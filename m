@@ -1,7 +1,7 @@
 From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 4/4] Documentation: DT: misc: Add ti-st bindings
-Date: Sat, 25 Apr 2015 15:15:18 -0700
-Message-ID: <1430000118-26386-4-git-send-email-eric.nelson@boundarydevices.com>
+Subject: [PATCH 3/4] misc: ti-st: don't use NULL pdata
+Date: Sat, 25 Apr 2015 15:15:17 -0700
+Message-ID: <1430000118-26386-3-git-send-email-eric.nelson@boundarydevices.com>
 References: <1430000118-26386-1-git-send-email-eric.nelson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1430000118-26386-1-git-send-email-eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
@@ -12,33 +12,25 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 ---
- Documentation/devicetree/bindings/misc/ti-st.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/ti-st.txt
+ drivers/misc/ti-st/st_kim.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/ti-st.txt b/Documentation/devicetree/bindings/misc/ti-st.txt
-new file mode 100644
-index 0000000..a1948d9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/ti-st.txt
-@@ -0,0 +1,17 @@
-+TI Shared-transport driver (a.k.a. kim)
-+
-+Required properties:
-+- compatible : kim
-+- nshutdown_gpio : gpio name and polarity
-+- dev_name : uart used for communication
-+- flow_cntrl : 1 if RTS/CTS hardware flow control is available
-+- baud_rate : baud rate for the UART
-+
-+Example (from am355x-evm):
-+	kim {
-+		compatible = "kim";
-+		nshutdown_gpio = <&gpio3 21 GPIO_ACTIVE_LOW>;
-+		dev_name = "/dev/ttyS1";
-+		flow_cntrl = <1>;
-+		baud_rate = <3000000>;
-+	};
+diff --git a/drivers/misc/ti-st/st_kim.c b/drivers/misc/ti-st/st_kim.c
+index c5a0e15..4b44345 100644
+--- a/drivers/misc/ti-st/st_kim.c
++++ b/drivers/misc/ti-st/st_kim.c
+@@ -755,8 +755,10 @@ static struct ti_st_plat_data *get_platform_data(struct device *dev)
+ 
+ 	dt_pdata = kzalloc(sizeof(*dt_pdata), GFP_KERNEL);
+ 
+-	if (!dt_pdata)
++	if (!dt_pdata) {
+ 		pr_err("Can't allocate device_tree platform data\n");
++		return 0;
++	}
+ 
+ 	dt_property = of_get_property(np, "dev_name", &len);
+ 	if (dt_property)
 -- 
 1.9.1
 
