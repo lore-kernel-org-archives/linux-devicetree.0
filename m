@@ -1,56 +1,39 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: 8250-based SoC serial ports and features
-Date: Sat, 25 Apr 2015 22:08 +0200
-Message-ID: <6085099.eeiYtUGZgl@wuerfel>
-References: <CAGhQ9Vw5hJKX+wrhV91mGmB00eUJKaR8Astns8rpk465BQnv1Q@mail.gmail.com> <9563845.vZY1xECvNe@wuerfel> <CAGhQ9VyrnPrgzqtkTN5V7zpSQQ6QhmQdpQi5Sc1eTkcQnxKZXw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH 1/4] misc: ti-st: use GPIO_LOW for initial value of nshutdown
+Date: Sat, 25 Apr 2015 15:15:15 -0700
+Message-ID: <1430000118-26386-1-git-send-email-eric.nelson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGhQ9VyrnPrgzqtkTN5V7zpSQQ6QhmQdpQi5Sc1eTkcQnxKZXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, der.herr-kA1LtwSENNE@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bvijay-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, gigi.joseph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eyalr-l0cyMroinI0@public.gmane.org, robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 25 April 2015 16:33:18 Joachim Eastwood wrote:
-> 
-> One other question: What is the preferred way of describing different
-> UART SoC features in DT?
-> 16550a is used as base on most NXP Cortex-M devices, but each UART can
-> have different features like; IRDA, Smart card, RS485, sync mode
-> (USART), DMA, hardware RTS/CTS pins and full modem pins.
-> Features also differ between UARTs on the same device.
-> 
-> I am thinking about either using different comp strings or some kind
-> of feature flags in DT. (Freescale UART already uses feature flags
-> like: "fsl,irda-mode" and "fsl,uart-has-rtscts")
+All other uses of the nshutdown gpio use macros GPIO_LOW and
+GPIO_HIGH to allow changing the pin polarity.
 
-I would probably specify both then, to give more flexibility to the
-driver in implementing it one way or the other.
+Do this in gpio_direction_output as well.
 
-> All UARTs on LPC1850 have RS485 and DMA support. In additional you have:
-> UART0,2,3: sync mode and smart card.
-> UART3: IRDA
-> UART1: full modem control pin set.
-> 
-> Comp strings could be something like:
-> "nxp,lpc1850-usart" <- sync+smart card
-> "nxp,lpc1850-usart-irda" <- sync+smart card+irda
-> "nxp,lpc1850-uart-modem" <- modem-pins
-> 
-> or feature flags like:
-> nxp,sync-mode;
-> nxp,rs485-mode;
-> nxp,smart-card;
-> nxp,irda-mode;
-> nxp,full-modem;
+Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
+ drivers/misc/ti-st/st_kim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For cases where a single chip has uarts with different features,
-using feature flags makes most sense, you can probably skip
-assigning different compatible strings there.
+diff --git a/drivers/misc/ti-st/st_kim.c b/drivers/misc/ti-st/st_kim.c
+index 18e7a03..aaa17b0 100644
+--- a/drivers/misc/ti-st/st_kim.c
++++ b/drivers/misc/ti-st/st_kim.c
+@@ -817,7 +817,7 @@ static int kim_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Configure nShutdown GPIO as output=0 */
+-	err = gpio_direction_output(kim_gdata->nshutdown, 0);
++	err = gpio_direction_output(kim_gdata->nshutdown, GPIO_LOW);
+ 	if (unlikely(err)) {
+ 		pr_err(" unable to configure gpio %d", kim_gdata->nshutdown);
+ 		return err;
+-- 
+1.9.1
 
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
