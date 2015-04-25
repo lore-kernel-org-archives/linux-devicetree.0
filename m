@@ -1,251 +1,57 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v14 0/3] ARM: rk3288: Add PM Domain support
-Date: Sat, 25 Apr 2015 20:47:49 +0200
-Message-ID: <3550912.kR0pejLP0h@diego>
-References: <1429862868-14218-1-git-send-email-wxt@rock-chips.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: 8250-based SoC serial ports and features
+Date: Sat, 25 Apr 2015 22:08 +0200
+Message-ID: <6085099.eeiYtUGZgl@wuerfel>
+References: <CAGhQ9Vw5hJKX+wrhV91mGmB00eUJKaR8Astns8rpk465BQnv1Q@mail.gmail.com> <9563845.vZY1xECvNe@wuerfel> <CAGhQ9VyrnPrgzqtkTN5V7zpSQQ6QhmQdpQi5Sc1eTkcQnxKZXw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1429862868-14218-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>, khilman@linaro.org, tomasz.figa@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, dmitry.torokhov@gmail.com, broonie@kernel.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGhQ9VyrnPrgzqtkTN5V7zpSQQ6QhmQdpQi5Sc1eTkcQnxKZXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
-
-
-thanks for keeping this alive :-)
-
-Am Freitag, 24. April 2015, 16:07:45 schrieb Caesar Wang:
->     Add power domain drivers based on generic power domain for
-> Rockchip platform, and support RK3288.
+On Saturday 25 April 2015 16:33:18 Joachim Eastwood wrote:
 > 
->     Verified on url =
->     https://chromium.googlesource.com/chromiumos/third_party/kernel.
+> One other question: What is the preferred way of describing different
+> UART SoC features in DT?
+> 16550a is used as base on most NXP Cortex-M devices, but each UART can
+> have different features like; IRDA, Smart card, RS485, sync mode
+> (USART), DMA, hardware RTS/CTS pins and full modem pins.
+> Features also differ between UARTs on the same device.
 > 
->     At the moment,there are mass of products are using the driver.
-> I believe the driver can happy work for next kernel.
+> I am thinking about either using different comp strings or some kind
+> of feature flags in DT. (Freescale UART already uses feature flags
+> like: "fsl,irda-mode" and "fsl,uart-has-rtscts")
 
-I've taken a look at the driver and here are some global remarks:
+I would probably specify both then, to give more flexibility to the
+driver in implementing it one way or the other.
 
-(1) You provide dt-bindings/power-domain/rk3288.h in patch 3. This breaks
-bisectability, as the driver itself in patch 2 also includes the header and
-would thus fail to compile if the later patch 3 is missing.
-Ideally I think the header addition should be a separate patch itself, so that
-we can possibly share it between driver and dts branches.
-So 1: binding doc, 2: binding-header, 3: driver, 4: dts-changes.
+> All UARTs on LPC1850 have RS485 and DMA support. In additional you have:
+> UART0,2,3: sync mode and smart card.
+> UART3: IRDA
+> UART1: full modem control pin set.
+> 
+> Comp strings could be something like:
+> "nxp,lpc1850-usart" <- sync+smart card
+> "nxp,lpc1850-usart-irda" <- sync+smart card+irda
+> "nxp,lpc1850-uart-modem" <- modem-pins
+> 
+> or feature flags like:
+> nxp,sync-mode;
+> nxp,rs485-mode;
+> nxp,smart-card;
+> nxp,irda-mode;
+> nxp,full-modem;
 
+For cases where a single chip has uarts with different features,
+using feature flags makes most sense, you can probably skip
+assigning different compatible strings there.
 
-(2) The dts-changes in patch 3 should also add any necessary power-domain
-assignment on devices if they're still missing, so that we don't introduce
-regressions. In my case my work-in-progress edp died because the powerdomain
-was turned off automatically it seems.
-
-
-(3) more like wondering @Kevin or so, is there some more generic place for a
-power-domain driver nowadays?
-
-
-(4) As Tomasz remarked previously the dts should represent the hardware and
-the power-domains are part of the pmu. There is a recent addition from Linus
-Walleij, called simple-mfd [a] that is supposed to get added real early for
-kernel 4.2. So I'd think the power-domains should use that and the patchset
-modified to include the changes shown below [b]?
-
-
-(5) Keven Hilman and Tomasz had reservations about all the device clocks
-being listed in the power-domains itself in the previous versions. I don't see
-a comment from them yet changing that view.
-
-Their wish was to get the clocks by reading the clocks from the device nodes,
-though I see a problem on how to handle devices that do not have any bindings
-at all yet.
-
-Kevin, Tomasz any new thoughts?
-
-
-Heiko
-
-
-[a] https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-integrator.git/commit/?h=simple-mfd&id=fcf294c020ff7ee4e3b1e96159e4dc7a17ad59d1
-
-[b]
-Subject: [PATCH] make power-domains a child of the pmu
-
-This should of course be distributed across the original patches and not
-be a separate patch.
----
- arch/arm/boot/dts/rk3288.dtsi       | 118 ++++++++++++++++++------------------
- arch/arm/mach-rockchip/pm_domains.c |  11 +++-
- 2 files changed, 67 insertions(+), 62 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 9696f51..b9ba79013 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -549,8 +549,66 @@
- 	};
- 
- 	pmu: power-management@ff730000 {
--		compatible = "rockchip,rk3288-pmu", "syscon";
-+		compatible = "rockchip,rk3288-pmu", "syscon", "simple-mfd";
- 		reg = <0xff730000 0x100>;
-+
-+		power: power-controller {
-+			compatible = "rockchip,rk3288-power-controller";
-+			#power-domain-cells = <1>;
-+			rockchip,pmu = <&pmu>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pd_gpu {
-+				reg = <RK3288_PD_GPU>;
-+				clocks = <&cru ACLK_GPU>;
-+			};
-+
-+			pd_hevc {
-+				reg = <RK3288_PD_HEVC>;
-+				clocks = <&cru ACLK_HEVC>,
-+					<&cru SCLK_HEVC_CABAC>,
-+					<&cru SCLK_HEVC_CORE>,
-+					<&cru HCLK_HEVC>;
-+			};
-+
-+			pd_vio {
-+				reg = <RK3288_PD_VIO>;
-+				clocks = <&cru ACLK_IEP>,
-+					<&cru ACLK_ISP>,
-+					<&cru ACLK_RGA>,
-+					<&cru ACLK_VIP>,
-+					<&cru ACLK_VOP0>,
-+					<&cru ACLK_VOP1>,
-+					<&cru DCLK_VOP0>,
-+					<&cru DCLK_VOP1>,
-+					<&cru HCLK_IEP>,
-+					<&cru HCLK_ISP>,
-+					<&cru HCLK_RGA>,
-+					<&cru HCLK_VIP>,
-+					<&cru HCLK_VOP0>,
-+					<&cru HCLK_VOP1>,
-+					<&cru PCLK_EDP_CTRL>,
-+					<&cru PCLK_HDMI_CTRL>,
-+					<&cru PCLK_LVDS_PHY>,
-+					<&cru PCLK_MIPI_CSI>,
-+					<&cru PCLK_MIPI_DSI0>,
-+					<&cru PCLK_MIPI_DSI1>,
-+					<&cru SCLK_EDP_24M>,
-+					<&cru SCLK_EDP>,
-+					<&cru SCLK_HDMI_CEC>,
-+					<&cru SCLK_HDMI_HDCP>,
-+					<&cru SCLK_ISP_JPE>,
-+					<&cru SCLK_ISP>,
-+					<&cru SCLK_RGA>;
-+			};
-+
-+			pd_video {
-+				reg = <RK3288_PD_VIDEO>;
-+				clocks = <&cru ACLK_VCODEC>,
-+					<&cru HCLK_VCODEC>;
-+			};
-+		};
- 	};
- 
- 	sgrf: syscon@ff740000 {
-@@ -1316,62 +1374,4 @@
- 			};
- 		};
- 	};
--
--	power: power-controller {
--		compatible = "rockchip,rk3288-power-controller";
--		#power-domain-cells = <1>;
--		rockchip,pmu = <&pmu>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		pd_gpu {
--			reg = <RK3288_PD_GPU>;
--			clocks = <&cru ACLK_GPU>;
--		};
--
--		pd_hevc {
--			reg = <RK3288_PD_HEVC>;
--			clocks = <&cru ACLK_HEVC>,
--				 <&cru SCLK_HEVC_CABAC>,
--				 <&cru SCLK_HEVC_CORE>,
--				 <&cru HCLK_HEVC>;
--		};
--
--		pd_vio {
--			reg = <RK3288_PD_VIO>;
--			clocks = <&cru ACLK_IEP>,
--				 <&cru ACLK_ISP>,
--				 <&cru ACLK_RGA>,
--				 <&cru ACLK_VIP>,
--				 <&cru ACLK_VOP0>,
--				 <&cru ACLK_VOP1>,
--				 <&cru DCLK_VOP0>,
--				 <&cru DCLK_VOP1>,
--				 <&cru HCLK_IEP>,
--				 <&cru HCLK_ISP>,
--				 <&cru HCLK_RGA>,
--				 <&cru HCLK_VIP>,
--				 <&cru HCLK_VOP0>,
--				 <&cru HCLK_VOP1>,
--				 <&cru PCLK_EDP_CTRL>,
--				 <&cru PCLK_HDMI_CTRL>,
--				 <&cru PCLK_LVDS_PHY>,
--				 <&cru PCLK_MIPI_CSI>,
--				 <&cru PCLK_MIPI_DSI0>,
--				 <&cru PCLK_MIPI_DSI1>,
--				 <&cru SCLK_EDP_24M>,
--				 <&cru SCLK_EDP>,
--				 <&cru SCLK_HDMI_CEC>,
--				 <&cru SCLK_HDMI_HDCP>,
--				 <&cru SCLK_ISP_JPE>,
--				 <&cru SCLK_ISP>,
--				 <&cru SCLK_RGA>;
--		};
--
--		pd_video {
--			reg = <RK3288_PD_VIDEO>;
--			clocks = <&cru ACLK_VCODEC>,
--				 <&cru HCLK_VCODEC>;
--		};
--	};
- };
-diff --git a/arch/arm/mach-rockchip/pm_domains.c b/arch/arm/mach-rockchip/pm_domains.c
-index 92d2569..f3d87c21 100644
---- a/arch/arm/mach-rockchip/pm_domains.c
-+++ b/arch/arm/mach-rockchip/pm_domains.c
-@@ -377,6 +377,7 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct device_node *node;
-+	struct device *parent;
- 	struct rockchip_pmu *pmu;
- 	const struct of_device_id *match;
- 	const struct rockchip_pmu_info *pmu_info;
-@@ -410,9 +411,13 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 	pmu->genpd_data.domains = pmu->domains;
- 	pmu->genpd_data.num_domains = pmu_info->num_domains;
- 
--	node = of_parse_phandle(np, "rockchip,pmu", 0);
--	pmu->regmap = syscon_node_to_regmap(node);
--	of_node_put(node);
-+	parent = dev->parent;
-+	if (!parent) {
-+		dev_err(dev, "no parent for syscon LED\n");
-+		return -ENODEV;
-+	}
-+
-+	pmu->regmap = syscon_node_to_regmap(parent->of_node);
- 	if (IS_ERR(pmu->regmap)) {
- 		error = PTR_ERR(pmu->regmap);
- 		dev_err(dev, "failed to get PMU regmap: %d\n", error);
--- 
-2.1.4
-
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
