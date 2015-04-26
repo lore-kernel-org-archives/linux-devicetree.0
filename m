@@ -1,93 +1,99 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
- platform
-Date: Sun, 26 Apr 2015 21:31:46 +0200
-Message-ID: <20150426193146.GA4539@amd>
-References: <20150407121247.GA29497@amd>
- <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
- <20150409110634.GA27407@amd>
- <552660C7.4020805@ti.com>
- <552663C2.70308@ti.com>
- <55277650.8070607@codeaurora.org>
- <20150424132923.GA11729@amd>
- <553A47D3.2070107@ti.com>
- <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 1/6] ARM: dts: berlin: relicense the berlin2q dtsi under
+ GPLv2/X11
+Date: Sun, 26 Apr 2015 23:19:48 +0200
+Message-ID: <20150426211948.GB3872@piout.net>
+References: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1430057013-12842-2-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
+In-Reply-To: <1430057013-12842-2-git-send-email-antoine.tenart@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Russell King <rmk@arm.linux.org.uk>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, Russell King <linux@arm.linux.org.uk>, H Hartley Sweeten <hsweeten@visionengravers.com>
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2015-04-24 15:46:56, Geert Uytterhoeven wrote:
-> On Fri, Apr 24, 2015 at 3:40 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> > On 24/04/15 16:29, Pavel Machek wrote:
-> >> On Fri 2015-04-10 12:35:52, Archit Taneja wrote:
-> >>>> That said, if the fb is in RAM, and is only written by the CPU, I think
-> >>>> a normal memcpy() for fb_memcpy_fromfb() should be fine...
-> >>>
-> >>> I didn't test for performance regressions when I posted this patch.
-> >>>
-> >>> A look at _memcpy_fromio in arch/arm/kernel/io.c shows that readb() is used
-> >>> all the time, even when the source and destination addresses are aligned for
-> >>> larger reads to be possible. Other archs seem to use readl() or readq() when
-> >>> they can. Maybe that makes memcpy_fromio slower than the implementation of
-> >>> memcpy on arm?
-> >>
-> >> Ok, can you prepare a patch for me to try? Or should we just revert
-> >> the original commit?
-> >
-> > The old way worked fine, afaik, so maybe we can revert. But still, isn't
-> > it more correct to use memcpy_fromio? It's (possibly) io memory we have
-> > here.
-> 
-> Yes it is.
-> 
-> So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
-> That will benefit other drivers on ARM, too.
+On 26/04/2015 at 16:03:28 +0200, Antoine T=E9nart wrote :
+> The current GPLv2 only licensing on this dtsi makes it very impractic=
+al
+> for other software components licensed under another license.
+>=20
+> In order to make it easier for them to reuse our device trees, relice=
+nse
+> this dtsi under a GPLv2/X11 dual-license.
+>=20
+> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 
-No, sorry. Yes, I could "optimize" memcpy_toio... just by sticking
-memcpy there, as for example asm-generic/io.h suggests.
+> ---
+>  arch/arm/boot/dts/berlin2q.dtsi | 34 +++++++++++++++++++++++++++++++=
+---
+>  1 file changed, 31 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berl=
+in2q.dtsi
+> index be5397288d24..703ce384e0d7 100644
+> --- a/arch/arm/boot/dts/berlin2q.dtsi
+> +++ b/arch/arm/boot/dts/berlin2q.dtsi
+> @@ -1,9 +1,37 @@
+>  /*
+>   * Copyright (C) 2014 Antoine T=E9nart <antoine.tenart@free-electron=
+s.com>
+>   *
+> - * This file is licensed under the terms of the GNU General Public
+> - * License version 2. This program is licensed "as is" without any
+> - * warranty of any kind, whether express or implied.
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dua=
+l
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is licensed under the terms of the GNU General Publ=
+ic
+> + *     License version 2. This program is licensed "as is" without a=
+ny
+> + *     warranty of any kind, whether express or implied.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentatio=
+n
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom th=
+e
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall b=
+e
+> + *     included in all copies or substantial portions of the Softwar=
+e.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIN=
+D,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
+ES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+> =20
+>  #include <dt-bindings/clock/berlin2q.h>
+> --=20
+> 2.3.6
+>=20
 
-Maybe it would break something. Maybe not, but potential for that
-clearly is there... since this is very seldom used function. Or do you
-know drivers that would benefit from this?
-
-void _memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
-{
-        const unsigned char *f = from;
-	while (count) {
-	      count--;
-	      writeb(*f, to);
-	      f++;
-	      to++;
- 	}
-}
-
-We have a regression, we have a patch that causes the
-regression. Right fix at this point is to revert a "cleanup" that
-causes this, not try to "optimize" otherwise unused piece of code.
-
-commit 981409b25e2a99409b26daa67293ca1cfd5ea0a0
-Author: Archit Taneja <archit@ti.com>
-Date:   Fri Nov 16 14:46:04 2012 +0530
-
-    fbdev: arm has __raw I/O accessors, use them in fb.h
-
-    This removes the sparse warnings on arm platforms:
-
-    warning: cast removes address space of expression
-
-Signed-off-by: Archit Taneja <archit@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: H Hartley Sweeten <hsweeten at visionengravers.com>
-Cc: Alexander Shiyan <shc_work@mail.ru>
-Cc: Russell King <linux@arm.linux.org.uk>
-
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
