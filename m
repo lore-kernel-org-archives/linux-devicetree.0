@@ -1,8 +1,8 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH 4/6] ARM: dts: berlin: relicense the BG2 Sony NSZ-GS7 dts
- under GPLv2/X11
-Date: Sun, 26 Apr 2015 16:03:31 +0200
-Message-ID: <1430057013-12842-5-git-send-email-antoine.tenart@free-electrons.com>
+Subject: [PATCH 6/6] ARM: dts: berlin: relicense the BG2CD Google Chromecast
+ dts under GPLv2/X11
+Date: Sun, 26 Apr 2015 16:03:33 +0200
+Message-ID: <1430057013-12842-7-git-send-email-antoine.tenart@free-electrons.com>
 References: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -30,13 +30,13 @@ this dts under a GPLv2/X11 dual-license.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
 ---
- arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts | 34 +++++++++++++++++++++++++++---
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 34 +++++++++++++++++++++--
  1 file changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
-index 86d85d8896a3..5c99fb3a4d10 100644
---- a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
-+++ b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+index 30270be4d0c9..772165ad0a52 100644
+--- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
 @@ -3,9 +3,37 @@
   *
   * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
