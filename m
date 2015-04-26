@@ -1,38 +1,57 @@
-From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 3/4] misc: ti-st: don't use NULL pdata
-Date: Sat, 25 Apr 2015 15:15:17 -0700
-Message-ID: <1430000118-26386-3-git-send-email-eric.nelson@boundarydevices.com>
-References: <1430000118-26386-1-git-send-email-eric.nelson@boundarydevices.com>
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] Import of dtc/libfdt upstream into kernel
+Date: Sat, 25 Apr 2015 22:53:08 -0700
+Message-ID: <1430027588-11041-1-git-send-email-gaurav.minocha.os@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430000118-26386-1-git-send-email-eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, der.herr-kA1LtwSENNE@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bvijay-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, gigi.joseph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eyalr-l0cyMroinI0@public.gmane.org, robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
- drivers/misc/ti-st/st_kim.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The following script is used to import dtc upstream
+into kernel. It was missing import of dtc/libfdt, with
+this commit it will include the same.
 
-diff --git a/drivers/misc/ti-st/st_kim.c b/drivers/misc/ti-st/st_kim.c
-index c5a0e15..4b44345 100644
---- a/drivers/misc/ti-st/st_kim.c
-+++ b/drivers/misc/ti-st/st_kim.c
-@@ -755,8 +755,10 @@ static struct ti_st_plat_data *get_platform_data(struct device *dev)
+Also, currently in arch and driver code that needs early access to
+the flattened device tree it is necessary to add specific CFLAGS
+so that when scripts/dtc/libfdt/libfdt.h is included the C
+preprocessor is able to locate the libfdt versions of libfdt_env.h
+and fdt.h without generating an error. So, this script replaces
+angular brackets with quotation used to include header files
+fdt.h and libfdt_env.h
+
+Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ scripts/dtc/update-dtc-source.sh | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
+index feb01ef..6f0d447 100755
+--- a/scripts/dtc/update-dtc-source.sh
++++ b/scripts/dtc/update-dtc-source.sh
+@@ -34,6 +34,7 @@ DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c
+ 		srcpos.h treesource.c util.c util.h version_gen.h Makefile.dtc \
+ 		dtc-lexer.l dtc-parser.y"
+ DTC_GENERATED="dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h"
++LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_empty_tree.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
  
- 	dt_pdata = kzalloc(sizeof(*dt_pdata), GFP_KERNEL);
+ # Build DTC
+ cd $DTC_UPSTREAM_PATH
+@@ -50,5 +51,12 @@ for f in $DTC_GENERATED; do
+ 	cp ${DTC_UPSTREAM_PATH}/$f ${f}_shipped
+ 	git add ${f}_shipped
+ done
++for f in $LIBFDT_SOURCE; do
++       cp ${DTC_UPSTREAM_PATH}/libfdt/${f} libfdt/${f}
++       git add libfdt/${f}
++done
++
++sed -i -- 's/#include <libfdt_env.h>/#include "libfdt_env.h"/g' ./libfdt/libfdt.h
++sed -i -- 's/#include <fdt.h>/#include "fdt.h"/g' ./libfdt/libfdt.h
  
--	if (!dt_pdata)
-+	if (!dt_pdata) {
- 		pr_err("Can't allocate device_tree platform data\n");
-+		return 0;
-+	}
- 
- 	dt_property = of_get_property(np, "dev_name", &len);
- 	if (dt_property)
+ git commit -e -v -m "scripts/dtc: Update to upstream version [CHANGEME]"
 -- 
-1.9.1
+2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
