@@ -1,12 +1,12 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH 3/6] ARM: dts: berlin: relicense the berlin2 dtsi under
- GPLv2/X11
-Date: Sun, 26 Apr 2015 16:03:30 +0200
-Message-ID: <1430057013-12842-4-git-send-email-antoine.tenart@free-electrons.com>
+Subject: [PATCH 2/6] ARM: dts: berlin: relicense the BG2Q Marvell DMP dts
+ under GPLv2/X11
+Date: Sun, 26 Apr 2015 16:03:29 +0200
+Message-ID: <1430057013-12842-3-git-send-email-antoine.tenart@free-electrons.com>
 References: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -22,61 +22,53 @@ To: sebastian.hesselbarth@gmail.com, jszhang@marvell.com, alexandre.belloni@free
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The current GPLv2 only licensing on this dtsi makes it very impractical
-for other software components licensed under another license.
-
-In order to make it easier for them to reuse our device trees, relicense
-this dtsi under a GPLv2/X11 dual-license.
-
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
----
- arch/arm/boot/dts/berlin2.dtsi | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-index 63d00a63cfa6..da9adf8f69da 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -6,9 +6,37 @@
-  * based on GPL'ed 2.6 kernel sources
-  *  (c) Marvell International Ltd.
-  *
-- * This file is licensed under the terms of the GNU General Public
-- * License version 2.  This program is licensed "as is" without any
-- * warranty of any kind, whether express or implied.
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is licensed under the terms of the GNU General Public
-+ *     License version 2. This program is licensed "as is" without any
-+ *     warranty of any kind, whether express or implied.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- #include "skeleton.dtsi"
--- 
-2.3.6
+VGhlIGN1cnJlbnQgR1BMdjIgb25seSBsaWNlbnNpbmcgb24gdGhpcyBkdHMgbWFrZXMgaXQgdmVy
+eSBpbXByYWN0aWNhbApmb3Igb3RoZXIgc29mdHdhcmUgY29tcG9uZW50cyBsaWNlbnNlZCB1bmRl
+ciBhbm90aGVyIGxpY2Vuc2UuCgpJbiBvcmRlciB0byBtYWtlIGl0IGVhc2llciBmb3IgdGhlbSB0
+byByZXVzZSBvdXIgZGV2aWNlIHRyZWVzLCByZWxpY2Vuc2UKdGhpcyBkdHMgdW5kZXIgYSBHUEx2
+Mi9YMTEgZHVhbC1saWNlbnNlLgoKU2lnbmVkLW9mZi1ieTogQW50b2luZSBUZW5hcnQgPGFudG9p
+bmUudGVuYXJ0QGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9iZXJs
+aW4ycS1tYXJ2ZWxsLWRtcC5kdHMgfCAzNCArKysrKysrKysrKysrKysrKysrKysrKysrKystLS0K
+IDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJxLW1hcnZlbGwtZG1wLmR0cyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2JlcmxpbjJxLW1hcnZlbGwtZG1wLmR0cwppbmRleCBhOThhYzFiZDhmNjUu
+LjRhNzQ5ZTViM2I0NCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMnEtbWFy
+dmVsbC1kbXAuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJxLW1hcnZlbGwtZG1w
+LmR0cwpAQCAtMSw5ICsxLDM3IEBACiAvKgogICogQ29weXJpZ2h0IChDKSAyMDE0IEFudG9pbmUg
+VMOpbmFydCA8YW50b2luZS50ZW5hcnRAZnJlZS1lbGVjdHJvbnMuY29tPgogICoKLSAqIFRoaXMg
+ZmlsZSBpcyBsaWNlbnNlZCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1Ymxp
+YwotICogTGljZW5zZSB2ZXJzaW9uIDIuIFRoaXMgcHJvZ3JhbSBpcyBsaWNlbnNlZCAiYXMgaXMi
+IHdpdGhvdXQgYW55Ci0gKiB3YXJyYW50eSBvZiBhbnkga2luZCwgd2hldGhlciBleHByZXNzIG9y
+IGltcGxpZWQuCisgKiBUaGlzIGZpbGUgaXMgZHVhbC1saWNlbnNlZDogeW91IGNhbiB1c2UgaXQg
+ZWl0aGVyIHVuZGVyIHRoZSB0ZXJtcworICogb2YgdGhlIEdQTCBvciB0aGUgWDExIGxpY2Vuc2Us
+IGF0IHlvdXIgb3B0aW9uLiBOb3RlIHRoYXQgdGhpcyBkdWFsCisgKiBsaWNlbnNpbmcgb25seSBh
+cHBsaWVzIHRvIHRoaXMgZmlsZSwgYW5kIG5vdCB0aGlzIHByb2plY3QgYXMgYQorICogd2hvbGUu
+CisgKgorICogIGEpIFRoaXMgZmlsZSBpcyBsaWNlbnNlZCB1bmRlciB0aGUgdGVybXMgb2YgdGhl
+IEdOVSBHZW5lcmFsIFB1YmxpYworICogICAgIExpY2Vuc2UgdmVyc2lvbiAyLiBUaGlzIHByb2dy
+YW0gaXMgbGljZW5zZWQgImFzIGlzIiB3aXRob3V0IGFueQorICogICAgIHdhcnJhbnR5IG9mIGFu
+eSBraW5kLCB3aGV0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZC4KKyAqCisgKiBPciwgYWx0ZXJuYXRp
+dmVseSwKKyAqCisgKiAgYikgUGVybWlzc2lvbiBpcyBoZXJlYnkgZ3JhbnRlZCwgZnJlZSBvZiBj
+aGFyZ2UsIHRvIGFueSBwZXJzb24KKyAqICAgICBvYnRhaW5pbmcgYSBjb3B5IG9mIHRoaXMgc29m
+dHdhcmUgYW5kIGFzc29jaWF0ZWQgZG9jdW1lbnRhdGlvbgorICogICAgIGZpbGVzICh0aGUgIlNv
+ZnR3YXJlIiksIHRvIGRlYWwgaW4gdGhlIFNvZnR3YXJlIHdpdGhvdXQKKyAqICAgICByZXN0cmlj
+dGlvbiwgaW5jbHVkaW5nIHdpdGhvdXQgbGltaXRhdGlvbiB0aGUgcmlnaHRzIHRvIHVzZSwKKyAq
+ICAgICBjb3B5LCBtb2RpZnksIG1lcmdlLCBwdWJsaXNoLCBkaXN0cmlidXRlLCBzdWJsaWNlbnNl
+LCBhbmQvb3IKKyAqICAgICBzZWxsIGNvcGllcyBvZiB0aGUgU29mdHdhcmUsIGFuZCB0byBwZXJt
+aXQgcGVyc29ucyB0byB3aG9tIHRoZQorICogICAgIFNvZnR3YXJlIGlzIGZ1cm5pc2hlZCB0byBk
+byBzbywgc3ViamVjdCB0byB0aGUgZm9sbG93aW5nCisgKiAgICAgY29uZGl0aW9uczoKKyAqCisg
+KiAgICAgVGhlIGFib3ZlIGNvcHlyaWdodCBub3RpY2UgYW5kIHRoaXMgcGVybWlzc2lvbiBub3Rp
+Y2Ugc2hhbGwgYmUKKyAqICAgICBpbmNsdWRlZCBpbiBhbGwgY29waWVzIG9yIHN1YnN0YW50aWFs
+IHBvcnRpb25zIG9mIHRoZSBTb2Z0d2FyZS4KKyAqCisgKiAgICAgVEhFIFNPRlRXQVJFIElTIFBS
+T1ZJREVEICJBUyBJUyIsIFdJVEhPVVQgV0FSUkFOVFkgT0YgQU5ZIEtJTkQsCisgKiAgICAgRVhQ
+UkVTUyBPUiBJTVBMSUVELCBJTkNMVURJTkcgQlVUIE5PVCBMSU1JVEVEIFRPIFRIRSBXQVJSQU5U
+SUVTCisgKiAgICAgT0YgTUVSQ0hBTlRBQklMSVRZLCBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIg
+UFVSUE9TRSBBTkQKKyAqICAgICBOT05JTkZSSU5HRU1FTlQuIElOIE5PIEVWRU5UIFNIQUxMIFRI
+RSBBVVRIT1JTIE9SIENPUFlSSUdIVAorICogICAgIEhPTERFUlMgQkUgTElBQkxFIEZPUiBBTlkg
+Q0xBSU0sIERBTUFHRVMgT1IgT1RIRVIgTElBQklMSVRZLAorICogICAgIFdIRVRIRVIgSU4gQU4g
+QUNUSU9OIE9GIENPTlRSQUNULCBUT1JUIE9SIE9USEVSV0lTRSwgQVJJU0lORworICogICAgIEZS
+T00sIE9VVCBPRiBPUiBJTiBDT05ORUNUSU9OIFdJVEggVEhFIFNPRlRXQVJFIE9SIFRIRSBVU0Ug
+T1IKKyAqICAgICBPVEhFUiBERUFMSU5HUyBJTiBUSEUgU09GVFdBUkUuCiAgKi8KIAogL2R0cy12
+MS87Ci0tIAoyLjMuNgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
