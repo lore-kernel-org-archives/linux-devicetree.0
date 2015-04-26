@@ -1,86 +1,45 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: sunxi: A10s Olinuxino add missing SPI and simplefb.
-Date: Sun, 26 Apr 2015 11:21:34 +0200
-Message-ID: <CAOMqctTKoDeLqii7YEEv80B+Ru4tsVwiGYB0-u7XLPqNoEiCTQ@mail.gmail.com>
-References: <cover.1430034797.git.hramrach@gmail.com> <f6e34cb3f0b72fcb0ae18ccf96962fb8a1c477f7.1430034797.git.hramrach@gmail.com>
- <20150426083958.GD5627@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150426083958.GD5627@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Yunzhi Li <lyz@rock-chips.com>
+Subject: [PATCH v1 1/2] ARM: dts: rockchip: add properties for dwc2 usb otg controller
+Date: Sun, 26 Apr 2015 17:41:38 +0800
+Message-ID: <1430041299-24874-1-git-send-email-lyz@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: cf@rock-chips.com, hl@rock-chips.com, yk@rock-chips.com, gauravsh@google.com, alberto@google.com, wulf@rock-chips.com, Yunzhi Li <lyz@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add properties for dwc2 usb device controller according to
+Documentation/devicetree/bindings/usb/dwc2.txt
 
-On 26 April 2015 at 10:39, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Mon, Mar 23, 2015 at 03:00:31PM +0100, Michal Suchanek wrote:
->> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
+---
 
->>  &ohci0 {
->>       status = "okay";
->>  };
->> diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
->> index a78c95d..438eba1 100644
->> --- a/arch/arm/boot/dts/sun5i-a10s.dtsi
->> +++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
->> @@ -154,6 +154,20 @@
->>                       clocks = <&apb1_gates 18>;
->>                       status = "disabled";
->>               };
->> +
->> +             spi2: spi@01c17000 {
->> +                     compatible = "allwinner,sun4i-a10-spi";
->> +                     reg = <0x01c17000 0x1000>;
->> +                     interrupts = <12>;
->> +                     clocks = <&ahb_gates 22>, <&spi2_clk>;
->> +                     clock-names = "ahb", "mod";
->> +                     dmas = <&dma SUN4I_DMA_DEDICATED 29>,
->> +                            <&dma SUN4I_DMA_DEDICATED 28>;
->> +                     dma-names = "rx", "tx";
->> +                     status = "disabled";
->> +                     #address-cells = <1>;
->> +                     #size-cells = <0>;
->> +             };
->>       };
->>  };
->
-> This should be in sun5i.dtsi (and in a separate patch).
->
->> @@ -198,4 +212,18 @@
->>               allwinner,drive = <SUN4I_PINCTRL_30_MA>;
->>               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>       };
->> +
->> +     spi2_pins_a: spi2@0 {
->> +             allwinner,pins = "PB11", "PB12", "PB13", "PB14";
->> +             allwinner,function = "spi2";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +     };
->> +
->> +     spi2_pins_b: spi2@1 {
->> +             allwinner,pins = "PE00", "PE01", "PE02", "PE03";
->> +             allwinner,function = "spi2";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +     };
->>  };
->
-> Ditto.
->
+ arch/arm/boot/dts/rk3288.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-A13 does not have these pins so maybe not?
-
-Thanks
-
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index eccc78d..2b55b07 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -432,6 +432,7 @@
+ 		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_USBHOST1>;
+ 		clock-names = "otg";
++		dr_mode = "host";
+ 		status = "disabled";
+ 	};
+ 
+@@ -442,6 +443,11 @@
+ 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_OTG0>;
+ 		clock-names = "otg";
++		dr_mode = "otg";
++		g-np-tx-fifo-size = <16>;
++		g-rx-fifo-size = <275>;
++		g-tx-fifo-size = <256 128 128 64 64 32>;
++		g-use-dma;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+2.0.0
