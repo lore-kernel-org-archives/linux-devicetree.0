@@ -1,82 +1,68 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH 6/6] ARM: dts: berlin: relicense the BG2CD Google Chromecast
- dts under GPLv2/X11
-Date: Sun, 26 Apr 2015 16:03:33 +0200
-Message-ID: <1430057013-12842-7-git-send-email-antoine.tenart@free-electrons.com>
-References: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] ARM: sunxi: dts: Add A10 uarts pin muxing options
+Date: Sun, 26 Apr 2015 18:11:57 +0200
+Message-ID: <20150426161157.GM5627@lukather>
+References: <1430043338-28982-1-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, jszhang@marvell.com, alexandre.belloni@free-electrons.com
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fDP66DSfTvWAYVew"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430043338-28982-1-git-send-email-richard.genoud@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The current GPLv2 only licensing on this dts makes it very impractical
-for other software components licensed under another license.
 
-In order to make it easier for them to reuse our device trees, relicense
-this dts under a GPLv2/X11 dual-license.
+--fDP66DSfTvWAYVew
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
----
- arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 34 +++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 3 deletions(-)
+Hi Richard,
 
-diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-index 30270be4d0c9..772165ad0a52 100644
---- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-+++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-@@ -3,9 +3,37 @@
-  *
-  * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-  *
-- * This file is licensed under the terms of the GNU General Public
-- * License version 2.  This program is licensed "as is" without any
-- * warranty of any kind, whether express or implied.
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is licensed under the terms of the GNU General Public
-+ *     License version 2. This program is licensed "as is" without any
-+ *     warranty of any kind, whether express or implied.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
--- 
-2.3.6
+On Sun, Apr 26, 2015 at 12:15:38PM +0200, Richard Genoud wrote:
+> The A10 has 8 uarts, only uart0 and uart1 where filled.
+> This patch adds all the missing uarts(2 to 7) pin muxing to the dtsi.
+>=20
+> Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
+
+It's obviously correct, but I'd rather not add new pinctrl nodes that
+don't have any users so that it doesn't bloat the DT without any
+particular reason.
+
+Feel free to resubmit this patch if one of these nodes become actually
+useful.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--fDP66DSfTvWAYVew
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVPQ5NAAoJEBx+YmzsjxAgqkYQALQeom7fFQKFHOHyjSzwotAZ
+Iqii6ZJzdR1LG8v7nyoAw/a0EFxDjhzjsW6L7hO9SEd20CX7y6g6aEh8ylYcuEAA
+RNDXUV/XwBndxzbdMHi01MI3cKYlhDAhHBJmrRRW63RTSx1ajPuP+kWqUbJHvF+v
+ieB/pOOab2eHVm/oh/4qgCLlNAY+rr3bdjYv1xtxJQ+zNUlhvyTngihH/LK8pJDi
+FUMZxRJfoaPIe9ECObuJDwzSsAJ8475o0nj+vRic5hEkahJMMWa+eHH5tSXuLp0d
+ZCRusxkwBKlLu9cQFlNrh+5h9YtstHi8SDUzPPCa9FgtbByM5Vz3jZWocejdBiUR
+Df2PTtCufgRCflKvgXOfIWO1XNRAE8xLh9gpTk25Gb+VmKpd8+VQe1162nY7xSAN
+JV0W+pKv2DdM5lPwQBwmHAoSeW1gno+Ve4HSbk7EvSJL7kHMLQMewgSCLuNAEjMG
+UvkPuntQxEQndBUkT6e83Uj+NG2S3S+dOtFHNegSAg7zeJmS+ZkN1IhPl+ZIinpz
+MT8uJtK6ZknWQOZSiNLnblpc8qssf8Z9j9fl+PxD6svYD5WdOlEGYqUGs31FDFHE
+I+zQL0losSrWXZRXSlFJnCYYhxwc4jtbzGGSbi4gZqXb//83MOlxawb453DlMMSm
+PLg71/2hjCMlUxaRKHV9
+=G0Zs
+-----END PGP SIGNATURE-----
+
+--fDP66DSfTvWAYVew--
