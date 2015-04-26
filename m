@@ -1,12 +1,12 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH 1/6] ARM: dts: berlin: relicense the berlin2q dtsi under
- GPLv2/X11
-Date: Sun, 26 Apr 2015 16:03:28 +0200
-Message-ID: <1430057013-12842-2-git-send-email-antoine.tenart@free-electrons.com>
+Subject: [PATCH 4/6] ARM: dts: berlin: relicense the BG2 Sony NSZ-GS7 dts
+ under GPLv2/X11
+Date: Sun, 26 Apr 2015 16:03:31 +0200
+Message-ID: <1430057013-12842-5-git-send-email-antoine.tenart@free-electrons.com>
 References: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -22,53 +22,61 @@ To: sebastian.hesselbarth@gmail.com, jszhang@marvell.com, alexandre.belloni@free
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGN1cnJlbnQgR1BMdjIgb25seSBsaWNlbnNpbmcgb24gdGhpcyBkdHNpIG1ha2VzIGl0IHZl
-cnkgaW1wcmFjdGljYWwKZm9yIG90aGVyIHNvZnR3YXJlIGNvbXBvbmVudHMgbGljZW5zZWQgdW5k
-ZXIgYW5vdGhlciBsaWNlbnNlLgoKSW4gb3JkZXIgdG8gbWFrZSBpdCBlYXNpZXIgZm9yIHRoZW0g
-dG8gcmV1c2Ugb3VyIGRldmljZSB0cmVlcywgcmVsaWNlbnNlCnRoaXMgZHRzaSB1bmRlciBhIEdQ
-THYyL1gxMSBkdWFsLWxpY2Vuc2UuCgpTaWduZWQtb2ZmLWJ5OiBBbnRvaW5lIFRlbmFydCA8YW50
-b2luZS50ZW5hcnRAZnJlZS1lbGVjdHJvbnMuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2Jl
-cmxpbjJxLmR0c2kgfCAzNCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tCiAxIGZp
-bGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4ycS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmVy
-bGluMnEuZHRzaQppbmRleCBiZTUzOTcyODhkMjQuLjcwM2NlMzg0ZTBkNyAxMDA2NDQKLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMnEuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9i
-ZXJsaW4ycS5kdHNpCkBAIC0xLDkgKzEsMzcgQEAKIC8qCiAgKiBDb3B5cmlnaHQgKEMpIDIwMTQg
-QW50b2luZSBUw6luYXJ0IDxhbnRvaW5lLnRlbmFydEBmcmVlLWVsZWN0cm9ucy5jb20+CiAgKgot
-ICogVGhpcyBmaWxlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVy
-YWwgUHVibGljCi0gKiBMaWNlbnNlIHZlcnNpb24gMi4gVGhpcyBwcm9ncmFtIGlzIGxpY2Vuc2Vk
-ICJhcyBpcyIgd2l0aG91dCBhbnkKLSAqIHdhcnJhbnR5IG9mIGFueSBraW5kLCB3aGV0aGVyIGV4
-cHJlc3Mgb3IgaW1wbGllZC4KKyAqIFRoaXMgZmlsZSBpcyBkdWFsLWxpY2Vuc2VkOiB5b3UgY2Fu
-IHVzZSBpdCBlaXRoZXIgdW5kZXIgdGhlIHRlcm1zCisgKiBvZiB0aGUgR1BMIG9yIHRoZSBYMTEg
-bGljZW5zZSwgYXQgeW91ciBvcHRpb24uIE5vdGUgdGhhdCB0aGlzIGR1YWwKKyAqIGxpY2Vuc2lu
-ZyBvbmx5IGFwcGxpZXMgdG8gdGhpcyBmaWxlLCBhbmQgbm90IHRoaXMgcHJvamVjdCBhcyBhCisg
-KiB3aG9sZS4KKyAqCisgKiAgYSkgVGhpcyBmaWxlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0ZXJt
-cyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljCisgKiAgICAgTGljZW5zZSB2ZXJzaW9uIDIuIFRo
-aXMgcHJvZ3JhbSBpcyBsaWNlbnNlZCAiYXMgaXMiIHdpdGhvdXQgYW55CisgKiAgICAgd2FycmFu
-dHkgb2YgYW55IGtpbmQsIHdoZXRoZXIgZXhwcmVzcyBvciBpbXBsaWVkLgorICoKKyAqIE9yLCBh
-bHRlcm5hdGl2ZWx5LAorICoKKyAqICBiKSBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBm
-cmVlIG9mIGNoYXJnZSwgdG8gYW55IHBlcnNvbgorICogICAgIG9idGFpbmluZyBhIGNvcHkgb2Yg
-dGhpcyBzb2Z0d2FyZSBhbmQgYXNzb2NpYXRlZCBkb2N1bWVudGF0aW9uCisgKiAgICAgZmlsZXMg
-KHRoZSAiU29mdHdhcmUiKSwgdG8gZGVhbCBpbiB0aGUgU29mdHdhcmUgd2l0aG91dAorICogICAg
-IHJlc3RyaWN0aW9uLCBpbmNsdWRpbmcgd2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMgdG8g
-dXNlLAorICogICAgIGNvcHksIG1vZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1
-YmxpY2Vuc2UsIGFuZC9vcgorICogICAgIHNlbGwgY29waWVzIG9mIHRoZSBTb2Z0d2FyZSwgYW5k
-IHRvIHBlcm1pdCBwZXJzb25zIHRvIHdob20gdGhlCisgKiAgICAgU29mdHdhcmUgaXMgZnVybmlz
-aGVkIHRvIGRvIHNvLCBzdWJqZWN0IHRvIHRoZSBmb2xsb3dpbmcKKyAqICAgICBjb25kaXRpb25z
-OgorICoKKyAqICAgICBUaGUgYWJvdmUgY29weXJpZ2h0IG5vdGljZSBhbmQgdGhpcyBwZXJtaXNz
-aW9uIG5vdGljZSBzaGFsbCBiZQorICogICAgIGluY2x1ZGVkIGluIGFsbCBjb3BpZXMgb3Igc3Vi
-c3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgorICoKKyAqICAgICBUSEUgU09GVFdB
-UkUgSVMgUFJPVklERUQgIkFTIElTIiwgV0lUSE9VVCBXQVJSQU5UWSBPRiBBTlkgS0lORCwKKyAq
-ICAgICBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xVRElORyBCVVQgTk9UIExJTUlURUQgVE8gVEhF
-IFdBUlJBTlRJRVMKKyAqICAgICBPRiBNRVJDSEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFS
-VElDVUxBUiBQVVJQT1NFIEFORAorICogICAgIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQg
-U0hBTEwgVEhFIEFVVEhPUlMgT1IgQ09QWVJJR0hUCisgKiAgICAgSE9MREVSUyBCRSBMSUFCTEUg
-Rk9SIEFOWSBDTEFJTSwgREFNQUdFUyBPUiBPVEhFUiBMSUFCSUxJVFksCisgKiAgICAgV0hFVEhF
-UiBJTiBBTiBBQ1RJT04gT0YgQ09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HCisg
-KiAgICAgRlJPTSwgT1VUIE9GIE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1Ig
-VEhFIFVTRSBPUgorICogICAgIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KICAqLwog
-CiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svYmVybGluMnEuaD4KLS0gCjIuMy42CgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+The current GPLv2 only licensing on this dts makes it very impractical
+for other software components licensed under another license.
+
+In order to make it easier for them to reuse our device trees, relicense
+this dts under a GPLv2/X11 dual-license.
+
+Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+---
+ arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts | 34 +++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+index 86d85d8896a3..5c99fb3a4d10 100644
+--- a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
++++ b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+@@ -3,9 +3,37 @@
+  *
+  * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+  *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2.  This program is licensed "as is" without any
+- * warranty of any kind, whether express or implied.
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is licensed under the terms of the GNU General Public
++ *     License version 2. This program is licensed "as is" without any
++ *     warranty of any kind, whether express or implied.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+-- 
+2.3.6
