@@ -1,236 +1,93 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] iio: magn: bmc150_magn: add oversampling ratio
-Date: Sun, 26 Apr 2015 18:23:15 +0100
-Message-ID: <553D1F03.3010708@kernel.org>
-References: <1429814048-22808-1-git-send-email-irina.tirdea@intel.com> <1429814048-22808-5-git-send-email-irina.tirdea@intel.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
+ platform
+Date: Sun, 26 Apr 2015 21:31:46 +0200
+Message-ID: <20150426193146.GA4539@amd>
+References: <20150407121247.GA29497@amd>
+ <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
+ <20150409110634.GA27407@amd>
+ <552660C7.4020805@ti.com>
+ <552663C2.70308@ti.com>
+ <55277650.8070607@codeaurora.org>
+ <20150424132923.GA11729@amd>
+ <553A47D3.2070107@ti.com>
+ <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429814048-22808-5-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Russell King <rmk@arm.linux.org.uk>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, Russell King <linux@arm.linux.org.uk>, H Hartley Sweeten <hsweeten@visionengravers.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23/04/15 19:34, Irina Tirdea wrote:
-> Export the oversampling ratio so that the user can change the
-> number of repetions for x/y/z axis.
+On Fri 2015-04-24 15:46:56, Geert Uytterhoeven wrote:
+> On Fri, Apr 24, 2015 at 3:40 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> > On 24/04/15 16:29, Pavel Machek wrote:
+> >> On Fri 2015-04-10 12:35:52, Archit Taneja wrote:
+> >>>> That said, if the fb is in RAM, and is only written by the CPU, I think
+> >>>> a normal memcpy() for fb_memcpy_fromfb() should be fine...
+> >>>
+> >>> I didn't test for performance regressions when I posted this patch.
+> >>>
+> >>> A look at _memcpy_fromio in arch/arm/kernel/io.c shows that readb() is used
+> >>> all the time, even when the source and destination addresses are aligned for
+> >>> larger reads to be possible. Other archs seem to use readl() or readq() when
+> >>> they can. Maybe that makes memcpy_fromio slower than the implementation of
+> >>> memcpy on arm?
+> >>
+> >> Ok, can you prepare a patch for me to try? Or should we just revert
+> >> the original commit?
+> >
+> > The old way worked fine, afaik, so maybe we can revert. But still, isn't
+> > it more correct to use memcpy_fromio? It's (possibly) io memory we have
+> > here.
 > 
-> The sampling frequency is limited by the oversampling ratio.
-> The available sampling frequencies might change depending
-> on the values of oversampling_ratio.
+> Yes it is.
 > 
-> The specification can be downloaded from:
-> http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS000-04.pdf.
-> 
-> Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Also looks good to me.   As it's new ABI I'm keen to let this sit
-a while longer and see if anyone objects (doubt they will, but you never
-know).
+> So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
+> That will benefit other drivers on ARM, too.
 
-Jonathan
-> ---
->  drivers/iio/magnetometer/bmc150_magn.c | 133 ++++++++++++++++++++++++++++++++-
->  1 file changed, 129 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/magnetometer/bmc150_magn.c b/drivers/iio/magnetometer/bmc150_magn.c
-> index b8e4c90..c3f9447 100644
-> --- a/drivers/iio/magnetometer/bmc150_magn.c
-> +++ b/drivers/iio/magnetometer/bmc150_magn.c
-> @@ -146,6 +146,7 @@ struct bmc150_magn_data {
->  	s32 buffer[6];
->  	struct iio_trigger *dready_trig;
->  	bool dready_trigger_on;
-> +	int max_odr;
->  };
->  
->  static const struct {
-> @@ -323,6 +324,43 @@ static int bmc150_magn_set_odr(struct bmc150_magn_data *data, int val)
->  	return -EINVAL;
->  }
->  
-> +static int bmc150_magn_set_max_odr(struct bmc150_magn_data *data, int rep_xy,
-> +				   int rep_z, int odr)
-> +{
-> +	int ret, reg_val, max_odr;
-> +
-> +	if (rep_xy <= 0) {
-> +		ret = regmap_read(data->regmap, BMC150_MAGN_REG_REP_XY,
-> +				  &reg_val);
-> +		if (ret < 0)
-> +			return ret;
-> +		rep_xy = BMC150_MAGN_REGVAL_TO_REPXY(reg_val);
-> +	}
-> +	if (rep_z <= 0) {
-> +		ret = regmap_read(data->regmap, BMC150_MAGN_REG_REP_Z,
-> +				  &reg_val);
-> +		if (ret < 0)
-> +			return ret;
-> +		rep_z = BMC150_MAGN_REGVAL_TO_REPZ(reg_val);
-> +	}
-> +	if (odr <= 0) {
-> +		ret = bmc150_magn_get_odr(data, &odr);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +	/* the maximum selectable read-out frequency from datasheet */
-> +	max_odr = 1000000 / (145 * rep_xy + 500 * rep_z + 980);
-> +	if (odr > max_odr) {
-> +		dev_err(&data->client->dev,
-> +			"Can't set oversampling with sampling freq %d\n",
-> +			odr);
-> +		return -EINVAL;
-> +	}
-> +	data->max_odr = max_odr;
-> +
-> +	return 0;
-> +}
-> +
->  static s32 bmc150_magn_compensate_x(struct bmc150_magn_trim_regs *tregs, s16 x,
->  				    u16 rhall)
->  {
-> @@ -422,7 +460,7 @@ static int bmc150_magn_read_raw(struct iio_dev *indio_dev,
->  				int *val, int *val2, long mask)
->  {
->  	struct bmc150_magn_data *data = iio_priv(indio_dev);
-> -	int ret;
-> +	int ret, tmp;
->  	s32 values[AXIS_XYZ_MAX];
->  
->  	switch (mask) {
-> @@ -467,6 +505,26 @@ static int bmc150_magn_read_raw(struct iio_dev *indio_dev,
->  		if (ret < 0)
->  			return ret;
->  		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		switch (chan->channel2) {
-> +		case IIO_MOD_X:
-> +		case IIO_MOD_Y:
-> +			ret = regmap_read(data->regmap, BMC150_MAGN_REG_REP_XY,
-> +					  &tmp);
-> +			if (ret < 0)
-> +				return ret;
-> +			*val = BMC150_MAGN_REGVAL_TO_REPXY(tmp);
-> +			return IIO_VAL_INT;
-> +		case IIO_MOD_Z:
-> +			ret = regmap_read(data->regmap, BMC150_MAGN_REG_REP_Z,
-> +					  &tmp);
-> +			if (ret < 0)
-> +				return ret;
-> +			*val = BMC150_MAGN_REGVAL_TO_REPZ(tmp);
-> +			return IIO_VAL_INT;
-> +		default:
-> +			return -EINVAL;
-> +		}
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -481,10 +539,50 @@ static int bmc150_magn_write_raw(struct iio_dev *indio_dev,
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		if (val > data->max_odr)
-> +			return -EINVAL;
->  		mutex_lock(&data->mutex);
->  		ret = bmc150_magn_set_odr(data, val);
->  		mutex_unlock(&data->mutex);
->  		return ret;
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		switch (chan->channel2) {
-> +		case IIO_MOD_X:
-> +		case IIO_MOD_Y:
-> +			if (val < 1 || val > 511)
-> +				return -EINVAL;
-> +			mutex_lock(&data->mutex);
-> +			ret = bmc150_magn_set_max_odr(data, val, 0, 0);
-> +			if (ret < 0) {
-> +				mutex_unlock(&data->mutex);
-> +				return ret;
-> +			}
-> +			ret = regmap_update_bits(data->regmap,
-> +						 BMC150_MAGN_REG_REP_XY,
-> +						 0xFF,
-> +						 BMC150_MAGN_REPXY_TO_REGVAL
-> +						 (val));
-> +			mutex_unlock(&data->mutex);
-> +			return ret;
-> +		case IIO_MOD_Z:
-> +			if (val < 1 || val > 256)
-> +				return -EINVAL;
-> +			mutex_lock(&data->mutex);
-> +			ret = bmc150_magn_set_max_odr(data, 0, val, 0);
-> +			if (ret < 0) {
-> +				mutex_unlock(&data->mutex);
-> +				return ret;
-> +			}
-> +			ret = regmap_update_bits(data->regmap,
-> +						 BMC150_MAGN_REG_REP_Z,
-> +						 0xFF,
-> +						 BMC150_MAGN_REPZ_TO_REGVAL
-> +						 (val));
-> +			mutex_unlock(&data->mutex);
-> +			return ret;
-> +		default:
-> +			return -EINVAL;
-> +		}
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -501,10 +599,31 @@ static int bmc150_magn_validate_trigger(struct iio_dev *indio_dev,
->  	return 0;
->  }
->  
-> -static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("2 6 8 10 15 20 25 30");
-> +static ssize_t bmc150_magn_show_samp_freq_avail(struct device *dev,
-> +						struct device_attribute *attr,
-> +						char *buf)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct bmc150_magn_data *data = iio_priv(indio_dev);
-> +	size_t len = 0;
-> +	u8 i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(bmc150_magn_samp_freq_table); i++) {
-> +		if (bmc150_magn_samp_freq_table[i].freq > data->max_odr)
-> +			break;
-> +		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
-> +				 bmc150_magn_samp_freq_table[i].freq);
-> +	}
-> +	/* replace last space with a newline */
-> +	buf[len - 1] = '\n';
-> +
-> +	return len;
-> +}
-> +
-> +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(bmc150_magn_show_samp_freq_avail);
->  
->  static struct attribute *bmc150_magn_attributes[] = {
-> -	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
-> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
->  	NULL,
->  };
->  
-> @@ -516,7 +635,8 @@ static const struct attribute_group bmc150_magn_attrs_group = {
->  	.type = IIO_MAGN,						\
->  	.modified = 1,							\
->  	.channel2 = IIO_MOD_##_axis,					\
-> -	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
-> +			      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
->  	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SAMP_FREQ) |	\
->  				    BIT(IIO_CHAN_INFO_SCALE),		\
->  	.scan_index = AXIS_##_axis,					\
-> @@ -617,6 +737,11 @@ static int bmc150_magn_init(struct bmc150_magn_data *data)
->  		goto err_poweroff;
->  	}
->  
-> +	ret = bmc150_magn_set_max_odr(data, preset.rep_xy, preset.rep_z,
-> +				      preset.odr);
-> +	if (ret < 0)
-> +		goto err_poweroff;
-> +
->  	ret = bmc150_magn_set_power_mode(data, BMC150_MAGN_POWER_MODE_NORMAL,
->  					 true);
->  	if (ret < 0) {
-> 
+No, sorry. Yes, I could "optimize" memcpy_toio... just by sticking
+memcpy there, as for example asm-generic/io.h suggests.
+
+Maybe it would break something. Maybe not, but potential for that
+clearly is there... since this is very seldom used function. Or do you
+know drivers that would benefit from this?
+
+void _memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
+{
+        const unsigned char *f = from;
+	while (count) {
+	      count--;
+	      writeb(*f, to);
+	      f++;
+	      to++;
+ 	}
+}
+
+We have a regression, we have a patch that causes the
+regression. Right fix at this point is to revert a "cleanup" that
+causes this, not try to "optimize" otherwise unused piece of code.
+
+commit 981409b25e2a99409b26daa67293ca1cfd5ea0a0
+Author: Archit Taneja <archit@ti.com>
+Date:   Fri Nov 16 14:46:04 2012 +0530
+
+    fbdev: arm has __raw I/O accessors, use them in fb.h
+
+    This removes the sparse warnings on arm platforms:
+
+    warning: cast removes address space of expression
+
+Signed-off-by: Archit Taneja <archit@ti.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: H Hartley Sweeten <hsweeten at visionengravers.com>
+Cc: Alexander Shiyan <shc_work@mail.ru>
+Cc: Russell King <linux@arm.linux.org.uk>
+
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
