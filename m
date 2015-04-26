@@ -1,38 +1,118 @@
-From: Yunzhi Li <lyz@rock-chips.com>
-Subject: [PATCH v1 2/2] ARM: dts: rockchip: set dr_mode property for rk3288-firefly board
-Date: Sun, 26 Apr 2015 17:41:39 +0800
-Message-ID: <1430041299-24874-2-git-send-email-lyz@rock-chips.com>
-References: <1430041299-24874-1-git-send-email-lyz@rock-chips.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH] ARM: sunxi: dts: Add A10 uarts pin muxing options
+Date: Sun, 26 Apr 2015 12:15:38 +0200
+Message-ID: <1430043338-28982-1-git-send-email-richard.genoud@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430041299-24874-1-git-send-email-lyz@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: cf@rock-chips.com, hl@rock-chips.com, yk@rock-chips.com, gauravsh@google.com, alberto@google.com, wulf@rock-chips.com, Yunzhi Li <lyz@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-rk3288-firefly board use the dwc2 usb otg controller as a host
-controller and the device mode not used, so the dr_mode should be
-"host" then the dwc2 usb otg controller will work at host only
-mode
+The A10 has 8 uarts, only uart0 and uart1 where filled.
+This patch adds all the missing uarts(2 to 7) pin muxing to the dtsi.
 
-Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
-
+Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
 ---
+ arch/arm/boot/dts/sun4i-a10.dtsi |   84 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
- arch/arm/boot/dts/rk3288-firefly.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Based on V4.0
+uart4_a tested on cubieboard A10
 
-diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
-index e6f873a..a861776 100644
---- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-+++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-@@ -466,6 +466,7 @@
- };
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index eebb785..e83fd2c 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -673,6 +673,90 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
  
- &usb_otg {
-+	dr_modr = "host";
- 	status = "okay";
- };
- 
++			uart2_pins_a: uart2@0 {
++				allwinner,pins = "PA2", "PA3";
++				allwinner,function = "uart2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart2_pins_b: uart2@1 {
++				allwinner,pins = "PI18", "PI19";
++				allwinner,function = "uart2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart3_pins_a: uart3@0 {
++				allwinner,pins = "PG6", "PG7";
++				allwinner,function = "uart3";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart3_pins_b: uart3@1 {
++				allwinner,pins = "PH0", "PH1";
++				allwinner,function = "uart3";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart4_pins_a: uart4@0 {
++				allwinner,pins = "PG10", "PG11";
++				allwinner,function = "uart4";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart4_pins_b: uart4@1 {
++				allwinner,pins = "PH4", "PH5";
++				allwinner,function = "uart4";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart5_pins_a: uart5@0 {
++				allwinner,pins = "PH6", "PH7";
++				allwinner,function = "uart5";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart5_pins_b: uart5@1 {
++				allwinner,pins = "PI10", "PI11";
++				allwinner,function = "uart5";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart6_pins_a: uart6@0 {
++				allwinner,pins = "PA12", "PA13";
++				allwinner,function = "uart6";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart6_pins_b: uart6@1 {
++				allwinner,pins = "PI12", "PI13";
++				allwinner,function = "uart6";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart7_pins_a: uart7@0 {
++				allwinner,pins = "PA14", "PA15";
++				allwinner,function = "uart7";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart7_pins_b: uart7@1 {
++				allwinner,pins = "PI20", "PI21";
++				allwinner,function = "uart7";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
+ 			i2c0_pins_a: i2c0@0 {
+ 				allwinner,pins = "PB0", "PB1";
+ 				allwinner,function = "i2c0";
 -- 
-2.0.0
+1.7.10.4
