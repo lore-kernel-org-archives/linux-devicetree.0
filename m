@@ -1,118 +1,58 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: [PATCH] ARM: sunxi: dts: Add A10 uarts pin muxing options
-Date: Sun, 26 Apr 2015 12:15:38 +0200
-Message-ID: <1430043338-28982-1-git-send-email-richard.genoud@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] ARM: dts: rockchip: set dr_mode property for rk3288-firefly board
+Date: Sun, 26 Apr 2015 12:16:05 +0200
+Message-ID: <8829961.lJFBlrS3Ia@diego>
+References: <1430041299-24874-1-git-send-email-lyz@rock-chips.com> <1430041299-24874-2-git-send-email-lyz@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430041299-24874-2-git-send-email-lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, gauravsh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, alberto-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The A10 has 8 uarts, only uart0 and uart1 where filled.
-This patch adds all the missing uarts(2 to 7) pin muxing to the dtsi.
+Hi,
 
-Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
----
- arch/arm/boot/dts/sun4i-a10.dtsi |   84 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+Am Sonntag, 26. April 2015, 17:41:39 schrieb Yunzhi Li:
+> rk3288-firefly board use the dwc2 usb otg controller as a host
+> controller and the device mode not used, so the dr_mode should be
+> "host" then the dwc2 usb otg controller will work at host only
+> mode
+> 
+> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Based on V4.0
-uart4_a tested on cubieboard A10
+Not sure I understand. Is this some sort of hardware limitation? Because when 
+for example flashing a kernel via upgrade_tool it is working just fine as 
+gadget.
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index eebb785..e83fd2c 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -673,6 +673,90 @@
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
- 
-+			uart2_pins_a: uart2@0 {
-+				allwinner,pins = "PA2", "PA3";
-+				allwinner,function = "uart2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart2_pins_b: uart2@1 {
-+				allwinner,pins = "PI18", "PI19";
-+				allwinner,function = "uart2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart3_pins_a: uart3@0 {
-+				allwinner,pins = "PG6", "PG7";
-+				allwinner,function = "uart3";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart3_pins_b: uart3@1 {
-+				allwinner,pins = "PH0", "PH1";
-+				allwinner,function = "uart3";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart4_pins_a: uart4@0 {
-+				allwinner,pins = "PG10", "PG11";
-+				allwinner,function = "uart4";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart4_pins_b: uart4@1 {
-+				allwinner,pins = "PH4", "PH5";
-+				allwinner,function = "uart4";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart5_pins_a: uart5@0 {
-+				allwinner,pins = "PH6", "PH7";
-+				allwinner,function = "uart5";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart5_pins_b: uart5@1 {
-+				allwinner,pins = "PI10", "PI11";
-+				allwinner,function = "uart5";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart6_pins_a: uart6@0 {
-+				allwinner,pins = "PA12", "PA13";
-+				allwinner,function = "uart6";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart6_pins_b: uart6@1 {
-+				allwinner,pins = "PI12", "PI13";
-+				allwinner,function = "uart6";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart7_pins_a: uart7@0 {
-+				allwinner,pins = "PA14", "PA15";
-+				allwinner,function = "uart7";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart7_pins_b: uart7@1 {
-+				allwinner,pins = "PI20", "PI21";
-+				allwinner,function = "uart7";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
- 			i2c0_pins_a: i2c0@0 {
- 				allwinner,pins = "PB0", "PB1";
- 				allwinner,function = "i2c0";
--- 
-1.7.10.4
+If it is a software choice, this should not be made in the devicetree, as the 
+dt describes the hardware alone.
+
+
+Heiko
+
+
+> 
+> ---
+> 
+>  arch/arm/boot/dts/rk3288-firefly.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi
+> b/arch/arm/boot/dts/rk3288-firefly.dtsi index e6f873a..a861776 100644
+> --- a/arch/arm/boot/dts/rk3288-firefly.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+> @@ -466,6 +466,7 @@
+>  };
+> 
+>  &usb_otg {
+> +	dr_modr = "host";
+>  	status = "okay";
+>  };
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
