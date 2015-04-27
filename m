@@ -1,31 +1,80 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 0/6] ARM: berlin: relicense the device trees under GPLv2/X11
-Date: Sun, 26 Apr 2015 23:33:02 +0200
-Message-ID: <553D598E.9070401@gmail.com>
-References: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH 2/2] ARM: dts: Fix pinctrl settings for S2MPS11 RTC alarm
+ IRQ on Arndale Octa
+Date: Mon, 27 Apr 2015 09:59:45 +0900
+Message-ID: <0d3901d08085$73a05f00$5ae11d00$@kernel.org>
+References: <1427985376-20420-1-git-send-email-k.kozlowski@samsung.com>
+ <1427985376-20420-3-git-send-email-k.kozlowski@samsung.com>
+ <CAJKOXPfbsrkvXT_CBxZeDTLYdbwGMH=+5mnBLoy9Yfyp4thVQg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
+In-reply-to: <CAJKOXPfbsrkvXT_CBxZeDTLYdbwGMH=+5mnBLoy9Yfyp4thVQg@mail.gmail.com>
+Content-language: ko
 Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>, jszhang@marvell.com, alexandre.belloni@free-electrons.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, 'Kukjin Kim' <kgene@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Samuel Ortiz' <sameo@linux.intel.com>, 'Sangbeom Kim' <sbkim73@samsung.com>, linux-kernel@vger.kernel.org, 'Lee Jones' <lee.jones@linaro.org>, 'Javier Martinez Canillas' <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 26.04.2015 16:03, Antoine Tenart wrote:
-> Hi,
->
-> The GPLv2 license makes it impractical for other software components
-> licensed under another license to use our device trees. To fix this,
-> and make our device tree usable by other software components, relicense
-> them under a GPLv2/X11 dual-license.
->
-> In order to get this accepted, we *need* all contributors to the Berlin
-> device tree files to ack-by the patches applying on a file they
-> contributed on. A list of needed ack-by by device tree is shown below:
+Krzysztof Kozlowski wrote:
+> 
+> 2015-04-02 23:36 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
+> > On Arndale Octa the S2MPS11 RTC alarm interrupt was not handled at all
+> > because of wrong configuration of interrupt and gpx3-2.
+> > 1. Interrupt is signaled by falling edge.
+> > 2. This GPIO line is hard-wired on the board to PVDD_APIO_1V8 through a
+> >    resistor so pull-up/down must be disabled.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > ---
+> >  arch/arm/boot/dts/exynos5420-arndale-octa.dts | 13 ++++++++++++-
+> >  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> Dear Kukjin,
+> 
+> Any comments  on this and other patches. A lot of emails waits for
+> your opinion. Is there anything I could do to help you in smooth
+> review or applying?
+> 
+Sorry for the delay and looks good to me.
 
-I'd sign it off anyways, but for the record:
+Will apply into fixes branch and thanks.
 
-Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+- Kukjin
 
-Sebastian
+> Best regards,
+> Krzysztof
+> 
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-
+> octa.dts
+> > index d78fcd997ce6..97346df31d41 100644
+> > --- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> > +++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> > @@ -87,7 +87,9 @@
+> >                         s2mps11,buck4-ramp-enable = <1>;
+> >
+> >                         interrupt-parent = <&gpx3>;
+> > -                       interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> > +                       pinctrl-names = "default";
+> > +                       pinctrl-0 = <&s2mps11_irq>;
+> >
+> >                         s2mps11_osc: clocks {
+> >                                 #clock-cells = <1>;
+> > @@ -379,3 +381,12 @@
+> >         clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
+> >         clock-names = "rtc", "rtc_src";
+> >  };
+> > +
+> > +&pinctrl_0 {
+> > +       s2mps11_irq: s2mps11-irq {
+> > +               samsung,pins = "gpx3-2";
+> > +               samsung,pin-function = <0xf>;
+> > +               samsung,pin-pud = <0>;
+> > +               samsung,pin-drv = <0>;
+> > +       };
+> > +};
+> > --
+> > 1.9.1
