@@ -1,30 +1,62 @@
-From: =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski.k@gmail.com>
-Subject: Re: [PATCH v3 04/10] clk: samsung: exynos5433: Fix wrong parent clock
- of sclk_apollo clock
-Date: Mon, 27 Apr 2015 21:43:53 +0900
-Message-ID: <CAJKOXPdsA-5RDooKfctxO9MnKZedOKQTEytyuabjtTFwO4s+uw@mail.gmail.com>
-References: <1430134597-14668-1-git-send-email-cw00.choi@samsung.com>
-	<1430134597-14668-5-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430134597-14668-5-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@linaro.org, kgene@kernel.org, inki.dae@samsung.com, chanho61.park@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v6 2/7] PM / Domains: R-Mobile SYSC: Add PM domain power-on/off latencies
+Date: Mon, 27 Apr 2015 14:43:37 +0200
+Message-ID: <1430138622-14029-3-git-send-email-geert+renesas@glider.be>
+References: <1430138622-14029-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1430138622-14029-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Axel Haslam <ahaslam@baylibre.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-2015-04-27 20:36 GMT+09:00 Chanwoo Choi <cw00.choi@samsung.com>:
-> This patch fixes the wrong parent clock of sclk_apollo clock
-> from 'div_apollo_pll' to 'div_apollo2'.
->
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Add optional generic PM domain power-on/off latencies to the bindings
+and example.
 
-Hi,
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v6:
+  - Rebased on top of v4.1-rc1 for new RFC.
+---
+ Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+diff --git a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
+index beda7d2efc304350..0a6f03a136792e84 100644
+--- a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
++++ b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
+@@ -45,6 +45,8 @@ Optional properties:
+ 	 - #address-cells: Must be 1,
+ 	 - #size-cells: Must be 0.
+        If the PM domain is always-on, this property must be omitted.
++- power-on-latency: Power-on latency of the PM domain, in ns,
++- power-off-latency: Power-off latency of the PM domain, in ns.
+ 
+ 
+ Example:
+@@ -68,16 +70,22 @@ which is a subdomain of A4S.
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					#power-domain-cells = <0>;
++					power-on-latency = <250000>;
++					power-off-latency = <250000>;
+ 
+ 					pd_a3sp: a3sp@11 {
+ 						reg = <11>;
+ 						#power-domain-cells = <0>;
++						power-on-latency = <250000>;
++						power-off-latency = <250000>;
+ 					};
+ 				};
+ 
+ 				pd_a4su: a4su@20 {
+ 					reg = <20>;
+ 					#power-domain-cells = <0>;
++					power-on-latency = <250000>;
++					power-off-latency = <250000>;
+ 				};
+ 			};
+ 		};
+-- 
+1.9.1
 
-Best regards,
-Krzysztof
