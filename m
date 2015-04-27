@@ -1,320 +1,113 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 2/3 v5] mailbox: Enable BCM2835 mailbox support
-Date: Mon, 27 Apr 2015 15:27:23 -0700
-Message-ID: <1430173644-19099-3-git-send-email-eric@anholt.net>
-References: <1430173644-19099-1-git-send-email-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430173644-19099-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH V7 0/9] Tegra xHCI support
+Date: Mon, 27 Apr 2015 15:37:13 -0700
+Message-ID: <1430174242-29465-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+This series adds support for xHCI on NVIDIA Tegra SoCs.  This includes:
+ - patches 1, 2, and 3: minor cleanups for mailbox framework and xHCI,
+ - patches 4 and 5: adding an MFD driver for the XUSB cmoplex,
+ - patches 6 and 7: adding a driver for the mailbox used to communicate
+   with the xHCI controller's firmware, and
+ - patches 8 and 9: adding a xHCI host-controller driver.
 
-Implement BCM2835 mailbox support as a device registered with the
-general purpose mailbox framework. Implementation based on commits by
-Lubomir Rintel [1], Suman Anna and Jassi Brar [2] on which to base the
-implementation.
+The addition of USB PHY support to the XUSB padctl driver has been dropped
+from v7.  Thierry will be posting those patches later.
 
-[1] http://lists.infradead.org/pipermail/linux-rpi-kernel/2013-April/000528.html
-[2] http://lists.infradead.org/pipermail/linux-rpi-kernel/2013-May/000546.html
+Given the many compile and run-time dependencies in this series, it is probably
+best if the first 3 patches are picked up by the relevant maintainers in topic
+branches so that the remainder of the series can go through the Tegra tree.
 
-Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
----
+Tested on Jetson TK1 and Nyan-Big with a variety of USB2.0 and USB3.0 memory
+sticks and ethernet dongles.  This has also been tested, with additional
+out-of-tree patches, on a Tegra132-based board.
 
-v2: Squashed Craig's work for review, carried over to new version of
-    Mailbox framework (changes by Lubomir)
+Based on v4.1-rc1.  A branch with the entire series is available at:
+  https://github.com/abrestic/linux/tree/tegra-xhci-v7
 
-v3: Fix multi-line comment style.  Refer to the documentation by
-    filename.  Only declare one MODULE_AUTHOR.  Alphabetize includes.
-    Drop some excessive dev_dbg()s (changes by anholt).
+Changes from v6:
+ - Dropped PHY changes from series.  Will be posted later by Thierry.
+ - Added an MFD device with the mailbox and xHCI host as sub-devices.
 
-v4: Use the new bcm2835_peripheral_read_workaround(), drop the
-    unnecessary wmb()s, make the messages be a pointer to u32, rather
-    than u32-cast-as-pointer, fold in small static functions, drop
-    extra error messages, clean up sizeof() arg for malloc, disable
-    interrupts on unload (changes by anholt).
+Changes from v5:
+ - Addressed review comments from Jassi and Felipe.
 
-v5: Rewrite as a single-channel driver, where the old notion of
-    channels will now be interpreted by an rpi-specific driver.  Minor
-    style fix.  Drop peripheral_read_workaround() since it's been
-    noted that readl() covers the non-interrupt half of it, and I
-    found that we would need to resolve read ordering in the interrupt
-    handler anyway (changes by anholt).
+Changes from v4:
+ - Made USB support optional in padctl driver.
+ - Made usb3-port a pinconfig property again.
+ - Cleaned up mbox_request_channel() error handling and allowed it to defer
+   probing (patch 3).
+ - Minor xHCI (patch 1) and mailbox framework (patch 2) cleanups suggested
+   by Thierry.
+ - Addressed Thierry's review comments.
 
- drivers/mailbox/Kconfig           |   8 ++
- drivers/mailbox/Makefile          |   2 +
- drivers/mailbox/bcm2835-mailbox.c | 220 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 230 insertions(+)
- create mode 100644 drivers/mailbox/bcm2835-mailbox.c
+Changes from v3:
+ - Fixed USB2.0 flakiness on Jetson-TK1.
+ - Switched to 32-bit DMA mask for host.
+ - Addressed Stephen's review comments.
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index 84b0a2d..ab574da 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -60,4 +60,12 @@ config ALTERA_MBOX
- 	  An implementation of the Altera Mailbox soft core. It is used
- 	  to send message between processors. Say Y here if you want to use the
- 	  Altera mailbox support.
-+
-+config BCM2835_MBOX
-+	tristate "BCM2835 Mailbox"
-+	depends on ARCH_BCM2835
-+	help
-+	  An implementation of the BCM2385 Mailbox.  It is used to invoke
-+	  the services of the Videocore. Say Y here if you want to use the
-+	  BCM2835 Mailbox.
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index b18201e..8e6d822 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -11,3 +11,5 @@ obj-$(CONFIG_OMAP2PLUS_MBOX)	+= omap-mailbox.o
- obj-$(CONFIG_PCC)		+= pcc.o
- 
- obj-$(CONFIG_ALTERA_MBOX)	+= mailbox-altera.o
-+
-+obj-$(CONFIG_BCM2835_MBOX)	+= bcm2835-mailbox.o
-diff --git a/drivers/mailbox/bcm2835-mailbox.c b/drivers/mailbox/bcm2835-mailbox.c
-new file mode 100644
-index 0000000..6910c71
---- /dev/null
-+++ b/drivers/mailbox/bcm2835-mailbox.c
-@@ -0,0 +1,220 @@
-+/*
-+ *  Copyright (C) 2010 Broadcom
-+ *  Copyright (C) 2013-2014 Lubomir Rintel
-+ *  Copyright (C) 2013 Craig McGeachie
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This device provides a mechanism for writing to the mailboxes,
-+ * that are shared between the ARM and the VideoCore processor
-+ *
-+ * Parts of the driver are based on:
-+ *  - arch/arm/mach-bcm2708/vcio.c file written by Gray Girling that was
-+ *    obtained from branch "rpi-3.6.y" of git://github.com/raspberrypi/
-+ *    linux.git
-+ *  - drivers/mailbox/bcm2835-ipc.c by Lubomir Rintel at
-+ *    https://github.com/hackerspace/rpi-linux/blob/lr-raspberry-pi/drivers/
-+ *    mailbox/bcm2835-ipc.c
-+ *  - documentation available on the following web site:
-+ *    https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+/* Mailboxes */
-+#define ARM_0_MAIL0	0x00
-+#define ARM_0_MAIL1	0x20
-+
-+/*
-+ * Mailbox registers. We basically only support mailbox 0 & 1. We
-+ * deliver to the VC in mailbox 1, it delivers to us in mailbox 0. See
-+ * BCM2835-ARM-Peripherals.pdf section 1.3 for an explanation about
-+ * the placement of memory barriers.
-+ */
-+#define MAIL0_RD	(ARM_0_MAIL0 + 0x00)
-+#define MAIL0_POL	(ARM_0_MAIL0 + 0x10)
-+#define MAIL0_STA	(ARM_0_MAIL0 + 0x18)
-+#define MAIL0_CNF	(ARM_0_MAIL0 + 0x1C)
-+#define MAIL1_WRT	(ARM_0_MAIL1 + 0x00)
-+
-+/* Status register: FIFO state. */
-+#define ARM_MS_FULL		0x80000000
-+#define ARM_MS_EMPTY		0x40000000
-+
-+/* Configuration register: Enable interrupts. */
-+#define ARM_MC_IHAVEDATAIRQEN	0x00000001
-+
-+struct bcm2835_mbox {
-+	struct device *dev;
-+	void __iomem *regs;
-+	spinlock_t lock;
-+	bool started;
-+	struct mbox_controller controller;
-+};
-+
-+struct bcm2835_mbox *mbox;
-+
-+static irqreturn_t bcm2835_mbox_irq(int irq, void *dev_id)
-+{
-+	struct device *dev = mbox->dev;
-+	struct mbox_chan *link = &mbox->controller.chans[0];
-+
-+	while (!(readl(mbox->regs + MAIL0_STA) & ARM_MS_EMPTY)) {
-+		u32 msg = readl(mbox->regs + MAIL0_RD);
-+
-+		if (!mbox->started) {
-+			dev_err(dev, "Reply 0x%08x with no client attached\n",
-+				msg);
-+			continue;
-+		}
-+		dev_dbg(dev, "Reply 0x%08X\n", msg);
-+		mbox_chan_received_data(link, &msg);
-+	}
-+	return IRQ_HANDLED;
-+}
-+
-+static int bcm2835_send_data(struct mbox_chan *link, void *data)
-+{
-+	int ret = 0;
-+	u32 msg = *(u32 *)data;
-+
-+	if (!mbox->started)
-+		return -ENODEV;
-+	spin_lock(&mbox->lock);
-+	if (readl(mbox->regs + MAIL0_STA) & ARM_MS_FULL) {
-+		ret = -EBUSY;
-+		goto end;
-+	}
-+	writel(msg, mbox->regs + MAIL1_WRT);
-+	dev_dbg(mbox->dev, "Request 0x%08X\n", msg);
-+end:
-+	spin_unlock(&mbox->lock);
-+	return ret;
-+}
-+
-+static int bcm2835_startup(struct mbox_chan *link)
-+{
-+	mbox->started = true;
-+	return 0;
-+}
-+
-+static void bcm2835_shutdown(struct mbox_chan *link)
-+{
-+	mbox->started = false;
-+}
-+
-+static bool bcm2835_last_tx_done(struct mbox_chan *link)
-+{
-+	bool ret;
-+
-+	if (!mbox->started)
-+		return false;
-+	spin_lock(&mbox->lock);
-+	ret = !(readl(mbox->regs + MAIL0_STA) & ARM_MS_FULL);
-+	spin_unlock(&mbox->lock);
-+	return ret;
-+}
-+
-+static struct mbox_chan_ops bcm2835_mbox_chan_ops = {
-+	.send_data	= bcm2835_send_data,
-+	.startup	= bcm2835_startup,
-+	.shutdown	= bcm2835_shutdown,
-+	.last_tx_done	= bcm2835_last_tx_done
-+};
-+
-+static int bcm2835_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	int ret = 0;
-+	struct resource *iomem;
-+
-+	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (mbox == NULL)
-+		return -ENOMEM;
-+	mbox->dev = dev;
-+	spin_lock_init(&mbox->lock);
-+
-+	ret = devm_request_irq(dev, irq_of_parse_and_map(dev->of_node, 0),
-+			       bcm2835_mbox_irq, 0, dev_name(dev), mbox);
-+	if (ret) {
-+		dev_err(dev, "Failed to register a mailbox IRQ handler: %d\n",
-+			ret);
-+		mbox = NULL;
-+		return -ENODEV;
-+	}
-+
-+	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mbox->regs = devm_ioremap_resource(&pdev->dev, iomem);
-+	if (IS_ERR(mbox->regs)) {
-+		ret = PTR_ERR(mbox->regs);
-+		dev_err(&pdev->dev, "Failed to remap mailbox regs: %d\n", ret);
-+		mbox = NULL;
-+		return ret;
-+	}
-+
-+	mbox->controller.txdone_poll = true;
-+	mbox->controller.txpoll_period = 5;
-+	mbox->controller.ops = &bcm2835_mbox_chan_ops;
-+	mbox->controller.dev = dev;
-+	mbox->controller.num_chans = 1;
-+	mbox->controller.chans = devm_kzalloc(dev,
-+		sizeof(*mbox->controller.chans), GFP_KERNEL);
-+	if (!mbox->controller.chans) {
-+		mbox = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	ret  = mbox_controller_register(&mbox->controller);
-+	if (ret) {
-+		mbox = NULL;
-+		return ret;
-+	}
-+
-+	/* Enable the interrupt on data reception */
-+	writel(ARM_MC_IHAVEDATAIRQEN, mbox->regs + MAIL0_CNF);
-+	dev_info(dev, "mailbox enabled\n");
-+
-+	return ret;
-+}
-+
-+static int bcm2835_mbox_remove(struct platform_device *pdev)
-+{
-+	writel(0, mbox->regs + MAIL0_CNF);
-+	mbox_controller_unregister(&mbox->controller);
-+	mbox = NULL;
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm2835_mbox_of_match[] = {
-+	{ .compatible = "brcm,bcm2835-mbox", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, bcm2835_mbox_of_match);
-+
-+static struct platform_driver bcm2835_mbox_driver = {
-+	.driver = {
-+		.name = "bcm2835-mbox",
-+		.owner = THIS_MODULE,
-+		.of_match_table = bcm2835_mbox_of_match,
-+	},
-+	.probe		= bcm2835_mbox_probe,
-+	.remove		= bcm2835_mbox_remove,
-+};
-+module_platform_driver(bcm2835_mbox_driver);
-+
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>");
-+MODULE_DESCRIPTION("BCM2835 mailbox IPC driver");
-+MODULE_LICENSE("GPL v2");
+Chagnes from v2:
+ - Dropped mailbox channel specifier.  The mailbox driver allocates virtual
+   channels backed by the single physical channel.
+ - Added support for HS_CURR_LEVEL adjustment pinconfig property, which
+   will be required for the Blaze board.
+ - Addressed Stephen's review comments.
+
+Changes from v1:
+ - Converted mailbox driver to use the common mailbox framework.
+ - Fixed up host driver so that it can now be built and used as a module.
+ - Addressed Stephen's review comments.
+ - Misc. cleanups.
+
+Andrew Bresticker (8):
+  xhci: Set shared HCD's hcd_priv in xhci_gen_setup
+  mailbox: Make struct mbox_controller's ops field const
+  mfd: Add binding document for NVIDIA Tegra XUSB
+  mfd: Add driver for NVIDIA Tegra XUSB
+  mailbox: Add NVIDIA Tegra XUSB mailbox binding
+  mailbox: Add NVIDIA Tegra XUSB mailbox driver
+  usb: Add NVIDIA Tegra xHCI controller binding
+  usb: xhci: Add NVIDIA Tegra xHCI host-controller driver
+
+Benson Leung (1):
+  mailbox: Fix up error handling in mbox_request_channel()
+
+ .../bindings/mailbox/nvidia,tegra124-xusb-mbox.txt |  30 +
+ .../bindings/mfd/nvidia,tegra124-xusb.txt          |  46 +
+ .../bindings/usb/nvidia,tegra124-xhci.txt          |  90 ++
+ drivers/mailbox/Kconfig                            |   8 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/mailbox.c                          |  11 +-
+ drivers/mailbox/omap-mailbox.c                     |   6 +-
+ drivers/mailbox/tegra-xusb-mailbox.c               | 275 ++++++
+ drivers/mfd/Kconfig                                |   7 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/tegra-xusb.c                           | 167 ++++
+ drivers/usb/host/Kconfig                           |  10 +
+ drivers/usb/host/Makefile                          |   1 +
+ drivers/usb/host/xhci-pci.c                        |   5 -
+ drivers/usb/host/xhci-plat.c                       |   5 -
+ drivers/usb/host/xhci-tegra.c                      | 946 +++++++++++++++++++++
+ drivers/usb/host/xhci.c                            |   6 +-
+ include/linux/mailbox_controller.h                 |   2 +-
+ include/soc/tegra/xusb.h                           |  49 ++
+ 19 files changed, 1647 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
+ create mode 100644 drivers/mailbox/tegra-xusb-mailbox.c
+ create mode 100644 drivers/mfd/tegra-xusb.c
+ create mode 100644 drivers/usb/host/xhci-tegra.c
+ create mode 100644 include/soc/tegra/xusb.h
+
 -- 
-2.1.4
+2.2.0.rc0.207.ga3a616c
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
