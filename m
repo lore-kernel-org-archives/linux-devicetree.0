@@ -1,50 +1,48 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V2 2/4] misc: ti-st: use of_get_named_gpio_flags for nshutdown
-Date: Mon, 27 Apr 2015 16:29:22 -0400
-Message-ID: <553E9C22.4030702@hurleysoftware.com>
-References: <20150427085242.GM16501@mwanda> <1430162849-8804-1-git-send-email-eric.nelson@boundarydevices.com> <1430162849-8804-2-git-send-email-eric.nelson@boundarydevices.com> <553E97E8.4080103@hurleysoftware.com> <553E99A7.1080206@boundarydevices.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [Gta04-owner] [PATCH 3/3] tty/slaves: add a driver to power
+ on/off UART attached devices.
+Date: Mon, 27 Apr 2015 22:35:42 +0200
+Message-ID: <20150427203542.GB29351@xo-6d-61-c0.localdomain>
+References: <20150321103122.23603014@notabene.brown>
+ <C091D3C1-CE79-469A-BEA4-25E03F6E9164@goldelico.com>
+ <20150325014543.GA967@earth>
+ <6B657A35-68BD-45F6-BD55-A3D6AC1055C8@goldelico.com>
+ <20150325152110.GA7903@earth>
+ <E4CA3051-6004-4D7B-BF01-CE47CFEDA4EB@goldelico.com>
+ <20150326180805.GA562@earth>
+ <06BFF79C-F9FC-441D-BA41-7209219A912E@goldelico.com>
+ <20150327163108.GA5089@earth>
+ <983B007F-6DC4-4333-B383-E387E2E55AE2@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <553E99A7.1080206-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, der.herr-kA1LtwSENNE@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, gigi.joseph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eyalr-l0cyMroinI0@public.gmane.org, robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <983B007F-6DC4-4333-B383-E387E2E55AE2@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Sebastian Reichel <sre@kernel.org>, NeilBrown <neilb@suse.de>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+Hi!
 
-On 04/27/2015 04:18 PM, Eric Nelson wrote:
-> Hi Peter,
+> > In my opinion making something a node in / is always the
+> > last resort and in my perspective it has been handled in such a way
+> > so far.
 > 
-> On 04/27/2015 01:11 PM, Peter Hurley wrote:
->> On 04/27/2015 03:27 PM, Eric Nelson wrote:
->>> Use of_get_named_gpio_flags to retrieve the "nshutdown" gpio connected
->>> to the BT_EN pin of the device when retrieving platform data from device
->>> tree.
->>
->> This breaks all existing DTs wrt the 'nshutdown_gpio' key.
->> I suggest using a different, optional key in the absence of 'nshutdown_gpio'.
->>
+> But that contradicts some documents I have found and linked. Please
+> show me a document about DT that supports your view.
 > 
-> You mean all zero of them up-stream ;)?
+> I agree that both views can be valid, but in lack of some ?official? guideline
+> we can?t decide ourselves.
 
-"nshutdown_gpio" DT key became ABI as of 4.0
+This is not how kernel development works.
 
+We can decide ourselves, and DT people will swear at us if we decide wrongly,
+and then Linus swears at them if they do too obvious mistakes.
 
-> I did forward a patch set to the maintainers of the ti-linux-kernel on
-> git.ti.com:
-> 
-> 	https://git.ti.com/ti-linux-kernel/ti-linux-kernel
-> 
-> Regards,
-> 
-> 
-> Eric
-> 
+Lets KISS.
+									Pavel
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
