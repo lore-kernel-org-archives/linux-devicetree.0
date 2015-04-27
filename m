@@ -1,51 +1,55 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH v3] Renesas Ethernet AVB driver
-Date: Mon, 27 Apr 2015 09:22:24 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D1CB25CD5@AcuExch.aculab.com>
-References: <SIXPR06MB03142A49C392C39922DC2BDA3EE0@SIXPR06MB031.apcprd06.prod.outlook.com>
-	<20150422.113654.1169277303695917496.davem@davemloft.net>
-	<553804CA.1030605@cogentembedded.com>
- <20150422.164242.2185477513394713122.davem@davemloft.net>
- <553814F0.40405@cogentembedded.com>
- <063D6719AE5E284EB5DD2968C1650D6D1CB24BB5@AcuExch.aculab.com>
- <553A8AF7.2020206@cogentembedded.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: LED subsystem child DT node ref counting
+Date: Mon, 27 Apr 2015 11:26:27 +0200
+Message-ID: <553E00C3.3060409@samsung.com>
+References: <5530E891.20707@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <553A8AF7.2020206@cogentembedded.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: 'Sergei Shtylyov' <sergei.shtylyov@cogentembedded.com>, David Miller <davem@davemloft.net>
-Cc: "mitsuhiro.kimura.kc@renesas.com" <mitsuhiro.kimura.kc@renesas.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "richardcochran@gmail.com" <richardcochran@gmail.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "masaru.nagai.vx@renesas.com" <masaru.nagai.vx@renesas.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <5530E891.20707@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov 
-> Sent: 24 April 2015 19:27
-...
-> > If you have ethernet hardware that requires tx or rx buffers to be on
-> > 4n boundaries you should send it back as 'not fit for purpose'.
-> 
->     The RX buffers can be adjusted with skb_resrerve(), it's only the TX
-> buffers that need to be copied...
+Gentle reminder. Can anyone clarify this?
 
-If the processor can't perform misaligned reads (don't know what is on
-your SoC, but I suspect it can't - crossing page boundaries is hard)
-then the rx buffer will have to be re-aligned in software.
-Even the 'userdata' part will typically end up with an expensive
-misaligned buffer copy.
+On 04/17/2015 01:03 PM, Jacek Anaszewski wrote:
+> Hi,
+>
+> I'd like to clarify whether LED subsystem drivers behave correctly
+> or not, regarding child DT nodes reference counting.
+>
+> Single LED controller can have connected more then one LED to it.
+> The LEDs are represented by child DT nodes of the node representing
+> the controller (see Documentation/devicetree/bindings/leds).
+>
+> LED subsystem drivers parse child DT nodes and use the node name,
+> or 'label' property string as the LED class device name.
+>
+> This is usually accomplished like below:
+>
+> for_each_child_of_node(np, child) {
+>      ...
+>      led.name = of_get_property(child, "label", NULL) ? : child->name;
+>
+>
+> The question is whether reference count of the child node shouldn't
+> be increased here with of_node_get(child). Whereas intuitively it could
+> be thought of as a right thing to do, empirical experiments don't
+> necessary confirm that.
+>
+> When I print the value of child_node->kobj.kref.refcount.counter
+> inside for_each loop it is 3 and and after leaving the loop it gets
+> decreased to 2. On driver removal the value is also 2. It means that
+> label is available all the time, without increasing child node ref
+> counter.
+>
+> I'd like to ask if this is guaranteed to be always true.
+>
 
-Even on x86 the misaligned transfers are probably measurable.
 
->     I'm afraid we can't. :-)
->     However, my colleague has suggested a scheme minimizing the copying:
-> only up to 3 first bytes need to be copied to the driver's internal buffers,
-> the rest can be sent from an skb itself. That would require substantial
-> changes to the driver though...
-
-There might be a restriction on the length of buffer fragments.
-
-You might be able to alternate 14 and 1500+ byte receive buffers.
-The frame following a slightly overlong one would be 'wrong'.
-
-	David
+-- 
+Best Regards,
+Jacek Anaszewski
