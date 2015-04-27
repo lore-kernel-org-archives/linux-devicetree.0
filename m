@@ -1,68 +1,23 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: [PATCH 4/4] ARM: at91/dt: sama5d4 xplained: add regulators for v(q)mmc1 supplies
-Date: Mon, 27 Apr 2015 15:19:13 +0200
-Message-ID: <1430140753-19998-4-git-send-email-ludovic.desroches@atmel.com>
-References: <1430140753-19998-1-git-send-email-ludovic.desroches@atmel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinctrl: mvebu: Fix mapping of pin 63 (gpo -> gpio)
+Date: Mon, 27 Apr 2015 15:24:44 +0200
+Message-ID: <CACRpkdbHV2jTnXwGv=CyjG9EvkFiuudjqj0-B2=r2QP4u5-ZVw@mail.gmail.com>
+References: <1428784160-19431-1-git-send-email-andrew@ncrmnt.org>
+	<1428784160-19431-2-git-send-email-andrew@ncrmnt.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430140753-19998-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, plagnioj@jcrosoft.com, ben.dooks@codethink.co.uk, Ludovic Desroches <ludovic.desroches@atmel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1428784160-19431-2-git-send-email-andrew@ncrmnt.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Andrianov <andrew@ncrmnt.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add vcc_mmc1 fixed regulator to remove the 'no vmmc regulator found' warning
-when probing the mmc1 device.
+On Sat, Apr 11, 2015 at 10:29 PM, Andrew Andrianov <andrew@ncrmnt.org> wrote:
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
----
- arch/arm/boot/dts/at91-sama5d4_xplained.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+> Signed-off-by: Andrew Andrianov <andrew@ncrmnt.org>
 
-diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-index c740e1a..d49cb71 100644
---- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-@@ -90,6 +90,7 @@
- 
- 			i2c0: i2c@f8014000 {
- 				status = "okay";
-+
- 			};
- 
- 			macb0: ethernet@f8020000 {
-@@ -106,6 +107,8 @@
- 			mmc1: mmc@fc000000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &pinctrl_mmc1_cd>;
-+				vmmc-supply = <&vcc_mmc1_reg>;
-+				vqmmc-supply = <&vcc_3v3_reg>;
- 				status = "okay";
- 				slot@0 {
- 					reg = <0>;
-@@ -238,4 +241,22 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
-+
-+	vcc_3v3_reg: fixedregulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC 3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc_mmc1_reg: fixedregulator@1 {
-+		compatible = "regulator-fixed";
-+		gpio = <&pioE 4 GPIO_ACTIVE_LOW>;
-+		regulator-name = "VDD MCI1";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_3v3_reg>;
-+	};
- };
--- 
-2.2.0
+Patch applied for fixes.
+
+Yours,
+Linus Walleij
