@@ -1,52 +1,59 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 10/10] ARM: shmobile: marzen dts: Use generic names for device nodes
-Date: Mon, 27 Apr 2015 14:55:34 +0200
-Message-ID: <1430139334-15272-11-git-send-email-geert+renesas@glider.be>
-References: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430139334-15272-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: "Nicolae, Anda-maria" <anda-maria.nicolae@intel.com>
+Subject: RE: [PATCH] power_supply: Add support for Richtek rt9455 battery
+ charger
+Date: Mon, 27 Apr 2015 13:00:11 +0000
+Message-ID: <11982715D62E664DBACA4351A418B0581437DA44@IRSMSX107.ger.corp.intel.com>
+References: <1429862240-21619-1-git-send-email-anda-maria.nicolae@intel.com>,<1429952401.2927.91.camel@x220>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1429952401.2927.91.camel@x220>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: "sre@kernel.org" <sre@kernel.org>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-lan0 -> ethernet
+Hello Paul,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7779-marzen.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks for feedback :). 
+I understand. I will change the license to GPL.
 
-diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
-index 540756cdf3914a2a..20afea6f06ef6735 100644
---- a/arch/arm/boot/dts/r8a7779-marzen.dts
-+++ b/arch/arm/boot/dts/r8a7779-marzen.dts
-@@ -42,10 +42,10 @@
- 		regulator-always-on;
- 	};
- 
--	lan0@18000000 {
-+	ethernet@18000000 {
- 		compatible = "smsc,lan9220", "smsc,lan9115";
- 		reg = <0x18000000 0x100>;
--		pinctrl-0 = <&lan0_pins>;
-+		pinctrl-0 = <&ethernet_pins>;
- 		pinctrl-names = "default";
- 
- 		phy-mode = "mii";
-@@ -176,7 +176,7 @@
- 		};
- 	};
- 
--	lan0_pins: lan0 {
-+	ethernet_pins: ethernet {
- 		intc {
- 			renesas,groups = "intc_irq1_b";
- 			renesas,function = "intc";
--- 
-1.9.1
+Thanks,
+Anda
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+________________________________________
+From: Paul Bolle [pebolle@tiscali.nl]
+Sent: Saturday, April 25, 2015 12:00 PM
+To: Nicolae, Anda-maria
+Cc: sre@kernel.org; dbaryshkov@gmail.com; robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com; ijc+devicetree@hellion.org.uk; galak@codeaurora.org; dwmw2@infradead.org; linux-pm@vger.kernel.org; linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+Subject: Re: [PATCH] power_supply: Add support for Richtek rt9455 battery charger
+
+Just a single nit: a license mismatch.
+
+On Fri, 2015-04-24 at 10:57 +0300, Anda-Maria Nicolae wrote:
+> --- /dev/null
+> +++ b/drivers/power/rt9455_charger.c
+
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+This states the license is GPL v2 or later.
+
+> +MODULE_LICENSE("GPL v2");
+
+And, according to include/linux/module.h, this states the license is
+(only) GPL v2. So I think either the license comment or the ident used
+in the MODULE_LICENSE() macro should be changed.
+
+
+Paul Bolle
+
