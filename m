@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 05/10] ARM: shmobile: r8a7791 dtsi: Use generic names for device nodes
-Date: Mon, 27 Apr 2015 14:55:29 +0200
-Message-ID: <1430139334-15272-6-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 04/10] ARM: shmobile: r8a7790 dtsi: Use generic names for device nodes
+Date: Mon, 27 Apr 2015 14:55:28 +0200
+Message-ID: <1430139334-15272-5-git-send-email-geert+renesas@glider.be>
 References: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1430139334-15272-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
@@ -14,14 +14,14 @@ rcar_sound -> sound
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7791.dtsi | 2 +-
+ arch/arm/boot/dts/r8a7790.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index 3e9f824797e75aed..9492c961ad4ee12d 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1485,7 +1485,7 @@
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index f3b8430070b6e4b9..943d2e29bc57133f 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1442,7 +1442,7 @@
  		status = "disabled";
  	};
  
