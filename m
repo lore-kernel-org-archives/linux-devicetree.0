@@ -1,80 +1,86 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH 2/2] ARM: dts: Fix pinctrl settings for S2MPS11 RTC alarm
- IRQ on Arndale Octa
-Date: Mon, 27 Apr 2015 09:59:45 +0900
-Message-ID: <0d3901d08085$73a05f00$5ae11d00$@kernel.org>
-References: <1427985376-20420-1-git-send-email-k.kozlowski@samsung.com>
- <1427985376-20420-3-git-send-email-k.kozlowski@samsung.com>
- <CAJKOXPfbsrkvXT_CBxZeDTLYdbwGMH=+5mnBLoy9Yfyp4thVQg@mail.gmail.com>
+From: Inha Song <ideal.song@samsung.com>
+Subject: Re: [alsa-devel] [PATCH v3 1/2] extcon: arizona: Add support for
+ select accessory detect mode when headphone detection
+Date: Mon, 27 Apr 2015 10:26:04 +0900
+Message-ID: <20150427102604.2dfb0ca0@songinha-Samsung-DeskTop-System>
+References: <1429701801-25287-1-git-send-email-ideal.song@samsung.com>
+ <1429701801-25287-2-git-send-email-ideal.song@samsung.com>
+ <20150425125025.GI3480@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAJKOXPfbsrkvXT_CBxZeDTLYdbwGMH=+5mnBLoy9Yfyp4thVQg@mail.gmail.com>
-Content-language: ko
+In-reply-to: <20150425125025.GI3480@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, 'Kukjin Kim' <kgene@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Samuel Ortiz' <sameo@linux.intel.com>, 'Sangbeom Kim' <sbkim73@samsung.com>, linux-kernel@vger.kernel.org, 'Lee Jones' <lee.jones@linaro.org>, 'Javier Martinez Canillas' <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, cw00.choi@samsung.com, broonie@kernel.org, rf@opensource.wolfsonmicro.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Krzysztof Kozlowski wrote:
-> 
-> 2015-04-02 23:36 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
-> > On Arndale Octa the S2MPS11 RTC alarm interrupt was not handled at all
-> > because of wrong configuration of interrupt and gpx3-2.
-> > 1. Interrupt is signaled by falling edge.
-> > 2. This GPIO line is hard-wired on the board to PVDD_APIO_1V8 through a
-> >    resistor so pull-up/down must be disabled.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Hi,
+
+Thanks for your comments :)
+
+
+On Sat, 25 Apr 2015 13:50:25 +0100
+Charles Keepax <ckeepax@opensource.wolfsonmicro.com> wrote:
+
+> On Wed, Apr 22, 2015 at 08:23:20PM +0900, Inha Song wrote:
+> > This patch add support for select accessory detect mode to HPDETL or HPDETR.
+> > Arizona provides a headphone detection circuit on the HPDETL and HPDETR pins
+> > to measure the impedance of an external load connected to the headphone.
+> > 
+> > Depending on board design, headphone detect pins can change to HPDETR or HPDETL.
+> > 
+> > Signed-off-by: Inha Song <ideal.song@samsung.com>
 > > ---
-> >  arch/arm/boot/dts/exynos5420-arndale-octa.dts | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
+> >  
+> > +static int arizona_extcon_of_get_pdata(struct arizona *arizona)
+> > +{
+> > +	struct arizona_pdata *pdata = &arizona->pdata;
+> > +	unsigned int val;
 > 
-> Dear Kukjin,
+> I would rather this is "unsigned int val =
+> ARIZONA_ACCDET_MODE_HPL;".
 > 
-> Any comments  on this and other patches. A lot of emails waits for
-> your opinion. Is there anything I could do to help you in smooth
-> review or applying?
-> 
-Sorry for the delay and looks good to me.
-
-Will apply into fixes branch and thanks.
-
-- Kukjin
-
-> Best regards,
-> Krzysztof
-> 
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-
-> octa.dts
-> > index d78fcd997ce6..97346df31d41 100644
-> > --- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-> > +++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-> > @@ -87,7 +87,9 @@
-> >                         s2mps11,buck4-ramp-enable = <1>;
-> >
-> >                         interrupt-parent = <&gpx3>;
-> > -                       interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> > +                       pinctrl-names = "default";
-> > +                       pinctrl-0 = <&s2mps11_irq>;
-> >
-> >                         s2mps11_osc: clocks {
-> >                                 #clock-cells = <1>;
-> > @@ -379,3 +381,12 @@
-> >         clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
-> >         clock-names = "rtc", "rtc_src";
-> >  };
 > > +
-> > +&pinctrl_0 {
-> > +       s2mps11_irq: s2mps11-irq {
-> > +               samsung,pins = "gpx3-2";
-> > +               samsung,pin-function = <0xf>;
-> > +               samsung,pin-pud = <0>;
-> > +               samsung,pin-drv = <0>;
-> > +       };
-> > +};
-> > --
-> > 1.9.1
+> > +	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel", &val);
+> 
+> Because this won't fill val if the DT entry isn't present.
+> 
+> > +	switch (val) {
+> 
+> Which means we hit this with val uninitialised.
+> 
+> > +	case ARIZONA_ACCDET_MODE_HPL:
+> > +	case ARIZONA_ACCDET_MODE_HPR:
+> 
+> So we may select either channel at random.
+
+Opps, Ok, I will set the default value to ARIZONA_ACCDET_MODE_HPL.
+
+> 
+> > +		pdata->hpdet_channel = val;
+> > +		break;
+> > +	default:
+> > +		dev_err(arizona->dev,
+> > +			"Wrong wlf,hpdet-channel DT value %d\n", val);
+> 
+> Or most likely just print an error but the DT being missing
+> shouldn't really be an error it is an optional entry.
+
+If the default value is set to ARIZONA_ACCDET_MODE_HPL,
+Only the print will be shown, when an invalid value is set by DT.
+So, This is a resonable error message.
+
+Best Regards,
+Inha Song.
+
+> 
+> > +		pdata->hpdet_channel = ARIZONA_ACCDET_MODE_HPL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> Thanks,
+> Charles
