@@ -1,79 +1,91 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v3 2/4] of: overlay: global sysfs enable attribute
-Date: Mon, 27 Apr 2015 21:25:03 +0300
-Message-ID: <9F31828D-016A-4C01-A75D-DF9891DE417A@konsulko.com>
-References: <1429868744-19863-1-git-send-email-pantelis.antoniou@konsulko.com> <1429868744-19863-3-git-send-email-pantelis.antoniou@konsulko.com> <20150424203619.GC14970@kroah.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v14 0/3] ARM: rk3288: Add PM Domain support
+Date: Mon, 27 Apr 2015 11:28:42 -0700
+Message-ID: <7h383lzaqt.fsf@deeprootsystems.com>
+References: <1429862868-14218-1-git-send-email-wxt@rock-chips.com>
+	<3550912.kR0pejLP0h@diego>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150424203619.GC14970@kroah.com>
+In-Reply-To: <3550912.kR0pejLP0h@diego> ("Heiko =?utf-8?Q?St=C3=BCbner=22'?=
+ =?utf-8?Q?s?= message of "Sat, 25
+	Apr 2015 20:47:49 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <greg@kroah.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Andrew Morton <akpm@linux-foundation.org>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, tomasz.figa@gmail.com, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, dmitry.torokhov@gmail.com, broonie@kernel.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+Heiko St=C3=BCbner <heiko@sntech.de> writes:
 
-> On Apr 24, 2015, at 23:36 , Greg KH <greg@kroah.com> wrote:
->=20
-> On Fri, Apr 24, 2015 at 12:45:42PM +0300, Pantelis Antoniou wrote:
->> A throw once master enable switch to protect against any
->> further overlay applications if the administrator desires so.
+> Am Freitag, 24. April 2015, 16:07:45 schrieb Caesar Wang:
+>>     Add power domain drivers based on generic power domain for
+>> Rockchip platform, and support RK3288.
 >>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->> ---
->> drivers/of/overlay.c | 45 ++++++++++++++++++++++++++++++++++++++++++=
-++-
->> 1 file changed, 44 insertions(+), 1 deletion(-)
+>>     Verified on url =3D
+>>     https://chromium.googlesource.com/chromiumos/third_party/kernel.
 >>=20
->> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->> index f17f5ef..c335809 100644
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -21,6 +21,7 @@
->> #include <linux/err.h>
->> #include <linux/idr.h>
->> #include <linux/sysfs.h>
->> +#include <linux/atomic.h>
->>=20
->> #include "of_private.h"
->>=20
->> @@ -55,8 +56,12 @@ struct of_overlay {
->> 	struct kobject kobj;
->> };
->>=20
->> +/* master enable switch; once set to 0 can't be re-enabled */
->> +static atomic_t ov_enable =3D ATOMIC_INIT(1);
->> +
->> static int of_overlay_apply_one(struct of_overlay *ov,
->> 		struct device_node *target, const struct device_node *overlay);
->> +static int overlay_removal_is_ok(struct of_overlay *ov);
->>=20
->> static int of_overlay_apply_single_property(struct of_overlay *ov,
->> 		struct device_node *target, struct property *prop)
->> @@ -339,6 +344,37 @@ void of_overlay_release(struct kobject *kobj)
->> 	kfree(ov);
->> }
->>=20
->> +static ssize_t enable_show(struct kobject *kobj,
->> +		struct kobj_attribute *attr, char *buf)
->> +{
->> +	return snprintf(buf, PAGE_SIZE, "%d\n", atomic_read(&ov_enable));
->> +}
->> +
->> +static ssize_t enable_store(struct kobject *kobj,
->> +		struct kobj_attribute *attr, const char *buf, size_t count)
->> +{
->> +	int ret;
->> +	long new_enable;
->> +
->> +	ret =3D kstrtol(buf, 10, &new_enable);
->=20
-> strtobool()?
+>>     At the moment,there are mass of products are using the driver.
+>> I believe the driver can happy work for next kernel.
+>
+> I've taken a look at the driver and here are some global remarks:
+>
+> (1) You provide dt-bindings/power-domain/rk3288.h in patch 3. This br=
+eaks
+> bisectability, as the driver itself in patch 2 also includes the head=
+er and
+> would thus fail to compile if the later patch 3 is missing.
+> Ideally I think the header addition should be a separate patch itself=
+, so that
+> we can possibly share it between driver and dts branches.
+> So 1: binding doc, 2: binding-header, 3: driver, 4: dts-changes.
+>
+>
+> (2) The dts-changes in patch 3 should also add any necessary power-do=
+main
+> assignment on devices if they're still missing, so that we don't intr=
+oduce
+> regressions. In my case my work-in-progress edp died because the powe=
+rdomain
+> was turned off automatically it seems.
+>
+>
+> (3) more like wondering @Kevin or so, is there some more generic plac=
+e for a
+> power-domain driver nowadays?
 
-OK
+I think the preference has been to put these under drivers/soc/<vendor>=
+ for now,
+so they can shared across arm32 and arm64.
 
-Regards
+> (4) As Tomasz remarked previously the dts should represent the hardwa=
+re and
+> the power-domains are part of the pmu. There is a recent addition fro=
+m Linus
+> Walleij, called simple-mfd [a] that is supposed to get added real ear=
+ly for
+> kernel 4.2. So I'd think the power-domains should use that and the pa=
+tchset
+> modified to include the changes shown below [b]?
+>
+> (5) Keven Hilman and Tomasz had reservations about all the device clo=
+cks
+> being listed in the power-domains itself in the previous versions. I =
+don't see
+> a comment from them yet changing that view.
 
-=E2=80=94 Pantelis
+Correct. =20
+
+> Their wish was to get the clocks by reading the clocks from the devic=
+e nodes,
+> though I see a problem on how to handle devices that do not have any =
+bindings
+> at all yet.
+>
+> Kevin, Tomasz any new thoughts?
+
+I don't see any issues with devices that don't have bindings, as all
+that would be needed would be to simple device nodes with a clock
+property.  I wouldn't even matter if those devices had device drivers.
+
+Kevin
