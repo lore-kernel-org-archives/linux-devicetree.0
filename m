@@ -1,109 +1,66 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arch: arm: Show the serial number from devicetree
- in cpuinfo
-Date: Mon, 27 Apr 2015 10:20:17 -0500
-Message-ID: <CAL_Jsq+x5vXTmzxFW8+YSKntRgNVr7AzAS+xAkuBGx1Nmfeaaw@mail.gmail.com>
-References: <1429351135-11842-1-git-send-email-contact@paulk.fr>
- <1429351135-11842-2-git-send-email-contact@paulk.fr> <CAL_JsqKkw7n5p1ZH345BeKkyU=GKDrhaLef__0ET7t90Cm0Eog@mail.gmail.com>
- <1430145747.3081.5.camel@collins>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH] RFC: let gpiod_get_optional et all return NULL when
+ GPIOLIB is not enabled
+Date: Mon, 27 Apr 2015 17:21:53 +0200
+Message-ID: <20150427152153.GN19431@pengutronix.de>
+References: <1423731809-4800-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <CACRpkdb6KcZx3WfTqUKemhQ0_OsqxBGQb_P5cXXZvgc3riakdA@mail.gmail.com>
+ <20150306085957.GC10717@pengutronix.de>
+ <CACRpkdYq70V8SG4XOPBCGWs__J4ehknZSucpO5OdXpMDj8GPKA@mail.gmail.com>
+ <CAAVeFu+0bWSAUSaDGTUmPyj9JxEJn4yxF_hzab4CHp8YV1MuoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430145747.3081.5.camel@collins>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFu+0bWSAUSaDGTUmPyj9JxEJn4yxF_hzab4CHp8YV1MuoA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Alexandre Courbot <acourbot@nvidia.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2015 at 9:42 AM, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org> w=
-rote:
-> Le lundi 27 avril 2015 =C3=A0 08:48 -0500, Rob Herring a =C3=A9crit :
->> On Sat, Apr 18, 2015 at 4:58 AM, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org=
-> wrote:
->> > This grabs the serial number shown in cpuinfo from the serial-numb=
-er devicetree
->> > property in priority. When booting with ATAGs (and without device-=
-tree), the
->> > provided number is still shown instead.
->> >
->> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
->>
->> One comment below, otherwise:
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> > ---
->> >  arch/arm/include/asm/system_info.h |  1 +
->> >  arch/arm/kernel/setup.c            | 27 +++++++++++++++++++++++++=
+Hello,
+
+On Thu, Apr 09, 2015 at 11:20:55AM +0900, Alexandre Courbot wrote:
+> I should have replied one month ago, but if gpiolib is disabled, how
+> can we use gpiolib-like logic to check the existence of a GPIO?
+>=20
+> Having GPIO disabled means there is no GPIO support, including the
+> ability to look for GPIOs. -ENOSYS is a well-documented error-code
+> which meaning also applies to the gpio_*_optional functions (we don't
+> have support for the operation you requested). If a driver or
+> architecture really, really needs GPIO support they can require or
+> depend on CONFIG_GPIOLIB, and the problem goes away. If they can work
+> with and without gpiolib, then they should check for -ENOSYS when the=
+y
+> request GPIOs and behave accordingly.
+What whould be the right behaviour in your eyes? I hope it's not
+
+	if (ret !=3D -ENOSYS)
+		return ret;
+
+	/* continue and ignore error */
+
+> Moving the interpretation of what the absence of gpiolib means down t=
+o
+> the GPIO functions themselves is actually what might lead consumers t=
+o
+> not know the result of their request. For this reason I would say tha=
+t
+> -ENOSYS is appropriate here.
+Yeah, I fully agree.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
 --
->> >  2 files changed, 26 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/arch/arm/include/asm/system_info.h b/arch/arm/include=
-/asm/system_info.h
->> > index 720ea03..3860cbd40 100644
->> > --- a/arch/arm/include/asm/system_info.h
->> > +++ b/arch/arm/include/asm/system_info.h
->> > @@ -17,6 +17,7 @@
->> >
->> >  /* information about the system we're running on */
->> >  extern unsigned int system_rev;
->> > +extern const char *system_serial;
->> >  extern unsigned int system_serial_low;
->> >  extern unsigned int system_serial_high;
->> >  extern unsigned int mem_fclk_21285;
->> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
->> > index 1d60beb..349790f 100644
->> > --- a/arch/arm/kernel/setup.c
->> > +++ b/arch/arm/kernel/setup.c
->> > @@ -93,6 +93,9 @@ unsigned int __atags_pointer __initdata;
->> >  unsigned int system_rev;
->> >  EXPORT_SYMBOL(system_rev);
->> >
->> > +const char *system_serial;
->> > +EXPORT_SYMBOL(system_serial);
->> > +
->> >  unsigned int system_serial_low;
->> >  EXPORT_SYMBOL(system_serial_low);
->> >
->> > @@ -821,8 +824,29 @@ arch_initcall(customize_machine);
->> >
->> >  static int __init init_machine_late(void)
->> >  {
->> > +#ifdef CONFIG_OF
->> > +       struct device_node *root;
->> > +       int ret;
->> > +#endif
->> > +
->> >         if (machine_desc->init_late)
->> >                 machine_desc->init_late();
->> > +
->> > +#ifdef CONFIG_OF
->>
->> These ifdefs should not be necessary, but please double check.
->
-> Well, of_property_read_string is only defined when CONFIG_OF is set
-> (base.c is always built in drivers/of but the directory is only inclu=
-ded
-> when CONFIG_OF is set).
-
-Look at include/linux/of.h. There are an empty versions of both functio=
-ns.
-
-> Of course, on ARM, we now expect that it is the case, but it seems li=
-ke
-> good practice to check for it, since it could theoretically be disabl=
-ed.
-
-We still (and will continue to) have non-OF platforms.
-
-> This is also being done a few lines above in customize_machine.
-
-True, but that doesn't mean we want more.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
