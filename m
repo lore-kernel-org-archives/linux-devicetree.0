@@ -1,62 +1,39 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 01/10] ARM: shmobile: r8a7740 dtsi: Use generic names for device nodes
-Date: Mon, 27 Apr 2015 14:55:25 +0200
-Message-ID: <1430139334-15272-2-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 05/10] ARM: shmobile: r8a7791 dtsi: Use generic names for device nodes
+Date: Mon, 27 Apr 2015 14:55:29 +0200
+Message-ID: <1430139334-15272-6-git-send-email-geert+renesas@glider.be>
 References: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430139334-15272-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-irqpin -> interrupt-controller
+rcar_sound -> sound
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7740.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/r8a7791.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index 83c1c3ca1b8f1400..f265b6b194e9774d 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -67,7 +67,7 @@
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index 3e9f824797e75aed..9492c961ad4ee12d 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -1485,7 +1485,7 @@
+ 		status = "disabled";
  	};
  
- 	/* irqpin0: IRQ0 - IRQ7 */
--	irqpin0: irqpin@e6900000 {
-+	irqpin0: interrupt-controller@e6900000 {
- 		compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
-@@ -89,7 +89,7 @@
- 	};
- 
- 	/* irqpin1: IRQ8 - IRQ15 */
--	irqpin1: irqpin@e6900004 {
-+	irqpin1: interrupt-controller@e6900004 {
- 		compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
-@@ -111,7 +111,7 @@
- 	};
- 
- 	/* irqpin2: IRQ16 - IRQ23 */
--	irqpin2: irqpin@e6900008 {
-+	irqpin2: interrupt-controller@e6900008 {
- 		compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
-@@ -133,7 +133,7 @@
- 	};
- 
- 	/* irqpin3: IRQ24 - IRQ31 */
--	irqpin3: irqpin@e690000c {
-+	irqpin3: interrupt-controller@e690000c {
- 		compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
+-	rcar_sound: rcar_sound@ec500000 {
++	rcar_sound: sound@ec500000 {
+ 		/*
+ 		 * #sound-dai-cells is required
+ 		 *
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
