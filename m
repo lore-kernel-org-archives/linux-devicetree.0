@@ -1,43 +1,58 @@
-From: Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: [PATCH v3] dmaengine: xgene-dma: Fix sparse wannings and
- coccinelle warnings
-Date: Mon, 27 Apr 2015 13:20:45 +0800
-Message-ID: <20150427052045.GA5199@wfg-t540p.sh.intel.com>
-References: <1429212673-22254-1-git-send-email-rsahu@apm.com>
- <20150417182937.GN30624@intel.com>
- <CAFd313y-HfW_us0FVQFEkGAzf-ZCKpRtF6eYweaK0V94MBg4iQ@mail.gmail.com>
- <20150427031315.GG2738@intel.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] i.MX6-SabreAuto: DTS: use gpio-hog to enable
+ WEIM-NOR at boot
+Date: Mon, 27 Apr 2015 07:53:38 +0200
+Message-ID: <20150427055338.GE4946@pengutronix.de>
+References: <20150116072716.GD18220@pengutronix.de>
+ <1429477343-11076-1-git-send-email-alison_chaiken@mentor.com>
+ <1429477343-11076-2-git-send-email-alison_chaiken@mentor.com>
+ <20150423063127.GJ6325@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sparse-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150427031315.GG2738@intel.com>
-Sender: linux-sparse-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rameshwar Sahu <rsahu@apm.com>, dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Christopher Li <sparse@chrisli.org>, Linux-Sparse <linux-sparse@vger.kernel.org>
+In-Reply-To: <20150423063127.GJ6325-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
+Cc: bparrot-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2015 at 08:43:15AM +0530, Vinod Koul wrote:
-> On Mon, Apr 20, 2015 at 08:38:18AM +0530, Rameshwar Sahu wrote:
-> > Hi Vinod,
-> >> >> @@ -2085,6 +2043,5 @@ module_platform_driver(xgene_dma_driver);
-> > >>
-> > >>  MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
-> > >>  MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu@apm.com>");
-> > >> -MODULE_AUTHOR("Loc Ho <lho@apm.com>");
-> > > And why this?
-> > 
-> > I saw below warning reported by the kbuild robot test
-> > 
-> > drivers/dma/xgene-dma.c:2088:1: sparse: symbol
-> > '__UNIQUE_ID_author__COUNTER__' has multiple initializers (originally
-> > initialized at drivers/dma/xgene-dma.c:2087)
-> > So, I kept only one author here.
-> No that is not right, sparse shouldn't have cribbed here.
+On Thu, Apr 23, 2015 at 08:31:27AM +0200, Sascha Hauer wrote:
+> On Sun, Apr 19, 2015 at 02:02:23PM -0700, alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org wrote:
+> > +&i2c3 {
+> > +	status = "disabled";
+> > +};
+> > +
+> > +&uart3 {
+> > +	status = "disabled";
+> > +};
 > 
-> Fengguang can we get the bot to ignore this please
+> i2c3 and uart3 are not enabled for this board, why do you have to
+> disable them here?
+> 
+> > +
+> > +&ecspi1 {
+> > +	status = "disabled";
+> > +};
+> > +
+> > +&usdhc3 {
+> > +	status = "disabled";
+> > +};
+> 
+> usdhc3 uses other pins than the weim controller. Why do you have to
+> disable it?
 
-OK, sorry for the noises! CC sparse maintainer btw.
 
-Thanks,
-Fengguang
+Please read the whole mail.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
