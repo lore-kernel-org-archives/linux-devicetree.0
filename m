@@ -1,91 +1,151 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v14 0/3] ARM: rk3288: Add PM Domain support
-Date: Mon, 27 Apr 2015 11:28:42 -0700
-Message-ID: <7h383lzaqt.fsf@deeprootsystems.com>
-References: <1429862868-14218-1-git-send-email-wxt@rock-chips.com>
-	<3550912.kR0pejLP0h@diego>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH v3 2/4] of: overlay: global sysfs enable attribute
+Date: Mon, 27 Apr 2015 20:39:15 +0200
+Message-ID: <20150427183915.GA29312@kroah.com>
+References: <1429868744-19863-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1429868744-19863-3-git-send-email-pantelis.antoniou@konsulko.com>
+ <20150424202922.GA14970@kroah.com>
+ <355B6AF0-7F58-4BE4-BEE6-A77246D40652@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3550912.kR0pejLP0h@diego> ("Heiko =?utf-8?Q?St=C3=BCbner=22'?=
- =?utf-8?Q?s?= message of "Sat, 25
-	Apr 2015 20:47:49 +0200")
+Content-Disposition: inline
+In-Reply-To: <355B6AF0-7F58-4BE4-BEE6-A77246D40652@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc: Caesar Wang <wxt@rock-chips.com>, tomasz.figa@gmail.com, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, dmitry.torokhov@gmail.com, broonie@kernel.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Andrew Morton <akpm@linux-foundation.org>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Heiko St=C3=BCbner <heiko@sntech.de> writes:
+On Mon, Apr 27, 2015 at 09:13:56PM +0300, Pantelis Antoniou wrote:
+> Hi Greg,
+>=20
+> > On Apr 24, 2015, at 23:29 , Greg KH <greg@kroah.com> wrote:
+> >=20
+> > On Fri, Apr 24, 2015 at 12:45:42PM +0300, Pantelis Antoniou wrote:
+> >> A throw once master enable switch to protect against any
+> >> further overlay applications if the administrator desires so.
+> >>=20
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> >> ---
+> >> drivers/of/overlay.c | 45 ++++++++++++++++++++++++++++++++++++++++=
+++++-
+> >> 1 file changed, 44 insertions(+), 1 deletion(-)
+> >>=20
+> >> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> >> index f17f5ef..c335809 100644
+> >> --- a/drivers/of/overlay.c
+> >> +++ b/drivers/of/overlay.c
+> >> @@ -21,6 +21,7 @@
+> >> #include <linux/err.h>
+> >> #include <linux/idr.h>
+> >> #include <linux/sysfs.h>
+> >> +#include <linux/atomic.h>
+> >>=20
+> >> #include "of_private.h"
+> >>=20
+> >> @@ -55,8 +56,12 @@ struct of_overlay {
+> >> 	struct kobject kobj;
+> >> };
+> >>=20
+> >> +/* master enable switch; once set to 0 can't be re-enabled */
+> >> +static atomic_t ov_enable =3D ATOMIC_INIT(1);
+> >> +
+> >> static int of_overlay_apply_one(struct of_overlay *ov,
+> >> 		struct device_node *target, const struct device_node *overlay);
+> >> +static int overlay_removal_is_ok(struct of_overlay *ov);
+> >>=20
+> >> static int of_overlay_apply_single_property(struct of_overlay *ov,
+> >> 		struct device_node *target, struct property *prop)
+> >> @@ -339,6 +344,37 @@ void of_overlay_release(struct kobject *kobj)
+> >> 	kfree(ov);
+> >> }
+> >>=20
+> >> +static ssize_t enable_show(struct kobject *kobj,
+> >> +		struct kobj_attribute *attr, char *buf)
+> >> +{
+> >> +	return snprintf(buf, PAGE_SIZE, "%d\n", atomic_read(&ov_enable))=
+;
+> >> +}
+> >> +
+> >> +static ssize_t enable_store(struct kobject *kobj,
+> >> +		struct kobj_attribute *attr, const char *buf, size_t count)
+> >> +{
+> >> +	int ret;
+> >> +	long new_enable;
+> >> +
+> >> +	ret =3D kstrtol(buf, 10, &new_enable);
+> >> +	if (ret !=3D 0)
+> >> +		return ret;
+> >> +	if ((unsigned long)new_enable > 1)
+> >> +		return -EINVAL;
+> >> +	/* if we've disabled it, no going back */
+> >> +	if (atomic_read(&ov_enable) =3D=3D 0)
+> >> +		return -EPERM;
+> >> +	atomic_set(&ov_enable, (int)new_enable);
+> >> +	return count;
+> >> +}
+> >> +
+> >> +static struct kobj_attribute enable_attr =3D __ATTR_RW(enable);
+> >> +
+> >> +static const struct attribute *overlay_global_attrs[] =3D {
+> >> +	&enable_attr.attr,
+> >> +	NULL
+> >> +};
+> >=20
+> > Why not make this an attribute group and then attach it to the kobj=
+_type
+> > to create the files in a race-free manner?
+> >=20
+>=20
+> Err, these are the global attributes. They are attached to the
+> parent of the overlay objects which is a kset object itself.
 
-> Am Freitag, 24. April 2015, 16:07:45 schrieb Caesar Wang:
->>     Add power domain drivers based on generic power domain for
->> Rockchip platform, and support RK3288.
->>=20
->>     Verified on url =3D
->>     https://chromium.googlesource.com/chromiumos/third_party/kernel.
->>=20
->>     At the moment,there are mass of products are using the driver.
->> I believe the driver can happy work for next kernel.
->
-> I've taken a look at the driver and here are some global remarks:
->
-> (1) You provide dt-bindings/power-domain/rk3288.h in patch 3. This br=
-eaks
-> bisectability, as the driver itself in patch 2 also includes the head=
-er and
-> would thus fail to compile if the later patch 3 is missing.
-> Ideally I think the header addition should be a separate patch itself=
-, so that
-> we can possibly share it between driver and dts branches.
-> So 1: binding doc, 2: binding-header, 3: driver, 4: dts-changes.
->
->
-> (2) The dts-changes in patch 3 should also add any necessary power-do=
-main
-> assignment on devices if they're still missing, so that we don't intr=
-oduce
-> regressions. In my case my work-in-progress edp died because the powe=
-rdomain
-> was turned off automatically it seems.
->
->
-> (3) more like wondering @Kevin or so, is there some more generic plac=
-e for a
-> power-domain driver nowadays?
+Ick, no, never attach attributes to a kobject that you don't create
+yourself, otherwise it's a race that you lost.
 
-I think the preference has been to put these under drivers/soc/<vendor>=
- for now,
-so they can shared across arm32 and arm64.
+> >> +
+> >> static struct kobj_type of_overlay_ktype =3D {
+> >> 	.release =3D of_overlay_release,
+> >> };
+> >> @@ -360,6 +396,10 @@ int of_overlay_create(struct device_node *tre=
+e)
+> >> 	struct of_overlay *ov;
+> >> 	int err, id;
+> >>=20
+> >> +	/* administratively disabled */
+> >> +	if (!atomic_read(&ov_enable))
+> >> +		return -EPERM;
+> >> +
+> >> 	/* allocate the overlay structure */
+> >> 	ov =3D kzalloc(sizeof(*ov), GFP_KERNEL);
+> >> 	if (ov =3D=3D NULL)
+> >> @@ -596,5 +636,8 @@ int of_overlay_init(void)
+> >> 	if (!ov_kset)
+> >> 		return -ENOMEM;
+> >>=20
+> >> -	return 0;
+> >> +	rc =3D sysfs_create_files(&ov_kset->kobj, overlay_global_attrs);
+> >> +	WARN(rc, "%s: error adding global attributes\n", __func__);
+> >=20
+> > What can a user do with this warning message?  If nothing, then don=
+'t
+> > print it out, right?
+> >=20
+> > You are creating sysfs files _after_ the kobject has been announced=
+ to
+> > userspace, causing nasty race conditions.  Please don't do that.
+> >=20
+>=20
+> This is at overlay_init() time, which is way way before userspace eve=
+r
+> has a chance to start. If there=E2=80=99s a different way to attach a=
+ attribute
+> group to a kset object I=E2=80=99d like to find out how :)
 
-> (4) As Tomasz remarked previously the dts should represent the hardwa=
-re and
-> the power-domains are part of the pmu. There is a recent addition fro=
-m Linus
-> Walleij, called simple-mfd [a] that is supposed to get added real ear=
-ly for
-> kernel 4.2. So I'd think the power-domains should use that and the pa=
-tchset
-> modified to include the changes shown below [b]?
->
-> (5) Keven Hilman and Tomasz had reservations about all the device clo=
-cks
-> being listed in the power-domains itself in the previous versions. I =
-don't see
-> a comment from them yet changing that view.
+You can't load this as a module?  Where exactly in sysfs is this
+kobject, and who creates it?
 
-Correct. =20
+thanks,
 
-> Their wish was to get the clocks by reading the clocks from the devic=
-e nodes,
-> though I see a problem on how to handle devices that do not have any =
-bindings
-> at all yet.
->
-> Kevin, Tomasz any new thoughts?
-
-I don't see any issues with devices that don't have bindings, as all
-that would be needed would be to simple device nodes with a clock
-property.  I wouldn't even matter if those devices had device drivers.
-
-Kevin
+greg k-h
