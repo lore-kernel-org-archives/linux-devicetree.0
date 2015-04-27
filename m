@@ -1,33 +1,51 @@
-From: Catalin Crenguta <catalin.crenguta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6: Add Embest MarS Board
-Date: Mon, 27 Apr 2015 12:19:52 +0300
-Message-ID: <CABH3fy-kaEuwW6oxwZgahopPEUheXtwbJRyUk2_9J0mqo89Pzg@mail.gmail.com>
-References: <1427875809-10444-1-git-send-email-vianney.leclement@essensium.com>
-	<1427876156.24886.1.camel@pengutronix.de>
-	<1427877126.2449.0@mail.essensium.com>
-	<CABH3fy_YWYoQZL4E_i1FWaY+rOgidxBVcUNo15GrXfcoS2or0A@mail.gmail.com>
-	<1429878521.2872.3.camel@pengutronix.de>
-	<CABH3fy8o8R7d+bpyxS-Q0eSyPgqg0dvuQnF7m1gywLAzjRBXRA@mail.gmail.com>
-	<1430118452.1475.0@mail.essensium.com>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH v3] Renesas Ethernet AVB driver
+Date: Mon, 27 Apr 2015 09:22:24 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6D1CB25CD5@AcuExch.aculab.com>
+References: <SIXPR06MB03142A49C392C39922DC2BDA3EE0@SIXPR06MB031.apcprd06.prod.outlook.com>
+	<20150422.113654.1169277303695917496.davem@davemloft.net>
+	<553804CA.1030605@cogentembedded.com>
+ <20150422.164242.2185477513394713122.davem@davemloft.net>
+ <553814F0.40405@cogentembedded.com>
+ <063D6719AE5E284EB5DD2968C1650D6D1CB24BB5@AcuExch.aculab.com>
+ <553A8AF7.2020206@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430118452.1475.0-ZoYdQ1qa4hNshLDXf1BNyNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Vianney_le_Cl=C3=A9ment?= <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <553A8AF7.2020206@cogentembedded.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: 'Sergei Shtylyov' <sergei.shtylyov@cogentembedded.com>, David Miller <davem@davemloft.net>
+Cc: "mitsuhiro.kimura.kc@renesas.com" <mitsuhiro.kimura.kc@renesas.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "richardcochran@gmail.com" <richardcochran@gmail.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "masaru.nagai.vx@renesas.com" <masaru.nagai.vx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-> Hi Catalin,
->
-> Sorry for not being able to answer earlier.  Great that you made eMMC to
-> work.  Can you share your pinmux configuration for usdhc3, so I can send a
-> follow-up patch?
+From: Sergei Shtylyov 
+> Sent: 24 April 2015 19:27
+...
+> > If you have ethernet hardware that requires tx or rx buffers to be on
+> > 4n boundaries you should send it back as 'not fit for purpose'.
+> 
+>     The RX buffers can be adjusted with skb_resrerve(), it's only the TX
+> buffers that need to be copied...
 
-I have changed the byte 0x59 with 0x09
-0x17059 -> 0x17009
-and 0x10059 -> 0x10009
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If the processor can't perform misaligned reads (don't know what is on
+your SoC, but I suspect it can't - crossing page boundaries is hard)
+then the rx buffer will have to be re-aligned in software.
+Even the 'userdata' part will typically end up with an expensive
+misaligned buffer copy.
+
+Even on x86 the misaligned transfers are probably measurable.
+
+>     I'm afraid we can't. :-)
+>     However, my colleague has suggested a scheme minimizing the copying:
+> only up to 3 first bytes need to be copied to the driver's internal buffers,
+> the rest can be sent from an skb itself. That would require substantial
+> changes to the driver though...
+
+There might be a restriction on the length of buffer fragments.
+
+You might be able to alternate 14 and 1500+ byte receive buffers.
+The frame following a slightly overlong one would be 'wrong'.
+
+	David
