@@ -1,39 +1,33 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx23-olinuxino: Fix dr_mode of usb0
-Date: Mon, 27 Apr 2015 20:26:35 +0800
-Message-ID: <20150427122633.GJ9231@dragon>
-References: <1429043846-28731-1-git-send-email-stefan.wahren@i2se.com>
+From: =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski.k@gmail.com>
+Subject: Re: [PATCH v3 02/10] clk: samsung: exynos5433: Fix wrong offset of PCLK_MSCL_SECURE_SMMU_JPEG
+Date: Mon, 27 Apr 2015 21:37:52 +0900
+Message-ID: <CAJKOXPcND+strAenH-EMvYRCyeumo7m+pzg8z1guYShX0=zA7w@mail.gmail.com>
+References: <1430134597-14668-1-git-send-email-cw00.choi@samsung.com>
+	<1430134597-14668-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429043846-28731-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1430134597-14668-3-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@linaro.org, kgene@kernel.org, inki.dae@samsung.com, chanho61.park@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonghwa Lee <jonghwa3.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 08:37:26PM +0000, Stefan Wahren wrote:
-> The dr_mode of usb0 on imx233-olinuxino is left to default "otg".
-> Since the green LED (GPIO2_1) on imx233-olinuxino is connected to the
-> same pin as USB_OTG_ID it's possible to disable USB host by LED toggling:
-> 
-> echo 0 > /sys/class/leds/green/brightness
-> [ 1068.890000] ci_hdrc ci_hdrc.0: remove, state 1
-> [ 1068.890000] usb usb1: USB disconnect, device number 1
-> [ 1068.920000] usb 1-1: USB disconnect, device number 2
-> [ 1068.920000] usb 1-1.1: USB disconnect, device number 3
-> [ 1069.070000] usb 1-1.2: USB disconnect, device number 4
-> [ 1069.450000] ci_hdrc ci_hdrc.0: USB bus 1 deregistered
-> [ 1074.460000] ci_hdrc ci_hdrc.0: timeout waiting for 00000800 in 11
-> 
-> This patch fixes the issue by setting dr_mode to "host" in the dts file.
-> 
-> Reported-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+2015-04-27 20:36 GMT+09:00 Chanwoo Choi <cw00.choi@samsung.com>:
+> From: Jonghwa Lee <jonghwa3.lee@samsung.com>
+>
+> This patch fixes the wrong offoset of PCLK_MSCL_SECURE_SMMU_JPEG in CMU_MSCL
+> domain.
+>
+> Fixes: b274bbfd8b4a94cb5bd6f (clk: samsung: exynos5433: Add clocks for CMU_MSCL domain
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+
+Best regards,
+Krzysztof
