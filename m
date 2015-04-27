@@ -1,49 +1,95 @@
-From: Vianney le =?iso-8859-1?q?Cl=E9ment?=
-	<vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6: Add Embest MarS Board
-Date: Mon, 27 Apr 2015 09:07:32 +0200
-Message-ID: <1430118452.1475.0@mail.essensium.com>
-References: <1427875809-10444-1-git-send-email-vianney.leclement@essensium.com>
-	<1427876156.24886.1.camel@pengutronix.de>
-	<1427877126.2449.0@mail.essensium.com>
-	<CABH3fy_YWYoQZL4E_i1FWaY+rOgidxBVcUNo15GrXfcoS2or0A@mail.gmail.com>
-	<1429878521.2872.3.camel@pengutronix.de>
-	<CABH3fy8o8R7d+bpyxS-Q0eSyPgqg0dvuQnF7m1gywLAzjRBXRA@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] dmaengine: imx-sdma: Add DMA event remapping for
+ imx6sx-sdma
+Date: Mon, 27 Apr 2015 09:09:34 +0200
+Message-ID: <20150427070934.GX6325@pengutronix.de>
+References: <1429076351-4429-1-git-send-email-nicoleotsuka@gmail.com>
+ <20150420094541.GL6325@pengutronix.de>
+ <20150420173433.GA6920@Asurada>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABH3fy8o8R7d+bpyxS-Q0eSyPgqg0dvuQnF7m1gywLAzjRBXRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Crenguta <catalin.crenguta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150420173433.GA6920@Asurada>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: vinod.koul@intel.com, fabio.estevam@freescale.com, b38343@freescale.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2015 at 8:47 , Catalin Crenguta=20
-<catalin.crenguta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> I have managed to get it working after changing the drive strength to
-> 260 Ohm and speed to 50 MHz.
-> Changing only the speed to 50 MHz didn't work, I had to also change
-> the drive strength. I haven't tested other values.
-> Maybe this can be pushed to mainline?
+On Mon, Apr 20, 2015 at 10:34:33AM -0700, Nicolin Chen wrote:
+> Hi Sascha,
+> 
+> Thank you for the comments.
+> 
+> On Mon, Apr 20, 2015 at 11:45:41AM +0200, Sascha Hauer wrote:
+> > On Tue, Apr 14, 2015 at 10:39:11PM -0700, Nicolin Chen wrote:
+> > > The SDMA on imx6sx has a few DMA event remapping configurations
+> > > inside the GPR (General Purpose Register) of that SoC. When users
+> > > want to use a non-default DMA event, they need to configure the
+> > > GPR register. So this patch gives an interface of the GPR and
+> > > implements it in the SDMA driver so as to finish the DMA event
+> > > remapping.
+> > > 
+> > > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> 
+> > > diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > > index dc8d3aa..03315a6 100644
+> > > --- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > > +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > > @@ -8,6 +8,7 @@ Required properties:
+> > >        "fsl,imx51-sdma"
+> > >        "fsl,imx53-sdma"
+> > >        "fsl,imx6q-sdma"
+> > > +      "fsl,imx6sx-sdma"
+> > >    The -to variants should be preferred since they allow to determine the
+> > >    correct ROM script addresses needed for the driver to work without additional
+> > >    firmware.
+> > > @@ -19,6 +20,14 @@ Required properties:
+> > >  - fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
+> > >    scripts firmware
+> > >  
+> > > +Optional properties:
+> > > +- fsl, sdma-event-remap : List of one or more DMA event remapping
+> > > +  configurations. Its format: <&gpr addr shift val>
+> > > +	gpr : the gpr phandle
+> > > +	addr : the register address of the GPR
+> > > +	shift : the bit shift of the GPR register
+> > > +	val : the value of that bit
+> > 
+> > This binding allows arbitrary register writes to the GPR register space.
+> > I don't think we want to allow that. A binding for this if necessary at
+> > all must be higher level.
+> 
+> I was actually wondering where could be the best place to put this in.
+> But I couldn't figure out a better place than this driver while being
+> worried about the violation as you mentioned.
+> 
+> But what could be that higher level?
 
-Hi Catalin,
+This gpr register effectivly increases the number of event IDs
+available by muxing them with existing event IDs. Looking at the SDMA
+event mapping table we have:
 
-Sorry for not being able to answer earlier.  Great that you made eMMC=20
-to work.  Can you share your pinmux configuration for usdhc3, so I can=20
-send a follow-up patch?
+0 UART6 UART6 Rx FIFO; controlled by IOMUXC register GPR0[0]
+1 ADC1 / I2C4 ADC1 DMA request ;Muxed I2C4 DMA event by IOMUXC register GPR0[1]
+  ADC1 DMA request
+2 IOMUX / CSI2 Muxed with external DMA pad #1, controlled by IOMUXC
+  register GPR0[20].
+...
+47 UART6 UART6 Tx FIFO; controlled by IOMUXC register GPR0[19]
 
-Thanks,
-Vianney
+So I would extend that list by additional entries for the muxed dma
+events. event 48 then means event 0 alternative, with GPR0[0] set to 1.
 
-Vianney le Cl=C3=A9ment de Saint-Marcq
-Embedded Software Developper =C2=B7 +32 485 84 55 05
-Essensium, Mind division =C2=B7 www.mind.be
-GPG: 727B CFE9 355F 1B02 0820 EE1C 9042 3E07 A804 0316
+BTW. Using defines for the SDMA events like done nowadays for clocks and
+other stuff would improve readability, especially when the list of dma
+events gets extended by non obvious numbers which do not directly map
+to hardware numbers.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
