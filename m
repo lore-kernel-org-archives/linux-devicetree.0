@@ -1,52 +1,38 @@
-From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/4] misc: ti-st: don't use NULL pdata
-Date: Mon, 27 Apr 2015 11:52:43 +0300
-Message-ID: <20150427085242.GM16501@mwanda>
-References: <1430000118-26386-1-git-send-email-eric.nelson@boundarydevices.com>
- <1430000118-26386-3-git-send-email-eric.nelson@boundarydevices.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: [PATCH] ARM: at91/dt: sama5d4: update pinctrl ranges
+Date: Mon, 27 Apr 2015 11:15:06 +0200
+Message-ID: <1430126106-15300-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1430000118-26386-3-git-send-email-eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, der.herr-kA1LtwSENNE@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bvijay-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, gigi.joseph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eyalr-l0cyMroinI0@public.gmane.org, robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com
+Cc: plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 25, 2015 at 03:15:17PM -0700, Eric Nelson wrote:
-> Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-> ---
->  drivers/misc/ti-st/st_kim.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/ti-st/st_kim.c b/drivers/misc/ti-st/st_kim.c
-> index c5a0e15..4b44345 100644
-> --- a/drivers/misc/ti-st/st_kim.c
-> +++ b/drivers/misc/ti-st/st_kim.c
-> @@ -755,8 +755,10 @@ static struct ti_st_plat_data *get_platform_data(struct device *dev)
->  
->  	dt_pdata = kzalloc(sizeof(*dt_pdata), GFP_KERNEL);
->  
-> -	if (!dt_pdata)
-> +	if (!dt_pdata) {
->  		pr_err("Can't allocate device_tree platform data\n");
-> +		return 0;
+Update the pinctrl ranges property to support pioD controller whose
+mapping is not contiguous with other pio controllers. Without this
+update, getting resource will fail, then pinctrl probe will fail too
+because there is a missing pio controller.
 
-		return NULL;
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+---
+ arch/arm/boot/dts/sama5d4.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Zero means success.  You can delete the error message if you want.
-That's just a waste of memory.  1) It's never going to be printed.
-2)  If this particular allocation failed then we would be able to tell
-exactly what failed from the stack dump and from the message in the
-caller function.
-
-> +	}
-
-regards,
-dan carpenter
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 8679fa9..2cfc65f 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -1214,7 +1214,8 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
+-				ranges = <0xfc06a000 0xfc06a000 0x4000>;
++				ranges = <0xfc068000 0xfc068000 0x100
++					  0xfc06a000 0xfc06a000 0x4000>;
+ 				/* WARNING: revisit as pin spec has changed */
+ 				atmel,mux-mask = <
+ 					/*   A          B          C  */
+-- 
+2.1.4
