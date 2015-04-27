@@ -1,112 +1,87 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: Re: [PATCH v7 2/3] leds: ktd2692: add device tree bindings for ktd2692
-Date: Mon, 27 Apr 2015 15:32:58 +0900
-Message-ID: <553DD81A.1030504@samsung.com>
-References: <1429795085-22171-1-git-send-email-ingi2.kim@samsung.com>
- <1429795085-22171-3-git-send-email-ingi2.kim@samsung.com>
- <20150424152936.7e0b101a@ja.home>
+From: "Reizer, Eyal" <eyalr@ti.com>
+Subject: RE: [PATCH 1/1] Documentation: Add dt-binding for TI-btwilink driver
+Date: Mon, 27 Apr 2015 06:33:57 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B2365AA56@DFRE01.ent.ti.com>
+References: <1430106433-7132-1-git-send-email-gigi.joseph@ti.com>
+ <AE3797AF-6797-44E0-828C-6498DB73980F@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150424152936.7e0b101a@ja.home>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski81@gmail.com>
-Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AE3797AF-6797-44E0-828C-6498DB73980F@holtmann.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>, Gigi Joseph <gigi.joseph@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Gigi, Joseph" <gigi.joseph@ti.com>, "Ziv, Dotan" <dotanz@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Hi Marcel,
 
-Thanks for the review.
+> -----Original Message-----
+> From: Marcel Holtmann [mailto:marcel@holtmann.org]
+> Sent: Monday, April 27, 2015 7:32 AM
+> To: Gigi Joseph
+> Cc: devicetree@vger.kernel.org; Rob Herring; Pawel Moll; Mark Rutland; Ian
+> Campbell; Kumar Gala; linux-kernel@vger.kernel.org; Gigi, Joseph
+> Subject: Re: [PATCH 1/1] Documentation: Add dt-binding for TI-btwilink driver
+> 
+> Hi Gigi,
+> 
+> > btwilink binds bluetooth hci0 interface with the shared transport
+> > driver
+> >
+> > Signed-off-by: Gigi Joseph <gigi.joseph@ti.com>
+> > ---
+> > Documentation/devicetree/bindings/btwilink.txt | 15 +++++++++++++++
+> > 1 file changed, 15 insertions(+)
+> > create mode 100644 Documentation/devicetree/bindings/btwilink.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/btwilink.txt
+> > b/Documentation/devicetree/bindings/btwilink.txt
+> > new file mode 100644
+> > index 0000000..d286aea
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/btwilink.txt
+> > @@ -0,0 +1,15 @@
+> > +btwilink
+> > +--------
+> > +
+> > +Required properties:
+> > +
+> > +	- compatible : must be "ti,btwilink"
+> > +
+> > +Example:
+> > +
+> > +Enable the btwilink driver to bind the bluetooth hci0 interface with
+> > +ti-st shared transport driver
+> > +
+> > +btwilink {
+> > +	compatible = "ti,btwilink";
+> > +};
+> 
+> actually I wonder if someone finally starts re-writing the TI-ST driver to
+> integrate with the new Bluetooth subsystem features (like hdev->setup,
+> __hci_cmd_sync and h4_recv_buf) so that this complicated setup is no longer
+> needed.
+> 
+> I do not think we actually would need a shared transport at all. We should
+> have a Bluetooth HCI driver that can have children for FM radio and GPS
+> exposed. Exposing proper platform devices with Bluetooth HCI as parent
+> makes sense. The shared transport is not really a parent. First and foremost,
+> this is a Bluetooth chip. The FM radio and GPS features are just glued on top of
+> it.
+> 
 
+Thank you for your suggestion!
+One clarification: Wilink8 is not a Bluetooth chip.
+It is a combo device that includes wlan subsystem (connected over sdio) and bluetooth+gps connected using a single physical uart.
+The shared transport abstracts this single uart to look like two separated devices to the system.
+It was written in the past and is being used today by all the wilink family based products.
+My suggestion is to take a two steps approach here:
 
-On 2015=EB=85=84 04=EC=9B=94 24=EC=9D=BC 22:29, Jacek Anaszewski wrote:
-> On Thu, 23 Apr 2015 22:18:04 +0900
-> Hi Ingi,
->=20
-> Ingi Kim <ingi2.kim@samsung.com> wrote:
->=20
->> This patch adds the device tree bindings for ktd2692 flash LEDs.
->> Add Optional properties of child node for Flash LED
->>
->> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
->> Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
->> ---
->>  .../devicetree/bindings/leds/leds-ktd2692.txt      | 47
->> ++++++++++++++++++++++ 1 file changed, 47 insertions(+)
->>  create mode 100644
->> Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->> b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt new file
->> mode 100644 index 0000000..708f2d4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->> @@ -0,0 +1,47 @@
->> +* Kinetic Technologies - KTD2692 Flash LED Driver
->> +
->> +KTD2692 is the ideal power solution for high-power flash LEDs.
->> +It uses ExpressWire single-wire programming for maximum flexibility=
-=2E
->> +
->> +The ExpressWire interface through CTRL pin can control LED on/off a=
-nd
->> +enable/disable the IC, Movie(max 1/3 of Flash current) / Flash mode
->> current, +Flash timeout, LVP(low voltage protection).
->> +
->> +Also, When the AUX pin is pulled high while CTRL pin is high,
->> +LED current will be ramped up to the flash-mode current level.
->> +
->> +Required properties:
->> +- compatible: "kinetic,ktd2692"
->> +- ctrl-gpio : gpio pin in order control CTRL pin
->> +- aux-gpio : gpio pin in order control AUX pin
->> +
->> +Optional properties:
->> +- vin-supply : "vin" LED supply (2.7V to 5.5V)
->> +  See Documentation/devicetree/bindings/regulator/regulator.txt
->> +
->> +A discrete LED element connected to the device must be represented
->> by a child +node - see
->> Documentation/devicetree/bindings/leds/common.txt. +
->> +Required properties for flash LED child nodes:
->> +  See Documentation/devicetree/bindings/leds/common.txt
->> +- flash-max-microamp : Flash LED maximum current
->> +  Formula : I(mA) =3D 15000 / Rset
->> +- flash-max-timeout-us : Flash LED maximum timeout
->=20
-> Patch [1] makes the led-max-microamp property mandatory for
-> the LEDs with configurable current for non-flash modes.
->=20
-> It hasn't been merged yet as we are waiting for ack from DT maintaine=
-r.
->=20
->=20
+1. For the short term we need it updated in upstream (right now it is broken since 3.8 as it is lacking support for device tree) and all customers need to patch it manually.
+2. Once we have it updated we can look into switching from using shared transport to the mechanism you describe above. 
+    We would need to study it and make sure it can fully replace the shared transport driver.
 
-Ok, I'll add it.
-
-I saw discussion about introduction of new properties for Flash LED,
-I also hope that patch[1] would be merged as soon as possible :)
-
->> +
->> +Optional properties for flash LED child nodes:
->> +- label : see Documentation/devicetree/bindings/leds/common.txt
->> +
->> +Example:
->> +
->> +ktd2692 {
->> +	compatible =3D "kinetic,ktd2692";
->> +	ctrl-gpio =3D <&gpc0 1 0>;
->> +	aux-gpio =3D <&gpc0 2 0>;
->> +	vin-supply =3D <&vbat>;
->> +
->> +	flash-led {
->> +		label =3D "ktd2692-flash";
->> +		flash-max-microamp =3D <1500000>;
->> +		flash-max-timeout-us =3D <1835000>;
->> +	};
->> +};
->=20
-> [1] [PATCH v6] DT: leds: Improve description of flash LEDs related
-> properties
->=20
+Best Regards,
+Eyal
