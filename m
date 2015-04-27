@@ -1,67 +1,77 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 RESEND 2/2] mmc: host: Add some quirks to be read from fdt in sdhci-pltm.c
-Date: Mon, 27 Apr 2015 17:25:05 +0200
-Message-ID: <5771531.b7UhrXUGmv@wuerfel>
-References: <1429630959-32649-1-git-send-email-stripathi@apm.com> <8525627.D1S9aInyMV@wuerfel> <CAOHikRDkQwG+7EUddXmx427ZpEOjqTt22H_zzozABOE3a963tQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] ARM: gic: Document Power and Clock Domain optional properties
+Date: Mon, 27 Apr 2015 10:25:35 -0500
+Message-ID: <CAL_JsqKjXuGp0SRFAVWskJRfyeoko6ybtceJQcDzymshuz9wPw@mail.gmail.com>
+References: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOHikRDkQwG+7EUddXmx427ZpEOjqTt22H_zzozABOE3a963tQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, SH-Linux <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 27 April 2015 20:33:25 Suman Tripathi wrote:
-> > On Tuesday 21 April 2015 21:12:39 Suman Tripathi wrote:
-> > > index bef250e..9f6a4b9 100644
-> > > --- a/drivers/mmc/host/sdhci-pltfm.c
-> > > +++ b/drivers/mmc/host/sdhci-pltfm.c
-> > > @@ -85,6 +85,21 @@ void sdhci_get_of_property(struct platform_device
-> > > *pdev)
-> > >
-> > >                 if (of_get_property(np, "broken-cd", NULL))
-> > >                         host->quirks |=
-> > >SDHCI_QUIRK_BROKEN_CARD_DETECTION;
-> > >
-> > > +
-> > > +               if (of_get_property(np, "delay-after-power", NULL))
-> > > +                       host->quirks |= SDHCI_QUIRK_DELAY_AFTER_POWER;
-> > > +
-> > > +               if (of_get_property(np, "no-hispd", NULL))
-> > > +                       host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
-> > > +
-> > > +               if (of_get_property(np, "broken-adma", NULL))
-> > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_ADMA;
-> > > +
-> > > +               if (of_get_property(np, "broken-dma", NULL))
-> > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
-> > > +
-> > > +               if (of_get_property(np, "no-cmd23", NULL))
-> > > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
-> > >
-> > >                 if (of_get_property(np, "no-1-8-v", NULL))
-> > >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> > 
-> > Any property you add needs to be documented in the DT binding.
-> > If possible, add generic properties for each bug you have mmc.txt
-> > rather than the driver specific sdhci.txt, and implement the
-> I will add the binding in mmc.txt. I thought this was present but not.
-> 
-> > parsing in a common function that is used for all mmc hosts.
-> As per mine understanding the sdhci_get_of_porperty is a common
-> parsing function  . Am I wrong ??
+On Mon, Apr 27, 2015 at 10:00 AM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> On some SoCs, the GIC may be part of a PM Domain (hardware Power and/or
+> Clock Domain).  Document the related optional DT properties.
+>
+> Note: As the current GIC driver doesn't support Runtime PM yet, PM
+> Domain constraints must be handled elsewhere in e.g. platform code.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-No, this is only used for sdhci, not for the other controllers.
+Acked-by: Rob Herring <robh@kernel.org>
 
-> > An alternative would be to set all these bits based on the compatible
-> > string of your host, if that is the only one that has all these bugs.
-> 
-> The host driver  (arasan) is reused but this quirks are needed due to
-> board issues. so I have a control over dtb only to fix this.
+One comment below.
 
-What is the nature of the bug on that board? Is there a different
-way to describe that without introducing six new properties?
+> ---
+> To preserve DT stability, we would like to add these properties to the
+> affected shmobile dtsi files.
+>
+> On Thu, Mar 26, 2015 at 11:39 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>> On 25/03/15 21:19, Geert Uytterhoeven wrote:
+>>> I would like to add the clock and GIC dependency on the clock in the DTS now,
+>>> for reasons of DTS stability. But that means I need a temporary workaround
+>>> to avoid the clock from being disabled, until the GIC driver handles this.
+>>>
+>>> I don't expect a fix for the GIC code to just show up magically. I just wanted
+>>> you to be aware of the problem. GIC is not the only problematic module here,
+>>> there are others, cfr. the last slide of [2].
+>>
+>> As long as there is an agreement from the DT people on the presence of
+>> that extra property in the GIC node, I'm happy with that. I'd like it to
+>> be documented though.
+>
+> Full thread at
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/331876.html
+>
+>  Documentation/devicetree/bindings/arm/gic.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 2da059a4790cb3c6..b21113b35f085f27 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -58,6 +58,14 @@ Optional
+>    regions, used when the GIC doesn't have banked registers. The offset is
+>    cpu-offset * cpu-nr.
+>
+> +- power-domains : A phandle and PM domain specifier as defined by bindings of
+> +                 the power controller specified by phandle, used when the GIC
+> +                 is part of a Power or Clock Domain.
 
-	Arnd
+"or Clock" should be removed?
+
+> +
+> +- clocks        : A phandle and clock specifier as defined by bindings of
+> +                 the clock controller specified by phandle, used when the GIC
+> +                 is part of a Clock Domain.
+> +
+>  Example:
+>
+>         intc: interrupt-controller@fff11000 {
+> --
+> 1.9.1
+>
