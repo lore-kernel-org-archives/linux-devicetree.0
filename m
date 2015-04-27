@@ -1,97 +1,179 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 RESEND 2/2] mmc: host: Add some quirks to be read from fdt in sdhci-pltm.c
-Date: Mon, 27 Apr 2015 21:49:14 +0200
-Message-ID: <6927395.c8hJ4o34f5@wuerfel>
-References: <1429630959-32649-1-git-send-email-stripathi@apm.com> <5771531.b7UhrXUGmv@wuerfel> <CAOHikRDX7RZUkHFUmNs0kY+aYqXra5i=3cukpjz5yOECkcffbQ@mail.gmail.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V2 2/4] misc: ti-st: use of_get_named_gpio_flags for nshutdown
+Date: Mon, 27 Apr 2015 16:11:20 -0400
+Message-ID: <553E97E8.4080103@hurleysoftware.com>
+References: <20150427085242.GM16501@mwanda> <1430162849-8804-1-git-send-email-eric.nelson@boundarydevices.com> <1430162849-8804-2-git-send-email-eric.nelson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOHikRDX7RZUkHFUmNs0kY+aYqXra5i=3cukpjz5yOECkcffbQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430162849-8804-2-git-send-email-eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, der.herr-kA1LtwSENNE@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, gigi.joseph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eyalr-l0cyMroinI0@public.gmane.org, robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 27 April 2015 21:25:20 Suman Tripathi wrote:
-> > On Monday 27 April 2015 20:33:25 Suman Tripathi wrote:
-> > > > On Tuesday 21 April 2015 21:12:39 Suman Tripathi wrote:
-> > > > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
-> > > > > +
-> > > > > +               if (of_get_property(np, "no-cmd23", NULL))
-> > > > > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
-> > > > > 
-> > > > >                 if (of_get_property(np, "no-1-8-v", NULL))
-> > > > >                 
-> > > > >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> > > > 
-> > > > Any property you add needs to be documented in the DT binding.
-> > > > If possible, add generic properties for each bug you have mmc.txt
-> > > > rather than the driver specific sdhci.txt, and implement the
-> > > 
-> > > I will add the binding in mmc.txt. I thought this was present but not.
-> > > 
-> > > > parsing in a common function that is used for all mmc hosts.
-> > > 
-> > > As per mine understanding the sdhci_get_of_porperty is a common
-> > > parsing function  . Am I wrong ??
+On 04/27/2015 03:27 PM, Eric Nelson wrote:
+> Use of_get_named_gpio_flags to retrieve the "nshutdown" gpio connected
+> to the BT_EN pin of the device when retrieving platform data from device
+> tree.
+
+This breaks all existing DTs wrt the 'nshutdown_gpio' key.
+I suggest using a different, optional key in the absence of 'nshutdown_gpio'.
+
+Regards,
+Peter Hurley
+
+> This allows the polarity to be specified using GPIO_ACTIVE_HIGH/LOW 
+> in device tree.
+>
+> Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> ---
+> V2 changes comments to use "assert" and "de-assert" to refer to
+> the state of the nshutdown gpio instead of low/high/0/1.
+> 
+>  drivers/misc/ti-st/st_kim.c  | 34 +++++++++++++++++++++-------------
+>  include/linux/ti_wilink_st.h |  6 +++---
+>  2 files changed, 24 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/misc/ti-st/st_kim.c b/drivers/misc/ti-st/st_kim.c
+> index aaa17b0..54d5f50 100644
+> --- a/drivers/misc/ti-st/st_kim.c
+> +++ b/drivers/misc/ti-st/st_kim.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/tty.h>
+> +#include <linux/of_gpio.h>
+>  
+>  #include <linux/skbuff.h>
+>  #include <linux/ti_wilink_st.h>
+> @@ -481,10 +482,13 @@ long st_kim_start(void *kim_data)
+>  		if (pdata->chip_enable)
+>  			pdata->chip_enable(kim_gdata);
+>  
+> -		/* Configure BT nShutdown to HIGH state */
+> -		gpio_set_value(kim_gdata->nshutdown, GPIO_LOW);
+> +		/*
+> +		 * De-assert nShutdown (enable bluetooth),
+> +		 * but force a transition
+> +		 */
+> +		gpio_set_value(kim_gdata->nshutdown, kim_gdata->shutdown_val);
+>  		mdelay(5);	/* FIXME: a proper toggle */
+> -		gpio_set_value(kim_gdata->nshutdown, GPIO_HIGH);
+> +		gpio_set_value(kim_gdata->nshutdown, !kim_gdata->shutdown_val);
+>  		mdelay(100);
+>  		/* re-initialize the completion */
+>  		reinit_completion(&kim_gdata->ldisc_installed);
+> @@ -527,7 +531,7 @@ long st_kim_start(void *kim_data)
+>   *	(b) upon failure to either install ldisc or download firmware.
+>   *	The function is responsible to (a) notify UIM about un-installation,
+>   *	(b) flush UART if the ldisc was installed.
+> - *	(c) reset BT_EN - pull down nshutdown at the end.
+> + *	(c) reset BT_EN - assert nshutdown at the end.
+>   *	(d) invoke platform's chip disabling routine.
+>   */
+>  long st_kim_stop(void *kim_data)
+> @@ -565,12 +569,12 @@ long st_kim_stop(void *kim_data)
+>  		err = -ETIMEDOUT;
+>  	}
+>  
+> -	/* By default configure BT nShutdown to LOW state */
+> -	gpio_set_value(kim_gdata->nshutdown, GPIO_LOW);
+> +	/* Assert nShutdown (chip disabled), but force transitions */
+> +	gpio_set_value(kim_gdata->nshutdown, kim_gdata->shutdown_val);
+>  	mdelay(1);
+> -	gpio_set_value(kim_gdata->nshutdown, GPIO_HIGH);
+> +	gpio_set_value(kim_gdata->nshutdown, !kim_gdata->shutdown_val);
+>  	mdelay(1);
+> -	gpio_set_value(kim_gdata->nshutdown, GPIO_LOW);
+> +	gpio_set_value(kim_gdata->nshutdown, kim_gdata->shutdown_val);
+>  
+>  	/* platform specific disable */
+>  	if (pdata->chip_disable)
+> @@ -749,6 +753,7 @@ static struct ti_st_plat_data *get_platform_data(struct device *dev)
+>  {
+>  	struct device_node *np = dev->of_node;
+>  	const u32 *dt_property;
+> +	enum of_gpio_flags flags;
+>  	int len;
+>  
+>  	dt_pdata = kzalloc(sizeof(*dt_pdata), GFP_KERNEL);
+> @@ -759,8 +764,9 @@ static struct ti_st_plat_data *get_platform_data(struct device *dev)
+>  	dt_property = of_get_property(np, "dev_name", &len);
+>  	if (dt_property)
+>  		memcpy(&dt_pdata->dev_name, dt_property, len);
+> -	of_property_read_u32(np, "nshutdown_gpio",
+> -			     &dt_pdata->nshutdown_gpio);
+> +	dt_pdata->nshutdown_gpio = of_get_named_gpio_flags
+> +					(np, "nshutdown_gpio", 0, &flags);
+> +	dt_pdata->shutdown_val = !(flags & OF_GPIO_ACTIVE_LOW);
+>  	of_property_read_u32(np, "flow_cntrl", &dt_pdata->flow_cntrl);
+>  	of_property_read_u32(np, "baud_rate", &dt_pdata->baud_rate);
+>  
+> @@ -808,16 +814,18 @@ static int kim_probe(struct platform_device *pdev)
+>  	/* refer to itself */
+>  	kim_gdata->core_data->kim_data = kim_gdata;
+>  
+> -	/* Claim the chip enable nShutdown gpio from the system */
+> +	/* Claim the nShutdown GPIO */
+>  	kim_gdata->nshutdown = pdata->nshutdown_gpio;
+> +	kim_gdata->shutdown_val = pdata->shutdown_val;
+>  	err = gpio_request(kim_gdata->nshutdown, "kim");
+>  	if (unlikely(err)) {
+>  		pr_err(" gpio %d request failed ", kim_gdata->nshutdown);
+>  		return err;
+>  	}
+>  
+> -	/* Configure nShutdown GPIO as output=0 */
+> -	err = gpio_direction_output(kim_gdata->nshutdown, GPIO_LOW);
+> +	/* Configure nShutdown GPIO as output and assert */
+> +	err = gpio_direction_output(kim_gdata->nshutdown,
+> +				    kim_gdata->shutdown_val);
+>  	if (unlikely(err)) {
+>  		pr_err(" unable to configure gpio %d", kim_gdata->nshutdown);
+>  		return err;
+> diff --git a/include/linux/ti_wilink_st.h b/include/linux/ti_wilink_st.h
+> index c78dcfe..7154194 100644
+> --- a/include/linux/ti_wilink_st.h
+> +++ b/include/linux/ti_wilink_st.h
+> @@ -212,9 +212,6 @@ void gps_chrdrv_stub_init(void);
+>  #define MAKEWORD(a, b)  ((unsigned short)(((unsigned char)(a)) \
+>  	| ((unsigned short)((unsigned char)(b))) << 8))
+>  
+> -#define GPIO_HIGH 1
+> -#define GPIO_LOW  0
+> -
+>  /* the Power-On-Reset logic, requires to attempt
+>   * to download firmware onto chip more than once
+>   * since the self-test for chip takes a while
+> @@ -263,6 +260,7 @@ struct kim_data_s {
+>  	char resp_buffer[30];
+>  	const struct firmware *fw_entry;
+>  	unsigned nshutdown;
+> +	unsigned shutdown_val;
+>  	unsigned long rx_state;
+>  	unsigned long rx_count;
+>  	struct sk_buff *rx_skb;
+> @@ -418,6 +416,7 @@ struct gps_event_hdr {
+>   * struct ti_st_plat_data - platform data shared between ST driver and
+>   *	platform specific board file which adds the ST device.
+>   * @nshutdown_gpio: Host's GPIO line to which chip's BT_EN is connected.
+> + * @shutdown_val: shutdown state (0/1) of gpio
+>   * @dev_name: The UART/TTY name to which chip is interfaced. (eg: /dev/ttyS1)
+>   * @flow_cntrl: Should always be 1, since UART's CTS/RTS is used for PM
+>   *	purposes.
+> @@ -438,6 +437,7 @@ struct gps_event_hdr {
+>   */
+>  struct ti_st_plat_data {
+>  	u32 nshutdown_gpio;
+> +	int shutdown_val;
+>  	unsigned char dev_name[UART_DEV_NAME_LEN]; /* uart name */
+>  	u32 flow_cntrl; /* flow control flag */
+>  	u32 baud_rate;
 > 
 
-A small side note: please fix your email client to use proper attribution
-of the citations. The way you reply, nobody knows what you are saying
-compare to what you quote. Also, reduce the quotation to the parts you
-are replying to.
-
-> > No, this is only used for sdhci, not for the other controllers.
-> 
-> But our's is a SHCI variant so I added it in this file.
-
-That's my point: a lot of the bugs are independent of the specific
-host controller and could happen with any one of them. We want to
-ensure that nobody tries to add another property with similar
-semantics and a different name just because they are using a
-different driver.
- 
-> > > An alternative would be to set all these bits based on the compatible
-> > > string of your host, if that is the only one that has all these bugs.
-> >
-> > The host driver  (arasan) is reused but this quirks are needed due to
-> > board issues. so I have a control over dtb only to fix this.
-> 
-> What is the nature of the bug on that board? Is there a different
-> way to describe that without introducing six new properties?
-> 
-> Sorry it is board and IP as well SoC errata's,
-> 
-> 1. Delay after power is required due to some voltage issues that will
-> be fixed in next board revision
-
-This is clearly not sdhci-specific, so make that a generic property
-for all mmc.
-
-> 2. We need to support PIO mode as of now because DMA or ADMA requires
-> some kind of translation driver that I am working on.
-
-But this does not describe the hardware properties. Don't add properties
-that describe the lack of a kernel driver. If you can't do DMA yet,
-use a dma-ranges property that lists one empty range to prevent
-dma_set_mask() from working, so it will fall back to PIO mode. You
-may have to fix the driver if that doesn't already work.
-
-What kind of driver do you need here?
-
-> 3. The version of arasan variant we have in our SoC doesn't have the
-> HISPD  bit field in HI-SPEED SD card. So this makes HI-SPEED sdcard
-> work.
-> 
-> 4. NO_CMD23 is required for eMMC cards.
-> 
-> These are not new properties.  Only the fact is I am using it for our
-> SoC from dtb. These quirks are already there in mmc common framework.
-> Nothing is new.
-
-Are you sure that you have version 8.9a of the Arasan SDHCI? This sounds
-like version specific quirks, so they are probably present in each
-SoC that uses the same version.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
