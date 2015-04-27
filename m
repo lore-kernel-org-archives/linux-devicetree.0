@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 06/10] ARM: shmobile: sh73a0 dtsi: Use generic names for device nodes
-Date: Mon, 27 Apr 2015 14:55:30 +0200
-Message-ID: <1430139334-15272-7-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 10/10] ARM: shmobile: marzen dts: Use generic names for device nodes
+Date: Mon, 27 Apr 2015 14:55:34 +0200
+Message-ID: <1430139334-15272-11-git-send-email-geert+renesas@glider.be>
 References: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1430139334-15272-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
@@ -10,53 +10,39 @@ To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <m
 Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-irqpin -> interrupt-controller
+lan0 -> ethernet
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sh73a0.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/r8a7779-marzen.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index 45b539ce4d352035..0bdb1da60487b431 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -90,7 +90,7 @@
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
+index 540756cdf3914a2a..20afea6f06ef6735 100644
+--- a/arch/arm/boot/dts/r8a7779-marzen.dts
++++ b/arch/arm/boot/dts/r8a7779-marzen.dts
+@@ -42,10 +42,10 @@
+ 		regulator-always-on;
  	};
  
--	irqpin0: irqpin@e6900000 {
-+	irqpin0: interrupt-controller@e6900000 {
- 		compatible = "renesas,intc-irqpin-sh73a0", "renesas,intc-irqpin";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
-@@ -112,7 +112,7 @@
- 		control-parent;
+-	lan0@18000000 {
++	ethernet@18000000 {
+ 		compatible = "smsc,lan9220", "smsc,lan9115";
+ 		reg = <0x18000000 0x100>;
+-		pinctrl-0 = <&lan0_pins>;
++		pinctrl-0 = <&ethernet_pins>;
+ 		pinctrl-names = "default";
+ 
+ 		phy-mode = "mii";
+@@ -176,7 +176,7 @@
+ 		};
  	};
  
--	irqpin1: irqpin@e6900004 {
-+	irqpin1: interrupt-controller@e6900004 {
- 		compatible = "renesas,intc-irqpin-sh73a0", "renesas,intc-irqpin";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
-@@ -134,7 +134,7 @@
- 		control-parent;
- 	};
- 
--	irqpin2: irqpin@e6900008 {
-+	irqpin2: interrupt-controller@e6900008 {
- 		compatible = "renesas,intc-irqpin-sh73a0", "renesas,intc-irqpin";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
-@@ -156,7 +156,7 @@
- 		control-parent;
- 	};
- 
--	irqpin3: irqpin@e690000c {
-+	irqpin3: interrupt-controller@e690000c {
- 		compatible = "renesas,intc-irqpin-sh73a0", "renesas,intc-irqpin";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
+-	lan0_pins: lan0 {
++	ethernet_pins: ethernet {
+ 		intc {
+ 			renesas,groups = "intc_irq1_b";
+ 			renesas,function = "intc";
 -- 
 1.9.1
 
