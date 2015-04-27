@@ -1,89 +1,62 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] irqchip: renesas-intc-irqpin: Improve binding documentation
-Date: Mon, 27 Apr 2015 16:45:37 +0200
-Message-ID: <1430145937-29267-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: gic: Document Power and Clock Domain optional properties
+Date: Mon, 27 Apr 2015 17:00:11 +0200
+Message-ID: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add missing documentation for required properties:
-  - interrupt-controller,
-  - parent interrupts (one entry per provided interrupt).
+On some SoCs, the GIC may be part of a PM Domain (hardware Power and/or
+Clock Domain).  Document the related optional DT properties.
 
-Add missing documentation for optional properties:
-  - functional clock (managed since commit 705bc96c2c15313c ("irqchip:
-    renesas-intc-irqpin: Add minimal runtime PM support")),
-  - power-domains.
-
-Add an example, taken from r8a7740.dtsi.
+Note: As the current GIC driver doesn't support Runtime PM yet, PM
+Domain constraints must be handled elsewhere in e.g. platform code.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-This is v2 of "irqchip: renesas-intc-irqpin: Add optional functional
-clock to bindings":
-  - Document all missing properties, not just the functional clock,
-  - Use a generic name for the device node in the example.
----
- .../interrupt-controller/renesas,intc-irqpin.txt   | 39 ++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
+To preserve DT stability, we would like to add these properties to the
+affected shmobile dtsi files.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-index 4f7946ae8adcdc04..772c550d3b4bcfe2 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-@@ -13,9 +13,12 @@ Required properties:
- - reg: Base address and length of each register bank used by the external
-   IRQ pins driven by the interrupt controller hardware module. The base
-   addresses, length and number of required register banks varies with soctype.
--
-+- interrupt-controller: Identifies the node as an interrupt controller.
- - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
--  interrupts.txt in this directory
-+  interrupts.txt in this directory.
-+- interrupts: Must contain a list of interrupt specifiers. For each interrupt
-+  provided by this irqpin controller instance, there must be one entry,
-+  referring to the corresponding parent interrupt.
+On Thu, Mar 26, 2015 at 11:39 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On 25/03/15 21:19, Geert Uytterhoeven wrote:
+>> I would like to add the clock and GIC dependency on the clock in the DTS now,
+>> for reasons of DTS stability. But that means I need a temporary workaround
+>> to avoid the clock from being disabled, until the GIC driver handles this.
+>>
+>> I don't expect a fix for the GIC code to just show up magically. I just wanted
+>> you to be aware of the problem. GIC is not the only problematic module here,
+>> there are others, cfr. the last slide of [2].
+>
+> As long as there is an agreement from the DT people on the presence of
+> that extra property in the GIC node, I'm happy with that. I'd like it to
+> be documented though.
+
+Full thread at
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/331876.html
+
+ Documentation/devicetree/bindings/arm/gic.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+index 2da059a4790cb3c6..b21113b35f085f27 100644
+--- a/Documentation/devicetree/bindings/arm/gic.txt
++++ b/Documentation/devicetree/bindings/arm/gic.txt
+@@ -58,6 +58,14 @@ Optional
+   regions, used when the GIC doesn't have banked registers. The offset is
+   cpu-offset * cpu-nr.
  
- Optional properties:
++- power-domains : A phandle and PM domain specifier as defined by bindings of
++		  the power controller specified by phandle, used when the GIC
++		  is part of a Power or Clock Domain.
++
++- clocks        : A phandle and clock specifier as defined by bindings of
++		  the clock controller specified by phandle, used when the GIC
++		  is part of a Clock Domain.
++
+ Example:
  
-@@ -25,3 +28,35 @@ Optional properties:
-   if different from the default 4 bits
- - control-parent: disable and enable interrupts on the parent interrupt
-   controller, needed for some broken implementations
-+- clocks: Must contain a reference to the functional clock.  This property is
-+  mandatory if the hardware implements a controllable functional clock for
-+  the irqpin controller instance.
-+- power-domains: Must contain a reference to the power domain. This property is
-+  mandatory if the irqpin controller instance is part of a controllable power
-+  domain.
-+
-+
-+Example
-+-------
-+
-+	irqpin1: interrupt-controller@e6900004 {
-+		compatible = "renesas,intc-irqpin-r8a7740",
-+			     "renesas,intc-irqpin";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0xe6900004 4>,
-+			<0xe6900014 4>,
-+			<0xe6900024 1>,
-+			<0xe6900044 1>,
-+			<0xe6900064 1>;
-+		interrupts = <0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
-+		power-domains = <&pd_a4s>;
-+	};
+ 	intc: interrupt-controller@fff11000 {
 -- 
 1.9.1
-
