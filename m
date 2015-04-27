@@ -1,66 +1,68 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/4] ARM: at91/dt: sama5d3 xplained: add fixed regulator for vmmc0
-Date: Mon, 27 Apr 2015 15:19:12 +0200
-Message-ID: <1430140753-19998-3-git-send-email-ludovic.desroches@atmel.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: [PATCH 4/4] ARM: at91/dt: sama5d4 xplained: add regulators for v(q)mmc1 supplies
+Date: Mon, 27 Apr 2015 15:19:13 +0200
+Message-ID: <1430140753-19998-4-git-send-email-ludovic.desroches@atmel.com>
 References: <1430140753-19998-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430140753-19998-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430140753-19998-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, plagnioj@jcrosoft.com, ben.dooks@codethink.co.uk, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Add vcc_mmc1 fixed regulator to remove the 'no vmmc regulator found' warning
+when probing the mmc1 device.
 
-Add fixed regulator for vmmc0 and attach the vmmc for it to the mmc0
-node on the SAM5D3 Xplained board. This will remove the following
-warning from the kernel:
-
-atmel_mci f0000000.mmc: No vmmc regulator found
-
-Note, atmel_defconfig will need fixed regulator support enabled if this
-is to be used properly.
-
-Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-[use a fixed regulator instead of gpio one]
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 ---
- arch/arm/boot/dts/at91-sama5d3_xplained.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-index 61922b3..581986a 100644
---- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-@@ -35,6 +35,7 @@
- 		apb {
- 			mmc0: mmc@f0000000 {
- 				pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3 &pinctrl_mmc0_dat4_7 &pinctrl_mmc0_cd>;
-+				vmmc-supply = <&vcc_mmc0_reg>;
- 				vqmmc-supply = <&vcc_3v3_reg>;
+diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+index c740e1a..d49cb71 100644
+--- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+@@ -90,6 +90,7 @@
+ 
+ 			i2c0: i2c@f8014000 {
+ 				status = "okay";
++
+ 			};
+ 
+ 			macb0: ethernet@f8020000 {
+@@ -106,6 +107,8 @@
+ 			mmc1: mmc@fc000000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &pinctrl_mmc1_cd>;
++				vmmc-supply = <&vcc_mmc1_reg>;
++				vqmmc-supply = <&vcc_3v3_reg>;
  				status = "okay";
  				slot@0 {
-@@ -296,6 +297,14 @@
+ 					reg = <0>;
+@@ -238,4 +241,22 @@
+ 			linux,default-trigger = "heartbeat";
  		};
  	};
- 
-+	vcc_mmc0_reg: fixedregulator@0 {
++
++	vcc_3v3_reg: fixedregulator@0 {
 +		compatible = "regulator-fixed";
-+		gpio = <&pioE 2 GPIO_ACTIVE_LOW>;
-+		regulator-name = "mmc0-card-supply";
++		regulator-name = "VCC 3V3";
 +		regulator-min-microvolt = <3300000>;
 +		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
 +	};
 +
- 	gpio_keys {
- 		compatible = "gpio-keys";
- 
++	vcc_mmc1_reg: fixedregulator@1 {
++		compatible = "regulator-fixed";
++		gpio = <&pioE 4 GPIO_ACTIVE_LOW>;
++		regulator-name = "VDD MCI1";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc_3v3_reg>;
++	};
+ };
 -- 
 2.2.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
