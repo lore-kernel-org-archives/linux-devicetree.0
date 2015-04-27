@@ -1,153 +1,49 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v2 RESEND 2/2] mmc: host: Add some quirks to be read from
- fdt in sdhci-pltm.c
-Date: Mon, 27 Apr 2015 21:25:20 +0530
-Message-ID: <CAOHikRDX7RZUkHFUmNs0kY+aYqXra5i=3cukpjz5yOECkcffbQ@mail.gmail.com>
-References: <1429630959-32649-1-git-send-email-stripathi@apm.com>
-	<8525627.D1S9aInyMV@wuerfel>
-	<CAOHikRDkQwG+7EUddXmx427ZpEOjqTt22H_zzozABOE3a963tQ@mail.gmail.com>
-	<5771531.b7UhrXUGmv@wuerfel>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: gic: Document Power and Clock Domain optional properties
+Date: Mon, 27 Apr 2015 18:26:35 +0200
+Message-ID: <CAMuHMdXG_ME8S=GQgvWPL3n6PPDyhH96iBDzzhcddpNYGEML4A@mail.gmail.com>
+References: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
+	<CAL_JsqKjXuGp0SRFAVWskJRfyeoko6ybtceJQcDzymshuz9wPw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5771531.b7UhrXUGmv@wuerfel>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKjXuGp0SRFAVWskJRfyeoko6ybtceJQcDzymshuz9wPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 27 April 2015 20:33:25 Suman Tripathi wrote:
-> > On Tuesday 21 April 2015 21:12:39 Suman Tripathi wrote:
-> > > index bef250e..9f6a4b9 100644
-> > > --- a/drivers/mmc/host/sdhci-pltfm.c
-> > > +++ b/drivers/mmc/host/sdhci-pltfm.c
-> > > @@ -85,6 +85,21 @@ void sdhci_get_of_property(struct platform_device
-> > > *pdev)
-> > >
-> > >                 if (of_get_property(np, "broken-cd", NULL))
-> > >                         host->quirks |=
-> > >SDHCI_QUIRK_BROKEN_CARD_DETECTION;
-> > >
-> > > +
-> > > +               if (of_get_property(np, "delay-after-power", NULL))
-> > > +                       host->quirks |= SDHCI_QUIRK_DELAY_AFTER_POWER;
-> > > +
-> > > +               if (of_get_property(np, "no-hispd", NULL))
-> > > +                       host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
-> > > +
-> > > +               if (of_get_property(np, "broken-adma", NULL))
-> > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_ADMA;
-> > > +
-> > > +               if (of_get_property(np, "broken-dma", NULL))
-> > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
-> > > +
-> > > +               if (of_get_property(np, "no-cmd23", NULL))
-> > > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
-> > >
-> > >                 if (of_get_property(np, "no-1-8-v", NULL))
-> > >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> >
-> > Any property you add needs to be documented in the DT binding.
-> > If possible, add generic properties for each bug you have mmc.txt
-> > rather than the driver specific sdhci.txt, and implement the
-> I will add the binding in mmc.txt. I thought this was present but not.
->
-> > parsing in a common function that is used for all mmc hosts.
-> As per mine understanding the sdhci_get_of_porperty is a common
-> parsing function  . Am I wrong ??
-
-No, this is only used for sdhci, not for the other controllers.
-
-But our's is a SHCI variant so I added it in this file.
-
-> > An alternative would be to set all these bits based on the compatible
-> > string of your host, if that is the only one that has all these bugs.
->
-> The host driver  (arasan) is reused but this quirks are needed due to
-> board issues. so I have a control over dtb only to fix this.
-
-What is the nature of the bug on that board? Is there a different
-way to describe that without introducing six new properties?
-
-Sorry it is board and IP as well SoC errata's,
-
-1. Delay after power is required due to some voltage issues that will
-be fixed in next board revision
-
-2. We need to support PIO mode as of now because DMA or ADMA requires
-some kind of translation driver that I am working on.
-
-3. The version of arasan variant we have in our SoC doesn't have the
-HISPD  bit field in HI-SPEED SD card. So this makes HI-SPEED sdcard
-work.
-
-4. NO_CMD23 is required for eMMC cards.
-
-These are not new properties.  Only the fact is I am using it for our
-SoC from dtb. These quirks are already there in mmc common framework.
-Nothing is new.
-
-
-
-
-
-On Mon, Apr 27, 2015 at 8:55 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 27 April 2015 20:33:25 Suman Tripathi wrote:
->> > On Tuesday 21 April 2015 21:12:39 Suman Tripathi wrote:
->> > > index bef250e..9f6a4b9 100644
->> > > --- a/drivers/mmc/host/sdhci-pltfm.c
->> > > +++ b/drivers/mmc/host/sdhci-pltfm.c
->> > > @@ -85,6 +85,21 @@ void sdhci_get_of_property(struct platform_device
->> > > *pdev)
->> > >
->> > >                 if (of_get_property(np, "broken-cd", NULL))
->> > >                         host->quirks |=
->> > >SDHCI_QUIRK_BROKEN_CARD_DETECTION;
->> > >
->> > > +
->> > > +               if (of_get_property(np, "delay-after-power", NULL))
->> > > +                       host->quirks |= SDHCI_QUIRK_DELAY_AFTER_POWER;
->> > > +
->> > > +               if (of_get_property(np, "no-hispd", NULL))
->> > > +                       host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
->> > > +
->> > > +               if (of_get_property(np, "broken-adma", NULL))
->> > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_ADMA;
->> > > +
->> > > +               if (of_get_property(np, "broken-dma", NULL))
->> > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
->> > > +
->> > > +               if (of_get_property(np, "no-cmd23", NULL))
->> > > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
->> > >
->> > >                 if (of_get_property(np, "no-1-8-v", NULL))
->> > >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
->> >
->> > Any property you add needs to be documented in the DT binding.
->> > If possible, add generic properties for each bug you have mmc.txt
->> > rather than the driver specific sdhci.txt, and implement the
->> I will add the binding in mmc.txt. I thought this was present but not.
+On Mon, Apr 27, 2015 at 5:25 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> --- a/Documentation/devicetree/bindings/arm/gic.txt
+>> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+>> @@ -58,6 +58,14 @@ Optional
+>>    regions, used when the GIC doesn't have banked registers. The offset is
+>>    cpu-offset * cpu-nr.
 >>
->> > parsing in a common function that is used for all mmc hosts.
->> As per mine understanding the sdhci_get_of_porperty is a common
->> parsing function  . Am I wrong ??
+>> +- power-domains : A phandle and PM domain specifier as defined by bindings of
+>> +                 the power controller specified by phandle, used when the GIC
+>> +                 is part of a Power or Clock Domain.
 >
-> No, this is only used for sdhci, not for the other controllers.
->
->> > An alternative would be to set all these bits based on the compatible
->> > string of your host, if that is the only one that has all these bugs.
->>
->> The host driver  (arasan) is reused but this quirks are needed due to
->> board issues. so I have a control over dtb only to fix this.
->
-> What is the nature of the bug on that board? Is there a different
-> way to describe that without introducing six new properties?
->
->         Arnd
+> "or Clock" should be removed?
 
+No, both power domains and clock domains use the "power-domains"
+property.
 
+In case of clock domains, "power-domains" refers to the power controller,
+which controls the clocks.
+"clocks" is used for specifying the clock to control.
 
--- 
-Thanks,
-with regards,
-Suman Tripathi
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
