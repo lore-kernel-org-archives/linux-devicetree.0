@@ -1,55 +1,64 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: LED subsystem child DT node ref counting
-Date: Mon, 27 Apr 2015 11:26:27 +0200
-Message-ID: <553E00C3.3060409@samsung.com>
-References: <5530E891.20707@samsung.com>
+From: Vianney le =?iso-8859-1?q?Cl=E9ment?=
+	<vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6: Add Embest MarS Board
+Date: Mon, 27 Apr 2015 11:42:38 +0200
+Message-ID: <1430127758.1475.2@mail.essensium.com>
+References: <1427875809-10444-1-git-send-email-vianney.leclement@essensium.com>
+	<20150427083917.GD9231@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <5530E891.20707@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150427083917.GD9231@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Gentle reminder. Can anyone clarify this?
+Hi Shawn,
 
-On 04/17/2015 01:03 PM, Jacek Anaszewski wrote:
-> Hi,
->
-> I'd like to clarify whether LED subsystem drivers behave correctly
-> or not, regarding child DT nodes reference counting.
->
-> Single LED controller can have connected more then one LED to it.
-> The LEDs are represented by child DT nodes of the node representing
-> the controller (see Documentation/devicetree/bindings/leds).
->
-> LED subsystem drivers parse child DT nodes and use the node name,
-> or 'label' property string as the LED class device name.
->
-> This is usually accomplished like below:
->
-> for_each_child_of_node(np, child) {
->      ...
->      led.name = of_get_property(child, "label", NULL) ? : child->name;
->
->
-> The question is whether reference count of the child node shouldn't
-> be increased here with of_node_get(child). Whereas intuitively it could
-> be thought of as a right thing to do, empirical experiments don't
-> necessary confirm that.
->
-> When I print the value of child_node->kobj.kref.refcount.counter
-> inside for_each loop it is 3 and and after leaving the loop it gets
-> decreased to 2. On driver removal the value is also 2. It means that
-> label is available all the time, without increasing child node ref
-> counter.
->
-> I'd like to ask if this is guaranteed to be always true.
->
+Thanks for taking time reviewing this.  I will send a follow-up patch.
+
+On Mon, Apr 27, 2015 at 10:39 , Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> If eMMC doesn't work yet, you should just not add it.
+
+Thanks to Lucas and Catalin it does work now :).  Will update it in v2.
 
 
--- 
-Best Regards,
-Jacek Anaszewski
+> For new dts file, we suggest to use GPL/X11 dual-license for non-Linu=
+x
+> users. Find example below.
+>=20
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/=
+arch/arm/boot/dts/imx6q-hummingboard.dts
+
+No problem for dual-licensing on my part, but this dts is heavily based=
+=20
+on imx6q-riotboard.dts (as mentioned in the header), which is only=20
+licensed under the GPL.
+
+
+>>  +		pinctrl_usbotg: usbotggrp {
+>>  +			fsl,pins =3D <
+>>  +				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x17059
+>>  +				MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x000b0	/*=20
+>> MX6QDL_PAD_EIM_D22__USB_OTG_PWR */
+>=20
+> What does the comment mean?
+
+It is a leftover from imx6q-riotboard.dts.  I will change it.
+
+Regards,
+Vianney
+
+Vianney le Cl=C3=A9ment de Saint-Marcq
+Embedded Software Developper =C2=B7 +32 485 84 55 05
+Essensium, Mind division =C2=B7 www.mind.be
+GPG: 727B CFE9 355F 1B02 0820 EE1C 9042 3E07 A804 0316
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
