@@ -1,61 +1,103 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] i.MX6-SabreAuto: DTS: use gpio-hog to enable
- WEIM-NOR at boot
-Date: Mon, 27 Apr 2015 15:49:44 +0800
-Message-ID: <20150427074929.GA9231@dragon>
-References: <20150423063127.GJ6325@pengutronix.de>
- <1429862420-15434-1-git-send-email-alison_chaiken@mentor.com>
- <1429862420-15434-2-git-send-email-alison_chaiken@mentor.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] ARM: dts: imx5: Add dts files for USB armory.
+Date: Mon, 27 Apr 2015 16:14:29 +0800
+Message-ID: <20150427081428.GC9231@dragon>
+References: <87h9t6i40r.fsf@aikidev.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1429862420-15434-2-git-send-email-alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org
+In-Reply-To: <87h9t6i40r.fsf@aikidev.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vagrant Cascadian <vagrant@debian.org>
+Cc: devicetree@vger.kernel.org, Andrej Rosano <andrej@inversepath.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2015 at 01:00:20AM -0700, alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org wrote:
-> From: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+On Fri, Mar 27, 2015 at 01:23:00PM -0700, Vagrant Cascadian wrote:
+> Add support for the USB armory board by Inverse Path. This board
+> features a Freescale iMX53 SoC, 512MB RAM, and USB OTG operating in
+> either peripheral or host mode, and 5 GPIO pins.
 > 
-> Create an imx6qdl-sabreauto-weim-nor.dtsi file whose inclusion in
-> a DTS file sets GPIO5 to the level at boot that the WEIM-NOR
-> device requires.  The GPIO is set via the gpio-hogging mechanism.
-> Devices whose pinmux needs conflict with those of NOR are disabled.
+> One .dtb is generated for operating in peripheral mode, and one is
+> generated for operating in host mode.
+
+Is it possible to ask bootloader to patch the dtb instead of maintaining
+a new one for just changing one USB property?
+
 > 
-> Signed-off-by: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-
-- The patch numbering is confusing.  It says this 1/2, but I never saw
-  patch 2/2.
-
-- The patch is prefixed in a way different than what we usually do -
-  'ARM: dts: ...'
-
-- The commit log is vague.  GPIO5 is not a GPIO pin but a GPIO port.
-
-- The patch is incomplete if I understand WEIM NOR on SabreAuto
-  correctly. Not only EIM_D18 but also EIM_D30 needs to be steered,
-  right?  And how are the steering pins EIMD18_I2C3_STEER and
-  EIMD30_BTUART3_STEER being configured as GPIO in pinctrl?
-
-Shawn
-
+> Signed-off-by: Vagrant Cascadian <vagrant@debian.org>
+> Cc: Andrej Rosano <andrej@inversepath.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->  arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi | 43 +++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi
+>  arch/arm/boot/dts/Makefile                      |   2 +
+>  arch/arm/boot/dts/imx53-usbarmory-host_mode.dts |  17 +++
+>  arch/arm/boot/dts/imx53-usbarmory.dts           |  13 ++
+>  arch/arm/boot/dts/imx53-usbarmory.dtsi          | 183 ++++++++++++++++++++++++
+>  4 files changed, 215 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
+>  create mode 100644 arch/arm/boot/dts/imx53-usbarmory.dts
+>  create mode 100644 arch/arm/boot/dts/imx53-usbarmory.dtsi
 > 
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index a1c776b..bd2258b 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -244,6 +244,8 @@ dtb-$(CONFIG_SOC_IMX53) += \
+>  	imx53-smd.dtb \
+>  	imx53-tx53-x03x.dtb \
+>  	imx53-tx53-x13x.dtb \
+> +	imx53-usbarmory.dtb \
+> +	imx53-usbarmory-host_mode.dtb \
+>  	imx53-voipac-bsb.dtb
+>  dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6dl-aristainetos_4.dtb \
+> diff --git a/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts b/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
 > new file mode 100644
-> index 0000000..a126335
+> index 0000000..a94cb1d
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi
-> @@ -0,0 +1,43 @@
+> +++ b/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
+> @@ -0,0 +1,17 @@
 > +/*
-> + * Copyright 2012 Freescale Semiconductor, Inc.
-> + * Copyright 2011 Linaro Ltd.
-> + * Copyright (c) 2015 Mentor Graphics Inc.
+> + * Copyright 2015 Inverse Path, S.r.l.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+
+For new dts file, we suggest to use GPL/X11 dual-license for considering
+non-Linux device tree users.  Below is an example.
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/imx6q-hummingboard.dts
+
+> +
+> +/dts-v1/;
+> +#include "imx53-usbarmory.dtsi"
+> +
+> +&usbotg {
+> +	dr_mode = "host";
+> +};
+> diff --git a/arch/arm/boot/dts/imx53-usbarmory.dts b/arch/arm/boot/dts/imx53-usbarmory.dts
+> new file mode 100644
+> index 0000000..c86a4d8
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx53-usbarmory.dts
+> @@ -0,0 +1,13 @@
+> +/*
+> + * Copyright 2015 Inverse Path, S.r.l.
 > + *
 > + * The code contained herein is licensed under the GNU General Public
 > + * License. You may obtain a copy of the GNU General Public License
@@ -65,40 +107,218 @@ Shawn
 > + * http://www.gnu.org/copyleft/gpl.html
 > + */
 > +
-> +&gpio5 {
-> +	weim_nor {
-> +		gpio-hog;
-> +		gpios = <4 0>;
-> +		output-low;
-> +		line-name = "weim-nor-gpio";
+> +/dts-v1/;
+> +#include "imx53-usbarmory.dtsi"
+> diff --git a/arch/arm/boot/dts/imx53-usbarmory.dtsi b/arch/arm/boot/dts/imx53-usbarmory.dtsi
+> new file mode 100644
+> index 0000000..b4a9052
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx53-usbarmory.dtsi
+> @@ -0,0 +1,183 @@
+> +/*
+> + * Copyright 2015 Inverse Path, S.r.l.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include "imx53.dtsi"
+> +
+> +/ {
+> +	model = "Inverse Path USB armory";
+> +	compatible = "inversepath,imx53-usbarmory", "fsl,imx53";
+> +};
+> +
+> +/ {
+> +	chosen {
+> +		stdout-path = &uart1;
+> +	};
+> +
+> +	memory {
+> +		reg = <0x70000000 0x20000000>;
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&led_pin_gpio4_27>;
+> +
+> +		user {
+> +			label = "LED";
+> +			gpios = <&gpio4 27 0>;
+> +			linux,default-trigger = "heartbeat";
+> +		};
 > +	};
 > +};
 > +
-> +&weim {
+> +&esdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_esdhc1>;
 > +	status = "okay";
 > +};
 > +
-> +/* Disable devices that have pinmux conflicts with WEIM */
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
 > +
-> +&i2c3 {
-> +	status = "disabled";
+> +	imx53-usbarmory {
+> +		pinctrl_hog: hoggrp {
+> +			fsl,pins = <
+> +				MX53_PAD_GPIO_0__CCM_SSI_EXT1_CLK 0x80000000
+> +				MX53_PAD_GPIO_8__GPIO1_8          0x80000000
+> +				MX53_PAD_PATA_DATA14__GPIO2_14    0x80000000
+> +				MX53_PAD_PATA_DATA15__GPIO2_15    0x80000000
+> +				MX53_PAD_EIM_DA11__GPIO3_11       0x80000000
+> +				MX53_PAD_EIM_DA12__GPIO3_12       0x80000000
+> +				MX53_PAD_PATA_DA_0__GPIO7_6       0x80000000
+> +				MX53_PAD_PATA_DA_2__GPIO7_8	  0x80000000
+> +				MX53_PAD_GPIO_16__GPIO7_11        0x80000000
+
+Please use a proper pad configuration value instead of using whatever
+comes from firmware.
+
+> +			>;
+> +		};
+> +
+> +		led_pin_gpio4_27: led_gpio4_27@0 {
+> +			fsl,pins = <
+> +				MX53_PAD_DISP0_DAT6__GPIO4_27 0x80000000
+
+Ditto
+
+> +			>;
+> +		};
+> +
+> +		pinctrl_esdhc1: esdhc1grp {
+> +			fsl,pins = <
+> +				MX53_PAD_SD1_DATA0__ESDHC1_DAT0		0x1d5
+> +				MX53_PAD_SD1_DATA1__ESDHC1_DAT1		0x1d5
+> +				MX53_PAD_SD1_DATA2__ESDHC1_DAT2		0x1d5
+> +				MX53_PAD_SD1_DATA3__ESDHC1_DAT3		0x1d5
+> +				MX53_PAD_SD1_CMD__ESDHC1_CMD		0x1d5
+> +				MX53_PAD_SD1_CLK__ESDHC1_CLK		0x1d5
+> +			>;
+> +		};
+> +
+> +		pinctrl_i2c1: i2c1grp {
+> +			fsl,pins = <
+> +				MX53_PAD_CSI0_DAT8__I2C1_SDA	0xc0000000
+> +				MX53_PAD_CSI0_DAT9__I2C1_SCL	0xc0000000
+
+Ditto
+
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart1: uart1grp {
+> +			fsl,pins = <
+> +				MX53_PAD_CSI0_DAT10__UART1_TXD_MUX	0x1e4
+> +				MX53_PAD_CSI0_DAT11__UART1_RXD_MUX	0x1e4
+> +			>;
+> +		};
+> +	};
 > +};
 > +
-> +&uart3 {
-> +	status = "disabled";
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
 > +};
 > +
-> +&ecspi1 {
-> +	status = "disabled";
+> +&vpu {
+> +	status = "okay";
+> +};
+
+This is unnecessary, as vpu block is always enabled in imx53.dtsi.
+
+> +
+> +&usbotg {
+> +	dr_mode = "peripheral";
+> +	status = "okay";
 > +};
 > +
-> +&usdhc3 {
-> +	status = "disabled";
+> +&i2c1 {
+
+Please sort the node alphabetically in label names.
+
+> +	ltc3589: pmic@34 {
+> +		compatible = "lltc,ltc3589-2";
+> +		reg = <0x34>;
+> +
+> +		regulators {
+> +			sw1_reg: sw1 {
+> +				regulator-min-microvolt = <591930>;
+> +				regulator-max-microvolt = <1224671>;
+> +				lltc,fb-voltage-divider = <100000 158000>;
+> +				regulator-ramp-delay = <7000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw2_reg: sw2 {
+> +				regulator-min-microvolt = <704123>;
+> +				regulator-max-microvolt = <1456803>;
+> +				lltc,fb-voltage-divider = <180000 191000>;
+> +				regulator-ramp-delay = <7000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3_reg: sw3 {
+> +				regulator-min-microvolt = <1341250>;
+> +				regulator-max-microvolt = <2775000>;
+> +				lltc,fb-voltage-divider = <270000 100000>;
+> +				regulator-ramp-delay = <7000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			bb_out_reg: bb-out {
+> +				regulator-min-microvolt = <3387341>;
+> +				regulator-max-microvolt = <3387341>;
+> +				lltc,fb-voltage-divider = <511000 158000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+
+Miss a new line here.
+
+Shawn
+
+> +			ldo1_reg: ldo1 {
+> +				regulator-min-microvolt = <1306329>;
+> +				regulator-max-microvolt = <1306329>;
+> +				lltc,fb-voltage-divider = <100000 158000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo2_reg: ldo2 {
+> +				regulator-min-microvolt = <704123>;
+> +				regulator-max-microvolt = <1456806>;
+> +				lltc,fb-voltage-divider = <180000 191000>;
+> +				regulator-ramp-delay = <7000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo3_reg: ldo3 {
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo4_reg: ldo4 {
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <3200000>;
+> +			};
+> +		};
+> +	};
 > +};
 > -- 
 > 2.1.4
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
