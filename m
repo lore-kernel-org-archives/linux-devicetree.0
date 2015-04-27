@@ -1,37 +1,54 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] ARM: shmobile: sh73a0 dtsi: Fix SCIFB naming
-Date: Mon, 27 Apr 2015 15:55:24 +0200
-Message-ID: <1430142924-15777-2-git-send-email-geert+renesas@glider.be>
-References: <1430142924-15777-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1430142924-15777-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: LED subsystem child DT node ref counting
+Date: Mon, 27 Apr 2015 08:57:21 -0500
+Message-ID: <CAL_JsqLVEKN_XWOLz2uOVbhf3NWf=b27DXh8NhaqvfrNsU+WNw@mail.gmail.com>
+References: <5530E891.20707@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <5530E891.20707@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The single SCIFB on SH-Mobile AG5 is called "scifb", not "scifb8".
+On Fri, Apr 17, 2015 at 6:03 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> Hi,
+>
+> I'd like to clarify whether LED subsystem drivers behave correctly
+> or not, regarding child DT nodes reference counting.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Cfr. commit 0b3a0ef613538cae ("ARM: shmobile: r8a73a4: fix scifb* naming")
----
- arch/arm/boot/dts/sh73a0.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In general, the DT reference counting is broken. It is really only
+used on pSeries and only for certain nodes on it.
 
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index 0bdb1da60487b431..11e17c5f26e2cae2 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -376,7 +376,7 @@
- 		status = "disabled";
- 	};
- 
--	scifb8: serial@e6c30000 {
-+	scifb: serial@e6c30000 {
- 		compatible = "renesas,scifb-sh73a0", "renesas,scifb";
- 		reg = <0xe6c30000 0x100>;
- 		interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
--- 
-1.9.1
+> Single LED controller can have connected more then one LED to it.
+> The LEDs are represented by child DT nodes of the node representing
+> the controller (see Documentation/devicetree/bindings/leds).
+>
+> LED subsystem drivers parse child DT nodes and use the node name,
+> or 'label' property string as the LED class device name.
+>
+> This is usually accomplished like below:
+>
+> for_each_child_of_node(np, child) {
+>     ...
+>     led.name = of_get_property(child, "label", NULL) ? : child->name;
+>
+>
+> The question is whether reference count of the child node shouldn't
+> be increased here with of_node_get(child). Whereas intuitively it could
+> be thought of as a right thing to do, empirical experiments don't
+> necessary confirm that.
+>
+> When I print the value of child_node->kobj.kref.refcount.counter
+> inside for_each loop it is 3 and and after leaving the loop it gets
+> decreased to 2. On driver removal the value is also 2. It means that
+> label is available all the time, without increasing child node ref
+> counter.
 
+I believe the ref count is only left incremented if you break from the
+loop. Otherwise, it is only incremented during the loop one child at a
+time.
+
+Rob
