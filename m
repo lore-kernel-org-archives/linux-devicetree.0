@@ -1,78 +1,50 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [RFC] PCI: designware: missing *config* reg space
-Date: Mon, 27 Apr 2015 16:27:06 -0400
-Message-ID: <553E9B9A.5090000@ti.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V2 2/4] misc: ti-st: use of_get_named_gpio_flags for nshutdown
+Date: Mon, 27 Apr 2015 16:29:22 -0400
+Message-ID: <553E9C22.4030702@hurleysoftware.com>
+References: <20150427085242.GM16501@mwanda> <1430162849-8804-1-git-send-email-eric.nelson@boundarydevices.com> <1430162849-8804-2-git-send-email-eric.nelson@boundarydevices.com> <553E97E8.4080103@hurleysoftware.com> <553E99A7.1080206@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>, Mohit Kumar <mohit.kumar@st.com>, Lucas Stach <l.stach@pengutronix.de>, KISHON VIJAY <kishon@ti.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <553E99A7.1080206-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, der.herr-kA1LtwSENNE@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, gigi.joseph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eyalr-l0cyMroinI0@public.gmane.org, robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-All,
+Hi Eric,
 
-I would like to take action to resolve the following print message 
-thrown by PCI designware core driver when kernel boots up on Keystone.
+On 04/27/2015 04:18 PM, Eric Nelson wrote:
+> Hi Peter,
+> 
+> On 04/27/2015 01:11 PM, Peter Hurley wrote:
+>> On 04/27/2015 03:27 PM, Eric Nelson wrote:
+>>> Use of_get_named_gpio_flags to retrieve the "nshutdown" gpio connected
+>>> to the BT_EN pin of the device when retrieving platform data from device
+>>> tree.
+>>
+>> This breaks all existing DTs wrt the 'nshutdown_gpio' key.
+>> I suggest using a different, optional key in the absence of 'nshutdown_gpio'.
+>>
+> 
+> You mean all zero of them up-stream ;)?
 
-[    0.415778] keystone-pcie 21801000.pcie: missing *config* reg space
-
-As per DT documentation introduced by commit 
-4dd964df36d0e548e1806ec2ec275b62d4dc46e8 "PCI: designware: Look for 
-configuration space in 'reg', not 'ranges'
-
-This is introduced to stop abusing the range property for defining 
-resource for config space. However if the device binding doesn't have
-reg-name = "config" defined, this throws out an unnecessary log message
-at boot which seems to me not right. AFAIK, reg-names is not mandatory.
-config space address in Keystone case is defined using index. So for
-keystone this needs to be fixed.
-
-I propose to add the following check in the designware code to address
-this. Keystone uses an older version of the Designware IP and doesn't 
-have the ATU support. So va_cfg0_base and va_cfg1_base are already set 
-up in ks_dw_pcie_host_init() before calling dw_pcie_host_init() and 
-points to the remote config space address (both same for keystone). I 
-think for other DW drivers, these variables are NULL. So add a check and 
-avoid this error message for Keystone. Any comments?
+"nshutdown_gpio" DT key became ABI as of 4.0
 
 
---- a/drivers/pci/host/pcie-designware.c
-+++ b/drivers/pci/host/pcie-designware.c
-@@ -348,7 +348,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-         struct platform_device *pdev = to_platform_device(pp->dev);
-         struct of_pci_range range;
-         struct of_pci_range_parser parser;
--       struct resource *cfg_res;
-+       struct resource *cfg_res = NULL;
-         u32 val, na, ns;
-         const __be32 *addrp;
-         int i, index, ret;
-@@ -359,7 +359,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
-         of_property_read_u32(np, "#address-cells", &na);
-         ns = of_n_size_cells(np);
+> I did forward a patch set to the maintainers of the ti-linux-kernel on
+> git.ti.com:
+> 
+> 	https://git.ti.com/ti-linux-kernel/ti-linux-kernel
+> 
+> Regards,
+> 
+> 
+> Eric
+> 
 
--       cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, 
-"config");
-+       if (!pp->va_cfg0_base && !pp->va_cfg0_base)
-+               cfg_res = platform_get_resource_byname(pdev,
-+                                                      IORESOURCE_MEM,
-+                                                      "config");
-+
-         if (cfg_res) {
-                 pp->cfg0_size = resource_size(cfg_res)/2;
-                 pp->cfg1_size = resource_size(cfg_res)/2;
-@@ -372,7 +376,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
-                 pp->cfg0_mod_base = of_read_number(addrp, ns);
-                 pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
-         } else {
--               dev_err(pp->dev, "missing *config* reg space\n");
-+               if (!pp->va_cfg0_base && !pp->va_cfg1_base)
-+                       dev_err(pp->dev, "missing *config* reg space\n");
-         }
-
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
