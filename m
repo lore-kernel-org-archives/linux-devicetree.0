@@ -1,332 +1,87 @@
-From: Andrej Rosano <andrej@inversepath.com>
-Subject: Re: [PATCH] ARM: dts: imx5: Add dts files for USB armory.
-Date: Mon, 27 Apr 2015 15:37:08 +0200
-Message-ID: <20150427133708.GC11598@core.inversepath.com>
-References: <87h9t6i40r.fsf@aikidev.net>
- <20150427115747.GA11975@dragon>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v3 00/12] MIPS: ath79: Add OF support and DTS for TL-WR1043ND
+Date: Mon, 27 Apr 2015 10:42:32 -0300
+Message-ID: <553E3CC8.3070304@vanguardiasur.com.ar>
+References: <1429875679-14973-1-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20150427115747.GA11975@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vagrant Cascadian <vagrant@debian.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429875679-14973-1-git-send-email-albeu@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alban Bedel <albeu@free.fr>, linux-mips@linux-mips.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-On Mon, Apr 27, 2015 at 07:57:48PM +0800, Shawn Guo wrote:
-> +Peter
+On 04/24/2015 08:41 AM, Alban Bedel wrote:
+> This series add OF bindings and code support for the interrupt
+> controllers, clocks and GPIOs. However it was only tested on a
+> TL-WR1043ND with an AR9132, others SoCs are untested, and a few are
+> not supported at all.
 > 
-> On Fri, Mar 27, 2015 at 01:23:00PM -0700, Vagrant Cascadian wrote:
-> > Add support for the USB armory board by Inverse Path. This board
-> > features a Freescale iMX53 SoC, 512MB RAM, and USB OTG operating in
-> > either peripheral or host mode, and 5 GPIO pins.
-> > 
-> > One .dtb is generated for operating in peripheral mode, and one is
-> > generated for operating in host mode.
+> Most code changes base on the previous bug fix series:
+> [PATCH v2 0/5] MIPS: ath79: Various small fix to prepare OF support
 > 
-> Vagrant,
+> The requested patch to move the GPIO driver to drivers/gpio is ready and
+> will follow once it is clearer if this serie get merged.
 > 
-> Does that mean this board can work in peripheral or host mode but can
-> switch between them at run-time?
-
-The board can switch between host and peripheral mode without any
-hardware modification, but it need to reboot itself to pick up the
-corresponding dtb file. I am not sure if there is possible using the
-devicetree overlay feature to switch between the two modes runtime.
-
-Andrej
-
+> ChangeLog:
+> v2: * Fixed the OF bindings and DTS to use ePAPR standardized names
+>     * Fixed the typos in the OF bindings
+>     * Added an ngpios property to the GPIO binding and driver
+>     * Removed all the soc_is_xxx() calls out of the GPIO driver probe()
+>     * Updated the DTS patches to the new directory structure and merged both
+>       in one. Having 3 patches to add Makefile, SoC dtsi and board DTS seemed
+>       a bit overkill.
+>     * Moved the patch to use the common clk API to the bug fix serie to keep
+>       this one cleaner.
 > 
-> Shawn
+> v3: * Moved the builtin DTB menu to the patch adding the TL-WR1043ND DTS
+>     * Made the builtin DTB menu optional
+>     * Fixed more typos
+>     * Really fixed the DDR controller binding example to use ePAPR names
+>     * Fixed the qca9550 compatible string in the PLL bindings and driver
+>     * Fixed the example in the GPIO controller binding
+>     * Moved the new vendor entry to the correct place
 > 
-> > 
-> > Signed-off-by: Vagrant Cascadian <vagrant@debian.org>
-> > Cc: Andrej Rosano <andrej@inversepath.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Pawel Moll <pawel.moll@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> > Cc: Kumar Gala <galak@codeaurora.org>
-> > Cc: Russell King <linux@arm.linux.org.uk>
-> > Cc: Shawn Guo <shawn.guo@linaro.org>
-> > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  arch/arm/boot/dts/Makefile                      |   2 +
-> >  arch/arm/boot/dts/imx53-usbarmory-host_mode.dts |  17 +++
-> >  arch/arm/boot/dts/imx53-usbarmory.dts           |  13 ++
-> >  arch/arm/boot/dts/imx53-usbarmory.dtsi          | 183 ++++++++++++++++++++++++
-> >  4 files changed, 215 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
-> >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory.dts
-> >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory.dtsi
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index a1c776b..bd2258b 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -244,6 +244,8 @@ dtb-$(CONFIG_SOC_IMX53) += \
-> >  	imx53-smd.dtb \
-> >  	imx53-tx53-x03x.dtb \
-> >  	imx53-tx53-x13x.dtb \
-> > +	imx53-usbarmory.dtb \
-> > +	imx53-usbarmory-host_mode.dtb \
-> >  	imx53-voipac-bsb.dtb
-> >  dtb-$(CONFIG_SOC_IMX6Q) += \
-> >  	imx6dl-aristainetos_4.dtb \
-> > diff --git a/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts b/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
-> > new file mode 100644
-> > index 0000000..a94cb1d
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
-> > @@ -0,0 +1,17 @@
-> > +/*
-> > + * Copyright 2015 Inverse Path, S.r.l.
-> > + *
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> > + *
-> > + * http://www.opensource.org/licenses/gpl-license.html
-> > + * http://www.gnu.org/copyleft/gpl.html
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "imx53-usbarmory.dtsi"
-> > +
-> > +&usbotg {
-> > +	dr_mode = "host";
-> > +};
-> > diff --git a/arch/arm/boot/dts/imx53-usbarmory.dts b/arch/arm/boot/dts/imx53-usbarmory.dts
-> > new file mode 100644
-> > index 0000000..c86a4d8
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx53-usbarmory.dts
-> > @@ -0,0 +1,13 @@
-> > +/*
-> > + * Copyright 2015 Inverse Path, S.r.l.
-> > + *
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> > + *
-> > + * http://www.opensource.org/licenses/gpl-license.html
-> > + * http://www.gnu.org/copyleft/gpl.html
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "imx53-usbarmory.dtsi"
-> > diff --git a/arch/arm/boot/dts/imx53-usbarmory.dtsi b/arch/arm/boot/dts/imx53-usbarmory.dtsi
-> > new file mode 100644
-> > index 0000000..b4a9052
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx53-usbarmory.dtsi
-> > @@ -0,0 +1,183 @@
-> > +/*
-> > + * Copyright 2015 Inverse Path, S.r.l.
-> > + *
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> > + *
-> > + * http://www.opensource.org/licenses/gpl-license.html
-> > + * http://www.gnu.org/copyleft/gpl.html
-> > + */
-> > +
-> > +#include "imx53.dtsi"
-> > +
-> > +/ {
-> > +	model = "Inverse Path USB armory";
-> > +	compatible = "inversepath,imx53-usbarmory", "fsl,imx53";
-> > +};
-> > +
-> > +/ {
-> > +	chosen {
-> > +		stdout-path = &uart1;
-> > +	};
-> > +
-> > +	memory {
-> > +		reg = <0x70000000 0x20000000>;
-> > +	};
-> > +
-> > +	leds {
-> > +		compatible = "gpio-leds";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&led_pin_gpio4_27>;
-> > +
-> > +		user {
-> > +			label = "LED";
-> > +			gpios = <&gpio4 27 0>;
-> > +			linux,default-trigger = "heartbeat";
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&esdhc1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_esdhc1>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&iomuxc {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_hog>;
-> > +
-> > +	imx53-usbarmory {
-> > +		pinctrl_hog: hoggrp {
-> > +			fsl,pins = <
-> > +				MX53_PAD_GPIO_0__CCM_SSI_EXT1_CLK 0x80000000
-> > +				MX53_PAD_GPIO_8__GPIO1_8          0x80000000
-> > +				MX53_PAD_PATA_DATA14__GPIO2_14    0x80000000
-> > +				MX53_PAD_PATA_DATA15__GPIO2_15    0x80000000
-> > +				MX53_PAD_EIM_DA11__GPIO3_11       0x80000000
-> > +				MX53_PAD_EIM_DA12__GPIO3_12       0x80000000
-> > +				MX53_PAD_PATA_DA_0__GPIO7_6       0x80000000
-> > +				MX53_PAD_PATA_DA_2__GPIO7_8	  0x80000000
-> > +				MX53_PAD_GPIO_16__GPIO7_11        0x80000000
-> > +			>;
-> > +		};
-> > +
-> > +		led_pin_gpio4_27: led_gpio4_27@0 {
-> > +			fsl,pins = <
-> > +				MX53_PAD_DISP0_DAT6__GPIO4_27 0x80000000
-> > +			>;
-> > +		};
-> > +
-> > +		pinctrl_esdhc1: esdhc1grp {
-> > +			fsl,pins = <
-> > +				MX53_PAD_SD1_DATA0__ESDHC1_DAT0		0x1d5
-> > +				MX53_PAD_SD1_DATA1__ESDHC1_DAT1		0x1d5
-> > +				MX53_PAD_SD1_DATA2__ESDHC1_DAT2		0x1d5
-> > +				MX53_PAD_SD1_DATA3__ESDHC1_DAT3		0x1d5
-> > +				MX53_PAD_SD1_CMD__ESDHC1_CMD		0x1d5
-> > +				MX53_PAD_SD1_CLK__ESDHC1_CLK		0x1d5
-> > +			>;
-> > +		};
-> > +
-> > +		pinctrl_i2c1: i2c1grp {
-> > +			fsl,pins = <
-> > +				MX53_PAD_CSI0_DAT8__I2C1_SDA	0xc0000000
-> > +				MX53_PAD_CSI0_DAT9__I2C1_SCL	0xc0000000
-> > +			>;
-> > +		};
-> > +
-> > +		pinctrl_uart1: uart1grp {
-> > +			fsl,pins = <
-> > +				MX53_PAD_CSI0_DAT10__UART1_TXD_MUX	0x1e4
-> > +				MX53_PAD_CSI0_DAT11__UART1_RXD_MUX	0x1e4
-> > +			>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&uart1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_uart1>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&vpu {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&usbotg {
-> > +	dr_mode = "peripheral";
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c1 {
-> > +	ltc3589: pmic@34 {
-> > +		compatible = "lltc,ltc3589-2";
-> > +		reg = <0x34>;
-> > +
-> > +		regulators {
-> > +			sw1_reg: sw1 {
-> > +				regulator-min-microvolt = <591930>;
-> > +				regulator-max-microvolt = <1224671>;
-> > +				lltc,fb-voltage-divider = <100000 158000>;
-> > +				regulator-ramp-delay = <7000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw2_reg: sw2 {
-> > +				regulator-min-microvolt = <704123>;
-> > +				regulator-max-microvolt = <1456803>;
-> > +				lltc,fb-voltage-divider = <180000 191000>;
-> > +				regulator-ramp-delay = <7000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw3_reg: sw3 {
-> > +				regulator-min-microvolt = <1341250>;
-> > +				regulator-max-microvolt = <2775000>;
-> > +				lltc,fb-voltage-divider = <270000 100000>;
-> > +				regulator-ramp-delay = <7000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			bb_out_reg: bb-out {
-> > +				regulator-min-microvolt = <3387341>;
-> > +				regulator-max-microvolt = <3387341>;
-> > +				lltc,fb-voltage-divider = <511000 158000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +			ldo1_reg: ldo1 {
-> > +				regulator-min-microvolt = <1306329>;
-> > +				regulator-max-microvolt = <1306329>;
-> > +				lltc,fb-voltage-divider = <100000 158000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			ldo2_reg: ldo2 {
-> > +				regulator-min-microvolt = <704123>;
-> > +				regulator-max-microvolt = <1456806>;
-> > +				lltc,fb-voltage-divider = <180000 191000>;
-> > +				regulator-ramp-delay = <7000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			ldo3_reg: ldo3 {
-> > +				regulator-min-microvolt = <2800000>;
-> > +				regulator-max-microvolt = <2800000>;
-> > +				regulator-boot-on;
-> > +			};
-> > +
-> > +			ldo4_reg: ldo4 {
-> > +				regulator-min-microvolt = <1200000>;
-> > +				regulator-max-microvolt = <3200000>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > -- 
-> > 2.1.4
-> > 
-> 
+> Alban Bedel (12):
+>   devicetree: Add bindings for the SoC of the ATH79 family
+>   MIPS: ath79: Add basic device tree support
+>   devicetree: Add bindings for the ATH79 DDR controllers
+>   devicetree: Add bindings for the ATH79 interrupt controllers
+>   devicetree: Add bindings for the ATH79 MISC interrupt controllers
+>   MIPS: ath79: Add OF support to the IRQ controllers
+>   devicetree: Add bindings for the ATH79 PLL controllers
+>   MIPS: ath79: Add OF support to the clocks
+>   devicetree: Add bindings for the ATH79 GPIO controllers
+>   MIPS: ath79: Add OF support to the GPIO driver
+>   of: Add vendor prefix for TP-Link Technologies Co. Ltd
+>   MIPS: Add basic support for the TL-WR1043ND version 1
 > 
 
---
-Andrej Rosano                                           Inverse Path Srl
-<andrej@inversepath.com>                      http://www.inversepath.com
+Hi Alban,
 
-0x01939B21            5BB8 574E 68E8 D841 E18F  D5E9 CEAD E0CF 0193 9B21
+I've booted a Carambola2 using this (plus a custom devicetree and some
+small changes):
+
+Tested-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+
+Just a small comment/question: Shouldn't we allow to build all the
+devicetree files, instead of just the one that will be built-in?
+
+I.e., something like this:
+
+dtb-$(CONFIG_MATCH_ATH79_DT)   += ar9132_tl_wr1043nd_v1.dtb
+dtb-$(CONFIG_MACH_ATH79_DT)    += ar9331_carambola2.dtb
+
+It should be useful to catch errors, but also in general, as the
+devicetree is supposed to be independent of the kernel and should be
+built separate from it.
+
+PS: This series depends on a previous patchset. It's usually useful to
+mention this in the cover letter and make a poor tester's life easier :)
+
+Thanks for the work,
+-- 
+Ezequiel Garcia, VanguardiaSur
+www.vanguardiasur.com.ar
