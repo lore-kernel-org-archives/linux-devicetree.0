@@ -1,86 +1,39 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: Re: [alsa-devel] [PATCH v3 1/2] extcon: arizona: Add support for
- select accessory detect mode when headphone detection
-Date: Mon, 27 Apr 2015 10:26:04 +0900
-Message-ID: <20150427102604.2dfb0ca0@songinha-Samsung-DeskTop-System>
-References: <1429701801-25287-1-git-send-email-ideal.song@samsung.com>
- <1429701801-25287-2-git-send-email-ideal.song@samsung.com>
- <20150425125025.GI3480@opensource.wolfsonmicro.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v3] dmaengine: xgene-dma: Fix sparse wannings and
+ coccinelle warnings
+Date: Mon, 27 Apr 2015 08:43:15 +0530
+Message-ID: <20150427031315.GG2738@intel.com>
+References: <1429212673-22254-1-git-send-email-rsahu@apm.com>
+ <20150417182937.GN30624@intel.com>
+ <CAFd313y-HfW_us0FVQFEkGAzf-ZCKpRtF6eYweaK0V94MBg4iQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150425125025.GI3480@opensource.wolfsonmicro.com>
+Content-Disposition: inline
+In-Reply-To: <CAFd313y-HfW_us0FVQFEkGAzf-ZCKpRtF6eYweaK0V94MBg4iQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, cw00.choi@samsung.com, broonie@kernel.org, rf@opensource.wolfsonmicro.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
+To: Rameshwar Sahu <rsahu@apm.com>, fengguang.wu@intel.com
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Apr 20, 2015 at 08:38:18AM +0530, Rameshwar Sahu wrote:
+> Hi Vinod,
+>> >> @@ -2085,6 +2043,5 @@ module_platform_driver(xgene_dma_driver);
+> >>
+> >>  MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
+> >>  MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu@apm.com>");
+> >> -MODULE_AUTHOR("Loc Ho <lho@apm.com>");
+> > And why this?
+> 
+> I saw below warning reported by the kbuild robot test
+> 
+> drivers/dma/xgene-dma.c:2088:1: sparse: symbol
+> '__UNIQUE_ID_author__COUNTER__' has multiple initializers (originally
+> initialized at drivers/dma/xgene-dma.c:2087)
+> So, I kept only one author here.
+No that is not right, sparse shouldn't have cribbed here.
 
-Thanks for your comments :)
+Fengguang can we get the bot to ignore this please
 
-
-On Sat, 25 Apr 2015 13:50:25 +0100
-Charles Keepax <ckeepax@opensource.wolfsonmicro.com> wrote:
-
-> On Wed, Apr 22, 2015 at 08:23:20PM +0900, Inha Song wrote:
-> > This patch add support for select accessory detect mode to HPDETL or HPDETR.
-> > Arizona provides a headphone detection circuit on the HPDETL and HPDETR pins
-> > to measure the impedance of an external load connected to the headphone.
-> > 
-> > Depending on board design, headphone detect pins can change to HPDETR or HPDETL.
-> > 
-> > Signed-off-by: Inha Song <ideal.song@samsung.com>
-> > ---
-> >  
-> > +static int arizona_extcon_of_get_pdata(struct arizona *arizona)
-> > +{
-> > +	struct arizona_pdata *pdata = &arizona->pdata;
-> > +	unsigned int val;
-> 
-> I would rather this is "unsigned int val =
-> ARIZONA_ACCDET_MODE_HPL;".
-> 
-> > +
-> > +	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel", &val);
-> 
-> Because this won't fill val if the DT entry isn't present.
-> 
-> > +	switch (val) {
-> 
-> Which means we hit this with val uninitialised.
-> 
-> > +	case ARIZONA_ACCDET_MODE_HPL:
-> > +	case ARIZONA_ACCDET_MODE_HPR:
-> 
-> So we may select either channel at random.
-
-Opps, Ok, I will set the default value to ARIZONA_ACCDET_MODE_HPL.
-
-> 
-> > +		pdata->hpdet_channel = val;
-> > +		break;
-> > +	default:
-> > +		dev_err(arizona->dev,
-> > +			"Wrong wlf,hpdet-channel DT value %d\n", val);
-> 
-> Or most likely just print an error but the DT being missing
-> shouldn't really be an error it is an optional entry.
-
-If the default value is set to ARIZONA_ACCDET_MODE_HPL,
-Only the print will be shown, when an invalid value is set by DT.
-So, This is a resonable error message.
-
-Best Regards,
-Inha Song.
-
-> 
-> > +		pdata->hpdet_channel = ARIZONA_ACCDET_MODE_HPL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> Thanks,
-> Charles
+-- 
+~Vinod
