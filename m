@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 08/10] ARM: shmobile: armadillo800eva dts: Use generic names for device nodes
-Date: Mon, 27 Apr 2015 14:55:32 +0200
-Message-ID: <1430139334-15272-9-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 01/10] ARM: shmobile: r8a7740 dtsi: Use generic names for device nodes
+Date: Mon, 27 Apr 2015 14:55:25 +0200
+Message-ID: <1430139334-15272-2-git-send-email-geert+renesas@glider.be>
 References: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
@@ -10,26 +10,53 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-wm8978 -> codec
+irqpin -> interrupt-controller
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7740.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-index 9bd0cb439f448d03..2e31d8c01cbf6a74 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-@@ -208,7 +208,7 @@
- 		gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 83c1c3ca1b8f1400..f265b6b194e9774d 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -67,7 +67,7 @@
  	};
  
--	wm8978: wm8978@1a {
-+	wm8978: codec@1a {
- 		#sound-dai-cells = <0>;
- 		compatible = "wlf,wm8978";
- 		reg = <0x1a>;
+ 	/* irqpin0: IRQ0 - IRQ7 */
+-	irqpin0: irqpin@e6900000 {
++	irqpin0: interrupt-controller@e6900000 {
+ 		compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
+ 		#interrupt-cells = <2>;
+ 		interrupt-controller;
+@@ -89,7 +89,7 @@
+ 	};
+ 
+ 	/* irqpin1: IRQ8 - IRQ15 */
+-	irqpin1: irqpin@e6900004 {
++	irqpin1: interrupt-controller@e6900004 {
+ 		compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
+ 		#interrupt-cells = <2>;
+ 		interrupt-controller;
+@@ -111,7 +111,7 @@
+ 	};
+ 
+ 	/* irqpin2: IRQ16 - IRQ23 */
+-	irqpin2: irqpin@e6900008 {
++	irqpin2: interrupt-controller@e6900008 {
+ 		compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
+ 		#interrupt-cells = <2>;
+ 		interrupt-controller;
+@@ -133,7 +133,7 @@
+ 	};
+ 
+ 	/* irqpin3: IRQ24 - IRQ31 */
+-	irqpin3: irqpin@e690000c {
++	irqpin3: interrupt-controller@e690000c {
+ 		compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
+ 		#interrupt-cells = <2>;
+ 		interrupt-controller;
 -- 
 1.9.1
 
