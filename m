@@ -1,66 +1,67 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH] RFC: let gpiod_get_optional et all return NULL when
- GPIOLIB is not enabled
-Date: Mon, 27 Apr 2015 17:21:53 +0200
-Message-ID: <20150427152153.GN19431@pengutronix.de>
-References: <1423731809-4800-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CACRpkdb6KcZx3WfTqUKemhQ0_OsqxBGQb_P5cXXZvgc3riakdA@mail.gmail.com>
- <20150306085957.GC10717@pengutronix.de>
- <CACRpkdYq70V8SG4XOPBCGWs__J4ehknZSucpO5OdXpMDj8GPKA@mail.gmail.com>
- <CAAVeFu+0bWSAUSaDGTUmPyj9JxEJn4yxF_hzab4CHp8YV1MuoA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 RESEND 2/2] mmc: host: Add some quirks to be read from fdt in sdhci-pltm.c
+Date: Mon, 27 Apr 2015 17:25:05 +0200
+Message-ID: <5771531.b7UhrXUGmv@wuerfel>
+References: <1429630959-32649-1-git-send-email-stripathi@apm.com> <8525627.D1S9aInyMV@wuerfel> <CAOHikRDkQwG+7EUddXmx427ZpEOjqTt22H_zzozABOE3a963tQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFu+0bWSAUSaDGTUmPyj9JxEJn4yxF_hzab4CHp8YV1MuoA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Alexandre Courbot <acourbot@nvidia.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOHikRDkQwG+7EUddXmx427ZpEOjqTt22H_zzozABOE3a963tQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Monday 27 April 2015 20:33:25 Suman Tripathi wrote:
+> > On Tuesday 21 April 2015 21:12:39 Suman Tripathi wrote:
+> > > index bef250e..9f6a4b9 100644
+> > > --- a/drivers/mmc/host/sdhci-pltfm.c
+> > > +++ b/drivers/mmc/host/sdhci-pltfm.c
+> > > @@ -85,6 +85,21 @@ void sdhci_get_of_property(struct platform_device
+> > > *pdev)
+> > >
+> > >                 if (of_get_property(np, "broken-cd", NULL))
+> > >                         host->quirks |=
+> > >SDHCI_QUIRK_BROKEN_CARD_DETECTION;
+> > >
+> > > +
+> > > +               if (of_get_property(np, "delay-after-power", NULL))
+> > > +                       host->quirks |= SDHCI_QUIRK_DELAY_AFTER_POWER;
+> > > +
+> > > +               if (of_get_property(np, "no-hispd", NULL))
+> > > +                       host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
+> > > +
+> > > +               if (of_get_property(np, "broken-adma", NULL))
+> > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_ADMA;
+> > > +
+> > > +               if (of_get_property(np, "broken-dma", NULL))
+> > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
+> > > +
+> > > +               if (of_get_property(np, "no-cmd23", NULL))
+> > > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
+> > >
+> > >                 if (of_get_property(np, "no-1-8-v", NULL))
+> > >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+> > 
+> > Any property you add needs to be documented in the DT binding.
+> > If possible, add generic properties for each bug you have mmc.txt
+> > rather than the driver specific sdhci.txt, and implement the
+> I will add the binding in mmc.txt. I thought this was present but not.
+> 
+> > parsing in a common function that is used for all mmc hosts.
+> As per mine understanding the sdhci_get_of_porperty is a common
+> parsing function  . Am I wrong ??
 
-On Thu, Apr 09, 2015 at 11:20:55AM +0900, Alexandre Courbot wrote:
-> I should have replied one month ago, but if gpiolib is disabled, how
-> can we use gpiolib-like logic to check the existence of a GPIO?
->=20
-> Having GPIO disabled means there is no GPIO support, including the
-> ability to look for GPIOs. -ENOSYS is a well-documented error-code
-> which meaning also applies to the gpio_*_optional functions (we don't
-> have support for the operation you requested). If a driver or
-> architecture really, really needs GPIO support they can require or
-> depend on CONFIG_GPIOLIB, and the problem goes away. If they can work
-> with and without gpiolib, then they should check for -ENOSYS when the=
-y
-> request GPIOs and behave accordingly.
-What whould be the right behaviour in your eyes? I hope it's not
+No, this is only used for sdhci, not for the other controllers.
 
-	if (ret !=3D -ENOSYS)
-		return ret;
+> > An alternative would be to set all these bits based on the compatible
+> > string of your host, if that is the only one that has all these bugs.
+> 
+> The host driver  (arasan) is reused but this quirks are needed due to
+> board issues. so I have a control over dtb only to fix this.
 
-	/* continue and ignore error */
+What is the nature of the bug on that board? Is there a different
+way to describe that without introducing six new properties?
 
-> Moving the interpretation of what the absence of gpiolib means down t=
-o
-> the GPIO functions themselves is actually what might lead consumers t=
-o
-> not know the result of their request. For this reason I would say tha=
-t
-> -ENOSYS is appropriate here.
-Yeah, I fully agree.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
