@@ -1,49 +1,54 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 09/10] ARM: shmobile: kzm9d dts: Use generic names for device nodes
-Date: Mon, 27 Apr 2015 14:55:33 +0200
-Message-ID: <1430139334-15272-10-git-send-email-geert+renesas@glider.be>
-References: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430139334-15272-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 00/10] ARM: shmobile: Use generic names for device nodes
+Date: Mon, 27 Apr 2015 14:55:24 +0200
+Message-ID: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-lan9220 -> ethernet
-uart -> serial
+	Hi Magnus, Simon,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/emev2-kzm9d.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This patch series gets rid of the last non-generic device nodes names in
+the shmobile DTS files, and replaces them by generic names, cfr. ePAPR.
 
-diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev2-kzm9d.dts
-index 19446273e4a7f832..1dee0aa4f40cc351 100644
---- a/arch/arm/boot/dts/emev2-kzm9d.dts
-+++ b/arch/arm/boot/dts/emev2-kzm9d.dts
-@@ -81,7 +81,7 @@
- 		regulator-boot-on;
- 	};
- 
--	lan9220@20000000 {
-+	ethernet@20000000 {
- 		compatible = "smsc,lan9220", "smsc,lan9115";
- 		reg = <0x20000000 0x10000>;
- 		phy-mode = "mii";
-@@ -96,7 +96,7 @@
- };
- 
- &pfc {
--	uart1_pins: uart@e1030000 {
-+	uart1_pins: serial@e1030000 {
- 		renesas,groups = "uart1_ctrl", "uart1_data";
- 		renesas,function = "uart1";
- 	};
+Thanks for applying!
+
+Geert Uytterhoeven (10):
+  ARM: shmobile: r8a7740 dtsi: Use generic names for device nodes
+  ARM: shmobile: r8a7778 dtsi: Use generic names for device nodes
+  ARM: shmobile: r8a7779 dtsi: Use generic names for device nodes
+  ARM: shmobile: r8a7790 dtsi: Use generic names for device nodes
+  ARM: shmobile: r8a7791 dtsi: Use generic names for device nodes
+  ARM: shmobile: sh73a0 dtsi: Use generic names for device nodes
+  ARM: shmobile: ape6evm dts: Use generic names for device nodes
+  ARM: shmobile: armadillo800eva dts: Use generic names for device nodes
+  ARM: shmobile: kzm9d dts: Use generic names for device nodes
+  ARM: shmobile: marzen dts: Use generic names for device nodes
+
+ arch/arm/boot/dts/emev2-kzm9d.dts             | 4 ++--
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts         | 2 +-
+ arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 2 +-
+ arch/arm/boot/dts/r8a7740.dtsi                | 8 ++++----
+ arch/arm/boot/dts/r8a7778.dtsi                | 2 +-
+ arch/arm/boot/dts/r8a7779-marzen.dts          | 6 +++---
+ arch/arm/boot/dts/r8a7779.dtsi                | 2 +-
+ arch/arm/boot/dts/r8a7790.dtsi                | 2 +-
+ arch/arm/boot/dts/r8a7791.dtsi                | 2 +-
+ arch/arm/boot/dts/sh73a0.dtsi                 | 8 ++++----
+ 10 files changed, 19 insertions(+), 19 deletions(-)
+
 -- 
 1.9.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
