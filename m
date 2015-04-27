@@ -1,34 +1,64 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 3/8] mfd: arizona: Add support for WM8998 and WM1814
-Date: Mon, 27 Apr 2015 13:40:19 +0100
-Message-ID: <20150427124019.GA3622@opensource.wolfsonmicro.com>
-References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com> <1429619636-25478-4-git-send-email-rf@opensource.wolfsonmicro.com> <20150422110808.GU22845@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150422110808.GU22845@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, ckeepax@opensource.wolfsonmicro.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v6 6/7] PM / Domains: Retrieve PM QoS device latencies from DT
+Date: Mon, 27 Apr 2015 14:43:41 +0200
+Message-ID: <1430138622-14029-7-git-send-email-geert+renesas@glider.be>
+References: <1430138622-14029-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1430138622-14029-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Axel Haslam <ahaslam@baylibre.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2015 at 12:08:08PM +0100, Mark Brown wrote:
-> On Tue, Apr 21, 2015 at 01:33:51PM +0100, Richard Fitzgerald wrote:
-> 
-> > +	switch (arizona->type) {
-> > +	case WM8998:
-> > +	case WM1814:
-> > +		/* Some bits are shifted on WM8998,
-> > +		 * rearrange to match the standard bit layout
-> > +		 */
-> > +		val[0] = ((val[0] & 0x60e0) >> 1) |
-> > +			 ((val[0] & 0x1e00) >> 2) |
-> > +			 (val[0] & 0x000f);
-> > +		break;
-> 
-> Are you sure this approach is going to scale (and avoid confusion)?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v6:
+  - Rebased on top of v4.1-rc1 for new RFC,
 
-It's a total one-off for the WM8998/WM1814, no other codecs have
-this shifted-bit-position problem. This shouldn't happen for any
-future codecs, so I don't feel like it's worth over-complicating it.
+v4:
+  - Drop save/restore state latencies, as they're Linux driver-specific,
+  - Change state to RFC, as this is put on hold,
+
+v3:
+  - No changes,
+
+v2:
+  - New.
+---
+ drivers/base/power/domain.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index d20caa2c92b57edf..da0b9f69919988bb 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -2193,6 +2193,8 @@ int genpd_dev_pm_attach(struct device *dev)
+ 	struct device_node *np = dev->of_node;
+ 	struct of_phandle_args pd_args;
+ 	struct generic_pm_domain *pd;
++	struct gpd_timing_data td;
++	u32 latency;
+ 	int ret;
+ 
+ 	if (!np)
+@@ -2225,10 +2227,16 @@ int genpd_dev_pm_attach(struct device *dev)
+ 		return PTR_ERR(pd);
+ 	}
+ 
++	memset(&td, 0, sizeof(td));
++	if (!of_property_read_u32(np, "stop-latency", &latency))
++		td.stop_latency_ns = latency;
++	if (!of_property_read_u32(np, "start-latency", &latency))
++		td.start_latency_ns = latency;
++
+ 	dev_dbg(dev, "adding to PM domain %s\n", pd->name);
+ 
+ 	while (1) {
+-		ret = pm_genpd_add_device(pd, dev);
++		ret = __pm_genpd_add_device(pd, dev, &td);
+ 		if (ret != -EAGAIN)
+ 			break;
+ 		cond_resched();
+-- 
+1.9.1
+
