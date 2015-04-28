@@ -1,339 +1,218 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx5: Add dts files for USB armory.
-Date: Tue, 28 Apr 2015 16:20:00 +0800
-Message-ID: <20150428081959.GA32234@shlinux2>
-References: <87h9t6i40r.fsf@aikidev.net> <20150427115747.GA11975@dragon>
- <20150427133708.GC11598@core.inversepath.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: gic: Document Power and Clock Domain optional properties
+Date: Tue, 28 Apr 2015 10:28:22 +0200
+Message-ID: <CAMuHMdVY5Oh7b9Pme2jiwtV4GBPqK-T5nfxnB9_1ufFzueUjLA@mail.gmail.com>
+References: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
+	<20150427155427.GB16191@leverpostej>
+	<CAMuHMdVT=vzFazUsJtvPsyB8zX-WJqp19RNVYA=UMfWZtHnF=Q@mail.gmail.com>
+	<20150427171502.GD16191@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150427133708.GC11598-GPwhfZ5g21+KIOzWgp228laTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20150427171502.GD16191@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2015 at 03:37:08PM +0200, Andrej Rosano wrote:
-> Hi Shawn,
-> 
-> On Mon, Apr 27, 2015 at 07:57:48PM +0800, Shawn Guo wrote:
-> > +Peter
-> > 
-> > On Fri, Mar 27, 2015 at 01:23:00PM -0700, Vagrant Cascadian wrote:
-> > > Add support for the USB armory board by Inverse Path. This board
-> > > features a Freescale iMX53 SoC, 512MB RAM, and USB OTG operating in
-> > > either peripheral or host mode, and 5 GPIO pins.
-> > > 
-> > > One .dtb is generated for operating in peripheral mode, and one is
-> > > generated for operating in host mode.
-> > 
-> > Vagrant,
-> > 
-> > Does that mean this board can work in peripheral or host mode but can
-> > switch between them at run-time?
-> 
-> The board can switch between host and peripheral mode without any
-> hardware modification, but it need to reboot itself to pick up the
-> corresponding dtb file. I am not sure if there is possible using the
-> devicetree overlay feature to switch between the two modes runtime.
-> 
+Hi Mark,
 
-Not a good way, it is just one board with two different usb cables.
+On Mon, Apr 27, 2015 at 7:15 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Mon, Apr 27, 2015 at 05:43:13PM +0100, Geert Uytterhoeven wrote:
+>> On Mon, Apr 27, 2015 at 5:54 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > On Mon, Apr 27, 2015 at 04:00:11PM +0100, Geert Uytterhoeven wrote:
+>> >> On some SoCs, the GIC may be part of a PM Domain (hardware Power and/or
+>> >> Clock Domain).  Document the related optional DT properties.
+>> >>
+>> >> Note: As the current GIC driver doesn't support Runtime PM yet, PM
+>> >> Domain constraints must be handled elsewhere in e.g. platform code.
+>> >
+>> > I'm worried that without a current user these properties aren't going to
+>> > see any testing...
+>>
+>> Still, DT is supposed to describe the hardware. Even if the driver doesn't
+>> use the description.
+>
+> I appreciate that...
+>
+>> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> >> ---
+>> >> To preserve DT stability, we would like to add these properties to the
+>> >> affected shmobile dtsi files.
+>> >
+>> > ... which means that they could be wrong, and will get in the way of
+>> > stability rather than aiding it.
+>>
+>> We do know the GIC is part of the power domain, and has a controllable
+>> clock (on the affected SoCs).
+>
+> ... my concern is that the data we place into the DT will be untested
+> given that we don't have software relying on it. If said data is not
+> correct, it is harmful to have, especially for such fundamental
+> properties.
 
-Current chipidea usb driver supports role switch function well, if you
-have a gpio or id pin for it.
+Your statement challenges the viability of Stable DT Requirements, as we
+can thus never write a DTS until the full software implementation has been
+completed ;-)
 
-Peter
+We do know switching off that clock disables the GIC, as per documentation
+(and experimentation: lock up), and have used the same strategy with
+other Renesas interrupt controllers (renesas,intc-irqpin and renesas,irqc).
 
-> Andrej
-> 
-> > 
-> > Shawn
-> > 
-> > > 
-> > > Signed-off-by: Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> > > Cc: Andrej Rosano <andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>
-> > > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> > > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > > Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> > > Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > ---
-> > >  arch/arm/boot/dts/Makefile                      |   2 +
-> > >  arch/arm/boot/dts/imx53-usbarmory-host_mode.dts |  17 +++
-> > >  arch/arm/boot/dts/imx53-usbarmory.dts           |  13 ++
-> > >  arch/arm/boot/dts/imx53-usbarmory.dtsi          | 183 ++++++++++++++++++++++++
-> > >  4 files changed, 215 insertions(+)
-> > >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
-> > >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory.dts
-> > >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory.dtsi
-> > > 
-> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > > index a1c776b..bd2258b 100644
-> > > --- a/arch/arm/boot/dts/Makefile
-> > > +++ b/arch/arm/boot/dts/Makefile
-> > > @@ -244,6 +244,8 @@ dtb-$(CONFIG_SOC_IMX53) += \
-> > >  	imx53-smd.dtb \
-> > >  	imx53-tx53-x03x.dtb \
-> > >  	imx53-tx53-x13x.dtb \
-> > > +	imx53-usbarmory.dtb \
-> > > +	imx53-usbarmory-host_mode.dtb \
-> > >  	imx53-voipac-bsb.dtb
-> > >  dtb-$(CONFIG_SOC_IMX6Q) += \
-> > >  	imx6dl-aristainetos_4.dtb \
-> > > diff --git a/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts b/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
-> > > new file mode 100644
-> > > index 0000000..a94cb1d
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
-> > > @@ -0,0 +1,17 @@
-> > > +/*
-> > > + * Copyright 2015 Inverse Path, S.r.l.
-> > > + *
-> > > + * The code contained herein is licensed under the GNU General Public
-> > > + * License. You may obtain a copy of the GNU General Public License
-> > > + * Version 2 or later at the following locations:
-> > > + *
-> > > + * http://www.opensource.org/licenses/gpl-license.html
-> > > + * http://www.gnu.org/copyleft/gpl.html
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +#include "imx53-usbarmory.dtsi"
-> > > +
-> > > +&usbotg {
-> > > +	dr_mode = "host";
-> > > +};
-> > > diff --git a/arch/arm/boot/dts/imx53-usbarmory.dts b/arch/arm/boot/dts/imx53-usbarmory.dts
-> > > new file mode 100644
-> > > index 0000000..c86a4d8
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/imx53-usbarmory.dts
-> > > @@ -0,0 +1,13 @@
-> > > +/*
-> > > + * Copyright 2015 Inverse Path, S.r.l.
-> > > + *
-> > > + * The code contained herein is licensed under the GNU General Public
-> > > + * License. You may obtain a copy of the GNU General Public License
-> > > + * Version 2 or later at the following locations:
-> > > + *
-> > > + * http://www.opensource.org/licenses/gpl-license.html
-> > > + * http://www.gnu.org/copyleft/gpl.html
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +#include "imx53-usbarmory.dtsi"
-> > > diff --git a/arch/arm/boot/dts/imx53-usbarmory.dtsi b/arch/arm/boot/dts/imx53-usbarmory.dtsi
-> > > new file mode 100644
-> > > index 0000000..b4a9052
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/imx53-usbarmory.dtsi
-> > > @@ -0,0 +1,183 @@
-> > > +/*
-> > > + * Copyright 2015 Inverse Path, S.r.l.
-> > > + *
-> > > + * The code contained herein is licensed under the GNU General Public
-> > > + * License. You may obtain a copy of the GNU General Public License
-> > > + * Version 2 or later at the following locations:
-> > > + *
-> > > + * http://www.opensource.org/licenses/gpl-license.html
-> > > + * http://www.gnu.org/copyleft/gpl.html
-> > > + */
-> > > +
-> > > +#include "imx53.dtsi"
-> > > +
-> > > +/ {
-> > > +	model = "Inverse Path USB armory";
-> > > +	compatible = "inversepath,imx53-usbarmory", "fsl,imx53";
-> > > +};
-> > > +
-> > > +/ {
-> > > +	chosen {
-> > > +		stdout-path = &uart1;
-> > > +	};
-> > > +
-> > > +	memory {
-> > > +		reg = <0x70000000 0x20000000>;
-> > > +	};
-> > > +
-> > > +	leds {
-> > > +		compatible = "gpio-leds";
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&led_pin_gpio4_27>;
-> > > +
-> > > +		user {
-> > > +			label = "LED";
-> > > +			gpios = <&gpio4 27 0>;
-> > > +			linux,default-trigger = "heartbeat";
-> > > +		};
-> > > +	};
-> > > +};
-> > > +
-> > > +&esdhc1 {
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&pinctrl_esdhc1>;
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&iomuxc {
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&pinctrl_hog>;
-> > > +
-> > > +	imx53-usbarmory {
-> > > +		pinctrl_hog: hoggrp {
-> > > +			fsl,pins = <
-> > > +				MX53_PAD_GPIO_0__CCM_SSI_EXT1_CLK 0x80000000
-> > > +				MX53_PAD_GPIO_8__GPIO1_8          0x80000000
-> > > +				MX53_PAD_PATA_DATA14__GPIO2_14    0x80000000
-> > > +				MX53_PAD_PATA_DATA15__GPIO2_15    0x80000000
-> > > +				MX53_PAD_EIM_DA11__GPIO3_11       0x80000000
-> > > +				MX53_PAD_EIM_DA12__GPIO3_12       0x80000000
-> > > +				MX53_PAD_PATA_DA_0__GPIO7_6       0x80000000
-> > > +				MX53_PAD_PATA_DA_2__GPIO7_8	  0x80000000
-> > > +				MX53_PAD_GPIO_16__GPIO7_11        0x80000000
-> > > +			>;
-> > > +		};
-> > > +
-> > > +		led_pin_gpio4_27: led_gpio4_27@0 {
-> > > +			fsl,pins = <
-> > > +				MX53_PAD_DISP0_DAT6__GPIO4_27 0x80000000
-> > > +			>;
-> > > +		};
-> > > +
-> > > +		pinctrl_esdhc1: esdhc1grp {
-> > > +			fsl,pins = <
-> > > +				MX53_PAD_SD1_DATA0__ESDHC1_DAT0		0x1d5
-> > > +				MX53_PAD_SD1_DATA1__ESDHC1_DAT1		0x1d5
-> > > +				MX53_PAD_SD1_DATA2__ESDHC1_DAT2		0x1d5
-> > > +				MX53_PAD_SD1_DATA3__ESDHC1_DAT3		0x1d5
-> > > +				MX53_PAD_SD1_CMD__ESDHC1_CMD		0x1d5
-> > > +				MX53_PAD_SD1_CLK__ESDHC1_CLK		0x1d5
-> > > +			>;
-> > > +		};
-> > > +
-> > > +		pinctrl_i2c1: i2c1grp {
-> > > +			fsl,pins = <
-> > > +				MX53_PAD_CSI0_DAT8__I2C1_SDA	0xc0000000
-> > > +				MX53_PAD_CSI0_DAT9__I2C1_SCL	0xc0000000
-> > > +			>;
-> > > +		};
-> > > +
-> > > +		pinctrl_uart1: uart1grp {
-> > > +			fsl,pins = <
-> > > +				MX53_PAD_CSI0_DAT10__UART1_TXD_MUX	0x1e4
-> > > +				MX53_PAD_CSI0_DAT11__UART1_RXD_MUX	0x1e4
-> > > +			>;
-> > > +		};
-> > > +	};
-> > > +};
-> > > +
-> > > +&uart1 {
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&pinctrl_uart1>;
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&vpu {
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&usbotg {
-> > > +	dr_mode = "peripheral";
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&i2c1 {
-> > > +	ltc3589: pmic@34 {
-> > > +		compatible = "lltc,ltc3589-2";
-> > > +		reg = <0x34>;
-> > > +
-> > > +		regulators {
-> > > +			sw1_reg: sw1 {
-> > > +				regulator-min-microvolt = <591930>;
-> > > +				regulator-max-microvolt = <1224671>;
-> > > +				lltc,fb-voltage-divider = <100000 158000>;
-> > > +				regulator-ramp-delay = <7000>;
-> > > +				regulator-boot-on;
-> > > +				regulator-always-on;
-> > > +			};
-> > > +
-> > > +			sw2_reg: sw2 {
-> > > +				regulator-min-microvolt = <704123>;
-> > > +				regulator-max-microvolt = <1456803>;
-> > > +				lltc,fb-voltage-divider = <180000 191000>;
-> > > +				regulator-ramp-delay = <7000>;
-> > > +				regulator-boot-on;
-> > > +				regulator-always-on;
-> > > +			};
-> > > +
-> > > +			sw3_reg: sw3 {
-> > > +				regulator-min-microvolt = <1341250>;
-> > > +				regulator-max-microvolt = <2775000>;
-> > > +				lltc,fb-voltage-divider = <270000 100000>;
-> > > +				regulator-ramp-delay = <7000>;
-> > > +				regulator-boot-on;
-> > > +				regulator-always-on;
-> > > +			};
-> > > +
-> > > +			bb_out_reg: bb-out {
-> > > +				regulator-min-microvolt = <3387341>;
-> > > +				regulator-max-microvolt = <3387341>;
-> > > +				lltc,fb-voltage-divider = <511000 158000>;
-> > > +				regulator-boot-on;
-> > > +				regulator-always-on;
-> > > +			};
-> > > +			ldo1_reg: ldo1 {
-> > > +				regulator-min-microvolt = <1306329>;
-> > > +				regulator-max-microvolt = <1306329>;
-> > > +				lltc,fb-voltage-divider = <100000 158000>;
-> > > +				regulator-boot-on;
-> > > +				regulator-always-on;
-> > > +			};
-> > > +
-> > > +			ldo2_reg: ldo2 {
-> > > +				regulator-min-microvolt = <704123>;
-> > > +				regulator-max-microvolt = <1456806>;
-> > > +				lltc,fb-voltage-divider = <180000 191000>;
-> > > +				regulator-ramp-delay = <7000>;
-> > > +				regulator-boot-on;
-> > > +				regulator-always-on;
-> > > +			};
-> > > +
-> > > +			ldo3_reg: ldo3 {
-> > > +				regulator-min-microvolt = <2800000>;
-> > > +				regulator-max-microvolt = <2800000>;
-> > > +				regulator-boot-on;
-> > > +			};
-> > > +
-> > > +			ldo4_reg: ldo4 {
-> > > +				regulator-min-microvolt = <1200000>;
-> > > +				regulator-max-microvolt = <3200000>;
-> > > +			};
-> > > +		};
-> > > +	};
-> > > +};
-> > > -- 
-> > > 2.1.4
-> > > 
-> > 
-> > 
-> 
-> --
-> Andrej Rosano                                           Inverse Path Srl
-> <andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>                      http://www.inversepath.com
-> 
-> 0x01939B21            5BB8 574E 68E8 D841 E18F  D5E9 CEAD E0CF 0193 9B21
+>> > I'm also concerned that the carving up of clock inputs, power domains,
+>> > and other physical details is implementation-specific. I imagine that
+>> > pretty much every user that will care about this is using GIC-400, so
+>> > could we make this specific to GIC-400?
+>>
+>> I have no idea which GIC version is being used.
+>
+> This is unfortunate.
+>
+>> This is for Renesas R-Mobile APE6 (r8a73a4) and various R-Car Gen2.
+>> According to the DTS, they're compatible with "arm,cortex-a15-gic" and
+>> "arm,cortex-a7-gic", and work with that value.
+>
+> Who put the DT together in the first place?
 
--- 
+Magnus (added to CC).
 
-Best Regards,
-Peter Chen
+> If it's a multi-cluster SoC then we know that we're not using any
+> built-in distributor...
+
+R-Mobile APE6 has 2 clusters (4xCA15 and 4xCA7).
+R-Car Gen2 has 1 or 2 clusters (2/4xCA15 and/or 2/4xCA7).
+
+>> >> On Thu, Mar 26, 2015 at 11:39 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> >> > On 25/03/15 21:19, Geert Uytterhoeven wrote:
+>> >> >> I would like to add the clock and GIC dependency on the clock in the DTS now,
+>> >> >> for reasons of DTS stability. But that means I need a temporary workaround
+>> >> >> to avoid the clock from being disabled, until the GIC driver handles this.
+>> >> >>
+>> >> >> I don't expect a fix for the GIC code to just show up magically. I just wanted
+>> >> >> you to be aware of the problem. GIC is not the only problematic module here,
+>> >> >> there are others, cfr. the last slide of [2].
+>> >> >
+>> >> > As long as there is an agreement from the DT people on the presence of
+>> >> > that extra property in the GIC node, I'm happy with that. I'd like it to
+>> >> > be documented though.
+>> >>
+>> >> Full thread at
+>> >> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/331876.html
+>> >>
+>> >>  Documentation/devicetree/bindings/arm/gic.txt | 8 ++++++++
+>> >>  1 file changed, 8 insertions(+)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+>> >> index 2da059a4790cb3c6..b21113b35f085f27 100644
+>> >> --- a/Documentation/devicetree/bindings/arm/gic.txt
+>> >> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+>> >> @@ -58,6 +58,14 @@ Optional
+>> >>    regions, used when the GIC doesn't have banked registers. The offset is
+>> >>    cpu-offset * cpu-nr.
+>> >>
+>> >> +- power-domains : A phandle and PM domain specifier as defined by bindings of
+>> >> +               the power controller specified by phandle, used when the GIC
+>> >> +               is part of a Power or Clock Domain.
+>> >
+>> > I imagine that it's possible for the distributor and CPU interfaces to
+>> > be in separate power domains in some implementaitons.
+>>
+>> Possibly (then we're gonna need subnodes, each with their own
+>> power-domains properties?).
+>
+> Potentially for such implementations, yes. To the best of my knowledge a
+> GIC-400 is a single block, which is one reason why it would be nice to
+> focus on that particular implementation if that's applicable.
+>
+>> > Which components of the GIC does the apply to? The whole thing? Just the
+>> > GICD?
+>>
+>> Unfortunately that's not documented...
+>
+> That worries me somewhat, given my comments above, though I'd very much
+> suspect this is a GIC-400.
+>
+>> >> +- clocks        : A phandle and clock specifier as defined by bindings of
+>> >> +               the clock controller specified by phandle, used when the GIC
+>> >> +               is part of a Clock Domain.
+>> >
+>> > Depending on implementation, a GIC could require multiple clocks, and
+>> > their names would be implementation-specific (that said, GIC-400 has a
+>> > single "CLK" input).
+>>
+>> Documentation/devicetree/bindings/arm/gic.txt doesn't mention any clocks
+>> for GIC-400?
+>
+> I'm going by the TRM. There are other items not in the bindign that are
+> implementation-specific.
+>
+>> > Assuming that you're using GIC-400, could we use clock-names to make
+>> > that explicit?
+>>
+>> You can. But you have to be careful to avoid conflicts, as the controller
+>> for the clock domain needs to know which clock to use.
+>
+> Could you elborate on that? I don't see why a node's clock-names
+> property should be relevant to the clock controller.
+
+If there are multiple clocks listed, the clock controller needs to know which
+clocks is to be used for power management.
+
+If we standardize on a name for the clock to be used for power management
+(a platform property), that could conflict with the naming in the binding
+for the device.
+Some device bindings don't mandate clock-names as only a single clock
+is used.
+Other device bindings do mandate clock-names. You mentioned "CLK" for
+GIC-400, others use e.g. "fck", or "ick".
+
+>> On Renesas SoCs, we always used the first clock for power control.
+>> For the future, we plan to use "fck" if it exists.
+>
+> That's irrelevant from the PoV of the GIC; per the GIC architecture you
+> can't assume anything about the set of input clocks, and GIC-400 happens
+> to have a single clock input called "CLK". It's not IP specific to
+> Renesas.
+>
+>> Yes, this can be complicated, as ideally it needs synchronization between
+>> device DT bindings and platform (clock/power domain) DT bindings.
+>>
+>> Please also note that any device (hardware IP core) can be reused on an
+>> SoC that supports clock and/or power domains, and suddenly starts to rely
+>> on power-domains and clocks properties.
+>
+> Sorry, I don't follow this last part.
+
+Devices may describe zero, one, or more clocks in the DT bindings. Usually
+these clocks are functional, and they are described because the driver needs
+to control them, and/or needs knowledge about them.
+
+As all (current) logic is synchronous, there's always a clock that drives the
+logic of the device. Gating this clock can be used for power management.
+This clock may or may not be the one described in the bindings (obviously
+it isn't if the binding doesn't describe any clock, but there can be other
+cases).
+
+Any IP core for a device may be reused. On some SoCs, the logic may be
+driven by a fixed, non-gateable clock. On others the logic may be driven by
+a gateable clock to save power. Whether or not there is a gateable clock
+is a property of the platform (SoC), not of the IP core.
+
+Please see slides 37-40 of my presentation "Last one out, turn off the lights"
+at ELC2015:
+http://events.linuxfoundation.org/sites/events/files/slides/elc2015_uytterhoeven.pdf
+They show examples of devices with zero, one or more described clocks.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
