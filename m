@@ -1,88 +1,37 @@
-From: punnaiah choudary kalluri <punnaia@xilinx.com>
-Subject: Re: [PATCH v6 2/2] memory: pl353: Add driver for arm pl353 static
- memory controller
-Date: Tue, 28 Apr 2015 21:28:42 +0530
-Message-ID: <CAGnW=BY=vAOYMuK7My-g6+YOBEnbkRaY4mwpGUE9TexA9_GsFg@mail.gmail.com>
-References: <1428941512-26411-1-git-send-email-punnaia@xilinx.com>
-	<a1f437fe-51cf-4a89-87b4-8f0a305e68ed@BN1AFFO11FD026.protection.gbl>
-	<20150428151138.GB11721@bshelton-desktop>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] arch: arm: Show the serial number from devicetree
+ in cpuinfo
+Date: Tue, 28 Apr 2015 17:09:11 +0100
+Message-ID: <20150428160910.GE12732@n2100.arm.linux.org.uk>
+References: <1429351135-11842-1-git-send-email-contact@paulk.fr>
+ <1429351135-11842-2-git-send-email-contact@paulk.fr>
+ <CAL_JsqKkw7n5p1ZH345BeKkyU=GKDrhaLef__0ET7t90Cm0Eog@mail.gmail.com>
+ <1430145747.3081.5.camel@collins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150428151138.GB11721@bshelton-desktop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Shelton <ben.shelton@ni.com>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, Alexandre Courbot <acourbot@nvidia.co>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1430145747.3081.5.camel@collins>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+On Mon, Apr 27, 2015 at 04:42:27PM +0200, Paul Kocialkowski wrote:
+> Well, of_property_read_string is only defined when CONFIG_OF is set
+> (base.c is always built in drivers/of but the directory is only included
+> when CONFIG_OF is set).
+> 
+> Of course, on ARM, we now expect that it is the case, but it seems like
+> good practice to check for it, since it could theoretically be disabled.
 
-  I will take care of the boundary conditions for both lower and upper
-limits and update the patches accordingly.
+That is _not_ "is the case" - there are a number of non-OF platforms...
+including some which will probably never be converted.
 
-Thanks,
-Punnaiah
-
-On Tue, Apr 28, 2015 at 8:41 PM, Ben Shelton <ben.shelton@ni.com> wrote:
-> Hi Punnaiah,
->
->> +/**
->> + * pl353_smc_set_cycles - Set memory timing parameters
->> + * @dev:     Pointer to the device struct
->> + * @t0:      t_rc            read cycle time
->> + * @t1:      t_wc            write cycle time
->> + * @t2:      t_rea/t_ceoe    output enable assertion delay
->> + * @t3:      t_wp            write enable deassertion delay
->> + * @t4:      t_clr/t_pc      page cycle time
->> + * @t5:      t_ar/t_ta       ID read time/turnaround time
->> + * @t6:      t_rr            busy to RE timing
->> + *
->> + * Sets NAND chip specific timing parameters.
->> + */
->> +void pl353_smc_set_cycles(struct device *dev, u32 t0, u32 t1, u32 t2, u32 t3,
->> +                       u32 t4, u32 t5, u32 t6)
->> +{
->> +     struct pl353_smc_data *pl353_smc = dev_get_drvdata(dev);
->> +
->> +     t0 &= PL353_SMC_SET_CYCLES_T0_MASK;
->> +     t1 = (t1 & PL353_SMC_SET_CYCLES_T1_MASK) <<
->> +                     PL353_SMC_SET_CYCLES_T1_SHIFT;
->> +     t2 = (t2 & PL353_SMC_SET_CYCLES_T2_MASK) <<
->> +                     PL353_SMC_SET_CYCLES_T2_SHIFT;
->> +     t3 = (t3 & PL353_SMC_SET_CYCLES_T3_MASK) <<
->> +                     PL353_SMC_SET_CYCLES_T3_SHIFT;
->> +     t4 = (t4 & PL353_SMC_SET_CYCLES_T4_MASK) <<
->> +                     PL353_SMC_SET_CYCLES_T4_SHIFT;
->> +     t5 = (t5 & PL353_SMC_SET_CYCLES_T5_MASK) <<
->> +                     PL353_SMC_SET_CYCLES_T5_SHIFT;
->> +     t6 = (t6 & PL353_SMC_SET_CYCLES_T6_MASK) <<
->> +                     PL353_SMC_SET_CYCLES_T6_SHIFT;
->
-> Right now, if the caller (i.e. the PL353 NAND driver) passes in a value for any
-> of the timing parameters that is too large, it will be truncated with the
-> corresponding mask and then saved, resulting in unexpected behavior.  I saw
-> this when the PL353 NAND driver tried to set t_rc and t_wc to 17 cycles, which
-> does not fit in the 4-bit fields for those values -- it got clipped to 4 bits
-> and stored as 1 cycle, which made communication with the NAND chip fail and
-> time out.
->
-> It would be good to sanity-check each timing here, and rather than returning
-> void, return a return code indicating success or failure (e.g. -EINVAL for
-> invalid timings).
->
-> Note also that truncation isn't the only thing to check for here.  The PL350
-> r2p1 datasheet lists a "Minimum permitted value" for each of these timing
-> values.
->
->> +
->> +     t0 |= t1 | t2 | t3 | t4 | t5 | t6;
->> +
->> +     writel(t0, pl353_smc->base + PL353_SMC_SET_CYCLES_OFFS);
->> +     writel(PL353_SMC_DC_UPT_NAND_REGS, pl353_smc->base +
->> +            PL353_SMC_DIRECT_CMD_OFFS);
->> +}
->> +EXPORT_SYMBOL_GPL(pl353_smc_set_cycles);
->> +
->
-> Thanks,
-> Ben
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
