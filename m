@@ -1,114 +1,79 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: [PATCH v3 1/2] mtd: nand: dt binding documentation for digicolor NFC
-Date: Tue, 28 Apr 2015 15:19:18 +0300
-Message-ID: <2bba276e3a1808a9fc49d30cabe8d9de8bc60efd.1430223559.git.baruch@tkos.co.il>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] ARM: mediatek: dts: Add emmc support to mt8135
+Date: Tue, 28 Apr 2015 14:37:25 +0200
+Message-ID: <20150428123725.GK6325@pengutronix.de>
+References: <1430214525-19198-1-git-send-email-chaotian.jing@mediatek.com>
+ <1430214525-19198-7-git-send-email-chaotian.jing@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1430214525-19198-7-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The CX92755 SoC is one of Conexant Digicolor series of SoCs. This devicetree
-binding document describes the NAND flash controller the is shared by some SoCs
-in the Digicolor series.
+On Tue, Apr 28, 2015 at 05:48:44PM +0800, Chaotian Jing wrote:
+> From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Add emmc node for mt8135.dtsi & mt8135-evbp1.dts
+> 
+> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt8135-evbp1.dts | 141 +++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/mt8135.dtsi      |  26 +++++++
+>  2 files changed, 167 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt8135-evbp1.dts b/arch/arm/boot/dts/mt8135-evbp1.dts
+> index 357a91f..6d2fee9 100644
+> --- a/arch/arm/boot/dts/mt8135-evbp1.dts
+> +++ b/arch/arm/boot/dts/mt8135-evbp1.dts
+> @@ -24,6 +24,147 @@
+>  	};
+>  };
+>  
+> +&mmc0 {
+> +	pinctrl-names = "default", "state_uhs";
+> +	pinctrl-0 = <&mmc0_pins_default>;
+> +	pinctrl-1 = <&mmc0_pins_uhs>;
+> +	status = "okay";
+> +	bus-width = <8>;
+> +	max-frequency = <50000000>;
+> +	cap-mmc-highspeed;
+> +	vmmc-supply = <&mt6397_vemc_3v3_reg>;
+> +	non-removable;
+> +	func = "EMMC";
 
-Not all of the properties are currently actually used by the driver.
-Specifically, the driver doesn't make use of interrupts. This may change in the
-future.
+...
 
-Also worth noting that the only supported ECC mode is "hw_syndrome". In the
-future the driver may add support for additional modes.
+> +	func = "SDCARD";
 
-Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
----
-v3:
-   Make all generic nand binding properties for child nodes optional as
-   suggested by Boris Brezillon.
----
- .../devicetree/bindings/mtd/digicolor-nand.txt     | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/digicolor-nand.txt
+These have been removed in earlier versions, right?
 
-diff --git a/Documentation/devicetree/bindings/mtd/digicolor-nand.txt b/Documentation/devicetree/bindings/mtd/digicolor-nand.txt
-new file mode 100644
-index 000000000000..f2b725580885
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/digicolor-nand.txt
-@@ -0,0 +1,71 @@
-+Conexant Digicolor NAND Flash Controller (NFC)
-+
-+Required properties:
-+- compatible : "cnxt,cx92755-nfc".
-+- reg : shall contain registers location and length for data and reg.
-+- interrupts : shall define the nand controller interrupt.
-+- #address-cells: shall be set to 1. Encode the nand CS.
-+- #size-cells : shall be set to 0.
-+- clocks : shall reference nand controller clocks.
-+
-+Optional children nodes:
-+Children nodes represent the available nand chips.
-+
-+Optional children properties:
-+- nand-ecc-mode : defaults be "hw_syndrome".
-+- nand-ecc-strength : must be one of 6, 7, 8, 24, 28, 30.
-+- nand-ecc-step-size : must be either 512 or 1024.
-+
-+see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-+
-+Each nand chip child node may optionally have partition sub-nodes. See
-+Documentation/devicetree/bindings/mtd/partition.txt for partitions binding.
-+
-+Example:
-+nfc: nfc@f00a4000 {
-+	compatible = "cnxt,cx92755-nfc";
-+	reg = <0xf00a4000 0x200>;
-+	interrupts = <26>;
-+	clocks = <&main_clk>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	nand@0 {
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		nand-ecc-mode = "hw_syndrome";
-+		nand-ecc-step-size = <1024>;
-+		nand-ecc-strength = <28>;
-+
-+		partition@0 {
-+			label = "boot";
-+			reg = <0x00000000 0x00700000>;
-+		};
-+
-+		partition@700000 {
-+			label = "splash";
-+			reg = <0x00700000 0x00500000>;
-+		};
-+
-+		partition@c00000 {
-+			label = "maint";
-+			reg = <0x00c00000 0x00500000>;
-+		};
-+
-+		partition@1100000 {
-+			label = "kernel";
-+			reg = <0x01100000 0x00500000>;
-+		};
-+
-+		partition@1600000 {
-+			label = "rootfs";
-+			reg = <0x01600000 0x18000000>;
-+		};
-+
-+		partition@19600000 {
-+			label = "data1";
-+			reg = <0x19600000 0x66a00000>;
-+		};
-+	};
-+};
+> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+> index 4d1ddd9..2c5c4da 100644
+> --- a/arch/arm/boot/dts/mt8135.dtsi
+> +++ b/arch/arm/boot/dts/mt8135.dtsi
+> @@ -212,5 +212,31 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		mmc0: mmc@11230000 {
+> +			compatible = "mediatek,mt8135-mmc";
+> +			reg = <0 0x11230000 0 0x108>;
+
+Please use the whole register space for the controller here, not only
+the one actually used by the registers.
+
+Sascha
+
 -- 
-2.1.4
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
