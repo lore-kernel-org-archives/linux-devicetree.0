@@ -1,57 +1,73 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH] RFC: let gpiod_get_optional et all return NULL when
- GPIOLIB is not enabled
-Date: Tue, 28 Apr 2015 12:31:37 +0900
-Message-ID: <CAAVeFuKMiHhT8o1PCETNTys8EATcVdy7xfy+P+o_2r6BwAXEgw@mail.gmail.com>
-References: <1423731809-4800-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CACRpkdb6KcZx3WfTqUKemhQ0_OsqxBGQb_P5cXXZvgc3riakdA@mail.gmail.com>
- <20150306085957.GC10717@pengutronix.de> <CACRpkdYq70V8SG4XOPBCGWs__J4ehknZSucpO5OdXpMDj8GPKA@mail.gmail.com>
- <CAAVeFu+0bWSAUSaDGTUmPyj9JxEJn4yxF_hzab4CHp8YV1MuoA@mail.gmail.com> <20150427152153.GN19431@pengutronix.de>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3 v4] dt/bindings: Add binding for the BCM2835 mailbox driver
+Date: Tue, 28 Apr 2015 10:51:49 +0530
+Message-ID: <CABb+yY0JX0G2E5UNaNbtzG7GFY8Xi3wnLK+h8Pmf0uf6NrfzcQ@mail.gmail.com>
+References: <1430173644-19099-1-git-send-email-eric@anholt.net>
+	<1430173644-19099-2-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150427152153.GN19431@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Alexandre Courbot <acourbot@nvidia.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430173644-19099-2-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 12:21 AM, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> Hello,
+On Tue, Apr 28, 2015 at 3:57 AM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 >
-> On Thu, Apr 09, 2015 at 11:20:55AM +0900, Alexandre Courbot wrote:
->> I should have replied one month ago, but if gpiolib is disabled, how
->> can we use gpiolib-like logic to check the existence of a GPIO?
->>
->> Having GPIO disabled means there is no GPIO support, including the
->> ability to look for GPIOs. -ENOSYS is a well-documented error-code
->> which meaning also applies to the gpio_*_optional functions (we don'=
-t
->> have support for the operation you requested). If a driver or
->> architecture really, really needs GPIO support they can require or
->> depend on CONFIG_GPIOLIB, and the problem goes away. If they can wor=
-k
->> with and without gpiolib, then they should check for -ENOSYS when th=
-ey
->> request GPIOs and behave accordingly.
-> What whould be the right behaviour in your eyes? I hope it's not
+> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> ---
 >
->         if (ret !=3D -ENOSYS)
->                 return ret;
+> v2: Split into a separate patch for submitting to the devicetree list.
+>     Consistently start node docs with a capital letter. device's
+>     address in the example shouldn't have "0x". Drop machine-specific
+>     interrupt numbers from the docs.  (changes by anholt).
 >
->         /* continue and ignore error */
+> v3: Move the file to just bcm2835-mbox.txt, clean up formatting
+>     (changes by anholt, from review by Lee Jones).
+>
+> v4: Move file back by consensus from various Broadcom platform
+>     maintainers (changes by anholt, acked by Lee Jones).
+>
+>  .../devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+> new file mode 100644
+> index 0000000..0bb2b9d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+> @@ -0,0 +1,19 @@
+> +Broadcom BCM2835 VideoCore mailbox IPC
+> +
+> +Required properties:
+> +
+> +- compatible:  Should be "brcm,bcm2835-mbox"
+> +- reg:         Specifies base physical address and size of the registers
+> +- interrupts:  The interrupt number
+> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+> +- #mbox-cells: Specifies the number of cells needed to encode a mailbox
+> +                 channel. The value shall be 1
+>
+Probably also specify what that one-cell value would stand for.
 
-If a consumer absolutely needs a GPIO (most of the drivers out there I
-believe), then -ENOSYS can be handled like any other error. If it
-doesn't, and the driver is fine without GPIO support as well (meaning
-that it can somehow work even if a GPIO is declared, but GPIO support
-is not compiled in), then it will need to explicitly handle that
-particular error. That case should be rare though - most drivers will
-want to propagate -ENOSYS.
+> +
+> +Example:
+> +
+> +mailbox: mailbox@7e00b800 {
+> +       compatible = "brcm,bcm2835-mbox";
+> +       reg = <0x7e00b880 0x40>;
+> +       interrupts = <0 1>;
+> +       #mbox-cells = <1>;
+> +};
+Usually it comes with an example user node as well.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
