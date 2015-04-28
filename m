@@ -1,73 +1,51 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] usb: renesas_usbhs: Revise the binding document about the
- dma-names
-Date: Tue, 28 Apr 2015 02:43:42 +0000
-Message-ID: <SG2PR06MB0919F96450C1795252DF55BFD8E80@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1428489744-4872-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20150408131403.GC5977@leverpostej>
- <HKNPR06MB322EC49F217406EBDD006DFD8FB0@HKNPR06MB322.apcprd06.prod.outlook.com>
- <20150409090625.GA18488@leverpostej>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH iio] imu: inv_mpu6050: adds device tree bindings
+Date: Tue, 28 Apr 2015 09:01:06 +0530
+Message-ID: <553EFEFA.5010708@gmail.com>
+References: <1429867387-10219-1-git-send-email-varkab@cdac.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150409090625.GA18488@leverpostej>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: "balbi@ti.com" <balbi@ti.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429867387-10219-1-git-send-email-varkab-If5XQcfNmg0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+On 04/24/2015 02:53 PM, Varka Bhadram wrote:
 
+> Signed-off-by: Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/imu/inv_mpu6050.txt    |   17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+>
+> diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+> new file mode 100644
+> index 0000000..e4d8f1c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+> @@ -0,0 +1,17 @@
+> +InvenSense MPU-6050 Six-Axis (Gyro + Accelerometer) MEMS MotionTracking Device
+> +
+> +http://www.invensense.com/mems/gyro/mpu6050.html
+> +
+> +Required properties:
+> + - compatible : should be "invensense,mpu6050"
+> + - reg : the I2C address of the sensor
+> + - interrupt-parent : should be the phandle for the interrupt controller
+> + - interrupts : interrupt mapping for GPIO IRQ
+> +
+> +Example:
+> +	mpu6050@68 {
+> +		compatible = "invensense,mpu6050";
+> +		reg = <0x68>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <18 1>;
+> +	};
 
-> Sent: Thursday, April 09, 2015 6:06 PM
-> 
-> On Thu, Apr 09, 2015 at 01:17:44AM +0100, Yoshihiro Shimoda wrote:
-> > Hi Mark,
-> >
-> > >
-> > > On Wed, Apr 08, 2015 at 11:42:24AM +0100, Yoshihiro Shimoda wrote:
-> > > > Since the DT should describe the hardware (not the driver limitation),
-> > > > This patch revises the binding document about the dma-names to change
-> > > > simple numbering as "ch%d" instead of "tx<n>" and "rx<n>".
-> > >
-> > > The naming given in this patch looks more sensible to me.
-> >
-> > Thank you for your comment!
-> >
-> > > > Also this patch fixes the actual code of renesas_usbhs driver to handle
-> > > > the new dma-names.
-> > > >
-> > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > > ---
-> > > >  This patch is based on Felipe's usb.bit / testing/next branch.
-> > > >  (commit id = bbc78c07a51f6fd29c227b1220a9016e585358ba)
-> > >
-> > > I take it the existing driver and binding haven't hit mainline, and
-> > > therefore there are no users yet?
-> >
-> > That's correct. At the moment, nobody uses the dma-names in the node of
-> > renesas_usbhs yet.
-> 
-> Given that:
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+Ping..?
 
-Would you apply this patch to your repository?
-(If possible, it is merged in your fixes branch because the commit ab330cf388 is already merged
- on v4.1-rc1 and this patch is related to the commit.)
-
-Or, should I resubmit this patch with Mark and Geert's Acked-by?
-(I confirmed that this patch could be applied on the branches of both fixes and testing/next.)
-
-Best regards,
-Yoshihiro Shimoda
-
-P.S.
-I am surprised, the Morimoto-san's patch "tidyup usbhs_for_each_dfifo macro" is threaded to
-this patch. However, this patch is not related to the Morimoto-san's patch.
-http://thread.gmane.org/gmane.linux.ports.sh.devel/45229/focus=124680
-
-> Thanks,
-> Mark.
+-- 
+Varka Bhadram
