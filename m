@@ -1,173 +1,79 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH V2 1/2] input: misc: da9063: OnKey driver
-Date: Tue, 28 Apr 2015 12:56:31 +0100
-Message-ID: <20150428115631.GA9169@x1>
-References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
- <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 10/15] serial: stm32-usart: Add STM32 USART Driver
+Date: Tue, 28 Apr 2015 14:13:16 +0200
+Message-ID: <CALszF6CTFgVd4D6Ftkf0jW+Hcp53jqrutOHOagDXT-0705aHHQ@mail.gmail.com>
+References: <1428424234-28572-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1428424234-28572-11-git-send-email-mcoquelin.stm32@gmail.com>
+	<552678E7.4040107@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <552678E7.4040107-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Apr 2015, S Twiss wrote:
+Hi Vladimir,
 
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
->=20
-> Add OnKey driver support for DA9063
->=20
->=20
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
->=20
-> ---
-> Changes from PATCH V1 to V2
-> ---------------------------
-> - Remove the circular dependency comment in the main e-mail body
->   linking PATCH V1 1/2 and 2/2
-> - Alter the copyright header information to match expected GPLv2
->   text from http://www.gnu.org/licenses/gpl-2.0.html
->=20
-> This patch applies against linux-next and v4.0-rc6=20
->=20
->=20
->  MAINTAINERS                       |   2 +-
->  drivers/input/misc/Kconfig        |  10 ++
->  drivers/input/misc/Makefile       |   1 +
->  drivers/input/misc/da9063-onkey.c | 228 ++++++++++++++++++++++++++++=
-++++++++++
->  drivers/mfd/da9063-core.c         |  55 +++++++++
->  include/linux/mfd/da9063/pdata.h  |   1 +
+Thanks for the review, and sorry for the late reply.
 
-This should be a seperate patch.
+2015-04-09 15:04 GMT+02:00 Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>:
+> Hi Maxime,
+>
+> On 07.04.2015 19:30, Maxime Coquelin wrote:
+>> This drivers adds support to the STM32 USART controller, which is a
+>> standard serial driver.
+>>
+>> Tested-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/tty/serial/Kconfig       |  17 +
+>>  drivers/tty/serial/Makefile      |   1 +
+>>  drivers/tty/serial/stm32-usart.c | 735 +++++++++++++++++++++++++++++++++++++++
+>>  include/uapi/linux/serial_core.h |   3 +
+>>  4 files changed, 756 insertions(+)
+>>  create mode 100644 drivers/tty/serial/stm32-usart.c
+>
+> [snip]
+>
+>> +static void stm32_console_write(struct console *co, const char *s, unsigned cnt)
+>> +{
+>> +     struct uart_port *port = &stm32_ports[co->index].port;
+>> +     unsigned long flags;
+>> +     u32 old_cr1, new_cr1;
+>> +     int locked = 1;
+>> +
+>> +     if (oops_in_progress) {
+>> +             locked = spin_trylock_irqsave(&port->lock, flags);
+>> +     } else {
+>> +             locked = 1;    ID
 
->  6 files changed, 296 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/input/misc/da9063-onkey.c
+>
+> locked = 1 is done from the declaration.
+Right, I will fix this in next version
 
-[...]
+>
+> Also do you want to add "if (port->sysrq) locked = 0;" check?
 
-> diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
-> index facd361..b6d6f18 100644
-> --- a/drivers/mfd/da9063-core.c
-> +++ b/drivers/mfd/da9063-core.c
-> @@ -60,6 +60,7 @@ static struct resource da9063_rtc_resources[] =3D {
-> =20
->  static struct resource da9063_onkey_resources[] =3D {
->  	{
-> +		.name	=3D "ONKEY",
->  		.start	=3D DA9063_IRQ_ONKEY,
->  		.end	=3D DA9063_IRQ_ONKEY,
->  		.flags	=3D IORESOURCE_IRQ,
-> @@ -97,6 +98,7 @@ static const struct mfd_cell da9063_devs[] =3D {
->  		.name		=3D DA9063_DRVNAME_ONKEY,
->  		.num_resources	=3D ARRAY_SIZE(da9063_onkey_resources),
->  		.resources	=3D da9063_onkey_resources,
-> +		.of_compatible =3D "dlg,da9063-onkey",
->  	},
->  	{
->  		.name		=3D DA9063_DRVNAME_RTC,
+Yes, that makes sense. It will be also in v7.
+>
+>> +             spin_lock_irqsave(&port->lock, flags);
+>> +     }
+>> +
 
-This is lowercase, so why does "ONKEY" have to be uppercase?
 
-> @@ -109,12 +111,64 @@ static const struct mfd_cell da9063_devs[] =3D =
-{
->  	},
->  };
-> =20
-> +static int da9063_clear_fault_log(struct da9063 *da9063)
-> +{
-> +	int ret =3D 0;
-> +	int fault_log =3D 0;
-> +
-> +	ret =3D regmap_read(da9063->regmap, DA9063_REG_FAULT_LOG, &fault_lo=
-g);
-> +	if (ret < 0) {
-> +		dev_err(da9063->dev, "Cannot read FAULT_LOG.\n");
-> +		return -EIO;
-> +	}
-> +
-> +	if (fault_log) {
-> +		if (fault_log & DA9063_TWD_ERROR)
-> +			dev_dbg(da9063->dev,
-> +				"Fault log entry detected: DA9063_TWD_ERROR\n");
-> +		if (fault_log & DA9063_POR)
-> +			dev_dbg(da9063->dev,
-> +				"Fault log entry detected: DA9063_POR\n");
-> +		if (fault_log & DA9063_VDD_FAULT)
-> +			dev_dbg(da9063->dev,
-> +				"Fault log entry detected: DA9063_VDD_FAULT\n");
-> +		if (fault_log & DA9063_VDD_START)
-> +			dev_dbg(da9063->dev,
-> +				"Fault log entry detected: DA9063_VDD_START\n");
-> +		if (fault_log & DA9063_TEMP_CRIT)
-> +			dev_dbg(da9063->dev,
-> +				"Fault log entry detected: DA9063_TEMP_CRIT\n");
-> +		if (fault_log & DA9063_KEY_RESET)
-> +			dev_dbg(da9063->dev,
-> +				"Fault log entry detected: DA9063_KEY_RESET\n");
-> +		if (fault_log & DA9063_NSHUTDOWN)
-> +			dev_dbg(da9063->dev,
-> +				"Fault log entry detected: DA9063_NSHUTDOWN\n");
-> +		if (fault_log & DA9063_WAIT_SHUT)
-> +			dev_dbg(da9063->dev,
-> +				"Fault log entry detected: DA9063_WAIT_SHUT\n");
-> +	}
-> +
-> +	ret =3D regmap_write(da9063->regmap,
-> +			   DA9063_REG_FAULT_LOG,
-> +			   fault_log);
-> +	if (ret < 0)
-> +		dev_err(da9063->dev,
-> +			"Cannot reset FAULT_LOG values %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
->  int da9063_device_init(struct da9063 *da9063, unsigned int irq)
->  {
->  	struct da9063_pdata *pdata =3D da9063->dev->platform_data;
->  	int model, variant_id, variant_code;
->  	int ret;
-> =20
-> +	ret =3D da9063_clear_fault_log(da9063);
-> +	if (ret < 0)
-> +		dev_err(da9063->dev, "Cannot clear fault log\n");
-> +
->  	if (pdata) {
->  		da9063->flags =3D pdata->flags;
->  		da9063->irq_base =3D pdata->irq_base;
-> @@ -178,6 +232,7 @@ int da9063_device_init(struct da9063 *da9063, uns=
-igned int irq)
->  	if (ret)
->  		dev_err(da9063->dev, "Cannot add MFD cells\n");
-> =20
-> +
+>
+> [snip]
+>
+> Everything else is fine from point of view.
+>
+> Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
-Tut tut!
-
->  	return ret;
->  }
-> =20
-> diff --git a/include/linux/mfd/da9063/pdata.h b/include/linux/mfd/da9=
-063/pdata.h
-> index 95c8742..612383b 100644
-> --- a/include/linux/mfd/da9063/pdata.h
-> +++ b/include/linux/mfd/da9063/pdata.h
-> @@ -103,6 +103,7 @@ struct da9063;
->  struct da9063_pdata {
->  	int				(*init)(struct da9063 *da9063);
->  	int				irq_base;
-> +	bool				key_power;
->  	unsigned			flags;
->  	struct da9063_regulators_pdata	*regulators_pdata;
->  	struct led_platform_data	*leds_pdata;
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Regards,
+Maxime
+>
+> --
+> With best wishes,
+> Vladimir
