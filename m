@@ -1,45 +1,46 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 08/10] ARM: shmobile: armadillo800eva dts: Use generic
- names for device nodes
-Date: Tue, 28 Apr 2015 10:52:37 +0200
-Message-ID: <CAMuHMdVBCS66UCjZwRSdcWjgukoVK-JMq2ZFHX0WKkh=Jh+yBQ@mail.gmail.com>
-References: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
-	<1430139334-15272-9-git-send-email-geert+renesas@glider.be>
-	<553E3404.6020601@cogentembedded.com>
+From: Jon Hunter <jgchunter@gmail.com>
+Subject: Re: [PATCH v3] ARM: tegra: Correct which USB controller has the UTMI
+ pad registers
+Date: Tue, 28 Apr 2015 10:11:05 +0100
+Message-ID: <553F4EA9.4000307@gmail.com>
+References: <551D61A5.2010102@kapsi.fi> <1428045671-2333-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <553E3404.6020601@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428045671-2333-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-tegra@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Mikko Perttunen <mikko.perttunen@kapsi.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2015 at 3:05 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->> -       wm8978: wm8978@1a {
->> +       wm8978: codec@1a {
->
->     Perhaps sound-codec?
 
-Given there's no single instance of "sound-codec" under
-Documentation/devicetree/, and only four occurrences in DTS files (whoops,
-I should fix up 3 of them ;-):
+On 04/03/2015 08:21 AM, Tomeu Vizoso wrote:
+> It should be the first controller, not the second. The indexes of the
+> usb resets were also wrong and have been fixed.
+> 
+> The issue was caused by the changes in 308efde ("ARM: tegra: Add resets
+> & has-utmi-pad-registers flag to all USB PHYs") being misapplied by git
+> due to the patch context being insufficient.
+> 
+> This broke USB after 6261b06 ("regulator: Defer lookup of supply to
+> regulator_get"), because it changed the order in which the controllers
+> were probed.
+> 
+> The fix for this issue was suggested by Mikko Perttunen and Tuomas
+> Tynkkynen.
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> Cc: Mikko Perttunen <mikko.perttunen@kapsi.fi>
+> Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+> ---
+> Hi,
+> 
+> hope I have gotten it right this time, but please do check :)
 
-    arch/arm/boot/dts/r8a7778-bockw.dts: ak4643: sound-codec@12 {
-    arch/arm/boot/dts/r8a7790-lager.dts: ak4643: sound-codec@12 {
-    arch/arm/boot/dts/r8a7791-koelsch.dts: ak4643: sound-codec@12 {
-    arch/xtensa/boot/dts/xtfpga.dtsi: tlv320aic23: sound-codec@0 {
+FWIW, this works for me.
 
-I'm strongly leaning towards "codec".
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Cheers
+Jon
