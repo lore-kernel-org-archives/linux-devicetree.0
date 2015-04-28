@@ -1,47 +1,26 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH] ARM: dts: omap3-gta04: Add hdqw1 support
-Date: Tue, 28 Apr 2015 22:54:27 +0200
-Message-ID: <1430254467-29177-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v1 1/2] ARM: dts: rockchip: add properties for dwc2 usb otg controller
+Date: Tue, 28 Apr 2015 22:59:36 +0200
+Message-ID: <2011633.QJ5Q5DcLz6@diego>
+References: <1430041299-24874-1-git-send-email-lyz@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430041299-24874-1-git-send-email-lyz@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yunzhi Li <lyz@rock-chips.com>
+Cc: cf@rock-chips.com, hl@rock-chips.com, yk@rock-chips.com, gauravsh@google.com, alberto@google.com, wulf@rock-chips.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable omap-hdq for battery fuel gauge access.
+Am Sonntag, 26. April 2015, 17:41:38 schrieb Yunzhi Li:
+> Add properties for dwc2 usb device controller according to
+> Documentation/devicetree/bindings/usb/dwc2.txt
+> 
+> Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+applied to my dts branch for 4.2
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index b9f6881..6ea1257 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -200,6 +200,12 @@
- 			OMAP3_CORE1_IOPAD(0x210a, PIN_OUTPUT | MUX_MODE0)   /* dss_data23.dss_data23 */
- 		>;
-        };
-+
-+	hdq_pins: hdq_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21c6, PIN_INPUT_PULLUP | MUX_MODE0) /* i2c3_sda.hdq */
-+		>;
-+	};
- };
- 
- &omap3_pmx_core2 {
-@@ -517,3 +523,8 @@
- &mcbsp2 {
- 	status = "okay";
- };
-+
-+&hdqw1w {
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&hdq_pins>;
-+};
--- 
-1.9.1
 
+thanks
+Heiko
