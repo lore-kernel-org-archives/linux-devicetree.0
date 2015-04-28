@@ -1,55 +1,50 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V7 2/9] mailbox: Make struct mbox_controller's ops field
- const
-Date: Tue, 28 Apr 2015 11:49:44 -0500
-Message-ID: <553FBA28.40403@ti.com>
-References: <1430174242-29465-1-git-send-email-abrestic@chromium.org> <1430174242-29465-3-git-send-email-abrestic@chromium.org>
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
+	<noltari@gmail.com>
+Subject: [PATCH v5 0/2] BCM6328 LED driver
+Date: Tue, 28 Apr 2015 18:50:48 +0200
+Message-ID: <1430239850-26120-1-git-send-email-noltari@gmail.com>
+References: <1430050517-8045-1-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430174242-29465-3-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1430050517-8045-1-git-send-email-noltari@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, cooloney@gmail.com, jogo@openwrt.org, f.fainelli@gmail.com, cernekee@gmail.com, j.anaszewski@samsung.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+These patches add support and documentation for the BCM6328 LED driver,=
+ which is present on BCM6318, BCM6328, BCM6362 and BCM63268.
+In these SoCs it's possible to control LEDs both as GPIOs or by hardwar=
+e.
+However, on some devices there are Serial LEDs (LEDs connected to a 74h=
+c controller), which can either be controlled by software (exporting th=
+e 74hc as spi-gpio) or hardware using this driver.
+The problem is some of these serial LEDs are hardware controlled (ether=
+net LEDs) and exporting the 74hc as spi-gpio prevents those LEDs to be =
+hardware controlled, so the only chance to keep them working is by usin=
+g this driver.
 
-On 04/27/2015 05:37 PM, Andrew Bresticker wrote:
-> The mailbox controller's channel ops ought to be read-only.
+v4->v5: Introduce changes suggested by Jacek.
+v3->v4: Introduce changes suggested by Jacek.
+v2->v3: Introduce changes suggested by Jacek.
+v1->v2: Introduce changes suggested by Florian and Jonas.
 
-We ought to change this on all the existing controllers as well.
+=C3=81lvaro Fern=C3=A1ndez Rojas (2):
+  leds: add DT binding for BCM6328 LED controller
+  leds: add BCM6328 LED driver
 
-regards
-Suman
+ .../devicetree/bindings/leds/leds-bcm6328.txt      | 309 +++++++++++++=
+++
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-bcm6328.c                        | 413 +++++++++++++=
+++++++++
+ 4 files changed, 731 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-bcm6328=
+=2Etxt
+ create mode 100644 drivers/leds/leds-bcm6328.c
 
-> 
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> No changes from v5/v6.
-> New for v5.
-> ---
->  include/linux/mailbox_controller.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
-> index d4cf96f..68c4245 100644
-> --- a/include/linux/mailbox_controller.h
-> +++ b/include/linux/mailbox_controller.h
-> @@ -72,7 +72,7 @@ struct mbox_chan_ops {
->   */
->  struct mbox_controller {
->  	struct device *dev;
-> -	struct mbox_chan_ops *ops;
-> +	const struct mbox_chan_ops *ops;
->  	struct mbox_chan *chans;
->  	int num_chans;
->  	bool txdone_irq;
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+1.9.1
