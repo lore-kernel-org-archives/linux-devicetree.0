@@ -1,50 +1,38 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/5] ARM: shmobile: dts: Add "nor-jedec" compatible value
-Date: Tue, 28 Apr 2015 12:12:53 +0200
-Message-ID: <1430215978-31087-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 3/5] ARM: shmobile: henninger dts: Add "nor-jedec" compatible value
+Date: Tue, 28 Apr 2015 12:12:56 +0200
+Message-ID: <1430215978-31087-4-git-send-email-geert+renesas@glider.be>
+References: <1430215978-31087-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1430215978-31087-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+Spansion s25fl512s is compatible with "nor-jedec". Hence add the
+"nor-jedec" compatible value, so the driver can bind against the generic
+name, cfr. commit 8ff16cf77ce314c2 ("Documentation: devicetree: m25p80:
+add "nor-jedec" binding").
 
-This patch series adds the "nor-jedec" compatible value to all device
-nodes for JEDEC-compliant SPI FLASHes on Renesas shmobile boards,
-It allows the driver to bind against the generic name, cfr. commit
-8ff16cf77ce314c2 ("Documentation: devicetree: m25p80: add "nor-jedec"
-binding").
-	        
-This was tested on r8a7791/koelsch. I verified that it also works with
-"nor-jedec" only, without the specific compatible value.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm/boot/dts/r8a7791-henninger.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for applying!
-
-Geert Uytterhoeven (5):
-  ARM: shmobile: koelsch dts: Add "nor-jedec" compatible value
-  ARM: shmobile: lager dts: Add "nor-jedec" compatible value
-  ARM: shmobile: henninger dts: Add "nor-jedec" compatible value
-  ARM: shmobile: bockw-reference dts: Add "nor-jedec" compatible value
-  ARM: shmobile: bockw dts: Add "nor-jedec" compatible value
-
- arch/arm/boot/dts/r8a7778-bockw-reference.dts | 2 +-
- arch/arm/boot/dts/r8a7778-bockw.dts           | 2 +-
- arch/arm/boot/dts/r8a7790-lager.dts           | 2 +-
- arch/arm/boot/dts/r8a7791-henninger.dts       | 2 +-
- arch/arm/boot/dts/r8a7791-koelsch.dts         | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r8a7791-henninger.dts b/arch/arm/boot/dts/r8a7791-henninger.dts
+index e33e4047b0b0c920..bb80122b4113bd8a 100644
+--- a/arch/arm/boot/dts/r8a7791-henninger.dts
++++ b/arch/arm/boot/dts/r8a7791-henninger.dts
+@@ -226,7 +226,7 @@
+ 	flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		compatible = "spansion,s25fl512s";
++		compatible = "spansion,s25fl512s", "nor-jedec";
+ 		reg = <0>;
+ 		spi-max-frequency = <30000000>;
+ 		spi-tx-bus-width = <4>;
 -- 
 1.9.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
