@@ -1,69 +1,119 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: mt8173: Fixup pinctrl nodes
-Date: Tue, 28 Apr 2015 17:23:57 +0800
-Message-ID: <1430213037-23831-2-git-send-email-yingjoe.chen@mediatek.com>
-References: <1430213037-23831-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: ARCH_EXYNOS5433 missing in Kconfig
+Date: Tue, 28 Apr 2015 18:25:54 +0900
+Message-ID: <CAGTfZH2yttvRsHXZUXQ7t37wmU=seg8Qoa=h=nat4EwJDY42Kw@mail.gmail.com>
+References: <CAD3Xx4Jf5ACBKe-KvGRD=myHKrJ+K_P0vBrtrmfgh+1zNM4hug@mail.gmail.com>
+	<54FF95ED.1040003@samsung.com>
+	<CAD3Xx4KpTTqNiFA-8EfuPsCR5ow0JkNVo11zM1twkrf8sckJtA@mail.gmail.com>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430213037-23831-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD3Xx4KpTTqNiFA-8EfuPsCR5ow0JkNVo11zM1twkrf8sckJtA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Valentin Rothberg <valentinrothberg@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Inki Dae <inki.dae@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Andreas Ruprecht <rupran@einserver.de>, hengelein Stefan <stefan.hengelein@fau.de>, Paul Bolle <pebolle@tiscali.nl>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?6rmA6rWt7KeEQGtlcm5lbC5vcmc=?= <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The 8173 pinctrl node doesn't follow dts convention. Fix them.
-Also add a comment to explain pinctrl register usage to make it
-more clear.
+Hi Valentin,
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 8346c0f..e4a30cd 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -128,6 +128,7 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
-+		/* Provide regmap for pinctrl driver */
- 		syscfg_pctl_a: syscfg_pctl_a@10005000 {
- 			compatible = "mediatek,mt8173-pctl-a-syscfg", "syscon";
- 			reg = <0 0x10005000 0 0x1000>;
-@@ -159,9 +160,13 @@
- 			#reset-cells = <1>;
- 		};
- 
--		pio: pinctrl@0x10005000 {
-+		/*
-+		 * Pinctrl access register at 0x10005000 through regmap.
-+		 * Register 0x1000b000 is used by EINT.
-+		 */
-+		pio: pinctrl@10005000 {
- 			compatible = "mediatek,mt8173-pinctrl";
--			reg = <0 0x1000B000 0 0x1000>;
-+			reg = <0 0x1000b000 0 0x1000>;
- 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
- 			pins-are-numbered;
- 			gpio-controller;
-@@ -169,8 +174,8 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
--						<GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
--						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		sysirq: intpol-controller@10200620 {
--- 
-1.8.1.1.dirty
+On Mon, Apr 27, 2015 at 3:31 PM, Valentin Rothberg
+<valentinrothberg@gmail.com> wrote:
+> Hi Chanwoo,
+>
+> this is a kind reminder that the issue mentioned below is still
+> present and made its way to v4.1-rc1.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I sent the patch[1] to fix it. And Sylwester said that he will pick
+this patchset on patch[2].
+[1] https://lkml.org/lkml/2015/4/27/237
+[2] https://lkml.org/lkml/2015/4/28/117
+
+Hi Sylwester,
+Could you apply a patch[1] on 4.2-rc2 to fix build warning?
+
+Best Regards,
+Chanwoo Choi
+
+>
+> Kind regards,
+>  Valentin
+>
+> On Wed, Mar 11, 2015 at 2:10 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>> Hi Valentin,
+>>
+>> I sent the Exynos5433 clock patch and then separately I'm sending the
+>> Exynos5433 devicetree patch-set[1].
+>> [1] [PATCH v6 0/9] arm64: Add the support for new Exynos5433 SoC
+>> - https://lkml.org/lkml/2015/3/9/1036
+>>
+>> But, according to Arnd bergmann's comment[2], latest Exynos5433 dt patch-set[1]
+>> removed the CONFIG_ARCH_EXYNOS5433.
+>> [2] https://lkml.org/lkml/2015/2/24/85
+>>
+>>
+>> So, I have plan to send following patch.
+>>
+>> ---
+>>     clk: samsung: Use CONFIG_ARCH_EXYNOS instead of Exynos-specific configuration
+>>
+>>     This patch removes the CONFIG_ARCH_EXYNOS{5433|7} and then use only the
+>>     CONFIG_ARCH_EXYNOS for ARM-64bit Exynos SoC.
+>>
+>>     Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>>     Cc: Tomasz Figa <tomasz.figa@gmail.com>
+>>     Cc: Arnd Bergmann <arnd@arndb.de>
+>>     Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  drivers/clk/samsung/Makefile | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+>> index 17e9af7..561719d 100644
+>> --- a/drivers/clk/samsung/Makefile
+>> +++ b/drivers/clk/samsung/Makefile
+>> @@ -10,11 +10,11 @@ obj-$(CONFIG_SOC_EXYNOS5250)        += clk-exynos5250.o
+>>  obj-$(CONFIG_SOC_EXYNOS5260)   += clk-exynos5260.o
+>>  obj-$(CONFIG_SOC_EXYNOS5410)   += clk-exynos5410.o
+>>  obj-$(CONFIG_SOC_EXYNOS5420)   += clk-exynos5420.o
+>> -obj-$(CONFIG_ARCH_EXYNOS5433)  += clk-exynos5433.o
+>> +obj-$(CONFIG_ARCH_EXYNOS)      += clk-exynos5433.o
+>>  obj-$(CONFIG_SOC_EXYNOS5440)   += clk-exynos5440.o
+>>  obj-$(CONFIG_ARCH_EXYNOS)      += clk-exynos-audss.o
+>>  obj-$(CONFIG_ARCH_EXYNOS)      += clk-exynos-clkout.o
+>>
+>>
+>> Regards,
+>> Chanwoo Choi
+>>
+>>
+>> On 03/11/2015 12:32 AM, Valentin Rothberg wrote:
+>>> Hi Chanwoo,
+>>>
+>>> your commit 96bd6224f07b ("clk: samsung: exynos5433: Add clocks using
+>>> common clock framework") is included in today's linux-next tree (i.e.,
+>>> next-20150310).
+>>>
+>>> This patch conditionally compiles clk-exynos5433.c depending on the
+>>> Kconfig option ARCH_EXYNOS5433.  However, this option is not defined
+>>> in Kconfig, so that the driver cannot be compiled at the current
+>>> state:
+>>>
+>>> +obj-$(CONFIG_ARCH_EXYNOS5433)  += clk-exynos5433.o
+>>>
+>>> Is there a patch queued somewhere that adds this Kconfig symbol?  I
+>>> detected the issue by running undertaker-checkpatch from the
+>>> Undertaker tool suite (undertaker.cs.fau.de).  There is also a tool in
+>>> the git tree that can detect such issues (i.e.,
+>>> scripts/checkkconfigsymbols.py).
+>>>
+>>> Kind regards,
+>>>  Valentin
+>>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
