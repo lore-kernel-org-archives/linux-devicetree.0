@@ -1,50 +1,61 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH v3 2/3] tty: serial: 8250_mtk: Add earlycon
-Date: Tue, 28 Apr 2015 21:40:33 +0800
-Message-ID: <1430228434-31779-3-git-send-email-eddie.huang@mediatek.com>
-References: <1430228434-31779-1-git-send-email-eddie.huang@mediatek.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
+ platform
+Date: Tue, 28 Apr 2015 14:48:49 +0100
+Message-ID: <20150428134848.GC12732@n2100.arm.linux.org.uk>
+References: <20150407121247.GA29497@amd>
+ <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
+ <20150409110634.GA27407@amd>
+ <552660C7.4020805@ti.com>
+ <552663C2.70308@ti.com>
+ <55277650.8070607@codeaurora.org>
+ <20150424132923.GA11729@amd>
+ <553A47D3.2070107@ti.com>
+ <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430228434-31779-1-git-send-email-eddie.huang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Peter Hurley <peter@hurleysoftware.com>, Wang Long <long.wanglong@huawei.com>, Kevin Cernekee <cernekee@gmail.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Alan Cox <alan@linux.intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.orgSascha Hauer <kern>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Pavel Machek <pavel@ucw.cz>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, H Hartley Sweeten <hsweeten@visionengravers.com>
 List-Id: devicetree@vger.kernel.org
 
-Add 8250 MTK UART driver to support earlycon device tree.
-Earlycon take effect by
-  add "earlycon" in kernel boot argument
-  add "linux,sdtout-path" property in device tree file
+On Fri, Apr 24, 2015 at 03:46:56PM +0200, Geert Uytterhoeven wrote:
+> On Fri, Apr 24, 2015 at 3:40 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> > On 24/04/15 16:29, Pavel Machek wrote:
+> >> On Fri 2015-04-10 12:35:52, Archit Taneja wrote:
+> >>>> That said, if the fb is in RAM, and is only written by the CPU, I think
+> >>>> a normal memcpy() for fb_memcpy_fromfb() should be fine...
+> >>>
+> >>> I didn't test for performance regressions when I posted this patch.
+> >>>
+> >>> A look at _memcpy_fromio in arch/arm/kernel/io.c shows that readb() is used
+> >>> all the time, even when the source and destination addresses are aligned for
+> >>> larger reads to be possible. Other archs seem to use readl() or readq() when
+> >>> they can. Maybe that makes memcpy_fromio slower than the implementation of
+> >>> memcpy on arm?
+> >>
+> >> Ok, can you prepare a patch for me to try? Or should we just revert
+> >> the original commit?
+> >
+> > The old way worked fine, afaik, so maybe we can revert. But still, isn't
+> > it more correct to use memcpy_fromio? It's (possibly) io memory we have
+> > here.
+> 
+> Yes it is.
+> 
+> So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
+> That will benefit other drivers on ARM, too.
 
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- drivers/tty/serial/8250/8250_mtk.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+That's not going to happen.
 
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index 7a11fac..8b2a666 100644
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -289,6 +289,19 @@ static struct platform_driver mtk8250_platform_driver = {
- };
- module_platform_driver(mtk8250_platform_driver);
- 
-+static int __init early_mtk8250_setup(struct earlycon_device *device,
-+					const char *options)
-+{
-+	if (!device->port.membase)
-+		return -ENODEV;
-+
-+	device->port.iotype = UPIO_MEM32;
-+
-+	return early_serial8250_setup(device, NULL);
-+}
-+
-+OF_EARLYCON_DECLARE(mtk8250, "mediatek,mt6577-uart", early_mtk8250_setup);
-+
- MODULE_AUTHOR("Matthias Brugger");
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("Mediatek 8250 serial port driver");
+I've had a patch which does that, but people are concerned that it changes
+the behaviour of the functions by changing the access size, which could
+cause regressions.  It seems people are far too worried about that to even
+consider trying. :(
+
 -- 
-1.8.1.1.dirty
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
