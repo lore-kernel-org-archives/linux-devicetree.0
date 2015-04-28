@@ -1,41 +1,55 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/7] ARM: shmobile: Add IRQC clock to device tree
-Date: Tue, 28 Apr 2015 09:52:38 +0900
-Message-ID: <20150428005237.GB557@verge.net.au>
-References: <1426704961-27322-1-git-send-email-geert+renesas@glider.be>
- <20150319014328.GJ14051@verge.net.au>
- <CAMuHMdXOBPZe6JDccvq88asPJ4D-hA_HPOv0pnUhk9rVwuF6cg@mail.gmail.com>
+Subject: Re: [PATCH 00/10] ARM: shmobile: Use generic names for device nodes
+Date: Tue, 28 Apr 2015 09:57:29 +0900
+Message-ID: <20150428005728.GC557@verge.net.au>
+References: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXOBPZe6JDccvq88asPJ4D-hA_HPOv0pnUhk9rVwuF6cg@mail.gmail.com>
+In-Reply-To: <1430139334-15272-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2015 at 04:15:14PM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
+On Mon, Apr 27, 2015 at 02:55:24PM +0200, Geert Uytterhoeven wrote:
+> 	Hi Magnus, Simon,
 > 
-> On Thu, Mar 19, 2015 at 2:43 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Wed, Mar 18, 2015 at 07:55:54PM +0100, Geert Uytterhoeven wrote:
-> >> This patch series adds the IRQC clock to the device tree on SoCs that
-> >> have such a clock (r8a73a4 and r8a779x), and adds mininal runtime PM
-> >> support to the renesas-irqc driver, to make sure the clock is enabled
-> >> when needed by the external IRQ controller(s).
-> >> Before, the clock was assumed enabled by the bootloader or reset state.
-> >>
-> >> As usual when involving clocks, the DTS changes depend stricly on the
-> >> driver changes. Else the clock will be disabled as assumed unused,
-> >> breaking the boot.
-> >>
-> >> This was tested on r8a73a4/ape6evm and r8a7791/koelsch.
-> >
-> > I will defer the DTS changes until the irqchip changes, which I
-> > have reviewed, are accepted.
+> This patch series gets rid of the last non-generic device nodes names in
+> the shmobile DTS files, and replaces them by generic names, cfr. ePAPR.
 > 
-> The irqchip changes are upstream. Do you want me to resend the DTS
-> changes, or will you apply the original patches?
+> Thanks for applying!
 
-THanks, I have located the original patches and queued them up for v4.2.
+Thanks!
+
+I have queued up the patches except for 08/10 which Sergei raised
+a concern about for which I am unsure of the resolution of.
+
+> 
+> Geert Uytterhoeven (10):
+>   ARM: shmobile: r8a7740 dtsi: Use generic names for device nodes
+>   ARM: shmobile: r8a7778 dtsi: Use generic names for device nodes
+>   ARM: shmobile: r8a7779 dtsi: Use generic names for device nodes
+>   ARM: shmobile: r8a7790 dtsi: Use generic names for device nodes
+>   ARM: shmobile: r8a7791 dtsi: Use generic names for device nodes
+>   ARM: shmobile: sh73a0 dtsi: Use generic names for device nodes
+>   ARM: shmobile: ape6evm dts: Use generic names for device nodes
+>   ARM: shmobile: armadillo800eva dts: Use generic names for device nodes
+
+The above armadillo800eva patch is 08/10; the one I have not queued up (yet).
+
+>   ARM: shmobile: kzm9d dts: Use generic names for device nodes
+>   ARM: shmobile: marzen dts: Use generic names for device nodes
+> 
+>  arch/arm/boot/dts/emev2-kzm9d.dts             | 4 ++--
+>  arch/arm/boot/dts/r8a73a4-ape6evm.dts         | 2 +-
+>  arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 2 +-
+>  arch/arm/boot/dts/r8a7740.dtsi                | 8 ++++----
+>  arch/arm/boot/dts/r8a7778.dtsi                | 2 +-
+>  arch/arm/boot/dts/r8a7779-marzen.dts          | 6 +++---
+>  arch/arm/boot/dts/r8a7779.dtsi                | 2 +-
+>  arch/arm/boot/dts/r8a7790.dtsi                | 2 +-
+>  arch/arm/boot/dts/r8a7791.dtsi                | 2 +-
+>  arch/arm/boot/dts/sh73a0.dtsi                 | 8 ++++----
+>  10 files changed, 19 insertions(+), 19 deletions(-)
