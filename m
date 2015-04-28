@@ -1,61 +1,816 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
- platform
-Date: Tue, 28 Apr 2015 14:48:49 +0100
-Message-ID: <20150428134848.GC12732@n2100.arm.linux.org.uk>
-References: <20150407121247.GA29497@amd>
- <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
- <20150409110634.GA27407@amd>
- <552660C7.4020805@ti.com>
- <552663C2.70308@ti.com>
- <55277650.8070607@codeaurora.org>
- <20150424132923.GA11729@amd>
- <553A47D3.2070107@ti.com>
- <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [PATCH 1/4] mailbox: add support for System Control and Power
+ Interface(SCPI) protocol
+Date: Tue, 28 Apr 2015 14:54:43 +0100
+Message-ID: <1430229283.3321.40.camel@linaro.org>
+References: <1430134846-24320-1-git-send-email-sudeep.holla@arm.com>
+	 <1430134846-24320-2-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
+In-Reply-To: <1430134846-24320-2-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Pavel Machek <pavel@ucw.cz>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, H Hartley Sweeten <hsweeten@visionengravers.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2015 at 03:46:56PM +0200, Geert Uytterhoeven wrote:
-> On Fri, Apr 24, 2015 at 3:40 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> > On 24/04/15 16:29, Pavel Machek wrote:
-> >> On Fri 2015-04-10 12:35:52, Archit Taneja wrote:
-> >>>> That said, if the fb is in RAM, and is only written by the CPU, I think
-> >>>> a normal memcpy() for fb_memcpy_fromfb() should be fine...
-> >>>
-> >>> I didn't test for performance regressions when I posted this patch.
-> >>>
-> >>> A look at _memcpy_fromio in arch/arm/kernel/io.c shows that readb() is used
-> >>> all the time, even when the source and destination addresses are aligned for
-> >>> larger reads to be possible. Other archs seem to use readl() or readq() when
-> >>> they can. Maybe that makes memcpy_fromio slower than the implementation of
-> >>> memcpy on arm?
-> >>
-> >> Ok, can you prepare a patch for me to try? Or should we just revert
-> >> the original commit?
-> >
-> > The old way worked fine, afaik, so maybe we can revert. But still, isn't
-> > it more correct to use memcpy_fromio? It's (possibly) io memory we have
-> > here.
+On Mon, 2015-04-27 at 12:40 +0100, Sudeep Holla wrote:
+> This patch adds support for System Control and Power Interface (SCPI)
+> Message Protocol used between the Application Cores(AP) and the System
+> Control Processor(SCP). The MHU peripheral provides a mechanism for
+> inter-processor communication between SCP's M3 processor and AP.
 > 
-> Yes it is.
+> SCP offers control and management of the core/cluster power states,
+> various power domain DVFS including the core/cluster, certain system
+> clocks configuration, thermal sensors and many others.
 > 
-> So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
-> That will benefit other drivers on ARM, too.
+> This protocol driver provides interface for all the client drivers using
+> SCPI to make use of the features offered by the SCP.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> CC: Jassi Brar <jassisinghbrar@gmail.com>
+> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> ---
 
-That's not going to happen.
+There are several spelling errors but I won't point out each, sure you
+can find them with a spellcheck ;-) I'll just comment on the code...
 
-I've had a patch which does that, but people are concerned that it changes
-the behaviour of the functions by changing the access size, which could
-cause regressions.  It seems people are far too worried about that to even
-consider trying. :(
+[...]
+> +++ b/drivers/mailbox/scpi_protocol.c
+> @@ -0,0 +1,694 @@
+> +/*
+> + * System Control and Power Interface (SCPI) Message Protocol driver
+> + *
+> + * SCPI Message Protocol is used between the System Control Processor(SCP)
+> + * and the Application Processors(AP). The Message Handling Unit(MHU)
+> + * provides a mechanism for inter-processor communication between SCP's
+> + * Cortex M3 and AP.
+> + *
+> + * SCP offers control and management of the core/cluster power states,
+> + * various power domain DVFS including the core/cluster, certain system
+> + * clocks configuration, thermal sensors and many others.
+> + *
+> + * Copyright (C) 2015 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/bitmap.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/export.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/printk.h>
+> +#include <linux/scpi_protocol.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define CMD_ID_SHIFT		0
+> +#define CMD_ID_MASK		0x7f
+> +#define CMD_TOKEN_ID_SHIFT	8
+> +#define CMD_TOKEN_ID_MASK	0xff
+> +#define CMD_DATA_SIZE_SHIFT	16
+> +#define CMD_DATA_SIZE_MASK	0x1ff
+> +#define PACK_SCPI_CMD(cmd_id, token, tx_sz)			\
+> +	((((cmd_id) & CMD_ID_MASK) << CMD_ID_SHIFT) |		\
+> +	(((token) & CMD_TOKEN_ID_MASK) << CMD_TOKEN_ID_SHIFT) |	\
+> +	(((tx_sz) & CMD_DATA_SIZE_MASK) << CMD_DATA_SIZE_SHIFT))
+> +
+> +#define CMD_SIZE(cmd)	(((cmd) >> CMD_DATA_SIZE_SHIFT) & CMD_DATA_SIZE_MASK)
+> +#define CMD_UNIQ_MASK	(CMD_TOKEN_ID_MASK << CMD_TOKEN_ID_SHIFT | CMD_ID_MASK)
+> +#define CMD_XTRACT_UNIQ(cmd)	((cmd) & CMD_UNIQ_MASK)
+> +
+> +#define SCPI_SLOT		0
+> +
+> +#define MAX_DVFS_DOMAINS	8
+> +#define MAX_DVFS_OPPS		8
+> +#define DVFS_LATENCY(hdr)	(le32_to_cpu(hdr) >> 16)
+> +#define DVFS_OPP_COUNT(hdr)	((le32_to_cpu(hdr) >> 8) & 0xff)
+> +
+> +#define PROTOCOL_REV_MINOR_BITS	16
+> +#define PROTOCOL_REV_MINOR_MASK	((1U << PROTOCOL_REV_MINOR_BITS) - 1)
+> +#define PROTOCOL_REV_MAJOR(x)	((x) >> PROTOCOL_REV_MINOR_BITS)
+> +#define PROTOCOL_REV_MINOR(x)	((x) & PROTOCOL_REV_MINOR_MASK)
+> +
+> +#define FW_REV_MAJOR_BITS	24
+> +#define FW_REV_MINOR_BITS	16
+> +#define FW_REV_PATCH_MASK	((1U << FW_REV_MINOR_BITS) - 1)
+> +#define FW_REV_MINOR_MASK	((1U << FW_REV_MAJOR_BITS) - 1)
+> +#define FW_REV_MAJOR(x)		((x) >> FW_REV_MAJOR_BITS)
+> +#define FW_REV_MINOR(x)		(((x) & FW_REV_MINOR_MASK) >> FW_REV_MINOR_BITS)
+> +#define FW_REV_PATCH(x)		((x) & FW_REV_PATCH_MASK)
+> +
+> +#define MAX_RX_TIMEOUT		(msecs_to_jiffies(30))
+> +
+> +enum scpi_error_codes {
+> +	SCPI_SUCCESS = 0, /* Success */
+> +	SCPI_ERR_PARAM = 1, /* Invalid parameter(s) */
+> +	SCPI_ERR_ALIGN = 2, /* Invalid alignment */
+> +	SCPI_ERR_SIZE = 3, /* Invalid size */
+> +	SCPI_ERR_HANDLER = 4, /* Invalid handler/callback */
+> +	SCPI_ERR_ACCESS = 5, /* Invalid access/permission denied */
+> +	SCPI_ERR_RANGE = 6, /* Value out of range */
+> +	SCPI_ERR_TIMEOUT = 7, /* Timeout has occurred */
+> +	SCPI_ERR_NOMEM = 8, /* Invalid memory area or pointer */
+> +	SCPI_ERR_PWRSTATE = 9, /* Invalid power state */
+> +	SCPI_ERR_SUPPORT = 10, /* Not supported or disabled */
+> +	SCPI_ERR_DEVICE = 11, /* Device error */
+> +	SCPI_ERR_BUSY = 12, /* Device busy */
+> +	SCPI_ERR_MAX
+> +};
+> +
+> +enum scpi_std_cmd {
+> +	SCPI_CMD_INVALID		= 0x00,
+> +	SCPI_CMD_SCPI_READY		= 0x01,
+> +	SCPI_CMD_SCPI_CAPABILITIES	= 0x02,
+> +	SCPI_CMD_SET_CSS_PWR_STATE	= 0x03,
+> +	SCPI_CMD_GET_CSS_PWR_STATE	= 0x04,
+> +	SCPI_CMD_SET_SYS_PWR_STATE	= 0x05,
+> +	SCPI_CMD_SET_CPU_TIMER		= 0x06,
+> +	SCPI_CMD_CANCEL_CPU_TIMER	= 0x07,
+> +	SCPI_CMD_DVFS_CAPABILITIES	= 0x08,
+> +	SCPI_CMD_GET_DVFS_INFO		= 0x09,
+> +	SCPI_CMD_SET_DVFS		= 0x0a,
+> +	SCPI_CMD_GET_DVFS		= 0x0b,
+> +	SCPI_CMD_GET_DVFS_STAT		= 0x0c,
+> +	SCPI_CMD_CLOCK_CAPABILITIES	= 0x0d,
+> +	SCPI_CMD_GET_CLOCK_INFO		= 0x0e,
+> +	SCPI_CMD_SET_CLOCK_VALUE	= 0x0f,
+> +	SCPI_CMD_GET_CLOCK_VALUE	= 0x10,
+> +	SCPI_CMD_PSU_CAPABILITIES	= 0x11,
+> +	SCPI_CMD_GET_PSU_INFO		= 0x12,
+> +	SCPI_CMD_SET_PSU		= 0x13,
+> +	SCPI_CMD_GET_PSU		= 0x14,
+> +	SCPI_CMD_SENSOR_CAPABILITIES	= 0x15,
+> +	SCPI_CMD_SENSOR_INFO		= 0x16,
+> +	SCPI_CMD_SENSOR_VALUE		= 0x17,
+> +	SCPI_CMD_SENSOR_CFG_PERIODIC	= 0x18,
+> +	SCPI_CMD_SENSOR_CFG_BOUNDS	= 0x19,
+> +	SCPI_CMD_SENSOR_ASYNC_VALUE	= 0x1a,
+> +	SCPI_CMD_SET_DEVICE_PWR_STATE	= 0x1b,
+> +	SCPI_CMD_GET_DEVICE_PWR_STATE	= 0x1c,
+> +	SCPI_CMD_COUNT
+> +};
+> +
+> +struct scpi_xfer {
+> +	u32 slot; /* has to be first element */
+> +	u32 cmd;
+> +	u32 status;
+> +	const void *tx_buf;
+> +	void *rx_buf;
+> +	unsigned int tx_len;
+> +	struct list_head node;
+> +	struct completion done;
+> +};
+> +
+> +struct scpi_chan {
+> +	struct mbox_client cl;
+> +	struct mbox_chan *chan;
+> +	void __iomem *tx_payload;
+> +	void __iomem *rx_payload;
+> +	struct list_head rx_pending;
+> +	struct list_head xfers_list;
+> +	struct scpi_xfer *xfers;
+> +	spinlock_t rx_lock; /* locking for the rx pending list */
+> +	struct mutex xfers_lock;
+> +	atomic_t token;
+> +};
+> +
+> +struct scpi_drvinfo {
+> +	u32 protocol_version;
+> +	u32 firmware_version;
+> +	int num_chans;
+> +	atomic_t next_chan;
+> +	struct scpi_ops *scpi_ops;
+> +	struct scpi_chan *channels;
+> +	struct scpi_dvfs_info *dvfs[MAX_DVFS_DOMAINS];
+> +};
+> +
+> +/*
+> + * The SCP firmware only executes in little-endian mode, so any buffers
+> + * shared through SCPI should have their contents converted to little-endian
+> + */
+> +struct scpi_shared_mem {
+> +	__le32 command;
+> +	__le32 status;
+> +	u8 payload[0];
+> +} __packed;
+> +
+> +struct scp_capabilities {
+> +	__le32 protocol_version;
+> +	__le32 event_version;
+> +	__le32 platform_version;
+> +	__le32 commands[4];
+> +} __packed;
+> +
+> +struct clk_get_info {
+> +	__le16 id;
+> +	__le16 flags;
+> +	__le32 min_rate;
+> +	__le32 max_rate;
+> +	u8 name[20];
+> +} __packed;
+> +
+> +struct clk_get_value {
+> +	__le32 rate;
+> +} __packed;
+> +
+> +struct clk_set_value {
+> +	__le16 id;
+> +	__le16 reserved;
+> +	__le32 rate;
+> +} __packed;
+> +
+> +struct dvfs_info {
+> +	__le32 header;
+> +	struct {
+> +		__le32 freq;
+> +		__le32 m_volt;
+> +	} opps[MAX_DVFS_OPPS];
+> +} __packed;
+> +
+> +struct dvfs_get {
+> +	u8 index;
+> +} __packed;
+> +
+> +struct dvfs_set {
+> +	u8 domain;
+> +	u8 index;
+> +} __packed;
+> +
+> +static struct scpi_drvinfo *scpi_info;
+> +
+> +static int scpi_linux_errmap[SCPI_ERR_MAX] = {
+> +	/* better than switch case as long as return value is continuous */
+> +	0, /* SCPI_SUCCESS */
+> +	-EINVAL, /* SCPI_ERR_PARAM */
+> +	-ENOEXEC, /* SCPI_ERR_ALIGN */
+> +	-EMSGSIZE, /* SCPI_ERR_SIZE */
+> +	-EINVAL, /* SCPI_ERR_HANDLER */
+> +	-EACCES, /* SCPI_ERR_ACCESS */
+> +	-ERANGE, /* SCPI_ERR_RANGE */
+> +	-ETIMEDOUT, /* SCPI_ERR_TIMEOUT */
+> +	-ENOMEM, /* SCPI_ERR_NOMEM */
+> +	-EINVAL, /* SCPI_ERR_PWRSTATE */
+> +	-EOPNOTSUPP, /* SCPI_ERR_SUPPORT */
+> +	-EIO, /* SCPI_ERR_DEVICE */
+> +	-EBUSY, /* SCPI_ERR_BUSY */
+> +};
+> +
+> +static inline int scpi_to_linux_errno(int errno)
+> +{
+> +	if (errno >= SCPI_SUCCESS && errno < SCPI_ERR_MAX)
+> +		return scpi_linux_errmap[errno];
+> +	return -EIO;
+> +}
+> +
+> +static void scpi_process_cmd(struct scpi_chan *ch, u32 cmd)
+> +{
+> +	unsigned long flags;
+> +	struct scpi_xfer *t, *match = NULL;
+> +
+> +	spin_lock_irqsave(&ch->rx_lock, flags);
+> +	if (list_empty(&ch->rx_pending)) {
+> +		spin_unlock_irqrestore(&ch->rx_lock, flags);
+> +		return;
+> +	}
+> +
+> +	list_for_each_entry(t, &ch->rx_pending, node)
+> +		if (CMD_XTRACT_UNIQ(t->cmd) == CMD_XTRACT_UNIQ(cmd)) {
+
+So if UNIQ here isn't actually unique amongst all pending requests, its
+possible we'll pick the wrong one. There's a couple of scenarios where
+that can happen, comments further down about that.
+
+> +			list_del(&t->node);
+> +			match = t;
+> +			break;
+> +		}
+> +	/* check if wait_for_completion is in progress or timed-out */
+> +	if (match && !completion_done(&match->done)) {
+> +		struct scpi_shared_mem *mem = ch->rx_payload;
+> +
+> +		match->status = le32_to_cpu(mem->status);
+> +		memcpy_fromio(match->rx_buf, mem->payload, CMD_SIZE(cmd));
+> +		complete(&match->done);
+> +	}
+> +	spin_unlock_irqrestore(&ch->rx_lock, flags);
+> +}
+> +
+> +static void scpi_handle_remote_msg(struct mbox_client *c, void *msg)
+> +{
+> +	struct scpi_chan *ch = container_of(c, struct scpi_chan, cl);
+> +	struct scpi_shared_mem *mem = ch->rx_payload;
+> +	u32 cmd = le32_to_cpu(mem->command);
+> +
+> +	scpi_process_cmd(ch, cmd);
+> +}
+> +
+> +static void scpi_tx_prepare(struct mbox_client *c, void *msg)
+> +{
+> +	unsigned long flags;
+> +	struct scpi_xfer *t = msg;
+> +	struct scpi_chan *ch = container_of(c, struct scpi_chan, cl);
+> +	struct scpi_shared_mem *mem = (struct scpi_shared_mem *)ch->tx_payload;
+> +
+> +	mem->command = cpu_to_le32(t->cmd);
+> +	if (t->tx_buf)
+> +		memcpy_toio(mem->payload, t->tx_buf, t->tx_len);
+> +	if (t->rx_buf) {
+> +		spin_lock_irqsave(&ch->rx_lock, flags);
+> +		list_add_tail(&t->node, &ch->rx_pending);
+> +		spin_unlock_irqrestore(&ch->rx_lock, flags);
+> +	}
+> +}
+> +
+> +static struct scpi_xfer *get_scpi_xfer(struct scpi_chan *ch)
+> +{
+> +	struct scpi_xfer *t;
+> +
+> +	mutex_lock(&ch->xfers_lock);
+> +	if (list_empty(&ch->xfers_list)) {
+> +		mutex_unlock(&ch->xfers_lock);
+> +		return NULL;
+> +	}
+> +	t = list_first_entry(&ch->xfers_list, struct scpi_xfer, node);
+> +	list_del(&t->node);
+> +	mutex_unlock(&ch->xfers_lock);
+> +	return t;
+> +}
+> +
+> +static void put_scpi_xfer(struct scpi_xfer *t, struct scpi_chan *ch)
+> +{
+> +	mutex_lock(&ch->xfers_lock);
+> +	list_add_tail(&t->node, &ch->xfers_list);
+> +	mutex_unlock(&ch->xfers_lock);
+> +}
+> +
+> +static int
+> +scpi_send_message(u8 cmd, void *tx_buf, unsigned int len, void *rx_buf)
+> +{
+
+So the caller doesn't specify the length of rx_buf, wouldn't this be a
+good idea?
+
+That way we could truncate data sent from the SCP which would prevent
+buffer overruns due to buggy SCP or Linux code. It would also allow the
+SCP message format to be extended in the future in a backwards
+compatible way.
+
+And we could zero fill any data that was too short to allow
+compatibility with Linux drivers using any new extended format messages
+on older SCP firmware. Or at least so any bugs behave more consistently
+by seeing zeros instead of random data left over from old messages.
+
+> +	int ret;
+> +	u8 token, chan;
+> +	struct scpi_xfer *msg;
+> +	struct scpi_chan *scpi_chan;
+> +
+> +	chan = atomic_inc_return(&scpi_info->next_chan) % scpi_info->num_chans;
+> +	scpi_chan = scpi_info->channels + chan;
+> +
+> +	msg = get_scpi_xfer(scpi_chan);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	token = atomic_inc_return(&scpi_chan->token) & CMD_TOKEN_ID_MASK;
+
+So, this 8 bit token is what's used to 'uniquely' identify a pending
+command. But as it's just an incrementing value, then if one command
+gets delayed for long enough that 256 more are issued then we will have
+a non-unique value and scpi_process_cmd can go wrong.
+
+Note, this delay doesn't just have to be at the SCPI end. We could get
+preempted here (?) before actually sending the command to the SCP and
+other kernel threads or processes could send those other 256 commands
+before we get to run again.
+
+Wouldn't it be better instead to have scpi_alloc_xfer_list add a unique
+number to each struct scpi_xfer.
+
+> +
+> +	msg->slot = BIT(SCPI_SLOT);
+> +	msg->cmd = PACK_SCPI_CMD(cmd, token, len);
+> +	msg->tx_buf = tx_buf;
+> +	msg->tx_len = len;
+> +	msg->rx_buf = rx_buf;
+> +	init_completion(&msg->done);
+> +
+> +	ret = mbox_send_message(scpi_chan->chan, msg);
+> +	if (ret < 0 || !rx_buf)
+> +		goto out;
+> +
+> +	if (!wait_for_completion_timeout(&msg->done, MAX_RX_TIMEOUT))
+> +		ret = -ETIMEDOUT;
+> +	else
+> +		/* first status word */
+> +		ret = le32_to_cpu(msg->status);
+> +out:
+> +	if (ret < 0 && rx_buf) /* remove entry from the list if timed-out */
+
+So, even with my suggestion that the unique message identifies are
+fixed values stored in struct scpi_xfer, we can still have the situation
+where we timeout a request, that scpi_xfer then getting used for another
+request, and finally the SCP completes the request that we timed out,
+which has the same 'unique' value as the later one.
+
+One way to handle that it to not have any timeout on requests and assume
+the firmware isn't buggy.
+
+Another way is to have something more closely approximating unique in
+the message, e.g. a 64-bit incrementing count. I realise though that
+ARM have already finished the spec so we're limited to 8-bits :-(
+
+> +		scpi_process_cmd(scpi_chan, msg->cmd);
+> +
+> +	put_scpi_xfer(msg, scpi_chan);
+> +	/* SCPI error codes > 0, translate them to Linux scale*/
+> +	return ret > 0 ? scpi_to_linux_errno(ret) : ret;
+> +}
+> +
+> +static u32 scpi_get_version(void)
+> +{
+> +	return scpi_info->protocol_version;
+> +}
+> +
+> +static int
+> +scpi_clk_get_range(u16 clk_id, unsigned long *min, unsigned long *max)
+> +{
+> +	int ret;
+> +	struct clk_get_info clk;
+> +	__le16 le_clk_id = cpu_to_le16(clk_id);
+> +
+> +	ret = scpi_send_message(SCPI_CMD_GET_CLOCK_INFO,
+> +				&le_clk_id, sizeof(le_clk_id), &clk);
+> +	if (!ret) {
+> +		*min = le32_to_cpu(clk.min_rate);
+> +		*max = le32_to_cpu(clk.max_rate);
+> +	}
+> +	return ret;
+> +}
+> +
+> +static unsigned long scpi_clk_get_val(u16 clk_id)
+> +{
+> +	int ret;
+> +	struct clk_get_value clk;
+> +	__le16 le_clk_id = cpu_to_le16(clk_id);
+> +
+> +	ret = scpi_send_message(SCPI_CMD_GET_CLOCK_VALUE,
+> +				&le_clk_id, sizeof(le_clk_id), &clk);
+> +	return ret ? ret : le32_to_cpu(clk.rate);
+> +}
+> +
+> +static int scpi_clk_set_val(u16 clk_id, unsigned long rate)
+> +{
+> +	int stat;
+> +	struct clk_set_value clk = {
+> +		cpu_to_le16(clk_id), 0, cpu_to_le32(rate)
+
+I know that '0' is what I suggested when I spotted the 'reserved' member
+wasn't being allowed for, but I have since thought that the more robust
+way of initialising structures here, and in other functions below,
+might be with this syntax:
+
+		.id = cpu_to_le16(clk_id),
+		.rate = cpu_to_le32(rate)
+
+> +	};
+> +
+> +	return scpi_send_message(SCPI_CMD_SET_CLOCK_VALUE,
+> +				 &clk, sizeof(clk), &stat);
+> +}
+> +
+> +static int scpi_dvfs_get_idx(u8 domain)
+> +{
+> +	int ret;
+> +	struct dvfs_get dvfs;
+> +
+> +	ret = scpi_send_message(SCPI_CMD_GET_DVFS,
+> +				&domain, sizeof(domain), &dvfs);
+> +	return ret ? ret : dvfs.index;
+> +}
+> +
+> +static int scpi_dvfs_set_idx(u8 domain, u8 index)
+> +{
+> +	int stat;
+> +	struct dvfs_set dvfs = {domain, index};
+> +
+> +	return scpi_send_message(SCPI_CMD_SET_DVFS,
+> +				 &dvfs, sizeof(dvfs), &stat);
+> +}
+> +
+> +static struct scpi_dvfs_info *scpi_dvfs_get_info(u8 domain)
+> +{
+> +	struct scpi_dvfs_info *info;
+> +	struct scpi_opp *opp;
+> +	struct dvfs_info buf;
+> +	int ret, i;
+> +
+> +	if (domain >= MAX_DVFS_DOMAINS)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	if (scpi_info->dvfs[domain])	/* data already populated */
+> +		return scpi_info->dvfs[domain];
+> +
+> +	ret = scpi_send_message(SCPI_CMD_GET_DVFS_INFO, &domain,
+> +				sizeof(domain), &buf);
+> +
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	info = kmalloc(sizeof(*info), GFP_KERNEL);
+> +	if (!info)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	info->count = DVFS_OPP_COUNT(buf.header);
+> +	info->latency = DVFS_LATENCY(buf.header) * 1000; /* uS to nS */
+> +
+> +	info->opps = kcalloc(info->count, sizeof(*opp), GFP_KERNEL);
+> +	if (!info->opps) {
+> +		kfree(info);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	for (i = 0, opp = info->opps; i < info->count; i++, opp++) {
+> +		opp->freq = le32_to_cpu(buf.opps[i].freq);
+> +		opp->m_volt = le32_to_cpu(buf.opps[i].m_volt);
+> +	}
+> +
+> +	scpi_info->dvfs[domain] = info;
+> +	return info;
+> +}
+> +
+> +static struct scpi_ops scpi_ops = {
+> +	.get_version = scpi_get_version,
+> +	.clk_get_range = scpi_clk_get_range,
+> +	.clk_get_val = scpi_clk_get_val,
+> +	.clk_set_val = scpi_clk_set_val,
+> +	.dvfs_get_idx = scpi_dvfs_get_idx,
+> +	.dvfs_set_idx = scpi_dvfs_set_idx,
+> +	.dvfs_get_info = scpi_dvfs_get_info,
+> +};
+> +
+> +struct scpi_ops *get_scpi_ops(void)
+> +{
+> +	return scpi_info ? scpi_info->scpi_ops : NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(get_scpi_ops);
+
+I'm curious to know why the interface for users of this driver is an
+array of function pointers rather than just exporting functions
+statically. The pointer array would be the sort of thing you'd do if
+there were more than one possible provider of this interface in the
+kernel, is this what we expect?
+
+> +
+> +static int scpi_init_versions(struct scpi_drvinfo *info)
+> +{
+> +	int ret;
+> +	struct scp_capabilities caps;
+> +
+> +	ret = scpi_send_message(SCPI_CMD_SCPI_CAPABILITIES, NULL, 0, &caps);
+> +	if (!ret) {
+> +		info->protocol_version = le32_to_cpu(caps.protocol_version);
+> +		info->firmware_version = le32_to_cpu(caps.platform_version);
+> +	}
+> +	return ret;
+> +}
+> +
+> +static ssize_t protocol_version_show(struct device *dev,
+> +				     struct device_attribute *attr, char *buf)
+> +{
+> +	struct scpi_drvinfo *scpi_info = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%d.%d\n",
+> +		       PROTOCOL_REV_MAJOR(scpi_info->protocol_version),
+> +		       PROTOCOL_REV_MINOR(scpi_info->protocol_version));
+> +}
+> +static DEVICE_ATTR_RO(protocol_version);
+> +
+> +static ssize_t firmware_version_show(struct device *dev,
+> +				     struct device_attribute *attr, char *buf)
+> +{
+> +	struct scpi_drvinfo *scpi_info = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%d.%d.%d\n",
+> +		       FW_REV_MAJOR(scpi_info->firmware_version),
+> +		       FW_REV_MINOR(scpi_info->firmware_version),
+> +		       FW_REV_PATCH(scpi_info->firmware_version));
+> +}
+> +static DEVICE_ATTR_RO(firmware_version);
+> +
+> +static struct attribute *versions_attrs[] = {
+> +	&dev_attr_firmware_version.attr,
+> +	&dev_attr_protocol_version.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(versions);
+> +
+> +static void
+> +scpi_free_channels(struct device *dev, struct scpi_chan *pchan, int count)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < count && pchan->chan; i++, pchan++) {
+> +		mbox_free_channel(pchan->chan);
+> +		devm_kfree(dev, pchan->xfers);
+> +		devm_iounmap(dev, pchan->rx_payload);
+> +	}
+> +}
+> +
+> +static int scpi_remove(struct platform_device *pdev)
+> +{
+> +	int i;
+> +	struct device *dev = &pdev->dev;
+> +	struct scpi_drvinfo *info = platform_get_drvdata(pdev);
+> +
+> +	scpi_info = NULL; /* stop exporting SCPI ops through get_scpi_ops */
+> +
+> +	of_platform_depopulate(dev);
+> +	sysfs_remove_groups(&dev->kobj, versions_groups);
+> +	scpi_free_channels(dev, info->channels, info->num_chans);
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	for (i = 0; i < MAX_DVFS_DOMAINS && info->dvfs[i]; i++) {
+> +		kfree(info->dvfs[i]->opps);
+> +		kfree(info->dvfs[i]);
+> +	}
+> +	devm_kfree(dev, info->channels);
+> +	devm_kfree(dev, info);
+> +
+> +	return 0;
+> +}
+> +
+> +#define MAX_SCPI_XFERS		10
+> +static int scpi_alloc_xfer_list(struct device *dev, struct scpi_chan *ch)
+> +{
+> +	int i;
+> +	struct scpi_xfer *xfers;
+> +
+> +	xfers = devm_kzalloc(dev, MAX_SCPI_XFERS * sizeof(*xfers), GFP_KERNEL);
+> +	if (!xfers)
+> +		return -ENOMEM;
+> +
+> +	ch->xfers = xfers;
+> +	for (i = 0; i < MAX_SCPI_XFERS; i++, xfers++)
+> +		list_add_tail(&xfers->node, &ch->xfers_list);
+> +	return 0;
+> +}
+> +
+> +static int scpi_probe(struct platform_device *pdev)
+> +{
+> +	int count, idx, ret;
+> +	struct resource res;
+> +	struct scpi_chan *scpi_chan;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +
+> +	scpi_info = devm_kzalloc(dev, sizeof(*scpi_info), GFP_KERNEL);
+> +	if (!scpi_info) {
+> +		dev_err(dev, "failed to allocate memory for scpi drvinfo\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	count = of_count_phandle_with_args(np, "mboxes", "#mbox-cells");
+> +	if (count < 0) {
+> +		dev_err(dev, "no mboxes property in '%s'\n", np->full_name);
+> +		return -ENODEV;
+> +	}
+> +
+> +	scpi_chan = devm_kcalloc(dev, count, sizeof(*scpi_chan), GFP_KERNEL);
+> +	if (!scpi_chan) {
+> +		dev_err(dev, "failed to allocate memory scpi chaninfo\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for (idx = 0; idx < count; idx++) {
+> +		resource_size_t size;
+> +		struct scpi_chan *pchan = scpi_chan + idx;
+> +		struct mbox_client *cl = &pchan->cl;
+> +		struct device_node *shmem = of_parse_phandle(np, "shmem", idx);
+> +
+> +		if (of_address_to_resource(shmem, 0, &res)) {
+> +			dev_err(dev, "failed to get SCPI payload mem resource\n");
+> +			ret = -EINVAL;
+> +			goto err;
+> +		}
+> +
+> +		size = resource_size(&res);
+> +		pchan->rx_payload = devm_ioremap(dev, res.start, size);
+> +		if (!pchan->rx_payload) {
+> +			dev_err(dev, "failed to ioremap SCPI payload\n");
+> +			ret = -EADDRNOTAVAIL;
+> +			goto err;
+> +		}
+> +		pchan->tx_payload = pchan->rx_payload + (size >> 1);
+> +
+> +		cl->dev = dev;
+> +		cl->rx_callback = scpi_handle_remote_msg;
+> +		cl->tx_prepare = scpi_tx_prepare;
+> +		cl->tx_block = true;
+> +		cl->tx_tout = 50;
+> +		cl->knows_txdone = false; /* controller can ack */
+> +
+> +		INIT_LIST_HEAD(&pchan->rx_pending);
+> +		INIT_LIST_HEAD(&pchan->xfers_list);
+> +		spin_lock_init(&pchan->rx_lock);
+> +		mutex_init(&pchan->xfers_lock);
+> +
+> +		ret = scpi_alloc_xfer_list(dev, pchan);
+> +		if (!ret) {
+> +			pchan->chan = mbox_request_channel(cl, idx);
+> +			if (!IS_ERR(pchan->chan))
+> +				continue;
+> +			ret = -EPROBE_DEFER;
+> +			dev_err(dev, "failed to acquire channel#%d\n", idx);
+> +		}
+> +err:
+> +		scpi_free_channels(dev, scpi_chan, idx);
+
+Think we need to add one to 'idx' above, otherwise we won't free up
+resources we successfully allocated to the current channel before we got
+the error.
+
+Actually, we also fail to free scpi_chan and scpi_info, so should we not
+just call scpi_remove here instead? (Would require some tweaks as
+scpi_info and drvdata aren't set until a bit further down.)
+
+> +		scpi_info = NULL;
+> +		return ret;
+> +	}
+> +
+> +	scpi_info->channels = scpi_chan;
+> +	scpi_info->num_chans = count;
+> +	platform_set_drvdata(pdev, scpi_info);
+> +
+> +	ret = scpi_init_versions(scpi_info);
+> +	if (ret) {
+> +		dev_err(dev, "incorrect or no SCP firmware found\n");
+> +		scpi_remove(pdev);
+> +		return ret;
+> +	}
+> +
+> +	_dev_info(dev, "SCP Protocol %d.%d Firmware %d.%d.%d version\n",
+> +		  PROTOCOL_REV_MAJOR(scpi_info->protocol_version),
+> +		  PROTOCOL_REV_MINOR(scpi_info->protocol_version),
+> +		  FW_REV_MAJOR(scpi_info->firmware_version),
+> +		  FW_REV_MINOR(scpi_info->firmware_version),
+> +		  FW_REV_PATCH(scpi_info->firmware_version));
+> +	scpi_info->scpi_ops = &scpi_ops;
+> +
+> +	ret = sysfs_create_groups(&dev->kobj, versions_groups);
+> +	if (ret)
+> +		dev_err(dev, "unable to create sysfs version group\n");
+> +
+> +	return of_platform_populate(dev->of_node, NULL, NULL, dev);
+> +}
+> +
+> +static const struct of_device_id scpi_of_match[] = {
+> +	{.compatible = "arm,scpi"},
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, scpi_of_match);
+> +
+> +static struct platform_driver scpi_driver = {
+> +	.driver = {
+> +		.name = "scpi_protocol",
+> +		.of_match_table = scpi_of_match,
+> +	},
+> +	.probe = scpi_probe,
+> +	.remove = scpi_remove,
+> +};
+> +module_platform_driver(scpi_driver);
+> +
+> +MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
+> +MODULE_DESCRIPTION("ARM SCPI mailbox protocol driver");
+> +MODULE_LICENSE("GPL");
+[...]
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+Tixy
