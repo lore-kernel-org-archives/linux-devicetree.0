@@ -1,71 +1,115 @@
 From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: LED subsystem child DT node ref counting
-Date: Tue, 28 Apr 2015 09:15:47 +0200
-Message-ID: <553F33A3.2000902@samsung.com>
-References: <5530E891.20707@samsung.com>
- <CAL_JsqLVEKN_XWOLz2uOVbhf3NWf=b27DXh8NhaqvfrNsU+WNw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <CAL_JsqLVEKN_XWOLz2uOVbhf3NWf=b27DXh8NhaqvfrNsU+WNw@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v6 02/10] DT: Add documentation for the mfd Maxim max77693
+Date: Tue, 28 Apr 2015 09:18:42 +0200
+Message-ID: <1430205530-20873-3-git-send-email-j.anaszewski@samsung.com>
+References: <1430205530-20873-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1430205530-20873-1-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
+Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/27/2015 03:57 PM, Rob Herring wrote:
-> On Fri, Apr 17, 2015 at 6:03 AM, Jacek Anaszewski
-> <j.anaszewski@samsung.com> wrote:
->> Hi,
->>
->> I'd like to clarify whether LED subsystem drivers behave correctly
->> or not, regarding child DT nodes reference counting.
->
-> In general, the DT reference counting is broken. It is really only
-> used on pSeries and only for certain nodes on it.
->
->> Single LED controller can have connected more then one LED to it.
->> The LEDs are represented by child DT nodes of the node representing
->> the controller (see Documentation/devicetree/bindings/leds).
->>
->> LED subsystem drivers parse child DT nodes and use the node name,
->> or 'label' property string as the LED class device name.
->>
->> This is usually accomplished like below:
->>
->> for_each_child_of_node(np, child) {
->>      ...
->>      led.name = of_get_property(child, "label", NULL) ? : child->name;
->>
->>
->> The question is whether reference count of the child node shouldn't
->> be increased here with of_node_get(child). Whereas intuitively it could
->> be thought of as a right thing to do, empirical experiments don't
->> necessary confirm that.
->>
->> When I print the value of child_node->kobj.kref.refcount.counter
->> inside for_each loop it is 3 and and after leaving the loop it gets
->> decreased to 2. On driver removal the value is also 2. It means that
->> label is available all the time, without increasing child node ref
->> counter.
->
-> I believe the ref count is only left incremented if you break from the
-> loop. Otherwise, it is only incremented during the loop one child at a
-> time.
+This patch adds device tree binding documentation for
+the flash cell of the Maxim max77693 multifunctional device.
 
-Child node ref count is 3 right after obtaining it with
-of_get_next_available_child.
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/mfd/max77693.txt |   67 ++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-Nonetheless my further source code investigation revealed that this
-does not pose an issue for the LED subsystem, as the label is copied
-in the device_create_with_groups function.
-
-The related 'name' property should be probably removed from the
-struct led_classdev, as it seems to be used only for device name
-initialization. It will require modifications in the existing LED
-drivers though.
-
+diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+index 38e6440..d342584 100644
+--- a/Documentation/devicetree/bindings/mfd/max77693.txt
++++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+@@ -76,7 +76,60 @@ Optional properties:
+     Valid values: 4300000, 4700000, 4800000, 4900000
+     Default: 4300000
+ 
++- led : the LED submodule device node
++
++There are two LED outputs available - FLED1 and FLED2. Each of them can
++control a separate LED or they can be connected together to double
++the maximum current for a single connected LED. One LED is represented
++by one child node.
++
++Required properties:
++- compatible : Must be "maxim,max77693-led".
++
++Optional properties:
++- maxim,boost-mode :
++	In boost mode the device can produce up to 1.2A of total current
++	on both outputs. The maximum current on each output is reduced
++	to 625mA then. If not enabled explicitly, boost setting defaults to
++	LEDS_BOOST_FIXED in case both current sources are used.
++	Possible values:
++		LEDS_BOOST_OFF (0) - no boost,
++		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
++		LEDS_BOOST_FIXED (2) - fixed mode.
++- maxim,boost-mvout : Output voltage of the boost module in millivolts.
++	Valid values: 3300 - 5500, step by 25 (rounded down)
++	Default: 3300
++- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
++	if chip estimates that system voltage could drop below this level due
++	to flash power consumption.
++	Valid values: 2400 - 3400, step by 33 (rounded down)
++	Default: 2400
++
++Required properties for the LED child node:
++- led-sources : see Documentation/devicetree/bindings/leds/common.txt;
++		device current output identifiers: 0 - FLED1, 1 - FLED2
++- led-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++	Valid values for a LED connected to one FLED output:
++		15625 - 250000, step by 15625 (rounded down)
++	Valid values for a LED connected to both FLED outputs:
++		15625 - 500000, step by 15625 (rounded down)
++- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++	Valid values for a single LED connected to one FLED output
++	(boost mode must be turned off):
++		15625 - 1000000, step by 15625 (rounded down)
++	Valid values for a single LED connected to both FLED outputs:
++		15625 - 1250000, step by 15625 (rounded down)
++	Valid values for two LEDs case:
++		15625 - 625000, step by 15625 (rounded down)
++- flash-max-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
++	Valid values: 62500 - 1000000, step by 62500 (rounded down)
++
++Optional properties for the LED child node:
++- label : see Documentation/devicetree/bindings/leds/common.txt
++
+ Example:
++#include <dt-bindings/leds/common.h>
++
+ 	max77693@66 {
+ 		compatible = "maxim,max77693";
+ 		reg = <0x66>;
+@@ -117,5 +170,19 @@ Example:
+ 			maxim,thermal-regulation-celsius = <75>;
+ 			maxim,battery-overcurrent-microamp = <3000000>;
+ 			maxim,charge-input-threshold-microvolt = <4300000>;
++
++		led {
++			compatible = "maxim,max77693-led";
++			maxim,boost-mode = <LEDS_BOOST_FIXED>;
++			maxim,boost-mvout = <5000>;
++			maxim,mvsys-min = <2400>;
++
++			camera_flash: flash-led {
++				label = "max77693-flash";
++				led-sources = <0>, <1>;
++				led-max-microamp = <500000>;
++				flash-max-microamp = <1250000>;
++				flash-max-timeout-us = <1000000>;
++			};
+ 		};
+ 	};
 -- 
-Best Regards,
-Jacek Anaszewski
+1.7.9.5
