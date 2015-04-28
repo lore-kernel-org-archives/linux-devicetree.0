@@ -1,49 +1,57 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 1/4] mailbox: add support for System Control and Power
- Interface(SCPI) protocol
-Date: Tue, 28 Apr 2015 09:36:04 +0200
-Message-ID: <1430206564.2411.21.camel@x220>
-References: <1430134846-24320-1-git-send-email-sudeep.holla@arm.com>
-	 <1430134846-24320-2-git-send-email-sudeep.holla@arm.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Duplicated device tree and Dynamic symbols
+Date: Tue, 28 Apr 2015 10:16:01 +0200
+Message-ID: <CAPybu_3CQ0vD=uj_gKwdcsQ_W7u-SRKzKDWOYaXvU83V8iYOqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430134846-24320-2-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Just one nit: a license mismatch.
+Hello
 
-On Mon, 2015-04-27 at 12:40 +0100, Sudeep Holla wrote:
-> --- /dev/null
-> +++ b/drivers/mailbox/scpi_protocol.c
+I have an X86 platform with device tree support. It has multiple pci
+slots with a custom board that is described with a device tree.
 
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program. If not, see <http://www.gnu.org/licenses/>.
+When the pci device is probed, the driver fetches a device tree from
+the firmware infrastructure, patches the range property based on the
+bar address and adds the device to the main device tree.
 
-This states the license is GPL v2.
+This works perfectly fine with only one card, but when the second card
+is connected: Here be dragons :)
 
-> +MODULE_LICENSE("GPL");
+The main issue is that of_find_node_by_phandle always resolves to the
+first connected card. I fixed this by creating a new function.
+of_find_node_by_phandle_family() that chooses the closest phandle on
+the tree, not just the first one.
 
-And, according to include/linux/module.h, this states the license is GPL
-v2 or later. So I think either the comment at the top of this file or
-the license ident used in the MODULE_LICENSE() macro should be changed.
+By reading the "Dynamic Symbols support and fixup support"
+here:
+http://events.linuxfoundation.org/sites/events/files/slides/dynamic-dt-elce14.pdf
+and here
+https://lwn.net/Articles/616859/
 
-Likewise for 2/4 and 4/4.
+It seemed that the patch would fix my issue and it would be already
+merged, but I cannot find the patch here
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
+or here
+https://git.kernel.org/cgit/linux/kernel/git/jdl/dtc.git
 
-Thanks,
+So I am wondering some stuff:
+
+Would a patch adding my of_find_node_by_phandle_family() would be accepted.?
+
+Will Dynamic symbols fix my issue?
+
+What is the status of Dynamic symbol support?
+
+Thanks!
 
 
-Paul Bolle
+-- 
+Ricardo Ribalda
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
