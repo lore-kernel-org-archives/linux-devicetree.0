@@ -1,84 +1,79 @@
-From: <kamlakant.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/2] Documentation: Add Netlogic XLP GPIO devicetree bindings documentation
-Date: Tue, 28 Apr 2015 20:10:44 +0530
-Message-ID: <1430232045-5114-2-git-send-email-kamlakant.patel@broadcom.com>
-References: <1430232045-5114-1-git-send-email-kamlakant.patel@broadcom.com>
+From: Ben Shelton <ben.shelton@ni.com>
+Subject: Re: [PATCH v6 2/2] memory: pl353: Add driver for arm pl353 static
+ memory controller
+Date: Tue, 28 Apr 2015 10:11:38 -0500
+Message-ID: <20150428151138.GB11721@bshelton-desktop>
+References: <1428941512-26411-1-git-send-email-punnaia@xilinx.com>
+ <a1f437fe-51cf-4a89-87b4-8f0a305e68ed@BN1AFFO11FD026.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430232045-5114-1-git-send-email-kamlakant.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kamlakant Patel <kamlakant.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <a1f437fe-51cf-4a89-87b4-8f0a305e68ed@BN1AFFO11FD026.protection.gbl>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Kamlakant Patel <kamlakant.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hi Punnaiah,
 
-Provide documentation for Netlogic XLP SoCs GPIO controller DTS bindings.
+> +/**
+> + * pl353_smc_set_cycles - Set memory timing parameters
+> + * @dev:	Pointer to the device struct
+> + * @t0:	t_rc		read cycle time
+> + * @t1:	t_wc		write cycle time
+> + * @t2:	t_rea/t_ceoe	output enable assertion delay
+> + * @t3:	t_wp		write enable deassertion delay
+> + * @t4:	t_clr/t_pc	page cycle time
+> + * @t5:	t_ar/t_ta	ID read time/turnaround time
+> + * @t6:	t_rr		busy to RE timing
+> + *
+> + * Sets NAND chip specific timing parameters.
+> + */
+> +void pl353_smc_set_cycles(struct device *dev, u32 t0, u32 t1, u32 t2, u32 t3,
+> +			  u32 t4, u32 t5, u32 t6)
+> +{
+> +	struct pl353_smc_data *pl353_smc = dev_get_drvdata(dev);
+> +
+> +	t0 &= PL353_SMC_SET_CYCLES_T0_MASK;
+> +	t1 = (t1 & PL353_SMC_SET_CYCLES_T1_MASK) <<
+> +			PL353_SMC_SET_CYCLES_T1_SHIFT;
+> +	t2 = (t2 & PL353_SMC_SET_CYCLES_T2_MASK) <<
+> +			PL353_SMC_SET_CYCLES_T2_SHIFT;
+> +	t3 = (t3 & PL353_SMC_SET_CYCLES_T3_MASK) <<
+> +			PL353_SMC_SET_CYCLES_T3_SHIFT;
+> +	t4 = (t4 & PL353_SMC_SET_CYCLES_T4_MASK) <<
+> +			PL353_SMC_SET_CYCLES_T4_SHIFT;
+> +	t5 = (t5 & PL353_SMC_SET_CYCLES_T5_MASK) <<
+> +			PL353_SMC_SET_CYCLES_T5_SHIFT;
+> +	t6 = (t6 & PL353_SMC_SET_CYCLES_T6_MASK) <<
+> +			PL353_SMC_SET_CYCLES_T6_SHIFT;
 
-Signed-off-by: Kamlakant Patel <kamlakant.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio-xlp.txt          |   47 ++++++++++++++++++++
- 1 files changed, 47 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xlp.txt
+Right now, if the caller (i.e. the PL353 NAND driver) passes in a value for any
+of the timing parameters that is too large, it will be truncated with the
+corresponding mask and then saved, resulting in unexpected behavior.  I saw
+this when the PL353 NAND driver tried to set t_rc and t_wc to 17 cycles, which
+does not fit in the 4-bit fields for those values -- it got clipped to 4 bits
+and stored as 1 cycle, which made communication with the NAND chip fail and
+time out.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-xlp.txt b/Documentation/devicetree/bindings/gpio/gpio-xlp.txt
-new file mode 100644
-index 0000000..262ee4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-xlp.txt
-@@ -0,0 +1,47 @@
-+Netlogic XLP Family GPIO
-+========================
-+
-+This GPIO driver is used for following Netlogic XLP SoCs:
-+	XLP832, XLP316, XLP208, XLP980, XLP532
-+
-+Required properties:
-+-------------------
-+
-+- compatible: Should be one of the following:
-+  - "netlogic,xlp832-gpio": For Netlogic XLP832
-+  - "netlogic,xlp316-gpio": For Netlogic XLP316
-+  - "netlogic,xlp208-gpio": For Netlogic XLP208
-+  - "netlogic,xlp980-gpio": For Netlogic XLP980
-+  - "netlogic,xlp532-gpio": For Netlogic XLP532
-+- reg: Physical base address and length of the controller's registers.
-+- #gpio-cells: Should be two. The first cell is the pin number and the second
-+  cell is used to specify optional parameters (currently unused).
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- nr-gpios: Number of GPIO pins supported by the controller.
-+- interrupt-cells: Should be two. The first cell is the GPIO Number. The
-+  second cell is used to specify flags. The following subset of flags is
-+  supported:
-+  - trigger type:
-+	1 = low to high edge triggered.
-+	2 = high to low edge triggered.
-+	4 = active high level-sensitive.
-+	8 = active low level-sensitive.
-+- interrupts: Interrupt number for this device.
-+- interrupt-parent: phandle of the parent interrupt controller.
-+- interrupt-controller: Identifies the node as an interrupt controller.
-+
-+Example:
-+
-+	gpio: xlp_gpio@34000 {
-+		compatible = "netlogic,xlp316-gpio";
-+		reg = <0 0x34100 0x1000
-+		       0 0x35100 0x1000>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		nr-gpios = <57>;
-+
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&pic>;
-+		interrupts = <39>;
-+		interrupt-controller;
-+	};
--- 
-1.7.1
+It would be good to sanity-check each timing here, and rather than returning
+void, return a return code indicating success or failure (e.g. -EINVAL for
+invalid timings).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Note also that truncation isn't the only thing to check for here.  The PL350
+r2p1 datasheet lists a "Minimum permitted value" for each of these timing
+values.
+
+> +
+> +	t0 |= t1 | t2 | t3 | t4 | t5 | t6;
+> +
+> +	writel(t0, pl353_smc->base + PL353_SMC_SET_CYCLES_OFFS);
+> +	writel(PL353_SMC_DC_UPT_NAND_REGS, pl353_smc->base +
+> +	       PL353_SMC_DIRECT_CMD_OFFS);
+> +}
+> +EXPORT_SYMBOL_GPL(pl353_smc_set_cycles);
+> +
+
+Thanks,
+Ben
