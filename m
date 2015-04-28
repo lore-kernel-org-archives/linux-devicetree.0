@@ -1,84 +1,64 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH 0/6] ARM: berlin: relicense the device trees under
- GPLv2/X11
-Date: Tue, 28 Apr 2015 13:41:33 +0800
-Message-ID: <20150428134133.5ada5804@xhacker>
-References: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Subject: Re: [PATCH iio] imu: inv_mpu6050: adds device tree bindings
+Date: Tue, 28 Apr 2015 06:52:35 +0100
+Message-ID: <15AC68F4-8C11-4A4A-9F28-411A037E1844@jic23.retrosnub.co.uk>
+References: <1429867387-10219-1-git-send-email-varkab@cdac.in> <553EFEFA.5010708@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430057013-12842-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <553EFEFA.5010708-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Antoine,
 
-On Sun, 26 Apr 2015 07:03:27 -0700
-Antoine Tenart <antoine.tenart@free-electrons.com> wrote:
 
-> Hi,
-> 
-> The GPLv2 license makes it impractical for other software components
-> licensed under another license to use our device trees. To fix this,
-> and make our device tree usable by other software components, relicense
-> them under a GPLv2/X11 dual-license.
-> 
-> In order to get this accepted, we *need* all contributors to the Berlin
-> device tree files to ack-by the patches applying on a file they
-> contributed on. A list of needed ack-by by device tree is shown below:
+On 28 April 2015 04:31:06 BST, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>On 04/24/2015 02:53 PM, Varka Bhadram wrote:
+>
+>> Signed-off-by: Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/imu/inv_mpu6050.txt    |   17
+>+++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>  create mode 100644
+>Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+>>
+>> diff --git
+>a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+>b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+>> new file mode 100644
+>> index 0000000..e4d8f1c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+>> @@ -0,0 +1,17 @@
+>> +InvenSense MPU-6050 Six-Axis (Gyro + Accelerometer) MEMS
+>MotionTracking Device
+>> +
+>> +http://www.invensense.com/mems/gyro/mpu6050.html
+>> +
+>> +Required properties:
+>> + - compatible : should be "invensense,mpu6050"
+>> + - reg : the I2C address of the sensor
+>> + - interrupt-parent : should be the phandle for the interrupt
+>controller
+>> + - interrupts : interrupt mapping for GPIO IRQ
+>> +
+>> +Example:
+>> +	mpu6050@68 {
+>> +		compatible = "invensense,mpu6050";
+>> +		reg = <0x68>;
+>> +		interrupt-parent = <&gpio1>;
+>> +		interrupts = <18 1>;
+>> +	};
+>
+>Ping..?
 
-For all of them:
+Device tree bindings. Either need a device tree back or 3 weeks to pass before I can
+ take them. Looks fine to me! Could cross ref the interrupts binding doc....
 
-Acked-by: Jisheng Zhang <jszhang@marvell.com>
-
-> 
->  * berlin2q.dtsi:
->         Antoine Tenart <antoine.tenart@free-electrons.com>
->         Jisheng Zhang <jszhang@marvell.com>
-> 	Alexandre Belloni <alexandre.belloni@free-electrons.com>
->         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> 
->  * berlin2q-marvell-dmp.dtsi:
->         Antoine Tenart <antoine.tenart@free-electrons.com>
->         Jisheng Zhang <jszhang@marvell.com>
-> 
->  * berlin2.dtsi:
->         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->         Antoine Tenart <antoine.tenart@free-electrons.com>
->         Jisheng Zhang <jszhang@marvell.com>
-> 
->  * berlin2-sony-nsz-gs7.dts:
->         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> 
->  * berlin2cd.dtsi:
->         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->         Antoine Tenart <antoine.tenart@free-electrons.com>
->         Jisheng Zhang <jszhang@marvell.com>
-> 
->  * berlin2cd-google-chromecast.dts:
->         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> 
-> Thanks!
-> 
-> Antoine
-> 
-> Antoine Tenart (6):
->   ARM: dts: berlin: relicense the berlin2q dtsi under GPLv2/X11
->   ARM: dts: berlin: relicense the BG2Q Marvell DMP dts under GPLv2/X11
->   ARM: dts: berlin: relicense the berlin2 dtsi under GPLv2/X11
->   ARM: dts: berlin: relicense the BG2 Sony NSZ-GS7 dts under GPLv2/X11
->   ARM: dts: berlin: relicense the berlin2cd dtsi under GPLv2/X11
->   ARM: dts: berlin: relicense the BG2CD Google Chromecast dts under
->     GPLv2/X11
-> 
->  arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts        | 34 +++++++++++++++++++++--
->  arch/arm/boot/dts/berlin2.dtsi                    | 34 +++++++++++++++++++++--
->  arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 34 +++++++++++++++++++++--
->  arch/arm/boot/dts/berlin2cd.dtsi                  | 34 +++++++++++++++++++++--
->  arch/arm/boot/dts/berlin2q-marvell-dmp.dts        | 34 +++++++++++++++++++++--
->  arch/arm/boot/dts/berlin2q.dtsi                   | 34 +++++++++++++++++++++--
->  6 files changed, 186 insertions(+), 18 deletions(-)
-> 
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
