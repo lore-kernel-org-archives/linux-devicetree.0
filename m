@@ -1,66 +1,37 @@
-From: <dinguyen@opensource.altera.com>
-Subject: [PATCHv2 1/4] clk: socfpga: update clk.h so for Arria10 platform to use
-Date: Tue, 28 Apr 2015 10:10:13 -0500
-Message-ID: <1430233816-32635-2-git-send-email-dinguyen@opensource.altera.com>
-References: <1430233816-32635-1-git-send-email-dinguyen@opensource.altera.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
+ platform
+Date: Tue, 28 Apr 2015 11:28:53 -0400 (EDT)
+Message-ID: <alpine.LFD.2.11.1504281127200.1582@knanqh.ubzr>
+References: <20150407121247.GA29497@amd> <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com> <20150409110634.GA27407@amd> <552660C7.4020805@ti.com> <552663C2.70308@ti.com> <55277650.8070607@codeaurora.org> <20150424132923.GA11729@amd>
+ <553A47D3.2070107@ti.com> <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com> <20150428134848.GC12732@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430233816-32635-1-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@codeaurora.org, mturquette@linaro.org
-Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150428134848.GC12732-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
+On Tue, 28 Apr 2015, Russell King - ARM Linux wrote:
 
-There are 5 possible parent clocks for the SoCFPGA Arria10. Move the define
-SYSMGR_SDMMC_CTRL_SET and streq() to clk.h so that the Arria clock driver
-can use.
+> On Fri, Apr 24, 2015 at 03:46:56PM +0200, Geert Uytterhoeven wrote:
+> > So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
+> > That will benefit other drivers on ARM, too.
+> 
+> That's not going to happen.
+> 
+> I've had a patch which does that, but people are concerned that it changes
+> the behaviour of the functions by changing the access size, which could
+> cause regressions.  It seems people are far too worried about that to even
+> consider trying. :(
 
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
----
- drivers/clk/socfpga/clk-gate.c | 4 ----
- drivers/clk/socfpga/clk.h      | 6 +++++-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+What about making the optimized implementation available via kconfig?
 
-diff --git a/drivers/clk/socfpga/clk-gate.c b/drivers/clk/socfpga/clk-gate.c
-index dd3a78c..607ab35 100644
---- a/drivers/clk/socfpga/clk-gate.c
-+++ b/drivers/clk/socfpga/clk-gate.c
-@@ -32,14 +32,10 @@
- #define SOCFPGA_MMC_CLK			"sdmmc_clk"
- #define SOCFPGA_GPIO_DB_CLK_OFFSET	0xA8
- 
--#define streq(a, b) (strcmp((a), (b)) == 0)
--
- #define to_socfpga_gate_clk(p) container_of(p, struct socfpga_gate_clk, hw.hw)
- 
- /* SDMMC Group for System Manager defines */
- #define SYSMGR_SDMMCGRP_CTRL_OFFSET    0x108
--#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel) \
--	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
- 
- static u8 socfpga_clk_get_parent(struct clk_hw *hwclk)
- {
-diff --git a/drivers/clk/socfpga/clk.h b/drivers/clk/socfpga/clk.h
-index d291f60..b09a5d5 100644
---- a/drivers/clk/socfpga/clk.h
-+++ b/drivers/clk/socfpga/clk.h
-@@ -26,9 +26,13 @@
- #define CLKMGR_L4SRC		0x70
- #define CLKMGR_PERPLL_SRC	0xAC
- 
--#define SOCFPGA_MAX_PARENTS		3
-+#define SOCFPGA_MAX_PARENTS		5
- #define div_mask(width) ((1 << (width)) - 1)
- 
-+#define streq(a, b) (strcmp((a), (b)) == 0)
-+#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel) \
-+	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
-+
- extern void __iomem *clk_mgr_base_addr;
- 
- void __init socfpga_pll_init(struct device_node *node);
--- 
-2.2.1
+
+Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
