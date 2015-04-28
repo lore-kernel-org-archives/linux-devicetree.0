@@ -1,66 +1,43 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 2/3 v5] mailbox: Enable BCM2835 mailbox support
-Date: Tue, 28 Apr 2015 11:50:25 +0200
-Message-ID: <1430214625.3948.28.camel@v3.sk>
-References: <1430173644-19099-1-git-send-email-eric@anholt.net>
- <1430173644-19099-3-git-send-email-eric@anholt.net>
- <CABb+yY2u_v1uSDrBgP2DRAOrDkXETfs_zmLACm=uRFALVYFjmA@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: ARCH_EXYNOS5433 missing in Kconfig
+Date: Tue, 28 Apr 2015 11:58:36 +0200
+Message-ID: <553F59CC.7040008@samsung.com>
+References: <CAD3Xx4Jf5ACBKe-KvGRD=myHKrJ+K_P0vBrtrmfgh+1zNM4hug@mail.gmail.com>
+ <54FF95ED.1040003@samsung.com>
+ <CAD3Xx4KpTTqNiFA-8EfuPsCR5ow0JkNVo11zM1twkrf8sckJtA@mail.gmail.com>
+ <CAGTfZH2yttvRsHXZUXQ7t37wmU=seg8Qoa=h=nat4EwJDY42Kw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY2u_v1uSDrBgP2DRAOrDkXETfs_zmLACm=uRFALVYFjmA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Craig McGeachie <slapdau@yahoo.com.au>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAGTfZH2yttvRsHXZUXQ7t37wmU=seg8Qoa=h=nat4EwJDY42Kw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: cw00.choi@samsung.com
+Cc: Valentin Rothberg <valentinrothberg@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Inki Dae <inki.dae@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-04-28 at 11:13 +0530, Jassi Brar wrote:
-> On Tue, Apr 28, 2015 at 3:57 AM, Eric Anholt <eric@anholt.net> wrote:
-> > From: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > Implement BCM2835 mailbox support as a device registered with the
-> > general purpose mailbox framework. Implementation based on commits 
-> > by
-> > Lubomir Rintel [1], Suman Anna and Jassi Brar [2] on which to base 
-> > the
-> > implementation.
-> > 
-> > [1] http://lists.infradead.org/pipermail/linux-rpi-kernel/2013
-> > -April/000528.html
-> > [2] http://lists.infradead.org/pipermail/linux-rpi-kernel/2013
-> > -May/000546.html
-> > 
-> We could probably drop the history from changelog. Just talk about
-> what the controller is and any specifics of the driver.
+Hello,
+
+On 28/04/15 11:25, Chanwoo Choi wrote:
+> Hi Valentin,
 > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > Signed-off-by: Craig McGeachie <slapdau@yahoo.com.au>
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > Signed-off-by: Jassi Brar <jassisinghbrar@gmail.com>
-> > 
+> On Mon, Apr 27, 2015 at 3:31 PM, Valentin Rothberg
+> <valentinrothberg@gmail.com> wrote:
+>> > Hi Chanwoo,
+>> >
+>> > this is a kind reminder that the issue mentioned below is still
+>> > present and made its way to v4.1-rc1.
+>
+> I sent the patch[1] to fix it. And Sylwester said that he will pick
+> this patchset on patch[2].
+> [1] https://lkml.org/lkml/2015/4/27/237
+> [2] https://lkml.org/lkml/2015/4/28/117
 > 
-> How come it has my s-o-b?
+> Hi Sylwester,
+> Could you apply a patch[1] on 4.2-rc2 to fix build warning?
 
-A good question. Seems like I've added it, but I can't really remember
-or explain that:
+Sure, I plan to send a pull request this week.
 
-http://lists.infradead.org/pipermail/linux-rpi-kernel/2014
--October/001006.html
-
-It doesn't seem like I've squashed any commit with S-o-b by Jassi Brar
-or Suman Anna in. Maybe I intended to add a Cc: and pasted in a S-o-b
-by accident? I'm sorry for that.
-
-Please remove the two.
-
-Thank you,
-Lubo
+-- 
+Regards,
+Sylwester
