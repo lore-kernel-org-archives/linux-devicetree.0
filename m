@@ -1,56 +1,340 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v4 1/2] leds: add DT binding for BCM6328 LED controller
-Date: Tue, 28 Apr 2015 10:18:55 +0200
-Message-ID: <553F426F.3000507@samsung.com>
-References: <1429895176-21818-1-git-send-email-noltari@gmail.com>
- <1430050517-8045-1-git-send-email-noltari@gmail.com>
- <1430050517-8045-2-git-send-email-noltari@gmail.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx5: Add dts files for USB armory.
+Date: Tue, 28 Apr 2015 16:20:00 +0800
+Message-ID: <20150428081959.GA32234@shlinux2>
+References: <87h9t6i40r.fsf@aikidev.net> <20150427115747.GA11975@dragon>
+ <20150427133708.GC11598@core.inversepath.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1430050517-8045-2-git-send-email-noltari@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, cooloney@gmail.com, jogo@openwrt.org, f.fainelli@gmail.com, cernekee@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150427133708.GC11598-GPwhfZ5g21+KIOzWgp228laTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/2015 02:15 PM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
-> This adds device tree binding documentation for the Broadcom BCM6328 =
-LED controller.
->
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> Signed-off-by: Jonas Gorski <jogo@openwrt.org>
-> ---
->   v4: introduce changes suggested by Jacek
->   - Follow Documentation convention.
->   v3: introduce changes suggested by Jacek
->   - Revert compatible string to "brcm,bcm6328-leds".
->   - Improved description.
->   - Renamed normal LEDs to hardware controlled.
->   - Explain that LEDs are active high by default on active-low option=
-al property.
->   - Properties are now grouped depending on the type of LED and optio=
-nal requirement.
->   - Added more examples to explain hardware controlled LEDs and activ=
-ity/link selection.
->   v2: Introduce changes suggested by Florian and Jonas.
->   - Change compatible string to "brcm,bcm6328-leds-ctrl".
->   - Make valid LEDs statement more strict.
->   - Remove compatible strings from LED subnodes.
->   - Clarify that LEDs are active high by default.
->   - Add a better description for brcm,link-signal-sources and brcm,ac=
-tivity-signal-sources.
->
->   .../devicetree/bindings/leds/leds-bcm6328.txt      | 309 ++++++++++=
-+++++++++++
->   1 file changed, 309 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-bcm6=
-328.txt
+On Mon, Apr 27, 2015 at 03:37:08PM +0200, Andrej Rosano wrote:
+> Hi Shawn,
+> 
+> On Mon, Apr 27, 2015 at 07:57:48PM +0800, Shawn Guo wrote:
+> > +Peter
+> > 
+> > On Fri, Mar 27, 2015 at 01:23:00PM -0700, Vagrant Cascadian wrote:
+> > > Add support for the USB armory board by Inverse Path. This board
+> > > features a Freescale iMX53 SoC, 512MB RAM, and USB OTG operating in
+> > > either peripheral or host mode, and 5 GPIO pins.
+> > > 
+> > > One .dtb is generated for operating in peripheral mode, and one is
+> > > generated for operating in host mode.
+> > 
+> > Vagrant,
+> > 
+> > Does that mean this board can work in peripheral or host mode but can
+> > switch between them at run-time?
+> 
+> The board can switch between host and peripheral mode without any
+> hardware modification, but it need to reboot itself to pick up the
+> corresponding dtb file. I am not sure if there is possible using the
+> devicetree overlay feature to switch between the two modes runtime.
+> 
 
-Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Not a good way, it is just one board with two different usb cables.
 
---=20
+Current chipidea usb driver supports role switch function well, if you
+have a gpio or id pin for it.
+
+Peter
+
+> Andrej
+> 
+> > 
+> > Shawn
+> > 
+> > > 
+> > > Signed-off-by: Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> > > Cc: Andrej Rosano <andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>
+> > > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> > > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> > > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > > Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> > > Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > ---
+> > >  arch/arm/boot/dts/Makefile                      |   2 +
+> > >  arch/arm/boot/dts/imx53-usbarmory-host_mode.dts |  17 +++
+> > >  arch/arm/boot/dts/imx53-usbarmory.dts           |  13 ++
+> > >  arch/arm/boot/dts/imx53-usbarmory.dtsi          | 183 ++++++++++++++++++++++++
+> > >  4 files changed, 215 insertions(+)
+> > >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
+> > >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory.dts
+> > >  create mode 100644 arch/arm/boot/dts/imx53-usbarmory.dtsi
+> > > 
+> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > > index a1c776b..bd2258b 100644
+> > > --- a/arch/arm/boot/dts/Makefile
+> > > +++ b/arch/arm/boot/dts/Makefile
+> > > @@ -244,6 +244,8 @@ dtb-$(CONFIG_SOC_IMX53) += \
+> > >  	imx53-smd.dtb \
+> > >  	imx53-tx53-x03x.dtb \
+> > >  	imx53-tx53-x13x.dtb \
+> > > +	imx53-usbarmory.dtb \
+> > > +	imx53-usbarmory-host_mode.dtb \
+> > >  	imx53-voipac-bsb.dtb
+> > >  dtb-$(CONFIG_SOC_IMX6Q) += \
+> > >  	imx6dl-aristainetos_4.dtb \
+> > > diff --git a/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts b/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
+> > > new file mode 100644
+> > > index 0000000..a94cb1d
+> > > --- /dev/null
+> > > +++ b/arch/arm/boot/dts/imx53-usbarmory-host_mode.dts
+> > > @@ -0,0 +1,17 @@
+> > > +/*
+> > > + * Copyright 2015 Inverse Path, S.r.l.
+> > > + *
+> > > + * The code contained herein is licensed under the GNU General Public
+> > > + * License. You may obtain a copy of the GNU General Public License
+> > > + * Version 2 or later at the following locations:
+> > > + *
+> > > + * http://www.opensource.org/licenses/gpl-license.html
+> > > + * http://www.gnu.org/copyleft/gpl.html
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +#include "imx53-usbarmory.dtsi"
+> > > +
+> > > +&usbotg {
+> > > +	dr_mode = "host";
+> > > +};
+> > > diff --git a/arch/arm/boot/dts/imx53-usbarmory.dts b/arch/arm/boot/dts/imx53-usbarmory.dts
+> > > new file mode 100644
+> > > index 0000000..c86a4d8
+> > > --- /dev/null
+> > > +++ b/arch/arm/boot/dts/imx53-usbarmory.dts
+> > > @@ -0,0 +1,13 @@
+> > > +/*
+> > > + * Copyright 2015 Inverse Path, S.r.l.
+> > > + *
+> > > + * The code contained herein is licensed under the GNU General Public
+> > > + * License. You may obtain a copy of the GNU General Public License
+> > > + * Version 2 or later at the following locations:
+> > > + *
+> > > + * http://www.opensource.org/licenses/gpl-license.html
+> > > + * http://www.gnu.org/copyleft/gpl.html
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +#include "imx53-usbarmory.dtsi"
+> > > diff --git a/arch/arm/boot/dts/imx53-usbarmory.dtsi b/arch/arm/boot/dts/imx53-usbarmory.dtsi
+> > > new file mode 100644
+> > > index 0000000..b4a9052
+> > > --- /dev/null
+> > > +++ b/arch/arm/boot/dts/imx53-usbarmory.dtsi
+> > > @@ -0,0 +1,183 @@
+> > > +/*
+> > > + * Copyright 2015 Inverse Path, S.r.l.
+> > > + *
+> > > + * The code contained herein is licensed under the GNU General Public
+> > > + * License. You may obtain a copy of the GNU General Public License
+> > > + * Version 2 or later at the following locations:
+> > > + *
+> > > + * http://www.opensource.org/licenses/gpl-license.html
+> > > + * http://www.gnu.org/copyleft/gpl.html
+> > > + */
+> > > +
+> > > +#include "imx53.dtsi"
+> > > +
+> > > +/ {
+> > > +	model = "Inverse Path USB armory";
+> > > +	compatible = "inversepath,imx53-usbarmory", "fsl,imx53";
+> > > +};
+> > > +
+> > > +/ {
+> > > +	chosen {
+> > > +		stdout-path = &uart1;
+> > > +	};
+> > > +
+> > > +	memory {
+> > > +		reg = <0x70000000 0x20000000>;
+> > > +	};
+> > > +
+> > > +	leds {
+> > > +		compatible = "gpio-leds";
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&led_pin_gpio4_27>;
+> > > +
+> > > +		user {
+> > > +			label = "LED";
+> > > +			gpios = <&gpio4 27 0>;
+> > > +			linux,default-trigger = "heartbeat";
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&esdhc1 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_esdhc1>;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&iomuxc {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_hog>;
+> > > +
+> > > +	imx53-usbarmory {
+> > > +		pinctrl_hog: hoggrp {
+> > > +			fsl,pins = <
+> > > +				MX53_PAD_GPIO_0__CCM_SSI_EXT1_CLK 0x80000000
+> > > +				MX53_PAD_GPIO_8__GPIO1_8          0x80000000
+> > > +				MX53_PAD_PATA_DATA14__GPIO2_14    0x80000000
+> > > +				MX53_PAD_PATA_DATA15__GPIO2_15    0x80000000
+> > > +				MX53_PAD_EIM_DA11__GPIO3_11       0x80000000
+> > > +				MX53_PAD_EIM_DA12__GPIO3_12       0x80000000
+> > > +				MX53_PAD_PATA_DA_0__GPIO7_6       0x80000000
+> > > +				MX53_PAD_PATA_DA_2__GPIO7_8	  0x80000000
+> > > +				MX53_PAD_GPIO_16__GPIO7_11        0x80000000
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		led_pin_gpio4_27: led_gpio4_27@0 {
+> > > +			fsl,pins = <
+> > > +				MX53_PAD_DISP0_DAT6__GPIO4_27 0x80000000
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_esdhc1: esdhc1grp {
+> > > +			fsl,pins = <
+> > > +				MX53_PAD_SD1_DATA0__ESDHC1_DAT0		0x1d5
+> > > +				MX53_PAD_SD1_DATA1__ESDHC1_DAT1		0x1d5
+> > > +				MX53_PAD_SD1_DATA2__ESDHC1_DAT2		0x1d5
+> > > +				MX53_PAD_SD1_DATA3__ESDHC1_DAT3		0x1d5
+> > > +				MX53_PAD_SD1_CMD__ESDHC1_CMD		0x1d5
+> > > +				MX53_PAD_SD1_CLK__ESDHC1_CLK		0x1d5
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_i2c1: i2c1grp {
+> > > +			fsl,pins = <
+> > > +				MX53_PAD_CSI0_DAT8__I2C1_SDA	0xc0000000
+> > > +				MX53_PAD_CSI0_DAT9__I2C1_SCL	0xc0000000
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_uart1: uart1grp {
+> > > +			fsl,pins = <
+> > > +				MX53_PAD_CSI0_DAT10__UART1_TXD_MUX	0x1e4
+> > > +				MX53_PAD_CSI0_DAT11__UART1_RXD_MUX	0x1e4
+> > > +			>;
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&uart1 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_uart1>;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&vpu {
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&usbotg {
+> > > +	dr_mode = "peripheral";
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&i2c1 {
+> > > +	ltc3589: pmic@34 {
+> > > +		compatible = "lltc,ltc3589-2";
+> > > +		reg = <0x34>;
+> > > +
+> > > +		regulators {
+> > > +			sw1_reg: sw1 {
+> > > +				regulator-min-microvolt = <591930>;
+> > > +				regulator-max-microvolt = <1224671>;
+> > > +				lltc,fb-voltage-divider = <100000 158000>;
+> > > +				regulator-ramp-delay = <7000>;
+> > > +				regulator-boot-on;
+> > > +				regulator-always-on;
+> > > +			};
+> > > +
+> > > +			sw2_reg: sw2 {
+> > > +				regulator-min-microvolt = <704123>;
+> > > +				regulator-max-microvolt = <1456803>;
+> > > +				lltc,fb-voltage-divider = <180000 191000>;
+> > > +				regulator-ramp-delay = <7000>;
+> > > +				regulator-boot-on;
+> > > +				regulator-always-on;
+> > > +			};
+> > > +
+> > > +			sw3_reg: sw3 {
+> > > +				regulator-min-microvolt = <1341250>;
+> > > +				regulator-max-microvolt = <2775000>;
+> > > +				lltc,fb-voltage-divider = <270000 100000>;
+> > > +				regulator-ramp-delay = <7000>;
+> > > +				regulator-boot-on;
+> > > +				regulator-always-on;
+> > > +			};
+> > > +
+> > > +			bb_out_reg: bb-out {
+> > > +				regulator-min-microvolt = <3387341>;
+> > > +				regulator-max-microvolt = <3387341>;
+> > > +				lltc,fb-voltage-divider = <511000 158000>;
+> > > +				regulator-boot-on;
+> > > +				regulator-always-on;
+> > > +			};
+> > > +			ldo1_reg: ldo1 {
+> > > +				regulator-min-microvolt = <1306329>;
+> > > +				regulator-max-microvolt = <1306329>;
+> > > +				lltc,fb-voltage-divider = <100000 158000>;
+> > > +				regulator-boot-on;
+> > > +				regulator-always-on;
+> > > +			};
+> > > +
+> > > +			ldo2_reg: ldo2 {
+> > > +				regulator-min-microvolt = <704123>;
+> > > +				regulator-max-microvolt = <1456806>;
+> > > +				lltc,fb-voltage-divider = <180000 191000>;
+> > > +				regulator-ramp-delay = <7000>;
+> > > +				regulator-boot-on;
+> > > +				regulator-always-on;
+> > > +			};
+> > > +
+> > > +			ldo3_reg: ldo3 {
+> > > +				regulator-min-microvolt = <2800000>;
+> > > +				regulator-max-microvolt = <2800000>;
+> > > +				regulator-boot-on;
+> > > +			};
+> > > +
+> > > +			ldo4_reg: ldo4 {
+> > > +				regulator-min-microvolt = <1200000>;
+> > > +				regulator-max-microvolt = <3200000>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +};
+> > > -- 
+> > > 2.1.4
+> > > 
+> > 
+> > 
+> 
+> --
+> Andrej Rosano                                           Inverse Path Srl
+> <andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>                      http://www.inversepath.com
+> 
+> 0x01939B21            5BB8 574E 68E8 D841 E18F  D5E9 CEAD E0CF 0193 9B21
+
+-- 
+
 Best Regards,
-Jacek Anaszewski
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
