@@ -1,103 +1,79 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
-Date: Tue, 28 Apr 2015 21:52:32 +0200
-Message-ID: <20150428215232.6834906c@bbrezillon>
-References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, linux-crypto@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <info@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 1/3 v5] dt/bindings: Add binding for the BCM2835 mailbox driver
+Date: Tue, 28 Apr 2015 13:44:28 -0700
+Message-ID: <1430253868-11138-1-git-send-email-eric@anholt.net>
+References: <1430173644-19099-2-git-send-email-eric@anholt.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430173644-19099-2-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Herbert, David,
+From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 
-Any comment on the crypto driver implementation ?
+Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+---
 
-I've had several reviews focused on:
-1/ splitting the patch series into smaller subsets
-2/ allowing for smoother transition from the old driver to the new one
+v2: Split into a separate patch for submitting to the devicetree list.
+    Consistently start node docs with a capital letter. device's
+    address in the example shouldn't have "0x". Drop machine-specific
+    interrupt numbers from the docs.  (changes by anholt).
 
-I'll address (or have addressed) all of these comments, but I'd like to
-have your opinion on the crypto driver itself.
+v3: Move the file to just bcm2835-mbox.txt, clean up formatting
+    (changes by anholt, from review by Lee Jones).
 
-In particular, I'd like to discuss the threaded-irq approach taken in
-this driver (other drivers are using tasklets).
-The main reason behind this choice is the fact that crypto engines
-are quite fast, and I'm worried about the CPU contention that might
-happen in case of fully loaded crypto engines (the CPU might spend most
-of its time in interrupt context until the crypto queue is emptied).
-Using threaded-irq allows preemption of the crypto completion
-operation, thus authorizing another thread (with higher priority) to be
-scheduled. ITOH, the tasklet approach provide slightly performances (I
-don't recall the exact numbers, but Arnaud did some tests).
+v4: Move file back by consensus from various Broadcom platform
+    maintainers (changes by anholt, acked by Lee Jones).
 
-On Thu,  9 Apr 2015 16:58:41 +0200
-Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+v5: Document that the mailbox cell should be 0 in clients, and add an
+    example of a client (changes by anholt, from review by Jassi).
 
-> Hello,
-> 
-> This is an attempt to replace the mv_cesa driver by a new one to address
-> some limitations of the existing driver.
-> From a performance and CPU load point of view the most important
-> limitation is the lack of DMA support, thus preventing us from chaining
-> crypto operations.
-> 
-> I know we usually try to adapt existing drivers instead of replacing them
-> by new ones, but after trying to refactor the mv_cesa driver I realized it
-> would take longer than writing an new one from scratch.
-> 
-> Here are the main features brought by this new driver:
-> - support for armada SoCs (up to 38x) while keeping support for older ones
->   (Orion and Kirkwood)
-> - DMA mode to offload the CPU in case of intensive crypto usage
-> - new algorithms: SHA256, DES and 3DES
-> 
-> I'd like to thank Arnaud, who has carefully reviewed several iterations of
-> this driver, helped me improved my implementation, provided support for
-> several crypto algorithms, provided support for armada-370 and tested
-> the driver on different platforms, hence the SoB and dual MODULE_AUTHOR
-> in the driver code.
+ .../bindings/mailbox/brcm,bcm2835-mbox.txt         | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
 
-
-
-> 
-> Best Regards,
-> 
-> Boris
-> 
-> Boris Brezillon (2):
->   crypto: add new driver for Marvell CESA
->   crypto: marvell/CESA: update DT bindings documentation
-> 
->  .../devicetree/bindings/crypto/mv_cesa.txt         |   50 +-
->  drivers/crypto/Kconfig                             |    2 +
->  drivers/crypto/Makefile                            |    2 +-
->  drivers/crypto/marvell/Makefile                    |    1 +
->  drivers/crypto/marvell/cesa.c                      |  539 ++++++++
->  drivers/crypto/marvell/cesa.h                      |  802 ++++++++++++
->  drivers/crypto/marvell/cipher.c                    |  761 +++++++++++
->  drivers/crypto/marvell/hash.c                      | 1349 ++++++++++++++++++++
->  drivers/crypto/marvell/tdma.c                      |  223 ++++
->  drivers/crypto/mv_cesa.c                           | 1193 -----------------
->  drivers/crypto/mv_cesa.h                           |  150 ---
->  11 files changed, 3716 insertions(+), 1356 deletions(-)
->  create mode 100644 drivers/crypto/marvell/Makefile
->  create mode 100644 drivers/crypto/marvell/cesa.c
->  create mode 100644 drivers/crypto/marvell/cesa.h
->  create mode 100644 drivers/crypto/marvell/cipher.c
->  create mode 100644 drivers/crypto/marvell/hash.c
->  create mode 100644 drivers/crypto/marvell/tdma.c
->  delete mode 100644 drivers/crypto/mv_cesa.c
->  delete mode 100644 drivers/crypto/mv_cesa.h
-> 
-
-
-
+diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+new file mode 100644
+index 0000000..731de34
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+@@ -0,0 +1,27 @@
++Broadcom BCM2835 VideoCore mailbox IPC
++
++Required properties:
++
++- compatible:	Should be "brcm,bcm2835-mbox"
++- reg:		Specifies base physical address and size of the registers
++- interrupts:	The interrupt number
++		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
++		  channel. The value shall be 1.  Clients should supply a value
++		  of 0 for the mailbox channel, because there is only one
++		  exposed
++
++Example:
++
++mailbox: mailbox@7e00b800 {
++	compatible = "brcm,bcm2835-mbox";
++	reg = <0x7e00b880 0x40>;
++	interrupts = <0 1>;
++	#mbox-cells = <1>;
++};
++
++firmware: firmware {
++	compatible = "raspberrypi,firmware";
++	mboxes = <&mailbox 0>;
++	#power-domain-cells = <1>;
++};
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
