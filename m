@@ -1,42 +1,42 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] clk: emev2: Use generic names for device nodes
-Date: Tue, 28 Apr 2015 11:07:02 +0900
-Message-ID: <20150428020701.GA26051@verge.net.au>
-References: <1430139093-14769-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH] ASoC: rsnd: Use generic names for device nodes
+Date: Tue, 28 Apr 2015 11:07:32 +0900
+Message-ID: <20150428020731.GB26051@verge.net.au>
+References: <1430138949-14563-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1430139093-14769-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1430138949-14563-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2015 at 02:51:33PM +0200, Geert Uytterhoeven wrote:
-> uart -> serial
+On Mon, Apr 27, 2015 at 02:49:09PM +0200, Geert Uytterhoeven wrote:
+> rcar_sound -> sound
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
 > ---
->  Documentation/devicetree/bindings/clock/emev2-clock.txt | 2 +-
+>  Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/emev2-clock.txt b/Documentation/devicetree/bindings/clock/emev2-clock.txt
-> index 60bbb1a8c69a3852..268ca615459e7549 100644
-> --- a/Documentation/devicetree/bindings/clock/emev2-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/emev2-clock.txt
-> @@ -52,7 +52,7 @@ usia_u0_sclk: usia_u0_sclk {
+> diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+> index f316ce1f214a03e3..62ece4c59da759a4 100644
+> --- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+> +++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+> @@ -47,7 +47,7 @@ DAI subnode properties:
 >  
->  Example of consumer:
+>  Example:
 >  
-> -uart@e1020000 {
-> +serial@e1020000 {
->  	compatible = "renesas,em-uart";
->  	reg = <0xe1020000 0x38>;
->  	interrupts = <0 8 0>;
+> -rcar_sound: rcar_sound@ec500000 {
+> +rcar_sound: sound@ec500000 {
+>  	#sound-dai-cells = <1>;
+>  	compatible = "renesas,rcar_sound-r8a7791", "renesas,rcar_sound-gen2";
+>  	reg =	<0 0xec500000 0 0x1000>, /* SCU */
 > -- 
 > 1.9.1
 > 
