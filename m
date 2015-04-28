@@ -1,58 +1,104 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [tty:tty-testing 9/30] drivers/of/fdt.c:807:2: error: implicit
- declaration of function 'fdt_path_offset_namelen'
-Date: Tue, 28 Apr 2015 23:30:44 +0200
-Message-ID: <20150428213044.GB32383@kroah.com>
-References: <201504282048.WK91FDRR%fengguang.wu@intel.com>
- <553F8A6D.9040404@hurleysoftware.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v7 0/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Tue, 28 Apr 2015 16:10:40 -0600
+Message-ID: <1430259045-19012-1-git-send-email-lho@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <553F8A6D.9040404-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 09:26:05AM -0400, Peter Hurley wrote:
-> [ +cc Rob H, Grant L, devicetree ]
-> 
-> On 04/28/2015 08:24 AM, kbuild test robot wrote:
-> > tree:   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
-> > head:   962a6a5ce6b8280d6ce7416ce57a36103d31a523
-> > commit: 5a95cfdfaf5cb960ea06f333323dbe85ed269abf [9/30] of: earlycon: Fix 'stdout-path' with ':' path terminator
-> > config: microblaze-mmu_defconfig (attached as .config)
-> > reproduce:
-> >   wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
-> >   chmod +x ~/bin/make.cross
-> >   git checkout 5a95cfdfaf5cb960ea06f333323dbe85ed269abf
-> >   # save the attached .config to linux build tree
-> >   make.cross ARCH=microblaze 
-> > 
-> > All error/warnings:
-> > 
-> >    drivers/of/fdt.c: In function 'early_init_dt_scan_chosen_serial':
-> >>> drivers/of/fdt.c:807:2: error: implicit declaration of function 'fdt_path_offset_namelen' [-Werror=implicit-function-declaration]
-> >      offset = fdt_path_offset_namelen(fdt, p, (int)(q - p));
-> >      ^
-> >    cc1: some warnings being treated as errors
-> 
-> Greg,
-> 
-> This error occurs because the patch "libfdt: Add fdt_path_offset_namelen()"
-> has not been upstreamed yet by the devicetree maintainers.
-> 
-> Please back out commits 5a95cfdfaf5c ("of: earlycon: Fix 'stdout-path' with ':' path terminator")
-> through 865f9cc509db ("of: earlycon: Log more helpful message if earlycon not found")
-> from tty-testing.
-> 
-> I'll just resend the series when the situation with the missing
-> commit has been sorted.
+This patch adds support for the APM X-Gene SoC EDAC driver for DT.
 
-Ok, those patches are now dropped, thanks.
+v7:
+* Update binding documentation for memory controller, PMD, L3, and SoC EDAC
+* Change resource for PCP, CSW, MCBA, MCBB, and efuse to syscon type nodes
+  and updae driver accordingly
+* Fix clearing L2 RTO register properly
+* Fix the MODULE_DEVICE_TABLE for OF
+* Update DT accordingly to binding documentation
 
-greg k-h
+v6:
+* Rebase to 4.0.0-rc3
+* Add memory scrub stub function and enable ARM64 EDAC support patch
+* Add bit definition defines for L2RTOS registers
+* Remove un-necessary clearing of all L1/L2 software generated registers
+* Remove wrong notification of LSU un-correctable error
+* Change L2 reporting of un-correcable error to correctable error
+* Change clearing of the L2C L2RTO registers
+* Add support for L2 HW version 1 and version 2 or above
+* Add support for L3 HW version 1 and version 2 or above
+
+v5:
+* Rebase to 3.17.rc1 (next)
+* Update binding documentation for additional SoC node binding resource
+* Enable MCU correctable and uncorrectable interrupts if not enabled by
+  firmware
+* Enable top level interrupt only after all MCU registered. Otherwise,
+  error interrupt will never get cleared by the corresponding MCU.
+* Remove clearing of L1 and L2 errors during initialization time. Otherwise,
+  they will not be captured between firmware booting and error configuration.
+* Add capture and clearing SoC register bus errors
+* Add register bus resource to SoC DT node
+
+v4:
+* Fix PMD l1/l2 error reading address due to wrong variable type
+* Fix clearing of software generated and HW errors for l1/l2
+
+v3:
+* Update binding documentation for PMD DT node and exampples
+* Add binding documentation for SoC DT node
+* Change MC, PMD, and L3C driver error injection to use debugfs
+* Add missing IRQ for MC correctable error (code and DT)
+* Use true/false where appropriate instead 1/0
+* Add bit definition for L1 MMUESR register and fully decode this error
+* Remove the un-necessary dev variable from xgene_edac_pmd_ctx structure
+* Add check for disabled PMD (code and DT)
+* Switch to edac_printk instead pr_err
+* Some minor comments update
+
+v2:
+* Add EDAC entry in MAINTAINERS for APM EDAC driver
+* Remove the MC scrub patch
+* Remove the word 'Caches' from Kconfig
+* Change all MASK defines to use BIT(x)
+* Update comment or remove them
+* Wrap error injection code around CONFIG_EDAC_DEBUG
+* Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
+* Change all function XXX_hw_init to XXX_hw_ctl
+* Fix typo 'activie'
+* Move calling function edac_mc_alloc after resource retrieval
+* Check for NULL on platform_get_resource return if reference directly
+* Add documentation for struct xgene_edac_pmd_ctx
+* Move L1 and L2 check out of function xgene_edac_pmd_check to its own
+  functions
+* Use for loop for configure each CPU of an PMD
+* Replace /2 by >> 1
+* Remove unnecessary comment on edac_device_add_device failure
+* Make mem_err_ip static const
+* Unwind EDAC register correctly if failed
+---
+Loc Ho (5):
+  arm64: Enable EDAC on ARM64
+  MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
+  Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
+    binding
+  edac: Add APM X-Gene SoC EDAC driver
+  arm64: Add APM X-Gene SoC EDAC DTS entries
+
+ .../devicetree/bindings/edac/apm-xgene-edac.txt    |  107 +
+ MAINTAINERS                                        |    8 +
+ arch/arm64/Kconfig                                 |    1 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |  123 ++
+ arch/arm64/include/asm/edac.h                      |   31 +
+ drivers/edac/Kconfig                               |    9 +-
+ drivers/edac/Makefile                              |    1 +
+ drivers/edac/xgene_edac.c                          | 2175 ++++++++++++++++++++
+ 8 files changed, 2454 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+ create mode 100644 arch/arm64/include/asm/edac.h
+ create mode 100644 drivers/edac/xgene_edac.c
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
