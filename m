@@ -1,70 +1,71 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH] RFC: let gpiod_get_optional et all return NULL when
- GPIOLIB is not enabled
-Date: Tue, 28 Apr 2015 15:46:47 +0900
-Message-ID: <CAAVeFu+V4YpCRRV26VgACDKOpyc4k9rOxHb9gDxoEm2TXQk+0g@mail.gmail.com>
-References: <1423731809-4800-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CACRpkdb6KcZx3WfTqUKemhQ0_OsqxBGQb_P5cXXZvgc3riakdA@mail.gmail.com>
- <20150306085957.GC10717@pengutronix.de> <CACRpkdYq70V8SG4XOPBCGWs__J4ehknZSucpO5OdXpMDj8GPKA@mail.gmail.com>
- <CAAVeFu+0bWSAUSaDGTUmPyj9JxEJn4yxF_hzab4CHp8YV1MuoA@mail.gmail.com>
- <20150427152153.GN19431@pengutronix.de> <CAAVeFuKMiHhT8o1PCETNTys8EATcVdy7xfy+P+o_2r6BwAXEgw@mail.gmail.com>
- <20150428064524.GV19431@pengutronix.de>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: LED subsystem child DT node ref counting
+Date: Tue, 28 Apr 2015 09:15:47 +0200
+Message-ID: <553F33A3.2000902@samsung.com>
+References: <5530E891.20707@samsung.com>
+ <CAL_JsqLVEKN_XWOLz2uOVbhf3NWf=b27DXh8NhaqvfrNsU+WNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150428064524.GV19431@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Alexandre Courbot <acourbot@nvidia.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <CAL_JsqLVEKN_XWOLz2uOVbhf3NWf=b27DXh8NhaqvfrNsU+WNw@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 3:45 PM, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> Hello,
->
-> On Tue, Apr 28, 2015 at 12:31:37PM +0900, Alexandre Courbot wrote:
->> On Tue, Apr 28, 2015 at 12:21 AM, Uwe Kleine-K=C3=B6nig
->> <u.kleine-koenig@pengutronix.de> wrote:
->> > On Thu, Apr 09, 2015 at 11:20:55AM +0900, Alexandre Courbot wrote:
->> >> Having GPIO disabled means there is no GPIO support, including th=
-e
->> >> ability to look for GPIOs. -ENOSYS is a well-documented error-cod=
-e
->> >> which meaning also applies to the gpio_*_optional functions (we d=
-on't
->> >> have support for the operation you requested). If a driver or
->> >> architecture really, really needs GPIO support they can require o=
-r
->> >> depend on CONFIG_GPIOLIB, and the problem goes away. If they can =
-work
->> >> with and without gpiolib, then they should check for -ENOSYS when=
- they
->> >> request GPIOs and behave accordingly.
->> > What whould be the right behaviour in your eyes? I hope it's not
->> >
->> >         if (ret !=3D -ENOSYS)
->> >                 return ret;
->> >
->> >         /* continue and ignore error */
+On 04/27/2015 03:57 PM, Rob Herring wrote:
+> On Fri, Apr 17, 2015 at 6:03 AM, Jacek Anaszewski
+> <j.anaszewski@samsung.com> wrote:
+>> Hi,
 >>
->> If a consumer absolutely needs a GPIO (most of the drivers out there=
- I
->> believe), then -ENOSYS can be handled like any other error. If it
->> doesn't, and the driver is fine without GPIO support as well (meanin=
-g
->> that it can somehow work even if a GPIO is declared, but GPIO suppor=
-t
->> is not compiled in), then it will need to explicitly handle that
->> particular error. That case should be rare though - most drivers wil=
-l
->> want to propagate -ENOSYS.
-> Ack.
+>> I'd like to clarify whether LED subsystem drivers behave correctly
+>> or not, regarding child DT nodes reference counting.
+>
+> In general, the DT reference counting is broken. It is really only
+> used on pSeries and only for certain nodes on it.
+>
+>> Single LED controller can have connected more then one LED to it.
+>> The LEDs are represented by child DT nodes of the node representing
+>> the controller (see Documentation/devicetree/bindings/leds).
+>>
+>> LED subsystem drivers parse child DT nodes and use the node name,
+>> or 'label' property string as the LED class device name.
+>>
+>> This is usually accomplished like below:
+>>
+>> for_each_child_of_node(np, child) {
+>>      ...
+>>      led.name = of_get_property(child, "label", NULL) ? : child->name;
+>>
+>>
+>> The question is whether reference count of the child node shouldn't
+>> be increased here with of_node_get(child). Whereas intuitively it could
+>> be thought of as a right thing to do, empirical experiments don't
+>> necessary confirm that.
+>>
+>> When I print the value of child_node->kobj.kref.refcount.counter
+>> inside for_each loop it is 3 and and after leaving the loop it gets
+>> decreased to 2. On driver removal the value is also 2. It means that
+>> label is available all the time, without increasing child node ref
+>> counter.
+>
+> I believe the ref count is only left incremented if you break from the
+> loop. Otherwise, it is only incremented during the loop one child at a
+> time.
 
-Of course if you can think of a more elegant way to handle this, by
-all means, please let us know. :)
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Child node ref count is 3 right after obtaining it with
+of_get_next_available_child.
+
+Nonetheless my further source code investigation revealed that this
+does not pose an issue for the LED subsystem, as the label is copied
+in the device_create_with_groups function.
+
+The related 'name' property should be probably removed from the
+struct led_classdev, as it seems to be used only for device name
+initialization. It will require modifications in the existing LED
+drivers though.
+
+-- 
+Best Regards,
+Jacek Anaszewski
