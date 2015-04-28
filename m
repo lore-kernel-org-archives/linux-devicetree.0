@@ -1,37 +1,67 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
- platform
-Date: Tue, 28 Apr 2015 11:28:53 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1504281127200.1582@knanqh.ubzr>
-References: <20150407121247.GA29497@amd> <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com> <20150409110634.GA27407@amd> <552660C7.4020805@ti.com> <552663C2.70308@ti.com> <55277650.8070607@codeaurora.org> <20150424132923.GA11729@amd>
- <553A47D3.2070107@ti.com> <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com> <20150428134848.GC12732@n2100.arm.linux.org.uk>
+From: Ben Shelton <ben.shelton@ni.com>
+Subject: Re: [PATCH v6 1/3] nand: pl353: Add basic driver for arm pl353 smc
+ nand interface
+Date: Tue, 28 Apr 2015 10:38:13 -0500
+Message-ID: <20150428153813.GC11721@bshelton-desktop>
+References: <1428941550-4620-1-git-send-email-punnaia@xilinx.com>
+ <858a607d-7c5a-4066-aa79-ab14c456b8e5@BN1BFFO11FD046.protection.gbl>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150428134848.GC12732-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <858a607d-7c5a-4066-aa79-ab14c456b8e5@BN1BFFO11FD046.protection.gbl>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Apr 2015, Russell King - ARM Linux wrote:
+Hi Punnaiah,
 
-> On Fri, Apr 24, 2015 at 03:46:56PM +0200, Geert Uytterhoeven wrote:
-> > So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
-> > That will benefit other drivers on ARM, too.
+On 04/13, Punnaiah Choudary Kalluri wrote:
+> Add driver for arm pl353 static memory controller nand interface with
+> HW ECC support. This controller is used in xilinx zynq soc for interfacing
+> the nand flash memory.
 > 
-> That's not going to happen.
-> 
-> I've had a patch which does that, but people are concerned that it changes
-> the behaviour of the functions by changing the access size, which could
-> cause regressions.  It seems people are far too worried about that to even
-> consider trying. :(
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 
-What about making the optimized implementation available via kconfig?
+[...]
 
+> +
+> +static int pl353_nand_init_timing(struct device *dev, int mode)
+> +{
+> +	const struct nand_sdr_timings *time;
+> +	u32 t_rc, t_wc, t_rea, t_wp, t_clr, t_ar, t_rr;
+> +	ulong clkrate;
+> +
+> +	time = onfi_async_timing_mode_to_sdr_timings(mode);
+> +	if (IS_ERR(time))
+> +		return PTR_ERR(time);
+> +
+> +	clkrate = pl353_smc_get_clkrate(dev);
+> +	t_rc  = get_cyc_from_ns(clkrate, time->tRC_min / 1000);
+> +	t_wc  = get_cyc_from_ns(clkrate, time->tWC_min / 1000);
+> +	t_rea = get_cyc_from_ns(clkrate, time->tREA_max / 1000);
+> +	t_wp  = get_cyc_from_ns(clkrate, time->tWP_min / 1000);
+> +	t_clr = get_cyc_from_ns(clkrate, time->tCLR_min / 1000);
+> +	t_ar  = get_cyc_from_ns(clkrate, time->tAR_min / 1000);
+> +	t_rr  = get_cyc_from_ns(clkrate, time->tRR_min / 1000);
 
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I tested this patch set in conjunction with your PL353 SMC patch set.
+
+Our first stage bootloader sets the SMC memclk rate to 166.6 MHz, which leads
+this code to calculate a t_rc and t_wc of 17 cycles for ONFI mode 0.  As I
+mentioned in my response to your SMC patch, this overflows the 4-bit-wide
+register fields in the SMC that hold these values.
+
+Could we somehow set it up so the NAND and SMC drivers work together to adjust
+the memclk rate, if necessary, to achieve the desired timings?  Or is there a
+better way to handle this?
+
+> +
+> +	pl353_smc_set_cycles(dev, t_rc, t_wc, t_rea, t_wp, t_clr, t_ar, t_rr);
+> +
+> +	return 0;
+> +}
+
+Thanks,
+Ben
