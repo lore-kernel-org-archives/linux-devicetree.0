@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/5] ARM: shmobile: koelsch dts: Add "nor-jedec" compatible value
-Date: Tue, 28 Apr 2015 12:12:54 +0200
-Message-ID: <1430215978-31087-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/5] ARM: shmobile: lager dts: Add "nor-jedec" compatible value
+Date: Tue, 28 Apr 2015 12:12:55 +0200
+Message-ID: <1430215978-31087-3-git-send-email-geert+renesas@glider.be>
 References: <1430215978-31087-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1430215978-31087-1-git-send-email-geert+renesas@glider.be>
@@ -17,14 +17,14 @@ add "nor-jedec" binding").
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7791-koelsch.dts | 2 +-
+ arch/arm/boot/dts/r8a7790-lager.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 74c3212f1f11e47e..70e9d5e9afddc546 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -474,7 +474,7 @@
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index aaa4f258e279ccfa..a6c793de8d809bd4 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -429,7 +429,7 @@
  	flash: flash@0 {
  		#address-cells = <1>;
  		#size-cells = <1>;
