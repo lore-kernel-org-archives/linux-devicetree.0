@@ -1,146 +1,293 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 RESEND 2/2] mmc: host: Add some quirks to be read from fdt in sdhci-pltm.c
-Date: Wed, 29 Apr 2015 11:15:27 +0200
-Message-ID: <17258495.kJWOqBBcrn@wuerfel>
-References: <1429630959-32649-1-git-send-email-stripathi@apm.com> <6927395.c8hJ4o34f5@wuerfel> <CAOHikRAYtPt67-ZOFz890v46v28gtvQDPhgH1qA8d4xoSaQ7+Q@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V7 5/9] mfd: Add driver for NVIDIA Tegra XUSB
+Date: Wed, 29 Apr 2015 10:23:48 +0100
+Message-ID: <20150429092348.GQ9169@x1>
+References: <1430174242-29465-1-git-send-email-abrestic@chromium.org>
+ <1430174242-29465-6-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOHikRAYtPt67-ZOFz890v46v28gtvQDPhgH1qA8d4xoSaQ7+Q@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430174242-29465-6-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 April 2015 12:34:41 Suman Tripathi wrote:
-> On Tue, Apr 28, 2015 at 1:19 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Monday 27 April 2015 21:25:20 Suman Tripathi wrote:
-> >> > On Monday 27 April 2015 20:33:25 Suman Tripathi wrote:
-> >> > > > On Tuesday 21 April 2015 21:12:39 Suman Tripathi wrote:
-> >> > > > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
-> >> > > > > +
-> >> > > > > +               if (of_get_property(np, "no-cmd23", NULL))
-> >> > > > > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
-> >> > > > >
-> >> > > > >                 if (of_get_property(np, "no-1-8-v", NULL))
-> >> > > > >
-> >> > > > >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> >> > > >
-> >> > > > Any property you add needs to be documented in the DT binding.
-> >> > > > If possible, add generic properties for each bug you have mmc.txt
-> >> > > > rather than the driver specific sdhci.txt, and implement the
-> >> > >
-> >> > > I will add the binding in mmc.txt. I thought this was present but not.
-> >> > >
-> >> > > > parsing in a common function that is used for all mmc hosts.
-> >> > >
-> >> > > As per mine understanding the sdhci_get_of_porperty is a common
-> >> > > parsing function  . Am I wrong ??
-> >>
-> >
-> > A small side note: please fix your email client to use proper attribution
-> > of the citations. The way you reply, nobody knows what you are saying
-> > compare to what you quote. Also, reduce the quotation to the parts you
-> > are replying to.
-> >
-> 
-> Okay. Sorry for that. I fixed it.
+On Mon, 27 Apr 2015, Andrew Bresticker wrote:
 
-Ok, much better.
+> Add an MFD driver for the XUSB host complex found on NVIDIA Tegra124
+> and later SoCs.
+>=20
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> Cc: Samuel Ortiz <sameo@linux.intel.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> ---
+> New for v7.
+> ---
+>  drivers/mfd/Kconfig      |   7 ++
+>  drivers/mfd/Makefile     |   1 +
+>  drivers/mfd/tegra-xusb.c | 167 +++++++++++++++++++++++++++++++++++++=
+++++++++++
+>  include/soc/tegra/xusb.h |  19 ++++++
+>  4 files changed, 194 insertions(+)
+>  create mode 100644 drivers/mfd/tegra-xusb.c
+>  create mode 100644 include/soc/tegra/xusb.h
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index d5ad04d..61872b4 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1430,6 +1430,13 @@ config MFD_STW481X
+>  	  in various ST Microelectronics and ST-Ericsson embedded
+>  	  Nomadik series.
+> =20
+> +config MFD_TEGRA_XUSB
+> +	tristate "NVIDIA Tegra XUSB"
+> +	depends on ARCH_TEGRA
+> +	select MFD_CORE
+> +	help
+> +	  Support for the XUSB complex found on NVIDIA Tegra124 and later S=
+oCs.
+> +
+>  menu "Multimedia Capabilities Port drivers"
+>  	depends on ARCH_SA1100
+> =20
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 0e5cfeb..7588caf 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -181,6 +181,7 @@ obj-$(CONFIG_MFD_HI6421_PMIC)	+=3D hi6421-pmic-co=
+re.o
+>  obj-$(CONFIG_MFD_DLN2)		+=3D dln2.o
+>  obj-$(CONFIG_MFD_RT5033)	+=3D rt5033.o
+>  obj-$(CONFIG_MFD_SKY81452)	+=3D sky81452.o
+> +obj-$(CONFIG_MFD_TEGRA_XUSB)	+=3D tegra-xusb.o
+> =20
+>  intel-soc-pmic-objs		:=3D intel_soc_pmic_core.o intel_soc_pmic_crc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC)	+=3D intel-soc-pmic.o
+> diff --git a/drivers/mfd/tegra-xusb.c b/drivers/mfd/tegra-xusb.c
+> new file mode 100644
+> index 0000000..d30d259
+> --- /dev/null
+> +++ b/drivers/mfd/tegra-xusb.c
+> @@ -0,0 +1,167 @@
+> +/*
+> + * NVIDIA Tegra XUSB MFD driver
+> + *
+> + * Copyright (C) 2015 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +#include <soc/tegra/xusb.h>
+> +
+> +struct tegra_xusb_soc_data {
+> +	struct mfd_cell *devs;
+> +	unsigned int num_devs;
+> +};
+> +
+> +static struct resource tegra_xhci_resources[] =3D {
+> +	{
+> +		.name =3D "host",
+> +		.flags =3D IORESOURCE_IRQ,
+> +	},
+> +	{
+> +		.name =3D "xhci",
+> +		.flags =3D IORESOURCE_MEM,
+> +	},
+> +	{
+> +		.name =3D "ipfs",
+> +		.flags =3D IORESOURCE_MEM,
+> +	},
+> +};
+> +
+> +static struct resource tegra_xusb_mbox_resources[] =3D {
+> +	{
+> +		.name =3D "smi",
+> +		.flags =3D IORESOURCE_IRQ,
+> +	},
+> +};
 
-> >> > No, this is only used for sdhci, not for the other controllers.
-> >>
-> >> But our's is a SHCI variant so I added it in this file.
-> >
-> > That's my point: a lot of the bugs are independent of the specific
-> > host controller and could happen with any one of them. We want to
-> > ensure that nobody tries to add another property with similar
-> > semantics and a different name just because they are using a
-> > different driver.
-> 
-> Then I am not finding a reason why we have sdhci_get_of_property function ?? .
->  I added a generic names like broken-adma that everyone can reuse it.
-> I made mistake of not adding it in the binding.
-> 
-> For eg : broken-cd is not added by me but I can use it. So I added
-> something like broken-adma as it was not present.
+DEFINE_RES_IRQ_NAMED()
 
-The common mmc_of_parse() handles "broken-cd", and the sdhci_get_of_property()
-does so too. This is really a mistake we made earlier when it was added
-to sdhi instead of the common code. We should remove the parsing for
-that property from the sdhci driver and have the core handle it always,
-but that require someone to do it and ensure that no subtle ABI changes
-are introduced on the way.
+> +static struct mfd_cell tegra124_xusb_devs[] =3D {
+> +	{
+> +		.name =3D "tegra-xhci",
+> +		.of_compatible =3D "nvidia,tegra124-xhci",
+> +	},
+> +	{
+> +		.name =3D "tegra-xusb-mbox",
+> +		.of_compatible =3D "nvidia,tegra124-xusb-mbox",
+> +	},
+> +};
+> +
+> +static const struct tegra_xusb_soc_data tegra124_xusb_data =3D {
+> +	.devs =3D tegra124_xusb_devs,
+> +	.num_devs =3D ARRAY_SIZE(tegra124_xusb_devs),
+> +};
+> +
+> +static const struct of_device_id tegra_xusb_of_match[] =3D {
+> +	{ .compatible =3D "nvidia,tegra124-xusb", .data =3D &tegra124_xusb_=
+data },
 
-For new properties, the right way is to add it to the common function only.
+Yuk!  Why are you mixing platform data and DT in this way?
 
-> >> 2. We need to support PIO mode as of now because DMA or ADMA requires
-> >> some kind of translation driver that I am working on.
-> >
-> > But this does not describe the hardware properties. Don't add properties
-> > that describe the lack of a kernel driver. If you can't do DMA yet,
-> > use a dma-ranges property that lists one empty range to prevent
-> > dma_set_mask() from working, so it will fall back to PIO mode. You
-> > may have to fix the driver if that doesn't already work.
-> >
-> 
-> The generic sdhc framework doesn't have this capabiltiy. It uses the
-> quirks to identify the broken DMA and ADMA modes even
-> if the controller is capable of.
-> 
-> > What kind of driver do you need here?
-> 
-> For DMA and adma we need some 32 bit to 64 bit translation driver.
-> The existing arasan driver only support 32 bit.
+Why can't you just stick all of this in DT?
 
-Ok, that sounds like a very simple case: The width of the DMA is determined
-from DT by looking at the dma-ranges properties. If it doesn't work, one
-of these steps that are supposed to happen are broken and you should
-try to find out which one that is and fix it:
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, tegra_xusb_of_match);
+> +static struct regmap_config tegra_fpci_regmap_config =3D {
+> +	.reg_bits =3D 32,
+> +	.val_bits =3D 32,
+> +	.reg_stride =3D 4,
+> +};
+> +
+> +static int tegra_xusb_probe(struct platform_device *pdev)
+> +{
+> +	const struct tegra_xusb_soc_data *soc;
+> +	const struct of_device_id *match;
+> +	struct tegra_xusb *xusb;
+> +	struct resource *res;
+> +	void __iomem *fpci_base;
+> +	int irq, ret;
+> +
+> +	xusb =3D devm_kzalloc(&pdev->dev, sizeof(*xusb), GFP_KERNEL);
+> +	if (!xusb)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, xusb);
+> +
+> +	match =3D of_match_node(tegra_xusb_of_match, pdev->dev.of_node);
+> +	soc =3D match->data;
+> +
+> +	irq =3D platform_get_irq_byname(pdev, "host");
+> +	if (irq < 0)
+> +		return irq;
+> +	tegra_xhci_resources[0].start =3D irq;
+> +	tegra_xhci_resources[0].end =3D irq;
+> +
+> +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "xhci");
+> +	if (!res)
+> +		return -ENODEV;
+> +	tegra_xhci_resources[1].start =3D res->start;
+> +	tegra_xhci_resources[1].end =3D res->end;
+> +
+> +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "ipfs");
+> +	if (!res)
+> +		return -ENODEV;
+> +	tegra_xhci_resources[2].start =3D res->start;
+> +	tegra_xhci_resources[2].end =3D res->end;
+> +
+> +	soc->devs[0].resources =3D tegra_xhci_resources;
+> +	soc->devs[0].num_resources =3D ARRAY_SIZE(tegra_xhci_resources);
+> +
+> +	irq =3D platform_get_irq_byname(pdev, "smi");
+> +	if (irq < 0)
+> +		return irq;
+> +	tegra_xusb_mbox_resources[0].start =3D irq;
+> +	tegra_xusb_mbox_resources[0].end =3D irq;
+> +
+> +	soc->devs[1].resources =3D tegra_xusb_mbox_resources;
+> +	soc->devs[1].num_resources =3D ARRAY_SIZE(tegra_xusb_mbox_resources=
+);
+> +
+> +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "fpci");
+> +	fpci_base =3D devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(fpci_base))
+> +		return PTR_ERR(fpci_base);
 
-- The parent node of the sdhci device in DT must not claim to support
-  64 bit if the bus is only 32-bit wide. A dma-ranges property containing
-  "<0 0 1 0>" would describe a bus that has a 32-bit DMA address range that
-  is 1:1 mapped to the root bus, which is the default.
+This stuff is not good.
 
-- The ARM64 code must check that property in a call to dma_set_mask()
-  or dma_set_mask_and_coherent(), and not allow a mask to be set that
-  exceeds the size of the dma-ranges property.
+Either let MFD handle it with mfd_cells or stick all of this stuff in
+DT and parse it from the child devices.
 
-- The sdhci driver must call dma_set_mask() or dma_set_mask_and_coherent()
-  with the mask that is claimed by the device (usually 32 bit or 64 bit)
-  and check the result.
+> +	tegra_fpci_regmap_config.max_register =3D res->end - res->start - 3=
+;
+> +	xusb->fpci_regs =3D devm_regmap_init_mmio(&pdev->dev, fpci_base,
+> +						&tegra_fpci_regmap_config);
+> +	if (IS_ERR(xusb->fpci_regs)) {
+> +		ret =3D PTR_ERR(xusb->fpci_regs);
+> +		dev_err(&pdev->dev, "Failed to init regmap: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D mfd_add_devices(&pdev->dev, -1, soc->devs, soc->num_devs,
+> +			      NULL, 0, NULL);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to add MFD devices: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_xusb_remove(struct platform_device *pdev)
+> +{
+> +	mfd_remove_devices(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver tegra_xusb_driver =3D {
+> +	.probe =3D tegra_xusb_probe,
+> +	.remove =3D tegra_xusb_remove,
+> +	.driver =3D {
+> +		.name =3D "tegra-xusb",
+> +		.of_match_table =3D tegra_xusb_of_match,
+> +	},
+> +};
+> +module_platform_driver(tegra_xusb_driver);
+> +
+> +MODULE_DESCRIPTION("NVIDIA Tegra XUSB MFD");
+> +MODULE_AUTHOR("Andrew Bresticker <abrestic@chromium.org>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/soc/tegra/xusb.h b/include/soc/tegra/xusb.h
+> new file mode 100644
+> index 0000000..9d28d90
+> --- /dev/null
+> +++ b/include/soc/tegra/xusb.h
+> @@ -0,0 +1,19 @@
+> +/*
+> + * Copyright (C) 2014 NVIDIA Corporation
+> + * Copyright (C) 2014 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef __SOC_TEGRA_XUSB_H__
+> +#define __SOC_TEGRA_XUSB_H__
+> +
+> +struct regmap;
+> +
+> +struct tegra_xusb {
+> +	struct regmap *fpci_regs;
 
-- If the call to dma_set_mask() for the 64-bit mask fails, the driver must
-  fall back to using the 32-bit mask and not attempt to use the 64-bit
-  DMA registers.
+Are you going to add to this?
 
-This is the behavior we require anyway, and if this all works, you don't
-need the extra quirks.
+> +};
+> +
+> +#endif /* __SOC_TEGRA_XUSB_H__ */
 
-The above assumes that the limitation is enforced by the bus (e.g. an
-AHB bus can only do 32-bit DMA). It would be a little different if you
-have a 64-bit AXI bus and the Arasan device itself is limited to 32-bit
-independent of the width of the bus it is connected to. Can you find out
-which of these two cases you have?
-
-> >> 3. The version of arasan variant we have in our SoC doesn't have the
-> >> HISPD  bit field in HI-SPEED SD card. So this makes HI-SPEED sdcard
-> >> work.
-> >>
-> >> 4. NO_CMD23 is required for eMMC cards.
-> >>
-> >> These are not new properties.  Only the fact is I am using it for our
-> >> SoC from dtb. These quirks are already there in mmc common framework.
-> >> Nothing is new.
-> >
-> > Are you sure that you have version 8.9a of the Arasan SDHCI? This sounds
-> 
-> No We are using 4.9a ARASAN SDHCI
-
-Ok, then add a compatible string for this version to the arasan binding,
-and set the quirks flags only for the 4.9a version and not for the 8.9a
-version.
-
-	Arnd
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
