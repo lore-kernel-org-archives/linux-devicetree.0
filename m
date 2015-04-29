@@ -1,79 +1,163 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 1/4] regmap: cache: Add "was_reset" argument to
- regcache_sync_region()
-Date: Wed, 29 Apr 2015 17:46:32 +0100
-Message-ID: <20150429164632.GO22845@sirena.org.uk>
-References: <1429915008-22015-1-git-send-email-cernekee@chromium.org>
- <1429915008-22015-2-git-send-email-cernekee@chromium.org>
- <20150425113235.GA31708@sirena.org.uk>
- <CAJzqFtYkSds+s2HA3uKrMQes+D2K1TxOdzm5jJhtt2iZvyqxCA@mail.gmail.com>
- <20150429104042.GB22845@sirena.org.uk>
- <CAJzqFta=ndErf012QEV37kE0oSPp6dF_D7w_i_HsCkx5ytPgdA@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
+ X-Gene SoC EDAC DTS binding
+Date: Wed, 29 Apr 2015 11:47:53 -0500
+Message-ID: <CAL_Jsq+nhPUxHxrStB9cdy1YzE7tVPFVR1MrWq3Bz-JUa=3Rvg@mail.gmail.com>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+ <1430259045-19012-2-git-send-email-lho@apm.com> <1430259045-19012-3-git-send-email-lho@apm.com>
+ <1430259045-19012-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KhnGy1eznWbC2o3B"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJzqFta=ndErf012QEV37kE0oSPp6dF_D7w_i_HsCkx5ytPgdA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430259045-19012-4-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 28, 2015 at 5:10 PM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
+>
+> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  .../devicetree/bindings/edac/apm-xgene-edac.txt    |  107 ++++++++++++++++++++
+>  1 files changed, 107 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>
+> diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+> new file mode 100644
+> index 0000000..548299a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+> @@ -0,0 +1,107 @@
+> +* APM X-Gene SoC EDAC nodes
+> +
+> +EDAC nodes are defined to describe on-chip error detection and correction.
+> +There are four types of EDAC:
+> +
+> +  memory controller    - Memory controller
+> +  PMD (L1/L2)          - Processor module unit (PMD) L1/L2 cache
+> +  L3                   - CPU L3 cache
+> +  SoC                  - SoC IP such as SATA, Ethernet, and etc
+> +
+> +The following section describes the memory controller DT node binding.
+> +
+> +Required properties:
+> +- compatible           : Shall be "apm,xgene-edac-mc".
 
---KhnGy1eznWbC2o3B
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You are still describing what you want for EDAC driver not what the
+h/w looks like AFAICT.
 
-On Wed, Apr 29, 2015 at 07:13:27AM -0700, Kevin Cernekee wrote:
-> On Wed, Apr 29, 2015 at 3:40 AM, Mark Brown <broonie@kernel.org> wrote:
+> +- regmap-pcp           : Regmap of the PCP resource.
+> +- regmap-csw           : Regmap of the CSW resource.
+> +- regmap-mcba          : Regmap of the MCB-A resource.
+> +- regmap-mcbb          : Regmap of the MCB-B resource.
 
-> > Like I said above we can tell if the hardware was reset because
-> > mark_dirty() is called.
+What are these blocks? Regardless, I doubt the linkage here belongs in DT.
 
-> That covers the public API, but I do not understand how you intended
-> for this data to be stored in the rbtree if the use of a dirty bitmask
-> is discouraged.
+> +- reg                  : First resource shall be the MCU resource.
+> +- interrupts            : Interrupt-specifier for MCU error IRQ(s).
 
-We just need a single boolean?
+What is MCU?
 
-> i.e. regcache_sync() finds a register value marked "present".  How do
-> we know whether we need to write it back to the hardware?  For the
-> special case of "cached non default register values immediately after
-> a HW reset" you can mostly figure this out, but if there was no HW
-> reset how do we know which entries changed while the HW was
-> inaccessible?
+> +
+> +The following section describes the L1/L2 DT node binding.
 
-In the first instance do we care?
+Similar comments for the rest. I would define memory controller
+bindings and EDAC driver, then worry about the rest.
 
-> > I'm not suggesting that we do anything based on the presence of a cache
-> > entry, I'm suggesting that we could avoid having to ever cache values
-> > that never get referenced on a system (which can be a lot of them for
-> > common use cases) saving us memory.
+Rob
 
-> This seems to be solving a different problem.  It sounds like you are
-> more worried about regcache_sync() writing back lots of default values
-> for registers that were never touched, than performing unnecessary
-> writes to a few (actively used) registers that weren't changed while
-> we were in cache_only mode.  Is that accurate?
-
-No.  This is nothing to do with sync, it's just something that might be
-nice.
-
---KhnGy1eznWbC2o3B
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVQQrnAAoJECTWi3JdVIfQUFcH/0SynwjyXdpOG0FDUKg3hGRt
-DoXVSeih4qZKgGl6JXcaiDAF2JbXsi66XBkDt45qI7Rpid1TScuczKzy4kSfgalc
-+vYRwu8/8Z46+F0+9yUuY5GkEDatwqbhXRVpJ4e8afS3fYkyuBy8lTgUw5OWmRgk
-hvF0mqlfq3F9uw6E0GVMkb65ZiYYIUkYPTGBXWCUSGxNJpknkNyeyN8pdoo7Nn6e
-5AoDELu2JjhoB7NpGSPDBoGn6Vo2d5kuXgNgk4BvI/IzXfsQo8KZTBK/ijBPznyB
-2QWflf0f8yJVg+6dNHdZ4ydCbUCWlyix++JdDJEoZExEHJPwfU1mSw2d7ZkpzeI=
-=RIM5
------END PGP SIGNATURE-----
-
---KhnGy1eznWbC2o3B--
+> +
+> +- compatible           : Shall be "apm,xgene-edac-pmd".
+> +- regmap-pcp           : Regmap of the PCP resource.
+> +- regmap-efuse         : Regmap of the PMD efuse resource.
+> +- reg                  : First resource shall be the PMD resource.
+> +- interrupts            : Interrupt-specifier for PMD error IRQ(s).
+> +
+> +The following section describes the L3 DT node binding.
+> +
+> +- compatible           : Shall be "apm,xgene-edac-l3".
+> +- regmap-pcp           : Regmap of the PCP resource.
+> +- reg                  : First resource shall be the L3 resource.
+> +- interrupts            : Interrupt-specifier for L3 error IRQ(s).
+> +
+> +The following section describes the SoC DT node binding.
+> +
+> +- compatible           : Shall be "apm,xgene-edac-soc"".
+> +- regmap-pcp           : Regmap of the PCP resource.
+> +- reg                  : First resource shall be the SoC resource.
+> +                         Second resource shall be the register bus resource.
+> +- interrupts           : Interrupt-specifier for SoC error IRQ(s).
+> +
+> +Example:
+> +       efuse: efuse@1054a000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0x1054a000 0x0 0x20>;
+> +       };
+> +
+> +       pcperror: pcperror@78800000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0x78800000 0x0 0x100>;
+> +       };
+> +
+> +       csw: csw@7e200000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0x7e200000 0x0 0x1000>;
+> +       };
+> +
+> +       mcba: mcba@7e700000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0x7e700000 0x0 0x1000>;
+> +       };
+> +
+> +       mcbb: mcbb@7e720000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0x7e720000 0x0 0x1000>;
+> +       };
+> +
+> +       edacmc0: edacmc0@7e800000 {
+> +               compatible = "apm,xgene-edac-mc";
+> +               regmap-pcp = <&pcperror>;
+> +               regmap-csw = <&csw>;
+> +               regmap-mcba = <&mcba>;
+> +               regmap-mcbb = <&mcbb>;
+> +               reg = <0x0 0x7e800000 0x0 0x1000>;
+> +               interrupts = <0x0 0x20 0x4>,
+> +                            <0x0 0x21 0x4>;
+> +       };
+> +
+> +       edacpmd0: edacpmd0@7c000000 {
+> +               compatible = "apm,xgene-edac-pmd";
+> +               regmap-pcp = <&pcperror>;
+> +               regmap-efuse = <&efuse>;
+> +               reg = <0x0 0x7c000000 0x0 0x200000>;
+> +               interrupts = <0x0 0x20 0x4>,
+> +                            <0x0 0x21 0x4>;
+> +       };
+> +
+> +       edacl3: edacl3@7e600000 {
+> +               compatible = "apm,xgene-edac-l3";
+> +               regmap-pcp = <&pcperror>;
+> +               reg = <0x0 0x7e600000 0x0 0x1000>;
+> +               interrupts = <0x0 0x20 0x4>,
+> +                            <0x0 0x21 0x4>;
+> +       };
+> +
+> +       edacsoc: edacsoc@7e930000 {
+> +               compatible = "apm,xgene-edac-soc";
+> +               regmap-pcp = <&pcperror>;
+> +               reg = <0x0 0x7e930000 0x0 0x1000>,
+> +                     <0x0 0x7e000000 0x0 0x1000>;
+> +               interrupts = <0x0 0x20 0x4>,
+> +                            <0x0 0x21 0x4>,
+> +                            <0x0 0x27 0x4>;
+> +       };
+> --
+> 1.7.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
