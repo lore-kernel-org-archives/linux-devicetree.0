@@ -1,105 +1,158 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v7 0/9] mfd: watchdog: rtc: New driver for ST's LPC IP
-Date: Wed, 29 Apr 2015 06:25:51 -0700
-Message-ID: <5540DBDF.6020804@roeck-us.net>
-References: <1428590854-14095-1-git-send-email-lee.jones@linaro.org> <20150429132152.GQ9169@x1>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: gic: Document Power and Clock Domain optional properties
+Date: Wed, 29 Apr 2015 16:09:35 +0200
+Message-ID: <CAMuHMdU1T9t8O8J4F0KkhcoeYO9sNLpp+jARaCEP0ZKiVgBqJA@mail.gmail.com>
+References: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
+	<20150427155427.GB16191@leverpostej>
+	<CAMuHMdVT=vzFazUsJtvPsyB8zX-WJqp19RNVYA=UMfWZtHnF=Q@mail.gmail.com>
+	<20150427171502.GD16191@leverpostej>
+	<CAMuHMdVY5Oh7b9Pme2jiwtV4GBPqK-T5nfxnB9_1ufFzueUjLA@mail.gmail.com>
+	<20150429125703.GB11757@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150429132152.GQ9169@x1>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, david.paris-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150429125703.GB11757@leverpostej>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/29/2015 06:21 AM, Lee Jones wrote:
->> [Alessandro: This just needs RTC Acks now]
->
-> Given this patch-set has been on the list for some time now and we
-> haven't heard from Alessandro in all that time, I'm going to just
-> apply the set and send out a pull-request to the other Maintainers.
->
-> No point waiting any longer IMHO.
->
+Hi Mark,
 
-+1
-
-Guenter
-
->> ST's Low Power Controller (LPC) controls two devices; watchdog and RTC.
->> Only one of the devices can be used at any one time, which is enforced
->> by the Device Driver model.
+On Wed, Apr 29, 2015 at 2:57 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> >> >> To preserve DT stability, we would like to add these properties to the
+>> >> >> affected shmobile dtsi files.
+>> >> >
+>> >> > ... which means that they could be wrong, and will get in the way of
+>> >> > stability rather than aiding it.
+>> >>
+>> >> We do know the GIC is part of the power domain, and has a controllable
+>> >> clock (on the affected SoCs).
+>> >
+>> > ... my concern is that the data we place into the DT will be untested
+>> > given that we don't have software relying on it. If said data is not
+>> > correct, it is harmful to have, especially for such fundamental
+>> > properties.
 >>
->> This driver set provides everything you need to choose one (and only
->> one) of the LPC devices to run per I/P block, of which there are two
->> on the enabled STiH407 h/w.
->>
->> Version 7:
->>   - Fix 2 legacy typos in the binding documentation compatible string
->>     examples.
->>
->> Version 6:
->>   - RTC: GPL v2 => GPL to reflect the information in the header
->>   - Applied another Reviewed-by from Guenter
->>
->> Version 5:
->>   - Disable WDT clock over suspend
->>   - WDT: GPL v2 => GPL to reflect the information in the header
->>   - Change module name in Kconfig help and file header
->>
->> Version 4:
->>   - Use {readl,writel}_relaxed() calls
->>   - Add Guenter's Reviewed-by
->>   - Rebased onto v4.0-rc1
->>
->> Version 3:
->>   - Move Regmap pointer into core device data structure
->>   - Remove error message from devm_ioremap_resource
->>
->> Version 2:
->>   - Only calculate keepalive once in probe()
->>   - Check for a 0 clk_rate
->>   - Set limits using predefined attributes from watchdog_device
->>   - CONFIG_PM => CONFIG_SLEEP
->>   - Call st_wdog_setup() on resume
->>   - Remove MFD driver -- instead rely on driver probing mechanism
->>     which continues attempting to bind to different drivers until
->>     one does not return -ENODEV
->>
->> Lee Jones (9):
->>    mfd: dt-bindings: Provide human readable defines for LPC mode choosing
->>    ARM: multi_v7_defconfig: Enable support for ST's LPC Watchdog
->>    ARM: multi_v7_defconfig: Enable support for ST's LPC RTC
->>    ARM: STi: DT: STiH407: Add Device Tree node for the LPC
->>    watchdog: bindings: Provide ST bindings for ST's LPC Watchdog device
->>    watchdog: st_wdt: Add new driver for ST's LPC Watchdog
->>    rtc: bindings: Provide ST bindings for ST's LPC RTC device
->>    rtc: st: add new driver for ST's LPC RTC
->>    MAINTAINERS: Add Watchdog and RTC files to STI's maintainer entry
->>
->>   .../devicetree/bindings/rtc/rtc-st-lpc.txt         |  25 ++
->>   .../devicetree/bindings/watchdog/st_lpc_wdt.txt    |  38 +++
->>   MAINTAINERS                                        |   2 +
->>   arch/arm/boot/dts/stih407-family.dtsi              |  20 ++
->>   arch/arm/configs/multi_v7_defconfig                |   2 +
->>   drivers/rtc/Kconfig                                |  12 +
->>   drivers/rtc/Makefile                               |   1 +
->>   drivers/rtc/rtc-st-lpc.c                           | 354 +++++++++++++++++++++
->>   drivers/watchdog/Kconfig                           |  13 +
->>   drivers/watchdog/Makefile                          |   1 +
->>   drivers/watchdog/st_lpc_wdt.c                      | 344 ++++++++++++++++++++
->>   include/dt-bindings/mfd/st-lpc.h                   |  15 +
->>   12 files changed, 827 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/rtc/rtc-st-lpc.txt
->>   create mode 100644 Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
->>   create mode 100644 drivers/rtc/rtc-st-lpc.c
->>   create mode 100644 drivers/watchdog/st_lpc_wdt.c
->>   create mode 100644 include/dt-bindings/mfd/st-lpc.h
->>
+>> Your statement challenges the viability of Stable DT Requirements, as we
+>> can thus never write a DTS until the full software implementation has been
+>> completed ;-)
 >
+> I appreciate this is difficult, but I disagree that it's impossible ;)
+>
+> If you don't want to do clock management currently, don't describe the
+> clock controller, have some FW/loader pre-program the clocks, and list
+> fixed-clocks in the DTB. This DTB should continue to work, but a new
+> kernel alone won't give you fancy clock management. This is what we
+> expect in terms of stable DTBs.
+>
+> When you add clock controller support, you need a different DT to
+> describe the clock controller anyway. You can have it nuke the clock
+
+Currently we have the clock controller in the DTS. It only lacks a few clocks
+(like INTC-SYS -> GIC).
+
+> configuration at boot time as a test that everything you need is
+> described.
+
+Don't worry, I have early boot code that disables all non-critical clocks.
+This already caught many bugs (missing clock handling). It also caused a
+bug, as I missed an interrupt storm due to a disabled clock ;-)
+
+>> >> > I'm also concerned that the carving up of clock inputs, power domains,
+>> >> > and other physical details is implementation-specific. I imagine that
+>> >> > pretty much every user that will care about this is using GIC-400, so
+>> >> > could we make this specific to GIC-400?
+>> >>
+>> >> I have no idea which GIC version is being used.
+>> >
+>> > This is unfortunate.
+>> >
+>> >> This is for Renesas R-Mobile APE6 (r8a73a4) and various R-Car Gen2.
+>> >> According to the DTS, they're compatible with "arm,cortex-a15-gic" and
+>> >> "arm,cortex-a7-gic", and work with that value.
+>> >
+>> > Who put the DT together in the first place?
+>>
+>> Magnus (added to CC).
+>>
+>> > If it's a multi-cluster SoC then we know that we're not using any
+>> > built-in distributor...
+>>
+>> R-Mobile APE6 has 2 clusters (4xCA15 and 4xCA7).
+>> R-Car Gen2 has 1 or 2 clusters (2/4xCA15 and/or 2/4xCA7).
+>
+> It looks like we should be able to read the GICD_IIDR to figure out what
+> imlpementation is used. Could you see what GICD_IIDR reports on those
+> platforms? There's a patch at the end of the email to do so.
+
+Thanks!
+
+  - R-Mobile APE6 (r8a73a4):        GICD_IIDR reports 0x0200043b
+  - R-Car Gen M2-W (r8a7791):       GICD_IIDR reports 0x0200043b
+
+        ProductID = 0x02 (GIC-400)
+        Variant = 0x0
+        Revision = 0x0
+        Implementer = 0x43b (ARM)
+
+So both are GIC-400 (in the mean time I found a reference to GIC-400 in
+the APE6 docs).
+
+I also ran it on a few other SoCs:
+
+  - SH-Mobile AG5 (sh73a0):         GICD_IIDR reports 0x0102043b
+
+        Implementation version = 0x01 (Cortex-A9 MPCore)
+        Revision number = 0x020
+        Implementer = 0x43b (ARM)
+
+    Which GIC is that?
+
+  - R-Mobile A1 (r8a7740):          GICD_IIDR reports 0x0000043b
+
+        ProductID = 0x00 (GIC-500 or Cortex-A15 MPCore or PL390)
+        Variant = 0x0
+        Revision = 0x0
+        Implementer = 0x43b (ARM)
+
+    Seems like 0x0000043b can mean multiple things. Docs say PL390 r0p0.
+
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 7b315e3..02c8bb4 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -959,6 +959,7 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>         irq_hw_number_t hwirq_base;
+>         struct gic_chip_data *gic;
+>         int gic_irqs, irq_base, i;
+> +       unsigned long iidr;
+>
+>         BUG_ON(gic_nr >= MAX_GIC_NR);
+>
+> @@ -996,6 +997,9 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>                 gic_set_base_accessor(gic, gic_get_common_base);
+>         }
+>
+> +       iidr = readl_relaxed(gic_data_dist_base(gic) + GIC_DIST_IIDR);
+> +       pr_info("GICD_IIDR reports 0x%08lx\n", (unsigned long)iidr);
+
+No need for the cast.
+
+Perhaps just
+
+        pr_debug("GICD_IIDR reports 0x%08lx\n",
+                 readl_relaxed(gic_data_dist_base(gic) + GIC_DIST_IIDR));
+
+?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
