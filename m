@@ -1,83 +1,238 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 1/4] regmap: cache: Add "was_reset" argument to
- regcache_sync_region()
-Date: Wed, 29 Apr 2015 18:34:02 +0100
-Message-ID: <20150429173402.GP22845@sirena.org.uk>
-References: <1429915008-22015-1-git-send-email-cernekee@chromium.org>
- <1429915008-22015-2-git-send-email-cernekee@chromium.org>
- <20150425113235.GA31708@sirena.org.uk>
- <CAJzqFtYkSds+s2HA3uKrMQes+D2K1TxOdzm5jJhtt2iZvyqxCA@mail.gmail.com>
- <20150429104042.GB22845@sirena.org.uk>
- <CAJzqFta=ndErf012QEV37kE0oSPp6dF_D7w_i_HsCkx5ytPgdA@mail.gmail.com>
- <20150429164632.GO22845@sirena.org.uk>
- <CAJzqFtbTbUG=s7sxNBEYG1Haq5tzaCrMB=j55okZnwdVmzUAYQ@mail.gmail.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V7 5/9] mfd: Add driver for NVIDIA Tegra XUSB
+Date: Wed, 29 Apr 2015 10:59:52 -0700
+Message-ID: <CAL1qeaHNVVzMFg5r5ghg3zJTbaYOSf5Ms+Af_U5fhKc+vfWMHg@mail.gmail.com>
+References: <1430174242-29465-1-git-send-email-abrestic@chromium.org>
+	<1430174242-29465-6-git-send-email-abrestic@chromium.org>
+	<20150429092348.GQ9169@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3VjAXQKlB2CdpQtt"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJzqFtbTbUG=s7sxNBEYG1Haq5tzaCrMB=j55okZnwdVmzUAYQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150429092348.GQ9169@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Lee,
 
---3VjAXQKlB2CdpQtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Apr 29, 2015 at 2:23 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, 27 Apr 2015, Andrew Bresticker wrote:
+>
+>> Add an MFD driver for the XUSB host complex found on NVIDIA Tegra124
+>> and later SoCs.
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-On Wed, Apr 29, 2015 at 10:02:03AM -0700, Kevin Cernekee wrote:
-> On Wed, Apr 29, 2015 at 9:46 AM, Mark Brown <broonie@kernel.org> wrote:
+>> --- /dev/null
+>> +++ b/drivers/mfd/tegra-xusb.c
 
-> > We just need a single boolean?
+>> +struct tegra_xusb_soc_data {
+>> +     struct mfd_cell *devs;
+>> +     unsigned int num_devs;
+>> +};
+>> +
+>> +static struct resource tegra_xhci_resources[] = {
+>> +     {
+>> +             .name = "host",
+>> +             .flags = IORESOURCE_IRQ,
+>> +     },
+>> +     {
+>> +             .name = "xhci",
+>> +             .flags = IORESOURCE_MEM,
+>> +     },
+>> +     {
+>> +             .name = "ipfs",
+>> +             .flags = IORESOURCE_MEM,
+>> +     },
+>> +};
+>> +
+>> +static struct resource tegra_xusb_mbox_resources[] = {
+>> +     {
+>> +             .name = "smi",
+>> +             .flags = IORESOURCE_IRQ,
+>> +     },
+>> +};
+>
+> DEFINE_RES_IRQ_NAMED()
+>
+>> +static struct mfd_cell tegra124_xusb_devs[] = {
+>> +     {
+>> +             .name = "tegra-xhci",
+>> +             .of_compatible = "nvidia,tegra124-xhci",
+>> +     },
+>> +     {
+>> +             .name = "tegra-xusb-mbox",
+>> +             .of_compatible = "nvidia,tegra124-xusb-mbox",
+>> +     },
+>> +};
+>> +
+>> +static const struct tegra_xusb_soc_data tegra124_xusb_data = {
+>> +     .devs = tegra124_xusb_devs,
+>> +     .num_devs = ARRAY_SIZE(tegra124_xusb_devs),
+>> +};
+>> +
+>> +static const struct of_device_id tegra_xusb_of_match[] = {
+>> +     { .compatible = "nvidia,tegra124-xusb", .data = &tegra124_xusb_data },
+>
+> Yuk!  Why are you mixing platform data and DT in this way?
+>
+> Why can't you just stick all of this in DT?
 
-> Right, so if we add a per-regmap bool that tells us whether the device
-> has been reset, then in the case of "not reset" we will have to write
-> every regcache entry out to the device.  Even the ones that weren't
-> touched while in cache_only mode.  This makes the "not reset" case
-> much less efficient than the "reset" case.
+I assume you mean the resources?  The compatible strings will at least
+need to be SoC-specific since they will change from SoC to SoC.
 
-The immediate point is to provide a useful external interface, the
-internal optimisation is much less urgent (and it's less clear to me how
-often we're going to need to do that at all - generally cache only and
-power loss go together.
+>> +     {},
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, tegra_xusb_of_match);
+>> +static struct regmap_config tegra_fpci_regmap_config = {
+>> +     .reg_bits = 32,
+>> +     .val_bits = 32,
+>> +     .reg_stride = 4,
+>> +};
+>> +
+>> +static int tegra_xusb_probe(struct platform_device *pdev)
+>> +{
+>> +     const struct tegra_xusb_soc_data *soc;
+>> +     const struct of_device_id *match;
+>> +     struct tegra_xusb *xusb;
+>> +     struct resource *res;
+>> +     void __iomem *fpci_base;
+>> +     int irq, ret;
+>> +
+>> +     xusb = devm_kzalloc(&pdev->dev, sizeof(*xusb), GFP_KERNEL);
+>> +     if (!xusb)
+>> +             return -ENOMEM;
+>> +     platform_set_drvdata(pdev, xusb);
+>> +
+>> +     match = of_match_node(tegra_xusb_of_match, pdev->dev.of_node);
+>> +     soc = match->data;
+>> +
+>> +     irq = platform_get_irq_byname(pdev, "host");
+>> +     if (irq < 0)
+>> +             return irq;
+>> +     tegra_xhci_resources[0].start = irq;
+>> +     tegra_xhci_resources[0].end = irq;
+>> +
+>> +     res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "xhci");
+>> +     if (!res)
+>> +             return -ENODEV;
+>> +     tegra_xhci_resources[1].start = res->start;
+>> +     tegra_xhci_resources[1].end = res->end;
+>> +
+>> +     res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ipfs");
+>> +     if (!res)
+>> +             return -ENODEV;
+>> +     tegra_xhci_resources[2].start = res->start;
+>> +     tegra_xhci_resources[2].end = res->end;
+>> +
+>> +     soc->devs[0].resources = tegra_xhci_resources;
+>> +     soc->devs[0].num_resources = ARRAY_SIZE(tegra_xhci_resources);
+>> +
+>> +     irq = platform_get_irq_byname(pdev, "smi");
+>> +     if (irq < 0)
+>> +             return irq;
+>> +     tegra_xusb_mbox_resources[0].start = irq;
+>> +     tegra_xusb_mbox_resources[0].end = irq;
+>> +
+>> +     soc->devs[1].resources = tegra_xusb_mbox_resources;
+>> +     soc->devs[1].num_resources = ARRAY_SIZE(tegra_xusb_mbox_resources);
+>> +
+>> +     res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "fpci");
+>> +     fpci_base = devm_ioremap_resource(&pdev->dev, res);
+>> +     if (IS_ERR(fpci_base))
+>> +             return PTR_ERR(fpci_base);
+>
+> This stuff is not good.
+>
+> Either let MFD handle it with mfd_cells or stick all of this stuff in
+> DT and parse it from the child devices.
 
-> BTW, any preferences on naming for the bool or for the renamed
-> mark_dirty function?
+I'm not sure what exactly you mean by "let MFD handle it with
+mfd_cells" here - is that not what I'm doing now?  Anyway I think that
+leaves two ways of representing this in DT.
 
-Not urgently.  Note that I'm *not* suggesting an immediate rename,
-that's definitely a separate change (which will be a lot more painful to
-merge due to cross tree issues).
+Either have the MFD take a single IOMEM resource and divide it up
+statically within the driver:
 
-> >> i.e. regcache_sync() finds a register value marked "present".  How do
-> >> we know whether we need to write it back to the hardware?  For the
-> >> special case of "cached non default register values immediately after
-> >> a HW reset" you can mostly figure this out, but if there was no HW
-> >> reset how do we know which entries changed while the HW was
-> >> inaccessible?
+usb@0,70090000 {
+        compatible = "nvidia,tegra124-xusb";
+        reg = <0x0 0x70090000 0x0 0xa000>;
 
-> > In the first instance do we care?
+        usb-host {
+                compatible = "nvidia,tegra124-xhci";
+                interrupts = <...>;
+                ...
+        }:
 
-> I'm not sure I understand the question.
+        mailbox {
+                compatible = "nvidia,tegra124-xusb-mbox";
+                interrupts = <...>;
+                ...
+        };
+};
 
-Do we actually care about getting a list of the changed registers that
-much?
+... or have the MFD take only the shared FPCI resource and have the
+sub-devices parse the rest from DT:
 
---3VjAXQKlB2CdpQtt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+usb@0,70098000 {
+        compatible = "nvidia,tegra124-xusb";
+        reg = <0x0 0x70098000 0x0 0x1000>;
+        ranges;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+        usb-host@0,70090000 {
+                compatible = "nvidia,tegra124-xhci";
+                reg = <0x0 0x70090000 0x0 0x8000>,
+                        <0x0 0x70099000 0x0 0x1000>;
+                interrupts = <...>;
+                ...
+        }:
 
-iQEcBAEBCAAGBQJVQRYKAAoJECTWi3JdVIfQfYsIAIKxW37dqidzwS5ArJBIpzd9
-c5aJ5bmWP+r3aJXEY2NIGvg/lTtELe45uFOFltPfygWogYDxyp8j14Q0lFbBzytP
-m5o2rm+HmaOxtglvjM1q+qqhdDkDWq7tjuZ1gg05n0GCBt6eZLaV1iJrqQ8gMrgG
-vV9caW9J61hftHiZLMbTXP7l4bggj3zJmGX6id685iMBqApbpTsXvxJW0bm03tEE
-82iQ6qIOvXqBV/DUI7tYZdR8liFcff1p+2l+jXKXtUWz2qL6PzKJ7zusYB9ANDEY
-kzQpZCPFaCv5o4a0ZC/bIzUjd4+6zmZv6AKfW+PvnUOFBFrMeOxEkOuNL/z4+Tg=
-=joo2
------END PGP SIGNATURE-----
+        mailbox {
+                compatible = "nvidia,tegra124-xusb-mbox";
+                interrupts = <...>;
+                ...
+        };
+};
 
---3VjAXQKlB2CdpQtt--
+I don't have a strong preference here, but I think the former more
+accurately represents the resource hierarchy.  Since Thierry requested
+the use of an MFD, I'd like him to weigh in on this - Thierry?
+
+>> +     tegra_fpci_regmap_config.max_register = res->end - res->start - 3;
+>> +     xusb->fpci_regs = devm_regmap_init_mmio(&pdev->dev, fpci_base,
+>> +                                             &tegra_fpci_regmap_config);
+>> +     if (IS_ERR(xusb->fpci_regs)) {
+>> +             ret = PTR_ERR(xusb->fpci_regs);
+>> +             dev_err(&pdev->dev, "Failed to init regmap: %d\n", ret);
+>> +             return ret;
+>> +     }
+>> +
+>> +     ret = mfd_add_devices(&pdev->dev, -1, soc->devs, soc->num_devs,
+>> +                           NULL, 0, NULL);
+>> +     if (ret) {
+>> +             dev_err(&pdev->dev, "Failed to add MFD devices: %d\n", ret);
+>> +             return ret;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+
+>> --- /dev/null
+>> +++ b/include/soc/tegra/xusb.h
+
+>> +struct tegra_xusb {
+>> +     struct regmap *fpci_regs;
+>
+> Are you going to add to this?
+
+No, I don't have any plans to add to this struct.
+
+-Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
