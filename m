@@ -1,84 +1,65 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock
- support
-Date: Wed, 29 Apr 2015 22:27:52 +0200
-Message-ID: <20150429202752.GH6062@lukather>
-References: <20150407191746.GA26727@lukather>
- <20150408081450.GB5162@x1>
- <20150408094349.GC26727@lukather>
- <20150408103832.GG5162@x1>
- <20150408155705.GF26727@lukather>
- <20150408172344.GH5162@x1>
- <20150422093446.GA28007@lukather>
- <20150429141751.GR9169@x1>
- <CAMuHMdVdtoXGhK97Ky5hoVcjM6XZAZXKWELL64MFQebMpFr2Ng@mail.gmail.com>
- <20150429151147.GX9169@x1>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sunxi: dts: split IR pins for A10 and A20
+Date: Wed, 29 Apr 2015 22:32:00 +0200
+Message-ID: <20150429203200.GJ6062@lukather>
+References: <1430244287-29309-1-git-send-email-codekipper@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Hlh2aiwFLCZwGcpw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="MzdA25v054BPvyZa"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB54AQWVAKGQEGJM4PQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150429151147.GX9169@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1430244287-29309-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---Hlh2aiwFLCZwGcpw
-Content-Type: text/plain; charset=us-ascii
+--MzdA25v054BPvyZa
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 29, 2015 at 04:11:47PM +0100, Lee Jones wrote:
-> On Wed, 29 Apr 2015, Geert Uytterhoeven wrote:
-> > On Wed, Apr 29, 2015 at 4:17 PM, Lee Jones <lee.jones@linaro.org> wrote:
-> > > This useful binding should be accepted and people should not abuse
-> > > it.  If they do and the vendor Maintainer's review and accept then
-> > > they have no foundation for recourse.
-> > >
-> > > Would you prefer it if I made the warning starker?
-> >=20
-> > Perhaps you can add a check for "clock-always-on" to scripts/checkpatch=
-=2Epl,
-> > to make people aware they should think twice?
->=20
-> That's a really nice idea!
->=20
-> Maxime, would that make you happ(y|ier)?
+Hi,
 
-Do whatever you want.
+On Tue, Apr 28, 2015 at 08:04:47PM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Currently none of the target boards nor the driver supports
+> IR TX. However this pin is used in a few instances as a GPIO.
+> Split the pin ctrl descriptions so that only the IR RX is
+> configured to be used.
+> 
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun4i-a10.dtsi | 18 ++++++++++++++++--
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 18 ++++++++++++++++--
+>  2 files changed, 32 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+> index 1d7fd68..50df9b7 100644
+> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> @@ -798,14 +798,28 @@
+>  			};
+>  
+>  			ir0_pins_a: ir0@0 {
 
-This binding is going to be merged no matter what, so my opinion has
-really little value here.
+I would have changed the name of that node to ir0_rx_pins_a, just to
+make it clear what you're actually muxing.
+
+(of course, that would require fixing the users of these nodes, but
+that's fine.)
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---Hlh2aiwFLCZwGcpw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVQT7IAAoJEBx+YmzsjxAgSswP/2ivhpAJy+3PMgsx+uu3x/LM
-TthvqpFO9d7zha8ah007LMdHddgwGUC/boVMen6QTBQ3N6nkTXX2N8MwT/7USp1r
-uB/GKICmIxK+zQz9vaqbhux1xRAgbF98myOj5NrxTjBPlJ+k5OESfzG6BQ4jdghu
-NIsqnAqa68Tx9qkeygdIh1LpsKjlz8LUiMCAfHE8TQJIzwGiPc/vuoUBC+6cyL0c
-V6DNprL9yBYpAeLoCnIuv9uOESJAkd9NtfND3o/cHVM+/Caw7uX4ARwudSHqqlGk
-2yaoINcZdwb/uGM4K3Ag9ivVcL8E2kcTSN4kK+UsCMCpV1YKTUw0pk6IS+b9A8dg
-nYOoMB+eZi5eTAThvz/DOEUt1+5+3uszMD8pIpRf6/0h7m3VTegc+uAeFHh0Jl7A
-hkox9A/0g8O0/BqmYV29MCqzn1BtHuk4O7uk0Jr0tL9tGADG3DVcALbp2eI8dY88
-X+HdAdBWC80csoS+ZSaBzvsMANa8/z+BwnCX4GUMnN4wCO+deHmNAH2vg6VbFwB+
-BCXA7ecgfILVIbRiSEJzfMOEHZTlApi0U6jYQMublirRkNYlGAUrZ/S0F7KSNAx1
-s7XsS2WVDZm5P1GDNPL3ZCBbqvMP+ROsAgmqCGpnW/3t5zLj3N/IrOmRj++eTgre
-CfvsMN/f3M25CwwJCxV8
-=12nB
------END PGP SIGNATURE-----
-
---Hlh2aiwFLCZwGcpw--
+--MzdA25v054BPvyZa--
