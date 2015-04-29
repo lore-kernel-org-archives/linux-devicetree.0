@@ -1,69 +1,155 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH 1/5] clocksource: st_lpc: Add LPC timer as a clocksource.
-Date: Wed, 29 Apr 2015 17:48:11 +0200
-Message-ID: <5540FD3B.1040702@st.com>
-References: <1429267823-8879-1-git-send-email-peter.griffin@linaro.org> <1429267823-8879-2-git-send-email-peter.griffin@linaro.org> <alpine.DEB.2.11.1504211153580.13914@nanos>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: unittest: overlay: Keep track of created overlays
+Date: Wed, 29 Apr 2015 10:55:45 -0500
+Message-ID: <CAL_JsqJ7GxMMiu7U7u6bgDLut0Eme6TOowZZW9A3WXrjFuAexA@mail.gmail.com>
+References: <1429868546-19613-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1504211153580.13914@nanos>
+In-Reply-To: <1429868546-19613-1-git-send-email-pantelis.antoniou@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, daniel.lezcano@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ajit Pal Singh <ajitpal.singh@st.com>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Andrew Morton <akpm@linux-foundation.org>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Thomas,
-
-On 04/21/2015 11:56 AM, Thomas Gleixner wrote:
-> On Fri, 17 Apr 2015, Peter Griffin wrote:
->> +/* Low Power Timer */
->> +#define LPC_LPT_LSB_OFF		0x400
->> +#define LPC_LPT_MSB_OFF		0x404
->> +#define LPC_LPT_START_OFF	0x408
->> +
->> +struct st_lpc {
->> +	struct clk *clk;
->> +	void __iomem *iomem_cs;
->> +};
->> +
->> +static struct st_lpc *st_lpc;
->> +
->> +static u64 notrace st_lpc_counter_read(void)
->> +{
->> +	u64 counter;
->> +	u32 lower;
->> +	u32 upper, old_upper;
->> +
->> +	upper = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_MSB_OFF);
->> +	do {
->> +		old_upper = upper;
->> +		lower = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_LSB_OFF);
->> +		upper = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_MSB_OFF);
->> +	} while (upper != old_upper);
->> +
->> +	counter = upper;
->> +	counter <<= 32;
->> +	counter |= lower;
->> +	return counter;
+On Fri, Apr 24, 2015 at 4:42 AM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
+> During the course of the overlay selftests some of them remain
+> applied. While this does not pose a real problem, make sure you track
+> them and destroy them at the end of the test.
 >
-> What's the point of this exercise? The kernel can handle 32bit
-> clocksources nicely. So why do you want to artificially expand them to
-> 64bit by adding useless loops and hoops to a hotpath?
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 
-I agree we should use only the lower 32 bits.
-This timer is moreover clocked at a slow rate (30MHz), so we won't have 
-too much interrupts.
+This is already in for 4.1. Is this the same as the prior version.
 
-Peter, doing that, you could use something like this directly:
-clocksource_mmio_init(st_lpc->iomem_cs + LPC_LPT_LSB_OFF, 
-"st_lpc_timer", rate,
-             200, 24, clocksource_mmio_readl_down);
+Rob
 
-Thanks,
-Maxime
-
+> ---
+>  drivers/of/unittest.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
 >
-> Thanks,
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index e844907..1801634 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/i2c.h>
+>  #include <linux/i2c-mux.h>
 >
-> 	tglx
+> +#include <linux/bitops.h>
+> +
+>  #include "of_private.h"
+>
+>  static struct unittest_results {
+> @@ -1109,6 +1111,59 @@ static const char *overlay_path(int nr)
+>
+>  static const char *bus_path = "/testcase-data/overlay-node/test-bus";
+>
+> +/* it is guaranteed that overlay ids are assigned in sequence */
+> +#define MAX_UNITTEST_OVERLAYS  256
+> +static unsigned long overlay_id_bits[BITS_TO_LONGS(MAX_UNITTEST_OVERLAYS)];
+> +static int overlay_first_id = -1;
+> +
+> +static void of_unittest_track_overlay(int id)
+> +{
+> +       if (overlay_first_id < 0)
+> +               overlay_first_id = id;
+> +       id -= overlay_first_id;
+> +
+> +       /* we shouldn't need that many */
+> +       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
+> +       overlay_id_bits[BIT_WORD(id)] |= BIT_MASK(id);
+> +}
+> +
+> +static void of_unittest_untrack_overlay(int id)
+> +{
+> +       if (overlay_first_id < 0)
+> +               return;
+> +       id -= overlay_first_id;
+> +       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
+> +       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
+> +}
+> +
+> +static void of_unittest_destroy_tracked_overlays(void)
+> +{
+> +       int id, ret, defers;
+> +
+> +       if (overlay_first_id < 0)
+> +               return;
+> +
+> +       /* try until no defers */
+> +       do {
+> +               defers = 0;
+> +               /* remove in reverse order */
+> +               for (id = MAX_UNITTEST_OVERLAYS - 1; id >= 0; id--) {
+> +                       if (!(overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id)))
+> +                               continue;
+> +
+> +                       ret = of_overlay_destroy(id + overlay_first_id);
+> +                       if (ret != 0) {
+> +                               defers++;
+> +                               pr_warn("%s: overlay destroy failed for #%d\n",
+> +                                       __func__, id + overlay_first_id);
+> +                               continue;
+> +                       }
+> +
+> +                       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
+> +               }
+> +       } while (defers > 0);
+> +}
+> +
+>  static int of_unittest_apply_overlay(int unittest_nr, int overlay_nr,
+>                 int *overlay_id)
+>  {
+> @@ -1130,6 +1185,7 @@ static int of_unittest_apply_overlay(int unittest_nr, int overlay_nr,
+>                 goto out;
+>         }
+>         id = ret;
+> +       of_unittest_track_overlay(id);
+>
+>         ret = 0;
+>
+> @@ -1343,6 +1399,7 @@ static void of_unittest_overlay_6(void)
+>                         return;
+>                 }
+>                 ov_id[i] = ret;
+> +               of_unittest_track_overlay(ov_id[i]);
+>         }
+>
+>         for (i = 0; i < 2; i++) {
+> @@ -1367,6 +1424,7 @@ static void of_unittest_overlay_6(void)
+>                                                 PDEV_OVERLAY));
+>                         return;
+>                 }
+> +               of_unittest_untrack_overlay(ov_id[i]);
+>         }
+>
+>         for (i = 0; i < 2; i++) {
+> @@ -1411,6 +1469,7 @@ static void of_unittest_overlay_8(void)
+>                         return;
+>                 }
+>                 ov_id[i] = ret;
+> +               of_unittest_track_overlay(ov_id[i]);
+>         }
+>
+>         /* now try to remove first overlay (it should fail) */
+> @@ -1433,6 +1492,7 @@ static void of_unittest_overlay_8(void)
+>                                                 PDEV_OVERLAY));
+>                         return;
+>                 }
+> +               of_unittest_untrack_overlay(ov_id[i]);
+>         }
+>
+>         unittest(1, "overlay test %d passed\n", 8);
+> @@ -1855,6 +1915,8 @@ static void __init of_unittest_overlay(void)
+>         of_unittest_overlay_i2c_cleanup();
+>  #endif
+>
+> +       of_unittest_destroy_tracked_overlays();
+> +
+>  out:
+>         of_node_put(bus_np);
+>  }
+> --
+> 1.7.12
+>
