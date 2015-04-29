@@ -1,158 +1,58 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: gic: Document Power and Clock Domain optional properties
-Date: Wed, 29 Apr 2015 16:09:35 +0200
-Message-ID: <CAMuHMdU1T9t8O8J4F0KkhcoeYO9sNLpp+jARaCEP0ZKiVgBqJA@mail.gmail.com>
-References: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
-	<20150427155427.GB16191@leverpostej>
-	<CAMuHMdVT=vzFazUsJtvPsyB8zX-WJqp19RNVYA=UMfWZtHnF=Q@mail.gmail.com>
-	<20150427171502.GD16191@leverpostej>
-	<CAMuHMdVY5Oh7b9Pme2jiwtV4GBPqK-T5nfxnB9_1ufFzueUjLA@mail.gmail.com>
-	<20150429125703.GB11757@leverpostej>
+From: Kevin Cernekee <cernekee@chromium.org>
+Subject: Re: [PATCH V2 1/4] regmap: cache: Add "was_reset" argument to regcache_sync_region()
+Date: Wed, 29 Apr 2015 07:13:27 -0700
+Message-ID: <CAJzqFta=ndErf012QEV37kE0oSPp6dF_D7w_i_HsCkx5ytPgdA@mail.gmail.com>
+References: <1429915008-22015-1-git-send-email-cernekee@chromium.org>
+ <1429915008-22015-2-git-send-email-cernekee@chromium.org> <20150425113235.GA31708@sirena.org.uk>
+ <CAJzqFtYkSds+s2HA3uKrMQes+D2K1TxOdzm5jJhtt2iZvyqxCA@mail.gmail.com> <20150429104042.GB22845@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150429125703.GB11757@leverpostej>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150429104042.GB22845@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Wed, Apr 29, 2015 at 2:57 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> >> >> To preserve DT stability, we would like to add these properties to the
->> >> >> affected shmobile dtsi files.
->> >> >
->> >> > ... which means that they could be wrong, and will get in the way of
->> >> > stability rather than aiding it.
->> >>
->> >> We do know the GIC is part of the power domain, and has a controllable
->> >> clock (on the affected SoCs).
->> >
->> > ... my concern is that the data we place into the DT will be untested
->> > given that we don't have software relying on it. If said data is not
->> > correct, it is harmful to have, especially for such fundamental
->> > properties.
->>
->> Your statement challenges the viability of Stable DT Requirements, as we
->> can thus never write a DTS until the full software implementation has been
->> completed ;-)
+On Wed, Apr 29, 2015 at 3:40 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Apr 28, 2015 at 09:58:48PM -0700, Kevin Cernekee wrote:
+>> On Sat, Apr 25, 2015 at 4:32 AM, Mark Brown <broonie@kernel.org> wrote:
 >
-> I appreciate this is difficult, but I disagree that it's impossible ;)
+>> > What we should be doing here is providing a way for users to tell regmap
+>> > if they've reset the register map and actually we already have that
+>> > interface, it's just not got the best name - regcache_mark_dirty() is
+>> > effectively it since there's really not a lot of other reasons why a
+>> > driver would need to mark the cache as dirty.  We're just not handling
 >
-> If you don't want to do clock management currently, don't describe the
-> clock controller, have some FW/loader pre-program the clocks, and list
-> fixed-clocks in the DTB. This DTB should continue to work, but a new
-> kernel alone won't give you fancy clock management. This is what we
-> expect in terms of stable DTBs.
+>> 1) How do we tell the difference between "regcache contains a
+>> non-default value that correctly reflects the hardware register
+>> contents" versus "regcache contains a non-default value that is
+>> waiting to be written when we exit cache_only mode"?
 >
-> When you add clock controller support, you need a different DT to
-> describe the clock controller anyway. You can have it nuke the clock
+> Like I said above we can tell if the hardware was reset because
+> mark_dirty() is called.
 
-Currently we have the clock controller in the DTS. It only lacks a few clocks
-(like INTC-SYS -> GIC).
+That covers the public API, but I do not understand how you intended
+for this data to be stored in the rbtree if the use of a dirty bitmask
+is discouraged.
 
-> configuration at boot time as a test that everything you need is
-> described.
+i.e. regcache_sync() finds a register value marked "present".  How do
+we know whether we need to write it back to the hardware?  For the
+special case of "cached non default register values immediately after
+a HW reset" you can mostly figure this out, but if there was no HW
+reset how do we know which entries changed while the HW was
+inaccessible?
 
-Don't worry, I have early boot code that disables all non-critical clocks.
-This already caught many bugs (missing clock handling). It also caused a
-bug, as I missed an interrupt storm due to a disabled clock ;-)
+> I'm not suggesting that we do anything based on the presence of a cache
+> entry, I'm suggesting that we could avoid having to ever cache values
+> that never get referenced on a system (which can be a lot of them for
+> common use cases) saving us memory.
 
->> >> > I'm also concerned that the carving up of clock inputs, power domains,
->> >> > and other physical details is implementation-specific. I imagine that
->> >> > pretty much every user that will care about this is using GIC-400, so
->> >> > could we make this specific to GIC-400?
->> >>
->> >> I have no idea which GIC version is being used.
->> >
->> > This is unfortunate.
->> >
->> >> This is for Renesas R-Mobile APE6 (r8a73a4) and various R-Car Gen2.
->> >> According to the DTS, they're compatible with "arm,cortex-a15-gic" and
->> >> "arm,cortex-a7-gic", and work with that value.
->> >
->> > Who put the DT together in the first place?
->>
->> Magnus (added to CC).
->>
->> > If it's a multi-cluster SoC then we know that we're not using any
->> > built-in distributor...
->>
->> R-Mobile APE6 has 2 clusters (4xCA15 and 4xCA7).
->> R-Car Gen2 has 1 or 2 clusters (2/4xCA15 and/or 2/4xCA7).
->
-> It looks like we should be able to read the GICD_IIDR to figure out what
-> imlpementation is used. Could you see what GICD_IIDR reports on those
-> platforms? There's a patch at the end of the email to do so.
+This seems to be solving a different problem.  It sounds like you are
+more worried about regcache_sync() writing back lots of default values
+for registers that were never touched, than performing unnecessary
+writes to a few (actively used) registers that weren't changed while
+we were in cache_only mode.  Is that accurate?
 
-Thanks!
-
-  - R-Mobile APE6 (r8a73a4):        GICD_IIDR reports 0x0200043b
-  - R-Car Gen M2-W (r8a7791):       GICD_IIDR reports 0x0200043b
-
-        ProductID = 0x02 (GIC-400)
-        Variant = 0x0
-        Revision = 0x0
-        Implementer = 0x43b (ARM)
-
-So both are GIC-400 (in the mean time I found a reference to GIC-400 in
-the APE6 docs).
-
-I also ran it on a few other SoCs:
-
-  - SH-Mobile AG5 (sh73a0):         GICD_IIDR reports 0x0102043b
-
-        Implementation version = 0x01 (Cortex-A9 MPCore)
-        Revision number = 0x020
-        Implementer = 0x43b (ARM)
-
-    Which GIC is that?
-
-  - R-Mobile A1 (r8a7740):          GICD_IIDR reports 0x0000043b
-
-        ProductID = 0x00 (GIC-500 or Cortex-A15 MPCore or PL390)
-        Variant = 0x0
-        Revision = 0x0
-        Implementer = 0x43b (ARM)
-
-    Seems like 0x0000043b can mean multiple things. Docs say PL390 r0p0.
-
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 7b315e3..02c8bb4 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -959,6 +959,7 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
->         irq_hw_number_t hwirq_base;
->         struct gic_chip_data *gic;
->         int gic_irqs, irq_base, i;
-> +       unsigned long iidr;
->
->         BUG_ON(gic_nr >= MAX_GIC_NR);
->
-> @@ -996,6 +997,9 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
->                 gic_set_base_accessor(gic, gic_get_common_base);
->         }
->
-> +       iidr = readl_relaxed(gic_data_dist_base(gic) + GIC_DIST_IIDR);
-> +       pr_info("GICD_IIDR reports 0x%08lx\n", (unsigned long)iidr);
-
-No need for the cast.
-
-Perhaps just
-
-        pr_debug("GICD_IIDR reports 0x%08lx\n",
-                 readl_relaxed(gic_data_dist_base(gic) + GIC_DIST_IIDR));
-
-?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+FWIW, in the current iteration of the tas571x driver, there are few if
+any registers that meet this criteria.
