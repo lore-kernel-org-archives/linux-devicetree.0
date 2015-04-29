@@ -1,172 +1,87 @@
-From: Hannes Petermaier <Hannes.Petermaier-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>
-Subject: WG: Re: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties for
- tscadc
-Date: Wed, 29 Apr 2015 07:06:14 +0200
-Message-ID: <OF06BDC00A.6DD841DC-ONC1257E36.001BCA81-C1257E36.001C098D@br-automation.com>
+From: rajeev kumar <rajeevkumar.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: Add I2C bindings for mt65xx/mt81xx.
+Date: Wed, 29 Apr 2015 10:48:25 +0530
+Message-ID: <CAA7nrtgcAU8RpUO=GPAWQH5hrsMg5jDzOJ-NqN_c19t_GPmTjw@mail.gmail.com>
+References: <1430209869-6631-1-git-send-email-eddie.huang@mediatek.com>
+	<1430209869-6631-2-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430209869-6631-2-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, fcooper-l0cyMroinI0@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ijc,_O=+devicetree"@hellion.org.uk, JanKardelljan.kardell-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jim Cromie <jim.cromie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vignesh,
+On Tue, Apr 28, 2015 at 2:01 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> From: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>
+> Add devicetree bindings for Mediatek Soc I2C driver.
+>
+> Signed-off-by: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/i2c/i2c-mt6577.txt         | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+> new file mode 100644
+> index 0000000..0ce6fa3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+> @@ -0,0 +1,41 @@
+> +* Mediatek's I2C controller
+> +
+> +The Mediatek's I2C controller is used to interface with I2C devices.
+> +
+> +Required properties:
+> +  - compatible: value should be either of the following.
+> +      (a) "mediatek,mt6577-i2c", for i2c compatible with mt6577 i2c.
+> +      (b) "mediatek,mt6589-i2c", for i2c compatible with mt6589 i2c.
+> +      (c) "mediatek,mt8127-i2c", for i2c compatible with mt8127 i2c.
+> +      (d) "mediatek,mt8135-i2c", for i2c compatible with mt8135 i2c.
+> +      (e) "mediatek,mt8173-i2c", for i2c compatible with mt8173 i2c.
+> +  - reg: physical base address of the controller and dma base, length of memory
+> +    mapped region.
+> +  - interrupts: interrupt number to the cpu.
+> +  - clock-div: the fixed value for frequency divider of clock source in i2c
+> +    module. Each IC may be different.
+> +  - clocks: clock name from clock manager
+> +  - clock-names: Must include "main" and "dma", if enable have-pmic need include
+> +    "pmic" extra.
+> +
+> +Optional properties:
+> +  - clock-frequency: Frequency in Hz of the bus when transfer, the default value
+> +    is 100000.
 
-any comments on this ?
-I didn't hear anything last 2 weeks from you.
+100000 HZ ...
 
-best regards,
-Hannes
-
------ Forwarded by Hannes Petermaier/Eggelsberg/AT/B&R on 29.04.2015 07:03 
------
-
-> From: Hannes Petermaier/Eggelsberg/AT/B&R
-> To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov 
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 
-> fcooper-l0cyMroinI0@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell<ijc
-> +devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, 
-Johannes 
-> Pointner <Johannes.Pointner-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>, Hartmut Knaack 
-> <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen 
-
-> <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 
-linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 
-Peter 
-> Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Date: 15.04.2015 07:33
-> Subject: Re: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties 
-for tscadc
-> 
-> > Hi Hannes,
-> Hi Vignesh,
-> thanks for answer.
-> 
-> > >>
-> > >> would it be possible to add some more channel-specific settings ?
-> > >>
-> > >> It would be nice to have allmost full control to the STEPCONFIGx 
-> > > register.
-> > >>
-> > >> At least we need to write the bits
-> > >>
-> > >> SEL_RFM_SWC_1_0
-> > >> SEL_INM_SWC_3_0 
-> > >> SEL_RFP_SWC_2_0 
-> > >>
-> > >> In the current mainline version only (SEL_INP_SWC_3_0) is written.
-> > >> So for the other bits "0" is value is used, for my point of view 
-this is 
-> > > not correct.
-> > >>
-> > >> For example if we want to read a value from AIN5 the negative pin 
-from 
-> > > adc is 
-> > >> muxed allways to AIN0.
-> > 
-> > Sorry... I didn't understand what you meant by"AIN5 is muxed always 
-with
-> > AIN0"?
-> Have a look to the TRM (spruh73k.pdf) Page 1740 / Figure 12-2. 
-Functional Block Diagram.
-> There you can see that the ADC-cell which has two inputs, one positive 
-and onenegative.
-> Also there are two reference inputs, one positive - one negative.
-> 
-> All this "pins" are muxed, because only one channel per time can be 
-sampled.
-> This muxes are controlled through the STEPCONFIGx registers.
-> 
-> If you want for example take some measurement from AIN5 the driver muxes 
-the 
-> positive input from the ADC to AIN5 by setting the bits for SEL_INP<3:0> 
-- this is ok.
-> But the bits for SEL_INM<3:0> are still 'zero'. 
-> In summary this results in following mux-setting (regarding page 1771 in 
-TRM):
-> 
-> positive-reference muxed to   VDDA
-> negative-reference muxed to   VSSA
-> positive-input muxed to       AIN5
-> negative-input muxed to       AIN0
-> 
-> From this setup we run into 2 problems:
-> - the negative input terminal is muxed maybe to wrong potential
-> In much cases we have a single-ended signal so this setup looks good at 
-first,
-> because the "Diff_CNTRL" bit is also false. 
-> In fact there is an influence to the reading if the negative 
-input-terminal 
-> isn't setup correctly (to VSSA or REFN). 
-> Maybe i interpret the "Diff_CNTRL" not correctly, there is no detailed 
-> description within the TRM - maybe some of your workmates can explain 
-you the 
-> functionality of this bit.
-> 
-> - reference is allways taken from VDDA/VSSA
-> For a precision measurement you dont't use in normal case the 
-analog-supply.
-> This rail brings noise, drift - all things whicht we don't need for 
-accurate 
-> measurement.
-> 
-> > 
-> > >> In fact i can readout heavy jitter even if AIN5 is connected to 
-ground - 
-> > > after
-> > >> setting up negative adc pin within code (to use REFN)  the readout 
-value 
-> > > is 0 
-> > >> as expected without nameable jitter.
-> > >> If i short AIN0 also to ground, jitter is also eliminated.
-> > 
-> > Hmmm... nobody has reported such behavior before. ADC support for
-> > am335x-evm/beaglebone has been there for quite long time, but nobody
-> > reported any jitter on AIN5 line. I think this may be specific to
-> > your setup. Can you provide more info with regard to your setup?
-> > Which kernel? Is it am335x-evm or beaglebone or a custom board?
-> Maybe nobody does some precision measurement with beaglebone.
-> For operating some touchscreen or readout a potentiometer for evaluation 
-
-> purpose it is still good enough.
-> 
-> Kernel is current mainline, 4.0
-> Board is some custom board of my company.
-> But all this parameters shouldn't have some influence to the case.
-> 
-> > >>
-> > >> Maybe this is also some fault of TI SoC ... in normal case somebody 
-
-> > > could 
-> > >> expect, that negative adc pin is equal even the Diff_CNTRL bit 
-isn't set 
-> > > - but
-> > >> in practice it isn't.
-> > >>
-> > >> Also actually it isn't possible to make some accurate measurement 
-due to 
-> > > the 
-> > >> fact that allways VDDA_ADC is used as positive reference.
-> > >>
-> > >> So it would be nice to have control around this bits.
-> > >> Whats your opinion around that?
-> > 
-> > Sorry, I am not yet clear on your bug/use-case.
-> > 
-> > Please comment inline while replying on mailing list
-> okay so ?
-> 
-> > Regards
-> > Vignesh
-> best regards,
-> Hannes
-> 
-> 
-
-
+> +  - mediatek,have-pmic: platform can control i2c form special pmic side.
+> +    Only mt6589 and mt8135 support this feature.
+> +  - mediatek,use-push-pull: IO config use push-pull mode.
+> +
+> +Example:
+> +
+> +       i2c0: i2c@1100d000 {
+> +                       compatible = "mediatek,mt6577-i2c";
+> +                       reg = <0x1100d000 0x70>,
+> +                             <0x11000300 0x80>;
+> +                       interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> +                       clock-frequency = <400000>;
+> +                       mediatek,have-pmic;
+> +                       clock-div = <16>;
+> +                       clocks = <&i2c0_ck>, <&ap_dma_ck>;
+> +                       clock-names = "main", "dma";
+> +       };
+> +
+> --
+> 1.8.1.1.dirty
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
