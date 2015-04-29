@@ -1,293 +1,127 @@
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] coresight: replicator: Add Qualcomm CoreSight Replicator driver
-Date: Wed, 29 Apr 2015 15:19:59 +0300
-Message-ID: <1430310000-10867-2-git-send-email-ivan.ivanov@linaro.org>
-References: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430310000-10867-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [PATCH 1/4] mailbox: add support for System Control and Power
+ Interface(SCPI) protocol
+Date: Wed, 29 Apr 2015 13:25:38 +0100
+Message-ID: <1430310338.27241.45.camel@linaro.org>
+References: <1430134846-24320-1-git-send-email-sudeep.holla@arm.com>
+	 <1430134846-24320-2-git-send-email-sudeep.holla@arm.com>
+	 <1430229283.3321.40.camel@linaro.org> <5540B840.1030900@arm.com>
+	 <1430307828.27241.32.camel@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430307828.27241.32.camel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On Wed, 2015-04-29 at 12:43 +0100, Jon Medhurst (Tixy) wrote:
+> On Wed, 2015-04-29 at 11:53 +0100, Sudeep Holla wrote:
+> > On 28/04/15 14:54, Jon Medhurst (Tixy) wrote:
+> > > On Mon, 2015-04-27 at 12:40 +0100, Sudeep Holla wrote:
+> [...]
+> > >> +     int ret;
+> > >> +     u8 token, chan;
+> > >> +     struct scpi_xfer *msg;
+> > >> +     struct scpi_chan *scpi_chan;
+> > >> +
+> > >> +     chan = atomic_inc_return(&scpi_info->next_chan) % scpi_info->num_chans;
+> > >> +     scpi_chan = scpi_info->channels + chan;
+> > >> +
+> > >> +     msg = get_scpi_xfer(scpi_chan);
+> > >> +     if (!msg)
+> > >> +             return -ENOMEM;
+> > >> +
+> > >> +     token = atomic_inc_return(&scpi_chan->token) & CMD_TOKEN_ID_MASK;
+> > >
+> > > So, this 8 bit token is what's used to 'uniquely' identify a pending
+> > > command. But as it's just an incrementing value, then if one command
+> > > gets delayed for long enough that 256 more are issued then we will have
+> > > a non-unique value and scpi_process_cmd can go wrong.
+> > >
+> > 
+> > IMO by the time 256 message are queued up and serviced we would timeout
+> > on the initial command. Moreover the core mailbox has sent the mailbox
+> > length to 20(MBOX_TX_QUEUE_LEN) which needs to removed to even get the
+> > remote chance of hit the corner case.
+> 
+> The corner case can be hit even if the queue length is only 2, because
+> other processes/cpus can use the other message we don't own here and
+> they can send then receive a message using that, 256 times. The corner
+> case doesn't require 256 simultaneous outstanding requests.
+> 
+> That is the reason I suggested that rather than using an incrementing
+> value for the 'unique' token, that each message instead contain the
+> value of the token to use with it.
 
-This driver manages Qualcomm CoreSight Replicator device, which
-resides on the AMBA bus. Replicator has been made programmable to
-allow software to turn of the replicator branch to sink that is not
-being used. This avoids trace traffic to the unused/non-current sink
-from causing back pressure that results in overflows at the source.
+Of course, I failed to mention that this solution to this problem makes
+thing worse for the situation where we timeout messages, because the
+same token will get reused quicker in that case. So, in practice, if we
+have timeouts, and a unchangeable protocol limitation of 256 tokens,
+then using those tokens in order, for each message sent is probably the
+best we can do.
 
-Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/arm/coresight.txt          |   1 +
- drivers/hwtracing/coresight/Kconfig                |   9 +
- drivers/hwtracing/coresight/Makefile               |   1 +
- .../coresight/coresight-replicator-qcom.c          | 211 +++++++++++++++++++++
- 4 files changed, 222 insertions(+)
- create mode 100644 drivers/hwtracing/coresight/coresight-replicator-qcom.c
+Perhaps that's the clue, generate and add the token to the message, just
+before transmission via the MHU, at a point where we know no other
+request can overtake us. In scpi_tx_prepare? Perhaps, it might also be
+good to only use up a token if we are expecting a response, and use zero
+for other messages?
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index f4d6a86..2314f2b 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -18,6 +18,7 @@ its hardware characteristcs.
- 		- "arm,coresight-funnel", "arm,primecell";
- 		- "arm,coresight-etm3x", "arm,primecell";
- 		- "arm,coresight-etm4x", "arm,primecell";
-+		- "qcom,coresight-replicator", "arm,primecell";
+Something like this totally untested patch...
 
- 	* reg: physical base address and length of the register
- 	  set(s) of the component.
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 6b331d4..165b681 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -68,4 +68,13 @@ config CORESIGHT_SOURCE_ETM4X
- 	  instructions that a processor is executing. This is primarily useful
- 	  for instruction level tracing. Depending on the implemented version
- 	  data tracing may also be available.
-+
-+config CORESIGHT_QCOM_REPLICATOR
-+	bool "Qualcomm CoreSight Replicator driver"
-+	help
-+	  This enables support for CoreSight link and sink driver that are
-+	  responsible for transporting and collecting the trace data
-+	  respectively. Link and sinks are dynamically aggregated with a trace
-+	  entity at run time to form a complete trace path.
-+
- endif
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 0af28d4..99f8e5f 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_CORESIGHT_LINKS_AND_SINKS) += coresight-funnel.o \
- 					   coresight-replicator.o
- obj-$(CONFIG_CORESIGHT_SOURCE_ETM3X) += coresight-etm3x.o coresight-etm-cp14.o
- obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o
-+obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
-diff --git a/drivers/hwtracing/coresight/coresight-replicator-qcom.c b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
-new file mode 100644
-index 0000000..961f389
---- /dev/null
-+++ b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
-@@ -0,0 +1,211 @@
-+/*
-+ * Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/amba/bus.h>
-+#include <linux/clk.h>
-+#include <linux/coresight.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+
-+#include "coresight-priv.h"
-+
-+#define REPLICATOR_IDFILTER0		0x000
-+#define REPLICATOR_IDFILTER1		0x004
-+
-+/**
-+ * struct replicator_state - specifics associated to a replicator component
-+ * @base:	memory mapped base address for this component.
-+ * @dev:	the device entity associated with this component
-+ * @atclk:	optional clock for the core parts of the replicator.
-+ * @csdev:	component vitals needed by the framework
-+ */
-+struct replicator_state {
-+	void __iomem		*base;
-+	struct device		*dev;
-+	struct clk		*atclk;
-+	struct coresight_device	*csdev;
-+};
-+
-+static int replicator_enable(struct coresight_device *csdev, int inport,
-+			     int outport)
-+{
-+	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
-+
-+	pm_runtime_get_sync(drvdata->dev);
-+
-+	CS_UNLOCK(drvdata->base);
-+
-+	if (outport == 0) {
-+		writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER0);
-+		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
-+	} else {
-+		writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER1);
-+		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
-+	}
-+
-+	CS_LOCK(drvdata->base);
-+
-+	dev_info(drvdata->dev, "REPLICATOR enabled\n");
-+	return 0;
-+}
-+
-+static void replicator_disable(struct coresight_device *csdev, int inport,
-+			       int outport)
-+{
-+	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
-+
-+	CS_UNLOCK(drvdata->base);
-+
-+	if (outport == 0)
-+		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
-+	else
-+		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
-+
-+	CS_LOCK(drvdata->base);
-+
-+	pm_runtime_put(drvdata->dev);
-+
-+	dev_info(drvdata->dev, "REPLICATOR disabled\n");
-+}
-+
-+static const struct coresight_ops_link replicator_link_ops = {
-+	.enable		= replicator_enable,
-+	.disable	= replicator_disable,
-+};
-+
-+static const struct coresight_ops replicator_cs_ops = {
-+	.link_ops	= &replicator_link_ops,
-+};
-+
-+static int replicator_probe(struct amba_device *adev, const struct amba_id *id)
-+{
-+	int ret;
-+	struct device *dev = &adev->dev;
-+	struct resource *res = &adev->res;
-+	struct coresight_platform_data *pdata = NULL;
-+	struct replicator_state *drvdata;
-+	struct coresight_desc *desc;
-+	struct device_node *np = adev->dev.of_node;
-+	void __iomem *base;
-+
-+	if (np) {
-+		pdata = of_get_coresight_platform_data(dev, np);
-+		if (IS_ERR(pdata))
-+			return PTR_ERR(pdata);
-+		adev->dev.platform_data = pdata;
-+	}
-+
-+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
-+
-+	drvdata->dev = &adev->dev;
-+	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
-+	if (!IS_ERR(drvdata->atclk)) {
-+		ret = clk_prepare_enable(drvdata->atclk);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Validity for the resource is already checked by the AMBA core */
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	drvdata->base = base;
-+	dev_set_drvdata(dev, drvdata);
-+	pm_runtime_put(&adev->dev);
-+
-+	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
-+	if (!desc)
-+		return -ENOMEM;
-+
-+	desc->type = CORESIGHT_DEV_TYPE_LINK;
-+	desc->subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
-+	desc->ops = &replicator_cs_ops;
-+	desc->pdata = adev->dev.platform_data;
-+	desc->dev = &adev->dev;
-+	drvdata->csdev = coresight_register(desc);
-+	if (IS_ERR(drvdata->csdev))
-+		return PTR_ERR(drvdata->csdev);
-+
-+	dev_info(dev, "REPLICATOR initialized\n");
-+	return 0;
-+}
-+
-+static int replicator_remove(struct amba_device *adev)
-+{
-+	struct replicator_state *drvdata = amba_get_drvdata(adev);
-+
-+	pm_runtime_disable(&adev->dev);
-+	coresight_unregister(drvdata->csdev);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int replicator_runtime_suspend(struct device *dev)
-+{
-+	struct replicator_state *drvdata = dev_get_drvdata(dev);
-+
-+	if (drvdata && !IS_ERR(drvdata->atclk))
-+		clk_disable_unprepare(drvdata->atclk);
-+
-+	return 0;
-+}
-+
-+static int replicator_runtime_resume(struct device *dev)
-+{
-+	struct replicator_state *drvdata = dev_get_drvdata(dev);
-+
-+	if (drvdata && !IS_ERR(drvdata->atclk))
-+		clk_prepare_enable(drvdata->atclk);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops replicator_dev_pm_ops = {
-+	SET_RUNTIME_PM_OPS(replicator_runtime_suspend,
-+			   replicator_runtime_resume, NULL)
-+};
-+
-+static struct amba_id replicator_ids[] = {
-+	{
-+		.id     = 0x0003b909,
-+		.mask   = 0x0003ffff,
-+	},
-+	{ 0, 0},
-+};
-+
-+static struct amba_driver replicator_driver = {
-+	.drv = {
-+		.name	= "coresight-replicator-qcom",
-+		.owner	= THIS_MODULE,
-+		.pm	= &replicator_dev_pm_ops,
-+	},
-+	.probe		= replicator_probe,
-+	.remove		= replicator_remove,
-+	.id_table	= replicator_ids,
-+};
-+
-+module_amba_driver(replicator_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Qualcomm CoreSight Replicator driver");
---
-1.9.1
+diff --git a/drivers/mailbox/scpi_protocol.c b/drivers/mailbox/scpi_protocol.c
+index c74575b..5818d9b 100644
+--- a/drivers/mailbox/scpi_protocol.c
++++ b/drivers/mailbox/scpi_protocol.c
+@@ -286,14 +286,23 @@ static void scpi_tx_prepare(struct mbox_client *c, void *msg)
+ 	struct scpi_chan *ch = container_of(c, struct scpi_chan, cl);
+ 	struct scpi_shared_mem *mem = (struct scpi_shared_mem *)ch->tx_payload;
+ 
+-	mem->command = cpu_to_le32(t->cmd);
+ 	if (t->tx_buf)
+ 		memcpy_toio(mem->payload, t->tx_buf, t->tx_len);
+ 	if (t->rx_buf) {
++		int token;
+ 		spin_lock_irqsave(&ch->rx_lock, flags);
++		/*
++		 * Presumably we can do this token setting outside
++		 * spinlock and still be safe from concurrency?
++		 */
++		do
++			token = (++ch->token) & CMD_TOKEN_ID_MASK;
++		while(!token);
++		t->cmd |= token << CMD_TOKEN_ID_SHIFT;
+ 		list_add_tail(&t->node, &ch->rx_pending);
+ 		spin_unlock_irqrestore(&ch->rx_lock, flags);
+ 	}
++	mem->command = cpu_to_le32(t->cmd);
+ }
+ 
+ static struct scpi_xfer *get_scpi_xfer(struct scpi_chan *ch)
+@@ -322,7 +331,7 @@ static int
+ scpi_send_message(u8 cmd, void *tx_buf, unsigned int len, void *rx_buf)
+ {
+ 	int ret;
+-	u8 token, chan;
++	u8 chan;
+ 	struct scpi_xfer *msg;
+ 	struct scpi_chan *scpi_chan;
+ 
+@@ -333,10 +342,8 @@ scpi_send_message(u8 cmd, void *tx_buf, unsigned int len, void *rx_buf)
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
+-	token = atomic_inc_return(&scpi_chan->token) & CMD_TOKEN_ID_MASK;
+-
+ 	msg->slot = BIT(SCPI_SLOT);
+-	msg->cmd = PACK_SCPI_CMD(cmd, token, len);
++	msg->cmd = PACK_SCPI_CMD(cmd, 0, len);
+ 	msg->tx_buf = tx_buf;
+ 	msg->tx_len = len;
+ 	msg->rx_buf = rx_buf;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Tixy
