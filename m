@@ -1,57 +1,139 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] arm64: dts: Add mediatek MT8173 earlycon support
-Date: Wed, 29 Apr 2015 08:19:02 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA230756659C0C2@IN01WEMBXB.internal.synopsys.com>
-References: <1430228434-31779-1-git-send-email-eddie.huang@mediatek.com>
- <1430228434-31779-4-git-send-email-eddie.huang@mediatek.com>
- <20150429064454.GR6325@pengutronix.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 02/10] DT: Add documentation for the mfd Maxim max77693
+Date: Wed, 29 Apr 2015 09:25:25 +0100
+Message-ID: <20150429082525.GO9169@x1>
+References: <1430205530-20873-1-git-send-email-j.anaszewski@samsung.com>
+ <1430205530-20873-3-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>linu
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430205530-20873-3-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 April 2015 12:15 PM, Sascha Hauer wrote:
-> Hi Eddie,
->
-> On Tue, Apr 28, 2015 at 09:40:34PM +0800, Eddie Huang wrote:
->> Add earlycon support to mediatek MT8173 evaluation board dts.
-> This is not about earlycon support. It adds the stdout-path property
-> which is generally about console.
+On Tue, 28 Apr 2015, Jacek Anaszewski wrote:
 
-Indeed, this is shorter way of specifying the default console by referring to uart
-device.
+> This patch adds device tree binding documentation for
+> the flash cell of the Maxim max77693 multifunctional device.
+>=20
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/mfd/max77693.txt |   67 ++++++++++=
+++++++++++
+>  1 file changed, 67 insertions(+)
 
->  It only happens to used for earlycon,
-> but would be used as a regular console aswell if it wasn't broken for
-> some kernel revisisions.
+Applied with Bryan's Ack.
 
-Really - I'm confused. When I last tried this for arc_uart (in 3.17 time frame),
-it would setup default console, but to use it for earlycon we needed
-bootargs=earlycon in chosen. However I had to revet that change since OF core
-still was fixing a few things in that area.
+> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Doc=
+umentation/devicetree/bindings/mfd/max77693.txt
+> index 38e6440..d342584 100644
+> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+> @@ -76,7 +76,60 @@ Optional properties:
+>      Valid values: 4300000, 4700000, 4800000, 4900000
+>      Default: 4300000
+> =20
+> +- led : the LED submodule device node
+> +
+> +There are two LED outputs available - FLED1 and FLED2. Each of them =
+can
+> +control a separate LED or they can be connected together to double
+> +the maximum current for a single connected LED. One LED is represent=
+ed
+> +by one child node.
+> +
+> +Required properties:
+> +- compatible : Must be "maxim,max77693-led".
+> +
+> +Optional properties:
+> +- maxim,boost-mode :
+> +	In boost mode the device can produce up to 1.2A of total current
+> +	on both outputs. The maximum current on each output is reduced
+> +	to 625mA then. If not enabled explicitly, boost setting defaults to
+> +	LEDS_BOOST_FIXED in case both current sources are used.
+> +	Possible values:
+> +		LEDS_BOOST_OFF (0) - no boost,
+> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
+> +		LEDS_BOOST_FIXED (2) - fixed mode.
+> +- maxim,boost-mvout : Output voltage of the boost module in millivol=
+ts.
+> +	Valid values: 3300 - 5500, step by 25 (rounded down)
+> +	Default: 3300
+> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is =
+not fired
+> +	if chip estimates that system voltage could drop below this level d=
+ue
+> +	to flash power consumption.
+> +	Valid values: 2400 - 3400, step by 33 (rounded down)
+> +	Default: 2400
+> +
+> +Required properties for the LED child node:
+> +- led-sources : see Documentation/devicetree/bindings/leds/common.tx=
+t;
+> +		device current output identifiers: 0 - FLED1, 1 - FLED2
+> +- led-max-microamp : see Documentation/devicetree/bindings/leds/comm=
+on.txt
+> +	Valid values for a LED connected to one FLED output:
+> +		15625 - 250000, step by 15625 (rounded down)
+> +	Valid values for a LED connected to both FLED outputs:
+> +		15625 - 500000, step by 15625 (rounded down)
+> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/co=
+mmon.txt
+> +	Valid values for a single LED connected to one FLED output
+> +	(boost mode must be turned off):
+> +		15625 - 1000000, step by 15625 (rounded down)
+> +	Valid values for a single LED connected to both FLED outputs:
+> +		15625 - 1250000, step by 15625 (rounded down)
+> +	Valid values for two LEDs case:
+> +		15625 - 625000, step by 15625 (rounded down)
+> +- flash-max-timeout-us : see Documentation/devicetree/bindings/leds/=
+common.txt
+> +	Valid values: 62500 - 1000000, step by 62500 (rounded down)
+> +
+> +Optional properties for the LED child node:
+> +- label : see Documentation/devicetree/bindings/leds/common.txt
+> +
+>  Example:
+> +#include <dt-bindings/leds/common.h>
+> +
+>  	max77693@66 {
+>  		compatible =3D "maxim,max77693";
+>  		reg =3D <0x66>;
+> @@ -117,5 +170,19 @@ Example:
+>  			maxim,thermal-regulation-celsius =3D <75>;
+>  			maxim,battery-overcurrent-microamp =3D <3000000>;
+>  			maxim,charge-input-threshold-microvolt =3D <4300000>;
+> +
+> +		led {
+> +			compatible =3D "maxim,max77693-led";
+> +			maxim,boost-mode =3D <LEDS_BOOST_FIXED>;
+> +			maxim,boost-mvout =3D <5000>;
+> +			maxim,mvsys-min =3D <2400>;
+> +
+> +			camera_flash: flash-led {
+> +				label =3D "max77693-flash";
+> +				led-sources =3D <0>, <1>;
+> +				led-max-microamp =3D <500000>;
+> +				flash-max-microamp =3D <1250000>;
+> +				flash-max-timeout-us =3D <1000000>;
+> +			};
+>  		};
+>  	};
 
-See mainline 22524b02b17b901f28 ("Revert "ARC: [arcfpga] stdout-path now suffices
-for earlycon/console"")
-
--Vineet
-
->
->>  
->> -	chosen { };
->> +	chosen {
->> +		linux,stdout-path = &uart0;
->> +	};
-> Please use stdout-path, without the 'linux,'.
->
-> Sascha
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
