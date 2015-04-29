@@ -1,45 +1,33 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 2/2] mfd: arizona: Update DT binding to
-	support hpdet channel
-Date: Wed, 29 Apr 2015 14:12:45 +0100
-Message-ID: <20150429131245.GL3480@opensource.wolfsonmicro.com>
-References: <1429589505-11954-1-git-send-email-ideal.song@samsung.com> <1429589505-11954-3-git-send-email-ideal.song@samsung.com> <20150429105737.GZ9169@x1>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 02/10] DT: Add documentation for the mfd Maxim max77693
+Date: Wed, 29 Apr 2015 14:16:12 +0100
+Message-ID: <20150429131612.GP9169@x1>
+References: <1429080520-10687-1-git-send-email-j.anaszewski@samsung.com>
+ <1429080520-10687-3-git-send-email-j.anaszewski@samsung.com>
+ <20150429123412.GL9169@x1>
+ <5540D5C4.7060305@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150429105737.GZ9169@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+In-Reply-To: <5540D5C4.7060305@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2015 at 11:57:37AM +0100, Lee Jones wrote:
-> Does this looks okay to you Charles?
-> 
-> > This patch add device tree bindings for the pdata needed to configure
-> > the Accessory Detect Mode select when Headphone detection.
-> 
-> Isn't the idea of headphone detection that it headphones are detected
-> i.e. automatically?
-> 
+On Wed, 29 Apr 2015, Jacek Anaszewski wrote:
 
-Yeah, pretty much the chip can run an impedance measurement on
-either the left or the right headphone pin and to complicate
-things a little further you don't necessarily have to wire that
-to the actual headphones in hardware. So people tend to wire
-up all sorts of odd things that they thought sounded awesome. So
-you do really need a way to inform the driver which pin is
-actually going to be useful for measuring the headphone impedance
-on a specific system.
+> On 04/29/2015 02:34 PM, Lee Jones wrote:
+> >LED Ack please Bryan.
+>=20
+> You've already applied v6 with Bryan's ack today :)
 
-In an ideal world we would just measure both and take the
-average, but in practice it is very dependent on how the hardware
-is wired up.
+Ah, this is the same patch?  Jolly good!
 
-Thanks,
-Charles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
