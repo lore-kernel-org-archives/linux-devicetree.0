@@ -1,58 +1,54 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH v11 2/3] drm/i2c: tda998x: Change drvdata for audio extension
-Date: Wed, 29 Apr 2015 12:26:33 +0200
-Message-ID: <779ff69d5fd57f0ea0c62492debad181402805e5.1430320384.git.moinejf@free.fr>
-References: <cover.1430320384.git.moinejf@free.fr>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] devicetree: Add vendor prefix for Shelly, Inc.
+Date: Wed, 29 Apr 2015 10:30:35 -0500
+Message-ID: <CAL_JsqJbwCPNUK_bXxGSTfBJSRGyEksJazVvzodMStTUOEd6Vg@mail.gmail.com>
+References: <20150324105721.GH18115@ulmo.nvidia.com> <1427213528-27286-1-git-send-email-nicolas.ferre@atmel.com>
+ <5540F5F6.5030900@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1430320384.git.moinejf@free.fr>
+In-Reply-To: <5540F5F6.5030900@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Dave Airlie <airlied@gmail.com>, Andrew Jackson <Andrew.Jackson@arm.com>, Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The device drvdata is used for component bind, but points to the
-encoder/connector structure which is hidden from the slave encoder.
-For audio extension, the slave encoder private data must be accessible,
-so, this patch changes drvdata to the slave encoder private data and
-sets it in case of slave encoder use.
+On Wed, Apr 29, 2015 at 10:17 AM, Nicolas Ferre <nicolas.ferre@atmel.co=
+m> wrote:
+> Le 24/03/2015 17:12, Nicolas Ferre a =C3=A9crit :
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>
+> Ping?
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
----
- drivers/gpu/drm/i2c/tda998x_drv.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index a2ed391..e9b497e 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1448,6 +1448,8 @@ static int tda998x_encoder_init(struct i2c_client *client,
- 	encoder_slave->slave_priv = priv;
- 	encoder_slave->slave_funcs = &tda998x_encoder_slave_funcs;
- 
-+	dev_set_drvdata(&client->dev, priv);
-+
- 	return 0;
- }
- 
-@@ -1575,7 +1577,7 @@ static int tda998x_bind(struct device *dev, struct device *master, void *data)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	dev_set_drvdata(dev, priv);
-+	dev_set_drvdata(dev, &priv->base);
- 
- 	if (dev->of_node)
- 		crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-@@ -1634,7 +1636,9 @@ err_encoder:
- static void tda998x_unbind(struct device *dev, struct device *master,
- 			   void *data)
- {
--	struct tda998x_priv2 *priv = dev_get_drvdata(dev);
-+	struct tda998x_priv *priv_s = dev_get_drvdata(dev);
-+	struct tda998x_priv2 *priv =
-+			container_of(priv_s, struct tda998x_priv2, base);
- 
- 	drm_connector_cleanup(&priv->connector);
- 	drm_encoder_cleanup(&priv->encoder);
--- 
-2.1.4
+>
+>> ---
+>> Thierry,
+>>
+>> Here it is ;-)
+>>
+>> Bye,
+>>
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b=
+/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index a9eeaa0c5867..1b0f5b797cd5 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -165,6 +165,7 @@ sbs       Smart Battery System
+>>  schindler    Schindler
+>>  seagate      Seagate Technology PLC
+>>  semtech      Semtech Corporation
+>> +shelly       Shelly, Inc.
+>>  sil  Silicon Image
+>>  silabs       Silicon Laboratories
+>>  siliconmitus Silicon Mitus, Inc.
+>>
+>
+>
+> --
+> Nicolas Ferre
