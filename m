@@ -1,59 +1,81 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND v6 4/6] regulator: axp20x: add
- support for AXP22X regulators
-Date: Wed, 29 Apr 2015 13:36:15 +0100
-Message-ID: <20150429123615.GM9169@x1>
-References: <1428638946-24890-1-git-send-email-wens@csie.org>
- <1428638946-24890-5-git-send-email-wens@csie.org>
- <20150410154809.GN6023@sirena.org.uk>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 4/5] edac: Add APM X-Gene SoC EDAC driver
+Date: Wed, 29 Apr 2015 10:49:07 +0200
+Message-ID: <4492781.xynGhSMMir@wuerfel>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+ <1430259045-19012-4-git-send-email-lho@apm.com>
+ <1430259045-19012-5-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBRFAQOVAKGQE5OQQ3SQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150410154809.GN6023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1430259045-19012-5-git-send-email-lho@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, mchehab@osg.samsung.com, jcm@redhat.com, ijc+devicetree@hellion.org.uk, patches@apm.com, Feng Kan <fkan@apm.com>, robh+dt@kernel.org, bp@alien8.de, Loc Ho <lho@apm.com>, dougthompson@xmission.com, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Apr 2015, Mark Brown wrote:
+On Tuesday 28 April 2015 16:10:44 Loc Ho wrote:
+> +
+> +       rc = platform_driver_register(&xgene_edac_mc_driver);
+> +       if (rc) {
+> +               edac_printk(KERN_ERR, EDAC_MOD_STR, "MCU fails to register\n");
+> +               goto reg_mc_failed;
+> +       }
+> +       rc = platform_driver_register(&xgene_edac_pmd_driver);
+> +       if (rc) {
+> +               edac_printk(KERN_ERR, EDAC_MOD_STR, "PMD fails to register\n");
+> +               goto reg_pmd_failed;
+> +       }
+> +       rc = platform_driver_register(&xgene_edac_l3_driver);
+> +       if (rc) {
+> +               edac_printk(KERN_ERR, EDAC_MOD_STR, "L3 fails to register\n");
+> +               goto reg_l3_failed;
+> +       }
+> +       rc = platform_driver_register(&xgene_edac_soc_driver);
+> +       if (rc) {
+> +               edac_printk(KERN_ERR, EDAC_MOD_STR, "SoC fails to register\n");
+> +               goto reg_soc_failed;
+> +       }
+> 
 
-> On Fri, Apr 10, 2015 at 12:09:04PM +0800, Chen-Yu Tsai wrote:
->=20
-> > This patch depends on the previous patch "regulator: axp20x: prepare
-> > support for multiple AXP chip families" and the mfd header from the
-> > first patch "mfd: axp20x: add AXP22x PMIC support".
->=20
-> > Could we merge both regulator patches through the mfd tree, with the
-> > other patches in the series? There are no other external dependencies.
->=20
-> Yes, of course we can - that's the whole point of me sending a
-> Reviewed-by!  Half of what I'm trying to do with that is to cut down on
-> the number of reposts of MFD series I get sent :(
+I had not looked at the driver before, but I have one comment now:
 
-Okay, I'm ready to take this now.
+I think this can be simplified to registering a single platform_driver
+that just matches all four compatible strings, with an appropriate data:
 
-Mark,
++static struct of_device_id xgene_edac_of_match[] = {
++       { .compatible = "apm,xgene-edac-mcu", .data = &xgene_edac_mcu_data },
++       { .compatible = "apm,xgene-edac-pmd", .data = &xgene_edac_pmd_data },
++       { .compatible = "apm,xgene-edac-l3",  .data = &xgene_edac_l3_data },
++       { .compatible = "apm,xgene-edac-soc", .data = &xgene_edac_soc_data },
++       {},
++};
++MODULE_DEVICE_TABLE(of, xgene_edac_soc_of_match);
++
++static struct platform_driver xgene_edac_soc_driver = {
++       .probe = xgene_edac_soc_probe,
++       .remove = xgene_edac_soc_remove,
++       .driver = {
++               .name = "xgene-edac-soc",
++               .owner = THIS_MODULE,
++               .of_match_table = xgene_edac_of_match,
++       },
++};
 
-  Do you want a pull-request, or are you happy for me to just apply?
+You can probably share most of the four probe and release
+functions as well, and put the differences into the data structure
+that is attached to the of_device_id entry.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+As a style-only comment, you can also remove the #ifdef CONFIG_OF and
+of_match_ptr(), because the driver depends on OF anyway.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+	Arnd
