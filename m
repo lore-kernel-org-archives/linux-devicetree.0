@@ -1,52 +1,62 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] tty: serial: Add earlycon support to MT8173 SoC
-Date: Wed, 29 Apr 2015 08:46:04 +0200
-Message-ID: <20150429064604.GS6325@pengutronix.de>
-References: <1430228434-31779-1-git-send-email-eddie.huang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1430228434-31779-1-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek@
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Gta04-owner] [PATCH 3/3] tty/slaves: add a driver to power on/off UART attached devices.
+Date: Wed, 29 Apr 2015 08:56:25 +0200
+Message-ID: <24842662-A869-4A0E-B75F-ACC0AA6BAB51@goldelico.com>
+References: <20150321103122.23603014@notabene.brown> <C091D3C1-CE79-469A-BEA4-25E03F6E9164@goldelico.com> <20150325014543.GA967@earth> <6B657A35-68BD-45F6-BD55-A3D6AC1055C8@goldelico.com> <20150325152110.GA7903@earth> <E4CA3051-6004-4D7B-BF01-CE47CFEDA4EB@goldelico.com> <20150326180805.GA562@earth> <06BFF79C-F9FC-441D-BA41-7209219A912E@goldelico.com> <20150327163108.GA5089@earth> <983B007F-6DC4-4333-B383-E387E2E55AE2@goldelico.com> <20150427203542.GB29351@xo-6d-61-c0.localdomain>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150427203542.GB29351@xo-6d-61-c0.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org
+Cc: Sebastian Reichel <sre@kernel.org>, NeilBrown <neilb@suse.de>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 09:40:31PM +0800, Eddie Huang wrote:
-> This patch add earlycon support to MT8173 SoC platform.
-> To use earlycon, need
-> 1. Add earlycon in boot parameters
-> 2. Add "linux,sdtout-path" property in device tree file
-> 
-> This patch based on 4.1-rc1.
-> 
-> Change in v3:
-> Remove noinit options, not necessary, because 8250_early.c will not init hardware
-> if not provide baudrate.
-> 
-> Change v2:
-> 1. Add noinit options.
-> 2. Remove duplicate code in 8250_mtk.c, reuse the 8250_early.c existed function.
-> 
-> Eddie Huang (3):
->   tty: serial: 8250: export early_serial8250_setup function
->   tty: serial: 8250_mtk: Add earlycon
->   arm64: dts: Add mediatek MT8173 earlycon support
+Hi Pavel,
 
-Works fine here:
+Am 27.04.2015 um 22:35 schrieb Pavel Machek <pavel@ucw.cz>:
 
-Tested-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Hi!
+>=20
+>>> In my opinion making something a node in / is always the
+>>> last resort and in my perspective it has been handled in such a way
+>>> so far.
+>>=20
+>> But that contradicts some documents I have found and linked. Please
+>> show me a document about DT that supports your view.
+>>=20
+>> I agree that both views can be valid, but in lack of some ?official?=
+ guideline
+>> we can?t decide ourselves.
+>=20
+> This is not how kernel development works.
+>=20
+> We can decide ourselves, and DT people will swear at us if we decide =
+wrongly,
+> and then Linus swears at them if they do too obvious mistakes.
+>=20
+> Lets KISS.
 
-Sascha
+some time ago you also wrote in this thread:
 
+> Device tree is not operating system specific.=20
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In other words: this is a discussion about compatibility with the world=
+ outside of Linux.
+And compatibility can not be achieved by decisions about Linux implemen=
+tation details,
+even if Linus is deciding. He can just decide to stay incompatible (but=
+ then it should
+IMHO be a general decision and not case specific).
+
+So I think we should follow some basic design principles, if they exist=
+ (which I don=92t know),
+to have this compatibility. And then adapt the Linux implementation (us=
+ing the KISS principle).
+
+Anyways I have not yet seen any comment from the DT people or did I mis=
+s them?
+
+BR,
+Nikolaus
