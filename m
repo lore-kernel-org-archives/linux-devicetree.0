@@ -1,89 +1,79 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 1/3 v5] dt/bindings: Add binding for the BCM2835 mailbox driver
-Date: Wed, 29 Apr 2015 09:39:23 -0700
-Message-ID: <87vbgeq478.fsf@eliezer.anholt.net>
-References: <1430173644-19099-2-git-send-email-eric@anholt.net> <1430253868-11138-1-git-send-email-eric@anholt.net> <55403446.1040207@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 1/4] regmap: cache: Add "was_reset" argument to
+ regcache_sync_region()
+Date: Wed, 29 Apr 2015 17:46:32 +0100
+Message-ID: <20150429164632.GO22845@sirena.org.uk>
+References: <1429915008-22015-1-git-send-email-cernekee@chromium.org>
+ <1429915008-22015-2-git-send-email-cernekee@chromium.org>
+ <20150425113235.GA31708@sirena.org.uk>
+ <CAJzqFtYkSds+s2HA3uKrMQes+D2K1TxOdzm5jJhtt2iZvyqxCA@mail.gmail.com>
+ <20150429104042.GB22845@sirena.org.uk>
+ <CAJzqFta=ndErf012QEV37kE0oSPp6dF_D7w_i_HsCkx5ytPgdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55403446.1040207-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KhnGy1eznWbC2o3B"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJzqFta=ndErf012QEV37kE0oSPp6dF_D7w_i_HsCkx5ytPgdA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+--KhnGy1eznWbC2o3B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On 04/28/2015 02:44 PM, Eric Anholt wrote:
->> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
->>=20
->> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
->> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
->> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->> ---
->>=20
->> v2: Split into a separate patch for submitting to the devicetree list.
->>     Consistently start node docs with a capital letter. device's
->>     address in the example shouldn't have "0x". Drop machine-specific
->>     interrupt numbers from the docs.  (changes by anholt).
->>=20
->> v3: Move the file to just bcm2835-mbox.txt, clean up formatting
->>     (changes by anholt, from review by Lee Jones).
->>=20
->> v4: Move file back by consensus from various Broadcom platform
->>     maintainers (changes by anholt, acked by Lee Jones).
->>=20
->> v5: Document that the mailbox cell should be 0 in clients, and add an
->>     example of a client (changes by anholt, from review by Jassi).
->
-> Some mention of what you changed in the patch might be nice, since it
-> was originally authored by someone else, and there's quite a changelog.
+On Wed, Apr 29, 2015 at 07:13:27AM -0700, Kevin Cernekee wrote:
+> On Wed, Apr 29, 2015 at 3:40 AM, Mark Brown <broonie@kernel.org> wrote:
 
-I've been taking this changelog stuff out of the patch and putting it
-below '---' because when I was submitting this series before, I got
-chided for putting it in the patch!
+> > Like I said above we can tell if the hardware was reset because
+> > mark_dirty() is called.
 
->> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox=
-.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
->
->> +- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
->> +		  channel. The value shall be 1.  Clients should supply a value
->> +		  of 0 for the mailbox channel, because there is only one
->> +		  exposed
->
-> Can't you use #mbox-cells =3D <0> if there's no data to provide?
+> That covers the public API, but I do not understand how you intended
+> for this data to be stored in the rbtree if the use of a dirty bitmask
+> is discouraged.
 
-of_mbox_index_xlate looks like it's always dereferencing the first arg.
+We just need a single boolean?
 
---=-=-=
+> i.e. regcache_sync() finds a register value marked "present".  How do
+> we know whether we need to write it back to the hardware?  For the
+> special case of "cached non default register values immediately after
+> a HW reset" you can mostly figure this out, but if there was no HW
+> reset how do we know which entries changed while the HW was
+> inaccessible?
+
+In the first instance do we care?
+
+> > I'm not suggesting that we do anything based on the presence of a cache
+> > entry, I'm suggesting that we could avoid having to ever cache values
+> > that never get referenced on a system (which can be a lot of them for
+> > common use cases) saving us memory.
+
+> This seems to be solving a different problem.  It sounds like you are
+> more worried about regcache_sync() writing back lots of default values
+> for registers that were never touched, than performing unnecessary
+> writes to a few (actively used) registers that weren't changed while
+> we were in cache_only mode.  Is that accurate?
+
+No.  This is nothing to do with sync, it's just something that might be
+nice.
+
+--KhnGy1eznWbC2o3B
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBCgAGBQJVQQk7AAoJELXWKTbR/J7oZhgP/3gp3yXJtOfQkMj/DHOtMqil
-HoPhfQDAqBQ2doGINtzgPmRtUI+sBxZNQHqXJcrLrJUg6VzEauEH8TsPXXxpJE2Z
-OL/cowWmks4u1PeLMUzEZxe6ggCl26+vNM3Xbk2qveZkVOhwjMKxbYEa9cB33/SU
-a3J2XHKsovTMK7rsMBtG7lPWBo5+VrzsXiiBgp36b62tL297R5tBUwUnu+XLemD5
-zMgrphiTi9WYa0CZJJiPLmvoL8DbiqZQnzM85w4nWssfsJ9aaazcASTuoUZXN+FF
-046lMeh6zNO/yPUZPcaEAuKDOdDQRFrXvKXwrwpu4iJQsdkjmKFGi133uKvmnWBW
-UAIX9lCHvR1/3TpjUTnEkUAK+/8whDw2JJmB5F+uiutwXvRH880l+UdC4j2QySi3
-/YAhwaGq0gaIlXzGpL6oh9yiQuk7y2gXWQQ2wm4VDGkNMpDW7/Vht64t12k+djhl
-cYXGCwhJ2MUhKxLjkYS9NeODI/2FRt59XD61h94EdJ0Jt/TXx1XXcwT/K2D6o00A
-Ay61BHqPpZa56ARd49wwPbEWvuVDSgHaIl6NZvbMF/hhHVrjTYWpIFuWQfF4bRYf
-vskUaCKERWKg2t0euj3wc01JY06CR+Rl/1EGAvnLcKeEdDG+WceADJnl95+08A1c
-yJyT6UnhhtDAIX1UeuBI
-=84Ob
+iQEcBAEBCAAGBQJVQQrnAAoJECTWi3JdVIfQUFcH/0SynwjyXdpOG0FDUKg3hGRt
+DoXVSeih4qZKgGl6JXcaiDAF2JbXsi66XBkDt45qI7Rpid1TScuczKzy4kSfgalc
++vYRwu8/8Z46+F0+9yUuY5GkEDatwqbhXRVpJ4e8afS3fYkyuBy8lTgUw5OWmRgk
+hvF0mqlfq3F9uw6E0GVMkb65ZiYYIUkYPTGBXWCUSGxNJpknkNyeyN8pdoo7Nn6e
+5AoDELu2JjhoB7NpGSPDBoGn6Vo2d5kuXgNgk4BvI/IzXfsQo8KZTBK/ijBPznyB
+2QWflf0f8yJVg+6dNHdZ4ydCbUCWlyix++JdDJEoZExEHJPwfU1mSw2d7ZkpzeI=
+=RIM5
 -----END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--KhnGy1eznWbC2o3B--
