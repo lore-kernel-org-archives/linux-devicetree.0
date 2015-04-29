@@ -1,68 +1,88 @@
-From: Shenwei Wang <Shenwei.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/1] ARM: imx: make the imx timer driver implementation
- independent of SoCs.
-Date: Wed, 29 Apr 2015 16:34:33 +0000
-Message-ID: <BL2PR03MB370B0B1622F9EE980A6835883D70@BL2PR03MB370.namprd03.prod.outlook.com>
-References: <1430316881-4668-1-git-send-email-shenwei.wang@freescale.com>
- <20150429142614.GE2258@tarshish>
- <BL2PR03MB3703DA9D4D52EC9524D627C83D70@BL2PR03MB370.namprd03.prod.outlook.com>
- <20150429150824.GF2258@tarshish>
- <BL2PR03MB37005C844BCB89007D176F683D70@BL2PR03MB370.namprd03.prod.outlook.com>
- <20150429152527.GH2258@tarshish>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 1/3 v5] dt/bindings: Add binding for the BCM2835 mailbox driver
+Date: Wed, 29 Apr 2015 09:39:23 -0700
+Message-ID: <87vbgeq478.fsf@eliezer.anholt.net>
+References: <1430173644-19099-2-git-send-email-eric@anholt.net> <1430253868-11138-1-git-send-email-eric@anholt.net> <55403446.1040207@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150429152527.GH2258@tarshish>
-Content-Language: en-US
+In-Reply-To: <55403446.1040207-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmFydWNoLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEJhcnVj
-aCBTaWFjaCBbbWFpbHRvOmJhcnVjaEB0a29zLmNvLmlsXQ0KPiBTZW50OiAyMDE15bm0NOaciDI5
-5pelIDEwOjI1DQo+IFRvOiBXYW5nIFNoZW53ZWktQjM4MzM5DQo+IENjOiBzaGF3bi5ndW9AbGlu
-YXJvLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMV0gQVJNOiBpbXg6
-IG1ha2UgdGhlIGlteCB0aW1lciBkcml2ZXIgaW1wbGVtZW50YXRpb24NCj4gaW5kZXBlbmRlbnQg
-b2YgU29Dcy4NCj4gDQo+IEhpIFNoZW53ZWkgV2FuZywNCj4gT24gV2VkLCBBcHIgMjksIDIwMTUg
-YXQgMDM6MTk6MTlQTSArMDAwMCwgU2hlbndlaSBXYW5nIHdyb3RlOg0KPiA+ID4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IEJhcnVjaCBTaWFjaCBbbWFpbHRvOmJhcnVj
-aEB0a29zLmNvLmlsXQ0KPiA+ID4gU2VudDogMjAxNeW5tDTmnIgyOeaXpSAxMDowOA0KPiA+ID4g
-VG86IFdhbmcgU2hlbndlaS1CMzgzMzkNCj4gPiA+IENjOiBzaGF3bi5ndW9AbGluYXJvLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8xXSBBUk06IGlteDog
-bWFrZSB0aGUgaW14IHRpbWVyIGRyaXZlcg0KPiA+ID4gaW1wbGVtZW50YXRpb24gaW5kZXBlbmRl
-bnQgb2YgU29Dcy4NCj4gPiA+DQo+ID4gPiBXaGVuIHNldmVyYWwgU29DIHNoYXJlIHRoZSBzYW1l
-IElQIGJsb2NrIHRoZSB1c3VhbCBjb252ZW50aW9uIGlzIHRvDQo+ID4gPiBuYW1lIGl0IGluIHRo
-ZSBjb21wYXRpYmxlIHByb3BlcnR5IHN0cmluZyBhZnRlciB0aGUgZmlyc3QgU29DIGl0DQo+ID4g
-PiBhcHBlYXJlZCBvbi4gSnVzdCBsb29rIGF0IHNvbWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZy
-b20NCj4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci8gdG8gZmlu
-ZCBleGFtcGxlcy4gVGhlDQo+ID4gPiBhbGx3aW5uZXIsc3VuNWktYTEzLWhzdGltZXIgcHJvcGVy
-dHkgaXMgc2hhcmVkIGJ5IEExMHMgYW5kDQo+ID4gPiBBMTMgU29Dcy4gVGhlIGFtbG9naWMsbWVz
-b242LXRpbWVyIGlzIHNoYXJlZCBieSBNZXNvbjYgYW5kIE1lc29uOA0KPiA+ID4gU29DcywgYW5k
-IHNvIG9uLg0KPiA+DQo+ID4gSWYgdGhlIHNhbWUgSVAgYmxvY2sgaXMgc2hhcmVkIHdpdGggc2V2
-ZXJhbCBTb0NzLCB3aHkgd2UgZ2F2ZSB0aGVtDQo+ID4gZGlmZmVyZW50IGNvbXBhdGlibGUgc3Ry
-aW5ncz8gSWYgbm8gY2hhbmdlcyBpbiBhbiBJUCBibG9jaywgSSBhc3N1bWUgbm8gY2hhbmdlcw0K
-PiBpbiB0aGUgcmVsYXRpbmcgZHJpdmVyIGFzIHdlbGwuDQo+ID4gSW4gdGhpcyBhc3N1bXB0aW9u
-LCBJIGRvbid0IHNlZSBhbnkgbmVlZCB0byBpbnRyb2R1Y2UgYSBuZXcgY29tcGF0aWJsZQ0KPiA+
-IHN0cmluZyBmb3IgYW4gdW5jaGFuZ2VkIElQIGJsb2NrIGluIGEgbmV3IFNvQy4NCj4gDQo+IFRo
-YXQgaXMgZXhhY3RseSB3aGF0IEkgbWVhbnQgdG8gc2F5LiBTb3JyeSB0aGF0IEkgd2FzIG5vdCBj
-bGVhciBlbm91Z2guDQo+IA0KPiBXaGVuIHRoZSBzYW1lIElQIGJsb2NrIGlzIHVzZWQgaW4gYSBu
-ZXdlciBnZW5lcmF0aW9uIFNvQyB0aGUgc2FtZSBjb21wYXRpYmxlDQo+IHByb3BlcnR5IHN0cmlu
-ZyBpcyB1c2VkLiBGb3IgdGhhdCByZWFzb24geW91IGNhbiBmaW5kIGluIHN1bjVpLWExMHMuZHRz
-aSB0aGUgbGluZQ0KPiANCj4gCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjVpLWExMy1oc3Rp
-bWVyIjsNCj4gDQpUaGF0IGlzIHdoYXQgaGFzIGJlZW4gc3VwcG9ydGVkIGluIHRoaXMgcGF0Y2gu
-IEJlc2lkZXMgdGhhdCwgaXQgY2FuIGFsc28gc3VwcG9ydA0KZGlmZmVyZW50IElQIGJsb2NrIHZl
-cnNpb25zIGluIGEgU29DIHdpdGggZGlmZmVyZW50IHJldmlzaW9uLiBGb3IgZXhhbXBsZSwNCkxl
-dCdzIHNheTogDQoJaHN0aW1lciB2ZXJzaW9uIDEgIGluIEExMyByZXZpc2lvbiAxLjANCgloc3Rp
-bWVyIHZlcnNpb24gMiAgaW4gQTEzIHJldmlzaW9uIDEuMQ0KDQpTaGVud2VpDQoNCg0KPiBiYXJ1
-Y2gNCj4gDQo+IC0tDQo+ICAgICAgaHR0cDovL2JhcnVjaC5zaWFjaC5uYW1lL2Jsb2cvICAgICAg
-ICAgICAgICAgICAgfi4gLn4gICBUayBPcGVuDQo+IFN5c3RlbXMNCj4gPX0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1vb08tLVUtLU9vby0tLS0tLS0tLS0t
-LXs9DQo+ICAgIC0gYmFydWNoQHRrb3MuY28uaWwgLSB0ZWw6ICs5NzIuMi42NzkuNTM2NCwgaHR0
-cDovL3d3dy50a29zLmNvLmlsIC0NCg==
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+
+> On 04/28/2015 02:44 PM, Eric Anholt wrote:
+>> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>>=20
+>> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>> ---
+>>=20
+>> v2: Split into a separate patch for submitting to the devicetree list.
+>>     Consistently start node docs with a capital letter. device's
+>>     address in the example shouldn't have "0x". Drop machine-specific
+>>     interrupt numbers from the docs.  (changes by anholt).
+>>=20
+>> v3: Move the file to just bcm2835-mbox.txt, clean up formatting
+>>     (changes by anholt, from review by Lee Jones).
+>>=20
+>> v4: Move file back by consensus from various Broadcom platform
+>>     maintainers (changes by anholt, acked by Lee Jones).
+>>=20
+>> v5: Document that the mailbox cell should be 0 in clients, and add an
+>>     example of a client (changes by anholt, from review by Jassi).
+>
+> Some mention of what you changed in the patch might be nice, since it
+> was originally authored by someone else, and there's quite a changelog.
+
+I've been taking this changelog stuff out of the patch and putting it
+below '---' because when I was submitting this series before, I got
+chided for putting it in the patch!
+
+>> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox=
+.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>
+>> +- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
+>> +		  channel. The value shall be 1.  Clients should supply a value
+>> +		  of 0 for the mailbox channel, because there is only one
+>> +		  exposed
+>
+> Can't you use #mbox-cells =3D <0> if there's no data to provide?
+
+of_mbox_index_xlate looks like it's always dereferencing the first arg.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVQQk7AAoJELXWKTbR/J7oZhgP/3gp3yXJtOfQkMj/DHOtMqil
+HoPhfQDAqBQ2doGINtzgPmRtUI+sBxZNQHqXJcrLrJUg6VzEauEH8TsPXXxpJE2Z
+OL/cowWmks4u1PeLMUzEZxe6ggCl26+vNM3Xbk2qveZkVOhwjMKxbYEa9cB33/SU
+a3J2XHKsovTMK7rsMBtG7lPWBo5+VrzsXiiBgp36b62tL297R5tBUwUnu+XLemD5
+zMgrphiTi9WYa0CZJJiPLmvoL8DbiqZQnzM85w4nWssfsJ9aaazcASTuoUZXN+FF
+046lMeh6zNO/yPUZPcaEAuKDOdDQRFrXvKXwrwpu4iJQsdkjmKFGi133uKvmnWBW
+UAIX9lCHvR1/3TpjUTnEkUAK+/8whDw2JJmB5F+uiutwXvRH880l+UdC4j2QySi3
+/YAhwaGq0gaIlXzGpL6oh9yiQuk7y2gXWQQ2wm4VDGkNMpDW7/Vht64t12k+djhl
+cYXGCwhJ2MUhKxLjkYS9NeODI/2FRt59XD61h94EdJ0Jt/TXx1XXcwT/K2D6o00A
+Ay61BHqPpZa56ARd49wwPbEWvuVDSgHaIl6NZvbMF/hhHVrjTYWpIFuWQfF4bRYf
+vskUaCKERWKg2t0euj3wc01JY06CR+Rl/1EGAvnLcKeEdDG+WceADJnl95+08A1c
+yJyT6UnhhtDAIX1UeuBI
+=84Ob
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
