@@ -1,62 +1,145 @@
-From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Gta04-owner] [PATCH 3/3] tty/slaves: add a driver to power on/off UART attached devices.
-Date: Wed, 29 Apr 2015 08:56:25 +0200
-Message-ID: <24842662-A869-4A0E-B75F-ACC0AA6BAB51@goldelico.com>
-References: <20150321103122.23603014@notabene.brown> <C091D3C1-CE79-469A-BEA4-25E03F6E9164@goldelico.com> <20150325014543.GA967@earth> <6B657A35-68BD-45F6-BD55-A3D6AC1055C8@goldelico.com> <20150325152110.GA7903@earth> <E4CA3051-6004-4D7B-BF01-CE47CFEDA4EB@goldelico.com> <20150326180805.GA562@earth> <06BFF79C-F9FC-441D-BA41-7209219A912E@goldelico.com> <20150327163108.GA5089@earth> <983B007F-6DC4-4333-B383-E387E2E55AE2@goldelico.com> <20150427203542.GB29351@xo-6d-61-c0.localdomain>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150427203542.GB29351@xo-6d-61-c0.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org
-Cc: Sebastian Reichel <sre@kernel.org>, NeilBrown <neilb@suse.de>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, lkml <linux-kernel@vger.kernel.org>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [RFC 00/12] On-demand device registration
+Date: Wed, 29 Apr 2015 08:58:42 +0200
+Message-ID: <CAAObsKBQMY8NfzN3bfiDuy=QOsSV281punJGuEUPfMRRBwoA+g@mail.gmail.com>
+References: <1429886848-5843-1-git-send-email-tomeu.vizoso@collabora.com>
+ <553ACE96.2040804@ahsoftware.de> <CAAObsKAa_yEwcWQTJvAidwnM2h7UAcgwa2dUBtfYRFtWHb7Kng@mail.gmail.com>
+ <553FCECB.7040005@ahsoftware.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <553FCECB.7040005-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On 28 April 2015 at 20:17, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+> Am 28.04.2015 um 14:49 schrieb Tomeu Vizoso:
+>>
+>> On 25 April 2015 at 01:15, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+>>>
+>>> Am 24.04.2015 um 16:47 schrieb Tomeu Vizoso:
+>>>>
+>>>> Hi,
+>>>>
+>>>> while reading the thread [0] that Alexander Holler started with his
+>>>> series to make probing order deterministic, it occurred to me that it should
+>>>> be possible to achieve the same by probing devices as they are referenced by
+>>>> other devices.
+>>>>
+>>>> This basically reuses the information that is already embedded in the
+>>>> probe() implementations, saving us from refactoring existing drivers or
+>>>> adding information to DTBs.
+>>>>
+>>>> The main issue I see is that the registration code path in some
+>>>> subsystems may not be reentrant, so some refactoring of the locking will be
+>>>> needed. In my testing I have found this problem with regulators, as the
+>>>> supply of a regulator might end up being registered during the registration
+>>>> of the first one.
+>>>>
+>>>> Something I'm not completely happy with is that I have had to move the
+>>>> population of the device tree after all platform drivers have been
+>>>> registered. Otherwise I don't see how I could register drivers on demand as
+>>>> we don't have yet each driver's compatible strings.
+>>>>
+>>>> I have done my testing on a Tegra124-based Chromebook, and these patches
+>>>> were enough to eliminate all the deferred probes.
+>>>
+>>>
+>>> First you have to solve a problem which is totally unrelated to DT or
+>>> ACPI or x86 or ARM:
+>>>
+>>> I think as long as drivers don't register themself whithout any side
+>>> effect, this problem isn't solvable. In order to make an ordered list of
+>>> drivers to start, you need to know which drivers are actually available.
+>>
+>>
+>> Yeah, I kind of side-stepped that issue by waiting until all drivers
+>> have been registered before registering devices. I think someone
+>> suggested doing so in your thread (maybe Grant?).
+>
+>
+> That doesn't work. As said above, several drivers doing a lot more than just
+> registering in their initcall. They might even crash if some prerequisits
+> aren't given. And several of these prerequisits (init orders) are hardcoded
+> by various means.
 
-Am 27.04.2015 um 22:35 schrieb Pavel Machek <pavel@ucw.cz>:
+But aren't those dependencies being taken care currently by the
+initcall level the driver is placed in? That remains the same in this
+approach.
 
-> Hi!
->=20
->>> In my opinion making something a node in / is always the
->>> last resort and in my perspective it has been handled in such a way
->>> so far.
->>=20
->> But that contradicts some documents I have found and linked. Please
->> show me a document about DT that supports your view.
->>=20
->> I agree that both views can be valid, but in lack of some ?official?=
- guideline
->> we can?t decide ourselves.
->=20
-> This is not how kernel development works.
->=20
-> We can decide ourselves, and DT people will swear at us if we decide =
-wrongly,
-> and then Linus swears at them if they do too obvious mistakes.
->=20
-> Lets KISS.
+I have obviously spent less time thinking about all this than you, so
+sorry if I'm missing too many points.
 
-some time ago you also wrote in this thread:
+Regards,
 
-> Device tree is not operating system specific.=20
+Tomeu
 
-In other words: this is a discussion about compatibility with the world=
- outside of Linux.
-And compatibility can not be achieved by decisions about Linux implemen=
-tation details,
-even if Linus is deciding. He can just decide to stay incompatible (but=
- then it should
-IMHO be a general decision and not case specific).
-
-So I think we should follow some basic design principles, if they exist=
- (which I don=92t know),
-to have this compatibility. And then adapt the Linux implementation (us=
-ing the KISS principle).
-
-Anyways I have not yet seen any comment from the DT people or did I mis=
-s them?
-
-BR,
-Nikolaus
+>> There's lots of things that can be improved regarding driver and
+>> device initialization, but we have to start somewhere :)
+>
+>
+> That's what I've tried by marking good drivers as such (and by placing them
+> in their own initcall level group).
+>
+> But as said, good luck. I've tried it already and nobody seemed interested.
+> Some people even seem to panic if they see a patch which changes something
+> in linux/init/ ;)
+>
+> Regards,
+>
+> Alexander Holler
+>
+>
+>>
+>> Thanks,
+>>
+>> Tomeu
+>>
+>>> And also drivers are registering themself with their initcall, they
+>>> might do an awfull lot of stuff besides just registering themself. That
+>>> means several drivers already have prerequisites and dependcies for
+>>> their initcall. That means you can't just call their initcall to get and
+>>> idea of which driver an initcall is even part of.
+>>>
+>>> That ends up with the fact that you just don't have a list of drivers
+>>> you can sort, based on whatever algorithm you might have in mind.
+>>>
+>>> I've tried to solve that problem with marking drivers which don't have
+>>> any prerequisits (and side effects) as "well done".
+>>>
+>>> The patch which did that was 5/9 in my series, this one:
+>>>
+>>> https://lkml.org/lkml/2014/5/12/414
+>>>
+>>> Unfortunately nobody seemed really interested and without one of the few
+>>> "big guys" in your pocket, it's absolutely impossible to get such
+>>> changes into the kernel.
+>>>
+>>> Not to speak about all the unavoidable discussions about absolutely
+>>> silly things.
+>>>
+>>> But maybe I'm the problem here. No idea. I wish you more luck than I had
+>>> in the past two or three years.
+>>>
+>>> Regards,
+>>>
+>>> Alexander Holler
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-kernel"
+>>> in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> Please read the FAQ at  http://www.tux.org/lkml/
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
