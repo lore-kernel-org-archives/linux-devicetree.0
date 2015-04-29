@@ -1,104 +1,81 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 6/8] extcon: arizona: Add support for WM8998 and WM1814
-Date: Thu, 30 Apr 2015 08:35:34 +0900
-Message-ID: <55416AC6.4070403@samsung.com>
-References: <1430318229-28518-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1430318229-28518-7-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/3 v5] dt/bindings: Add binding for the BCM2835 mailbox
+ driver
+Date: Wed, 29 Apr 2015 17:41:41 -0600
+Message-ID: <55416C35.1030001@wwwdotorg.org>
+References: <1430173644-19099-2-git-send-email-eric@anholt.net> <1430253868-11138-1-git-send-email-eric@anholt.net> <55403446.1040207@wwwdotorg.org> <87vbgeq478.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <1430318229-28518-7-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87vbgeq478.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+On 04/29/15 10:39, Eric Anholt wrote:
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+>
+>> On 04/28/2015 02:44 PM, Eric Anholt wrote:
+>>> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>>>
+>>> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>>> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+>>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>>> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>> ---
+>>>
+>>> v2: Split into a separate patch for submitting to the devicetree list.
+>>>      Consistently start node docs with a capital letter. device's
+>>>      address in the example shouldn't have "0x". Drop machine-specific
+>>>      interrupt numbers from the docs.  (changes by anholt).
+>>>
+>>> v3: Move the file to just bcm2835-mbox.txt, clean up formatting
+>>>      (changes by anholt, from review by Lee Jones).
+>>>
+>>> v4: Move file back by consensus from various Broadcom platform
+>>>      maintainers (changes by anholt, acked by Lee Jones).
+>>>
+>>> v5: Document that the mailbox cell should be 0 in clients, and add an
+>>>      example of a client (changes by anholt, from review by Jassi).
+>>
+>> Some mention of what you changed in the patch might be nice, since it
+>> was originally authored by someone else, and there's quite a changelog.
+>
+> I've been taking this changelog stuff out of the patch and putting it
+> below '---' because when I was submitting this series before, I got
+> chided for putting it in the patch!
 
-This patch didn't include any description?
-I think that you better to add the patch description.
+A changelog and a description of the changes you've made aren't quite 
+the same thing.
 
-Thanks,
-Chanwoo Choi
+There should be some mention in the commit description of what you 
+changed relative to the patch that someone else authored, so they don't 
+get blaimed/praised for any of your changes. The format of that 
+description wouldn't usually be a detailed patch revision changelog 
+though, just a description of the overall changes that were left in the 
+final version.
 
+>>> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>>
+>>> +- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
+>>> +		  channel. The value shall be 1.  Clients should supply a value
+>>> +		  of 0 for the mailbox channel, because there is only one
+>>> +		  exposed
+>>
+>> Can't you use #mbox-cells = <0> if there's no data to provide?
+>
+> of_mbox_index_xlate looks like it's always dereferencing the first arg.
 
-On 04/29/2015 11:37 PM, Richard Fitzgerald wrote:
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  drivers/extcon/extcon-arizona.c |   33 ++++++++++++++++++++++-----------
->  1 files changed, 22 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-> index 830c5f9..586ec53 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -1,7 +1,7 @@
->  /*
->   * extcon-arizona.c - Extcon driver Wolfson Arizona devices
->   *
-> - *  Copyright (C) 2012 Wolfson Microelectronics plc
-> + *  Copyright (C) 2012-2014 Wolfson Microelectronics plc
->   *
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License as published by
-> @@ -140,10 +140,14 @@ static void arizona_extcon_hp_clamp(struct arizona_extcon_info *info,
->  				    bool clamp)
->  {
->  	struct arizona *arizona = info->arizona;
-> -	unsigned int mask = 0, val = 0;
-> +	unsigned int mask, val = 0;
->  	int ret;
->  
->  	switch (arizona->type) {
-> +	case WM8998:
-> +	case WM1814:
-> +		mask = 0;
-> +		break;
->  	case WM5110:
->  		mask = ARIZONA_HP1L_SHRTO | ARIZONA_HP1L_FLWR |
->  		       ARIZONA_HP1L_SHRTI;
-> @@ -175,17 +179,19 @@ static void arizona_extcon_hp_clamp(struct arizona_extcon_info *info,
->  				 ret);
->  	}
->  
-> -	ret = regmap_update_bits(arizona->regmap, ARIZONA_HP_CTRL_1L,
-> -				 mask, val);
-> -	if (ret != 0)
-> -		dev_warn(arizona->dev, "Failed to do clamp: %d\n",
-> +	if (mask) {
-> +		ret = regmap_update_bits(arizona->regmap, ARIZONA_HP_CTRL_1L,
-> +					 mask, val);
-> +		if (ret != 0)
-> +			dev_warn(arizona->dev, "Failed to do clamp: %d\n",
->  				 ret);
->  
-> -	ret = regmap_update_bits(arizona->regmap, ARIZONA_HP_CTRL_1R,
-> -				 mask, val);
-> -	if (ret != 0)
-> -		dev_warn(arizona->dev, "Failed to do clamp: %d\n",
-> -			 ret);
-> +		ret = regmap_update_bits(arizona->regmap, ARIZONA_HP_CTRL_1R,
-> +					 mask, val);
-> +		if (ret != 0)
-> +			dev_warn(arizona->dev, "Failed to do clamp: %d\n",
-> +				 ret);
-> +	}
->  
->  	/* Restore the desired state while not doing the clamp */
->  	if (!clamp) {
-> @@ -1176,6 +1182,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
->  			break;
->  		}
->  		break;
-> +	case WM8998:
-> +	case WM1814:
-> +		info->micd_clamp = true;
-> +		info->hpdet_ip_version = 2;
-> +		break;
->  	default:
->  		break;
->  	}
-> 
+Is it possible to fix that?
 
+That said, last I looked at the HW I thought there were actually 
+multiple channels possible, so perhaps having a cell for future 
+expansion is reasonable.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
