@@ -1,67 +1,95 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Wed, 29 Apr 2015 15:20:20 -0700
-Message-ID: <CAPw-ZT=YjmAEAEHH6tB4ZebnC6RQywm4=JiHoJv_MULPSGF7sQ@mail.gmail.com>
-References: <1430259045-19012-1-git-send-email-lho@apm.com>
-	<1430259045-19012-2-git-send-email-lho@apm.com>
-	<1430259045-19012-3-git-send-email-lho@apm.com>
-	<1430259045-19012-4-git-send-email-lho@apm.com>
-	<CAL_Jsq+nhPUxHxrStB9cdy1YzE7tVPFVR1MrWq3Bz-JUa=3Rvg@mail.gmail.com>
-	<CAPw-ZTnLR10Zr_p8L3-1nBZ+jKE1HCwERDmO=S5as2GLqime3A@mail.gmail.com>
-	<20150429214924.GH5498@pd.tnic>
-	<CAPw-ZTmoash48S3F8kBxsovD0mEPYBO8=XDaJ2peDu60yaGrZQ@mail.gmail.com>
-	<20150429220830.GI5498@pd.tnic>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150429220830.GI5498-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V2 4/6] DT: add binding for mxs on-chip regulators
+Date: Wed, 29 Apr 2015 22:32:25 +0000
+Message-ID: <1430346747-28728-5-git-send-email-stefan.wahren@i2se.com>
+References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, fabio.estevam@freescale.com, sebastien.szymanski@armadeus.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+This patch adds the device tree bindings for the Freescale MXS on-chip
+regulators.
 
->> >> > Similar comments for the rest. I would define memory controller
->> >> > bindings and EDAC driver, then worry about the rest.
->> >>
->> >> Okay.. As comment in following emails, I will break up the driver into
->> >> multiple drivers and focus only on the memory controller driver first.
->> >
->> > Please no multiple EDAC drivers. Or do you mean something else here?
->>
->> We will have the following:
->>
->> xgene-edac-mc.c
->> xgene-edac-pmd.c
->> xgene-edac-l3.c
->> xgene-edac-soc.c
->>
->> Or what would you suggest.
->
-> xgene-edac.c
->
-> This granularity is insane. On x86 we have single EDAC drivers for
-> multiple CPU families and platforms.
->
-> You can start carving out stuff when this is absolutely needed, i.e.
-> when an IP block is in multiple hw incarnations. And even then I'd be
-> sceptical and would really want to know whether it is even worth it to
-> have an EDAC module for it.
->
-> So let's be conservative please.
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ .../bindings/regulator/mxs-regulator.txt           |   65 ++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mxs-regulator.txt
 
-For now, let me just deal with the DDR module.
+diff --git a/Documentation/devicetree/bindings/regulator/mxs-regulator.txt b/Documentation/devicetree/bindings/regulator/mxs-regulator.txt
+new file mode 100644
+index 0000000..e7092fc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/mxs-regulator.txt
+@@ -0,0 +1,65 @@
++Regulators on Freescale i.MX23/i.MX28
++
++On-chip linear regulator daisy chain:
++
+++------------+     VDD5V  +---------+  VDDIO
++| DC-DC      |   +--------> LINREG  +--------->+
++|            |            | VDDIO   |          |
++|            |            +---------+          |
++| DCDC_VDDIO +->-+-----------------------------+
++|            |   |
++|            |   | VDDIO  +---------+  VDDA
++|            |   +--------> LINREG  +--------->+
++|            |            | VDDA    |          |
++|            |            +---------+          |
++| DCDC_VDDA  +->-+-----------------------------+
++|            |   |
++|            |   | VDDA   +---------+  VDD1P5
++|            |   +--------> LINREG  +--------->
++|            |   |        | VDD1P5  |
++|            |   |        +---------+
++|            |   | VDDA   +---------+  VDDD
++|            |   +--------> LINREG  +--------->+
++|            |            | VDDD    |          |
++|            |            +---------+          |
++| DCDC_VDDD  +->-------------------------------+
+++------------+                                 |
++                                               v
++
++Required properties:
++- compatible (imx23 and imx28 supported):
++  - "fsl,<soc>-dcdc" for DC-DC converter
++  - "fsl,<soc>-vddd" for VDDD linear regulator
++  - "fsl,<soc>-vdda" for VDDA linear regulator
++  - "fsl,<soc>-vddio" for VDDIO linear regulator
++
++Optional properties:
++- switching-frequency: switching frequency for the DC-DC converter in Hz.
++  Possible values are <1200000>, <1250000> or <1500000> (default).
++
++Any regulator property defined as part of the core regulator
++binding, defined in regulator.txt, can also be used.
++
++Example for i.MX28:
++
++	power: power@80044000 {
++		compatible = "fsl,imx28-power", "syscon";
++		reg = <0x80044000 0x2000>;
++		interrupts = <6>;
++
++		dcdc: regulator@1 {
++			compatible = "fsl,imx28-dcdc";
++			regulator-name = "dcdc";
++			regulator-boot-on;
++			regulator-always-on;
++			switching-frequency = <1250000>;
++		};
++
++		reg_vddd: regulator@2 {
++			compatible = "fsl,imx28-vddd";
++			regulator-name = "vddd";
++			regulator-min-microvolt = <1350000>;
++			regulator-max-microvolt = <1550000>;
++		};
++	};
++
+-- 
+1.7.9.5
 
-Rob,
-
-Did I answered all your questions regarding the EDAC DT binding for
-memory controller? I would like to get this sorted out before I post
-another version.
-
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
