@@ -1,106 +1,95 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH V7 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
-Date: Wed, 29 Apr 2015 10:02:35 -0700
-Message-ID: <CAL1qeaFh5go_K0GnGXxU7KqjcgCm2kpUL5mVgGSYosPoXAXgpw@mail.gmail.com>
-References: <1430174242-29465-1-git-send-email-abrestic@chromium.org>
-	<1430174242-29465-5-git-send-email-abrestic@chromium.org>
-	<20150429092545.GR9169@x1>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 2/3 v5] mailbox: Enable BCM2835 mailbox support
+Date: Wed, 29 Apr 2015 10:05:37 -0700
+Message-ID: <87sibiq2zi.fsf@eliezer.anholt.net>
+References: <1430173644-19099-1-git-send-email-eric@anholt.net> <1430173644-19099-3-git-send-email-eric@anholt.net> <CABb+yY2u_v1uSDrBgP2DRAOrDkXETfs_zmLACm=uRFALVYFjmA@mail.gmail.com> <87618g6nk8.fsf@eliezer.anholt.net> <CABb+yY2OLOPNf=9YyEmw_9m4h4a+sx5FAOkRK9Yc1ZKxDMFd1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150429092545.GR9169@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY2OLOPNf=9YyEmw_9m4h4a+sx5FAOkRK9Yc1ZKxDMFd1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lee,
+--=-=-=
+Content-Type: text/plain
 
-On Wed, Apr 29, 2015 at 2:25 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Mon, 27 Apr 2015, Andrew Bresticker wrote:
->
->> Add a binding document for the XUSB host complex on NVIDIA Tegra124
->> and later SoCs.  The XUSB host complex includes a mailbox for
->> communication with the XUSB micro-controller and an xHCI host-controller.
+Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+
+> On Wed, Apr 29, 2015 at 1:19 AM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+>> Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 >>
->> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Samuel Ortiz <sameo@linux.intel.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> ---
->> New for v7.
->> ---
->>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 46 ++++++++++++++++++++++
->>  1 file changed, 46 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>>>> +
+>>>> +struct bcm2835_mbox {
+>>>> +       struct device *dev;
+>>>> +       void __iomem *regs;
+>>>> +       spinlock_t lock;
+>>>> +       bool started;
+>>>> +       struct mbox_controller controller;
+>>>> +};
+>>>> +
+>>>> +struct bcm2835_mbox *mbox;
+>>>> +
+>>> Bad omen. You assume any platform will ever have just one instance of
+>>> the mailbox controller. Which may come true, but still is a taboo to
+>>> think of.
 >>
->> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
->> new file mode 100644
->> index 0000000..6a46680
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
->> @@ -0,0 +1,46 @@
->> +NVIDIA Tegra XUSB host copmlex
->> +==============================
->> +
->> +The XUSB host complex on Tegra124 and later SoCs contains an xHCI host
->> +controller and a mailbox for communication with the XUSB micro-controller.
->> +
->> +Required properties:
->> +--------------------
->> + - compatible: For Tegra124, must contain "nvidia,tegra124-xusb".
->> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,tegra124-xusb"'
->> +   where <chip> is tegra132.
->
-> Okay.  Why?
+>> On the other hand, when I've submitted to other subsystems people have
+>> complained about how I have these extra lookups/container_ofs, instead
+>> of just storing the obviously-only-one-of-them thing in a global.
+>>
+>> I think a global makes definite sense for this driver.
+>>
+> 0) Why is 'mbox' not even static?
 
-Why what?  This is the convention used for Tegra bindings and is also
-documented in Documentation/devicetree/bindings/submitting-patches.txt.
-See nvidia,tegra114-spi.txt and nvidia,tegra20-i2c.txt for other
-examples of this.
+Typo.
 
->> + - reg: Must contain register base and length for each register set listed
->> +   in reg-names.
->
-> You've mentioned 2 of the cells, what about the remaining 2?
+> 1) It makes sense for system wide entities like stack/protocol
+> instance. But this is _one_ controller instance with _one_ mailbox
+> instance. You think any platform will ever only need one mailbox or
+> use two classes of controllers?
 
-The example given was for Tegra124, where there are two address cells
-and two size cells.
+Yes, I think there will only ever be one or zero instances of this
+driver.  I give it 10:1 odds.
 
->> + - reg-names: Must include the following entries:
->> +   - xhci
->> +   - fpci
->> +   - ipfs
->> + - interrupts: Must contain an interrupt for each entry in interrupt-names.
->> + - interrupt-names: Must include the following entries:
->> +   - host
->> +   - smi
->> +   - pme
->> +
->> +Example:
->> +--------
->> +     usb@0,70090000 {
->> +             compatible = "nvidia,tegra124-xusb";
->> +             reg = <0x0 0x70090000 0x0 0x8000>,
->> +                   <0x0 0x70098000 0x0 0x1000>,
->> +                   <0x0 0x70099000 0x0 0x1000>;
->> +             reg-names = "xhci", "fpci", "ipfs";
->> +             interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <GIC_SPI 40 IRQ_TYPE_LEVEL_HGIH>,
->> +                          <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
->> +             interrupt-names = "host", "smi", "pme";
->
-> Are these resources used by both children?
+>>>> +       if (readl(mbox->regs + MAIL0_STA) & ARM_MS_FULL) {
+>>>> +               ret = -EBUSY;
+>>>> +               goto end;
+>>>> +       }
+>>>>
+>>> This check is unnecessary too. API would have already called
+>>> last_tx_done() already to make sure this never hits.
+>>
+>> Dropped.
+>>
+> I see it's not yet.
 
-Only the FPCI register set is shared.
+Misread this while going through the ->stopped removals.  Fixed now.
 
-> If not, place them into the children and ioremap() them from the
-> associated child drivers.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Ok.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
--Andrew
+iQIcBAEBCgAGBQJVQQ9hAAoJELXWKTbR/J7o24EQAJBf0EOHw86GltM37AQCL+M8
+yyac9VxygAmpNwRK3U+Oasf8AiR28Lhf3FYy7h6J0bcGQiTkaiFD1ZIMbMhaN3T9
+ZjUfgS4J++iMULNaAhIuioR8nhp73SDVjllpJXzIeaCrSyqFo5M4CC/7BLHHF8s+
+o7vS1CePr52MqVr0AGACeiELuauF5Cv/nDpnooGyIo+a/2McSkFLrUZK8OCVqoPE
+BhuDled7waCMOyA5U3StNgJAnowpThEY6BNBIdAA81+dPFmnK6lYLTJyfNwX8qai
+GSt1oNDAJSUxtBrmQkCvZuSi/JVUcYxhzw6IlZd3Wz1ytVlXWRyRd7LYTS13GtY+
+e44K09RR3DrUkQEwO5Cjx49FV6sqDo2bHOGyZSrvT+P7a3CPWJ+EpQHCUzv3DxtD
+7jUB0LyPc+9xO4+J6pVODeWPCOuowxHoRq8d/A+qPfUoHR37FR6iFLUkEhinsbwJ
+fl4kgjY5e0HpPIL5h/zHtClhMEny5Tcg9gfgyT4M6sfKjkgCJAPgDLbsRfz6dwtK
+bCDUs4GK234IjZ6QxWWUlkRgD+5CpcY+ZGOjNygYQXmjPHjGM6/orLdWHL2pVp/d
+b3qtenWq+28ZiMOGLBhkIYZlgPtucP+kPzh8u1kv/KfWRj/+BUuvzm2np5QUrG/Y
+X1vvkw9NwHvA5dvC0Co3
+=XPDZ
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
