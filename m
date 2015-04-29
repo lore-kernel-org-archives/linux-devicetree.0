@@ -1,59 +1,98 @@
-From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: vexpress: Add unified-cache Device Tree property
-Date: Wed, 29 Apr 2015 21:12:28 +0200
-Message-ID: <20150429191228.GO15254@pengutronix.de>
-References: <5509437E.6060806@arm.com>
- <1426671298-2012-1-git-send-email-r.schwebel@pengutronix.de>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V7 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
+Date: Wed, 29 Apr 2015 12:46:49 -0700
+Message-ID: <CAL1qeaEt9kGbcCfwqhVzwJxx9DvgOnjfU6C8MCH6t0vqwJK0WA@mail.gmail.com>
+References: <1430174242-29465-1-git-send-email-abrestic@chromium.org>
+	<1430174242-29465-5-git-send-email-abrestic@chromium.org>
+	<20150429092545.GR9169@x1>
+	<CAL1qeaFh5go_K0GnGXxU7KqjcgCm2kpUL5mVgGSYosPoXAXgpw@mail.gmail.com>
+	<20150429183429.GB9169@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426671298-2012-1-git-send-email-r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150429183429.GB9169@x1>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liviu,
+On Wed, Apr 29, 2015 at 11:34 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, 29 Apr 2015, Andrew Bresticker wrote:
+>
+>> Lee,
+>>
+>> On Wed, Apr 29, 2015 at 2:25 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Mon, 27 Apr 2015, Andrew Bresticker wrote:
+>> >
+>> >> Add a binding document for the XUSB host complex on NVIDIA Tegra124
+>> >> and later SoCs.  The XUSB host complex includes a mailbox for
+>> >> communication with the XUSB micro-controller and an xHCI host-controller.
+>> >>
+>> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> >> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >> ---
+>> >> New for v7.
+>> >> ---
+>> >>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 46 ++++++++++++++++++++++
+>> >>  1 file changed, 46 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> >> new file mode 100644
+>> >> index 0000000..6a46680
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> >> @@ -0,0 +1,46 @@
+>> >> +NVIDIA Tegra XUSB host copmlex
+>> >> +==============================
+>> >> +
+>> >> +The XUSB host complex on Tegra124 and later SoCs contains an xHCI host
+>> >> +controller and a mailbox for communication with the XUSB micro-controller.
+>> >> +
+>> >> +Required properties:
+>> >> +--------------------
+>> >> + - compatible: For Tegra124, must contain "nvidia,tegra124-xusb".
+>> >> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,tegra124-xusb"'
+>> >> +   where <chip> is tegra132.
+>> >
+>> > Okay.  Why?
+>>
+>> Why what?  This is the convention used for Tegra bindings and is also
+>> documented in Documentation/devicetree/bindings/submitting-patches.txt.
+>> See nvidia,tegra114-spi.txt and nvidia,tegra20-i2c.txt for other
+>> examples of this.
+>
+> It seems strange to me that you'd mention two specific chips in one
+> compatible string.  What's the purpose of that?
 
-On Wed, Mar 18, 2015 at 10:34:58AM +0100, Robert Schwebel wrote:
-> Without this property, we get this boot warning:
-> 
-> "L2C: device tree omits to specify unified cache"
-> 
-> Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vexpress-v2p-ca9.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> Changes since v1:
->  * fix typo in patch description
-> 
-> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-> index 23662b5..a411274 100644
-> --- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-> +++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-> @@ -170,6 +170,7 @@
->  		compatible = "arm,pl310-cache";
->  		reg = <0x1e00a000 0x1000>;
->  		interrupts = <0 43 4>;
-> +		cache-unified;
->  		cache-level = <2>;
->  		arm,data-latency = <1 1 1>;
->  		arm,tag-latency = <1 1 1>;
-> -- 
-> 2.1.4
+The Tegra maintainers can correct me if I'm wrong here, but the point
+is, I think, to future-proof the binding.  There are currently no
+differences between Tegra124 and Tegra132 that need to be accounted
+for in the driver, so the driver need only match against
+"nvidia,tegra124-xusb".  If a Tegra132-specific quirk comes about
+later all Tegra132 device-trees will also include the
+"nvidia,tegra132-*" compatible string, so we can simply update the
+driver without breaking DT backwards-compatibility.
 
-Gentle ping, this patch didn't make it into 4.1-rc1.
+>> >> + - reg: Must contain register base and length for each register set listed
+>> >> +   in reg-names.
+>> >
+>> > You've mentioned 2 of the cells, what about the remaining 2?
+>>
+>> The example given was for Tegra124, where there are two address cells
+>> and two size cells.
+>
+> I don't get that.  How does that work?
 
-rsc
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tegra124 has a physical address space of > 4GB because of LPAE, thus a
+single cell each for address and size is not sufficient.  The arm64
+Tegra SoCs will obviously also use two address and size cells.  Take a
+look at arch/arm/boot/dts/tegra124.dtsi.
+
+-Andrew
