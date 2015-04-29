@@ -1,77 +1,278 @@
-From: Shenwei Wang <Shenwei.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/1] ARM: imx: make the imx timer driver implementation
- independent of SoCs.
-Date: Wed, 29 Apr 2015 15:19:19 +0000
-Message-ID: <BL2PR03MB37005C844BCB89007D176F683D70@BL2PR03MB370.namprd03.prod.outlook.com>
-References: <1430316881-4668-1-git-send-email-shenwei.wang@freescale.com>
- <20150429142614.GE2258@tarshish>
- <BL2PR03MB3703DA9D4D52EC9524D627C83D70@BL2PR03MB370.namprd03.prod.outlook.com>
- <20150429150824.GF2258@tarshish>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V1 4/6] input: misc: onkey: da9062: DA9062 OnKey driver
+Date: Wed, 29 Apr 2015 15:18:48 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B217B29@SW-EX-MBX02.diasemi.com>
+References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
+ <c05802897197e71839a33b1f5ac224031b14e65b.1429280614.git.stwiss.opensource@diasemi.com>
+ <20150417161217.GA27440@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150429150824.GF2258@tarshish>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150417161217.GA27440@dtor-ws>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmFydWNoLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEJhcnVj
-aCBTaWFjaCBbbWFpbHRvOmJhcnVjaEB0a29zLmNvLmlsXQ0KPiBTZW50OiAyMDE15bm0NOaciDI5
-5pelIDEwOjA4DQo+IFRvOiBXYW5nIFNoZW53ZWktQjM4MzM5DQo+IENjOiBzaGF3bi5ndW9AbGlu
-YXJvLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMV0gQVJNOiBpbXg6
-IG1ha2UgdGhlIGlteCB0aW1lciBkcml2ZXIgaW1wbGVtZW50YXRpb24NCj4gaW5kZXBlbmRlbnQg
-b2YgU29Dcy4NCj4gDQo+IEhpIFNoZW53ZWkgV2FuZywNCj4gDQo+IE9uIFdlZCwgQXByIDI5LCAy
-MDE1IGF0IDAyOjU1OjUyUE0gKzAwMDAsIFNoZW53ZWkgV2FuZyB3cm90ZToNCj4gPiA+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBCYXJ1Y2ggU2lhY2ggW21haWx0bzpi
-YXJ1Y2hAdGtvcy5jby5pbF0NCj4gPiA+IFNlbnQ6IDIwMTXlubQ05pyIMjnml6UgOToyNg0KPiA+
-ID4gVG86IFdhbmcgU2hlbndlaS1CMzgzMzkNCj4gPiA+IENjOiBzaGF3bi5ndW9AbGluYXJvLm9y
-ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8xXSBBUk06IGlt
-eDogbWFrZSB0aGUgaW14IHRpbWVyIGRyaXZlcg0KPiA+ID4gaW1wbGVtZW50YXRpb24gaW5kZXBl
-bmRlbnQgb2YgU29Dcy4NCj4gPiA+DQo+ID4gPiBPbiBXZWQsIEFwciAyOSwgMjAxNSBhdCAwOTox
-NDo0MUFNIC0wNTAwLCBTaGVud2VpIFdhbmcgd3JvdGU6DQo+ID4gPiA+IFRoZXJlIGFyZSA0IHZl
-cnNpb25zIG9mIHRoZSB0aW1lciBoYXJkd2FyZSBvbiBGcmVlc2NhbGUgTVhDIGhhcmR3YXJlLg0K
-PiA+ID4gPiAtLVZlcnNpb24gMDogTVgxL01YTA0KPiA+ID4gPiAtLVZlcnNpb24gMTogTVgyMSwg
-TVgyNy4NCj4gPiA+ID4gLS1WZXJzaW9uIDI6IE1YMjUsIE1YMzEsIE1YMzUsIE1YMzcsIE1YNTEs
-IE1YNlEgLS1WZXJzaW9uIDM6DQo+ID4gPiA+IE1YNkRMLCBNWDZTWA0KPiA+ID4gPg0KPiA+ID4g
-PiBUaGlzIHBhdGNoIGhhcyByZW1vdmVkIHRoZSBTb0MgcmVsYXRlZCBjb2RlcywgYW5kIGltcGxl
-bWVudGVkIHRoZQ0KPiA+ID4gPiBkcml2ZXIgZGlyZWN0bHkgdXBvbiB0aGUgaGFyZHdhcmUgdGlt
-ZXIgSVAgdmVyc2lvbi4NCj4gPiA+ID4NCj4gPiA+ID4gVGhlIG5ldyBkcml2ZXIgY2FuIGJlIGlu
-c3RhbGxlZCB2aWEgZGV2aWNlIHRyZWUgb3IgdGhlIGRpcmVjdA0KPiA+ID4gPiBmdW5jdGlvbiBj
-YWxsIHRvIG14Y190aW1lcl9pbml0IGluIG9yZGVyIHRvIHN1cHBvcnQgaW14IGxlZ2FjeQ0KPiA+
-ID4gPiBzeXN0ZW1zIGxpa2UNCj4gPiA+ID4gTVgyMSBhbmQgTVgyNy4NCj4gPiA+ID4NCj4gPiA+
-ID4gRm9yIHRoZSBkZXZpY2UgdHJlZSBpbXBsZW1lbnRhdGlvbiwgdGhlIGRyaXZlciBpcyBjb21w
-YXRpYmxlIHdpdGgNCj4gPiA+ID4gdGhlIGN1cnJlbnQgYmluZGluZ3MgbGlrZSAiZnNsLGlteDZx
-LWdwdCIsIGJ1dCBmb3IgZnV0dXJlIGR0cw0KPiA+ID4gPiBmaWxlLCB0aGUgc3RyaW5nIGxpa2Ug
-ImZzbCxpbXgtZ3B0LXYyIiB3aXRob3V0IFNvQyBpbmZvcm1hdGlvbiBpcw0KPiByZWNvbW1lbmRl
-ZC4NCj4gPiA+DQo+ID4gPiBUaGF0IGlzIG5vdCB0aGUgdXN1YWwgY29udmVudGlvbiBmb3IgSVAg
-YmxvY2sgdmVyc2lvbnMuDQo+ID4gPg0KPiA+ID4gUGxlYXNlIENjIHRoZSBkZXZpY2V0cmVlIGxp
-c3QgKGFkZGVkKS4NCj4gPg0KPiA+IFRoYW5rIHlvdSBmb3IgdGhlIGNvbW1lbnRzLiBXaGF0IGlz
-IHRoZSBjdXJyZW50IG5hbWluZyBydWxlcyBmb3IgSVANCj4gPiBibG9jayB2ZXJzaW9uPyBJdCB3
-b3VsZCBiZSBhcHByZWNpYXRlZCBpZiB5b3UgY291bGQgcHJvdmlkZSBhbiBleGFtcGxlLg0KPiAN
-Cj4gV2hlbiBzZXZlcmFsIFNvQyBzaGFyZSB0aGUgc2FtZSBJUCBibG9jayB0aGUgdXN1YWwgY29u
-dmVudGlvbiBpcyB0byBuYW1lIGl0IGluDQo+IHRoZSBjb21wYXRpYmxlIHByb3BlcnR5IHN0cmlu
-ZyBhZnRlciB0aGUgZmlyc3QgU29DIGl0IGFwcGVhcmVkIG9uLiBKdXN0IGxvb2sgYXQNCj4gc29t
-ZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZnJvbSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvdGltZXIvIHRvDQo+IGZpbmQgZXhhbXBsZXMuIFRoZSBhbGx3aW5uZXIsc3VuNWktYTEz
-LWhzdGltZXIgcHJvcGVydHkgaXMgc2hhcmVkIGJ5IEExMHMgYW5kDQo+IEExMyBTb0NzLiBUaGUg
-YW1sb2dpYyxtZXNvbjYtdGltZXIgaXMgc2hhcmVkIGJ5IE1lc29uNiBhbmQgTWVzb244IFNvQ3Ms
-IGFuZA0KPiBzbyBvbi4NCj4gDQpJZiB0aGUgc2FtZSBJUCBibG9jayBpcyBzaGFyZWQgd2l0aCBz
-ZXZlcmFsIFNvQ3MsIHdoeSB3ZSBnYXZlIHRoZW0gZGlmZmVyZW50IGNvbXBhdGlibGUgDQpzdHJp
-bmdzPyBJZiBubyBjaGFuZ2VzIGluIGFuIElQIGJsb2NrLCBJIGFzc3VtZSBubyBjaGFuZ2VzIGlu
-IHRoZSByZWxhdGluZyBkcml2ZXIgYXMgd2VsbC4gDQpJbiB0aGlzIGFzc3VtcHRpb24sIEkgZG9u
-J3Qgc2VlIGFueSBuZWVkIHRvIGludHJvZHVjZSBhIG5ldyBjb21wYXRpYmxlIHN0cmluZyBmb3Ig
-YW4gDQp1bmNoYW5nZWQgSVAgYmxvY2sgaW4gYSBuZXcgU29DLg0KDQpTaGVud2VpDQo+IGJhcnVj
-aA0KPiANCj4gLS0NCj4gICAgICBodHRwOi8vYmFydWNoLnNpYWNoLm5hbWUvYmxvZy8gICAgICAg
-ICAgICAgICAgICB+LiAufiAgIFRrIE9wZW4NCj4gU3lzdGVtcw0KPiA9fS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLW9vTy0tVS0tT29vLS0tLS0tLS0tLS0t
-ez0NCj4gICAgLSBiYXJ1Y2hAdGtvcy5jby5pbCAtIHRlbDogKzk3Mi4yLjY3OS41MzY0LCBodHRw
-Oi8vd3d3LnRrb3MuY28uaWwgLQ0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Dmitry,
+
+Thanks for your patience on this one.
+The Dialog OnKey for DA9062 is a fairly complicated set of interrupts
+and register read and writes. I've tried to explain the best I can below.
+
+On  17 April 2015 17:12, Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com] wrote: 
+
+[...]
+
+> > diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> > index 403a1a5..a631283 100644
+> > --- a/drivers/input/misc/Makefile
+> > +++ b/drivers/input/misc/Makefile
+> > @@ -25,6 +25,7 @@ obj-$(CONFIG_INPUT_CMA3000_I2C)		+=
+> cma3000_d0x_i2c.o
+> >  obj-$(CONFIG_INPUT_COBALT_BTNS)		+= cobalt_btns.o
+> >  obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
+> >  obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
+> > +obj-$(CONFIG_INPUT_DA9062_ONKEY)	+= da9062-onkey.o
+> 
+> Can we maybe keep the same naming convention for all of these? Also, any
+> chance all of them or some of them can be combined?
+
+Yes. I will rename so it uses an underscore.
+
+Unfortunately, the 55 and 52 drivers are not functionally similar. However the
+DA9063 and DA9062 OnKey drivers *are* functionally similar and so I will make
+an effort to combine those two drivers in future. I would like to submit DA9063
+first and drop this DA9062 until I can combine it. However, since the DA9063 driver
+is identical -- your comments will be useful for my DA9063 submission attempt.
+I have added my replies here below which will also relate to DA9063.
+
+[...]
+
+> > +static void da9062_poll_on(struct work_struct *work)
+> > +{
+> > +	struct da9062_onkey *onkey = container_of(work, struct
+> da9062_onkey,
+> > +						  work.work);
+> > +	unsigned int val;
+> > +	int fault_log = 0;
+> > +	bool poll = true;
+> > +	int ret;
+> > +
+> > +	/* poll to see when the pin is released */
+> > +	ret = regmap_read(onkey->hw->regmap, DA9062AA_STATUS_A,
+> &val);
+> > +	if (ret < 0) {
+> > +		dev_err(&onkey->input->dev,
+> > +			"Failed to read ON status: %d\n", ret);
+> > +		goto err_poll;
+> > +	}
+> > +
+> > +	if (!(val & DA9062AA_NONKEY_MASK)) {
+> > +		ret = regmap_update_bits(onkey->hw->regmap,
+> > +					 DA9062AA_CONTROL_B,
+> > +					 DA9062AA_NONKEY_LOCK_MASK,
+> 0);
+> > +		if (ret < 0) {
+> > +			dev_err(&onkey->input->dev,
+> > +				"Failed to reset the Key Delay %d\n", ret);
+> > +			goto err_poll;
+> > +		}
+> > +
+> > +		input_report_key(onkey->input, KEY_POWER, 0);
+> > +		input_sync(onkey->input);
+> > +
+> > +		poll = false;
+> > +	}
+> > +
+> > +	/* if the fault log KEY_RESET is detected,
+> > +	 * then clear it and shutdown DA9062 via I2C
+> > +	 */
+> > +	ret = regmap_read(onkey->hw->regmap, DA9062AA_FAULT_LOG,
+> &fault_log);
+> > +	if (ret < 0)
+> > +		dev_warn(&onkey->input->dev, "Cannot read
+> FAULT_LOG\n");
+> > +
+> > +	if (fault_log & DA9062AA_KEY_RESET_MASK) {
+> > +		ret = regmap_write(onkey->hw->regmap,
+> > +				   DA9062AA_FAULT_LOG,
+> > +				   DA9062AA_KEY_RESET_MASK);
+> > +		if (ret < 0)
+> > +			dev_warn(&onkey->input->dev,
+> > +				 "Cannot reset KEY_RESET fault log\n");
+> > +		else {
+> > +			/* at this point we do any S/W housekeeping
+> > +			 * and then send shutdown command
+> > +			 */
+> > +			dev_info(&onkey->input->dev,
+> > +				 "Sending SHUTDOWN to DA9062 ...\n");
+> > +			ret = regmap_write(onkey->hw->regmap,
+> > +					   DA9062AA_CONTROL_F,
+> > +					   DA9062AA_SHUTDOWN_MASK);
+> > +			if (ret < 0)
+> > +				dev_err(&onkey->input->dev,
+> > +					"Cannot SHUTDOWN DA9062\n");
+> > +		}
+> > +	}
+> 
+> This entire block seems to not belong to the input portion of MFD. Why
+> do we do it here?
+> 
+
+There are four modes of OnKey operation here, but only the first three are handled
+in software. This block relates to case (3).
+
+(1) short press & release -- SLEEP
+(2) long press & release -- POWER
+(3) long-long press (no release) -- software power cut
+(4) long-long press (no release) -- hardware power cut
+
+For cases (1) and (2) the OnKey driver will handle the events using the Linux
+framework. And for case (4) this is completed totally in hardware and is the
+emergency power off for holding down the OnKey until the power is cut by
+the PMIC -- this is not handled here and in any case it is designed to be used
+when the software is not responding: H/W shutdown
+
+There is one more case and this is covered by point (3). This is when the user
+holds down the OnKey as though they were attempting an emergency power
+off. This is the same operation as point (4) except that software *is* still
+able to respond. At this point it sends the power off signal to the PMIC in a similar
+way as the hardware power cut operation would do -- but it does this 1 second
+before the hardware has chance to step-in and force the PMIC to go down.
+
+There are several reasons for case (3).
+
+ - It is to cover the usecase of a user pressing the OnKey until the device goes
+   off as their main way of turning the power off to their device.
+   This software power cut allows any critical house-keeping to be completed
+   before the power switch is flicked and so it mitigates the possibility for loss 
+   of any data.
+ - It also ensures the FAULT_LOG is cleared. The FAULT_LOG is a persistent register
+   in the PMIC and holds its information between resets -- in this case the reason the
+   device was powered off.
+
+In case (4)
+
+If the software was not responsive, then the hardware shutdown would happen
+1 second later and the FAULT_LOG would persist enough information to be able
+to tell the difference between a software power cut and a hardware power cut
+when the device was restarted. If the software had not responded, then due to
+the FAULT_LOG persistence, it would be possible to take action the next time the
+device was turned on again (maybe in the bootloader -- e.g. say to complete
+memory checks or put the device into a safe mode).
+
+> > +
+> > +err_poll:
+> > +	if (poll)
+> > +		schedule_delayed_work(&onkey->work, 50);
+> > +}
+> > +
+> > +static irqreturn_t da9062_onkey_irq_handler(int irq, void *data)
+> > +{
+> > +	struct da9062_onkey *onkey = data;
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	ret = regmap_read(onkey->hw->regmap, DA9062AA_STATUS_A,
+> &val);
+> > +	if (onkey->key_power && (ret >= 0) && (val &
+> DA9062AA_NONKEY_MASK)) {
+> > +		input_report_key(onkey->input, KEY_POWER, 1);
+> > +		input_sync(onkey->input);
+> > +		schedule_delayed_work(&onkey->work, 0);
+> > +		dev_notice(&onkey->input->dev, "KEY_POWER
+> pressed.\n");
+> > +	} else {
+> > +		input_report_key(onkey->input, KEY_SLEEP, 1);
+> > +		input_sync(onkey->input);
+> > +		input_report_key(onkey->input, KEY_SLEEP, 0);
+> > +		input_sync(onkey->input);
+> > +		dev_notice(&onkey->input->dev, "KEY_SLEEP pressed.\n");
+> > +	}
+> 
+> Why do we handle KEY_POWER and KEY_SLEEP completely differently?
+> 
+
+The reason for the keys being handled differently is due to the way with the
+interrupt is being triggered differently in the OnKey. This depends on whether
+the key-press is a short (SLEEP) or a long (POWER) key-press. 
+
+For case (1)
+(1) short-press & release -- SLEEP
+The *release* of the OnKey is the trigger of the interrupt. So we know the device
+has a press-release operation. This was the intention of the two key reports, one
+for press and the other for release. There is no way to detect the key press here,
+only the key release, but both must have happened.
+input_report_key(onkey->input, KEY_SLEEP, 1);
+input_report_key(onkey->input, KEY_SLEEP, 0);
+
+For the next case (2)
+(2) long-press & release -- POWER
+The key is pressed but not released for a period of time (say longer than 2 seconds),
+and once this time-limit has been passed without the key being released an interrupt
+is triggered. This is different to case (1) in that the key release was not the trigger
+of the interrupt, it was a time-out trip-line -- hence the single key report, because at
+this point we know that the key was pressed, just not released yet.
+input_report_key(onkey->input, KEY_POWER, 1);
+The second key report is triggered when the key is released, and this can only
+be detected during a polling operation and examination of the register
+DA9063_REG_STATUS_A. Once the key release is detected, then the second key report
+is sent out
+input_report_key(onkey->input, KEY_SLEEP, 0);
+This last operation happens inside the da9063_poll_on() function.
+
+It is this polling function that also detects for the key never being released and so is
+also able to handle case (3)
+(3) long-long press (no release) -- software power cut
+
+[...]
+
+> > +static int da9062_onkey_probe(struct platform_device *pdev)
+> > +{
+> > +	struct da9062 *chip = dev_get_drvdata(pdev->dev.parent);
+> > +	struct da9062_onkey *onkey;
+> > +	bool kp_tmp = true;
+> > +	int ret = 0;
+> > +
+> > +		kp_tmp = of_property_read_bool((&pdev->dev)->of_node,
+> > +					       "dlg,disable-key-power");
+> > +		kp_tmp = !kp_tmp;
+> 
+> Should we just allow specifying the keycode instead of hardcoding
+> KEY_POWER/KEY_SLEEP?
+> 
+
+The reason I have hard-coded the key-power and key-sleep is because this
+is the configuration written into the default PMIC one-time-programming
+registers. Perhaps I am not quite understanding your question properly here.
+
+[...]
+
+> > +static int da9062_onkey_remove(struct platform_device *pdev)
+> > +{
+> > +	struct	da9062_onkey *onkey = platform_get_drvdata(pdev);
+> > +
+> > +	free_irq(onkey->irq, onkey);
+> > +	cancel_delayed_work_sync(&onkey->work);
+> > +	input_unregister_device(onkey->input);
+> 	
+> No need to unregister explicitly if you allocated input device with
+> devm.
+> 
+
+Yep. I can alter this by removing the function input_unregister_device()
+as described.
+
+So, just to finish this off. I would like to reiterate that I am going to drop this patch
+from my next submission attempt of the DA9062. However because the DA9063 
+OnKey component is functionally identical, the comments from above will be
+used to modify my DA9063 driver submission.
+
+http://www.spinics.net/lists/linux-input/msg38034.html
+http://www.spinics.net/lists/linux-input/msg38137.html
+
+Regards,
+Steve
