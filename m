@@ -1,52 +1,51 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock support
-Date: Wed, 29 Apr 2015 16:33:11 +0200
-Message-ID: <CAMuHMdVdtoXGhK97Ky5hoVcjM6XZAZXKWELL64MFQebMpFr2Ng@mail.gmail.com>
-References: <1428432239-4114-1-git-send-email-lee.jones@linaro.org>
-	<1428432239-4114-5-git-send-email-lee.jones@linaro.org>
-	<20150407191746.GA26727@lukather>
-	<20150408081450.GB5162@x1>
-	<20150408094349.GC26727@lukather>
-	<20150408103832.GG5162@x1>
-	<20150408155705.GF26727@lukather>
-	<20150408172344.GH5162@x1>
-	<20150422093446.GA28007@lukather>
-	<20150429141751.GR9169@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150429141751.GR9169@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: [PATCH v2 0/8] Add support for Wolfson WM8998 and WM1814 codecs
+Date: Wed, 29 Apr 2015 15:37:01 +0100
+Message-ID: <1430318229-28518-1-git-send-email-rf@opensource.wolfsonmicro.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+This set of patches adds support for the Wolfson Microelectronics
+WM8998 and WM1814 codecs.
 
-On Wed, Apr 29, 2015 at 4:17 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This useful binding should be accepted and people should not abuse
-> it.  If they do and the vendor Maintainer's review and accept then
-> they have no foundation for recourse.
->
-> Would you prefer it if I made the warning starker?
+Richard Fitzgerald (8):
+  mfd: arizona: Split INx_MODE into two fields
+  ASoC: arizona: add defines for single-input gain control
+  mfd: arizona: Add support for WM8998 and WM1814
+  gpio: arizona: add support for WM8998 and WM1814
+  regulator: arizona: add support for WM8998 and WM1814
+  extcon: arizona: Add support for WM8998 and WM1814
+  ASoC: wm8998: Initial WM8998 codec driver
+  Documentation: Add WM8998/WM1814 device tree bindings
 
-Perhaps you can add a check for "clock-always-on" to scripts/checkpatch.pl,
-to make people aware they should think twice?
+ Documentation/devicetree/bindings/mfd/arizona.txt |   13 +-
+ drivers/extcon/extcon-arizona.c                   |   33 +-
+ drivers/gpio/gpio-arizona.c                       |    2 +
+ drivers/mfd/Kconfig                               |    6 +
+ drivers/mfd/Makefile                              |    3 +
+ drivers/mfd/arizona-core.c                        |  105 ++-
+ drivers/mfd/arizona-i2c.c                         |    8 +
+ drivers/mfd/arizona-irq.c                         |    9 +
+ drivers/mfd/arizona.h                             |    5 +
+ drivers/mfd/wm8998-tables.c                       | 1592 +++++++++++++++++++++
+ drivers/regulator/arizona-ldo1.c                  |    2 +
+ include/linux/mfd/arizona/core.h                  |    3 +
+ include/linux/mfd/arizona/pdata.h                 |    7 +-
+ include/linux/mfd/arizona/registers.h             |  247 +++-
+ sound/soc/codecs/Kconfig                          |    6 +
+ sound/soc/codecs/Makefile                         |    2 +
+ sound/soc/codecs/arizona.c                        |    7 +
+ sound/soc/codecs/arizona.h                        |    7 +-
+ sound/soc/codecs/wm8998.c                         | 1394 ++++++++++++++++++
+ sound/soc/codecs/wm8998.h                         |   23 +
+ 20 files changed, 3442 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/mfd/wm8998-tables.c
+ create mode 100644 sound/soc/codecs/wm8998.c
+ create mode 100644 sound/soc/codecs/wm8998.h
 
-Nah, people don't read documentation, don't run checkpatch, ignore compiler
-warnings, etc...
+-- 
+1.7.2.5
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
