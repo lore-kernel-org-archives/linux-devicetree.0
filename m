@@ -1,85 +1,173 @@
-From: Kevin Cernekee <cernekee@chromium.org>
-Subject: Re: [PATCH V2 1/4] regmap: cache: Add "was_reset" argument to regcache_sync_region()
-Date: Tue, 28 Apr 2015 21:58:48 -0700
-Message-ID: <CAJzqFtYkSds+s2HA3uKrMQes+D2K1TxOdzm5jJhtt2iZvyqxCA@mail.gmail.com>
-References: <1429915008-22015-1-git-send-email-cernekee@chromium.org>
- <1429915008-22015-2-git-send-email-cernekee@chromium.org> <20150425113235.GA31708@sirena.org.uk>
+From: Hannes Petermaier <Hannes.Petermaier-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>
+Subject: WG: Re: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties for
+ tscadc
+Date: Wed, 29 Apr 2015 07:06:14 +0200
+Message-ID: <OF06BDC00A.6DD841DC-ONC1257E36.001BCA81-C1257E36.001C098D@br-automation.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150425113235.GA31708@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, fcooper-l0cyMroinI0@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ijc,_O=+devicetree"@hellion.org.uk, JanKardelljan.kardell-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 25, 2015 at 4:32 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Apr 24, 2015 at 03:36:45PM -0700, Kevin Cernekee wrote:
->
->> index 116655d92269..ece122a6fdeb 100644
->> --- a/include/linux/regmap.h
->> +++ b/include/linux/regmap.h
->> @@ -438,7 +438,7 @@ bool regmap_can_raw_write(struct regmap *map);
->>
->>  int regcache_sync(struct regmap *map);
->>  int regcache_sync_region(struct regmap *map, unsigned int min,
->> -                      unsigned int max);
->> +                      unsigned int max, bool was_reset);
->
-> This seems pretty ugly - both the fact that we're changing the signature
-> of the function and the naming of the argument feel inelegant.  The
-> point isn't if the device has been reset, the point is if the device
-> currently has the default register values or not, and this means that
-> the user is responsible for tracking that state until the next time it
-> does the sync.  That may be immediately like in your case but there's no
-> reason that has to be the case.  The fact that we're passing in
-> something called "is_reset" which sounds like a state value for the
-> register map is a bit of a warning sign here.
->
-> What we should be doing here is providing a way for users to tell regmap
-> if they've reset the register map and actually we already have that
-> interface, it's just not got the best name - regcache_mark_dirty() is
-> effectively it since there's really not a lot of other reasons why a
-> driver would need to mark the cache as dirty.  We're just not handling
-> it properly.  What we should do instead is to keep the interface as it
-> is for now and make it behave in a more expected fashion so that if the
-> cache is explicitly marked dirty we assume that the hardware is in the
-> default state and otherwise we don't.
->
-> Ideally what we'd do is both improve the naming of mark_dirty() (though
-> that's API churn which is nasty) and arrange for rbtree to cache the
-> default values lazily, that way the only things in the cache will be
-> things that have been explicitly changed (we will still want default
-> checking but it makes life easier and means we don't end up having to do
-> a full writeout for cases where things have been put into cache mode
-> without a reset).
+Hi Vignesh,
 
-Hi Mark,
+any comments on this ?
+I didn't hear anything last 2 weeks from you.
 
-I started prototyping this, but ran into a couple of issues:
+best regards,
+Hannes
 
-1) How do we tell the difference between "regcache contains a
-non-default value that correctly reflects the hardware register
-contents" versus "regcache contains a non-default value that is
-waiting to be written when we exit cache_only mode"?
+----- Forwarded by Hannes Petermaier/Eggelsberg/AT/B&R on 29.04.2015 07:03 
+-----
 
-2) Does that also mean that we should store default values in the
-rbtree if they are part of a deferred cache_only write, but not store
-them if the write went through to the hardware?
+> From: Hannes Petermaier/Eggelsberg/AT/B&R
+> To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov 
+<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 
+> fcooper-l0cyMroinI0@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell<ijc
+> +devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, 
+Johannes 
+> Pointner <Johannes.Pointner-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>, Hartmut Knaack 
+> <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen 
 
-3) If we're caching the default values lazily, does that mean that
-every regcache read would incur both an rbtree lookup and a bsearch of
-the reg_defaults array?
+> <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 
+> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 
+Peter 
+> Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Date: 15.04.2015 07:33
+> Subject: Re: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties 
+for tscadc
+> 
+> > Hi Hannes,
+> Hi Vignesh,
+> thanks for answer.
+> 
+> > >>
+> > >> would it be possible to add some more channel-specific settings ?
+> > >>
+> > >> It would be nice to have allmost full control to the STEPCONFIGx 
+> > > register.
+> > >>
+> > >> At least we need to write the bits
+> > >>
+> > >> SEL_RFM_SWC_1_0
+> > >> SEL_INM_SWC_3_0 
+> > >> SEL_RFP_SWC_2_0 
+> > >>
+> > >> In the current mainline version only (SEL_INP_SWC_3_0) is written.
+> > >> So for the other bits "0" is value is used, for my point of view 
+this is 
+> > > not correct.
+> > >>
+> > >> For example if we want to read a value from AIN5 the negative pin 
+from 
+> > > adc is 
+> > >> muxed allways to AIN0.
+> > 
+> > Sorry... I didn't understand what you meant by"AIN5 is muxed always 
+with
+> > AIN0"?
+> Have a look to the TRM (spruh73k.pdf) Page 1740 / Figure 12-2. 
+Functional Block Diagram.
+> There you can see that the ADC-cell which has two inputs, one positive 
+and onenegative.
+> Also there are two reference inputs, one positive - one negative.
+> 
+> All this "pins" are muxed, because only one channel per time can be 
+sampled.
+> This muxes are controlled through the STEPCONFIGx registers.
+> 
+> If you want for example take some measurement from AIN5 the driver muxes 
+the 
+> positive input from the ADC to AIN5 by setting the bits for SEL_INP<3:0> 
+- this is ok.
+> But the bits for SEL_INM<3:0> are still 'zero'. 
+> In summary this results in following mux-setting (regarding page 1771 in 
+TRM):
+> 
+> positive-reference muxed to   VDDA
+> negative-reference muxed to   VSSA
+> positive-input muxed to       AIN5
+> negative-input muxed to       AIN0
+> 
+> From this setup we run into 2 problems:
+> - the negative input terminal is muxed maybe to wrong potential
+> In much cases we have a single-ended signal so this setup looks good at 
+first,
+> because the "Diff_CNTRL" bit is also false. 
+> In fact there is an influence to the reading if the negative 
+input-terminal 
+> isn't setup correctly (to VSSA or REFN). 
+> Maybe i interpret the "Diff_CNTRL" not correctly, there is no detailed 
+> description within the TRM - maybe some of your workmates can explain 
+you the 
+> functionality of this bit.
+> 
+> - reference is allways taken from VDDA/VSSA
+> For a precision measurement you dont't use in normal case the 
+analog-supply.
+> This rail brings noise, drift - all things whicht we don't need for 
+accurate 
+> measurement.
+> 
+> > 
+> > >> In fact i can readout heavy jitter even if AIN5 is connected to 
+ground - 
+> > > after
+> > >> setting up negative adc pin within code (to use REFN)  the readout 
+value 
+> > > is 0 
+> > >> as expected without nameable jitter.
+> > >> If i short AIN0 also to ground, jitter is also eliminated.
+> > 
+> > Hmmm... nobody has reported such behavior before. ADC support for
+> > am335x-evm/beaglebone has been there for quite long time, but nobody
+> > reported any jitter on AIN5 line. I think this may be specific to
+> > your setup. Can you provide more info with regard to your setup?
+> > Which kernel? Is it am335x-evm or beaglebone or a custom board?
+> Maybe nobody does some precision measurement with beaglebone.
+> For operating some touchscreen or readout a potentiometer for evaluation 
 
-4) If "the only things in the cache will be things that have been
-explicitly changed," that could impact the semantics of
-regcache_drop_region().  Which fortunately has no users.
+> purpose it is still good enough.
+> 
+> Kernel is current mainline, 4.0
+> Board is some custom board of my company.
+> But all this parameters shouldn't have some influence to the case.
+> 
+> > >>
+> > >> Maybe this is also some fault of TI SoC ... in normal case somebody 
 
-Seems like it would be more straightforward just to add an
-rbnode->dirty bitmask alongside rbnode->cache_present, rather than
-trying to infer the hardware state from the presence/absence of the
-cache entry.  Knowing whether each individual register is out of sync
-with the hardware lets us avoid unnecessary writes in both situations:
-full reset, and temporary loss of register access.
+> > > could 
+> > >> expect, that negative adc pin is equal even the Diff_CNTRL bit 
+isn't set 
+> > > - but
+> > >> in practice it isn't.
+> > >>
+> > >> Also actually it isn't possible to make some accurate measurement 
+due to 
+> > > the 
+> > >> fact that allways VDDA_ADC is used as positive reference.
+> > >>
+> > >> So it would be nice to have control around this bits.
+> > >> Whats your opinion around that?
+> > 
+> > Sorry, I am not yet clear on your bug/use-case.
+> > 
+> > Please comment inline while replying on mailing list
+> okay so ?
+> 
+> > Regards
+> > Vignesh
+> best regards,
+> Hannes
+> 
+> 
 
-What do you think?
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
