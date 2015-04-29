@@ -1,71 +1,106 @@
-From: Kevin Cernekee <cernekee@chromium.org>
-Subject: Re: [PATCH V2 1/4] regmap: cache: Add "was_reset" argument to regcache_sync_region()
-Date: Wed, 29 Apr 2015 10:02:03 -0700
-Message-ID: <CAJzqFtbTbUG=s7sxNBEYG1Haq5tzaCrMB=j55okZnwdVmzUAYQ@mail.gmail.com>
-References: <1429915008-22015-1-git-send-email-cernekee@chromium.org>
- <1429915008-22015-2-git-send-email-cernekee@chromium.org> <20150425113235.GA31708@sirena.org.uk>
- <CAJzqFtYkSds+s2HA3uKrMQes+D2K1TxOdzm5jJhtt2iZvyqxCA@mail.gmail.com>
- <20150429104042.GB22845@sirena.org.uk> <CAJzqFta=ndErf012QEV37kE0oSPp6dF_D7w_i_HsCkx5ytPgdA@mail.gmail.com>
- <20150429164632.GO22845@sirena.org.uk>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH V7 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
+Date: Wed, 29 Apr 2015 10:02:35 -0700
+Message-ID: <CAL1qeaFh5go_K0GnGXxU7KqjcgCm2kpUL5mVgGSYosPoXAXgpw@mail.gmail.com>
+References: <1430174242-29465-1-git-send-email-abrestic@chromium.org>
+	<1430174242-29465-5-git-send-email-abrestic@chromium.org>
+	<20150429092545.GR9169@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150429164632.GO22845@sirena.org.uk>
+In-Reply-To: <20150429092545.GR9169@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2015 at 9:46 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Apr 29, 2015 at 07:13:27AM -0700, Kevin Cernekee wrote:
->> On Wed, Apr 29, 2015 at 3:40 AM, Mark Brown <broonie@kernel.org> wrote:
+Lee,
+
+On Wed, Apr 29, 2015 at 2:25 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Mon, 27 Apr 2015, Andrew Bresticker wrote:
 >
->> > Like I said above we can tell if the hardware was reset because
->> > mark_dirty() is called.
+>> Add a binding document for the XUSB host complex on NVIDIA Tegra124
+>> and later SoCs.  The XUSB host complex includes a mailbox for
+>> communication with the XUSB micro-controller and an xHCI host-controller.
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: Samuel Ortiz <sameo@linux.intel.com>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> ---
+>> New for v7.
+>> ---
+>>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 46 ++++++++++++++++++++++
+>>  1 file changed, 46 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> new file mode 100644
+>> index 0000000..6a46680
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> @@ -0,0 +1,46 @@
+>> +NVIDIA Tegra XUSB host copmlex
+>> +==============================
+>> +
+>> +The XUSB host complex on Tegra124 and later SoCs contains an xHCI host
+>> +controller and a mailbox for communication with the XUSB micro-controller.
+>> +
+>> +Required properties:
+>> +--------------------
+>> + - compatible: For Tegra124, must contain "nvidia,tegra124-xusb".
+>> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,tegra124-xusb"'
+>> +   where <chip> is tegra132.
 >
->> That covers the public API, but I do not understand how you intended
->> for this data to be stored in the rbtree if the use of a dirty bitmask
->> is discouraged.
+> Okay.  Why?
+
+Why what?  This is the convention used for Tegra bindings and is also
+documented in Documentation/devicetree/bindings/submitting-patches.txt.
+See nvidia,tegra114-spi.txt and nvidia,tegra20-i2c.txt for other
+examples of this.
+
+>> + - reg: Must contain register base and length for each register set listed
+>> +   in reg-names.
 >
-> We just need a single boolean?
+> You've mentioned 2 of the cells, what about the remaining 2?
 
-Right, so if we add a per-regmap bool that tells us whether the device
-has been reset, then in the case of "not reset" we will have to write
-every regcache entry out to the device.  Even the ones that weren't
-touched while in cache_only mode.  This makes the "not reset" case
-much less efficient than the "reset" case.
+The example given was for Tegra124, where there are two address cells
+and two size cells.
 
-Maybe that's good enough for most purposes.  It's no worse than what
-my original patch submission did, anyway.
-
-BTW, any preferences on naming for the bool or for the renamed
-mark_dirty function?
-
->> i.e. regcache_sync() finds a register value marked "present".  How do
->> we know whether we need to write it back to the hardware?  For the
->> special case of "cached non default register values immediately after
->> a HW reset" you can mostly figure this out, but if there was no HW
->> reset how do we know which entries changed while the HW was
->> inaccessible?
+>> + - reg-names: Must include the following entries:
+>> +   - xhci
+>> +   - fpci
+>> +   - ipfs
+>> + - interrupts: Must contain an interrupt for each entry in interrupt-names.
+>> + - interrupt-names: Must include the following entries:
+>> +   - host
+>> +   - smi
+>> +   - pme
+>> +
+>> +Example:
+>> +--------
+>> +     usb@0,70090000 {
+>> +             compatible = "nvidia,tegra124-xusb";
+>> +             reg = <0x0 0x70090000 0x0 0x8000>,
+>> +                   <0x0 0x70098000 0x0 0x1000>,
+>> +                   <0x0 0x70099000 0x0 0x1000>;
+>> +             reg-names = "xhci", "fpci", "ipfs";
+>> +             interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <GIC_SPI 40 IRQ_TYPE_LEVEL_HGIH>,
+>> +                          <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+>> +             interrupt-names = "host", "smi", "pme";
 >
-> In the first instance do we care?
+> Are these resources used by both children?
 
-I'm not sure I understand the question.
+Only the FPCI register set is shared.
 
->> > I'm not suggesting that we do anything based on the presence of a cache
->> > entry, I'm suggesting that we could avoid having to ever cache values
->> > that never get referenced on a system (which can be a lot of them for
->> > common use cases) saving us memory.
->
->> This seems to be solving a different problem.  It sounds like you are
->> more worried about regcache_sync() writing back lots of default values
->> for registers that were never touched, than performing unnecessary
->> writes to a few (actively used) registers that weren't changed while
->> we were in cache_only mode.  Is that accurate?
->
-> No.  This is nothing to do with sync, it's just something that might be
-> nice.
+> If not, place them into the children and ioremap() them from the
+> associated child drivers.
 
-Thanks, that clarifies things.  I was not aware that other drivers
-even had an issue with excessively large regcache rbtrees, as my
-reg_defaults list is short.
+Ok.
+
+-Andrew
