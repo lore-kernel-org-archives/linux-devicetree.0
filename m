@@ -1,27 +1,62 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/3 v6] mailbox: Enable BCM2835 mailbox support
-Date: Tue, 28 Apr 2015 19:39:07 -0600
-Message-ID: <5540363B.5050800@wwwdotorg.org>
-References: <1430173644-19099-3-git-send-email-eric@anholt.net> <1430254460-26754-1-git-send-email-eric@anholt.net>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3 v5] mailbox: Enable BCM2835 mailbox support
+Date: Wed, 29 Apr 2015 07:37:25 +0530
+Message-ID: <CABb+yY2OLOPNf=9YyEmw_9m4h4a+sx5FAOkRK9Yc1ZKxDMFd1Q@mail.gmail.com>
+References: <1430173644-19099-1-git-send-email-eric@anholt.net>
+	<1430173644-19099-3-git-send-email-eric@anholt.net>
+	<CABb+yY2u_v1uSDrBgP2DRAOrDkXETfs_zmLACm=uRFALVYFjmA@mail.gmail.com>
+	<87618g6nk8.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430254460-26754-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <87618g6nk8.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/28/2015 02:54 PM, Eric Anholt wrote:
-> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> 
-> This mailbox driver provides a single mailbox channel to write 32-bit
-> values to the VPU and get a 32-bit response.  The Raspberry Pi
-> firmware uses this mailbox channel to implement firmware calls, while
-> Roku 2 (despite being derived from the same firmware tree) doesn't.
+On Wed, Apr 29, 2015 at 1:19 AM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>
+>>> +
+>>> +struct bcm2835_mbox {
+>>> +       struct device *dev;
+>>> +       void __iomem *regs;
+>>> +       spinlock_t lock;
+>>> +       bool started;
+>>> +       struct mbox_controller controller;
+>>> +};
+>>> +
+>>> +struct bcm2835_mbox *mbox;
+>>> +
+>> Bad omen. You assume any platform will ever have just one instance of
+>> the mailbox controller. Which may come true, but still is a taboo to
+>> think of.
+>
+> On the other hand, when I've submitted to other subsystems people have
+> complained about how I have these extra lookups/container_ofs, instead
+> of just storing the obviously-only-one-of-them thing in a global.
+>
+> I think a global makes definite sense for this driver.
+>
+0) Why is 'mbox' not even static?
+1) It makes sense for system wide entities like stack/protocol
+instance. But this is _one_ controller instance with _one_ mailbox
+instance. You think any platform will ever only need one mailbox or
+use two classes of controllers?
+2) "Avoidable global statics are generally bad"
 
-Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>> +       if (readl(mbox->regs + MAIL0_STA) & ARM_MS_FULL) {
+>>> +               ret = -EBUSY;
+>>> +               goto end;
+>>> +       }
+>>>
+>> This check is unnecessary too. API would have already called
+>> last_tx_done() already to make sure this never hits.
+>
+> Dropped.
+>
+I see it's not yet.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
