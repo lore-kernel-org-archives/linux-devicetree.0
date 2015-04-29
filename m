@@ -1,57 +1,69 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] devicetree: Add vendor prefix for Foxlink Group
-Date: Wed, 29 Apr 2015 10:31:05 -0500
-Message-ID: <CAL_Jsq+r3YYTZ-w8JCeRgsbfwhNJ+mvjzkWH-152BJiEZbRN7w@mail.gmail.com>
-References: <1427213575-27340-1-git-send-email-nicolas.ferre@atmel.com> <5540F5DD.5010101@atmel.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH 1/5] clocksource: st_lpc: Add LPC timer as a clocksource.
+Date: Wed, 29 Apr 2015 17:48:11 +0200
+Message-ID: <5540FD3B.1040702@st.com>
+References: <1429267823-8879-1-git-send-email-peter.griffin@linaro.org> <1429267823-8879-2-git-send-email-peter.griffin@linaro.org> <alpine.DEB.2.11.1504211153580.13914@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5540F5DD.5010101@atmel.com>
+In-Reply-To: <alpine.DEB.2.11.1504211153580.13914@nanos>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, daniel.lezcano@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ajit Pal Singh <ajitpal.singh@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2015 at 10:16 AM, Nicolas Ferre <nicolas.ferre@atmel.co=
-m> wrote:
-> Le 24/03/2015 17:12, Nicolas Ferre a =C3=A9crit :
->> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->> ---
->> Thierry,
->>
->> Boris added the support for a Foxlink panel in this commit: 102932b0=
-e474
->> (drm/panel: add support for Foxlink FL500WVR00-A0T panel). Here is t=
-he vendor
->> prefix.
->
-> Ping?
+Hello Thomas,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 04/21/2015 11:56 AM, Thomas Gleixner wrote:
+> On Fri, 17 Apr 2015, Peter Griffin wrote:
+>> +/* Low Power Timer */
+>> +#define LPC_LPT_LSB_OFF		0x400
+>> +#define LPC_LPT_MSB_OFF		0x404
+>> +#define LPC_LPT_START_OFF	0x408
+>> +
+>> +struct st_lpc {
+>> +	struct clk *clk;
+>> +	void __iomem *iomem_cs;
+>> +};
+>> +
+>> +static struct st_lpc *st_lpc;
+>> +
+>> +static u64 notrace st_lpc_counter_read(void)
+>> +{
+>> +	u64 counter;
+>> +	u32 lower;
+>> +	u32 upper, old_upper;
+>> +
+>> +	upper = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_MSB_OFF);
+>> +	do {
+>> +		old_upper = upper;
+>> +		lower = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_LSB_OFF);
+>> +		upper = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_MSB_OFF);
+>> +	} while (upper != old_upper);
+>> +
+>> +	counter = upper;
+>> +	counter <<= 32;
+>> +	counter |= lower;
+>> +	return counter;
+>
+> What's the point of this exercise? The kernel can handle 32bit
+> clocksources nicely. So why do you want to artificially expand them to
+> 64bit by adding useless loops and hoops to a hotpath?
+
+I agree we should use only the lower 32 bits.
+This timer is moreover clocked at a slow rate (30MHz), so we won't have 
+too much interrupts.
+
+Peter, doing that, you could use something like this directly:
+clocksource_mmio_init(st_lpc->iomem_cs + LPC_LPT_LSB_OFF, 
+"st_lpc_timer", rate,
+             200, 24, clocksource_mmio_readl_down);
+
+Thanks,
+Maxime
 
 >
->>
->> Bye,
->>
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b=
-/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index 1b0f5b797cd5..e9fca088ba1a 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -73,6 +73,7 @@ everspin    Everspin Technologies, Inc.
->>  excito       Excito
->>  fcs  Fairchild Semiconductor
->>  firefly      Firefly
->> +foxlink      Foxlink Group
->>  fsl  Freescale Semiconductor
->>  GEFanuc      GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->>  gef  GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->>
+> Thanks,
 >
->
-> --
-> Nicolas Ferre
+> 	tglx
