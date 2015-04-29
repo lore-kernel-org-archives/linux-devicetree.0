@@ -1,7 +1,7 @@
 From: Irina Tirdea <irina.tirdea@intel.com>
-Subject: [PATCH v3 3/4] iio: core: Introduce IIO_CHAN_INFO_OVERSAMPLING_RATIO
-Date: Wed, 29 Apr 2015 21:16:39 +0300
-Message-ID: <1430331400-25528-4-git-send-email-irina.tirdea@intel.com>
+Subject: [PATCH v3 2/4] iio: magn: bmc150_magn: Add devicetree binding documentation
+Date: Wed, 29 Apr 2015 21:16:38 +0300
+Message-ID: <1430331400-25528-3-git-send-email-irina.tirdea@intel.com>
 References: <1430331400-25528-1-git-send-email-irina.tirdea@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1430331400-25528-1-git-send-email-irina.tirdea@intel.com>
@@ -10,64 +10,41 @@ To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@v
 Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Some magnetometers can perform a number of repetitions in HW
-for each measurement to increase accuracy. One example is
-Bosch BMC150:
-http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS000-04.pdf.
-
-Introduce an interface to set the oversampling ratio
-for these devices.
+Add binding documentation for Bosch BMC150 magnetometer.
 
 Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 12 ++++++++++++
- drivers/iio/industrialio-core.c         |  1 +
- include/linux/iio/iio.h                 |  1 +
- 3 files changed, 14 insertions(+)
+ .../bindings/iio/magnetometer/bmc150_magn.txt      | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 866b4ec..e46c71f 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1375,3 +1375,15 @@ Description:
- 		The emissivity ratio of the surface in the field of view of the
- 		contactless temperature sensor.  Emissivity varies from 0 to 1,
- 		with 1 being the emissivity of a black body.
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+new file mode 100644
+index 0000000..9f263b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+@@ -0,0 +1,22 @@
++* Bosch BMC150 magnetometer sensor
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/in_magn_x_oversampling_ratio
-+What:		/sys/bus/iio/devices/iio:deviceX/in_magn_y_oversampling_ratio
-+What:		/sys/bus/iio/devices/iio:deviceX/in_magn_z_oversampling_ratio
-+KernelVersion:	4.2
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Hardware applied number of measurements for acquiring one
-+		data point. The HW will do <type>[_name]_oversampling_ratio
-+		measurements and return the average value as output data. Each
-+		value resulted from <type>[_name]_oversampling_ratio measurements
-+		is considered as one sample for <type>[_name]_sampling_frequency.
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 7c98bc1..dfa81db 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -129,6 +129,7 @@ static const char * const iio_chan_info_postfix[] = {
- 	[IIO_CHAN_INFO_DEBOUNCE_COUNT] = "debounce_count",
- 	[IIO_CHAN_INFO_DEBOUNCE_TIME] = "debounce_time",
- 	[IIO_CHAN_INFO_CALIBEMISSIVITY] = "calibemissivity",
-+	[IIO_CHAN_INFO_OVERSAMPLING_RATIO] = "oversampling_ratio",
- };
- 
- /**
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index b1e46ae..058441d 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -44,6 +44,7 @@ enum iio_chan_info_enum {
- 	IIO_CHAN_INFO_DEBOUNCE_COUNT,
- 	IIO_CHAN_INFO_DEBOUNCE_TIME,
- 	IIO_CHAN_INFO_CALIBEMISSIVITY,
-+	IIO_CHAN_INFO_OVERSAMPLING_RATIO,
- };
- 
- enum iio_shared_by {
++http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS000-04.pdf
++
++Required properties:
++
++  - compatible : should be "bosch,bmc150_magn"
++  - reg : the I2C address of the magnetometer
++
++Optional properties:
++
++  - interrupt-parent : phandle to the parent interrupt controller
++  - interrupts : interrupt mapping for GPIO IRQ
++
++Example:
++
++bmc150_magn@12 {
++        compatible = "bosch,bmc150_magn";
++        reg = <0x12>;
++        interrupt-parent = <&gpio1>;
++        interrupts = <0 1>;
++};
 -- 
 1.9.1
