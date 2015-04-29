@@ -1,141 +1,57 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v2 RESEND 2/2] mmc: host: Add some quirks to be read from
- fdt in sdhci-pltm.c
-Date: Wed, 29 Apr 2015 12:34:41 +0530
-Message-ID: <CAOHikRAYtPt67-ZOFz890v46v28gtvQDPhgH1qA8d4xoSaQ7+Q@mail.gmail.com>
-References: <1429630959-32649-1-git-send-email-stripathi@apm.com>
-	<5771531.b7UhrXUGmv@wuerfel>
-	<CAOHikRDX7RZUkHFUmNs0kY+aYqXra5i=3cukpjz5yOECkcffbQ@mail.gmail.com>
-	<6927395.c8hJ4o34f5@wuerfel>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] arm64: dts: Add mediatek MT8173 earlycon support
+Date: Wed, 29 Apr 2015 08:19:02 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA230756659C0C2@IN01WEMBXB.internal.synopsys.com>
+References: <1430228434-31779-1-git-send-email-eddie.huang@mediatek.com>
+ <1430228434-31779-4-git-send-email-eddie.huang@mediatek.com>
+ <20150429064454.GR6325@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <6927395.c8hJ4o34f5@wuerfel>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>linu
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-Please ignore the previous reply.
-
-On Tue, Apr 28, 2015 at 1:19 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 27 April 2015 21:25:20 Suman Tripathi wrote:
->> > On Monday 27 April 2015 20:33:25 Suman Tripathi wrote:
->> > > > On Tuesday 21 April 2015 21:12:39 Suman Tripathi wrote:
->> > > > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
->> > > > > +
->> > > > > +               if (of_get_property(np, "no-cmd23", NULL))
->> > > > > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
->> > > > >
->> > > > >                 if (of_get_property(np, "no-1-8-v", NULL))
->> > > > >
->> > > > >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
->> > > >
->> > > > Any property you add needs to be documented in the DT binding.
->> > > > If possible, add generic properties for each bug you have mmc.txt
->> > > > rather than the driver specific sdhci.txt, and implement the
->> > >
->> > > I will add the binding in mmc.txt. I thought this was present but not.
->> > >
->> > > > parsing in a common function that is used for all mmc hosts.
->> > >
->> > > As per mine understanding the sdhci_get_of_porperty is a common
->> > > parsing function  . Am I wrong ??
->>
+On Wednesday 29 April 2015 12:15 PM, Sascha Hauer wrote:
+> Hi Eddie,
 >
-> A small side note: please fix your email client to use proper attribution
-> of the citations. The way you reply, nobody knows what you are saying
-> compare to what you quote. Also, reduce the quotation to the parts you
-> are replying to.
->
+> On Tue, Apr 28, 2015 at 09:40:34PM +0800, Eddie Huang wrote:
+>> Add earlycon support to mediatek MT8173 evaluation board dts.
+> This is not about earlycon support. It adds the stdout-path property
+> which is generally about console.
 
-Okay. Sorry for that. I fixed it.
+Indeed, this is shorter way of specifying the default console by referring to uart
+device.
 
->> > No, this is only used for sdhci, not for the other controllers.
->>
->> But our's is a SHCI variant so I added it in this file.
->
-> That's my point: a lot of the bugs are independent of the specific
-> host controller and could happen with any one of them. We want to
-> ensure that nobody tries to add another property with similar
-> semantics and a different name just because they are using a
-> different driver.
+>  It only happens to used for earlycon,
+> but would be used as a regular console aswell if it wasn't broken for
+> some kernel revisisions.
 
-Then I am not finding a reason why we have sdhci_get_of_property function ?? .
- I added a generic names like broken-adma that everyone can reuse it.
-I made mistake of not adding it in the binding.
+Really - I'm confused. When I last tried this for arc_uart (in 3.17 time frame),
+it would setup default console, but to use it for earlycon we needed
+bootargs=earlycon in chosen. However I had to revet that change since OF core
+still was fixing a few things in that area.
 
-For eg : broken-cd is not added by me but I can use it. So I added
-something like broken-adma as it was not present.
+See mainline 22524b02b17b901f28 ("Revert "ARC: [arcfpga] stdout-path now suffices
+for earlycon/console"")
+
+-Vineet
 
 >
->> > > An alternative would be to set all these bits based on the compatible
->> > > string of your host, if that is the only one that has all these bugs.
->> >
->> > The host driver  (arasan) is reused but this quirks are needed due to
->> > board issues. so I have a control over dtb only to fix this.
->>
->> What is the nature of the bug on that board? Is there a different
->> way to describe that without introducing six new properties?
->>
->> Sorry it is board and IP as well SoC errata's,
->>
->> 1. Delay after power is required due to some voltage issues that will
->> be fixed in next board revision
+>>  
+>> -	chosen { };
+>> +	chosen {
+>> +		linux,stdout-path = &uart0;
+>> +	};
+> Please use stdout-path, without the 'linux,'.
 >
-> This is clearly not sdhci-specific, so make that a generic property
-> for all mmc.
+> Sascha
 >
 
-Okay
-
->> 2. We need to support PIO mode as of now because DMA or ADMA requires
->> some kind of translation driver that I am working on.
->
-> But this does not describe the hardware properties. Don't add properties
-> that describe the lack of a kernel driver. If you can't do DMA yet,
-> use a dma-ranges property that lists one empty range to prevent
-> dma_set_mask() from working, so it will fall back to PIO mode. You
-> may have to fix the driver if that doesn't already work.
->
-
-The generic sdhc framework doesn't have this capabiltiy. It uses the
-quirks to identify the broken DMA and ADMA modes even
-if the controller is capable of.
-
-> What kind of driver do you need here?
-
-For DMA and adma we need some 32 bit to 64 bit translation driver.
-The existing arasan driver only support 32 bit.
-
->
->> 3. The version of arasan variant we have in our SoC doesn't have the
->> HISPD  bit field in HI-SPEED SD card. So this makes HI-SPEED sdcard
->> work.
->>
->> 4. NO_CMD23 is required for eMMC cards.
->>
->> These are not new properties.  Only the fact is I am using it for our
->> SoC from dtb. These quirks are already there in mmc common framework.
->> Nothing is new.
->
-> Are you sure that you have version 8.9a of the Arasan SDHCI? This sounds
-
-No We are using 4.9a ARASAN SDHCI
-
-> like version specific quirks, so they are probably present in each
-> SoC that uses the same version.
-
-Not sure
-
->
->         Arnd
-
-
-
--- 
-Thanks,
-with regards,
-Suman Tripathi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
