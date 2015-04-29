@@ -1,136 +1,59 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 02/10] DT: Add documentation for the mfd Maxim max77693
-Date: Wed, 29 Apr 2015 13:34:12 +0100
-Message-ID: <20150429123412.GL9169@x1>
-References: <1429080520-10687-1-git-send-email-j.anaszewski@samsung.com>
- <1429080520-10687-3-git-send-email-j.anaszewski@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v6 4/6] regulator: axp20x: add
+ support for AXP22X regulators
+Date: Wed, 29 Apr 2015 13:36:15 +0100
+Message-ID: <20150429123615.GM9169@x1>
+References: <1428638946-24890-1-git-send-email-wens@csie.org>
+ <1428638946-24890-5-git-send-email-wens@csie.org>
+ <20150410154809.GN6023@sirena.org.uk>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBRFAQOVAKGQE5OQQ3SQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1429080520-10687-3-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
+In-Reply-To: <20150410154809.GN6023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-LED Ack please Bryan.
+On Fri, 10 Apr 2015, Mark Brown wrote:
 
-> This patch adds device tree binding documentation for
-> the flash cell of the Maxim max77693 multifunctional device.
+> On Fri, Apr 10, 2015 at 12:09:04PM +0800, Chen-Yu Tsai wrote:
 >=20
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/mfd/max77693.txt |   67 ++++++++++=
-++++++++++
->  1 file changed, 67 insertions(+)
+> > This patch depends on the previous patch "regulator: axp20x: prepare
+> > support for multiple AXP chip families" and the mfd header from the
+> > first patch "mfd: axp20x: add AXP22x PMIC support".
 >=20
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77693.txt
-> index 38e6440..d342584 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> @@ -76,7 +76,60 @@ Optional properties:
->      Valid values: 4300000, 4700000, 4800000, 4900000
->      Default: 4300000
-> =20
-> +- led : the LED submodule device node
-> +
-> +There are two LED outputs available - FLED1 and FLED2. Each of them =
-can
-> +control a separate LED or they can be connected together to double
-> +the maximum current for a single connected LED. One LED is represent=
-ed
-> +by one child node.
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max77693-led".
-> +
-> +Optional properties:
-> +- maxim,boost-mode :
-> +	In boost mode the device can produce up to 1.2A of total current
-> +	on both outputs. The maximum current on each output is reduced
-> +	to 625mA then. If not enabled explicitly, boost setting defaults to
-> +	LEDS_BOOST_FIXED in case both current sources are used.
-> +	Possible values:
-> +		LEDS_BOOST_OFF (0) - no boost,
-> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
-> +		LEDS_BOOST_FIXED (2) - fixed mode.
-> +- maxim,boost-mvout : Output voltage of the boost module in millivol=
-ts.
-> +	Valid values: 3300 - 5500, step by 25 (rounded down)
-> +	Default: 3300
-> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is =
-not fired
-> +	if chip estimates that system voltage could drop below this level d=
-ue
-> +	to flash power consumption.
-> +	Valid values: 2400 - 3400, step by 33 (rounded down)
-> +	Default: 2400
-> +
-> +Required properties for the LED child node:
-> +- led-sources : see Documentation/devicetree/bindings/leds/common.tx=
-t;
-> +		device current output identifiers: 0 - FLED1, 1 - FLED2
-> +- led-max-microamp : see Documentation/devicetree/bindings/leds/comm=
-on.txt
-> +	Valid values for a LED connected to one FLED output:
-> +		15625 - 250000, step by 15625 (rounded down)
-> +	Valid values for a LED connected to both FLED outputs:
-> +		15625 - 500000, step by 15625 (rounded down)
-> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/co=
-mmon.txt
-> +	Valid values for a single LED connected to one FLED output:
-> +	(boost mode must be turned off):
-> +		15625 - 1000000, step by 15625 (rounded down)
-> +	Valid values for a single LED connected to both FLED outputs:
-> +		15625 - 1250000, step by 15625 (rounded down)
-> +	Valid values for two LEDs case:
-> +		15625 - 625000, step by 15625 (rounded down)
-> +- flash-max-timeout-us : see Documentation/devicetree/bindings/leds/=
-common.txt
-> +	Valid values: 62500 - 1000000, step by 62500 (rounded down)
-> +
-> +Optional properties for the LED child node:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt
-> +
->  Example:
-> +#include <dt-bindings/leds/common.h>
-> +
->  	max77693@66 {
->  		compatible =3D "maxim,max77693";
->  		reg =3D <0x66>;
-> @@ -117,5 +170,19 @@ Example:
->  			maxim,thermal-regulation-celsius =3D <75>;
->  			maxim,battery-overcurrent-microamp =3D <3000000>;
->  			maxim,charge-input-threshold-microvolt =3D <4300000>;
-> +
-> +		led {
-> +			compatible =3D "maxim,max77693-led";
-> +			maxim,boost-mode =3D <LEDS_BOOST_FIXED>;
-> +			maxim,boost-mvout =3D <5000>;
-> +			maxim,mvsys-min =3D <2400>;
-> +
-> +			camera_flash: flash-led {
-> +				label =3D "max77693-flash";
-> +				led-sources =3D <0>, <1>;
-> +				led-max-microamp =3D <500000>;
-> +				flash-max-microamp =3D <1250000>;
-> +				flash-max-timeout-us =3D <1000000>;
-> +			};
->  		};
->  	};
+> > Could we merge both regulator patches through the mfd tree, with the
+> > other patches in the series? There are no other external dependencies.
+>=20
+> Yes, of course we can - that's the whole point of me sending a
+> Reviewed-by!  Half of what I'm trying to do with that is to cut down on
+> the number of reposts of MFD series I get sent :(
+
+Okay, I'm ready to take this now.
+
+Mark,
+
+  Do you want a pull-request, or are you happy for me to just apply?
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
