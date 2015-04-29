@@ -1,62 +1,100 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [RESEND PATCH V2 1/2] input: misc: da9063: OnKey driver
-Date: Wed, 29 Apr 2015 16:01:03 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B217B51@SW-EX-MBX02.diasemi.com>
-References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
- <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
- <20150428115631.GA9169@x1>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] remoteproc: Introduce wkup_m3_rproc driver
+Date: Wed, 29 Apr 2015 11:05:23 -0500
+Message-ID: <55410143.1080209@ti.com>
+References: <1427917039-43206-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150428115631.GA9169@x1>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427917039-43206-1-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiAyOCBBcHJpbCAyMDE1IDEyOjU3IExlZSBKb25lcyBbbWFpbHRvOmxlZS5qb25lc0BsaW5h
-cm8ub3JnXSB3cm90ZToNCg0KPiBPbiBGcmksIDE3IEFwciAyMDE1LCBTIFR3aXNzIHdyb3RlOg0K
-PiANCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJpdmVy
-cy9tZmQvZGE5MDYzLWNvcmUuYyAgICAgICAgIHwgIDU1ICsrKysrKysrKw0KPiA+ICBpbmNsdWRl
-L2xpbnV4L21mZC9kYTkwNjMvcGRhdGEuaCAgfCAgIDEgKw0KPiANCj4gVGhpcyBzaG91bGQgYmUg
-YSBzZXBlcmF0ZSBwYXRjaC4NCj4gDQoNCk9rYXksIGRvbmUgdGhpcyBub3cuIEFkZGVkIGEgbmV3
-IFBBVENIIDMvMw0KDQo+ID4gIHN0YXRpYyBzdHJ1Y3QgcmVzb3VyY2UgZGE5MDYzX29ua2V5X3Jl
-c291cmNlc1tdID0gew0KPiA+ICAJew0KPiA+ICsJCS5uYW1lCT0gIk9OS0VZIiwNCj4gPiAgCQku
-c3RhcnQJPSBEQTkwNjNfSVJRX09OS0VZLA0KPiA+ICAJCS5lbmQJPSBEQTkwNjNfSVJRX09OS0VZ
-LA0KPiA+ICAJCS5mbGFncwk9IElPUkVTT1VSQ0VfSVJRLA0KPiA+IEBAIC05Nyw2ICs5OCw3IEBA
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgZGE5MDYzX2RldnNbXSA9IHsNCj4gPiAgCQku
-bmFtZQkJPSBEQTkwNjNfRFJWTkFNRV9PTktFWSwNCj4gPiAgCQkubnVtX3Jlc291cmNlcwk9DQo+
-IEFSUkFZX1NJWkUoZGE5MDYzX29ua2V5X3Jlc291cmNlcyksDQo+ID4gIAkJLnJlc291cmNlcwk9
-IGRhOTA2M19vbmtleV9yZXNvdXJjZXMsDQo+ID4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRh
-OTA2My1vbmtleSIsDQo+ID4gIAl9LA0KPiA+ICAJew0KPiA+ICAJCS5uYW1lCQk9IERBOTA2M19E
-UlZOQU1FX1JUQywNCj4gDQo+IFRoaXMgaXMgbG93ZXJjYXNlLCBzbyB3aHkgZG9lcyAiT05LRVki
-IGhhdmUgdG8gYmUgdXBwZXJjYXNlPw0KPiANCg0KTm8gcmVhbCByZWFzb24gd2h5IHRoaXMgaXMg
-dXBwZXJjYXNlIGluIGZhdm91ciBvZiBsb3dlcmNhc2UgZXhjZXB0IGl0DQppcyBmb2xsb3dpbmcg
-dGhlIGNvbnZlbnRpb24gb2YgdGhlIGV4aXN0aW5nIERBOTA2MyBkcml2ZXIgY29kZS4NCkN1cnJl
-bnRseSB0aGUgREE5MDYzIHVzZXMgdXBwZXJjYXNlIGZvciBpdHMgbmFtaW5nLCB0aGVyZSBhcmUg
-c2V2ZXJhbA0Kb3RoZXJzIGNvbXBvbmVudHMgdGhhdCB1c2UgdGhlIHNhbWUgdXBwZXJjYXNlIGNv
-bnZlbnRpb24sIGUuZy4gdGhlDQpSVEMgYWxhcm0gYW5kIHRpY2sgaW50ZXJydXB0IGFuZCB0aGUg
-aGFyZHdhcmUgTERPIGxpbWl0Og0KDQo+IGNhdCAvcHJvYy9pbnRlcnJ1cHRzIHwgZ3JlcCA5MDYz
-DQozODQ6ICAgICAgICAgIDAgICAgICAgICAgMCAgICAgICAgICAwICAgICAgICAgIDAgIGRhOTA2
-My1pcnEgICAwICBPTktFWQ0KMzg1OiAgICAgICAgICAwICAgICAgICAgIDIgICAgICAgICAgMCAg
-ICAgICAgICAwICBkYTkwNjMtaXJxICAgMSAgQUxBUk0NCjM4NzogICAgICAgICAgMCAgICAgICAg
-IDMwICAgICAgICAgIDAgICAgICAgICAgMCAgZGE5MDYzLWlycSAgIDMgIEhXTU9ODQozOTI6ICAg
-ICAgICAgIDAgICAgICAgICAgMCAgICAgICAgICAwICAgICAgICAgIDAgIGRhOTA2My1pcnEgICA4
-ICBMRE9fTElNDQoNCkkgd2FzIGdvaW5nIHRvIGxlYXZlIHRoaXMgdXBwZXJjYXNlLCBidXQgSSBj
-YW4gZWFzaWx5IGNoYW5nZSBpdCBpZg0KdGhpcyBpcyBuZWNlc3NhcnkuDQoNCj4gPiAgCWlmIChy
-ZXQpDQo+ID4gIAkJZGV2X2VycihkYTkwNjMtPmRldiwgIkNhbm5vdCBhZGQgTUZEIGNlbGxzXG4i
-KTsNCj4gPg0KPiA+ICsNCj4gDQo+IFR1dCB0dXQhDQo+IA0KPiA+ICAJcmV0dXJuIHJldDsNCj4g
-PiAgfQ0KDQpJJ3ZlIGNoYW5nZWQgdGhhdCB0byByZW1vdmUgdGhlIGxhenkgZmFsbC10aHJvdWdo
-IG9uIHRoZSBlcnJvciBwYXRoLg0KSXQgbm93IGhhcyB0aGUgZm9sbG93aW5nIGZvcm06DQoNCkBA
-IC0yMjksOSArMjI5LDEwIEBAIGludCBkYTkwNjNfZGV2aWNlX2luaXQoc3RydWN0IGRhOTA2MyAq
-ZGE5MDYzLCB1bnNpZ25lZCBpbnQgaXJxKQ0KICAgICAgICByZXQgPSBtZmRfYWRkX2RldmljZXMo
-ZGE5MDYzLT5kZXYsIC0xLCBkYTkwNjNfZGV2cywNCiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIEFSUkFZX1NJWkUoZGE5MDYzX2RldnMpLCBOVUxMLCBkYTkwNjMtPmlycV9iYXNlLA0KICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgTlVMTCk7DQotICAgICAgIGlmIChyZXQpDQorICAg
-ICAgIGlmIChyZXQpIHsNCiAgICAgICAgICAgICAgICBkZXZfZXJyKGRhOTA2My0+ZGV2LCAiQ2Fu
-bm90IGFkZCBNRkQgY2VsbHNcbiIpOw0KLQ0KKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQor
-ICAgICAgIH0NCiANCiAgICAgICAgcmV0dXJuIHJldDsNCiB9DQoNClRoYW5rcyBmb3IgdGhlIHJl
-dmlldyBjb21tZW50cy4NClRoZSBuZXh0IHBhdGNoIHNldCBmb3IgREE5MDYzIHdpbGwgZm9sbG93
-IHNob3J0bHkuDQoNClJlZ2FyZHMsDQpTdGV2ZQ0K
+Hi Ohad,
+
+On 04/01/2015 02:37 PM, Dave Gerlach wrote:
+> Hi,
+> This patch series is version three of the series to add a
+> wkup_m3_rproc driver for TI AM335x SoCs. This family of SoCs
+> contains an ARM Cortex M3 coprocessor that is responsible for
+> low-level power tasks that cannot be handled by the main ARM
+> Cortex A8 so firmware running from the CM3 can be used instead.
+> This driver handles loading of the firmware and reset of the CM3
+> once it is booted.
+> 
+> The previous version of this series can be found here [1].
+> I have pushed a branch based on v4.0-rc5 containing the entire
+> am335x suspend series here for a higher level view of the entire
+> series of patch sets here [2]. This series depends on "remoteproc:
+> add IOMMU hardware capability flag" which is currently queued
+> here [3].
+> 
+> Based on comments on the DT node included in the "ARM: OMAP2+:
+> wkup_m3_rproc support patches" series (v3 of that will immediately
+> follow this series) the DT node moved under a different parent
+> node so some changes to the driver were necessary to calculate proper
+> device addresses for firmware loading.
+> 
+> This series also now includes a patch to introduce an
+> rproc_get_by_phandle API to the remoteproc core so that users of
+> this wkup_m3_rproc driver are able to get a handle to the rproc
+> and boot it as the rproc must be booted directly by the user.
+> An example user, wkup_m3_ipc, can be seen in previously mentioned
+> branch at [2].
+> 
+> v2 -> v3:
+> -Modify wkup_m3_rproc driver to properly handle device address
+>  based on new DT location in l4_wkup node.
+> -In binding doc, change ti,am3352-wkup-m3 from am3353-wkup_m3 to match
+>  other am3352 compats
+> -General cleanup of address representation in wkup_m3_rproc driver
+> -Includes rproc_get_by_phandle patch now
+> 
+> The driver expects to load firmware am335x-pm-firmware.elf from
+> /lib/firmware which is found here [4].
+> 
+> Regards,
+> Dave
+> 
+> [1] http://www.spinics.net/lists/linux-omap/msg116364.html
+> [2] https://github.com/dgerlach/linux-pm/tree/pm-v4.0-rc5-am335x-suspend
+> [3] https://git.kernel.org/cgit/linux/kernel/git/ohad/remoteproc.git/commit/?h=for-next&id=315491e5d6ee66838a18a8ca0c14e6ffb376e48c
+> [4] https://git.ti.com/ti-cm3-pm-firmware/amx3-cm3/commits/next-upstream
+> 
+> Dave Gerlach (3):
+>   remoteproc: introduce rproc_get_by_phandle API
+>   Documentation: dt: add bindings for TI Wakeup M3 processor
+>   remoteproc/wkup_m3: add a remoteproc driver for TI Wakeup M3
+> 
+> Suman Anna (1):
+>   remoteproc: add a rproc ops for performing address translation
+
+Ping, do you have any comments on this series? This is the core
+dependency for achieving suspend/resume and cpuidle on AM335x and AM437x
+SoCs. I am hoping to have this series make 4.2.
+
+regards
+Suman
+
+> 
+>  .../bindings/remoteproc/wkup_m3_rproc.txt          |  52 +++++
+>  Documentation/remoteproc.txt                       |   6 +
+>  drivers/remoteproc/Kconfig                         |  13 ++
+>  drivers/remoteproc/Makefile                        |   1 +
+>  drivers/remoteproc/remoteproc_core.c               | 114 +++++++++-
+>  drivers/remoteproc/wkup_m3_rproc.c                 | 249 +++++++++++++++++++++
+>  include/linux/platform_data/wkup_m3.h              |  30 +++
+>  include/linux/remoteproc.h                         |   4 +
+>  8 files changed, 463 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/wkup_m3_rproc.txt
+>  create mode 100644 drivers/remoteproc/wkup_m3_rproc.c
+>  create mode 100644 include/linux/platform_data/wkup_m3.h
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
