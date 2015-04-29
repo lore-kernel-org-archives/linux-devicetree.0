@@ -1,41 +1,272 @@
 From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: [PATCH 0/2] Add initial CoreSight support for the Qualcomm 8x16 chipsets
-Date: Wed, 29 Apr 2015 15:19:58 +0300
-Message-ID: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Wed, 29 Apr 2015 15:20:00 +0300
+Message-ID: <1430310000-10867-3-git-send-email-ivan.ivanov@linaro.org>
+References: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Mathieu Poirier <mathieu.poirier@linaro.org>, Kumar Gala <galak@codeaurora.org>
 Cc: Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial CoreSight support for the Qualcomm 8x16 chipsets
+Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
 
-This patch series add initial set of CoreSight components for the
-8x16 chipsets.
-
-Components will not be functional, because of missing clock controller
-driver, which is under internal testing.
-
-Patches are based on "Enable CoreSight for the Ux500 "[1] and
-"Support for coresight ETMv4 tracer" [2]
-
-[1] http://www.spinics.net/lists/arm-kernel/msg412873.html
-[2] https://lwn.net/Articles/641585/
-
-Ivan T. Ivanov (1):
-  arm64: dts: qcom: Add msm8916 CoreSight components
-
-Pratik Patel (1):
-  coresight: replicator: Add Qualcomm CoreSight Replicator driver
-
- .../devicetree/bindings/arm/coresight.txt          |   1 +
- arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi    | 244 +++++++++++++++++++++
- drivers/hwtracing/coresight/Kconfig                |   9 +
- drivers/hwtracing/coresight/Makefile               |   1 +
- .../coresight/coresight-replicator-qcom.c          | 211 ++++++++++++++++++
- 5 files changed, 466 insertions(+)
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi | 244 ++++++++++++++++++++++++
+ 1 file changed, 244 insertions(+)
  create mode 100644 arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
- create mode 100644 drivers/hwtracing/coresight/coresight-replicator-qcom.c
 
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+new file mode 100644
+index 0000000..08d8582
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+@@ -0,0 +1,244 @@
++/*
++ * Copyright (c) 2013 - 2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++&soc {
++
++	tpiu@820000 {
++		compatible = "arm,coresight-tpiu", "arm,primecell";
++		reg = <0x820000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		port {
++			tpiu_in: endpoint {
++				slave-mode;
++				remote-endpoint = <&replicator_out1>;
++			};
++		};
++	};
++
++	funnel@821000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0x821000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@4 {
++				reg = <4>;
++				funnel0_in4: endpoint {
++					slave-mode;
++					remote-endpoint = <&funnel1_out>;
++				};
++			};
++			port@8 {
++				reg = <0>;
++				funnel0_out: endpoint {
++					remote-endpoint = <&etf_in>;
++				};
++			};
++		};
++	};
++
++	replicator@824000 {
++		compatible = "qcom,coresight-replicator", "arm,primecell";
++		reg = <0x824000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				replicator_out0: endpoint {
++					remote-endpoint = <&etr_in>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				replicator_out1: endpoint {
++					remote-endpoint = <&tpiu_in>;
++				};
++			};
++			port@2 {
++				reg = <0>;
++				replicator_in: endpoint {
++					slave-mode;
++					remote-endpoint = <&etf_out>;
++				};
++			};
++		};
++	};
++
++	etf@825000 {
++		compatible = "arm,coresight-tmc", "arm,primecell";
++		reg = <0x825000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				etf_out: endpoint {
++					slave-mode;
++					remote-endpoint = <&funnel0_out>;
++				};
++			};
++			port@1 {
++				reg = <0>;
++				etf_in: endpoint {
++					remote-endpoint = <&replicator_in>;
++				};
++			};
++		};
++	};
++
++	etr@826000 {
++		compatible = "arm,coresight-tmc", "arm,primecell";
++		reg = <0x826000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		port {
++			etr_in: endpoint {
++				slave-mode;
++				remote-endpoint = <&replicator_out0>;
++			};
++		};
++	};
++
++	funnel@841000 {	/* APSS */
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0x841000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				funnel1_in0: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm0_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				funnel1_in1: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm1_out>;
++				};
++			};
++			port@2 {
++				reg = <2>;
++				funnel1_in2: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm2_out>;
++				};
++			};
++			port@3 {
++				reg = <3>;
++				funnel1_in3: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm3_out>;
++				};
++			};
++			port@4 {
++				reg = <0>;
++				funnel1_out: endpoint {
++					remote-endpoint = <&funnel0_in4>;
++				};
++			};
++		};
++	};
++
++	etm@85c000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0x85c000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		cpu = <&CPU0>;
++
++		port {
++			etm0_out: endpoint {
++				remote-endpoint = <&funnel1_in0>;
++			};
++		};
++	};
++
++	etm@85d000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0x85d000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		cpu = <&CPU1>;
++
++		port {
++			etm1_out: endpoint {
++				remote-endpoint = <&funnel1_in1>;
++			};
++		};
++	};
++
++	etm@85e000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0x85e000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		cpu = <&CPU2>;
++
++		port {
++			etm2_out: endpoint {
++				remote-endpoint = <&funnel1_in2>;
++			};
++		};
++	};
++
++	etm@85f000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0x85f000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		cpu = <&CPU3>;
++
++		port {
++			etm3_out: endpoint {
++				remote-endpoint = <&funnel1_in3>;
++			};
++		};
++	};
++};
 --
 1.9.1
