@@ -1,71 +1,96 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: sun7i: dt: Add new MK808C device
-Date: Wed, 29 Apr 2015 22:30:12 +0200
-Message-ID: <20150429203012.GI6062@lukather>
-References: <1430244066-29099-1-git-send-email-codekipper@gmail.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
+ X-Gene SoC EDAC DTS binding
+Date: Wed, 29 Apr 2015 14:33:28 -0700
+Message-ID: <CAPw-ZTnLR10Zr_p8L3-1nBZ+jKE1HCwERDmO=S5as2GLqime3A@mail.gmail.com>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+	<1430259045-19012-2-git-send-email-lho@apm.com>
+	<1430259045-19012-3-git-send-email-lho@apm.com>
+	<1430259045-19012-4-git-send-email-lho@apm.com>
+	<CAL_Jsq+nhPUxHxrStB9cdy1YzE7tVPFVR1MrWq3Bz-JUa=3Rvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y96v7rNg6HAoELs5"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1430244066-29099-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAL_Jsq+nhPUxHxrStB9cdy1YzE7tVPFVR1MrWq3Bz-JUa=3Rvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---y96v7rNg6HAoELs5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>  .../devicetree/bindings/edac/apm-xgene-edac.txt    |  107 ++++++++++++++++++++
+>>  1 files changed, 107 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>> new file mode 100644
+>> index 0000000..548299a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>> @@ -0,0 +1,107 @@
+>> +* APM X-Gene SoC EDAC nodes
+>> +
+>> +EDAC nodes are defined to describe on-chip error detection and correction.
+>> +There are four types of EDAC:
+>> +
+>> +  memory controller    - Memory controller
+>> +  PMD (L1/L2)          - Processor module unit (PMD) L1/L2 cache
+>> +  L3                   - CPU L3 cache
+>> +  SoC                  - SoC IP such as SATA, Ethernet, and etc
+>> +
+>> +The following section describes the memory controller DT node binding.
+>> +
+>> +Required properties:
+>> +- compatible           : Shall be "apm,xgene-edac-mc".
+>
+> You are still describing what you want for EDAC driver not what the
+> h/w looks like AFAICT.
+>
 
-On Tue, Apr 28, 2015 at 08:01:06PM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> The MK808C is an A20 based android stick, with 1G RAM, 8G NAND flash,
-> a RTL8723au wifi + bt combo chip, a USB host ports using USB-A receptacle=
-s,
-> a mini USB-B receptacle for USB OTG, mini HDMI and a TRS connector for AV.
->=20
-> This patch adds basic support for the device, more information can be fou=
-nd
-> here (http://linux-sunxi.org/MK808C).
->=20
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+We have 4 memory controller and two memory bridges. Each memory
+bridges can handle two memory controllers.
 
-Applied, thanks!
+>> +- regmap-pcp           : Regmap of the PCP resource.
+>> +- regmap-csw           : Regmap of the CSW resource.
+>> +- regmap-mcba          : Regmap of the MCB-A resource.
+>> +- regmap-mcbb          : Regmap of the MCB-B resource.
+>
+> What are these blocks? Regardless, I doubt the linkage here belongs in DT.
 
-Maxime
+The PCP provide the top level interrupt for various status. From that,
+one can determine the type of error based on various status bits -
+memory error, CPU cache parity memory errors (L1, L2, and L3), and SoC
+memory parity errors. The CSW contains the status to indicate whether
+an memory bridge is active or not. The MCB A and MCB B are used to
+determine an memory controller is active or not. In summary, we have:
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+CSW, MCB A, and MCB B are used to determine active memory controller
+and ignore in-active memory controller.
+PCP and the memory controller (reg property) are used to determine the
+memory error type and type of error (correctable or un-conrrectable).
 
---y96v7rNg6HAoELs5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+If one still needs more clarification, let me know.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>
+>> +- reg                  : First resource shall be the MCU resource.
+>> +- interrupts            : Interrupt-specifier for MCU error IRQ(s).
+>
+> What is MCU?
 
-iQIcBAEBAgAGBQJVQT9UAAoJEBx+YmzsjxAgQr8P/1LHJf0plpoiqSKvL+oEBAcD
-5pqHSY1FyZl0AKc4d8agqOMzzqUPM2+D/L/JaCX6yZVa2qHdClmaCRkUPdrP9w0h
-tghWItw5Nc3WJWmH4WbAkIrLgdBsgXvBUvvhk3rn+Hmx66J4Sb3/oZeM4Oa7rbJq
-4Qs3eXQ0lK6n4rSenl5VwqEXbIqxCgGks+R2D8oANfxWFUTwAboG6I30Pt9hOztx
-7Y5DjgOscnWO+Z6pZc8F8RdH0Tzyxg7CKDn/dCOTsk976UR59fovW0EfrXUyo4F7
-fTvM5+YqcTvOVZat1WW2m9RMxxvl5ND68z0R4tzxRKRK00D56Tq+zcIl7+uCmnph
-4rYCoOjVuy08jKl/Ol2sJoGK4A+6JrHZ+21jNzBJiWodhMrg8zKSoUAji515XsKD
-9Er+41Itahgcq4LkepeuXkuZzpk+62Dtc4ETiQCDrl1w/nbi3jABKhUy0XOqUfPJ
-Ci5KoW9cj+wPSrTuduEvUmJHL8aiaitQ7EHrKMwYa56gUBVo64lpn/q2IReKQwaI
-mICBrWHQdUfc5ZUb+kT3rVaxKlwWDgPrM3sqg/KsXUxawyoTmtNJvUy8TZVevXl0
-iBZRFjPxFgZCtPgGNg0DTTHS6Tu+B6I8laTHf1wD5CIsPQys52XrHuYJNZ0QoIHS
-OkofALeDOHzACYA/ui1p
-=wf0J
------END PGP SIGNATURE-----
+MCU represents the memory controller unit.
 
---y96v7rNg6HAoELs5--
+>
+>> +
+>> +The following section describes the L1/L2 DT node binding.
+>
+> Similar comments for the rest. I would define memory controller
+> bindings and EDAC driver, then worry about the rest.
+
+Okay.. As comment in following emails, I will break up the driver into
+multiple drivers and focus only on the memory controller driver first.
+
+-Loc
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
