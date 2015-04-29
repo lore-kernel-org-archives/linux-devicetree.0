@@ -1,1895 +1,442 @@
-From: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCHv2] power_supply: Add support for Richtek rt9455 battery charger
-Date: Wed, 29 Apr 2015 23:13:26 +0300
-Message-ID: <1430338406-24012-1-git-send-email-anda-maria.nicolae@intel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock
+ support
+Date: Wed, 29 Apr 2015 22:23:32 +0200
+Message-ID: <20150429202332.GG6062@lukather>
+References: <1428432239-4114-1-git-send-email-lee.jones@linaro.org>
+ <1428432239-4114-5-git-send-email-lee.jones@linaro.org>
+ <20150407191746.GA26727@lukather>
+ <20150408081450.GB5162@x1>
+ <20150408094349.GC26727@lukather>
+ <20150408103832.GG5162@x1>
+ <20150408155705.GF26727@lukather>
+ <20150408172344.GH5162@x1>
+ <20150422093446.GA28007@lukather>
+ <20150429141751.GR9169@x1>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Fnm8lRGFTVS/3GuM"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150429141751.GR9169@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Based on the datasheet found here:
-http://www.richtek.com/download_ds.jsp?p=RT9455
 
-Updates from the previous version:
-- replaced license GPLv2 with GPL
-- replaced vendor prefix rt with richtek
-- replaced uppercase properties names from devicetree with lowercase separated by dash properties names
-- replaced I/O read/write API with regmap_read/write and regmap_field_read/write
-- used kernel multiline comment
-- used DELAYED_WORK and scheduled the works in system_power_efficient_wq. It is high probability that the device is in suspend state while charging (i.e. the user leaves the device to charge during night) and it is needed that the scheduled works to be executed as planned.
-- replaced struct power_supply_desc rt9455_charger_desc with static const struct power_supply_desc rt9455_charger_desc 
-- replaced if (IS_ERR_OR_NULL(info->charger)) with if (IS_ERR(info->charger))
-- replaced {"RTK9455", 0} with { "RTK9455", 0 }
-- removed .owner = THIS_MODULE
+--Fnm8lRGFTVS/3GuM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/power/rt9455_charger.txt   |   43 +
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/power/Kconfig                              |    6 +
- drivers/power/Makefile                             |    1 +
- drivers/power/rt9455_charger.c                     | 1758 ++++++++++++++++++++
- 5 files changed, 1809 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/rt9455_charger.txt
- create mode 100644 drivers/power/rt9455_charger.c
+On Wed, Apr 29, 2015 at 03:17:51PM +0100, Lee Jones wrote:
+> On Wed, 22 Apr 2015, Maxime Ripard wrote:
+>=20
+> > On Wed, Apr 08, 2015 at 06:23:44PM +0100, Lee Jones wrote:
+> > > On Wed, 08 Apr 2015, Maxime Ripard wrote:
+> > >=20
+> > > > On Wed, Apr 08, 2015 at 11:38:32AM +0100, Lee Jones wrote:
+> > > > > On Wed, 08 Apr 2015, Maxime Ripard wrote:
+> > > > >=20
+> > > > > > On Wed, Apr 08, 2015 at 09:14:50AM +0100, Lee Jones wrote:
+> > > > > > > > > +
+> > > > > > > > > +		    This property is not to be abused.  It is only to =
+be used to
+> > > > > > > > > +		    protect platforms from being crippled by gated clo=
+cks, not
+> > > > > > > > > +		    as a convenience function to avoid using the frame=
+work
+> > > > > > > > > +		    correctly inside device drivers.
+> > > > > > > >=20
+> > > > > > > > Disregarding what's stated here, I'm pretty sure that this =
+will
+> > > > > > > > actually happen. Where do you place the cursor?
+> > > > > > >=20
+> > > > > > > That's up to Mike.
+> > > > > >=20
+> > > > > > Except that Mike won't review any of the DT changes, so he won'=
+t be
+> > > > > > able to refrain users from using it. Let alone out-of-tree DTs =
+using a
+> > > > > > mainline kernel.
+> > > > >=20
+> > > > > Ideally Mike should be Cc'ed on patches using clock bindings, but=
+ if
+> > > > > he isn't the DT guys are smart enough to either make the right
+> > > > > decisions themselves (Rob has Acked these bindings already, so wi=
+ll be
+> > > > > on the lookout for misuse, I'm sure), or ask for Mike's help.
+> > > >=20
+> > > > Yeah, right, as if this strategy really worked in the past....
+> > > >=20
+> > > > Do we really want to look at even the DT bindings that have actually
+> > > > been reviewed by maintainers that got merged?
+> > > >=20
+> > > > They don't have time for that, which is totally fine, but we really
+> > > > should bury our head in the sand by actually thinking they will rev=
+iew
+> > > > every single DT-related patch.
+> > > >=20
+> > > > Using that as an argument is just plain denial of what really happe=
+ned
+> > > > for the past 4 years.
+> > >=20
+> > > I agree that it's a problem, but this is a process problem and has
+> > > nothing to do with this set.  If you have a problem with the current
+> > > process and have a better alternative, submit your thoughts to the DT
+> > > list.  Rejecting all new bindings because you are frightened that they
+> > > will be used in a manner that they were not intended is not the way to
+> > > go though.
+> >=20
+> > I'm not saying that this binding should not go in because of a process
+> > issue.
+> >=20
+> > I'm saying that discarding arguments against your binding by adding
+> > restrictions that cannot be enforced is not reasonable.
+>=20
+> I'm open to constructive suggestions/alternatives.
+>=20
+> Hand rolling this stuff in C per vendor is not of of them.
 
-diff --git a/Documentation/devicetree/bindings/power/rt9455_charger.txt b/Documentation/devicetree/bindings/power/rt9455_charger.txt
-new file mode 100644
-index 0000000..7e8aed6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/rt9455_charger.txt
-@@ -0,0 +1,43 @@
-+Binding for Richtek rt9455 battery charger
-+
-+Required properties:
-+- compatible: Should contain one of the following:
-+ * "richtek,rt9455"
-+
-+- reg:					integer, i2c address of the device.
-+- richtek,output-charge-current:	integer, output current from the charger to the
-+					battery, in uA.
-+- richtek,end-of-charge-percentage:	integer, percent of the output charge current.
-+					When the current in constant-voltage phase drops
-+					below output_charge_current x end-of-charge-percentage,
-+					charge is terminated.
-+- richtek,battery-regulation-voltage:	integer, maximum battery voltage in uV.
-+
-+Optional properties:
-+- richtek,min-input-voltage-regulation: integer, input voltage level in uA, used to
-+					decrease voltage level when the over current
-+					of the input power source occurs.
-+					This prevents input voltage drop due to insufficient
-+					current provided by the power source.
-+- richtek,avg-input-current-regulation: integer, input current value drained by the
-+					charger from the power source.
-+
-+Example:
-+
-+rt9455@22 {
-+	compatible = "richtek,rt9455";
-+	reg = <0x22>;
-+
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <0 1>;
-+
-+	interrupt-gpio = <&gpio1 0 1>;
-+	reset-gpio = <&gpio1 1 1>;
-+
-+	richtek,output-charge-current	    = <500000>;
-+	richtek,end-of-charge-percentage    = <10>;
-+	richtek,battery-regulation-voltage  = <4200000>;
-+
-+	richtek,min-input-voltage-regulation = <4500000>;
-+	richtek,avg-input-current-regulation = <500000>;
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389ca13..92a9508 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -148,6 +148,7 @@ raidsonic	RaidSonic Technology GmbH
- ralink	Mediatek/Ralink Technology Corp.
- ramtron	Ramtron International
- realtek Realtek Semiconductor Corp.
-+richtek	Richtek Technology Corporation
- renesas	Renesas Electronics Corporation
- ricoh	Ricoh Co. Ltd.
- rockchip	Fuzhou Rockchip Electronics Co., Ltd
-diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-index 4091fb0..39f208d 100644
---- a/drivers/power/Kconfig
-+++ b/drivers/power/Kconfig
-@@ -439,6 +439,12 @@ config BATTERY_RT5033
- 	  The fuelgauge calculates and determines the battery state of charge
- 	  according to battery open circuit voltage.
- 
-+config CHARGER_RT9455
-+	tristate "Richtek RT9455 battery charger driver"
-+	depends on I2C && GPIOLIB
-+	help
-+	Say Y to enable support for the Richtek RT9455 battery charger.
-+
- source "drivers/power/reset/Kconfig"
- 
- endif # POWER_SUPPLY
-diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-index b7b0181..e49abbf 100644
---- a/drivers/power/Makefile
-+++ b/drivers/power/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_BATTERY_MAX17040)	+= max17040_battery.o
- obj-$(CONFIG_BATTERY_MAX17042)	+= max17042_battery.o
- obj-$(CONFIG_BATTERY_Z2)	+= z2_battery.o
- obj-$(CONFIG_BATTERY_RT5033)	+= rt5033_battery.o
-+obj-$(CONFIG_CHARGER_RT9455)	+= rt9455_charger.o
- obj-$(CONFIG_BATTERY_S3C_ADC)	+= s3c_adc_battery.o
- obj-$(CONFIG_BATTERY_TWL4030_MADC)	+= twl4030_madc_battery.o
- obj-$(CONFIG_CHARGER_88PM860X)	+= 88pm860x_charger.o
-diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
-new file mode 100644
-index 0000000..e45b0f2
---- /dev/null
-+++ b/drivers/power/rt9455_charger.c
-@@ -0,0 +1,1758 @@
-+/*
-+ * Driver for Richtek RT9455WSC battery charger.
-+ *
-+ * Copyright (C) 2015 Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/power_supply.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/acpi.h>
-+#include <linux/usb/phy.h>
-+#include <linux/regmap.h>
-+
-+#define RT9455_MANUFACTURER			"Richtek"
-+#define RT9455_MODEL_NAME			"RT9455"
-+#define RT9455_DRIVER_NAME			"rt9455-charger"
-+
-+#define RT9455_IRQ_NAME				"interrupt"
-+
-+#define RT9455_PWR_RDY_DELAY			1 /* 1 second */
-+#define RT9455_MAX_CHARGING_TIME		21600 /* 6 hrs */
-+#define RT9455_BATT_PRESENCE_DELAY		60 /* 60 seconds */
-+
-+#define RT9455_CHARGE_MODE			0x00
-+#define RT9455_BOOST_MODE			0x01
-+
-+#define RT9455_FAULT				0x03
-+
-+#define RT9455_IAICR_100MA			0x00
-+#define RT9455_IAICR_500MA			0x01
-+#define RT9455_IAICR_NO_LIMIT			0x03
-+
-+#define RT9455_CHARGE_DISABLE			0x00
-+#define RT9455_CHARGE_ENABLE			0x01
-+
-+#define RT9455_PWR_FAULT			0x00
-+#define RT9455_PWR_GOOD				0x01
-+
-+#define RT9455_REG_CTRL1			0x00 /* CTRL1 reg address */
-+#define RT9455_REG_CTRL1_STAT_MASK		(BIT(5) | BIT(4))
-+#define RT9455_REG_CTRL1_BOOST_MASK		BIT(3)
-+#define RT9455_REG_CTRL1_PWR_RDY_MASK		BIT(2)
-+#define RT9455_REG_CTRL1_OTG_PIN_POLARITY_MASK	BIT(1)
-+
-+#define RT9455_REG_CTRL2			0x01 /* CTRL2 reg address */
-+#define RT9455_REG_CTRL2_IAICR_MASK		(BIT(7) | BIT(6))
-+#define RT9455_REG_CTRL2_TE_SHDN_EN_MASK	BIT(5)
-+#define RT9455_REG_CTRL2_HIGHER_OCP_MASK	BIT(4)
-+#define RT9455_REG_CTRL2_TE_MASK		BIT(3)
-+#define RT9455_REG_CTRL2_IAICR_INT_MASK		BIT(2)
-+#define RT9455_REG_CTRL2_HIZ_MASK		BIT(1)
-+#define RT9455_REG_CTRL2_OPA_MODE_MASK		BIT(0)
-+
-+#define RT9455_REG_CTRL3			0x02 /* CTRL3 reg address */
-+#define RT9455_REG_CTRL3_VOREG_MASK		(BIT(7) | BIT(6) | BIT(5) | \
-+						 BIT(4) | BIT(3) | BIT(2))
-+#define RT9455_REG_CTRL3_OTG_PL_MASK		BIT(1)
-+#define RT9455_REG_CTRL3_OTG_EN_MASK		BIT(0)
-+
-+#define RT9455_REG_DEV_ID			0x03 /* DEV_ID reg address */
-+#define RT9455_REG_DEV_ID_VENDOR_ID_MASK	(BIT(7) | BIT(6) | BIT(5) | \
-+						 BIT(4))
-+#define RT9455_REG_DEV_ID_CHIP_REV_MASK		(BIT(3) | BIT(2) | BIT(1) | \
-+						 BIT(0))
-+
-+#define RT9455_REG_CTRL4			0x04 /* CTRL4 reg address */
-+#define RT9455_REG_CTRL4_RST_MASK		BIT(7)
-+
-+#define RT9455_REG_CTRL5			0x05 /* CTRL5 reg address */
-+#define RT9455_REG_CTRL5_TMR_EN_MASK		BIT(7)
-+#define RT9455_REG_CTRL5_MIVR_MASK		(BIT(5) | BIT(4))
-+#define RT9455_REG_CTRL5_IPREC_MASK		(BIT(3) | BIT(2))
-+#define RT9455_REG_CTRL5_IEOC_PERCENTAGE_MASK	(BIT(1) | BIT(0))
-+
-+#define RT9455_REG_CTRL6			0x06 /* CTRL6 reg address */
-+#define RT9455_REG_CTRL6_IAICR_SEL_MASK		BIT(7)
-+#define RT9455_REG_CTRL6_ICHRG_MASK		(BIT(6) | BIT(5) | BIT(4))
-+#define RT9455_REG_CTRL6_VPREC_MASK		(BIT(2) | BIT(1) | BIT(0))
-+
-+#define RT9455_REG_CTRL7			0x07 /* CTRL7 reg address */
-+#define RT9455_REG_CTRL7_BATD_EN_MASK		BIT(6)
-+#define RT9455_REG_CTRL7_CHG_EN_MASK		BIT(4)
-+#define RT9455_REG_CTRL7_VMREG_MASK		(BIT(3) | BIT(2) | BIT(1) | \
-+						 BIT(0))
-+
-+#define RT9455_REG_IRQ1				0x08 /* IRQ1 reg address */
-+#define RT9455_REG_IRQ1_TSDI_MASK		BIT(7)
-+#define RT9455_REG_IRQ1_VINOVPI_MASK		BIT(6)
-+#define RT9455_REG_IRQ1_BATAB_MASK		BIT(0)
-+
-+#define RT9455_REG_IRQ2				0x09 /* IRQ2 reg address */
-+#define RT9455_REG_IRQ2_CHRVPI_MASK		BIT(7)
-+#define RT9455_REG_IRQ2_CHBATOVI_MASK		BIT(5)
-+#define RT9455_REG_IRQ2_CHTERMI_MASK		BIT(4)
-+#define RT9455_REG_IRQ2_CHRCHGI_MASK		BIT(3)
-+#define RT9455_REG_IRQ2_CH32MI_MASK		BIT(2)
-+#define RT9455_REG_IRQ2_CHTREGI_MASK		BIT(1)
-+#define RT9455_REG_IRQ2_CHMIVRI_MASK		BIT(0)
-+
-+#define RT9455_REG_IRQ3				0x0A /* IRQ3 reg address */
-+#define RT9455_REG_IRQ3_BSTBUSOVI_MASK		BIT(7)
-+#define RT9455_REG_IRQ3_BSTOLI_MASK		BIT(6)
-+#define RT9455_REG_IRQ3_BSTLOWVI_MASK		BIT(5)
-+#define RT9455_REG_IRQ3_BST32SI_MASK		BIT(3)
-+
-+#define RT9455_REG_MASK1			0x0B /* MASK1 reg address */
-+#define RT9455_REG_MASK1_TSDM_MASK		BIT(7)
-+#define RT9455_REG_MASK1_VINOVPIM_MASK		BIT(6)
-+#define RT9455_REG_MASK1_BATABM_MASK		BIT(0)
-+
-+#define RT9455_REG_MASK2			0x0C /* MASK2 reg address */
-+#define RT9455_REG_MASK2_CHRVPIM_MASK		BIT(7)
-+#define RT9455_REG_MASK2_CHBATOVIM_MASK		BIT(5)
-+#define RT9455_REG_MASK2_CHTERMIM_MASK		BIT(4)
-+#define RT9455_REG_MASK2_CHRCHGIM_MASK		BIT(3)
-+#define RT9455_REG_MASK2_CH32MIM_MASK		BIT(2)
-+#define RT9455_REG_MASK2_CHTREGIM_MASK		BIT(1)
-+#define RT9455_REG_MASK2_CHMIVRIM_MASK		BIT(0)
-+
-+#define RT9455_REG_MASK3			0x0D /* MASK3 reg address */
-+#define RT9455_REG_MASK3_BSTVINOVIM_MASK	BIT(7)
-+#define RT9455_REG_MASK3_BSTOLIM_MASK		BIT(6)
-+#define RT9455_REG_MASK3_BSTLOWVIM_MASK		BIT(5)
-+#define RT9455_REG_MASK3_BST32SIM_MASK		BIT(3)
-+
-+enum rt9455_fields {
-+	F_STAT, F_BOOST, F_PWR_RDY, F_OTG_PIN_POLARITY, /* CTRL1 reg fields */
-+
-+	F_IAICR, F_TE_SHDN_EN, F_HIGHER_OCP, F_TE, F_IAICR_INT, F_HIZ,
-+	F_OPA_MODE, /* CTRL2 reg fields */
-+
-+	F_VOREG, F_OTG_PL, F_OTG_EN, /* CTRL3 reg fields */
-+
-+	F_VENDOR_ID, F_CHIP_REV, /* DEV_ID reg fields */
-+
-+	F_RST, /* CTRL4 reg fields */
-+
-+	F_TMR_EN, F_MIVR, F_IPREC, F_IEOC_PERCENTAGE, /* CTRL5 reg fields*/
-+
-+	F_IAICR_SEL, F_ICHRG, F_VPREC, /* CTRL6 reg fields */
-+
-+	F_BATD_EN, F_CHG_EN, F_VMREG, /* CTRL7 reg fields */
-+
-+	F_TSDI, F_VINOVPI, F_BATAB, /* IRQ1 reg fields */
-+
-+	F_CHRVPI, F_CHBATOVI, F_CHTERMI, F_CHRCHGI, F_CH32MI, F_CHTREGI,
-+	F_CHMIVRI, /* IRQ2 reg fields */
-+
-+	F_BSTBUSOVI, F_BSTOLI, F_BSTLOWVI, F_BST32SI, /* IRQ3 reg fields */
-+
-+	F_TSDM, F_VINOVPIM, F_BATABM, /* MASK1 reg fields */
-+
-+	F_CHRVPIM, F_CHBATOVIM, F_CHTERMIM, F_CHRCHGIM, F_CH32MIM, F_CHTREGIM,
-+	F_CHMIVRIM, /* MASK2 reg fields */
-+
-+	F_BSTVINOVIM, F_BSTOLIM, F_BSTLOWVIM, F_BST32SIM, /* MASK3 reg fields */
-+
-+	F_MAX_FIELDS
-+};
-+
-+static const struct reg_field rt9455_reg_fields[] = {
-+	[F_STAT]		= REG_FIELD(RT9455_REG_CTRL1, 4, 5),
-+	[F_BOOST]		= REG_FIELD(RT9455_REG_CTRL1, 3, 3),
-+	[F_PWR_RDY]		= REG_FIELD(RT9455_REG_CTRL1, 2, 2),
-+	[F_OTG_PIN_POLARITY]	= REG_FIELD(RT9455_REG_CTRL1, 1, 1),
-+
-+	[F_IAICR]		= REG_FIELD(RT9455_REG_CTRL2, 6, 7),
-+	[F_TE_SHDN_EN]		= REG_FIELD(RT9455_REG_CTRL2, 5, 5),
-+	[F_HIGHER_OCP]		= REG_FIELD(RT9455_REG_CTRL2, 4, 4),
-+	[F_TE]			= REG_FIELD(RT9455_REG_CTRL2, 3, 3),
-+	[F_IAICR_INT]		= REG_FIELD(RT9455_REG_CTRL2, 2, 2),
-+	[F_HIZ]			= REG_FIELD(RT9455_REG_CTRL2, 1, 1),
-+	[F_OPA_MODE]		= REG_FIELD(RT9455_REG_CTRL2, 0, 0),
-+
-+	[F_VOREG]		= REG_FIELD(RT9455_REG_CTRL3, 2, 7),
-+	[F_OTG_PL]		= REG_FIELD(RT9455_REG_CTRL3, 1, 1),
-+	[F_OTG_EN]		= REG_FIELD(RT9455_REG_CTRL3, 0, 0),
-+
-+	[F_VENDOR_ID]		= REG_FIELD(RT9455_REG_DEV_ID, 4, 7),
-+	[F_CHIP_REV]		= REG_FIELD(RT9455_REG_DEV_ID, 0, 3),
-+
-+	[F_RST]			= REG_FIELD(RT9455_REG_CTRL4, 7, 7),
-+
-+	[F_TMR_EN]		= REG_FIELD(RT9455_REG_CTRL5, 7, 7),
-+	[F_MIVR]		= REG_FIELD(RT9455_REG_CTRL5, 4, 5),
-+	[F_IPREC]		= REG_FIELD(RT9455_REG_CTRL5, 2, 3),
-+	[F_IEOC_PERCENTAGE]	= REG_FIELD(RT9455_REG_CTRL5, 0, 1),
-+
-+	[F_IAICR_SEL]		= REG_FIELD(RT9455_REG_CTRL6, 7, 7),
-+	[F_ICHRG]		= REG_FIELD(RT9455_REG_CTRL6, 4, 6),
-+	[F_VPREC]		= REG_FIELD(RT9455_REG_CTRL6, 0, 2),
-+
-+	[F_BATD_EN]		= REG_FIELD(RT9455_REG_CTRL7, 6, 6),
-+	[F_CHG_EN]		= REG_FIELD(RT9455_REG_CTRL7, 4, 4),
-+	[F_VMREG]		= REG_FIELD(RT9455_REG_CTRL7, 0, 3),
-+
-+	[F_TSDI]		= REG_FIELD(RT9455_REG_IRQ1, 7, 7),
-+	[F_VINOVPI]		= REG_FIELD(RT9455_REG_IRQ1, 6, 6),
-+	[F_BATAB]		= REG_FIELD(RT9455_REG_IRQ1, 0, 0),
-+
-+	[F_CHRVPI]		= REG_FIELD(RT9455_REG_IRQ2, 7, 7),
-+	[F_CHBATOVI]		= REG_FIELD(RT9455_REG_IRQ2, 5, 5),
-+	[F_CHTERMI]		= REG_FIELD(RT9455_REG_IRQ2, 4, 4),
-+	[F_CHRCHGI]		= REG_FIELD(RT9455_REG_IRQ2, 3, 3),
-+	[F_CH32MI]		= REG_FIELD(RT9455_REG_IRQ2, 2, 2),
-+	[F_CHTREGI]		= REG_FIELD(RT9455_REG_IRQ2, 1, 1),
-+	[F_CHMIVRI]		= REG_FIELD(RT9455_REG_IRQ2, 0, 0),
-+
-+	[F_BSTBUSOVI]		= REG_FIELD(RT9455_REG_IRQ3, 7, 7),
-+	[F_BSTOLI]		= REG_FIELD(RT9455_REG_IRQ3, 6, 6),
-+	[F_BSTLOWVI]		= REG_FIELD(RT9455_REG_IRQ3, 5, 5),
-+	[F_BST32SI]		= REG_FIELD(RT9455_REG_IRQ3, 3, 3),
-+
-+	[F_TSDM]		= REG_FIELD(RT9455_REG_MASK1, 7, 7),
-+	[F_VINOVPIM]		= REG_FIELD(RT9455_REG_MASK1, 6, 6),
-+	[F_BATABM]		= REG_FIELD(RT9455_REG_MASK1, 0, 0),
-+
-+	[F_CHRVPIM]		= REG_FIELD(RT9455_REG_MASK2, 7, 7),
-+	[F_CHBATOVIM]		= REG_FIELD(RT9455_REG_MASK2, 5, 5),
-+	[F_CHTERMIM]		= REG_FIELD(RT9455_REG_MASK2, 4, 4),
-+	[F_CHRCHGIM]		= REG_FIELD(RT9455_REG_MASK2, 3, 3),
-+	[F_CH32MIM]		= REG_FIELD(RT9455_REG_MASK2, 2, 2),
-+	[F_CHTREGIM]		= REG_FIELD(RT9455_REG_MASK2, 1, 1),
-+	[F_CHMIVRIM]		= REG_FIELD(RT9455_REG_MASK2, 0, 0),
-+
-+	[F_BSTVINOVIM]		= REG_FIELD(RT9455_REG_MASK3, 7, 7),
-+	[F_BSTOLIM]		= REG_FIELD(RT9455_REG_MASK3, 6, 6),
-+	[F_BSTLOWVIM]		= REG_FIELD(RT9455_REG_MASK3, 5, 5),
-+	[F_BST32SIM]		= REG_FIELD(RT9455_REG_MASK3, 3, 3),
-+};
-+
-+/*
-+ * Each array initialised below shows the possible real-world values for a
-+ * group of bits belonging to RT9455 registers. The arrays are sorted in
-+ * ascending order. The index of each real-world value represents the value
-+ * that is encoded in the group of bits belonging to RT9455 registers.
-+ */
-+/* REG06[6:4] (ICHRG) in uAh */
-+static const int rt9455_ichrg_values[] = {
-+	 500000,  650000,  800000,  950000, 1100000, 1250000, 1400000, 1550000
-+};
-+
-+/* REG02[7:2] (VOREG) in uV */
-+static const int rt9455_voreg_values[] = {
-+	3500000, 3520000, 3540000, 3560000, 3580000, 3600000, 3620000, 3640000,
-+	3660000, 3680000, 3700000, 3720000, 3740000, 3760000, 3780000, 3800000,
-+	3820000, 3840000, 3860000, 3880000, 3900000, 3920000, 3940000, 3960000,
-+	3980000, 4000000, 4020000, 4040000, 4060000, 4080000, 4100000, 4120000,
-+	4140000, 4160000, 4180000, 4200000, 4220000, 4240000, 4260000, 4280000,
-+	4300000, 4330000, 4350000, 4370000, 4390000, 4410000, 4430000, 4450000,
-+	4450000, 4450000, 4450000, 4450000, 4450000, 4450000, 4450000, 4450000,
-+	4450000, 4450000, 4450000, 4450000, 4450000, 4450000, 4450000, 4450000
-+};
-+
-+/* REG07[3:0] (VMREG) in uV */
-+static const int rt9455_vmreg_values[] = {
-+	4200000, 4220000, 4240000, 4260000, 4280000, 4300000, 4320000, 4340000,
-+	4360000, 4380000, 4400000, 4430000, 4450000, 4450000, 4450000, 4450000
-+};
-+
-+/* REG05[5:4] (IEOC_PERCENTAGE) */
-+static const int rt9455_ieoc_percentage_values[] = {
-+	10, 30, 20, 30
-+};
-+
-+/* REG05[1:0] (MIVR) in uV */
-+static const int rt9455_mivr_values[] = {
-+	4000000, 4250000, 4500000, 5000000
-+};
-+
-+/* REG05[1:0] (IAICR) in uA */
-+static const int rt9455_iaicr_values[] = {
-+	100000, 500000, 1000000, 2000000
-+};
-+
-+struct rt9455_info {
-+	struct i2c_client		*client;
-+	struct regmap			*regmap;
-+	struct regmap_field		*regmap_fields[F_MAX_FIELDS];
-+	struct power_supply		*charger;
-+#if IS_ENABLED(CONFIG_USB_PHY)
-+	struct usb_phy			*usb_phy;
-+	struct notifier_block		nb;
-+#endif
-+	struct gpio_desc		*gpiod_irq;
-+	unsigned int			gpio_irq;
-+	struct delayed_work		pwr_rdy_work;
-+	struct delayed_work		max_charging_time_work;
-+	struct delayed_work		batt_presence_work;
-+};
-+
-+static const struct regmap_config rt9455_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = RT9455_REG_MASK3,
-+};
-+
-+/*
-+ * Iterate through each element of the 'tbl' array until an element whose value
-+ * is greater than v is found. Return the index of the respective element,
-+ * or the index of the last element in the array, if no such element is found.
-+ */
-+static u8 rt9455_find_idx(const int tbl[], int tbl_size, int v)
-+{
-+	int i;
-+
-+	/*
-+	 * No need to iterate until the last index in the table because
-+	 * if no element greater than v is found in the table,
-+	 * or if only the last element is greater than v,
-+	 * function returns the index of the last element.
-+	 */
-+	for (i = 0; i < tbl_size - 1; i++)
-+		if (v <= tbl[i])
-+			return i;
-+
-+	return (tbl_size - 1);
-+}
-+
-+static int rt9455_get_field_val(struct rt9455_info *info,
-+				enum rt9455_fields field,
-+				const int tbl[], int tbl_size, int *val)
-+{
-+	unsigned int v;
-+	int ret;
-+
-+	ret = regmap_field_read(info->regmap_fields[field], &v);
-+	if (ret)
-+		return ret;
-+
-+	v = (v >= tbl_size) ? (tbl_size - 1) : v;
-+	*val = tbl[v];
-+
-+	return 0;
-+}
-+
-+static int rt9455_set_field_val(struct rt9455_info *info,
-+				enum rt9455_fields field,
-+				const int tbl[], int tbl_size, int val)
-+{
-+	u8 idx = rt9455_find_idx(tbl, tbl_size, val);
-+
-+	return regmap_field_write(info->regmap_fields[field], idx);
-+}
-+
-+static int rt9455_register_reset(struct rt9455_info *info)
-+{
-+	struct device *dev = &info->client->dev;
-+	unsigned int v;
-+	int ret, limit = 100;
-+
-+	ret = regmap_field_write(info->regmap_fields[F_RST], 0x01);
-+	if (ret) {
-+		dev_err(dev, "Failed to set RST bit\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * To make sure that reset operation has finished, loop until RST bit
-+	 * is set to 0.
-+	 */
-+	do {
-+		ret = regmap_field_read(info->regmap_fields[F_RST], &v);
-+		if (ret) {
-+			dev_err(dev, "Failed to read RST bit\n");
-+			return ret;
-+		}
-+
-+		if (!v)
-+			break;
-+
-+		usleep_range(10, 100);
-+	} while (--limit);
-+
-+	if (!limit)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+/* Charger power supply property routines */
-+static enum power_supply_property rt9455_charger_properties[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
-+	POWER_SUPPLY_PROP_SCOPE,
-+	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
-+	POWER_SUPPLY_PROP_MODEL_NAME,
-+	POWER_SUPPLY_PROP_MANUFACTURER,
-+};
-+
-+static char *rt9455_charger_supplied_to[] = {
-+	"main-battery",
-+};
-+
-+static int rt9455_charger_get_status(struct rt9455_info *info,
-+				     union power_supply_propval *val)
-+{
-+	unsigned int v;
-+	int ret;
-+
-+	ret = regmap_field_read(info->regmap_fields[F_STAT], &v);
-+	if (ret) {
-+		dev_err(&info->client->dev, "Failed to read STAT bits\n");
-+		return ret;
-+	}
-+
-+	switch (v) {
-+	case 0:
-+		val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+	break;
-+	case 1:
-+		val->intval = POWER_SUPPLY_STATUS_CHARGING;
-+	break;
-+	case 2:
-+		val->intval = POWER_SUPPLY_STATUS_FULL;
-+	break;
-+	default:
-+		val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
-+	break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_health(struct rt9455_info *info,
-+				     union power_supply_propval *val)
-+{
-+	struct device *dev = &info->client->dev;
-+	unsigned int v;
-+	int ret;
-+
-+	val->intval = POWER_SUPPLY_HEALTH_GOOD;
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_IRQ1, &v);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IRQ1 register\n");
-+		return ret;
-+	}
-+
-+	if (v & RT9455_REG_IRQ1_TSDI_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_OVERHEAT;
-+		return 0;
-+	}
-+	if (v & RT9455_REG_IRQ1_VINOVPI_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+		return 0;
-+	}
-+	if (v & RT9455_REG_IRQ1_BATAB_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+		return 0;
-+	}
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_IRQ2, &v);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IRQ2 register\n");
-+		return ret;
-+	}
-+
-+	if (v & RT9455_REG_IRQ2_CHBATOVI_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+		return 0;
-+	}
-+	if (v & RT9455_REG_IRQ2_CH32MI_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
-+		return 0;
-+	}
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_IRQ3, &v);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IRQ3 register\n");
-+		return ret;
-+	}
-+
-+	if (v & RT9455_REG_IRQ3_BSTBUSOVI_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+		return 0;
-+	}
-+	if (v & RT9455_REG_IRQ3_BSTOLI_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+		return 0;
-+	}
-+	if (v & RT9455_REG_IRQ3_BSTLOWVI_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+		return 0;
-+	}
-+	if (v & RT9455_REG_IRQ3_BST32SI_MASK) {
-+		val->intval = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
-+		return 0;
-+	}
-+
-+	ret = regmap_field_read(info->regmap_fields[F_STAT], &v);
-+	if (ret) {
-+		dev_err(dev, "Failed to read STAT bits\n");
-+		return ret;
-+	}
-+
-+	if (v == RT9455_FAULT) {
-+		val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+		return 0;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_battery_presence(struct rt9455_info *info,
-+					       union power_supply_propval *val)
-+{
-+	unsigned int v;
-+	int ret;
-+
-+	ret = regmap_field_read(info->regmap_fields[F_BATAB], &v);
-+	if (ret) {
-+		dev_err(&info->client->dev, "Failed to read BATAB bit\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Since BATAB is 1 when battery is NOT present and 0 otherwise,
-+	 * we return !BATAB.
-+	 */
-+	val->intval = !v;
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_online(struct rt9455_info *info,
-+				     union power_supply_propval *val)
-+{
-+	unsigned int v;
-+	int ret;
-+
-+	ret = regmap_field_read(info->regmap_fields[F_PWR_RDY], &v);
-+	if (ret) {
-+		dev_err(&info->client->dev, "Failed to read PWR_RDY bit\n");
-+		return ret;
-+	}
-+
-+	val->intval = (int)v;
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_current(struct rt9455_info *info,
-+				      union power_supply_propval *val)
-+{
-+	int curr;
-+	int ret;
-+
-+	ret = rt9455_get_field_val(info, F_ICHRG,
-+				   rt9455_ichrg_values,
-+				   ARRAY_SIZE(rt9455_ichrg_values),
-+				   &curr);
-+	if (ret) {
-+		dev_err(&info->client->dev, "Failed to read ICHRG value\n");
-+		return ret;
-+	}
-+
-+	val->intval = curr;
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_current_max(struct rt9455_info *info,
-+					  union power_supply_propval *val)
-+{
-+	int idx = ARRAY_SIZE(rt9455_ichrg_values) - 1;
-+
-+	val->intval = rt9455_ichrg_values[idx];
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_voltage(struct rt9455_info *info,
-+				      union power_supply_propval *val)
-+{
-+	int voltage;
-+	int ret;
-+
-+	ret = rt9455_get_field_val(info, F_VOREG,
-+				   rt9455_voreg_values,
-+				   ARRAY_SIZE(rt9455_voreg_values),
-+				   &voltage);
-+	if (ret) {
-+		dev_err(&info->client->dev, "Failed to read VOREG value\n");
-+		return ret;
-+	}
-+
-+	val->intval = voltage;
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_voltage_max(struct rt9455_info *info,
-+					  union power_supply_propval *val)
-+{
-+	int idx = ARRAY_SIZE(rt9455_voreg_values) - 1;
-+
-+	val->intval = rt9455_voreg_values[idx];
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_term_current(struct rt9455_info *info,
-+					   union power_supply_propval *val)
-+{
-+	struct device *dev = &info->client->dev;
-+	int ichrg, ieoc_percentage, ret;
-+
-+	ret = rt9455_get_field_val(info, F_ICHRG,
-+				   rt9455_ichrg_values,
-+				   ARRAY_SIZE(rt9455_ichrg_values),
-+				   &ichrg);
-+	if (ret) {
-+		dev_err(dev, "Failed to read ICHRG value\n");
-+		return ret;
-+	}
-+
-+	ret = rt9455_get_field_val(info, F_IEOC_PERCENTAGE,
-+				   rt9455_ieoc_percentage_values,
-+				   ARRAY_SIZE(rt9455_ieoc_percentage_values),
-+				   &ieoc_percentage);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IEOC value\n");
-+		return ret;
-+	}
-+
-+	val->intval = ichrg * ieoc_percentage / 100;
-+
-+	return 0;
-+}
-+
-+static int rt9455_charger_get_property(struct power_supply *psy,
-+				       enum power_supply_property psp,
-+				       union power_supply_propval *val)
-+{
-+	struct rt9455_info *info = power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_STATUS:
-+		return rt9455_charger_get_status(info, val);
-+	case POWER_SUPPLY_PROP_HEALTH:
-+		return rt9455_charger_get_health(info, val);
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		return rt9455_charger_get_battery_presence(info, val);
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		return rt9455_charger_get_online(info, val);
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+		return rt9455_charger_get_current(info, val);
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX:
-+		return rt9455_charger_get_current_max(info, val);
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
-+		return rt9455_charger_get_voltage(info, val);
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
-+		return rt9455_charger_get_voltage_max(info, val);
-+	case POWER_SUPPLY_PROP_SCOPE:
-+		val->intval = POWER_SUPPLY_SCOPE_SYSTEM;
-+		return 0;
-+	case POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT:
-+		return rt9455_charger_get_term_current(info, val);
-+	case POWER_SUPPLY_PROP_MODEL_NAME:
-+		val->strval = RT9455_MODEL_NAME;
-+		return 0;
-+	case POWER_SUPPLY_PROP_MANUFACTURER:
-+		val->strval = RT9455_MANUFACTURER;
-+		return 0;
-+	default:
-+		return -ENODATA;
-+	}
-+}
-+
-+static int rt9455_charger_set_current(struct rt9455_info *info,
-+				      const union power_supply_propval *val)
-+{
-+	return rt9455_set_field_val(info, F_ICHRG,
-+				    rt9455_ichrg_values,
-+				    ARRAY_SIZE(rt9455_ichrg_values),
-+				    val->intval);
-+}
-+
-+static int rt9455_charger_set_voltage(struct rt9455_info *info,
-+				      const union power_supply_propval *val)
-+{
-+	return rt9455_set_field_val(info, F_VOREG,
-+				    rt9455_voreg_values,
-+				    ARRAY_SIZE(rt9455_voreg_values),
-+				    val->intval);
-+}
-+
-+static int rt9455_charger_set_voltage_max(struct rt9455_info *info,
-+					  const union power_supply_propval *val)
-+{
-+	return rt9455_set_field_val(info, F_VMREG,
-+				    rt9455_vmreg_values,
-+				    ARRAY_SIZE(rt9455_vmreg_values),
-+				    val->intval);
-+}
-+
-+static int rt9455_charger_set_property(struct power_supply *psy,
-+				       enum power_supply_property psp,
-+				       const union power_supply_propval *val)
-+{
-+	struct rt9455_info *info = power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+		return rt9455_charger_set_current(info, val);
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
-+		return rt9455_charger_set_voltage(info, val);
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
-+		return rt9455_charger_set_voltage_max(info, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int rt9455_charger_property_is_writeable(struct power_supply *psy,
-+						enum power_supply_property psp)
-+{
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
-+		return 1;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static int rt9455_hw_init(struct rt9455_info *info, u32 ichrg,
-+			  u32 ieoc_percentage, u32 voreg,
-+			  u32 mivr, u32 iaicr)
-+{
-+	struct device *dev = &info->client->dev;
-+	int ret;
-+
-+	ret = rt9455_register_reset(info);
-+	if (ret) {
-+		dev_err(dev, "Power On Reset failed\n");
-+		return ret;
-+	}
-+
-+	/* Set TE bit in order to enable end of charge detection */
-+	ret = regmap_field_write(info->regmap_fields[F_TE], 1);
-+	if (ret) {
-+		dev_err(dev, "Failed to set TE bit\n");
-+		return ret;
-+	}
-+
-+	/* Set TE_SHDN_EN bit in order to enable end of charge detection */
-+	ret = regmap_field_write(info->regmap_fields[F_TE_SHDN_EN], 1);
-+	if (ret) {
-+		dev_err(dev, "Failed to set TE_SHDN_EN bit\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Set BATD_EN bit in order to enable battery detection
-+	 * when charging is done
-+	 */
-+	ret = regmap_field_write(info->regmap_fields[F_BATD_EN], 1);
-+	if (ret) {
-+		dev_err(dev, "Failed to set BATD_EN bit\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Disable Safety Timer. In charge mode, this timer terminates charging
-+	 * if no read or write via I2C is done within 32 minutes. This timer
-+	 * avoids overcharging the baterry when the OS is not loaded and the
-+	 * charger is connected to a power source.
-+	 * In boost mode, this timer triggers BST32SI interrupt if no read or
-+	 * write via I2C is done within 32 seconds.
-+	 * When the OS is loaded and the charger driver is inserted, we use
-+	 * delayed_work, named max_charging_time_work, to avoid overcharging
-+	 * the battery.
-+	 */
-+	ret = regmap_field_write(info->regmap_fields[F_TMR_EN], 0x00);
-+	if (ret) {
-+		dev_err(dev, "Failed to disable Safety Timer\n");
-+		return ret;
-+	}
-+
-+	/* Set ICHRG to value retrieved from device-specific data */
-+	ret = rt9455_set_field_val(info, F_ICHRG,
-+				   rt9455_ichrg_values,
-+				   ARRAY_SIZE(rt9455_ichrg_values), ichrg);
-+	if (ret) {
-+		dev_err(dev, "Failed to set ICHRG value\n");
-+		return ret;
-+	}
-+
-+	/* Set IEOC Percentage to value retrieved from device-specific data */
-+	ret = rt9455_set_field_val(info, F_IEOC_PERCENTAGE,
-+				   rt9455_ieoc_percentage_values,
-+				   ARRAY_SIZE(rt9455_ieoc_percentage_values),
-+				   ieoc_percentage);
-+	if (ret) {
-+		dev_err(dev, "Failed to set IEOC Percentage value\n");
-+		return ret;
-+	}
-+
-+	/* Set VOREG to value retrieved from device-specific data */
-+	ret = rt9455_set_field_val(info, F_VOREG,
-+				   rt9455_voreg_values,
-+				   ARRAY_SIZE(rt9455_voreg_values), voreg);
-+	if (ret) {
-+		dev_err(dev, "Failed to set VOREG value\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Set VMREG value to maximum (4.45V). The charger uses VOREG as maximum
-+	 * value for battery voltage, because charge termination is enabled.
-+	 */
-+	ret = regmap_field_write(info->regmap_fields[F_VMREG], 0x0F);
-+
-+	/*
-+	 * Set MIVR to value retrieved from device-specific data.
-+	 * If no value is specified, default value for MIVR is 4.5V.
-+	 */
-+	if (mivr == -1)
-+		mivr = 4500000;
-+
-+	ret = rt9455_set_field_val(info, F_MIVR,
-+				   rt9455_mivr_values,
-+				   ARRAY_SIZE(rt9455_mivr_values), mivr);
-+	if (ret) {
-+		dev_err(dev, "Failed to set MIVR value\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Set IAICR to value retrieved from device-specific data.
-+	 * If no value is specified, default value for IAICR is 500 mA.
-+	 */
-+	if (iaicr == -1)
-+		iaicr = 500000;
-+
-+	ret = rt9455_set_field_val(info, F_IAICR,
-+				   rt9455_iaicr_values,
-+				   ARRAY_SIZE(rt9455_iaicr_values), iaicr);
-+	if (ret) {
-+		dev_err(dev, "Failed to set IAICR value\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Set IAICR_INT bit so that IAICR value is determined by IAICR bits
-+	 * and not by OTG pin.
-+	 */
-+	ret = regmap_field_write(info->regmap_fields[F_IAICR_INT], 0x01);
-+	if (ret) {
-+		dev_err(dev, "Failed to set IAICR_INT bit\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Disable CHMIVRI interrupt. Because the driver sets MIVR value,
-+	 * CHMIVRI is triggered, but there is no action to be taken by the
-+	 * driver when CHMIVRI is triggered.
-+	 */
-+	ret = regmap_field_write(info->regmap_fields[F_CHMIVRIM], 0x01);
-+	if (ret) {
-+		dev_err(dev, "Failed to mask CHMIVRI interrupt\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rt9455_irq_handler_check_irq1_register(struct rt9455_info *info,
-+						  bool *_is_battery_absent,
-+						  bool *_alert_userspace)
-+{
-+	unsigned int irq1, mask1, mask2;
-+	struct device *dev = &info->client->dev;
-+	bool is_battery_absent = false;
-+	bool alert_userspace = false;
-+	int ret;
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_IRQ1, &irq1);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IRQ1 register\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_MASK1, &mask1);
-+	if (ret) {
-+		dev_err(dev, "Failed to read MASK1 register\n");
-+		return ret;
-+	}
-+
-+	if (irq1 & RT9455_REG_IRQ1_TSDI_MASK) {
-+		dev_err(dev, "Thermal shutdown fault occurred\n");
-+		alert_userspace = true;
-+	}
-+
-+	if (irq1 & RT9455_REG_IRQ1_VINOVPI_MASK) {
-+		dev_err(dev, "Overvoltage input occurred\n");
-+		alert_userspace = true;
-+	}
-+
-+	if (irq1 & RT9455_REG_IRQ1_BATAB_MASK) {
-+		dev_err(dev, "Battery absence occurred\n");
-+		is_battery_absent = true;
-+		alert_userspace = true;
-+
-+		if ((mask1 & RT9455_REG_MASK1_BATABM_MASK) == 0) {
-+			ret = regmap_field_write(info->regmap_fields[F_BATABM],
-+						 0x01);
-+			if (ret) {
-+				dev_err(dev, "Failed to mask BATAB interrupt\n");
-+				return ret;
-+			}
-+		}
-+
-+		ret = regmap_read(info->regmap, RT9455_REG_MASK2, &mask2);
-+		if (ret) {
-+			dev_err(dev, "Failed to read MASK2 register\n");
-+			return ret;
-+		}
-+
-+		if ((mask2 & RT9455_REG_MASK2_CHTERMIM_MASK)) {
-+			ret = regmap_field_write(
-+				info->regmap_fields[F_CHTERMIM], 0x00);
-+			if (ret) {
-+				dev_err(dev, "Failed to unmask CHTERMI interrupt\n");
-+				return ret;
-+			}
-+		}
-+
-+		if ((mask2 & RT9455_REG_MASK2_CHRCHGIM_MASK)) {
-+			ret = regmap_field_write(
-+				info->regmap_fields[F_CHRCHGIM], 0x00);
-+			if (ret) {
-+				dev_err(dev, "Failed to unmask CHRCHGI interrupt\n");
-+				return ret;
-+			}
-+		}
-+
-+		/*
-+		 * When the battery is absent, max_charging_time_work is
-+		 * cancelled, since no charging is done.
-+		 */
-+		cancel_delayed_work_sync(&info->max_charging_time_work);
-+		/*
-+		 * Since no interrupt is triggered when the battery is
-+		 * reconnected, max_charging_time_work is not rescheduled.
-+		 * Therefore, batt_presence_work is scheduled to check whether
-+		 * the battery is still absent or not.
-+		 */
-+		queue_delayed_work(system_power_efficient_wq,
-+				   &info->batt_presence_work,
-+				   RT9455_BATT_PRESENCE_DELAY * HZ);
-+	}
-+
-+	*_is_battery_absent = is_battery_absent;
-+
-+	if (alert_userspace)
-+		*_alert_userspace = alert_userspace;
-+
-+	return 0;
-+}
-+
-+static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
-+						  bool is_battery_absent,
-+						  bool *_alert_userspace)
-+{
-+	unsigned int irq2, mask2;
-+	struct device *dev = &info->client->dev;
-+	bool alert_userspace = false;
-+	int ret;
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_IRQ2, &irq2);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IRQ2 register\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_MASK2, &mask2);
-+	if (ret) {
-+		dev_err(dev, "Failed to read MASK2 register\n");
-+		return ret;
-+	}
-+
-+	if (irq2 & RT9455_REG_IRQ2_CHRVPI_MASK) {
-+		dev_dbg(dev, "Charger fault occurred\n");
-+		alert_userspace = true;
-+		/*
-+		 * CHRVPI bit is set in 2 cases:
-+		 * 1. when the power source is connected to the charger.
-+		 * 2. when the power source is disconnected from the charger.
-+		 * To identify the case, PWR_RDY bit is checked. Because
-+		 * PWR_RDY bit is set / cleared after CHRVPI interrupt is
-+		 * triggered, we use delayed_work to later read PWR_RDY bit.
-+		 */
-+		queue_delayed_work(system_power_efficient_wq,
-+				   &info->pwr_rdy_work,
-+				   RT9455_PWR_RDY_DELAY * HZ);
-+	}
-+	if (irq2 & RT9455_REG_IRQ2_CHBATOVI_MASK) {
-+		dev_err(dev, "Battery OVP occurred\n");
-+		alert_userspace = true;
-+	}
-+	if (irq2 & RT9455_REG_IRQ2_CHTERMI_MASK) {
-+		dev_info(dev, "Charge terminated\n");
-+		if (!is_battery_absent) {
-+			if ((mask2 & RT9455_REG_MASK2_CHTERMIM_MASK) == 0) {
-+				ret = regmap_field_write(
-+					info->regmap_fields[F_CHTERMIM], 0x01);
-+				if (ret) {
-+					dev_err(dev, "Failed to mask CHTERMI interrupt\n");
-+					return ret;
-+				}
-+				/*
-+				 * Update MASK2 value, since we set CHTERMIM
-+				 * bit.
-+				 */
-+				mask2 = mask2 | RT9455_REG_MASK2_CHTERMIM_MASK;
-+			}
-+			cancel_delayed_work_sync(&info->max_charging_time_work);
-+			alert_userspace = true;
-+		}
-+	}
-+	if (irq2 & RT9455_REG_IRQ2_CHRCHGI_MASK) {
-+		dev_info(dev, "Recharge request\n");
-+		ret = regmap_field_write(info->regmap_fields[F_CHG_EN], 0x01);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable charging\n");
-+			return ret;
-+		}
-+		if (mask2 & RT9455_REG_MASK2_CHTERMIM_MASK) {
-+			ret = regmap_field_write(
-+				info->regmap_fields[F_CHTERMIM], 0x00);
-+			if (ret) {
-+				dev_err(dev, "Failed to unmask CHTERMI interrupt\n");
-+				return ret;
-+			}
-+			/* Update MASK2 value, since we reset CHTERMIM bit. */
-+			mask2 = mask2 & ~RT9455_REG_MASK2_CHTERMIM_MASK;
-+		}
-+		if (!is_battery_absent) {
-+			/*
-+			 * No need to check whether the charger is connected to
-+			 * power source when CHRCHGI is received, since CHRCHGI
-+			 * is not triggered if the charger is not connected to
-+			 * the power source.
-+			 */
-+			queue_delayed_work(system_power_efficient_wq,
-+					   &info->max_charging_time_work,
-+					   RT9455_MAX_CHARGING_TIME * HZ);
-+			alert_userspace = true;
-+		}
-+	}
-+	if (irq2 & RT9455_REG_IRQ2_CH32MI_MASK) {
-+		dev_err(dev, "Charger fault. 32 mins timeout occurred\n");
-+		alert_userspace = true;
-+	}
-+	if (irq2 & RT9455_REG_IRQ2_CHTREGI_MASK) {
-+		dev_warn(dev,
-+			 "Charger warning. Thermal regulation loop active\n");
-+		alert_userspace = true;
-+	}
-+	if (irq2 & RT9455_REG_IRQ2_CHMIVRI_MASK) {
-+		dev_dbg(dev,
-+			"Charger warning. Input voltage MIVR loop active\n");
-+	}
-+
-+	if (alert_userspace)
-+		*_alert_userspace = alert_userspace;
-+
-+	return 0;
-+}
-+
-+static int rt9455_irq_handler_check_irq3_register(struct rt9455_info *info,
-+						  bool *_alert_userspace)
-+{
-+	unsigned int irq3, mask3;
-+	struct device *dev = &info->client->dev;
-+	bool alert_userspace = false;
-+	int ret;
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_IRQ3, &irq3);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IRQ3 register\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_MASK3, &mask3);
-+	if (ret) {
-+		dev_err(dev, "Failed to read MASK3 register\n");
-+		return ret;
-+	}
-+
-+	if (irq3 & RT9455_REG_IRQ3_BSTBUSOVI_MASK) {
-+		dev_err(dev, "Boost fault. Overvoltage input occurred\n");
-+		alert_userspace = true;
-+	}
-+	if (irq3 & RT9455_REG_IRQ3_BSTOLI_MASK) {
-+		dev_err(dev, "Boost fault. Overload\n");
-+		alert_userspace = true;
-+	}
-+	if (irq3 & RT9455_REG_IRQ3_BSTLOWVI_MASK) {
-+		dev_err(dev, "Boost fault. Battery voltage too low\n");
-+		alert_userspace = true;
-+	}
-+	if (irq3 & RT9455_REG_IRQ3_BST32SI_MASK) {
-+		dev_err(dev, "Boost fault. 32 seconds timeout occurred.\n");
-+		alert_userspace = true;
-+	}
-+
-+	if (alert_userspace) {
-+		dev_info(dev, "Boost fault occurred, therefore the charger goes into charge mode\n");
-+		ret = regmap_field_write(info->regmap_fields[F_OPA_MODE],
-+					 RT9455_CHARGE_MODE);
-+		if (ret) {
-+			dev_err(dev, "Failed to set charger in charge mode\n");
-+			return ret;
-+		}
-+		*_alert_userspace = alert_userspace;
-+	}
-+
-+	return 0;
-+}
-+
-+static irqreturn_t rt9455_irq_handler_thread(int irq, void *data)
-+{
-+	struct rt9455_info *info = data;
-+	struct device *dev;
-+	bool alert_userspace = false;
-+	bool is_battery_absent = false;
-+	unsigned int status;
-+	int ret;
-+
-+	if (!info)
-+		return IRQ_NONE;
-+
-+	dev = &info->client->dev;
-+
-+	if (irq != info->client->irq) {
-+		dev_err(dev, "Interrupt is not for RT9455 charger\n");
-+		return IRQ_NONE;
-+	}
-+
-+	ret = regmap_field_read(info->regmap_fields[F_STAT], &status);
-+	if (ret) {
-+		dev_err(dev, "Failed to read STAT bits\n");
-+		return IRQ_HANDLED;
-+	}
-+	dev_dbg(dev, "Charger status is %d\n", status);
-+
-+	/*
-+	 * Each function that processes an IRQ register receives as output
-+	 * parameter alert_userspace pointer. alert_userspace is set to true
-+	 * in such a function only if an interrupt has occurred in the
-+	 * respective interrupt register. This way, we avoid the following
-+	 * case: interrupt occurs only in IRQ1 register,
-+	 * rt9455_irq_handler_check_irq1_register() function sets to true
-+	 * alert_userspace, but rt9455_irq_handler_check_irq2_register()
-+	 * and rt9455_irq_handler_check_irq3_register() functions set to false
-+	 * alert_userspace and power_supply_changed() is never called.
-+	 */
-+	ret = rt9455_irq_handler_check_irq1_register(info, &is_battery_absent,
-+						     &alert_userspace);
-+	if (ret) {
-+		dev_err(dev, "Failed to handle IRQ1 register\n");
-+		return IRQ_HANDLED;
-+	}
-+
-+	ret = rt9455_irq_handler_check_irq2_register(info, is_battery_absent,
-+						     &alert_userspace);
-+	if (ret) {
-+		dev_err(dev, "Failed to handle IRQ2 register\n");
-+		return IRQ_HANDLED;
-+	}
-+
-+	ret = rt9455_irq_handler_check_irq3_register(info, &alert_userspace);
-+	if (ret) {
-+		dev_err(dev, "Failed to handle IRQ3 register\n");
-+		return IRQ_HANDLED;
-+	}
-+
-+	if (alert_userspace) {
-+		/*
-+		 * Sometimes, an interrupt occurs while probe() function is
-+		 * executing and power_supply_register() is not yet called.
-+		 * Do not call power_supply_charged() in this case.
-+		 */
-+		if (!IS_ERR_OR_NULL(info->charger))
-+			power_supply_changed(info->charger);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int rt9455_setup_irq(struct rt9455_info *info)
-+{
-+	struct device *dev = &info->client->dev;
-+	int ret;
-+
-+	/* Obtain IRQ GPIO */
-+	info->gpiod_irq = devm_gpiod_get_index(dev, RT9455_IRQ_NAME, 0);
-+	if (IS_ERR(info->gpiod_irq)) {
-+		dev_err(dev, "Failed to get IRQ GPIO\n");
-+		return PTR_ERR(info->gpiod_irq);
-+	}
-+
-+	/* Configure IRQ GPIO */
-+	ret = gpiod_direction_input(info->gpiod_irq);
-+	if (ret) {
-+		dev_err(dev, "Failed to set IRQ GPIO direction err = %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	/* Map the pin to an IRQ */
-+	ret = gpiod_to_irq(info->gpiod_irq);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to associate GPIO with an IRQ err = %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	dev_dbg(dev, "GPIO resource, no:%d irq:%d\n",
-+		desc_to_gpio(info->gpiod_irq), ret);
-+	info->client->irq = ret;
-+	info->gpio_irq = desc_to_gpio(info->gpiod_irq);
-+
-+	return 0;
-+}
-+
-+static int rt9455_discover_charger(struct rt9455_info *info, u32 *ichrg,
-+				   u32 *ieoc_percentage, u32 *voreg,
-+				   u32 *mivr, u32 *iaicr)
-+{
-+	struct device *dev = &info->client->dev;
-+	int ret;
-+
-+	if (!dev->of_node && !ACPI_HANDLE(dev)) {
-+		dev_err(dev, "No support for either device tree or ACPI\n");
-+		return -EINVAL;
-+	}
-+	/* ICHRG, IEOC_PERCENTAGE and VOREG are mandatory parameters. */
-+	ret = device_property_read_u32(dev, "richtek,output-charge-current",
-+				       ichrg);
-+	if (ret) {
-+		dev_err(dev, "Error: missing \"output-charge-current\" property\n");
-+		return ret;
-+	}
-+
-+	ret = device_property_read_u32(dev, "richtek,end-of-charge-percentage",
-+				       ieoc_percentage);
-+	if (ret) {
-+		dev_err(dev, "Error: missing \"end-of-charge-percentage\" property\n");
-+		return ret;
-+	}
-+
-+	ret = device_property_read_u32(dev,
-+				       "richtek,battery-regulation-voltage",
-+				       voreg);
-+	if (ret) {
-+		dev_err(dev, "Error: missing \"battery-regulation-voltage\" property\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * MIVR and IAICR are optional parameters. Do not return error if one
-+	 * of them is not present in ACPI table or device tree specification.
-+	 */
-+	device_property_read_u32(dev, "richtek,min-input-voltage-regulation",
-+				 mivr);
-+	device_property_read_u32(dev, "richtek,avg-input-current-regulation",
-+				 iaicr);
-+
-+	ret = rt9455_setup_irq(info);
-+	if (ret) {
-+		dev_err(dev, "Failed to allocate IRQ resource\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rt9455_usb_event_none(struct rt9455_info *info,
-+				 u8 opa_mode, u8 iaicr)
-+{
-+	struct device *dev = &info->client->dev;
-+	int ret;
-+
-+	if (opa_mode == RT9455_BOOST_MODE) {
-+		/*
-+		 * If the charger is in boost mode, and it has received
-+		 * USB_EVENT_NONE, this means the consumer device powered by the
-+		 * charger is not connected anymore.
-+		 * In this case, the charger goes into charge mode.
-+		 */
-+		dev_dbg(dev, "USB_EVENT_NONE received, therefore the charger goes into charge mode\n");
-+		ret = regmap_field_write(info->regmap_fields[F_OPA_MODE],
-+					 RT9455_CHARGE_MODE);
-+		if (ret) {
-+			dev_err(dev, "Failed to set charger in charge mode\n");
-+			return NOTIFY_DONE;
-+		}
-+	}
-+
-+	dev_dbg(dev, "USB_EVENT_NONE received, therefore IAICR is set to its minimum value\n");
-+	if (iaicr != RT9455_IAICR_100MA) {
-+		ret = regmap_field_write(info->regmap_fields[F_IAICR],
-+					 RT9455_IAICR_100MA);
-+		if (ret) {
-+			dev_err(dev, "Failed to set IAICR value\n");
-+			return NOTIFY_DONE;
-+		}
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int rt9455_usb_event_vbus(struct rt9455_info *info,
-+				 u8 opa_mode, u8 iaicr)
-+{
-+	struct device *dev = &info->client->dev;
-+	int ret;
-+
-+	if (opa_mode == RT9455_BOOST_MODE) {
-+		/*
-+		 * If the charger is in boost mode, and it has received
-+		 * USB_EVENT_VBUS, this means the consumer device powered by the
-+		 * charger is not connected anymore.
-+		 * In this case, the charger goes into charge mode.
-+		 */
-+		dev_dbg(dev, "USB_EVENT_VBUS received, therefore the charger goes into charge mode\n");
-+		ret = regmap_field_write(info->regmap_fields[F_OPA_MODE],
-+					 RT9455_CHARGE_MODE);
-+		if (ret) {
-+			dev_err(dev, "Failed to set charger in charge mode\n");
-+			return NOTIFY_DONE;
-+		}
-+	}
-+
-+	dev_dbg(dev, "USB_EVENT_VBUS received, therefore IAICR is set to 500 mA\n");
-+	if (iaicr != RT9455_IAICR_500MA) {
-+		ret = regmap_field_write(info->regmap_fields[F_IAICR],
-+					 RT9455_IAICR_500MA);
-+		if (ret) {
-+			dev_err(dev, "Failed to set IAICR value\n");
-+			return NOTIFY_DONE;
-+		}
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int rt9455_usb_event_id(struct rt9455_info *info,
-+			       u8 opa_mode, u8 iaicr)
-+{
-+	struct device *dev = &info->client->dev;
-+	int ret;
-+
-+	if (opa_mode == RT9455_CHARGE_MODE) {
-+		/*
-+		 * If the charger is in charge mode, and it has received
-+		 * USB_EVENT_ID, this means the consumer device powered by the
-+		 * charger is not connected anymore.
-+		 * In this case, the charger goes into charge mode.
-+		 */
-+		dev_dbg(dev, "USB_EVENT_ID received, therefore the charger goes into boost mode\n");
-+		ret = regmap_field_write(info->regmap_fields[F_OPA_MODE],
-+					 RT9455_BOOST_MODE);
-+		if (ret) {
-+			dev_err(dev, "Failed to set charger in boost mode\n");
-+			return NOTIFY_DONE;
-+		}
-+	}
-+
-+	dev_dbg(dev, "USB_EVENT_ID received, therefore IAICR is set to its minimum value\n");
-+	if (iaicr != RT9455_IAICR_100MA) {
-+		ret = regmap_field_write(info->regmap_fields[F_IAICR],
-+					 RT9455_IAICR_100MA);
-+		if (ret) {
-+			dev_err(dev, "Failed to set IAICR value\n");
-+			return NOTIFY_DONE;
-+		}
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int rt9455_usb_event_charger(struct rt9455_info *info,
-+				    u8 opa_mode, u8 iaicr)
-+{
-+	struct device *dev = &info->client->dev;
-+	int ret;
-+
-+	if (opa_mode == RT9455_BOOST_MODE) {
-+		/*
-+		 * If the charger is in boost mode, and it has received
-+		 * USB_EVENT_CHARGER, this means the consumer device powered by
-+		 * the charger is not connected anymore.
-+		 * In this case, the charger goes into charge mode.
-+		 */
-+		dev_dbg(dev, "USB_EVENT_CHARGER received, therefore the charger goes into charge mode\n");
-+		ret = regmap_field_write(info->regmap_fields[F_OPA_MODE],
-+					 RT9455_CHARGE_MODE);
-+		if (ret) {
-+			dev_err(dev, "Failed to set charger in charge mode\n");
-+			return NOTIFY_DONE;
-+		}
-+	}
-+
-+	dev_dbg(dev, "USB_EVENT_CHARGER received, therefore IAICR is set to no current limit\n");
-+	if (iaicr != RT9455_IAICR_NO_LIMIT) {
-+		ret = regmap_field_write(info->regmap_fields[F_IAICR],
-+					 RT9455_IAICR_NO_LIMIT);
-+		if (ret) {
-+			dev_err(dev, "Failed to set IAICR value\n");
-+			return NOTIFY_DONE;
-+		}
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int rt9455_usb_event(struct notifier_block *nb,
-+			    unsigned long event, void *power)
-+{
-+	struct rt9455_info *info = container_of(nb, struct rt9455_info, nb);
-+	struct device *dev = &info->client->dev;
-+	unsigned int opa_mode, iaicr;
-+	int ret;
-+
-+	if (!info)
-+		return NOTIFY_DONE;
-+
-+	/*
-+	 * Determine whether the charger is in charge mode
-+	 * or in boost mode.
-+	 */
-+	ret = regmap_field_read(info->regmap_fields[F_OPA_MODE],
-+				&opa_mode);
-+	if (ret) {
-+		dev_err(dev, "Failed to read operation mode value\n");
-+		return NOTIFY_DONE;
-+	}
-+
-+	ret = regmap_field_read(info->regmap_fields[F_IAICR],
-+				&iaicr);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IAICR value\n");
-+		return NOTIFY_DONE;
-+	}
-+
-+	dev_dbg(dev, "Received USB event %lu\n", event);
-+	switch (event) {
-+	case USB_EVENT_NONE:
-+		return rt9455_usb_event_none(info, opa_mode, iaicr);
-+	case USB_EVENT_VBUS:
-+		return rt9455_usb_event_vbus(info, opa_mode, iaicr);
-+	case USB_EVENT_ID:
-+		return rt9455_usb_event_id(info, opa_mode, iaicr);
-+	case USB_EVENT_CHARGER:
-+		return rt9455_usb_event_charger(info, opa_mode, iaicr);
-+	default:
-+		dev_err(dev, "Unknown USB event\n");
-+	}
-+	return NOTIFY_DONE;
-+}
-+
-+static void rt9455_pwr_rdy_work_callback(struct work_struct *work)
-+{
-+	struct rt9455_info *info = container_of(work, struct rt9455_info,
-+						pwr_rdy_work.work);
-+	struct device *dev = &info->client->dev;
-+	unsigned int pwr_rdy;
-+	int ret;
-+
-+	ret = regmap_field_read(info->regmap_fields[F_PWR_RDY], &pwr_rdy);
-+	if (ret) {
-+		dev_err(dev, "Failed to read PWR_RDY bit\n");
-+		return;
-+	}
-+	switch (pwr_rdy) {
-+	case RT9455_PWR_FAULT:
-+		dev_dbg(dev, "Charger disconnected from power source\n");
-+		cancel_delayed_work_sync(&info->max_charging_time_work);
-+		break;
-+	case RT9455_PWR_GOOD:
-+		dev_dbg(dev, "Charger connected to power source\n");
-+		ret = regmap_field_write(info->regmap_fields[F_CHG_EN],
-+					 RT9455_CHARGE_ENABLE);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable charging\n");
-+			return;
-+		}
-+		queue_delayed_work(system_power_efficient_wq,
-+				   &info->max_charging_time_work,
-+				   RT9455_MAX_CHARGING_TIME * HZ);
-+		break;
-+	}
-+}
-+
-+static void rt9455_max_charging_time_work_callback(struct work_struct *work)
-+{
-+	struct rt9455_info *info = container_of(work, struct rt9455_info,
-+						max_charging_time_work.work);
-+	struct device *dev = &info->client->dev;
-+	int ret;
-+
-+	dev_err(dev, "Battery has been charging for at least 6 hours and is not yet fully charged. Battery is dead, therefore charging is disabled.\n");
-+	ret = regmap_field_write(info->regmap_fields[F_CHG_EN],
-+				 RT9455_CHARGE_DISABLE);
-+	if (ret)
-+		dev_err(dev, "Failed to disable charging\n");
-+}
-+
-+static void rt9455_batt_presence_work_callback(struct work_struct *work)
-+{
-+	struct rt9455_info *info = container_of(work, struct rt9455_info,
-+						batt_presence_work.work);
-+	struct device *dev = &info->client->dev;
-+	unsigned int irq1, mask1;
-+	int ret;
-+
-+	ret = regmap_read(info->regmap, RT9455_REG_IRQ1, &irq1);
-+	if (ret) {
-+		dev_err(dev, "Failed to read IRQ1 register\n");
-+		return;
-+	}
-+
-+	/*
-+	 * If the battery is still absent, batt_presence_work is rescheduled.
-+	 * Otherwise, max_charging_time is scheduled.
-+	 */
-+	if (irq1 & RT9455_REG_IRQ1_BATAB_MASK) {
-+		queue_delayed_work(system_power_efficient_wq,
-+				   &info->batt_presence_work,
-+				   RT9455_BATT_PRESENCE_DELAY * HZ);
-+	} else {
-+		queue_delayed_work(system_power_efficient_wq,
-+				   &info->max_charging_time_work,
-+				   RT9455_MAX_CHARGING_TIME * HZ);
-+
-+		ret = regmap_read(info->regmap, RT9455_REG_MASK1, &mask1);
-+		if (ret) {
-+			dev_err(dev, "Failed to read MASK1 register\n");
-+			return;
-+		}
-+
-+		if ((mask1 & RT9455_REG_MASK1_BATABM_MASK) == 1) {
-+			ret = regmap_field_write(info->regmap_fields[F_BATABM],
-+						 0x00);
-+			if (ret)
-+				dev_err(dev, "Failed to unmask BATAB interrupt\n");
-+		}
-+	}
-+}
-+
-+static const struct power_supply_desc rt9455_charger_desc = {
-+	.name			= RT9455_DRIVER_NAME,
-+	.type			= POWER_SUPPLY_TYPE_USB,
-+	.properties		= rt9455_charger_properties,
-+	.num_properties		= ARRAY_SIZE(rt9455_charger_properties),
-+	.get_property		= rt9455_charger_get_property,
-+	.set_property		= rt9455_charger_set_property,
-+	.property_is_writeable	= rt9455_charger_property_is_writeable,
-+};
-+
-+static int rt9455_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-+	struct device *dev = &client->dev;
-+	struct rt9455_info *info;
-+	struct power_supply_config rt9455_charger_config = {};
-+	/* mandatory device-specific data values */
-+	u32 ichrg, ieoc_percentage, voreg;
-+	/* optional device-specific data values */
-+	u32 mivr = -1, iaicr = -1;
-+	int i, ret;
-+
-+	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
-+		dev_err(dev, "No support for SMBUS_BYTE_DATA\n");
-+		return -ENODEV;
-+	}
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	info->client = client;
-+	i2c_set_clientdata(client, info);
-+
-+	info->regmap = devm_regmap_init_i2c(client,
-+					    &rt9455_regmap_config);
-+	if (IS_ERR(info->regmap)) {
-+		dev_err(dev, "Failed to initialize register map\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < F_MAX_FIELDS; i++) {
-+		info->regmap_fields[i] =
-+			devm_regmap_field_alloc(dev, info->regmap,
-+						rt9455_reg_fields[i]);
-+		if (IS_ERR(info->regmap_fields[i])) {
-+			dev_err(dev,
-+				"Failed to allocate regmap field = %d\n", i);
-+			return PTR_ERR(info->regmap_fields[i]);
-+		}
-+	}
-+
-+	ret = rt9455_discover_charger(info, &ichrg, &ieoc_percentage,
-+				      &voreg, &mivr, &iaicr);
-+	if (ret) {
-+		dev_err(dev, "Failed to discover charger\n");
-+		return ret;
-+	}
-+
-+#if IS_ENABLED(CONFIG_USB_PHY)
-+	info->usb_phy = usb_get_phy(USB_PHY_TYPE_USB2);
-+	if (IS_ERR_OR_NULL(info->usb_phy)) {
-+		dev_err(dev, "Failed to get USB transceiver\n");
-+	} else {
-+		info->nb.notifier_call = rt9455_usb_event;
-+		ret = usb_register_notifier(info->usb_phy, &info->nb);
-+		if (ret) {
-+			dev_err(dev, "Failed to register USB notifier\n");
-+			usb_put_phy(info->usb_phy);
-+		}
-+	}
-+#endif
-+
-+	INIT_DELAYED_WORK(&info->pwr_rdy_work, rt9455_pwr_rdy_work_callback);
-+	INIT_DELAYED_WORK(&info->max_charging_time_work,
-+			  rt9455_max_charging_time_work_callback);
-+	INIT_DELAYED_WORK(&info->batt_presence_work,
-+			  rt9455_batt_presence_work_callback);
-+
-+	rt9455_charger_config.of_node		= dev->of_node;
-+	rt9455_charger_config.drv_data		= info;
-+	rt9455_charger_config.supplied_to	= rt9455_charger_supplied_to;
-+	rt9455_charger_config.num_supplicants	=
-+					ARRAY_SIZE(rt9455_charger_supplied_to);
-+	ret = devm_request_threaded_irq(dev, client->irq, NULL,
-+					rt9455_irq_handler_thread,
-+					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+					RT9455_DRIVER_NAME, info);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to register IRQ handler\n");
-+		return ret;
-+	}
-+
-+	ret = rt9455_hw_init(info, ichrg, ieoc_percentage, voreg, mivr, iaicr);
-+	if (ret) {
-+		dev_err(dev, "Failed to set charger to its default values\n");
-+		return ret;
-+	}
-+
-+	info->charger = power_supply_register(dev, &rt9455_charger_desc,
-+					      &rt9455_charger_config);
-+	if (IS_ERR(info->charger)) {
-+		dev_err(dev, "Failed to register charger\n");
-+		ret = PTR_ERR(info->charger);
-+		goto put_usb_phy;
-+	}
-+
-+	return 0;
-+
-+put_usb_phy:
-+#if IS_ENABLED(CONFIG_USB_PHY)
-+	if (!IS_ERR_OR_NULL(info->usb_phy))  {
-+		usb_unregister_notifier(info->usb_phy, &info->nb);
-+		usb_put_phy(info->usb_phy);
-+	}
-+#endif
-+	return ret;
-+}
-+
-+static int rt9455_remove(struct i2c_client *client)
-+{
-+	int ret;
-+	struct rt9455_info *info = i2c_get_clientdata(client);
-+
-+	ret = rt9455_register_reset(info);
-+	if (ret)
-+		dev_err(&info->client->dev, "Failed to set charger to its default values\n");
-+
-+#if IS_ENABLED(CONFIG_USB_PHY)
-+	if (!IS_ERR_OR_NULL(info->usb_phy)) {
-+		usb_unregister_notifier(info->usb_phy, &info->nb);
-+		usb_put_phy(info->usb_phy);
-+	}
-+#endif
-+
-+	cancel_delayed_work_sync(&info->pwr_rdy_work);
-+	cancel_delayed_work_sync(&info->max_charging_time_work);
-+	cancel_delayed_work_sync(&info->batt_presence_work);
-+
-+	power_supply_unregister(info->charger);
-+
-+	return ret;
-+}
-+
-+static const struct i2c_device_id rt9455_i2c_id_table[] = {
-+	{ RT9455_DRIVER_NAME, 0 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, rt9455_i2c_id_table);
-+
-+static const struct of_device_id rt9455_of_match[] = {
-+	{ .compatible = "richtek,rt9455", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, rt9455_of_match);
-+
-+static const struct acpi_device_id rt9455_i2c_acpi_match[] = {
-+	{ "RT945500", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, rt9455_i2c_acpi_match);
-+
-+static struct i2c_driver rt9455_driver = {
-+	.probe		= rt9455_probe,
-+	.remove		= rt9455_remove,
-+	.id_table	= rt9455_i2c_id_table,
-+	.driver = {
-+		.name		= RT9455_DRIVER_NAME,
-+		.of_match_table	= of_match_ptr(rt9455_of_match),
-+		.acpi_match_table = ACPI_PTR(rt9455_i2c_acpi_match),
-+	},
-+};
-+module_i2c_driver(rt9455_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>");
-+MODULE_ALIAS("i2c:rt9455-charger");
-+MODULE_DESCRIPTION("Richtek RT9455 Charger Driver");
--- 
-1.7.9.5
+I'm sorry, but ruling out alternatives that work for everyone (and
+actually work better) just because you don't want to edit a C file is
+not really constructive either.
 
+> > > > > > > > Should we create a new driver for our RAM controller, or do=
+ we want to
+> > > > > > > > use clock-always-on?
+> > > > > > >=20
+> > > > > > > I would say that if all the driver did was to enable clocks, =
+then you
+> > > > > > > should use this instead.  This binding was designed specifica=
+lly for
+> > > > > > > that purpose.
+> > > > > > >=20
+> > > > > > > However, if the aforementioned driver clock can be safely gat=
+ed, then
+> > > > > > > it should not be an always-on clock.
+> > > > > >=20
+> > > > > > Yeah, of course, I understand the original intent of it, but th=
+at
+> > > > > > argument, which might very well be true at one point in time, m=
+ight
+> > > > > > not be true anymore two or three releases later.
+> > > > >=20
+> > > > > Why?  The H/W isn't going to change in two or three releases.  The
+> > > > > clocks designated as 'always-on' will have to be on forever, or
+> > > > > synonymously, 'always'.
+> > > > >
+> > > > > > And that driver might actually rely on the fact that the clock =
+is shut
+> > > > > > down, which won't be the case.
+> > > > >=20
+> > > > > I think you are missing the point of this binding.  The driver can
+> > > > > never rely on that in this use-case.  If the clock is off, there =
+is no
+> > > > > device driver, period.=20
+> > > >=20
+> > > > Ok. So CPU hotplug or cpuidle is not a thing then? I'm pretty sure =
+the
+> > > > PM guys will be happy to hear that.
+> > > >=20
+> > > > And they are not device drivers, are not mandatory in the system, a=
+nd
+> > > > it's usually a good thing to keep the CPU running whenever you don't
+> > > > have such drivers.
+> > > >=20
+> > > > > > Introducing a DT interface solely by refering to the current st=
+ate of
+> > > > > > a driver is a bit odd.
+> > > > >=20
+> > > > > I'm not sure I get your point.  This binding has nothing to do wi=
+th
+> > > > > drivers.
+> > > >=20
+> > > > It's all about drivers. Or rather all about missing drivers.
+> > >=20
+> > > I think you are going to have to be more forthcoming with your issues
+> > > with this binding, because I'm struggling to understand what your
+> > > problem with it is.  You have already pointed me to vendors which have
+> > > a genuine/valid need for it.  But instead you'd prefer they hand-roll
+> > > their own implementations over multiple lines of C code (each).
+> >=20
+> > I told you already.
+> >=20
+> > If you have that property, there's absolutely no way to do any kind of
+> > clock management in the future.
+> >=20
+> > It might be fine for your use case, but see my point about the
+> > unreasonable restriction. People are going to use it for clocks that
+> > just don't have a driver *yet*, and when that driver will be merged we
+> > will end up with a driver that (for example) makes the assumption that
+> > the clock has been shut down to reset the IP, that might or might not
+> > be the case, depending on how old the DT is exactly.
+>=20
+> There is a need for this binding,
+
+That's your opinion. Several people already disagreed on this.
+
+Now, what we probably need is a generic way to flag the clocks as
+supposed to be enabled. The fact that this information should be in
+the DT is a different story.
+
+> but as you say, it must not be abused.  So how to we get people not
+> to use it willy-nilly?
+>=20
+> IMO, if people choose to ignore the stark warning in the documentation
+> then that's they're lookout.  I guess you'd like to wrap them in more
+> cotton wool than I would.  That's fine too, but how.
+
+You've chosen to ignore all our warnings. Fine. Assume that other
+people will ignore yours.
+
+This is not about whatever you put in the documentation or checkpatch,
+there will be people and/or maintainers that will go against that.
+
+The only way to prevent any abuse of the binding, is not to have any
+binding, really.
+
+> > This will be even a bigger madness if you ask me.
+> >=20
+> > > > > > > > Do we really want to enforce this if we ever gain a driver =
+that would
+> > > > > > > > actually be able to manage its clock (like do we want the C=
+PU clock to
+> > > > > > > > never *ever* be gated just because we don't have a cpuidle/=
+hotplug
+> > > > > > > > driver yet?)
+> > > > > > >=20
+> > > > > > > As I've just mentioned, if a clock 'can' be turned off, this =
+binding
+> > > > > > > should never be used. Situations where using always-on as a s=
+top-gap
+> > > > > > > due to a lack of current functionality is what the paragraph =
+above is
+> > > > > > > trying to mitigate.
+> > > > > >=20
+> > > > > > But it's not really what this property is about. What this prop=
+erty
+> > > > > > describes is that these clocks should never be gated. Any point=
+ in
+> > > > > > time during the life of the system AND with in any kernel versi=
+on.
+> > > > >=20
+> > > > > You got it, that's correct -- these clocks should never be gated.
+> > > > >=20
+> > > > > So why would that ever change?  If that is likely (or even possib=
+le)
+> > > > > to change in the future then this binding should not be used.
+> > > > >
+> > > > > To reiterate; this binding should be used on ungatable clocks onl=
+y.
+> > > > > Non-negotiable, non-changeable either by the introduction of new
+> > > > > functionality/support or kernel version.
+> > > >=20
+> > > > I'm pretty sure that if that patch gets merged, by the end of the
+> > > > year, there will be "incorrect" users by your standards.
+> > >=20
+> > > It's possible to abuse any binding.  I don't see why you are so
+> > > offended of this one in particular.
+> >=20
+> > I'm not offended, I just tried to push the same kind of patches two
+> > years ago, with Mike pushing back, and actually came to see that he
+> > was right a few monthes down the road.
+>=20
+> Well this was suggested by Mike.  I even have his Ack already.  So I
+> guess he too has changed the error of his ways. :)
+
+I wonder why it's not even merged yet then if you have the maintainers
+Acked-by, and want to ignore any other review.
+
+> > And yeah, your point that any binding can be abused is true. This one
+> > is only so easy to abuse it's not even funny.
+> >=20
+> > > > If you introduce a feature, you should expect people to use
+> > > > it.  If not, what's the point?
+> > >=20
+> > > By your own admission, there are genuine users for this binding and I
+> > > expect people to use it.
+> >=20
+> > The only thing that we really disagree upon is that whether that
+> > restriction will really be followed. You expect people to, I
+> > don't. It's the fundamental disagreement we have, that really prevent
+> > any purely technical discussion.
+> >=20
+> > Maybe we can try to address that before moving forward?
+>=20
+> I'd like that.
+>=20
+> If a firm warning isn't good enough, then what will be?
+>=20
+> > > > > > > > Have you seen the numerous NAK on such approach Mike did?
+> > > > > > >=20
+> > > > > > > I haven't, but the folks reviewing previous versions have.  D=
+o you
+> > > > > > > have something specific in mind that you'd like to bring to my
+> > > > > > > attention?
+> > > > > >=20
+> > > > > > Unfortunately, I haven't been able to dig out such mails. But i=
+t's why
+> > > > > > we ended up with clock protection code in various clock drivers
+> > > > > > including:
+> > > > > >=20
+> > > > > > AT91: http://lxr.free-electrons.com/source/drivers/clk/at91/clk=
+-slow.c#L484
+> > > > > > iMX28: http://lxr.free-electrons.com/source/drivers/clk/mxs/clk=
+-imx28.c#L154
+> > > > > > Rockchip: http://lxr.free-electrons.com/source/drivers/clk/rock=
+chip/clk.c#L320
+> > > > > > sunXi: http://lxr.free-electrons.com/source/drivers/clk/sunxi/c=
+lk-sunxi.c#L1183
+> > > > > > Zynq: http://lxr.free-electrons.com/source/drivers/clk/zynq/clk=
+c.c#L504
+> > > > > >=20
+> > > > > > Which is much more flexible, since you won't have to modify the=
+ DT to
+> > > > > > change which clocks are to be left enabled, as well as way easi=
+er to
+> > > > > > debug if you ever have to remove that property from the DT.
+> > > > >=20
+> > > > > You're right, you don't have the change the DT in these cases.  Y=
+ou
+> > > > > have to write new C code, which is _less_ flexible.
+> > > >=20
+> > > > I'm sorry to learn that you never heard of that stable-DT thing.
+> > > >=20
+> > > > And a bit sorry to see that a maintainer is really seeing C as not
+> > > > flexible.
+> > >=20
+> > > You're putting words in my mouth.  I didn't say C was not flexible.
+> > >=20
+> > > I'm referencing the original DT pros i.e. it is possible to supply a
+> > > different configuration without the need to compile the kernel.
+> > > That's certainly true in this case.  We can provide a clk-provider and
+> > > tag it as always-on, all without re-compile.
+> > >=20
+> > > > > So all these platforms are adding their own hand-rolled version of
+> > > > > this binding, adding more duplication and cruft to the kernel.
+> > > > > Instead they can use this 'always-on' and we can consolidate and =
+strip
+> > > > > it all out.
+> > > >=20
+> > > > Except that all these platforms are actually not implementing a
+> > > > binding, ie not an interface with the DT they are bound to. Each and
+> > > > every of these platforms can change that list whenever they wish, j=
+ust
+> > > > by sending a single one-liner patch (just like the DT, really.).
+> > > >=20
+> > > > Which is not something that you can achieve with a DT binding.
+> > >=20
+> > > Once again, can you give me more information about why you have such a
+> > > problem with this binding.  I wish for it to be stable/ABI, I wish for
+> > > it never to be removed, I envisage it will always be needed, so what's
+> > > the problem?=20
+> > >=20
+> > > Do you have a vested interest that I am missing?
+> > >=20
+> > > Perhaps an example of possible calamity will help convince me that
+> > > you're not completely wrong and blowing everything out of proportion
+> > > for no good reason.
+> >=20
+> > Let's say you've introduced such a clock in kernel 4.0 for the memory
+> > clock.
+> >=20
+> > At some point down the road, you create a ddrfreq driver (if that ever
+> > exists). You have a new driver, which will manage the clock.
+> >=20
+> > In that driver, for some reason, you have to shutdown the clock to
+> > reset the DDR controller. Of course that also means that you will be
+> > removing the clk-always-on property from your DT.
+> >=20
+> > You will have in your driver something like:
+> >=20
+> > /* Reset our controller */
+> > clk_disable(clk);
+> > clk_enable(clk):
+> >=20
+> > And then, you expect your controller to be in its out-of-reset
+> > state. Which will be the case with a new DT, and not with the old one,
+> > probably creating all kind of very entertaining issues to debug.
+> >=20
+> > All of this wouldn't be the case if you had this inside the kernel,
+> > since (hopefully) the kernel is consistent with itself.
+>=20
+> Surely you must have realised already that DTBs are more tightly
+> coupled to kernel versions than we would have initially liked?
+
+Just to get things straight. I'm *not* one proponent of the "DT as an
+ABI" rule.
+
+BUT, if you're designing a generic property, then you're also
+designing it for platforms that have chose to have that stability. And
+we do have some of those in the tree.
+
+And of course, that's assuming that the ABI stability is never going
+to be a thing (which might or might not happen).
+
+> It's naive to assume that old DTBs will 'just-work' with newer
+> kernels.
+
+Like I said, it does work on some mainline ARM platforms.
+
+> Wrong decisions related to DT are being made daily. Adding
+> mistakenly or foolhardily adding 'clk-always-on' to a DTS is not
+> going to be the sole cause of breakage somewhere down the line.
+
+I'm not sure that saying that accepting bindings because some other
+bindings are just as bad is a good argument, especially on bindings
+that do impact all the platforms.
+
+> Pushing back on the acceptance of this binding based on idealistic,
+> possibly already out-of-date premise is just frustrating.
+
+Don't worry, it's just as frustrating on the other end. Showing you
+exactly why it's going to be an issue with you simply ignoring by
+saying something close to "not my use case" is just as frustrating.
+
+> This useful binding should be accepted and people should not abuse
+> it.  If they do and the vendor Maintainer's review and accept then
+> they have no foundation for recourse.
+
+And in the end, there will be more and more bloated and / or poor code
+in the kernel, hurting it as a whole.
+
+> Would you prefer it if I made the warning starker?
+
+The only kind of warning that would be noticed by anyone is a runtime
+warning. I'm not sure this is a reasonable option :)
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--Fnm8lRGFTVS/3GuM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVQT3EAAoJEBx+YmzsjxAgV2EQAJ+/7u+6hFclSDrHoqV27wIy
+HtZ4br3C/zyL/1nUWP5X2EWSesfU+oo+ggAGVIgG0BNBw/TQNnkNZ7JoLtKGdboF
+YBxynUDvkSEzmO/eZMmXgE1I1ZyElS9Ih4cudB7eZCYctr8XF6F/BvNlb4ZV1jCk
+zQR5R3rvwjLE84BoHQeBOysZX3GqSYxITXoNijK5jwhNw/K2/Dq0JlIghjng4gQa
+yChI7vM3SdHWvAamrgBtpEJr4PR7KeSbVSJZD5bym0VCGMtTO2IzE3ayR7OLAKgK
+8xCxJVKKs4FZXOkxjLdbbaG1I20Y+2mkUNf33HNav6AZ0H3jdB1bJr4Y0hBZhB52
+suPvDGortpiP4NrzVBJN3p4yQsBq1Lm/BeMq29QUvsuR5IKyuvFVwXFZHCaHfV2R
+4oDQ6wGtsA4qUMKWkI+DnAIPuDFayXjjZIwzwQVQnKa4O/pz702jlsNjEE0fkBht
+rgwPBBSJ8ROYPapRtTzZeFKPg5kbWqzyo6hycg5ejmOr1IZ4bHn2vWwOxi4+60dj
+8PZ4YoM+r4OR0JCfmat7v1t9siq4dYjraEA8oPb1XhUVZhkgFCendDwmkaQHRb3H
+tN3f6nEx+xZ4LnUxNlYSk1YV1Ztl7g+/AexlmDPvc1LloLzygUV1A/0bYTMDgxU2
+G3xu5D/8fkB30zEHLLU4
+=5+SD
+-----END PGP SIGNATURE-----
+
+--Fnm8lRGFTVS/3GuM--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
