@@ -1,155 +1,47 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of: unittest: overlay: Keep track of created overlays
-Date: Wed, 29 Apr 2015 10:55:45 -0500
-Message-ID: <CAL_JsqJ7GxMMiu7U7u6bgDLut0Eme6TOowZZW9A3WXrjFuAexA@mail.gmail.com>
-References: <1429868546-19613-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [RESEND PATCH V2 1/2] input: misc: da9063: OnKey driver
+Date: Wed, 29 Apr 2015 16:00:20 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B217B43@SW-EX-MBX02.diasemi.com>
+References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
+ <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
+ <20150417161555.GB27440@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429868546-19613-1-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <20150417161555.GB27440@dtor-ws>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Andrew Morton <akpm@linux-foundation.org>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2015 at 4:42 AM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-> During the course of the overlay selftests some of them remain
-> applied. While this does not pose a real problem, make sure you track
-> them and destroy them at the end of the test.
->
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+On 17 April 2015 17:16 Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com] wrote:
 
-This is already in for 4.1. Is this the same as the prior version.
+> On Fri, Apr 17, 2015 at 01:03:20PM +0100, S Twiss wrote:
+> > From: Steve Twiss <stwiss.opensource@diasemi.com>
+> >
+> > Add OnKey driver support for DA9063
+> >
+> 
+> Isn't this almost to the letter identical to da9062 that I just looked
+> at? Please find a way to not make a brand new driver for the slightest
+> variation of the chip...
+> 
+> Thanks.
+> 
 
-Rob
+Hi Dmitry,
 
-> ---
->  drivers/of/unittest.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index e844907..1801634 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -23,6 +23,8 @@
->  #include <linux/i2c.h>
->  #include <linux/i2c-mux.h>
->
-> +#include <linux/bitops.h>
-> +
->  #include "of_private.h"
->
->  static struct unittest_results {
-> @@ -1109,6 +1111,59 @@ static const char *overlay_path(int nr)
->
->  static const char *bus_path = "/testcase-data/overlay-node/test-bus";
->
-> +/* it is guaranteed that overlay ids are assigned in sequence */
-> +#define MAX_UNITTEST_OVERLAYS  256
-> +static unsigned long overlay_id_bits[BITS_TO_LONGS(MAX_UNITTEST_OVERLAYS)];
-> +static int overlay_first_id = -1;
-> +
-> +static void of_unittest_track_overlay(int id)
-> +{
-> +       if (overlay_first_id < 0)
-> +               overlay_first_id = id;
-> +       id -= overlay_first_id;
-> +
-> +       /* we shouldn't need that many */
-> +       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
-> +       overlay_id_bits[BIT_WORD(id)] |= BIT_MASK(id);
-> +}
-> +
-> +static void of_unittest_untrack_overlay(int id)
-> +{
-> +       if (overlay_first_id < 0)
-> +               return;
-> +       id -= overlay_first_id;
-> +       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
-> +       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
-> +}
-> +
-> +static void of_unittest_destroy_tracked_overlays(void)
-> +{
-> +       int id, ret, defers;
-> +
-> +       if (overlay_first_id < 0)
-> +               return;
-> +
-> +       /* try until no defers */
-> +       do {
-> +               defers = 0;
-> +               /* remove in reverse order */
-> +               for (id = MAX_UNITTEST_OVERLAYS - 1; id >= 0; id--) {
-> +                       if (!(overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id)))
-> +                               continue;
-> +
-> +                       ret = of_overlay_destroy(id + overlay_first_id);
-> +                       if (ret != 0) {
-> +                               defers++;
-> +                               pr_warn("%s: overlay destroy failed for #%d\n",
-> +                                       __func__, id + overlay_first_id);
-> +                               continue;
-> +                       }
-> +
-> +                       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
-> +               }
-> +       } while (defers > 0);
-> +}
-> +
->  static int of_unittest_apply_overlay(int unittest_nr, int overlay_nr,
->                 int *overlay_id)
->  {
-> @@ -1130,6 +1185,7 @@ static int of_unittest_apply_overlay(int unittest_nr, int overlay_nr,
->                 goto out;
->         }
->         id = ret;
-> +       of_unittest_track_overlay(id);
->
->         ret = 0;
->
-> @@ -1343,6 +1399,7 @@ static void of_unittest_overlay_6(void)
->                         return;
->                 }
->                 ov_id[i] = ret;
-> +               of_unittest_track_overlay(ov_id[i]);
->         }
->
->         for (i = 0; i < 2; i++) {
-> @@ -1367,6 +1424,7 @@ static void of_unittest_overlay_6(void)
->                                                 PDEV_OVERLAY));
->                         return;
->                 }
-> +               of_unittest_untrack_overlay(ov_id[i]);
->         }
->
->         for (i = 0; i < 2; i++) {
-> @@ -1411,6 +1469,7 @@ static void of_unittest_overlay_8(void)
->                         return;
->                 }
->                 ov_id[i] = ret;
-> +               of_unittest_track_overlay(ov_id[i]);
->         }
->
->         /* now try to remove first overlay (it should fail) */
-> @@ -1433,6 +1492,7 @@ static void of_unittest_overlay_8(void)
->                                                 PDEV_OVERLAY));
->                         return;
->                 }
-> +               of_unittest_untrack_overlay(ov_id[i]);
->         }
->
->         unittest(1, "overlay test %d passed\n", 8);
-> @@ -1855,6 +1915,8 @@ static void __init of_unittest_overlay(void)
->         of_unittest_overlay_i2c_cleanup();
->  #endif
->
-> +       of_unittest_destroy_tracked_overlays();
-> +
->  out:
->         of_node_put(bus_np);
->  }
-> --
-> 1.7.12
->
+Yes it is functionally identical. I would like to drop the DA9062 component from
+my other submission attempt and concentrate on this DA9063 OnKey driver
+instead.
+
+I have applied the review comments that you made on the DA9062 to this
+DA9063 driver (since they are the same). Please find the review comments listed
+in the thread here: https://patchwork.ozlabs.org/patch/462107/
+
+The next patch set for the DA9063 will follow shortly.
+
+Regards,
+Steve
