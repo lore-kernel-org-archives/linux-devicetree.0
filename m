@@ -1,57 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: gic: Document Power and Clock Domain optional properties
-Date: Wed, 29 Apr 2015 20:12:32 +0200
-Message-ID: <CAMuHMdVao2jOV7kZrcTw9UMa4kvSRMhfN5KQgQ8V-4fPS6ouaQ@mail.gmail.com>
-References: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
-	<20150427155427.GB16191@leverpostej>
-	<CAMuHMdVT=vzFazUsJtvPsyB8zX-WJqp19RNVYA=UMfWZtHnF=Q@mail.gmail.com>
-	<20150427171502.GD16191@leverpostej>
-	<CAMuHMdVY5Oh7b9Pme2jiwtV4GBPqK-T5nfxnB9_1ufFzueUjLA@mail.gmail.com>
-	<20150429125703.GB11757@leverpostej>
-	<CAMuHMdU1T9t8O8J4F0KkhcoeYO9sNLpp+jARaCEP0ZKiVgBqJA@mail.gmail.com>
-	<20150429151527.GA8781@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150429151527.GA8781@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+From: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/4] Add support for BMC150 magnetometer
+Date: Wed, 29 Apr 2015 21:16:36 +0300
+Message-ID: <1430331400-25528-1-git-send-email-irina.tirdea@intel.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2015 at 5:15 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
->> > index 7b315e3..02c8bb4 100644
->> > --- a/drivers/irqchip/irq-gic.c
->> > +++ b/drivers/irqchip/irq-gic.c
->> > @@ -959,6 +959,7 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
->> >         irq_hw_number_t hwirq_base;
->> >         struct gic_chip_data *gic;
->> >         int gic_irqs, irq_base, i;
->> > +       unsigned long iidr;
->> >
->> >         BUG_ON(gic_nr >= MAX_GIC_NR);
->> >
->> > @@ -996,6 +997,9 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
->> >                 gic_set_base_accessor(gic, gic_get_common_base);
->> >         }
->> >
->> > +       iidr = readl_relaxed(gic_data_dist_base(gic) + GIC_DIST_IIDR);
->> > +       pr_info("GICD_IIDR reports 0x%08lx\n", (unsigned long)iidr);
->>
->> No need for the cast.
->
-> For arm64 there is ;)
+This is the third version for adding support for Bosch BMC150
+magnetometer. It contains fixes suggested by Jonathan.
 
-Why? iidr is already unsigned long.
+Changes in v3:
+ - a couple of small fixes suggested by Jonathan
 
-Gr{oetje,eeting}s,
+Changes in v2:
+ - renamed IIO_CHAN_INFO_CALIBREPETITIONS to IIO_CHAN_INFO_OVERSAMPLING_RATIO
+ - split the main patch in two patches: one that adds main functionality and
+another that adds oversampling_ratio
+ - fixed driver code and device tree bindings according to Jonathan's review
+ - updated the available sampling frequencies depending on oversampling_ratio
 
-                        Geert
+Irina Tirdea (4):
+  iio: magn: Add support for BMC150 magnetometer
+  iio: magn: bmc150_magn: Add devicetree binding documentation
+  iio: core: Introduce IIO_CHAN_INFO_OVERSAMPLING_RATIO
+  iio: magn: bmc150_magn: add oversampling ratio
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+ Documentation/ABI/testing/sysfs-bus-iio            |   12 +
+ .../bindings/iio/magnetometer/bmc150_magn.txt      |   22 +
+ drivers/iio/industrialio-core.c                    |    1 +
+ drivers/iio/magnetometer/Kconfig                   |   14 +
+ drivers/iio/magnetometer/Makefile                  |    2 +
+ drivers/iio/magnetometer/bmc150_magn.c             | 1109 ++++++++++++++++++++
+ include/linux/iio/iio.h                            |    1 +
+ 7 files changed, 1161 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+ create mode 100644 drivers/iio/magnetometer/bmc150_magn.c
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+1.9.1
