@@ -1,127 +1,136 @@
-From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Subject: Re: [PATCH 1/4] mailbox: add support for System Control and Power
- Interface(SCPI) protocol
-Date: Wed, 29 Apr 2015 13:25:38 +0100
-Message-ID: <1430310338.27241.45.camel@linaro.org>
-References: <1430134846-24320-1-git-send-email-sudeep.holla@arm.com>
-	 <1430134846-24320-2-git-send-email-sudeep.holla@arm.com>
-	 <1430229283.3321.40.camel@linaro.org> <5540B840.1030900@arm.com>
-	 <1430307828.27241.32.camel@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 02/10] DT: Add documentation for the mfd Maxim max77693
+Date: Wed, 29 Apr 2015 13:34:12 +0100
+Message-ID: <20150429123412.GL9169@x1>
+References: <1429080520-10687-1-git-send-email-j.anaszewski@samsung.com>
+ <1429080520-10687-3-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430307828.27241.32.camel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1429080520-10687-3-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-04-29 at 12:43 +0100, Jon Medhurst (Tixy) wrote:
-> On Wed, 2015-04-29 at 11:53 +0100, Sudeep Holla wrote:
-> > On 28/04/15 14:54, Jon Medhurst (Tixy) wrote:
-> > > On Mon, 2015-04-27 at 12:40 +0100, Sudeep Holla wrote:
-> [...]
-> > >> +     int ret;
-> > >> +     u8 token, chan;
-> > >> +     struct scpi_xfer *msg;
-> > >> +     struct scpi_chan *scpi_chan;
-> > >> +
-> > >> +     chan = atomic_inc_return(&scpi_info->next_chan) % scpi_info->num_chans;
-> > >> +     scpi_chan = scpi_info->channels + chan;
-> > >> +
-> > >> +     msg = get_scpi_xfer(scpi_chan);
-> > >> +     if (!msg)
-> > >> +             return -ENOMEM;
-> > >> +
-> > >> +     token = atomic_inc_return(&scpi_chan->token) & CMD_TOKEN_ID_MASK;
-> > >
-> > > So, this 8 bit token is what's used to 'uniquely' identify a pending
-> > > command. But as it's just an incrementing value, then if one command
-> > > gets delayed for long enough that 256 more are issued then we will have
-> > > a non-unique value and scpi_process_cmd can go wrong.
-> > >
-> > 
-> > IMO by the time 256 message are queued up and serviced we would timeout
-> > on the initial command. Moreover the core mailbox has sent the mailbox
-> > length to 20(MBOX_TX_QUEUE_LEN) which needs to removed to even get the
-> > remote chance of hit the corner case.
-> 
-> The corner case can be hit even if the queue length is only 2, because
-> other processes/cpus can use the other message we don't own here and
-> they can send then receive a message using that, 256 times. The corner
-> case doesn't require 256 simultaneous outstanding requests.
-> 
-> That is the reason I suggested that rather than using an incrementing
-> value for the 'unique' token, that each message instead contain the
-> value of the token to use with it.
+LED Ack please Bryan.
 
-Of course, I failed to mention that this solution to this problem makes
-thing worse for the situation where we timeout messages, because the
-same token will get reused quicker in that case. So, in practice, if we
-have timeouts, and a unchangeable protocol limitation of 256 tokens,
-then using those tokens in order, for each message sent is probably the
-best we can do.
+> This patch adds device tree binding documentation for
+> the flash cell of the Maxim max77693 multifunctional device.
+>=20
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/mfd/max77693.txt |   67 ++++++++++=
+++++++++++
+>  1 file changed, 67 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Doc=
+umentation/devicetree/bindings/mfd/max77693.txt
+> index 38e6440..d342584 100644
+> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+> @@ -76,7 +76,60 @@ Optional properties:
+>      Valid values: 4300000, 4700000, 4800000, 4900000
+>      Default: 4300000
+> =20
+> +- led : the LED submodule device node
+> +
+> +There are two LED outputs available - FLED1 and FLED2. Each of them =
+can
+> +control a separate LED or they can be connected together to double
+> +the maximum current for a single connected LED. One LED is represent=
+ed
+> +by one child node.
+> +
+> +Required properties:
+> +- compatible : Must be "maxim,max77693-led".
+> +
+> +Optional properties:
+> +- maxim,boost-mode :
+> +	In boost mode the device can produce up to 1.2A of total current
+> +	on both outputs. The maximum current on each output is reduced
+> +	to 625mA then. If not enabled explicitly, boost setting defaults to
+> +	LEDS_BOOST_FIXED in case both current sources are used.
+> +	Possible values:
+> +		LEDS_BOOST_OFF (0) - no boost,
+> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
+> +		LEDS_BOOST_FIXED (2) - fixed mode.
+> +- maxim,boost-mvout : Output voltage of the boost module in millivol=
+ts.
+> +	Valid values: 3300 - 5500, step by 25 (rounded down)
+> +	Default: 3300
+> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is =
+not fired
+> +	if chip estimates that system voltage could drop below this level d=
+ue
+> +	to flash power consumption.
+> +	Valid values: 2400 - 3400, step by 33 (rounded down)
+> +	Default: 2400
+> +
+> +Required properties for the LED child node:
+> +- led-sources : see Documentation/devicetree/bindings/leds/common.tx=
+t;
+> +		device current output identifiers: 0 - FLED1, 1 - FLED2
+> +- led-max-microamp : see Documentation/devicetree/bindings/leds/comm=
+on.txt
+> +	Valid values for a LED connected to one FLED output:
+> +		15625 - 250000, step by 15625 (rounded down)
+> +	Valid values for a LED connected to both FLED outputs:
+> +		15625 - 500000, step by 15625 (rounded down)
+> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/co=
+mmon.txt
+> +	Valid values for a single LED connected to one FLED output:
+> +	(boost mode must be turned off):
+> +		15625 - 1000000, step by 15625 (rounded down)
+> +	Valid values for a single LED connected to both FLED outputs:
+> +		15625 - 1250000, step by 15625 (rounded down)
+> +	Valid values for two LEDs case:
+> +		15625 - 625000, step by 15625 (rounded down)
+> +- flash-max-timeout-us : see Documentation/devicetree/bindings/leds/=
+common.txt
+> +	Valid values: 62500 - 1000000, step by 62500 (rounded down)
+> +
+> +Optional properties for the LED child node:
+> +- label : see Documentation/devicetree/bindings/leds/common.txt
+> +
+>  Example:
+> +#include <dt-bindings/leds/common.h>
+> +
+>  	max77693@66 {
+>  		compatible =3D "maxim,max77693";
+>  		reg =3D <0x66>;
+> @@ -117,5 +170,19 @@ Example:
+>  			maxim,thermal-regulation-celsius =3D <75>;
+>  			maxim,battery-overcurrent-microamp =3D <3000000>;
+>  			maxim,charge-input-threshold-microvolt =3D <4300000>;
+> +
+> +		led {
+> +			compatible =3D "maxim,max77693-led";
+> +			maxim,boost-mode =3D <LEDS_BOOST_FIXED>;
+> +			maxim,boost-mvout =3D <5000>;
+> +			maxim,mvsys-min =3D <2400>;
+> +
+> +			camera_flash: flash-led {
+> +				label =3D "max77693-flash";
+> +				led-sources =3D <0>, <1>;
+> +				led-max-microamp =3D <500000>;
+> +				flash-max-microamp =3D <1250000>;
+> +				flash-max-timeout-us =3D <1000000>;
+> +			};
+>  		};
+>  	};
 
-Perhaps that's the clue, generate and add the token to the message, just
-before transmission via the MHU, at a point where we know no other
-request can overtake us. In scpi_tx_prepare? Perhaps, it might also be
-good to only use up a token if we are expecting a response, and use zero
-for other messages?
-
-Something like this totally untested patch...
-
-diff --git a/drivers/mailbox/scpi_protocol.c b/drivers/mailbox/scpi_protocol.c
-index c74575b..5818d9b 100644
---- a/drivers/mailbox/scpi_protocol.c
-+++ b/drivers/mailbox/scpi_protocol.c
-@@ -286,14 +286,23 @@ static void scpi_tx_prepare(struct mbox_client *c, void *msg)
- 	struct scpi_chan *ch = container_of(c, struct scpi_chan, cl);
- 	struct scpi_shared_mem *mem = (struct scpi_shared_mem *)ch->tx_payload;
- 
--	mem->command = cpu_to_le32(t->cmd);
- 	if (t->tx_buf)
- 		memcpy_toio(mem->payload, t->tx_buf, t->tx_len);
- 	if (t->rx_buf) {
-+		int token;
- 		spin_lock_irqsave(&ch->rx_lock, flags);
-+		/*
-+		 * Presumably we can do this token setting outside
-+		 * spinlock and still be safe from concurrency?
-+		 */
-+		do
-+			token = (++ch->token) & CMD_TOKEN_ID_MASK;
-+		while(!token);
-+		t->cmd |= token << CMD_TOKEN_ID_SHIFT;
- 		list_add_tail(&t->node, &ch->rx_pending);
- 		spin_unlock_irqrestore(&ch->rx_lock, flags);
- 	}
-+	mem->command = cpu_to_le32(t->cmd);
- }
- 
- static struct scpi_xfer *get_scpi_xfer(struct scpi_chan *ch)
-@@ -322,7 +331,7 @@ static int
- scpi_send_message(u8 cmd, void *tx_buf, unsigned int len, void *rx_buf)
- {
- 	int ret;
--	u8 token, chan;
-+	u8 chan;
- 	struct scpi_xfer *msg;
- 	struct scpi_chan *scpi_chan;
- 
-@@ -333,10 +342,8 @@ scpi_send_message(u8 cmd, void *tx_buf, unsigned int len, void *rx_buf)
- 	if (!msg)
- 		return -ENOMEM;
- 
--	token = atomic_inc_return(&scpi_chan->token) & CMD_TOKEN_ID_MASK;
--
- 	msg->slot = BIT(SCPI_SLOT);
--	msg->cmd = PACK_SCPI_CMD(cmd, token, len);
-+	msg->cmd = PACK_SCPI_CMD(cmd, 0, len);
- 	msg->tx_buf = tx_buf;
- 	msg->tx_len = len;
- 	msg->rx_buf = rx_buf;
-
-
--- 
-Tixy
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
