@@ -1,47 +1,64 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2 1/6] DT: add binding for mxs power subsystem
-Date: Wed, 29 Apr 2015 22:32:22 +0000
-Message-ID: <1430346747-28728-2-git-send-email-stefan.wahren@i2se.com>
-References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, fabio.estevam@freescale.com, sebastien.szymanski@armadeus.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
+ X-Gene SoC EDAC DTS binding
+Date: Wed, 29 Apr 2015 17:43:23 -0500
+Message-ID: <CAL_JsqL0BMmpVT6hK23ZOhiGRscv1UDYWirA0ik4UZuXf5ku2Q@mail.gmail.com>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+ <1430259045-19012-2-git-send-email-lho@apm.com> <1430259045-19012-3-git-send-email-lho@apm.com>
+ <1430259045-19012-4-git-send-email-lho@apm.com> <CAL_Jsq+nhPUxHxrStB9cdy1YzE7tVPFVR1MrWq3Bz-JUa=3Rvg@mail.gmail.com>
+ <CAPw-ZTnLR10Zr_p8L3-1nBZ+jKE1HCwERDmO=S5as2GLqime3A@mail.gmail.com>
+ <20150429214924.GH5498@pd.tnic> <CAPw-ZTmoash48S3F8kBxsovD0mEPYBO8=XDaJ2peDu60yaGrZQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPw-ZTmoash48S3F8kBxsovD0mEPYBO8=XDaJ2peDu60yaGrZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree bindings for the Freescale MXS
-on-chip power subsystem.
+On Wed, Apr 29, 2015 at 4:56 PM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+> Hi,
+>
+>>> > Similar comments for the rest. I would define memory controller
+>>> > bindings and EDAC driver, then worry about the rest.
+>>>
+>>> Okay.. As comment in following emails, I will break up the driver into
+>>> multiple drivers and focus only on the memory controller driver first.
+>>
+>> Please no multiple EDAC drivers. Or do you mean something else here?
+>
+> We will have the following:
+>
+> xgene-edac-mc.c
+> xgene-edac-pmd.c
+> xgene-edac-l3.c
+> xgene-edac-soc.c
+>
+> Or what would you suggest. There are the following HW:
+>
+> 1. 4 DDR controller with one shared top level interrupt, two shared
+> memory bridges
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- .../devicetree/bindings/power/mxs_power.txt        |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/mxs_power.txt
+And ECC registers are in the DDR controllers?
 
-diff --git a/Documentation/devicetree/bindings/power/mxs_power.txt b/Documentation/devicetree/bindings/power/mxs_power.txt
-new file mode 100644
-index 0000000..4003ef7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/mxs_power.txt
-@@ -0,0 +1,17 @@
-+Power subsystem for Freescale i.MX23/i.MX28
-+
-+Required properties:
-+- compatible: Should be "fsl,<soc>-power". The supported SoCs include
-+  imx23 and imx28.
-+- reg: Address and length of the register set for the power subsystem.
-+
-+Optional properties;
-+- interrupts: Interrupts used by the power subsystem
-+
-+Example for i.MX28:
-+
-+	power: power@80044000 {
-+		compatible = "fsl,imx28-power", "syscon";
-+		reg = <0x80044000 0x2000>;
-+		interrupts = <6>;
-+	}
--- 
-1.7.9.5
+I would expect the DT to have 4 DDR controller nodes and probably 2
+bridges. The memory bridges have control registers?
 
+> 2. 4 CPU's domain with one shared top level interrupt, shared L2 for
+> two CPU's, and individual L1
+> 3. 1 L3 with one shared top level interrupt
+
+Presumably the registers for ECC are wired to some other block and not
+CPU registers?
+
+> 4. One SoC memory parity block with one shared top level interupt
+
+Shared interrupts are easily supported, but implicit in the DT.
+Otherwise, it seems this block is independent from the rest, correct?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
