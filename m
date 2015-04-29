@@ -1,228 +1,50 @@
-From: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 4/4] iio: magn: bmc150_magn: add oversampling ratio
-Date: Wed, 29 Apr 2015 21:16:40 +0300
-Message-ID: <1430331400-25528-5-git-send-email-irina.tirdea@intel.com>
-References: <1430331400-25528-1-git-send-email-irina.tirdea@intel.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430331400-25528-1-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 4/5] edac: Add APM X-Gene SoC EDAC driver
+Date: Wed, 29 Apr 2015 20:23:39 +0200
+Message-ID: <2496827.7XgVanEcLG@wuerfel>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+ <4492781.xynGhSMMir@wuerfel>
+ <CAL_Jsq+5f_dFJBnQ=vBj7dS8ebqGQe9_5c00CgmA7gT1yp=mZg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+5f_dFJBnQ=vBj7dS8ebqGQe9_5c00CgmA7gT1yp=mZg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "jcm@redhat.com" <jcm@redhat.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "patches@apm.com" <patches@apm.com>, Feng Kan <fkan@apm.com>, Rob Herring <robh+dt@kernel.org>, Borislav Petkov <bp@alien8.de>, Loc Ho <lho@apm.com>, Doug Thompson <dougthompson@xmission.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Export the oversampling ratio so that the user can change the
-number of repetions for x/y/z axis.
+On Wednesday 29 April 2015 11:57:09 Rob Herring wrote:
+> >>
+> >
+> > I had not looked at the driver before, but I have one comment now:
+> >
+> > I think this can be simplified to registering a single platform_driver
+> > that just matches all four compatible strings, with an appropriate data:
+> >
+> > +static struct of_device_id xgene_edac_of_match[] = {
+> > +       { .compatible = "apm,xgene-edac-mcu", .data = &xgene_edac_mcu_data },
+> > +       { .compatible = "apm,xgene-edac-pmd", .data = &xgene_edac_pmd_data },
+> > +       { .compatible = "apm,xgene-edac-l3",  .data = &xgene_edac_l3_data },
+> > +       { .compatible = "apm,xgene-edac-soc", .data = &xgene_edac_soc_data },
+> > +       {},
+> > +};
+> 
+> What exactly is shared here to combine all this into one driver? I
+> would argue these are all independent functions and should be separate
+> drivers. Add some library functions if there are common parts.
 
-The sampling frequency is limited by the oversampling ratio.
-The available sampling frequencies might change depending
-on the values of oversampling_ratio.
+Right, that is probably even better. I was mostly worried about having
+multiple platform_driver instances in a single module, which is a bit odd,
+and your approach would solve that in a simpler way.
 
-The specification can be downloaded from:
-http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS000-04.pdf.
-
-Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
- drivers/iio/magnetometer/bmc150_magn.c | 133 ++++++++++++++++++++++++++++++++-
- 1 file changed, 129 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iio/magnetometer/bmc150_magn.c b/drivers/iio/magnetometer/bmc150_magn.c
-index 7bbaea8..d4c1788 100644
---- a/drivers/iio/magnetometer/bmc150_magn.c
-+++ b/drivers/iio/magnetometer/bmc150_magn.c
-@@ -146,6 +146,7 @@ struct bmc150_magn_data {
- 	s32 buffer[6];
- 	struct iio_trigger *dready_trig;
- 	bool dready_trigger_on;
-+	int max_odr;
- };
- 
- static const struct {
-@@ -323,6 +324,43 @@ static int bmc150_magn_set_odr(struct bmc150_magn_data *data, int val)
- 	return -EINVAL;
- }
- 
-+static int bmc150_magn_set_max_odr(struct bmc150_magn_data *data, int rep_xy,
-+				   int rep_z, int odr)
-+{
-+	int ret, reg_val, max_odr;
-+
-+	if (rep_xy <= 0) {
-+		ret = regmap_read(data->regmap, BMC150_MAGN_REG_REP_XY,
-+				  &reg_val);
-+		if (ret < 0)
-+			return ret;
-+		rep_xy = BMC150_MAGN_REGVAL_TO_REPXY(reg_val);
-+	}
-+	if (rep_z <= 0) {
-+		ret = regmap_read(data->regmap, BMC150_MAGN_REG_REP_Z,
-+				  &reg_val);
-+		if (ret < 0)
-+			return ret;
-+		rep_z = BMC150_MAGN_REGVAL_TO_REPZ(reg_val);
-+	}
-+	if (odr <= 0) {
-+		ret = bmc150_magn_get_odr(data, &odr);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	/* the maximum selectable read-out frequency from datasheet */
-+	max_odr = 1000000 / (145 * rep_xy + 500 * rep_z + 980);
-+	if (odr > max_odr) {
-+		dev_err(&data->client->dev,
-+			"Can't set oversampling with sampling freq %d\n",
-+			odr);
-+		return -EINVAL;
-+	}
-+	data->max_odr = max_odr;
-+
-+	return 0;
-+}
-+
- static s32 bmc150_magn_compensate_x(struct bmc150_magn_trim_regs *tregs, s16 x,
- 				    u16 rhall)
- {
-@@ -422,7 +460,7 @@ static int bmc150_magn_read_raw(struct iio_dev *indio_dev,
- 				int *val, int *val2, long mask)
- {
- 	struct bmc150_magn_data *data = iio_priv(indio_dev);
--	int ret;
-+	int ret, tmp;
- 	s32 values[AXIS_XYZ_MAX];
- 
- 	switch (mask) {
-@@ -467,6 +505,26 @@ static int bmc150_magn_read_raw(struct iio_dev *indio_dev,
- 		if (ret < 0)
- 			return ret;
- 		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		switch (chan->channel2) {
-+		case IIO_MOD_X:
-+		case IIO_MOD_Y:
-+			ret = regmap_read(data->regmap, BMC150_MAGN_REG_REP_XY,
-+					  &tmp);
-+			if (ret < 0)
-+				return ret;
-+			*val = BMC150_MAGN_REGVAL_TO_REPXY(tmp);
-+			return IIO_VAL_INT;
-+		case IIO_MOD_Z:
-+			ret = regmap_read(data->regmap, BMC150_MAGN_REG_REP_Z,
-+					  &tmp);
-+			if (ret < 0)
-+				return ret;
-+			*val = BMC150_MAGN_REGVAL_TO_REPZ(tmp);
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
- 	default:
- 		return -EINVAL;
- 	}
-@@ -481,10 +539,50 @@ static int bmc150_magn_write_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (val > data->max_odr)
-+			return -EINVAL;
- 		mutex_lock(&data->mutex);
- 		ret = bmc150_magn_set_odr(data, val);
- 		mutex_unlock(&data->mutex);
- 		return ret;
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		switch (chan->channel2) {
-+		case IIO_MOD_X:
-+		case IIO_MOD_Y:
-+			if (val < 1 || val > 511)
-+				return -EINVAL;
-+			mutex_lock(&data->mutex);
-+			ret = bmc150_magn_set_max_odr(data, val, 0, 0);
-+			if (ret < 0) {
-+				mutex_unlock(&data->mutex);
-+				return ret;
-+			}
-+			ret = regmap_update_bits(data->regmap,
-+						 BMC150_MAGN_REG_REP_XY,
-+						 0xFF,
-+						 BMC150_MAGN_REPXY_TO_REGVAL
-+						 (val));
-+			mutex_unlock(&data->mutex);
-+			return ret;
-+		case IIO_MOD_Z:
-+			if (val < 1 || val > 256)
-+				return -EINVAL;
-+			mutex_lock(&data->mutex);
-+			ret = bmc150_magn_set_max_odr(data, 0, val, 0);
-+			if (ret < 0) {
-+				mutex_unlock(&data->mutex);
-+				return ret;
-+			}
-+			ret = regmap_update_bits(data->regmap,
-+						 BMC150_MAGN_REG_REP_Z,
-+						 0xFF,
-+						 BMC150_MAGN_REPZ_TO_REGVAL
-+						 (val));
-+			mutex_unlock(&data->mutex);
-+			return ret;
-+		default:
-+			return -EINVAL;
-+		}
- 	default:
- 		return -EINVAL;
- 	}
-@@ -501,10 +599,31 @@ static int bmc150_magn_validate_trigger(struct iio_dev *indio_dev,
- 	return 0;
- }
- 
--static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("2 6 8 10 15 20 25 30");
-+static ssize_t bmc150_magn_show_samp_freq_avail(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bmc150_magn_data *data = iio_priv(indio_dev);
-+	size_t len = 0;
-+	u8 i;
-+
-+	for (i = 0; i < ARRAY_SIZE(bmc150_magn_samp_freq_table); i++) {
-+		if (bmc150_magn_samp_freq_table[i].freq > data->max_odr)
-+			break;
-+		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
-+				 bmc150_magn_samp_freq_table[i].freq);
-+	}
-+	/* replace last space with a newline */
-+	buf[len - 1] = '\n';
-+
-+	return len;
-+}
-+
-+static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(bmc150_magn_show_samp_freq_avail);
- 
- static struct attribute *bmc150_magn_attributes[] = {
--	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
-+	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
- 	NULL,
- };
- 
-@@ -516,7 +635,8 @@ static const struct attribute_group bmc150_magn_attrs_group = {
- 	.type = IIO_MAGN,						\
- 	.modified = 1,							\
- 	.channel2 = IIO_MOD_##_axis,					\
--	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
-+			      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
- 	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SAMP_FREQ) |	\
- 				    BIT(IIO_CHAN_INFO_SCALE),		\
- 	.scan_index = AXIS_##_axis,					\
-@@ -616,6 +736,11 @@ static int bmc150_magn_init(struct bmc150_magn_data *data)
- 		goto err_poweroff;
- 	}
- 
-+	ret = bmc150_magn_set_max_odr(data, preset.rep_xy, preset.rep_z,
-+				      preset.odr);
-+	if (ret < 0)
-+		goto err_poweroff;
-+
- 	ret = bmc150_magn_set_power_mode(data, BMC150_MAGN_POWER_MODE_NORMAL,
- 					 true);
- 	if (ret < 0) {
--- 
-1.9.1
+	Arnd
