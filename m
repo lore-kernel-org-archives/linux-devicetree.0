@@ -1,59 +1,89 @@
-From: Shenwei Wang <Shenwei.Wang@freescale.com>
-Subject: RE: [PATCH 1/1] ARM: imx: make the imx timer driver implementation
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: imx: make the imx timer driver implementation
  independent of SoCs.
-Date: Wed, 29 Apr 2015 14:55:52 +0000
-Message-ID: <BL2PR03MB3703DA9D4D52EC9524D627C83D70@BL2PR03MB370.namprd03.prod.outlook.com>
+Date: Wed, 29 Apr 2015 18:08:24 +0300
+Message-ID: <20150429150824.GF2258@tarshish>
 References: <1430316881-4668-1-git-send-email-shenwei.wang@freescale.com>
  <20150429142614.GE2258@tarshish>
+ <BL2PR03MB3703DA9D4D52EC9524D627C83D70@BL2PR03MB370.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150429142614.GE2258@tarshish>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <BL2PR03MB3703DA9D4D52EC9524D627C83D70-AZ66ij2kwaY73p3xB2dGY+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shenwei Wang <Shenwei.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCYXJ1Y2ggU2lhY2ggW21haWx0
-bzpiYXJ1Y2hAdGtvcy5jby5pbF0NCj4gU2VudDogMjAxNcTqNNTCMjnI1SA5OjI2DQo+IFRvOiBX
-YW5nIFNoZW53ZWktQjM4MzM5DQo+IENjOiBzaGF3bi5ndW9AbGluYXJvLm9yZzsgbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMV0gQVJNOiBpbXg6IG1ha2UgdGhlIGlteCB0aW1l
-ciBkcml2ZXIgaW1wbGVtZW50YXRpb24NCj4gaW5kZXBlbmRlbnQgb2YgU29Dcy4NCj4gDQo+IEhp
-IFNoZW53ZWkgV2FuZywNCj4gDQo+IE9uIFdlZCwgQXByIDI5LCAyMDE1IGF0IDA5OjE0OjQxQU0g
-LTA1MDAsIFNoZW53ZWkgV2FuZyB3cm90ZToNCj4gPiBUaGVyZSBhcmUgNCB2ZXJzaW9ucyBvZiB0
-aGUgdGltZXIgaGFyZHdhcmUgb24gRnJlZXNjYWxlIE1YQyBoYXJkd2FyZS4NCj4gPiAtLVZlcnNp
-b24gMDogTVgxL01YTA0KPiA+IC0tVmVyc2lvbiAxOiBNWDIxLCBNWDI3Lg0KPiA+IC0tVmVyc2lv
-biAyOiBNWDI1LCBNWDMxLCBNWDM1LCBNWDM3LCBNWDUxLCBNWDZRIC0tVmVyc2lvbiAzOiBNWDZE
-TCwNCj4gPiBNWDZTWA0KPiA+DQo+ID4gVGhpcyBwYXRjaCBoYXMgcmVtb3ZlZCB0aGUgU29DIHJl
-bGF0ZWQgY29kZXMsIGFuZCBpbXBsZW1lbnRlZCB0aGUNCj4gPiBkcml2ZXIgZGlyZWN0bHkgdXBv
-biB0aGUgaGFyZHdhcmUgdGltZXIgSVAgdmVyc2lvbi4NCj4gPg0KPiA+IFRoZSBuZXcgZHJpdmVy
-IGNhbiBiZSBpbnN0YWxsZWQgdmlhIGRldmljZSB0cmVlIG9yIHRoZSBkaXJlY3QgZnVuY3Rpb24N
-Cj4gPiBjYWxsIHRvIG14Y190aW1lcl9pbml0IGluIG9yZGVyIHRvIHN1cHBvcnQgaW14IGxlZ2Fj
-eSBzeXN0ZW1zIGxpa2UNCj4gPiBNWDIxIGFuZCBNWDI3Lg0KPiA+DQo+ID4gRm9yIHRoZSBkZXZp
-Y2UgdHJlZSBpbXBsZW1lbnRhdGlvbiwgdGhlIGRyaXZlciBpcyBjb21wYXRpYmxlIHdpdGggdGhl
-DQo+ID4gY3VycmVudCBiaW5kaW5ncyBsaWtlICJmc2wsaW14NnEtZ3B0IiwgYnV0IGZvciBmdXR1
-cmUgZHRzIGZpbGUsIHRoZQ0KPiA+IHN0cmluZyBsaWtlICJmc2wsaW14LWdwdC12MiIgd2l0aG91
-dCBTb0MgaW5mb3JtYXRpb24gaXMgcmVjb21tZW5kZWQuDQo+IA0KPiBUaGF0IGlzIG5vdCB0aGUg
-dXN1YWwgY29udmVudGlvbiBmb3IgSVAgYmxvY2sgdmVyc2lvbnMuDQo+IA0KPiBQbGVhc2UgQ2Mg
-dGhlIGRldmljZXRyZWUgbGlzdCAoYWRkZWQpLg0KPg0KVGhhbmsgeW91IGZvciB0aGUgY29tbWVu
-dHMuIFdoYXQgaXMgdGhlIGN1cnJlbnQgbmFtaW5nIHJ1bGVzIGZvciBJUCBibG9jayB2ZXJzaW9u
-PyBJdCB3b3VsZCBiZSBhcHByZWNpYXRlZCBpZiB5b3UgY291bGQgcHJvdmlkZSBhbiBleGFtcGxl
-Lg0KDQpTaGVud2VpIA0KIA0KPiBiYXJ1Y2gNCj4gDQo+IC0tDQo+ICAgICAgaHR0cDovL2JhcnVj
-aC5zaWFjaC5uYW1lL2Jsb2cvICAgICAgICAgICAgICAgICAgfi4gLn4gICBUayBPcGVuDQo+IFN5
-c3RlbXMNCj4gPX0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS1vb08tLVUtLU9vby0tLS0tLS0tLS0tLXs9DQo+ICAgIC0gYmFydWNoQHRrb3MuY28uaWwgLSB0
-ZWw6ICs5NzIuMi42NzkuNTM2NCwgaHR0cDovL3d3dy50a29zLmNvLmlsIC0NCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Shenwei Wang,
+
+On Wed, Apr 29, 2015 at 02:55:52PM +0000, Shenwei Wang wrote:
+> > -----Original Message-----
+> > From: Baruch Siach [mailto:baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org]
+> > Sent: 2015=E5=B9=B44=E6=9C=8829=E6=97=A5 9:26
+> > To: Wang Shenwei-B38339
+> > Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: Re: [PATCH 1/1] ARM: imx: make the imx timer driver implem=
+entation
+> > independent of SoCs.
+> >=20
+> > On Wed, Apr 29, 2015 at 09:14:41AM -0500, Shenwei Wang wrote:
+> > > There are 4 versions of the timer hardware on Freescale MXC hardw=
+are.
+> > > --Version 0: MX1/MXL
+> > > --Version 1: MX21, MX27.
+> > > --Version 2: MX25, MX31, MX35, MX37, MX51, MX6Q
+> > > --Version 3: MX6DL, MX6SX
+> > >
+> > > This patch has removed the SoC related codes, and implemented the
+> > > driver directly upon the hardware timer IP version.
+> > >
+> > > The new driver can be installed via device tree or the direct fun=
+ction
+> > > call to mxc_timer_init in order to support imx legacy systems lik=
+e
+> > > MX21 and MX27.
+> > >
+> > > For the device tree implementation, the driver is compatible with=
+ the
+> > > current bindings like "fsl,imx6q-gpt", but for future dts file, t=
+he
+> > > string like "fsl,imx-gpt-v2" without SoC information is recommend=
+ed.
+> >=20
+> > That is not the usual convention for IP block versions.
+> >=20
+> > Please Cc the devicetree list (added).
+>
+> Thank you for the comments. What is the current naming rules for IP b=
+lock=20
+> version? It would be appreciated if you could provide an example.
+
+When several SoC share the same IP block the usual convention is to nam=
+e it in=20
+the compatible property string after the first SoC it appeared on. Just=
+ look=20
+at some binding documentation from Documentation/devicetree/bindings/ti=
+mer/ to=20
+find examples. The allwinner,sun5i-a13-hstimer property is shared by A1=
+0s and=20
+A13 SoCs. The amlogic,meson6-timer is shared by Meson6 and Meson8 SoCs,=
+ and so=20
+on.
+
+baruch
+
+--=20
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Sy=
+stems
+=3D}------------------------------------------------ooO--U--Ooo--------=
+----{=3D
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
