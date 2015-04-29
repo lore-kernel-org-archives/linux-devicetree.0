@@ -1,77 +1,81 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: imx: make the imx timer driver implementation
- independent of SoCs.
-Date: Wed, 29 Apr 2015 18:25:27 +0300
-Message-ID: <20150429152527.GH2258@tarshish>
-References: <1430316881-4668-1-git-send-email-shenwei.wang@freescale.com>
- <20150429142614.GE2258@tarshish>
- <BL2PR03MB3703DA9D4D52EC9524D627C83D70@BL2PR03MB370.namprd03.prod.outlook.com>
- <20150429150824.GF2258@tarshish>
- <BL2PR03MB37005C844BCB89007D176F683D70@BL2PR03MB370.namprd03.prod.outlook.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v11 0/3] ASoC: tda998x: add a codec to the HDMI
+	transmitter
+Date: Wed, 29 Apr 2015 17:13:04 +0200
+Message-ID: <cover.1430320384.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BL2PR03MB37005C844BCB89007D176F683D70-AZ66ij2kwaY73p3xB2dGY+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shenwei Wang <Shenwei.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shenwei Wang,
-On Wed, Apr 29, 2015 at 03:19:19PM +0000, Shenwei Wang wrote:
-> > -----Original Message-----
-> > From: Baruch Siach [mailto:baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org]
-> > Sent: 2015=E5=B9=B44=E6=9C=8829=E6=97=A5 10:08
-> > To: Wang Shenwei-B38339
-> > Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Subject: Re: [PATCH 1/1] ARM: imx: make the imx timer driver implem=
-entation
-> > independent of SoCs.
-> >
-> > When several SoC share the same IP block the usual convention is to=
- name=20
-> > it in
-> > the compatible property string after the first SoC it appeared on. =
-Just look at
-> > some binding documentation from Documentation/devicetree/bindings/t=
-imer/ to
-> > find examples. The allwinner,sun5i-a13-hstimer property is shared b=
-y A10s and
-> > A13 SoCs. The amlogic,meson6-timer is shared by Meson6 and Meson8 S=
-oCs, and
-> > so on.
->
-> If the same IP block is shared with several SoCs, why we gave them di=
-fferent compatible=20
-> strings? If no changes in an IP block, I assume no changes in the rel=
-ating driver as well.=20
-> In this assumption, I don't see any need to introduce a new compatibl=
-e string for an=20
-> unchanged IP block in a new SoC.
+Based on 4.1-rc1
 
-That is exactly what I meant to say. Sorry that I was not clear enough.
+v11:
+	- reduce the patch series to adding the tda998x codec only
+v10:
+	- add the generic dt-card
+	- define the audio ports from a DT graph of ports (Russell King)
+	- reuse HDMI constants (Andrew Jackson - Jyri Sarha)
+	- alloc rate_constraints in codec (Jyri Sarha)
+	- fix bad number of channels (Jyri Sarha)
+	- correct codec generation from config (Russell King - Jyri Sarha)
+	- no module init/exit (Russell King)
+v9:
+	- back to a TDA998x specific CODEC
+	- more comments
+	- change magic values to constants
+v8:
+	- change some comments about the patches
+v7:
+	- remove the change of the K predivider (Jyri Sarha)
+	- add S24_3LE and S32_LE as possible audio formats (Jyri Sarha)
+	- don't move the struct priv2 definition and use the
+	  slave encoder private data as the device private data
+	  (Russell King)
+	- remove the useless request_module (Russell King/Mark Brown)
+	- don't lock the HDMI module (Russell King)
+	- use platform_device_unregister to remove the codec
+	  (Russell King)
+v6:
+	- extend the HDMI CODEC instead of using a specific CODEC
+v5:
+	- use the TDA998x private data instead of a specific area
+	  for the CODEC interface
+	- the CODEC is TDA998x specific (Mark Brown)
+v4:
+	- remove all the TDA998x specific stuff from the CODEC
+	- move the EDID scan from the CODEC to the TDA998x
+	- move the CODEC to sound/soc (Mark Brown)
+	- update the audio_sample_rate from the EDID (Andrew Jackson)
+v3: fix bad rate (Andrew Jackson)
+v2: check double stream start (Mark Brown)
 
-When the same IP block is used in a newer generation SoC the same compa=
-tible=20
-property string is used. For that reason you can find in sun5i-a10s.dts=
-i the=20
-line
+Jean-Francois Moine (3):
+  drm/i2c: tda998x: Add support of a DT graph of ports
+  drm/i2c: tda998x: Change drvdata for audio extension
+  ASoC: tda998x: add a codec to the HDMI transmitter
 
-	compatible =3D "allwinner,sun5i-a13-hstimer";
+ .../devicetree/bindings/drm/i2c/tda998x.txt        |  51 +++++
+ drivers/gpu/drm/i2c/tda998x_drv.c                  | 220 +++++++++++++++++++--
+ include/sound/tda998x.h                            |  30 +++
+ sound/soc/codecs/Kconfig                           |   5 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/tda998x.c                         | 174 ++++++++++++++++
+ 6 files changed, 471 insertions(+), 11 deletions(-)
+ create mode 100644 include/sound/tda998x.h
+ create mode 100644 sound/soc/codecs/tda998x.c
 
-baruch
-
---=20
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Sy=
-stems
-=3D}------------------------------------------------ooO--U--Ooo--------=
-----{=3D
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.1.4
