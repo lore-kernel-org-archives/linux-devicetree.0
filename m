@@ -1,67 +1,43 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] arm64: Enable EDAC on ARM64
-Date: Wed, 29 Apr 2015 15:40:32 +0100
-Message-ID: <20150429144031.GB18867@e104818-lin.cambridge.arm.com>
-References: <1430259045-19012-1-git-send-email-lho@apm.com>
- <1430259045-19012-2-git-send-email-lho@apm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 RESEND 2/2] mmc: host: Add some quirks to be read from fdt in sdhci-pltm.c
+Date: Wed, 29 Apr 2015 16:45:30 +0200
+Message-ID: <2511590.IBzkZm5Ibi@wuerfel>
+References: <1429630959-32649-1-git-send-email-stripathi@apm.com> <17258495.kJWOqBBcrn@wuerfel> <CAOHikRD6enDS2VyYH4Nz_+wz_m2v-61QyBDLixZxm-Y0qYtojA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1430259045-19012-2-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <CAOHikRD6enDS2VyYH4Nz_+wz_m2v-61QyBDLixZxm-Y0qYtojA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 04:10:41PM -0600, Loc Ho wrote:
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/edac.h
-> @@ -0,0 +1,31 @@
-> +/*
-> + * ARM64 EDAC Header File 
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#ifndef ASM_EDAC_H
-> +#define ASM_EDAC_H
+On Wednesday 29 April 2015 19:55:53 Suman Tripathi wrote:
+> >
+> > The above assumes that the limitation is enforced by the bus (e.g. an
+> > AHB bus can only do 32-bit DMA). It would be a little different if you
+> > have a 64-bit AXI bus and the Arasan device itself is limited to 32-bit
+> > independent of the width of the bus it is connected to. Can you find out
+> > which of these two cases you have?
+> >
+> 
+> We have 64 bit AXI and Arasan device or controller is 32 bit . So there is
+> 64 bit AXI to 32 bit AHB translation.
 
-For consistency, please use __ASM_EDAC_H.
+Please be very specific here. If this is an AHB based MMC controller, you
+should model that AHB bus in DT, with the 32-bit dma-ranges.
 
-> +/*
-> + * ECC atomic, DMA, SMP and interrupt safe scrub function.
-> + * Implements the per arch atomic_scrub() that EDAC use for software
-> + * ECC scrubbing.  It reads memory and then writes back the original
-> + * value, allowing the hardware to detect and correct memory errors.
-> + */
+However, if this is an AXI based MMC controller that is limited to 32-bit
+DMA, the correct change would be to make ensure that the driver never
+asks for a 64-bit DMA mask with this hardware.
 
-The comment here is misleading since the function doesn't do anything.
+Both will result in a 32-bit dma mask being used, and high DMA handled
+through the block bounce code or swiotlb, but it's best to ensure that
+the DT representation matches the actual hardware as closely as possible,
+so it keeps working when you change something in a future chip.
 
-> +static inline void atomic_scrub(void *va, u32 size)
-> +{
-> +	/* Stub function for now until an ARM64 HW has a way to test it. */
-> +}
-
-Can we have a WARN_ONCE() here?
-
-We had some discussions last year, restarted this year and the
-conclusion was to leave this function as a no-op since it is not safe in
-the presence of KVM or non-coherent DMA:
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/326986.html
-
--- 
-Catalin
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
