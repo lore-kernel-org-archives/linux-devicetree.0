@@ -1,130 +1,52 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ARM: gic: Document Power and Clock Domain optional
- properties
-Date: Wed, 29 Apr 2015 16:15:28 +0100
-Message-ID: <20150429151527.GA8781@leverpostej>
-References: <1430146811-29862-1-git-send-email-geert+renesas@glider.be>
- <20150427155427.GB16191@leverpostej>
- <CAMuHMdVT=vzFazUsJtvPsyB8zX-WJqp19RNVYA=UMfWZtHnF=Q@mail.gmail.com>
- <20150427171502.GD16191@leverpostej>
- <CAMuHMdVY5Oh7b9Pme2jiwtV4GBPqK-T5nfxnB9_1ufFzueUjLA@mail.gmail.com>
- <20150429125703.GB11757@leverpostej>
- <CAMuHMdU1T9t8O8J4F0KkhcoeYO9sNLpp+jARaCEP0ZKiVgBqJA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] devicetree: Add vendor prefix for Foxlink Group
+Date: Wed, 29 Apr 2015 17:16:45 +0200
+Message-ID: <5540F5DD.5010101@atmel.com>
+References: <1427213575-27340-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdU1T9t8O8J4F0KkhcoeYO9sNLpp+jARaCEP0ZKiVgBqJA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1427213575-27340-1-git-send-email-nicolas.ferre@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Le 24/03/2015 17:12, Nicolas Ferre a =E9crit :
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+> Thierry,
+>=20
+> Boris added the support for a Foxlink panel in this commit: 102932b0e=
+474
+> (drm/panel: add support for Foxlink FL500WVR00-A0T panel). Here is th=
+e vendor
+> prefix.
 
-> >> >> > I'm also concerned that the carving up of clock inputs, power domains,
-> >> >> > and other physical details is implementation-specific. I imagine that
-> >> >> > pretty much every user that will care about this is using GIC-400, so
-> >> >> > could we make this specific to GIC-400?
-> >> >>
-> >> >> I have no idea which GIC version is being used.
-> >> >
-> >> > This is unfortunate.
-> >> >
-> >> >> This is for Renesas R-Mobile APE6 (r8a73a4) and various R-Car Gen2.
-> >> >> According to the DTS, they're compatible with "arm,cortex-a15-gic" and
-> >> >> "arm,cortex-a7-gic", and work with that value.
-> >> >
-> >> > Who put the DT together in the first place?
-> >>
-> >> Magnus (added to CC).
-> >>
-> >> > If it's a multi-cluster SoC then we know that we're not using any
-> >> > built-in distributor...
-> >>
-> >> R-Mobile APE6 has 2 clusters (4xCA15 and 4xCA7).
-> >> R-Car Gen2 has 1 or 2 clusters (2/4xCA15 and/or 2/4xCA7).
-> >
-> > It looks like we should be able to read the GICD_IIDR to figure out what
-> > imlpementation is used. Could you see what GICD_IIDR reports on those
-> > platforms? There's a patch at the end of the email to do so.
-> 
-> Thanks!
-> 
->   - R-Mobile APE6 (r8a73a4):        GICD_IIDR reports 0x0200043b
->   - R-Car Gen M2-W (r8a7791):       GICD_IIDR reports 0x0200043b
-> 
->         ProductID = 0x02 (GIC-400)
->         Variant = 0x0
->         Revision = 0x0
->         Implementer = 0x43b (ARM)
-> 
-> So both are GIC-400 (in the mean time I found a reference to GIC-400 in
-> the APE6 docs).
+Ping?
 
-Ok. We already support the "arm,gic-400" compatible string, so these
-could be moved over, and given a CLK clock input.
+>=20
+> Bye,
+>=20
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 1b0f5b797cd5..e9fca088ba1a 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -73,6 +73,7 @@ everspin	Everspin Technologies, Inc.
+>  excito	Excito
+>  fcs	Fairchild Semiconductor
+>  firefly	Firefly
+> +foxlink	Foxlink Group
+>  fsl	Freescale Semiconductor
+>  GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>=20
 
-> I also ran it on a few other SoCs:
-> 
->   - SH-Mobile AG5 (sh73a0):         GICD_IIDR reports 0x0102043b
-> 
->         Implementation version = 0x01 (Cortex-A9 MPCore)
->         Revision number = 0x020
->         Implementer = 0x43b (ARM)
-> 
->     Which GIC is that?
 
-That seems to be a GIC internal to the A9 MPCore, so "arm,cortex-a9-gic"
-is fine for this.
-
-It seems to take separate PERIPHCLK and PERIPHCLKEN clock inputs, though
-it's not clear to be from the TRM whether PERIPHCLKEN is generated
-internally from PERIPHCLK, or if it needs to be generated by an external
-clock controller.
-
->   - R-Mobile A1 (r8a7740):          GICD_IIDR reports 0x0000043b
-> 
->         ProductID = 0x00 (GIC-500 or Cortex-A15 MPCore or PL390)
->         Variant = 0x0
->         Revision = 0x0
->         Implementer = 0x43b (ARM)
-> 
->     Seems like 0x0000043b can mean multiple things. Docs say PL390 r0p0.
-
-We might want to add an "arm,pl390" compatible string for this. The
-PL390 seems to take a single "gclk" clock input.
-
-> > diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> > index 7b315e3..02c8bb4 100644
-> > --- a/drivers/irqchip/irq-gic.c
-> > +++ b/drivers/irqchip/irq-gic.c
-> > @@ -959,6 +959,7 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
-> >         irq_hw_number_t hwirq_base;
-> >         struct gic_chip_data *gic;
-> >         int gic_irqs, irq_base, i;
-> > +       unsigned long iidr;
-> >
-> >         BUG_ON(gic_nr >= MAX_GIC_NR);
-> >
-> > @@ -996,6 +997,9 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
-> >                 gic_set_base_accessor(gic, gic_get_common_base);
-> >         }
-> >
-> > +       iidr = readl_relaxed(gic_data_dist_base(gic) + GIC_DIST_IIDR);
-> > +       pr_info("GICD_IIDR reports 0x%08lx\n", (unsigned long)iidr);
-> 
-> No need for the cast.
-
-For arm64 there is ;)
-
-> Perhaps just
-> 
->         pr_debug("GICD_IIDR reports 0x%08lx\n",
->                  readl_relaxed(gic_data_dist_base(gic) + GIC_DIST_IIDR));
-
-I could fold the read in, but with the cast it was either overly long or
-weirdly formatted.
-
-Thanks,
-Mark.
+--=20
+Nicolas Ferre
