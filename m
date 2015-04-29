@@ -1,61 +1,76 @@
-From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] BCM6328 LED driver
-Date: Tue, 28 Apr 2015 17:46:12 -0700
-Message-ID: <CAK5ve-JHffs9Dbq_C5SVFo7dyWpBwb9gSvVFjnPG6mpK9XF0sw@mail.gmail.com>
-References: <1430050517-8045-1-git-send-email-noltari@gmail.com> <1430239850-26120-1-git-send-email-noltari@gmail.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH V3 2/2] pinctrl: Add Pistachio SoC pin control driver
+Date: Tue, 28 Apr 2015 17:49:25 -0700
+Message-ID: <CAL1qeaH8gg2Df=GbQdW+GvMEzzYgMgAZwO9LSerj=xYYWSnsBA@mail.gmail.com>
+References: <1428435862-14354-1-git-send-email-abrestic@chromium.org>
+	<1428435862-14354-3-git-send-email-abrestic@chromium.org>
+	<554016A5.7040209@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430239850-26120-1-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <554016A5.7040209@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>, Paul Bolle <pebolle@tiscali.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 9:50 AM, =C3=81lvaro Fern=C3=A1ndez Rojas
-<noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> These patches add support and documentation for the BCM6328 LED drive=
-r, which is present on BCM6318, BCM6328, BCM6362 and BCM63268.
-> In these SoCs it's possible to control LEDs both as GPIOs or by hardw=
-are.
-> However, on some devices there are Serial LEDs (LEDs connected to a 7=
-4hc controller), which can either be controlled by software (exporting =
-the 74hc as spi-gpio) or hardware using this driver.
-> The problem is some of these serial LEDs are hardware controlled (eth=
-ernet LEDs) and exporting the 74hc as spi-gpio prevents those LEDs to b=
-e hardware controlled, so the only chance to keep them working is by us=
-ing this driver.
+On Tue, Apr 28, 2015 at 4:24 PM, Ezequiel Garcia
+<ezequiel.garcia@imgtec.com> wrote:
+> Andrew,
 >
-> v4->v5: Introduce changes suggested by Jacek.
-> v3->v4: Introduce changes suggested by Jacek.
-> v2->v3: Introduce changes suggested by Jacek.
-> v1->v2: Introduce changes suggested by Florian and Jonas.
+> On 04/07/2015 04:44 PM, Andrew Bresticker wrote:
+> [..]
+>> +static int pistachio_pinmux_enable(struct pinctrl_dev *pctldev,
+>> +                                unsigned func, unsigned group)
+>> +{
+>> +     struct pistachio_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+>> +     const struct pistachio_pin_group *pg = &pctl->groups[group];
+>> +     const struct pistachio_function *pf = &pctl->functions[func];
+>> +     struct pinctrl_gpio_range *range;
+>> +     unsigned int i;
+>> +     u32 val;
+>> +
+>> +     if (pg->mux_reg > 0) {
+>> +             for (i = 0; i < ARRAY_SIZE(pg->mux_option); i++) {
+>> +                     if (pg->mux_option[i] == func)
+>> +                             break;
+>> +             }
+>> +             if (i == ARRAY_SIZE(pg->mux_option)) {
+>> +                     dev_err(pctl->dev, "Cannot mux pin %u to function %u\n",
+>> +                             group, func);
+>> +                     return -EINVAL;
+>> +             }
+>> +
+>> +             val = pctl_readl(pctl, pg->mux_reg);
+>> +             val &= ~(pg->mux_mask << pg->mux_shift);
+>> +             val |= i << pg->mux_shift;
+>> +             pctl_writel(pctl, val, pg->mux_reg);
+>> +
+>> +             if (pf->scenarios) {
+>> +                     for (i = 0; i < pf->nscenarios; i++) {
+>> +                             if (pf->scenarios[i] == group)
+>> +                                     break;
+>> +                     }
+>> +                     if (WARN_ON(i == pf->nscenarios))
+>> +                             return -EINVAL;
+>> +
+>> +                     val = pctl_readl(pctl, pf->scenario_reg);
+>> +                     val &= ~(pf->scenario_mask << pf->scenario_shift);
+>> +                     val |= i << pf->scenario_shift;
+>> +                     pctl_writel(pctl, val, pf->scenario_reg);
+>> +             }
+>> +     }
+>> +
+>> +     range = pinctrl_find_gpio_range_from_pin(pctl->pctldev, group);
+>> +     if (range)
+>> +             gpio_disable(gc_to_bank(range->gc), group - range->pin_base);
+>> +
 >
+> If you plan to submit a v4, how about using "pg->pins" here instead of "group"?
+>
+> Using "group" relies on having the same numberspace for the group and the pin,
+> and it'll break when introducing the RPU pinctrl.
 
-Applied to my tree, thanks.
--Bryan
+Sure, will do.
 
-> =C3=81lvaro Fern=C3=A1ndez Rojas (2):
->   leds: add DT binding for BCM6328 LED controller
->   leds: add BCM6328 LED driver
->
->  .../devicetree/bindings/leds/leds-bcm6328.txt      | 309 +++++++++++=
-++++
->  drivers/leds/Kconfig                               |   8 +
->  drivers/leds/Makefile                              |   1 +
->  drivers/leds/leds-bcm6328.c                        | 413 +++++++++++=
-++++++++++
->  4 files changed, 731 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-bcm63=
-28.txt
->  create mode 100644 drivers/leds/leds-bcm6328.c
->
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Andrew
