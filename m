@@ -1,48 +1,77 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] devicetree: Add vendor prefix for Shelly, Inc.
-Date: Wed, 29 Apr 2015 17:17:10 +0200
-Message-ID: <5540F5F6.5030900@atmel.com>
-References: <20150324105721.GH18115@ulmo.nvidia.com> <1427213528-27286-1-git-send-email-nicolas.ferre@atmel.com>
+From: Shenwei Wang <Shenwei.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 1/1] ARM: imx: make the imx timer driver implementation
+ independent of SoCs.
+Date: Wed, 29 Apr 2015 15:19:19 +0000
+Message-ID: <BL2PR03MB37005C844BCB89007D176F683D70@BL2PR03MB370.namprd03.prod.outlook.com>
+References: <1430316881-4668-1-git-send-email-shenwei.wang@freescale.com>
+ <20150429142614.GE2258@tarshish>
+ <BL2PR03MB3703DA9D4D52EC9524D627C83D70@BL2PR03MB370.namprd03.prod.outlook.com>
+ <20150429150824.GF2258@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427213528-27286-1-git-send-email-nicolas.ferre@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150429150824.GF2258@tarshish>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 24/03/2015 17:12, Nicolas Ferre a =E9crit :
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-
-Ping?
-
-> ---
-> Thierry,
->=20
-> Here it is ;-)
->=20
-> Bye,
->=20
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index a9eeaa0c5867..1b0f5b797cd5 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -165,6 +165,7 @@ sbs	Smart Battery System
->  schindler	Schindler
->  seagate	Seagate Technology PLC
->  semtech	Semtech Corporation
-> +shelly	Shelly, Inc.
->  sil	Silicon Image
->  silabs	Silicon Laboratories
->  siliconmitus	Silicon Mitus, Inc.
->=20
-
-
---=20
-Nicolas Ferre
+SGkgQmFydWNoLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEJhcnVj
+aCBTaWFjaCBbbWFpbHRvOmJhcnVjaEB0a29zLmNvLmlsXQ0KPiBTZW50OiAyMDE15bm0NOaciDI5
+5pelIDEwOjA4DQo+IFRvOiBXYW5nIFNoZW53ZWktQjM4MzM5DQo+IENjOiBzaGF3bi5ndW9AbGlu
+YXJvLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMV0gQVJNOiBpbXg6
+IG1ha2UgdGhlIGlteCB0aW1lciBkcml2ZXIgaW1wbGVtZW50YXRpb24NCj4gaW5kZXBlbmRlbnQg
+b2YgU29Dcy4NCj4gDQo+IEhpIFNoZW53ZWkgV2FuZywNCj4gDQo+IE9uIFdlZCwgQXByIDI5LCAy
+MDE1IGF0IDAyOjU1OjUyUE0gKzAwMDAsIFNoZW53ZWkgV2FuZyB3cm90ZToNCj4gPiA+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBCYXJ1Y2ggU2lhY2ggW21haWx0bzpi
+YXJ1Y2hAdGtvcy5jby5pbF0NCj4gPiA+IFNlbnQ6IDIwMTXlubQ05pyIMjnml6UgOToyNg0KPiA+
+ID4gVG86IFdhbmcgU2hlbndlaS1CMzgzMzkNCj4gPiA+IENjOiBzaGF3bi5ndW9AbGluYXJvLm9y
+ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8xXSBBUk06IGlt
+eDogbWFrZSB0aGUgaW14IHRpbWVyIGRyaXZlcg0KPiA+ID4gaW1wbGVtZW50YXRpb24gaW5kZXBl
+bmRlbnQgb2YgU29Dcy4NCj4gPiA+DQo+ID4gPiBPbiBXZWQsIEFwciAyOSwgMjAxNSBhdCAwOTox
+NDo0MUFNIC0wNTAwLCBTaGVud2VpIFdhbmcgd3JvdGU6DQo+ID4gPiA+IFRoZXJlIGFyZSA0IHZl
+cnNpb25zIG9mIHRoZSB0aW1lciBoYXJkd2FyZSBvbiBGcmVlc2NhbGUgTVhDIGhhcmR3YXJlLg0K
+PiA+ID4gPiAtLVZlcnNpb24gMDogTVgxL01YTA0KPiA+ID4gPiAtLVZlcnNpb24gMTogTVgyMSwg
+TVgyNy4NCj4gPiA+ID4gLS1WZXJzaW9uIDI6IE1YMjUsIE1YMzEsIE1YMzUsIE1YMzcsIE1YNTEs
+IE1YNlEgLS1WZXJzaW9uIDM6DQo+ID4gPiA+IE1YNkRMLCBNWDZTWA0KPiA+ID4gPg0KPiA+ID4g
+PiBUaGlzIHBhdGNoIGhhcyByZW1vdmVkIHRoZSBTb0MgcmVsYXRlZCBjb2RlcywgYW5kIGltcGxl
+bWVudGVkIHRoZQ0KPiA+ID4gPiBkcml2ZXIgZGlyZWN0bHkgdXBvbiB0aGUgaGFyZHdhcmUgdGlt
+ZXIgSVAgdmVyc2lvbi4NCj4gPiA+ID4NCj4gPiA+ID4gVGhlIG5ldyBkcml2ZXIgY2FuIGJlIGlu
+c3RhbGxlZCB2aWEgZGV2aWNlIHRyZWUgb3IgdGhlIGRpcmVjdA0KPiA+ID4gPiBmdW5jdGlvbiBj
+YWxsIHRvIG14Y190aW1lcl9pbml0IGluIG9yZGVyIHRvIHN1cHBvcnQgaW14IGxlZ2FjeQ0KPiA+
+ID4gPiBzeXN0ZW1zIGxpa2UNCj4gPiA+ID4gTVgyMSBhbmQgTVgyNy4NCj4gPiA+ID4NCj4gPiA+
+ID4gRm9yIHRoZSBkZXZpY2UgdHJlZSBpbXBsZW1lbnRhdGlvbiwgdGhlIGRyaXZlciBpcyBjb21w
+YXRpYmxlIHdpdGgNCj4gPiA+ID4gdGhlIGN1cnJlbnQgYmluZGluZ3MgbGlrZSAiZnNsLGlteDZx
+LWdwdCIsIGJ1dCBmb3IgZnV0dXJlIGR0cw0KPiA+ID4gPiBmaWxlLCB0aGUgc3RyaW5nIGxpa2Ug
+ImZzbCxpbXgtZ3B0LXYyIiB3aXRob3V0IFNvQyBpbmZvcm1hdGlvbiBpcw0KPiByZWNvbW1lbmRl
+ZC4NCj4gPiA+DQo+ID4gPiBUaGF0IGlzIG5vdCB0aGUgdXN1YWwgY29udmVudGlvbiBmb3IgSVAg
+YmxvY2sgdmVyc2lvbnMuDQo+ID4gPg0KPiA+ID4gUGxlYXNlIENjIHRoZSBkZXZpY2V0cmVlIGxp
+c3QgKGFkZGVkKS4NCj4gPg0KPiA+IFRoYW5rIHlvdSBmb3IgdGhlIGNvbW1lbnRzLiBXaGF0IGlz
+IHRoZSBjdXJyZW50IG5hbWluZyBydWxlcyBmb3IgSVANCj4gPiBibG9jayB2ZXJzaW9uPyBJdCB3
+b3VsZCBiZSBhcHByZWNpYXRlZCBpZiB5b3UgY291bGQgcHJvdmlkZSBhbiBleGFtcGxlLg0KPiAN
+Cj4gV2hlbiBzZXZlcmFsIFNvQyBzaGFyZSB0aGUgc2FtZSBJUCBibG9jayB0aGUgdXN1YWwgY29u
+dmVudGlvbiBpcyB0byBuYW1lIGl0IGluDQo+IHRoZSBjb21wYXRpYmxlIHByb3BlcnR5IHN0cmlu
+ZyBhZnRlciB0aGUgZmlyc3QgU29DIGl0IGFwcGVhcmVkIG9uLiBKdXN0IGxvb2sgYXQNCj4gc29t
+ZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZnJvbSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdGltZXIvIHRvDQo+IGZpbmQgZXhhbXBsZXMuIFRoZSBhbGx3aW5uZXIsc3VuNWktYTEz
+LWhzdGltZXIgcHJvcGVydHkgaXMgc2hhcmVkIGJ5IEExMHMgYW5kDQo+IEExMyBTb0NzLiBUaGUg
+YW1sb2dpYyxtZXNvbjYtdGltZXIgaXMgc2hhcmVkIGJ5IE1lc29uNiBhbmQgTWVzb244IFNvQ3Ms
+IGFuZA0KPiBzbyBvbi4NCj4gDQpJZiB0aGUgc2FtZSBJUCBibG9jayBpcyBzaGFyZWQgd2l0aCBz
+ZXZlcmFsIFNvQ3MsIHdoeSB3ZSBnYXZlIHRoZW0gZGlmZmVyZW50IGNvbXBhdGlibGUgDQpzdHJp
+bmdzPyBJZiBubyBjaGFuZ2VzIGluIGFuIElQIGJsb2NrLCBJIGFzc3VtZSBubyBjaGFuZ2VzIGlu
+IHRoZSByZWxhdGluZyBkcml2ZXIgYXMgd2VsbC4gDQpJbiB0aGlzIGFzc3VtcHRpb24sIEkgZG9u
+J3Qgc2VlIGFueSBuZWVkIHRvIGludHJvZHVjZSBhIG5ldyBjb21wYXRpYmxlIHN0cmluZyBmb3Ig
+YW4gDQp1bmNoYW5nZWQgSVAgYmxvY2sgaW4gYSBuZXcgU29DLg0KDQpTaGVud2VpDQo+IGJhcnVj
+aA0KPiANCj4gLS0NCj4gICAgICBodHRwOi8vYmFydWNoLnNpYWNoLm5hbWUvYmxvZy8gICAgICAg
+ICAgICAgICAgICB+LiAufiAgIFRrIE9wZW4NCj4gU3lzdGVtcw0KPiA9fS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLW9vTy0tVS0tT29vLS0tLS0tLS0tLS0t
+ez0NCj4gICAgLSBiYXJ1Y2hAdGtvcy5jby5pbCAtIHRlbDogKzk3Mi4yLjY3OS41MzY0LCBodHRw
+Oi8vd3d3LnRrb3MuY28uaWwgLQ0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
