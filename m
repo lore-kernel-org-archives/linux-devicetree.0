@@ -1,73 +1,43 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH V3 2/2] pinctrl: Add Pistachio SoC pin control driver
-Date: Tue, 28 Apr 2015 20:24:21 -0300
-Message-ID: <554016A5.7040209@imgtec.com>
-References: <1428435862-14354-1-git-send-email-abrestic@chromium.org> <1428435862-14354-3-git-send-email-abrestic@chromium.org>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v6 02/10] DT: Add documentation for the mfd Maxim max77693
+Date: Tue, 28 Apr 2015 17:24:09 -0700
+Message-ID: <CAK5ve-Kj92nU0Ykq54OVZxi_oekAiZ9O6R2sf11TrtZTKDr=dg@mail.gmail.com>
+References: <1430205530-20873-1-git-send-email-j.anaszewski@samsung.com>
+ <1430205530-20873-3-git-send-email-j.anaszewski@samsung.com> <20150428100951.GO11956@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428435862-14354-3-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>, Paul Bolle <pebolle@tiscali.nl>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20150428100951.GO11956@x1>
+Sender: linux-leds-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pavel Machek <pavel@ucw.cz>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Andrew,
+On Tue, Apr 28, 2015 at 3:09 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Tue, 28 Apr 2015, Jacek Anaszewski wrote:
+>
+>> This patch adds device tree binding documentation for
+>> the flash cell of the Maxim max77693 multifunctional device.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+>> Cc: Bryan Wu <cooloney@gmail.com>
+>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>  Documentation/devicetree/bindings/mfd/max77693.txt |   67 ++++++++++++++++++++
+>>  1 file changed, 67 insertions(+)
+>
+> Requires a LED Ack.
+>
 
-On 04/07/2015 04:44 PM, Andrew Bresticker wrote:
-[..]
-> +static int pistachio_pinmux_enable(struct pinctrl_dev *pctldev,
-> +				   unsigned func, unsigned group)
-> +{
-> +	struct pistachio_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +	const struct pistachio_pin_group *pg = &pctl->groups[group];
-> +	const struct pistachio_function *pf = &pctl->functions[func];
-> +	struct pinctrl_gpio_range *range;
-> +	unsigned int i;
-> +	u32 val;
-> +
-> +	if (pg->mux_reg > 0) {
-> +		for (i = 0; i < ARRAY_SIZE(pg->mux_option); i++) {
-> +			if (pg->mux_option[i] == func)
-> +				break;
-> +		}
-> +		if (i == ARRAY_SIZE(pg->mux_option)) {
-> +			dev_err(pctl->dev, "Cannot mux pin %u to function %u\n",
-> +				group, func);
-> +			return -EINVAL;
-> +		}
-> +
-> +		val = pctl_readl(pctl, pg->mux_reg);
-> +		val &= ~(pg->mux_mask << pg->mux_shift);
-> +		val |= i << pg->mux_shift;
-> +		pctl_writel(pctl, val, pg->mux_reg);
-> +
-> +		if (pf->scenarios) {
-> +			for (i = 0; i < pf->nscenarios; i++) {
-> +				if (pf->scenarios[i] == group)
-> +					break;
-> +			}
-> +			if (WARN_ON(i == pf->nscenarios))
-> +				return -EINVAL;
-> +
-> +			val = pctl_readl(pctl, pf->scenario_reg);
-> +			val &= ~(pf->scenario_mask << pf->scenario_shift);
-> +			val |= i << pf->scenario_shift;
-> +			pctl_writel(pctl, val, pf->scenario_reg);
-> +		}
-> +	}
-> +
-> +	range = pinctrl_find_gpio_range_from_pin(pctl->pctldev, group);
-> +	if (range)
-> +		gpio_disable(gc_to_bank(range->gc), group - range->pin_base);
-> +
+Please go with my Ack:
 
-If you plan to submit a v4, how about using "pg->pins" here instead of "group"?
+Acked-by: Bryan Wu <cooloney@gmail.com>
 
-Using "group" relies on having the same numberspace for the group and the pin,
-and it'll break when introducing the RPU pinctrl.
-
-Thanks!
--- 
-Ezequiel
+Thanks,
+-Bryan
