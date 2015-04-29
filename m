@@ -1,45 +1,68 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH v2 4/8] gpio: arizona: add support for WM8998
-	and WM1814
-Date: Wed, 29 Apr 2015 15:37:05 +0100
-Message-ID: <1430318229-28518-5-git-send-email-rf@opensource.wolfsonmicro.com>
-References: <1430318229-28518-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 1/5] arm64: Enable EDAC on ARM64
+Date: Wed, 29 Apr 2015 15:40:32 +0100
+Message-ID: <20150429144031.GB18867@e104818-lin.cambridge.arm.com>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+ <1430259045-19012-2-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1430318229-28518-1-git-send-email-rf@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, myungjoo.ham@samsung.com, ckeepax@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1430259045-19012-2-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-arizona.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+On Tue, Apr 28, 2015 at 04:10:41PM -0600, Loc Ho wrote:
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/edac.h
+> @@ -0,0 +1,31 @@
+> +/*
+> + * ARM64 EDAC Header File 
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#ifndef ASM_EDAC_H
+> +#define ASM_EDAC_H
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 052fbc8..ca00273 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -118,6 +118,8 @@ static int arizona_gpio_probe(struct platform_device *pdev)
- 	case WM5110:
- 	case WM8280:
- 	case WM8997:
-+	case WM8998:
-+	case WM1814:
- 		arizona_gpio->gpio_chip.ngpio = 5;
- 		break;
- 	default:
+For consistency, please use __ASM_EDAC_H.
+
+> +/*
+> + * ECC atomic, DMA, SMP and interrupt safe scrub function.
+> + * Implements the per arch atomic_scrub() that EDAC use for software
+> + * ECC scrubbing.  It reads memory and then writes back the original
+> + * value, allowing the hardware to detect and correct memory errors.
+> + */
+
+The comment here is misleading since the function doesn't do anything.
+
+> +static inline void atomic_scrub(void *va, u32 size)
+> +{
+> +	/* Stub function for now until an ARM64 HW has a way to test it. */
+> +}
+
+Can we have a WARN_ONCE() here?
+
+We had some discussions last year, restarted this year and the
+conclusion was to leave this function as a no-op since it is not safe in
+the presence of KVM or non-coherent DMA:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/326986.html
+
 -- 
-1.7.2.5
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
