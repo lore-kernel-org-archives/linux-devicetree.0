@@ -1,145 +1,141 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [RFC 00/12] On-demand device registration
-Date: Wed, 29 Apr 2015 08:58:42 +0200
-Message-ID: <CAAObsKBQMY8NfzN3bfiDuy=QOsSV281punJGuEUPfMRRBwoA+g@mail.gmail.com>
-References: <1429886848-5843-1-git-send-email-tomeu.vizoso@collabora.com>
- <553ACE96.2040804@ahsoftware.de> <CAAObsKAa_yEwcWQTJvAidwnM2h7UAcgwa2dUBtfYRFtWHb7Kng@mail.gmail.com>
- <553FCECB.7040005@ahsoftware.de>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: Re: [PATCH v2 RESEND 2/2] mmc: host: Add some quirks to be read from
+ fdt in sdhci-pltm.c
+Date: Wed, 29 Apr 2015 12:34:41 +0530
+Message-ID: <CAOHikRAYtPt67-ZOFz890v46v28gtvQDPhgH1qA8d4xoSaQ7+Q@mail.gmail.com>
+References: <1429630959-32649-1-git-send-email-stripathi@apm.com>
+	<5771531.b7UhrXUGmv@wuerfel>
+	<CAOHikRDX7RZUkHFUmNs0kY+aYqXra5i=3cukpjz5yOECkcffbQ@mail.gmail.com>
+	<6927395.c8hJ4o34f5@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <553FCECB.7040005-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <6927395.c8hJ4o34f5@wuerfel>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 28 April 2015 at 20:17, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
-> Am 28.04.2015 um 14:49 schrieb Tomeu Vizoso:
->>
->> On 25 April 2015 at 01:15, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
->>>
->>> Am 24.04.2015 um 16:47 schrieb Tomeu Vizoso:
->>>>
->>>> Hi,
->>>>
->>>> while reading the thread [0] that Alexander Holler started with his
->>>> series to make probing order deterministic, it occurred to me that it should
->>>> be possible to achieve the same by probing devices as they are referenced by
->>>> other devices.
->>>>
->>>> This basically reuses the information that is already embedded in the
->>>> probe() implementations, saving us from refactoring existing drivers or
->>>> adding information to DTBs.
->>>>
->>>> The main issue I see is that the registration code path in some
->>>> subsystems may not be reentrant, so some refactoring of the locking will be
->>>> needed. In my testing I have found this problem with regulators, as the
->>>> supply of a regulator might end up being registered during the registration
->>>> of the first one.
->>>>
->>>> Something I'm not completely happy with is that I have had to move the
->>>> population of the device tree after all platform drivers have been
->>>> registered. Otherwise I don't see how I could register drivers on demand as
->>>> we don't have yet each driver's compatible strings.
->>>>
->>>> I have done my testing on a Tegra124-based Chromebook, and these patches
->>>> were enough to eliminate all the deferred probes.
->>>
->>>
->>> First you have to solve a problem which is totally unrelated to DT or
->>> ACPI or x86 or ARM:
->>>
->>> I think as long as drivers don't register themself whithout any side
->>> effect, this problem isn't solvable. In order to make an ordered list of
->>> drivers to start, you need to know which drivers are actually available.
->>
->>
->> Yeah, I kind of side-stepped that issue by waiting until all drivers
->> have been registered before registering devices. I think someone
->> suggested doing so in your thread (maybe Grant?).
->
->
-> That doesn't work. As said above, several drivers doing a lot more than just
-> registering in their initcall. They might even crash if some prerequisits
-> aren't given. And several of these prerequisits (init orders) are hardcoded
-> by various means.
+Hi Arnd,
 
-But aren't those dependencies being taken care currently by the
-initcall level the driver is placed in? That remains the same in this
-approach.
+Please ignore the previous reply.
 
-I have obviously spent less time thinking about all this than you, so
-sorry if I'm missing too many points.
-
-Regards,
-
-Tomeu
-
->> There's lots of things that can be improved regarding driver and
->> device initialization, but we have to start somewhere :)
->
->
-> That's what I've tried by marking good drivers as such (and by placing them
-> in their own initcall level group).
->
-> But as said, good luck. I've tried it already and nobody seemed interested.
-> Some people even seem to panic if they see a patch which changes something
-> in linux/init/ ;)
->
-> Regards,
->
-> Alexander Holler
->
->
+On Tue, Apr 28, 2015 at 1:19 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Monday 27 April 2015 21:25:20 Suman Tripathi wrote:
+>> > On Monday 27 April 2015 20:33:25 Suman Tripathi wrote:
+>> > > > On Tuesday 21 April 2015 21:12:39 Suman Tripathi wrote:
+>> > > > > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
+>> > > > > +
+>> > > > > +               if (of_get_property(np, "no-cmd23", NULL))
+>> > > > > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
+>> > > > >
+>> > > > >                 if (of_get_property(np, "no-1-8-v", NULL))
+>> > > > >
+>> > > > >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+>> > > >
+>> > > > Any property you add needs to be documented in the DT binding.
+>> > > > If possible, add generic properties for each bug you have mmc.txt
+>> > > > rather than the driver specific sdhci.txt, and implement the
+>> > >
+>> > > I will add the binding in mmc.txt. I thought this was present but not.
+>> > >
+>> > > > parsing in a common function that is used for all mmc hosts.
+>> > >
+>> > > As per mine understanding the sdhci_get_of_porperty is a common
+>> > > parsing function  . Am I wrong ??
 >>
->> Thanks,
->>
->> Tomeu
->>
->>> And also drivers are registering themself with their initcall, they
->>> might do an awfull lot of stuff besides just registering themself. That
->>> means several drivers already have prerequisites and dependcies for
->>> their initcall. That means you can't just call their initcall to get and
->>> idea of which driver an initcall is even part of.
->>>
->>> That ends up with the fact that you just don't have a list of drivers
->>> you can sort, based on whatever algorithm you might have in mind.
->>>
->>> I've tried to solve that problem with marking drivers which don't have
->>> any prerequisits (and side effects) as "well done".
->>>
->>> The patch which did that was 5/9 in my series, this one:
->>>
->>> https://lkml.org/lkml/2014/5/12/414
->>>
->>> Unfortunately nobody seemed really interested and without one of the few
->>> "big guys" in your pocket, it's absolutely impossible to get such
->>> changes into the kernel.
->>>
->>> Not to speak about all the unavoidable discussions about absolutely
->>> silly things.
->>>
->>> But maybe I'm the problem here. No idea. I wish you more luck than I had
->>> in the past two or three years.
->>>
->>> Regards,
->>>
->>> Alexander Holler
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-kernel"
->>> in
->>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>> Please read the FAQ at  http://www.tux.org/lkml/
 >
+> A small side note: please fix your email client to use proper attribution
+> of the citations. The way you reply, nobody knows what you are saying
+> compare to what you quote. Also, reduce the quotation to the parts you
+> are replying to.
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Okay. Sorry for that. I fixed it.
+
+>> > No, this is only used for sdhci, not for the other controllers.
+>>
+>> But our's is a SHCI variant so I added it in this file.
+>
+> That's my point: a lot of the bugs are independent of the specific
+> host controller and could happen with any one of them. We want to
+> ensure that nobody tries to add another property with similar
+> semantics and a different name just because they are using a
+> different driver.
+
+Then I am not finding a reason why we have sdhci_get_of_property function ?? .
+ I added a generic names like broken-adma that everyone can reuse it.
+I made mistake of not adding it in the binding.
+
+For eg : broken-cd is not added by me but I can use it. So I added
+something like broken-adma as it was not present.
+
+>
+>> > > An alternative would be to set all these bits based on the compatible
+>> > > string of your host, if that is the only one that has all these bugs.
+>> >
+>> > The host driver  (arasan) is reused but this quirks are needed due to
+>> > board issues. so I have a control over dtb only to fix this.
+>>
+>> What is the nature of the bug on that board? Is there a different
+>> way to describe that without introducing six new properties?
+>>
+>> Sorry it is board and IP as well SoC errata's,
+>>
+>> 1. Delay after power is required due to some voltage issues that will
+>> be fixed in next board revision
+>
+> This is clearly not sdhci-specific, so make that a generic property
+> for all mmc.
+>
+
+Okay
+
+>> 2. We need to support PIO mode as of now because DMA or ADMA requires
+>> some kind of translation driver that I am working on.
+>
+> But this does not describe the hardware properties. Don't add properties
+> that describe the lack of a kernel driver. If you can't do DMA yet,
+> use a dma-ranges property that lists one empty range to prevent
+> dma_set_mask() from working, so it will fall back to PIO mode. You
+> may have to fix the driver if that doesn't already work.
+>
+
+The generic sdhc framework doesn't have this capabiltiy. It uses the
+quirks to identify the broken DMA and ADMA modes even
+if the controller is capable of.
+
+> What kind of driver do you need here?
+
+For DMA and adma we need some 32 bit to 64 bit translation driver.
+The existing arasan driver only support 32 bit.
+
+>
+>> 3. The version of arasan variant we have in our SoC doesn't have the
+>> HISPD  bit field in HI-SPEED SD card. So this makes HI-SPEED sdcard
+>> work.
+>>
+>> 4. NO_CMD23 is required for eMMC cards.
+>>
+>> These are not new properties.  Only the fact is I am using it for our
+>> SoC from dtb. These quirks are already there in mmc common framework.
+>> Nothing is new.
+>
+> Are you sure that you have version 8.9a of the Arasan SDHCI? This sounds
+
+No We are using 4.9a ARASAN SDHCI
+
+> like version specific quirks, so they are probably present in each
+> SoC that uses the same version.
+
+Not sure
+
+>
+>         Arnd
+
+
+
+-- 
+Thanks,
+with regards,
+Suman Tripathi
