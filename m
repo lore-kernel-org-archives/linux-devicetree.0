@@ -1,51 +1,117 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 0/3] Using SPI NOR flah on sunxi.
-Date: Thu, 30 Apr 2015 20:34:36 +0200
-Message-ID: <201504302034.36753.marex@denx.de>
-References: <cover.1430403750.git.hramrach@gmail.com> <OF23B05612.4290AF80-ONC1257E37.00589292-C1257E37.005AB106@rohde-schwarz.com> <CAOMqctRLnCJfVCYGjsmhORYNk+HCf07wwSXnZv4oqDxbaQqKGw@mail.gmail.com>
-Reply-To: marex-ynQEQJNshbs@public.gmane.org
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
+ X-Gene SoC EDAC DTS binding
+Date: Thu, 30 Apr 2015 14:19:44 -0700
+Message-ID: <CAPw-ZTksYNDE2zVD=ZjGzpKfXQN8KgW85ZnHoQ2eVmSGdSdMOw@mail.gmail.com>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+ <7128860.xHITr0VFap@wuerfel> <20150430094134.GD3488@pd.tnic>
+ <10227049.9i19zDi2y3@wuerfel> <20150430130028.GF3488@pd.tnic>
+ <CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q@mail.gmail.com>
+ <20150430171846.GJ3488@pd.tnic>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sunxi+bncBDIOBYPK6QDRB5VORKVAKGQEH3B3XDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAOMqctRLnCJfVCYGjsmhORYNk+HCf07wwSXnZv4oqDxbaQqKGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas.Betker-Bf/A/FSCP0w3s4ca2cGeAgC/G2K4zDHf@public.gmane.org, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Bean Huo ????????? (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd <linux-mtd-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150430171846.GJ3488@pd.tnic>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "jcm@redhat.com" <jcm@redhat.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "patches@apm.com" <patches@apm.com>, Feng Kan <fkan@apm.com>, Doug Thompson <dougthompson@xmission.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, April 30, 2015 at 06:56:18 PM, Michal Suchanek wrote:
-> On 30 April 2015 at 18:30,  <Thomas.Betker-Bf/A/FSCP0w3s4ca2cGeAgC/G2K4zDHf@public.gmane.org> wrote:
-> > Hello Michal:
-> >> I tried to connect a SPI NOR flash to my sunxi board and due to the
-> > 
-> > current
-> > 
-> >> sunxi SPI driver limitations it does not work.
-> >> 
-> >> The SPI driver returns an error when more than 64 bytes are
-> >> transferred at once
-> >> due to lack of DMA support.
-> > 
-> > Wouldn't it be easier to fix the SPI driver to handle transfers larger
-> > than 64 bytes, filling and draining the FIFO multiple times if
-> > neccessary? (As far as I can tell, most SPI drivers do this.)
-> 
-> Yes, the intent is to fix this by adding dma support to the driver,
-> eventually.
-> 
-> The patch might be still useful for other hardware with developing SPI
-> support.
+Hi,
 
-Please just fix the controller driver to correctly handle arbitrary transfer
-lengths.
+>> I had read all the emails interaction. Yes I can write a single EDAC
+>> driver. But I actually have multiple instances and single instance of
+>> the same IP's. For example, I have 4 DDR controllers, 4 CPU domains,
+>> one L3 and one SoC. If you can suggest to me how this would work with
+>> devicetree, I might be able to make it works. But from HW point of
+>> view (take the memory controller as an example), there is really 4
+>> hardware blocks and some shared IP's block for status. It is much
+>> simple representation with multiple instance of the driver.
+>
+> Your whole error reporting is done roughly through the same registers,
+> as Arnd pointed out. Why can't you build your single driver around that
+> and based on the error type being reported, multiplex inside a *single*
+> interrupt handler to the proper decoding routines.
 
-Best regards,
-Marek Vasut
+Yes... I can do this but I don't see how it will scale when some SoC
+in the future may have more or less instance of the memory controllers
+for example. I guess for now, I will just iteration 4 time with an
+single base address or four resources in a loop. Let's agreed on the
+DT layout and I will generate an new patch then. See below...
+
+>
+>> I think we should first agreed on the DT binding and let's not worry
+>> about APEI. Then, whether we have one file or multiple file. Again,
+>> the HW consist of:
+>>
+>> 1. One top level interrupt and status registers
+>> 2. CSW, MCB A and MCB B for detection of any active memory controllers
+>> 3. 4 individual memory controller instance
+>> 4. 4 CPU domain instance with its own individual L2 registers
+>> 5. Each CPU has instance own L1
+>> 6. One L3 instance
+>> 7. One SoC instance
+>
+> And all of those are separate IP blocks and they can be integrated with
+> other, non APM hardware, or do those things all belong together?
+
+The top level interrupt may be different and APM specific unless other
+vendors adapt the same bit definitions. I highly doubt other vendor
+will use the same bit definitions. The CSW is APM only. The MCB A, MCB
+B, and memory controller are APM only. The L3, and SoC are APM specify
+only. For L1 and L2, I will need to check with the CPU designer - but
+likely APM specific.
+
+> IOW,
+> can we expect such IP blocks to appear in other hw platforms or are
+> they all custom APM design which need to go together due to proprietary
+> coherency protocol or whatever, for example?
+
+See above.
+
+>
+>> As for as what is useful, we find that the memory controller and the
+>> L1 and L2 are useful as it provides info for errors - for HW/system
+>> debugging as well as margin of DDR.
+>
+> Sounds like all is useful.
+>
+
+Now let us discuss the DT layout if it is an single driver:
+
+xgeneedac: xgeneedac@7e800000 {
+        compatible = "apm,xgene-edac";
+        regmap-efuse = <&efuse>; /* efuse */
+        reg = <0x0 0x78800000 0x0 0x100>, /* Top level interrupt
+status resource */
+                <0x0 0x7e200000 0x0 0x1000>, /* CSW for MCB active resource
+                <0x0 0x7e700000 0x0 0x1000>, /* MCB A resource */
+                <0x0 0x7e720000 0x0 0x1000>, /* MCB B resource */
+                <0x0 0x7e800000 0x0 0x1000>, /* MCU 0 resource */
+                <0x0 0x7e840000 0x0 0x1000>, /* MCU 1 resource */
+                <0x0 0x7e880000 0x0 0x1000>, /* MCU 2 resource */
+                <0x0 0x7e8c0000 0x0 0x1000>, /* MCU 3 resource */
+                <0x0 0x7c000000 0x0 0x200000>, /* CPU 0 domain for L1 and L2 */
+                <0x0 0x7c200000 0x0 0x200000>, /* CPU 1 domain for L1 and L2 */
+                <0x0 0x7c400000 0x0 0x200000>, /* CPU 2 domain for L1 and L2 */
+                <0x0 0x7c600000 0x0 0x200000>, /* CPU 3 domain for L1 and L2 */
+                <0x0 0x7e600000 0x0 0x1000>, /* L3 resource */
+                <0x0 0x7e930000 0x0 0x1000>, /* SoC bus resource */
+                <0x0 0x7e000000 0x0 0x1000>, /* SoC device resource */
+      interrupts = <0x0 0x20 0x4>,
+                       <0x0 0x21 0x4>,
+                       <0x0 0x27 0x4>;
+};
+
+Arnd, Rob, and Borislav, Please comment and let me know.
+
+-Loc
