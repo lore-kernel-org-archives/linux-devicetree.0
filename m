@@ -1,70 +1,43 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Thu, 30 Apr 2015 19:18:46 +0200
-Message-ID: <20150430171846.GJ3488@pd.tnic>
-References: <1430259045-19012-1-git-send-email-lho@apm.com>
- <7128860.xHITr0VFap@wuerfel>
- <20150430094134.GD3488@pd.tnic>
- <10227049.9i19zDi2y3@wuerfel>
- <20150430130028.GF3488@pd.tnic>
- <CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q@mail.gmail.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for SMEM
+Date: Thu, 30 Apr 2015 10:41:26 -0700
+Message-ID: <CAJAp7OgNfnppcg7u-rjH0gG=7t45bgXYfN1+wAOEZD6xwEb=zQ@mail.gmail.com>
+References: <1428795178-24312-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<55424C78.3020506@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <55424C78.3020506@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andry Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 09:57:46AM -0700, Loc Ho wrote:
-> I had read all the emails interaction. Yes I can write a single EDAC
-> driver. But I actually have multiple instances and single instance of
-> the same IP's. For example, I have 4 DDR controllers, 4 CPU domains,
-> one L3 and one SoC. If you can suggest to me how this would work with
-> devicetree, I might be able to make it works. But from HW point of
-> view (take the memory controller as an example), there is really 4
-> hardware blocks and some shared IP's block for status. It is much
-> simple representation with multiple instance of the driver.
+On Thu, Apr 30, 2015 at 8:38 AM, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+> On 4/11/2015 5:32 PM, Bjorn Andersson wrote:
+>>
+>> Add device tree binding documentation for the Qualcom Shared Memory
+>> manager.
+[..]
+>> +- hwspinlocks:
+>> +       Usage: required
+>> +       Value type: <prop-encoded-array>
+>> +       Definition: reference to a hwspinlock used to protect allocations
+>> from
+>> +                   the shared memory
+>> +
+>> += EXAMPLE
+[..]
+>> +               hwlocks = <&tcsr_mutex 3>;
+>
+>
+> Just noticed, this looks like a typo.  The description of the field above
+> calls it "hwspinlocks".  Would to please determine which of the two labels
+> you most prefer, and change things so that label is used in both the
+> description and the example?  Thanks
+>
 
-Your whole error reporting is done roughly through the same registers,
-as Arnd pointed out. Why can't you build your single driver around that
-and based on the error type being reported, multiplex inside a *single*
-interrupt handler to the proper decoding routines.
+Thanks, you're correct it's a typo in the definition.
 
-> I think we should first agreed on the DT binding and let's not worry
-> about APEI. Then, whether we have one file or multiple file. Again,
-> the HW consist of:
-> 
-> 1. One top level interrupt and status registers
-> 2. CSW, MCB A and MCB B for detection of any active memory controllers
-> 3. 4 individual memory controller instance
-> 4. 4 CPU domain instance with its own individual L2 registers
-> 5. Each CPU has instance own L1
-> 6. One L3 instance
-> 7. One SoC instance
-
-And all of those are separate IP blocks and they can be integrated with
-other, non APM hardware, or do those things all belong together? IOW,
-can we expect such IP blocks to appear in other hw platforms or are
-they all custom APM design which need to go together due to proprietary
-coherency protocol or whatever, for example?
-
-> As for as what is useful, we find that the memory controller and the
-> L1 and L2 are useful as it provides info for errors - for HW/system
-> debugging as well as margin of DDR.
-
-Sounds like all is useful.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
