@@ -1,65 +1,55 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/4] clk: si5351: Some fixes
-Date: Thu, 30 Apr 2015 19:45:50 +0200
-Message-ID: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Russell King <rmk+linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 1/4] clk: si5351: Mention clock-names in the binding documentation
+Date: Thu, 30 Apr 2015 19:45:51 +0200
+Message-ID: <1430415954-29517-2-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Jean-Francois Moine <moinejf@free.fr>, Michael Welling <mwelling@ieee.org>, Russell King <rmk+linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For Si5351 clock driver, Michael Welling and Jean-Francois Moine reported
-issues with recent v4.x kernels due to broken/missing/wrong parent clock
-claming. This patch set now deals with the issues reported.
+Since the introduction of clk-si5351 the way we should deal with DT provided
+clocks has changed from indexed to named clock phandles. Amend the binding
+documentation to reflect named clock phandles by clock-names property.
 
-Patch 1 amends the binding documentation mention clock-names property
-for the "xtal" and "clkin" parent clock inputs of Si5351 variants.
-
-Patch 2 adds the clock-names property for the SolidRun CuBox using Si5351
-with a fixed oscillator connected to "xtal" input.
-
-Patch 3 reworks the way we claim parent clocks by using devm_clk_get()
-for both DT and platform_data based registration. Also, properly check
-for errors returned by devm_clk_get() and prepare/enable the parent clocks.
-
-Patch 4 introduces a function to reset PLLs on rate change. This should
-improve generated clock output stability. I currently have no scope at hand
-to actually test that properly, so there may be more issues remaining.
-
-@Michael, Jean-Francois: Please test and report if there are still
-issues remaining.
-
-Sebastian
-
-Sebastian Hesselbarth (4):
-  clk: si5351: Mention clock-names in the binding documentation
-  ARM: dove: Add clock-names to CuBox Si5351 clk generator
-  clk: si5351: Do not pass struct clk in platform_data
-  clk: si5351: Reset PLL after rate change
-
- .../devicetree/bindings/clock/silabs,si5351.txt    |  4 +-
- arch/arm/boot/dts/dove-cubox.dts                   |  1 +
- drivers/clk/clk-si5351.c                           | 87 +++++++++++++++++-----
- include/linux/platform_data/si5351.h               |  4 -
- 4 files changed, 73 insertions(+), 23 deletions(-)
-
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
-Cc: Russell King <rmk+linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mike Turquette <mturquette@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Jean-Francois Moine <moinejf@free.fr>
+Cc: Michael Welling <mwelling@ieee.org>
+Cc: Russell King <rmk+linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ Documentation/devicetree/bindings/clock/silabs,si5351.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/silabs,si5351.txt b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
+index c40711e8e8f7..28b28309f535 100644
+--- a/Documentation/devicetree/bindings/clock/silabs,si5351.txt
++++ b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
+@@ -17,7 +17,8 @@ Required properties:
+ - #clock-cells: from common clock binding; shall be set to 1.
+ - clocks: from common clock binding; list of parent clock
+   handles, shall be xtal reference clock or xtal and clkin for
+-  si5351c only.
++  si5351c only. Corresponding clock input names are "xtal" and
++  "clkin" respectively.
+ - #address-cells: shall be set to 1.
+ - #size-cells: shall be set to 0.
+ 
+@@ -71,6 +72,7 @@ i2c-master-node {
+ 
+ 		/* connect xtal input to 25MHz reference */
+ 		clocks = <&ref25>;
++		clock-names = "xtal";
+ 
+ 		/* connect xtal input as source of pll0 and pll1 */
+ 		silabs,pll-source = <0 0>, <1 0>;
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
