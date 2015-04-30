@@ -1,58 +1,43 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [RFC PATCH 2/7] mmc: sh_mobile_sdhi: Add actual clock rate support
-Date: Thu, 30 Apr 2015 19:34:40 +0300
-Message-ID: <554259A0.9030307@cogentembedded.com>
-References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk> <1430397081.5802.41.camel@xylophone.i.decadent.org.uk>
+From: Thomas.Betker@rohde-schwarz.com
+Subject: Re: [PATCH 0/3] Using SPI NOR flah on sunxi.
+Date: Thu, 30 Apr 2015 18:30:32 +0200
+Message-ID: <OF23B05612.4290AF80-ONC1257E37.00589292-C1257E37.005AB106__11501.5413532548$1430412040$gmane$org@rohde-schwarz.com>
+References: <cover.1430403750.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1430397081.5802.41.camel@xylophone.i.decadent.org.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Hutchings <ben.hutchings@codethink.co.uk>, Ian Molton <ian@mnementh.co.uk>, linux-mmc@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@lists.codethink.co.uk, Shinobu Uehara <shinobu.uehara.xc@renesas.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1430403750.git.hramrach@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: linux-mtd <linux-mtd-bounces@lists.infradead.org>, devicetree@vger.kernel.org, Marek Vasut <marex@denx.de>, "grmoore@altera.com" <grmoore@altera.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Woodhouse <dwmw2@infradead.org>, Rafa?? Mi??ecki <zajec5@gmail.com>, linux-kernel@vger.kernel.org, Huang Shijie <b32955@freescale.com>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Ben Hutchings <ben@decadent.org.uk>, Alison Chaiken <alison_chaiken@mentor.com>, "Bean Huo ????????? (beanhuo)" <beanhuo@micron.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/30/2015 03:31 PM, Ben Hutchings wrote:
+Hello Michal:
 
-> From: Shinobu Uehara <shinobu.uehara.xc@renesas.com>
+> I tried to connect a SPI NOR flash to my sunxi board and due to the 
+current
+> sunxi SPI driver limitations it does not work.
+> 
+> The SPI driver returns an error when more than 64 bytes are 
+> transferred at once
+> due to lack of DMA support.
 
-> It is necessary to stop the SD clock before using
-> the actual clock in case of SDHI controller.
+Wouldn't it be easier to fix the SPI driver to handle transfers larger 
+than 64 bytes, filling and draining the FIFO multiple times if neccessary? 
+(As far as I can tell, most SPI drivers do this.)
 
-> Signed-off-by: Shinobu Uehara <shinobu.uehara.xc@renesas.com>
-> Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-> ---
->   drivers/mmc/host/sh_mobile_sdhi.c |   14 ++++++++++++++
->   1 file changed, 14 insertions(+)
+Just asking,
+Thomas
 
-> diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
-> index 6906a905cd54..92a58c6007fe 100644
-> --- a/drivers/mmc/host/sh_mobile_sdhi.c
-> +++ b/drivers/mmc/host/sh_mobile_sdhi.c
-> @@ -136,6 +136,18 @@ static void sh_mobile_sdhi_clk_disable(struct platform_device *pdev)
->   	clk_disable_unprepare(priv->clk);
->   }
->
-> +static void sh_mobile_sdhi_set_clk_div(struct platform_device *pdev, int clk)
-> +{
-> +	struct mmc_host *mmc = dev_get_drvdata(&pdev->dev);
-> +	struct tmio_mmc_host *host = mmc_priv(mmc);
-> +
-> +	if (clk == true) {
-
-    'clk' is *int*. Perhaps, should be just *if* (clk)?
-
-> +		sd_ctrl_write16(host, CTL_SD_CARD_CLK_CTL, ~0x0100 &
-> +				sd_ctrl_read16(host, CTL_SD_CARD_CLK_CTL));
-> +		sd_ctrl_write16(host, CTL_SD_CARD_CLK_CTL, 0x00ff);
-> +	}
-> +}
-> +
->   static int sh_mobile_sdhi_wait_idle(struct tmio_mmc_host *host)
->   {
->   	int timeout = 1000;
-[...]
-
-WBR, Sergei
-
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
