@@ -1,58 +1,95 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Thu, 30 Apr 2015 15:00:28 +0200
-Message-ID: <20150430130028.GF3488@pd.tnic>
-References: <1430259045-19012-1-git-send-email-lho@apm.com>
- <7128860.xHITr0VFap@wuerfel>
- <20150430094134.GD3488@pd.tnic>
- <10227049.9i19zDi2y3@wuerfel>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Thu, 30 Apr 2015 07:03:31 -0600
+Message-ID: <CANLsYkwaOe2b+Hytfkd18YbOXQcG7cdEi-HgZS1g_ZFpFDyMNQ@mail.gmail.com>
+References: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
+	<1430310000-10867-3-git-send-email-ivan.ivanov@linaro.org>
+	<CANLsYkxE9xieUW+OMgb4LbnJHRdCtTM=uzcwPzC6bs4x4pP3MA@mail.gmail.com>
+	<1430385874.2400.13.camel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <10227049.9i19zDi2y3@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1430385874.2400.13.camel@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 12:42:48PM +0200, Arnd Bergmann wrote:
-> I've looked at the driver in a little more detail now, and found that
-> it is a weird conglomerate at the moment. Basically you have four
-> drivers in one file here, appended to one another, but not sharing
-> any common functions except the module_init() that registers the four
-> drivers. This is what Rob was referring to when he suggested splitting
-> it up into four files, and these would in total be smaller than the
-> common file (by being able to use module_platform_driver()).
-> 
-> However, there is another dimension to this, which supports your point
-> about making it one driver for the platform: The split into four drivers
-> is completely artificial, because all four use the same IRQs and
-> implement four separate interrupt handlers for it (using IRQF_SHARED),
-> each handling only the events they are interested in. Similarly, they
-> all access the same register set ("pcperror"), aside from having their
-> own separate registers, and they use the "syscon" framework to get to
-> the registers.  This seems to be an inferior design, as the pcperror
+On 30 April 2015 at 03:24, Ivan T. Ivanov <ivan.ivanov@linaro.org> wrote:
+>
+> On Wed, 2015-04-29 at 10:49 -0600, Mathieu Poirier wrote:
+>> On 29 April 2015 at 06:20, Ivan T. Ivanov ivanov@linaro.org> wrote:
+>
+>
+>> > +
+>> > +       funnel@821000 {
+>> > +               compatible = "arm,coresight-funnel", "arm,primecell";
+>> > +               reg = <0x821000 0x1000>;
+>> > +
+>> > +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+>> > +               clock-names = "apb_pclk", "atclk";
+>> > +
+>> > +               ports {
+>> > +                       #address-cells = <1>;
+>> > +                       #size-cells = <0>;
+>> > +
+>> > +                       port@4 {
+>> > +                               reg = <4>;
+>> > +                               funnel0_in4: endpoint {
+>> > +                                       slave-mode;
+>> > +                                       remote-endpoint = <&funnel1_out>;
+>> > +                               };
+>> > +                       };
+>> > +                       port@8 {
+>> > +                               reg = <0>;
+>> > +                               funnel0_out: endpoint {
+>> > +                                       remote-endpoint = <&etf_in>;
+>> > +                               };
+>> > +                       };
+>>
+>> Please add a comment indicating what the other ports are connected to.
+>>
+>> > +               };
+>> > +       };
+>> > +
+>> > +       replicator@824000 {
+>> > +               compatible = "qcom,coresight-replicator", "arm,primecell";
+>> > +               reg = <0x824000 0x1000>;
+>> > +
+>> > +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+>> > +               clock-names = "apb_pclk", "atclk";
+>> > +
+>> > +               ports {
+>> > +                       #address-cells = <1>;
+>> > +                       #size-cells = <0>;
+>> > +
+>> > +                       port@0 {
+>> > +                               reg = <0>;
+>> > +                               replicator_out0: endpoint {
+>> > +                                       remote-endpoint = <&etr_in>;
+>> > +                               };
+>> > +                       };
+>> > +                       port@1 {
+>> > +                               reg = <1>;
+>> > +                               replicator_out1: endpoint {
+>> > +                                       remote-endpoint = <&tpiu_in>;
+>> > +                               };
+>> > +                       };
+>> > +                       port@2 {
+>> > +                               reg = <0>;
+>> > +                               replicator_in: endpoint {
+>> > +                                       slave-mode;
+>> > +                                       remote-endpoint = <&etf_out>;
+>> > +                               };
+>> > +                       };
+>>
+>> Same comment as with the funnel component.
+>
+> Sorry, but what do you mean here?
 
-Doh, now that you mention it...
+My bad - replicators have only one input port and two output ones.
+Forget about this comments.
 
-So why isn't this thing registering a single IRQ handler which
-multiplexes between the _check routines depending on the bits set in
-PCPHPERRINTSTS/MEMERRINTSTS? (L3 alternatively, ctx->dev_csr + L3C_ESR).
-
-This would really make it a single driver which acts according to the
-bits set in those error registers. It can't get any simpler than that.
-
-Loc?
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Regards,
+> Ivan
