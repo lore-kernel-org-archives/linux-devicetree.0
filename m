@@ -1,40 +1,43 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [STLinux Kernel] [PATCH v7 3/9] ARM: multi_v7_defconfig: Enable
- support for ST's LPC RTC
-Date: Thu, 30 Apr 2015 13:17:03 +0200
-Message-ID: <55420F2F.2040708@st.com>
-References: <1428590854-14095-1-git-send-email-lee.jones@linaro.org> <1428590854-14095-4-git-send-email-lee.jones@linaro.org>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: phy: msm: Use extcon framework for VBUS and ID
+ detection
+Date: Thu, 30 Apr 2015 14:30:02 +0300
+Message-ID: <1430393402.2400.14.camel@mm-sol.com>
+References: <1428568462-20193-1-git-send-email-ivan.ivanov@linaro.org>
+	 <1429601312.15866.11.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428590854-14095-4-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, a.zummo@towertech.it, david.paris@st.com, wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429601312.15866.11.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+Ping.
 
-On 04/09/2015 04:47 PM, Lee Jones wrote:
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->   arch/arm/configs/multi_v7_defconfig | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 138e68a..136b8da 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -490,6 +490,7 @@ CONFIG_RTC_DRV_MAX8907=y
->   CONFIG_RTC_DRV_MAX77686=y
->   CONFIG_RTC_DRV_RS5C372=m
->   CONFIG_RTC_DRV_PALMAS=y
-> +CONFIG_RTC_DRV_ST_LPC=y
->   CONFIG_RTC_DRV_TWL4030=y
->   CONFIG_RTC_DRV_TPS6586X=y
->   CONFIG_RTC_DRV_TPS65910=y
-Applied to sti_defconfig-for_v4.2.
-
-Thanks!
-Maxime
+On Tue, 2015-04-21 at 10:28 +0300, Ivan T. Ivanov wrote:
+> On Thu, 2015-04-09 at 11:34 +0300, Ivan T. Ivanov wrote:
+> > On recent Qualcomm platforms VBUS and ID lines are not routed to
+> > USB PHY LINK controller. Use extcon framework to receive connect
+> > and disconnect ID and VBUS notification.
+> > 
+> > Signed-off-by: Ivan T. Ivanov ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Hi Felipe,
+> 
+> Did you have any comments on this and/or following patches?
+> 
+> Regards,
+> Ivan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
