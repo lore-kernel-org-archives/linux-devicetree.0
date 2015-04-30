@@ -1,92 +1,70 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC PATCH 14/14] ASoC: qcom: document apq8016 machine driver bindings
-Date: Thu, 30 Apr 2015 18:18:26 +0100
-Message-ID: <1430414306-11469-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
+ X-Gene SoC EDAC DTS binding
+Date: Thu, 30 Apr 2015 19:18:46 +0200
+Message-ID: <20150430171846.GJ3488@pd.tnic>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+ <7128860.xHITr0VFap@wuerfel>
+ <20150430094134.GD3488@pd.tnic>
+ <10227049.9i19zDi2y3@wuerfel>
+ <20150430130028.GF3488@pd.tnic>
+ <CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for apq8016 machine driver.
-On APQ8016 4 MI2S can be configured to different sinks like internal
-codec/external codec, this connection is controlled via 2 iomux
-registers.
+On Thu, Apr 30, 2015 at 09:57:46AM -0700, Loc Ho wrote:
+> I had read all the emails interaction. Yes I can write a single EDAC
+> driver. But I actually have multiple instances and single instance of
+> the same IP's. For example, I have 4 DDR controllers, 4 CPU domains,
+> one L3 and one SoC. If you can suggest to me how this would work with
+> devicetree, I might be able to make it works. But from HW point of
+> view (take the memory controller as an example), there is really 4
+> hardware blocks and some shared IP's block for status. It is much
+> simple representation with multiple instance of the driver.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../bindings/sound/qcom,apq8016-machine.txt        | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8016-machine.txt
+Your whole error reporting is done roughly through the same registers,
+as Arnd pointed out. Why can't you build your single driver around that
+and based on the error type being reported, multiplex inside a *single*
+interrupt handler to the proper decoding routines.
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8016-machine.txt b/Documentation/devicetree/bindings/sound/qcom,apq8016-machine.txt
-new file mode 100644
-index 0000000..de697b8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,apq8016-machine.txt
-@@ -0,0 +1,61 @@
-+* Qualcomm Technologies APQ8016 ASoC machine driver
-+
-+This node models the Qualcomm Technologies APQ8016 ASoC machine driver
-+
-+Required properties:
-+
-+- compatible		: "qcom,apq8016-sndcard"
-+
-+- pinctrl-N		: One property must exist for each entry in
-+			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
-+			  for details of the property values.
-+- pinctrl-names		: Must contain a "default" entry.
-+- reg			: Must contain an address for each entry in reg-names.
-+- reg-names		: A list which must include the following entries:
-+				* "mic-iomux"
-+				* "spkr-iomux"
-+- qcom,model		: Name of the sound card.
-+
-+Dai-link subnode properties and subnodes:
-+
-+Required dai-link subnodes:
-+
-+- cpu					: CPU   sub-node
-+- codec					: CODEC sub-node
-+
-+Required CPU/CODEC subnodes properties:
-+
-+-sound-dai		: phandle and port of CPU/CODEC
-+-capture-dai		: phandle and port of CPU/CODEC
-+
-+Optional CPU/CODEC subnodes properties:
-+- external	: flag to indicate if the I2S is connected to external codec
-+Example:
-+
-+sound: sound {
-+	compatible = "qcom,apq8016-sndcard";
-+	reg = <0x07702000 0x4>, <0x07702004 0x4>;
-+	reg-names = "mic-iomux", "spkr-iomux";
-+	qcom,model = "DB410c";
-+
-+	/* I2S - Internal codec */
-+	internal-dai-link@0 {
-+		cpu { /* PRIMARY */
-+			sound-dai = <&lpass MI2S_PRIMARY>;
-+		};
-+		codec {
-+			sound-dai = <&wcd_codec 0>;
-+		};
-+	};
-+
-+	/* External Primary or External Secondary -ADV7533 HDMI */
-+	external-dai-link@0 {
-+		external;
-+		cpu { /* QUAT */
-+			sound-dai = <&lpass MI2S_QUATERNARY>;
-+		};
-+		codec {
-+			sound-dai = <&adv_bridge 0>;
-+		};
-+	};
-+};
+> I think we should first agreed on the DT binding and let's not worry
+> about APEI. Then, whether we have one file or multiple file. Again,
+> the HW consist of:
+> 
+> 1. One top level interrupt and status registers
+> 2. CSW, MCB A and MCB B for detection of any active memory controllers
+> 3. 4 individual memory controller instance
+> 4. 4 CPU domain instance with its own individual L2 registers
+> 5. Each CPU has instance own L1
+> 6. One L3 instance
+> 7. One SoC instance
+
+And all of those are separate IP blocks and they can be integrated with
+other, non APM hardware, or do those things all belong together? IOW,
+can we expect such IP blocks to appear in other hw platforms or are
+they all custom APM design which need to go together due to proprietary
+coherency protocol or whatever, for example?
+
+> As for as what is useful, we find that the memory controller and the
+> L1 and L2 are useful as it provides info for errors - for HW/system
+> debugging as well as margin of DDR.
+
+Sounds like all is useful.
+
 -- 
-1.9.1
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
