@@ -1,169 +1,161 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v4 1/2] extcon: arizona: Add support for
- select accessory detect mode when headphone detection
-Date: Thu, 30 Apr 2015 11:16:41 +0100
-Message-ID: <20150430101641.GF1815@x1>
-References: <1430357878-22859-1-git-send-email-ideal.song@samsung.com>
- <1430357878-22859-2-git-send-email-ideal.song@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM X-Gene SoC EDAC DTS binding
+Date: Thu, 30 Apr 2015 12:21:14 +0200
+Message-ID: <3900315.9fjubb6CtE@wuerfel>
+References: <1430259045-19012-1-git-send-email-lho@apm.com> <7128860.xHITr0VFap@wuerfel> <20150430094134.GD3488@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430357878-22859-2-git-send-email-ideal.song@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, cw00.choi@samsung.com, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com, rf@opensource.wolfsonmicro.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150430094134.GD3488-fF5Pk5pvG8Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Apr 2015, Inha Song wrote:
+On Thursday 30 April 2015 11:41:34 Borislav Petkov wrote:
+> On Thu, Apr 30, 2015 at 11:01:43AM +0200, Arnd Bergmann wrote:
+> > Ok, but I'd also do multiple drivers for one vendor if they have several
+> > blocks that are clearly unrelated. My understanding was that this is the
+> > case here, but I have not looked too closely.
+> 
+> AFAIU, this is a driver for a bunch of xgene IP blocks.
+> 
+> Now, if someone integrates xgene memory controller in some other hw
+> platform, we could still serve it with the same xgene-edac driver -
+> it'll simply use only the memory controller part of the functionality.
+> 
+> > Note that a lot of vendors do not like to say who they licensed IP
+> > blocks from, or they are contractually required not to say it.
+> 
+> Then there's that :-\
+> 
+> But the moment they supply an EDAC driver, one can recognize the IP
+> block from the registers and functionality, no? Or do they change stuff
+> a little bit so that it looks sufficiently different?
 
-> This patch add support for select accessory detect mode to HPDETL or =
-HPDETR.
-> Arizona provides a headphone detection circuit on the HPDETL and HPDE=
-TR pins
-> to measure the impedance of an external load connected to the headpho=
-ne.
->=20
-> Depending on board design, headphone detect pins can change to HPDETR=
- or HPDETL.
->=20
-> Signed-off-by: Inha Song <ideal.song@samsung.com>
-> ---
->  drivers/extcon/extcon-arizona.c   | 38 +++++++++++++++++++++++++++++=
-+--------
->  include/dt-bindings/mfd/arizona.h |  8 ++++++++
->  include/linux/mfd/arizona/pdata.h |  3 +++
->  3 files changed, 41 insertions(+), 8 deletions(-)
->  create mode 100644 include/dt-bindings/mfd/arizona.h
->=20
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-=
-arizona.c
-> index 63f01c4..d251e92 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -32,13 +32,10 @@
->  #include <linux/mfd/arizona/core.h>
->  #include <linux/mfd/arizona/pdata.h>
->  #include <linux/mfd/arizona/registers.h>
-> +#include <dt-bindings/mfd/arizona.h>
-> =20
->  #define ARIZONA_MAX_MICD_RANGE 8
-> =20
-> -#define ARIZONA_ACCDET_MODE_MIC 0
-> -#define ARIZONA_ACCDET_MODE_HPL 1
-> -#define ARIZONA_ACCDET_MODE_HPR 2
-> -
->  #define ARIZONA_MICD_CLAMP_MODE_JDL      0x4
->  #define ARIZONA_MICD_CLAMP_MODE_JDH      0x5
->  #define ARIZONA_MICD_CLAMP_MODE_JDL_GP5H 0x9
-> @@ -653,9 +650,9 @@ static void arizona_identify_headphone(struct ari=
-zona_extcon_info *info)
->  	ret =3D regmap_update_bits(arizona->regmap,
->  				 ARIZONA_ACCESSORY_DETECT_MODE_1,
->  				 ARIZONA_ACCDET_MODE_MASK,
-> -				 ARIZONA_ACCDET_MODE_HPL);
-> +				 arizona->pdata.hpdet_channel);
->  	if (ret !=3D 0) {
-> -		dev_err(arizona->dev, "Failed to set HPDETL mode: %d\n", ret);
-> +		dev_err(arizona->dev, "Failed to set HPDET mode: %d\n", ret);
->  		goto err;
->  	}
-> =20
-> @@ -705,9 +702,9 @@ static void arizona_start_hpdet_acc_id(struct ari=
-zona_extcon_info *info)
->  				 ARIZONA_ACCESSORY_DETECT_MODE_1,
->  				 ARIZONA_ACCDET_SRC | ARIZONA_ACCDET_MODE_MASK,
->  				 info->micd_modes[0].src |
-> -				 ARIZONA_ACCDET_MODE_HPL);
-> +				 arizona->pdata.hpdet_channel);
->  	if (ret !=3D 0) {
-> -		dev_err(arizona->dev, "Failed to set HPDETL mode: %d\n", ret);
-> +		dev_err(arizona->dev, "Failed to set HPDET mode: %d\n", ret);
->  		goto err;
->  	}
-> =20
-> @@ -1103,6 +1100,26 @@ static void arizona_micd_set_level(struct ariz=
-ona *arizona, int index,
->  	regmap_update_bits(arizona->regmap, reg, mask, level);
->  }
-> =20
-> +static int arizona_extcon_of_get_pdata(struct arizona *arizona)
-> +{
-> +	struct arizona_pdata *pdata =3D &arizona->pdata;
-> +	unsigned int val =3D ARIZONA_ACCDET_MODE_HPL;
-> +
-> +	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel", &v=
-al);
-> +	switch (val) {
-> +	case ARIZONA_ACCDET_MODE_HPL:
-> +	case ARIZONA_ACCDET_MODE_HPR:
-> +		pdata->hpdet_channel =3D val;
-> +		break;
-> +	default:
-> +		dev_err(arizona->dev,
-> +			"Wrong wlf,hpdet-channel DT value %d\n", val);
-> +		pdata->hpdet_channel =3D ARIZONA_ACCDET_MODE_HPL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int arizona_extcon_probe(struct platform_device *pdev)
->  {
->  	struct arizona *arizona =3D dev_get_drvdata(pdev->dev.parent);
-> @@ -1120,6 +1137,11 @@ static int arizona_extcon_probe(struct platfor=
-m_device *pdev)
->  	if (!info)
->  		return -ENOMEM;
-> =20
-> +	if (IS_ENABLED(CONFIG_OF)) {
-> +		if (!dev_get_platdata(arizona->dev))
-> +			arizona_extcon_of_get_pdata(arizona);
-> +	}
-> +
->  	info->micvdd =3D devm_regulator_get(&pdev->dev, "MICVDD");
->  	if (IS_ERR(info->micvdd)) {
->  		ret =3D PTR_ERR(info->micvdd);
-> diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/=
-mfd/arizona.h
-> new file mode 100644
-> index 0000000..9ecff78
-> --- /dev/null
-> +++ b/include/dt-bindings/mfd/arizona.h
-> @@ -0,0 +1,8 @@
-> +#ifndef __DT_BINDINGS_ARIZONA_H__
-> +#define __DT_BINDINGS_ARIZONA_H__
-> +
-> +#define ARIZONA_ACCDET_MODE_MIC 0
-> +#define ARIZONA_ACCDET_MODE_HPL 1
-> +#define ARIZONA_ACCDET_MODE_HPR 2
-> +
-> +#endif /* __DT_BINDINGS_ARIZONA_H__ */
-> diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/ar=
-izona/pdata.h
-> index 4578c72..2473a67 100644
-> --- a/include/linux/mfd/arizona/pdata.h
-> +++ b/include/linux/mfd/arizona/pdata.h
-> @@ -139,6 +139,9 @@ struct arizona_pdata {
->  	/** GPIO used for mic isolation with HPDET */
->  	int hpdet_id_gpio;
-> =20
-> +	/** Channel to use for headphone detection */
-> +	unsigned int hpdet_channel;
-> +
+They don't normally change stuff intentionally, but you can have
+drivers for the same hardware that are written so differently that
+it becomes hard to spot that they are doing the same thing.
 
-Not sure why this file is using kerneldoc comments.
+We have a bunch of XGMAC drivers for the same basic licensed IP block,
+each one configured a bit differently and extended with some soc-specific
+bits, and drivers written from scratch.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+I would also not assume that people are trying hard to hide something
+from you, it's more that some guy is given the task to write a driver
+for an IP block, but is not told who made that, so the binding will
+just come with the name of the company he's working for.
 
->  	/** Extra debounce timeout used during initial mic detection (ms) *=
-/
->  	int micd_detect_debounce;
-> =20
+> > Ok, let me try to state what I think we agree on:
+> > 
+> > - For EDAC devices that are clearly unrelated (in particular, made by
+> >   different vendors, but possibly part of the same chip), there should
+> >   be one module per device type that registers one platform_driver.
+> > 
+> > - For EDAC drivers that are variants of one another (e.g. different
+> >   generations of the same memory controller), we want one module with
+> >   one platform_driver that can handle all variants.
+> > 
+> > Let me know if you disagree with the above. If that's fine, I think it
+> > leaves the case where we have one chip that has multiple EDAC blocks
+> > and we can't easily tell if those blocks are all inter-related or not.
+> > For this case, I would like to rely on your judgment as subsystem
+> > maintainer on whether the parts look related enough to have a single
+> > driver (with matching all device variants) or one driver for each
+> > class of device, as well as spotting cases where a part already has
+> > a driver from a different chip vendor that was licensing the same IP
+> > block.
+> 
+> Well, so the way I see it is, if we could map the EDAC drivers to the IP
+> blocks. I.e., I'd like to have EDAC drivers mapped to the *IP* *blocks*
+> vendor *instead* of the platform vendor.
+> 
+> We will have to be able to load multiple EDAC drivers anyway but it'll
+> be much easier this way.
+> 
+> So let's have an example:
+> 
+> Let's say there's one xgene_edac driver which contains all the RAS
+> functionality of xgene IP blocks. Memory controller, L3 cache,
+> whatever...
+> 
+> Now, three *platform* vendors license, say, the xgene memory controller.
+> 
+> With my scheme, xgene_edac will be loaded on all those three vendors'
+> Linux. Done.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Right, but they would then also have to load the code for the other
+blocks they did not license.
+
+> But if those three vendors went and created an EDAC module each for
+> their system, it would be a lot of repeated copy'pasting and bloat.
+
+Yes, and I would expect you to reject any such driver submission.
+
+> Now, the other dimension doesn't look better either:
+> 
+> xgene_edac_mc
+> xgene_edac_mc-v2
+> xgene_edac_l3
+> xgene_edac-l2
+> ...
+
+Not following you here, what is the problem here?
+
+> Also, in both cases, if any of those drivers need to talk to each other
+> or know of one another in any way, the situation becomes really funny as
+> they need to create something ad-hoc each time.
+
+Agreed. If the drivers need to talk to one another, that is a clear
+sign that the devices are not actually independent and that they
+really belong into a single driver. That's not the case I'm thinking
+of here.
+
+> And this all can be avoided by having a single IP-blocks RAS driver.
+> 
+> Does that make more sense? Can it even be done with devicetree and all?
+
+The devicetree just describes the available hardware blocks. Typically
+you have one node for one block (e.g. a memory controller), and then
+have one driver for that block. Things get a little funny if you want
+to have multiple drivers for the same device, e.g. you want a driver
+in drivers/memory/ to support autorefresh in sleep states and another
+driver in drivers/edac to support error handling. If you get something
+like this, you need some coordination between the two drivers, but that
+is unrelated to devicetree or not.
+
+A platform driver should match against a set of similar devices that are
+identified by a "compatible" string, and we try to list the name of the
+ip block here, which could be something like "arm,pl12345rev1.2" if it
+is licensed from another company, or if that is not known, describe it
+by using the product number of the first chip it appeared in, e.g.
+"amcc,405ez-memory-controller". APM does not use numbers for their
+chips, so "apm,xgene-memory-controller" would refer to the memory
+controller used in the "xgene" chip. If they come out with a second
+product that uses the same one, they would use the same string, or
+use "apm,ygene-memory-controller" for the one that is in "ygene" if
+that is slightly different. The driver can then match against both
+and handle the differences based on the compatible string.
+
+The point where it gets silly is when you try to handle multiple
+unrelated devices in the same driver and you get a probe function
+that just does:
+
+apm_edac_probe(struct platform_device *dev)
+{
+	if (dev_is_xgene_mc(dev))
+		return apm_probe_xgene_mc(dev);
+	if (dev_is_xgene_l2(dev))
+		return apm_probe_xgene_l2(dev);
+	if (dev_is_ygene_mc(dev))
+		...
+}
+
+with each of the called functions implemented in a separate file.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
