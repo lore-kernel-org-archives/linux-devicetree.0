@@ -1,29 +1,88 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: Add msm8916 CoreSight components
-Date: Thu, 30 Apr 2015 10:22:39 +0300
-Message-ID: <1430378559.2400.10.camel@linaro.org>
-References: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
-	 <1430310000-10867-3-git-send-email-ivan.ivanov@linaro.org>
-	 <CANLsYkxE9xieUW+OMgb4LbnJHRdCtTM=uzcwPzC6bs4x4pP3MA@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Thu, 30 Apr 2015 10:32:48 +0300
+Message-ID: <5541DAA0.7030200@ti.com>
+References: <552CEC97.1050205@samsung.com> <552CEE42.1050907@ti.com> <552CFA1E.5070400@samsung.com> <20150415032734.GA29095@shlinux2> <552E1862.6090709@ti.com> <552E2EBF.5090906@samsung.com> <20150416015922.GB22269@shlinux2> <552F5E17.5020902@samsung.com> <1429168424.26621.1.camel@mm-sol.com> <552F6BE3.5080604@samsung.com> <20150416080107.GC1709@shlinux2> <552F724A.1050500@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkxE9xieUW+OMgb4LbnJHRdCtTM=uzcwPzC6bs4x4pP3MA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <552F724A.1050500-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Wed, 2015-04-29 at 10:49 -0600, Mathieu Poirier wrote:
-> On 29 April 2015 at 06:20, Ivan T. Ivanov ivanov@linaro.org> wrote:
-> > Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
-> > 
-
-> Please add a comment indicating what the other ports are connected to.
+On 16/04/15 11:26, Chanwoo Choi wrote:
+> On 04/16/2015 05:01 PM, Peter Chen wrote:
+>> On Thu, Apr 16, 2015 at 04:59:31PM +0900, Chanwoo Choi wrote:
+>>> On 04/16/2015 04:13 PM, Ivan T. Ivanov wrote:
+>>>> Hi,
+>>>>
+>>>> On Thu, 2015-04-16 at 16:00 +0900, Chanwoo Choi wrote:
+>>>>> Hi Peter,
+>>>>>
+>>>>> On 04/16/2015 10:59 AM, Peter Chen wrote:
+>>>>>>
+>>>>
+>>>>>> Ok, from USB point, external id/vbus value can't decide
+>>>>>> which role the controller will be, the controller driver
+>>>>>> will decide role according to many things, eg, user configurations,
+>>>>>> id/vbus value, OTG HNP, etc.
+>>>>>>
+>>>>>> So, from USB controller/phy driver, it doesn't care which cable is
+>>>>>> inserted, it cares about id/vbus value. Eg, it can get id/vbus value
+>>>>>> and it will be notified when the id/vbus value has changed.
+>>>>>
+>>>>> OK, I change the notifier name and add notifier events as following:
+>>>>>
+>>>>> - extcon_{register|unregister}_usb_notifier(struct extcon_dev *edev, struct notifier_block *nb);
+>>>>> - list of notifier events
+>>>>>         #define EXTCON_USB_ID_L_VBUS_L0       /* ID low  and VBUS low */
+>>>>>         #define EXTCON_USB_ID_L_VBUS_H1       /* ID low  and VBUS high */
+>>>>>         #define EXTCON_USB_ID_H_VBUS_L2       /* ID high and VBUS low */
+>>>>>         #define EXTCON_USB_ID_H_VBUS_H3       /* ID high and VBUS high */
+>>>>
+>>>> I am still confused, why we mix ID and VBUS events into one? 
+>>>> Those are two lines and they are not necessarily handled by
+>>>> the same extcon_dev.
+>>>
+>>> IMO, if some usb driver check both id and vbus pin at the same time,
+>>> the usb driver can know the both id and vbus pin state through only one notifier event.
+>>>
+>>> Also,
+>>> If some usb driver want to know the state of id pin except of vbus state,
+>>> when receiving following events, id pin is low.
+>>> 	#define EXTCON_USB_ID_L_VBUS_L0
+>>> 	#define EXTCON_USB_ID_L_VBUS_H1
+>>> when receiving following events, id pin is high.
+>>> 	#define EXTCON_USB_ID_H_VBUS_L2
+>>> 	#define EXTCON_USB_ID_H_VBUS_H3
+>>> Also, some usb driver would catch the vbus pin state with same method.
+>>>
+>>> But, it is just my opinion. We may use following notifier events for each pin.
+>>> We need to discuss it.
+>>> 	#define EXTCON_USB_ID_LOW
+>>> 	#define EXTCON_USB_ID_HIGH	
+>>> 	#define EXTCON_USB_VBUS_LOW
+>>> 	#define EXTCON_USB_VBUS_HIGH
+>>> 	
+>>
+>> I agree with above definition.
+>>
 > 
+> OK. I understand.
+> 
+> 
+Chanwoo, Robert,
 
-Thank you. Will fix and resend.
+Do we have an agreement on a common solution then?
+IMO the above mentioned 4 notifier events should meet all our USB needs.
 
-Ivan
+cheers,
+-roger
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
