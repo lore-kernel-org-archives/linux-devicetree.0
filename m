@@ -1,43 +1,46 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for SMEM
-Date: Thu, 30 Apr 2015 10:41:26 -0700
-Message-ID: <CAJAp7OgNfnppcg7u-rjH0gG=7t45bgXYfN1+wAOEZD6xwEb=zQ@mail.gmail.com>
-References: <1428795178-24312-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<55424C78.3020506@codeaurora.org>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: vexpress: Add unified-cache Device Tree property
+Date: Thu, 30 Apr 2015 18:45:10 +0100
+Message-ID: <55426A26.9060704@arm.com>
+References: <5509437E.6060806@arm.com> <1426671298-2012-1-git-send-email-r.schwebel@pengutronix.de> <20150429191228.GO15254@pengutronix.de> <20150430110853.GN7440@e106497-lin.cambridge.arm.com> <20150430133011.GE15254@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <55424C78.3020506@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andry Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150430133011.GE15254-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 8:38 AM, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
-> On 4/11/2015 5:32 PM, Bjorn Andersson wrote:
->>
->> Add device tree binding documentation for the Qualcom Shared Memory
->> manager.
-[..]
->> +- hwspinlocks:
->> +       Usage: required
->> +       Value type: <prop-encoded-array>
->> +       Definition: reference to a hwspinlock used to protect allocations
->> from
->> +                   the shared memory
->> +
->> += EXAMPLE
-[..]
->> +               hwlocks = <&tcsr_mutex 3>;
->
->
-> Just noticed, this looks like a typo.  The description of the field above
-> calls it "hwspinlocks".  Would to please determine which of the two labels
-> you most prefer, and change things so that label is used in both the
-> description and the example?  Thanks
->
 
-Thanks, you're correct it's a typo in the definition.
+
+On 30/04/15 14:30, Robert Schwebel wrote:
+> Hi Liviu,
+>
+> On Thu, Apr 30, 2015 at 12:08:53PM +0100, Liviu Dudau wrote:
+>> Sorry Robert, this fell through the cracks. VExpress gets very few
+>> patches in general and we're new to this :(
+>
+> Thanks for the help!
+>
+> I still see these errors with 4.1-rc1:
+>
+> [    0.000000] L2C: platform modifies aux control register: 0x02020000 -> 0x02420000
+> [    0.000000] L2C: DT/platform modifies aux control register: 0x02020000 -> 0x02420000
+> [    0.268626] platform 10000000.sysreg: Error -2 creating of_node link
+> [    0.271997] platform basic-mmio-gpio.1.auto: Error -2 creating of_node link
+> [    0.272266] platform basic-mmio-gpio.2.auto: Error -2 creating of_node link
+> [    0.272681] platform basic-mmio-gpio.3.auto: Error -2 creating of_node link
+
+OK, I was able to debug this, it boils down to initcall ordering.
+Both of_init where the firmware sysfs is initialized and
+vexpress_sysreg_init are at same core_initcall level. Needs some
+thinking and more time to fix this.
 
 Regards,
-Bjorn
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
