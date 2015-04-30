@@ -1,40 +1,80 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] Using SPI NOR flah on sunxi.
-Date: Thu, 30 Apr 2015 18:56:18 +0200
-Message-ID: <CAOMqctRLnCJfVCYGjsmhORYNk+HCf07wwSXnZv4oqDxbaQqKGw@mail.gmail.com>
-References: <cover.1430403750.git.hramrach@gmail.com> <OF23B05612.4290AF80-ONC1257E37.00589292-C1257E37.005AB106@rohde-schwarz.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
+ X-Gene SoC EDAC DTS binding
+Date: Thu, 30 Apr 2015 09:57:46 -0700
+Message-ID: <CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q@mail.gmail.com>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+	<7128860.xHITr0VFap@wuerfel>
+	<20150430094134.GD3488@pd.tnic>
+	<10227049.9i19zDi2y3@wuerfel>
+	<20150430130028.GF3488@pd.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <OF23B05612.4290AF80-ONC1257E37.00589292-C1257E37.005AB106-Bf/A/FSCP0w3s4ca2cGeAgC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20150430130028.GF3488-fF5Pk5pvG8Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas.Betker-Bf/A/FSCP0w3s4ca2cGeAgC/G2K4zDHf@public.gmane.org
-Cc: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Bean Huo ????????? (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd <linux-mtd-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 April 2015 at 18:30,  <Thomas.Betker-Bf/A/FSCP0w3s4ca2cGeAgC/G2K4zDHf@public.gmane.org> wrote:
-> Hello Michal:
->
->> I tried to connect a SPI NOR flash to my sunxi board and due to the
-> current
->> sunxi SPI driver limitations it does not work.
+Hi,
+
+>> I've looked at the driver in a little more detail now, and found that
+>> it is a weird conglomerate at the moment. Basically you have four
+>> drivers in one file here, appended to one another, but not sharing
+>> any common functions except the module_init() that registers the four
+>> drivers. This is what Rob was referring to when he suggested splitting
+>> it up into four files, and these would in total be smaller than the
+>> common file (by being able to use module_platform_driver()).
 >>
->> The SPI driver returns an error when more than 64 bytes are
->> transferred at once
->> due to lack of DMA support.
+>> However, there is another dimension to this, which supports your point
+>> about making it one driver for the platform: The split into four drivers
+>> is completely artificial, because all four use the same IRQs and
+>> implement four separate interrupt handlers for it (using IRQF_SHARED),
+>> each handling only the events they are interested in. Similarly, they
+>> all access the same register set ("pcperror"), aside from having their
+>> own separate registers, and they use the "syscon" framework to get to
+>> the registers.  This seems to be an inferior design, as the pcperror
 >
-> Wouldn't it be easier to fix the SPI driver to handle transfers larger
-> than 64 bytes, filling and draining the FIFO multiple times if neccessary?
-> (As far as I can tell, most SPI drivers do this.)
+> Doh, now that you mention it...
 >
+> So why isn't this thing registering a single IRQ handler which
+> multiplexes between the _check routines depending on the bits set in
+> PCPHPERRINTSTS/MEMERRINTSTS? (L3 alternatively, ctx->dev_csr + L3C_ESR).
+>
+> This would really make it a single driver which acts according to the
+> bits set in those error registers. It can't get any simpler than that.
+>
+> Loc?
 
-Yes, the intent is to fix this by adding dma support to the driver, eventually.
+I had read all the emails interaction. Yes I can write a single EDAC
+driver. But I actually have multiple instances and single instance of
+the same IP's. For example, I have 4 DDR controllers, 4 CPU domains,
+one L3 and one SoC. If you can suggest to me how this would work with
+devicetree, I might be able to make it works. But from HW point of
+view (take the memory controller as an example), there is really 4
+hardware blocks and some shared IP's block for status. It is much
+simple representation with multiple instance of the driver. In
+addition, should one day we have 6 memory controllers, I would just
+add two more instances in the DT node.
 
-The patch might be still useful for other hardware with developing SPI support.
+I think we should first agreed on the DT binding and let's not worry
+about APEI. Then, whether we have one file or multiple file. Again,
+the HW consist of:
 
-Thanks
+1. One top level interrupt and status registers
+2. CSW, MCB A and MCB B for detection of any active memory controllers
+3. 4 individual memory controller instance
+4. 4 CPU domain instance with its own individual L2 registers
+5. Each CPU has instance own L1
+6. One L3 instance
+7. One SoC instance
 
-Michal
+As for as what is useful, we find that the memory controller and the
+L1 and L2 are useful as it provides info for errors - for HW/system
+debugging as well as margin of DDR.
+
+-Loc
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
