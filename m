@@ -1,79 +1,75 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 4/4] clk: si5351: Reset PLL after rate change
-Date: Thu, 30 Apr 2015 19:45:54 +0200
-Message-ID: <1430415954-29517-5-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Jean-Francois Moine <moinejf@free.fr>, Michael Welling <mwelling@ieee.org>, Russell King <rmk+linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/2] ARM: vexpress: Add interrupt-affinity
+Date: Thu, 30 Apr 2015 19:54:08 +0200
+Message-ID: <1430416448-25203-1-git-send-email-r.schwebel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When changing PLL rate significantly, PLLs have to be reset. Add a function
-to perform and check for successful PLL reset.
+Without this property, we get this boot warning:
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Jean-Francois Moine <moinejf@free.fr>
-Cc: Michael Welling <mwelling@ieee.org>
-Cc: Russell King <rmk+linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: linux-clk@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/clk/clk-si5351.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+[    0.459361] CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
 
-diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
-index beeb57bbb04c..9b97c134e3c1 100644
---- a/drivers/clk/clk-si5351.c
-+++ b/drivers/clk/clk-si5351.c
-@@ -366,6 +366,32 @@ static const struct clk_ops si5351_vxco_ops = {
-  *         = (MSNx_P1*MSNx_P3 + MSNx_P2 + 512*MSNx_P3)/(128*MSNx_P3)
-  *
-  */
-+static int si5351_pll_reset(struct si5351_hw_data *hwdata)
-+{
-+	unsigned long timeout;
-+	u8 mask = (hwdata->num == 0) ?
-+		SI5351_STATUS_LOL_A : SI5351_STATUS_LOL_B;
-+
-+	si5351_reg_write(hwdata->drvdata, SI5351_PLL_RESET,
-+			 (hwdata->num == 0) ? SI5351_PLL_RESET_A :
-+			 SI5351_PLL_RESET_B);
-+	timeout = jiffies + msecs_to_jiffies(100);
-+	do {
-+		if ((si5351_reg_read(hwdata->drvdata, SI5351_DEVICE_STATUS) &
-+		     mask) == 0)
-+			break;
-+		if (time_after(jiffies, timeout)) {
-+			dev_err(&hwdata->drvdata->client->dev,
-+				"timeout waiting for pll %d reset\n",
-+				hwdata->num);
-+			return -EBUSY;
-+		};
-+		udelay(250);
-+	} while (true);
-+
-+	return 0;
-+}
-+
- static int _si5351_pll_reparent(struct si5351_driver_data *drvdata,
- 				int num, enum si5351_pll_src parent)
- {
-@@ -519,6 +545,9 @@ static int si5351_pll_set_rate(struct clk_hw *hw, unsigned long rate,
- 		SI5351_CLK_INTEGER_MODE,
- 		(hwdata->params.p2 == 0) ? SI5351_CLK_INTEGER_MODE : 0);
+Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+index a411274..9d71493 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -33,28 +33,28 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
-+	/* reset pll after rate change */
-+	si5351_pll_reset(hwdata);
+-		cpu@0 {
++		A9_0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
+ 			next-level-cache = <&L2>;
+ 		};
+ 
+-		cpu@1 {
++		A9_1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
+ 			next-level-cache = <&L2>;
+ 		};
+ 
+-		cpu@2 {
++		A9_2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <2>;
+ 			next-level-cache = <&L2>;
+ 		};
+ 
+-		cpu@3 {
++		A9_3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <3>;
+@@ -182,6 +182,11 @@
+ 			     <0 61 4>,
+ 			     <0 62 4>,
+ 			     <0 63 4>;
++		interrupt-affinity = <&A9_0>,
++		                     <&A9_1>,
++		                     <&A9_2>,
++		                     <&A9_3>;
 +
- 	dev_dbg(&hwdata->drvdata->client->dev,
- 		"%s - %s: p1 = %lu, p2 = %lu, p3 = %lu, parent_rate = %lu, rate = %lu\n",
- 		__func__, __clk_get_name(hwdata->hw.clk),
+ 	};
+ 
+ 	dcc {
 -- 
-2.1.0
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
