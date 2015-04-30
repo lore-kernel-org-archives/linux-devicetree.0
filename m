@@ -1,100 +1,88 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v5 0/9] Add sd/emmc support for stih407 family silicon
-Date: Thu, 30 Apr 2015 10:56:21 +0200
-Message-ID: <5541EE35.2070002@st.com>
-References: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM X-Gene SoC EDAC DTS binding
+Date: Thu, 30 Apr 2015 11:01:43 +0200
+Message-ID: <7128860.xHITr0VFap@wuerfel>
+References: <1430259045-19012-1-git-send-email-lho@apm.com> <4411194.KCIZ9l536O@wuerfel> <20150430084549.GB3488@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, ulf.hansson@linaro.org, peppe.cavallaro@st.com
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150430084549.GB3488-fF5Pk5pvG8Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 30 April 2015 10:45:50 Borislav Petkov wrote:
+> On Thu, Apr 30, 2015 at 10:31:12AM +0200, Arnd Bergmann wrote:
+> > The problem with your approach is that a lot of these blocks are not
+> > vendor specific. You will probably see a server chip that contains a
+> > memory controller from DesignWare, a cache controller from ARM, and
+> > some other device from the chip vendor, and each of them comes with
+> > EDAC support. Then you get three other vendors that have various
+> > combinations of the same memory controller, cache controller and
+> > other EDAC devices. Not all of these chips would have ARM CPU cores,
+> > some may be e.g. MIPS or PowerPC.
+> 
+> I don't mean system-vendor specific but IP-block vendor specific. So
+> doing a designware-edac, arm-edac, apm-edac and so on...
 
+Ok, but I'd also do multiple drivers for one vendor if they have several
+blocks that are clearly unrelated. My understanding was that this is the
+case here, but I have not looked too closely.
 
-On 04/10/2015 11:40 AM, Peter Griffin wrote:
-> Hi,
->
-> This series adds sd/emmc support to the sdhci-st.c driver for stih407
-> family silicon. The changes mainly involve configuring some extra glue
-> registers in the flashSS which configure the Arasan controller.
->
-> This series also adds support for UHS modes for eMMC. To allow
-> UHS HS200/SD104 modes to function correctly, due to the
-> tight timing constriants, support for delay management is also added.
-> Two types of delay management are supported, static delay management and
-> dynamic delay management, this delay management is only available
-> on eMMC pads on stih410 and later silicon.
->
-> This series has been tested with stih410-b2120 revd on eMMC and sd, at
-> various clock speeds. As part of this testing a bug was also found in the
-> upstream flexgen clock set_rate implementation (now fixed upstream).
->
->      max-frequency = 200Mhz
->      /dev/mmcblk0p1:
->       Timing buffered disk reads: 270 MB in  3.02 seconds =  89.54 MB/sec
->      
->      max-frequency = 100Mhz
->      root@debian-armhf:~# hdparm -t /dev/mmcblk0p1
->      /dev/mmcblk0p1:
->       Timing buffered disk reads: 210 MB in  3.00 seconds =  70.00 MB/sec
->      
->      max-frequency = 50Mhz
->      root@debian-armhf:~# hdparm -t /dev/mmcblk0p1
->      /dev/mmcblk0p1:
->       Timing buffered disk reads: 118 MB in  3.00 seconds =  39.28 MB/sec
->
-> It has also been tested on stih416-b2020 to ensure we have caused no
-> regressions. Finally the dt documentation has been updated to reflect
-> the changes in the driver code. Intrestingly it seems we are the first
-> upstream platform to be using some of the uhs bindings such as
-> sd-uhs-sdr104.
->
-> Changes since v4:
->   - Fixup typo (Pete)
->
-> Changes since v3:
->   - Rebased on Ulf's mmc next branch (rc5 based) (Ulf)
->
-> Changes since v2:
->   - Some whitespace fixups (Max)
->   - if (!ioaddr) suggestion (Max)
->   - Add stih418-b2199 suport (Max)
->   - Stih410 to STiH410 fixes (Max)
->   - rebased on v4.0-rc6 (Pete)
->
-> Changes since v1:
->   - Partition the changes into smaller patches to aid review process (Ulf)
->
-> Peter Griffin (9):
->    mmc: sdhci-st: Add macros for register offsets and bitfields for mmcss
->      glue regs
->    mmc: sdhci-st: Add support for de-asserting reset signal and top regs
->      resource
->    mmc: sdhci-st: Add delay management functions for top registers
->      (eMMC).
->    mmc: sdhci-st: Add st_mmcss_cconfig function to configure mmcss glue
->      registers.
->    mmc: sdhci-st: Add sdhci_st_set_uhs_signaling function.
->    mmc: sdhci-st: Update the quirks for this controller.
->    mmc: sdhci-st: Update ST SDHCI binding documentation.
->    ARM: STi: DT: STiH407: Add dt nodes for sdhci and emmc.
->    ARM: STi: DT: STiH418: Add dt nodes for sdhci and emmc.
->
->   Documentation/devicetree/bindings/mmc/sdhci-st.txt | 100 +++++-
->   arch/arm/boot/dts/stih407-family.dtsi              |  30 ++
->   arch/arm/boot/dts/stih410-b2120.dts                |  10 +
->   arch/arm/boot/dts/stih418-b2199.dts                |  12 +
->   arch/arm/boot/dts/stihxxx-b2120.dtsi               |   8 +
->   drivers/mmc/host/sdhci-st.c                        | 354 ++++++++++++++++++++-
->   6 files changed, 500 insertions(+), 14 deletions(-)
->
+Note that a lot of vendors do not like to say who they licensed IP
+blocks from, or they are contractually required not to say it.
 
+> Also, I really want for people thinking of writing EDAC drivers to think
+> hard before doing so. Whether it is even worth to expose *every* RAS
+> functionality in some driver. And to consider that exposing it might
+> cause more trouble than benefit.
 
-Patches 8 & 9 applied to STi DT branch.
+Definitely agreed on this point.
 
-Thanks,
-Maxime
+> We've had that experience on x86 with reporting innocuous DRAM ECC
+> errors which were corrected by the hardware. People weren't even reading
+> the error message and running around wanting to RMA their processors
+> because something in dmesg screamed "Hardware Error".
+> 
+> And now APEI does the firmware-first thing where it gets to look at the
+> error first and then decide to report it up to the OS or not.
+> 
+> Which is a good thing because in most cases it unnecessarily upsets the
+> user.
+
+Yes, that is helpful feedback, but seems unrelated to the discussion
+about how to split this driver or not.
+
+> So to get back on track: I think having the IP-block vendor stuff in one
+> EDAC module would make this whole heterogeneity much more manageable.
+> 
+> On that system above, we will load - if I can count correctly - 6 EDAC
+> drivers anyway. But the EDAC pile would remain sane.
+
+Ok, let me try to state what I think we agree on:
+
+- For EDAC devices that are clearly unrelated (in particular, made by
+  different vendors, but possibly part of the same chip), there should
+  be one module per device type that registers one platform_driver.
+
+- For EDAC drivers that are variants of one another (e.g. different
+  generations of the same memory controller), we want one module with
+  one platform_driver that can handle all variants.
+
+Let me know if you disagree with the above. If that's fine, I think it
+leaves the case where we have one chip that has multiple EDAC blocks
+and we can't easily tell if those blocks are all inter-related or not.
+For this case, I would like to rely on your judgment as subsystem
+maintainer on whether the parts look related enough to have a single
+driver (with matching all device variants) or one driver for each
+class of device, as well as spotting cases where a part already has
+a driver from a different chip vendor that was licensing the same IP
+block.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
