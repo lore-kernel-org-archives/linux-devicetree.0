@@ -1,17 +1,17 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 2/4] ARM: dove: Add clock-names to CuBox Si5351 clk generator
-Date: Thu, 30 Apr 2015 19:45:52 +0200
-Message-ID: <1430415954-29517-3-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 4/4] clk: si5351: Reset PLL after rate change
+Date: Thu, 30 Apr 2015 19:45:54 +0200
+Message-ID: <1430415954-29517-5-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Jean-Francois Moine <moinejf@free.fr>, Michael Welling <mwelling@ieee.org>, Russell King <rmk+linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Jean-Francois Moine <moinejf@free.fr>, Michael Welling <mwelling@ieee.org>, Russell King <rmk+linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Si5351 clock generator on CuBox uses XTAL as clock reference, name the
-clock phandle accordingly.
+When changing PLL rate significantly, PLLs have to be reset. Add a function
+to perform and check for successful PLL reset.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
@@ -20,28 +20,60 @@ Cc: Stephen Boyd <sboyd@codeaurora.org>
 Cc: Jean-Francois Moine <moinejf@free.fr>
 Cc: Michael Welling <mwelling@ieee.org>
 Cc: Russell King <rmk+linux@arm.linux.org.uk>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Gregory Clement <gregory.clement@free-electrons.com>
 Cc: devicetree@vger.kernel.org
 Cc: linux-clk@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/dove-cubox.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/clk-si5351.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
-index aae7efc09b0b..e6fa251e17b9 100644
---- a/arch/arm/boot/dts/dove-cubox.dts
-+++ b/arch/arm/boot/dts/dove-cubox.dts
-@@ -87,6 +87,7 @@
+diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
+index beeb57bbb04c..9b97c134e3c1 100644
+--- a/drivers/clk/clk-si5351.c
++++ b/drivers/clk/clk-si5351.c
+@@ -366,6 +366,32 @@ static const struct clk_ops si5351_vxco_ops = {
+  *         = (MSNx_P1*MSNx_P3 + MSNx_P2 + 512*MSNx_P3)/(128*MSNx_P3)
+  *
+  */
++static int si5351_pll_reset(struct si5351_hw_data *hwdata)
++{
++	unsigned long timeout;
++	u8 mask = (hwdata->num == 0) ?
++		SI5351_STATUS_LOL_A : SI5351_STATUS_LOL_B;
++
++	si5351_reg_write(hwdata->drvdata, SI5351_PLL_RESET,
++			 (hwdata->num == 0) ? SI5351_PLL_RESET_A :
++			 SI5351_PLL_RESET_B);
++	timeout = jiffies + msecs_to_jiffies(100);
++	do {
++		if ((si5351_reg_read(hwdata->drvdata, SI5351_DEVICE_STATUS) &
++		     mask) == 0)
++			break;
++		if (time_after(jiffies, timeout)) {
++			dev_err(&hwdata->drvdata->client->dev,
++				"timeout waiting for pll %d reset\n",
++				hwdata->num);
++			return -EBUSY;
++		};
++		udelay(250);
++	} while (true);
++
++	return 0;
++}
++
+ static int _si5351_pll_reparent(struct si5351_driver_data *drvdata,
+ 				int num, enum si5351_pll_src parent)
+ {
+@@ -519,6 +545,9 @@ static int si5351_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ 		SI5351_CLK_INTEGER_MODE,
+ 		(hwdata->params.p2 == 0) ? SI5351_CLK_INTEGER_MODE : 0);
  
- 		/* connect xtal input to 25MHz reference */
- 		clocks = <&ref25>;
-+		clock-names = "xtal";
- 
- 		/* connect xtal input as source of pll0 and pll1 */
- 		silabs,pll-source = <0 0>, <1 0>;
++	/* reset pll after rate change */
++	si5351_pll_reset(hwdata);
++
+ 	dev_dbg(&hwdata->drvdata->client->dev,
+ 		"%s - %s: p1 = %lu, p2 = %lu, p3 = %lu, parent_rate = %lu, rate = %lu\n",
+ 		__func__, __clk_get_name(hwdata->hw.clk),
 -- 
 2.1.0
