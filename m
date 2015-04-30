@@ -1,12 +1,13 @@
 From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/3] MTD: spi-nor: check for short writes in spi_nor_write.
-Date: Thu, 30 Apr 2015 15:38:50 +0200
-Message-ID: <50c40ef17ab6566f35ef5a4426bf23567f896db7.1430403750.git.hramrach@gmail.com>
+Subject: [PATCH 3/3] MTD: m25p80: Add option to limit SPI
+ transfer size.
+Date: Thu, 30 Apr 2015 15:46:11 +0200
+Message-ID: <3b0c112672f364452e80c333048161eaffb655db.1430403750.git.hramrach@gmail.com>
 References: <cover.1430403750.git.hramrach@gmail.com>
 Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQMLUOX54MBBJH2RCVAKGQEL2QJKVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCQMLUOX54MBBJP2RCVAKGQEEJDT7TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <cover.1430403750.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -18,80 +19,88 @@ List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39
 To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-My SPI controller driver does not support DMA so writes are truncated to
-FIFO size.
-Check the amount of data actually written by the driver.
+My SPI driver does not support DMA so sizes larger than 64 bytes return
+an error. Add an option to limit transfer size so m25p80 can be used
+with reduced speed with such controller.
 
 Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 42 +++++++++++++++++-------------------------
- 1 file changed, 17 insertions(+), 25 deletions(-)
+ Documentation/devicetree/bindings/mtd/m25p80.txt |  5 +++++
+ drivers/mtd/devices/m25p80.c                     | 19 +++++++++++++++++--
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 14a5d23..75904b5 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -807,7 +807,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 	size_t *retlen, const u_char *buf)
- {
- 	struct spi_nor *nor = mtd_to_spi_nor(mtd);
--	u32 page_offset, page_size, i;
-+	u32 page_offset, page_remainder, page_size, i;
- 	int ret;
+diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Documentation/devicetree/bindings/mtd/m25p80.txt
+index f20b111..2bda5be 100644
+--- a/Documentation/devicetree/bindings/mtd/m25p80.txt
++++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
+@@ -19,6 +19,11 @@ Optional properties:
+                    all chips and support for it can not be detected at runtime.
+                    Refer to your chips' datasheet to check if this is supported
+                    by your chip.
++- linux,max_tx_len : With some SPI controller drivers transfer size is
++                     limited.s
++                     Transfer data in chunks no larger than this value.
++                     Using this option will degrade performance when
++                     max_tx_len is smaller than flash page size.
  
- 	dev_dbg(nor->dev, "to 0x%08x, len %zd\n", (u32)to, len);
-@@ -816,36 +816,28 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 	if (ret)
+ Example:
+ 
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index 0b2bc21..dfdb750 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -26,12 +26,14 @@
+ #include <linux/spi/spi.h>
+ #include <linux/spi/flash.h>
+ #include <linux/mtd/spi-nor.h>
++#include <linux/of_platform.h>
+ 
+ #define	MAX_CMD_SIZE		6
+ struct m25p {
+ 	struct spi_device	*spi;
+ 	struct spi_nor		spi_nor;
+ 	struct mtd_info		mtd;
++	size_t max_tx_len;
+ 	u8			command[MAX_CMD_SIZE];
+ };
+ 
+@@ -97,7 +99,10 @@ static void m25p80_write(struct spi_nor *nor, loff_t to, size_t len,
+ 	spi_message_add_tail(&t[0], &m);
+ 
+ 	t[1].tx_buf = buf;
+-	t[1].len = len;
++	if (flash->max_tx_len)
++		t[1].len = min(len,flash->max_tx_len);
++	else
++		t[1].len = len;
+ 	spi_message_add_tail(&t[1], &m);
+ 
+ 	spi_sync(spi, &m);
+@@ -145,7 +150,10 @@ static int m25p80_read(struct spi_nor *nor, loff_t from, size_t len,
+ 
+ 	t[1].rx_buf = buf;
+ 	t[1].rx_nbits = m25p80_rx_nbits(nor);
+-	t[1].len = len;
++	if (flash->max_tx_len)
++		t[1].len = min(len,flash->max_tx_len);
++	else
++		t[1].len = len;
+ 	spi_message_add_tail(&t[1], &m);
+ 
+ 	spi_sync(spi, &m);
+@@ -233,6 +241,13 @@ static int m25p_probe(struct spi_device *spi)
  		return ret;
  
--	write_enable(nor);
--
--	page_offset = to & (nor->page_size - 1);
--
--	/* do all the bytes fit onto one page? */
--	if (page_offset + len <= nor->page_size) {
--		nor->write(nor, to, len, retlen, buf);
--	} else {
--		/* the size of data remaining on the first page */
--		page_size = nor->page_size - page_offset;
--		nor->write(nor, to, page_size, retlen, buf);
-+	/* write everything in nor->page_size chunks */
-+	/* check the size of data actually written */
-+	for (i = 0; i < len; i += *retlen) {
-+		page_size = len - i;
-+		page_offset = (to + i) & (nor->page_size - 1);
-+		page_remainder = nor->page_size - page_offset;
-+		if (page_size > nor->page_size)
-+			page_size = nor->page_size;
-+		if (page_remainder && (page_size > page_remainder))
-+			page_size = page_remainder;
+ 	ppdata.of_node = spi->dev.of_node;
++	if (spi->dev.of_node){
++		int result = of_property_read_u32(spi->dev.of_node, "linux,max_tx_len", &flash->max_tx_len);
++		if (result)
++			flash->max_tx_len = 0;
++		else
++			dev_info(&spi->dev, "Using maximum transfer length %u\n", flash->max_tx_len);
++	}
  
--		/* write everything in nor->page_size chunks */
--		for (i = page_size; i < len; i += page_size) {
--			page_size = len - i;
--			if (page_size > nor->page_size)
--				page_size = nor->page_size;
--
--			ret = spi_nor_wait_till_ready(nor);
--			if (ret)
--				goto write_err;
-+		write_enable(nor);
- 
--			write_enable(nor);
-+		nor->write(nor, to + i, page_size, retlen, buf + i);
- 
--			nor->write(nor, to + i, page_size, retlen, buf + i);
--		}
-+		ret = spi_nor_wait_till_ready(nor);
-+		if (ret)
-+			goto write_err;
- 	}
- 
--	ret = spi_nor_wait_till_ready(nor);
- write_err:
-+	*retlen = i;
- 	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_WRITE);
- 	return ret;
- }
+ 	return mtd_device_parse_register(&flash->mtd, NULL, &ppdata,
+ 			data ? data->parts : NULL,
 -- 
 2.1.4
