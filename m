@@ -1,94 +1,78 @@
 From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3 v5] dt/bindings: Add binding for the BCM2835 mailbox driver
-Date: Thu, 30 Apr 2015 10:23:53 +0530
-Message-ID: <CABb+yY3by37AGmVHfNH2RZF8KcU3GUYDJj_xQZTGCBDb2PsHQg@mail.gmail.com>
-References: <1430173644-19099-2-git-send-email-eric@anholt.net>
-	<1430253868-11138-1-git-send-email-eric@anholt.net>
-	<55403446.1040207@wwwdotorg.org>
-	<87vbgeq478.fsf@eliezer.anholt.net>
-	<55416C35.1030001@wwwdotorg.org>
+Subject: Re: [PATCH 2/3 v7] mailbox: Enable BCM2835 mailbox support
+Date: Thu, 30 Apr 2015 10:56:33 +0530
+Message-ID: <CABb+yY0+Dd6RMJfmcqWrJfsSkPS8KjtpctJteoTZrj3QttJ71g@mail.gmail.com>
+References: <1430254460-26754-1-git-send-email-eric@anholt.net>
+	<1430327374-6562-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55416C35.1030001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1430327374-6562-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 5:11 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 04/29/15 10:39, Eric Anholt wrote:
->>
->> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->>
->>> On 04/28/2015 02:44 PM, Eric Anholt wrote:
->>>>
->>>> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
->>>>
->>>> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
->>>> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
->>>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->>>> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>>> ---
->>>>
->>>> v2: Split into a separate patch for submitting to the devicetree list.
->>>>      Consistently start node docs with a capital letter. device's
->>>>      address in the example shouldn't have "0x". Drop machine-specific
->>>>      interrupt numbers from the docs.  (changes by anholt).
->>>>
->>>> v3: Move the file to just bcm2835-mbox.txt, clean up formatting
->>>>      (changes by anholt, from review by Lee Jones).
->>>>
->>>> v4: Move file back by consensus from various Broadcom platform
->>>>      maintainers (changes by anholt, acked by Lee Jones).
->>>>
->>>> v5: Document that the mailbox cell should be 0 in clients, and add an
->>>>      example of a client (changes by anholt, from review by Jassi).
->>>
->>>
->>> Some mention of what you changed in the patch might be nice, since it
->>> was originally authored by someone else, and there's quite a changelog.
->>
->>
->> I've been taking this changelog stuff out of the patch and putting it
->> below '---' because when I was submitting this series before, I got
->> chided for putting it in the patch!
+On Wed, Apr 29, 2015 at 10:39 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+
+> +
+> +struct bcm2835_mbox {
+> +       struct device *dev;
+> +       void __iomem *regs;
+> +       spinlock_t lock;
+> +       struct mbox_controller controller;
+> +};
+> +
+> +static struct bcm2835_mbox *mbox;
+> +
+> +static irqreturn_t bcm2835_mbox_irq(int irq, void *dev_id)
+> +{
+> +       struct device *dev = mbox->dev;
+> +       struct mbox_chan *link = &mbox->controller.chans[0];
+> +
+I learn from Stephen's other post that the controller could have
+multiple channels. In which case this driver is poorly setup. Actually
+if the driver was designed properly there isn't anything special to be
+done.
+ Here you choose to waste 'dev_id' and hard-code dereferencing to channel-0
+
+> +       while (!(readl(mbox->regs + MAIL0_STA) & ARM_MS_EMPTY)) {
+> +               u32 msg = readl(mbox->regs + MAIL0_RD);
+> +               dev_dbg(dev, "Reply 0x%08X\n", msg);
+> +               mbox_chan_received_data(link, &msg);
+> +       }
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int bcm2835_send_data(struct mbox_chan *link, void *data)
+> +{
+> +       int ret = 0;
+> +       u32 msg = *(u32 *)data;
+> +
+> +       spin_lock(&mbox->lock);
+> +       writel(msg, mbox->regs + MAIL1_WRT);
+> +       dev_dbg(mbox->dev, "Request 0x%08X\n", msg);
+> +end:
 >
+Did you compile check the driver for errors and warnings?
+
+> +static int bcm2835_mbox_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       int ret = 0;
+> +       struct resource *iomem;
+> +
+> +       mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
+> +       if (mbox == NULL)
+> +               return -ENOMEM;
+> +       mbox->dev = dev;
+> +       spin_lock_init(&mbox->lock);
+> +
+> +       ret = devm_request_irq(dev, irq_of_parse_and_map(dev->of_node, 0),
+> +                              bcm2835_mbox_irq, 0, dev_name(dev), mbox);
 >
-> A changelog and a description of the changes you've made aren't quite the
-> same thing.
->
-> There should be some mention in the commit description of what you changed
-> relative to the patch that someone else authored, so they don't get
-> blaimed/praised for any of your changes. The format of that description
-> wouldn't usually be a detailed patch revision changelog though, just a
-> description of the overall changes that were left in the final version.
->
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
->>>> b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
->>>
->>>
->>>> +- #mbox-cells: Specifies the number of cells needed to encode a mailbox
->>>> +                 channel. The value shall be 1.  Clients should supply
->>>> a value
->>>> +                 of 0 for the mailbox channel, because there is only
->>>> one
->>>> +                 exposed
->>>
->>>
->>> Can't you use #mbox-cells = <0> if there's no data to provide?
->>
->>
->> of_mbox_index_xlate looks like it's always dereferencing the first arg.
->
->
-> Is it possible to fix that?
->
-The driver specific of_xlate() is meant to be provided during
-mbox_controller_register() in which case the default 1-cell xlate
-won't be used.
+Why even pass 'mbox' when you insist on ignoring 'dev_id' and access
+the global variable again directly :D
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
