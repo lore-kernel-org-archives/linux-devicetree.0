@@ -1,18 +1,17 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 1/4] clk: si5351: Mention clock-names in the binding documentation
-Date: Thu, 30 Apr 2015 19:45:51 +0200
-Message-ID: <1430415954-29517-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 2/4] ARM: dove: Add clock-names to CuBox Si5351 clk generator
+Date: Thu, 30 Apr 2015 19:45:52 +0200
+Message-ID: <1430415954-29517-3-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Jean-Francois Moine <moinejf@free.fr>, Michael Welling <mwelling@ieee.org>, Russell King <rmk+linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Jean-Francois Moine <moinejf@free.fr>, Michael Welling <mwelling@ieee.org>, Russell King <rmk+linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since the introduction of clk-si5351 the way we should deal with DT provided
-clocks has changed from indexed to named clock phandles. Amend the binding
-documentation to reflect named clock phandles by clock-names property.
+Si5351 clock generator on CuBox uses XTAL as clock reference, name the
+clock phandle accordingly.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
@@ -21,29 +20,22 @@ Cc: Stephen Boyd <sboyd@codeaurora.org>
 Cc: Jean-Francois Moine <moinejf@free.fr>
 Cc: Michael Welling <mwelling@ieee.org>
 Cc: Russell King <rmk+linux@arm.linux.org.uk>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory Clement <gregory.clement@free-electrons.com>
 Cc: devicetree@vger.kernel.org
 Cc: linux-clk@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- Documentation/devicetree/bindings/clock/silabs,si5351.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/dove-cubox.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/silabs,si5351.txt b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
-index c40711e8e8f7..28b28309f535 100644
---- a/Documentation/devicetree/bindings/clock/silabs,si5351.txt
-+++ b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
-@@ -17,7 +17,8 @@ Required properties:
- - #clock-cells: from common clock binding; shall be set to 1.
- - clocks: from common clock binding; list of parent clock
-   handles, shall be xtal reference clock or xtal and clkin for
--  si5351c only.
-+  si5351c only. Corresponding clock input names are "xtal" and
-+  "clkin" respectively.
- - #address-cells: shall be set to 1.
- - #size-cells: shall be set to 0.
- 
-@@ -71,6 +72,7 @@ i2c-master-node {
+diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
+index aae7efc09b0b..e6fa251e17b9 100644
+--- a/arch/arm/boot/dts/dove-cubox.dts
++++ b/arch/arm/boot/dts/dove-cubox.dts
+@@ -87,6 +87,7 @@
  
  		/* connect xtal input to 25MHz reference */
  		clocks = <&ref25>;
