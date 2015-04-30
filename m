@@ -1,145 +1,60 @@
-MIME-Version: 1.0
-In-Reply-To: <1427808215-19178-3-git-send-email-beomho.seo@samsung.com>
-References: <1427808215-19178-1-git-send-email-beomho.seo@samsung.com>
-	<1427808215-19178-3-git-send-email-beomho.seo@samsung.com>
-Date: Wed, 1 Apr 2015 14:01:19 -0500
-Message-ID: <CAL_JsqJAcm95W2zegwmZ27XQi9k92c3kyLsnLBR6h-1Sr5B8Mg@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] Documentation: Add device tree bindings document
- for max77843
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, sangbae90.lee@samsung.com, InKi Dae <inki.dae@samsung.com>, Jaewon Kim <jaewon02.kim@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-List-ID: <devicetree@vger.kernel.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] clk: si5351: Some fixes
+Date: Fri, 01 May 2015 00:21:20 +0200
+Message-ID: <5542AAE0.5020204@gmail.com>
+References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com> <20150430193317.GC22000@deathray> <55429417.4070103@gmail.com> <20150430212059.GA14026@deathray>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150430212059.GA14026@deathray>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Russell King <rmk+linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 8:23 AM, Beomho Seo <beomho.seo@samsung.com> wrote:
-> From: Jaewon Kim <jaewon02.kim@samsung.com>
+On 30.04.2015 23:20, Michael Welling wrote:
+> On Thu, Apr 30, 2015 at 10:44:07PM +0200, Sebastian Hesselbarth wrote:
+[...]
+>> What I noticed about your clk2 that you always measure as 0 Hz is
+>> that none of your clocks is prepared/enabled.
+>>
+>> Currently, the si5351 driver only ensures the output is enabled
+>> when si5351_clkout_prepare() is called.
+>>
+>> As long as you do not have a clk consumer that properly prepare/enables
+>> the clock output, it may remain disabled.
+>>
+>> We should probably have additional DT properties and corresponding
+>> pdata to force clkoutN always on.
 >
-> Add document describing device tree bindings for max77843 MFD.
-> Drivers: MFD core, regulator, extcon, charger and fuelgauge.
+> Does the silabs,disable-state of 3 (SI5351_DISABLE_NEVER) take care
+> of this?
+
+That would be the HW version of never disabling the clock output.
+I never really tried the property, does it work as expected?
+
+> Otherwise is there a simple registration that will do this?
+
+The SW version of such a property would involve CLK_IGNORE_UNUSED
+and enabling all requested clock outputs on probe().
+
+If above HW property already works, I think it should be enough.
+
+[...]
+>>> It should be noted that if I program the device's register map in the
+>>> bootloader the device keeps the correct frequency outputs.
+>>
+>> "keeps"? You mean "generates", don't you?
+>>
 >
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mfd/max77843.txt |  100 ++++++++++++++++++++
->  1 file changed, 100 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77843.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/max77843.txt b/Documentation/devicetree/bindings/mfd/max77843.txt
-> new file mode 100644
-> index 0000000..4111f84
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max77843.txt
-> @@ -0,0 +1,100 @@
-> +Maxim MAX77843 multi-function device
-> +
-> +MAX77843 is a Multi-Function Device with the following submodules:
-> +- PMIC   : 2 SAFEOUT LDOs for USB device
-> +- CHARGER : Li+ battery charger with Fuel Gauge
-> +- MUIC   : Micro USB Interface Controller
-> +- HAPTIC  : Motor Controller for tactile feedback
-> +
-> +It is interfaced to host controller using I2C.
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max77843".
-> +- reg : I2C slave address of PMIC block.
-> +- interrupts : I2C line for main SoCs.
-> +- interrupt-parent : The parent of interrupt controller.
-> +
-> +Optional properties:
-> +- regulators : The regulators of max77843 have to be instantiated under subnode
-> +       named "regulators" using the following format.
-> +
-> +       [*]refer : Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +       regulators {
-> +               SAFEOUT {
-> +                       regulator-name = "SAFEOUT";
-> +               };
-> +       }
-> +
-> +       List of valid regulator names:
-> +       - SAFEOUT1, SAFEOUT2, CHARGER.
-> +
-> +- max77843-muic : This properties used by extcon consumers.
-> +       Required properties:
-> +               - compatible : Must be "maxim,max77842-muic".
-> +
-> +- max77843-charger : There battery charger of MAX77843 have to be instantiated
-> +       under sub-node named "max77843-charger" using the following format.
-> +       Required properties:
-> +               - compatible : Must be "maxim,max77842-charger".
-> +               - maxim,fast-charge-uamp : Fast charge current levels are
-> +                       100 mA to 3150 mA programmed by I2C per 100 mA.
-> +               - maxim,top-off-uamp : Top off current threshold levels are
-> +                       125 mA to 650 mA programmed by I2C per 75 mA.
-> +               - maxim,input-uamp-limit : Input current limit levels are
-> +                       100 mA to 3533 mA programmed by I2C per 33 mA.
-> +
-> +- max77843-haptic : The MAX77843 haptic device provides the tactile feedback
-> +       to the user by using PWM(Pulse Width Modulation) signal.
-> +       Required properties:
-> +               - compatible : Must be "maxim,max77843-hpatic".
-> +               - haptic-supply : Power supply for the haptic motor.
-> +                       [*] refer Documentation/devicetree/
-> +                                       bindings/regulator/regulator.txt
-> +               - pwms : phandle for the PWM(Pulse Width Modulation) device.
-> +                       PWM properties should be named "pwms".
-> +                       [*] refer Documentation/devicetree/bindings/pwm/pwm.txt
-> +
-> +Example:
-> +       max77843@66 {
-> +               compatible = "samsung,max77843";
-> +               reg = <0x66>;
-> +               interrupt-parent = <&gpa1>;
-> +               interrupts = <5 2>;
-> +
-> +               regulators {
-> +                       SAFEOUT1 {
-> +                               regulator-name = "SAFEOUT1";
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <4950000>;
-> +                       };
-> +                       SAFEOUT2 {
-> +                               regulator-name = "SAFEOUT2";
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <4950000>;
-> +                       };
-> +                       CHARGER {
-> +                               regulator-name = "CHARGER";
-> +                               regulator-min-microamp = <100000>;
-> +                               regulator-max-microamp = <3150000>;
-> +                       };
-> +               };
-> +
-> +               haptic {
-> +                       compatible = "maxim,max77843-haptic";
-> +                       haptic-supply = <&haptic_supply>;
-> +                       pwms = <&pwm 0 40000 0>;
-> +                       pwm-names = "haptic";
-> +               };
-> +
-> +               max77843-muic {
-> +                       compatible = "maxim,max77843-muic";
-> +               };
-> +
-> +               max77843-charger {
-> +                       compatible = "maxim,max77843-charger";
-> +                       maxim,fast-charge-uamp = <450000>;
-> +                       maxim,top-off-uamp = <125000>;
-> +                       maxim,input-uamp-limit = <500000>;
-> +               };
-> +       };
-> --
-> 1.7.9.5
->
+> Yes the clocks are generated and do not get effected by the driver.
+
+IIRC, clk API does check if requested rate and current rate match
+already. If they do, it does not request the same rate again.
+
+Sebastian
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
