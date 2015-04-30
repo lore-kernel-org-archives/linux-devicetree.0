@@ -1,57 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/2] scripts/dtc: Update to upstream version 9d3649bd3be245c9
-Date: Thu, 30 Apr 2015 08:14:13 -0500
-Message-ID: <1430399653-30269-2-git-send-email-robh@kernel.org>
-References: <1430399653-30269-1-git-send-email-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430399653-30269-1-git-send-email-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@linaro.org>
+From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: vexpress: Add unified-cache Device Tree property
+Date: Thu, 30 Apr 2015 15:30:11 +0200
+Message-ID: <20150430133011.GE15254@pengutronix.de>
+References: <5509437E.6060806@arm.com>
+ <1426671298-2012-1-git-send-email-r.schwebel@pengutronix.de>
+ <20150429191228.GO15254@pengutronix.de>
+ <20150430110853.GN7440@e106497-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150430110853.GN7440-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sync dtc with upstream as of commit 9d3649bd3be2 (Add testcases for
-fdt_path_offset_namelen()).
+Hi Liviu,
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org
----
- scripts/dtc/checks.c                 |   31 +-
- scripts/dtc/data.c                   |   12 +-
- scripts/dtc/dtc-lexer.l              |   65 +-
- scripts/dtc/dtc-lexer.lex.c_shipped  |  516 +++++-----
- scripts/dtc/dtc-parser.tab.c_shipped | 1773 ++++++++++++++++------------------
- scripts/dtc/dtc-parser.tab.h_shipped |  114 ++-
- scripts/dtc/dtc-parser.y             |  147 +--
- scripts/dtc/dtc.c                    |   14 +-
- scripts/dtc/dtc.h                    |   18 +-
- scripts/dtc/flattree.c               |    4 +-
- scripts/dtc/fstree.c                 |   17 +-
- scripts/dtc/libfdt/Makefile.libfdt   |    3 +-
- scripts/dtc/libfdt/fdt.c             |   30 +-
- scripts/dtc/libfdt/fdt.h             |   93 +-
- scripts/dtc/libfdt/fdt_empty_tree.c  |    1 +
- scripts/dtc/libfdt/fdt_ro.c          |   29 +-
- scripts/dtc/libfdt/fdt_rw.c          |   10 +-
- scripts/dtc/libfdt/fdt_sw.c          |   36 +-
- scripts/dtc/libfdt/fdt_wip.c         |    2 +-
- scripts/dtc/libfdt/libfdt.h          |  148 ++-
- scripts/dtc/libfdt/libfdt_env.h      |  104 +-
- scripts/dtc/libfdt/libfdt_internal.h |    6 +-
- scripts/dtc/livetree.c               |    4 +-
- scripts/dtc/srcpos.c                 |   49 +-
- scripts/dtc/srcpos.h                 |   15 +-
- scripts/dtc/treesource.c             |   15 +-
- scripts/dtc/util.c                   |   18 +-
- scripts/dtc/util.h                   |    4 +-
- scripts/dtc/version_gen.h            |    2 +-
- 29 files changed, 1745 insertions(+), 1535 deletions(-)
+On Thu, Apr 30, 2015 at 12:08:53PM +0100, Liviu Dudau wrote:
+> Sorry Robert, this fell through the cracks. VExpress gets very few
+> patches in general and we're new to this :(
 
-The patch is quite large, so I've only included the diffstat. The full 
-patch is created by scripts/dtc/update-dtc-source.sh and can be found 
-here[1].
+Thanks for the help!
 
-Rob
+I still see these errors with 4.1-rc1:
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dtc-import
+[    0.000000] L2C: platform modifies aux control register: 0x02020000 -> 0x02420000
+[    0.000000] L2C: DT/platform modifies aux control register: 0x02020000 -> 0x02420000
+[    0.268626] platform 10000000.sysreg: Error -2 creating of_node link
+[    0.271997] platform basic-mmio-gpio.1.auto: Error -2 creating of_node link
+[    0.272266] platform basic-mmio-gpio.2.auto: Error -2 creating of_node link
+[    0.272681] platform basic-mmio-gpio.3.auto: Error -2 creating of_node link
+[    0.426298] of_amba_device_create(): amba_device_add() failed (-19) for /memory-controller@100e0000
+[    0.426799] of_amba_device_create(): amba_device_add() failed (-19) for /memory-controller@100e1000
+[    0.427099] of_amba_device_create(): amba_device_add() failed (-19) for /watchdog@100e5000
+[    0.433206] of_amba_device_create(): amba_device_add() failed (-19) for /smb/motherboard/iofpga@7,00000000/sysctl@01000
+[    0.438165] of_amba_device_create(): amba_device_add() failed (-19) for /smb/motherboard/iofpga@7,00000000/wdt@0f000
+
+Do you have an idea what might go wrong?
+
+rsc
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
