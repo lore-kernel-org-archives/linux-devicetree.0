@@ -1,90 +1,228 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: [PATCH] Documentation/devicetree: document OCTEON USB bindings
-Date: Thu, 30 Apr 2015 22:44:00 +0300
-Message-ID: <1430423040-2088-1-git-send-email-aaro.koskinen@iki.fi>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] Regulator: add driver for Freescale MC34708
+Date: Thu, 30 Apr 2015 20:45:52 +0100
+Message-ID: <20150430194552.GE22845@sirena.org.uk>
+References: <20150428141740.16243.79036.stgit@localhost>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4oCDeAhvQ/quDUbW"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150428141740.16243.79036.stgit@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Fuzzey <mfuzzey@parkeon.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document device-tree bindings for the USB controller on older
-OCTEON SOCs (OCTEON, OCTEON+).
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
----
- .../devicetree/bindings/usb/octeon-usb.txt         | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/octeon-usb.txt
+--4oCDeAhvQ/quDUbW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/usb/octeon-usb.txt b/Documentation/devicetree/bindings/usb/octeon-usb.txt
-new file mode 100644
-index 0000000..fd121c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/octeon-usb.txt
-@@ -0,0 +1,58 @@
-+OCTEON/OCTEON+ USB BLOCK
-+
-+1) Main node
-+
-+   Required properties:
-+
-+   - compatible: must be "cavium,octeon-5750-usbn"
-+
-+   - reg: specifies the physical base address of the USBN block and
-+     the length of the memory mapped region.
-+
-+   - #address-cells: specifies the number of cells needed to encode an
-+     address. The value must be 2.
-+
-+   - #size-cells: specifies the number of cells used to represent the size
-+     of an address. The value must be 2.
-+
-+   - ranges: specifies the translation between child address space and parent
-+     address space.
-+
-+   - refclk-frequency: speed of the USB reference clock. Allowed values are
-+     12000000, 24000000 or 48000000.
-+
-+   - refclk-type: type of the USB reference clock. Allowed values are
-+     "crystal" or "external".
-+
-+2) Child node
-+
-+   The main node must have one child node which describes the built-in
-+   USB controller.
-+
-+   Required properties:
-+
-+   - compatible: must be "cavium,octeon-5750-usbc"
-+
-+   - reg: specifies the physical base address of the USBC block and
-+     the length of the memory mapped region.
-+
-+   - interrupts: specifies the interrupt number for the USB controller.
-+
-+3) Example:
-+
-+	usbn: usbn@1180068000000 {
-+		compatible = "cavium,octeon-5750-usbn";
-+		reg = <0x11800 0x68000000 0x0 0x1000>;
-+		ranges; /* Direct mapping */
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		refclk-frequency = <12000000>;
-+		refclk-type = "crystal";
-+
-+		usbc@16f0010000000 {
-+			compatible = "cavium,octeon-5750-usbc";
-+			reg = <0x16f00 0x10000000 0x0 0x80000>;
-+			interrupts = <0 56>;
-+		};
-+	};
-+
--- 
-2.3.3
+On Tue, Apr 28, 2015 at 04:17:40PM +0200, Martin Fuzzey wrote:
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please use subject lines reflecting the style for the subsystem.
+
+> +static int mc34708_read_bits(struct mc34708_regulator *mc34708_reg,
+> +			     unsigned int reg, u32 mask)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = mc13xxx_reg_read(mc34708_reg->mc13xxx, reg, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val &= mask;
+> +	val >>= ffs(mask) - 1;
+
+Ick, this looks confusing - it's wrapping something which should hopefully
+be a regmap in multiple layer.  The bitfield access helper does seem
+reasonable though.
+
+> +static int mc34708_update_bits(struct mc34708_regulator *mc34708_reg,
+> +			       unsigned int reg, u32 mask, u32 val)
+> +{
+> +	val <<= ffs(mask) - 1;
+> +
+> +	return mc13xxx_reg_rmw(mc34708_reg->mc13xxx, reg, mask, val);
+
+This is a wrapper for the widely used _update_bits() interface which has
+a different interface - that's *definitely* confusing.
+
+> +static int mc34708_get_voltage_sel(struct regulator_dev *rdev)
+> +{
+> +	struct mc34708_regulator *mc34708_reg = rdev->reg_data;
+> +
+> +	return mc34708_read_bits(mc34708_reg,
+> +				rdev->desc->vsel_reg, rdev->desc->vsel_mask);
+> +}
+
+Don't open code this, use the standard regmap helpers.
+
+> +	val = mc34708_read_bits(mc34708_reg,
+> +				mc34708_reg->def->mode_reg,
+> +				mc34708_reg->def->mode_mask);
+> +	if (val < 0)
+> +		return ERR_PTR(val);
+> +
+> +	BUG_ON(val >= mc34708_reg->def->kind->num_hw_modes);
+
+This is too severe, could be a hardware error.
+
+> +static int mc34708_sw_find_hw_mode_sel(
+> +	const struct mc34708_regulator_kind *kind,
+> +	unsigned int normal,
+> +	unsigned int standby)
+> +{
+> +	const struct mc34708_hw_mode *mode;
+> +	int i;
+> +
+> +	for (i = 0, mode = kind->hw_modes;
+> +			i < kind->num_hw_modes; i++, mode++) {
+> +		if (mode->normal == -1 || mode->standby == -1)
+> +			continue;
+> +
+> +		if (mode->standby != standby)
+> +			continue;
+> +
+> +		if ((mode->normal == normal) ||
+> +		    (normal && (mode->alt_normal == normal)))
+> +			return i;
+> +	}
+
+I honestly don't really know what the above is supposed to do.  It's
+mapping something to something but what exactly is unclear...  skipping
+most of the rest of the mode code.
+
+> +static int mc34708_swbst_mode_to_hwmode(unsigned int mode)
+> +{
+> +	switch (mode) {
+> +	case REGULATOR_MODE_IDLE:
+> +	case REGULATOR_MODE_STANDBY:
+> +		return  MC34708_SW_OPMODE_PFM;
+
+No, this is broken - you're mapping two different modes to one hardware
+setting.  If the device doesn't support something it just doesn't
+support it, let the upper layers work out how to handle that.
+
+Also an extra space there.
+
+> +static int mc34708_swbst_setup(struct mc34708_regulator *mc34708_reg)
+> +{
+> +	int val, mode;
+> +
+> +	val = mc34708_read_bits(mc34708_reg,
+> +				mc34708_reg->def->mode_reg,
+> +				mc34708_reg->def->mode_mask);
+> +	if (val < 0)
+> +		return val;
+> +
+> +	if (val > 0) {
+> +		mode = mc34708_swbst_hwmode_to_mode(val);
+> +		if (mode < 0)
+> +			return mode;
+> +
+> +		mc34708_reg->req_mode_normal = mode;
+> +	} else {
+> +		/*
+> +		 * If regulator is intially off we don't know the mode
+> +		 * but we need a mode to be able to enable it later.
+> +		 */
+> +		mc34708_reg->req_mode_normal = REGULATOR_MODE_NORMAL;
+> +	}
+
+I don't really understand what the above is supposed to do, some
+comments would probably help.
+
+> +static int mc34708_swbst_enable(struct regulator_dev *rdev)
+> +{
+> +	struct mc34708_regulator *mc34708_reg = rdev->reg_data;
+> +
+> +	return mc34708_update_bits(mc34708_reg,
+> +					mc34708_reg->def->mode_reg,
+> +					mc34708_reg->def->mode_mask,
+> +					mc34708_reg->req_mode_normal);
+> +}
+
+Again use the standard regmap helpers.
+
+> +static int mc34708_ldo_set_suspend_enable(struct regulator_dev *rdev)
+> +{
+> +	struct mc34708_regulator *mc34708_reg = rdev->reg_data;
+> +	int ret;
+> +
+> +	ret = mc34708_update_hw_mode(mc34708_reg,
+> +				     mc34708_reg->req_mode_normal,
+> +				     mc34708_reg->req_mode_standby);
+> +	if (!ret)
+> +		mc34708_reg->suspend_off = false;
+
+This looks like it should be a noop.  It also seems very familiar from
+some of the other code.
+
+> +static int mc34708_ldo_set_suspend_mode(struct regulator_dev *rdev,
+> +					unsigned int mode)
+> +{
+> +	struct mc34708_regulator *mc34708_reg = rdev->reg_data;
+> +	int ret;
+> +
+> +	if (!mc34708_ldo_has_mode_bit(mc34708_reg))
+> +		return 0;
+
+Again, if the driver doesn't support something don't implement it.
+
+> +static const unsigned int mc34708_vgen1_volt_table[] = {
+> +	1200000, 1250000, 1300000, 1350000, 1400000, 1450000, 1500000, 1550000
+> +};
+
+This looks like a linear mapping, use the standard helpers please.
+
+> +/*
+> + * Setting some LDO standby states also requires changing the normal state.
+> + * Therefore save the LDO configuration register on suspend and restore it
+> + * on resume.
+> + *
+> + * This works because .set_suspend_X are called by the platform suspend handler
+> + * AFTER device suspend
+> + */
+
+That's not something you can rely on, I suggest omitting this for now
+and doing it separately.
+
+> +	num_regs = of_get_child_count(regs_np);
+> +	mc34708_data = devm_kzalloc(dev, sizeof(*mc34708_data) +
+> +					num_regs * sizeof(*mc34708_reg),
+> +					GFP_KERNEL);
+> +	if (!mc34708_data) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	dev_set_drvdata(dev, mc34708_data);
+> +
+> +	mc34708_reg = mc34708_data->regulators;
+> +	for_each_child_of_node(regs_np, reg_np) {
+
+No, this is broken - your driver should like all the others register all
+the regulators on the device uncondtionally.  It should also be using
+.of_match to allow the core to look up the init data.
+
+--4oCDeAhvQ/quDUbW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVQoZvAAoJECTWi3JdVIfQytUH/RZWCBwu+8zt2jpd8aBBptfg
+xtrxPDd3V+TJ8JEhbRbYzOasO1qNvTf9UOqMsiLvqFSbOwPoQTNzvdAaXbZwOhTs
+2mmV4U9D3J7o9b0SBny/bXyzs9QNWevsoRFuvgs2b9ajbH9x5sCSIpaNdmH0ipbY
+fjcpAVqsU0OKz/wHICEOh82ckj0pkBUcW/Pv56SBBIPlgorr7+jFHagM45Pop1Wz
+WJ/rsMoT6ehcHmuIJGYeciigEQAarXhmRP7jOlbBDJcF+isAdLOBhH/GU9xM8+f+
+bJsQgKjy6GZx3C0XmeMo1S5d3VKELaMxh3U3IFnfVMluSF2QJhputzB+rI+VEtI=
+=Gy3K
+-----END PGP SIGNATURE-----
+
+--4oCDeAhvQ/quDUbW--
