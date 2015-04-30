@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v3 5/6] ARM: DT: STi: STiH418: Add miphy28lp optional oscillator clock properties
-Date: Thu, 30 Apr 2015 14:30:51 +0100
-Message-ID: <1430400652-3366-6-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v3 3/6] usb: dwc3: dwc3-st: Update the incorrect DT dwc3 example.
+Date: Thu, 30 Apr 2015 14:30:49 +0100
+Message-ID: <1430400652-3366-4-git-send-email-peter.griffin@linaro.org>
 References: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
@@ -10,33 +10,42 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.c
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-STiH418 miphy28lp port0/1 need the oscillator clock configured in the same way
-as on STiH407/STiH410 platforms.
+There is a subtle typo phys-names should be phy-names. Using the
+current example means you don't have working usb (as you fail to
+obtain the phys). Also update the example to use the generic phy
+type constants which are now used for miphy28.
+
+Additionally also remove the unnecessary new line in the example.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 ---
- arch/arm/boot/dts/stih418-b2199.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc3-st.txt | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-index 926235c..e0e5b23 100644
---- a/arch/arm/boot/dts/stih418-b2199.dts
-+++ b/arch/arm/boot/dts/stih418-b2199.dts
-@@ -74,5 +74,16 @@
- 			st,i2c-min-scl-pulse-width-us = <0>;
- 			st,i2c-min-sda-pulse-width-us = <5>;
- 		};
-+
-+		miphy28lp_phy: miphy28lp@9b22000 {
-+
-+			phy_port0: port@9b22000 {
-+				st,osc-rdy;
-+			};
-+
-+			phy_port1: port@9b2a000 {
-+				st,osc-force-ext;
-+			};
-+		};
+diff --git a/Documentation/devicetree/bindings/usb/dwc3-st.txt b/Documentation/devicetree/bindings/usb/dwc3-st.txt
+index f9d7025..01c71b1 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3-st.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3-st.txt
+@@ -49,8 +49,7 @@ st_dwc3: dwc3@8f94000 {
+ 	st,syscfg	= <&syscfg_core>;
+ 	resets		= <&powerdown STIH407_USB3_POWERDOWN>,
+ 			  <&softreset STIH407_MIPHY2_SOFTRESET>;
+-	reset-names	= "powerdown",
+-			  "softreset";
++	reset-names	= "powerdown", "softreset";
+ 	#address-cells	= <1>;
+ 	#size-cells	= <1>;
+ 	pinctrl-names	= "default";
+@@ -62,7 +61,7 @@ st_dwc3: dwc3@8f94000 {
+ 		reg		= <0x09900000 0x100000>;
+ 		interrupts	= <GIC_SPI 155 IRQ_TYPE_NONE>;
+ 		dr_mode		= "host";
+-		phys-names      = "usb2-phy", "usb3-phy";
+-		phys            = <&usb2_picophy2>, <&phy_port2 MIPHY_TYPE_USB>;
++		phy-names	= "usb2-phy", "usb3-phy";
++		phys		= <&usb2_picophy2>, <&phy_port2 PHY_TYPE_USB3>;
  	};
  };
 -- 
