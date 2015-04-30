@@ -1,81 +1,87 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] coresight: replicator: Add Qualcomm CoreSight
- Replicator driver
-Date: Thu, 30 Apr 2015 07:07:42 -0600
-Message-ID: <CANLsYkwhegfrnCbWk_o=3W26LNoAampFa+_TV4OLFFnm3SOszA@mail.gmail.com>
-References: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
-	<1430310000-10867-2-git-send-email-ivan.ivanov@linaro.org>
-	<CANLsYkwfDYjTqBUvXp2da6E=SA8F2EbH7_Mi20Sba9NpJm9Y7g@mail.gmail.com>
-	<1430378466.2400.8.camel@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430378466.2400.8.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/2] libfdt: add fdt type definitions
+Date: Thu, 30 Apr 2015 08:14:12 -0500
+Message-ID: <1430399653-30269-1-git-send-email-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 April 2015 at 01:21, Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
-> On Wed, 2015-04-29 at 10:28 -0600, Mathieu Poirier wrote:
->> On 29 April 2015 at 06:19, Ivan T. Ivanov ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
-> <snip>
->
->> >                 - "arm,coresight-etm4x", "arm,primecell";
->> > +               - "qcom,coresight-replicator", "arm,primecell";
->>
->> Is there some sort of versioning information we can add like it was
->> done for the "coresight-etmXY" bindings?  It makes things a lot
->> cleaner when a new (and possibly not backward compatible) version gets
->> released.
->>
->
-> From what I can see, it is version 1. I could add it to compatible
-> string, but suldn't we use amba_id for this reason.
+In preparation for libfdt/dtc update, add the new fdt specific types.
 
-amba_id work well for devices within the same family and compatible up
-to a certain point.  When revisions change backward compatibility is
-usually not kept and it becomes a nightmare to maintain.
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+---
+ arch/arm/boot/compressed/libfdt_env.h | 4 ++++
+ arch/powerpc/boot/libfdt_env.h        | 4 ++++
+ arch/powerpc/boot/of.h                | 2 ++
+ include/linux/libfdt_env.h            | 4 ++++
+ 4 files changed, 14 insertions(+)
 
->
->> >         * reg: physical base address and length of the register
->> >           set(s) of the component.
->> > diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
->> > index 6b331d4..165b681 100644
->> > --- a/drivers/hwtracing/coresight/Kconfig
->> > +++ b/drivers/hwtracing/coresight/Kconfig
->> > @@ -68,4 +68,13 @@ config CORESIGHT_SOURCE_ETM4X
->> >           instructions that a processor is executing. This is primarily useful
->> >           for instruction level tracing. Depending on the implemented version
->> >           data tracing may also be available.
->> > +
->> > +config CORESIGHT_QCOM_REPLICATOR
->> > +       bool "Qualcomm CoreSight Replicator driver"
->> > +       help
->> > +         This enables support for CoreSight link and sink driver that are
->> > +         responsible for transporting and collecting the trace data
->> > +         respectively. Link and sinks are dynamically aggregated with a trace
->> > +         entity at run time to form a complete trace path.
->>
->> The replicator is only a link entity.  It is only transporting trace
->> data information rather than collecting it.  Please review the
->> comment.
->
-> True, sorry. copy and paste from CORESIGHT_LINKS_AND_SINKS.
->
->> Also, can this specific version run on both V7 and V8
->> architecture.  If not the proper "depends" should be added.
->>
->
-> Same driver/device on both architectures.
->
-> Will fix rest of the comments and will resend.
->
-> Thank you,
-> Ivan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 1f4e718..17ae0f3 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -5,6 +5,10 @@
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
+ 
++typedef __be16 fdt16_t;
++typedef __be32 fdt32_t;
++typedef __be64 fdt64_t;
++
+ #define fdt16_to_cpu(x)		be16_to_cpu(x)
+ #define cpu_to_fdt16(x)		cpu_to_be16(x)
+ #define fdt32_to_cpu(x)		be32_to_cpu(x)
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 8dcd744..7e3789e 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -10,6 +10,10 @@ typedef u32 uint32_t;
+ typedef u64 uint64_t;
+ typedef unsigned long uintptr_t;
+ 
++typedef __be16 fdt16_t;
++typedef __be32 fdt32_t;
++typedef __be64 fdt64_t;
++
+ #define fdt16_to_cpu(x)		be16_to_cpu(x)
+ #define cpu_to_fdt16(x)		cpu_to_be16(x)
+ #define fdt32_to_cpu(x)		be32_to_cpu(x)
+diff --git a/arch/powerpc/boot/of.h b/arch/powerpc/boot/of.h
+index 5603320..53f8f27 100644
+--- a/arch/powerpc/boot/of.h
++++ b/arch/powerpc/boot/of.h
+@@ -21,7 +21,9 @@ int of_setprop(const void *phandle, const char *name, const void *buf,
+ /* Console functions */
+ void of_console_init(void);
+ 
++typedef u16			__be16;
+ typedef u32			__be32;
++typedef u64			__be64;
+ 
+ #ifdef __LITTLE_ENDIAN__
+ #define cpu_to_be16(x) swab16(x)
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 01508c7..2a663c6 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -5,6 +5,10 @@
+ 
+ #include <asm/byteorder.h>
+ 
++typedef __be16 fdt16_t;
++typedef __be32 fdt32_t;
++typedef __be64 fdt64_t;
++
+ #define fdt32_to_cpu(x) be32_to_cpu(x)
+ #define cpu_to_fdt32(x) cpu_to_be32(x)
+ #define fdt64_to_cpu(x) be64_to_cpu(x)
+-- 
+2.1.0
