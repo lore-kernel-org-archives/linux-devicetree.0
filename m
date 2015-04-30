@@ -1,49 +1,72 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH V7 04/10] ARM: dts: add imx7d soc dtsi file
-Date: Thu, 30 Apr 2015 13:25:05 -0500
-Message-ID: <CAHrpEqRn-KWVzBaY1OtcLHivPVp-17Vw7qZaCzGts52_rv1eug@mail.gmail.com>
-References: <1430317210-18333-1-git-send-email-Frank.Li@freescale.com>
-	<1430317210-18333-5-git-send-email-Frank.Li@freescale.com>
-	<CAOMZO5C2ye2GHi_CxFd_AKuK1k3okBBVgNoXN_31hjeCuzdXpA@mail.gmail.com>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH 0/4] clk: si5351: Some fixes
+Date: Thu, 30 Apr 2015 13:47:42 -0500
+Message-ID: <20150430184742.GA22000@deathray>
+References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5C2ye2GHi_CxFd_AKuK1k3okBBVgNoXN_31hjeCuzdXpA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Frank Li <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Jean-Francois Moine <moinejf@free.fr>, Russell King <rmk+linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 1:07 PM, Fabio Estevam <festevam@gmail.com> wrote:
-> Hi Frank,
->
-> On Wed, Apr 29, 2015 at 11:20 AM,  <Frank.Li@freescale.com> wrote:
->
->> +       cpus {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               cpu0: cpu@0 {
->> +                       compatible = "arm,cortex-a7";
->> +                       device_type = "cpu";
->> +                       reg = <0>;
->> +                       operating-points = <
->> +                               /* KHz  uV */
->> +                               996000  1075000
->> +                               792000  975000
->> +                       >;
->> +                       clock-latency = <61036>; /* two CLK32 periods */
->> +                       clocks = <&clks IMX7D_ARM_A7_ROOT_CLK>, <&clks IMX7D_ARM_A7_ROOT_SRC>,
->> +                                <&clks IMX7D_PLL_ARM_MAIN_CLK>, <&clks IMX7D_PLL_SYS_MAIN_CLK>;
->> +                       clock-names = "arm", "arm_root_src", "pll_arm", "pll_sys_main";
->> +               };
->> +       };
->
-> That's a dual core, so you also need to pass cpu1 ;-)
+On Thu, Apr 30, 2015 at 07:45:50PM +0200, Sebastian Hesselbarth wrote:
+> For Si5351 clock driver, Michael Welling and Jean-Francois Moine reported
+> issues with recent v4.x kernels due to broken/missing/wrong parent clock
+> claming. This patch set now deals with the issues reported.
+> 
+> Patch 1 amends the binding documentation mention clock-names property
+> for the "xtal" and "clkin" parent clock inputs of Si5351 variants.
+> 
+> Patch 2 adds the clock-names property for the SolidRun CuBox using Si5351
+> with a fixed oscillator connected to "xtal" input.
+> 
+> Patch 3 reworks the way we claim parent clocks by using devm_clk_get()
+> for both DT and platform_data based registration. Also, properly check
+> for errors returned by devm_clk_get() and prepare/enable the parent clocks.
+> 
+> Patch 4 introduces a function to reset PLLs on rate change. This should
+> improve generated clock output stability. I currently have no scope at hand
+> to actually test that properly, so there may be more issues remaining.
+> 
+> @Michael, Jean-Francois: Please test and report if there are still
+> issues remaining.
 
-SMP is not enabled yet.
-cpu1 will be added when enable SMP.
-I am working on that.
+I am in the process of testing this patch series.
 
-best regards
-Frank Li
+Hopefully this fixes some issues.
+
+> 
+> Sebastian
+> 
+> Sebastian Hesselbarth (4):
+>   clk: si5351: Mention clock-names in the binding documentation
+>   ARM: dove: Add clock-names to CuBox Si5351 clk generator
+>   clk: si5351: Do not pass struct clk in platform_data
+>   clk: si5351: Reset PLL after rate change
+> 
+>  .../devicetree/bindings/clock/silabs,si5351.txt    |  4 +-
+>  arch/arm/boot/dts/dove-cubox.dts                   |  1 +
+>  drivers/clk/clk-si5351.c                           | 87 +++++++++++++++++-----
+>  include/linux/platform_data/si5351.h               |  4 -
+>  4 files changed, 73 insertions(+), 23 deletions(-)
+> 
+> ---
+> Cc: Mike Turquette <mturquette@linaro.org>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Jean-Francois Moine <moinejf@free.fr>
+> Cc: Michael Welling <mwelling@ieee.org>
+> Cc: Russell King <rmk+linux@arm.linux.org.uk>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@free-electrons.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> -- 
+> 2.1.0
+> 
