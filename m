@@ -1,71 +1,78 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] MIPS: ath79: Add OF support and DTS for TL-WR1043ND
-Date: Thu, 30 Apr 2015 17:41:35 -0300
-Message-ID: <5542937F.1050909@vanguardiasur.com.ar>
-References: <1429875679-14973-1-git-send-email-albeu@free.fr>	<553E3CC8.3070304@vanguardiasur.com.ar> <20150430010728.0331a736@tock>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 1/2] coresight: replicator: Add Qualcomm CoreSight
+ Replicator driver
+Date: Thu, 30 Apr 2015 22:53:45 +0200
+Message-ID: <1430427225.2187.15.camel@x220>
+References: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
+	 <1430310000-10867-2-git-send-email-ivan.ivanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150430010728.0331a736@tock>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1430310000-10867-2-git-send-email-ivan.ivanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2015-04-29 at 15:19 +0300, Ivan T. Ivanov wrote:
+
+> +config CORESIGHT_QCOM_REPLICATOR
+> +	bool "Qualcomm CoreSight Replicator driver"
+> +	help
+> +	  This enables support for CoreSight link and sink driver that are
+> +	  responsible for transporting and collecting the trace data
+> +	  respectively. Link and sinks are dynamically aggregated with a trace
+> +	  entity at run time to form a complete trace path.
+
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+
+> +obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
+
+CORESIGHT_QCOM_REPLICATOR is a bool symbol. So
+coresight-replicator-qcom.o will never be part of a module.
+
+(If that's incorrect, you can stop reading here.)
+
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
+
+> +#include <linux/module.h>
+
+Is this include needed?
+
+> +static struct amba_driver replicator_driver = {
+> +	.drv = {
+> +		.name	= "coresight-replicator-qcom",
+> +		.owner	= THIS_MODULE,
+
+For built-in only code THIS_MODULE will be, basically, equivalent to
+NULL (see include/linux/export.h). So I suppose this line can be
+dropped.
+
+> +		.pm	= &replicator_dev_pm_ops,
+> +	},
+> +	.probe		= replicator_probe,
+> +	.remove		= replicator_remove,
+> +	.id_table	= replicator_ids,
+> +};
+> +
+> +module_amba_driver(replicator_driver);
+
+For built-in only code this is, assuming I grepped this correctly,
+equivalent to calling
+    amba_driver_register(&replicator_driver);
+
+from within a function marked with some sort of *initcall().
+
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Qualcomm CoreSight Replicator driver");
+
+For built-in only code these macros will be effectively preprocessed
+away.
+
+Thanks,
 
 
-On 04/29/2015 08:07 PM, Alban wrote:
-> On Mon, 27 Apr 2015 10:42:32 -0300
-> Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> 
->> On 04/24/2015 08:41 AM, Alban Bedel wrote:
->>> This series add OF bindings and code support for the interrupt
->>> controllers, clocks and GPIOs. However it was only tested on a
->>> TL-WR1043ND with an AR9132, others SoCs are untested, and a few are
->>> not supported at all.
->>>
->  
->> Hi Alban,
-> 
-> Hi,
-> 
->> I've booted a Carambola2 using this (plus a custom devicetree and some
->> small changes):
->>
->> Tested-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->>
->> Just a small comment/question: Shouldn't we allow to build all the
->> devicetree files, instead of just the one that will be built-in?
->>
->> I.e., something like this:
->>
->> dtb-$(CONFIG_MATCH_ATH79_DT)   += ar9132_tl_wr1043nd_v1.dtb
->> dtb-$(CONFIG_MACH_ATH79_DT)    += ar9331_carambola2.dtb
->>
->> It should be useful to catch errors, but also in general, as the
->> devicetree is supposed to be independent of the kernel and should be
->> built separate from it.
-> 
-> Yes, that would be better, I'll fix that.
-> 
->> PS: This series depends on a previous patchset. It's usually useful to
->> mention this in the cover letter and make a poor tester's life
->> easier :)
-> 
->>> Most code changes base on the previous bug fix series:
->>> [PATCH v2 0/5] MIPS: ath79: Various small fix to prepare OF support
-> 
-> Wasn't that clear enough?
-> 
-
-Ugh, somehow I managed to miss that.
-
-Sorry for the noise,
--- 
-Ezequiel Garcia, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Paul Bolle
