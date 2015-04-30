@@ -1,69 +1,102 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/2] usb: phy: msm: Use extcon framework for VBUS and ID
- detection
-Date: Thu, 30 Apr 2015 10:16:47 -0500
-Message-ID: <20150430151647.GF1515@saruman.tx.rr.com>
-References: <1428568462-20193-1-git-send-email-ivan.ivanov@linaro.org>
- <1429601312.15866.11.camel@mm-sol.com>
- <1430393402.2400.14.camel@mm-sol.com>
-Reply-To: <balbi@ti.com>
+From: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for SMEM
+Date: Thu, 30 Apr 2015 09:38:32 -0600
+Message-ID: <55424C78.3020506@codeaurora.org>
+References: <1428795178-24312-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uTRFFR9qmiCqR05s"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430393402.2400.14.camel@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428795178-24312-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andry Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---uTRFFR9qmiCqR05s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 4/11/2015 5:32 PM, Bjorn Andersson wrote:
+> Add device tree binding documentation for the Qualcom Shared Memory
+> manager.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> ---
+>
+> Changes since v1:
+> - None
+>
+>   .../devicetree/bindings/soc/qcom/qcom,smem.txt     | 49 ++++++++++++++++++++++
+>   1 file changed, 49 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
+>
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
+> new file mode 100644
+> index 0000000..d90f839
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
+> @@ -0,0 +1,49 @@
+> +Qualcomm Shared Memory binding
+> +
+> +This binding describes the Qualcomm Shared Memory, used to share data between
+> +various subsystems and OSes in Qualcomm platforms.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be:
+> +		    "qcom,smem"
+> +
+> +- memory-region:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: handle to memory reservation for main smem memory region.
+> +
+> +- reg:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: base address and size pair for any additional memory areas
+> +		    of the shared memory.
+> +
+> +- hwspinlocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to a hwspinlock used to protect allocations from
+> +		    the shared memory
+> +
+> += EXAMPLE
+> +
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		smem_region: smem@fa00000 {
+> +			reg = <0xfa00000 0x200000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	smem@fa00000 {
+> +		compatible = "qcom,smem";
+> +
+> +		memory-region = <&smem_region>;
+> +		reg = <0xfc428000 0x4000>;
+> +
+> +		hwlocks = <&tcsr_mutex 3>;
 
-On Thu, Apr 30, 2015 at 02:30:02PM +0300, Ivan T. Ivanov wrote:
->=20
-> Ping.
->=20
-> On Tue, 2015-04-21 at 10:28 +0300, Ivan T. Ivanov wrote:
-> > On Thu, 2015-04-09 at 11:34 +0300, Ivan T. Ivanov wrote:
-> > > On recent Qualcomm platforms VBUS and ID lines are not routed to
-> > > USB PHY LINK controller. Use extcon framework to receive connect
-> > > and disconnect ID and VBUS notification.
-> > >=20
-> > > Signed-off-by: Ivan T. Ivanov ivanov@linaro.org>
-> >=20
-> > Hi Felipe,
-> >=20
-> > Did you have any comments on this and/or following patches?
+Just noticed, this looks like a typo.  The description of the field 
+above calls it "hwspinlocks".  Would to please determine which of the 
+two labels you most prefer, and change things so that label is used in 
+both the description and the example?  Thanks
 
-see testing/next
+> +	};
+>
 
---=20
-balbi
 
---uTRFFR9qmiCqR05s
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVQkdfAAoJEIaOsuA1yqREbCsP/0iY83Y8uiT8kG95KnfOX04f
-VAhwbttwAEeRGdkfv/wkVlKaPuhbYigem1LTlkHbRT3iZYhNaH+l8HIU5xIPFSny
-z/VEw4oSJcyZtjzvjNp1aDaXmklJu+iZaw8HT4xyx3pqbgtokDQdj7aN/5MhfVji
-ioJOJ0dlYr8kwJmqAQdPpHGfxPcu1mzLdPwSECML7nKl8mdaU+nFNpsu7XI1OfFM
-z8ZuEKcf6ufkbSyXaKHzhSyyThioZxGUNFWjKF1/ibxtcLbVq89FSHpAAPFvQ+YB
-udjPMX8R2jqtF+UFc7WrNrEWwtFfhNlYNyutlJP2QV4k/Gmg+ubPLw/HkPlHepN8
-+3SzZsdh6plMZ/V7ckf2sTKzKImfVvriaoEm+QDr40ka+EQ5iXYpEqeloySADncG
-uRGdcEMnKAjIc6NNEN50VZUBTLXxeYx+Gghwg8ZDb7FH5KhUZsDotats324X68c8
-8MVEeGOoWsBRh8xvEbVJe4M2FrxXA2jcPUuRv+YSBfsNmjRTLws1OLh1w9pXj3Ij
-a0p5nds2MzylPlWmh325cuIHtbAuISv57kBjQpfSda2su3jhau8cuKPjpb7a30Tp
-iIu4UeC9MrUVSCevfgPjRgY/Ne0CiPP22bfE50m1EwhbzqJ1zGZMKi4Lh6PAKUAc
-us2JR2aeCK7pFDjOepuk
-=JWog
------END PGP SIGNATURE-----
-
---uTRFFR9qmiCqR05s--
+-- 
+Jeffrey Hugo
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
