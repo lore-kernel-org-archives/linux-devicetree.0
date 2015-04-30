@@ -1,43 +1,85 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: phy: msm: Use extcon framework for VBUS and ID
- detection
-Date: Thu, 30 Apr 2015 14:30:02 +0300
-Message-ID: <1430393402.2400.14.camel@mm-sol.com>
-References: <1428568462-20193-1-git-send-email-ivan.ivanov@linaro.org>
-	 <1429601312.15866.11.camel@mm-sol.com>
+From: S Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH V3 2/3] devicetree: Add bindings for DA9063 OnKey
+Date: Thu, 30 Apr 2015 12:26:34 +0100
+Message-ID: <f922f2798ef08dbee60f1ab5fe34143bf12e266f.1430393194.git.stwiss.opensource@diasemi.com>
+References: <cover.1430393194.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429601312.15866.11.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <cover.1430393194.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-Ping.
+Add device tree bindings for the DA9063 OnKey driver
 
-On Tue, 2015-04-21 at 10:28 +0300, Ivan T. Ivanov wrote:
-> On Thu, 2015-04-09 at 11:34 +0300, Ivan T. Ivanov wrote:
-> > On recent Qualcomm platforms VBUS and ID lines are not routed to
-> > USB PHY LINK controller. Use extcon framework to receive connect
-> > and disconnect ID and VBUS notification.
-> > 
-> > Signed-off-by: Ivan T. Ivanov ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Hi Felipe,
-> 
-> Did you have any comments on this and/or following patches?
-> 
-> Regards,
-> Ivan
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+
+---
+Version History
+
+Changes in V3
+ - No change
+
+Changes in V2
+ - Remove the circular dependency comment linking patches in the main e-mail
+ - Search and replace 'keyword' with 'property' in onkey sub-node description
+ - Reformat onkey sub-node content to move the description for key-power into
+   a new optional properties sub-section so it has a more promiment position
+
+This patch applies against linux-next and v4.1-rc1 
+
+
+ Documentation/devicetree/bindings/mfd/da9063.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Documentation/devicetree/bindings/mfd/da9063.txt
+index 42c6fa6..05b21bc 100644
+--- a/Documentation/devicetree/bindings/mfd/da9063.txt
++++ b/Documentation/devicetree/bindings/mfd/da9063.txt
+@@ -5,6 +5,7 @@ DA9093 consists of a large and varied group of sub-devices (I2C Only):
+ Device                   Supply Names    Description
+ ------                   ------------    -----------
+ da9063-regulator        :               : LDOs & BUCKs
++da9063-onkey            :               : On Key
+ da9063-rtc              :               : Real-Time Clock
+ da9063-watchdog         :               : Watchdog
+ 
+@@ -51,6 +52,18 @@ Sub-nodes:
+   the DA9063. There are currently no entries in this binding, however
+   compatible = "dlg,da9063-rtc" should be added if a node is created.
+ 
++- onkey : This node defines the OnKey settings for controlling the key
++  functionality of the device. The node should contain the compatible property
++  with the value "dlg,da9063-onkey".
++
++  Optional onkey properties:
++
++  - dlg,disable-key-power : Disable power-down using a long key-press. If this
++    entry exists the OnKey driver will remove support for the KEY_POWER key
++    press. If this entry does not exist then by default the key-press
++    triggered power down is enabled and the OnKey will support both KEY_POWER
++    and KEY_SLEEP.
++
+ - watchdog : This node defines settings for the Watchdog timer associated
+   with the DA9063. There are currently no entries in this binding, however
+   compatible = "dlg,da9063-watchdog" should be added if a node is created.
+@@ -73,6 +86,11 @@ Example:
+ 			compatible = "dlg,da9063-watchdog";
+ 		};
+ 
++		onkey {
++			compatible = "dlg,da9063-onkey";
++			dlg,disable-key-power;
++		};
++
+ 		regulators {
+ 			DA9063_BCORE1: bcore1 {
+ 				regulator-name = "BCORE1";
+-- 
+end-of-patch for PATCH V3
+
