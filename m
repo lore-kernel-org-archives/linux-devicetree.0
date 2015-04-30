@@ -1,402 +1,62 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: Gateworks GW5510 support (i.MX6)
-Date: Thu, 30 Apr 2015 09:01:31 -0700
-Message-ID: <1430409691-15963-1-git-send-email-tharvey@gateworks.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [RFC PATCH 5/7] mmc: sh_mobile_sdhi: Add UHS-I mode support
+Date: Thu, 30 Apr 2015 19:04:49 +0300
+Message-ID: <554252A1.6070302@cogentembedded.com>
+References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk> <1430397136.5802.44.camel@xylophone.i.decadent.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1430397136.5802.44.camel@xylophone.i.decadent.org.uk>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ben Hutchings <ben.hutchings@codethink.co.uk>, Ian Molton <ian@mnementh.co.uk>, linux-mmc@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@lists.codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Add support for the Gateworks GW5510 board featuring:
- * i.MX6 SoC
- * up to 512MB DDR3
- * up to 2GB NAND flash
- * 1x miniPCIe socket (with USB)
- * HDMI out (micro-HDMI)
- * HDMI in (micro-HDMI) (currently supported by only vendor kernel)
- * TTL level I/O (supported by GW16111 breakout board):
-  * I2C
-  * 2x UART
-  * CAN
-  * 2x DIO (GPIO/PWM)
-  * USB OTG
+Hello.
 
-For more details see:
- http://www.gateworks.com/product/item/ventana-gw5510-single-board-computer
+On 04/30/2015 03:32 PM, Ben Hutchings wrote:
 
-Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile            |   2 +
- arch/arm/boot/dts/imx6dl-gw551x.dts   |  19 +++
- arch/arm/boot/dts/imx6q-gw551x.dts    |  19 +++
- arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 281 ++++++++++++++++++++++++++++++++++
- 4 files changed, 321 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-gw551x.dts
- create mode 100644 arch/arm/boot/dts/imx6q-gw551x.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+> Implement voltage switch, supporting modes up to SDR-50.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a1c776b..1b17f2e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -254,6 +254,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-gw52xx.dtb \
- 	imx6dl-gw53xx.dtb \
- 	imx6dl-gw54xx.dtb \
-+	imx6dl-gw551x.dtb \
- 	imx6dl-gw552x.dtb \
- 	imx6dl-hummingboard.dtb \
- 	imx6dl-nitrogen6x.dtb \
-@@ -280,6 +281,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-gw53xx.dtb \
- 	imx6q-gw5400-a.dtb \
- 	imx6q-gw54xx.dtb \
-+	imx6q-gw551x.dtb \
- 	imx6q-gw552x.dtb \
- 	imx6q-hummingboard.dtb \
- 	imx6q-nitrogen6x.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-gw551x.dts b/arch/arm/boot/dts/imx6dl-gw551x.dts
-new file mode 100644
-index 0000000..64d31d0
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-gw551x.dts
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright 2014 Gateworks Corporation
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-gw551x.dtsi"
-+
-+/ {
-+	model = "Gateworks Ventana i.MX6 DualLite/Solo GW551X";
-+	compatible = "gw,imx6dl-gw551x", "gw,ventana", "fsl,imx6dl";
-+};
-diff --git a/arch/arm/boot/dts/imx6q-gw551x.dts b/arch/arm/boot/dts/imx6q-gw551x.dts
-new file mode 100644
-index 0000000..d3d9a97
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-gw551x.dts
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright 2014 Gateworks Corporation
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include "imx6q.dtsi"
-+#include "imx6qdl-gw551x.dtsi"
-+
-+/ {
-+	model = "Gateworks Ventana i.MX6 Dual/Quad GW551X";
-+	compatible = "gw,imx6q-gw551x", "gw,ventana", "fsl,imx6q";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-new file mode 100644
-index 0000000..6a993337
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-@@ -0,0 +1,281 @@
-+/*
-+ * Copyright 2014 Gateworks Corporation
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	/* these are used by bootloader for disabling nodes */
-+	aliases {
-+		led0 = &led0;
-+		nand = &gpmi;
-+		ssi0 = &ssi1;
-+		usb0 = &usbh1;
-+		usb1 = &usbotg;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttymxc1,115200";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led0: user1 {
-+			label = "user1";
-+			gpios = <&gpio4 7 GPIO_ACTIVE_LOW>;
-+			default-state = "on";
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	memory {
-+		reg = <0x10000000 0x20000000>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_5p0v: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "5P0V";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_usb_h1_vbus: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "usb_h1_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_usb_otg_vbus: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "okay";
-+};
-+
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	ddc-i2c-bus = <&i2c3>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	eeprom1: eeprom@50 {
-+		compatible = "atmel,24c02";
-+		reg = <0x50>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom2: eeprom@51 {
-+		compatible = "atmel,24c02";
-+		reg = <0x51>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom3: eeprom@52 {
-+		compatible = "atmel,24c02";
-+		reg = <0x52>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom4: eeprom@53 {
-+		compatible = "atmel,24c02";
-+		reg = <0x53>;
-+		pagesize = <16>;
-+	};
-+
-+	gpio: pca9555@23 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x23>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	rtc: ds1672@68 {
-+		compatible = "dallas,ds1672";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+
-+	gpio_exp: pca9555@24 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x24>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	imx6qdl-gw51xx {
-+		pinctrl_flexcan1: flexcan1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x1b0b1
-+				MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x1b0b1
-+				MX6QDL_PAD_GPIO_9__GPIO1_IO09		0x4001b0b0 /* CAN_STBY */
-+			>;
-+		};
-+
-+		pinctrl_gpio_leds: gpioledsgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_ROW0__GPIO4_IO07   0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_gpmi_nand: gpminandgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
-+				MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
-+				MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
-+				MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
-+				MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
-+				MX6QDL_PAD_NANDF_CS1__NAND_CE1_B	0xb0b1
-+				MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
-+				MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
-+				MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
-+				MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
-+				MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
-+				MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
-+				MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
-+				MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
-+				MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
-+				MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
-+			>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
-+				MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
-+			>;
-+		};
-+
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-+				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-+			>;
-+		};
-+
-+		pinctrl_i2c3: i2c3grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
-+				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
-+			>;
-+		};
-+
-+		pinctrl_pcie: pciegrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0 /* PCIE RST */
-+			>;
-+		};
-+
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
-+				MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_uart3: uart3grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
-+				MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_usbotg: usbotggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
-+			>;
-+		};
-+	};
-+};
--- 
-1.9.1
+> Based on work by Shinobu Uehara, Rob Taylor, William Towle and Ian Molton.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This uses two voltage regulators, one external and one on the pfc.
+
+> Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+> ---
+>   drivers/mmc/host/sh_mobile_sdhi.c |   48 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 48 insertions(+)
+
+> diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+> index 92a58c6007fe..c8538a256e22 100644
+> --- a/drivers/mmc/host/sh_mobile_sdhi.c
+> +++ b/drivers/mmc/host/sh_mobile_sdhi.c
+[...]
+> @@ -148,6 +150,41 @@ static void sh_mobile_sdhi_set_clk_div(struct platform_device *pdev, int clk)
+>   	}
+>   }
+>
+> +static int sh_mobile_sdhi_start_signal_voltage_switch(
+> +	struct tmio_mmc_host *host, unsigned char signal_voltage)
+> +{
+> +	struct sh_mobile_sdhi *priv = host_to_priv(host);
+> +	int min_uV, max_uV;
+> +	int ret;
+> +
+> +	if (signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
+> +		min_uV = 2700000;
+> +		max_uV = 3600000;
+> +	} else if (signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
+> +		min_uV = 1700000;
+> +		max_uV = 1950000;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+
+    The above is asking to be a *switch* statement.
+
+[...]
+
+WBR, Sergei
+
