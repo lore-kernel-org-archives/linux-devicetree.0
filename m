@@ -1,115 +1,51 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC 00/12] On-demand device registration
-Date: Thu, 30 Apr 2015 09:44:27 +0200
-Message-ID: <5541DD5B.5090604@ahsoftware.de>
-References: <1429886848-5843-1-git-send-email-tomeu.vizoso@collabora.com> <553ACE96.2040804@ahsoftware.de> <CAAObsKAa_yEwcWQTJvAidwnM2h7UAcgwa2dUBtfYRFtWHb7Kng@mail.gmail.com> <553FCECB.7040005@ahsoftware.de> <CAAObsKBQMY8NfzN3bfiDuy=QOsSV281punJGuEUPfMRRBwoA+g@mail.gmail.com> <5540A883.8060708@ahsoftware.de>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCHv2] power_supply: Add support for Richtek rt9455 battery charger
+Date: Thu, 30 Apr 2015 16:53:56 +0900
+Message-ID: <CAJKOXPfb6-HY8XP-nqPziC=M-+w8PwLF-zgGr9HXiCotY=+XUg@mail.gmail.com>
+References: <1430338406-24012-1-git-send-email-anda-maria.nicolae@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5540A883.8060708@ahsoftware.de>
+In-Reply-To: <1430338406-24012-1-git-send-email-anda-maria.nicolae@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <marcheu@chromium.org>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Cc: sre@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 29.04.2015 um 11:46 schrieb Alexander Holler:
-> Am 29.04.2015 um 08:58 schrieb Tomeu Vizoso:
->> On 28 April 2015 at 20:17, Alexander Holler <holler@ahsoftware.de> wrote:
->>> Am 28.04.2015 um 14:49 schrieb Tomeu Vizoso:
->>>>
->>>> On 25 April 2015 at 01:15, Alexander Holler <holler@ahsoftware.de>
->>>> wrote:
->>>>>
->>>>> Am 24.04.2015 um 16:47 schrieb Tomeu Vizoso:
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> while reading the thread [0] that Alexander Holler started with his
->>>>>> series to make probing order deterministic, it occurred to me that
->>>>>> it should
->>>>>> be possible to achieve the same by probing devices as they are
->>>>>> referenced by
->>>>>> other devices.
->>>>>>
->>>>>> This basically reuses the information that is already embedded in the
->>>>>> probe() implementations, saving us from refactoring existing
->>>>>> drivers or
->>>>>> adding information to DTBs.
->>>>>>
->>>>>> The main issue I see is that the registration code path in some
->>>>>> subsystems may not be reentrant, so some refactoring of the
->>>>>> locking will be
->>>>>> needed. In my testing I have found this problem with regulators,
->>>>>> as the
->>>>>> supply of a regulator might end up being registered during the
->>>>>> registration
->>>>>> of the first one.
->>>>>>
->>>>>> Something I'm not completely happy with is that I have had to move
->>>>>> the
->>>>>> population of the device tree after all platform drivers have been
->>>>>> registered. Otherwise I don't see how I could register drivers on
->>>>>> demand as
->>>>>> we don't have yet each driver's compatible strings.
->>>>>>
->>>>>> I have done my testing on a Tegra124-based Chromebook, and these
->>>>>> patches
->>>>>> were enough to eliminate all the deferred probes.
->>>>>
->>>>>
->>>>> First you have to solve a problem which is totally unrelated to DT or
->>>>> ACPI or x86 or ARM:
->>>>>
->>>>> I think as long as drivers don't register themself whithout any side
->>>>> effect, this problem isn't solvable. In order to make an ordered
->>>>> list of
->>>>> drivers to start, you need to know which drivers are actually
->>>>> available.
->>>>
->>>>
->>>> Yeah, I kind of side-stepped that issue by waiting until all drivers
->>>> have been registered before registering devices. I think someone
->>>> suggested doing so in your thread (maybe Grant?).
->>>
->>>
->>> That doesn't work. As said above, several drivers doing a lot more
->>> than just
->>> registering in their initcall. They might even crash if some
->>> prerequisits
->>> aren't given. And several of these prerequisits (init orders) are
->>> hardcoded
->>> by various means.
->>
->> But aren't those dependencies being taken care currently by the
->> initcall level the driver is placed in? That remains the same in this
->> approach.
+2015-04-30 5:13 GMT+09:00 Anda-Maria Nicolae <anda-maria.nicolae@intel.com>:
+> Based on the datasheet found here:
+> http://www.richtek.com/download_ds.jsp?p=RT9455
 >
-> In short, no. There are various very ugly things done in several drivers
-> to enforce some order.
+> Updates from the previous version:
+> - replaced license GPLv2 with GPL
+> - replaced vendor prefix rt with richtek
+> - replaced uppercase properties names from devicetree with lowercase separated by dash properties names
+> - replaced I/O read/write API with regmap_read/write and regmap_field_read/write
+> - used kernel multiline comment
+> - used DELAYED_WORK and scheduled the works in system_power_efficient_wq. It is high probability that the device is in suspend state while charging (i.e. the user leaves the device to charge during night) and it is needed that the scheduled works to be executed as planned.
 
-To explain it a bit more:
+I think when device is suspended (e.g. to RAM) no work will ever be
+executed. The timers (for delayed work) will not wake up the device...
+RTC could wake but this is different story. My proposal of deferred
+timers is affected by idle CPU time. Are you sure that you want to
+wake up from the system suspend?
 
-The case with the regulator you've described above is just one of these 
-ugly things done on some driver initcalls. That's why I've decided to 
-introduce a new initcall level which only contains drivers which don't 
-have any side effect but just registering themself. Ideally all drivers 
-would end up in that level, and thus the special level would not be 
-necessary at all. Because this means that several drivers have to 
-change, which is a lot of work, an intermediate workaround is to make a 
-whitelist. That's easier than a blacklist which would mean you have to 
-examine every driver. And that whitelist is exactly what I did by 
-introducing those "well done" drivers.
+> - replaced struct power_supply_desc rt9455_charger_desc with static const struct power_supply_desc rt9455_charger_desc
+> - replaced if (IS_ERR_OR_NULL(info->charger)) with if (IS_ERR(info->charger))
+> - replaced {"RTK9455", 0} with { "RTK9455", 0 }
+> - removed .owner = THIS_MODULE
+>
+> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
 
-And just in case of, I haven't looked at your patches at all. I've just 
-read the introductory mail and the subjects of the patches and then 
-concluded what I've written.
+You missed some of my comments. I mentioned wrong error paths around
+put_usb_phy in probe. They do not seem to be fixed...
 
-That means if you've a special use case in mind, your solution might 
-work. But as an overall solution the problem with identifying drivers 
-(mapping initcalls to drivers) has to be solved (which I've tried with 
-those "well done" driver list).
+Just one hint - mostly new bindings are posted in separate patches at
+the beginning of the patchset. I actually don't mind. but separating
+them will probably give you higher chance of review from DT people.
+This is also mentioned in:
+Documentation/devicetree/bindings/submitting-patches.txt
 
-Regards,
-
-Alexander Holler
+Best regards,
+Krzysztof
