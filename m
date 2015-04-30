@@ -1,24 +1,15 @@
 From: Thomas.Betker@rohde-schwarz.com
 Subject: Re: [PATCH 0/3] Using SPI NOR flah on sunxi.
 Date: Thu, 30 Apr 2015 18:30:32 +0200
-Message-ID: <OF23B05612.4290AF80-ONC1257E37.00589292-C1257E37.005AB106__11501.5413532548$1430412040$gmane$org@rohde-schwarz.com>
+Message-ID: <OF23B05612.4290AF80-ONC1257E37.00589292-C1257E37.005AB106__25095.4002993696$1430412380$gmane$org@rohde-schwarz.com>
 References: <cover.1430403750.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1430403750.git.hramrach@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Michal Suchanek <hramrach@gmail.com>
-Cc: linux-mtd <linux-mtd-bounces@lists.infradead.org>, devicetree@vger.kernel.org, Marek Vasut <marex@denx.de>, "grmoore@altera.com" <grmoore@altera.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Woodhouse <dwmw2@infradead.org>, Rafa?? Mi??ecki <zajec5@gmail.com>, linux-kernel@vger.kernel.org, Huang Shijie <b32955@freescale.com>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Ben Hutchings <ben@decadent.org.uk>, Alison Chaiken <alison_chaiken@mentor.com>, "Bean Huo ????????? (beanhuo)" <beanhuo@micron.com>
+Cc: Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, "Bean Huo ????????? (beanhuo)" <beanhuo@micron.com>, Ben Hutchings <ben@decadent.org.uk>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Kumar Gala <galak@codeaurora.org>, "grmoore@altera.com" <grmoore@altera.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-mtd <linux-mtd-bounces@lists.infradead.org>, linux-sunxi@googlegroups.com, Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rafa?? Mi??ecki <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 Hello Michal:
@@ -37,7 +28,3 @@ than 64 bytes, filling and draining the FIFO multiple times if neccessary?
 
 Just asking,
 Thomas
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
