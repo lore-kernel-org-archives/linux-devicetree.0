@@ -1,135 +1,74 @@
-From: S Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH V3 3/3] mfd: da9063: MFD support for OnKey driver
-Date: Thu, 30 Apr 2015 12:26:34 +0100
-Message-ID: <639fd177d5ddd4ce80df45f9d774cc971b286ef9.1430393194.git.stwiss.opensource@diasemi.com>
-References: <cover.1430393194.git.stwiss.opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1430393194.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V4 0/3] OPP: Introduce OPP (V2) bindings
+Date: Thu, 30 Apr 2015 17:37:58 +0530
+Message-ID: <cover.1430394884.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+Hi Guys (Specially Stephen),
 
-Add MFD support for the DA9063 OnKey driver
+These are dangling since a long time now and I am really getting discouraged to
+take these further. Not many people have reviewed them, apart from few nice
+folks.
 
+One last try ..
 
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+I have tried to take care of most of the concerns you had Stephen, please let me
+know if they workout for you or you don't want these bindings to take care of
+qcom stuff at all. Then we can keep them simple and carry on. Ofcourse we would
+like to handle every platform here :)
 
----
-Version History
+V3->V4:
+- Dropped code changes as we are still concerned about bindings.
+- separated out into three patches, some of which might be NAK'd. :)
+- The first patch presents basic OPP stuff that was reviewed earlier. It also
+  has support for multiple regulators, with values for both current and voltage.
+- Second patch is based on a special concern that Stephen had about multiple OPP
+  tables, one of which the parsing code will select at runtime.
+- Third one separates out 'opp-next' or Intermediate freq support as Mike T. had
+  few concerns over it. He wanted the clock driver to take care of this and so
+  do not want it to be passed by DT and used by cpufreq. Also, there were
+  concerns like the platform may not want to choose intermediate frequency as a
+  target frequency for longer runs, which wasn't prevented in earlier bindings.
+  And so it is kept separate to be NAK'd quietly, without much disturbances.
 
-Changes in V3
- - The MFD code was originally in [PATCH V2 1/2]. This is now been moved into
-   this patch [PATCH V3 3/3].
- - Whitespace cleanup
+  ---------------x-------------------x------------------------
 
-This patch applies against linux-next and v4.1-rc1 
+Current OPP (Operating performance point) DT bindings are proven to be
+insufficient at multiple instances.
 
+The shortcomings we are trying to solve here:
 
- drivers/mfd/da9063-core.c        | 54 ++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/da9063/pdata.h |  1 +
- 2 files changed, 55 insertions(+)
+- Getting clock sharing information between CPUs. Single shared clock vs
+  independent clock per core vs shared clock per cluster.
 
-diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
-index facd361..af841c1 100644
---- a/drivers/mfd/da9063-core.c
-+++ b/drivers/mfd/da9063-core.c
-@@ -60,6 +60,7 @@ static struct resource da9063_rtc_resources[] = {
- 
- static struct resource da9063_onkey_resources[] = {
- 	{
-+		.name	= "ONKEY",
- 		.start	= DA9063_IRQ_ONKEY,
- 		.end	= DA9063_IRQ_ONKEY,
- 		.flags	= IORESOURCE_IRQ,
-@@ -97,6 +98,7 @@ static const struct mfd_cell da9063_devs[] = {
- 		.name		= DA9063_DRVNAME_ONKEY,
- 		.num_resources	= ARRAY_SIZE(da9063_onkey_resources),
- 		.resources	= da9063_onkey_resources,
-+		.of_compatible = "dlg,da9063-onkey",
- 	},
- 	{
- 		.name		= DA9063_DRVNAME_RTC,
-@@ -109,12 +111,64 @@ static const struct mfd_cell da9063_devs[] = {
- 	},
- };
- 
-+static int da9063_clear_fault_log(struct da9063 *da9063)
-+{
-+	int ret = 0;
-+	int fault_log = 0;
-+
-+	ret = regmap_read(da9063->regmap, DA9063_REG_FAULT_LOG, &fault_log);
-+	if (ret < 0) {
-+		dev_err(da9063->dev, "Cannot read FAULT_LOG.\n");
-+		return -EIO;
-+	}
-+
-+	if (fault_log) {
-+		if (fault_log & DA9063_TWD_ERROR)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_TWD_ERROR\n");
-+		if (fault_log & DA9063_POR)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_POR\n");
-+		if (fault_log & DA9063_VDD_FAULT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_VDD_FAULT\n");
-+		if (fault_log & DA9063_VDD_START)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_VDD_START\n");
-+		if (fault_log & DA9063_TEMP_CRIT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_TEMP_CRIT\n");
-+		if (fault_log & DA9063_KEY_RESET)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_KEY_RESET\n");
-+		if (fault_log & DA9063_NSHUTDOWN)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_NSHUTDOWN\n");
-+		if (fault_log & DA9063_WAIT_SHUT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_WAIT_SHUT\n");
-+	}
-+
-+	ret = regmap_write(da9063->regmap,
-+			   DA9063_REG_FAULT_LOG,
-+			   fault_log);
-+	if (ret < 0)
-+		dev_err(da9063->dev,
-+			"Cannot reset FAULT_LOG values %d\n", ret);
-+
-+	return ret;
-+}
-+
- int da9063_device_init(struct da9063 *da9063, unsigned int irq)
- {
- 	struct da9063_pdata *pdata = da9063->dev->platform_data;
- 	int model, variant_id, variant_code;
- 	int ret;
- 
-+	ret = da9063_clear_fault_log(da9063);
-+	if (ret < 0)
-+		dev_err(da9063->dev, "Cannot clear fault log\n");
-+
- 	if (pdata) {
- 		da9063->flags = pdata->flags;
- 		da9063->irq_base = pdata->irq_base;
-diff --git a/include/linux/mfd/da9063/pdata.h b/include/linux/mfd/da9063/pdata.h
-index 95c8742..612383b 100644
---- a/include/linux/mfd/da9063/pdata.h
-+++ b/include/linux/mfd/da9063/pdata.h
-@@ -103,6 +103,7 @@ struct da9063;
- struct da9063_pdata {
- 	int				(*init)(struct da9063 *da9063);
- 	int				irq_base;
-+	bool				key_power;
- 	unsigned			flags;
- 	struct da9063_regulators_pdata	*regulators_pdata;
- 	struct led_platform_data	*leds_pdata;
+- Support for specifying current levels along with voltages.
+
+- Support for multiple regulators.
+
+- Support for turbo modes.
+
+- Other per OPP settings: transition latencies, disabled status, etc.?
+
+- Expandability of OPPs in future.
+
+This patchset shows a path forward to get all these fixed. Please give some
+comments this time and lets get this done.
+
+--
+viresh
+
+Viresh Kumar (3):
+  OPP: Redefine bindings to overcome shortcomings
+  OPP: Allow multiple OPP tables to be passed via DT
+  OPP: Add 'opp-next' in operating-points-v2 bindings
+
+ Documentation/devicetree/bindings/power/opp.txt | 501 +++++++++++++++++++++++-
+ 1 file changed, 497 insertions(+), 4 deletions(-)
+
 -- 
-end-of-patch for PATCH V3
+2.3.0.rc0.44.ga94655d
+
