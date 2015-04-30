@@ -1,80 +1,89 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Thu, 30 Apr 2015 09:57:46 -0700
-Message-ID: <CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q@mail.gmail.com>
-References: <1430259045-19012-1-git-send-email-lho@apm.com>
-	<7128860.xHITr0VFap@wuerfel>
-	<20150430094134.GD3488@pd.tnic>
-	<10227049.9i19zDi2y3@wuerfel>
-	<20150430130028.GF3488@pd.tnic>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RFC PATCH 00/14] ASoC: qcom: add support to apq8016 audio
+Date: Thu, 30 Apr 2015 18:15:48 +0100
+Message-ID: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150430130028.GF3488-fF5Pk5pvG8Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi All,
 
->> I've looked at the driver in a little more detail now, and found that
->> it is a weird conglomerate at the moment. Basically you have four
->> drivers in one file here, appended to one another, but not sharing
->> any common functions except the module_init() that registers the four
->> drivers. This is what Rob was referring to when he suggested splitting
->> it up into four files, and these would in total be smaller than the
->> common file (by being able to use module_platform_driver()).
->>
->> However, there is another dimension to this, which supports your point
->> about making it one driver for the platform: The split into four drivers
->> is completely artificial, because all four use the same IRQs and
->> implement four separate interrupt handlers for it (using IRQF_SHARED),
->> each handling only the events they are interested in. Similarly, they
->> all access the same register set ("pcperror"), aside from having their
->> own separate registers, and they use the "syscon" framework to get to
->> the registers.  This seems to be an inferior design, as the pcperror
->
-> Doh, now that you mention it...
->
-> So why isn't this thing registering a single IRQ handler which
-> multiplexes between the _check routines depending on the bits set in
-> PCPHPERRINTSTS/MEMERRINTSTS? (L3 alternatively, ctx->dev_csr + L3C_ESR).
->
-> This would really make it a single driver which acts according to the
-> bits set in those error registers. It can't get any simpler than that.
->
-> Loc?
+This patchset adds apq8016 audio support into lpass driver. Existing Lpass
+driver can not be used as-it-is for apq8016 as it contains code specific to
+ipq806x. Also the driver only supports single i2s port, single dma channel and
+single bitclk control.
 
-I had read all the emails interaction. Yes I can write a single EDAC
-driver. But I actually have multiple instances and single instance of
-the same IP's. For example, I have 4 DDR controllers, 4 CPU domains,
-one L3 and one SoC. If you can suggest to me how this would work with
-devicetree, I might be able to make it works. But from HW point of
-view (take the memory controller as an example), there is really 4
-hardware blocks and some shared IP's block for status. It is much
-simple representation with multiple instance of the driver. In
-addition, should one day we have 6 memory controllers, I would just
-add two more instances in the DT node.
+APQ8016 has 4 MI2S( Primary, Secondary, Tertiary, Quaternary) which can be routed
+to internal wcd codec or external codecs. This routing is controlled by 2 mux
+registers.
 
-I think we should first agreed on the DT binding and let's not worry
-about APEI. Then, whether we have one file or multiple file. Again,
-the HW consist of:
+This patch series firstly re-organizes the lpass driver such that the SOC
+specific bits are moved away from the driver. And secondly the SOC specifics
+are now passed as lpass variant data which would include various register
+offsets, dma channel allocations and SOC specific clock handling.
 
-1. One top level interrupt and status registers
-2. CSW, MCB A and MCB B for detection of any active memory controllers
-3. 4 individual memory controller instance
-4. 4 CPU domain instance with its own individual L2 registers
-5. Each CPU has instance own L1
-6. One L3 instance
-7. One SoC instance
+Finally the patchset add apq8016 lpass and machine driver.
 
-As for as what is useful, we find that the memory controller and the
-L1 and L2 are useful as it provides info for errors - for HW/system
-debugging as well as margin of DDR.
+This patchset also has two trivial cleanup patches which are to do with
+redundant checks and removing unnecessary header files.
 
--Loc
+All these patches are tested for HDMI audio via adv7533 bridge and Analog audio
+on APQ8016-SBC and msm8916-mtp boards. I dont have access to ipq806x boards to
+test these patches.
+
+This is very first version of the patches which was developed with very
+mimimal/no access to IP documentation. I would like to get your opinon on the
+over all approch.
+
+
+Kenneth/Patrick,
+	Could you please try these patches on storm board?
+
+Thanks,
+srini
+
+
+Srinivas Kandagatla (14):
+  ASoC: qcom: Remove redundant error check.
+  ASoC: qcom: remove unnecessary header files
+  ASoC: qcom: move ipq806x specific bits out of lpass driver.
+  ASoC: qcom: remove hardcoded i2s port number
+  ASoC: qcom: remove hardcoded dma channel
+  ASoC: qcom: support bitclk and osrclk per i2s port
+  ASoC: qcom: add no osr clk flag to lpass variant
+  ASoC: qcom: add dma channel control offset to variant data
+  ASoC: qcom: Add ability to handle interrupts per dma channel
+  ASoC: qcom: add bit map to track static dma channel allocations
+  ASoC: qcom: Add apq8016 lpass driver support
+  ASoC: qcom: add apq8016 sound card support
+  ASoC: qcom: Document apq8016 bindings.
+  ASoC: qcom: document apq8016 machine driver bindings
+
+ .../bindings/sound/qcom,apq8016-machine.txt        |  61 ++++++
+ .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  13 +-
+ sound/soc/qcom/Kconfig                             |  25 ++-
+ sound/soc/qcom/Makefile                            |   5 +
+ sound/soc/qcom/apq8016.c                           | 214 ++++++++++++++++++
+ sound/soc/qcom/lpass-apq8016.c                     | 243 +++++++++++++++++++++
+ sound/soc/qcom/lpass-cpu.c                         | 234 ++++++++++----------
+ sound/soc/qcom/lpass-ipq806x.c                     |  95 ++++++++
+ sound/soc/qcom/lpass-lpaif-ipq806x.h               | 172 ---------------
+ sound/soc/qcom/lpass-lpaif-reg.h                   | 167 ++++++++++++++
+ sound/soc/qcom/lpass-platform.c                    | 197 +++++++++++------
+ sound/soc/qcom/lpass.h                             |  54 ++++-
+ 12 files changed, 1121 insertions(+), 359 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8016-machine.txt
+ create mode 100644 sound/soc/qcom/apq8016.c
+ create mode 100644 sound/soc/qcom/lpass-apq8016.c
+ create mode 100644 sound/soc/qcom/lpass-ipq806x.c
+ delete mode 100644 sound/soc/qcom/lpass-lpaif-ipq806x.h
+ create mode 100644 sound/soc/qcom/lpass-lpaif-reg.h
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
