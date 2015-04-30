@@ -1,56 +1,70 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v3 0/6] Add dwc3 usb3 DT node and various phy cleanup
-Date: Thu, 30 Apr 2015 14:30:46 +0100
-Message-ID: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v3 2/6] ARM: DT: STi: STiH407: Add dwc3 usb3 DT node.
+Date: Thu, 30 Apr 2015 14:30:48 +0100
+Message-ID: <1430400652-3366-3-git-send-email-peter.griffin@linaro.org>
+References: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, balbi@ti.com, srinivas.kandagatla@gmail.com
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Now that both usb2 and usb3 phy drivers, and also the ST dwc3 glue code
+are all present upstream, we can add the dwc3 DT node and have a working
+usb3 controller on stih407-b2120 and stih410-b2020.
 
-This series primarily adds the dwc3 DT node which activates the usb3 controller on
-the stih407-b2120, stih410-b2120 and stih418-b2199 platforms.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+---
+ arch/arm/boot/dts/stih407-family.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-As part of getting this working I noticed an error with the picophyreset which 
-stops the controller working which I've also fixed.
-
-regards,
-
-Peter.
-
-Changes in v3:
-- Add miphys8lp options properties for stih418 (Pete)
-- Add support for stih418-b2199 (Max)
-- Only enable usb3 controller in the board file (Max)
-- Fix superflous '\n' (Lee)
-- Rebase series on v4.1-rc1 (Pete)
-
-NB: Since v2 some patches were taken into the phy and ahci trees which I've now
-removed from the series.
-
-Changes in v2:
-- Update commit to explicitly say no ABI breakage (Rob)
-- Rebase series on v4.0-rc6 (Pete)
-- Collect up Acks (Pete)
-
-Peter Griffin (6):
-  ARM: DT: STi: STiH407: Update picophyreset for the usb3 controllers
-    usb2 phy
-  ARM: DT: STi: STiH407: Add dwc3 usb3 DT node.
-  usb: dwc3: dwc3-st: Update the incorrect DT dwc3 example.
-  ARM: DT: STi: stihxxx-b2120: Enable USB3 port on stih407-b2120 and
-    stih410-b2120
-  ARM: DT: STi: STiH418: Add miphy28lp optional oscillator clock
-    properties
-  ARM: DT: STi: STiH418: Enable USB3 port on stih418-b2199.
-
- Documentation/devicetree/bindings/usb/dwc3-st.txt |  7 +++---
- arch/arm/boot/dts/stih407-family.dtsi             | 30 ++++++++++++++++++++++-
- arch/arm/boot/dts/stih418-b2199.dts               | 15 ++++++++++++
- arch/arm/boot/dts/stihxxx-b2120.dtsi              |  5 ++++
- 4 files changed, 52 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 186412d..821598e 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -7,6 +7,7 @@
+  * publishhed by the Free Software Foundation.
+  */
+ #include "stih407-pinctrl.dtsi"
++#include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/reset-controller/stih407-resets.h>
+ / {
+ 	#address-cells = <1>;
+@@ -336,5 +337,32 @@
+ 				resets = <&softreset STIH407_MIPHY2_SOFTRESET>;
+ 			};
+ 		};
++
++		st_dwc3: dwc3@8f94000 {
++			compatible	= "st,stih407-dwc3";
++			reg		= <0x08f94000 0x1000>, <0x110 0x4>;
++			reg-names	= "reg-glue", "syscfg-reg";
++			st,syscfg	= <&syscfg_core>;
++			resets		= <&powerdown STIH407_USB3_POWERDOWN>,
++					  <&softreset STIH407_MIPHY2_SOFTRESET>;
++			reset-names	= "powerdown", "softreset";
++			#address-cells	= <1>;
++			#size-cells	= <1>;
++			pinctrl-names	= "default";
++			pinctrl-0	= <&pinctrl_usb3>;
++			ranges;
++
++			status = "disabled";
++
++			dwc3: dwc3@9900000 {
++				compatible	= "snps,dwc3";
++				reg		= <0x09900000 0x100000>;
++				interrupts	= <GIC_SPI 155 IRQ_TYPE_NONE>;
++				dr_mode		= "host";
++				phy-names	= "usb2-phy", "usb3-phy";
++				phys		= <&usb2_picophy0>,
++						  <&phy_port2 PHY_TYPE_USB3>;
++			};
++		};
+ 	};
+ };
 -- 
 1.9.1
