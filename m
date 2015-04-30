@@ -1,117 +1,94 @@
-From: "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [RESEND PATCH] NFC: trf7970a: Handle extra byte in response to Type 5 RMB commands
-Date: Wed, 29 Apr 2015 21:08:30 -0700
-Message-ID: <1430366910-21712-1-git-send-email-mgreer@animalcreek.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3 v5] dt/bindings: Add binding for the BCM2835 mailbox driver
+Date: Thu, 30 Apr 2015 10:23:53 +0530
+Message-ID: <CABb+yY3by37AGmVHfNH2RZF8KcU3GUYDJj_xQZTGCBDb2PsHQg@mail.gmail.com>
+References: <1430173644-19099-2-git-send-email-eric@anholt.net>
+	<1430253868-11138-1-git-send-email-eric@anholt.net>
+	<55403446.1040207@wwwdotorg.org>
+	<87vbgeq478.fsf@eliezer.anholt.net>
+	<55416C35.1030001@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55416C35.1030001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current versions of the trf7970a has an erratum where it returns
-an extra byte in the response to 'Read Multiple Block' (RMB) commands.
-This command is issued to Type 5 tags (i.e., ISO/IEC 15693 tags) by
-the neard daemon.
-
-To handle this, define a new Device Tree property,
-'t5t-rmb-extra-byte-quirk', which indicates that the associated
-trf7970a device has this erratum.  The trf7970a device driver
-will then ensure that the response length to RMB commands is
-reduced by one byte (for devices with the erratum).
-
-Signed-off-by: Mark A. Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
----
- .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++++
- drivers/nfc/trf7970a.c                             | 23 ++++++++++++++++++----
- 2 files changed, 23 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-index 7c89ca2..32b35a0 100644
---- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-@@ -18,6 +18,9 @@ Optional SoC Specific Properties:
-   "IRQ Status Read" erratum.
- - en2-rf-quirk: Specify that the trf7970a being used has the "EN2 RF"
-   erratum.
-+- t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
-+  where an extra byte is returned by Read Multiple Block commands issued
-+  to Type 5 tags.
- 
- Example (for ARM-based BeagleBone with TRF7970A on SPI1):
- 
-@@ -39,6 +42,7 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
- 		autosuspend-delay = <30000>;
- 		irq-status-read-quirk;
- 		en2-rf-quirk;
-+		t5t-rmb-extra-byte-quirk;
- 		status = "okay";
- 	};
- };
-diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-index aa6a333..85b4d86 100644
---- a/drivers/nfc/trf7970a.c
-+++ b/drivers/nfc/trf7970a.c
-@@ -149,6 +149,7 @@
-  */
- #define TRF7970A_QUIRK_IRQ_STATUS_READ		BIT(0)
- #define TRF7970A_QUIRK_EN2_MUST_STAY_LOW	BIT(1)
-+#define TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE	BIT(2)
- 
- /* Direct commands */
- #define TRF7970A_CMD_IDLE			0x00
-@@ -446,6 +447,7 @@ struct trf7970a {
- 	u8				md_rf_tech;
- 	u8				tx_cmd;
- 	bool				issue_eof;
-+	bool				adjust_resp_len;
- 	int				en2_gpio;
- 	int				en_gpio;
- 	struct mutex			lock;
-@@ -626,6 +628,11 @@ static void trf7970a_send_upstream(struct trf7970a *trf)
- 		trf->aborting = false;
- 	}
- 
-+	if (trf->adjust_resp_len) {
-+		skb_trim(trf->rx_skb, trf->rx_skb->len - 1);
-+		trf->adjust_resp_len = false;
-+	}
-+
- 	trf->cb(trf->ddev, trf->cb_arg, trf->rx_skb);
- 
- 	trf->rx_skb = NULL;
-@@ -1429,10 +1436,15 @@ static int trf7970a_per_cmd_config(struct trf7970a *trf, struct sk_buff *skb)
- 			trf->iso_ctrl = iso_ctrl;
- 		}
- 
--		if ((trf->framing == NFC_DIGITAL_FRAMING_ISO15693_T5T) &&
--				trf7970a_is_iso15693_write_or_lock(req[1]) &&
--				(req[0] & ISO15693_REQ_FLAG_OPTION))
--			trf->issue_eof = true;
-+		if (trf->framing == NFC_DIGITAL_FRAMING_ISO15693_T5T) {
-+			if (trf7970a_is_iso15693_write_or_lock(req[1]) &&
-+					(req[0] & ISO15693_REQ_FLAG_OPTION))
-+				trf->issue_eof = true;
-+			else if ((trf->quirks &
-+					TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE) &&
-+				 (req[1] == ISO15693_CMD_READ_MULTIPLE_BLOCK))
-+				trf->adjust_resp_len = true;
-+		}
- 	}
- 
- 	return 0;
-@@ -1992,6 +2004,9 @@ static int trf7970a_probe(struct spi_device *spi)
- 		return ret;
- 	}
- 
-+	if (of_property_read_bool(np, "t5t-rmb-extra-byte-quirk"))
-+		trf->quirks |= TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE;
-+
- 	if (of_property_read_bool(np, "irq-status-read-quirk"))
- 		trf->quirks |= TRF7970A_QUIRK_IRQ_STATUS_READ;
- 
--- 
-2.2.1
-
+On Thu, Apr 30, 2015 at 5:11 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 04/29/15 10:39, Eric Anholt wrote:
+>>
+>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+>>
+>>> On 04/28/2015 02:44 PM, Eric Anholt wrote:
+>>>>
+>>>> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>>>>
+>>>> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>>>> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+>>>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>>>> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>>> ---
+>>>>
+>>>> v2: Split into a separate patch for submitting to the devicetree list.
+>>>>      Consistently start node docs with a capital letter. device's
+>>>>      address in the example shouldn't have "0x". Drop machine-specific
+>>>>      interrupt numbers from the docs.  (changes by anholt).
+>>>>
+>>>> v3: Move the file to just bcm2835-mbox.txt, clean up formatting
+>>>>      (changes by anholt, from review by Lee Jones).
+>>>>
+>>>> v4: Move file back by consensus from various Broadcom platform
+>>>>      maintainers (changes by anholt, acked by Lee Jones).
+>>>>
+>>>> v5: Document that the mailbox cell should be 0 in clients, and add an
+>>>>      example of a client (changes by anholt, from review by Jassi).
+>>>
+>>>
+>>> Some mention of what you changed in the patch might be nice, since it
+>>> was originally authored by someone else, and there's quite a changelog.
+>>
+>>
+>> I've been taking this changelog stuff out of the patch and putting it
+>> below '---' because when I was submitting this series before, I got
+>> chided for putting it in the patch!
+>
+>
+> A changelog and a description of the changes you've made aren't quite the
+> same thing.
+>
+> There should be some mention in the commit description of what you changed
+> relative to the patch that someone else authored, so they don't get
+> blaimed/praised for any of your changes. The format of that description
+> wouldn't usually be a detailed patch revision changelog though, just a
+> description of the overall changes that were left in the final version.
+>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>>>> b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>>>
+>>>
+>>>> +- #mbox-cells: Specifies the number of cells needed to encode a mailbox
+>>>> +                 channel. The value shall be 1.  Clients should supply
+>>>> a value
+>>>> +                 of 0 for the mailbox channel, because there is only
+>>>> one
+>>>> +                 exposed
+>>>
+>>>
+>>> Can't you use #mbox-cells = <0> if there's no data to provide?
+>>
+>>
+>> of_mbox_index_xlate looks like it's always dereferencing the first arg.
+>
+>
+> Is it possible to fix that?
+>
+The driver specific of_xlate() is meant to be provided during
+mbox_controller_register() in which case the default 1-cell xlate
+won't be used.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
