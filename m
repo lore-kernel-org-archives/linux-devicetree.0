@@ -1,78 +1,62 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 1/2] coresight: replicator: Add Qualcomm CoreSight
- Replicator driver
-Date: Thu, 30 Apr 2015 22:53:45 +0200
-Message-ID: <1430427225.2187.15.camel@x220>
-References: <1430310000-10867-1-git-send-email-ivan.ivanov@linaro.org>
-	 <1430310000-10867-2-git-send-email-ivan.ivanov@linaro.org>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 1/3] MTD: m25p80: fix write return value.
+Date: Thu, 30 Apr 2015 20:43:11 +0200
+Message-ID: <201504302043.11118.marex@denx.de>
+References: <cover.1430403750.git.hramrach@gmail.com> <55132b4496e7fe73f949186c0f140f3e4fd4e2c7.1430403750.git.hramrach@gmail.com>
+Reply-To: marex-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1430310000-10867-2-git-send-email-ivan.ivanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-sunxi+bncBDIOBYPK6QDRB5VORKVAKGQEH3B3XDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <55132b4496e7fe73f949186c0f140f3e4fd4e2c7.1430403750.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>,  
+ =?utf-8?q?Rafa=C5=82?= =?utf-8?q?_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Bean Huo
+ =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-04-29 at 15:19 +0300, Ivan T. Ivanov wrote:
+On Thursday, April 30, 2015 at 03:33:47 PM, Michal Suchanek wrote:
+> The size of written data was added to user supplied value rather than
+> written at the provided address.
 
-> +config CORESIGHT_QCOM_REPLICATOR
-> +	bool "Qualcomm CoreSight Replicator driver"
-> +	help
-> +	  This enables support for CoreSight link and sink driver that are
-> +	  responsible for transporting and collecting the trace data
-> +	  respectively. Link and sinks are dynamically aggregated with a trace
-> +	  entity at run time to form a complete trace path.
+You might want to work on the commit message a little, something like
+the following, but feel free to reword as seen fit.
 
-> --- a/drivers/hwtracing/coresight/Makefile
-> +++ b/drivers/hwtracing/coresight/Makefile
+The 'retlen' points to a variable representing the number of data bytes 
+written/read (see include/linux/mtd/mtd.h) by the current invocation of
+the function. This variable must be set, not incremented.
 
-> +obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
+Otherwise, the patch is correct I believe:
 
-CORESIGHT_QCOM_REPLICATOR is a bool symbol. So
-coresight-replicator-qcom.o will never be part of a module.
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
-(If that's incorrect, you can stop reading here.)
+> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/mtd/devices/m25p80.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+> index 7c8b169..0b2bc21 100644
+> --- a/drivers/mtd/devices/m25p80.c
+> +++ b/drivers/mtd/devices/m25p80.c
+> @@ -102,7 +102,7 @@ static void m25p80_write(struct spi_nor *nor, loff_t
+> to, size_t len,
+> 
+>  	spi_sync(spi, &m);
+> 
+> -	*retlen += m.actual_length - cmd_sz;
+> +	*retlen = m.actual_length - cmd_sz;
+>  }
+> 
+>  static inline unsigned int m25p80_rx_nbits(struct spi_nor *nor)
 
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
-
-> +#include <linux/module.h>
-
-Is this include needed?
-
-> +static struct amba_driver replicator_driver = {
-> +	.drv = {
-> +		.name	= "coresight-replicator-qcom",
-> +		.owner	= THIS_MODULE,
-
-For built-in only code THIS_MODULE will be, basically, equivalent to
-NULL (see include/linux/export.h). So I suppose this line can be
-dropped.
-
-> +		.pm	= &replicator_dev_pm_ops,
-> +	},
-> +	.probe		= replicator_probe,
-> +	.remove		= replicator_remove,
-> +	.id_table	= replicator_ids,
-> +};
-> +
-> +module_amba_driver(replicator_driver);
-
-For built-in only code this is, assuming I grepped this correctly,
-equivalent to calling
-    amba_driver_register(&replicator_driver);
-
-from within a function marked with some sort of *initcall().
-
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Qualcomm CoreSight Replicator driver");
-
-For built-in only code these macros will be effectively preprocessed
-away.
-
-Thanks,
-
-
-Paul Bolle
+Best regards,
+Marek Vasut
