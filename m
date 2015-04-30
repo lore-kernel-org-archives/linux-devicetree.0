@@ -1,74 +1,39 @@
 From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 2/2] ARM: vexpress: Add interrupt-affinity
-Date: Thu, 30 Apr 2015 19:54:08 +0200
-Message-ID: <1430416448-25203-1-git-send-email-r.schwebel@pengutronix.de>
+Subject: Re: [PATCH 2/2] ARM: vexpress: Add interrupt-affinity
+Date: Thu, 30 Apr 2015 19:55:41 +0200
+Message-ID: <20150430175541.GL15254@pengutronix.de>
+References: <1430416448-25203-1-git-send-email-r.schwebel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1430416448-25203-1-git-send-email-r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Without this property, we get this boot warning:
+On Thu, Apr 30, 2015 at 07:54:08PM +0200, Robert Schwebel wrote:
+> Without this property, we get this boot warning:
+> 
+> [    0.459361] CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
+> 
+> Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-[    0.459361] CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
+However, with this patch applied, the messages above disappear, but I
+still get this:
 
-Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/vexpress-v2p-ca9.dts | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+[    0.495280] CPU PMU: Failed to find logical CPU for cpu
 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-index a411274..9d71493 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-@@ -33,28 +33,28 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		cpu@0 {
-+		A9_0: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
- 			next-level-cache = <&L2>;
- 		};
- 
--		cpu@1 {
-+		A9_1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <1>;
- 			next-level-cache = <&L2>;
- 		};
- 
--		cpu@2 {
-+		A9_2: cpu@2 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <2>;
- 			next-level-cache = <&L2>;
- 		};
- 
--		cpu@3 {
-+		A9_3: cpu@3 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <3>;
-@@ -182,6 +182,11 @@
- 			     <0 61 4>,
- 			     <0 62 4>,
- 			     <0 63 4>;
-+		interrupt-affinity = <&A9_0>,
-+		                     <&A9_1>,
-+		                     <&A9_2>,
-+		                     <&A9_3>;
-+
- 	};
- 
- 	dcc {
+on a kernel configured with CONFIG_SMP=n. nr_cpu_ids is 1 there, while 
+the loop still loops over all available cores. Ths makes the logic fail.
+
+rsc
 -- 
-2.1.4
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
