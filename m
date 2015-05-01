@@ -1,49 +1,41 @@
-From: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH 1/2] power: reset: Add syscon reboot device node for APM X-Gene platform
-Date: Fri,  1 May 2015 13:11:13 -0700
-Message-ID: <1430511074-32229-2-git-send-email-ttnguyen@apm.com>
-References: <1430511074-32229-1-git-send-email-ttnguyen@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430511074-32229-1-git-send-email-ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
-Cc: ttnguyen-qTEPVZfXA3Y@public.gmane.org, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+From: Christophe Ricard <christophe.ricard@gmail.com>
+Subject: [RFC v1 01/14] NFC: st21nfcb: Remove inappropriate kfree on a devm_kzalloc pointer
+Date: Fri,  1 May 2015 22:19:24 +0200
+Message-ID: <1430511577-19678-2-git-send-email-christophe-h.ricard@st.com>
+References: <1430511577-19678-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1430511577-19678-1-git-send-email-christophe-h.ricard@st.com>
+Sender: stable-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, devicetree@vger.kernel.org, christophe.ricard@gmail.com, stable@vger.kernel.org, Firo Yang <firogm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds syscon reboot device node to support reboot feature on APM X-Gene platform
+Since ndev->driver_data is allocated by devm_kzalloc(), we do not
+need the inappropriate kfree to free it in driver's remove function.
+Freeing will trigger when driver unloads.
 
-Signed-off-by: Feng Kan  <fkan-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: stable@vger.kernel.org
+Acked-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Firo Yang <firogm@gmail.com>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/nfc/st21nfcb/st21nfcb.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index c8d3e0e..16efcf7 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -710,5 +710,17 @@
- 			dma-coherent;
- 			clocks = <&dmaclk 0>;
- 		};
-+
-+		scu: system-clk-controller@17000000 {
-+			compatible = "apm,xgene-scu","syscon";
-+			reg = <0x0 0x17000000 0x0 0x400>;
-+		};
-+
-+		reboot: reboot@17000014 {
-+			compatible = "syscon-reboot";
-+			regmap = <&scu>;
-+			offset = <0x14>;
-+			mask = <0x1>;
-+		};
- 	};
- };
+diff --git a/drivers/nfc/st21nfcb/st21nfcb.c b/drivers/nfc/st21nfcb/st21nfcb.c
+index ca9871a..c7dc282 100644
+--- a/drivers/nfc/st21nfcb/st21nfcb.c
++++ b/drivers/nfc/st21nfcb/st21nfcb.c
+@@ -131,11 +131,8 @@ EXPORT_SYMBOL_GPL(st21nfcb_nci_probe);
+ 
+ void st21nfcb_nci_remove(struct nci_dev *ndev)
+ {
+-	struct st21nfcb_nci_info *info = nci_get_drvdata(ndev);
+-
+ 	nci_unregister_device(ndev);
+ 	nci_free_device(ndev);
+-	kfree(info);
+ }
+ EXPORT_SYMBOL_GPL(st21nfcb_nci_remove);
+ 
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
