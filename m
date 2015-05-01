@@ -1,61 +1,61 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: vexpress: Add interrupt-affinity
-Date: Fri, 01 May 2015 14:44:45 +0100
-Message-ID: <5543834D.6040506@arm.com>
-References: <1430416448-25203-1-git-send-email-r.schwebel@pengutronix.de> <20150430175541.GL15254@pengutronix.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] ASoC: Add gtm601 codec driver
+Date: Fri, 1 May 2015 15:02:25 +0100
+Message-ID: <20150501140225.GY22845@sirena.org.uk>
+References: <1430429283-27907-1-git-send-email-marek@goldelico.com>
+ <1430429283-27907-2-git-send-email-marek@goldelico.com>
+ <20150501110311.GV22845@sirena.org.uk>
+ <CAAfyv36Bi_Em=PUUf1n0nk6AAR65QLzr_R2SenHs_C5Q3Ggjmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150430175541.GL15254-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="l9OvbEp/JYZ/p+uv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAfyv36Bi_Em=PUUf1n0nk6AAR65QLzr_R2SenHs_C5Q3Ggjmg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Belisko Marek <marek.belisko@gmail.com>
+Cc: perex@perex.cz, tiwai@suse.de, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
 
+--l9OvbEp/JYZ/p+uv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 30/04/15 18:55, Robert Schwebel wrote:
-> On Thu, Apr 30, 2015 at 07:54:08PM +0200, Robert Schwebel wrote:
->> Without this property, we get this boot warning:
->>
->> [    0.459361] CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
->>
->> Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Fri, May 01, 2015 at 01:36:48PM +0200, Belisko Marek wrote:
+> On Fri, May 1, 2015 at 1:03 PM, Mark Brown <broonie@kernel.org> wrote:
+> > On Thu, Apr 30, 2015 at 11:28:01PM +0200, Marek Belisko wrote:
 
-May be you can also mention the commit introducing the change in the log
-something like:
+> >> +/*
+> >> + * Note this is a simple chip with no configuration interface, sample rate is
+> >> + * determined automatically by examining the Master clock and Bit clock ratios
+> >> + */
+> >
+> >> +#define GTM601_RATES  (SNDRV_PCM_RATE_8000)
 
-"
-Commit 9fd85eb502a7 ("ARM: pmu: add support for interrupt-affinity
-property") added optional optional "interrupt-affinity" property, to
-specify CPU affinity for each SPI listed in the interrupts property.
+> > Does it or doesn't it support multiple sample rates?
 
-Without this property, we get this boot warning:
-	CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
+> It support only 8kHz rate. I'll remove define and use SNDRV_PCM_RATE_8000
+> only in gtm601_dai struct.
 
-This patch add interrupt-affinity to the PMU node in CA9x4 device tree.
-"
+I was more commenting on the fact that the comment immediately above
+says that the sample rate is determined automatically which suggests
+that multiple sample rates are supported.
 
-Otherwise:
-Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+--l9OvbEp/JYZ/p+uv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->
-> However, with this patch applied, the messages above disappear, but I
-> still get this:
->
-> [    0.495280] CPU PMU: Failed to find logical CPU for cpu
->
-> on a kernel configured with CONFIG_SMP=n. nr_cpu_ids is 1 there, while
-> the loop still loops over all available cores. Ths makes the logic fail.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-This is a different issue. You must also see warning from devtree.c when
-parsing CPUs complaining about more CPU nodes found in DT. IIUC the
-functionality still works fine.
+iQEcBAEBCAAGBQJVQ4dwAAoJECTWi3JdVIfQ0noH/0aGUH8Q/GvQmW9609Zzeqhz
+LQovDqAiFPx8VQRAeB96LVYUdiTC6BBnKFy+b434VQ41NScxS07sPo7ypDVNWDBd
+pwBoLCbJC/xeUVw1tZO4rvIuWJApzD7XukhqgDUK3JZcX7qqaZ61QdteeXr7Nrhn
+4RUiamPqmfS0HCViugGUmMp+P22Y4W48LmqJmIjKm+J54nZOZ5LQaNp731sIc2SK
+i4U9eQI9cjqFnOGgRJ+2o2xj69hxVTSW3Z3LyySSB9FbXbq8xVeX+FRjOM7IuEji
+c64laBuQXPSSTbmOF/wqspv6tHPH3M6M+ql6Ihpfkd8fMQoCN6gFMWhvC6FfICQ=
+=WdGS
+-----END PGP SIGNATURE-----
 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--l9OvbEp/JYZ/p+uv--
