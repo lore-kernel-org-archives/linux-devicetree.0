@@ -1,42 +1,46 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ASoC: Add gtm601 codec driver
-Date: Fri, 01 May 2015 09:30:09 +0200
-Message-ID: <1430465409.2187.47.camel@x220>
-References: <1430429283-27907-1-git-send-email-marek@goldelico.com>
-	 <1430429283-27907-2-git-send-email-marek@goldelico.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH 0/7] Add SMP bringup support for mt65xx socs
+Date: Fri, 1 May 2015 15:43:23 +0800
+Message-ID: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430429283-27907-2-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Marc Carino <marc.ceeeee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Just a nit: a license mismatch.
+This series add SMP brinup support for mediatek SoCs. This is based
+on v4.1-rc1.
 
-On Thu, 2015-04-30 at 23:28 +0200, Marek Belisko wrote:
-> --- /dev/null
-> +++ b/sound/soc/codecs/gtm601.c
+There are 2 similar but different SMP bringup up methods on Mediatek
+mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
+firmware. Others, like MT6589, doesn't have trustzone, and run kernel
+directly in secure world.
 
-> + *  This program is free software; you can redistribute  it and/or modify it
-> + *  under  the terms of  the GNU General  Public License as published by the
-> + *  Free Software Foundation;  either version 2 of the  License, or (at your
-> + *  option) any later version.
+Patch 1~3 fix issues in mtk_timer(GPT) and enable arch timer support.
+Patch 4,5 add support for cpu enable-method "mediatek,mt65xx-smp" and
+"mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
+and TZ platform.
+Patch 6,7 finally enable SMP bringup for mt8135 and mt8127.
 
-This states the license is GPL v2 or later.
+Matthias Brugger (1):
+  arm: mediatek: enable gpt6 on boot up to make arch timer working
 
-> +MODULE_LICENSE("GPL v2");
+Yingjoe Chen (6):
+  clocksource: mediatek: Don't run event_handler if it is NULL
+  clocksource: mediatek: Use GPT as sched clock source
+  devicetree: bindings: add new SMP enable method Mediatek SoC
+  ARM: mediatek: add smp bringup code
+  ARM: dts: mt8135: enable basic SMP bringup for mt8135
+  ARM: dts: mt8127: enable basic SMP bringup for mt8127
 
-And, according to include/linux/module.h, this states the license is
-(just) GPL v2. So I think either the comment at the top of this file or
-the ident used in the MODULE_LICESE() macro should change.
-
-
-Paul Bolle
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/arm/cpus.txt |   2 +
+ arch/arm/boot/dts/mt8127.dtsi                  |  16 +++
+ arch/arm/boot/dts/mt8135.dtsi                  |  16 +++
+ arch/arm/mach-mediatek/Makefile                |   3 +
+ arch/arm/mach-mediatek/mediatek.c              |  29 +++++
+ arch/arm/mach-mediatek/platsmp.c               | 145 +++++++++++++++++++++++++
+ drivers/clocksource/mtk_timer.c                |  13 ++-
+ 7 files changed, 223 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/mach-mediatek/platsmp.c
