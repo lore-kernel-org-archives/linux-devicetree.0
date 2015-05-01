@@ -1,65 +1,59 @@
-From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: add DT nodes for ov2659 sensor
-Date: Fri, 1 May 2015 09:55:42 +0100
-Message-ID: <CA+V-a8tk+CzcktcJSWpODpSsyue1J4vVQDNra5TpqWZeGieaOQ@mail.gmail.com>
-References: <1426203501-32115-1-git-send-email-prabhakar.csengg@gmail.com>
- <20150316221740.GQ12397@atomide.com> <CA+V-a8uWqjze32ukOGonQAACByPmW6WDbpFrA9EFipnNJeD58A@mail.gmail.com>
- <20150317022344.GB31346@atomide.com> <CA+V-a8u-Y7M9ynJDD05=XeMjZMsb_0Utd-TuwJzEuRziPksvGQ@mail.gmail.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 0/4] clk: si5351: Some fixes
+Date: Fri, 1 May 2015 11:14:06 +0200
+Message-ID: <20150501111406.0aa23c7b@armhf>
+References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+V-a8u-Y7M9ynJDD05=XeMjZMsb_0Utd-TuwJzEuRziPksvGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1430415954-29517-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Russell King <rmk+linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2015 at 9:22 PM, Lad, Prabhakar
-<prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Tony,
->
-> On Tue, Mar 17, 2015 at 2:23 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->> * Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150316 18:20]:
->>> Hi Tony,
->>>
->>> On Mon, Mar 16, 2015 at 10:17 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->>> > * Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150312 16:38]:
->>> >> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> >>
->>> >> this patch does the following:
->>> >> 1: adds DT node for fixed oscillator.
->>> >> 2: adds DT node entries for ov2659 sensor
->>> >> 3: adds remote-endpoint entry for VPFE.
->>> >>
->>> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> >
->>> > Applying into omap-for-v4.1/dt thanks.
->>> >
->>> I would like to get this one in via media tree to avoid dependency
->>> as I am still waiting for Acks from DT maintainers for the sensor
->>> driver.
->>
->> OK dropping it.
->>
->>> If I can get your Ack on this I'll queue it up along with sensor
->>> driver via media tree.
->>
->> Sorry the chances are too big for pointless merge conflicts with
->> these files with constant patching going on.
->>
->> Please just resend this patch alone again to me later on once the
->> driver changes are merged into Linux next and on their way to the
->> mainline kernel.
->>
-> the sensor driver is now present in linux-next and the same patch
-> applies cleanly, can you pick up the same or do you want me to
-> resend the patch ?
->
-Ping...
+On Thu, 30 Apr 2015 19:45:50 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Cheers,
---Prabhakar Lad
+> For Si5351 clock driver, Michael Welling and Jean-Francois Moine repo=
+rted
+> issues with recent v4.x kernels due to broken/missing/wrong parent cl=
+ock
+> claming. This patch set now deals with the issues reported.
+>=20
+> Patch 1 amends the binding documentation mention clock-names property
+> for the "xtal" and "clkin" parent clock inputs of Si5351 variants.
+>=20
+> Patch 2 adds the clock-names property for the SolidRun CuBox using Si=
+5351
+> with a fixed oscillator connected to "xtal" input.
+>=20
+> Patch 3 reworks the way we claim parent clocks by using devm_clk_get(=
+)
+> for both DT and platform_data based registration. Also, properly chec=
+k
+> for errors returned by devm_clk_get() and prepare/enable the parent c=
+locks.
+>=20
+> Patch 4 introduces a function to reset PLLs on rate change. This shou=
+ld
+> improve generated clock output stability. I currently have no scope a=
+t hand
+> to actually test that properly, so there may be more issues remaining=
+=2E
+>=20
+> @Michael, Jean-Francois: Please test and report if there are still
+> issues remaining.
+
+I applied the patches 2 and 3, and the audio and video in the Cubox
+work fine again. Thanks.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
