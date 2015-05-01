@@ -1,61 +1,64 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3] ASoC: Add gtm601 codec driver
-Date: Fri, 1 May 2015 15:02:25 +0100
-Message-ID: <20150501140225.GY22845@sirena.org.uk>
-References: <1430429283-27907-1-git-send-email-marek@goldelico.com>
- <1430429283-27907-2-git-send-email-marek@goldelico.com>
- <20150501110311.GV22845@sirena.org.uk>
- <CAAfyv36Bi_Em=PUUf1n0nk6AAR65QLzr_R2SenHs_C5Q3Ggjmg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Regulator: mc34708: Add DT binding documentation
+Date: Fri, 1 May 2015 15:03:21 +0100
+Message-ID: <20150501140321.GZ22845@sirena.org.uk>
+References: <20150428141736.16243.57292.stgit@localhost>
+ <20150428141738.16243.18377.stgit@localhost>
+ <1345809430.776937.1430476461635.JavaMail.open-xchange@oxbaltgw07.schlund.de>
+ <20150501110123.GU22845@sirena.org.uk>
+ <1816610654.762513.1430483624334.JavaMail.open-xchange@oxbaltgw08.schlund.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="l9OvbEp/JYZ/p+uv"
+	protocol="application/pgp-signature"; boundary="cj2v4dTZyK4qpVAb"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAAfyv36Bi_Em=PUUf1n0nk6AAR65QLzr_R2SenHs_C5Q3Ggjmg@mail.gmail.com>
+In-Reply-To: <1816610654.762513.1430483624334.JavaMail.open-xchange@oxbaltgw08.schlund.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Belisko Marek <marek.belisko@gmail.com>
-Cc: perex@perex.cz, tiwai@suse.de, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---l9OvbEp/JYZ/p+uv
+--cj2v4dTZyK4qpVAb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 01, 2015 at 01:36:48PM +0200, Belisko Marek wrote:
-> On Fri, May 1, 2015 at 1:03 PM, Mark Brown <broonie@kernel.org> wrote:
-> > On Thu, Apr 30, 2015 at 11:28:01PM +0200, Marek Belisko wrote:
+On Fri, May 01, 2015 at 02:33:44PM +0200, Stefan Wahren wrote:
+> > Mark Brown <broonie@kernel.org> hat am 1. Mai 2015 um 13:01 geschrieben:
 
-> >> +/*
-> >> + * Note this is a simple chip with no configuration interface, sample rate is
-> >> + * determined automatically by examining the Master clock and Bit clock ratios
-> >> + */
-> >
-> >> +#define GTM601_RATES  (SNDRV_PCM_RATE_8000)
+> > On Fri, May 01, 2015 at 12:34:21PM +0200, Stefan Wahren wrote:
 
-> > Does it or doesn't it support multiple sample rates?
+> > > a commit message would be nice and the subject should specify dt-bind=
+ings
+> > > instead of regulator subsystem.
 
-> It support only 8kHz rate. I'll remove define and use SNDRV_PCM_RATE_8000
-> only in gtm601_dai struct.
+> > No, it shouldn't. DT bindings for a subsystem go through the subsystem
+> > and the subsystem maintainer needs to see them to read them.
 
-I was more commenting on the fact that the comment immediately above
-says that the sample rate is determined automatically which suggests
-that multiple sample rates are supported.
+> sorry for my bad expressing.=20
 
---l9OvbEp/JYZ/p+uv
+> I tought the subject line should be something like:
+
+> DT: add binding documentation for mc34708 regulator
+
+No, it shouldn't.  The subject line should start "regulator: " like all
+other regulator commits.
+
+--cj2v4dTZyK4qpVAb
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVQ4dwAAoJECTWi3JdVIfQ0noH/0aGUH8Q/GvQmW9609Zzeqhz
-LQovDqAiFPx8VQRAeB96LVYUdiTC6BBnKFy+b434VQ41NScxS07sPo7ypDVNWDBd
-pwBoLCbJC/xeUVw1tZO4rvIuWJApzD7XukhqgDUK3JZcX7qqaZ61QdteeXr7Nrhn
-4RUiamPqmfS0HCViugGUmMp+P22Y4W48LmqJmIjKm+J54nZOZ5LQaNp731sIc2SK
-i4U9eQI9cjqFnOGgRJ+2o2xj69hxVTSW3Z3LyySSB9FbXbq8xVeX+FRjOM7IuEji
-c64laBuQXPSSTbmOF/wqspv6tHPH3M6M+ql6Ihpfkd8fMQoCN6gFMWhvC6FfICQ=
-=WdGS
+iQEcBAEBCAAGBQJVQ4eoAAoJECTWi3JdVIfQVtMH/j6LPvdmJ8rJ7H0IXN6uOhNf
+zRKTwN1DZiWxs47Y2kNFKXOJQQjZDxZxafAIYcAUIpu4Q9PG2pQrAEpgiGs4MaL0
+UcNgD43bUOaeIxABpyE2NCOxxCqVREveGnSWMO/ANq3PpDPrAG9BKI0a9cp76LfL
+goaYriuOK9fnnZ4miv/WdAnZc0deWl7IL2H3JvE1POThK6m8Pr7gF1hjmBOK1sj2
+C5uYRuxrIoVt0ZtTOUQJWs/AH1rOUzXVryAd8f4fvZsyVDZXXh/Ps4Al/M/rudyO
+3Q5w8crBcigl8RU4kpzf611DbwODKRtGVbVV7CgvYSmDqszLSEdVSTA5Dq6B9Yw=
+=u0ug
 -----END PGP SIGNATURE-----
 
---l9OvbEp/JYZ/p+uv--
+--cj2v4dTZyK4qpVAb--
