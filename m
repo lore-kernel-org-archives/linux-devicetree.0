@@ -1,65 +1,56 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: sunxi: sun5i: add spi2_pins_b.
-Date: Fri, 1 May 2015 22:22:18 +0200
-Message-ID: <20150501202218.GK6062@lukather>
-References: <cover.1430295711.git.hramrach@gmail.com>
- <bda468ecf45ca063098f756bdaba85b6f5f42263.1430295711.git.hramrach@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH 1/3] ASoC: Add gtm601 codec driver
+Date: Fri, 1 May 2015 22:34:26 +0200
+Message-ID: <CAAfyv34FJvBmCqUnZhiNMRMn2X+_4gbh=GJpV3ySmUeGaTSxyQ@mail.gmail.com>
+References: <1430429283-27907-1-git-send-email-marek@goldelico.com>
+	<1430429283-27907-2-git-send-email-marek@goldelico.com>
+	<20150501110311.GV22845@sirena.org.uk>
+	<CAAfyv36Bi_Em=PUUf1n0nk6AAR65QLzr_R2SenHs_C5Q3Ggjmg@mail.gmail.com>
+	<20150501140225.GY22845@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8tUgZ4IE8L4vmMyh"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBI6CR6VAKGQECVVJP5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <bda468ecf45ca063098f756bdaba85b6f5f42263.1430295711.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150501140225.GY22845@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: perex@perex.cz, tiwai@suse.de, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
---8tUgZ4IE8L4vmMyh
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Fri, May 1, 2015 at 4:02 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Fri, May 01, 2015 at 01:36:48PM +0200, Belisko Marek wrote:
+>> On Fri, May 1, 2015 at 1:03 PM, Mark Brown <broonie@kernel.org> wrote:
+>> > On Thu, Apr 30, 2015 at 11:28:01PM +0200, Marek Belisko wrote:
+>
+>> >> +/*
+>> >> + * Note this is a simple chip with no configuration interface, sample rate is
+>> >> + * determined automatically by examining the Master clock and Bit clock ratios
+>> >> + */
+>> >
+>> >> +#define GTM601_RATES  (SNDRV_PCM_RATE_8000)
+>
+>> > Does it or doesn't it support multiple sample rates?
+>
+>> It support only 8kHz rate. I'll remove define and use SNDRV_PCM_RATE_8000
+>> only in gtm601_dai struct.
+>
+> I was more commenting on the fact that the comment immediately above
+> says that the sample rate is determined automatically which suggests
+> that multiple sample rates are supported.
+OK I see. Checked with gtm601 datasheet max master clock is 2.048MHz so
+it is 8kHz LRCLK. Sorry for confusing comment.
 
-On Wed, Apr 29, 2015 at 10:00:27AM +0200, Michal Suchanek wrote:
-> spi2_pins_a are only available on A10s
+BR,
 
-spi2_pins_a doesn't mean anything without any context.
-
-Anyone should be able to read this commit log alone and understand
-what it's about and why you are doing it.
-
-It's clearly not the case here.
-
-> 
-> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun5i.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-> index 186d25f..9f22c28 100644
-> --- a/arch/arm/boot/dts/sun5i.dtsi
-> +++ b/arch/arm/boot/dts/sun5i.dtsi
-> @@ -551,6 +551,13 @@
->  				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
->  				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->  			};
-> +
-> +			spi2_pins_b: spi2@1 {
-
-You should probably name that group spi2_pins_a. It feels a bit weird
-to have a spi2_pins_b group without its "a" counterpart.
-
-Maxime
+marek
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---8tUgZ4IE8L4vmMyh--
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
