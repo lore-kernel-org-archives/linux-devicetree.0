@@ -1,82 +1,184 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [RFC PATCH 6/7] ARM: shmobile: r8a7790-lager.dts: Set sdhi and
- mmcif clock rates
-Date: Fri, 1 May 2015 09:59:20 +0900
-Message-ID: <20150501005920.GH13754@verge.net.au>
-References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
- <1430397166.5802.45.camel@xylophone.i.decadent.org.uk>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] dt-bindings: ARM: Mediatek: Document devicetree
+ bindings for clock/reset controllers
+Date: Thu, 30 Apr 2015 18:20:39 -0700
+Message-ID: <20150501012039.GG32407@codeaurora.org>
+References: <1429778143-2074-1-git-send-email-s.hauer@pengutronix.de>
+ <1429778143-2074-7-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1430397166.5802.45.camel-2NU49sBE5Aze9VDwLV8dzJPsBRI6B4nW9dF7HbQ/qKg@public.gmane.org>
+In-Reply-To: <1429778143-2074-7-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: Ian Molton <ian-zdned+2MO1+9FHfhHBbuYA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
-
-Please use the following prefix for r8a7790-lager.dts patches:
-
-ARM: shmobile: lager:
-
-On Thu, Apr 30, 2015 at 01:32:46PM +0100, Ben Hutchings wrote:
-> From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+On 04/23, Sascha Hauer wrote:
+> This adds the binding documentation for the apmixedsys, perisys and
+> infracfg controllers found on Mediatek SoCs.
 > 
-> [bwh: Fold in fix from Ian Molton]
-> Signed-off-by: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+Please Cc devicetree reviewers on bindings (CCed now).
+
 > ---
->  arch/arm/boot/dts/r8a7790-lager.dts |   11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  | 23 +++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,infracfg.txt    | 30 ++++++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,pericfg.txt     | 30 ++++++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,topckgen.txt    | 23 +++++++++++++++++
+>  4 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
 > 
-> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-> index aaa4f258e279..343ec0ccc8df 100644
-> --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-> @@ -413,6 +413,11 @@
->  	vmmc-supply = <&fixedregulator3v3>;
->  	bus-width = <8>;
->  	non-removable;
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> new file mode 100644
+> index 0000000..5af6d73
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> @@ -0,0 +1,23 @@
+> +Mediatek apmixedsys controller
+> +==============================
 > +
-> +	assigned-clocks = <&mstp3_clks R8A7790_CLK_MMCIF1>;
-> +	assigned-clock-rates = <97500000>;
-> +	max-frequency = <50000000>;
+> +The Mediatek apmixedsys controller provides the PLLs to the system.
 > +
->  	status = "okay";
->  };
->  
-> @@ -488,6 +493,9 @@
->  	pinctrl-0 = <&sdhi0_pins>;
->  	pinctrl-names = "default";
->  
-> +	assigned-clocks = <&mstp3_clks R8A7790_CLK_SDHI0>;
-> +	assigned-clock-rates = <156000000>;
+> +Required Properties:
 > +
->  	vmmc-supply = <&vcc_sdhi0>;
->  	vqmmc-supply = <&vccq_sdhi0>;
->  	cd-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
-> @@ -498,6 +506,9 @@
->  	pinctrl-0 = <&sdhi2_pins>;
->  	pinctrl-names = "default";
->  
-> +	assigned-clocks = <&mstp3_clks R8A7790_CLK_SDHI2>;
-> +	assigned-clock-rates = <97500000>;
+> +- compatible: Should be:
+> +	- "mediatek,mt8135-apmixedsys"
+> +	- "mediatek,mt8173-apmixedsys"
+> +- #clock-cells: Must be 1
 > +
->  	vmmc-supply = <&vcc_sdhi2>;
->  	vqmmc-supply = <&vccq_sdhi2>;
->  	cd-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
+> +The apmixedsys controller uses the common clk binding from
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> +
+> +Example:
+> +
+> +apmixedsys: apmixedsys@10209000 {
+
+apmixedsys: clock-controller@10209000 {
+
+would be more standard. The same comment applies throughout this
+patch. Otherwise it looks good to me.
+
+-Stephen
+
+> +	compatible = "mediatek,mt8173-apmixedsys";
+> +	reg = <0 0x10209000 0 0x1000>;
+> +	#clock-cells = <1>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+> new file mode 100644
+> index 0000000..684da473
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+> @@ -0,0 +1,30 @@
+> +Mediatek infracfg controller
+> +============================
+> +
+> +The Mediatek infracfg controller provides various clocks and reset
+> +outputs to the system.
+> +
+> +Required Properties:
+> +
+> +- compatible: Should be:
+> +	- "mediatek,mt8135-infracfg", "syscon"
+> +	- "mediatek,mt8173-infracfg", "syscon"
+> +- #clock-cells: Must be 1
+> +- #reset-cells: Must be 1
+> +
+> +The infracfg controller uses the common clk binding from
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> +Also it uses the common reset controller binding from
+> +Documentation/devicetree/bindings/reset/reset.txt.
+> +The available reset outputs are defined in
+> +dt-bindings/reset-controller/mt*-resets.h
+> +
+> +Example:
+> +
+> +infracfg: infracfg@10001000 {
+> +	compatible = "mediatek,mt8173-infracfg", "syscon";
+> +	reg = <0 0x10001000 0 0x1000>;
+> +	#clock-cells = <1>;
+> +	#reset-cells = <1>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+> new file mode 100644
+> index 0000000..fdb45c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+> @@ -0,0 +1,30 @@
+> +Mediatek pericfg controller
+> +===========================
+> +
+> +The Mediatek pericfg controller provides various clocks and reset
+> +outputs to the system.
+> +
+> +Required Properties:
+> +
+> +- compatible: Should be:
+> +	- "mediatek,mt8135-pericfg", "syscon"
+> +	- "mediatek,mt8173-pericfg", "syscon"
+> +- #clock-cells: Must be 1
+> +- #reset-cells: Must be 1
+> +
+> +The pericfg controller uses the common clk binding from
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> +Also it uses the common reset controller binding from
+> +Documentation/devicetree/bindings/reset/reset.txt.
+> +The available reset outputs are defined in
+> +dt-bindings/reset-controller/mt*-resets.h
+> +
+> +Example:
+> +
+> +pericfg: pericfg@10003000 {
+> +	compatible = "mediatek,mt8173-pericfg", "syscon";
+> +	reg = <0 0x10003000 0 0x1000>;
+> +	#clock-cells = <1>;
+> +	#reset-cells = <1>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+> new file mode 100644
+> index 0000000..a425248
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+> @@ -0,0 +1,23 @@
+> +Mediatek topckgen controller
+> +============================
+> +
+> +The Mediatek topckgen controller provides various clocks to the system.
+> +
+> +Required Properties:
+> +
+> +- compatible: Should be:
+> +	- "mediatek,mt8135-topckgen"
+> +	- "mediatek,mt8173-topckgen"
+> +- #clock-cells: Must be 1
+> +
+> +The topckgen controller uses the common clk binding from
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> +
+> +Example:
+> +
+> +topckgen: topckgen@10000000 {
+> +	compatible = "mediatek,mt8173-topckgen";
+> +	reg = <0 0x10000000 0 0x1000>;
+> +	#clock-cells = <1>;
+> +};
 > -- 
-> 1.7.10.4
+> 2.1.4
 > 
-> 
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
