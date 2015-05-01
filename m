@@ -1,44 +1,32 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 0/2] regulator: Add regulator driver for the MC34708
- PMIC
-Date: Fri, 1 May 2015 12:26:09 +0200 (CEST)
-Message-ID: <62238108.776606.1430475969692.JavaMail.open-xchange@oxbaltgw07.schlund.de>
-References: <20150428141736.16243.57292.stgit@localhost>
-Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 1/2] Regulator: mc34708: Add DT binding documentation
+Date: Fri, 1 May 2015 12:34:21 +0200 (CEST)
+Message-ID: <1345809430.776937.1430476461635.JavaMail.open-xchange@oxbaltgw07.schlund.de>
+References: <20150428141736.16243.57292.stgit@localhost> <20150428141738.16243.18377.stgit@localhost>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150428141736.16243.57292.stgit@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Fuzzey <mfuzzey@parkeon.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150428141738.16243.18377.stgit@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Martin,
 
-> Martin Fuzzey <mfuzzey@parkeon.com> hat am 28. April 2015 um 16:17
+> Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org> hat am 28. April 2015 um 16:17
 > geschrieben:
 >
 >
-> Add regulator driver and associated DT bindings for the regulators in the
-> Freescale MC34708 PMIC.
+> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
 
-from my understanding this PMIC is used typically for i.MX50/53 SoCs. So in this
-case
-it would make sense to mention it here and CC this patch series also to the IMX
-maintainers.
-
-Btw 
-
-git format-patch --cover-letter
-
-is your friend.
+a commit message would be nice and the subject should specify dt-bindings
+instead of regulator subsystem.
 
 Stefan
-
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
