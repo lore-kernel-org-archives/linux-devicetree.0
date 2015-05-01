@@ -1,46 +1,44 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 14/15] clk: shmobile: Add r8a7793 SoC to MSTP bindings
-Date: Fri, 1 May 2015 09:33:25 +0900
-Message-ID: <20150501003325.GB13754@verge.net.au>
+Subject: Re: [PATCH v2 15/15] PCI: rcar: document r8a7793 DT bindings
+Date: Fri, 1 May 2015 09:36:00 +0900
+Message-ID: <20150501003600.GC13754@verge.net.au>
 References: <1430403544-26742-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1430403544-26742-15-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1430403544-26742-16-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1430403544-26742-15-git-send-email-ulrich.hecht+renesas@gmail.com>
+In-Reply-To: <1430403544-26742-16-git-send-email-ulrich.hecht+renesas@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: geert@linux-m68k.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, Michael Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
+Cc: geert@linux-m68k.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 04:19:03PM +0200, Ulrich Hecht wrote:
-> Also replaces "R-Car M2" with "R-Car M2-W" to avoid confusion.
-> 
+[CC Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org ]
+
+On Thu, Apr 30, 2015 at 04:19:04PM +0200, Ulrich Hecht wrote:
 > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> Cc: Michael Turquette <mturquette@linaro.org>
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > Cc: devicetree@vger.kernel.org
-
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-
 > ---
->  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> index 0a80fa7..923ee0f 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> @@ -15,7 +15,8 @@ Required Properties:
->      - "renesas,r8a7740-mstp-clocks" for R8A7740 (R-Mobile A1) MSTP gate clocks
->      - "renesas,r8a7779-mstp-clocks" for R8A7779 (R-Car H1) MSTP gate clocks
->      - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
-> -    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
-> +    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2-W) MSTP gate clocks
-> +    - "renesas,r8a7793-mstp-clocks" for R8A7793 (R-Car M2-N) MSTP gate clocks
->      - "renesas,r8a7794-mstp-clocks" for R8A7794 (R-Car E2) MSTP gate clocks
->      - "renesas,sh73a0-mstp-clocks" for SH73A0 (SH-MobileAG5) MSTP gate clocks
->      - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
+>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+I suppose this one is for the PCI subsystem and thus Bjorn Helgaas (CCed).
+
+> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> index d8ef5bf..8b156fe 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> @@ -8,6 +8,7 @@ OHCI and EHCI controllers.
+>  Required properties:
+>  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
+>  	      "renesas,pci-r8a7791" for the R8A7791 SoC.
+> +	      "renesas,pci-r8a7793" for the R8A7793 SoC.
+>  - reg:	A list of physical regions to access the device: the first is
+>  	the operational registers for the OHCI/EHCI controllers and the
+>  	second is for the bridge configuration and control registers.
 > -- 
 > 2.3.5
 > 
