@@ -1,96 +1,64 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] clk: si5351: Some fixes
-Date: Fri, 01 May 2015 10:17:35 +0200
-Message-ID: <5543369F.2070207@gmail.com>
-References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com> <20150430193317.GC22000@deathray> <55429417.4070103@gmail.com> <20150430212059.GA14026@deathray> <5542AAE0.5020204@gmail.com> <20150430223603.GA18006@deathray>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: add DT nodes for ov2659 sensor
+Date: Fri, 1 May 2015 09:55:42 +0100
+Message-ID: <CA+V-a8tk+CzcktcJSWpODpSsyue1J4vVQDNra5TpqWZeGieaOQ@mail.gmail.com>
+References: <1426203501-32115-1-git-send-email-prabhakar.csengg@gmail.com>
+ <20150316221740.GQ12397@atomide.com> <CA+V-a8uWqjze32ukOGonQAACByPmW6WDbpFrA9EFipnNJeD58A@mail.gmail.com>
+ <20150317022344.GB31346@atomide.com> <CA+V-a8u-Y7M9ynJDD05=XeMjZMsb_0Utd-TuwJzEuRziPksvGQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150430223603.GA18006@deathray>
+In-Reply-To: <CA+V-a8u-Y7M9ynJDD05=XeMjZMsb_0Utd-TuwJzEuRziPksvGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Russell King <rmk+linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01.05.2015 00:36, Michael Welling wrote:
-> On Fri, May 01, 2015 at 12:21:20AM +0200, Sebastian Hesselbarth wrote:
->> On 30.04.2015 23:20, Michael Welling wrote:
->>> On Thu, Apr 30, 2015 at 10:44:07PM +0200, Sebastian Hesselbarth wrote:
->> [...]
->>>> What I noticed about your clk2 that you always measure as 0 Hz is
->>>> that none of your clocks is prepared/enabled.
->>>>
->>>> Currently, the si5351 driver only ensures the output is enabled
->>>> when si5351_clkout_prepare() is called.
->>>>
->>>> As long as you do not have a clk consumer that properly prepare/enables
->>>> the clock output, it may remain disabled.
->>>>
->>>> We should probably have additional DT properties and corresponding
->>>> pdata to force clkoutN always on.
+On Fri, Apr 10, 2015 at 9:22 PM, Lad, Prabhakar
+<prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Tony,
+>
+> On Tue, Mar 17, 2015 at 2:23 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>> * Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150316 18:20]:
+>>> Hi Tony,
 >>>
->>> Does the silabs,disable-state of 3 (SI5351_DISABLE_NEVER) take care
->>> of this?
+>>> On Mon, Mar 16, 2015 at 10:17 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> > * Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150312 16:38]:
+>>> >> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> >>
+>>> >> this patch does the following:
+>>> >> 1: adds DT node for fixed oscillator.
+>>> >> 2: adds DT node entries for ov2659 sensor
+>>> >> 3: adds remote-endpoint entry for VPFE.
+>>> >>
+>>> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> >
+>>> > Applying into omap-for-v4.1/dt thanks.
+>>> >
+>>> I would like to get this one in via media tree to avoid dependency
+>>> as I am still waiting for Acks from DT maintainers for the sensor
+>>> driver.
 >>
->> That would be the HW version of never disabling the clock output.
->> I never really tried the property, does it work as expected?
+>> OK dropping it.
+>>
+>>> If I can get your Ack on this I'll queue it up along with sensor
+>>> driver via media tree.
+>>
+>> Sorry the chances are too big for pointless merge conflicts with
+>> these files with constant patching going on.
+>>
+>> Please just resend this patch alone again to me later on once the
+>> driver changes are merged into Linux next and on their way to the
+>> mainline kernel.
+>>
+> the sensor driver is now present in linux-next and the same patch
+> applies cleanly, can you pick up the same or do you want me to
+> resend the patch ?
 >
-> This did not appear to effect the behavior.
+Ping...
 
-I think it is also a good idea to expose register values to debugfs,
-so we can easily check what is really written into internal registers.
-
->>
->>> Otherwise is there a simple registration that will do this?
->>
->> The SW version of such a property would involve CLK_IGNORE_UNUSED
->> and enabling all requested clock outputs on probe().
->>
->> If above HW property already works, I think it should be enough.
->>
->> [...]
->>>>> It should be noted that if I program the device's register map in the
->>>>> bootloader the device keeps the correct frequency outputs.
->>>>
->>>> "keeps"? You mean "generates", don't you?
->>>>
->>>
->>> Yes the clocks are generated and do not get effected by the driver.
->>
->> IIRC, clk API does check if requested rate and current rate match
->> already. If they do, it does not request the same rate again.
->
-> So I found that the audio codec that I am driving with clk2 could
-> register the clock and allowed the clock to be enabled and disabled
-> by playing audio.
->
-> This is when I noticed some strange behavior. The first time I attempt
-> to play audio the clock does not turn on blocking the audio from playing.
-> After I interrupt and the clock is disabled for the first time, the
-> successive clock enables work as expected.
-
-Does "does not turn on" mean you cannot measure any clock on the
-output or is it just a guess because audio does not play?
-
-It could be that we just need to add some delay when we enable a clock
-output. Datasheet just says 10us max from OEB pin pulled low to valid
-clock output - not exactly what we are looking for but it could be a
-good start.
-
-> Something tells me that a fault off some kind is occurring on initial
-> configuration.
-
-What I noticed when adding the pll reset and checking DEVICE_STATUS is
-that SYS_INIT is still set. According to the datasheet, the meaning of
-the bit is that si5351 is still copying NVM content to its internal
-registers and therefore, we shouldn't try to access them.
-
-What really irritates me about it is that it is seconds after power-up
-and copying the contents shouldn't really take _that_ long. However,
-the datasheet does not mention anything about how long it may take.
-
-Sebastian
-
+Cheers,
+--Prabhakar Lad
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
