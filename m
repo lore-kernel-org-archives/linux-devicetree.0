@@ -1,83 +1,47 @@
-From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] ARM: vexpress: Add interrupt-affinity
-Date: Fri,  1 May 2015 19:11:26 +0200
-Message-ID: <1430500286-10337-1-git-send-email-r.schwebel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Fri, 1 May 2015 13:46:44 -0500
+Message-ID: <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com> <1430493730.7979.58.camel@kernel.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1430493730.7979.58.camel@kernel.crashing.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 9fd85eb502a7 ("ARM: pmu: add support for interrupt-affinity
-property") added an optional "interrupt-affinity" property, to specify
-the CPU affinity for each SPI listed in the interrupts property.
+On Fri, May 1, 2015 at 10:22 AM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> On Fri, 2015-05-01 at 07:54 -0500, Rob Herring wrote:
+>
+>> The difference seems to be whether you allocate space or just point to
+>> the FDT for various strings/data. Is that right?
+>>
+>> >    * of_fdt_add_subtree() is the introduced API to do the work.
+>>
+>> Have you looked at overlays and if so why do they not work for your purposes?
+>>
+>> Why do you need to do this with the flattened tree?
+>
+> The basic idea I asked Gavin to implement is that since the FW needs to
+> provide a bunch of DT updates to Linux at runtime in the form of new
+> nodes below an existing one, rather than doing it via some new/custom
+> format, instead, have it send a bit of FDT blob to expand under an
+> existing node.
 
-Without this property, we get this boot warning:
+Overlay = an FDT blob to graft into a live running system. Sounds like
+the same thing.
 
-  CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
+> As for the details of Gavin implementation, I haven't looked at it in
+> details yet so there might be issues there, however I don't know what
+> you mean by "overlays", any pointer ?
 
-This patch adds interrupt-affinity to the PMU node in the
-vexpress-v2p-ca9 device tree.
+CONFIG_OF_OVERLAY
 
-Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/boot/dts/vexpress-v2p-ca9.dts | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+http://events.linuxfoundation.org/sites/events/files/slides/dynamic-dt-keynote-v3.pdf
 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-index a411274..9d71493 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-@@ -33,28 +33,28 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		cpu@0 {
-+		A9_0: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
- 			next-level-cache = <&L2>;
- 		};
- 
--		cpu@1 {
-+		A9_1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <1>;
- 			next-level-cache = <&L2>;
- 		};
- 
--		cpu@2 {
-+		A9_2: cpu@2 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <2>;
- 			next-level-cache = <&L2>;
- 		};
- 
--		cpu@3 {
-+		A9_3: cpu@3 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <3>;
-@@ -182,6 +182,11 @@
- 			     <0 61 4>,
- 			     <0 62 4>,
- 			     <0 63 4>;
-+		interrupt-affinity = <&A9_0>,
-+		                     <&A9_1>,
-+		                     <&A9_2>,
-+		                     <&A9_3>;
-+
- 	};
- 
- 	dcc {
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
