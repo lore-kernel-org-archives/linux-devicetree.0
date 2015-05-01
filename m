@@ -1,37 +1,55 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH 4/7] devicetree: bindings: add new SMP enable method Mediatek SoC
-Date: Fri, 1 May 2015 15:43:27 +0800
-Message-ID: <1430466210-22963-5-git-send-email-yingjoe.chen@mediatek.com>
-References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: Fix pinctrl settings for S2MPS11 RTC alarm
+ IRQ on Arndale Octa
+Date: Fri, 1 May 2015 17:04:49 +0900
+Message-ID: <CAJKOXPexEcG==NefbYaNcZQCq9qtYSaS_qq8tKTthvbGNWFB3A@mail.gmail.com>
+References: <1427985376-20420-1-git-send-email-k.kozlowski@samsung.com>
+	<1427985376-20420-3-git-send-email-k.kozlowski@samsung.com>
+	<CAJKOXPfbsrkvXT_CBxZeDTLYdbwGMH=+5mnBLoy9Yfyp4thVQg@mail.gmail.com>
+	<7hy4l9liav.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
+In-Reply-To: <7hy4l9liav.fsf@deeprootsystems.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Marc Carino <marc.ceeeee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
+To: Kevin Hilman <khilman@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Sangbeom Kim <sbkim73@samsung.com>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This commit add new cpu enable method "mediatek,mt65xx-smp" and
-"mediatek,mt81xx-tz-smp".
+2015-05-01 0:58 GMT+09:00 Kevin Hilman <khilman@kernel.org>:
+> Hi Krzystof,
+>
+> Krzysztof Kozlowski <k.kozlowski@samsung.com> writes:
+>
+>> 2015-04-02 23:36 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
+>>> On Arndale Octa the S2MPS11 RTC alarm interrupt was not handled at all
+>>> because of wrong configuration of interrupt and gpx3-2.
+>>> 1. Interrupt is signaled by falling edge.
+>>> 2. This GPIO line is hard-wired on the board to PVDD_APIO_1V8 through a
+>>>    resistor so pull-up/down must be disabled.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>> ---
+>>>  arch/arm/boot/dts/exynos5420-arndale-octa.dts | 13 ++++++++++++-
+>>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> Dear Kukjin,
+>>
+>> Any comments  on this and other patches. A lot of emails waits for
+>> your opinion. Is there anything I could do to help you in smooth
+>> review or applying?
+>
+> IMO, I think you you should just start collecting fixes and features and
+> queuing them for Kukjin and then start working as a co-maintainer.
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Seems an interesting and challenging idea. Let's try it and see if it helps.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 6aa331d..ac2903d 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -194,6 +194,8 @@ nodes to be present and contain the properties described below.
- 			    "marvell,armada-380-smp"
- 			    "marvell,armada-390-smp"
- 			    "marvell,armada-xp-smp"
-+			    "mediatek,mt65xx-smp"
-+			    "mediatek,mt81xx-tz-smp"
- 			    "qcom,gcc-msm8660"
- 			    "qcom,kpss-acc-v1"
- 			    "qcom,kpss-acc-v2"
--- 
-1.8.1.1.dirty
+>
+> The samsung platforms have been in a near constant state of breakage
+> over the last *several* cycles, and something really needs to change in
+> how these are being monitored and maintained.
+
+We have been struggling with this for some time... It is annoying also to me.
+
+Best regards,
+Krzysztof
