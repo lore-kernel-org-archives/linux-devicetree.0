@@ -1,7 +1,7 @@
 From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 7/7] ARM: dts: mt8127: enable basic SMP bringup for mt8127
-Date: Fri, 1 May 2015 15:43:30 +0800
-Message-ID: <1430466210-22963-8-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH 6/7] ARM: dts: mt8135: enable basic SMP bringup for mt8135
+Date: Fri, 1 May 2015 15:43:29 +0800
+Message-ID: <1430466210-22963-7-git-send-email-yingjoe.chen@mediatek.com>
 References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,7 @@ To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add arch timer node to enable arch-timer support. MT8127 firmware
+Add arch timer node to enable arch-timer support. MT8135 firmware
 doesn't correctly setup arch-timer frequency and CNTVOFF, add
 properties to workaround this.
 
@@ -20,23 +20,23 @@ This also set cpu enable-method to enable SMP.
 
 Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/mt8127.dtsi | 16 ++++++++++++++++
+ arch/arm/boot/dts/mt8135.dtsi | 16 ++++++++++++++++
  1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
-index aaa7862..7c2090d 100644
---- a/arch/arm/boot/dts/mt8127.dtsi
-+++ b/arch/arm/boot/dts/mt8127.dtsi
-@@ -23,6 +23,7 @@
+diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+index 612bd22..eb5e06f 100644
+--- a/arch/arm/boot/dts/mt8135.dtsi
++++ b/arch/arm/boot/dts/mt8135.dtsi
+@@ -46,6 +46,7 @@
  	cpus {
  		#address-cells = <1>;
  		#size-cells = <0>;
 +		enable-method = "mediatek,mt81xx-tz-smp";
  
- 		cpu@0 {
+ 		cpu0: cpu@0 {
  			device_type = "cpu";
-@@ -72,6 +73,21 @@
-                 };
+@@ -103,6 +104,21 @@
+ 		};
  	};
  
 +	timer {
