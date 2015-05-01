@@ -1,41 +1,82 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH] Documentation/devicetree: document OCTEON USB bindings
-Date: Fri, 1 May 2015 19:15:48 +0300
-Message-ID: <20150501161548.GB595@fuloong-minipc.musicnaut.iki.fi>
-References: <1430423040-2088-1-git-send-email-aaro.koskinen@iki.fi>
- <CAL_JsqJbebtb6z2WOXfs8DUBsb=oGhFAh+qUQaR0yndGvWgSGg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] ARM: vexpress: Add interrupt-affinity
+Date: Fri,  1 May 2015 19:11:26 +0200
+Message-ID: <1430500286-10337-1-git-send-email-r.schwebel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJbebtb6z2WOXfs8DUBsb=oGhFAh+qUQaR0yndGvWgSGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Commit 9fd85eb502a7 ("ARM: pmu: add support for interrupt-affinity
+property") added an optional "interrupt-affinity" property, to specify
+the CPU affinity for each SPI listed in the interrupts property.
 
-On Fri, May 01, 2015 at 09:39:19AM -0500, Rob Herring wrote:
-> > +   - refclk-frequency: speed of the USB reference clock. Allowed values are
-> > +     12000000, 24000000 or 48000000.
-> 
-> We already have a standard property for this if you only have 1 clock:
-> clock-frequency.
-> 
-> > +   - refclk-type: type of the USB reference clock. Allowed values are
-> > +     "crystal" or "external".
-> 
-> Should be prefixed with "cavium,".
+Without this property, we get this boot warning:
 
-Both of these are already used in
-Documentation/devicetree/bindings/mips/cavium/uctl.txt (the USB
-controller for newer OCTEONs). These bindings are unfortunately
-just "reverse-engineered" from products that are already shipping
-and likely not perfect, but shouldn't we still try to be compatible
-for the sake of users?
+  CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
 
-A.
+This patch adds interrupt-affinity to the PMU node in the
+vexpress-v2p-ca9 device tree.
+
+Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+index a411274..9d71493 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -33,28 +33,28 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		A9_0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
+ 			next-level-cache = <&L2>;
+ 		};
+ 
+-		cpu@1 {
++		A9_1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
+ 			next-level-cache = <&L2>;
+ 		};
+ 
+-		cpu@2 {
++		A9_2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <2>;
+ 			next-level-cache = <&L2>;
+ 		};
+ 
+-		cpu@3 {
++		A9_3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <3>;
+@@ -182,6 +182,11 @@
+ 			     <0 61 4>,
+ 			     <0 62 4>,
+ 			     <0 63 4>;
++		interrupt-affinity = <&A9_0>,
++		                     <&A9_1>,
++		                     <&A9_2>,
++		                     <&A9_3>;
++
+ 	};
+ 
+ 	dcc {
+-- 
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
