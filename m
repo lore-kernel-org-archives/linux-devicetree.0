@@ -1,154 +1,58 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH 3/3] mmc: dw_mmc: k3: support hi6220
-Date: Fri,  1 May 2015 09:46:58 +0800
-Message-ID: <1430444818-7740-4-git-send-email-zhangfei.gao@linaro.org>
-References: <1430444818-7740-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1430444818-7740-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>, "Jorge A. Ramirez-Ortiz" <jorge.ramirez-ortiz@linaro.org>, Dan Yuan <yuandan@hisilicon.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/3 v7] mailbox: Enable BCM2835 mailbox support
+Date: Thu, 30 Apr 2015 21:01:55 -0600
+Message-ID: <5542ECA3.8060104@wwwdotorg.org>
+References: <1430254460-26754-1-git-send-email-eric@anholt.net>	<1430327374-6562-1-git-send-email-eric@anholt.net> <CABb+yY0+Dd6RMJfmcqWrJfsSkPS8KjtpctJteoTZrj3QttJ71g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY0+Dd6RMJfmcqWrJfsSkPS8KjtpctJteoTZrj3QttJ71g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jorge A. Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Dan Yuan <yuandan@hisilicon.com>
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- drivers/mmc/host/dw_mmc-k3.c | 104 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 102 insertions(+), 2 deletions(-)
+On 04/29/2015 11:26 PM, Jassi Brar wrote:
+> On Wed, Apr 29, 2015 at 10:39 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> 
+>> +
+>> +struct bcm2835_mbox {
+>> +       struct device *dev;
+>> +       void __iomem *regs;
+>> +       spinlock_t lock;
+>> +       struct mbox_controller controller;
+>> +};
+>> +
+>> +static struct bcm2835_mbox *mbox;
+>> +
+>> +static irqreturn_t bcm2835_mbox_irq(int irq, void *dev_id)
+>> +{
+>> +       struct device *dev = mbox->dev;
+>> +       struct mbox_chan *link = &mbox->controller.chans[0];
+>> +
+> I learn from Stephen's other post that the controller could have
+> multiple channels. In which case this driver is poorly setup. Actually
+> if the driver was designed properly there isn't anything special to be
+> done.
+>  Here you choose to waste 'dev_id' and hard-code dereferencing to channel-0
 
-diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
-index 650f9cc..ab3dc59 100644
---- a/drivers/mmc/host/dw_mmc-k3.c
-+++ b/drivers/mmc/host/dw_mmc-k3.c
-@@ -8,16 +8,29 @@
-  * (at your option) any later version.
-  */
- 
--#include <linux/module.h>
--#include <linux/platform_device.h>
- #include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/mmc/host.h>
- #include <linux/mmc/dw_mmc.h>
-+#include <linux/module.h>
- #include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- 
- #include "dw_mmc.h"
- #include "dw_mmc-pltfm.h"
- 
-+#define AO_SCTRL_SEL18		BIT(10)
-+#define AO_SCTRL_CTRL3		0x40C
-+
-+#define SDMMC_CMD_DISABLE_BOOT	BIT(26)
-+
-+struct k3_priv {
-+	struct regmap	*reg;
-+};
-+
- static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
- {
- 	int ret;
-@@ -33,8 +46,95 @@ static const struct dw_mci_drv_data k3_drv_data = {
- 	.set_ios		= dw_mci_k3_set_ios,
- };
- 
-+static int dw_mci_hi6220_parse_dt(struct dw_mci *host)
-+{
-+	struct k3_priv *priv;
-+
-+	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->reg = syscon_regmap_lookup_by_phandle(host->dev->of_node,
-+					 "hisilicon,peripheral-syscon");
-+	if (IS_ERR(priv->reg))
-+		priv->reg = NULL;
-+
-+	host->priv = priv;
-+	return 0;
-+}
-+
-+static int dw_mci_hi6220_switch_voltage(struct mmc_host *mmc, struct mmc_ios *ios)
-+{
-+	struct dw_mci_slot *slot = mmc_priv(mmc);
-+	struct k3_priv *priv;
-+	struct dw_mci *host;
-+	int min_uv, max_uv;
-+	int ret;
-+
-+	host = slot->host;
-+	priv = host->priv;
-+
-+	if (!priv || !priv->reg)
-+		return 0;
-+
-+	min_uv = 1800000;
-+	max_uv = 1800000;
-+
-+	if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
-+		ret = regmap_update_bits(priv->reg, AO_SCTRL_CTRL3,
-+					 AO_SCTRL_SEL18, 0);
-+		if (ret) {
-+			dev_dbg(host->dev, "switch voltage failed\n");
-+			return ret;
-+		}
-+		min_uv = 3000000;
-+		max_uv = 3000000;
-+	}
-+
-+	if (IS_ERR_OR_NULL(mmc->supply.vqmmc))
-+		return 0;
-+
-+	ret = regulator_set_voltage(mmc->supply.vqmmc, min_uv, max_uv);
-+	if (ret) {
-+		dev_dbg(host->dev, "Regulator set error %d: %d - %d\n",
-+				 ret, min_uv, max_uv);
-+		return ret;
-+	}
-+
-+	ret = regulator_enable(mmc->supply.vqmmc);
-+	if (ret) {
-+		dev_dbg(host->dev, "Regulator enable error %d\n", ret);
-+		return ret;
-+	}
-+
-+	usleep_range(5000, 5500);
-+
-+	return 0;
-+}
-+
-+static void dw_mci_hi6220_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-+{
-+	int ret;
-+	unsigned int clock;
-+
-+	clock = (ios->clock <= 25000000) ? 25000000 : ios->clock;
-+
-+	ret = clk_set_rate(host->biu_clk, clock);
-+	if (ret)
-+		dev_warn(host->dev, "failed to set rate %uHz\n", clock);
-+
-+	host->bus_hz = clk_get_rate(host->biu_clk);
-+}
-+
-+static const struct dw_mci_drv_data hi6220_data = {
-+	.switch_voltage		= dw_mci_hi6220_switch_voltage,
-+	.set_ios		= dw_mci_hi6220_set_ios,
-+	.parse_dt		= dw_mci_hi6220_parse_dt,
-+};
-+
- static const struct of_device_id dw_mci_k3_match[] = {
- 	{ .compatible = "hisilicon,hi4511-dw-mshc", .data = &k3_drv_data, },
-+	{ .compatible = "hisilicon,hi6220-dw-mshc", .data = &hi6220_data, },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, dw_mci_k3_match);
--- 
-1.9.1
+Now that I look a bit harder at the registers, I think there are 2
+mailbox register sets, but each is uni-directional, so a pair makes up
+the typical bi-directional mailbox. There are multiple "owner" areas (or
+sets of registers); I'm not quite sure what that implies.
 
+As such, limiting this driver to a single mailbox is probably correct.
+
+I would expect to see #mbox-cells=<0> in the DT, which would require a
+custom of_xlate though (or modifying the default to work with a 0 cell
+count; IIRC the default of_xlate for some other subsystems will work in
+that scenario).
+
+(As an aside, if we ever did find the need to expand the driver to cover
+more mailboxes in the future, extending it and the DT to support
+#mbox-cells=<0> or #mbox-cells=<1> at run-time should be trivial).
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
