@@ -1,64 +1,105 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] Regulator: mc34708: Add DT binding documentation
-Date: Fri, 1 May 2015 15:03:21 +0100
-Message-ID: <20150501140321.GZ22845@sirena.org.uk>
-References: <20150428141736.16243.57292.stgit@localhost>
- <20150428141738.16243.18377.stgit@localhost>
- <1345809430.776937.1430476461635.JavaMail.open-xchange@oxbaltgw07.schlund.de>
- <20150501110123.GU22845@sirena.org.uk>
- <1816610654.762513.1430483624334.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Documentation/devicetree: document OCTEON USB bindings
+Date: Fri, 1 May 2015 09:39:19 -0500
+Message-ID: <CAL_JsqJbebtb6z2WOXfs8DUBsb=oGhFAh+qUQaR0yndGvWgSGg@mail.gmail.com>
+References: <1430423040-2088-1-git-send-email-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cj2v4dTZyK4qpVAb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1816610654.762513.1430483624334.JavaMail.open-xchange@oxbaltgw08.schlund.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430423040-2088-1-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 30, 2015 at 2:44 PM, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> wrote:
+> Document device-tree bindings for the USB controller on older
+> OCTEON SOCs (OCTEON, OCTEON+).
+>
+> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/usb/octeon-usb.txt         | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/octeon-usb.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/octeon-usb.txt b/Documentation/devicetree/bindings/usb/octeon-usb.txt
+> new file mode 100644
+> index 0000000..fd121c4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/octeon-usb.txt
+> @@ -0,0 +1,58 @@
+> +OCTEON/OCTEON+ USB BLOCK
+> +
+> +1) Main node
+> +
+> +   Required properties:
+> +
+> +   - compatible: must be "cavium,octeon-5750-usbn"
+> +
+> +   - reg: specifies the physical base address of the USBN block and
+> +     the length of the memory mapped region.
+> +
+> +   - #address-cells: specifies the number of cells needed to encode an
+> +     address. The value must be 2.
+> +
+> +   - #size-cells: specifies the number of cells used to represent the size
+> +     of an address. The value must be 2.
+> +
+> +   - ranges: specifies the translation between child address space and parent
+> +     address space.
+> +
+> +   - refclk-frequency: speed of the USB reference clock. Allowed values are
+> +     12000000, 24000000 or 48000000.
 
---cj2v4dTZyK4qpVAb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We already have a standard property for this if you only have 1 clock:
+clock-frequency.
 
-On Fri, May 01, 2015 at 02:33:44PM +0200, Stefan Wahren wrote:
-> > Mark Brown <broonie@kernel.org> hat am 1. Mai 2015 um 13:01 geschrieben:
+> +   - refclk-type: type of the USB reference clock. Allowed values are
+> +     "crystal" or "external".
 
-> > On Fri, May 01, 2015 at 12:34:21PM +0200, Stefan Wahren wrote:
+Should be prefixed with "cavium,".
 
-> > > a commit message would be nice and the subject should specify dt-bind=
-ings
-> > > instead of regulator subsystem.
-
-> > No, it shouldn't. DT bindings for a subsystem go through the subsystem
-> > and the subsystem maintainer needs to see them to read them.
-
-> sorry for my bad expressing.=20
-
-> I tought the subject line should be something like:
-
-> DT: add binding documentation for mc34708 regulator
-
-No, it shouldn't.  The subject line should start "regulator: " like all
-other regulator commits.
-
---cj2v4dTZyK4qpVAb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVQ4eoAAoJECTWi3JdVIfQVtMH/j6LPvdmJ8rJ7H0IXN6uOhNf
-zRKTwN1DZiWxs47Y2kNFKXOJQQjZDxZxafAIYcAUIpu4Q9PG2pQrAEpgiGs4MaL0
-UcNgD43bUOaeIxABpyE2NCOxxCqVREveGnSWMO/ANq3PpDPrAG9BKI0a9cp76LfL
-goaYriuOK9fnnZ4miv/WdAnZc0deWl7IL2H3JvE1POThK6m8Pr7gF1hjmBOK1sj2
-C5uYRuxrIoVt0ZtTOUQJWs/AH1rOUzXVryAd8f4fvZsyVDZXXh/Ps4Al/M/rudyO
-3Q5w8crBcigl8RU4kpzf611DbwODKRtGVbVV7CgvYSmDqszLSEdVSTA5Dq6B9Yw=
-=u0ug
------END PGP SIGNATURE-----
-
---cj2v4dTZyK4qpVAb--
+> +
+> +2) Child node
+> +
+> +   The main node must have one child node which describes the built-in
+> +   USB controller.
+> +
+> +   Required properties:
+> +
+> +   - compatible: must be "cavium,octeon-5750-usbc"
+> +
+> +   - reg: specifies the physical base address of the USBC block and
+> +     the length of the memory mapped region.
+> +
+> +   - interrupts: specifies the interrupt number for the USB controller.
+> +
+> +3) Example:
+> +
+> +       usbn: usbn@1180068000000 {
+> +               compatible = "cavium,octeon-5750-usbn";
+> +               reg = <0x11800 0x68000000 0x0 0x1000>;
+> +               ranges; /* Direct mapping */
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               refclk-frequency = <12000000>;
+> +               refclk-type = "crystal";
+> +
+> +               usbc@16f0010000000 {
+> +                       compatible = "cavium,octeon-5750-usbc";
+> +                       reg = <0x16f00 0x10000000 0x0 0x80000>;
+> +                       interrupts = <0 56>;
+> +               };
+> +       };
+> +
+> --
+> 2.3.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
