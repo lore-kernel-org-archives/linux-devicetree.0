@@ -1,63 +1,27 @@
-From: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ASoC: Add gtm601 codec driver
-Date: Fri, 1 May 2015 13:39:39 +0200
-Message-ID: <CAAfyv368_X6t7OqtP6CKttU1PKx2Su_xptUNqYZ2j2-2PmG5DA@mail.gmail.com>
-References: <1430429283-27907-1-git-send-email-marek@goldelico.com>
-	<1430429283-27907-2-git-send-email-marek@goldelico.com>
-	<1430465409.2187.47.camel@x220>
+From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
+Subject: Re: [PATCH 0/3] Using SPI NOR flah on sunxi.
+Date: Fri, 01 May 2015 08:27:45 -0400
+Message-ID: <jwv4mnwfppf.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+References: <cover.1430403750.git.hramrach@gmail.com>
+Reply-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430465409.2187.47.camel@x220>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Return-path: <linux-sunxi+bncBDMKFH665MBBBVXCRWVAKGQEQUKFDKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+> The SPI driver returns an error when more than 64 bytes are
+> transferred at once due to lack of DMA support.
 
-On Fri, May 1, 2015 at 9:30 AM, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> wrote:
-> Just a nit: a license mismatch.
-Right, I copy and paste license header from wm827 driver but add
-MODULE_LICENSE wrong version. I'll update in next version. Thanks.
->
-> On Thu, 2015-04-30 at 23:28 +0200, Marek Belisko wrote:
->> --- /dev/null
->> +++ b/sound/soc/codecs/gtm601.c
->
->> + *  This program is free software; you can redistribute  it and/or modify it
->> + *  under  the terms of  the GNU General  Public License as published by the
->> + *  Free Software Foundation;  either version 2 of the  License, or (at your
->> + *  option) any later version.
->
-> This states the license is GPL v2 or later.
->
->> +MODULE_LICENSE("GPL v2");
->
-> And, according to include/linux/module.h, this states the license is
-> (just) GPL v2. So I think either the comment at the top of this file or
-> the ident used in the MODULE_LICESE() macro should change.
->
->
-> Paul Bolle
->
+Have you tried the dmaengine patch and make the SPI driver use it?
 
-BR,
 
-marek
-
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+        Stefan
