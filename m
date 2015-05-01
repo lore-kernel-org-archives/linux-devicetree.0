@@ -1,57 +1,46 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 13/15] serial: sh-sci: Add device tree bindings for
- r8a7793
-Date: Fri, 1 May 2015 09:41:37 +0900
-Message-ID: <20150501004137.GD13754@verge.net.au>
+Subject: Re: [PATCH v2 06/15] pinctrl: sh-pfc: Add renesas,pfc-r8a7793 to
+ binding documentation
+Date: Fri, 1 May 2015 09:44:19 +0900
+Message-ID: <20150501004419.GE13754@verge.net.au>
 References: <1430403544-26742-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1430403544-26742-14-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1430403544-26742-7-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1430403544-26742-14-git-send-email-ulrich.hecht+renesas@gmail.com>
+In-Reply-To: <1430403544-26742-7-git-send-email-ulrich.hecht+renesas@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 Cc: geert@linux-m68k.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 04:19:02PM +0200, Ulrich Hecht wrote:
-> Also replaces "R-Car M2" with "R-Car M2-W" to avoid confusion.
+On Thu, Apr 30, 2015 at 04:18:55PM +0200, Ulrich Hecht wrote:
+> Also renames "R-Car M2" to "R-Car M2-W" to avoid confusion.
 > 
 > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 > Cc: devicetree@vger.kernel.org
 
 Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-Most likely this needs to go to the SERIAL DRIVERS maintainers.
-
 > ---
->  .../devicetree/bindings/serial/renesas,sci-serial.txt        | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> index ae73bb0..78419eb 100644
-> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> @@ -15,10 +15,14 @@ Required properties:
->      - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
->      - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
->      - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
-> -    - "renesas,scif-r8a7791" for R8A7791 (R-Car M2) SCIF compatible UART.
-> -    - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2) SCIFA compatible UART.
-> -    - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2) SCIFB compatible UART.
-> -    - "renesas,hscif-r8a7791" for R8A7791 (R-Car M2) HSCIF compatible UART.
-> +    - "renesas,scif-r8a7791" for R8A7791 (R-Car M2-W) SCIF compatible UART.
-> +    - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2-W) SCIFA compatible UART.
-> +    - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2-W) SCIFB compatible UART.
-> +    - "renesas,hscif-r8a7791" for R8A7791 (R-Car M2-W) HSCIF compatible UART.
-> +    - "renesas,scif-r8a7793" for R8A7793 (R-Car M2-N) SCIF compatible UART.
-> +    - "renesas,scifa-r8a7793" for R8A7793 (R-Car M2-N) SCIFA compatible UART.
-> +    - "renesas,scifb-r8a7793" for R8A7793 (R-Car M2-N) SCIFB compatible UART.
-> +    - "renesas,hscif-r8a7793" for R8A7793 (R-Car M2-N) HSCIF compatible UART.
->      - "renesas,scif-r8a7794" for R8A7794 (R-Car E2) SCIF compatible UART.
->      - "renesas,scifa-r8a7794" for R8A7794 (R-Car E2) SCIFA compatible UART.
->      - "renesas,scifb-r8a7794" for R8A7794 (R-Car E2) SCIFB compatible UART.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+> index bfe72ec..6bcf851 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+> @@ -16,7 +16,8 @@ Required Properties:
+>      - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible pin-controller.
+>      - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
+>      - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible pin-controller.
+> -    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2) compatible pin-controller.
+> +    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2-W) compatible pin-controller.
+> +    - "renesas,pfc-r8a7793": for R8A7793 (R-Car M2-N) compatible pin-controller.
+>      - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-controller.
+>  
+>    - reg: Base address and length of each memory resource used by the pin
 > -- 
 > 2.3.5
 > 
