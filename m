@@ -1,44 +1,57 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 15/15] PCI: rcar: document r8a7793 DT bindings
-Date: Fri, 1 May 2015 09:36:00 +0900
-Message-ID: <20150501003600.GC13754@verge.net.au>
+Subject: Re: [PATCH v2 13/15] serial: sh-sci: Add device tree bindings for
+ r8a7793
+Date: Fri, 1 May 2015 09:41:37 +0900
+Message-ID: <20150501004137.GD13754@verge.net.au>
 References: <1430403544-26742-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1430403544-26742-16-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1430403544-26742-14-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1430403544-26742-16-git-send-email-ulrich.hecht+renesas@gmail.com>
+In-Reply-To: <1430403544-26742-14-git-send-email-ulrich.hecht+renesas@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: geert@linux-m68k.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: geert@linux-m68k.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[CC Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org ]
-
-On Thu, Apr 30, 2015 at 04:19:04PM +0200, Ulrich Hecht wrote:
+On Thu, Apr 30, 2015 at 04:19:02PM +0200, Ulrich Hecht wrote:
+> Also replaces "R-Car M2" with "R-Car M2-W" to avoid confusion.
+> 
 > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > Cc: devicetree@vger.kernel.org
+
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+
+Most likely this needs to go to the SERIAL DRIVERS maintainers.
+
 > ---
->  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
->  1 file changed, 1 insertion(+)
-
-I suppose this one is for the PCI subsystem and thus Bjorn Helgaas (CCed).
-
-> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> index d8ef5bf..8b156fe 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> @@ -8,6 +8,7 @@ OHCI and EHCI controllers.
->  Required properties:
->  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
->  	      "renesas,pci-r8a7791" for the R8A7791 SoC.
-> +	      "renesas,pci-r8a7793" for the R8A7793 SoC.
->  - reg:	A list of physical regions to access the device: the first is
->  	the operational registers for the OHCI/EHCI controllers and the
->  	second is for the bridge configuration and control registers.
+>  .../devicetree/bindings/serial/renesas,sci-serial.txt        | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> index ae73bb0..78419eb 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -15,10 +15,14 @@ Required properties:
+>      - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
+>      - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
+>      - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
+> -    - "renesas,scif-r8a7791" for R8A7791 (R-Car M2) SCIF compatible UART.
+> -    - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2) SCIFA compatible UART.
+> -    - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2) SCIFB compatible UART.
+> -    - "renesas,hscif-r8a7791" for R8A7791 (R-Car M2) HSCIF compatible UART.
+> +    - "renesas,scif-r8a7791" for R8A7791 (R-Car M2-W) SCIF compatible UART.
+> +    - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2-W) SCIFA compatible UART.
+> +    - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2-W) SCIFB compatible UART.
+> +    - "renesas,hscif-r8a7791" for R8A7791 (R-Car M2-W) HSCIF compatible UART.
+> +    - "renesas,scif-r8a7793" for R8A7793 (R-Car M2-N) SCIF compatible UART.
+> +    - "renesas,scifa-r8a7793" for R8A7793 (R-Car M2-N) SCIFA compatible UART.
+> +    - "renesas,scifb-r8a7793" for R8A7793 (R-Car M2-N) SCIFB compatible UART.
+> +    - "renesas,hscif-r8a7793" for R8A7793 (R-Car M2-N) HSCIF compatible UART.
+>      - "renesas,scif-r8a7794" for R8A7794 (R-Car E2) SCIF compatible UART.
+>      - "renesas,scifa-r8a7794" for R8A7794 (R-Car E2) SCIFA compatible UART.
+>      - "renesas,scifb-r8a7794" for R8A7794 (R-Car E2) SCIFB compatible UART.
 > -- 
 > 2.3.5
 > 
