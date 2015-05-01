@@ -1,231 +1,56 @@
-From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
- for cygnus
-Date: Fri, 1 May 2015 12:01:07 -0700
-Message-ID: <5543CD73.2030902@broadcom.com>
-References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com> <1429744923-2007-3-git-send-email-jonathar@broadcom.com> <6346218.3x3hbSlxMs@wuerfel>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE)
+ driver for cygnus
+Date: Fri, 1 May 2015 20:30:04 +0100
+Message-ID: <20150501203004.3add2c95@lxorguk.ukuu.org.uk>
+References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com>
+	<1429744923-2007-3-git-send-email-jonathar@broadcom.com>
+	<6346218.3x3hbSlxMs@wuerfel>
+	<5543CD73.2030902@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6346218.3x3hbSlxMs@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Darren Edamura <dedamura-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5543CD73.2030902@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Richardson <jonathar@broadcom.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Darren Edamura <dedamura@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd, some more info is provided and also some questions before I can
-proceed.
+> It's a bit more than a PTP hardware clock on a NIC. It's a clock for PTP
+> plus timestamping 32 other hardware inputs that can be enabled at any
+> time with timestamps being generated at varying frequencies. As clients
+> are enabled that generate timestamps at higher frequencies, the
+> isochronous interrupt frequency needs to be increased so that overflows
+> in the the h/w and s/w FIFO's don't occur (this frequency could possibly
+> be automated instead of changing it manually as we currently do).
 
-On 15-04-23 01:04 AM, Arnd Bergmann wrote:
-> On Wednesday 22 April 2015 16:22:03 Jonathan Richardson wrote:
->> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Tested-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> 
-> No description at all?
+Nice that this is finally happening mainstream having worked on an early
+design for this about 25 years ago 8)
 
-The DTE creates timestamps of hardware based events such as GPIO, I2S
-signals for audio, etc. It was also intended to provide 802.1AS / PTP
-timestamps for network packets. The h/w has up to 32 "clients" -- the
-hardware inputs into a timestamping engine. These clients are specific
-to the chip the DTE is used on. For Cygnus you can see what they are in
-our 'enum dte_client' from bcm_cygnus_dte.h.
+> It looks like the driver could almost be a PTP driver instead of a char
+> driver controlled with ioctls. PTP does this already using
+> clock_gettime(), clock_settime(), clock_adjtime(). But we want to set
+> the frequency as well as adjust the clock and I don't see how that is
+> possible with the stripped down timex data passed to the driver from
+> ptp_clock_adjtime().
 
-The DTE timestamper creates timestamps based on the current clock wall
-time. When an event occurs it stores the timestamp in a h/w FIFO. Each
-client also has a divider that can be set to control the rate that
-timestamps are generated at by the timestamper and these are adjustable
-at run time.
+Agreed. You also want the plumbing so that socket sk_buffs can be
+timestamped by it when it is monitoring the IRQ (the stamp code in the
+kernel actually got added way back when for exactly this type of card).
 
-The isochronous interrupt is used to pull the timestamps out of the h/w
-FIFO and store them in a s/w FIFO until they are pulled out of that from
-user space.
+> channel control, unless I'm missing something. If people are flexible
+> with extending that I could propose something. Let me know which way you
+> prefer to go. Thanks.
 
-The API we provide in the driver enables clients (inputs into the
-timestamper) using dte_enable_timestamp(). The clients divider is set
-with dte_set_client_divider(). The isochronous interrupt frequency - the
-rate at which the ISR fires to pull timestamps from h/w to s/w FIFO is
-dte_set_irq_interval().
+I would strongly favour fixing PTP to do this right. Otherwise we will
+have 2 or 3 adhoc drivers, then end up moving them to PTP and then end up
+dealing with the compat mess.
 
-Timestamps generated by the timestamper for clients are polled for using
-dte_get_timestamp().
+The only other question I'd ponder is whether aspects of this best fit
+PTP or IIO or both depending upon purpose. There's after all no
+fundamental reason a driver can't provide services to both types of
+consumer depending upon the need.
 
-The clock is controlled with the remaining functions: dte_set_time(),
-dte_get_time(), dte_adj_time(), dte_adj_freq(). These functions provide
-the time base for the timestamper but also provide a clock that was
-meant to be used later by an Ethernet driver for PTP.
 
-The ioctls correspond to all of these functions for the user space API.
-
-The idea for future PTP support was to use the dte_get_time() to get
-timestamps for the packets. This may make the driver more suitable to be
-PTP driver.
-
-It's a bit more than a PTP hardware clock on a NIC. It's a clock for PTP
-plus timestamping 32 other hardware inputs that can be enabled at any
-time with timestamps being generated at varying frequencies. As clients
-are enabled that generate timestamps at higher frequencies, the
-isochronous interrupt frequency needs to be increased so that overflows
-in the the h/w and s/w FIFO's don't occur (this frequency could possibly
-be automated instead of changing it manually as we currently do).
-
-> 
-> You are introducing a new subsystem here, which means you get to put
-> a lot of thought into the API design, to ensure that it works with
-> other drivers of the same type, and that we don't already have
-> a subsystem that does what you need here.
-> 
-> Please write a few pages of text about the tradeoffs that went into
-> the internal and user-facing API design, and explain the differences
-> to the existing infrastructure we have for the clocksource, clockevent,
-> k_clock, posix timers, posix timers, timerfd, rtc, and ptp frameworks,
-> in particular why your hardware cannot fit into the existing frameworks
-> and has to have a new one.
-> 
->> +struct bcm_cygnus_dte *dte_get_dev_from_devname(const char *devname)
->> +{
->> +	struct bcm_cygnus_dte *cygnus_dte = NULL;
->> +	bool found = false;
->> +
->> +	if (!devname)
->> +		return NULL;
->> +
->> +	list_for_each_entry(cygnus_dte, &dtedev_list, node) {
->> +		if (!strcmp(dev_name(&cygnus_dte->pdev->dev), devname)) {
->> +			/* Matched on device name */
->> +			found = true;
->> +			break;
->> +		}
->> +	}
->> +
->> +	return found ? cygnus_dte : NULL;
->> +}
->> +EXPORT_SYMBOL(dte_get_dev_from_devname);
-> 
-> No, don't match on a device name. If you must have a reference, use
-> a phandle in DT.
-> 
->> +int dte_get_timestamp(
->> +		struct bcm_cygnus_dte *cygnus_dte,
->> +		enum dte_client client,
->> +		struct timespec *ts)
-> 
-> Please use timespec64 or ktime_t for internal interfaces.
-> 
->> +	case DTE_IOCTL_SET_DIVIDER:
-> 
-> For the IOCTLs, please write a documentation in man-page form. No need
-> for troff formatting, plain text is fine.
-
-Sure, where should this man page live in the kernel?
-
-> 
->> +/**
->> + * DTE Client
->> + */
->> +enum dte_client {
->> +	DTE_CLIENT_MIN = 0,
->> +	DTE_CLIENT_I2S0_BITCLOCK = 0,
->> +	DTE_CLIENT_I2S1_BITCLOCK,
->> +	DTE_CLIENT_I2S2_BITCLOCK,
->> +	DTE_CLIENT_I2S0_WORDCLOCK,
->> +	DTE_CLIENT_I2S1_WORDCLOCK,
->> +	DTE_CLIENT_I2S2_WORDCLOCK,
->> +	DTE_CLIENT_LCD_CLFP,
->> +	DTE_CLIENT_LCD_CLLP,
->> +	DTE_CLIENT_GPIO14,
->> +	DTE_CLIENT_GPIO15,
->> +	DTE_CLIENT_GPIO22,
->> +	DTE_CLIENT_GPIO23,
->> +	DTE_CLIENT_MAX,
->> +};
-> 
-> Make this more abstract, so we can reuse the API for other vendors.
-> 
->> +#define DTE_IOCTL_BASE          'd'
->> +#define DTE_IO(nr)              _IO(DTE_IOCTL_BASE, nr)
->> +#define DTE_IOR(nr, type)       _IOR(DTE_IOCTL_BASE, nr, type)
->> +#define DTE_IOW(nr, type)       _IOW(DTE_IOCTL_BASE, nr, type)
->> +#define DTE_IOWR(nr, type)      _IOWR(DTE_IOCTL_BASE, nr, type)
->> +
->> +#define DTE_IOCTL_SET_DIVIDER       DTE_IOW(0x00, struct dte_data)
->> +#define DTE_IOCTL_ENABLE_TIMESTAMP  DTE_IOW(0x01, struct dte_data)
->> +#define DTE_IOCTL_SET_IRQ_INTERVAL  DTE_IOW(0x02, struct dte_data)
->> +#define DTE_IOCTL_GET_TIMESTAMP     DTE_IOWR(0x03, struct dte_timestamp)
->> +#define DTE_IOCTL_SET_TIME          DTE_IOW(0x04, struct timespec)
->> +#define DTE_IOCTL_GET_TIME          DTE_IOR(0x05, struct timespec)
-> 
-> Instead of timespec, use a pair of '__u64' values, or alternatively
-> just a '__u64' for nanoseconds if the API does not have to cover
-> times before 1970 or after 2262.
-> 
->> +#define DTE_IOCTL_ADJ_TIME          DTE_IOW(0x06, int64_t)
->> +#define DTE_IOCTL_ADJ_FREQ          DTE_IOW(0x07, int32_t)
-> 
-> Maybe 'struct timex' for the adjustment?
-> 
-> Also, how about adding new syscalls along the lines of
-> the timerfd stuff instead of using ioctl?
-
-It looks like the driver could almost be a PTP driver instead of a char
-driver controlled with ioctls. PTP does this already using
-clock_gettime(), clock_settime(), clock_adjtime(). But we want to set
-the frequency as well as adjust the clock and I don't see how that is
-possible with the stripped down timex data passed to the driver from
-ptp_clock_adjtime().
-
-We have the additional requirement of controlling multiple clients and
-retrieving the timestamps, etc. The PTP driver allows for some control
-of external time stamp channels already using 'n_ext_ts' in struct
-ptp_clock_info. We could use that to enable clients and get timestamps,
-but we also need to be able to change dividers for the clients at run
-time if desired. It doesn't look like additional ioctls could be passed
-to a PTP driver because ptp_ioctl() is the ioctl handler.
-
-I don't see how any of the API's currently do what we need other than
-the flexibility a char device provides. Just wanted to get your thoughts
-on this before I start looking at an entirely new user and kernel API
-for DTE. Really what we need is PTP with extended external timestamping
-channel control, unless I'm missing something. If people are flexible
-with extending that I could propose something. Let me know which way you
-prefer to go. Thanks.
-
-> 
->> +struct dte_data {
->> +	enum dte_client client;
->> +	unsigned int data;
->> +};
-> 
-> No 'enum' in ioctl data, always use '__u32' etc.
-> 
->> +
->> +struct dte_timestamp {
->> +	enum dte_client client;
->> +	struct timespec ts;
->> +};
-> 
-> Instead of timespec, use a pair of '__u64' values, or alternatively
-> just a '__u64' for nanoseconds if the API does not have to cover
-> times before 1970 or after 2262.
-> 
->> +struct bcm_cygnus_dte;
->> +
->> +extern struct bcm_cygnus_dte *dte_get_dev_from_devname(
->> +		const char *devname);
->> +extern int dte_enable_timestamp(
->> +		struct bcm_cygnus_dte *cygnus_dte,
->> +		enum dte_client client,
->> +		int enable);
-> 
-> 
-> Put the internal declarations into one header in include/linux, and the
-> user space facing ones in another one in include/uapi/linux.
-> 
-> 	Arnd
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alan
