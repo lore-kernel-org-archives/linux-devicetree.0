@@ -1,55 +1,70 @@
-From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Subject: Re: [Celinux-dev] Invitation and RFC: Linux Plumbers Device Tree
- track proposed
-Date: Fri, 01 May 2015 16:22:08 -0500
-Message-ID: <5543EE80.5060109@landley.net>
-References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Sat, 02 May 2015 08:57:18 +1000
+Message-ID: <1430521038.7979.70.camel@kernel.crashing.org>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+	 <1430493730.7979.58.camel@kernel.crashing.org>
+	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E-6yWnlZQfN9JoBVljSLT0Ysm4BeyDBExM@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2015 02:20 PM, Rowand, Frank wrote:
-> In recent years there have been proposed tools to aid in the creation of valid
-> device trees and in debugging device tree issues.  An example of this is the
-> various approaches proposed (with source code provided) to validate device tree
-> source against valid bindings.  As of today, device tree related tools,
-> techniques, and debugging infrastructure have not progressed very far.  I have
-> submitted a device tree related proposal for the Linux Plumbers 2015 conference
-> to spur action and innovation in such tools, techniques, and debugging
-> infrastructure.
+On Fri, 2015-05-01 at 13:46 -0500, Rob Herring wrote:
+> On Fri, May 1, 2015 at 10:22 AM, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+> > On Fri, 2015-05-01 at 07:54 -0500, Rob Herring wrote:
+> >
+> >> The difference seems to be whether you allocate space or just point to
+> >> the FDT for various strings/data. Is that right?
+> >>
+> >> >    * of_fdt_add_subtree() is the introduced API to do the work.
+> >>
+> >> Have you looked at overlays and if so why do they not work for your purposes?
+> >>
+> >> Why do you need to do this with the flattened tree?
+> >
+> > The basic idea I asked Gavin to implement is that since the FW needs to
+> > provide a bunch of DT updates to Linux at runtime in the form of new
+> > nodes below an existing one, rather than doing it via some new/custom
+> > format, instead, have it send a bit of FDT blob to expand under an
+> > existing node.
 > 
-> The current title of the track is "Device Tree Tools, Validation, and
-> Troubleshooting".  The proposal is located at
+> Overlay = an FDT blob to graft into a live running system. Sounds like
+> the same thing.
 > 
->    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
+> > As for the details of Gavin implementation, I haven't looked at it in
+> > details yet so there might be issues there, however I don't know what
+> > you mean by "overlays", any pointer ?
+> 
+> CONFIG_OF_OVERLAY
+> 
+> http://events.linuxfoundation.org/sites/events/files/slides/dynamic-dt-keynote-v3.pdf
 
-Want I want to do is:
+Well, that looks horrendously complicated, poorly documented and totally
+unused in-tree outside of the unittest stuff, yay ! It has all sort of
+"features" that I don't really care about.
 
-1) Download an archive of device tree files describing a bunch of
-boards. (Both dts and corresponding dtb files, with maybe a .txt telling
-me about the board and the -append line qemu needs to give it any
-board-specific kernel command line stuff like "console=myserialport".)
+I still don't see what it buys me other than making my FW a lot more
+complex having to generate all that additional fixup etc... crap that I
+don't totally get yet.
 
-2) Feed one of the dtb files to qemu to instantiate a bunch of devices.
+What's wrong with just unflattening the nodes in place ? The DT comes
+from the FW in the first place so all the phandles are already good in
+the new added blob. Internally, the FW created new nodes in its internal
+representation and flattened the subtree and sends that subtree to
+Linux.
 
-3) Feed the same file to a generic-ish linux kernel to bind to those
-devices. (Or have qemu do this for me.)
+I don't plan to play "revert" either, if you unplug, I do need to remove
+what's under the slot but that's true of boot time devices, not just
+"new" ones, so the overlay stuff won't do the trick and I certainly
+don't want to keep track...
 
-Every year or so I sit down to figure out how to do this, spent fifteen
-minutes head scratching, and wander away again.
-
-The archive in 1) should have subdirectories for architectures, with the
-same name as the corresponding kernel arch directory. It would be nice
-if there was some sort of dts_defconfig that built a vmlinux that
-statically linked in all the drivers with a device tree binding. It
-would be _really_ nice if qemu's vmlinux loader actually worked on all
-the hardware targets.
-
-In theory, this should be easy. In practice, I've never made it work.
-
-Rob
+Ben.
