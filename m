@@ -1,186 +1,66 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH 5/7] ARM: mediatek: add smp bringup code
-Date: Fri, 1 May 2015 15:43:28 +0800
-Message-ID: <1430466210-22963-6-git-send-email-yingjoe.chen@mediatek.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 7/7] ARM: dts: mt8127: enable basic SMP bringup for mt8127
+Date: Fri, 1 May 2015 15:43:30 +0800
+Message-ID: <1430466210-22963-8-git-send-email-yingjoe.chen@mediatek.com>
 References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Marc Carino <marc.ceeeee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430466210-22963-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for booting secondary CPUs on mt6589, mt8127
-and mt8135.
+Add arch timer node to enable arch-timer support. MT8127 firmware
+doesn't correctly setup arch-timer frequency and CNTVOFF, add
+properties to workaround this.
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+This also set cpu enable-method to enable SMP.
+
+Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/mach-mediatek/Makefile  |   3 +
- arch/arm/mach-mediatek/platsmp.c | 145 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 148 insertions(+)
- create mode 100644 arch/arm/mach-mediatek/platsmp.c
+ arch/arm/boot/dts/mt8127.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/mach-mediatek/Makefile b/arch/arm/mach-mediatek/Makefile
-index 43e619f..2116460 100644
---- a/arch/arm/mach-mediatek/Makefile
-+++ b/arch/arm/mach-mediatek/Makefile
-@@ -1 +1,4 @@
-+ifeq ($(CONFIG_SMP),y)
-+obj-$(CONFIG_ARCH_MEDIATEK) += platsmp.o
-+endif
- obj-$(CONFIG_ARCH_MEDIATEK) += mediatek.o
-diff --git a/arch/arm/mach-mediatek/platsmp.c b/arch/arm/mach-mediatek/platsmp.c
-new file mode 100644
-index 0000000..e266b3d
---- /dev/null
-+++ b/arch/arm/mach-mediatek/platsmp.c
-@@ -0,0 +1,145 @@
-+/*
-+ * arch/arm/mach-mediatek/platsmp.c
-+ *
-+ * Copyright (c) 2014 Mediatek Inc.
-+ * Author: Shunli Wang <shunli.wang@mediatek.com>
-+ *         Yingjoe Chen <yingjoe.chen@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/io.h>
-+#include <linux/memblock.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/string.h>
-+#include <linux/threads.h>
+diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
+index aaa7862..7c2090d 100644
+--- a/arch/arm/boot/dts/mt8127.dtsi
++++ b/arch/arm/boot/dts/mt8127.dtsi
+@@ -23,6 +23,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "mediatek,mt81xx-tz-smp";
+ 
+ 		cpu@0 {
+ 			device_type = "cpu";
+@@ -72,6 +73,21 @@
+                 };
+ 	};
+ 
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <13000000>;
++		arm,cpu-registers-not-fw-configured;
++	};
 +
-+#define MTK_MAX_CPU		8
-+#define MTK_SMP_REG_SIZE	0x1000
-+
-+struct mtk_smp_boot_info {
-+	unsigned long smp_base;
-+	unsigned int jump_reg;
-+	unsigned int boot_reg;
-+	unsigned int core_keys[MTK_MAX_CPU - 1];
-+	unsigned int core_regs[MTK_MAX_CPU - 1];
-+};
-+
-+static const struct mtk_smp_boot_info mtk_mt8135_tz_boot = {
-+	0x80002000, 1020, 1012,
-+	{ 0x534c4131, 0x4c415332, 0x41534c33 },
-+	{ 1016, 1016, 1016},
-+};
-+
-+static const struct mtk_smp_boot_info mtk_mt6589_boot = {
-+	0x10002000, 0x34, 0x30,
-+	{ 0x534c4131, 0x4c415332, 0x41534c33 },
-+	{ 0x38, 0x3c, 0x40 },
-+};
-+
-+static const struct of_device_id mtk_tz_smp_boot_infos[] __initconst = {
-+	{ .compatible   = "mediatek,mt8135", .data = &mtk_mt8135_tz_boot },
-+	{ .compatible   = "mediatek,mt8127", .data = &mtk_mt8135_tz_boot },
-+};
-+
-+static const struct of_device_id mtk_smp_boot_infos[] __initconst = {
-+	{ .compatible   = "mediatek,mt6589", .data = &mtk_mt6589_boot },
-+};
-+
-+static void __iomem *mtk_smp_base;
-+static const struct mtk_smp_boot_info *mtk_smp_info;
-+
-+static int mtk_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	if (!mtk_smp_base)
-+		return -EINVAL;
-+
-+	if (!mtk_smp_info->core_keys[cpu-1])
-+		return -EINVAL;
-+
-+	writel_relaxed(mtk_smp_info->core_keys[cpu-1],
-+		mtk_smp_base + mtk_smp_info->core_regs[cpu-1]);
-+
-+	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
-+
-+	return 0;
-+}
-+
-+static void __init __mtk_smp_prepare_cpus(unsigned int max_cpus, int trustzone)
-+{
-+	int i, num;
-+	const struct of_device_id *infos;
-+
-+	if (trustzone) {
-+		num = ARRAY_SIZE(mtk_tz_smp_boot_infos);
-+		infos = mtk_tz_smp_boot_infos;
-+	} else {
-+		num = ARRAY_SIZE(mtk_smp_boot_infos);
-+		infos = mtk_smp_boot_infos;
-+	}
-+
-+	/* Find smp boot info for this SoC */
-+	for (i = 0; i < num; i++) {
-+		if (of_machine_is_compatible(infos[i].compatible)) {
-+			mtk_smp_info = infos[i].data;
-+			break;
-+		}
-+	}
-+
-+	if (!mtk_smp_info) {
-+		pr_err("%s: Device is not supported\n", __func__);
-+		return;
-+	}
-+
-+	if (trustzone) {
-+		if (memblock_reserve(mtk_smp_info->smp_base, MTK_SMP_REG_SIZE)) {
-+			pr_err("%s: Can't reserve smp memory\n", __func__);
-+			return;
-+		}
-+		mtk_smp_base = phys_to_virt(mtk_smp_info->smp_base);
-+	} else {
-+		mtk_smp_base = ioremap(mtk_smp_info->smp_base, MTK_SMP_REG_SIZE);
-+		if (!mtk_smp_base) {
-+			pr_err("%s: Can't remap %lx\n", __func__,
-+				mtk_smp_info->smp_base);
-+			return;
-+		}
-+	}
-+
-+	/*
-+	 * write the address of slave startup address into the system-wide
-+	 * jump register
-+	 */
-+	writel_relaxed(virt_to_phys(secondary_startup),
-+			mtk_smp_base + mtk_smp_info->jump_reg);
-+}
-+
-+static void __init mtk_tz_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	__mtk_smp_prepare_cpus(max_cpus, 1);
-+}
-+
-+static void __init mtk_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	__mtk_smp_prepare_cpus(max_cpus, 0);
-+}
-+
-+static struct smp_operations mt81xx_tz_smp_ops __initdata = {
-+	.smp_prepare_cpus = mtk_tz_smp_prepare_cpus,
-+	.smp_boot_secondary = mtk_boot_secondary,
-+};
-+CPU_METHOD_OF_DECLARE(mt81xx_tz_smp, "mediatek,mt81xx-tz-smp", &mt81xx_tz_smp_ops);
-+
-+static struct smp_operations mt65xx_smp_ops __initdata = {
-+	.smp_prepare_cpus = mtk_smp_prepare_cpus,
-+	.smp_boot_secondary = mtk_boot_secondary,
-+};
-+CPU_METHOD_OF_DECLARE(mt65xx_smp, "mediatek,mt65xx-smp", &mt65xx_smp_ops);
+ 	soc {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
 -- 
 1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
