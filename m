@@ -1,70 +1,51 @@
-From: "Ilkka Koskinen" <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH] of: Add empty of_get_next_parent() for !OF
-Date: Thu, 30 Apr 2015 16:27:01 -0700 (PDT)
-Message-ID: <57872.10.24.5.56.1430436421.squirrel@linux.intel.com>
-References: <1430347479-1715-1-git-send-email-ilkka.koskinen@linux.intel.com>
-    <CAL_JsqJEQmJT9+4t=PSc_K6yRxuTRObewfdghXmBgDTg=Sm+qQ@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 14/15] clk: shmobile: Add r8a7793 SoC to MSTP bindings
+Date: Fri, 1 May 2015 09:33:25 +0900
+Message-ID: <20150501003325.GB13754@verge.net.au>
+References: <1430403544-26742-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1430403544-26742-15-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJEQmJT9+4t=PSc_K6yRxuTRObewfdghXmBgDTg=Sm+qQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ilkka Koskinen <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430403544-26742-15-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: geert@linux-m68k.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, Michael Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Apr 30, 2015 at 04:19:03PM +0200, Ulrich Hecht wrote:
+> Also replaces "R-Car M2" with "R-Car M2-W" to avoid confusion.
+> 
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> Cc: Michael Turquette <mturquette@linaro.org>
+> Cc: devicetree@vger.kernel.org
 
-On Wed, April 29, 2015 16:03, Rob Herring wrote:
-> On Wed, Apr 29, 2015 at 5:44 PM, Ilkka Koskinen
-> <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->> From: Ilkka Koskinen <ilkka.koskinen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->>
->> Add an empty version of of_get_next_parent() in order to avoid
->> build error.
->
-> Some details on the build error and what introduced it please.
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-I agree. I'll add a better description of the issue in the commit message.
-
-Some background: I'm basically implementing a parser that deals
-with both device tree and ACPI. If OF hasn't been enabled, there's no
-declaration or implementation of the function. I'm not aware if any
-existing code in the kernel introduces the bug though.
-
-Thanks,
-Ilkka
-
->> Signed-off-by: Ilkka Koskinen <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> ---
->>  include/linux/of.h | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index dfde07e..416158f 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -425,6 +425,11 @@ static inline struct device_node
->> *of_get_parent(const struct device_node *node)
->>         return NULL;
->>  }
->>
->> +static inline struct device_node *of_get_next_parent(struct device_node
->> *node)
->> +{
->> +       return NULL;
->> +}
->> +
->>  static inline struct device_node *of_get_next_child(
->>         const struct device_node *node, struct device_node *prev)
->>  {
->> --
->> 1.9.1
->>
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> index 0a80fa7..923ee0f 100644
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> @@ -15,7 +15,8 @@ Required Properties:
+>      - "renesas,r8a7740-mstp-clocks" for R8A7740 (R-Mobile A1) MSTP gate clocks
+>      - "renesas,r8a7779-mstp-clocks" for R8A7779 (R-Car H1) MSTP gate clocks
+>      - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
+> -    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
+> +    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2-W) MSTP gate clocks
+> +    - "renesas,r8a7793-mstp-clocks" for R8A7793 (R-Car M2-N) MSTP gate clocks
+>      - "renesas,r8a7794-mstp-clocks" for R8A7794 (R-Car E2) MSTP gate clocks
+>      - "renesas,sh73a0-mstp-clocks" for SH73A0 (SH-MobileAG5) MSTP gate clocks
+>      - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
+> -- 
+> 2.3.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
