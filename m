@@ -1,48 +1,100 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 06/15] pinctrl: sh-pfc: Add renesas,pfc-r8a7793 to
- binding documentation
-Date: Fri, 1 May 2015 09:44:19 +0900
-Message-ID: <20150501004419.GE13754@verge.net.au>
-References: <1430403544-26742-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1430403544-26742-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+Subject: Re: [RFC PATCH 4/7] ARM: shmobile: r8a7790: Add nodes for pfc SD
+ voltage regulators
+Date: Fri, 1 May 2015 09:57:19 +0900
+Message-ID: <20150501005719.GG13754@verge.net.au>
+References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
+ <1430397114.5802.43.camel@xylophone.i.decadent.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1430403544-26742-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+In-Reply-To: <1430397114.5802.43.camel@xylophone.i.decadent.org.uk>
 Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: geert@linux-m68k.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, devicetree@vger.kernel.org
+To: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc: Ian Molton <ian@mnementh.co.uk>, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@lists.codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 04:18:55PM +0200, Ulrich Hecht wrote:
-> Also renames "R-Car M2" to "R-Car M2-W" to avoid confusion.
-> 
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> Cc: devicetree@vger.kernel.org
+Hi Ben,
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+thanks for your patch-set.
 
+On Thu, Apr 30, 2015 at 01:31:54PM +0100, Ben Hutchings wrote:
+> Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 > ---
->  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/r8a7790.dtsi |   21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-> index bfe72ec..6bcf851 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-> @@ -16,7 +16,8 @@ Required Properties:
->      - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible pin-controller.
->      - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
->      - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible pin-controller.
-> -    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2) compatible pin-controller.
-> +    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2-W) compatible pin-controller.
-> +    - "renesas,pfc-r8a7793": for R8A7793 (R-Car M2-N) compatible pin-controller.
->      - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-controller.
+> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+> index 4bb2f4c17321..23e826153a9d 100644
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -483,6 +483,23 @@
+>  	pfc: pfc@e6060000 {
+>  		compatible = "renesas,pfc-r8a7790";
+>  		reg = <0 0xe6060000 0 0x250>;
+> +
+> +		vccq_ref_sdhi0: sd-regulator@0 {
+> +			compatible = "renesas,pfc-r8a7790-sd-regulator";
+
+I'm a little confused. What is "renesas,pfc-r8a7790-sd-regulator"?
+It suspect that it should at least be documented under
+Documentation/devicetree/bindings/
+
+> +			status = "disabled";
+> +		};
+> +		vccq_ref_sdhi1: sd-regulator@1 {
+> +			compatible = "renesas,pfc-r8a7790-sd-regulator";
+> +			status = "disabled";
+> +		};
+> +		vccq_ref_sdhi2: sd-regulator@2 {
+> +			compatible = "renesas,pfc-r8a7790-sd-regulator";
+> +			status = "disabled";
+> +		};
+> +		vccq_ref_sdhi3: sd-regulator@3 {
+> +			compatible = "renesas,pfc-r8a7790-sd-regulator";
+> +			status = "disabled";
+> +		};
+>  	};
 >  
->    - reg: Base address and length of each memory resource used by the pin
+>  	sdhi0: sd@ee100000 {
+> @@ -490,6 +507,7 @@
+>  		reg = <0 0xee100000 0 0x328>;
+>  		interrupts = <0 165 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks = <&mstp3_clks R8A7790_CLK_SDHI0>;
+> +		vqmmc-ref-supply = <&vccq_ref_sdhi0>;
+>  		dmas = <&dmac1 0xcd>, <&dmac1 0xce>;
+>  		dma-names = "tx", "rx";
+>  		status = "disabled";
+> @@ -500,6 +518,7 @@
+>  		reg = <0 0xee120000 0 0x328>;
+>  		interrupts = <0 166 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks = <&mstp3_clks R8A7790_CLK_SDHI1>;
+> +		vqmmc-ref-supply = <&vccq_ref_sdhi1>;
+>  		dmas = <&dmac1 0xc9>, <&dmac1 0xca>;
+>  		dma-names = "tx", "rx";
+>  		status = "disabled";
+> @@ -510,6 +529,7 @@
+>  		reg = <0 0xee140000 0 0x100>;
+>  		interrupts = <0 167 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks = <&mstp3_clks R8A7790_CLK_SDHI2>;
+> +		vqmmc-ref-supply = <&vccq_ref_sdhi2>;
+>  		dmas = <&dmac1 0xc1>, <&dmac1 0xc2>;
+>  		dma-names = "tx", "rx";
+>  		status = "disabled";
+> @@ -520,6 +540,7 @@
+>  		reg = <0 0xee160000 0 0x100>;
+>  		interrupts = <0 168 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks = <&mstp3_clks R8A7790_CLK_SDHI3>;
+> +		vqmmc-ref-supply = <&vccq_ref_sdhi3>;
+>  		dmas = <&dmac1 0xd3>, <&dmac1 0xd4>;
+>  		dma-names = "tx", "rx";
+>  		status = "disabled";
 > -- 
-> 2.3.5
+> 1.7.10.4
+> 
+> 
+> 
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-sh" in
