@@ -1,184 +1,47 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] dt-bindings: ARM: Mediatek: Document devicetree
- bindings for clock/reset controllers
-Date: Thu, 30 Apr 2015 18:20:39 -0700
-Message-ID: <20150501012039.GG32407@codeaurora.org>
-References: <1429778143-2074-1-git-send-email-s.hauer@pengutronix.de>
- <1429778143-2074-7-git-send-email-s.hauer@pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Add empty of_get_next_parent() for !OF
+Date: Thu, 30 Apr 2015 20:26:12 -0500
+Message-ID: <CAL_JsqJ_0LZ0i6BD4ECFJgaEPUkRM5qrDS1jKextB+bM5_iz5w@mail.gmail.com>
+References: <1430347479-1715-1-git-send-email-ilkka.koskinen@linux.intel.com>
+ <CAL_JsqJEQmJT9+4t=PSc_K6yRxuTRObewfdghXmBgDTg=Sm+qQ@mail.gmail.com> <57872.10.24.5.56.1430436421.squirrel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429778143-2074-7-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <57872.10.24.5.56.1430436421.squirrel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ilkka Koskinen <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/23, Sascha Hauer wrote:
-> This adds the binding documentation for the apmixedsys, perisys and
-> infracfg controllers found on Mediatek SoCs.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Thu, Apr 30, 2015 at 6:27 PM, Ilkka Koskinen
+<ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> Hi,
+>
+> On Wed, April 29, 2015 16:03, Rob Herring wrote:
+>> On Wed, Apr 29, 2015 at 5:44 PM, Ilkka Koskinen
+>> <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>> From: Ilkka Koskinen <ilkka.koskinen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>>>
+>>> Add an empty version of of_get_next_parent() in order to avoid
+>>> build error.
+>>
+>> Some details on the build error and what introduced it please.
+>
+> I agree. I'll add a better description of the issue in the commit message.
+>
+> Some background: I'm basically implementing a parser that deals
+> with both device tree and ACPI. If OF hasn't been enabled, there's no
+> declaration or implementation of the function. I'm not aware if any
+> existing code in the kernel introduces the bug though.
 
-Please Cc devicetree reviewers on bindings (CCed now).
+Then the build error is meaningless. Generally something like walking
+up parents is only something core code would do and is why there is no
+empty version. Your case may fit, but I'll have to wait and see your
+code. So just include this in the series with the rest of your work.
+I'll try not to run the other way when I see something ACPI related.
+;)
 
-> ---
->  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  | 23 +++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,infracfg.txt    | 30 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,pericfg.txt     | 30 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,topckgen.txt    | 23 +++++++++++++++++
->  4 files changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-> new file mode 100644
-> index 0000000..5af6d73
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-> @@ -0,0 +1,23 @@
-> +Mediatek apmixedsys controller
-> +==============================
-> +
-> +The Mediatek apmixedsys controller provides the PLLs to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +	- "mediatek,mt8135-apmixedsys"
-> +	- "mediatek,mt8173-apmixedsys"
-> +- #clock-cells: Must be 1
-> +
-> +The apmixedsys controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +
-> +Example:
-> +
-> +apmixedsys: apmixedsys@10209000 {
-
-apmixedsys: clock-controller@10209000 {
-
-would be more standard. The same comment applies throughout this
-patch. Otherwise it looks good to me.
-
--Stephen
-
-> +	compatible = "mediatek,mt8173-apmixedsys";
-> +	reg = <0 0x10209000 0 0x1000>;
-> +	#clock-cells = <1>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
-> new file mode 100644
-> index 0000000..684da473
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
-> @@ -0,0 +1,30 @@
-> +Mediatek infracfg controller
-> +============================
-> +
-> +The Mediatek infracfg controller provides various clocks and reset
-> +outputs to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +	- "mediatek,mt8135-infracfg", "syscon"
-> +	- "mediatek,mt8173-infracfg", "syscon"
-> +- #clock-cells: Must be 1
-> +- #reset-cells: Must be 1
-> +
-> +The infracfg controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +Also it uses the common reset controller binding from
-> +Documentation/devicetree/bindings/reset/reset.txt.
-> +The available reset outputs are defined in
-> +dt-bindings/reset-controller/mt*-resets.h
-> +
-> +Example:
-> +
-> +infracfg: infracfg@10001000 {
-> +	compatible = "mediatek,mt8173-infracfg", "syscon";
-> +	reg = <0 0x10001000 0 0x1000>;
-> +	#clock-cells = <1>;
-> +	#reset-cells = <1>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
-> new file mode 100644
-> index 0000000..fdb45c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
-> @@ -0,0 +1,30 @@
-> +Mediatek pericfg controller
-> +===========================
-> +
-> +The Mediatek pericfg controller provides various clocks and reset
-> +outputs to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +	- "mediatek,mt8135-pericfg", "syscon"
-> +	- "mediatek,mt8173-pericfg", "syscon"
-> +- #clock-cells: Must be 1
-> +- #reset-cells: Must be 1
-> +
-> +The pericfg controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +Also it uses the common reset controller binding from
-> +Documentation/devicetree/bindings/reset/reset.txt.
-> +The available reset outputs are defined in
-> +dt-bindings/reset-controller/mt*-resets.h
-> +
-> +Example:
-> +
-> +pericfg: pericfg@10003000 {
-> +	compatible = "mediatek,mt8173-pericfg", "syscon";
-> +	reg = <0 0x10003000 0 0x1000>;
-> +	#clock-cells = <1>;
-> +	#reset-cells = <1>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
-> new file mode 100644
-> index 0000000..a425248
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
-> @@ -0,0 +1,23 @@
-> +Mediatek topckgen controller
-> +============================
-> +
-> +The Mediatek topckgen controller provides various clocks to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +	- "mediatek,mt8135-topckgen"
-> +	- "mediatek,mt8173-topckgen"
-> +- #clock-cells: Must be 1
-> +
-> +The topckgen controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +
-> +Example:
-> +
-> +topckgen: topckgen@10000000 {
-> +	compatible = "mediatek,mt8173-topckgen";
-> +	reg = <0 0x10000000 0 0x1000>;
-> +	#clock-cells = <1>;
-> +};
-> -- 
-> 2.1.4
-> 
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
