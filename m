@@ -1,40 +1,42 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Sat, 02 May 2015 01:22:10 +1000
-Message-ID: <1430493730.7979.58.camel@kernel.crashing.org>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH] Documentation/devicetree: document OCTEON USB bindings
+Date: Fri, 1 May 2015 19:15:48 +0300
+Message-ID: <20150501161548.GB595@fuloong-minipc.musicnaut.iki.fi>
+References: <1430423040-2088-1-git-send-email-aaro.koskinen@iki.fi>
+ <CAL_JsqJbebtb6z2WOXfs8DUBsb=oGhFAh+qUQaR0yndGvWgSGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJbebtb6z2WOXfs8DUBsb=oGhFAh+qUQaR0yndGvWgSGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-05-01 at 07:54 -0500, Rob Herring wrote:
+Hi,
 
-> The difference seems to be whether you allocate space or just point to
-> the FDT for various strings/data. Is that right?
+On Fri, May 01, 2015 at 09:39:19AM -0500, Rob Herring wrote:
+> > +   - refclk-frequency: speed of the USB reference clock. Allowed values are
+> > +     12000000, 24000000 or 48000000.
 > 
-> >    * of_fdt_add_subtree() is the introduced API to do the work.
+> We already have a standard property for this if you only have 1 clock:
+> clock-frequency.
 > 
-> Have you looked at overlays and if so why do they not work for your purposes?
+> > +   - refclk-type: type of the USB reference clock. Allowed values are
+> > +     "crystal" or "external".
 > 
-> Why do you need to do this with the flattened tree?
+> Should be prefixed with "cavium,".
 
-The basic idea I asked Gavin to implement is that since the FW needs to
-provide a bunch of DT updates to Linux at runtime in the form of new
-nodes below an existing one, rather than doing it via some new/custom
-format, instead, have it send a bit of FDT blob to expand under an
-existing node.
+Both of these are already used in
+Documentation/devicetree/bindings/mips/cavium/uctl.txt (the USB
+controller for newer OCTEONs). These bindings are unfortunately
+just "reverse-engineered" from products that are already shipping
+and likely not perfect, but shouldn't we still try to be compatible
+for the sake of users?
 
-As for the details of Gavin implementation, I haven't looked at it in
-details yet so there might be issues there, however I don't know what
-you mean by "overlays", any pointer ?
-
-Cheers,
-Ben.
+A.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
