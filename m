@@ -1,74 +1,61 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: Re: Invitation and RFC: Linux Plumbers Device Tree track proposed
-Date: Fri, 1 May 2015 09:32:29 -0400
-Message-ID: <20150501133229.GF4789@beef>
-References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
- <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: vexpress: Add interrupt-affinity
+Date: Fri, 01 May 2015 14:44:45 +0100
+Message-ID: <5543834D.6040506@arm.com>
+References: <1430416448-25203-1-git-send-email-r.schwebel@pengutronix.de> <20150430175541.GL15254@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "Rowand, Frank" <Frank.Rowand@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "devicetree-compiler@vger.kernel.org" <devicetree-compiler@vger.kernel.org>, "linux-embedded@vger.kernel.org" <linux-embedded@vger.kernel.org>, "celinux-dev@lists.celinuxforum.org" <celinux-dev@lists.celinuxforum.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Loeliger <jdl@jdl.com>, Arnd Bergmann <arnd@arndb.de>, Gaurav Minocha <gaurav.minocha.os@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150430175541.GL15254-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 10:36:15AM -0500, Rob Herring wrote:
-> On Sat, Apr 11, 2015 at 2:20 PM, Rowand, Frank
-> <Frank.Rowand@sonymobile.com> wrote:
-> > In recent years there have been proposed tools to aid in the creation of valid
-> > device trees and in debugging device tree issues.  An example of this is the
-> > various approaches proposed (with source code provided) to validate device tree
-> > source against valid bindings.  As of today, device tree related tools,
-> > techniques, and debugging infrastructure have not progressed very far.  I have
-> > submitted a device tree related proposal for the Linux Plumbers 2015 conference
-> > to spur action and innovation in such tools, techniques, and debugging
-> > infrastructure.
-> >
-> > The current title of the track is "Device Tree Tools, Validation, and
-> > Troubleshooting".  The proposal is located at
-> >
-> >    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
-> >
-> > I am looking for several things at the moment:
-> >
-> >    1) Suggestions of additional topics to be discussed.
-> 
-> A few things on my list:
-> 
-> - Supported and not supported overlay usecases
-> - Tools for overlays - I think overlays has created new challenges in
-> validation and a need for new tools. How to test an overlay applies?
-> Generating a dtb from dts + overlay dts. Generating an overlay from a
-> diff of old and new dts (overlay as a way to update old dtbs)
-> - Shrinking the binding review fire hose. How to improve binding
-> documentation structure and review.
-> - Standardizing Android dtb handling. Appended DTB for arm64? Not
-> liked by upstream, but already in use.
 
-- Clean up of existing hardware-specific bindings to conform to the
-  generic bindings, working dts files in the kernel tree, and bring
-  consistency to the documentation style/syntax.
 
-> >    2) Emails or other messages expressing an interest in attending the
-> >       device tree track.
-> >
-> >    3) Commitments to attend the device tree track (the conference committee
-> >       is looking at attendee interest and commitments as part of the process
-> >       of accepting the device tree track).
-> 
-> I plan to attend. I'm probably attending some of the Android mini conf
-> too, so I'll have to split my time.
-> 
-> >    4) Identifying additional people who should attend the device tree track.
-> 
-> Arnd Bergmann
-> Matt Porter
-> Jon Loeliger
-> Gaurav Minocha
+On 30/04/15 18:55, Robert Schwebel wrote:
+> On Thu, Apr 30, 2015 at 07:54:08PM +0200, Robert Schwebel wrote:
+>> Without this property, we get this boot warning:
+>>
+>> [    0.459361] CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
+>>
+>> Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-I also plan to attend. I have an interest in most of the topics already
-mentioned as well as the topic I added above.
+May be you can also mention the commit introducing the change in the log
+something like:
 
--Matt
+"
+Commit 9fd85eb502a7 ("ARM: pmu: add support for interrupt-affinity
+property") added optional optional "interrupt-affinity" property, to
+specify CPU affinity for each SPI listed in the interrupts property.
+
+Without this property, we get this boot warning:
+	CPU PMU: Failed to parse <no-node>/interrupt-affinity[0]
+
+This patch add interrupt-affinity to the PMU node in CA9x4 device tree.
+"
+
+Otherwise:
+Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+
+>
+> However, with this patch applied, the messages above disappear, but I
+> still get this:
+>
+> [    0.495280] CPU PMU: Failed to find logical CPU for cpu
+>
+> on a kernel configured with CONFIG_SMP=n. nr_cpu_ids is 1 there, while
+> the loop still loops over all available cores. Ths makes the logic fail.
+
+This is a different issue. You must also see warning from devtree.c when
+parsing CPUs complaining about more CPU nodes found in DT. IIUC the
+functionality still works fine.
+
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
