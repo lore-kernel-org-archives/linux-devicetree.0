@@ -1,14 +1,14 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 1/2] Regulator: mc34708: Add DT binding documentation
-Date: Fri, 1 May 2015 12:34:21 +0200 (CEST)
-Message-ID: <1345809430.776937.1430476461635.JavaMail.open-xchange@oxbaltgw07.schlund.de>
-References: <20150428141736.16243.57292.stgit@localhost> <20150428141738.16243.18377.stgit@localhost>
+Subject: Re: [PATCH 2/2] Regulator: add driver for Freescale MC34708
+Date: Fri, 1 May 2015 12:38:21 +0200 (CEST)
+Message-ID: <2086312558.777066.1430476701341.JavaMail.open-xchange@oxbaltgw07.schlund.de>
+References: <20150428141736.16243.57292.stgit@localhost> <20150428141740.16243.79036.stgit@localhost>
 Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150428141738.16243.18377.stgit@localhost>
+In-Reply-To: <20150428141740.16243.79036.stgit@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
@@ -20,10 +20,19 @@ Hi Martin,
 > geschrieben:
 >
 >
-> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+> [...]
+> diff --git a/drivers/regulator/mc34708-regulator.c
+> b/drivers/regulator/mc34708-regulator.c
+> new file mode 100644
+> index 0000000..b5ff727
+> --- /dev/null
+> +++ b/drivers/regulator/mc34708-regulator.c
+> @@ -0,0 +1,1266 @@
+> +/*
+> + * Driver for regulators in the Fresscale MC34708/9 PMICs
+> + *
 
-a commit message would be nice and the subject should specify dt-bindings
-instead of regulator subsystem.
+just a typo: Freescale
 
 Stefan
 --
