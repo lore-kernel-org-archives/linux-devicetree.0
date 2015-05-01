@@ -1,27 +1,36 @@
-From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
-Subject: Re: [PATCH 0/3] Using SPI NOR flah on sunxi.
-Date: Fri, 01 May 2015 08:27:45 -0400
-Message-ID: <jwv4mnwfppf.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
-References: <cover.1430403750.git.hramrach@gmail.com>
-Reply-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 1/2] Regulator: mc34708: Add DT binding documentation
+Date: Fri, 1 May 2015 14:33:44 +0200 (CEST)
+Message-ID: <1816610654.762513.1430483624334.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+References: <20150428141736.16243.57292.stgit@localhost> <20150428141738.16243.18377.stgit@localhost> <1345809430.776937.1430476461635.JavaMail.open-xchange@oxbaltgw07.schlund.de> <20150501110123.GU22845@sirena.org.uk>
+Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDMKFH665MBBBVXCRWVAKGQEQUKFDKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150501110123.GU22845@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> The SPI driver returns an error when more than 64 bytes are
-> transferred at once due to lack of DMA support.
+Hi Mark,
 
-Have you tried the dmaengine patch and make the SPI driver use it?
+> Mark Brown <broonie@kernel.org> hat am 1. Mai 2015 um 13:01 geschrieben:
+>
+>
+> On Fri, May 01, 2015 at 12:34:21PM +0200, Stefan Wahren wrote:
+>
+> > a commit message would be nice and the subject should specify dt-bindings
+> > instead of regulator subsystem.
+>
+> No, it shouldn't. DT bindings for a subsystem go through the subsystem
+> and the subsystem maintainer needs to see them to read them.
 
+sorry for my bad expressing. 
 
-        Stefan
+I tought the subject line should be something like:
+
+DT: add binding documentation for mc34708 regulator
+
+Stefan
