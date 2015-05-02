@@ -1,80 +1,57 @@
-From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Subject: Re: [2/2] ARM: dts: Add missing irq pinctrl for max77686 on smdk5250
-Date: Sat, 02 May 2015 14:49:46 +0900
-Message-ID: <5544657A.7010006@gmail.com>
-References: <1416312509-11530-2-git-send-email-yadi.brar@samsung.com> <553F68CC.6030504@samsung.com>
+From: "Ilkka Koskinen" <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH] of: Add empty of_get_next_parent() for !OF
+Date: Fri, 1 May 2015 23:11:07 -0700 (PDT)
+Message-ID: <61192.10.254.5.120.1430547067.squirrel@linux.intel.com>
+References: <1430347479-1715-1-git-send-email-ilkka.koskinen@linux.intel.com>
+    <CAL_JsqJEQmJT9+4t=PSc_K6yRxuTRObewfdghXmBgDTg=Sm+qQ@mail.gmail.com>
+    <57872.10.24.5.56.1430436421.squirrel@linux.intel.com>
+    <CAL_JsqJ_0LZ0i6BD4ECFJgaEPUkRM5qrDS1jKextB+bM5_iz5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <553F68CC.6030504@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com
-Cc: robh+dt@kernel.org, yadi.brar01@gmail.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJ_0LZ0i6BD4ECFJgaEPUkRM5qrDS1jKextB+bM5_iz5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ilkka Koskinen <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 28.04.2015 o 20:02, Pankaj Dubey pisze:
-> Hi Kukjin,
-> 
-> Any updated for this patch. Without this PMIC RTC is not working on
-> SMDK5250.
-> 
+On Thu, April 30, 2015 18:26, Rob Herring wrote:
+> On Thu, Apr 30, 2015 at 6:27 PM, Ilkka Koskinen
+> <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On Wed, April 29, 2015 16:03, Rob Herring wrote:
+>>> On Wed, Apr 29, 2015 at 5:44 PM, Ilkka Koskinen
+>>> <ilkka.koskinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>>> From: Ilkka Koskinen <ilkka.koskinen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>> Add an empty version of of_get_next_parent() in order to avoid
+>>>> build error.
+>>>
+>>> Some details on the build error and what introduced it please.
+>>
+>> I agree. I'll add a better description of the issue in the commit
+>> message.
+>>
+>> Some background: I'm basically implementing a parser that deals
+>> with both device tree and ACPI. If OF hasn't been enabled, there's no
+>> declaration or implementation of the function. I'm not aware if any
+>> existing code in the kernel introduces the bug though.
+>
+> Then the build error is meaningless. Generally something like walking
+> up parents is only something core code would do and is why there is no
+> empty version. Your case may fit, but I'll have to wait and see your
+> code. So just include this in the series with the rest of your work.
+> I'll try not to run the other way when I see something ACPI related.
+> ;)
 
-Could you resend the patch after rebasing it?
+Ok, sounds good to me.
 
-Best regards,
-Krzysztof
+Thanks,
+Ilkka
 
-> Thanks,
-> Pankaj Dubey
-> 
-> On Tuesday 18 November 2014 05:38 PM, Yadwinder Singh Brar wrote:
->> This patch adds pinctrl configuration for using configuring gpx3-2 as an
->> external interrupt from max77686. Though max77686 RTC is enabled and gets
->> probed by default, it doesnt work as its unable to get interrupt.
->>
->> This patch makes max77686 RTC work and also configures it as wakeup
->> source.
->>
->> Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
->> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> Tested-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->>
->> ---
->> arch/arm/boot/dts/exynos5250-smdk5250.dts |   12 ++++++++++++
->>   1 files changed, 12 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> index 95b5b51..19cd918 100644
->> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> @@ -131,6 +131,9 @@
->>           reg = <0x09>;
->>           interrupt-parent = <&gpx3>;
->>           interrupts = <2 IRQ_TYPE_NONE>;
->> +        pinctrl-names = "default";
->> +        pinctrl-0 = <&max77686_irq>;
->> +        wakeup-source;
->>
->>           voltage-regulators {
->>               ldo1_reg: LDO1 {
->> @@ -411,3 +414,12 @@
->>           };
->>       };
->>   };
->> +
->> +&pinctrl_0 {
->> +    max77686_irq: max77686-irq {
->> +        samsung,pins = "gpx3-2";
->> +        samsung,pin-function = <0xf>;
->> +        samsung,pin-pud = <0>;
->> +        samsung,pin-drv = <0>;
->> +    };
->> +};
->>
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
