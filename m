@@ -1,56 +1,80 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Sat, 02 May 2015 12:48:26 +1000
-Message-ID: <1430534906.7979.85.camel@kernel.crashing.org>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
-	 <1430493730.7979.58.camel@kernel.crashing.org>
-	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
-	 <1430521038.7979.70.camel@kernel.crashing.org>
-	 <1430522976.7979.78.camel@kernel.crashing.org>
+From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Subject: Re: [2/2] ARM: dts: Add missing irq pinctrl for max77686 on smdk5250
+Date: Sat, 02 May 2015 14:49:46 +0900
+Message-ID: <5544657A.7010006@gmail.com>
+References: <1416312509-11530-2-git-send-email-yadi.brar@samsung.com> <553F68CC.6030504@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1430522976.7979.78.camel@kernel.crashing.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <553F68CC.6030504@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com
+Cc: robh+dt@kernel.org, yadi.brar01@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2015-05-02 at 09:29 +1000, Benjamin Herrenschmidt wrote:
-
-> Looking a bit more at it, I don't quite see how I can attach a subtree
-> using that stuff.
+W dniu 28.04.2015 o 20:02, Pankaj Dubey pisze:
+> Hi Kukjin,
 > 
-> Instead, each node in the overlay seems to need extra nodes and
-> properties to refer to the original.
+> Any updated for this patch. Without this PMIC RTC is not working on
+> SMDK5250.
 > 
-> So the FW would essentially have to create something a lot more complex
-> than just reflattening a bit of its internal tree. For each internal
-> node, it will need to add all those __overlay__ nodes and properties.
+
+Could you resend the patch after rebasing it?
+
+Best regards,
+Krzysztof
+
+> Thanks,
+> Pankaj Dubey
 > 
-> That is not going to fly for me at all. It's order of magnitudes more
-> complex than the solution we are pursuing.
-> 
-> So I think for our use case, we should continue in the direction of
-> having a helper to unflatten a piece of FDT underneath an existing
-> node. I don't like the "HYBRID" stuff though, we should not refer to
-> the original FDT, we should just make them normal dynamic nodes.
-
-A bit more thought... if we were to use the overlay stuff, Gavin, what
-we *could* do is add to OPAL FW internal representation a generation
-count to every node and property.
-
-That way we could essentially know whenever something's changed from
-what we flattened originally for the kernel.
-
-We can then create a generic (not PCI specific) call that generates
-an overlay tree for every node and property that has a generation
-count that is newer than what was flattened (or passed by the OS).
-
-It's still a LOT more complex than what we need though...
-
-Cheers,
-Ben.
+> On Tuesday 18 November 2014 05:38 PM, Yadwinder Singh Brar wrote:
+>> This patch adds pinctrl configuration for using configuring gpx3-2 as an
+>> external interrupt from max77686. Though max77686 RTC is enabled and gets
+>> probed by default, it doesnt work as its unable to get interrupt.
+>>
+>> This patch makes max77686 RTC work and also configures it as wakeup
+>> source.
+>>
+>> Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
+>> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> Tested-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>>
+>> ---
+>> arch/arm/boot/dts/exynos5250-smdk5250.dts |   12 ++++++++++++
+>>   1 files changed, 12 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> index 95b5b51..19cd918 100644
+>> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> @@ -131,6 +131,9 @@
+>>           reg = <0x09>;
+>>           interrupt-parent = <&gpx3>;
+>>           interrupts = <2 IRQ_TYPE_NONE>;
+>> +        pinctrl-names = "default";
+>> +        pinctrl-0 = <&max77686_irq>;
+>> +        wakeup-source;
+>>
+>>           voltage-regulators {
+>>               ldo1_reg: LDO1 {
+>> @@ -411,3 +414,12 @@
+>>           };
+>>       };
+>>   };
+>> +
+>> +&pinctrl_0 {
+>> +    max77686_irq: max77686-irq {
+>> +        samsung,pins = "gpx3-2";
+>> +        samsung,pin-function = <0xf>;
+>> +        samsung,pin-pud = <0>;
+>> +        samsung,pin-drv = <0>;
+>> +    };
+>> +};
+>>
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe
+> linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
