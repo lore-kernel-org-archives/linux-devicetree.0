@@ -1,44 +1,72 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: ARM: sunxi: dts: split IR pins for A10 and A20
-Date: Sat, 2 May 2015 13:52:04 +0200
-Message-ID: <20150502115204.GN6062@lukather>
-References: <1430566580-14295-1-git-send-email-codekipper@gmail.com>
- <CAEKpxBmp456qWrPRM7H-FVY5V3whZZLx1teNv7KLSbxsjhLVmQ@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] arch: arm: Show the serial number from
+ devicetree in cpuinfo
+Date: Sat, 02 May 2015 17:46:22 +0200
+Message-ID: <1430581582.5339.0.camel@collins>
+References: <1429351135-11842-1-git-send-email-contact@paulk.fr>
+	 <1429351135-11842-2-git-send-email-contact@paulk.fr>
+	 <CAL_JsqKkw7n5p1ZH345BeKkyU=GKDrhaLef__0ET7t90Cm0Eog@mail.gmail.com>
+	 <1430145747.3081.5.camel@collins>
+	 <20150428160910.GE12732@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="v541l457l4DThMFo"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBF7WSKVAKGQELBZZYHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAEKpxBmp456qWrPRM7H-FVY5V3whZZLx1teNv7KLSbxsjhLVmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-aVmLc9kywaqi7Ezdt/vH"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150428160910.GE12732-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---v541l457l4DThMFo
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 
-On Sat, May 02, 2015 at 01:42:20PM +0200, Code Kipper wrote:
-> This is v2 of the patch after Maxime's comments. Was trying to add
-> versioning comments to below the commit message but for some reason
-> adding --subject to the send-email command seemed to cancel out the
-> --dry-run. So it's out in the wild.
+--=-aVmLc9kywaqi7Ezdt/vH
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Usually, you want to use --annotate for this, and having PATCH vX in
-the subject, which can easily be done using -vX.
+Le mardi 28 avril 2015 =C3=A0 17:09 +0100, Russell King - ARM Linux a =C3=
+=A9crit :
+> On Mon, Apr 27, 2015 at 04:42:27PM +0200, Paul Kocialkowski wrote:
+> > Well, of_property_read_string is only defined when CONFIG_OF is set
+> > (base.c is always built in drivers/of but the directory is only include=
+d
+> > when CONFIG_OF is set).
+> >=20
+> > Of course, on ARM, we now expect that it is the case, but it seems like
+> > good practice to check for it, since it could theoretically be disabled=
+.
+>=20
+> That is _not_ "is the case" - there are a number of non-OF platforms...
+> including some which will probably never be converted.
 
-Maxime
+Right, so I think v4 should be fine too, given the empty functions in
+case CONFIG_OF is not set.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---v541l457l4DThMFo--
+--=-aVmLc9kywaqi7Ezdt/vH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJVRPFOAAoJEIT9weqP7pUM/F0P/2DQdmQDrqSf9Gh7ERrNeTRk
+N3mJB32uZ8JWRJxb8/huDg5r6r3cGLnZ2ycq5ImFdi5LUN23HRpVqD1wZ50TSoBD
+xnhtJSOrOxtWnOTsE2yimSS2new745fc6eMQKg5oD9Is8KX0JxIXReTZbVcpEIBW
+nsDlSueoldAzUtov/ycnL3RCxlWb6H7KcWNs/Cob054607KVwEPco3UwnU0MDZI+
+BeSzLYpmBsmNdP907ZiIp1nW9PeWC6P06HcaOHbqOI54FDm2nWO6bViDDRCmjqrC
+7QBWuQuH4Hy1T2t0cbHu+laPvsfIF5/rGc14gwnwI0VIsRWWStB1ZCbH5kzoZob9
+7asN4/DFg/7KfEDDzfK22YaBIs0QlzbWDHpD0jl0hthBYDJdY+7P5pNGAGLwaBok
+q6jnD6tzUgkh+jPhmLQCoSKd8K5CF9ZmXVJRi3KLHfRdRZJG0ASEpHVG0IisDxPZ
+Xp9khDL5oWFdZg9chc/VA80RuoaRVkfXuXhyPq0tTc0KYlE1uN8PxjE6hqX0mH+z
+To6fqE+HRy5VlkuaxzjOmRxydQ6hwSdiUPLcYVD7/IHiS+tvcK9qToCDojUQccAY
+KIkjIkdGZbTfRVx0nt18Jq6U9VoRiFoo4bgVpiVMBpLdb28dvKBpyvtiKMxIwyAG
+xK0qN9iJZjYLrTKLFPq0
+=1FjM
+-----END PGP SIGNATURE-----
+
+--=-aVmLc9kywaqi7Ezdt/vH--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
