@@ -1,80 +1,58 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] clocksource: st_lpc: Add LPC timer as a clocksource.
-Date: Sat, 2 May 2015 17:36:59 +0100
-Message-ID: <20150502163659.GA23998@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1429267823-8879-1-git-send-email-peter.griffin@linaro.org>
- <1429267823-8879-2-git-send-email-peter.griffin@linaro.org>
- <alpine.DEB.2.11.1504211153580.13914@nanos>
+From: Kenneth Westfield <kwestfie@codeaurora.org>
+Subject: Re: [RFC PATCH 00/14] ASoC: qcom: add support to apq8016 audio
+Date: Sat, 2 May 2015 16:57:04 -0700
+Message-ID: <20150502235704.GA27804@kwestfie-linux.qualcomm.com>
+References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.11.1504211153580.13914@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-On Tue, 21 Apr 2015, Thomas Gleixner wrote:
-
-> On Fri, 17 Apr 2015, Peter Griffin wrote:
-> > +/* Low Power Timer */
-> > +#define LPC_LPT_LSB_OFF		0x400
-> > +#define LPC_LPT_MSB_OFF		0x404
-> > +#define LPC_LPT_START_OFF	0x408
-> > +
-> > +struct st_lpc {
-> > +	struct clk *clk;
-> > +	void __iomem *iomem_cs;
-> > +};
-> > +
-> > +static struct st_lpc *st_lpc;
-> > +
-> > +static u64 notrace st_lpc_counter_read(void)
-> > +{
-> > +	u64 counter;
-> > +	u32 lower;
-> > +	u32 upper, old_upper;
-> > +
-> > +	upper = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_MSB_OFF);
-> > +	do {
-> > +		old_upper = upper;
-> > +		lower = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_LSB_OFF);
-> > +		upper = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_MSB_OFF);
-> > +	} while (upper != old_upper);
-> > +
-> > +	counter = upper;
-> > +	counter <<= 32;
-> > +	counter |= lower;
-> > +	return counter;
+On Thu, Apr 30, 2015 at 06:15:48PM +0100, Srinivas Kandagatla wrote:
+> Hi All,
+> 
+> This patchset adds apq8016 audio support into lpass driver. Existing Lpass
+> driver can not be used as-it-is for apq8016 as it contains code specific to
+> ipq806x. Also the driver only supports single i2s port, single dma channel and
+> single bitclk control.
+> 
+> APQ8016 has 4 MI2S( Primary, Secondary, Tertiary, Quaternary) which can be routed
+> to internal wcd codec or external codecs. This routing is controlled by 2 mux
+> registers.
+> 
+> This patch series firstly re-organizes the lpass driver such that the SOC
+> specific bits are moved away from the driver. And secondly the SOC specifics
+> are now passed as lpass variant data which would include various register
+> offsets, dma channel allocations and SOC specific clock handling.
+> 
+> Finally the patchset add apq8016 lpass and machine driver.
+> 
+> This patchset also has two trivial cleanup patches which are to do with
+> redundant checks and removing unnecessary header files.
+> 
+> All these patches are tested for HDMI audio via adv7533 bridge and Analog audio
+> on APQ8016-SBC and msm8916-mtp boards. I dont have access to ipq806x boards to
+> test these patches.
+> 
+> This is very first version of the patches which was developed with very
+> mimimal/no access to IP documentation. I would like to get your opinon on the
+> over all approch.
 > 
 > 
-> What's the point of this exercise? The kernel can handle 32bit
-> clocksources nicely. So why do you want to artificially expand them to
-> 64bit by adding useless loops and hoops to a hotpath?
+> Kenneth/Patrick,
+> 	Could you please try these patches on storm board?
 
-Thanks for reviewing, yes your correct, we don't really need to be
-doing this. We will fix this in the v2 version.
+I will test the patches and let you know by Wednesday.  Also, I posted
+some comments, but Patrick should be posting his comments separately
+later next week.
 
-Lee Jones has also pointed out something which I was not aware of when
-submitting this, and that is this IP has shared registers with the RTC
-driver.
-
-He has been working on some patches here https://lkml.org/lkml/2015/4/9/609
-which deal with configuring between watchdog and rtc and ensuring only one
-can be configured at a time, and this driver should also be making use of
-that mechanism.
-
-As he is already working on this, we decided it would be best if he takes
-over for the V2 submission, and aligns it with the work he has already done
-for this IP.
-
-regards,
-
-Peter.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
+a Linux Foundation Collaborative Project
