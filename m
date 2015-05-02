@@ -1,40 +1,62 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 0/4] clk: si5351: Some fixes
-Date: Sat, 2 May 2015 10:55:23 +0200
-Message-ID: <20150502105523.1e6dd07c@armhf>
-References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20150501111406.0aa23c7b@armhf>
-	<554347AA.3070502@gmail.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v3 3/8] mfd: arizona: Add support for WM8998 and WM1814
+Date: Sat, 02 May 2015 11:58:51 +0200
+Message-ID: <1430560731.2187.70.camel@x220>
+References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com>
+	 <1430493319-23808-4-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <554347AA.3070502-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Russell King <rmk+linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1430493319-23808-4-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 01 May 2015 11:30:18 +0200
-Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Something I didn't notice when v2 came along.
 
-> > I applied the patches 2 and 3, and the audio and video in the Cubox
-> > work fine again. Thanks. =20
->=20
-> Ok, good. You mentioned that on v3.19-rc1 it still "works" i.e. despi=
-te
-> the broken/missing clk_get/clk_prepare_enable?
->=20
-> Can you check the stable (v3.19, v4.0) versions and see how far we
-> should backport the fix?
+On Fri, 2015-05-01 at 16:15 +0100, Richard Fitzgerald wrote:
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
 
-v3.19 works, v4.0 does not.
+> +config MFD_WM8998
+> +	bool "Wolfson Microelectronics WM8998"
+> +	depends on MFD_ARIZONA
+> +	help
+> +	  Support for Wolfson Microelectronics WM8998 low power audio SoC
+> +
+>  config MFD_WM8400
+>  	bool "Wolfson Microelectronics WM8400"
+>  	select MFD_CORE
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+
+>  ifneq ($(CONFIG_MFD_WM8997),n)
+>  obj-$(CONFIG_MFD_ARIZONA)	+= wm8997-tables.o
+>  endif
+> +ifneq ($(CONFIG_MFD_WM8998),n)
+> +obj-$(CONFIG_MFD_ARIZONA)	+= wm8998-tables.o
+> +endif
+
+Playing a bit with the current version of drivers/mfd/Makefile it seems
+these
+    ifneq ($(CONFIG_MFD_WM[...]),n)
+
+tests will always be true. Because, as far as I know, the Kconfig macros
+used in those tests will either be "y" or the empty string, but never
+"n". (I don't speak Makefilese fluent enough to know how to add simple
+debugging prints for the values of the CONFIG_MFD_WM[...] macros to
+actually test this, so correct me if I'm wrong here.)
+
+So I think that, effectively, these wm[...]-tables.o objects will always
+be built if CONFIG_MFD_ARIZONA is set. Is that the intention? If not,
+perhaps these test should read
+    ifeq ($(CONFIG_MFD_WM[...]),y)
+
+Thanks,
+
+
+Paul Bolle
+
