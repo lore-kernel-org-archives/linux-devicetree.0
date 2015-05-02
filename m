@@ -1,157 +1,353 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v7 05/15] dt-bindings: Document the STM32 reset bindings
-Date: Sat, 02 May 2015 11:01:13 +0100
-Message-ID: <5544A069.5000808@linaro.org>
-References: <1430410844-16062-1-git-send-email-mcoquelin.stm32@gmail.com>	<1430410844-16062-6-git-send-email-mcoquelin.stm32@gmail.com>	<55433467.2010603@linaro.org> <CALszF6Bw900E9MtpaVmvkFxsrOODRkNg+RxRXz5V3WghHtsxbw@mail.gmail.com>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: ARM: sunxi: dts: split IR pins for A10 and A20
+Date: Sat,  2 May 2015 13:36:20 +0200
+Message-ID: <1430566580-14295-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CALszF6Bw900E9MtpaVmvkFxsrOODRkNg+RxRXz5V3WghHtsxbw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@c>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBNXNSKVAKGQE7GV2RPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/15 08:55, Maxime Coquelin wrote:
-> 2015-05-01 10:08 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
->> On 30/04/15 17:20, Maxime Coquelin wrote:
->>>
->>> This adds documentation of device tree bindings for the
->>> STM32 reset controller.
->>>
->>> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
->>> Acked-by: Rob Herring <robh@kernel.org>
->>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->>> ---
->>>    .../devicetree/bindings/reset/st,stm32-rcc.txt     | 107
->>> +++++++++++++++++++++
->>>    1 file changed, 107 insertions(+)
->>>    create mode 100644
->>> Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->>> b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->>> new file mode 100644
->>> index 0000000..c1b0f8d
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->>> @@ -0,0 +1,107 @@
->>> +STMicroelectronics STM32 Peripheral Reset Controller
->>> +====================================================
->>> +
->>> +The RCC IP is both a reset and a clock controller. This documentation
->>> only
->>> +documents the reset part.
->>> +
->>> +Please also refer to reset.txt in this directory for common reset
->>> +controller binding usage.
->>> +
->>> +Required properties:
->>> +- compatible: Should be "st,stm32-rcc"
->>> +- reg: should be register base and length as documented in the
->>> +  datasheet
->>> +- #reset-cells: 1, see below
->>> +
->>> +example:
->>> +
->>> +rcc: reset@40023800 {
->>> +       #reset-cells = <1>;
->>> +       compatible = "st,stm32-rcc";
->>
->>
->> Do you intend the clock driver to use the same compatible string (given it
->> is the same bit of hardware).
->>
->> If so, is it better to use st,stm32f4-rcc here? It seems unlikey to me that
->> the register layout of the PLLs and dividers can be the same on the f7 parts
->> (and later).
->
-> I agree we need a compatible dedicate to f4 series for clocks, and
-> maybe even one for f429 (to be checked).
-> For the reset part, we don't have this need.
->
-> So either we use only "st,stm32f4" as you suggest, or we can have both
-> in device tree:
->
-> rcc: reset@40023800 {
->      #reset-cells = <1>;
->      compatible = "st,stm32f4-rcc", "st,stm32-rcc";
->      reg = <0x40023800 0x400>;
-> };
->
-> What do you think?
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Having both makes sense. The reset driver probably doesn't care about 
-differences between F4 and F7 (I know very little about F7 but I can't 
-think of any obvious h/ware evolution that would confuse the current 
-reset driver).
+Currently none of the target boards nor the driver supports
+IR TX. However this pin is used in a few instances as a GPIO.
+Split the pin ctrl descriptions so that only the IR RX is
+configured to be used.
 
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10-a1000.dts         |  2 +-
+ arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts    |  2 +-
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts    |  2 +-
+ arch/arm/boot/dts/sun4i-a10-hackberry.dts     |  2 +-
+ arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts    |  2 +-
+ arch/arm/boot/dts/sun4i-a10-mini-xplus.dts    |  4 ++--
+ arch/arm/boot/dts/sun4i-a10.dtsi              | 22 ++++++++++++++++++----
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts      |  2 +-
+ arch/arm/boot/dts/sun7i-a20-bananapro.dts     |  2 +-
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts   |  2 +-
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts    |  2 +-
+ arch/arm/boot/dts/sun7i-a20-hummingbird.dts   |  2 +-
+ arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts     |  2 +-
+ arch/arm/boot/dts/sun7i-a20-m3.dts            |  2 +-
+ arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts |  2 +-
+ arch/arm/boot/dts/sun7i-a20-orangepi.dts      |  2 +-
+ arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts |  2 +-
+ arch/arm/boot/dts/sun7i-a20-pcduino3.dts      |  2 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi              | 22 ++++++++++++++++++----
+ 19 files changed, 54 insertions(+), 26 deletions(-)
 
->>> +       reg = <0x40023800 0x400>;
->>> +};
->>> +
->>> +Specifying softreset control of devices
->>> +=======================================
->>> +
->>> +Device nodes should specify the reset channel required in their "resets"
->>> +property, containing a phandle to the reset device node and an index
->>> specifying
->>> +which channel to use.
->>> +The index is the bit number within the RCC registers bank, starting from
->>> RCC
->>> +base address.
->>> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
->>> +Where bit_offset is the bit offset within the register.
->>> +For example, for CRC reset:
->>> +  crc = AHB1RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x10 / 4 * 32 + 12
->>> = 140
->>> +
->>> +example:
->>> +
->>> +       timer2 {
->>> +               resets                  = <&rcc 256>;
->>> +       };
->>> +
->>> +List of valid indices for STM32F429:
->>> + - gpioa: 128
->>> + - gpiob: 129
->>> ...
->>> <snip>
->>> ...
->>> + - sai1: 310
->>> + - ltdc: 314
->>
->>
->> These numbers are stable for all STM32F4 family parts. Should this table go
->> into a dt-bindings header file?
->>
->
-> This has already been discussed with Philipp and Arnd in earlier
-> versions of this series [0].
-> I initially created a header file, and we  decided going this way finally.
-
-Thanks for the link. I had overlooked that (I only really started paying 
-attention at v5; I should probably have looked further back before 
-commenting).
-
-However...
-
-Arnd's concerns about mergability of headers can also be met by using 
-h/ware values in the header file can't there. To be honest my comment 
-was pretty heavily influenced after having read a recent patch from Rob 
-Herring ( https://lkml.org/lkml/2015/5/1/14 ) which does exactly this.
-
-The main reason I got interested in having a header is that the reset 
-bits and the clock gate bits are encoded using the same bit patterns so 
-I wondering it we could express that only once.
-
-I guess it doesn't matter that much, especially given there is only one 
-.dtsi file, and we can add a header later and remain binary compatible. 
-However if the same number set does end up repeated in different .dtsi 
-files I think that would motivate adding a header for F4 family.
-
-
-Daniel.
-
+diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+index f032814..57970d0 100644
+--- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
++++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+@@ -130,7 +130,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts b/arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts
+index 1a3c7dd..62e4b36 100644
+--- a/arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts
++++ b/arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts
+@@ -96,7 +96,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+index 0ba67d7..db204b1 100644
+--- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
++++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+@@ -126,7 +126,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun4i-a10-hackberry.dts b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
+index f443788..835eb30 100644
+--- a/arch/arm/boot/dts/sun4i-a10-hackberry.dts
++++ b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
+@@ -93,7 +93,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
+index 1b0452f..4281782 100644
+--- a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
++++ b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
+@@ -126,7 +126,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
+index 0f24914..132ace5 100644
+--- a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
++++ b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
+@@ -92,11 +92,11 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+-&ir0_pins_a {
++&ir0_rx_pins_a {
+ 	/* The ir receiver is not always populated */
+ 	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ };
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 1d7fd68..7529857 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -797,15 +797,29 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ 			};
+ 
+-			ir0_pins_a: ir0@0 {
+-				allwinner,pins = "PB3","PB4";
++			ir0_rx_pins_a: ir0@0 {
++				allwinner,pins = "PB4";
+ 				allwinner,function = "ir0";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			ir1_pins_a: ir1@0 {
+-				allwinner,pins = "PB22","PB23";
++			ir0_tx_pins_a: ir0@1 {
++				allwinner,pins = "PB3";
++				allwinner,function = "ir0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			ir1_rx_pins_a: ir1@0 {
++				allwinner,pins = "PB23";
++				allwinner,function = "ir1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			ir1_tx_pins_a: ir1@1 {
++				allwinner,pins = "PB22";
+ 				allwinner,function = "ir1";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index b952ac4..ecc2a4d 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -142,7 +142,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapro.dts b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
+index 9d9027f..d408bbc 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapro.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
+@@ -154,7 +154,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+index 3c817ac..930ea80d 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+@@ -133,7 +133,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index 613a19e..8a83c99 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -160,7 +160,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
+index d3f15c2..9a4d783 100644
+--- a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
++++ b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
+@@ -160,7 +160,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts b/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
+index 3f99b3f..d9782c4 100644
+--- a/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
++++ b/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
+@@ -157,7 +157,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-m3.dts b/arch/arm/boot/dts/sun7i-a20-m3.dts
+index f2fb26e..39b4a80 100644
+--- a/arch/arm/boot/dts/sun7i-a20-m3.dts
++++ b/arch/arm/boot/dts/sun7i-a20-m3.dts
+@@ -117,7 +117,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+index 0556938..bf6dd25 100644
+--- a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
++++ b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+@@ -137,7 +137,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi.dts b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
+index 7e6405c..b282dda 100644
+--- a/arch/arm/boot/dts/sun7i-a20-orangepi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
+@@ -132,7 +132,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+index 810c5f7..f14cd60 100644
+--- a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
++++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+@@ -125,7 +125,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
+index cd05267..2578959 100644
+--- a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
++++ b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
+@@ -154,7 +154,7 @@
+ 
+ &ir0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&ir0_pins_a>;
++	pinctrl-0 = <&ir0_rx_pins_a>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 4163ade..89d7206 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1000,15 +1000,29 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			ir0_pins_a: ir0@0 {
+-				    allwinner,pins = "PB3","PB4";
++			ir0_rx_pins_a: ir0@0 {
++				    allwinner,pins = "PB4";
+ 				    allwinner,function = "ir0";
+ 				    allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				    allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			ir1_pins_a: ir1@0 {
+-				    allwinner,pins = "PB22","PB23";
++			ir0_tx_pins_a: ir0@1 {
++				    allwinner,pins = "PB3";
++				    allwinner,function = "ir0";
++				    allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				    allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			ir1_rx_pins_a: ir1@0 {
++				    allwinner,pins = "PB23";
++				    allwinner,function = "ir1";
++				    allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				    allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			ir1_tx_pins_a: ir1@1 {
++				    allwinner,pins = "PB22";
+ 				    allwinner,function = "ir1";
+ 				    allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				    allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+-- 
+2.3.6
