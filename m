@@ -1,23 +1,40 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCH v3 0/4] remoteproc: Introduce wkup_m3_rproc driver
-Date: Sat, 2 May 2015 11:45:29 +0300
-Message-ID: <CAK=Wgba1j_BL5TZzsg2efrBaLs7otY1w1nFEQ9WM025kYnkahQ@mail.gmail.com>
-References: <1427917039-43206-1-git-send-email-d-gerlach@ti.com> <55410143.1080209@ti.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 0/4] clk: si5351: Some fixes
+Date: Sat, 2 May 2015 10:55:23 +0200
+Message-ID: <20150502105523.1e6dd07c@armhf>
+References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<20150501111406.0aa23c7b@armhf>
+	<554347AA.3070502@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <55410143.1080209@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>, Kevin Hilman <khilman@linaro.org>, Tony Lindgren <tony@atomide.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <554347AA.3070502-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Russell King <rmk+linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
+On Fri, 01 May 2015 11:30:18 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On Wed, Apr 29, 2015 at 7:05 PM, Suman Anna <s-anna@ti.com> wrote:
-> Ping, do you have any comments on this series?
+> > I applied the patches 2 and 3, and the audio and video in the Cubox
+> > work fine again. Thanks. =20
+>=20
+> Ok, good. You mentioned that on v3.19-rc1 it still "works" i.e. despi=
+te
+> the broken/missing clk_get/clk_prepare_enable?
+>=20
+> Can you check the stable (v3.19, v4.0) versions and see how far we
+> should backport the fix?
 
-I'll get to review this next week.
+v3.19 works, v4.0 does not.
 
-Thanks,
-Ohad.
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
