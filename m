@@ -1,61 +1,55 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3] Import of dtc/libfdt upstream into kernel
-Date: Sun,  3 May 2015 14:31:16 -0700
-Message-ID: <1430688676-7919-1-git-send-email-gaurav.minocha.os@gmail.com>
+From: Andrew <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/1] ARM: mvebu: dts: Add dts file for DLink DNS-327L
+Date: Mon, 04 May 2015 01:05:56 +0300
+Message-ID: <ad0fbb28b4b74de4c6685a5ddd21010c@mail.ncrmnt.org>
+References: <1430663256-22714-1-git-send-email-andrew@ncrmnt.org>
+ <20150503205043.GA23342@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150503205043.GA23342-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The following script is used to import dtc upstream
-into kernel. It was missing import of dtc/libfdt, with
-this commit it will include the same.
+Andrew Lunn =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 03.05.2015 23:50:
+> Hi Andrew
+>=20
+>> DNS-327L is a 2-bay NAS with the following specs:
+>>      - 512MiB RAM
+>>      - 128MiB NAND Flash
+>>      - 1 GbE interface (Marvell PHY)
+>=20
+> ...
+>=20
+>> /* Set RGMII voltage to 1.8v, according to public docs. Nice! */
+>> mw.l 0xd00184e0 0xa8a;
+>> /* Some weird magic that goes into phy registers, no public docs */
+>> phyWrite 0 16 2;
+>> phyWrite 0 19 77;
+>> phyWrite 0 18 5747;
+>=20
+> Take a look at the marvell,reg-init property. Might do what you need.
+>=20
+>      Andrew
 
-Following is a temporary fix, should be removed once fixed in
-DTC upstream. Currently in arch and driver code that needs early access
-to the flattened device tree it is necessary to add specific CFLAGS
-so that when scripts/dtc/libfdt/libfdt.h is included the C
-preprocessor is able to locate the libfdt versions of libfdt_env.h
-and fdt.h without generating an error. So, this script replaces
-angular brackets with quotation used to include header files
-fdt.h and libfdt_env.h.
+Thanks for the tip. So far I'm solving it via u-boot.
+You have to set RGMII voltage there anyway if you want tftp for the=20
+updates,
+so it looks like the right place to do this kind of stuff.
 
-Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- scripts/dtc/update-dtc-source.sh | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
-index feb01ef..cde59e9 100755
---- a/scripts/dtc/update-dtc-source.sh
-+++ b/scripts/dtc/update-dtc-source.sh
-@@ -34,6 +34,7 @@ DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c
- 		srcpos.h treesource.c util.c util.h version_gen.h Makefile.dtc \
- 		dtc-lexer.l dtc-parser.y"
- DTC_GENERATED="dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h"
-+LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_empty_tree.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
- 
- # Build DTC
- cd $DTC_UPSTREAM_PATH
-@@ -50,5 +51,13 @@ for f in $DTC_GENERATED; do
- 	cp ${DTC_UPSTREAM_PATH}/$f ${f}_shipped
- 	git add ${f}_shipped
- done
-+for f in $LIBFDT_SOURCE; do
-+       cp ${DTC_UPSTREAM_PATH}/libfdt/${f} libfdt/${f}
-+       git add libfdt/${f}
-+done
-+
-+# Temporary fix: it should be removed once fixed in DTC upstream
-+sed -i -- 's/#include <libfdt_env.h>/#include "libfdt_env.h"/g' ./libfdt/libfdt.h
-+sed -i -- 's/#include <fdt.h>/#include "fdt.h"/g' ./libfdt/libfdt.h
- 
- git commit -e -v -m "scripts/dtc: Update to upstream version [CHANGEME]"
--- 
-2.1.0
+I'll add the proper magic to the dts file and resend tomorrow.
+
+--=20
+Regards,
+Andrew
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
