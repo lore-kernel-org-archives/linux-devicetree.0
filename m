@@ -1,87 +1,83 @@
-From: Andrew <andrew@ncrmnt.org>
-Subject: Re: Fwd: Re: [PATCH 2/2] ARM: mvebu: dts: Add dts file for DLink  DNS-327L
-Date: Sun, 03 May 2015 14:37:59 +0300
-Message-ID: <072d4c1171194abcb0bf753ce5a2e776@mail.ncrmnt.org>
-References: <b6534b962d2cf9d21cb72d43f19a6574@mail.ncrmnt.org>
- <552A6209.9040903@gmail.com>
- <cd7445f789f1082f464d464f77807f12@mail.ncrmnt.org>
- <20150412145857.GA14038@lunn.ch>
- <b172d775afa24cea69a9490f531c6b37@mail.ncrmnt.org>
- <20150412194735.GA27921@lunn.ch> <552BCFAA.2020109@free-electrons.com>
- <1ec8906f00468ca5a9fa227f8c83fe69@mail.ncrmnt.org>
- <55351569.7000307@free-electrons.com>
- <d28764ea5d0d5f4c2e5d3e9ca1d7217a@mail.ncrmnt.org>
- <55351898.60604@free-electrons.com>
- <4e7e91562aac6a260885bf2d12174060@mail.ncrmnt.org>
- <5545FF6D.9040205@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5545FF6D.9040205@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>
+From: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/2] am335x-evm: add bluetooth support
+Date: Sun,  3 May 2015 15:19:29 +0300
+Message-ID: <1430655569-27849-2-git-send-email-eyalr@ti.com>
+References: <1430655569-27849-1-git-send-email-eyalr@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430655569-27849-1-git-send-email-eyalr-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sebastian Hesselbarth =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 03.05.2015 13:58:
-> On 03.05.2015 12:18, Andrew wrote:
-> [...]
->> Sorry for the long delay with testing, but here come the results.
->> I've rebased everything to 4.1-rc1
->>=20
->> 1. WFI + DeepIdle =3D> freeze after approx:
->>    * 1 hours and 30 minutes, first test
->>    * 3 hours and 40 minutes, second test
->> 2. WFI only (DeepIdle disabled via sysfs) =3D> Still alive after 13=20
->> hours
->> and counting
->>=20
->> The proper patchset will follow as soon as I figure out what change=20
->> broke
->> dns320l-daemon (The utility that speaks to weltrend mcu on ttyS1)
->> It was working on 3.18.6, on 3.19 and up - it writes data to the por=
-t
->> (and mcu acks it),
->> but can't read any responses.
->>=20
->> Same thing happens to the python (pyserial inside) implementation of=
-=20
->> the
->> fan-daemon:
->> https://github.com/martignlo/DNS-320L
->=20
-> Andrew,
->=20
-> did you realize that you request a non-standard UART baudrate in your
-> python code above:
->=20
-> port =3D serial.Serial("/dev/ttyS1", 115600, 8, "N", 1, 0.1)
->=20
-> s/115600/115200/
->=20
-> Does that fix your communication issues?
->=20
-> Sebastian
+From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 
+uart1 is used for shared transport (used for multiplexing
+bluetooth and nfc data). add the needed muxes and definitions.
 
-If life was that simple ;-)
-Unfortunately that's not the issue.
-dns320l-daemon ( http://www.aboehler.at/hg/dns320l-daemon ) uses correc=
-t=20
-115200 baud and
-doesn't work either.
-Since I can transmit, but can't receive, I will be first checking out=20
-mpp settings
-If that doesn't help, I guess it's git-bisect time.
+Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-evm.dts |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 0f398fa..5968cde 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -135,6 +135,18 @@
+ 		};
+ 	};
+ 
++	kim {
++		compatible = "kim";
++		nshutdown_gpio = <117>; /* Bank3, pin21 */
++		dev_name = "/dev/ttyS1";
++		flow_cntrl = <1>;
++		baud_rate = <3000000>;
++	};
++
++	btwilink {
++		compatible = "btwilink";
++	};
++
+ 	sound {
+ 		compatible = "ti,da830-evm-audio";
+ 		ti,model = "AM335x-EVM";
+@@ -191,6 +203,15 @@
+ 		>;
+ 	};
+ 
++	uart1_pins: pinmux_uart1_pins {
++		pinctrl-single,pins = <
++			0x178 (PIN_INPUT | MUX_MODE0)		/* uart1_ctsn.uart1_ctsn */
++			0x17C (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart1_rtsn.uart1_rtsn */
++			0x180 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart1_rxd.uart1_rxd */
++			0x184 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart1_txd.uart1_txd */
++		>;
++	};
++
+ 	clkout2_pin: pinmux_clkout2_pin {
+ 		pinctrl-single,pins = <
+ 			0x1b4 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr1.clkout2 */
+@@ -357,6 +378,13 @@
+ 	status = "okay";
+ };
+ 
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++
++	status = "okay";
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins>;
+-- 
+1.7.9.5
 
---=20
-Regards,
-Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
