@@ -1,120 +1,76 @@
-From: Eyal Reizer <eyalreizer@gmail.com>
-Subject: [PATCH 1/2] am335x-evm: add mmc3 and wlan definitions to dts
-Date: Sun,  3 May 2015 15:19:28 +0300
-Message-ID: <1430655569-27849-1-git-send-email-eyalr@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Eyal Reizer <eyalr@ti.com>, Arik Nemtsov <arik@wizery.com>, Eliad Peller <eliad@wizery.com>
+From: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 0/1] ARM: mvebu: dts: Add dts file for DLink DNS-327L
+Date: Sun,  3 May 2015 17:27:35 +0300
+Message-ID: <1430663256-22714-1-git-send-email-andrew@ncrmnt.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This includes the wlan regulator, pinmux, DMA
-and wlcore bindings.
+Rebased and fixed against 4.1-rc1
+This is the resubmit of the patch with fixes based on reviews by Andrew Lunn
+and Sebastian Hesselbarth
 
-Signed-off-by: Arik Nemtsov <arik@wizery.com>
-Signed-off-by: Eliad Peller <eliad@wizery.com>
-Signed-off-by: Eyal Reizer <eyalr@ti.com>
----
- arch/arm/boot/dts/am335x-evm.dts |   65 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+It looks like UART1 MPP defaults (mpp41, mpp42) introduced in 
+f8afeaea9611b5183b7919de4fb9333dedc72896 don't play well with DNS-327L and 
+break both ttyS1 and NAND if used.
+I have fixed the mappings for DNS-327L in this patch
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 6634251..0f398fa 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- #include "am33xx.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "TI AM335x EVM";
-@@ -38,6 +39,20 @@
- 		regulator-boot-on;
- 	};
- 
-+	wlan_en_reg: fixedregulator@2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wlan-en-regulator";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+
-+		/* WLAN_EN GPIO for this board - Bank1, pin16 */
-+		gpio = <&gpio1 16 0>;
-+
-+		/* WLAN card specific delay */
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+	};
-+
- 	matrix_keypad: matrix_keypad@0 {
- 		compatible = "gpio-matrix-keypad";
- 		debounce-delay-ms = <5>;
-@@ -266,6 +281,25 @@
- 		>;
- 	};
- 
-+	mmc3_pins: pinmux_mmc3_pins {
-+		pinctrl-single,pins = <
-+			0x44 (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a1.mmc2_dat0, INPUT_PULLUP | MODE3 */
-+			0x48 (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a2.mmc2_dat1, INPUT_PULLUP | MODE3 */
-+			0x4C (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a3.mmc2_dat2, INPUT_PULLUP | MODE3 */
-+			0x78 (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_ben1.mmc2_dat3, INPUT_PULLUP | MODE3 */
-+			0x88 (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_csn3.mmc2_cmd, INPUT_PULLUP | MODE3 */
-+			0x8C (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_clk.mmc2_clk, INPUT_PULLUP | MODE3 */
-+		>;
-+	};
-+
-+	wlan_pins: pinmux_wlan_pins {
-+		pinctrl-single,pins = <
-+			0x40 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a0.gpio1_16 */
-+			0x19C (PIN_INPUT | MUX_MODE7)		/* mcasp0_ahclkr.gpio3_17 */
-+			0x1AC (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mcasp0_ahclkx.gpio3_21 */
-+		>;
-+	};
-+
- 	lcd_pins_s0: lcd_pins_s0 {
- 		pinctrl-single,pins = <
- 			0x20 (PIN_OUTPUT | MUX_MODE1)		/* gpmc_ad8.lcd_data23 */
-@@ -665,6 +699,37 @@
- 	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
- };
- 
-+&mmc3 {
-+	/* these are on the crossbar and are outlined in the
-+	   xbar-event-map element */
-+	dmas = <&edma 12
-+		&edma 13>;
-+	dma-names = "tx", "rx";
-+	status = "okay";
-+	vmmc-supply = <&wlan_en_reg>;
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins &wlan_pins>;
-+	ti,non-removable;
-+	ti,needs-special-hs-handling;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@0 {
-+		compatible = "ti,wl1835";
-+		reg = <2>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-+
-+&edma {
-+	ti,edma-xbar-event-map = /bits/ 16 <1 12
-+					    2 13>;
-+};
-+
- &sham {
- 	status = "okay";
- };
+Changelog since last respin: 
+* All the style fixes
+* pinctrl fixes for uart1
+
+Fixed and updated description of the patch from my first email follows.
+
+DNS-327L is a 2-bay NAS with the following specs:     
+     - 512MiB RAM
+     - 128MiB NAND Flash
+     - 1 GbE interface (Marvell PHY)
+     - 1 rear USB 3.0 port (via PCIe USB 3.0 controller)
+     - 2 internal SATA ports handled by the Armada 370: 
+       	 uses 2 gpios for power control
+     - two front 2-color leds (amber + white) for both discs, 
+        controlled by the SoC
+     - One white LED handled by SoC (USB)
+     - 3 buttons. Power handled by weltrend, USB and 
+       RESET (on the bottom) are wired via GPIOs 
+     - Unidentified i2c device at address 0x13 (via i2cdetect)
+     - UART0 providing serial console
+     - Weltrend MCU serving for RTC, temperature, fan control, 
+       and power button handling interfaced via UART1 
+       (Handled via userspace dns320l-daemon)
+
+Hardware notes follow: 
+Everything's supported, save for mysterious i2c device at 
+address 0x13 (any ideas what can it be?) that I couldn't even find 
+on the PCB.
+
+Stock firmware performs some messing with PHY registers (that 
+have no public documentation) using a userspace script. Using 
+upstream kernel it is possible to match the stock behavior using 
+the following in u-boot prompt:
+
+/* Set RGMII voltage to 1.8v, according to public docs. Nice! */
+mw.l 0xd00184e0 0xa8a; 
+/* Some weird magic that goes into phy registers, no public docs */
+phyWrite 0 16 2; 
+phyWrite 0 19 77; 
+phyWrite 0 18 5747; 
+
+
+Andrew Andrianov (1):
+  ARM: mvebu: dts: Add dts file for DLink DNS-327L
+
+ arch/arm/boot/dts/Makefile                     |    1 +
+ arch/arm/boot/dts/armada-370-dlink-dns327l.dts |  349 ++++++++++++++++++++++++
+ 2 files changed, 350 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-370-dlink-dns327l.dts
+
 -- 
-1.7.9.5
+1.7.10.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
