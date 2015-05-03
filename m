@@ -1,80 +1,59 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: function to retrive of_device_id data
-Date: Sun,  3 May 2015 23:19:03 +0200
-Message-ID: <1430687943-13051-1-git-send-email-manabian@gmail.com>
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] Import of dtc/libfdt upstream into kernel
+Date: Sun,  3 May 2015 14:31:16 -0700
+Message-ID: <1430688676-7919-1-git-send-email-gaurav.minocha.os@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi DT maintainers,
+The following script is used to import dtc upstream
+into kernel. It was missing import of dtc/libfdt, with
+this commit it will include the same.
 
-A common driver pattern for retrieving the data field in a of_device_id struct seems to be:
+Following is a temporary fix, should be removed once fixed in
+DTC upstream. Currently in arch and driver code that needs early access
+to the flattened device tree it is necessary to add specific CFLAGS
+so that when scripts/dtc/libfdt/libfdt.h is included the C
+preprocessor is able to locate the libfdt versions of libfdt_env.h
+and fdt.h without generating an error. So, this script replaces
+angular brackets with quotation used to include header files
+fdt.h and libfdt_env.h.
 
-    const struct of_device_id *match;
-    match = of_match_device(driver_of_match, &pdev->dev);
-    driver->data = match->data;
-
-I was looking for a simple function to perform the above action but couldn't find one.
-
-What do you think about the following patch to add such a function?
-
+Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/of/device.c       | 12 ++++++++++++
- include/linux/of_device.h |  7 +++++++
- 2 files changed, 19 insertions(+)
+ scripts/dtc/update-dtc-source.sh | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 46d6c75c1404..fd07bc55194a 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -79,6 +79,18 @@ void of_device_unregister(struct platform_device *ofdev)
- }
- EXPORT_SYMBOL(of_device_unregister);
+diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
+index feb01ef..cde59e9 100755
+--- a/scripts/dtc/update-dtc-source.sh
++++ b/scripts/dtc/update-dtc-source.sh
+@@ -34,6 +34,7 @@ DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c
+ 		srcpos.h treesource.c util.c util.h version_gen.h Makefile.dtc \
+ 		dtc-lexer.l dtc-parser.y"
+ DTC_GENERATED="dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h"
++LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_empty_tree.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
  
-+const void *of_device_get_data(const struct device *dev)
-+{
-+	const struct of_device_id *match;
+ # Build DTC
+ cd $DTC_UPSTREAM_PATH
+@@ -50,5 +51,13 @@ for f in $DTC_GENERATED; do
+ 	cp ${DTC_UPSTREAM_PATH}/$f ${f}_shipped
+ 	git add ${f}_shipped
+ done
++for f in $LIBFDT_SOURCE; do
++       cp ${DTC_UPSTREAM_PATH}/libfdt/${f} libfdt/${f}
++       git add libfdt/${f}
++done
 +
-+	match = of_match_device(dev->driver->of_match_table, dev);
-+	if (!match)
-+		return NULL;
-+
-+	return match->data;
-+}
-+EXPORT_SYMBOL(of_device_get_data);
-+
- ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- {
- 	const char *compat;
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index ef370210ffb2..78fddff259a0 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -33,6 +33,8 @@ extern int of_device_add(struct platform_device *pdev);
- extern int of_device_register(struct platform_device *ofdev);
- extern void of_device_unregister(struct platform_device *ofdev);
++# Temporary fix: it should be removed once fixed in DTC upstream
++sed -i -- 's/#include <libfdt_env.h>/#include "libfdt_env.h"/g' ./libfdt/libfdt.h
++sed -i -- 's/#include <fdt.h>/#include "fdt.h"/g' ./libfdt/libfdt.h
  
-+extern const void *of_device_get_data(const struct device *dev);
-+
- extern ssize_t of_device_get_modalias(struct device *dev,
- 					char *str, ssize_t len);
- 
-@@ -64,6 +66,11 @@ static inline int of_driver_match_device(struct device *dev,
- static inline void of_device_uevent(struct device *dev,
- 			struct kobj_uevent_env *env) { }
- 
-+static const void *of_device_get_data(const struct device *dev)
-+{
-+	return NULL;
-+}
-+
- static inline int of_device_get_modalias(struct device *dev,
- 				   char *str, ssize_t len)
- {
+ git commit -e -v -m "scripts/dtc: Update to upstream version [CHANGEME]"
 -- 
-1.8.0
+2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
