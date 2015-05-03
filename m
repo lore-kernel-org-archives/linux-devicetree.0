@@ -1,40 +1,38 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH] of: unittest: overlay: Keep track of created overlays
-Date: Sun, 3 May 2015 20:56:48 +0300
-Message-ID: <2FBD69F5-84E9-4528-9843-D3A010ED1B4B@antoniou-consulting.com>
-References: <1429868546-19613-1-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqJ7GxMMiu7U7u6bgDLut0Eme6TOowZZW9A3WXrjFuAexA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ7GxMMiu7U7u6bgDLut0Eme6TOowZZW9A3WXrjFuAexA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v3 0/1] ARM: mvebu: dts: Add dts file for DLink DNS-327L
+Date: Sun, 3 May 2015 22:50:43 +0200
+Message-ID: <20150503205043.GA23342@lunn.ch>
+References: <1430663256-22714-1-git-send-email-andrew@ncrmnt.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1430663256-22714-1-git-send-email-andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Andrew
 
-> On Apr 29, 2015, at 18:55 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
-:
->=20
-> On Fri, Apr 24, 2015 at 4:42 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> During the course of the overlay selftests some of them remain
->> applied. While this does not pose a real problem, make sure you trac=
-k
->> them and destroy them at the end of the test.
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->=20
-> This is already in for 4.1. Is this the same as the prior version.
->=20
+> DNS-327L is a 2-bay NAS with the following specs:     
+>      - 512MiB RAM
+>      - 128MiB NAND Flash
+>      - 1 GbE interface (Marvell PHY)
 
-It is the same as the earlier one.
+...
 
-> Rob
->=20
+> /* Set RGMII voltage to 1.8v, according to public docs. Nice! */
+> mw.l 0xd00184e0 0xa8a; 
+> /* Some weird magic that goes into phy registers, no public docs */
+> phyWrite 0 16 2; 
+> phyWrite 0 19 77; 
+> phyWrite 0 18 5747; 
 
-Regards
+Take a look at the marvell,reg-init property. Might do what you need.
 
-=E2=80=94 Pantelis
+     Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
