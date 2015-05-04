@@ -1,114 +1,61 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] doc: dt: add documentation for lpc1850-rgu reset driver
-Date: Tue,  5 May 2015 00:52:36 +0200
-Message-ID: <1430779956-12490-3-git-send-email-manabian@gmail.com>
-References: <1430779956-12490-1-git-send-email-manabian@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Celinux-dev] Invitation and RFC: Linux Plumbers Device Tree
+ track proposed
+Date: Mon, 4 May 2015 18:20:35 -0500
+Message-ID: <CAL_JsqKkZYEMdYmh=JkA6O34a+7mKy=SgB2XxzgTM70mihgQeQ@mail.gmail.com>
+References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
+ <5543EE80.5060109@landley.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430779956-12490-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <5543EE80.5060109-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel.dalessandro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/reset/nxp,lpc1850-rgu.txt  | 84 ++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/nxp,lpc1850-rgu.txt
+On Fri, May 1, 2015 at 4:22 PM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
+> On 04/11/2015 02:20 PM, Rowand, Frank wrote:
+>> In recent years there have been proposed tools to aid in the creation of valid
+>> device trees and in debugging device tree issues.  An example of this is the
+>> various approaches proposed (with source code provided) to validate device tree
+>> source against valid bindings.  As of today, device tree related tools,
+>> techniques, and debugging infrastructure have not progressed very far.  I have
+>> submitted a device tree related proposal for the Linux Plumbers 2015 conference
+>> to spur action and innovation in such tools, techniques, and debugging
+>> infrastructure.
+>>
+>> The current title of the track is "Device Tree Tools, Validation, and
+>> Troubleshooting".  The proposal is located at
+>>
+>>    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
+>
+> Want I want to do is:
+>
+> 1) Download an archive of device tree files describing a bunch of
+> boards. (Both dts and corresponding dtb files, with maybe a .txt telling
+> me about the board and the -append line qemu needs to give it any
+> board-specific kernel command line stuff like "console=myserialport".)
 
-diff --git a/Documentation/devicetree/bindings/reset/nxp,lpc1850-rgu.txt b/Documentation/devicetree/bindings/reset/nxp,lpc1850-rgu.txt
-new file mode 100644
-index 000000000000..b4e96a278445
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/nxp,lpc1850-rgu.txt
-@@ -0,0 +1,84 @@
-+NXP LPC1850  Reset Generation Unit (RGU)
-+========================================
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+- compatible: Should be "nxp,lpc1850-rgu"
-+- reg: register base and length
-+- clocks: phandle and clock specifier to RGU clocks
-+- clock-names: should contain "delay" and "reg"
-+- #reset-cells: should be 1
-+
-+See table below for valid peripheral reset numbers. Numbers not
-+in the table below are either reserved or not applicable for
-+normal operation.
-+
-+Reset	Peripheral
-+  9	System control unit (SCU)
-+ 12	ARM Cortex-M0 subsystem core (LPC43xx only)
-+ 13	CPU core
-+ 16	LCD controller
-+ 17	USB0
-+ 18	USB1
-+ 19	DMA
-+ 20	SDIO
-+ 21	External memory controller (EMC)
-+ 22	Ethernet
-+ 25	Flash bank A
-+ 27	EEPROM
-+ 28	GPIO
-+ 29	Flash bank B
-+ 32	Timer0
-+ 33	Timer1
-+ 34	Timer2
-+ 35	Timer3
-+ 36	Repetitive Interrupt timer (RIT)
-+ 37	State Configurable Timer (SCT)
-+ 38	Motor control PWM (MCPWM)
-+ 39	QEI
-+ 40	ADC0
-+ 41	ADC1
-+ 42	DAC
-+ 44	USART0
-+ 45	UART1
-+ 46	USART2
-+ 47	USART3
-+ 48	I2C0
-+ 49	I2C1
-+ 50	SSP0
-+ 51	SSP1
-+ 52	I2S0 and I2S1
-+ 53	Serial Flash Interface (SPIFI)
-+ 54	C_CAN1
-+ 55	C_CAN0
-+ 56	ARM Cortex-M0 application core (LPC4370 only)
-+ 57	SGPIO (LPC43xx only)
-+ 58	SPI (LPC43xx only)
-+ 60	ADCHS (12-bit ADC) (LPC4370 only)
-+
-+Refer to NXP LPC18xx or LPC43xx user manual for more details about
-+the reset signals and the connected block/peripheral.
-+
-+Reset provider example:
-+rgu: reset-controller@40053000 {
-+	compatible = "nxp,lpc1850-rgu";
-+	reg = <0x40053000 0x1000>;
-+	clocks = <&cgu BASE_SAFE_CLK>, <&ccu1 CLK_CPU_BUS>;
-+	clock-names = "delay", "reg";
-+	#reset-cells = <1>;
-+};
-+
-+Reset consumer example:
-+mac: ethernet@40010000 {
-+	compatible = "nxp,lpc1850-dwmac", "snps,dwmac-3.611", "snps,dwmac";
-+	reg = <0x40010000 0x2000>;
-+	interrupts = <5>;
-+	interrupt-names = "macirq";
-+	clocks = <&ccu1 CLK_CPU_ETHERNET>;
-+	clock-names = "stmmaceth";
-+	resets = <&rgu 22>;
-+	reset-names = "stmmaceth";
-+	status = "disabled";
-+};
--- 
-1.8.0
+The dts half is here[1]. It is a kernel repository automatically
+stripped of everything but dts files.
 
+> 2) Feed one of the dtb files to qemu to instantiate a bunch of devices.
+
+I'd like this too. The QEMU maintainers don't really agree. I think
+the ARM virt platform is the wrong way around with QEMU generating the
+DT. There was a patch series to allow sysbus devices to be created on
+the command line like you can with PCI. This would have allowed a
+front end script to generate a QEMU command line from a DT. I'm not
+sure if it ever got in.
+
+It would lower the bar to adding new platforms to just writing models
+for blocks perhaps. I'm not sure there's enough interest. The number
+of ARM platforms supported in QEMU is much less than the kernel.
+
+Rob
+
+[1] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
