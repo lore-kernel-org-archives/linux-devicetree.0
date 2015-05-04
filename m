@@ -1,102 +1,72 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 1/3] Document: dw_mmc-k3: add document of hi6220 mmc
-Date: Mon, 04 May 2015 09:15:50 +0900
-Message-ID: <5546BA36.5080608@samsung.com>
-References: <1430444818-7740-1-git-send-email-zhangfei.gao@linaro.org>
- <1430444818-7740-2-git-send-email-zhangfei.gao@linaro.org>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Mon, 4 May 2015 10:23:14 +1000
+Message-ID: <20150504002314.GA12518@gwshan>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+ <1430493730.7979.58.camel@kernel.crashing.org>
+ <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+ <1430521038.7979.70.camel@kernel.crashing.org>
+ <1430522976.7979.78.camel@kernel.crashing.org>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1430444818-7740-2-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430522976.7979.78.camel@kernel.crashing.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Zhangfei.
+On Sat, May 02, 2015 at 09:29:36AM +1000, Benjamin Herrenschmidt wrote:
+>On Sat, 2015-05-02 at 08:57 +1000, Benjamin Herrenschmidt wrote:
+>
+>> > Overlay = an FDT blob to graft into a live running system. Sounds like
+>> > the same thing.
+>> > 
+>> > > As for the details of Gavin implementation, I haven't looked at it in
+>> > > details yet so there might be issues there, however I don't know what
+>> > > you mean by "overlays", any pointer ?
+>> > 
+>> > CONFIG_OF_OVERLAY
+>> > 
+>> > http://events.linuxfoundation.org/sites/events/files/slides/dynamic-dt-keynote-v3.pdf
+>> 
+>> Well, that looks horrendously complicated, poorly documented and totally
+>> unused in-tree outside of the unittest stuff, yay ! It has all sort of
+>> "features" that I don't really care about.
+>
+>Looking a bit more at it, I don't quite see how I can attach a subtree
+>using that stuff.
+>
+>Instead, each node in the overlay seems to need extra nodes and
+>properties to refer to the original.
+>
+>So the FW would essentially have to create something a lot more complex
+>than just reflattening a bit of its internal tree. For each internal
+>node, it will need to add all those __overlay__ nodes and properties.
+>
+>That is not going to fly for me at all. It's order of magnitudes more
+>complex than the solution we are pursuing.
+>
+>So I think for our use case, we should continue in the direction of
+>having a helper to unflatten a piece of FDT underneath an existing
+>node. I don't like the "HYBRID" stuff though, we should not refer to
+>the original FDT, we should just make them normal dynamic nodes.
+>
 
-Is there no commit message for this patch?
+The original FDT from firmware is copied over to the memory chunk
+allocated from slab by kernel. So we refer to the copy of the FDT,
+not original one. Yeah, "HYBRID" wouldn't be a good idea. If we
+want make all device nodes and properties of the sub-tree "DYNAMIC",
+the FDT hasn't to be copied over from skiboot to kernel, indicating
+those dynamic device nodes and properties in the subtree can be
+figured out directly from the FDT blob, which is owned by firmware.
 
-On 05/01/2015 10:46 AM, Zhangfei Gao wrote:
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  .../devicetree/bindings/mmc/k3-dw-mshc.txt         | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> index 3b35449..a353d0b 100644
-> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> @@ -13,6 +13,10 @@ Required Properties:
->  
->  * compatible: should be one of the following.
->    - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extensions.
-> +  - "hisilicon,hi6220-dw-mshc": for controllers with hi6220 specific extensions.
-> +
-> +Optional Properties:
-> +- hisilicon,peripheral-syscon: phandle of syscon used to control peripheral.
->  
->  Example:
->  
-> @@ -42,3 +46,49 @@ Example:
->  		cap-mmc-highspeed;
->  		cap-sd-highspeed;
->  	};
-> +
-> +	/* for Hi6220 */
-> +
-> +	/* SoC portion */
-> +	dwmmc_0: dwmmc0@f723d000 {
-> +	        compatible = "hisilicon,hi6220-dw-mshc";
-> +	        num-slots = <0x1>;
-> +	        board-mmc-bus-clk = <0x0>;
-> +	        reg = <0x0 0xf723d000 0x0 0x1000>;
-> +	        interrupts = <0x0 0x48 0x4>;
-> +	        clocks = <&clock_sys HI6220_MMC0_CIUCLK>, <&clock_sys HI6220_MMC0_CLK>;
-> +	        clock-names = "ciu", "biu";
-> +	};
-> +
-> +	dwmmc_1: dwmmc1@f723e000 {
-> +		compatible = "hisilicon,hi6220-dw-mshc";
-> +		num-slots = <0x1>;
-> +		board-mmc-bus-clk = <0x0>;
-> +		card-detect-delay = <200>;
-> +		hisilicon,peripheral-syscon = <&ao_ctrl>;
-> +		reg = <0x0 0xf723e000 0x0 0x1000>;
-> +		interrupts = <0x0 0x49 0x4>;
-> +		clocks = <&clock_sys HI6220_MMC1_CIUCLK>, <&clock_sys HI6220_MMC1_CLK>;
-> +		clock-names = "ciu", "biu";
-> +	};
+Also, it just need small changes to code what we have. Not too much
+changes needed.
 
-this is example, so i think it doesn't need to add dwmmc_1's case.
-
-> +
-> +	/* Board portion */
-
-What are Board portion and SoC portion?
-This should be merged to one node. why do you separate this?
-
-Best Regards,
-Jaehoon Chung
-> +	dwmmc_0: dwmmc0@f723d000 {
-> +		bus-width = <0x8>;
-> +	        broken-cd;
-> +		vmmc-supply = <&ldo19>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&emmc_pmx_func &emmc_clk_cfg_func
-> +			     &emmc_cfg_func &emmc_rst_cfg_func>;
-> +	};
-> +
-> +	dwmmc_1: dwmmc1@f723e000 {
-> +		bus-width = <0x4>;
-> +		disable-wp;
-> +		cd-gpios = <&gpio1 0 1>;
-> +		pinctrl-names = "default", "idle";
-> +		pinctrl-0 = <&sd_pmx_func &sd_clk_cfg_func &sd_cfg_func>;
-> +		pinctrl-1 = <&sd_pmx_idle &sd_clk_cfg_idle &sd_cfg_idle>;
-> +		vqmmc-supply = <&ldo7>;
-> +		vmmc-supply = <&ldo10>;
-> +	};
-> 
-
+Thanks,
+Gavin
