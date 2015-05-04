@@ -1,70 +1,58 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v3 3/8] mfd: arizona: Add support for WM8998 and WM1814
-Date: Mon, 4 May 2015 10:11:19 +0100
-Message-ID: <20150504091119.GA32076@opensource.wolfsonmicro.com>
-References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com> <1430493319-23808-4-git-send-email-rf@opensource.wolfsonmicro.com> <1430560731.2187.70.camel@x220>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v7 05/15] dt-bindings: Document the STM32 reset bindings
+Date: Mon, 04 May 2015 12:28:40 +0200
+Message-ID: <1430735320.3722.34.camel@pengutronix.de>
+References: <1430410844-16062-1-git-send-email-mcoquelin.stm32@gmail.com>
+		<1430410844-16062-6-git-send-email-mcoquelin.stm32@gmail.com>
+		<55433467.2010603@linaro.org>
+	 <CALszF6Bw900E9MtpaVmvkFxsrOODRkNg+RxRXz5V3WghHtsxbw@mail.gmail.com>
+	 <5544A069.5000808@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430560731.2187.70.camel@x220>
+In-Reply-To: <5544A069.5000808@linaro.org>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <ga>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 02, 2015 at 11:58:51AM +0200, Paul Bolle wrote:
-> Something I didn't notice when v2 came along.
+Am Samstag, den 02.05.2015, 11:01 +0100 schrieb Daniel Thompson:
+> On 02/05/15 08:55, Maxime Coquelin wrote:
+> > 2015-05-01 10:08 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
+[...]
+> >> Do you intend the clock driver to use the same compatible string (given it
+> >> is the same bit of hardware).
+> >>
+> >> If so, is it better to use st,stm32f4-rcc here? It seems unlikey to me that
+> >> the register layout of the PLLs and dividers can be the same on the f7 parts
+> >> (and later).
+> >
+> > I agree we need a compatible dedicate to f4 series for clocks, and
+> > maybe even one for f429 (to be checked).
+> > For the reset part, we don't have this need.
+> >
+> > So either we use only "st,stm32f4" as you suggest, or we can have both
+> > in device tree:
+> >
+> > rcc: reset@40023800 {
+> >      #reset-cells = <1>;
+> >      compatible = "st,stm32f4-rcc", "st,stm32-rcc";
+> >      reg = <0x40023800 0x400>;
+> > };
+> >
+> > What do you think?
 > 
-> On Fri, 2015-05-01 at 16:15 +0100, Richard Fitzgerald wrote:
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> 
-> > +config MFD_WM8998
-> > +	bool "Wolfson Microelectronics WM8998"
-> > +	depends on MFD_ARIZONA
-> > +	help
-> > +	  Support for Wolfson Microelectronics WM8998 low power audio SoC
-> > +
-> >  config MFD_WM8400
-> >  	bool "Wolfson Microelectronics WM8400"
-> >  	select MFD_CORE
-> 
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> 
-> >  ifneq ($(CONFIG_MFD_WM8997),n)
-> >  obj-$(CONFIG_MFD_ARIZONA)	+= wm8997-tables.o
-> >  endif
-> > +ifneq ($(CONFIG_MFD_WM8998),n)
-> > +obj-$(CONFIG_MFD_ARIZONA)	+= wm8998-tables.o
-> > +endif
-> 
-> Playing a bit with the current version of drivers/mfd/Makefile it seems
-> these
->     ifneq ($(CONFIG_MFD_WM[...]),n)
-> 
-> tests will always be true. Because, as far as I know, the Kconfig macros
-> used in those tests will either be "y" or the empty string, but never
-> "n". (I don't speak Makefilese fluent enough to know how to add simple
-> debugging prints for the values of the CONFIG_MFD_WM[...] macros to
-> actually test this, so correct me if I'm wrong here.)
+> Having both makes sense. The reset driver probably doesn't care about 
+> differences between F4 and F7 (I know very little about F7 but I can't 
+> think of any obvious h/ware evolution that would confuse the current 
+> reset driver).
 
-Yes, I've noticed that these tests are wrong and I'm working on a patch for
-it. It's another one of those cases where more lines needs patching to fix
-it than the 3 lines this WM8998 patch adds, and also fixing it potentially
-breaks the build because of dependencies that were accidentally working
-because they never got compiled out. So I'd prefer not to half-fix it in
-these WM8998 patches it's better to let the code settle and then fix it properly.
+Seconded, this is exactly the way compatible string lists are supposed
+to be used.
 
-> 
-> So I think that, effectively, these wm[...]-tables.o objects will always
-> be built if CONFIG_MFD_ARIZONA is set. Is that the intention? If not,
-> perhaps these test should read
->     ifeq ($(CONFIG_MFD_WM[...]),y)
-> 
-> Thanks,
-> 
-> 
-> Paul Bolle
-> 
+[...]
+
+regards
+Philipp
+
