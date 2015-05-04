@@ -1,52 +1,68 @@
-From: YesGrowth Loans <info-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: lening
-Date: Mon, 04 May 2015 16:22:18 -0300
-Message-ID: <20150504162218.71w3r7je1c7c4k04@webmail.itakar.com.br>
-Reply-To: yesgrowth1986-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V2 4/6] DT: add binding for mxs on-chip regulators
+Date: Mon, 4 May 2015 22:20:50 +0200 (CEST)
+Message-ID: <1858103470.878923.1430770850541.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
+ <1430346747-28728-5-git-send-email-stefan.wahren@i2se.com>
+ <201505041551.26355.jbe@pengutronix.de>
+Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	DelSp=Yes	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201505041551.26355.jbe@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?=22J=C3=BCrgen_Borleis=22?= <jbe@pengutronix.de>
+Cc: fabio.estevam@freescale.com, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, sebastien.szymanski@armadeus.com, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-Goedendag,
-
-=A0=A0 Ik ben mevrouw Rose Butler, het uitvoerend orgaan van een goed e=
-rkende
-legitieme kredietgever bekend als YesGrowth leningen. United we geld le=
-nen aan
-particulieren en bedrijven die financi=EBle steun nodig hebben. Heeft u=
- een
-slecht krediet of u behoefte aan geld om je rekeningen te betalen? rent=
-e van
-3%.
-
-=A0=A0 Als u ge=EFnteresseerd bent, vul dan de lening aanvraagformulier=
- en terug te
-keren zo snel mogelijk met uw persoonlijke gegevens.
-
-Volledige naam:
-Geslacht:
-Hoeveelheid nodig:
-duur:
-Tel:
-Begrijp Engels?
-
-=A0=A0=A0 We vriendelijk wachten op de gevuld lening aanvraagformulier,=
- zodat we de
-berekening kan doen en voor de goedkeuring start de lening verwerking.
-
-U kunt contact met ons opnemen via Tel: +447045734550
-
-=A0 Met vriendelijke groet,
-Mrs. Rose Butler
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gSnVlcmdlbiwKCj4gSsO8cmdlbiBCb3JsZWlzIDxqYmVAcGVuZ3V0cm9uaXguZGU+IGhh
+dCBhbSA0LiBNYWkgMjAxNSB1bSAxNTo1MSBnZXNjaHJpZWJlbjoKPgo+Cj4gSGkgU3RlZmFuLAo+
+Cj4gZm9yIHRoZSBpLk1YMjMgdGhlIHJlZ3VsYXRvciBkYWlzeSBjaGFpbiBsb29rcyBhIGxpdHRs
+ZSBiaXQgZGlmZmVyZW50Ogo+Cj4gKy0tLS0tLS0tLS0tLSsgICAgIFZERDVWICArLS0tLS0tLS0t
+KyAgVkRESU8KPiB8IERDLURDICAgICAgfCAgICstLS0tLS0tLT4gTElOUkVHICArLS0tLS0tLS0t
+PisKPiB8ICAgICAgICAgICAgfCAgICAgICAgICAgIHwgVkRESU8gICB8ICAgICAgICAgIHwKPiB8
+ICAgICAgICAgICAgfCAgICAgICAgICAgICstLS0tLS0tLS0rICAgICAgICAgIHwKPiB8IERDRENf
+VkRESU8gKy0+LSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKPiB8ICAgICAgICAgICAg
+fCAgIHwKPiB8ICAgICAgICAgICAgfCAgIHwgVkRESU8gICstLS0tLS0tLS0rIFZERE1FTQo+IHwg
+ICAgICAgICAgICB8ICAgKy0tLS0tLS0tPiBMSU5SRUcgICstLS0tLS0tLS0+Cj4gfCAgICAgICAg
+ICAgIHwgICB8ICAgICAgICB8IFZERE1FTSAgfAo+IHwgICAgICAgICAgICB8ICAgfCAgICAgICAg
+Ky0tLS0tLS0tLSsKPiB8ICAgICAgICAgICAgfCAgIHwgVkRESU8gICstLS0tLS0tLS0rICBWRERB
+Cj4gfCAgICAgICAgICAgIHwgICArLS0tLS0tLS0+IExJTlJFRyAgKy0tLS0tLS0tLT4rCj4gfCAg
+ICAgICAgICAgIHwgICAgICAgICAgICB8IFZEREEgICAgfCAgICAgICAgICB8Cj4gfCAgICAgICAg
+ICAgIHwgICAgICAgICAgICArLS0tLS0tLS0tKyAgICAgICAgICB8Cj4gfCBEQ0RDX1ZEREEgICst
+Pi0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4gfCAgICAgICAgICAgIHwgICB8IFZE
+REEgICArLS0tLS0tLS0tKyAgVkRERAo+IHwgICAgICAgICAgICB8ICAgKy0tLS0tLS0tPiBMSU5S
+RUcgICstLS0tLS0tLS0+Kwo+IHwgICAgICAgICAgICB8ICAgICAgICAgICAgfCBWREREICAgIHwg
+ICAgICAgICAgfAo+IHwgICAgICAgICAgICB8ICAgICAgICAgICAgKy0tLS0tLS0tLSsgICAgICAg
+ICAgfAo+IHwgRENEQ19WREREICArLT4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKwo+
+ICstLS0tLS0tLS0tLS0rICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfAo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdgoKZGFtbiEgSSBkaWRu
+J3Qgbm90aWNlZCB0aGF0IFZERE1FTSBpcyBwb3dlcmVkIGJ5IFZERElPIGFuZCBWREQxUDUgaXMg
+cG93ZXJlZCBieQpWRERBLiBUaGFuayB5b3UgdmVyeSBtdWNoLgoKRnJvbSBteSB1bmRlcnN0YW5k
+aW5nIFZERE1FTSBhbmQgVkREMVA1IGRlc2NyaWJlIHRoZSBzYW1lIHJlZ3VsYXRvciBmdW5jdGlv
+bgoocHJvdmlkZXMgcG93ZXIgdG8gZXh0ZXJuYWwgbWVtb3J5IHN1Y2ggYXMgU0RSQU0gYW5kIG1E
+RFIgd2hpY2ggZG9lc24ndCBmaXQgdG8KVkRERCwgVkRESU8gb3IgVkREQSkuIEJ1dCB0aGUgdXNh
+Z2Ugb2YKdGhlIG5hbWUgaXMgbm90IGNvbnNpc3RlbnQgYWNyb3NzIHRoZSBkb2N1bWVudGF0aW9u
+OgogICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgIHwgaS5NWDIzIHwgaS5NWDI4
+IAotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KQXBwbGljYXRpb24gbm90ZSAg
+fCBWRERNRU0gfCBWREQxUDUKUmVmZXJlbmNlIG1hbnVhbCAgfCBWRERNRU0gfCBWRERNRU0KRGF0
+YSBzaGVldCAgICAgICAgfCAtICAgICAgfCBWREQxUDUKCkkgd291bGQgc3VnZ2VzdCB0byB1c2Ug
+VkRETUVNLCBiZWNhdXNlIHRoZSByZWdpc3RlcnMgYXJlIGFsd2F5cyBjYWxsZWQgSFdfVkRETUVN
+Cihmb3IgYm90aCBTb0NzKS4KCkkgdGhpbmsgd2UgaGF2ZSAzIG9wdGlvbnMgaGVyZToKCmEpIGFk
+ZCB0aGUgcmVndWxhdG9yIGRhaXN5IGNoYWluIGZvciB0aGUgaS5NWDIzIHRvbwpiKSByZW1vdmUg
+VkREMVA1IGZyb20gdGhlIGkuTVgyOCBkaWFncmFtIHNvIGl0IHdvdWxkIGZpdCBmb3IgYm90aCBh
+Z2FpbgpjKSByZW1vdmUgdGhlIGRpYWdyYW0gY29tcGxldGUKCkkgd291bGQgcHJlZmVyIG9wdGlv
+biBiLiBXaGF0J3MgeW91ciBvcGluaW9uPwoKPgo+IFJlZ2FyZHMsCj4gSnVlcmdlbgoKQmVzdCBy
+ZWdhcmRzClN0ZWZhbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
