@@ -1,80 +1,47 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Mon, 4 May 2015 11:30:12 +1000
-Message-ID: <20150504013012.GA15561@gwshan>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
- <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
- <1430493730.7979.58.camel@kernel.crashing.org>
- <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
- <1430521038.7979.70.camel@kernel.crashing.org>
- <1430522976.7979.78.camel@kernel.crashing.org>
- <1430534906.7979.85.camel@kernel.crashing.org>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND RFC PATCH 1/3] ASoC: mediatek: Add binding support for
+ AFE driver
+Date: Mon, 4 May 2015 09:57:19 +0800
+Message-ID: <1430704639.4497.6.camel@mtksdaap41>
+References: <1428653649-38200-1-git-send-email-koro.chen@mediatek.com>
+	 <1428653649-38200-2-git-send-email-koro.chen@mediatek.com>
+	 <20150418173407.GE26185@sirena.org.uk>
+	 <20150420043747.GH6325@pengutronix.de>
+	 <20150420204849.GJ14892@sirena.org.uk>
+	 <1429672640.14162.55.camel@mtksdaap41>
+	 <20150430201207.GK22845@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430534906.7979.85.camel@kernel.crashing.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150430201207.GK22845-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 02, 2015 at 12:48:26PM +1000, Benjamin Herrenschmidt wrote:
->On Sat, 2015-05-02 at 09:29 +1000, Benjamin Herrenschmidt wrote:
->
->> Looking a bit more at it, I don't quite see how I can attach a subtree
->> using that stuff.
->> 
->> Instead, each node in the overlay seems to need extra nodes and
->> properties to refer to the original.
->> 
->> So the FW would essentially have to create something a lot more complex
->> than just reflattening a bit of its internal tree. For each internal
->> node, it will need to add all those __overlay__ nodes and properties.
->> 
->> That is not going to fly for me at all. It's order of magnitudes more
->> complex than the solution we are pursuing.
->> 
->> So I think for our use case, we should continue in the direction of
->> having a helper to unflatten a piece of FDT underneath an existing
->> node. I don't like the "HYBRID" stuff though, we should not refer to
->> the original FDT, we should just make them normal dynamic nodes.
+On Thu, 2015-04-30 at 21:12 +0100, Mark Brown wrote:
+> On Wed, Apr 22, 2015 at 11:17:20AM +0800, Koro Chen wrote:
+> 
+> > If using DPCM, it seems the most suitable FE DAIs will be memif, and
+> > external interface like I2S should be BE DAIs. Do you think it is
+> > suitable for our memif to be FE DAIs? Then which memif to used can be
+> > described in a machine driver's FE DAIs. But I think this has a problem
+> > that our memif is one-direction, playback or capture. So the binded pcm
+> > device cannot have playback and capture capability together. May it
+> > cause trouble for user space apps that assumes there will be pcmC0D0p,
+> > pcmC0D0c?
+> 
+> I think the only userspace application you really have to worry about
+> here is PulseAudio which (at least with UCM) should be able to cope
+> since it needs to handle things like USB microphones.  I think
+> everything else I can think of can either cope or has to handle the same
+> use cases as PulseAudio does so should have support.
+Thank you very much for the feedback, I will try DPCM.
+  
 
-Just took a close look on the overlay code. Hopefully I understand
-how it works completely. Yeah, there is one questions according to my
-understanding. The "overlay" device node should have been in child list
-of the device node, who also has the indicator to "target" node. That
-means some one else has to create "overlay" node and figure out the
-"target" node in advance, then invokes overlay module to apply the
-changes. From this perspective, the mechanism is something used to
-apply the changes to device-tree, not parsing and create device nodes
-from input. It does gurantee all the changes will be applied or none
-of them. So I agree on what Ben suggested: to continue the direction
-of having a helper to unflatten FDT blobk underneath the existing node,
-and "HYBRID" should be replaced with "OF_DYNAMIC".
 
->
->A bit more thought... if we were to use the overlay stuff, Gavin, what
->we *could* do is add to OPAL FW internal representation a generation
->count to every node and property.
->
->That way we could essentially know whenever something's changed from
->what we flattened originally for the kernel.
->
->We can then create a generic (not PCI specific) call that generates
->an overlay tree for every node and property that has a generation
->count that is newer than what was flattened (or passed by the OS).
->
->It's still a LOT more complex than what we need though...
->
-
-Thanks, Ben. If we really need utilize overlay to support our case,
-we need some one to parse the input (device-tree changes) from firmware
-and create "overlay" device node and "target" node as I mentioned above.
-It's not simpler than the way we had to support our case. I'm not sure
-if we really need utilize overlay for our case.
-
-Thanks,
-Gavin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
