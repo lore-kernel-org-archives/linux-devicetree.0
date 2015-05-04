@@ -1,119 +1,69 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V3 3/3] mfd: da9063: MFD support for OnKey driver
-Date: Mon, 4 May 2015 09:46:43 +0200
-Message-ID: <CAMuHMdW43GHj-iO1F9gjHsjYOvvycjrP6WPyCKSOvcpcwPsM-w@mail.gmail.com>
-References: <cover.1430393194.git.stwiss.opensource@diasemi.com>
-	<639fd177d5ddd4ce80df45f9d774cc971b286ef9.1430393194.git.stwiss.opensource@diasemi.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/7] Add SMP bringup support for mt65xx socs
+Date: Mon, 4 May 2015 09:48:43 +0200
+Message-ID: <CABuKBeJ406DUFoVs2p3-u6sW58Dm7XDd6uxCc==Mkq3dMhhd5Q@mail.gmail.com>
+References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <639fd177d5ddd4ce80df45f9d774cc971b286ef9.1430393194.git.stwiss.opensource@diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430466210-22963-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
+Hi Yingjoe,
 
-On Thu, Apr 30, 2015 at 1:26 PM, S Twiss <stwiss.opensource@diasemi.com> wrote:
-> Add MFD support for the DA9063 OnKey driver
-
-Thanks  for your patch!
-
-> --- a/drivers/mfd/da9063-core.c
-> +++ b/drivers/mfd/da9063-core.c
-> @@ -60,6 +60,7 @@ static struct resource da9063_rtc_resources[] = {
+2015-05-01 9:43 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> This series add SMP brinup support for mediatek SoCs. This is based
+> on v4.1-rc1.
 >
->  static struct resource da9063_onkey_resources[] = {
->         {
-> +               .name   = "ONKEY",
->                 .start  = DA9063_IRQ_ONKEY,
->                 .end    = DA9063_IRQ_ONKEY,
->                 .flags  = IORESOURCE_IRQ,
-> @@ -97,6 +98,7 @@ static const struct mfd_cell da9063_devs[] = {
->                 .name           = DA9063_DRVNAME_ONKEY,
->                 .num_resources  = ARRAY_SIZE(da9063_onkey_resources),
->                 .resources      = da9063_onkey_resources,
-> +               .of_compatible = "dlg,da9063-onkey",
->         },
->         {
->                 .name           = DA9063_DRVNAME_RTC,
-> @@ -109,12 +111,64 @@ static const struct mfd_cell da9063_devs[] = {
->         },
->  };
+> There are 2 similar but different SMP bringup up methods on Mediatek
+> mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
+> firmware. Others, like MT6589, doesn't have trustzone, and run kernel
+> directly in secure world.
 >
-> +static int da9063_clear_fault_log(struct da9063 *da9063)
-> +{
-> +       int ret = 0;
-> +       int fault_log = 0;
-> +
-> +       ret = regmap_read(da9063->regmap, DA9063_REG_FAULT_LOG, &fault_log);
-> +       if (ret < 0) {
-> +               dev_err(da9063->dev, "Cannot read FAULT_LOG.\n");
-> +               return -EIO;
-> +       }
-> +
-> +       if (fault_log) {
-> +               if (fault_log & DA9063_TWD_ERROR)
-> +                       dev_dbg(da9063->dev,
-> +                               "Fault log entry detected: DA9063_TWD_ERROR\n");
-> +               if (fault_log & DA9063_POR)
-> +                       dev_dbg(da9063->dev,
-> +                               "Fault log entry detected: DA9063_POR\n");
-> +               if (fault_log & DA9063_VDD_FAULT)
-> +                       dev_dbg(da9063->dev,
-> +                               "Fault log entry detected: DA9063_VDD_FAULT\n");
-> +               if (fault_log & DA9063_VDD_START)
-> +                       dev_dbg(da9063->dev,
-> +                               "Fault log entry detected: DA9063_VDD_START\n");
-> +               if (fault_log & DA9063_TEMP_CRIT)
-> +                       dev_dbg(da9063->dev,
-> +                               "Fault log entry detected: DA9063_TEMP_CRIT\n");
-> +               if (fault_log & DA9063_KEY_RESET)
-> +                       dev_dbg(da9063->dev,
-> +                               "Fault log entry detected: DA9063_KEY_RESET\n");
-> +               if (fault_log & DA9063_NSHUTDOWN)
-> +                       dev_dbg(da9063->dev,
-> +                               "Fault log entry detected: DA9063_NSHUTDOWN\n");
-> +               if (fault_log & DA9063_WAIT_SHUT)
-> +                       dev_dbg(da9063->dev,
-> +                               "Fault log entry detected: DA9063_WAIT_SHUT\n");
-> +       }
-> +
-> +       ret = regmap_write(da9063->regmap,
-> +                          DA9063_REG_FAULT_LOG,
-> +                          fault_log);
-> +       if (ret < 0)
-> +               dev_err(da9063->dev,
-> +                       "Cannot reset FAULT_LOG values %d\n", ret);
-> +
-> +       return ret;
-> +}
-> +
->  int da9063_device_init(struct da9063 *da9063, unsigned int irq)
->  {
->         struct da9063_pdata *pdata = da9063->dev->platform_data;
->         int model, variant_id, variant_code;
->         int ret;
+> Patch 1~3 fix issues in mtk_timer(GPT) and enable arch timer support.
+> Patch 4,5 add support for cpu enable-method "mediatek,mt65xx-smp" and
+> "mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
+> and TZ platform.
+> Patch 6,7 finally enable SMP bringup for mt8135 and mt8127.
 >
-> +       ret = da9063_clear_fault_log(da9063);
-> +       if (ret < 0)
-> +               dev_err(da9063->dev, "Cannot clear fault log\n");
-> +
->         if (pdata) {
->                 da9063->flags = pdata->flags;
->                 da9063->irq_base = pdata->irq_base;
+> Matthias Brugger (1):
+>   arm: mediatek: enable gpt6 on boot up to make arch timer working
+>
+> Yingjoe Chen (6):
+>   clocksource: mediatek: Don't run event_handler if it is NULL
+>   clocksource: mediatek: Use GPT as sched clock source
+>   devicetree: bindings: add new SMP enable method Mediatek SoC
+>   ARM: mediatek: add smp bringup code
+>   ARM: dts: mt8135: enable basic SMP bringup for mt8135
+>   ARM: dts: mt8127: enable basic SMP bringup for mt8127
+>
 
-The code above doesn't seem to match the patch description.
-Can you please explain why it is needed?
+I tried on the mt8135 eval board but it fails to bring up the CPU.
 
-Gr{oetje,eeting}s,
+When booting:
+[    1.048588] CPU1: failed to come online
+[    2.049914] CPU2: failed to come online
+[    3.051245] CPU3: failed to come online
 
-                        Geert
+And from userspace:
+/ # echo 1 > /sys/devices/system/cpu/cpu1/online
+[   40.115142] CPU1: failed to come online
+sh: write error: Input/output error
+/ # echo 1 > /sys/devices/system/cpu/cpu2/online
+[   44.667141] CPU2: failed to come online
+sh: write error: Input/output error
+/ # echo 1 > /sys/devices/system/cpu/cpu3/online
+[   51.271141] CPU3: failed to come online
+sh: write error: Input/output error
 
+Please check again.
+
+Cheers,
+Matthias
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
