@@ -1,66 +1,65 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH 2/2] am335x-evm: add bluetooth support
-Date: Mon, 04 May 2015 19:38:34 -0400
-Message-ID: <554802FA.6050700@hurleysoftware.com>
-References: <1430655569-27849-1-git-send-email-eyalr@ti.com> <1430655569-27849-2-git-send-email-eyalr@ti.com> <CAL_JsqJd=6nG1S-Mds+MiS4wSmKnOUo2nBnA6wjGSycXECLpcQ@mail.gmail.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
+ X-Gene SoC EDAC DTS binding
+Date: Mon, 4 May 2015 16:39:36 -0700
+Message-ID: <CAPw-ZT=YH8faa4_iWfpwOkbxeVDeDNqpJqnOcfnov3s1ianq1w@mail.gmail.com>
+References: <1430259045-19012-1-git-send-email-lho@apm.com>
+	<7128860.xHITr0VFap@wuerfel>
+	<20150430094134.GD3488@pd.tnic>
+	<10227049.9i19zDi2y3@wuerfel>
+	<20150430130028.GF3488@pd.tnic>
+	<CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q@mail.gmail.com>
+	<20150430171846.GJ3488@pd.tnic>
+	<CAPw-ZTksYNDE2zVD=ZjGzpKfXQN8KgW85ZnHoQ2eVmSGdSdMOw@mail.gmail.com>
+	<CAL_JsqL7emqq=bSaWSi_0G5qSJqO+nVH_JH7VY+ynbrHhaSf_g@mail.gmail.com>
+	<CAPw-ZTnNEiTA-MJthY04yCrc9RdZOUFaNjzBHFV1fWzkBqRCyQ@mail.gmail.com>
+	<CAL_JsqLyyBCd3DcwjWw57XCQ0fEWHXo_0dkWeBo=TVDoXM_zhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJd=6nG1S-Mds+MiS4wSmKnOUo2nBnA6wjGSycXECLpcQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Eyal Reizer <eyalreizer@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Eliad Peller <eliad@wizery.com>, Eyal Reizer <eyalr@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLyyBCd3DcwjWw57XCQ0fEWHXo_0dkWeBo=TVDoXM_zhQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On 05/04/2015 06:28 PM, Rob Herring wrote:
-> On Sun, May 3, 2015 at 7:19 AM, Eyal Reizer <eyalreizer@gmail.com> wrote:
->> From: Eliad Peller <eliad@wizery.com>
+On Mon, May 4, 2015 at 3:36 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, May 1, 2015 at 2:59 PM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> Hi Rob,
 >>
->> uart1 is used for shared transport (used for multiplexing
->> bluetooth and nfc data). add the needed muxes and definitions.
+>>>>>> I think we should first agreed on the DT binding and let's not worry
+>>>>>> about APEI. Then, whether we have one file or multiple file. Again,
+>>>>>> the HW consist of:
+>>>>>>
+>>>>>> 1. One top level interrupt and status registers
+>>>
+>>> For these registers, are there ECC specific functions here or just
+>>> normal interrupt control/status bits (mask/unmask/status)? Assuming
+>>> the later, then you should make this block an interrupt-controller.
+>>> Then this is the interrupt-parent for the rest of the blocks.
+>>>
 >>
->> Signed-off-by: Eliad Peller <eliad@wizery.com>
->> Signed-off-by: Eyal Reizer <eyalr@ti.com>
->> ---
->>  arch/arm/boot/dts/am335x-evm.dts |   28 ++++++++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
->> index 0f398fa..5968cde 100644
->> --- a/arch/arm/boot/dts/am335x-evm.dts
->> +++ b/arch/arm/boot/dts/am335x-evm.dts
->> @@ -135,6 +135,18 @@
->>                 };
->>         };
->>
->> +       kim {
->> +               compatible = "kim";
-> 
-> Who is kim?
-
-drivers/misc/ti-st/st_kim.c, et.al.
-
->> +               nshutdown_gpio = <117>; /* Bank3, pin21 */
-> 
-> We have a standard way to specify gpios.
-> 
->> +               dev_name = "/dev/ttyS1";
-> 
-> Uh, Linux specific. No.
-> 
->> +               flow_cntrl = <1>;
->> +               baud_rate = <3000000>;
-> 
-> I believe there are standard properties for uarts for both of these.
+>> This is the only item remain before I generate an patch with just the
+>> memory controller. Most of the code that I see are actually an
+>> interrupt controller HW. As it is just an interrupt mask and status
+>> registers, is there an example in Linux that I can model after? Also,
+>> I am not quite convince as to why we can't just share the interrupt
+>> and request it by each memory controller?
 >
-> Is any of this documented?
+> Pretty much anything that calls irq_set_chained_handler. If you don't
+> need to touch the shared registers and can set them up once at boot
+> time, then you could just do shared irq handlers. But if you have to
+> clear the interrupt within the PCP, you need a demuxer.
+>
 
-See commit 46d0d333 ("ti-st: add device tree support").
+Thanks Rob. I look through the entire driver. Interrupts are cleared
+at the source. Therefore, the next version will just register for the
+shared interrupt as it is currently.
 
-Don't shoot the messenger; I had nothing to do with this.
-
-Regards,
-Peter Hurley
+-Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
