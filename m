@@ -1,85 +1,72 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] clocksource: mediatek: Don't run event_handler if
- it is NULL
-Date: Mon, 04 May 2015 10:44:18 +0200
-Message-ID: <55473162.5010608@linaro.org>
-References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>	<1430466210-22963-2-git-send-email-yingjoe.chen@mediatek.com>	<55472A80.9020904@linaro.org> <CABuKBeKBcg+zCDSx8PNCsRC3A8Lo9ripw5ZYCC0c+GjJN8dp6Q@mail.gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH  0/2] gpio: Allow userspace export from DT
+Date: Mon, 4 May 2015 10:49:25 +0200
+Message-ID: <20150504084925.GB4047@localhost>
+References: <20150413110515.9681.58848.stgit@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABuKBeKBcg+zCDSx8PNCsRC3A8Lo9ripw5ZYCC0c+GjJN8dp6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150413110515.9681.58848.stgit@localhost>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Martin Fuzzey <mfuzzey@parkeon.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2015 10:34 AM, Matthias Brugger wrote:
-> 2015-05-04 10:14 GMT+02:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>=
-:
->> On 05/01/2015 09:43 AM, Yingjoe Chen wrote:
->>>
->>> Spurious timer interrupt is noticed in mtk timer and cause kernel
->>> crash. In mtk_timer_interrupt(), only run event_handler if it is
->>> not NULL.
->>>
->>> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> ---
->>>    drivers/clocksource/mtk_timer.c | 3 ++-
->>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/clocksource/mtk_timer.c
->>> b/drivers/clocksource/mtk_timer.c
->>> index 68ab423..85e0ab5 100644
->>> --- a/drivers/clocksource/mtk_timer.c
->>> +++ b/drivers/clocksource/mtk_timer.c
->>> @@ -143,7 +143,8 @@ static irqreturn_t mtk_timer_interrupt(int irq,=
- void
->>> *dev_id)
->>>
->>>          /* Acknowledge timer0 irq */
->>>          writel(GPT_IRQ_ACK(GPT_CLK_EVT), evt->gpt_base + GPT_IRQ_A=
-CK_REG);
->>> -       evt->dev.event_handler(&evt->dev);
->>> +       if (evt->dev.event_handler)
->>> +               evt->dev.event_handler(&evt->dev);
->>>
->>>          return IRQ_HANDLED;
->>>    }
->>>
->>
->> This fix does not look good.
->>
->> Could you try by requesting the irq *after* clockevents_config_and_r=
-egister
->> in the init sequence [1] ?
->>
->
->  From my understanding [1] should already fix this.
->
-> [1] https://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable.=
-git/commit/drivers/clocksource/mtk_timer.c?id=3Dd4a19eb3b15a4ba98f62718=
-2f48d5bc0cffae670
+On Mon, Apr 13, 2015 at 01:05:15PM +0200, Martin Fuzzey wrote:
+> Currently the gpio sysfs interface allows userspace to access simple hardware
+> where no kernel driver exists or would be useful.
+> 
+> However it requires userspace to know the gpio number that has been assigned
+> by the kernel.
+> 
+> That number, in the case of gpio drviers using dynamic allocation, is not fixed,
+> and may change when:
+> * The kernel version changes and ARCH_NR_GPIOS is changed (happened in 3.17)
+> * The kernel version changes and probe order changes for gpio chips.
+> * The kernel configuration is changed if CONFIG_ARCH_NR_GPIO is used
+> * The board is redesigned (eg switching an externally visible signal from a
+> SoC provided GPIO to an I2C expander chip or vice versa).
+> * Other GPIO chips are added to the system.
+> 
+> The above means that, in order to export the GPIO to userspace via
+> /sys/class/gpio/export the userspace code must know the exact hardware and
+> kernel version information.
 
-Indeed it seems to fix it. But I think request_irq should be done after=
-=20
-clockevents_config_and_register in any case.
+Not quite. You can still determine the gpio number in the above cases by
+walking the sysfs tree to find the chip and it's base. This is the only
+way to do this for dynamic buses such as USB.
 
-Yingjoe, are the spurious interrupts occurring with the fix Matthias=20
-mentions ?
+The only case for which this fails is if a pin function is moved (e.g.
+your i2c-expander case above).
 
+> Furthermore, in many cases, it makes no sense to allow userspace to
+> change the signal direction; even if the GPIO itself allows it the
+> circuitry connected to the pin often does not (eg a signal dedicated
+> to an output function driving a  transistor).
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+Indeed. The current sysfs-interface is a hack (which I personally think
+never should have been merged).
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Firmware should describe pin directionality and function, and undefined
+pins should never be allowed to be accessed from userspace.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure, the current GPIO-sysfs-interface is useful during development and
+for one-off hacks, but I'm convinced it's detrimental in the long run as
+it removes the incentives to fix the driver code that it's used to work
+around (e.g. custom init script to toggle enable lines of some radio
+chips).
+
+> This patch series solves both problems by performing the external
+> signal => GPIO mapping in the device tree.
+
+As Rob already mentioned, what we want is some way to declare pin
+functions. These could then be requested from userspace (or used in DT,
+something which should allow for further refactoring there as well)
+unless a driver has already claimed them.
+
+We don't want to add more dependencies on the current sysfs-based
+interface, which I hope we'll one day will be able to retire in favour
+of a more sane one.
+
+Johan
