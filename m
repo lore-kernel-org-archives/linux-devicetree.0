@@ -1,71 +1,32 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 6/7] ARM: dts: mt8135: enable basic SMP bringup for mt8135
-Date: Mon, 4 May 2015 16:31:05 +0200
-Message-ID: <20150504143105.GK4946@pengutronix.de>
-References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
- <1430466210-22963-7-git-send-email-yingjoe.chen@mediatek.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 2/5] phy: qcom: Add Qualcomm PCIe PHY
+Date: Mon, 4 May 2015 20:05:57 +0530
+Message-ID: <554783CD.50708@ti.com>
+References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com> <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430466210-22963-7-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 01, 2015 at 03:43:29PM +0800, Yingjoe Chen wrote:
-> Add arch timer node to enable arch-timer support. MT8135 firmware
-> doesn't correctly setup arch-timer frequency and CNTVOFF, add
-> properties to workaround this.
-> 
-> This also set cpu enable-method to enable SMP.
-> 
-> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Hi,
+
+On Monday 04 May 2015 06:12 PM, Stanimir Varbanov wrote:
+> Add a PCIe PHY driver used by PCIe host controller driver
+> on Qualcomm SoCs like Snapdragon 805.
+>
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 > ---
->  arch/arm/boot/dts/mt8135.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-> index 612bd22..eb5e06f 100644
-> --- a/arch/arm/boot/dts/mt8135.dtsi
-> +++ b/arch/arm/boot/dts/mt8135.dtsi
-> @@ -46,6 +46,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "mediatek,mt81xx-tz-smp";
->  
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> @@ -103,6 +104,21 @@
->  		};
->  	};
->  
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
-> +					  IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
-> +					  IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
-> +					  IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
-> +					  IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <13000000>;
-> +		arm,cpu-registers-not-fw-configured;
-> +	};
+>   drivers/phy/Kconfig         |    9 ++
+>   drivers/phy/Makefile        |    1 +
+>   drivers/phy/phy-qcom-pcie.c |  291 +++++++++++++++++++++++++++++++++++++++++++
 
-This is the SoC dtsi file. What you say here is that all MT8135
-present and future firmwares on all boards do this wrong.
-Shouldn't you fix the firmware instead? Shouldn't this property be board
-specific?
+Why do you need a new PHY driver for this? Why not use the existing QCOM PHY 
+driver. I can see the registers used here in phy-qcom-ufs-qmp-14nm.h?
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks
+Kishon
