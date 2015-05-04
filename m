@@ -1,59 +1,45 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v7 3/5] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Mon, 4 May 2015 17:36:19 -0500
-Message-ID: <CAL_JsqLyyBCd3DcwjWw57XCQ0fEWHXo_0dkWeBo=TVDoXM_zhQ@mail.gmail.com>
-References: <1430259045-19012-1-git-send-email-lho@apm.com>
- <7128860.xHITr0VFap@wuerfel> <20150430094134.GD3488@pd.tnic>
- <10227049.9i19zDi2y3@wuerfel> <20150430130028.GF3488@pd.tnic>
- <CAPw-ZTnuyB2ne1C2-38qAxM_ANwdr9nuCYUMj=aTx7c90sVg+Q@mail.gmail.com>
- <20150430171846.GJ3488@pd.tnic>
- <CAPw-ZTksYNDE2zVD=ZjGzpKfXQN8KgW85ZnHoQ2eVmSGdSdMOw@mail.gmail.com>
- <CAL_JsqL7emqq=bSaWSi_0G5qSJqO+nVH_JH7VY+ynbrHhaSf_g@mail.gmail.com>
- <CAPw-ZTnNEiTA-MJthY04yCrc9RdZOUFaNjzBHFV1fWzkBqRCyQ@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Documentation/devicetree: document OCTEON USB bindings
+Date: Mon, 4 May 2015 17:37:40 -0500
+Message-ID: <CAL_JsqJSJFxXGEZ688NRYijjXkTnM2y+VHHWF77gMA86t0xzzw@mail.gmail.com>
+References: <1430423040-2088-1-git-send-email-aaro.koskinen@iki.fi>
+ <CAL_JsqJbebtb6z2WOXfs8DUBsb=oGhFAh+qUQaR0yndGvWgSGg@mail.gmail.com> <20150501161548.GB595@fuloong-minipc.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPw-ZTnNEiTA-MJthY04yCrc9RdZOUFaNjzBHFV1fWzkBqRCyQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Loc Ho <lho@apm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "jcm@redhat.com" <jcm@redhat.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "patches@apm.com" <patches@apm.com>, Feng Kan <fkan@apm.com>, Rob Herring <robh+dt@kernel.org>, Borislav Petkov <bp@alien8.de>, Doug Thompson <dougthompson@xmission.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150501161548.GB595-+UqvGBo8NkiJ/SmVcN9c7yH8jP4CeeTLqBW4ids5wwA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 1, 2015 at 2:59 PM, Loc Ho <lho@apm.com> wrote:
-> Hi Rob,
+On Fri, May 1, 2015 at 11:15 AM, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> wrote:
+> Hi,
 >
->>>>> I think we should first agreed on the DT binding and let's not worry
->>>>> about APEI. Then, whether we have one file or multiple file. Again,
->>>>> the HW consist of:
->>>>>
->>>>> 1. One top level interrupt and status registers
+> On Fri, May 01, 2015 at 09:39:19AM -0500, Rob Herring wrote:
+>> > +   - refclk-frequency: speed of the USB reference clock. Allowed values are
+>> > +     12000000, 24000000 or 48000000.
 >>
->> For these registers, are there ECC specific functions here or just
->> normal interrupt control/status bits (mask/unmask/status)? Assuming
->> the later, then you should make this block an interrupt-controller.
->> Then this is the interrupt-parent for the rest of the blocks.
+>> We already have a standard property for this if you only have 1 clock:
+>> clock-frequency.
 >>
+>> > +   - refclk-type: type of the USB reference clock. Allowed values are
+>> > +     "crystal" or "external".
+>>
+>> Should be prefixed with "cavium,".
 >
-> This is the only item remain before I generate an patch with just the
-> memory controller. Most of the code that I see are actually an
-> interrupt controller HW. As it is just an interrupt mask and status
-> registers, is there an example in Linux that I can model after? Also,
-> I am not quite convince as to why we can't just share the interrupt
-> and request it by each memory controller?
+> Both of these are already used in
+> Documentation/devicetree/bindings/mips/cavium/uctl.txt (the USB
+> controller for newer OCTEONs). These bindings are unfortunately
+> just "reverse-engineered" from products that are already shipping
+> and likely not perfect, but shouldn't we still try to be compatible
+> for the sake of users?
 
-Pretty much anything that calls irq_set_chained_handler. If you don't
-need to touch the shared registers and can set them up once at boot
-time, then you could just do shared irq handlers. But if you have to
-clear the interrupt within the PCP, you need a demuxer.
+Well, generally we don't just accept whatever crap people came up with
+behind closed doors. But for this case, I'm not going to bikeshed it.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
