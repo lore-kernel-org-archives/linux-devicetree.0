@@ -1,84 +1,467 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] dt-bindings: ARM: Mediatek: Document devicetree
- bindings for clock/reset controllers
-Date: Mon, 4 May 2015 10:38:52 +0200
-Message-ID: <20150504083852.GJ4946@pengutronix.de>
-References: <1429778143-2074-1-git-send-email-s.hauer@pengutronix.de>
- <1429778143-2074-7-git-send-email-s.hauer@pengutronix.de>
- <20150501012039.GG32407@codeaurora.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH RESEND] w1: masters: omap_hdq: Add support for 1-wire mode
+Date: Mon, 4 May 2015 14:08:55 +0530
+Message-ID: <1430728735-22747-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150501012039.GG32407-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Evgeniy Polyakov <zbr@ioremap.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, NeilBrown <neilb@suse.de>, Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2015 at 06:20:39PM -0700, Stephen Boyd wrote:
-> On 04/23, Sascha Hauer wrote:
-> > This adds the binding documentation for the apmixedsys, perisys and
-> > infracfg controllers found on Mediatek SoCs.
-> > 
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Please Cc devicetree reviewers on bindings (CCed now).
-> 
-> > ---
-> >  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  | 23 +++++++++++++++++
-> >  .../bindings/arm/mediatek/mediatek,infracfg.txt    | 30 ++++++++++++++++++++++
-> >  .../bindings/arm/mediatek/mediatek,pericfg.txt     | 30 ++++++++++++++++++++++
-> >  .../bindings/arm/mediatek/mediatek,topckgen.txt    | 23 +++++++++++++++++
-> >  4 files changed, 106 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-> > new file mode 100644
-> > index 0000000..5af6d73
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-> > @@ -0,0 +1,23 @@
-> > +Mediatek apmixedsys controller
-> > +==============================
-> > +
-> > +The Mediatek apmixedsys controller provides the PLLs to the system.
-> > +
-> > +Required Properties:
-> > +
-> > +- compatible: Should be:
-> > +	- "mediatek,mt8135-apmixedsys"
-> > +	- "mediatek,mt8173-apmixedsys"
-> > +- #clock-cells: Must be 1
-> > +
-> > +The apmixedsys controller uses the common clk binding from
-> > +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> > +
-> > +Example:
-> > +
-> > +apmixedsys: apmixedsys@10209000 {
-> 
-> apmixedsys: clock-controller@10209000 {
-> 
-> would be more standard. The same comment applies throughout this
-> patch. Otherwise it looks good to me.
+This patches makes following changes to omap_hdq driver
+ - Enable 1-wire mode.
+ - Implement w1_triplet callback to facilitate search rom
+   procedure and auto detection of 1-wire slaves.
+ - Proper enabling and disabling of interrupt.
+ - Cleanups (formatting and return value checks).
 
-For apmixed this I agree, but the others are also reset controllers, so
-I'm not sure if clock-controller is appropriate. Personally I don't care
-much, I'll change to whatever you like.
+HDQ mode remains unchanged.
 
-Sascha
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
 
+This patch was sent for v4.1 but was never picked up.
+Here is the link to the previous patch
+http://www.spinics.net/lists/linux-omap/msg116228.html
+
+ Documentation/devicetree/bindings/w1/omap-hdq.txt |   7 +-
+ Documentation/w1/masters/omap-hdq                 |   6 +
+ drivers/w1/masters/omap_hdq.c                     | 209 ++++++++++++++++++----
+ 3 files changed, 188 insertions(+), 34 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/w1/omap-hdq.txt b/Documentation/devicetree/bindings/w1/omap-hdq.txt
+index fef794741bd1..913c5f91a0f9 100644
+--- a/Documentation/devicetree/bindings/w1/omap-hdq.txt
++++ b/Documentation/devicetree/bindings/w1/omap-hdq.txt
+@@ -1,11 +1,15 @@
+ * OMAP HDQ One wire bus master controller
+ 
+ Required properties:
+-- compatible : should be "ti,omap3-1w"
++- compatible : should be "ti,omap3-1w" or "ti,am4372-hdq"
+ - reg : Address and length of the register set for the device
+ - interrupts : interrupt line.
+ - ti,hwmods : "hdq1w"
+ 
++Optional properties:
++- ti,mode: should be "hdq": HDQ mode  "1w": one-wire mode.
++	   If not specified HDQ mode is implied.
++
+ Example:
+ 
+ - From omap3.dtsi
+@@ -14,4 +18,5 @@ Example:
+ 	reg = <0x480b2000 0x1000>;
+ 	interrupts = <58>;
+ 	ti,hwmods = "hdq1w";
++	ti,mode = "hdq";
+   };
+diff --git a/Documentation/w1/masters/omap-hdq b/Documentation/w1/masters/omap-hdq
+index 884dc284b215..234522709a5f 100644
+--- a/Documentation/w1/masters/omap-hdq
++++ b/Documentation/w1/masters/omap-hdq
+@@ -44,3 +44,9 @@ e.g:
+ insmod omap_hdq.ko W1_ID=2
+ inamod w1_bq27000.ko F_ID=2
+ 
++The driver also supports 1-wire mode. In this mode, there is no need to
++pass slave ID as parameter. The driver will auto-detect slaves connected
++to the bus using SEARCH_ROM procedure. 1-wire mode can be selected by
++setting "ti,mode" property to "1w" in DT (see
++Documentation/devicetree/bindings/w1/omap-hdq.txt for more details).
++By default driver is in HDQ mode.
+diff --git a/drivers/w1/masters/omap_hdq.c b/drivers/w1/masters/omap_hdq.c
+index e7d448963a24..98aaade59651 100644
+--- a/drivers/w1/masters/omap_hdq.c
++++ b/drivers/w1/masters/omap_hdq.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/sched.h>
+ #include <linux/pm_runtime.h>
++#include <linux/of.h>
+ 
+ #include "../w1.h"
+ #include "../w1_int.h"
+@@ -27,21 +28,23 @@
+ #define OMAP_HDQ_TX_DATA			0x04
+ #define OMAP_HDQ_RX_DATA			0x08
+ #define OMAP_HDQ_CTRL_STATUS			0x0c
+-#define OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK	(1<<6)
+-#define OMAP_HDQ_CTRL_STATUS_CLOCKENABLE	(1<<5)
+-#define OMAP_HDQ_CTRL_STATUS_GO			(1<<4)
+-#define OMAP_HDQ_CTRL_STATUS_INITIALIZATION	(1<<2)
+-#define OMAP_HDQ_CTRL_STATUS_DIR		(1<<1)
+-#define OMAP_HDQ_CTRL_STATUS_MODE		(1<<0)
++#define OMAP_HDQ_CTRL_STATUS_SINGLE		BIT(7)
++#define OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK	BIT(6)
++#define OMAP_HDQ_CTRL_STATUS_CLOCKENABLE	BIT(5)
++#define OMAP_HDQ_CTRL_STATUS_GO                 BIT(4)
++#define OMAP_HDQ_CTRL_STATUS_PRESENCE		BIT(3)
++#define OMAP_HDQ_CTRL_STATUS_INITIALIZATION	BIT(2)
++#define OMAP_HDQ_CTRL_STATUS_DIR		BIT(1)
+ #define OMAP_HDQ_INT_STATUS			0x10
+-#define OMAP_HDQ_INT_STATUS_TXCOMPLETE		(1<<2)
+-#define OMAP_HDQ_INT_STATUS_RXCOMPLETE		(1<<1)
+-#define OMAP_HDQ_INT_STATUS_TIMEOUT		(1<<0)
++#define OMAP_HDQ_INT_STATUS_TXCOMPLETE		BIT(2)
++#define OMAP_HDQ_INT_STATUS_RXCOMPLETE		BIT(1)
++#define OMAP_HDQ_INT_STATUS_TIMEOUT		BIT(0)
+ #define OMAP_HDQ_SYSCONFIG			0x14
+-#define OMAP_HDQ_SYSCONFIG_SOFTRESET		(1<<1)
+-#define OMAP_HDQ_SYSCONFIG_AUTOIDLE		(1<<0)
++#define OMAP_HDQ_SYSCONFIG_SOFTRESET		BIT(1)
++#define OMAP_HDQ_SYSCONFIG_AUTOIDLE		BIT(0)
++#define OMAP_HDQ_SYSCONFIG_NOIDLE		BIT(0)
+ #define OMAP_HDQ_SYSSTATUS			0x18
+-#define OMAP_HDQ_SYSSTATUS_RESETDONE		(1<<0)
++#define OMAP_HDQ_SYSSTATUS_RESETDONE		BIT(0)
+ 
+ #define OMAP_HDQ_FLAG_CLEAR			0
+ #define OMAP_HDQ_FLAG_SET			1
+@@ -67,6 +70,10 @@ struct hdq_data {
+ 	 * the data wrire or read.
+ 	 */
+ 	int			init_trans;
++	int                     rrw;
++	/* mode: 0-HDQ 1-W1 */
++	int                     mode;
++
+ };
+ 
+ static int omap_hdq_probe(struct platform_device *pdev);
+@@ -74,6 +81,7 @@ static int omap_hdq_remove(struct platform_device *pdev);
+ 
+ static const struct of_device_id omap_hdq_dt_ids[] = {
+ 	{ .compatible = "ti,omap3-1w" },
++	{ .compatible = "ti,am4372-hdq" },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, omap_hdq_dt_ids);
+@@ -90,15 +98,12 @@ static struct platform_driver omap_hdq_driver = {
+ static u8 omap_w1_read_byte(void *_hdq);
+ static void omap_w1_write_byte(void *_hdq, u8 byte);
+ static u8 omap_w1_reset_bus(void *_hdq);
+-static void omap_w1_search_bus(void *_hdq, struct w1_master *master_dev,
+-		u8 search_type,	w1_slave_found_callback slave_found);
+ 
+ 
+ static struct w1_bus_master omap_w1_master = {
+ 	.read_byte	= omap_w1_read_byte,
+ 	.write_byte	= omap_w1_write_byte,
+ 	.reset_bus	= omap_w1_reset_bus,
+-	.search		= omap_w1_search_bus,
+ };
+ 
+ /* HDQ register I/O routines */
+@@ -122,6 +127,15 @@ static inline u8 hdq_reg_merge(struct hdq_data *hdq_data, u32 offset,
+ 	return new_val;
+ }
+ 
++static void hdq_disable_interrupt(struct hdq_data *hdq_data, u32 offset,
++				  u32 mask)
++{
++	u32 ie;
++
++	ie = readl(hdq_data->hdq_base + offset);
++	writel(ie & mask, hdq_data->hdq_base + offset);
++}
++
+ /*
+  * Wait for one or more bits in flag change.
+  * HDQ_FLAG_SET: wait until any bit in the flag is set.
+@@ -229,13 +243,7 @@ static irqreturn_t hdq_isr(int irq, void *_hdq)
+ 	return IRQ_HANDLED;
+ }
+ 
+-/* HDQ Mode: always return success */
+-static u8 omap_w1_reset_bus(void *_hdq)
+-{
+-	return 0;
+-}
+-
+-/* W1 search callback function */
++/* W1 search callback function  in HDQ mode */
+ static void omap_w1_search_bus(void *_hdq, struct w1_master *master_dev,
+ 		u8 search_type, w1_slave_found_callback slave_found)
+ {
+@@ -262,9 +270,10 @@ static int _omap_hdq_reset(struct hdq_data *hdq_data)
+ 	int ret;
+ 	u8 tmp_status;
+ 
+-	hdq_reg_out(hdq_data, OMAP_HDQ_SYSCONFIG, OMAP_HDQ_SYSCONFIG_SOFTRESET);
++	hdq_reg_out(hdq_data, OMAP_HDQ_SYSCONFIG,
++		    OMAP_HDQ_SYSCONFIG_SOFTRESET);
+ 	/*
+-	 * Select HDQ mode & enable clocks.
++	 * Select HDQ/1W mode & enable clocks.
+ 	 * It is observed that INT flags can't be cleared via a read and GO/INIT
+ 	 * won't return to zero if interrupt is disabled. So we always enable
+ 	 * interrupt.
+@@ -282,7 +291,8 @@ static int _omap_hdq_reset(struct hdq_data *hdq_data)
+ 	else {
+ 		hdq_reg_out(hdq_data, OMAP_HDQ_CTRL_STATUS,
+ 			OMAP_HDQ_CTRL_STATUS_CLOCKENABLE |
+-			OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK);
++			OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK |
++			hdq_data->mode);
+ 		hdq_reg_out(hdq_data, OMAP_HDQ_SYSCONFIG,
+ 			OMAP_HDQ_SYSCONFIG_AUTOIDLE);
+ 	}
+@@ -334,6 +344,18 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+ 	}
++
++	/*
++	 * check for the presence detect bit to get
++	 * set to show that the slave is responding
++	 */
++	if (!(hdq_reg_in(hdq_data, OMAP_HDQ_CTRL_STATUS) &
++			OMAP_HDQ_CTRL_STATUS_PRESENCE)) {
++		dev_dbg(hdq_data->dev, "Presence bit not set\n");
++		ret = -ETIMEDOUT;
++		goto out;
++	}
++
+ 	/*
+ 	 * wait for both INIT and GO bits rerurn to zero.
+ 	 * zero wait time expected for interrupt mode.
+@@ -368,6 +390,8 @@ static int hdq_read_byte(struct hdq_data *hdq_data, u8 *val)
+ 		goto out;
+ 	}
+ 
++	hdq_data->hdq_irqstatus = 0;
++
+ 	if (!(hdq_data->hdq_irqstatus & OMAP_HDQ_INT_STATUS_RXCOMPLETE)) {
+ 		hdq_reg_merge(hdq_data, OMAP_HDQ_CTRL_STATUS,
+ 			OMAP_HDQ_CTRL_STATUS_DIR | OMAP_HDQ_CTRL_STATUS_GO,
+@@ -400,7 +424,7 @@ rtn:
+ 
+ }
+ 
+-/* Enable clocks and set the controller to HDQ mode */
++/* Enable clocks and set the controller to HDQ/1W mode */
+ static int omap_hdq_get(struct hdq_data *hdq_data)
+ {
+ 	int ret = 0;
+@@ -422,7 +446,7 @@ static int omap_hdq_get(struct hdq_data *hdq_data)
+ 
+ 			pm_runtime_get_sync(hdq_data->dev);
+ 
+-			/* make sure HDQ is out of reset */
++			/* make sure HDQ/1W is out of reset */
+ 			if (!(hdq_reg_in(hdq_data, OMAP_HDQ_SYSSTATUS) &
+ 				OMAP_HDQ_SYSSTATUS_RESETDONE)) {
+ 				ret = _omap_hdq_reset(hdq_data);
+@@ -430,12 +454,13 @@ static int omap_hdq_get(struct hdq_data *hdq_data)
+ 					/* back up the count */
+ 					hdq_data->hdq_usecount--;
+ 			} else {
+-				/* select HDQ mode & enable clocks */
++				/* select HDQ/1W mode & enable clocks */
+ 				hdq_reg_out(hdq_data, OMAP_HDQ_CTRL_STATUS,
+ 					OMAP_HDQ_CTRL_STATUS_CLOCKENABLE |
+-					OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK);
++					OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK |
++					hdq_data->mode);
+ 				hdq_reg_out(hdq_data, OMAP_HDQ_SYSCONFIG,
+-					OMAP_HDQ_SYSCONFIG_AUTOIDLE);
++					OMAP_HDQ_SYSCONFIG_NOIDLE);
+ 				hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
+ 			}
+ 		}
+@@ -456,6 +481,8 @@ static int omap_hdq_put(struct hdq_data *hdq_data)
+ 	if (ret < 0)
+ 		return -EINTR;
+ 
++	hdq_reg_out(hdq_data, OMAP_HDQ_SYSCONFIG,
++		    OMAP_HDQ_SYSCONFIG_AUTOIDLE);
+ 	if (0 == hdq_data->hdq_usecount) {
+ 		dev_dbg(hdq_data->dev, "attempt to decrement use count"
+ 			" when it is zero");
+@@ -471,6 +498,85 @@ static int omap_hdq_put(struct hdq_data *hdq_data)
+ 	return ret;
+ }
+ 
++/*
++ * W1 triplet callback function - used for searching ROM addresses.
++ * Registered only when controller is in 1-wire mode.
++ */
++static u8 omap_w1_triplet(void *_hdq, u8 bdir)
++{
++	u8 ret, id_bit, comp_bit;
++	struct hdq_data *hdq_data = _hdq;
++	u8 ctrl = OMAP_HDQ_CTRL_STATUS_SINGLE | OMAP_HDQ_CTRL_STATUS_GO |
++		  OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK;
++	u8 mask = ctrl | OMAP_HDQ_CTRL_STATUS_DIR;
++
++	omap_hdq_get(_hdq);
++
++	ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
++	if (ret < 0) {
++		ret = -EINTR;
++		goto rtn;
++	}
++
++	hdq_data->hdq_irqstatus = 0;
++	/* read id_bit */
++	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
++		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
++	wait_event_timeout(hdq_wait_queue,
++			   (hdq_data->hdq_irqstatus
++			   & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
++			   OMAP_HDQ_TIMEOUT);
++	id_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
++
++	hdq_data->hdq_irqstatus = 0;
++	/* read comp_bit */
++	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
++		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
++	wait_event_timeout(hdq_wait_queue,
++			   (hdq_data->hdq_irqstatus
++			   & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
++			   OMAP_HDQ_TIMEOUT);
++	comp_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
++
++	if (id_bit && comp_bit) {
++		ret = 0x03;  /* error */
++		goto rtn;
++	}
++	if (!id_bit && !comp_bit) {
++		/* Both bits are valid, take the direction given */
++		ret = bdir ? 0x04 : 0;
++	} else {
++		/* Only one bit is valid, take that direction */
++		bdir = id_bit;
++		ret = id_bit ? 0x05 : 0x02;
++	}
++
++	/* write bdir bit */
++	hdq_reg_out(_hdq, OMAP_HDQ_TX_DATA, bdir);
++	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS, ctrl, mask);
++	wait_event_timeout(hdq_wait_queue,
++			   (hdq_data->hdq_irqstatus
++			   & OMAP_HDQ_INT_STATUS_TXCOMPLETE),
++			   OMAP_HDQ_TIMEOUT);
++
++	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS, 0,
++		      OMAP_HDQ_CTRL_STATUS_SINGLE);
++
++rtn:
++	mutex_unlock(&hdq_data->hdq_mutex);
++	omap_hdq_put(_hdq);
++	return ret;
++}
++
++/* reset callback */
++static u8 omap_w1_reset_bus(void *_hdq)
++{
++	omap_hdq_get(_hdq);
++	omap_hdq_break(_hdq);
++	omap_hdq_put(_hdq);
++	return 0;
++}
++
+ /* Read a byte of data from the device */
+ static u8 omap_w1_read_byte(void *_hdq)
+ {
+@@ -478,6 +584,10 @@ static u8 omap_w1_read_byte(void *_hdq)
+ 	u8 val = 0;
+ 	int ret;
+ 
++	/* First write to initialize the transfer */
++	if (hdq_data->init_trans == 0)
++		omap_hdq_get(hdq_data);
++
+ 	ret = hdq_read_byte(hdq_data, &val);
+ 	if (ret) {
+ 		ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
+@@ -491,6 +601,10 @@ static u8 omap_w1_read_byte(void *_hdq)
+ 		return -1;
+ 	}
+ 
++	hdq_disable_interrupt(hdq_data, OMAP_HDQ_CTRL_STATUS,
++			      ~OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK);
++	hdq_data->hdq_usecount = 0;
++
+ 	/* Write followed by a read, release the module */
+ 	if (hdq_data->init_trans) {
+ 		ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
+@@ -517,6 +631,14 @@ static void omap_w1_write_byte(void *_hdq, u8 byte)
+ 	if (hdq_data->init_trans == 0)
+ 		omap_hdq_get(hdq_data);
+ 
++	/*
++	 * We need to reset the slave before
++	 * issuing the SKIP ROM command, else
++	 * the slave will not work.
++	 */
++	if (byte == W1_SKIP_ROM)
++		omap_hdq_break(hdq_data);
++
+ 	ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
+ 	if (ret < 0) {
+ 		dev_dbg(hdq_data->dev, "Could not acquire mutex\n");
+@@ -551,6 +673,7 @@ static int omap_hdq_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	int ret, irq;
+ 	u8 rev;
++	const char *mode;
+ 
+ 	hdq_data = devm_kzalloc(dev, sizeof(*hdq_data), GFP_KERNEL);
+ 	if (!hdq_data) {
+@@ -567,10 +690,21 @@ static int omap_hdq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(hdq_data->hdq_base);
+ 
+ 	hdq_data->hdq_usecount = 0;
++	hdq_data->rrw = 0;
+ 	mutex_init(&hdq_data->hdq_mutex);
+ 
+ 	pm_runtime_enable(&pdev->dev);
+-	pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (ret < 0) {
++		dev_dbg(&pdev->dev, "pm_runtime_get_sync failed\n");
++		goto err_w1;
++	}
++
++	ret = _omap_hdq_reset(hdq_data);
++	if (ret) {
++		dev_dbg(&pdev->dev, "reset failed\n");
++		return -EINVAL;
++	}
+ 
+ 	rev = hdq_reg_in(hdq_data, OMAP_HDQ_REVISION);
+ 	dev_info(&pdev->dev, "OMAP HDQ Hardware Rev %c.%c. Driver in %s mode\n",
+@@ -594,6 +728,15 @@ static int omap_hdq_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_put_sync(&pdev->dev);
+ 
++	ret = of_property_read_string(pdev->dev.of_node, "ti,mode", &mode);
++	if (ret < 0 || !strcmp(mode, "hdq")) {
++		hdq_data->mode = 0;
++		omap_w1_master.search = omap_w1_search_bus;
++	} else {
++		hdq_data->mode = 1;
++		omap_w1_master.triplet = omap_w1_triplet;
++	}
++
+ 	omap_w1_master.data = hdq_data;
+ 
+ 	ret = w1_add_master_device(&omap_w1_master);
+@@ -635,8 +778,8 @@ static int omap_hdq_remove(struct platform_device *pdev)
+ module_platform_driver(omap_hdq_driver);
+ 
+ module_param(w1_id, int, S_IRUSR);
+-MODULE_PARM_DESC(w1_id, "1-wire id for the slave detection");
++MODULE_PARM_DESC(w1_id, "1-wire id for the slave detection in HDQ mode");
+ 
+ MODULE_AUTHOR("Texas Instruments");
+-MODULE_DESCRIPTION("HDQ driver Library");
++MODULE_DESCRIPTION("HDQ-1W driver Library");
+ MODULE_LICENSE("GPL");
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
