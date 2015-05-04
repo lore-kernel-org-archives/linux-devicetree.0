@@ -1,37 +1,37 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v4 3/3] Documentation: mmc: Update Arasan SDHC documentation to support 4.9a version of Arasan SDHC controller.
-Date: Mon,  4 May 2015 19:09:52 +0530
-Message-ID: <1430746792-32574-4-git-send-email-stripathi@apm.com>
-References: <1430746792-32574-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1430746792-32574-1-git-send-email-stripathi@apm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: chris@printf.net, anton@enomsg.org, arnd@arndb.de, michal.simek@xilinx.com
-Cc: linux-mmc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, mlangsdo@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
+From: =?iso-8859-1?q?J=FCrgen_Borleis?= <jbe@pengutronix.de>
+Subject: Re: [PATCH V2 4/6] DT: add binding for mxs on-chip regulators
+Date: Mon, 4 May 2015 15:51:26 +0200
+Message-ID: <201505041551.26355.jbe@pengutronix.de>
+References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com> <1430346747-28728-5-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1430346747-28728-5-git-send-email-stefan.wahren@i2se.com>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, fabio.estevam@freescale.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, sebastien.szymanski@armadeus.com, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates Arasan SDHC documentation to support
-4.9a version of Arasan SDHC controller.
-
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index 98ee2ab..6dd3d60 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -8,7 +8,8 @@ Device Tree Bindings for the Arasan SDHCI Controller
-   [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-
- Required Properties:
--  - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a'
-+  - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
-+                'arasan,sdhci-4.9a'
-   - reg: From mmc bindings: Register location and length.
-   - clocks: From clock bindings: Handles to clock inputs.
-   - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
---
-1.8.2.1
-
+SGkgU3RlZmFuLAoKZm9yIHRoZSBpLk1YMjMgdGhlIHJlZ3VsYXRvciBkYWlzeSBjaGFpbiBsb29r
+cyBhIGxpdHRsZSBiaXQgZGlmZmVyZW50OgoKKy0tLS0tLS0tLS0tLSsgoCCgIFZERDVWIKArLS0t
+LS0tLS0tKyCgVkRESU8KfCBEQy1EQyCgIKAgoHwgoCArLS0tLS0tLS0+IExJTlJFRyCgKy0tLS0t
+LS0tLT4rCnwgoCCgIKAgoCCgIKB8IKAgoCCgIKAgoCCgfCBWRERJTyCgIHwgoCCgIKAgoCCgfAp8
+IKAgoCCgIKAgoCCgfCCgIKAgoCCgIKAgoCstLS0tLS0tLS0rIKAgoCCgIKAgoHwKfCBEQ0RDX1ZE
+RElPICstPi0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCnwgoCCgIKAgoCCgIKB8IKAg
+fAp8ICAgICAgICAgICAgfCAgIHwgVkRESU8gICstLS0tLS0tLS0rICBWRERNRU0KfCAgICAgICAg
+ICAgIHwgICArLS0tLS0tLS0+IExJTlJFRyAgKy0tLS0tLS0tLT4KfCAgICAgICAgICAgIHwgICB8
+ICAgICAgICB8IFZERE1FTSAgfAp8ICAgICAgICAgICAgfCAgIHwgICAgICAgICstLS0tLS0tLS0r
+CnwgoCCgIKAgoCCgIKB8IKAgfCBWRERJTyCgKy0tLS0tLS0tLSsgoFZEREEKfCCgIKAgoCCgIKAg
+oHwgoCArLS0tLS0tLS0+IExJTlJFRyCgKy0tLS0tLS0tLT4rCnwgoCCgIKAgoCCgIKB8IKAgICCg
+IKAgoCCgfCBWRERBIKAgoHwgoCCgIKAgoCCgfAp8IKAgoCCgIKAgoCCgfCCgICAgoCCgIKAgoCst
+LS0tLS0tLS0rIKAgoCCgIKAgoHwKfCBEQ0RDX1ZEREEgICstPi0rLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0rCnwgoCCgIKAgoCCgIKB8IKAgfCBWRERBIKAgKy0tLS0tLS0tLSsgoFZEREQK
+fCCgIKAgoCCgIKAgoHwgoCArLS0tLS0tLS0+IExJTlJFRyCgKy0tLS0tLS0tLT4rCnwgoCCgIKAg
+oCCgIKB8IKAgoCCgIKAgoCCgfCBWREREIKAgoHwgoCCgIKAgoCCgfAp8IKAgoCCgIKAgoCCgfCCg
+IKAgoCCgIKAgoCstLS0tLS0tLS0rIKAgoCCgIKAgoHwKfCBEQ0RDX1ZEREQgoCstPi0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCistLS0tLS0tLS0tLS0rIKAgoCCgIKAgoCCgIKAgoCCg
+IKAgoCCgIKAgoCCgIKAgfAogoCCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCCg
+IKAgoCCgIHYKClJlZ2FyZHMsCkp1ZXJnZW4K
