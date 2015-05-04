@@ -1,54 +1,32 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [alsa-devel] [PATCH v5 2/2] mfd: arizona: Update DT binding to
- support hpdet channel
-Date: Mon, 04 May 2015 14:17:28 +0900
-Message-ID: <554700E8.9050006@samsung.com>
-References: <1430714534-28772-1-git-send-email-ideal.song@samsung.com>
- <1430714534-28772-3-git-send-email-ideal.song@samsung.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/8] dmaengine: Add driver for TI DMA crossbar on DRA7x
+Date: Mon, 4 May 2015 11:08:51 +0530
+Message-ID: <20150504053851.GY3521@localhost>
+References: <1428572154-3548-1-git-send-email-peter.ujfalusi@ti.com>
+ <1428572154-3548-4-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1430714534-28772-3-git-send-email-ideal.song@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>, lee.jones@linaro.org
-Cc: galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, sameo@linux.intel.com, ckeepax@opensource.wolfsonmicro.com, broonie@kernel.org, rf@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1428572154-3548-4-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Lee,
+On Thu, Apr 09, 2015 at 12:35:49PM +0300, Peter Ujfalusi wrote:
+> +int omap_dmaxbar_init(void)
+> +{
+> +	return platform_driver_register(&ti_dma_xbar_driver);
+> +}
+> +arch_initcall(omap_dmaxbar_init);
+All looks fine except this bit, I think I did point out this last time as
+well, though dont recall your answer. We rather depend on defered probe and
+not rely on module ordering.
 
-This patch includes the documentation about extcon-arizona.c.
-How are we apply this patch to either mfd git or extcon git?
-
-Thanks,
-Chanwoo Choi
-
-On 05/04/2015 01:42 PM, Inha Song wrote:
-> This patch add device tree bindings for the pdata needed to configure
-> the Accessory Detect Mode select when Headphone detection.
-> 
-> Signed-off-by: Inha Song <ideal.song@samsung.com>
-> Acked-by: Lee Jones <lee@kernel.org>
-> Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> index 7665aa9..32a71b7 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -62,6 +62,12 @@ Optional properties:
->      present, the number of values should be less than or equal to the
->      number of inputs, unspecified inputs will use the chip default.
->  
-> +  - wlf,hpdet-channel : Headphone detection channel.
-> +    ARIZONA_ACCDET_MODE_HPL or 1 - Headphone detect mode is set to HPDETL
-> +    ARIZONA_ACCDET_MODE_HPR or 2 - Headphone detect mode is set to HPDETR
-> +    If this node is not mentioned or if the value is unknown, then
-> +    headphone detection mode is set to HPDETL.
-> +
->    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
->      they are being externally supplied. As covered in
->      Documentation/devicetree/bindings/regulator/regulator.txt
-> 
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
