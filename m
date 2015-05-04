@@ -1,34 +1,46 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 0/3] Using SPI NOR flah on sunxi.
-Date: Mon, 4 May 2015 12:32:51 +0200
-Message-ID: <CAOMqctT42f0RuShMb5BU_4Qun-qouS3HCj7_=8-oEY9h-zVimg@mail.gmail.com>
-References: <cover.1430403750.git.hramrach@gmail.com> <jwv4mnwfppf.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v3 3/8] mfd: arizona: Add support for
+	WM8998 and WM1814
+Date: Mon, 04 May 2015 12:44:14 +0200
+Message-ID: <1430736254.23580.2.camel@tiscali.nl>
+References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1430493319-23808-4-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1430560731.2187.70.camel@x220>
+ <20150504091119.GA32076@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <jwv4mnwfppf.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi-mXXj517/zsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20150504091119.GA32076@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, broonie@kernel.org, myungjoo.ham@samsung.com, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Richard Fitzgerald schreef op ma 04-05-2015 om 10:11 [+0100]:
+> Yes, I've noticed that these tests are wrong and I'm working on a patch for
+> it.
 
-On 1 May 2015 at 14:27, Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org> wrote:
->> The SPI driver returns an error when more than 64 bytes are
->> transferred at once due to lack of DMA support.
->
-> Have you tried the dmaengine patch and make the SPI driver use it?
->
+Glad to hear I wasn't misreading that Makefile.
 
-The dmaengine is already merged or queued in sunxi-wip but the SPI
-glue fell through the cracks. I found it after digging through the
-archives so I will see if it works for me.
+> It's another one of those cases where more lines needs patching to fix
+> it than the 3 lines this WM8998 patch adds, and also fixing it potentially
+> breaks the build because of dependencies that were accidentally working
+> because they never got compiled out. So I'd prefer not to half-fix it in
+> these WM8998 patches it's better to let the code settle and then fix it properly.
 
-Thanks
+I see. Unless that fix takes very long to land, I won't be bothering you
+about this again.
 
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+
+Paul Bolle
