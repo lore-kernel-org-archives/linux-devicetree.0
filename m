@@ -1,72 +1,167 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH  0/2] gpio: Allow userspace export from DT
-Date: Mon, 4 May 2015 10:49:25 +0200
-Message-ID: <20150504084925.GB4047@localhost>
-References: <20150413110515.9681.58848.stgit@localhost>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [net-next PATCH v2 2/3] net: macb: Add support for jumbo frames
+Date: Mon, 4 May 2015 10:48:39 +0200
+Message-ID: <55473267.5040100@atmel.com>
+References: <1430725960-8441-1-git-send-email-harinik@xilinx.com> <b7d968f7-1eb8-4a37-ae28-e7b841d6b178@BY2FFO11FD038.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150413110515.9681.58848.stgit@localhost>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Martin Fuzzey <mfuzzey@parkeon.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <b7d968f7-1eb8-4a37-ae28-e7b841d6b178@BY2FFO11FD038.protection.gbl>
+Sender: netdev-owner@vger.kernel.org
+To: Harini Katakam <harini.katakam@xilinx.com>, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, michals@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2015 at 01:05:15PM +0200, Martin Fuzzey wrote:
-> Currently the gpio sysfs interface allows userspace to access simple hardware
-> where no kernel driver exists or would be useful.
-> 
-> However it requires userspace to know the gpio number that has been assigned
-> by the kernel.
-> 
-> That number, in the case of gpio drviers using dynamic allocation, is not fixed,
-> and may change when:
-> * The kernel version changes and ARCH_NR_GPIOS is changed (happened in 3.17)
-> * The kernel version changes and probe order changes for gpio chips.
-> * The kernel configuration is changed if CONFIG_ARCH_NR_GPIO is used
-> * The board is redesigned (eg switching an externally visible signal from a
-> SoC provided GPIO to an I2C expander chip or vice versa).
-> * Other GPIO chips are added to the system.
-> 
-> The above means that, in order to export the GPIO to userspace via
-> /sys/class/gpio/export the userspace code must know the exact hardware and
-> kernel version information.
+Le 04/05/2015 09:52, Harini Katakam a =E9crit :
+> Check for "cdns,zynqmp-gem" compatible string and enable jumbo frame =
+support
+> in NWCFG register, update descriptor length masks and registers accor=
+dingly.
+> Jumbo max length register should be set according to support in SoC; =
+it is
+> set to 10240 for Zynq Ultrascale+ MPSoC.
+>=20
+> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> Reviewed-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> ---
+>=20
+> On v1, Michal commented that I should use macb_config for jumbo param=
+eters
+> instead of defining them by reading the compatible string directly.
+> I can use .caps for isjumbo. But jumbo-max-length needs to be defined=
+=2E
+> Can I add this to the structure? Any suggestions on how to handle thi=
+s?
 
-Not quite. You can still determine the gpio number in the above cases by
-walking the sysfs tree to find the chip and it's base. This is the only
-way to do this for dynamic buses such as USB.
+Yes, adding it to the "caps" field and adding a field for the max lengt=
+h
+is definitively the way to go.
 
-The only case for which this fails is if a pin function is moved (e.g.
-your i2c-expander case above).
+So "NAK" for this implementation.
 
-> Furthermore, in many cases, it makes no sense to allow userspace to
-> change the signal direction; even if the GPIO itself allows it the
-> circuitry connected to the pin often does not (eg a signal dedicated
-> to an output function driving a  transistor).
+Thanks, bye.
 
-Indeed. The current sysfs-interface is a hack (which I personally think
-never should have been merged).
+> v2:
+> Add constant definition and update SoC name
+>=20
+> ---
+>  drivers/net/ethernet/cadence/macb.c |   21 ++++++++++++++++++---
+>  drivers/net/ethernet/cadence/macb.h |    8 ++++++++
+>  2 files changed, 26 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethern=
+et/cadence/macb.c
+> index 4104d49..a065283 100644
+> --- a/drivers/net/ethernet/cadence/macb.c
+> +++ b/drivers/net/ethernet/cadence/macb.c
+> @@ -54,6 +54,8 @@
+>  #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) =
+- 1))
+>  #define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - =
+1))
+> =20
+> +#define GEM_ZYNQMP_JUMBO_MAX	10240
+> +
+>  /*
+>   * Graceful stop timeouts in us. We should allow up to
+>   * 1 frame time (10 Mbits/s, full-duplex, ignoring collisions)
+> @@ -782,7 +784,7 @@ static int gem_rx(struct macb *bp, int budget)
+>  		}
+>  		/* now everything is ready for receiving packet */
+>  		bp->rx_skbuff[entry] =3D NULL;
+> -		len =3D MACB_BFEXT(RX_FRMLEN, ctrl);
+> +		len =3D ctrl & bp->rx_frm_len_mask;
+> =20
+>  		netdev_vdbg(bp->dev, "gem_rx %u (len %u)\n", entry, len);
+> =20
+> @@ -828,7 +830,7 @@ static int macb_rx_frame(struct macb *bp, unsigne=
+d int first_frag,
+>  	struct macb_dma_desc *desc;
+> =20
+>  	desc =3D macb_rx_desc(bp, last_frag);
+> -	len =3D MACB_BFEXT(RX_FRMLEN, desc->ctrl);
+> +	len =3D desc->ctrl & bp->rx_frm_len_mask;
+> =20
+>  	netdev_vdbg(bp->dev, "macb_rx_frame frags %u - %u (len %u)\n",
+>  		macb_rx_ring_wrap(first_frag),
+> @@ -1633,7 +1635,10 @@ static void macb_init_hw(struct macb *bp)
+>  	config |=3D MACB_BF(RBOF, NET_IP_ALIGN);	/* Make eth data aligned *=
+/
+>  	config |=3D MACB_BIT(PAE);		/* PAuse Enable */
+>  	config |=3D MACB_BIT(DRFCS);		/* Discard Rx FCS */
+> -	config |=3D MACB_BIT(BIG);		/* Receive oversized frames */
+> +	if (bp->isjumbo)
+> +		config |=3D MACB_BIT(JFRAME);	/* Enable jumbo frames */
+> +	else
+> +		config |=3D MACB_BIT(BIG);	/* Receive oversized frames */
+>  	if (bp->dev->flags & IFF_PROMISC)
+>  		config |=3D MACB_BIT(CAF);	/* Copy All Frames */
+>  	else if (macb_is_gem(bp) && bp->dev->features & NETIF_F_RXCSUM)
+> @@ -1642,8 +1647,13 @@ static void macb_init_hw(struct macb *bp)
+>  		config |=3D MACB_BIT(NBC);	/* No BroadCast */
+>  	config |=3D macb_dbw(bp);
+>  	macb_writel(bp, NCFGR, config);
+> +	if (bp->isjumbo && bp->jumbo_max_len)
+> +		gem_writel(bp, JML, bp->jumbo_max_len);
+>  	bp->speed =3D SPEED_10;
+>  	bp->duplex =3D DUPLEX_HALF;
+> +	bp->rx_frm_len_mask =3D MACB_RX_FRMLEN_MASK;
+> +	if (bp->isjumbo)
+> +		bp->rx_frm_len_mask =3D MACB_RX_JFRMLEN_MASK;
+> =20
+>  	macb_configure_dma(bp);
+> =20
+> @@ -2762,6 +2772,11 @@ static int macb_probe(struct platform_device *=
+pdev)
+>  	bp->pclk =3D pclk;
+>  	bp->hclk =3D hclk;
+>  	bp->tx_clk =3D tx_clk;
+> +	if (of_device_is_compatible(pdev->dev.of_node, "cdns,zynqmp-gem")) =
+{
+> +		bp->isjumbo =3D 1;
+> +		bp->jumbo_max_len =3D GEM_ZYNQMP_JUMBO_MAX;
+> +	}
+> +
+>  	spin_lock_init(&bp->lock);
+> =20
+>  	/* setup capabilities */
+> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethern=
+et/cadence/macb.h
+> index eb7d76f..e25f77e 100644
+> --- a/drivers/net/ethernet/cadence/macb.h
+> +++ b/drivers/net/ethernet/cadence/macb.h
+> @@ -71,6 +71,7 @@
+>  #define GEM_NCFGR		0x0004 /* Network Config */
+>  #define GEM_USRIO		0x000c /* User IO */
+>  #define GEM_DMACFG		0x0010 /* DMA Configuration */
+> +#define GEM_JML			0x0048 /* Jumbo Max Length */
+>  #define GEM_HRB			0x0080 /* Hash Bottom */
+>  #define GEM_HRT			0x0084 /* Hash Top */
+>  #define GEM_SA1B		0x0088 /* Specific1 Bottom */
+> @@ -514,6 +515,9 @@ struct macb_dma_desc {
+>  #define MACB_RX_BROADCAST_OFFSET		31
+>  #define MACB_RX_BROADCAST_SIZE			1
+> =20
+> +#define MACB_RX_FRMLEN_MASK			0xFFF
+> +#define MACB_RX_JFRMLEN_MASK			0x3FFF
+> +
+>  /* RX checksum offload disabled: bit 24 clear in NCFGR */
+>  #define GEM_RX_TYPEID_MATCH_OFFSET		22
+>  #define GEM_RX_TYPEID_MATCH_SIZE		2
+> @@ -826,6 +830,10 @@ struct macb {
+>  	unsigned int		max_tx_length;
+> =20
+>  	u64			ethtool_stats[GEM_STATS_LEN];
+> +
+> +	unsigned int		rx_frm_len_mask;
+> +	unsigned int		jumbo_max_len;
+> +	bool			isjumbo;
+>  };
+> =20
+>  static inline bool macb_is_gem(struct macb *bp)
+>=20
 
-Firmware should describe pin directionality and function, and undefined
-pins should never be allowed to be accessed from userspace.
 
-Sure, the current GPIO-sysfs-interface is useful during development and
-for one-off hacks, but I'm convinced it's detrimental in the long run as
-it removes the incentives to fix the driver code that it's used to work
-around (e.g. custom init script to toggle enable lines of some radio
-chips).
-
-> This patch series solves both problems by performing the external
-> signal => GPIO mapping in the device tree.
-
-As Rob already mentioned, what we want is some way to declare pin
-functions. These could then be requested from userspace (or used in DT,
-something which should allow for further refactoring there as well)
-unless a driver has already claimed them.
-
-We don't want to add more dependencies on the current sysfs-based
-interface, which I hope we'll one day will be able to retire in favour
-of a more sane one.
-
-Johan
+--=20
+Nicolas Ferre
