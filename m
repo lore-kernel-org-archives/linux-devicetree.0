@@ -1,34 +1,70 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: mt8173: Fixup pinctrl nodes
-Date: Mon, 4 May 2015 11:04:14 +0200
-Message-ID: <CABuKBeJNCjpP2o-AAjSG9wrq=aRcLKy90RoyeS3Qmh4=gqohpw@mail.gmail.com>
-References: <1430462971-28195-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1430462971-28195-2-git-send-email-yingjoe.chen@mediatek.com>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 3/8] mfd: arizona: Add support for WM8998 and WM1814
+Date: Mon, 4 May 2015 10:11:19 +0100
+Message-ID: <20150504091119.GA32076@opensource.wolfsonmicro.com>
+References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com> <1430493319-23808-4-git-send-email-rf@opensource.wolfsonmicro.com> <1430560731.2187.70.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430462971-28195-2-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430560731.2187.70.camel@x220>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-2015-05-01 8:49 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> The 8173 pinctrl node doesn't follow dts convention. Fix them.
-> Also add a comment to explain pinctrl register usage to make it
-> more clear.
->
-> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
+On Sat, May 02, 2015 at 11:58:51AM +0200, Paul Bolle wrote:
+> Something I didn't notice when v2 came along.
+> 
+> On Fri, 2015-05-01 at 16:15 +0100, Richard Fitzgerald wrote:
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> 
+> > +config MFD_WM8998
+> > +	bool "Wolfson Microelectronics WM8998"
+> > +	depends on MFD_ARIZONA
+> > +	help
+> > +	  Support for Wolfson Microelectronics WM8998 low power audio SoC
+> > +
+> >  config MFD_WM8400
+> >  	bool "Wolfson Microelectronics WM8400"
+> >  	select MFD_CORE
+> 
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> 
+> >  ifneq ($(CONFIG_MFD_WM8997),n)
+> >  obj-$(CONFIG_MFD_ARIZONA)	+= wm8997-tables.o
+> >  endif
+> > +ifneq ($(CONFIG_MFD_WM8998),n)
+> > +obj-$(CONFIG_MFD_ARIZONA)	+= wm8998-tables.o
+> > +endif
+> 
+> Playing a bit with the current version of drivers/mfd/Makefile it seems
+> these
+>     ifneq ($(CONFIG_MFD_WM[...]),n)
+> 
+> tests will always be true. Because, as far as I know, the Kconfig macros
+> used in those tests will either be "y" or the empty string, but never
+> "n". (I don't speak Makefilese fluent enough to know how to add simple
+> debugging prints for the values of the CONFIG_MFD_WM[...] macros to
+> actually test this, so correct me if I'm wrong here.)
 
-applied to v4.1-next/arm64
+Yes, I've noticed that these tests are wrong and I'm working on a patch for
+it. It's another one of those cases where more lines needs patching to fix
+it than the 3 lines this WM8998 patch adds, and also fixing it potentially
+breaks the build because of dependencies that were accidentally working
+because they never got compiled out. So I'd prefer not to half-fix it in
+these WM8998 patches it's better to let the code settle and then fix it properly.
 
-Thanks,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> So I think that, effectively, these wm[...]-tables.o objects will always
+> be built if CONFIG_MFD_ARIZONA is set. Is that the intention? If not,
+> perhaps these test should read
+>     ifeq ($(CONFIG_MFD_WM[...]),y)
+> 
+> Thanks,
+> 
+> 
+> Paul Bolle
+> 
