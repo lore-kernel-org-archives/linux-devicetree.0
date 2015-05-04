@@ -1,178 +1,102 @@
-From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH V3 1/4] regmap: Use regcache_mark_dirty() to indicate power loss or reset
-Date: Sun,  3 May 2015 17:00:16 -0700
-Message-ID: <1430697619-22773-2-git-send-email-cernekee@chromium.org>
-References: <1430697619-22773-1-git-send-email-cernekee@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430697619-22773-1-git-send-email-cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH 1/3] Document: dw_mmc-k3: add document of hi6220 mmc
+Date: Mon, 04 May 2015 09:15:50 +0900
+Message-ID: <5546BA36.5080608@samsung.com>
+References: <1430444818-7740-1-git-send-email-zhangfei.gao@linaro.org>
+ <1430444818-7740-2-git-send-email-zhangfei.gao@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1430444818-7740-2-git-send-email-zhangfei.gao@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Existing regmap users call regcache_mark_dirty() as part of the
-suspend/resume sequence, to tell regcache that non-default values need to
-be resynced post-resume.  Add an internal "no_sync_defaults" regmap flag
-to remember this state, so that regcache_sync() can differentiate between
-these two cases:
+Hi, Zhangfei.
 
-1) HW was reset, so any cache values that match map->reg_defaults can be
-safely skipped.  On some chips there are a lot of registers in the
-reg_defaults list, so this optimization speeds things up quite a bit.
+Is there no commit message for this patch?
 
-2) HW was not reset (maybe it was just clock-gated), so if we cached
-any writes, they should be sent to the hardware regardless of whether
-they match the HW default.  Currently this will write out all values in
-the regcache, since we don't maintain per-register dirty bits.
+On 05/01/2015 10:46 AM, Zhangfei Gao wrote:
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>  .../devicetree/bindings/mmc/k3-dw-mshc.txt         | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> index 3b35449..a353d0b 100644
+> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> @@ -13,6 +13,10 @@ Required Properties:
+>  
+>  * compatible: should be one of the following.
+>    - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extensions.
+> +  - "hisilicon,hi6220-dw-mshc": for controllers with hi6220 specific extensions.
+> +
+> +Optional Properties:
+> +- hisilicon,peripheral-syscon: phandle of syscon used to control peripheral.
+>  
+>  Example:
+>  
+> @@ -42,3 +46,49 @@ Example:
+>  		cap-mmc-highspeed;
+>  		cap-sd-highspeed;
+>  	};
+> +
+> +	/* for Hi6220 */
+> +
+> +	/* SoC portion */
+> +	dwmmc_0: dwmmc0@f723d000 {
+> +	        compatible = "hisilicon,hi6220-dw-mshc";
+> +	        num-slots = <0x1>;
+> +	        board-mmc-bus-clk = <0x0>;
+> +	        reg = <0x0 0xf723d000 0x0 0x1000>;
+> +	        interrupts = <0x0 0x48 0x4>;
+> +	        clocks = <&clock_sys HI6220_MMC0_CIUCLK>, <&clock_sys HI6220_MMC0_CLK>;
+> +	        clock-names = "ciu", "biu";
+> +	};
+> +
+> +	dwmmc_1: dwmmc1@f723e000 {
+> +		compatible = "hisilicon,hi6220-dw-mshc";
+> +		num-slots = <0x1>;
+> +		board-mmc-bus-clk = <0x0>;
+> +		card-detect-delay = <200>;
+> +		hisilicon,peripheral-syscon = <&ao_ctrl>;
+> +		reg = <0x0 0xf723e000 0x0 0x1000>;
+> +		interrupts = <0x0 0x49 0x4>;
+> +		clocks = <&clock_sys HI6220_MMC1_CIUCLK>, <&clock_sys HI6220_MMC1_CLK>;
+> +		clock-names = "ciu", "biu";
+> +	};
 
-Suggested-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/base/regmap/internal.h |  3 +++
- drivers/base/regmap/regcache.c | 61 ++++++++++++++++++++++++++++--------------
- 2 files changed, 44 insertions(+), 20 deletions(-)
+this is example, so i think it doesn't need to add dwmmc_1's case.
 
-diff --git a/drivers/base/regmap/internal.h b/drivers/base/regmap/internal.h
-index a13587b5c2be..b2b2849fc6d3 100644
---- a/drivers/base/regmap/internal.h
-+++ b/drivers/base/regmap/internal.h
-@@ -131,7 +131,10 @@ struct regmap {
- 	struct reg_default *reg_defaults;
- 	const void *reg_defaults_raw;
- 	void *cache;
-+	/* if set, the cache contains newer data than the HW */
- 	u32 cache_dirty;
-+	/* if set, the HW registers are known to match map->reg_defaults */
-+	bool no_sync_defaults;
- 
- 	struct reg_default *patch;
- 	int patch_regs;
-diff --git a/drivers/base/regmap/regcache.c b/drivers/base/regmap/regcache.c
-index 7eb7b3b98794..63af3103d0c6 100644
---- a/drivers/base/regmap/regcache.c
-+++ b/drivers/base/regmap/regcache.c
-@@ -253,6 +253,9 @@ static int regcache_default_sync(struct regmap *map, unsigned int min,
- 				 unsigned int max)
- {
- 	unsigned int reg;
-+	bool no_sync_defaults = map->no_sync_defaults;
-+
-+	map->no_sync_defaults = false;
- 
- 	for (reg = min; reg <= max; reg += map->reg_stride) {
- 		unsigned int val;
-@@ -266,10 +269,12 @@ static int regcache_default_sync(struct regmap *map, unsigned int min,
- 		if (ret)
- 			return ret;
- 
--		/* Is this the hardware default?  If so skip. */
--		ret = regcache_lookup_reg(map, reg);
--		if (ret >= 0 && val == map->reg_defaults[ret].def)
--			continue;
-+		if (no_sync_defaults) {
-+			/* Is this the hardware default?  If so skip. */
-+			ret = regcache_lookup_reg(map, reg);
-+			if (ret >= 0 && val == map->reg_defaults[ret].def)
-+				continue;
-+		}
- 
- 		map->cache_bypass = 1;
- 		ret = _regmap_write(map, reg, val);
-@@ -461,18 +466,23 @@ void regcache_cache_only(struct regmap *map, bool enable)
- EXPORT_SYMBOL_GPL(regcache_cache_only);
- 
- /**
-- * regcache_mark_dirty: Mark the register cache as dirty
-+ * regcache_mark_dirty: Indicate that HW registers were reset to default values
-  *
-  * @map: map to mark
-  *
-- * Mark the register cache as dirty, for example due to the device
-- * having been powered down for suspend.  If the cache is not marked
-- * as dirty then the cache sync will be suppressed.
-+ * Inform regcache that the device has been powered down or reset, so that
-+ * on resume, regcache_sync() knows to write out all non-default values
-+ * stored in the cache.
-+ *
-+ * If this function is not called, regcache_sync() will assume that
-+ * the hardware state still matches the cache state, modulo any writes that
-+ * happened when cache_only was true.
-  */
- void regcache_mark_dirty(struct regmap *map)
- {
- 	map->lock(map->lock_arg);
- 	map->cache_dirty = true;
-+	map->no_sync_defaults = true;
- 	map->unlock(map->lock_arg);
- }
- EXPORT_SYMBOL_GPL(regcache_mark_dirty);
-@@ -604,6 +614,9 @@ static int regcache_sync_block_single(struct regmap *map, void *block,
- {
- 	unsigned int i, regtmp, val;
- 	int ret;
-+	bool no_sync_defaults = map->no_sync_defaults;
-+
-+	map->no_sync_defaults = false;
- 
- 	for (i = start; i < end; i++) {
- 		regtmp = block_base + (i * map->reg_stride);
-@@ -614,10 +627,12 @@ static int regcache_sync_block_single(struct regmap *map, void *block,
- 
- 		val = regcache_get_val(map, block, i);
- 
--		/* Is this the hardware default?  If so skip. */
--		ret = regcache_lookup_reg(map, regtmp);
--		if (ret >= 0 && val == map->reg_defaults[ret].def)
--			continue;
-+		if (no_sync_defaults) {
-+			/* Is this the hardware default?  If so skip. */
-+			ret = regcache_lookup_reg(map, regtmp);
-+			if (ret >= 0 && val == map->reg_defaults[ret].def)
-+				continue;
-+		}
- 
- 		map->cache_bypass = 1;
- 
-@@ -674,6 +689,9 @@ static int regcache_sync_block_raw(struct regmap *map, void *block,
- 	unsigned int base = 0;
- 	const void *data = NULL;
- 	int ret;
-+	bool no_sync_defaults = map->no_sync_defaults;
-+
-+	map->no_sync_defaults = false;
- 
- 	for (i = start; i < end; i++) {
- 		regtmp = block_base + (i * map->reg_stride);
-@@ -689,14 +707,17 @@ static int regcache_sync_block_raw(struct regmap *map, void *block,
- 
- 		val = regcache_get_val(map, block, i);
- 
--		/* Is this the hardware default?  If so skip. */
--		ret = regcache_lookup_reg(map, regtmp);
--		if (ret >= 0 && val == map->reg_defaults[ret].def) {
--			ret = regcache_sync_block_raw_flush(map, &data,
--							    base, regtmp);
--			if (ret != 0)
--				return ret;
--			continue;
-+		if (no_sync_defaults) {
-+			/* Is this the hardware default?  If so skip. */
-+			ret = regcache_lookup_reg(map, regtmp);
-+			if (ret >= 0 && val == map->reg_defaults[ret].def) {
-+				ret = regcache_sync_block_raw_flush(map, &data,
-+								    base,
-+								    regtmp);
-+				if (ret != 0)
-+					return ret;
-+				continue;
-+			}
- 		}
- 
- 		if (!data) {
--- 
-2.2.0.rc0.207.ga3a616c
+> +
+> +	/* Board portion */
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What are Board portion and SoC portion?
+This should be merged to one node. why do you separate this?
+
+Best Regards,
+Jaehoon Chung
+> +	dwmmc_0: dwmmc0@f723d000 {
+> +		bus-width = <0x8>;
+> +	        broken-cd;
+> +		vmmc-supply = <&ldo19>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&emmc_pmx_func &emmc_clk_cfg_func
+> +			     &emmc_cfg_func &emmc_rst_cfg_func>;
+> +	};
+> +
+> +	dwmmc_1: dwmmc1@f723e000 {
+> +		bus-width = <0x4>;
+> +		disable-wp;
+> +		cd-gpios = <&gpio1 0 1>;
+> +		pinctrl-names = "default", "idle";
+> +		pinctrl-0 = <&sd_pmx_func &sd_clk_cfg_func &sd_cfg_func>;
+> +		pinctrl-1 = <&sd_pmx_idle &sd_clk_cfg_idle &sd_cfg_idle>;
+> +		vqmmc-supply = <&ldo7>;
+> +		vmmc-supply = <&ldo10>;
+> +	};
+> 
+
