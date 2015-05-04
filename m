@@ -1,82 +1,51 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v10 04/19] sh-sci: Add H8/300 SCI.
-Date: Mon, 4 May 2015 15:58:17 +0200
-Message-ID: <CAMuHMdXK==yacRPHqZe3JqP83GPCk+TJsCH6OPETwcB8mOxNfw@mail.gmail.com>
-References: <1430736122-20929-2-git-send-email-ysato@users.sourceforge.jp>
-	<1430736122-20929-6-git-send-email-ysato@users.sourceforge.jp>
+From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V3 1/4] regmap: Use regcache_mark_dirty() to indicate
+ power loss or reset
+Date: Mon, 4 May 2015 07:05:38 -0700
+Message-ID: <CAJzqFta5nHr+KiWfAVgV_iaycpLZ3h2MUYfSSqZ1Z72UP0hOcA@mail.gmail.com>
+References: <1430697619-22773-1-git-send-email-cernekee@chromium.org>
+ <1430697619-22773-2-git-send-email-cernekee@chromium.org> <554713DD.4020006@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1430736122-20929-6-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-arch-owner@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <554713DD.4020006-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CC devicetree
+On Sun, May 3, 2015 at 11:38 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>> diff --git a/drivers/base/regmap/regcache.c
+>> b/drivers/base/regmap/regcache.c
+>> index 7eb7b3b98794..63af3103d0c6 100644
+>> --- a/drivers/base/regmap/regcache.c
+>> +++ b/drivers/base/regmap/regcache.c
+>> @@ -253,6 +253,9 @@ static int regcache_default_sync(struct regmap *map,
+>> unsigned int min,
+>>                                  unsigned int max)
+>>   {
+>>         unsigned int reg;
+>> +       bool no_sync_defaults = map->no_sync_defaults;
+>> +
+>> +       map->no_sync_defaults = false;
+>
+>
+> This needs to be done at the end in regcache_sync(), the same place where
+> dirty is set to false.
 
-On Mon, May 4, 2015 at 12:41 PM, Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> H8/300 internal serial controller of same as sh-sci.
-> So h8300 use SH_SCI.
-> And add sci bindings.
->
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+But map->cache_dirty means "any register is dirty," not "all registers
+are dirty."  So it can only be cleared after a successful flush.
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+If one of the writes fails and regcache_sync() has to return
+prematurely, we probably don't want no_sync_defaults to stay true
+because some of the HW registers might not match map->reg_defaults
+anymore.
 
-> ---
->  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 1 +
->  drivers/tty/serial/Kconfig                                      | 2 +-
->  drivers/tty/serial/sh-sci.c                                     | 6 ++++++
->  3 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> index ae73bb0..7534d46 100644
-> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> @@ -29,6 +29,7 @@ Required properties:
->      - "renesas,scifa" for generic SCIFA compatible UART.
->      - "renesas,scifb" for generic SCIFB compatible UART.
->      - "renesas,hscif" for generic HSCIF compatible UART.
-> +    - "renesas,sci" for generic SCI compatible UART.
->
->      When compatible with the generic version, nodes must list the
->      SoC-specific version corresponding to the platform first followed by the
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index f8120c1..dea1eff 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -728,7 +728,7 @@ config SERIAL_IP22_ZILOG_CONSOLE
->
->  config SERIAL_SH_SCI
->         tristate "SuperH SCI(F) serial port support"
-> -       depends on SUPERH || ARCH_SHMOBILE || COMPILE_TEST
-> +       depends on SUPERH || ARCH_SHMOBILE || H8300 || COMPILE_TEST
->         select SERIAL_CORE
->
->  config SERIAL_SH_SCI_NR_UARTS
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index e7d6566..1468ec5 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -2536,6 +2536,12 @@ static const struct of_device_id of_sci_match[] = {
->                         .regtype = SCIx_HSCIF_REGTYPE,
->                 },
->         }, {
-> +               .compatible = "renesas,sci",
-> +               .data = &(const struct sci_port_info) {
-> +                       .type = PORT_SCI,
-> +                       .regtype = SCIx_SCI_REGTYPE,
-> +               },
-> +       }, {
->                 /* Terminator */
->         },
->  };
-> --
-> 2.1.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arch" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Leaving it set to true wouldn't break the current regcache_sync()
+implementation, but no_sync_defaults is documented as: "if set, the HW
+registers are known to match map->reg_defaults".  Writing any register
+to a non-default value makes it false.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
