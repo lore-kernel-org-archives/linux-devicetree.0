@@ -1,61 +1,93 @@
-From: Eyal Reizer <eyalreizer@gmail.com>
-Subject: [PATCHv2] am335x-evm: add bluetooth support
-Date: Mon,  4 May 2015 15:41:13 +0300
-Message-ID: <1430743273-2518-1-git-send-email-eyalr@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eliad Peller <eliad@wizery.com>, Eyal Reizer <eyalr@ti.com>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/5] DT: phy: qcom: Add PCIe PHY devicetree bindings
+Date: Mon,  4 May 2015 15:42:14 +0300
+Message-ID: <1430743338-10441-2-git-send-email-svarbanov@mm-sol.com>
+References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430743338-10441-1-git-send-email-svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eliad Peller <eliad@wizery.com>
+Document Qualcomm PCIe PHY devicetree bindings.
 
-uart1 is used for connecting to wilink8 bluetooth subsystem.
-add the needed muxes and definitions.
-
-Signed-off-by: Eliad Peller <eliad@wizery.com>
-Signed-off-by: Eyal Reizer <eyalr@ti.com>
+Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 ---
-Changes in v2:
-removed ti shared transport bindings
+ .../devicetree/bindings/phy/qcom-pcie-phy.txt      |   60 ++++++++++++++++++++
+ 1 files changed, 60 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie-phy.txt
 
- arch/arm/boot/dts/am335x-evm.dts |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 0f398fa..765be27 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -191,6 +191,15 @@
- 		>;
- 	};
- 
-+	uart1_pins: pinmux_uart1_pins {
-+		pinctrl-single,pins = <
-+			0x178 (PIN_INPUT | MUX_MODE0)		/* uart1_ctsn.uart1_ctsn */
-+			0x17C (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart1_rtsn.uart1_rtsn */
-+			0x180 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart1_rxd.uart1_rxd */
-+			0x184 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart1_txd.uart1_txd */
-+		>;
+diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie-phy.txt
+new file mode 100644
+index 0000000..e4c7f9c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom-pcie-phy.txt
+@@ -0,0 +1,60 @@
++* Qualcomm PCIe PHY controller
++
++PCIe PHY nodes are defined to describe on-chip PCIe Physical layer controllers.
++Each PCIe PHY controller should have its own node.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain "qcom,pcie-phy"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Offset and length of the PCIe PHY registers
++
++- #phy-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: Must be zero
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A list of phandles and clock specifier pair, one
++		    for each entry in clock-names property
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Should contain "core" for PHY core clock
++
++- resets:
++	Usage: required
++	Value type: <phandle>
++	Definition: List of phandle and reset specifier pairs as listed
++		    in reset-names property
++
++- reset-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Should contain "core" for PHY core reset
++
++- <name>-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: List of phandles to the power supply regulators
++		    - "vdda_pll" analog Vdd PLL power supply
++
++* Example
++
++	pciephy0: phy@fc526000 {
++		compatible = "qcom,pcie-phy";
++		reg = <0xfc526000 0x1000>;
++		clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
++		clock-names = "core";
++		resets = <&gcc GCC_PCIE_0_PHY_BCR>;
++		reset-names = "core";
++		vdda_pll-supply = <&pma8084_l12>;
++		#phy-cells = <0>;
 +	};
-+
- 	clkout2_pin: pinmux_clkout2_pin {
- 		pinctrl-single,pins = <
- 			0x1b4 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr1.clkout2 */
-@@ -357,6 +366,13 @@
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
 -- 
-1.7.9.5
+1.7.0.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
