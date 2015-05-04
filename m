@@ -1,58 +1,42 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Mon, 04 May 2015 14:51:15 +1000
-Message-ID: <1430715075.7979.115.camel@kernel.crashing.org>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
-	 <1430493730.7979.58.camel@kernel.crashing.org>
-	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
-	 <1430521038.7979.70.camel@kernel.crashing.org>
-	 <1430522976.7979.78.camel@kernel.crashing.org>
-	 <1430534906.7979.85.camel@kernel.crashing.org>
-	 <20150504013012.GA15561@gwshan>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v5 1/2] extcon: arizona: Add support for
+ select accessory detect mode when headphone detection
+Date: Mon, 04 May 2015 14:14:59 +0900
+Message-ID: <55470053.10308@samsung.com>
+References: <1430714534-28772-1-git-send-email-ideal.song@samsung.com>
+ <1430714534-28772-2-git-send-email-ideal.song@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150504013012.GA15561@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: Rob Herring <robherring2@gmail.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1430714534-28772-2-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-05-04 at 11:30 +1000, Gavin Shan wrote:
-> Thanks, Ben. If we really need utilize overlay to support our case,
-> we need some one to parse the input (device-tree changes) from
-> firmware
-> and create "overlay" device node and "target" node as I mentioned
-> above.
-> It's not simpler than the way we had to support our case. I'm not sure
-> if we really need utilize overlay for our case.
+On 05/04/2015 01:42 PM, Inha Song wrote:
+> This patch add support for select accessory detect mode to HPDETL or HPDETR.
+> Arizona provides a headphone detection circuit on the HPDETL and HPDETR pins
+> to measure the impedance of an external load connected to the headphone.
+> 
+> Depending on board design, headphone detect pins can change to HPDETR or HPDETL.
+> 
+> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
+>  drivers/extcon/extcon-arizona.c   | 38 ++++++++++++++++++++++++++++++--------
+>  include/dt-bindings/mfd/arizona.h |  4 ++++
+>  include/linux/mfd/arizona/pdata.h |  3 +++
+>  3 files changed, 37 insertions(+), 8 deletions(-)
 
-No, if we decide to go down that path, then the FW needs to create
-the overlay.
+Appled it on extcon-next branch.
 
-This could be done by having some kind of versioning to all nodes and
-properties using a global generation count.
+Thanks,
+Chanwoo Choi
 
-Ie, if we "know" what we passed to Linux, we can generate an overlay
-that contains everything that changed since then using the version
-numbers.
-
-However, we should probably encode the version in the tree itself and
-have specific APIs to retrieve "from" a given version to properly deal
-with kexec'ing a kernel since in that case, the new kernel will have
-something that isn't version 0 but version N where N is the latest
-applied overlay.
-
-Also I don't know how removing nodes works with overlay. IE the overlay
-system is designed around the idea of removing the overlay to retrieve
-the original tree.
-
-In our case, our overlays are meant to be fully committed, and I don't
-know whether there's a way to keep track. On unplug, we will just remove
-all the nodes below the slot.
-
-Cheers,
-Ben.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
