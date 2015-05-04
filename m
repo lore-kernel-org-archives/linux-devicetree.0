@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 5/6] ARM: shmobile: r8a7740: Remove mapping of L2 cache controller registers
-Date: Mon,  4 May 2015 17:24:31 +0200
-Message-ID: <1430753072-17145-6-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v3 6/6] ARM: shmobile: r8a7740 dtsi: Add L1 cache information to CPU node
+Date: Mon,  4 May 2015 17:24:32 +0200
+Message-ID: <1430753072-17145-7-git-send-email-geert+renesas@glider.be>
 References: <1430753072-17145-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1430753072-17145-1-git-send-email-geert+renesas@glider.be>
@@ -10,9 +10,11 @@ To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Tushar Behera <tushar.behera@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Now all r8a7740-based platforms have been migrated to the generic l2c OF
-initialization, it's no longer needed to map the L2 cache controller
-registers from .map_io().
+Describe the L1 cache in the CPU node:
+  - L1 instruction cache: 32 KiB (8 KiB x 4 ways),
+  - L1 data cache: 32 KiB (8 KiB x 4 ways).
+
+Add a link to the L2 cache.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
@@ -20,34 +22,31 @@ v3:
   - No changes,
 
 v2:
-  - No changes.
+  - New.
 ---
- arch/arm/mach-shmobile/setup-r8a7740.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ arch/arm/boot/dts/r8a7740.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/mach-shmobile/setup-r8a7740.c b/arch/arm/mach-shmobile/setup-r8a7740.c
-index 5dbb40d5c56b6495..3d8a8cfee9a62c6c 100644
---- a/arch/arm/mach-shmobile/setup-r8a7740.c
-+++ b/arch/arm/mach-shmobile/setup-r8a7740.c
-@@ -51,18 +51,6 @@ static struct map_desc r8a7740_io_desc[] __initdata = {
- 		.length		= 160 << 20,
- 		.type		= MT_DEVICE_NONSHARED
- 	},
--#ifdef CONFIG_CACHE_L2X0
--	/*
--	 * for l2x0_init()
--	 * 0xf0100000-0xf0101000 -> 0xf0002000-0xf0003000
--	 */
--	{
--		.virtual	= 0xf0002000,
--		.pfn		= __phys_to_pfn(0xf0100000),
--		.length		= PAGE_SIZE,
--		.type		= MT_DEVICE_NONSHARED
--	},
--#endif
- };
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index ddef5b1c68fa06b3..3aaab195132bfc2c 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -26,6 +26,15 @@
+ 			reg = <0x0>;
+ 			clock-frequency = <800000000>;
+ 			power-domains = <&pd_a3sm>;
++			i-cache-size = <0x8000>;
++			i-cache-sets = <256>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <256>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2>;
+ 		};
+ 	};
  
- void __init r8a7740_map_io(void)
 -- 
 1.9.1
 
