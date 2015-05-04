@@ -1,140 +1,70 @@
-From: Harini Katakam <harini.katakam@xilinx.com>
-Subject: [net-next PATCH v2 2/3] net: macb: Add support for jumbo frames
-Date: Mon, 4 May 2015 13:22:39 +0530
-Message-ID: <b7d968f7-1eb8-4a37-ae28-e7b841d6b178@BY2FFO11FD038.protection.gbl>
-References: <1430725960-8441-1-git-send-email-harinik@xilinx.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/7] clocksource: mediatek: Don't run event_handler if
+ it is NULL
+Date: Mon, 04 May 2015 10:14:56 +0200
+Message-ID: <55472A80.9020904@linaro.org>
+References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com> <1430466210-22963-2-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1430725960-8441-1-git-send-email-harinik@xilinx.com>
-Sender: netdev-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, michals@xilinx.com
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430466210-22963-2-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Check for "cdns,zynqmp-gem" compatible string and enable jumbo frame support
-in NWCFG register, update descriptor length masks and registers accordingly.
-Jumbo max length register should be set according to support in SoC; it is
-set to 10240 for Zynq Ultrascale+ MPSoC.
+On 05/01/2015 09:43 AM, Yingjoe Chen wrote:
+> Spurious timer interrupt is noticed in mtk timer and cause kernel
+> crash. In mtk_timer_interrupt(), only run event_handler if it is
+> not NULL.
+>
+> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>   drivers/clocksource/mtk_timer.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mt=
+k_timer.c
+> index 68ab423..85e0ab5 100644
+> --- a/drivers/clocksource/mtk_timer.c
+> +++ b/drivers/clocksource/mtk_timer.c
+> @@ -143,7 +143,8 @@ static irqreturn_t mtk_timer_interrupt(int irq, v=
+oid *dev_id)
+>
+>   	/* Acknowledge timer0 irq */
+>   	writel(GPT_IRQ_ACK(GPT_CLK_EVT), evt->gpt_base + GPT_IRQ_ACK_REG);
+> -	evt->dev.event_handler(&evt->dev);
+> +	if (evt->dev.event_handler)
+> +		evt->dev.event_handler(&evt->dev);
+>
+>   	return IRQ_HANDLED;
+>   }
+>
 
-Signed-off-by: Harini Katakam <harinik@xilinx.com>
-Reviewed-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
----
+This fix does not look good.
 
-On v1, Michal commented that I should use macb_config for jumbo parameters
-instead of defining them by reading the compatible string directly.
-I can use .caps for isjumbo. But jumbo-max-length needs to be defined.
-Can I add this to the structure? Any suggestions on how to handle this?
+Could you try by requesting the irq *after*=20
+clockevents_config_and_register in the init sequence [1] ?
 
-v2:
-Add constant definition and update SoC name
+Thanks
+   -- Daniel
 
----
- drivers/net/ethernet/cadence/macb.c |   21 ++++++++++++++++++---
- drivers/net/ethernet/cadence/macb.h |    8 ++++++++
- 2 files changed, 26 insertions(+), 3 deletions(-)
+[1]=20
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/=
+?id=3D1096be084ac59927158ce80ff1d31c33eed0e565
 
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index 4104d49..a065283 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -54,6 +54,8 @@
- #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1))
- #define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1))
- 
-+#define GEM_ZYNQMP_JUMBO_MAX	10240
-+
- /*
-  * Graceful stop timeouts in us. We should allow up to
-  * 1 frame time (10 Mbits/s, full-duplex, ignoring collisions)
-@@ -782,7 +784,7 @@ static int gem_rx(struct macb *bp, int budget)
- 		}
- 		/* now everything is ready for receiving packet */
- 		bp->rx_skbuff[entry] = NULL;
--		len = MACB_BFEXT(RX_FRMLEN, ctrl);
-+		len = ctrl & bp->rx_frm_len_mask;
- 
- 		netdev_vdbg(bp->dev, "gem_rx %u (len %u)\n", entry, len);
- 
-@@ -828,7 +830,7 @@ static int macb_rx_frame(struct macb *bp, unsigned int first_frag,
- 	struct macb_dma_desc *desc;
- 
- 	desc = macb_rx_desc(bp, last_frag);
--	len = MACB_BFEXT(RX_FRMLEN, desc->ctrl);
-+	len = desc->ctrl & bp->rx_frm_len_mask;
- 
- 	netdev_vdbg(bp->dev, "macb_rx_frame frags %u - %u (len %u)\n",
- 		macb_rx_ring_wrap(first_frag),
-@@ -1633,7 +1635,10 @@ static void macb_init_hw(struct macb *bp)
- 	config |= MACB_BF(RBOF, NET_IP_ALIGN);	/* Make eth data aligned */
- 	config |= MACB_BIT(PAE);		/* PAuse Enable */
- 	config |= MACB_BIT(DRFCS);		/* Discard Rx FCS */
--	config |= MACB_BIT(BIG);		/* Receive oversized frames */
-+	if (bp->isjumbo)
-+		config |= MACB_BIT(JFRAME);	/* Enable jumbo frames */
-+	else
-+		config |= MACB_BIT(BIG);	/* Receive oversized frames */
- 	if (bp->dev->flags & IFF_PROMISC)
- 		config |= MACB_BIT(CAF);	/* Copy All Frames */
- 	else if (macb_is_gem(bp) && bp->dev->features & NETIF_F_RXCSUM)
-@@ -1642,8 +1647,13 @@ static void macb_init_hw(struct macb *bp)
- 		config |= MACB_BIT(NBC);	/* No BroadCast */
- 	config |= macb_dbw(bp);
- 	macb_writel(bp, NCFGR, config);
-+	if (bp->isjumbo && bp->jumbo_max_len)
-+		gem_writel(bp, JML, bp->jumbo_max_len);
- 	bp->speed = SPEED_10;
- 	bp->duplex = DUPLEX_HALF;
-+	bp->rx_frm_len_mask = MACB_RX_FRMLEN_MASK;
-+	if (bp->isjumbo)
-+		bp->rx_frm_len_mask = MACB_RX_JFRMLEN_MASK;
- 
- 	macb_configure_dma(bp);
- 
-@@ -2762,6 +2772,11 @@ static int macb_probe(struct platform_device *pdev)
- 	bp->pclk = pclk;
- 	bp->hclk = hclk;
- 	bp->tx_clk = tx_clk;
-+	if (of_device_is_compatible(pdev->dev.of_node, "cdns,zynqmp-gem")) {
-+		bp->isjumbo = 1;
-+		bp->jumbo_max_len = GEM_ZYNQMP_JUMBO_MAX;
-+	}
-+
- 	spin_lock_init(&bp->lock);
- 
- 	/* setup capabilities */
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index eb7d76f..e25f77e 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -71,6 +71,7 @@
- #define GEM_NCFGR		0x0004 /* Network Config */
- #define GEM_USRIO		0x000c /* User IO */
- #define GEM_DMACFG		0x0010 /* DMA Configuration */
-+#define GEM_JML			0x0048 /* Jumbo Max Length */
- #define GEM_HRB			0x0080 /* Hash Bottom */
- #define GEM_HRT			0x0084 /* Hash Top */
- #define GEM_SA1B		0x0088 /* Specific1 Bottom */
-@@ -514,6 +515,9 @@ struct macb_dma_desc {
- #define MACB_RX_BROADCAST_OFFSET		31
- #define MACB_RX_BROADCAST_SIZE			1
- 
-+#define MACB_RX_FRMLEN_MASK			0xFFF
-+#define MACB_RX_JFRMLEN_MASK			0x3FFF
-+
- /* RX checksum offload disabled: bit 24 clear in NCFGR */
- #define GEM_RX_TYPEID_MATCH_OFFSET		22
- #define GEM_RX_TYPEID_MATCH_SIZE		2
-@@ -826,6 +830,10 @@ struct macb {
- 	unsigned int		max_tx_length;
- 
- 	u64			ethtool_stats[GEM_STATS_LEN];
-+
-+	unsigned int		rx_frm_len_mask;
-+	unsigned int		jumbo_max_len;
-+	bool			isjumbo;
- };
- 
- static inline bool macb_is_gem(struct macb *bp)
--- 
-1.7.9.5
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
