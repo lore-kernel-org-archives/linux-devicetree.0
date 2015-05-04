@@ -1,60 +1,70 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v3 2/2] ata: ahci_xgene: Add AHCI Support for 2nd HW
- version of APM X-Gene SoC AHCI SATA Host controller.
-Date: Mon, 4 May 2015 08:21:32 +0530
-Message-ID: <CAOHikRDsnywXaSW8XZiOq-uq9fHiwhp0uxXzHF-ysUO_VmQYFw@mail.gmail.com>
-References: <1430667220-23477-1-git-send-email-stripathi@apm.com>
-	<1430667220-23477-3-git-send-email-stripathi@apm.com>
-	<CAGRGNgWGk9jkg3Kui5BdFNhpCKOhD=SCW4apmzqMNHKfVbKMmw@mail.gmail.com>
+From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Subject: [PATCH RESEND v4 0/2] 96boards: add thermal senor support to hikey board
+Date: Mon, 4 May 2015 10:52:18 +0800
+Message-ID: <1430707940-14468-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <CAGRGNgWGk9jkg3Kui5BdFNhpCKOhD=SCW4apmzqMNHKfVbKMmw@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Julian Calaby <julian.calaby@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-scsi <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "Mailing List, Arm" <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: rui.zhuang@intel.com, edubezval@gmail.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org
+Cc: linuxarm@huawei.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, liguozhu@hisilicon.com, mporter@konsulko.com, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, leo.yan@linaro.org, zhenwei.wang@hisilicon.com, zhangfei.gao@linaro.org, z.liuxinliang@huawei.com, xuwei5@hisilicon.com, w.f@huawei.com, yuanzhichang@hisilicon.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Julian.
+From: kongxinwei <kong.kongxinwei@hisilicon.com>
 
-On Mon, May 4, 2015 at 5:56 AM, Julian Calaby <julian.calaby@gmail.com> wrote:
-> Hi Suman,
->
-> On Mon, May 4, 2015 at 1:33 AM, Suman Tripathi <stripathi@apm.com> wrote:
->> This patch enables full AHCI feature support for APM X-Gene SoC SATA
->> host controller. The following errata's are removed:
->>
->> 1. 2a0bdff6b95 ("ahci-xgene: fix the dma state machine lockup for the
->>                  IDENTIFY DEVICE PIO mode command")
->> 2. 09c32aaa368 ("ahci_xgene: Fix the dma state machine lockup for the
->>                  ATA_CMD_SMART PIO mode command")
->> 3. 1540035da71 ("ahci_xgene: Implement the xgene_ahci_poll_reg_val to
->>                  support PMP")
->> 4. a3a84bc7c88 ("ahci_xgene: Implement the workaround to support PMP
->>                  enumeration and discovery")
->> 5. 1102407bb71 ("ahci_xgene: Fix the DMA state machine lockup for the
->>                  ATA_CMD_PACKET PIO mode command")
->> 6. 72f79f9e35b ("ahci_xgene: Removing NCQ support from the APM X-Gene
->>                 SoC AHCI SATA Host Controller driver")
->
-> Won't this mean that the 1st HW version won't work properly?
+The Linaro connect introduce 96boards series in Hong Kong,The HiKey board
+is the first board to be certified 96Boards Consumer Edition compatible.
+This board is based on the HiSilicon SoC. you can get more information
+from https://www.96boards.org.
 
-No it doesn't mean that, It means whatever workaround we had in 1st HW
-version has been
-fixed in 2nd HW version.
+The hisilicon SoC contains thermal module, this thermal module has 4 sensors,
 
->
-> Thanks,
->
-> --
-> Julian Calaby
->
-> Email: julian.calaby@gmail.com
-> Profile: http://www.google.com/profiles/julian.calaby/
+	- sensor 0: local sensor;
+	- sensor 1: remote sensor for ACPU cluster 1;
+	- sensor 2: remote sensor for ACPU cluster 2;
+	- sensor 3: remote sensor for GPU;
 
+It can obtain this device temperature by operating this hardware. The new
+sensor driver satisfies thermal framework and to realize the ACPU ,GPU and
+so on to cool function.
 
+Changes v0->v1;
+* Delete this hi6220 dtsi.
+* Fix documentation and error checks.
+* Modify this driver which makes use of kernel to decide how to dynamically
+  bind the interrupt to hottest sensor.
+* Delete "sensor-thres-temp" property and read thermal_zone trips points
+  replace of it.
+* Delete "sensor-reset-temp" property and define the fixed value replace
+  of it.
+
+Changes v1->v2;
+* change patch's position between binding document and driver file
+* clean up some regiser for enabling thermal sensor
+* use mutex lock to replace the spin lock
+
+Changes v2->v3;
+* delete sensor id property in binding document 
+* fix sensor driver to satisfy sensor register after deleting sensor id
+  property
+
+Changes v3->v4;
+* using "usleep_range" function instead of "msleep" function
+* delete code detail error
+
+kongxinwei (2):
+  dt-bindings: Document the hi6220 thermal sensor bindings
+  thermal: hisilicon: add new hisilicon thermal sensor driver
+
+ .../bindings/thermal/hisilicon-thermal.txt         |  23 ++
+ drivers/thermal/Kconfig                            |   8 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/hisi_thermal.c                     | 437 +++++++++++++++++++++
+ 4 files changed, 469 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+ create mode 100644 drivers/thermal/hisi_thermal.c
 
 -- 
-Thanks,
-with regards,
-Suman Tripathi
+1.9.1
+
+
