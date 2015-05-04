@@ -1,32 +1,93 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 2/5] phy: qcom: Add Qualcomm PCIe PHY
-Date: Mon, 4 May 2015 20:05:57 +0530
-Message-ID: <554783CD.50708@ti.com>
-References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com> <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v10 19/19] h8300: devicetree source
+Date: Mon, 04 May 2015 17:09:21 +0200
+Message-ID: <2656548.FgCj9p2Jp9@wuerfel>
+References: <1430736122-20929-2-git-send-email-ysato@users.sourceforge.jp> <1430736122-20929-21-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1430736122-20929-21-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-arch-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday 04 May 2015 19:42:02 Yoshinori Sato wrote:
+> +
+> +	h8intc: intc@0 {
+> +		compatible = "renesas,h8s-intc", "renesas,h8300-intc";
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +	};
 
-On Monday 04 May 2015 06:12 PM, Stanimir Varbanov wrote:
-> Add a PCIe PHY driver used by PCIe host controller driver
-> on Qualcomm SoCs like Snapdragon 805.
->
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> ---
->   drivers/phy/Kconfig         |    9 ++
->   drivers/phy/Makefile        |    1 +
->   drivers/phy/phy-qcom-pcie.c |  291 +++++++++++++++++++++++++++++++++++++++++++
+The node name should be "interrupt-controller@0", not "intc@0", to follow
+the common conventions.
 
-Why do you need a new PHY driver for this? Why not use the existing QCOM PHY 
-driver. I can see the registers used here in phy-qcom-ufs-qmp-14nm.h?
+> +	tpu: tpu@ffffe0 {
+> +		compatible = "renesas,tpu";
+> +		reg = <0xffffe0 16>, <0xfffff0 12>;
+> +		clocks = <&pclk>;
+> +		clock-names = "peripheral_clk";
+> +	};
+> +
+> +	timer8: timer@ffffb0 {
+> +		compatible = "renesas,8bit-timer";
+> +		reg = <0xffff80 10>;
+> +		interrupts = <72 75>;
+> +		clocks = <&pclk>;
+> +		clock-names = "peripheral_clk";
+> +		renesas,mode = <CLOCKEVENTDEVICE>;
+> +		renesas,div = <DIV_8>;
+> +	};
+> +
 
-Thanks
-Kishon
+The renesas,div property seems odd here. How about defining a
+"clock-frequency" property and figuring out the divider from
+the parent clock in the driver?
+
+Your new binding makes it mandatory to have a "fclk" clock, which
+seems better suited than "peripheral_clk", so I'd suggest you
+change the code to match the documentation (rather than the other
+way round). Alternatively, you could make this an anonymous
+clock and not specify the name at all.
+
+The renesas,mode property seems odd. Why is that needed? It sounds
+like you are encoding how you expect the device to be used by
+Linux, rather than what it can do in hardware. If you have multiple
+variants of the 8bit-timer hardware that have different features,
+better use separate compatible strings for them, or a boolean
+flag that announces the presence or absence of a feature.
+
+If however, this is just a hint for Linux, maybe you can find a way
+for the driver to take a guess itself, e.g. using the first
+device it finds as a clockevent device, and only use a clocksource
+device if there is more than one?
+
+> +	sci0: serial@ffff78 {
+> +		compatible = "renesas,sci";
+> +		reg = <0xffff78 8>;
+> +		interrupts = <88 89 90 91>;
+> +		clocks = <&pclk>;
+> +		clock-names = "peripheral_clk";
+> +	};
+> +	sci1: serial@ffff80 {
+> +		compatible = "renesas,sci";
+> +		reg = <0xffff80 8>;
+> +		interrupts = <92 93 94 95>;
+> +		clocks = <&pclk>;
+> +		clock-names = "peripheral_clk";
+> +	};
+> +	sci2: serial@ffff88 {
+> +		compatible = "renesas,sci";
+> +		reg = <0xffff88 8>;
+> +		interrupts = <96 97 98 99>;
+> +		clocks = <&pclk>;
+> +		clock-names = "peripheral_clk";
+> +	};
+> +};
+
+The binding for sci requires the clock to be named "sci_ick",  so please
+use that instead of "peripheral_clk". The driver can handle both.
+
+	Arnd
