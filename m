@@ -1,270 +1,79 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH v2 3/5] DT: PCI: qcom: Document PCIe devicetree bindings
-Date: Mon,  4 May 2015 15:42:16 +0300
-Message-ID: <1430743338-10441-4-git-send-email-svarbanov@mm-sol.com>
-References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
+From: "Nicolae, Anda-maria" <anda-maria.nicolae@intel.com>
+Subject: RE: [PATCHv2] power_supply: Add support for Richtek rt9455 battery
+ charger
+Date: Mon, 4 May 2015 12:48:45 +0000
+Message-ID: <11982715D62E664DBACA4351A418B0581437E15D@IRSMSX107.ger.corp.intel.com>
+References: <1430338406-24012-1-git-send-email-anda-maria.nicolae@intel.com>,<CAJKOXPfb6-HY8XP-nqPziC=M-+w8PwLF-zgGr9HXiCotY=+XUg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Stanimir Varbanov <svarbanov@mm-sol.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mathieu Olivari <mathieu@codeaurora.org>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPfb6-HY8XP-nqPziC=M-+w8PwLF-zgGr9HXiCotY=+XUg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: "sre@kernel.org" <sre@kernel.org>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document Qualcomm PCIe driver devicetree bindings.
+Hi Krzysztof,
 
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
----
- .../devicetree/bindings/pci/qcom,pcie.txt          |  231 ++++++++++++++++++++
- 1 files changed, 231 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+Inline are the answers to your questions.
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-new file mode 100644
-index 0000000..dcf7348
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -0,0 +1,231 @@
-+* Qualcomm PCI express root complex
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value shall include
-+		    - "qcom,pcie-v0" for apq/ipq8064
-+		    - "qcom,pcie-v1" for apq8084
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register ranges as listed in the reg-names property
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Must include the following entries
-+		    - "parf"   Qualcomm specific registers
-+		    - "dbi"    Designware PCIe registers
-+		    - "elbi"   External local bus interface registers
-+		    - "config" PCIe configuration space
-+
-+- device_type:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should be "pci". As specified in designware-pcie.txt
-+
-+- #address-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Should be set to 3. As specified in designware-pcie.txt
-+
-+- #size-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Should be set 2. As specified in designware-pcie.txt
-+
-+- ranges:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: As specified in designware-pcie.txt
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: MSI interrupt
-+
-+- interrupt-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain "msi"
-+
-+- #interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Should be 1. As specified in designware-pcie.txt
-+
-+- interrupt-map-mask:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: As specified in designware-pcie.txt
-+
-+- interrupt-map:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: As specified in designware-pcie.txt
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: List of phandle and clock specifier pairs as listed
-+		    in clock-names property
-+
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+		    * should be populated for v0 and v1
-+		    	- "iface"      Configuration AHB clock
-+
-+		    * should be populated for v0
-+		    	- "core"       Clocks the pcie hw block
-+		    	- "phy"        Clocks the pcie PHY block
-+
-+		    * should be populated for v1
-+			- "aux"        Auxiliary (AUX) clock
-+		    	- "bus_master" Master AXI clock
-+		    	- "bus_slave"  Slave AXI clock
-+
-+- resets:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: List of phandle and reset specifier pairs as listed
-+		    in reset-names property
-+
-+- reset-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+		    * should be populated for v0
-+			- "axi"  AXI reset
-+			- "ahb"  AHB reset
-+			- "por"  POR reset
-+			- "pci"  PCI reset
-+			- "phy"  PHY reset
-+
-+		    * should be populated for v1
-+			- "core" Core reset
-+
-+- power-domains:
-+	Usage: required (for v1 only)
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pair to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the peripheral
-+
-+- <name>-supply:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: List of phandles to the power supply regulator(s)
-+		    * should be populated for v0 and v1
-+			- "vdda"        core analog power supply
-+
-+		    * should be populated for v0
-+			- "vdda_phy"    analog power supply for PHY
-+			- "vdda_refclk" analog power supply for IC which generate
-+					reference clock
-+
-+- phys:
-+	Usage: required (for v1 only)
-+	Value type: <phandle>
-+	Definition: List of phandle(s) as listed in phy-names property
-+
-+- phy-names:
-+	Usage: required (for v1 only)
-+	Value type: <stringlist>
-+	Definition: Should contain "pciephy"
-+
-+- <name>-gpio:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: List of phandle and gpio specifier pairs. Should contain
-+		    - "perst"  PCIe endpoint reset signal line
-+		    - "pewake" PCIe endpoint wake signal line
-+
-+- pinctrl-0:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: List of phandles pointing at a pin(s) configuration
-+
-+- pinctrl-names
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: List of names of pinctrl-0 state
-+
-+* Example for v0
-+	pcie0: pci@1b500000 {
-+		compatible = "qcom,pcie-v0";
-+		reg = <0x1b500000 0x1000
-+		       0x1b502000 0x80
-+		       0x1b600000 0x100
-+		       0x0ff00000 0x100000>;
-+		reg-names = "dbi", "elbi", "parf", "config";
-+		device_type = "pci";
-+		linux,pci-domain = <0>;
-+		bus-range = <0x00 0xff>;
-+		num-lanes = <1>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		ranges = <0x81000000 0 0	  0x0fe00000 0 0x00100000   /* I/O */
-+			  0x82000000 0 0x00000000 0x08000000 0 0x07e00000>; /* memory */
-+		interrupts = <GIC_SPI 35 IRQ_TYPE_NONE>;
-+		interrupt-names = "msi";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0x7>;
-+		interrupt-map = <0 0 0 1 &intc 0 36 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+				<0 0 0 2 &intc 0 37 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+				<0 0 0 3 &intc 0 38 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+		clocks = <&gcc PCIE_A_CLK>,
-+			 <&gcc PCIE_H_CLK>,
-+			 <&gcc PCIE_PHY_CLK>;
-+		clock-names = "core", "iface", "phy";
-+		resets = <&gcc PCIE_ACLK_RESET>,
-+			 <&gcc PCIE_HCLK_RESET>,
-+			 <&gcc PCIE_POR_RESET>,
-+			 <&gcc PCIE_PCI_RESET>,
-+			 <&gcc PCIE_PHY_RESET>;
-+		reset-names = "axi", "ahb", "por", "pci", "phy";
-+	};
-+
-+* Example for v1
-+	pcie0@fc520000 {
-+		compatible = "qcom,pcie-v1";
-+		reg = <0xfc520000 0x2000>,
-+		      <0xff000000 0x1000>,
-+		      <0xff001000 0x1000>,
-+		      <0xff002000 0x2000>;
-+		reg-names = "parf", "dbi", "elbi", "config";
-+		device_type = "pci";
-+		linux,pci-domain = <0>;
-+		bus-range = <0x00 0xff>;
-+		num-lanes = <1>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		ranges = <0x81000000 0 0          0xff200000 0 0x00100000   /* I/O */
-+			  0x82000000 0 0x00300000 0xff300000 0 0x00d00000>; /* memory */
-+		interrupts = <GIC_SPI 243 IRQ_TYPE_NONE>;
-+		interrupt-names = "msi";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0x7>;
-+		interrupt-map = <0 0 0 1 &intc 0 244 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+				<0 0 0 2 &intc 0 245 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+				<0 0 0 3 &intc 0 247 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+				<0 0 0 4 &intc 0 248 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+		clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+			 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+			 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+			 <&gcc GCC_PCIE_0_AUX_CLK>;
-+		clock-names = "iface", "master_bus", "slave_bus", "aux";
-+		resets = <&gcc GCC_PCIE_0_BCR>;
-+		reset-names = "core";
-+		power-domains = <&gcc PCIE0_GDSC>;
-+		vdda-supply = <&pma8084_l3>;
-+		phys = <&pciephy0>;
-+		phy-names = "pciephy";
-+		perst-gpio = <&tlmm 70 GPIO_ACTIVE_LOW>;
-+		pinctrl-0 = <&pcie0_pins_default>;
-+		pinctrl-names = "default";
-+	};
--- 
-1.7.0.4
+Thanks,
+Anda
+
+________________________________________
+From: k.kozlowski.k@gmail.com [k.kozlowski.k@gmail.com] on behalf of Krzysztof Kozlowski [k.kozlowski@samsung.com]
+Sent: Thursday, April 30, 2015 10:53 AM
+To: Nicolae, Anda-maria
+Cc: sre@kernel.org; dbaryshkov@gmail.com; robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com; ijc+devicetree@hellion.org.uk; galak@codeaurora.org; dwmw2@infradead.org; linux-pm@vger.kernel.org; linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+Subject: Re: [PATCHv2] power_supply: Add support for Richtek rt9455 battery charger
+
+2015-04-30 5:13 GMT+09:00 Anda-Maria Nicolae <anda-maria.nicolae@intel.com>:
+> Based on the datasheet found here:
+> http://www.richtek.com/download_ds.jsp?p=RT9455
+>
+> Updates from the previous version:
+> - replaced license GPLv2 with GPL
+> - replaced vendor prefix rt with richtek
+> - replaced uppercase properties names from devicetree with lowercase separated by dash properties names
+> - replaced I/O read/write API with regmap_read/write and regmap_field_read/write
+> - used kernel multiline comment
+> - used DELAYED_WORK and scheduled the works in system_power_efficient_wq. It is high probability that the device is in suspend state while charging (i.e. the user leaves the device to charge during night) and it is needed that the scheduled works to be executed as planned.
+
+I think when device is suspended (e.g. to RAM) no work will ever be
+executed. The timers (for delayed work) will not wake up the device...
+RTC could wake but this is different story. My proposal of deferred
+timers is affected by idle CPU time. Are you sure that you want to
+wake up from the system suspend?
+
+Oh, now I better understand it. I don't think I need this feature. Also, the expire times that I use in the driver are not defined in the datasheet, so it should not be a problem if they are fired later.
+So, I will use INIT_DEFERRABLE_WORK instead of INIT_DELAYED_WORK.
+
+> - replaced struct power_supply_desc rt9455_charger_desc with static const struct power_supply_desc rt9455_charger_desc
+> - replaced if (IS_ERR_OR_NULL(info->charger)) with if (IS_ERR(info->charger))
+> - replaced {"RTK9455", 0} with { "RTK9455", 0 }
+> - removed .owner = THIS_MODULE
+>
+> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+
+You missed some of my comments. I mentioned wrong error paths around
+put_usb_phy in probe. They do not seem to be fixed...
+
+Now I see what you meant. I looked at usb_get_phy() implementation and I saw that I cannot return NULL. So I replaced IS_ERR_OR_NULL() with IS_ERR(). I did this in rt9455_remove() and in rt9455_irq_handler_thread() functions, too.
+Also, this replacement (IS_ERR() instead of IS_ERR_OR_NULL()) should also be done in other power charger drivers: 
+drivers/power/pda_power.c lines 319, 375, 410, 445; 
+drivers/power/ab8500_charger.c line 3651;
+drivers/power/twl4030_charger.c lines 642, 674 and 706.
+I will send the patch for RT9455 charger soon. I will also send a patch to replace IS_ERR_OR_NULL() with IS_ERR() in the drivers listed above.
+
+
+
+Just one hint - mostly new bindings are posted in separate patches at
+the beginning of the patchset. I actually don't mind. but separating
+them will probably give you higher chance of review from DT people.
+This is also mentioned in:
+Documentation/devicetree/bindings/submitting-patches.txt
+
+Best regards,
+Krzysztof
