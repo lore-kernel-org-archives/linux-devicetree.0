@@ -1,37 +1,33 @@
-From: =?iso-8859-1?q?J=FCrgen_Borleis?= <jbe@pengutronix.de>
-Subject: Re: [PATCH V2 4/6] DT: add binding for mxs on-chip regulators
-Date: Mon, 4 May 2015 15:51:26 +0200
-Message-ID: <201505041551.26355.jbe@pengutronix.de>
-References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com> <1430346747-28728-5-git-send-email-stefan.wahren@i2se.com>
+From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V3 3/4] ASoC: tas571x: New driver for TI TAS571x power amplifiers
+Date: Mon, 4 May 2015 06:51:32 -0700
+Message-ID: <CAJzqFtYm6W40B05DG5yfa5iOaUo3ShJOm6AXcOQ1ehUOG0yO6A@mail.gmail.com>
+References: <1430697619-22773-1-git-send-email-cernekee@chromium.org>
+ <1430697619-22773-4-git-send-email-cernekee@chromium.org> <20150504114558.GD15510@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1430346747-28728-5-git-send-email-stefan.wahren@i2se.com>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, fabio.estevam@freescale.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, sebastien.szymanski@armadeus.com, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150504114558.GD15510-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKZm9yIHRoZSBpLk1YMjMgdGhlIHJlZ3VsYXRvciBkYWlzeSBjaGFpbiBsb29r
-cyBhIGxpdHRsZSBiaXQgZGlmZmVyZW50OgoKKy0tLS0tLS0tLS0tLSsgoCCgIFZERDVWIKArLS0t
-LS0tLS0tKyCgVkRESU8KfCBEQy1EQyCgIKAgoHwgoCArLS0tLS0tLS0+IExJTlJFRyCgKy0tLS0t
-LS0tLT4rCnwgoCCgIKAgoCCgIKB8IKAgoCCgIKAgoCCgfCBWRERJTyCgIHwgoCCgIKAgoCCgfAp8
-IKAgoCCgIKAgoCCgfCCgIKAgoCCgIKAgoCstLS0tLS0tLS0rIKAgoCCgIKAgoHwKfCBEQ0RDX1ZE
-RElPICstPi0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCnwgoCCgIKAgoCCgIKB8IKAg
-fAp8ICAgICAgICAgICAgfCAgIHwgVkRESU8gICstLS0tLS0tLS0rICBWRERNRU0KfCAgICAgICAg
-ICAgIHwgICArLS0tLS0tLS0+IExJTlJFRyAgKy0tLS0tLS0tLT4KfCAgICAgICAgICAgIHwgICB8
-ICAgICAgICB8IFZERE1FTSAgfAp8ICAgICAgICAgICAgfCAgIHwgICAgICAgICstLS0tLS0tLS0r
-CnwgoCCgIKAgoCCgIKB8IKAgfCBWRERJTyCgKy0tLS0tLS0tLSsgoFZEREEKfCCgIKAgoCCgIKAg
-oHwgoCArLS0tLS0tLS0+IExJTlJFRyCgKy0tLS0tLS0tLT4rCnwgoCCgIKAgoCCgIKB8IKAgICCg
-IKAgoCCgfCBWRERBIKAgoHwgoCCgIKAgoCCgfAp8IKAgoCCgIKAgoCCgfCCgICAgoCCgIKAgoCst
-LS0tLS0tLS0rIKAgoCCgIKAgoHwKfCBEQ0RDX1ZEREEgICstPi0rLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0rCnwgoCCgIKAgoCCgIKB8IKAgfCBWRERBIKAgKy0tLS0tLS0tLSsgoFZEREQK
-fCCgIKAgoCCgIKAgoHwgoCArLS0tLS0tLS0+IExJTlJFRyCgKy0tLS0tLS0tLT4rCnwgoCCgIKAg
-oCCgIKB8IKAgoCCgIKAgoCCgfCBWREREIKAgoHwgoCCgIKAgoCCgfAp8IKAgoCCgIKAgoCCgfCCg
-IKAgoCCgIKAgoCstLS0tLS0tLS0rIKAgoCCgIKAgoHwKfCBEQ0RDX1ZEREQgoCstPi0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCistLS0tLS0tLS0tLS0rIKAgoCCgIKAgoCCgIKAgoCCg
-IKAgoCCgIKAgoCCgIKAgfAogoCCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCCg
-IKAgoCCgIHYKClJlZ2FyZHMsCkp1ZXJnZW4K
+On Mon, May 4, 2015 at 4:45 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, May 03, 2015 at 05:00:18PM -0700, Kevin Cernekee wrote:
+>> +     if (dev->of_node) {
+>> +             const struct of_device_id *of_id;
+>> +
+>> +             of_id = of_match_device(tas571x_of_match, dev);
+>> +             if (of_id)
+>> +                     priv->chip = of_id->data;
+>> +     }
+>
+> Doesn't of_match_device() do the right thing with devices not registered
+> from DT?
+
+Not sure.  What kinds of situations are you concerned about?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
