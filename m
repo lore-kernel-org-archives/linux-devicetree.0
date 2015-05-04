@@ -1,183 +1,80 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 3/3] mmc: dw_mmc: k3: support hi6220
-Date: Mon, 04 May 2015 09:56:51 +0900
-Message-ID: <5546C3D3.7080402@samsung.com>
-References: <1430444818-7740-1-git-send-email-zhangfei.gao@linaro.org>
- <1430444818-7740-4-git-send-email-zhangfei.gao@linaro.org>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Mon, 4 May 2015 11:30:12 +1000
+Message-ID: <20150504013012.GA15561@gwshan>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+ <1430493730.7979.58.camel@kernel.crashing.org>
+ <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+ <1430521038.7979.70.camel@kernel.crashing.org>
+ <1430522976.7979.78.camel@kernel.crashing.org>
+ <1430534906.7979.85.camel@kernel.crashing.org>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1430444818-7740-4-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, "Jorge A. Ramirez-Ortiz" <jorge.ramirez-ortiz@linaro.org>, Dan Yuan <yuandan@hisilicon.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430534906.7979.85.camel@kernel.crashing.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Zhangfei.
+On Sat, May 02, 2015 at 12:48:26PM +1000, Benjamin Herrenschmidt wrote:
+>On Sat, 2015-05-02 at 09:29 +1000, Benjamin Herrenschmidt wrote:
+>
+>> Looking a bit more at it, I don't quite see how I can attach a subtree
+>> using that stuff.
+>> 
+>> Instead, each node in the overlay seems to need extra nodes and
+>> properties to refer to the original.
+>> 
+>> So the FW would essentially have to create something a lot more complex
+>> than just reflattening a bit of its internal tree. For each internal
+>> node, it will need to add all those __overlay__ nodes and properties.
+>> 
+>> That is not going to fly for me at all. It's order of magnitudes more
+>> complex than the solution we are pursuing.
+>> 
+>> So I think for our use case, we should continue in the direction of
+>> having a helper to unflatten a piece of FDT underneath an existing
+>> node. I don't like the "HYBRID" stuff though, we should not refer to
+>> the original FDT, we should just make them normal dynamic nodes.
 
-Could you add the commit message for this patch?
+Just took a close look on the overlay code. Hopefully I understand
+how it works completely. Yeah, there is one questions according to my
+understanding. The "overlay" device node should have been in child list
+of the device node, who also has the indicator to "target" node. That
+means some one else has to create "overlay" node and figure out the
+"target" node in advance, then invokes overlay module to apply the
+changes. From this perspective, the mechanism is something used to
+apply the changes to device-tree, not parsing and create device nodes
+from input. It does gurantee all the changes will be applied or none
+of them. So I agree on what Ben suggested: to continue the direction
+of having a helper to unflatten FDT blobk underneath the existing node,
+and "HYBRID" should be replaced with "OF_DYNAMIC".
 
-On 05/01/2015 10:46 AM, Zhangfei Gao wrote:
-> Signed-off-by: Jorge A. Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Dan Yuan <yuandan@hisilicon.com>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  drivers/mmc/host/dw_mmc-k3.c | 104 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 102 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
-> index 650f9cc..ab3dc59 100644
-> --- a/drivers/mmc/host/dw_mmc-k3.c
-> +++ b/drivers/mmc/host/dw_mmc-k3.c
-> @@ -8,16 +8,29 @@
->   * (at your option) any later version.
->   */
->  
-> -#include <linux/module.h>
-> -#include <linux/platform_device.h>
->  #include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/mmc/host.h>
->  #include <linux/mmc/dw_mmc.h>
-> +#include <linux/module.h>
->  #include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include "dw_mmc.h"
->  #include "dw_mmc-pltfm.h"
->  
-> +#define AO_SCTRL_SEL18		BIT(10)
-> +#define AO_SCTRL_CTRL3		0x40C
+>
+>A bit more thought... if we were to use the overlay stuff, Gavin, what
+>we *could* do is add to OPAL FW internal representation a generation
+>count to every node and property.
+>
+>That way we could essentially know whenever something's changed from
+>what we flattened originally for the kernel.
+>
+>We can then create a generic (not PCI specific) call that generates
+>an overlay tree for every node and property that has a generation
+>count that is newer than what was flattened (or passed by the OS).
+>
+>It's still a LOT more complex than what we need though...
+>
 
-Does it use these at all K3 SoC?
+Thanks, Ben. If we really need utilize overlay to support our case,
+we need some one to parse the input (device-tree changes) from firmware
+and create "overlay" device node and "target" node as I mentioned above.
+It's not simpler than the way we had to support our case. I'm not sure
+if we really need utilize overlay for our case.
 
-> +
-> +#define SDMMC_CMD_DISABLE_BOOT	BIT(26)
-> +
-> +struct k3_priv {
-> +	struct regmap	*reg;
-> +};
-> +
->  static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->  {
->  	int ret;
-> @@ -33,8 +46,95 @@ static const struct dw_mci_drv_data k3_drv_data = {
->  	.set_ios		= dw_mci_k3_set_ios,
->  };
->  
-> +static int dw_mci_hi6220_parse_dt(struct dw_mci *host)
-> +{
-> +	struct k3_priv *priv;
-> +
-> +	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->reg = syscon_regmap_lookup_by_phandle(host->dev->of_node,
-> +					 "hisilicon,peripheral-syscon");
-> +	if (IS_ERR(priv->reg))
-> +		priv->reg = NULL;
-> +
-> +	host->priv = priv;
-> +	return 0;
-> +}
-> +
-> +static int dw_mci_hi6220_switch_voltage(struct mmc_host *mmc, struct mmc_ios *ios)
-> +{
-> +	struct dw_mci_slot *slot = mmc_priv(mmc);
-> +	struct k3_priv *priv;
-> +	struct dw_mci *host;
-> +	int min_uv, max_uv;
-> +	int ret;
-> +
-> +	host = slot->host;
-> +	priv = host->priv;
-> +
-> +	if (!priv || !priv->reg)
-> +		return 0;
-
-If returned at this point, switch_voltage don't do nothing.
-See voltage_switch into dw_mmc.c.
-"return 0" is meaning that switch_voltage was done.
-How about using the error number?
-
-> +
-> +	min_uv = 1800000;
-> +	max_uv = 1800000;
-> +
-> +	if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
-> +		ret = regmap_update_bits(priv->reg, AO_SCTRL_CTRL3,
-> +					 AO_SCTRL_SEL18, 0);
-> +		if (ret) {
-> +			dev_dbg(host->dev, "switch voltage failed\n");
-> +			return ret;
-> +		}
-> +		min_uv = 3000000;
-> +		max_uv = 3000000;
-> +	}
-> +
-> +	if (IS_ERR_OR_NULL(mmc->supply.vqmmc))
-> +		return 0;
-
-ditto.
-
-> +
-> +	ret = regulator_set_voltage(mmc->supply.vqmmc, min_uv, max_uv);
-> +	if (ret) {
-> +		dev_dbg(host->dev, "Regulator set error %d: %d - %d\n",
-> +				 ret, min_uv, max_uv);
-> +		return ret;
-> +	}
-> +
-> +	ret = regulator_enable(mmc->supply.vqmmc);
-> +	if (ret) {
-> +		dev_dbg(host->dev, "Regulator enable error %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	usleep_range(5000, 5500);
-
-What's delay?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void dw_mci_hi6220_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-> +{
-> +	int ret;
-> +	unsigned int clock;
-> +
-> +	clock = (ios->clock <= 25000000) ? 25000000 : ios->clock;
-
-Even though ios->clock is 400KHz, is it set to 25MHz?
-
-Best Regards,
-Jaehoon Chung
-
-> +
-> +	ret = clk_set_rate(host->biu_clk, clock);
-> +	if (ret)
-> +		dev_warn(host->dev, "failed to set rate %uHz\n", clock);
-> +
-> +	host->bus_hz = clk_get_rate(host->biu_clk);
-> +}
-> +
-> +static const struct dw_mci_drv_data hi6220_data = {
-> +	.switch_voltage		= dw_mci_hi6220_switch_voltage,
-> +	.set_ios		= dw_mci_hi6220_set_ios,
-> +	.parse_dt		= dw_mci_hi6220_parse_dt,
-> +};
-> +
->  static const struct of_device_id dw_mci_k3_match[] = {
->  	{ .compatible = "hisilicon,hi4511-dw-mshc", .data = &k3_drv_data, },
-> +	{ .compatible = "hisilicon,hi6220-dw-mshc", .data = &hi6220_data, },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, dw_mci_k3_match);
-> 
-
+Thanks,
+Gavin
