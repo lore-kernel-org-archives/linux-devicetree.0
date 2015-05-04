@@ -1,61 +1,82 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V3 3/4] ASoC: tas571x: New driver for TI TAS571x power
- amplifiers
-Date: Mon, 4 May 2015 14:57:26 +0100
-Message-ID: <20150504135726.GB15510@sirena.org.uk>
-References: <1430697619-22773-1-git-send-email-cernekee@chromium.org>
- <1430697619-22773-4-git-send-email-cernekee@chromium.org>
- <20150504114558.GD15510@sirena.org.uk>
- <CAJzqFtYm6W40B05DG5yfa5iOaUo3ShJOm6AXcOQ1ehUOG0yO6A@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v10 04/19] sh-sci: Add H8/300 SCI.
+Date: Mon, 4 May 2015 15:58:17 +0200
+Message-ID: <CAMuHMdXK==yacRPHqZe3JqP83GPCk+TJsCH6OPETwcB8mOxNfw@mail.gmail.com>
+References: <1430736122-20929-2-git-send-email-ysato@users.sourceforge.jp>
+	<1430736122-20929-6-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Z4ZSWl3cPHKQyRxO"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJzqFtYm6W40B05DG5yfa5iOaUo3ShJOm6AXcOQ1ehUOG0yO6A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1430736122-20929-6-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-arch-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+CC devicetree
 
---Z4ZSWl3cPHKQyRxO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, May 4, 2015 at 12:41 PM, Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> H8/300 internal serial controller of same as sh-sci.
+> So h8300 use SH_SCI.
+> And add sci bindings.
+>
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-On Mon, May 04, 2015 at 06:51:32AM -0700, Kevin Cernekee wrote:
-> On Mon, May 4, 2015 at 4:45 AM, Mark Brown <broonie@kernel.org> wrote:
-> > On Sun, May 03, 2015 at 05:00:18PM -0700, Kevin Cernekee wrote:
-> >> +     if (dev->of_node) {
-> >> +             const struct of_device_id *of_id;
-> >> +
-> >> +             of_id = of_match_device(tas571x_of_match, dev);
-> >> +             if (of_id)
-> >> +                     priv->chip = of_id->data;
-> >> +     }
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> > Doesn't of_match_device() do the right thing with devices not registered
-> > from DT?
-
-> Not sure.  What kinds of situations are you concerned about?
-
-I'm wondering why we need to bother checking for dev->of_node before
-calling it.
-
---Z4ZSWl3cPHKQyRxO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVR3rFAAoJECTWi3JdVIfQU3sH/3xpSxPuskfBeUXqWulyo4If
-R6lxf+zSmrIBZn2gXxzoyL19HhlSYpRCYlST5CqHwYq4fN7MOrM4SWLkToGXhYfa
-mYk6CZ6lMQU/cSEN8Q8ngZ5V+RsYcTf7vjRlGrJvBILXN3QfZy3WLwZ9Usol4XSc
-V/P3cqDN/BM6DHIbjENrK/OUt42GWmNX/2eruPPRJlM2ax5DlSF0Qggkiufds/Ee
-FXmpaOXUkzhF1Ocd7xzJYP1U9n5T5wccAVfQVmEp4GNpMDWRHCxyq+0NWeaien0Z
-Cagf0PADPnwSYFcwl1EL559UEuKwbh7/NJGh5PXiILl0e3p1kEFfycLka5UbIKM=
-=acyP
------END PGP SIGNATURE-----
-
---Z4ZSWl3cPHKQyRxO--
+> ---
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 1 +
+>  drivers/tty/serial/Kconfig                                      | 2 +-
+>  drivers/tty/serial/sh-sci.c                                     | 6 ++++++
+>  3 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> index ae73bb0..7534d46 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -29,6 +29,7 @@ Required properties:
+>      - "renesas,scifa" for generic SCIFA compatible UART.
+>      - "renesas,scifb" for generic SCIFB compatible UART.
+>      - "renesas,hscif" for generic HSCIF compatible UART.
+> +    - "renesas,sci" for generic SCI compatible UART.
+>
+>      When compatible with the generic version, nodes must list the
+>      SoC-specific version corresponding to the platform first followed by the
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index f8120c1..dea1eff 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -728,7 +728,7 @@ config SERIAL_IP22_ZILOG_CONSOLE
+>
+>  config SERIAL_SH_SCI
+>         tristate "SuperH SCI(F) serial port support"
+> -       depends on SUPERH || ARCH_SHMOBILE || COMPILE_TEST
+> +       depends on SUPERH || ARCH_SHMOBILE || H8300 || COMPILE_TEST
+>         select SERIAL_CORE
+>
+>  config SERIAL_SH_SCI_NR_UARTS
+> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+> index e7d6566..1468ec5 100644
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+> @@ -2536,6 +2536,12 @@ static const struct of_device_id of_sci_match[] = {
+>                         .regtype = SCIx_HSCIF_REGTYPE,
+>                 },
+>         }, {
+> +               .compatible = "renesas,sci",
+> +               .data = &(const struct sci_port_info) {
+> +                       .type = PORT_SCI,
+> +                       .regtype = SCIx_SCI_REGTYPE,
+> +               },
+> +       }, {
+>                 /* Terminator */
+>         },
+>  };
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arch" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
