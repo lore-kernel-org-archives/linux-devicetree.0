@@ -1,91 +1,55 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: function to retrive of_device_id data
-Date: Mon, 4 May 2015 17:24:11 -0500
-Message-ID: <CAL_JsqKLaZFr7_ZWhkfQLqMpCr8BCn2xh2GAbEOwysau7E-1+w@mail.gmail.com>
-References: <1430687943-13051-1-git-send-email-manabian@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/2] am335x-evm: add bluetooth support
+Date: Mon, 4 May 2015 17:28:20 -0500
+Message-ID: <CAL_JsqJd=6nG1S-Mds+MiS4wSmKnOUo2nBnA6wjGSycXECLpcQ@mail.gmail.com>
+References: <1430655569-27849-1-git-send-email-eyalr@ti.com> <1430655569-27849-2-git-send-email-eyalr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430687943-13051-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1430655569-27849-2-git-send-email-eyalr@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Eyal Reizer <eyalreizer@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Eliad Peller <eliad@wizery.com>, Eyal Reizer <eyalr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 3, 2015 at 4:19 PM, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi DT maintainers,
+On Sun, May 3, 2015 at 7:19 AM, Eyal Reizer <eyalreizer@gmail.com> wrote:
+> From: Eliad Peller <eliad@wizery.com>
 >
-> A common driver pattern for retrieving the data field in a of_device_id struct seems to be:
+> uart1 is used for shared transport (used for multiplexing
+> bluetooth and nfc data). add the needed muxes and definitions.
 >
->     const struct of_device_id *match;
->     match = of_match_device(driver_of_match, &pdev->dev);
->     driver->data = match->data;
+> Signed-off-by: Eliad Peller <eliad@wizery.com>
+> Signed-off-by: Eyal Reizer <eyalr@ti.com>
+> ---
+>  arch/arm/boot/dts/am335x-evm.dts |   28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 >
-> I was looking for a simple function to perform the above action but couldn't find one.
+> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+> index 0f398fa..5968cde 100644
+> --- a/arch/arm/boot/dts/am335x-evm.dts
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -135,6 +135,18 @@
+>                 };
+>         };
 >
-> What do you think about the following patch to add such a function?
+> +       kim {
+> +               compatible = "kim";
 
-Looks fine to me. I'd prefer it be called of_device_get_match_data() though.
+Who is kim?
+
+> +               nshutdown_gpio = <117>; /* Bank3, pin21 */
+
+We have a standard way to specify gpios.
+
+> +               dev_name = "/dev/ttyS1";
+
+Uh, Linux specific. No.
+
+> +               flow_cntrl = <1>;
+> +               baud_rate = <3000000>;
+
+I believe there are standard properties for uarts for both of these.
+
+Is any of this documented?
 
 Rob
-
-> ---
->  drivers/of/device.c       | 12 ++++++++++++
->  include/linux/of_device.h |  7 +++++++
->  2 files changed, 19 insertions(+)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 46d6c75c1404..fd07bc55194a 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -79,6 +79,18 @@ void of_device_unregister(struct platform_device *ofdev)
->  }
->  EXPORT_SYMBOL(of_device_unregister);
->
-> +const void *of_device_get_data(const struct device *dev)
-> +{
-> +       const struct of_device_id *match;
-> +
-> +       match = of_match_device(dev->driver->of_match_table, dev);
-> +       if (!match)
-> +               return NULL;
-> +
-> +       return match->data;
-> +}
-> +EXPORT_SYMBOL(of_device_get_data);
-> +
->  ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->  {
->         const char *compat;
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index ef370210ffb2..78fddff259a0 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -33,6 +33,8 @@ extern int of_device_add(struct platform_device *pdev);
->  extern int of_device_register(struct platform_device *ofdev);
->  extern void of_device_unregister(struct platform_device *ofdev);
->
-> +extern const void *of_device_get_data(const struct device *dev);
-> +
->  extern ssize_t of_device_get_modalias(struct device *dev,
->                                         char *str, ssize_t len);
->
-> @@ -64,6 +66,11 @@ static inline int of_driver_match_device(struct device *dev,
->  static inline void of_device_uevent(struct device *dev,
->                         struct kobj_uevent_env *env) { }
->
-> +static const void *of_device_get_data(const struct device *dev)
-> +{
-> +       return NULL;
-> +}
-> +
->  static inline int of_device_get_modalias(struct device *dev,
->                                    char *str, ssize_t len)
->  {
-> --
-> 1.8.0
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
