@@ -1,136 +1,97 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH V2 1/3] phy: Add binding document for Pistachio USB2.0 PHY
-Date: Wed, 6 May 2015 00:35:34 +0100
-Message-ID: <20150505233534.GB18183@jhogan-linux.le.imgtec.org>
-References: <1428444258-25852-1-git-send-email-abrestic@chromium.org>
- <1428444258-25852-2-git-send-email-abrestic@chromium.org>
- <20150505220116.GE17687@jhogan-linux.le.imgtec.org>
- <CAL1qeaFacmDaCW6VSp247HZx+RwJKjYTWQhu5qxjH5JE3ET6Nw@mail.gmail.com>
- <20150505224352.GA18183@jhogan-linux.le.imgtec.org>
- <CAL1qeaG=O7LYo6RRxEMZw2da=eKAp0Dd+LxhBX32TojyBkr=xA@mail.gmail.com>
+From: Tyler Baker <tyler.baker@linaro.org>
+Subject: Re: [PATCH v4 0/5] arm64,hi6220: Enable Hisilicon Hi6220 SoC
+Date: Tue, 5 May 2015 16:46:19 -0700
+Message-ID: <CANMBJr7KTcMRNv7PrKHcJJ3hCNUQAtFrMROQq4q4+_07=QxcaA@mail.gmail.com>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL1qeaG=O7LYo6RRxEMZw2da=eKAp0Dd+LxhBX32TojyBkr=xA@mail.gmail.com>
+In-Reply-To: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, James Hartley <james.hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: Bintian Wang <bintian.wang@huawei.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Jaehoon Chung <jh80.chung@samsung.com>, Olof Johansson <olof@lixom.net>, Haifeng Yan <yanhaifeng@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "xuejiancheng@huawei.com" <xuejiancheng@hua>
 List-Id: devicetree@vger.kernel.org
 
---St7VIuEGZ6dlpu13
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5 May 2015 at 05:06, Bintian Wang <bintian.wang@huawei.com> wrote:
+> Hi6220 is one mobile solution of Hisilicon, this patchset contains
+> initial support for Hi6220 SoC and HiKey development board, which
+> supports octal ARM Cortex A53 cores. Initial support is minimal and
+> includes just the arch configuration, clock driver, device tree
+> configuration.
+>
+> PSCI is enabled in device tree and there is no problem to boot all the
+> octal cores, and the CPU hotplug is also working now, you can download
+> and compile the latest firmware based on the following link to run this
+> patch set:
+> https://github.com/96boards/documentation/wiki/UEFI
+>
+> Changes v4:
+> * Rebase to kernel 4.1-rc1
+> * Delete "arm,cortex-a15-gic" from the gic node in dts
 
-On Tue, May 05, 2015 at 04:09:31PM -0700, Andrew Bresticker wrote:
-> On Tue, May 5, 2015 at 3:43 PM, James Hogan <james.hogan@imgtec.com> wrot=
-e:
-> > On Tue, May 05, 2015 at 03:16:23PM -0700, Andrew Bresticker wrote:
-> >> Hi James,
-> >>
-> >> On Tue, May 5, 2015 at 3:01 PM, James Hogan <james.hogan@imgtec.com> w=
-rote:
-> >> > Hi Andrew,
-> >> >
-> >> > On Tue, Apr 07, 2015 at 03:04:16PM -0700, Andrew Bresticker wrote:
-> >> >> Add a binding document for the USB2.0 PHY found on the IMG Pistachi=
-o SoC.
-> >> >>
-> >> >> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> >> >> Cc: Rob Herring <robh+dt@kernel.org>
-> >> >> Cc: Pawel Moll <pawel.moll@arm.com>
-> >> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> >> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> >> >> Cc: Kumar Gala <galak@codeaurora.org>
-> >> >> ---
-> >> >> No changes from v1.
-> >> >> ---
-> >> >>  .../devicetree/bindings/phy/pistachio-usb-phy.txt  | 29 ++++++++++=
-++++++++++++
-> >> >>  include/dt-bindings/phy/phy-pistachio-usb.h        | 16 ++++++++++=
-++
-> >> >>  2 files changed, 45 insertions(+)
-> >> >>  create mode 100644 Documentation/devicetree/bindings/phy/pistachio=
--usb-phy.txt
-> >> >>  create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/phy/pistachio-usb-ph=
-y.txt b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
-> >> >> new file mode 100644
-> >> >> index 0000000..afbc7e2
-> >> >> --- /dev/null
-> >> >> +++ b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
-> >> >> @@ -0,0 +1,29 @@
-> >> >> +IMG Pistachio USB PHY
-> >> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> >> +
-> >> >> +Required properties:
-> >> >> +--------------------
-> >> >> + - compatible: Must be "img,pistachio-usb-phy".
-> >> >> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
-> >> >> + - clocks: Must contain an entry for each entry in clock-names.
-> >> >> +   See ../clock/clock-bindings.txt for details.
-> >> >> + - clock-names: Must include "usb_phy".
-> >> >> + - img,cr-top: Must constain a phandle to the CR_TOP syscon node.
-> >> >> + - img,refclk: Indicates the reference clock source for the USB PH=
-Y.
-> >> >> +   See <dt-bindings/phy/phy-pistachio-usb.h> for a list of valid v=
-alues.
-> >> >
-> >> > Possibly dumb question: why isn't the reference clock source specifi=
-ed
-> >> > in the normal ways like the "usb_phy" clock is?
-> >> >
-> >> > Does the value required here depend on what usb_phy clock gets muxed
-> >> > from or something?
-> >>
-> >> Right, the value indicates what clock "usb_phy" is: whether it comes
-> >> from the core clock controller, the XO crystal, or is some external
-> >> clock.  It's a mux internal to the PHY.
-> >
-> > Okay. If its a software controllable mux, is there a particular reason
-> > the DT doesn't describe it as such, i.e. have all 3 clock inputs, and
-> > the driver somehow work out which to use?
->=20
-> Well, I'm not sure how the driver would determine which clock to use
-> without a device-tree property like the one I've got here :).  Also,
+Tested by: Tyler Baker <tyler.baker@linaro.org>
 
-Does it make sense to just look for the "best" usable source clock based
-on the supported rates listed in fsel_rate_map[] (for some definition of
-"best" such as "fastest" / "slowest" / "first usable"), or are things
-just not that simple?
+Built and booted all v4 patches in this series ontop a v4.1-rc1 based
+tree. Tested with the UEFI load mentioned above, booting to a minimal
+ramdisk userspace[0]. Confirmed all 8 CPUs were activated.
 
-I'm just wondering how the DT writer would decide, since it seems to
-come down to a policy decision rather than a description of the
-hardware, which should probably be avoided in DT bindings if possible.
+>
+> Changes v3:
+> * Verified the CPU hotplug based on the new released firmware
+> * Redefined the compatible strings of four system controllers in dts
+> * Setting COMMON_CLK_HI6220 to a bool symbol
+> * Keep CONFGI_ARCH_HISI sorted alphabetically
+>
+> Changes v2:
+> * Split the DT bindings documents into earlier patches
+> * Change SMP enable method from spin-table to PSCI in device tree
+> * Remove "clock-frequency" from armv8-timer device node in device tree
+> * Add more description about Hisilicon designed system controllers
+>   in DT bindings document
+> * Enable high speed clock on UART1 mux
+> * Other changes based on the discussion in the mailing list:
+>   https://lkml.org/lkml/2015/2/5/147
+>
+> Bintian Wang (5):
+>   arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
+>   arm64: hi6220: Document devicetree bindings for Hisilicon hi6220 SoC
+>   clk: hi6220: Document devicetree bindings for hi6220 clock
+>   clk: hi6220: Clock driver support for Hisilicon hi6220 SoC
+>   arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+>
+>  .../bindings/arm/hisilicon/hisilicon.txt           |  87 ++++++
+>  .../devicetree/bindings/clock/hi6220-clock.txt     |  34 +++
+>  arch/arm64/Kconfig                                 |   5 +
+>  arch/arm64/boot/dts/Makefile                       |   1 +
+>  arch/arm64/boot/dts/hisilicon/Makefile             |   5 +
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |  31 +++
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 172 ++++++++++++
+>  arch/arm64/configs/defconfig                       |   1 +
+>  drivers/clk/Kconfig                                |   2 +
+>  drivers/clk/Makefile                               |   4 +-
+>  drivers/clk/hisilicon/Kconfig                      |   6 +
+>  drivers/clk/hisilicon/Makefile                     |   3 +-
+>  drivers/clk/hisilicon/clk-hi6220.c                 | 292 +++++++++++++++++++++
+>  drivers/clk/hisilicon/clk.c                        |  29 ++
+>  drivers/clk/hisilicon/clk.h                        |  17 ++
+>  drivers/clk/hisilicon/clkdivider-hi6220.c          | 273 +++++++++++++++++++
+>  include/dt-bindings/clock/hi6220-clock.h           | 173 ++++++++++++
+>  17 files changed, 1131 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hi6220-clock.txt
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/Makefile
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>  create mode 100644 drivers/clk/hisilicon/Kconfig
+>  create mode 100644 drivers/clk/hisilicon/clk-hi6220.c
+>  create mode 100644 drivers/clk/hisilicon/clkdivider-hi6220.c
+>  create mode 100644 include/dt-bindings/clock/hi6220-clock.h
+>
+> --
+> 1.9.1
+>
 
-If it really can't be avoided, then fair enough.
+Cheers,
 
-Cheers
-James
+Tyler
 
---St7VIuEGZ6dlpu13
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJVSVPGAAoJEGwLaZPeOHZ69KUP/3Cy3bs0jFywkCFDJ9m7qFd2
-spZmI/TLWzi7ooIl+R3o32cxK30XPVddvQg6ZddgkroIWjdzSCSK/08OyVWJb63z
-7dQ1SNgeSHOxOHa6Zy8MpDILk1ILUGw//TLWtGCxHE07h3XEfZffRB71YDxAxZ7N
-Awe7dueBcPvOhbHMwU7eg626xVQfzut+MP3zCVoEtCJPkf5rogtcJKokrnVcShrH
-TD6Fkm0plZvuI8nSN3rnTDwiQHK/7derOrP5YCJXUhn7thfI2AZXarnOFsWuPODh
-8AeVIilQrwZcNAkNlHfEngWmt2rViGHAjwcPqLwg9WLNe8k5Qwe1CW4JfU2EpwzP
-zJ0GUzYMKPLkutMdNWPIydCZfz4XdXZAuc7YC7QYODBptbQpcc0vIrYGhUFR5ZA5
-Vr52yqyYTure6+R6cm5i1zy2kM+gbfwTWClmvwgX8Voft4/GJ6Cpv2EB7ClmfGkp
-R/dC1rM+Mfs4nw5P08UDsnFo1zGaMtshsEkUc64I+ZwSmjFDCJnQwDu9jb5ttvsW
-UepoKvtO3qt19cjJkk2Hh3IqtJamRNP4UwR9uqg4uGdoCtygRP+A3VwXdEtpUNSd
-kY3iw4kmg+hW73A1Risso8w4yL1D7um4S7u8M5/pA7XR9n3h6Jifc2f/eesW8qab
-qo8rFnpG8qphkGPgNASU
-=lTAE
------END PGP SIGNATURE-----
-
---St7VIuEGZ6dlpu13--
+[0] http://kernelci.org/boot/hi6220-hikey/job/testing/kernel/v4.1-rc1-5-gf609561/defconfig/defconfig/lab/lab-tbaker/?_id=5549541559b51417e999c5cd
