@@ -1,51 +1,50 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [RESEND-PATCH] ARM: dts: Add missing irq pinctrl for max77686
- on smdk5250
-Date: Wed, 06 May 2015 06:40:57 +0900
-Message-ID: <554938E9.10907@kernel.org>
-References: <1430798855-27271-1-git-send-email-pankaj.dubey@samsung.com> <CAJKOXPd2x_DiD8EAq202=scTuK0HHH8evvD_TkLn4oO_6hrRhg@mail.gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 5/5] MAINTAINERS: Add pci-st.c to ARCH/STI architecture
+Date: Tue, 5 May 2015 16:42:25 -0500
+Message-ID: <20150505214225.GC24643@google.com>
+References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1428657168-12495-6-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPd2x_DiD8EAq202=scTuK0HHH8evvD_TkLn4oO_6hrRhg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski.k@gmail.com>
-Cc: Pankaj Dubey <pankaj.dubey@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kgene@kernel.org, yadi.brar01@gmail.com, Kozik <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1428657168-12495-6-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edw>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/15 13:14, Krzysztof Koz=C5=82owski wrote:
-> 2015-05-05 13:07 GMT+09:00 Pankaj Dubey <pankaj.dubey@samsung.com>:
->> From: Yadwinder Singh Brar <yadi.brar@samsung.com>
->>
->> This patch adds pinctrl configuration for using configuring gpx3-2 a=
-s an
->> external interrupt from max77686. Though max77686 RTC is enabled and=
- gets
->> probed by default, it doesnt work as its unable to get interrupt.
->>
->> This patch makes max77686 RTC work and also configures it as wakeup =
-source.
->>
->> Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
->> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.=
-uk>
->> Tested-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->> ---
->>
->> Initial version of this patch was part of following series, though
->> they are not dependent on each other, resubmitting after rebasing
->> and detaching second one from first patch in the series [1]
->>
->> [1]: http://lists.infradead.org/pipermail/linux-arm-kernel/2014-Nove=
-mber/303652.html
->=20
-> Thanks, but now it needs your Signed-off-by because you touched it.
->=20
-Just note, to more clarify, Signed-off-by should be added who wants to
-submit anything into mailing-list even no updating and just posting...
+On Fri, Apr 10, 2015 at 11:12:48AM +0200, Gabriel FERNANDEZ wrote:
+> This patch adds the pci-st.c pci driver found on STMicroelectronics
+> SoC's into the STI arch section of the maintainers file.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 
-> Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->=20
-Thanks,
-Kukjin
+I'd like an ack from the current maintainers:
+
+  ARM/STI ARCHITECTURE
+  M:      Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
+  M:      Maxime Coquelin <maxime.coquelin@st.com>
+  M:      Patrice Chotard <patrice.chotard@st.com>
+
+that they're OK with taking on this additional file.
+
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index efbcb50..4639d2d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1468,6 +1468,7 @@ F:	drivers/clocksource/arm_global_timer.c
+>  F:	drivers/i2c/busses/i2c-st.c
+>  F:	drivers/media/rc/st_rc.c
+>  F:	drivers/mmc/host/sdhci-st.c
+> +F:	drivers/pci/host/pci-st.c
+>  F:	drivers/phy/phy-stih407-usb.c
+>  F:	drivers/phy/phy-stih41x-usb.c
+>  F:	drivers/pinctrl/pinctrl-st.c
+> -- 
+> 1.9.1
+> 
