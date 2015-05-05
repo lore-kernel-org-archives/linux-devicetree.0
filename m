@@ -1,55 +1,101 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 2/2] pinctrl: asm9260: add pinctrl add device tree
- bindings documentation
-Date: Tue, 5 May 2015 16:46:25 +0200
-Message-ID: <CACRpkdbAipNWY+Vn77x88apchnbjKpCtWPAZU2uHM0ZsEQOjkA@mail.gmail.com>
-References: <1428306169.634.51.camel@x220>
-	<1428311043-12012-1-git-send-email-linux@rempel-privat.de>
-	<1428311043-12012-3-git-send-email-linux@rempel-privat.de>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v7 05/15] dt-bindings: Document the STM32 reset bindings
+Date: Tue, 5 May 2015 19:24:04 +0200
+Message-ID: <CALszF6C2B-Ja+hgdYz7N4c7MYg41XAWEYbRRbnuf+H0EY0OwGQ@mail.gmail.com>
+References: <1430410844-16062-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1430410844-16062-6-git-send-email-mcoquelin.stm32@gmail.com>
+	<55433467.2010603@linaro.org>
+	<CALszF6Bw900E9MtpaVmvkFxsrOODRkNg+RxRXz5V3WghHtsxbw@mail.gmail.com>
+	<5544A069.5000808@linaro.org>
+	<CALszF6BTb0Ce6jfT5gY4eEtSep6+8XqOxu1LbpUXHmPYX9PmgQ@mail.gmail.com>
+	<5548CEA2.8020807@linaro.org>
+	<CALszF6DyUA7Wr2qo4sASFBTRwwjhGAkFKRYnY+1UwHmf4nTj5w@mail.gmail.com>
+	<1430840557.3035.60.camel@pengutronix.de>
+	<5548EAC1.7010002@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428311043-12012-3-git-send-email-linux@rempel-privat.de>
+In-Reply-To: <5548EAC1.7010002@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Daniel Thompson <daniel.thompson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gr>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2015 at 11:04 AM, Oleksij Rempel <linux@rempel-privat.de> wrote:
-
-> Add device tree bindings documentation for Alphascale asm9260 pin controller
+2015-05-05 18:07 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
+> On 05/05/15 16:42, Philipp Zabel wrote:
+>>
+>> Am Dienstag, den 05.05.2015, 17:19 +0200 schrieb Maxime Coquelin:
+>>>>>
+>>>>> For example, includes/dt-bindings/mfd/stm32f4-rcc.h would look like:
+>>>>>
+>>>>> #define GPIOA 0
+>>>>> #define GPIOB 1
+>>>>> ...
+>>>>> #define LTDC 186
+>>
+>>
+>> That looks a bit fragile.
+>> At least the defines for the indices should be properly namespaced,
+>> check out include/dt-bindings/gpio/tegra-gpio.h for a similar case.
 >
-> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+>
+> Good point.
+>
+>>>>> #define STM32F4_RESET(x) (x + 128)
+>>>>> #define STM32F4_CLOCK(x) (x + 384)
+>
+>
+> Thinking more about this point, if we are going to follow hardware if might
+> be better to have:
+>
+> #define STM32F4_RCC_AHB1_GPIOA 0
+> #define STM32F4_RCC_AHB1_GPIOA 1
+> ...
+> #define STM32F4_RCC_APB2_LTDC 26
+>
+>
+> #define STM32F4_AHB1_RESET(x) (STM32F4_RCC_AHB1_##x##_BIT + (0x10 * 8))
+> #define STM32F4_AHB2_RESET(x) (STM32F4_RCC_AHB2_##x##_BIT + (0x14 * 8))
+> ...
+> #define STM32F4_APB2_RESET(x) (STM32F4_RCC_APB2_##x##_BIT + (0x24 * 8))
+>
+> Its more typing (or copy 'n pasting) by at least every number now maps
+> directly to the datasheet.
 
-(...)
-> +* Alphascale ASM9260 SoC pinctrl core driver
-> +
-> +The pinctrl driver enables Alphascale ASM9260 to configure pin multiplexing
-> +to a specific function.
-> +
-> +Required properties for pinctrl driver:
-> +- compatible: "alphascale,asm9260-pinctrl"
-> +- reg: Register base of the MPP block and length.
-> +- clocks: clock ids.
-> +- clock-names:
-> +       * 1 "ahb" : AHB gating clock.
+As said in Philipp's reply, I like the idea.
 
-This clock is usually called pclock, "apb_pclk" (amba peripheral bus
-p clock, don't know what P is...) what name does this have on your
-data sheet?
-
-> +The following generic properties as defined in pinctrl-bindings.txt are valid
-> +to specify in a pin configuration subnode:
-> +pins                   - the list of pins that properties in the node
-> +                         apply to (either this or "groups" has to be
-> +                         specified)
-> +function               - the mux function to select
-> +bias-disable           - disable any pin bias
-> +bias-pull-up           - pull up the pin. Supported only on GPIO0_* pins.
-> +bias-pull-down         - pull down the pin. Supported on all pins except of GPIO0_*.
-
-Generic bindings, nice. Put a reference to the file pinctrl-bindings.txt
-to point this out.
-
-Yours,
-Linus Walleij
+Regards,
+Maxime
+>
+>
+>
+>>>>>
+>>>>> Then, in DT, a reset would be described like this:
+>>>>>
+>>>>> timer2 {
+>>>>>       resets = <&rcc STM32F4_RESET(TIM2)>;
+>>>>> };
+>>>>>
+>>>>> Phillip, Daniel, does that look acceptable to you?
+>>>>
+>>>>
+>>>>
+>>>> Doesn't look unreasonable.
+>>>>
+>>>> I am a little uneasy simply because there are very few similar header
+>>>> files
+>>>> in that directory but I haven't thought of a better idea.
+>>>
+>>>
+>>> Since this file will be shared by both clock and reset drivers, I
+>>> don't see better option.
+>>> I will implement it in v8 if Philipp agrees.
+>>
+>>
+>> Are the device tree maintainers happy with this idiom spreading?
+>> Except for the point above, I think this is acceptable.
+>>
+>> regards
+>> Philipp
+>>
+>
