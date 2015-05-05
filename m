@@ -1,41 +1,52 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v3 3/5] PCI: st: Provide support for the sti PCIe
- controller
-Date: Tue, 5 May 2015 17:16:46 -0500
-Message-ID: <20150505221646.GE24643@google.com>
-References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
- <1428657168-12495-4-git-send-email-gabriel.fernandez@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V4 3/5] ASoC: tas571x: Add DT binding document
+Date: Tue, 5 May 2015 23:32:30 +0100
+Message-ID: <20150505223230.GL15510@sirena.org.uk>
+References: <1430864057-3848-1-git-send-email-cernekee@chromium.org>
+ <1430864057-3848-4-git-send-email-cernekee@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rwPUPCdI5hI47J6b"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1428657168-12495-4-git-send-email-gabriel.fernandez@linaro.org>
+In-Reply-To: <1430864057-3848-4-git-send-email-cernekee@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edw>
+To: Kevin Cernekee <cernekee@chromium.org>
+Cc: lgirdwood@gmail.com, lars@metafoo.de, dgreid@chromium.org, abrestic@chromium.org, olofj@chromium.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2015 at 11:12:46AM +0200, Gabriel FERNANDEZ wrote:
-> sti pcie is built around a Synopsis Designware PCIe IP.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 
-> +/* ST PCIe driver does not allow module unload */
+--rwPUPCdI5hI47J6b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Is there something that prevents module unload, or is it just untested?
+On Tue, May 05, 2015 at 03:14:15PM -0700, Kevin Cernekee wrote:
+> Document the bindings for the soon-to-be-added tas571x driver.
 
-> +static int __init pcie_init(void)
-> +{
-> +	return platform_driver_probe(&st_pcie_driver, st_pcie_probe);
-> +}
-> +device_initcall(pcie_init);
+If this is different to the already applied patches send incremental
+updates.  If this is the same as the version of the driver that is
+already applied please don't resend already applied patches.
 
-Can you use module_platform_driver_probe() or module_init() here?
+--rwPUPCdI5hI47J6b
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
-> +MODULE_DESCRIPTION("PCI express Driver for ST SoCs");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 1.9.1
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJVSUT7AAoJELSic+t+oim9S7gP/j5U88KOyaSk46MYF7/qDVSj
+M6Wq2vSWg2G83QsHSuTgIbJtd8HiGJzdmjWlWPKq0KKcUgtLka4bYamfQlgU4wEP
+DQ8/NhpWhnmv2s2InnS4qZw9YSAv1bwjNlSfUQx1N9YWoVJvLUIOzZ1XyXry2fuN
+V3yLAlJeGA5pSBVgPLzNiJACv0/Ya3gIuhPlostCO7CaIK2LpTpNjW1VLbMEJAlS
+Y30kD8VZEHdd+Cd8XFHGc+ccaR/d+dMoawLiLPCcqKbqoluJkYXJxXgMgKSstwpM
+jCgU4/YW+5jeuN5dpoqYgv0yBE5TFaZR101HBUJid2w/48ru/Goehq+9CtNU+Wc2
+HoppIKLZ92ONOhj4deUxSQs/euAh3t1NgS5shAANrPpYB210CldcQQ84pazL2o6E
+XFaGKRNDRi+06CUiMe5vOQp3GGSitbRP0jZewBbs0tQ98Nxr2tnC+L9ItNpUBDep
+mOSZZFDvOH+Gpjwh0xOhV3y0j4+GYNbVZiJBTNM3BR/ZAVHeUPWUkBcrxQ9UeJil
+EGvBcfVmTk6GkDwNS6j2yLOu61xFIw2jLns7BECVy7/veiTpMR8bbaWmLGj29wMv
+BUcZOQswURbm/SB0C0sJS/z9ubIxPCpY84JMXvK4lmoMaOa1zdR+462UY+SNdJ4E
+TH06m5RH1aMqNPlRxVOe
+=eFuT
+-----END PGP SIGNATURE-----
+
+--rwPUPCdI5hI47J6b--
