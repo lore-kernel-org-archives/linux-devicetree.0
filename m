@@ -1,146 +1,91 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] phy: Add binding document for Pistachio USB2.0 PHY
-Date: Tue, 5 May 2015 23:01:17 +0100
-Message-ID: <20150505220116.GE17687@jhogan-linux.le.imgtec.org>
-References: <1428444258-25852-1-git-send-email-abrestic@chromium.org>
- <1428444258-25852-2-git-send-email-abrestic@chromium.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 2/5] PCI: st: Add Device Tree bindings for sti pcie
+Date: Tue, 5 May 2015 17:09:04 -0500
+Message-ID: <20150505220904.GD24643@google.com>
+References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1428657168-12495-3-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VdOwlNaOFKGAtAAV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1428444258-25852-2-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1428657168-12495-3-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edw>
 List-Id: devicetree@vger.kernel.org
 
---VdOwlNaOFKGAtAAV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Apr 10, 2015 at 11:12:45AM +0200, Gabriel FERNANDEZ wrote:
+> sti pcie is built around a Synopsis Designware PCIe IP.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 
-Hi Andrew,
+Arnd, Rob, can you ack this?
 
-On Tue, Apr 07, 2015 at 03:04:16PM -0700, Andrew Bresticker wrote:
-> Add a binding document for the USB2.0 PHY found on the IMG Pistachio SoC.
->=20
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
-> No changes from v1.
-> ---
->  .../devicetree/bindings/phy/pistachio-usb-phy.txt  | 29 ++++++++++++++++=
-++++++
->  include/dt-bindings/phy/phy-pistachio-usb.h        | 16 ++++++++++++
->  2 files changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-p=
-hy.txt
->  create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt =
-b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+>  Documentation/devicetree/bindings/pci/st-pcie.txt | 53 +++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/st-pcie.txt b/Documentation/devicetree/bindings/pci/st-pcie.txt
 > new file mode 100644
-> index 0000000..afbc7e2
+> index 0000000..25fcab3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
-> @@ -0,0 +1,29 @@
-> +IMG Pistachio USB PHY
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +++ b/Documentation/devicetree/bindings/pci/st-pcie.txt
+> @@ -0,0 +1,53 @@
+> +STMicroelectronics STi PCIe controller
+> +
+> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+> +and thus inherits all the common properties defined in designware-pcie.txt.
 > +
 > +Required properties:
-> +--------------------
-> + - compatible: Must be "img,pistachio-usb-phy".
-> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
-> + - clocks: Must contain an entry for each entry in clock-names.
-> +   See ../clock/clock-bindings.txt for details.
-> + - clock-names: Must include "usb_phy".
-> + - img,cr-top: Must constain a phandle to the CR_TOP syscon node.
-> + - img,refclk: Indicates the reference clock source for the USB PHY.
-> +   See <dt-bindings/phy/phy-pistachio-usb.h> for a list of valid values.
-
-Possibly dumb question: why isn't the reference clock source specified
-in the normal ways like the "usb_phy" clock is?
-
-Does the value required here depend on what usb_phy clock gets muxed
-=66rom or something?
-
-Cheers
-James
-
+> + - compatible: "st,stih407-pcie"
+> + - reg: base address and length of the pcie controller, mem-window address
+> +   and length available to the controller.
+> + - interrupts: A list of interrupt outputs of the controller. Must contain an
+> +   entry for each entry in the interrupt-names property.
+> + - interrupt-names: Should be "msi". STi interrupt that is asserted when an
+> +   MSI is received.
+> + - st,syscfg : should be a phandle of the syscfg node. Also contains syscfg
+> +   offset for IP configuration.
+> + - resets, reset-names: the power-down and soft-reset lines of PCIe IP.
+> +   Associated names must be "powerdown" and "softreset".
+> + - phys, phy-names: the phandle for the PHY device.
+> +   Associated name must be "pcie"
 > +
 > +Optional properties:
-> +--------------------
-> + - phy-supply: USB VBUS supply.  Must supply 5.0V.
+> + - reset-gpio: a GPIO spec to define which pin is connected to the bus reset.
 > +
 > +Example:
-> +--------
-> +usb_phy: usb-phy {
-> +	compatible =3D "img,pistachio-usb-phy";
-> +	clocks =3D <&clk_core CLK_USB_PHY>;
-> +	clock-names =3D "usb_phy";
-> +	phy-supply =3D <&usb_vbus>;
-> +	img,refclk =3D <REFCLK_CLK_CORE>;
-> +	img,cr-top =3D <&cr_top>;
-> +	#phy-cells =3D <0>;
+> +
+> +pcie0: pcie@9b00000 {
+> +	compatible = "st,pcie", "snps,dw-pcie";
+> +	device_type = "pci";
+> +	reg = <0x09b00000 0x4000>,	/* dbi cntrl registers */
+> +	      <0x2fff0000 0x00010000>,	/* configuration space */
+> +	      <0x40000000 0x80000000>;	/* lmi mem window */
+> +	reg-names = "dbi", "config", "mem-window";
+> +	st,syscfg = <&syscfg_core 0xd8 0xe0>;
+> +	#address-cells = <3>;
+> +	#size-cells = <2>;
+> +	ranges = <0x82000000 0 0x20000000 0x20000000 0 0x0FFF0000>; /* non-prefetchable memory */
+> +	num-lanes = <1>;
+> +	interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "msi";
+> +	#interrupt-cells = <1>;
+> +	interrupt-map-mask = <0 0 0 7>;
+> +	interrupt-map = <0 0 0 1 &intc GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>, /* INT A */
+> +			<0 0 0 2 &intc GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>, /* INT B */
+> +			<0 0 0 3 &intc GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>, /* INT C */
+> +			<0 0 0 4 &intc GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>; /* INT D */
+> +
+> +	resets = <&powerdown STIH407_PCIE0_POWERDOWN>,
+> +		 <&softreset STIH407_PCIE0_SOFTRESET>;
+> +	reset-names = "powerdown",
+> +		      "softreset";
+> +	phys = <&phy_port0 PHY_TYPE_PCIE>;
+> +	phy-names = "pcie";
 > +};
-> diff --git a/include/dt-bindings/phy/phy-pistachio-usb.h b/include/dt-bin=
-dings/phy/phy-pistachio-usb.h
-> new file mode 100644
-> index 0000000..d1877aa
-> --- /dev/null
-> +++ b/include/dt-bindings/phy/phy-pistachio-usb.h
-> @@ -0,0 +1,16 @@
-> +/*
-> + * Copyright (C) 2015 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify =
-it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_PHY_PISTACHIO
-> +#define _DT_BINDINGS_PHY_PISTACHIO
-> +
-> +#define REFCLK_XO_CRYSTAL	0x0
-> +#define REFCLK_X0_EXT_CLK	0x1
-> +#define REFCLK_CLK_CORE		0x2
-> +
-> +#endif /* _DT_BINDINGS_PHY_PISTACHIO */
-> --=20
-> 2.2.0.rc0.207.ga3a616c
->=20
->=20
-
---VdOwlNaOFKGAtAAV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJVST2sAAoJEGwLaZPeOHZ6h3EQAIWL5SPjeM4XQVqS8syp5m45
-9pAnlu3nfqJorWzkH5JMfe8bSRRoQ+HKCzGVZ3YoqUKT9ZeTM3cvBCu0OaK/dfWZ
-+HFLDwukaibdOyIfvfk7527uOUwtwTnbX3bett6ECeXS0Ar3AxI54ibln936n9sW
-3XbSBY1YId+EE06uvuVFgib+mGRJQU9o8FqjhIGL/507CHsXfEzcaiT9rY/fs5FA
-3pAaoTNL7SODk9fnW+gXFt2gSC40yZ89qoIjwSjkjkYeojtX4+ZiloxlrJddK2sk
-2VtYLuXxK+4lnS4EB1X2DXyEe1utpy5JEo5vGsBXV5SYFbmDemxMIpKD7Llx/E9p
-P7hybOPpAr5yDx4xzQqMbS5wYf8IzlsJVLMYj9wyqSPPHzz+78YpF9Zi0kKrYsL5
-lRE3ejHYjBA8x3zQcihXf4Z0vD0mTT+l+VL7IOPVnQl78KSVUNNNU7DVrd7J+ewF
-Gnx4p1ZCvKKYGYNXH2wMubMs8p+pM+7DU+WEowCYWTRi1iaSVoonZ90XWV1oHiNJ
-VQ+v/Y5jdHgsfNZ/sGRWHhxl/dW3kwyYAKlEfu1juCnFrBw1/t1Ap2HrpgDaOJwJ
-otT/kWJHyE+f4iDtnD6Q52QdgC4+8Fov4kNpputOijQIuowV27jopYuUa0xU29+i
-5nj2MeKORszfDYANiOKb
-=lJGl
------END PGP SIGNATURE-----
-
---VdOwlNaOFKGAtAAV--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- 
+> 1.9.1
+> 
