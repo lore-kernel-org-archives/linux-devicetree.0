@@ -1,53 +1,71 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/3 v7] mailbox: Enable BCM2835 mailbox support
-Date: Tue, 05 May 2015 13:32:14 -0600
-Message-ID: <55491ABE.40300@wwwdotorg.org>
-References: <1430254460-26754-1-git-send-email-eric@anholt.net>	<1430327374-6562-1-git-send-email-eric@anholt.net>	<CABb+yY0+Dd6RMJfmcqWrJfsSkPS8KjtpctJteoTZrj3QttJ71g@mail.gmail.com>	<871tivq1rp.fsf@eliezer.anholt.net> <CABb+yY2V5dXQ5fH3s2T4-j6-z68bOzaeUN9WQoNze2mc-quD+A@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Invitation and RFC: Linux Plumbers Device Tree
+ track proposed
+Date: Tue, 5 May 2015 14:32:44 -0500
+Message-ID: <CAL_Jsq+Us5v7t_2Othfubr5Lhp3bWtZrqE9V30WCPzbJuCftzQ@mail.gmail.com>
+References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
+	<5543EE80.5060109@landley.net>
+	<CAL_JsqKkZYEMdYmh=JkA6O34a+7mKy=SgB2XxzgTM70mihgQeQ@mail.gmail.com>
+	<CAMuHMdV7xfbBYL5fhudObdwNVJ0L_1_h0ozT+U4Lpx=Mu9UGhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY2V5dXQ5fH3s2T4-j6-z68bOzaeUN9WQoNze2mc-quD+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <celinux-dev-bounces-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>
+In-Reply-To: <CAMuHMdV7xfbBYL5fhudObdwNVJ0L_1_h0ozT+U4Lpx=Mu9UGhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.celinuxforum.org/mailman/options/celinux-dev>,
+	<mailto:celinux-dev-request-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.celinuxforum.org/pipermail/celinux-dev/>
+List-Post: <mailto:celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>
+List-Help: <mailto:celinux-dev-request-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.celinuxforum.org/mailman/listinfo/celinux-dev>,
+	<mailto:celinux-dev-request-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org?subject=subscribe>
+Sender: celinux-dev-bounces-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org
+Errors-To: celinux-dev-bounces-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2015 08:30 PM, Jassi Brar wrote:
-> On Tue, May 5, 2015 at 6:27 AM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
->> Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->>
->>> On Wed, Apr 29, 2015 at 10:39 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
->>>
->>>> +
->>>> +struct bcm2835_mbox {
->>>> +       struct device *dev;
->>>> +       void __iomem *regs;
->>>> +       spinlock_t lock;
->>>> +       struct mbox_controller controller;
->>>> +};
->>>> +
->>>> +static struct bcm2835_mbox *mbox;
->>>> +
->>>> +static irqreturn_t bcm2835_mbox_irq(int irq, void *dev_id)
->>>> +{
->>>> +       struct device *dev = mbox->dev;
->>>> +       struct mbox_chan *link = &mbox->controller.chans[0];
->>>> +
->>> I learn from Stephen's other post that the controller could have
->>> multiple channels. In which case this driver is poorly setup. Actually
->>> if the driver was designed properly there isn't anything special to be
->>> done.
->>>   Here you choose to waste 'dev_id' and hard-code dereferencing to channel-0
->>
->> There's only the one channel according to the docs.  I wish we wouldn't
->> get derailed by speculation on the list when the documentation is
->> available. :(
->>
-> Can I have the pointer to the doc please, if its publicly available.
++Ian
 
-https://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, May 5, 2015 at 2:34 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Rob
+>
+> On Tue, May 5, 2015 at 1:20 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Fri, May 1, 2015 at 4:22 PM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
+>>> On 04/11/2015 02:20 PM, Rowand, Frank wrote:
+>>>> In recent years there have been proposed tools to aid in the creation of valid
+>>>> device trees and in debugging device tree issues.  An example of this is the
+>>>> various approaches proposed (with source code provided) to validate device tree
+>>>> source against valid bindings.  As of today, device tree related tools,
+>>>> techniques, and debugging infrastructure have not progressed very far.  I have
+>>>> submitted a device tree related proposal for the Linux Plumbers 2015 conference
+>>>> to spur action and innovation in such tools, techniques, and debugging
+>>>> infrastructure.
+>>>>
+>>>> The current title of the track is "Device Tree Tools, Validation, and
+>>>> Troubleshooting".  The proposal is located at
+>>>>
+>>>>    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
+>>>
+>>> Want I want to do is:
+>>>
+>>> 1) Download an archive of device tree files describing a bunch of
+>>> boards. (Both dts and corresponding dtb files, with maybe a .txt telling
+>>> me about the board and the -append line qemu needs to give it any
+>>> board-specific kernel command line stuff like "console=myserialport".)
+>>
+>> The dts half is here[1]. It is a kernel repository automatically
+>> stripped of everything but dts files.
+>>
+>> [1] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+>
+> Great!
+>
+> While "git log" has the "--nomerges" option, cgit hasn't, making it hard to see
+> the actual changes through the forest of merges.
+>
+> Any chance merge commits not causing any changes can be stripped out, too?
+
+That's a question for Ian.
+
+Rob
