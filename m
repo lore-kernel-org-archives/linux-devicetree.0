@@ -1,135 +1,67 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 09/14] ASoC: qcom: Add ability to handle interrupts
- per dma channel
-Date: Tue, 05 May 2015 08:17:14 +0100
-Message-ID: <55486E7A.1030801@linaro.org>
-References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org> <1430414262-11252-1-git-send-email-srinivas.kandagatla@linaro.org> <20150502235950.GE27804@kwestfie-linux.qualcomm.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [Celinux-dev] Invitation and RFC: Linux Plumbers Device Tree
+ track proposed
+Date: Tue, 5 May 2015 09:34:08 +0200
+Message-ID: <CAMuHMdV7xfbBYL5fhudObdwNVJ0L_1_h0ozT+U4Lpx=Mu9UGhw@mail.gmail.com>
+References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
+	<5543EE80.5060109@landley.net>
+	<CAL_JsqKkZYEMdYmh=JkA6O34a+7mKy=SgB2XxzgTM70mihgQeQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150502235950.GE27804-VfhoOQ2zEbNBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKkZYEMdYmh=JkA6O34a+7mKy=SgB2XxzgTM70mihgQeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob
 
+On Tue, May 5, 2015 at 1:20 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, May 1, 2015 at 4:22 PM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
+>> On 04/11/2015 02:20 PM, Rowand, Frank wrote:
+>>> In recent years there have been proposed tools to aid in the creation of valid
+>>> device trees and in debugging device tree issues.  An example of this is the
+>>> various approaches proposed (with source code provided) to validate device tree
+>>> source against valid bindings.  As of today, device tree related tools,
+>>> techniques, and debugging infrastructure have not progressed very far.  I have
+>>> submitted a device tree related proposal for the Linux Plumbers 2015 conference
+>>> to spur action and innovation in such tools, techniques, and debugging
+>>> infrastructure.
+>>>
+>>> The current title of the track is "Device Tree Tools, Validation, and
+>>> Troubleshooting".  The proposal is located at
+>>>
+>>>    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
+>>
+>> Want I want to do is:
+>>
+>> 1) Download an archive of device tree files describing a bunch of
+>> boards. (Both dts and corresponding dtb files, with maybe a .txt telling
+>> me about the board and the -append line qemu needs to give it any
+>> board-specific kernel command line stuff like "console=myserialport".)
+>
+> The dts half is here[1]. It is a kernel repository automatically
+> stripped of everything but dts files.
+>
+> [1] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
 
-On 03/05/15 01:00, Kenneth Westfield wrote:
-> On Thu, Apr 30, 2015 at 06:17:42PM +0100, Srinivas Kandagatla wrote:
->> This patch adds ablity to lpass driver to handle interrupt per dma
->> channel. Without this patch its not possible to use multipl ports on the
->> lpass.
->
->> diff --git a/sound/soc/qcom/lpass-platform.c b/sound/soc/qcom/lpass-platform.c
->> index 8ab0ac1..c5907d5 100644
->> --- a/sound/soc/qcom/lpass-platform.c
->> +++ b/sound/soc/qcom/lpass-platform.c
->
->> -static irqreturn_t lpass_platform_lpaif_irq(int irq, void *data)
->> +static irqreturn_t lpass_dma_interrupt_handler(
->> +			struct snd_pcm_substream *substream,
->> +			struct lpass_data *drvdata,
->> +			int chan, u32 interrupts)
->>   {
->> -	struct snd_pcm_substream *substream = data;
->>   	struct snd_soc_pcm_runtime *soc_runtime = substream->private_data;
->> -	struct lpass_data *drvdata =
->> -		snd_soc_platform_get_drvdata(soc_runtime->platform);
->>   	struct lpass_variant *v = drvdata->variant;
->> -	struct lpass_pcm_data *pcm_data = snd_soc_pcm_get_drvdata(soc_runtime);
->> -	unsigned int interrupts;
->>   	irqreturn_t ret = IRQ_NONE;
->> -	int rv, chan = pcm_data->rdma_ch;
->> -
->> -	rv = regmap_read(drvdata->lpaif_map,
->> -			LPAIF_IRQSTAT_REG(v, LPAIF_IRQ_PORT_HOST), &interrupts);
->> -	if (rv) {
->> -		dev_err(soc_runtime->dev, "%s() error reading from irqstat reg: %d\n",
->> -				__func__, rv);
->> -		return IRQ_NONE;
->> -	}
->> -
->> -	interrupts &= LPAIF_IRQ_ALL(chan);
->> +	int rv;
->>
->>   	if (interrupts & LPAIF_IRQ_PER(chan)) {
->>   		rv = regmap_write(drvdata->lpaif_map,
->> @@ -422,6 +410,30 @@ static irqreturn_t lpass_platform_lpaif_irq(int irq, void *data)
->>   	return ret;
->
-> You are returning the ISR result here...
->
->>   }
->>
->> +static irqreturn_t lpass_platform_lpaif_irq(int irq, void *data)
->> +{
->> +	struct lpass_data *drvdata = data;
->> +	struct lpass_variant *v = drvdata->variant;
->> +	unsigned int irqs;
->> +	int rv, chan;
->> +
->> +	rv = regmap_read(drvdata->lpaif_map,
->> +			LPAIF_IRQSTAT_REG(v, LPAIF_IRQ_PORT_HOST), &irqs);
->> +	if (rv) {
->> +		pr_err("%s() error reading from irqstat reg: %d\n",
->> +				__func__, rv);
->> +		return IRQ_NONE;
->> +	}
->> +
->> +	/* Handle per channel interrupts */
->> +	for (chan = 0; chan < LPASS_MAX_DMA_CHANNELS; chan++)
->> +		if (irqs & LPAIF_IRQ_ALL(chan) && drvdata->substream[chan])
->> +			lpass_dma_interrupt_handler(drvdata->substream[chan],
->> +						    drvdata, chan, irqs);
->
-> ...but ignoring the result here and always returning HANDLED.
->
-That's correct, I will fix this in next version.
+Great!
 
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->
->>   int asoc_qcom_lpass_platform_register(struct platform_device *pdev)
->>   {
->>   	struct lpass_data *drvdata = platform_get_drvdata(pdev);
->> +	struct lpass_variant *v = drvdata->variant;
->> +	int ret;
->>
->>   	drvdata->lpaif_irq = platform_get_irq_byname(pdev, "lpass-irq-lpaif");
->>   	if (drvdata->lpaif_irq < 0) {
->> @@ -553,6 +553,25 @@ int asoc_qcom_lpass_platform_register(struct platform_device *pdev)
->>   		return -ENODEV;
->>   	}
->>
->> +	ret = devm_request_irq(&pdev->dev, drvdata->lpaif_irq,
->> +			lpass_platform_lpaif_irq, IRQF_TRIGGER_RISING,
->> +			"lpass-irq-lpaif", drvdata);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "%s() irq request failed: %d\n",
->> +				__func__, ret);
->> +		return ret;
->> +	}
->> +
->> +	/* ensure audio hardware is disabled */
->> +	ret = regmap_write(drvdata->lpaif_map,
->> +			LPAIF_IRQEN_REG(v, LPAIF_IRQ_PORT_HOST), 0);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "%s() error writing to irqen reg: %d\n",
->> +				__func__, ret);
->> +		return ret;
->> +	}
->
-> Looking at this, it may be safer to disable the interrupt sources before
-> getting/enabling the interrupt, i.e. do the regmap_write first, then
-> devm_request_irq.
-Yes, Its not safe, will fix it in next version too.
+While "git log" has the "--nomerges" option, cgit hasn't, making it hard to see
+the actual changes through the forest of merges.
 
---srini
->
+Any chance merge commits not causing any changes can be stripped out, too?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
