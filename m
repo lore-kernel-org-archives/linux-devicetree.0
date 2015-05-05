@@ -1,53 +1,71 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V2 4/6] DT: add binding for mxs on-chip regulators
-Date: Tue, 5 May 2015 19:12:34 +0200 (CEST)
-Message-ID: <1195324103.963873.1430845954289.JavaMail.open-xchange@oxbaltgw07.schlund.de>
-References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com> <201505041551.26355.jbe@pengutronix.de> <1858103470.878923.1430770850541.JavaMail.open-xchange@oxbaltgw08.schlund.de> <201505051021.01939.jbe@pengutronix.de>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v7 05/15] dt-bindings: Document the STM32 reset bindings
+Date: Tue, 5 May 2015 19:22:17 +0200
+Message-ID: <CALszF6CiLrdhKUJNRJApqzK8WsS9H22yHKbxha+Vp06-vZ+LHQ@mail.gmail.com>
+References: <1430410844-16062-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1430410844-16062-6-git-send-email-mcoquelin.stm32@gmail.com>
+	<55433467.2010603@linaro.org>
+	<CALszF6Bw900E9MtpaVmvkFxsrOODRkNg+RxRXz5V3WghHtsxbw@mail.gmail.com>
+	<5544A069.5000808@linaro.org>
+	<CALszF6BTb0Ce6jfT5gY4eEtSep6+8XqOxu1LbpUXHmPYX9PmgQ@mail.gmail.com>
+	<5548CEA2.8020807@linaro.org>
+	<CALszF6DyUA7Wr2qo4sASFBTRwwjhGAkFKRYnY+1UwHmf4nTj5w@mail.gmail.com>
+	<1430840557.3035.60.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201505051021.01939.jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?=22J=C3=BCrgen_Borleis=22?= <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430840557.3035.60.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas
 List-Id: devicetree@vger.kernel.org
 
-Hi Juergen,
+2015-05-05 17:42 GMT+02:00 Philipp Zabel <p.zabel@pengutronix.de>:
+> Am Dienstag, den 05.05.2015, 17:19 +0200 schrieb Maxime Coquelin:
+>> >> For example, includes/dt-bindings/mfd/stm32f4-rcc.h would look like:
+>> >>
+>> >> #define GPIOA 0
+>> >> #define GPIOB 1
+>> >> ...
+>> >> #define LTDC 186
+>
+> That looks a bit fragile.
+> At least the defines for the indices should be properly namespaced,
+> check out include/dt-bindings/gpio/tegra-gpio.h for a similar case.
 
-> J=C3=BCrgen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> hat am 5. Mai 2015 um 10:21 =
-geschrieben:
->
->
-> Hi Stefan,
->
-> On Monday 04 May 2015 22:20:50 Stefan Wahren wrote:
-> > [...]
-> >=20
-> > I think we have 3 options here:
-> >
-> > a) add the regulator daisy chain for the i.MX23 too
-> > b) remove VDD1P5 from the i.MX28 diagram so it would fit for both a=
-gain
-> > c) remove the diagram complete
-> >
-> > I would prefer option b. What's your opinion?
->
-> I prefer a) because once the details are known, we should keep them.
-
-beside the point this could be to much diagrams for a binding documenta=
-tion, i
-don't have any objections about option a).
+Thanks, I will prefix them with the proper namespace, Daniel proposal
+is fine to me.
 
 >
-> Regards,
-> Juergen
+>> >> #define STM32F4_RESET(x) (x + 128)
+>> >> #define STM32F4_CLOCK(x) (x + 384)
+>> >>
+>> >> Then, in DT, a reset would be described like this:
+>> >>
+>> >> timer2 {
+>> >>      resets = <&rcc STM32F4_RESET(TIM2)>;
+>> >> };
+>> >>
+>> >> Phillip, Daniel, does that look acceptable to you?
+>> >
+>> >
+>> > Doesn't look unreasonable.
+>> >
+>> > I am a little uneasy simply because there are very few similar header files
+>> > in that directory but I haven't thought of a better idea.
+>>
+>> Since this file will be shared by both clock and reset drivers, I
+>> don't see better option.
+>> I will implement it in v8 if Philipp agrees.
+>
+> Are the device tree maintainers happy with this idiom spreading?
+> Except for the point above, I think this is acceptable.
+Ok good. Let's see what DT maintainers thinks about that.
 
-Regards
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Maxime
+
+>
+> regards
+> Philipp
+>
