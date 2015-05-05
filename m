@@ -1,77 +1,41 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] Add SDHCI support for APM X-Gene SoC using ARASAN
- SDHCI controller.
-Date: Tue, 5 May 2015 14:12:32 +0530
-Message-ID: <CAOHikRAviwD=kPQpHeR5NCXdANWH8B+DqNW=qJQ0ACpeOppU2A@mail.gmail.com>
-References: <1430746792-32574-1-git-send-email-stripathi@apm.com>
-	<CAPDyKFqva7jioEpf1qBv+sSo9-ZWU69+wb9qTF1X+4cxOgf2uQ@mail.gmail.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] reset driver for NXP LPC18xx family
+Date: Tue, 5 May 2015 10:45:15 +0200
+Message-ID: <CAGhQ9VzsyVVZS6kNV3YeFq89=f3CaEX0NDFd8hTb9RU0PrXsEQ@mail.gmail.com>
+References: <1430779956-12490-1-git-send-email-manabian@gmail.com>
+	<1430814827.3035.10.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFqva7jioEpf1qBv+sSo9-ZWU69+wb9qTF1X+4cxOgf2uQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1430814827.3035.10.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ariel D'Alessandro <ariel.dalessandro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 5, 2015 at 2:06 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 4 May 2015 at 15:39, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
->> This patch adds the SDHCI support for APM X-Gene SoC using ARASAN SDHCI controller.
+On 5 May 2015 at 10:33, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Am Dienstag, den 05.05.2015, 00:52 +0200 schrieb Joachim Eastwood:
+>> This patch set adds a reset driver for NXP LPC18xx/43xx devices.
 >>
->> v1 change:
->>  * Use the CONFIG_ARM64_DMA_HAS_IOMMU for dma-mapping.
->>
->> v2 change:
->>  * Drop the IOMMU support and switching to PIO mode for arasan.
->>    controller integrated inside APM X-Gene SoC.
->>
->> v3 change:
->>  * Change the sdhci-of-arasan.c to support arasan4.9a.
->>  * Add quirks for arasan4.9a.
->>
->> v4 change:
->>  * Cleanup the Documentation and dts.
->>
->> Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
->> ---
->>
->> Suman Tripathi (3):
->>   arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
->>   mmc: host: arasan: Add the support for sdhci-arasan4.9a in
->>     sdhci-of-arasan.c
->>   Documentation: mmc: Update Arasan SDHC documentation to support 4.9a
->>     version of     Arasan SDHC controller.
->>
->>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  3 +-
->>  arch/arm64/boot/dts/apm-mustang.dts                |  4 ++
->>  arch/arm64/boot/dts/apm-storm.dtsi                 | 44 ++++++++++++++++++++++
->>  drivers/mmc/host/sdhci-of-arasan.c                 |  7 ++++
->>  4 files changed, 57 insertions(+), 1 deletion(-)
->>
+>> Changes in v2:
+>> * clean up header includes
+>> * prefix M0 reset defines with LPC43XX
+>> * fix comment about M0 reset lines
+>> * reorganize reset call chains
+>> * add reset number table to dt doc
 >
-> Thanks!
->
-> I have applied patch2 and patch3. Though, I decided to squash them
-> into one patch and changed the commit message header a bit.
->
-> I couldn't apply patch 1, so I guess that will be taken through arm soc?
+> I am satisfied with the changes.
 
-why it couldn't be applied?? I made it in top of
+Excellent!
 
-git git://git.linaro.org/people/ulf.hansson/mmc.git
+> I'd like a short patch description in both patches before applying them.
 
-Is this not correct ??
+ah, yes, the commit messages are a bit lacking...
 
->
-> Kind regards
-> Uffe
+I'll send out a v3 later today.
 
-
-
--- 
-Thanks,
-with regards,
-Suman Tripathi
+regards,
+Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
