@@ -1,68 +1,46 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] Documentation/devicetree: document OCTEON USB bindings
-Date: Tue, 05 May 2015 12:02:04 +0200
-Message-ID: <3842439.qIvEyqJvhE@wuerfel>
-References: <1430423040-2088-1-git-send-email-aaro.koskinen@iki.fi>
+From: Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>
+Subject: Device Tree Blob (DTB) licence
+Date: Tue, 05 May 2015 12:05:15 +0200
+Message-ID: <1430820315.19516.26.camel@opteya.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430423040-2088-1-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 30 April 2015 22:44:00 Aaro Koskinen wrote:
-> +1) Main node
-> +
-> +   Required properties:
-> +
-> +   - compatible: must be "cavium,octeon-5750-usbn"
-> +
-> +   - reg: specifies the physical base address of the USBN block and
-> +     the length of the memory mapped region.
-> +
-> +   - #address-cells: specifies the number of cells needed to encode an
-> +     address. The value must be 2.
-> +
-> +   - #size-cells: specifies the number of cells used to represent the size
-> +     of an address. The value must be 2.
-> +
-> +   - ranges: specifies the translation between child address space and parent
-> +     address space.
-> +
-> +   - refclk-frequency: speed of the USB reference clock. Allowed values are
-> +     12000000, 24000000 or 48000000.
-> +
-> +   - refclk-type: type of the USB reference clock. Allowed values are
-> +     "crystal" or "external".
-> +
-> +2) Child node
-> +
-> +   The main node must have one child node which describes the built-in
-> +   USB controller.
-> +
-> +   Required properties:
-> +
-> +   - compatible: must be "cavium,octeon-5750-usbc"
-> +
-> +   - reg: specifies the physical base address of the USBC block and
-> +     the length of the memory mapped region.
-> +
-> +   - interrupts: specifies the interrupt number for the USB controller.
-> +
-> 
+Hi,
 
-What does that main node actually do?
+I believe Device Tree Blob (.dtb file) built from kernel's Device Tree 
+Sources (.dts, which #include .dtsi, which #include .h) using Device 
+Tree Compiler (dtc) are covered by GNU General Public Licence v2 
+(GPLv2), but cannot find any reference.
 
-The common setup is that you have regular ehci/ohci/uhci host bridges
-connected to an mmio bus, plus with shared PHY driver that would nowadays
-sit in drivers/phy/ and handle the setup of the physical USB interface.
+As most .dtsi in arch/arm/boot/dts/ are covered by GPLv2, and,
+as most .h in include/dt-bindings/ are also covered by GPLv2,
+the source code is likely covered by GPLv2.
 
-Is Octeon different from everything else here?
+Then this source code is translated in a different language (flattened 
+device tree), so the resulting translation is also likely covered by 
+GPLv2.
 
-	Arnd
+So, when I'm proposed to download a .dtb file from a random vendor,
+can I require to get the associated source code ?
+
+Anyway, for a .dtb file generated from kernel sources, it's rather 
+painful to look after all .dts, .dtsi, .h, to find what kind of 
+licences are applicables, as some are covered by BSD, dual licensed 
+(any combination of X11, MIT, BSD, GPLv2).
+
+Regards.
+
+-- 
+Yann Droneaud
+OPTEYA
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
