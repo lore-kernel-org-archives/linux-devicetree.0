@@ -1,117 +1,50 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v5 1/1] arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
-Date: Tue, 5 May 2015 12:34:29 +0200
-Message-ID: <CAPDyKFpfiid4ny0fhw-yNfzCrynZnALNs+i51yeMhPneQ4XFFQ@mail.gmail.com>
-References: <1430817426-5241-1-git-send-email-stripathi@apm.com>
-	<1430817426-5241-2-git-send-email-stripathi@apm.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Tue, 5 May 2015 16:18:59 +0530
+Message-ID: <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+	<d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+	<20150504121209.GM15510@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1430817426-5241-2-git-send-email-stripathi@apm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150504121209.GM15510@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
-On 5 May 2015 at 11:17, Suman Tripathi <stripathi@apm.com> wrote:
-> This patch adds the arasan sdhc nodes to reuse the of-arasan
-> driver for APM X-Gene SoC.
+On 4 May 2015 at 17:42, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Apr 30, 2015 at 05:37:59PM +0530, Viresh Kumar wrote:
 >
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-
-I consider this one acked by Arnd, due to:
-http://www.spinics.net/lists/arm-kernel/msg415634.html
-
-Thus applied to my mmc tree.
-
-Thanks!
-
-Kind regards
-Uffe
-
-> ---
->  arch/arm64/boot/dts/apm/apm-mustang.dts |  4 +++
->  arch/arm64/boot/dts/apm/apm-storm.dtsi  | 44 +++++++++++++++++++++++++++++++++
->  2 files changed, 48 insertions(+)
+>> +- opp-microamp: current in micro Amperes. It can contain entries for multiple
+>> +  regulators.
+>> +
+>> +  A single regulator's current is specified with an array of size one or three.
+>> +  Single entry is for target current and three entries are for <target min max>
+>> +  currents.
 >
-> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
-> index 83578e7..4cc5d07 100644
-> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
-> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
-> @@ -52,3 +52,7 @@
->  &xgenet {
->         status = "ok";
->  };
-> +
-> +&sdhc0 {
-> +       status = "ok";
-> +};
-> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> index c8d3e0e..240c793 100644
-> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> @@ -145,6 +145,40 @@
->                                 clock-output-names = "socplldiv2";
->                         };
->
-> +                       ahbclk: ahbclk@1f2ac000 {
-> +                               compatible = "apm,xgene-device-clock";
-> +                               #clock-cells = <1>;
-> +                               clocks = <&socplldiv2 0>;
-> +                               reg = <0x0 0x1f2ac000 0x0 0x1000
-> +                                       0x0 0x17000000 0x0 0x2000>;
-> +                               reg-names = "csr-reg", "div-reg";
-> +                               csr-offset = <0x0>;
-> +                               csr-mask = <0x1>;
-> +                               enable-offset = <0x8>;
-> +                               enable-mask = <0x1>;
-> +                               divider-offset = <0x164>;
-> +                               divider-width = <0x5>;
-> +                               divider-shift = <0x0>;
-> +                               clock-output-names = "ahbclk";
-> +                       };
-> +
-> +                       sdioclk: sdioclk@1f2ac000 {
-> +                               compatible = "apm,xgene-device-clock";
-> +                               #clock-cells = <1>;
-> +                               clocks = <&socplldiv2 0>;
-> +                               reg = <0x0 0x1f2ac000 0x0 0x1000
-> +                                       0x0 0x17000000 0x0 0x2000>;
-> +                               reg-names = "csr-reg", "div-reg";
-> +                               csr-offset = <0x0>;
-> +                               csr-mask = <0x2>;
-> +                               enable-offset = <0x8>;
-> +                               enable-mask = <0x2>;
-> +                               divider-offset = <0x178>;
-> +                               divider-width = <0x8>;
-> +                               divider-shift = <0x0>;
-> +                               clock-output-names = "sdioclk";
-> +                       };
-> +
->                         qmlclk: qmlclk {
->                                 compatible = "apm,xgene-device-clock";
->                                 #clock-cells = <1>;
-> @@ -533,6 +567,16 @@
->                         interrupts = <0x0 0x4f 0x4>;
->                 };
->
-> +               sdhc0: sdhc@1c000000 {
-> +                       device_type = "sdhc";
-> +                       compatible = "arasan,sdhci-4.9a";
-> +                       reg = <0x0 0x1c000000 0x0 0x100>;
-> +                       interrupts = <0x0 0x49 0x4>;
-> +                       dma-coherent;
-> +                       clock-names = "clk_xin", "clk_ahb";
-> +                       clocks = <&sdioclk 0>, <&ahbclk 0>;
-> +               };
-> +
->                 phy1: phy@1f21a000 {
->                         compatible = "apm,xgene-phy";
->                         reg = <0x0 0x1f21a000 0x0 0x100>;
-> --
-> 1.8.2.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> What is this for - are you trying to define OPPs for current regulators?
+> If you are that's worrying, I can't think of a sensible use case.  If
+> that's not what's happening then the binding needs to be more specific
+> about what this is supposed to mean.
+
+Its another property of the same voltage regulator we are using in
+opp-microvolt.
+I hope that makes sense ?
+
+And that's why I wrote this as well:
+
++  Entries for multiple regulators must be present in the same order as
++  regulators are specified in device's DT node. If few regulators don't provide
++  capability to configure current, then values for then should be marked as
++  zero.
+
+i.e. this is optional but the voltage regulator isn't..
+
+But, perhaps I need to write it with more clarity? Or this field doesn't make
+sense ?
+
+FWIW, its an outcome of this request from Stephen:
+
+https://www.marc.info/?l=linux-arm-kernel&m=142370250522589&w=3
