@@ -1,98 +1,62 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V3 3/3] mfd: da9063: MFD support for OnKey driver
-Date: Tue, 5 May 2015 08:36:05 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B219017@SW-EX-MBX02.diasemi.com>
-References: <cover.1430393194.git.stwiss.opensource@diasemi.com>
-	<639fd177d5ddd4ce80df45f9d774cc971b286ef9.1430393194.git.stwiss.opensource@diasemi.com>
- <CAMuHMdW43GHj-iO1F9gjHsjYOvvycjrP6WPyCKSOvcpcwPsM-w@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] Add SDHCI support for APM X-Gene SoC using ARASAN
+ SDHCI controller.
+Date: Tue, 5 May 2015 10:36:37 +0200
+Message-ID: <CAPDyKFqva7jioEpf1qBv+sSo9-ZWU69+wb9qTF1X+4cxOgf2uQ@mail.gmail.com>
+References: <1430746792-32574-1-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW43GHj-iO1F9gjHsjYOvvycjrP6WPyCKSOvcpcwPsM-w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430746792-32574-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiAwNCBNYXkgMjAxNSAwODo0NywgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KDQo+IE9u
-IFRodSwgQXByIDMwLCAyMDE1IGF0IDE6MjYgUE0sIFMgVHdpc3MgPHN0d2lzcy5vcGVuc291cmNl
-QGRpYXNlbWkuY29tPg0KPiB3cm90ZToNCj4gPiBBZGQgTUZEIHN1cHBvcnQgZm9yIHRoZSBEQTkw
-NjMgT25LZXkgZHJpdmVyDQo+IA0KPiBUaGFua3MgIGZvciB5b3VyIHBhdGNoIQ0KPiANCj4gPiAr
-c3RhdGljIGludCBkYTkwNjNfY2xlYXJfZmF1bHRfbG9nKHN0cnVjdCBkYTkwNjMgKmRhOTA2MykN
-Cj4gPiArewkNCj4gPiArICAgICAgIGludCByZXQgPSAwOw0KPiA+ICsgICAgICAgaW50IGZhdWx0
-X2xvZyA9IDA7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0ID0gcmVnbWFwX3JlYWQoZGE5MDYzLT5y
-ZWdtYXAsIERBOTA2M19SRUdfRkFVTFRfTE9HLA0KPiAmZmF1bHRfbG9nKTsNCj4gPiArICAgICAg
-IGlmIChyZXQgPCAwKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoZGE5MDYzLT5kZXYs
-ICJDYW5ub3QgcmVhZCBGQVVMVF9MT0cuXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJu
-IC1FSU87DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKGZhdWx0X2xvZykg
-ew0KPiA+ICsgICAgICAgICAgICAgICBpZiAoZmF1bHRfbG9nICYgREE5MDYzX1RXRF9FUlJPUikN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfZGJnKGRhOTA2My0+ZGV2LA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIkZhdWx0IGxvZyBlbnRyeSBkZXRlY3RlZDog
-REE5MDYzX1RXRF9FUlJPUlxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChmYXVsdF9sb2cg
-JiBEQTkwNjNfUE9SKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9kYmcoZGE5MDYz
-LT5kZXYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiRmF1bHQgbG9nIGVu
-dHJ5IGRldGVjdGVkOiBEQTkwNjNfUE9SXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKGZh
-dWx0X2xvZyAmIERBOTA2M19WRERfRkFVTFQpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ZGV2X2RiZyhkYTkwNjMtPmRldiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICJGYXVsdCBsb2cgZW50cnkgZGV0ZWN0ZWQ6IERBOTA2M19WRERfRkFVTFRcbiIpOw0KPiA+ICsg
-ICAgICAgICAgICAgICBpZiAoZmF1bHRfbG9nICYgREE5MDYzX1ZERF9TVEFSVCkNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICBkZXZfZGJnKGRhOTA2My0+ZGV2LA0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIkZhdWx0IGxvZyBlbnRyeSBkZXRlY3RlZDogREE5MDYzX1ZE
-RF9TVEFSVFxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChmYXVsdF9sb2cgJiBEQTkwNjNf
-VEVNUF9DUklUKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9kYmcoZGE5MDYzLT5k
-ZXYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiRmF1bHQgbG9nIGVudHJ5
-IGRldGVjdGVkOiBEQTkwNjNfVEVNUF9DUklUXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgaWYg
-KGZhdWx0X2xvZyAmIERBOTA2M19LRVlfUkVTRVQpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgZGV2X2RiZyhkYTkwNjMtPmRldiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICJGYXVsdCBsb2cgZW50cnkgZGV0ZWN0ZWQ6IERBOTA2M19LRVlfUkVTRVRcbiIpOw0KPiA+
-ICsgICAgICAgICAgICAgICBpZiAoZmF1bHRfbG9nICYgREE5MDYzX05TSFVURE9XTikNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBkZXZfZGJnKGRhOTA2My0+ZGV2LA0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIkZhdWx0IGxvZyBlbnRyeSBkZXRlY3RlZDogREE5MDYz
-X05TSFVURE9XTlxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChmYXVsdF9sb2cgJiBEQTkw
-NjNfV0FJVF9TSFVUKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9kYmcoZGE5MDYz
-LT5kZXYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiRmF1bHQgbG9nIGVu
-dHJ5IGRldGVjdGVkOiBEQTkwNjNfV0FJVF9TSFVUXG4iKTsNCj4gPiArICAgICAgIH0NCj4gPiAr
-DQo+ID4gKyAgICAgICByZXQgPSByZWdtYXBfd3JpdGUoZGE5MDYzLT5yZWdtYXAsDQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgREE5MDYzX1JFR19GQVVMVF9MT0csDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgZmF1bHRfbG9nKTsNCj4gPiArICAgICAgIGlmIChyZXQgPCAw
-KQ0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJyKGRhOTA2My0+ZGV2LA0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICJDYW5ub3QgcmVzZXQgRkFVTFRfTE9HIHZhbHVlcyAlZFxuIiwgcmV0
-KTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICBp
-bnQgZGE5MDYzX2RldmljZV9pbml0KHN0cnVjdCBkYTkwNjMgKmRhOTA2MywgdW5zaWduZWQgaW50
-IGlycSkNCj4gPiAgew0KPiA+ICAgICAgICAgc3RydWN0IGRhOTA2M19wZGF0YSAqcGRhdGEgPSBk
-YTkwNjMtPmRldi0+cGxhdGZvcm1fZGF0YTsNCj4gPiAgICAgICAgIGludCBtb2RlbCwgdmFyaWFu
-dF9pZCwgdmFyaWFudF9jb2RlOw0KPiA+ICAgICAgICAgaW50IHJldDsNCj4gPg0KPiA+ICsgICAg
-ICAgcmV0ID0gZGE5MDYzX2NsZWFyX2ZhdWx0X2xvZyhkYTkwNjMpOw0KPiA+ICsgICAgICAgaWYg
-KHJldCA8IDApDQo+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoZGE5MDYzLT5kZXYsICJDYW5u
-b3QgY2xlYXIgZmF1bHQgbG9nXG4iKTsNCj4gPiArDQo+ID4gICAgICAgICBpZiAocGRhdGEpIHsN
-Cj4gPiAgICAgICAgICAgICAgICAgZGE5MDYzLT5mbGFncyA9IHBkYXRhLT5mbGFnczsNCj4gPiAg
-ICAgICAgICAgICAgICAgZGE5MDYzLT5pcnFfYmFzZSA9IHBkYXRhLT5pcnFfYmFzZTsNCj4gDQo+
-IFRoZSBjb2RlIGFib3ZlIGRvZXNuJ3Qgc2VlbSB0byBtYXRjaCB0aGUgcGF0Y2ggZGVzY3JpcHRp
-b24uDQo+IENhbiB5b3UgcGxlYXNlIGV4cGxhaW4gd2h5IGl0IGlzIG5lZWRlZD8NCj4gDQoNCkhp
-IEdlZXJ0LA0KDQpZZXMsIGF0IGZpcnN0IGl0IGRvZXMgc2VlbSB0aGF0IHRoZSBmYXVsdC1sb2cg
-Y2xlYXJpbmcgZnVuY3Rpb24gaXMgdW5yZWxhdGVkIHRvIHRoZQ0KIk1GRCBzdXBwb3J0IGZvciB0
-aGUgREE5MDYzIE9uS2V5IGRyaXZlciIsIGJ1dCB0aGVyZSBpcyBhbiBpbXBvcnRhbnQgY29ubmVj
-dGlvbg0KdGhhdCBtYWtlcyBpdCBlc3NlbnRpYWwgZm9yIHRoZSBPbktleSBkcml2ZXIgaW4gdGhp
-cyBjYXNlLg0KDQpJIGhhdmUgbWFkZSBzb21lIGV4cGxhbmF0aW9uIG9mIHRoZSBPbktleSdzIG9w
-ZXJhdGlvbiBpbiB0aGlzIHRocmVhZCBoZXJlOg0KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTUv
-NC8yOS80MDYNCg0KQnV0IEkgb25seSBkZXNjcmliZWQgdGhlIE9uS2V5J3MgcG9pbnQtb2Ytdmll
-dyBmb3IgY2FzZSAoNCkgb2YgdGhlICJPbktleSBvcGVyYXRpb24iDQpDYXNlICg0KTogdGhlIGxv
-bmctbG9uZyBwcmVzcyBhbmQgbm8ga2V5IHJlbGVhc2UgLS0gdGhlIGhhcmR3YXJlIHBvd2VyLWN1
-dCB3aGVuDQpzb2Z0d2FyZSBpcyB1bmFibGUgdG8gcmVzcG9uZCAoZm9yIHdoYXRldmVyIHJlYXNv
-bikuDQoNCkluIHRoaXMgY2FzZSwgaWYgdGhlIHNvZnR3YXJlIHdhcyBub3QgcmVzcG9uc2l2ZSBh
-bmQgYSBoYXJkd2FyZSBzaHV0ZG93biBvZiB0aGUNCmRldmljZSB3YXMgY2hvc2VuLCB0aGUgRkFV
-TFRfTE9HIHdvdWxkIHBlcnNpc3Qgd2l0aCBpbmZvcm1hdGlvbiB0aGF0IHdvdWxkIGJlDQphY2Nl
-c3NpYmxlIHdoZW4gdGhlIGRldmljZSB3YXMgcmVzdGFydGVkOiBpdCB3b3VsZCBiZSBwb3NzaWJs
-ZSB0byB0YWtlIGFjdGlvbiB0aGUNCm5leHQgdGltZSB0aGUgZGV2aWNlIHdhcyB0dXJuZWQgb24g
-YWdhaW4gKG1heWJlIHRvIHRyaWdnZXIgc29tZSBtaXRpZ2F0aW9uIGV4ZXJjaXNlDQppbiB0aGUg
-Ym9vdGxvYWRlciAtLSBlLmcuIHNheSB0byBjb21wbGV0ZSBtZW1vcnkgY2hlY2tzIG9yIHB1dCB0
-aGUgZGV2aWNlIGludG8gYQ0Kc2FmZSBtb2RlKS4gDQoNCkhvd2V2ZXIgdGhpcyBtaXRpZ2F0aW9u
-IGV4ZXJjaXNlIGFuZCBjbGVhcmFuY2Ugb2YgdGhlIGZhdWx0LWxvZyBjYW5ub3QgYmUgY291bnRl
-ZCBvbiANCm91dHNpZGUgdGhlIExpbnV4IGtlcm5lbCBhbmQgc28gdGhlIGNsZWFyYW5jZSBmdW5j
-dGlvbiBkYTkwNjNfY2xlYXJfZmF1bHRfbG9nICgpIGhhcw0KYmVlbiBkb25lIGhlcmUuDQoNCklm
-IHRoaXMgY2xlYXJhbmNlIGZ1bmN0aW9uIGRpZCBub3QgZXhpc3QsIHRoZW4gYWZ0ZXIgYSBoYXJk
-d2FyZSBzaHV0ZG93biAoZHVlIHRvIFMvVw0KZmFpbHVyZSksIHRoZSBuZXh0IHRpbWUgdGhlIGRl
-dmljZSBpcyByZXN0YXJ0ZWQgdGhlIEZBVUxUX0xPRyB3b3VsZCBwZXJzaXN0IHdpdGggdmFsdWVz
-DQpmcm9tIHRoZSBwcmV2aW91cyBlcnJvci4NCg0KUmVnYXJkcywNClN0ZXZlDQoNCg==
+On 4 May 2015 at 15:39, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch adds the SDHCI support for APM X-Gene SoC using ARASAN SDHCI controller.
+>
+> v1 change:
+>  * Use the CONFIG_ARM64_DMA_HAS_IOMMU for dma-mapping.
+>
+> v2 change:
+>  * Drop the IOMMU support and switching to PIO mode for arasan.
+>    controller integrated inside APM X-Gene SoC.
+>
+> v3 change:
+>  * Change the sdhci-of-arasan.c to support arasan4.9a.
+>  * Add quirks for arasan4.9a.
+>
+> v4 change:
+>  * Cleanup the Documentation and dts.
+>
+> Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>
+> Suman Tripathi (3):
+>   arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
+>   mmc: host: arasan: Add the support for sdhci-arasan4.9a in
+>     sdhci-of-arasan.c
+>   Documentation: mmc: Update Arasan SDHC documentation to support 4.9a
+>     version of     Arasan SDHC controller.
+>
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  3 +-
+>  arch/arm64/boot/dts/apm-mustang.dts                |  4 ++
+>  arch/arm64/boot/dts/apm-storm.dtsi                 | 44 ++++++++++++++++++++++
+>  drivers/mmc/host/sdhci-of-arasan.c                 |  7 ++++
+>  4 files changed, 57 insertions(+), 1 deletion(-)
+>
+
+Thanks!
+
+I have applied patch2 and patch3. Though, I decided to squash them
+into one patch and changed the commit message header a bit.
+
+I couldn't apply patch 1, so I guess that will be taken through arm soc?
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
