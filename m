@@ -1,67 +1,290 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [Celinux-dev] Invitation and RFC: Linux Plumbers Device Tree
- track proposed
-Date: Tue, 5 May 2015 09:34:08 +0200
-Message-ID: <CAMuHMdV7xfbBYL5fhudObdwNVJ0L_1_h0ozT+U4Lpx=Mu9UGhw@mail.gmail.com>
-References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
-	<5543EE80.5060109@landley.net>
-	<CAL_JsqKkZYEMdYmh=JkA6O34a+7mKy=SgB2XxzgTM70mihgQeQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC PATCH 3/7] pinctrl: sh-pfc: r8a7790: Add regulators for SD
+ voltage switch
+Date: Tue, 5 May 2015 09:52:51 +0200
+Message-ID: <CAPDyKFq_y6tv8Tcuc+LXqKr5bbqVC5YRQAPvO=Tq3n2+p6CZfw@mail.gmail.com>
+References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
+	<1430397095.5802.42.camel@xylophone.i.decadent.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKkZYEMdYmh=JkA6O34a+7mKy=SgB2XxzgTM70mihgQeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1430397095.5802.42.camel@xylophone.i.decadent.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc: Ian Molton <ian@mnementh.co.uk>, linux-mmc <linux-mmc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@lists.codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
-
-On Tue, May 5, 2015 at 1:20 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, May 1, 2015 at 4:22 PM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
->> On 04/11/2015 02:20 PM, Rowand, Frank wrote:
->>> In recent years there have been proposed tools to aid in the creation of valid
->>> device trees and in debugging device tree issues.  An example of this is the
->>> various approaches proposed (with source code provided) to validate device tree
->>> source against valid bindings.  As of today, device tree related tools,
->>> techniques, and debugging infrastructure have not progressed very far.  I have
->>> submitted a device tree related proposal for the Linux Plumbers 2015 conference
->>> to spur action and innovation in such tools, techniques, and debugging
->>> infrastructure.
->>>
->>> The current title of the track is "Device Tree Tools, Validation, and
->>> Troubleshooting".  The proposal is located at
->>>
->>>    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
->>
->> Want I want to do is:
->>
->> 1) Download an archive of device tree files describing a bunch of
->> boards. (Both dts and corresponding dtb files, with maybe a .txt telling
->> me about the board and the -append line qemu needs to give it any
->> board-specific kernel command line stuff like "console=myserialport".)
+On 30 April 2015 at 14:31, Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
+> Model the choice of 1.8V or 3.3V signalling for each SD interface as a
+> regulator.
 >
-> The dts half is here[1]. It is a kernel repository automatically
-> stripped of everything but dts files.
+> Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+
+You need also to send this to the pinctrl maintainer and the corresponding list.
+
+Kind regards
+Uffe
+
+> ---
+>  drivers/pinctrl/sh-pfc/Kconfig       |    1 +
+>  drivers/pinctrl/sh-pfc/core.c        |    2 +-
+>  drivers/pinctrl/sh-pfc/core.h        |    1 +
+>  drivers/pinctrl/sh-pfc/pfc-r8a7790.c |  189 ++++++++++++++++++++++++++++++++++
+>  4 files changed, 192 insertions(+), 1 deletion(-)
 >
-> [1] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
-
-Great!
-
-While "git log" has the "--nomerges" option, cgit hasn't, making it hard to see
-the actual changes through the forest of merges.
-
-Any chance merge commits not causing any changes can be stripped out, too?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> diff --git a/drivers/pinctrl/sh-pfc/Kconfig b/drivers/pinctrl/sh-pfc/Kconfig
+> index 8c4b3d391823..4b1895a6ac69 100644
+> --- a/drivers/pinctrl/sh-pfc/Kconfig
+> +++ b/drivers/pinctrl/sh-pfc/Kconfig
+> @@ -49,6 +49,7 @@ config PINCTRL_PFC_R8A7790
+>         def_bool y
+>         depends on ARCH_R8A7790
+>         select PINCTRL_SH_PFC
+> +       select REGULATOR if OF
+>
+>  config PINCTRL_PFC_R8A7791
+>         def_bool y
+> diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
+> index 7b2c9495c383..7d51f96afc9a 100644
+> --- a/drivers/pinctrl/sh-pfc/core.c
+> +++ b/drivers/pinctrl/sh-pfc/core.c
+> @@ -92,7 +92,7 @@ static int sh_pfc_map_resources(struct sh_pfc *pfc,
+>         return 0;
+>  }
+>
+> -static void __iomem *sh_pfc_phys_to_virt(struct sh_pfc *pfc, u32 reg)
+> +void __iomem *sh_pfc_phys_to_virt(struct sh_pfc *pfc, u32 reg)
+>  {
+>         struct sh_pfc_window *window;
+>         phys_addr_t address = reg;
+> diff --git a/drivers/pinctrl/sh-pfc/core.h b/drivers/pinctrl/sh-pfc/core.h
+> index 6dc8a6fc2746..af355629c5d2 100644
+> --- a/drivers/pinctrl/sh-pfc/core.h
+> +++ b/drivers/pinctrl/sh-pfc/core.h
+> @@ -57,6 +57,7 @@ int sh_pfc_unregister_gpiochip(struct sh_pfc *pfc);
+>  int sh_pfc_register_pinctrl(struct sh_pfc *pfc);
+>  int sh_pfc_unregister_pinctrl(struct sh_pfc *pfc);
+>
+> +void __iomem *sh_pfc_phys_to_virt(struct sh_pfc *pfc, u32 address);
+>  u32 sh_pfc_read_raw_reg(void __iomem *mapped_reg, unsigned int reg_width);
+>  void sh_pfc_write_raw_reg(void __iomem *mapped_reg, unsigned int reg_width,
+>                           u32 data);
+> diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> index 22a5470889f5..0c9d2c018a10 100644
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> @@ -23,6 +23,13 @@
+>
+>  #include <linux/kernel.h>
+>  #include <linux/platform_data/gpio-rcar.h>
+> +#ifdef CONFIG_OF
+> +#include <linux/of.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/regulator/of_regulator.h>
+> +#include <linux/string.h>
+> +#endif
+>
+>  #include "core.h"
+>  #include "sh_pfc.h"
+> @@ -5586,8 +5593,190 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+>         { },
+>  };
+>
+> +#ifdef CONFIG_OF
+> +
+> +struct r8a7790_sd_regulator_data {
+> +       struct regulator_desc desc;
+> +       char name[10];
+> +       struct regulator_dev *dev;
+> +       int state;
+> +};
+> +
+> +#define SD_REGULATOR_NAME "regulator-r8a7790-sd"
+> +
+> +#define SD_LOW_VOLTAGE 1800000
+> +#define SD_STD_VOLTAGE 3300000
+> +
+> +static int r8a7790_sd_regulator_set_voltage(struct regulator_dev *dev,
+> +                                           int min_uV, int max_uV,
+> +                                           unsigned int *selector)
+> +{
+> +       struct r8a7790_sd_regulator_data *drvdata = rdev_get_drvdata(dev);
+> +       struct sh_pfc *pfc = dev_get_drvdata(dev->dev.parent);
+> +       void __iomem *mapped_reg;
+> +       u32 data, mask;
+> +       int state;
+> +
+> +       if (min_uV <= SD_LOW_VOLTAGE && max_uV >= SD_LOW_VOLTAGE)
+> +               state = 0;
+> +       else if (min_uV <= SD_STD_VOLTAGE && max_uV >= SD_STD_VOLTAGE)
+> +               state = 1;
+> +       else
+> +               return -EINVAL;
+> +
+> +       /* Map IOCTRL6 */
+> +       mapped_reg = sh_pfc_phys_to_virt(pfc, 0xe606008c);
+> +
+> +       spin_lock(&pfc->lock);
+> +
+> +       data = sh_pfc_read_raw_reg(mapped_reg, 32);
+> +
+> +       /* Set I/O voltage for the 8 pins for this SD interface */
+> +       mask = 0xff << (24 - drvdata->desc.id * 8);
+> +       if (state)
+> +               data |= mask;
+> +       else
+> +               data &= ~mask;
+> +
+> +       sh_pfc_write_raw_reg(
+> +               sh_pfc_phys_to_virt(pfc, pfc->info->unlock_reg), 32,
+> +               ~data);
+> +       sh_pfc_write_raw_reg(mapped_reg, 32, data);
+> +
+> +       spin_unlock(&pfc->lock);
+> +
+> +       drvdata->state = state;
+> +       if (selector)
+> +               *selector = state;
+> +
+> +       return 0;
+> +}
+> +
+> +static int r8a7790_sd_regulator_list_voltage(struct regulator_dev *dev,
+> +                                      unsigned int selector)
+> +{
+> +       switch (selector) {
+> +       case 0:
+> +               return SD_LOW_VOLTAGE;
+> +       case 1:
+> +               return SD_STD_VOLTAGE;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +}
+> +
+> +static int r8a7790_sd_regulator_get_voltage(struct regulator_dev *dev)
+> +{
+> +       struct r8a7790_sd_regulator_data *drvdata = rdev_get_drvdata(dev);
+> +
+> +       return r8a7790_sd_regulator_list_voltage(dev, drvdata->state);
+> +}
+> +
+> +static const struct regulator_ops r8a7790_sd_regulator_ops = {
+> +       .set_voltage = r8a7790_sd_regulator_set_voltage,
+> +       .get_voltage = r8a7790_sd_regulator_get_voltage,
+> +       .list_voltage = r8a7790_sd_regulator_list_voltage,
+> +};
+> +
+> +static const struct regulator_init_data r8a7790_sd_regulator_init = {
+> +       .constraints = {
+> +               .valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
+> +               .min_uV = SD_LOW_VOLTAGE,
+> +               .max_uV = SD_STD_VOLTAGE,
+> +       },
+> +};
+> +
+> +static int r8a7790_sd_regulator_probe(struct sh_pfc *pfc, int index)
+> +{
+> +       char child_name[20];
+> +       struct device_node *np;
+> +       struct r8a7790_sd_regulator_data *drvdata;
+> +       struct regulator_config cfg = { };
+> +       void __iomem *mapped_reg;
+> +       int ret;
+> +
+> +       snprintf(child_name, sizeof(child_name), "sd-regulator@%d", index);
+> +       np = NULL;
+> +       while ((np = of_get_next_available_child(pfc->dev->of_node, np))) {
+> +               if (!strcmp(kbasename(np->full_name), child_name))
+> +                       break;
+> +       }
+> +       if (!np) {
+> +               dev_dbg(pfc->dev, "no %s child node found\n", child_name);
+> +               return -ENODEV;
+> +       }
+> +
+> +       drvdata = devm_kzalloc(pfc->dev, sizeof(*drvdata), GFP_KERNEL);
+> +       if (!drvdata) {
+> +               ret = -ENOMEM;
+> +               goto out;
+> +       }
+> +       drvdata->desc.owner = THIS_MODULE;
+> +       /* XXX drvdata->desc.enable_time = ???; */
+> +       drvdata->desc.id = index;
+> +       drvdata->desc.type = REGULATOR_VOLTAGE;
+> +       drvdata->desc.ops = &r8a7790_sd_regulator_ops;
+> +       drvdata->desc.n_voltages = 2;
+> +
+> +       snprintf(drvdata->name, sizeof(drvdata->name), "sd%d-vccq", index);
+> +       drvdata->desc.name = drvdata->name;
+> +
+> +       /* Read initial state from IOCTRL6 */
+> +       mapped_reg = sh_pfc_phys_to_virt(pfc, 0xe606008c);
+> +       switch ((sh_pfc_read_raw_reg(mapped_reg, 32) >> (24 - index * 8)) &
+> +               0xff) {
+> +       case 0:         /* low = 1.8V */
+> +               drvdata->state = 0;
+> +               break;
+> +       case 0xff:      /* standard = 3.3V */
+> +               drvdata->state = 1;
+> +               break;
+> +       default:        /* mixed?! */
+> +               drvdata->state = -1;
+> +               break;
+> +       }
+> +
+> +       cfg.dev = pfc->dev;
+> +       cfg.of_node = np;
+> +       cfg.driver_data = drvdata;
+> +       cfg.init_data = &r8a7790_sd_regulator_init;
+> +
+> +       drvdata->dev = devm_regulator_register(pfc->dev, &drvdata->desc, &cfg);
+> +       if (IS_ERR(drvdata->dev)) {
+> +               ret = PTR_ERR(drvdata->dev);
+> +               dev_err(pfc->dev, "Failed to register regulator: %d\n", ret);
+> +       }
+> +
+> +out:
+> +       of_node_put(np);
+> +       return ret;
+> +}
+> +
+> +static int r8a7790_pinmux_soc_init(struct sh_pfc *pfc)
+> +{
+> +       int i, ret;
+> +
+> +       for (i = 0; i < 4; ++i) {
+> +               ret = r8a7790_sd_regulator_probe(pfc, i);
+> +               if (ret && ret != -ENODEV)
+> +                       return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +#endif /* CONFIG_OF */
+> +
+> +static const struct sh_pfc_soc_operations pinmux_ops = {
+> +#ifdef CONFIG_OF
+> +       .init = r8a7790_pinmux_soc_init,
+> +#endif
+> +};
+> +
+>  const struct sh_pfc_soc_info r8a7790_pinmux_info = {
+>         .name = "r8a77900_pfc",
+> +       .ops = &pinmux_ops,
+> +
+>         .unlock_reg = 0xe6060000, /* PMMR */
+>
+>         .function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
+> --
+> 1.7.10.4
+>
+>
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
