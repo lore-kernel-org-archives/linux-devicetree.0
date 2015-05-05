@@ -1,73 +1,71 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V3 3/3] mfd: da9063: MFD support for OnKey driver
-Date: Tue, 5 May 2015 09:19:14 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B219050@SW-EX-MBX02.diasemi.com>
-References: <cover.1430393194.git.stwiss.opensource@diasemi.com>
-	<639fd177d5ddd4ce80df45f9d774cc971b286ef9.1430393194.git.stwiss.opensource@diasemi.com>
-	<CAMuHMdW43GHj-iO1F9gjHsjYOvvycjrP6WPyCKSOvcpcwPsM-w@mail.gmail.com>
-	<6ED8E3B22081A4459DAC7699F3695FB7014B219017@SW-EX-MBX02.diasemi.com>
- <CAMuHMdWjSUqtrOC=CvhKQFb2oBHTJYSPUJknf_o92P=OuLS3NQ@mail.gmail.com>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 7/8] ASoC: wm8998: Initial WM8998 codec driver
+Date: Tue, 5 May 2015 10:24:12 +0100
+Message-ID: <20150505092411.GA15549@opensource.wolfsonmicro.com>
+References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com> <1430493319-23808-8-git-send-email-rf@opensource.wolfsonmicro.com> <20150504113943.GB15510@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWjSUqtrOC=CvhKQFb2oBHTJYSPUJknf_o92P=OuLS3NQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150504113943.GB15510@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUgTWF5IDIwMTUgMDk6NTIgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KDQo+IE9uIFR1
-ZSwgTWF5IDUsIDIwMTUgYXQgMTA6MzYgQU0sIE9wZW5zb3VyY2UgW1N0ZXZlIFR3aXNzXQ0KPiA8
-c3R3aXNzLm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+IHdyb3RlOg0KPiA+IE9uIDA0IE1heSAyMDE1
-IDA4OjQ3LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4+IE9uIFRodSwgQXByIDMwLCAy
-MDE1IGF0IDE6MjYgUE0sIFMgVHdpc3MgPHN0d2lzcy5vcGVuc291cmNlQGRpYXNlbWkuY29tPiB3
-cm90ZToNCj4gPj4gPiBBZGQgTUZEIHN1cHBvcnQgZm9yIHRoZSBEQTkwNjMgT25LZXkgZHJpdmVy
-DQo+ID4+ID4gK3N0YXRpYyBpbnQgZGE5MDYzX2NsZWFyX2ZhdWx0X2xvZyhzdHJ1Y3QgZGE5MDYz
-ICpkYTkwNjMpDQo+ID4+ID4gK3sNCj4gDQo+ID4+ID4gK30NCj4gPj4gPiArDQo+ID4+ID4gIGlu
-dCBkYTkwNjNfZGV2aWNlX2luaXQoc3RydWN0IGRhOTA2MyAqZGE5MDYzLCB1bnNpZ25lZCBpbnQg
-aXJxKQ0KPiA+PiA+ICB7DQo+ID4+ID4gICAgICAgICBzdHJ1Y3QgZGE5MDYzX3BkYXRhICpwZGF0
-YSA9IGRhOTA2My0+ZGV2LT5wbGF0Zm9ybV9kYXRhOw0KPiA+PiA+ICAgICAgICAgaW50IG1vZGVs
-LCB2YXJpYW50X2lkLCB2YXJpYW50X2NvZGU7DQo+ID4+ID4gICAgICAgICBpbnQgcmV0Ow0KPiA+
-PiA+DQo+ID4+ID4gKyAgICAgICByZXQgPSBkYTkwNjNfY2xlYXJfZmF1bHRfbG9nKGRhOTA2Myk7
-DQo+ID4+ID4gKyAgICAgICBpZiAocmV0IDwgMCkNCj4gPj4gPiArICAgICAgICAgICAgICAgZGV2
-X2VycihkYTkwNjMtPmRldiwgIkNhbm5vdCBjbGVhciBmYXVsdCBsb2dcbiIpOw0KPiA+PiA+ICsN
-Cj4gPj4gPiAgICAgICAgIGlmIChwZGF0YSkgew0KPiA+PiA+ICAgICAgICAgICAgICAgICBkYTkw
-NjMtPmZsYWdzID0gcGRhdGEtPmZsYWdzOw0KPiA+PiA+ICAgICAgICAgICAgICAgICBkYTkwNjMt
-PmlycV9iYXNlID0gcGRhdGEtPmlycV9iYXNlOw0KPiA+Pg0KPiA+PiBUaGUgY29kZSBhYm92ZSBk
-b2Vzbid0IHNlZW0gdG8gbWF0Y2ggdGhlIHBhdGNoIGRlc2NyaXB0aW9uLg0KPiA+PiBDYW4geW91
-IHBsZWFzZSBleHBsYWluIHdoeSBpdCBpcyBuZWVkZWQ/DQo+ID4NCj4gPiBZZXMsIGF0IGZpcnN0
-IGl0IGRvZXMgc2VlbSB0aGF0IHRoZSBmYXVsdC1sb2cgY2xlYXJpbmcgZnVuY3Rpb24gaXMgdW5y
-ZWxhdGVkIHRvIHRoZQ0KPiA+ICJNRkQgc3VwcG9ydCBmb3IgdGhlIERBOTA2MyBPbktleSBkcml2
-ZXIiLCBidXQgdGhlcmUgaXMgYW4gaW1wb3J0YW50IGNvbm5lY3Rpb24NCj4gPiB0aGF0IG1ha2Vz
-IGl0IGVzc2VudGlhbCBmb3IgdGhlIE9uS2V5IGRyaXZlciBpbiB0aGlzIGNhc2UuDQo+ID4NCj4g
-PiBJIGhhdmUgbWFkZSBzb21lIGV4cGxhbmF0aW9uIG9mIHRoZSBPbktleSdzIG9wZXJhdGlvbiBp
-biB0aGlzIHRocmVhZCBoZXJlOg0KPiA+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzQvMjkv
-NDA2DQo+ID4NCj4gPiBCdXQgSSBvbmx5IGRlc2NyaWJlZCB0aGUgT25LZXkncyBwb2ludC1vZi12
-aWV3IGZvciBjYXNlICg0KSBvZiB0aGUgIk9uS2V5IG9wZXJhdGlvbiINCj4gPiBDYXNlICg0KTog
-dGhlIGxvbmctbG9uZyBwcmVzcyBhbmQgbm8ga2V5IHJlbGVhc2UgLS0gdGhlIGhhcmR3YXJlIHBv
-d2VyLWN1dCB3aGVuDQo+ID4gc29mdHdhcmUgaXMgdW5hYmxlIHRvIHJlc3BvbmQgKGZvciB3aGF0
-ZXZlciByZWFzb24pLg0KPiA+DQo+ID4gSW4gdGhpcyBjYXNlLCBpZiB0aGUgc29mdHdhcmUgd2Fz
-IG5vdCByZXNwb25zaXZlIGFuZCBhIGhhcmR3YXJlIHNodXRkb3duIG9mIHRoZQ0KPiA+IGRldmlj
-ZSB3YXMgY2hvc2VuLCB0aGUgRkFVTFRfTE9HIHdvdWxkIHBlcnNpc3Qgd2l0aCBpbmZvcm1hdGlv
-biB0aGF0IHdvdWxkIGJlDQo+ID4gYWNjZXNzaWJsZSB3aGVuIHRoZSBkZXZpY2Ugd2FzIHJlc3Rh
-cnRlZDogaXQgd291bGQgYmUgcG9zc2libGUgdG8gdGFrZSBhY3Rpb24gdGhlDQo+ID4gbmV4dCB0
-aW1lIHRoZSBkZXZpY2Ugd2FzIHR1cm5lZCBvbiBhZ2FpbiAobWF5YmUgdG8gdHJpZ2dlciBzb21l
-IG1pdGlnYXRpb24gZXhlcmNpc2UNCj4gPiBpbiB0aGUgYm9vdGxvYWRlciAtLSBlLmcuIHNheSB0
-byBjb21wbGV0ZSBtZW1vcnkgY2hlY2tzIG9yIHB1dCB0aGUgZGV2aWNlIGludG8gYQ0KPiA+IHNh
-ZmUgbW9kZSkuDQo+ID4NCj4gPiBIb3dldmVyIHRoaXMgbWl0aWdhdGlvbiBleGVyY2lzZSBhbmQg
-Y2xlYXJhbmNlIG9mIHRoZSBmYXVsdC1sb2cgY2Fubm90IGJlIGNvdW50ZWQgb24NCj4gPiBvdXRz
-aWRlIHRoZSBMaW51eCBrZXJuZWwgYW5kIHNvIHRoZSBjbGVhcmFuY2UgZnVuY3Rpb24gZGE5MDYz
-X2NsZWFyX2ZhdWx0X2xvZyAoKSBoYXMNCj4gPiBiZWVuIGRvbmUgaGVyZS4NCj4gPg0KPiA+IElm
-IHRoaXMgY2xlYXJhbmNlIGZ1bmN0aW9uIGRpZCBub3QgZXhpc3QsIHRoZW4gYWZ0ZXIgYSBoYXJk
-d2FyZSBzaHV0ZG93biAoZHVlIHRvIFMvVw0KPiA+IGZhaWx1cmUpLCB0aGUgbmV4dCB0aW1lIHRo
-ZSBkZXZpY2UgaXMgcmVzdGFydGVkIHRoZSBGQVVMVF9MT0cgd291bGQgcGVyc2lzdCB3aXRoIHZh
-bHVlcw0KPiA+IGZyb20gdGhlIHByZXZpb3VzIGVycm9yLg0KPiANCj4gVGhhbmtzIGZvciB5b3Vy
-IGV4cGxhbmF0aW9uIQ0KPiANCj4gUGxlYXNlIGFkZCAoc29tZSBwYXJ0cyBvZiBpdCkgdG8gdGhl
-IHBhdGNoIGRlc2NyaXB0aW9uLg0KPiANCg0KVGhhbmtzIEdlZXJ0LCANCg0KSSB3aWxsIGRvIHRo
-YXQuDQpJJ2xsIHdhaXQgYSB3aGlsZSB0byBzZWUgaWYgdGhlcmUgYXJlIGFueSBvdGhlciByZXNw
-b25zZXMgKGUuZy4gT25LZXkpIGFuZCB0aGVuIG1ha2UgYSBuZXcNCnBhdGNoIHNldCBjYWxsZWQg
-UEFUQ0ggVjQuDQoNClJlZ2FyZHMsDQpTdGV2ZQ0KDQpDQzogRG1pdHJ5IFRvcm9raG92IGZvciBp
-bmZvcm1hdGlvbiBvbiB0aGVzZSBNRkQgY2hhbmdlcyBzaW5jZSB0aGV5IGFsc28gcmVsYXRlIHRv
-IHRoZQ0KT25LZXkuDQo=
+On Mon, May 04, 2015 at 12:39:43PM +0100, Mark Brown wrote:
+> On Fri, May 01, 2015 at 04:15:18PM +0100, Richard Fitzgerald wrote:
+> 
+> > +	switch (event) {
+> > +	case SND_SOC_DAPM_PRE_PMU:
+> > +		val = snd_soc_read(codec, ARIZONA_ASRC_RATE1);
+> > +		val &= ARIZONA_ASRC_RATE1_MASK;
+> > +		val >>= ARIZONA_ASRC_RATE1_SHIFT;
+> > +
+> > +		val = snd_soc_read(codec, ARIZONA_SAMPLE_RATE_1 + val);
+> > +		if (val >= 0x11)
+> > +			dev_warn(codec->dev, "Unsupported ASRC rate1\n");
+> 
+> Shouldn't we be returning an error if the rate is unsupported?  It'd
+> also be helpful to log what the invalid value that's been set is.
+> 
+> > +		val = snd_soc_read(codec, ARIZONA_ASRC_RATE2);
+> > +		val &= ARIZONA_ASRC_RATE2_MASK;
+> > +		val >>= ARIZONA_ASRC_RATE2_SHIFT;
+> > +		val -= 0x8;
+> 
+> What if the value we read back is set (invalidly I guess) to less than
+> 8?  We'll just read...
+
+> 
+> > +
+> > +		val = snd_soc_read(codec, ARIZONA_ASYNC_SAMPLE_RATE_1 + val);
+> > +		if (val >= 0x11)
+> > +			dev_warn(codec->dev, "Unsupported ASRC rate2\n");
+> 
+> ...some random other register.
+
+ARIZONA_ASRC_RATE2 register can only have the values 8 or 9 and we don't
+provide a way to set it to illegal values.
+
+> 
+> > +static const char * const wm8998_inmux_texts[] = {
+> > +	"A",
+> > +	"B",
+> > +};
+> > +
+> > +static const SOC_ENUM_SINGLE_DECL(wm8998_in1muxl_enum,
+> > +				  ARIZONA_ADC_DIGITAL_VOLUME_1L,
+> > +				  ARIZONA_IN1L_SRC_SHIFT,
+> > +				  wm8998_inmux_texts);
+> 
+> Those are some fun input names...
+
+... that's what the mux positions are called and it seems nice to have consistent
+naming for all similar muxes across channels and across future codecs. Like for
+example to switch both muxes of a stereo input you set them both to the same
+position name (both "A" or both "B") is clearer, and quicker to spot in a dump
+of ALSA control settings, than having the two muxes set to different enumeration
+strings that actually mean the same mux position.
+
+
