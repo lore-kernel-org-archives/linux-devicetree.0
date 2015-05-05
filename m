@@ -1,35 +1,38 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] reset driver for NXP LPC18xx family
-Date: Tue, 05 May 2015 10:33:47 +0200
-Message-ID: <1430814827.3035.10.camel@pengutronix.de>
-References: <1430779956-12490-1-git-send-email-manabian@gmail.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [Linux-kernel] [RFC PATCH 5/7] mmc: sh_mobile_sdhi: Add UHS-I
+ mode support
+Date: Tue, 05 May 2015 11:35:21 +0300
+Message-ID: <554880C9.8080201@codethink.co.uk>
+References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk> <1430397136.5802.44.camel@xylophone.i.decadent.org.uk> <CAPDyKFodZscxZJmKgYyMV8m8mNWYc9GitkoKbixTKS5r7rv_fA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430779956-12490-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel.dalessandro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFodZscxZJmKgYyMV8m8mNWYc9GitkoKbixTKS5r7rv_fA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc: linux-kernel@lists.codethink.co.uk, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Molton <ian@mnementh.co.uk>, linux-mmc <linux-mmc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 05.05.2015, 00:52 +0200 schrieb Joachim Eastwood:
-> This patch set adds a reset driver for NXP LPC18xx/43xx devices.
+On 05/05/15 10:56, Ulf Hansson wrote:
+> On 30 April 2015 at 14:32, Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
+>> Implement voltage switch, supporting modes up to SDR-50.
+>>
+>> Based on work by Shinobu Uehara, Rob Taylor, William Towle and Ian Molton.
+>>
+>> This uses two voltage regulators, one external and one on the pfc.
 > 
-> Changes in v2:
-> * clean up header includes
-> * prefix M0 reset defines with LPC43XX
-> * fix comment about M0 reset lines
-> * reorganize reset call chains
-> * add reset number table to dt doc
+> Why two? If there is a parent child relation ship, that should be
+> handled through the regulator tree, right!? Please elaborate.
 
-I am satisfied with the changes.
-I'd like a short patch description in both patches before applying them.
+The card main power is separate from the IO line voltages.
 
-regards
-Philipp
+To get to the high-speed, card power is left at 3.3V and the IO
+voltage is changed to 1.8V.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In the systems we have the power gate is separate from the controls
+for the IO but not integrated into the MMC controller itself.
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
