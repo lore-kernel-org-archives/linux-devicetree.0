@@ -1,17 +1,14 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 1/6] ARM: l2c: Add DT support for Shared Override
-Date: Tue, 5 May 2015 16:55:02 +0200
-Message-ID: <CAMuHMdXpStgQpq6A7GDc2iXNgmBNWjP82E5TykzTUS=6hrWVRw@mail.gmail.com>
-References: <1430753072-17145-1-git-send-email-geert+renesas@glider.be>
- <1430753072-17145-2-git-send-email-geert+renesas@glider.be>
- <20150505112145.GG22384@e104818-lin.cambridge.arm.com>
- <CAMuHMdWE3HjGk73gCN3P-bBVEGrMbgfJ=FqvcTtGecs15R=A_g@mail.gmail.com>
- <20150505142211.GH22384@e104818-lin.cambridge.arm.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v8 0/9] Tegra xHCI support
+Date: Tue, 5 May 2015 15:57:50 +0100
+Message-ID: <5548DA6E.5060807@nvidia.com>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+ <5548D389.2080609@nvidia.com> <20150505144234.GA29813@ulmo.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150505142211.GH22384@e104818-lin.cambridge.arm.com>
+In-Reply-To: <20150505144234.GA29813@ulmo.nvidia.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,51 +18,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Pawel Moll <pawel.moll@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tushar Behera <tushar.behera@linaro.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Catalin,
+Hi Thierry,
 
-On Tue, May 5, 2015 at 4:22 PM, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> On Tue, May 05, 2015 at 01:42:21PM +0200, Geert Uytterhoeven wrote:
->> On Tue, May 5, 2015 at 1:21 PM, Catalin Marinas <catalin.marinas@arm.com> wrote:
->> > On Mon, May 04, 2015 at 05:24:27PM +0200, Geert Uytterhoeven wrote:
->> >> Hence add support for an "arm,shared-override" device tree property for
->> >> the l2c device node. By specifying this property, affected systems can
->> >> indicate that non-cacheable transactions must not be transformed.
->> >>
->> >> If specified, the actual behavior of the kernel depends on whether CMA
->> >> is available or not:
->> >>   - If CMA is available, nothing needs to be done, as there won't be a
->> >>     kernel linear mappings and cacheable aliases for the DMA buffers,
->> >
->> > I don't think this is true. See this thread:
->> >
->> > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/329492.html
+On 05/05/15 15:42, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Tue, May 05, 2015 at 03:28:25PM +0100, Jon Hunter wrote:
+>> Hi Andrew,
 >>
->> Doh, and I had hoped to please Russell...
+>> On 04/05/15 18:36, Andrew Bresticker wrote:
+>>> This series adds support for xHCI on NVIDIA Tegra SoCs.  This includes:
+>>>  - patches 1, 2, and 3: minor cleanups for mailbox framework and xHCI,
+>>>  - patches 4 and 5: adding an MFD driver for the XUSB cmoplex,
+>>>  - patches 6 and 7: adding a driver for the mailbox used to communicate
+>>>    with the xHCI controller's firmware, and
+>>>  - patches 8 and 9: adding a xHCI host-controller driver.
+>>>
+>>> The addition of USB PHY support to the XUSB padctl driver has been dropped.
+>>> Thierry will be posting those patches later.
+>>>
+>>> Given the many compile and run-time dependencies in this series, it is probably
+>>> best if the first 3 patches are picked up by the relevant maintainers in topic
+>>> branches so that the remainder of the series can go through the Tegra tree.
+>>>
+>>> Tested on Jetson TK1 and Nyan-Big with a variety of USB2.0 and USB3.0 memory
+>>> sticks and ethernet dongles.  This has also been tested, with additional
+>>> out-of-tree patches, on Tegra132 and Tegra210 based boards.
 >>
->> To bad, will drop this.
->
-> You should only drop the "if (dev_get_cma_area(NULL))" check.
+>> For the series, you can add my ...
+>>
+>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+>> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+>>
+>> I have tested this on a t124 nyan-big with USB3.0 and USB2.0 devices.
+> 
+> How can this be tested without the corresponding USB PHY patches that
+> I'm supposed to be sending out?
+> 
+> Also, can anyone point me at patches that add the device tree nodes
+> which this driver makes use of?
 
-Of course.
+Andrew has a branch here [1] for testing this series. Yes, obviously
+testing without your PHY piece (which I should have mentioned), but at
+least we can test Andrew's changes.
 
-> BTW, your patch mentions r2p0. My reading of the PL310 TRM shows this
-> bit as default from r0p0.
+Cheers
+Jon
 
-Arnd told me he had read the documentation for r0p0 and couldn't find it.
-The r3p2 manual lists the following changes between r1p0-r2p0:
-  - new behavior linked to the Shared attribute.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[1] https://github.com/abrestic/linux/tree/tegra-xhci-v8-test
