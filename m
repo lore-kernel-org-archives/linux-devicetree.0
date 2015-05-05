@@ -1,17 +1,21 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH v2 1/1] drivers: cpuidle: cpuidle-arm: heterogeneous
- systems extension
-Date: Tue, 5 May 2015 16:56:15 +0100
-Message-ID: <20150505155615.GA23106@red-moon>
-References: <1429200617-9546-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1429200617-9546-2-git-send-email-lorenzo.pieralisi@arm.com>
- <554771D3.5010701@linaro.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v7 05/15] dt-bindings: Document the STM32 reset bindings
+Date: Tue, 05 May 2015 17:07:29 +0100
+Message-ID: <5548EAC1.7010002@linaro.org>
+References: <1430410844-16062-1-git-send-email-mcoquelin.stm32@gmail.com>	
+ <1430410844-16062-6-git-send-email-mcoquelin.stm32@gmail.com>	
+ <55433467.2010603@linaro.org>	
+ <CALszF6Bw900E9MtpaVmvkFxsrOODRkNg+RxRXz5V3WghHtsxbw@mail.gmail.com>	
+ <5544A069.5000808@linaro.org>	
+ <CALszF6BTb0Ce6jfT5gY4eEtSep6+8XqOxu1LbpUXHmPYX9PmgQ@mail.gmail.com>	
+ <5548CEA2.8020807@linaro.org>	
+ <CALszF6DyUA7Wr2qo4sASFBTRwwjhGAkFKRYnY+1UwHmf4nTj5w@mail.gmail.com>
+ <1430840557.3035.60.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <554771D3.5010701@linaro.org>
+In-Reply-To: <1430840557.3035.60.camel@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,221 +25,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Howard Chen <howard.chen@linaro.org>, Kevin Hilman <khilman@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lina Iyer <lina.iyer@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Jiri Slaby <jslaby@suse.cz>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, =?UTF-8?B?VXdlIEtsZ
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 04, 2015 at 02:19:15PM +0100, Daniel Lezcano wrote:
-> On 04/16/2015 06:10 PM, Lorenzo Pieralisi wrote:
+On 05/05/15 16:42, Philipp Zabel wrote:
+> Am Dienstag, den 05.05.2015, 17:19 +0200 schrieb Maxime Coquelin:
+>>>> For example, includes/dt-bindings/mfd/stm32f4-rcc.h would look like:
+>>>>
+>>>> #define GPIOA 0
+>>>> #define GPIOB 1
+>>>> ...
+>>>> #define LTDC 186
+>
+> That looks a bit fragile.
+> At least the defines for the indices should be properly namespaced,
+> check out include/dt-bindings/gpio/tegra-gpio.h for a similar case.
 
-<snip>
+Good point.
 
-> >   /*
-> > - * arm_idle_init
-> > + * Compare idle states phandle properties
-> >    *
-> > - * Registers the arm specific cpuidle driver with the cpuidle
-> > - * framework. It relies on core code to parse the idle states
-> > - * and initialize them using driver data structures accordingly.
-> > + * Return true if properties are valid and equal, false otherwise
-> 
-> Just a detail. Would be more consistent to return zero when valid and
-> equal ?
+>>>> #define STM32F4_RESET(x) (x + 128)
+>>>> #define STM32F4_CLOCK(x) (x + 384)
 
-Consistent with memcmp you mean ? Yes, I can change it.
+Thinking more about this point, if we are going to follow hardware if 
+might be better to have:
 
-> >    */
-> > -static int __init arm_idle_init(void)
-> > +static bool __init idle_states_cmp(struct property *states1,
-> > +                                struct property *states2)
-> > +{
-> > +     /*
-> > +      * NB: Implemented through code from drivers/of/unittest.c
-> > +      *     Function is generic and can be moved to generic OF code
-> > +      *     if needed
-> > +      */
-> > +     return states1 && states2 &&
-> > +            (states1->length == states2->length) &&
-> > +            states1->value && states2->value &&
-> > +            !memcmp(states1->value, states2->value, states1->length);
-> > +}
-> > +
-> > +static int __init arm_idle_init_driver(struct cpuidle_driver *drv)
-> >   {
-> > -     int cpu, ret;
-> > -     struct cpuidle_driver *drv = &arm_idle_driver;
-> > +     int ret, cpu;
-> >       struct cpuidle_device *dev;
-> > +     struct property *curr_idle_states, *idle_states = NULL;
-> > +     struct device_node *cpu_node;
-> > +
-> > +     for_each_cpu(cpu, drv->cpumask) {
-> > +             cpu_node = of_cpu_device_node_get(cpu);
-> > +             curr_idle_states = of_find_property(cpu_node,
-> > +                                                 "cpu-idle-states", NULL);
-> > +             of_node_put(cpu_node);
-> > +
-> > +             /*
-> > +              * Stash the first valid idle states phandle in the cpumask.
-> > +              * If curr_idle_states is NULL assigning it to idle_states
-> > +              * is harmless and it is managed by idle states comparison
-> > +              * code. Keep track of first valid phandle so that
-> > +              * subsequent cpus can compare against it.
-> > +              */
-> > +             if (!idle_states)
-> > +                     idle_states = curr_idle_states;
-> > +
-> > +             /*
-> > +              * If idle states phandles are not equal, remove the
-> > +              * cpu from the driver mask since a CPUidle driver
-> > +              * is only capable of managing uniform idle states.
-> > +              *
-> > +              * Comparison works also when idle_states and
-> > +              * curr_idle_states are the same property, since
-> > +              * they can be == NULL so the cpu must be removed from
-> > +              * the driver mask in that case too (ie cpu has no idle
-> > +              * states).
-> > +              */
-> > +             if (!idle_states_cmp(idle_states, curr_idle_states))
-> > +                     cpumask_clear_cpu(cpu, drv->cpumask);
-> > +     }
-> > +
-> > +     /*
-> > +      *  If there are no valid states for this driver we rely on arch
-> > +      *  default idle behaviour, bail out
-> > +      */
-> > +     if (!idle_states)
-> > +             return -ENODEV;
-> >
-> >       /*
-> >        * Initialize idle states data, starting at index 1.
-> > @@ -117,7 +173,7 @@ static int __init arm_idle_init(void)
-> >        * Call arch CPU operations in order to initialize
-> >        * idle states suspend back-end specific data
-> >        */
-> > -     for_each_possible_cpu(cpu) {
-> > +     for_each_cpu(cpu, drv->cpumask) {
-> >               ret = arm_cpuidle_init(cpu);
-> >
-> >               /*
-> > @@ -157,7 +213,77 @@ out_fail:
-> >       }
-> >
-> >       cpuidle_unregister_driver(drv);
-> > +     return ret;
-> > +}
-> > +
-> > +/*
-> > + * arm_idle_init
-> > + *
-> > + * Registers the arm specific cpuidle driver(s) with the cpuidle
-> > + * framework. It relies on core code to parse the idle states
-> > + * and initialize them using driver data structures accordingly.
-> > + */
-> > +static int __init arm_idle_init(void)
-> > +{
-> > +     int i, ret = -ENODEV;
-> > +     struct cpuidle_driver *drv;
-> > +     cpumask_var_t tmpmask;
-> > +
-> > +     /*
-> > +      * These drivers require DT idle states to be present.
-> > +      * If no idle states are detected there is no reason to
-> > +      * proceed any further hence we return early.
-> > +      */
-> > +     if (!of_find_node_by_name(NULL, "idle-states"))
-> > +             return -ENODEV;
-> > +
-> > +     if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
-> > +             return -ENOMEM;
-> > +
-> > +     /*
-> > +      * We need to vet idle states to create CPUidle drivers
-> > +      * that share a common set of them. Create a tmp mask
-> > +      * that we use to keep track of initialized cpus.
-> > +      * Start off by initializing the mask with all possible
-> > +      * cpus, we clear it as we go, till either all cpus
-> > +      * have a CPUidle driver initialized or there are some
-> > +      * CPUs that have no idle states or a parsing error
-> > +      * occurs.
-> > +      */
-> > +     cpumask_copy(tmpmask, cpu_possible_mask);
-> > +
-> > +     for (i = 0; !cpumask_empty(tmpmask); i++) {
-> > +             if (i == ARM_CPUIDLE_MAX_DRIVERS) {
-> > +                     pr_warn("number of drivers exceeding static allocation\n");
-> > +                     break;
-> > +             }
-> > +
-> > +             drv = &arm_idle_drivers[i];
-> > +             drv->cpumask = kzalloc(cpumask_size(), GFP_KERNEL);
-> > +             if (!drv->cpumask) {
-> > +                     ret = -ENOMEM;
-> > +                     break;
-> > +             }
-> > +             /*
-> > +              * Force driver mask, arm_idle_init_driver()
-> > +              * will tweak it by vetting idle states.
-> > +              */
-> > +             cpumask_copy(drv->cpumask, tmpmask);
-> 
-> Why do you need to copy tmpmask ? Isn't simpler to have a zero-ed
-> cpumask and let the arm_idle_init_driver function to set a bit instead
-> of clearing it ?
+#define STM32F4_RCC_AHB1_GPIOA 0
+#define STM32F4_RCC_AHB1_GPIOA 1
+...
+#define STM32F4_RCC_APB2_LTDC 26
 
-No, because we need to keep track of logical cpus that have been
-already parsed, we need a tmpmask to keep track of that, how could
-we do it otherwise ? We can have more than two cpumask sets.
 
-> 
-> > +             ret = arm_idle_init_driver(drv);
-> > +             if (ret) {
-> > +                     kfree(drv->cpumask);
-> > +                     break;
-> > +             }
-> > +             /*
-> > +              * Remove the cpus that were part of the registered
-> > +              * driver from the mask of cpus to be initialized
-> > +              * and restart.
-> > +              */
-> > +             cpumask_andnot(tmpmask, tmpmask, drv->cpumask);
-> 
-> If there is a DT definition with just a cluster with the cpuidle driver
-> set and another one without any idle state, we will have always a
-> pr_warn because i == ARM_CPUIDLE_MAX_DRIVERS due to tmpmask being never
-> equal to a zero mask. Is it the purpose to detect such cases ?
+#define STM32F4_AHB1_RESET(x) (STM32F4_RCC_AHB1_##x##_BIT + (0x10 * 8))
+#define STM32F4_AHB2_RESET(x) (STM32F4_RCC_AHB2_##x##_BIT + (0x14 * 8))
+...
+#define STM32F4_APB2_RESET(x) (STM32F4_RCC_APB2_##x##_BIT + (0x24 * 8))
 
-Not really, because arm_idle_init_driver() would return -ENODEV when
-it detects cpus with no idle states and the loop will break before warning.
+Its more typing (or copy 'n pasting) by at least every number now maps 
+directly to the datasheet.
 
-If we had two cluster of cpus with an idle-states set per cluster plus
-some cpus with no idle states the warning would be hit, because
-in actual facts we have more cpuidle sets than drivers (I know, a cpu
-set with no idle states falls back to default idle, but I think
-that's a detail that is easy to sort out).
 
-I can create idle drivers dynamically so that the ARM_CPUIDLE_MAX_DRIVERS
-check can be removed or relaxed (but the code becomes slightly more complex).
-
-Thanks for having a look, apart from these comments do we think it is
-a reasonable approach ?
-
-Lorenzo
-
-> 
-> > +     }
-> >
-> > +     free_cpumask_var(tmpmask);
-> >       return ret;
-> >   }
-> >   device_initcall(arm_idle_init);
-> >
-> 
-> 
-> --
->   <http://www.linaro.org/> Linaro.org ??? Open source software for ARM SoCs
-> 
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
-> 
+>>>>
+>>>> Then, in DT, a reset would be described like this:
+>>>>
+>>>> timer2 {
+>>>>       resets = <&rcc STM32F4_RESET(TIM2)>;
+>>>> };
+>>>>
+>>>> Phillip, Daniel, does that look acceptable to you?
+>>>
+>>>
+>>> Doesn't look unreasonable.
+>>>
+>>> I am a little uneasy simply because there are very few similar header files
+>>> in that directory but I haven't thought of a better idea.
+>>
+>> Since this file will be shared by both clock and reset drivers, I
+>> don't see better option.
+>> I will implement it in v8 if Philipp agrees.
+>
+> Are the device tree maintainers happy with this idiom spreading?
+> Except for the point above, I think this is acceptable.
+>
+> regards
+> Philipp
+>
