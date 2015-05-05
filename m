@@ -1,68 +1,91 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [RESEND-v2-PATCH] ARM: dts: Add missing irq pinctrl for max77686 on
- smdk5250
-Date: Tue, 05 May 2015 10:09:56 +0530
-Message-ID: <1430800796-30960-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, kgene@kernel.org, yadi.brar01@gmail.com, k.kozlowski.k@gmail.com, k.kozlowski@samsung.com, Yadwinder Singh Brar <yadi.brar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
+From: Kenneth Westfield <kwestfie@codeaurora.org>
+Subject: Re: [RFC PATCH 03/14] ASoC: qcom: move ipq806x specific bits out of
+ lpass driver.
+Date: Mon, 4 May 2015 22:19:28 -0700
+Message-ID: <20150505051913.GA12961@kwestfie-linux.qualcomm.com>
+References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1430414213-10997-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150502235738.GB27804@kwestfie-linux.qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150502235738.GB27804@kwestfie-linux.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yadwinder Singh Brar <yadi.brar@samsung.com>
+On Sat, May 02, 2015 at 04:57:38PM -0700, Kenneth Westfield wrote:
+> On Thu, Apr 30, 2015 at 06:16:53PM +0100, Srinivas Kandagatla wrote:
+> > This patch tries to make the lpass driver more generic by moving the
+> > ipq806x specific bits out of the cpu and platform driver, also allows
+> the
+> > SOC specific drivers to add the correct register offsets.
+> > 
+> > This patch also renames the register definition header file into more
+> > generic header file.
+> 
+> > diff --git a/sound/soc/qcom/lpass-ipq806x.c
+> b/sound/soc/qcom/lpass-ipq806x.c
+> > new file mode 100644
+> > index 0000000..8e9a427
+> > --- /dev/null
+> > +++ b/sound/soc/qcom/lpass-ipq806x.c
 
-This patch adds pinctrl configuration for using configuring gpx3-2 as an
-external interrupt from max77686. Though max77686 RTC is enabled and gets
-probed by default, it doesnt work as its unable to get interrupt.
+> > +enum lpaif_i2s_ports {
+> > +	LPAIF_I2S_PORT_MIN		= 0,
+> > +
+> > +	LPAIF_I2S_PORT_CODEC_SPK	= 0,
+> > +	LPAIF_I2S_PORT_CODEC_MIC	= 1,
+> > +	LPAIF_I2S_PORT_SEC_SPK		= 2,
+> > +	LPAIF_I2S_PORT_SEC_MIC		= 3,
+> > +	LPAIF_I2S_PORT_MI2S		= 4,
+> > +
+> > +	LPAIF_I2S_PORT_MAX		= 4,
+> > +	LPAIF_I2S_PORT_NUM		= 5,
+> > +};
+> 
+> These port mappings here...
+> 
+> > +enum lpaif_irq_ports {
+> > +	LPAIF_IRQ_PORT_MIN		= 0,
+> > +
+> > +	LPAIF_IRQ_PORT_HOST		= 0,
+> > +	LPAIF_IRQ_PORT_ADSP		= 1,
+> > +
+> > +	LPAIF_IRQ_PORT_MAX		= 2,
+> > +	LPAIF_IRQ_PORT_NUM		= 3,
+> > +};
+> 
+> ...here...
+> 
+> > +enum lpaif_dma_channels {
+> > +	LPAIF_RDMA_CHAN_MIN		= 0,
+> > +
+> > +	LPAIF_RDMA_CHAN_MI2S		= 0,
+> > +	LPAIF_RDMA_CHAN_PCM0		= 1,
+> > +	LPAIF_RDMA_CHAN_PCM1		= 2,
+> > +
+> > +	LPAIF_RDMA_CHAN_MAX		= 4,
+> > +	LPAIF_RDMA_CHAN_NUM		= 5,
+> > +};
+> 
+> ...and here can be SOC-specific.  Should move them to the SOC-specific
+> files.
 
-This patch makes max77686 RTC work and also configures it as wakeup source.
+Expanding on this, the I2S port mappings for the APQ8016 should replace
+the ones defined above with the constants you refer to in
+dt-bindings/sound/apq8016.h:
+   MI2S_PRIMARY
+   MI2S_SECONDARY
+   etc.
 
-Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
-[pankaj.dubey: resubmitted after rebasing to latest kgene tree]
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Tested-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
-Initial version of this patch was part of following series, though
-they are not dependent on each other, resubmitting after rebasing
-and detaching second one from first patch in the series [1]
+Maybe defining a corresponding ipq806x.h in the same directory, and
+moving the above definitions there?
 
-[1]: http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/303652.html
-
-v2:
- -Included my Signed-off-by for touching this patch.
- -Included Acked-by from Krzysztof Kozlowski.
-
- arch/arm/boot/dts/exynos5250-smdk5250.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index bc27cc2..4fe186d 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -131,6 +131,9 @@
- 		reg = <0x09>;
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <2 IRQ_TYPE_NONE>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&max77686_irq>;
-+		wakeup-source;
- 
- 		voltage-regulators {
- 			ldo1_reg: LDO1 {
-@@ -410,3 +413,12 @@
- 		};
- 	};
- };
-+
-+&pinctrl_0 {
-+	max77686_irq: max77686-irq {
-+		samsung,pins = "gpx3-2";
-+		samsung,pin-function = <0xf>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
 -- 
-2.2.0
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
+a Linux Foundation Collaborative Project
