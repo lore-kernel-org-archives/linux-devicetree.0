@@ -1,47 +1,72 @@
-From: Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>
-Subject: Device Tree Blob (DTB) licence
-Date: Tue, 05 May 2015 12:05:15 +0200
-Message-ID: <1430820315.19516.26.camel@opteya.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 2/2] mmc: sdhci: DT: Allow to specify that no write
+ protect signal is present
+Date: Tue, 5 May 2015 12:15:13 +0200
+Message-ID: <CAPDyKFrpTLZokiHCKCafh6neBmYpDtk2hLq6X57rzR8GY-bgug@mail.gmail.com>
+References: <1430214020-16816-1-git-send-email-lars@metafoo.de>
+	<1430214020-16816-2-git-send-email-lars@metafoo.de>
+	<CAPDyKFpC9uc0n8HLiC1gWgdJOM-0DGVaNazkF3Q847r-sfXNtg@mail.gmail.com>
+	<554887B0.4020407@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <554887B0.4020407@metafoo.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Mike Looijmans <mike.looijmans@topic.nl>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 5 May 2015 at 11:04, Lars-Peter Clausen <lars@metafoo.de> wrote:
+> On 05/05/2015 10:36 AM, Ulf Hansson wrote:
+> [...]
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
+>>> b/Documentation/devicetree/bindings/mmc/mmc.txt
+>>> index 438899e..b068549 100644
+>>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+>>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+>>> @@ -21,6 +21,7 @@ Optional properties:
+>>>     below for the case, when a GPIO is used for the CD line
+>>>   - wp-inverted: when present, polarity on the WP line is inverted. See
+>>> the note
+>>>     below for the case, when a GPIO is used for the WP line
+>>> +- disable-wp: When set no physical WP line is present
+>>
+>>
+>> This requires some additional explanation, I believe. I assume this
+>> property is only relevant for those controllers that have internal
+>> logic to handle WP!?
+>
+>
+> Yes, currently drivers for controllers that have a built-in WP detection
+> logic typically assume that if no WP GPIO is specified the built-in WP logic
+> should be used. But for some of them the value returned by the internal
+> detection logic will be bogus if there is no WP signal connected. So we need
+> a way to specify that that there is no WP signal and the internal detection
+> logic shouldn't be used either.
+>
+>>
+>> For those that uses GPIO, this can't ever be a correct configuration.
+>> Right?
+>
+>
+> It wouldn't make much sense to use it with a GPIO based detection logic,
+> since you simply don't specify the wp-gpio property if it is not present.
+> One the other hand it wouldn't cause any harm to specify it in addition to
+> not specifying the wp-gpios property.
+>
+> How about:
+>
+> - disable-wp: When set no physical WP line is present. This property should
+> only be specified when the controller has a dedicated write-protect
+> detection logic. If a GPIO is used for write-protect detection logic is used
 
-I believe Device Tree Blob (.dtb file) built from kernel's Device Tree 
-Sources (.dts, which #include .dtsi, which #include .h) using Device 
-Tree Compiler (dtc) are covered by GNU General Public Licence v2 
-(GPLv2), but cannot find any reference.
+Remove the last "is used".
 
-As most .dtsi in arch/arm/boot/dts/ are covered by GPLv2, and,
-as most .h in include/dt-bindings/ are also covered by GPLv2,
-the source code is likely covered by GPLv2.
+> it is sufficient to not specify wp-gpios property in the absence of a WP
+> line.
 
-Then this source code is translated in a different language (flattened 
-device tree), so the resulting translation is also likely covered by 
-GPLv2.
+Looks good!
 
-So, when I'm proposed to download a .dtb file from a random vendor,
-can I require to get the associated source code ?
-
-Anyway, for a .dtb file generated from kernel sources, it's rather 
-painful to look after all .dts, .dtsi, .h, to find what kind of 
-licences are applicables, as some are covered by BSD, dual licensed 
-(any combination of X11, MIT, BSD, GPLv2).
-
-Regards.
-
--- 
-Yann Droneaud
-OPTEYA
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
