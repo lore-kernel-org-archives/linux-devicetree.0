@@ -1,89 +1,64 @@
-From: Bintian Wang <bintian.wang@huawei.com>
-Subject: [PATCH v4 0/5] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Tue, 5 May 2015 20:06:34 +0800
-Message-ID: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: tegra: fix hda2codec_2x clock name in Tegra124
+ device tree
+Date: Tue, 5 May 2015 14:08:52 +0200
+Message-ID: <20150505120850.GE30501@ulmo.nvidia.com>
+References: <cover.1428700856.git.marcel.ziswiler@toradex.com>
+ <4d791b76e1b363b2446a2b6a6bfb84869d9f94e8.1428700856.git.marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, khilman@kernel.org, pebolle@tiscali.nl, arnd@arndb.de, marc.zyngier@arm.com
-Cc: dan.zhao@hisilicon.com, huxinwei@huawei.com, bintian.wang@huawei.com, xuyiping@hisilicon.com, victor.lixin@hisilicon.com, btw@mail.itp.ac.cn, puck.chen@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, liguozhu@hisilicon.com, kong.kongxinwei@hisilicon.com, heyunlei@huawei.com, w.f@huawei.com, z.liuxinliang@huawei.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lteA1dqeVaWQ9QQl"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4d791b76e1b363b2446a2b6a6bfb84869d9f94e8.1428700856.git.marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt@kerne>
 List-Id: devicetree@vger.kernel.org
 
-Hi6220 is one mobile solution of Hisilicon, this patchset contains
-initial support for Hi6220 SoC and HiKey development board, which
-supports octal ARM Cortex A53 cores. Initial support is minimal and
-includes just the arch configuration, clock driver, device tree
-configuration.
 
-PSCI is enabled in device tree and there is no problem to boot all the
-octal cores, and the CPU hotplug is also working now, you can download
-and compile the latest firmware based on the following link to run this
-patch set:
-https://github.com/96boards/documentation/wiki/UEFI 
+--lteA1dqeVaWQ9QQl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes v4:
-* Rebase to kernel 4.1-rc1
-* Delete "arm,cortex-a15-gic" from the gic node in dts 
+On Fri, Apr 10, 2015 at 11:36:00PM +0200, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+>=20
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/tegra124.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes v3:
-* Verified the CPU hotplug based on the new released firmware
-* Redefined the compatible strings of four system controllers in dts 
-* Setting COMMON_CLK_HI6220 to a bool symbol
-* Keep CONFGI_ARCH_HISI sorted alphabetically
+I have this exact commit locally in my tree, so I've just taken the
+commit message from that and applied this for v4.2.
 
-Changes v2:
-* Split the DT bindings documents into earlier patches
-* Change SMP enable method from spin-table to PSCI in device tree
-* Remove "clock-frequency" from armv8-timer device node in device tree
-* Add more description about Hisilicon designed system controllers
-  in DT bindings document
-* Enable high speed clock on UART1 mux
-* Other changes based on the discussion in the mailing list:
-  https://lkml.org/lkml/2015/2/5/147
+Thanks,
+Thierry
 
-Bintian Wang (5):
-  arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
-  arm64: hi6220: Document devicetree bindings for Hisilicon hi6220 SoC
-  clk: hi6220: Document devicetree bindings for hi6220 clock
-  clk: hi6220: Clock driver support for Hisilicon hi6220 SoC
-  arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+--lteA1dqeVaWQ9QQl
+Content-Type: application/pgp-signature
 
- .../bindings/arm/hisilicon/hisilicon.txt           |  87 ++++++
- .../devicetree/bindings/clock/hi6220-clock.txt     |  34 +++
- arch/arm64/Kconfig                                 |   5 +
- arch/arm64/boot/dts/Makefile                       |   1 +
- arch/arm64/boot/dts/hisilicon/Makefile             |   5 +
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |  31 +++
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 172 ++++++++++++
- arch/arm64/configs/defconfig                       |   1 +
- drivers/clk/Kconfig                                |   2 +
- drivers/clk/Makefile                               |   4 +-
- drivers/clk/hisilicon/Kconfig                      |   6 +
- drivers/clk/hisilicon/Makefile                     |   3 +-
- drivers/clk/hisilicon/clk-hi6220.c                 | 292 +++++++++++++++++++++
- drivers/clk/hisilicon/clk.c                        |  29 ++
- drivers/clk/hisilicon/clk.h                        |  17 ++
- drivers/clk/hisilicon/clkdivider-hi6220.c          | 273 +++++++++++++++++++
- include/dt-bindings/clock/hi6220-clock.h           | 173 ++++++++++++
- 17 files changed, 1131 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/hi6220-clock.txt
- create mode 100644 arch/arm64/boot/dts/hisilicon/Makefile
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
- create mode 100644 drivers/clk/hisilicon/Kconfig
- create mode 100644 drivers/clk/hisilicon/clk-hi6220.c
- create mode 100644 drivers/clk/hisilicon/clkdivider-hi6220.c
- create mode 100644 include/dt-bindings/clock/hi6220-clock.h
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
--- 
-1.9.1
+iQIcBAABCAAGBQJVSLLSAAoJEN0jrNd/PrOhgZkP/1J1qhlOA/J3UsPupw18/v1T
+UjEoHKDaHSkiEBb64UfnoFK1zEMs5d0slAbFavvHi0TsO7oIDoxs2Tokev9LOKKw
+fLPHEcxc/h8D3r3zdSu0jqrW3qsEnnOP1nyTpol696QUdbm0ucJykpMF/9Meqfnb
+kPsCPDBvQDaZZ6ebOcHfyIG1C60ffCuTNOR0nHDu/Ga4fmXq6XYhTd/Hh4LMolMq
+u3OkqdWRNM8uXFmk+1XWEO9QSYsk7ERx1ataW5ddS1vonVn+PxUOnqdfaJTAOQqc
+iQDhGKCIzSX9KiBlcXASikgKuf7WffYHg1l6orN+uyf+FrNR21sF9SJWzWs5oKxf
+Hupa9ynrkQ9aIu4eeA4sThK1DE+hptPaNInJOooWwIXNAVaNH6uEmzLK4fnJPIuw
+YzlXMt/g7wUtYPTs0hO2nUh99yHUu7+quJ+NfjOSYDTHiQBeHJT35acNJyGkMCkK
+qbqlwdNyi4YO7ObgIagucmXDXeN9PuDfViGp7fdhjT1rdmhCV108fnw9Gn7Su69C
+7r1NxsVc9fP8ItzLCJoopu1QLJ0synZB27dhOjHIs727LYyOghrC02rTquZtBIpn
+Bup2u0dFxaIKtr6r2Fg/EfC1iFN/U8ayxNmXl/2F7HyRDgmGmUvJDhLTSTUHiINI
+/tv0kVRSLY+AVPIoh/xU
+=ZiKi
+-----END PGP SIGNATURE-----
+
+--lteA1dqeVaWQ9QQl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
