@@ -1,101 +1,188 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v7 05/15] dt-bindings: Document the STM32 reset bindings
-Date: Tue, 5 May 2015 19:24:04 +0200
-Message-ID: <CALszF6C2B-Ja+hgdYz7N4c7MYg41XAWEYbRRbnuf+H0EY0OwGQ@mail.gmail.com>
-References: <1430410844-16062-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1430410844-16062-6-git-send-email-mcoquelin.stm32@gmail.com>
-	<55433467.2010603@linaro.org>
-	<CALszF6Bw900E9MtpaVmvkFxsrOODRkNg+RxRXz5V3WghHtsxbw@mail.gmail.com>
-	<5544A069.5000808@linaro.org>
-	<CALszF6BTb0Ce6jfT5gY4eEtSep6+8XqOxu1LbpUXHmPYX9PmgQ@mail.gmail.com>
-	<5548CEA2.8020807@linaro.org>
-	<CALszF6DyUA7Wr2qo4sASFBTRwwjhGAkFKRYnY+1UwHmf4nTj5w@mail.gmail.com>
-	<1430840557.3035.60.camel@pengutronix.de>
-	<5548EAC1.7010002@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5548EAC1.7010002@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gr>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v4 2/2] ata: ahci_xgene: Add AHCI Support for 2nd HW version of APM X-Gene SoC AHCI SATA Host controller.
+Date: Tue,  5 May 2015 20:43:42 +0530
+Message-ID: <1430838822-17507-3-git-send-email-stripathi@apm.com>
+References: <1430838822-17507-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1430838822-17507-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-05 18:07 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
-> On 05/05/15 16:42, Philipp Zabel wrote:
->>
->> Am Dienstag, den 05.05.2015, 17:19 +0200 schrieb Maxime Coquelin:
->>>>>
->>>>> For example, includes/dt-bindings/mfd/stm32f4-rcc.h would look like:
->>>>>
->>>>> #define GPIOA 0
->>>>> #define GPIOB 1
->>>>> ...
->>>>> #define LTDC 186
->>
->>
->> That looks a bit fragile.
->> At least the defines for the indices should be properly namespaced,
->> check out include/dt-bindings/gpio/tegra-gpio.h for a similar case.
->
->
-> Good point.
->
->>>>> #define STM32F4_RESET(x) (x + 128)
->>>>> #define STM32F4_CLOCK(x) (x + 384)
->
->
-> Thinking more about this point, if we are going to follow hardware if might
-> be better to have:
->
-> #define STM32F4_RCC_AHB1_GPIOA 0
-> #define STM32F4_RCC_AHB1_GPIOA 1
-> ...
-> #define STM32F4_RCC_APB2_LTDC 26
->
->
-> #define STM32F4_AHB1_RESET(x) (STM32F4_RCC_AHB1_##x##_BIT + (0x10 * 8))
-> #define STM32F4_AHB2_RESET(x) (STM32F4_RCC_AHB2_##x##_BIT + (0x14 * 8))
-> ...
-> #define STM32F4_APB2_RESET(x) (STM32F4_RCC_APB2_##x##_BIT + (0x24 * 8))
->
-> Its more typing (or copy 'n pasting) by at least every number now maps
-> directly to the datasheet.
+This patch enables full AHCI feature support for APM X-Gene SoC SATA
+host controller. The following errata's are removed:
 
-As said in Philipp's reply, I like the idea.
+1. 2a0bdff6b95 ("ahci-xgene: fix the dma state machine lockup for the
+                 IDENTIFY DEVICE PIO mode command")
+2. 09c32aaa368 ("ahci_xgene: Fix the dma state machine lockup for the
+                 ATA_CMD_SMART PIO mode command")
+3. 1540035da71 ("ahci_xgene: Implement the xgene_ahci_poll_reg_val to
+                 support PMP")
+4. a3a84bc7c88 ("ahci_xgene: Implement the workaround to support PMP
+                 enumeration and discovery")
+5. 1102407bb71 ("ahci_xgene: Fix the DMA state machine lockup for the
+                 ATA_CMD_PACKET PIO mode command")
+6. 72f79f9e35b ("ahci_xgene: Removing NCQ support from the APM X-Gene
+		SoC AHCI SATA Host Controller driver")
 
-Regards,
-Maxime
->
->
->
->>>>>
->>>>> Then, in DT, a reset would be described like this:
->>>>>
->>>>> timer2 {
->>>>>       resets = <&rcc STM32F4_RESET(TIM2)>;
->>>>> };
->>>>>
->>>>> Phillip, Daniel, does that look acceptable to you?
->>>>
->>>>
->>>>
->>>> Doesn't look unreasonable.
->>>>
->>>> I am a little uneasy simply because there are very few similar header
->>>> files
->>>> in that directory but I haven't thought of a better idea.
->>>
->>>
->>> Since this file will be shared by both clock and reset drivers, I
->>> don't see better option.
->>> I will implement it in v8 if Philipp agrees.
->>
->>
->> Are the device tree maintainers happy with this idiom spreading?
->> Except for the point above, I think this is acceptable.
->>
->> regards
->> Philipp
->>
->
+In addition, enable PMP support for APM X-Gene SoC and enable FBS
+support for second generation APM X-Gene SoC.
+
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+ drivers/ata/ahci_xgene.c | 90 ++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 72 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+index 2b78510..2ced663 100644
+--- a/drivers/ata/ahci_xgene.c
++++ b/drivers/ata/ahci_xgene.c
+@@ -27,6 +27,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/ahci_platform.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/of_irq.h>
+ #include <linux/phy/phy.h>
+ #include "ahci.h"
+@@ -84,6 +85,11 @@
+ /* Max retry for link down */
+ #define MAX_LINK_DOWN_RETRY 3
+
++enum xgene_ahci_version {
++	XGENE_AHCI_V1 = 1,
++	XGENE_AHCI_V2,
++};
++
+ struct xgene_ahci_context {
+ 	struct ahci_host_priv *hpriv;
+ 	struct device *dev;
+@@ -547,9 +553,6 @@ static struct ata_port_operations xgene_ahci_ops = {
+ 	.host_stop = xgene_ahci_host_stop,
+ 	.hardreset = xgene_ahci_hardreset,
+ 	.read_id = xgene_ahci_read_id,
+-	.qc_issue = xgene_ahci_qc_issue,
+-	.softreset = xgene_ahci_softreset,
+-	.pmp_softreset = xgene_ahci_pmp_softreset
+ };
+
+ static const struct ata_port_info xgene_ahci_port_info = {
+@@ -629,12 +632,30 @@ static struct scsi_host_template ahci_platform_sht = {
+ 	AHCI_SHT(DRV_NAME),
+ };
+
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id xgene_ahci_acpi_match[] = {
++	{ "APMC0D0D", XGENE_AHCI_V1},
++	{ "APMC0D32", XGENE_AHCI_V2},
++	{},
++};
++MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
++#endif
++
++static const struct of_device_id xgene_ahci_of_match[] = {
++	{.compatible = "apm,xgene-ahci", .data = (void *) XGENE_AHCI_V1},
++	{.compatible = "apm,xgene-ahci-v2", .data = (void *) XGENE_AHCI_V2},
++	{},
++};
++MODULE_DEVICE_TABLE(of, xgene_ahci_of_match);
++
+ static int xgene_ahci_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct ahci_host_priv *hpriv;
+ 	struct xgene_ahci_context *ctx;
+ 	struct resource *res;
++	const struct of_device_id *of_devid;
++	enum xgene_ahci_version version = XGENE_AHCI_V1;
+ 	int rc;
+
+ 	hpriv = ahci_platform_get_resources(pdev);
+@@ -677,6 +698,37 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 		ctx->csr_mux = csr;
+ 	}
+
++	of_devid = of_match_device(xgene_ahci_of_match, dev);
++	if (of_devid) {
++		if (of_devid->data)
++			version = (enum xgene_ahci_version) of_devid->data;
++	}
++#ifdef CONFIG_ACPI
++	else {
++		const struct acpi_device_id *acpi_id;
++		struct acpi_device_info *info;
++		acpi_status status;
++
++		acpi_id = acpi_match_device(xgene_ahci_acpi_match, &pdev->dev);
++		if (!acpi_id) {
++			dev_warn(&pdev->dev, "No node entry in ACPI table. Assume version1\n");
++			version = XGENE_AHCI_V1;
++		}
++
++		if (acpi_id->driver_data) {
++			version = (enum xgene_ahci_version) acpi_id->driver_data;
++			status = acpi_get_object_info(ACPI_HANDLE(&pdev->dev), &info);
++			if (ACPI_FAILURE(status)) {
++				dev_warn(&pdev->dev, "%s: Error reading device info. Assume version1\n",
++					__func__);
++				version = XGENE_AHCI_V1;
++			}
++			if (info->valid & ACPI_VALID_CID)
++				version = XGENE_AHCI_V2;
++		}
++	}
++#endif
++
+ 	dev_dbg(dev, "VAddr 0x%p Mmio VAddr 0x%p\n", ctx->csr_core,
+ 		hpriv->mmio);
+
+@@ -704,7 +756,23 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 	/* Configure the host controller */
+ 	xgene_ahci_hw_init(hpriv);
+ skip_clk_phy:
+-	hpriv->flags = AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_NCQ;
++
++	switch (version) {
++	case XGENE_AHCI_V1:
++		hpriv->flags = AHCI_HFLAG_NO_NCQ;
++		/*
++		 * Override the callbacks for storm ERRATA
++		 */
++		xgene_ahci_ops.qc_issue = xgene_ahci_qc_issue;
++		xgene_ahci_ops.softreset = xgene_ahci_softreset;
++		xgene_ahci_ops.pmp_softreset = xgene_ahci_pmp_softreset;
++		break;
++	case XGENE_AHCI_V2:
++		hpriv->flags |= AHCI_HFLAG_YES_FBS | AHCI_HFLAG_EDGE_TRIG_IRQ;
++		break;
++	default:
++		break;
++	}
+
+ 	rc = ahci_platform_init_host(pdev, hpriv, &xgene_ahci_port_info,
+ 				     &ahci_platform_sht);
+@@ -719,20 +787,6 @@ disable_resources:
+ 	return rc;
+ }
+
+-#ifdef CONFIG_ACPI
+-static const struct acpi_device_id xgene_ahci_acpi_match[] = {
+-	{ "APMC0D0D", },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
+-#endif
+-
+-static const struct of_device_id xgene_ahci_of_match[] = {
+-	{.compatible = "apm,xgene-ahci"},
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, xgene_ahci_of_match);
+-
+ static struct platform_driver xgene_ahci_driver = {
+ 	.probe = xgene_ahci_probe,
+ 	.remove = ata_platform_remove_one,
+--
+1.8.2.1
+
