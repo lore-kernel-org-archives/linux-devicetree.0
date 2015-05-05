@@ -1,42 +1,84 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 3/3 v2] ARM: bcm2835: Add the mailbox to the device tree
-Date: Tue,  5 May 2015 13:27:46 -0700
-Message-ID: <1430857666-18877-3-git-send-email-eric@anholt.net>
-References: <1430857666-18877-1-git-send-email-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430857666-18877-1-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, Craig McGeachie <slapdau@yahoo.com.au>, Lubomir Rintel <lkundrak@v3.sk>, Eric Anholt <eric@anholt.net>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 1/3 v6] dt/bindings: Add binding for the BCM2835 mailbox driver
+Date: Tue,  5 May 2015 13:27:44 -0700
+Message-ID: <1430857666-18877-1-git-send-email-eric@anholt.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+
+This patch was split out of Lubomir's original mailbox patch by Eric
+Anholt, and the required properties documentation and examples have
+been filled out more completely and updated for the driver being
+changed to expose a single channel.
+
+Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 ---
 
-v2: Update for #mbox-cells 0 change in the driver.
+v2: Split into a separate patch for submitting to the devicetree list.
+    Consistently start node docs with a capital letter. device's
+    address in the example shouldn't have "0x". Drop machine-specific
+    interrupt numbers from the docs.  (changes by anholt).
 
- arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+v3: Move the file to just bcm2835-mbox.txt, clean up formatting
+    (changes by anholt, from review by Lee Jones).
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index 4d4c129..4ff1b83 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -61,6 +61,13 @@
- 			reg = <0x7e104000 0x10>;
- 		};
- 
-+		mailbox: mailbox@7e00b800 {
-+			compatible = "brcm,bcm2835-mbox";
-+			reg = <0x7e00b880 0x40>;
-+			interrupts = <0 1>;
-+			#mbox-cells = <0>;
-+		};
+v4: Move file back by consensus from various Broadcom platform
+    maintainers (changes by anholt, acked by Lee Jones).
+
+v5: Document that the mailbox cell should be 0 in clients, and add an
+    example of a client.
+
+v6: Add change description to commit message separate from this
+    version section.  Update for #mbox-cells 0 change.
+
+ .../bindings/mailbox/brcm,bcm2835-mbox.txt         | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+
+diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+new file mode 100644
+index 0000000..e893615
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+@@ -0,0 +1,26 @@
++Broadcom BCM2835 VideoCore mailbox IPC
 +
- 		gpio: gpio@7e200000 {
- 			compatible = "brcm,bcm2835-gpio";
- 			reg = <0x7e200000 0xb4>;
++Required properties:
++
++- compatible:	Should be "brcm,bcm2835-mbox"
++- reg:		Specifies base physical address and size of the registers
++- interrupts:	The interrupt number
++		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
++		  channel. The value shall be 0, since there is only one
++		  mailbox channel implemented by the device.
++
++Example:
++
++mailbox: mailbox@7e00b800 {
++	compatible = "brcm,bcm2835-mbox";
++	reg = <0x7e00b880 0x40>;
++	interrupts = <0 1>;
++	#mbox-cells = <0>;
++};
++
++firmware: firmware {
++	compatible = "raspberrypi,firmware";
++	mboxes = <&mailbox>;
++	#power-domain-cells = <1>;
++};
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
