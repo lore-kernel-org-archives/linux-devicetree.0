@@ -1,114 +1,72 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v2 1/2] pinctrl: dt-binding: document Conexant CX92755 SoC
-Date: Tue,  5 May 2015 13:55:09 +0300
-Message-ID: <eaf294961247ac7c105156d6fae6d7389a4c0dfc.1430823310.git.baruch@tkos.co.il>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Baruch Siach <baruch@tkos.co.il>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Tue, 5 May 2015 11:57:14 +0100
+Message-ID: <20150505105714.GA22845@sirena.org.uk>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+ <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+ <20150504121209.GM15510@sirena.org.uk>
+ <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="9MumfqHRHGxgklkB"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl device tree binding documentation for the General Purpose Pin
-Mapping module of the Conexant CX92755 SoC.
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
----
- .../bindings/pinctrl/cnxt,cx92755-pinctrl.txt      | 86 ++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/cnxt,cx92755-pinctrl.txt
+--9MumfqHRHGxgklkB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/cnxt,cx92755-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/cnxt,cx92755-pinctrl.txt
-new file mode 100644
-index 000000000000..23ce8dc26990
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/cnxt,cx92755-pinctrl.txt
-@@ -0,0 +1,86 @@
-+Conexant Digicolor CX92755 General Purpose Pin Mapping
-+
-+This document describes the device tree binding of the pin mapping hardware
-+modules in the Conexant Digicolor CX92755 SoCs. The CX92755 in one of the
-+Digicolor series of SoCs.
-+
-+=== Pin Controller Node ===
-+
-+Required Properties:
-+
-+- compatible: Must be "cnxt,cx92755-pinctrl"
-+- reg: Base address of the General Purpose Pin Mapping register block and the
-+  size of the block.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Must be <2>. The first cell is the pin number and the
-+  second cell is used to specify flags. See include/dt-bindings/gpio/gpio.h
-+  for possible values.
-+
-+For example, the following is the bare minimum node:
-+
-+	pinctrl: pinctrl@f0000e20 {
-+		compatible = "cnxt,cx92755-pinctrl";
-+		reg = <0xf0000e20 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+As a pin controller device, in addition to the required properties, this node
-+should also contain the pin configuration nodes that client devices reference,
-+if any.
-+
-+For a general description of GPIO bindings, please refer to ../gpio/gpio.txt.
-+
-+=== Pin Configuration Node ===
-+
-+Each pin configuration node is a sub-node of the pin controller node and is a
-+container of an arbitrary number of subnodes, called pin group nodes in this
-+document.
-+
-+Please refer to the pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices, including the definition of a
-+"pin configuration node".
-+
-+=== Pin Group Node ===
-+
-+A pin group node specifies the desired pin mux for an arbitrary number of
-+pins. The name of the pin group node is optional and not used.
-+
-+A pin group node only affects the properties specified in the node, and has no
-+effect on any properties that are omitted.
-+
-+The pin group node accepts a subset of the generic pin config properties. For
-+details generic pin config properties, please refer to pinctrl-bindings.txt
-+and <include/linux/pinctrl/pinconfig-generic.h>.
-+
-+Required Pin Group Node Properties:
-+
-+- pins: Multiple strings. Specifies the name(s) of one or more pins to be
-+  configured by this node. The format of a pin name string is "GP_xy", where x
-+  is an uppercase character from 'A' to 'R', and y is a digit from 0 to 7.
-+- function: String. Specifies the pin mux selection. Values must be one of:
-+  "gpio", "client_a", "client_b", "client_c"
-+
-+Example:
-+	pinctrl: pinctrl@f0000e20 {
-+		compatible = "cnxt,cx92755-pinctrl";
-+		reg = <0xf0000e20 0x100>;
-+
-+		uart0_default: uart0_active {
-+			data_signals {
-+				pins = "GP_O0", "GP_O1";
-+				function = "client_b";
-+			};
-+		};
-+	};
-+
-+	uart0: uart@f0000740 {
-+		compatible = "cnxt,cx92755-usart";
-+		...
-+		pinctrl-0 = <&uart0_default>;
-+		pinctrl-names = "default";
-+	};
-+
-+In the example above, a single pin group configuration node defines the
-+"client select" for the Rx and Tx signals of uart0. The uart0 node references
-+that pin configuration node using the &uart0_default phandle.
--- 
-2.1.4
+On Tue, May 05, 2015 at 04:18:59PM +0530, Viresh Kumar wrote:
+> On 4 May 2015 at 17:42, Mark Brown <broonie@kernel.org> wrote:
+> > On Thu, Apr 30, 2015 at 05:37:59PM +0530, Viresh Kumar wrote:
 
+> >> +- opp-microamp: current in micro Amperes. It can contain entries for multiple
+> >> +  regulators.
+> >> +
+> >> +  A single regulator's current is specified with an array of size one or three.
+> >> +  Single entry is for target current and three entries are for <target min max>
+> >> +  currents.
+
+> > What is this for - are you trying to define OPPs for current regulators?
+> > If you are that's worrying, I can't think of a sensible use case.  If
+> > that's not what's happening then the binding needs to be more specific
+> > about what this is supposed to mean.
+
+> Its another property of the same voltage regulator we are using in
+> opp-microvolt.
+> I hope that makes sense ?
+
+No, it doesn't - you're not answering the question about what this is
+for.
+
+> But, perhaps I need to write it with more clarity? Or this field doesn't make
+> sense ?
+
+To know if this makes sense I need to know what you beleive "setting the
+current" does.  If you literally mean setting the current it makes no
+sense at all.  If you mean something else that something else should
+probably be written into the binding.
+
+--9MumfqHRHGxgklkB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVSKIJAAoJECTWi3JdVIfQdw0H/3bfWn84ToOCquYyePh3CfWw
+IjmSAk769j49AzLcqgU+zBXzjGT6asQ3Pz7NBF6Gbl4tqq1n5581SHyLB40AqdGl
+2A9Dym7eBCx4BGEPq0MZ7jcdu5cbpA/9aqsz3KRVcgfpbJnfN1c+WckYCLcbMV6z
++OnZRIuzxOr+HLIu6zq7RirdMWLGNhoV4ejCEseOGvxBXDQyQP6LEHATU0UvgQ9P
+1IAGzBYjt9QPnwgyUpKXiCJCk4xRWfOJv4d1r7zWk3/ZMu2R5iT8iFnNacEhhr0F
+Up3q6q4nE6W9WeV0FYBNd7J3WRdTXrFu0zUWvNl3wXCrXjU0HO74UouQZn3RA6w=
+=uUx5
+-----END PGP SIGNATURE-----
+
+--9MumfqHRHGxgklkB--
