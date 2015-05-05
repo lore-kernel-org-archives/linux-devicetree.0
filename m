@@ -1,64 +1,85 @@
-From: NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 0/3] tty slave device support - version 3.
-Date: Wed, 6 May 2015 06:46:32 +1000
-Message-ID: <20150506064632.75ed1a24@notabene.brown>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
-	<55492001.30806@hurleysoftware.com>
+From: "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Tue, 5 May 2015 21:02:27 +0000
+Message-ID: <BY2PR03MB3794413FB3FF795DF520D23E6D10@BY2PR03MB379.namprd03.prod.outlook.com>
+References: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
+	 <1429119357.22867.724.camel@freescale.com>
+	 <DM2PR03MB38330DBBFFD1BC45D58F447E6E40@DM2PR03MB383.namprd03.prod.outlook.com>
+	 <1429249281.32545.52.camel@freescale.com>
+	 <DM2PR03MB383E5F67C358CCE2E38EA71E6E00@DM2PR03MB383.namprd03.prod.outlook.com>
+	 <1429577504.4352.67.camel@freescale.com>
+	 <DM2PR03MB383C35FA5959662DD48D00BE6EE0@DM2PR03MB383.namprd03.prod.outlook.com>
+	 <1430353832.16357.138.camel@freescale.com>
+	 <DM2PR03MB3839C9D3FDFD7978C1A3497E6D60@DM2PR03MB383.namprd03.prod.outlook.com>
+ <1430523775.16357.177.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/VDAGAOTVC3fteOAvF/=LqJA"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55492001.30806@hurleysoftware.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430523775.16357.177.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/VDAGAOTVC3fteOAvF/=LqJA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 05 May 2015 15:54:41 -0400 Peter Hurley <peter@hurleysoftware.com>
-wrote:
-
-> Hi Neil,
->=20
-> On 03/18/2015 01:58 AM, NeilBrown wrote:
-> >  here is version 3 of support for tty-slaves.
->=20
-> Is there a v4 of this that I missed?
->=20
-
-No there isn't sorry.  This is part of a side-project that I get enthusiast=
-ic
-about for a while, and then get distracted and lose interest :-)
-
-However, getting this sort of query is a big help - I'll try to make a V4
-within a week.
-
-Thanks,
-NeilBrown
-
---Sig_/VDAGAOTVC3fteOAvF/=LqJA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIVAwUBVUksKDnsnt1WYoG5AQLCtw/7BbAnV2HWyi32qUbSGkJqhaM2+SSqzHj4
-GitDHP/JaAeJnhlpPAxvy/S500lSFJAwkEi4+R1fVoeVoyT8j+GEN82mBC/AtCrK
-8/nfnBzWgbQadv4T0lu7DCZ92nXZkx8zSJww+7T43ww/GPWY72KBaGQ7wg8XRwei
-34zKMC5jgbBBrfkmF0P6iN2TdR7ymJNvgA7q9W2ImYp6skDf6FMEh62WwhFGa/4A
-QLpteBGBNPBx8Q4XaSMCfl042z9hg0IWjOT681HKTYZKRX0BDsW4Wb0seMLCWYRU
-Gos+ABLmKHXWzZ4HVOE5yrmtmrCnk89vT85tAwi9dA/boXW4Xg/aWgGAEDLdTSC7
-Ss3M2ZQ3wJFhKKpQ6hTFz38ecCkNczMRhb1rXNw5HAx12NLOvZYBOWZvN94U+i/+
-H9DVCW8YvL0jlWguJOgI6dqqJ1kEsOaAwG94SHRDJn5dfsGy9rqyiF316EN9Y6f+
-CB+NPL+B1viiui99K3m4RQjFxKiHwRqkWiB9j5s+lsBWmzbiNTPrG6b1JMJTreC3
-1N6sIlWgiNM0Fids6KitVxy5FE+ccRZWhc6Qayl0A152MzYY7kY0/dLLH0zQtefP
-B/FWIWjZz7946fBq9ff+wl2Oqdsum8f9ak+jJVoHlYgboXpCJkJgP4SuVwtN2Kkc
-3IYVIEVANoI=
-=qNBC
------END PGP SIGNATURE-----
-
---Sig_/VDAGAOTVC3fteOAvF/=LqJA--
+DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFNhdHVyZGF5LCBNYXkgMDIs
+IDIwMTUgMjo0MyBBTQ0KPiBUbzogTGliZXJtYW4gSWdhbC1CMzE5NTANCj4gQ2M6IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgVGFuZw0K
+PiBZdWFudGlhbi1CMjk5ODMNCj4gU3ViamVjdDogUmU6IFt2M10gZHQvYmluZGluZ3M6IHFvcmlx
+LWNsb2NrOiBBZGQgYmluZGluZyBmb3IgRk1hbiBjbG9jayBtdXgNCj4gDQo+IE9uIFRodSwgMjAx
+NS0wNC0zMCBhdCAwOToyOCAtMDUwMCwgTGliZXJtYW4gSWdhbC1CMzE5NTAgd3JvdGU6DQo+ID4g
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogV29vZCBTY290dC1CMDc0
+MjENCj4gPiA+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAzMCwgMjAxNSAzOjMxIEFNDQo+ID4gPiBU
+bzogTGliZXJtYW4gSWdhbC1CMzE5NTANCj4gPiA+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IFRhbmcNCj4gPiA+IFl1YW50aWFu
+LUIyOTk4Mw0KPiA+ID4gU3ViamVjdDogUmU6IFt2M10gZHQvYmluZGluZ3M6IHFvcmlxLWNsb2Nr
+OiBBZGQgYmluZGluZyBmb3IgRk1hbg0KPiA+ID4gY2xvY2sgbXV4DQo+ID4gPg0KPiA+ID4gT24g
+V2VkLCAyMDE1LTA0LTIyIGF0IDA1OjQ3IC0wNTAwLCBMaWJlcm1hbiBJZ2FsLUIzMTk1MCB3cm90
+ZToNCj4gPiA+ID4gV2UgaGF2ZSAyIGNhc2VzOg0KPiA+ID4gPiAJLSBEZXZpY2VzIChUMi9UNC9C
+NCkgd2l0aCBDTEtDRzFIV0FDU1IgcmVnaXN0ZXIuDQo+ID4gPiA+IAktIERldmljZXMgKFB4eHh4
+LCBUMSkgd2l0aG91dCBDTEtDRzFIV0FDU1IgcmVnaXN0ZXIgKFB4eHh4DQo+ID4gPiBkZXZpY2Vz
+DQo+ID4gPiA+IGhhdmUgbWFueSBvcHRpb25zLCBUMSBoYXMgb25seSBvbmUgb3B0aW9uKQ0KPiA+
+ID4gPg0KPiA+ID4gPiBGb3IgdGhlIGZpcnN0IGdyb3VwLCB3ZSBjYW4gaGF2ZSAiIHFvcmlxLWh3
+YWNzciIgcHJvcGVydHkgaW4gdGhlIGNsb2NrDQo+IG5vZGUuDQo+ID4gPg0KPiA+ID4gTm8sIHdl
+J3JlIG5vdCBnb2luZyB0byBkZXNjcmliZSBldmVyeSByZWdpc3RlciB3aXRoIGl0cyBvd24gcHJv
+cGVydHkuDQo+ID4gPiBEZXNjcmliZSB0aGUgY2hpcCBhbmQgbGV0IHRoZSBkcml2ZXIgYmUgdGhl
+IHBsYWNlIHdpdGggdGhlIGtub3dsZWRnZQ0KPiA+ID4gb2Ygd2hhdCBlYWNoIGNoaXAgaXMgbGlr
+ZS4NCj4gPiA+DQo+ID4NCj4gPiBJIHRoaW5rIHRoYXQgRk1hbiBjbG9jayBtdXggKGFzIHdlIGRl
+ZmluZWQgaXQpIGlzIHNpbWlsYXIgdG8gb3RoZXIgbXV4ZXMNCj4gYXZhaWxhYmxlIGluIG91ciBT
+b0MuDQo+IA0KPiBJIHJlYWxpemUgdGhhdC4gIEknbSBzYXlpbmcgdGhlIHdheSB3ZSBkZXNjcmli
+ZWQgZXhpc3RpbmcgbXV4ZXMgc2VlbXMgdG8gYmUgYQ0KPiBtaXN0YWtlLiAgV2UncmUgcHV0dGlu
+ZyB0b28gbXVjaCBjb21wbGV4aXR5IGluIHRoZSBkZXZpY2UgdHJlZS4NCj4gQmV0dGVyIHRvIHB1
+dCB0aGUgY29tcGxleGl0eSBpbiBhIHBsYWNlIHRoYXQgaXNuJ3Qgc3RhYmxlIEFCSS4NCj4gDQo+
+ID4gSWYgd2UgdGFrZSBUNCBhcyBleGFtcGxlLCBpdCBoYXMgMyBtdXhlcyBkZWZpbmVkIGluIHRo
+ZSBkZXZpY2UgdHJlZSAobXV4MCwNCj4gbXV4MSBhbmQgbXV4MikuDQo+ID4gRWFjaCBtdXggaGFz
+IGl0cyBvd24gcmVnIHByb3BlcnR5IChhbmQgY2xvY2sgcHJvdmlkZXJzKS4NCj4gPiAJbXV4Mjog
+bXV4MkA0MCB7DQo+ID4gCQkjY2xvY2stY2VsbHMgPSA8MD47DQo+ID4gCQlyZWcgPSA8MHg0MCAw
+eDQ+Ow0KPiA+IAkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1tdXgtMi4wIjsNCj4gPiAJ
+CWNsb2NrcyA9IDwmcGxsMyAwPiwgPCZwbGwzIDE+LCA8JnBsbDMgMj4sDQo+ID4gCQkJPCZwbGw0
+IDA+LCA8JnBsbDQgMT4sIDwmcGxsNCAyPjsNCj4gPiAJCWNsb2NrLW5hbWVzID0gInBsbDMiLCAi
+cGxsMy1kaXYyIiwgInBsbDMtZGl2NCIsDQo+ID4gCQkJInBsbDQiLCAicGxsNC1kaXYyIiwgInBs
+bDQtZGl2NCI7DQo+ID4gCQljbG9jay1vdXRwdXQtbmFtZXMgPSAiY211eDIiOw0KPiA+IAl9Ow0K
+PiA+DQo+ID4gSSBhZ3JlZSB0aGF0ICJmbTEtY2xrLW11eCIgbmVlZCB0byBiZSBtb3ZlZCBmcm9t
+IHRoZSAiZ3V0cyIgbm9kZSB0bw0KPiAiY2xvY2tnZW4iIG5vZGUuDQo+IA0KPiBUaGF0J3Mgbm90
+IHdoYXQgSSB3YXMgc2F5aW5nLiAgSSdtIHNheWluZyBnZXQgcmlkIG9mIHRoZSBub2RlIGVudGly
+ZWx5LCBpbiBmYXZvcg0KPiBvZiBoYXZpbmcgdGhlIGNsb2NrZ2VuIG5vZGUgaXRzZWxmIGJlIGEg
+Y2xvY2sgc291cmNlIHdpdGggbXVsdGlwbGUgcG9zdC1tdXgNCj4gb3V0cHV0cy4NCj4gDQoNClNj
+b3R0LA0KQ3VycmVudGx5IHRoZSBjbG9ja2dlbiBub2RlIGhhcyBhIG51bWJlciBvZiBzdWIgbm9k
+ZXMgKHBsYXRmb3JtIGNsb2NrLCBzeXNjbG9jaywgUExMcyBhbmQgbXV4ZXMsIHRoZSBudW1iZXIg
+b2YgbXV4ZXMvUExMcyBpcyBTb0MgZGVwZW5kZW50KS4NClRoZSBjbG9ja2dlbiBub2RlIGhhcyBy
+ZWcgcHJvcGVydHksIGhvd2V2ZXIsIGFsbCBvdGhlciBub2RlcyBoYXZlIHJlZyBwcm9wZXJ0eSB0
+b28gKFRoZSBjbG9ja2dlbiBwb2ludHMgdG8gdGhlIGNsb2NraW5nIGJsb2NrIGFkZHJlc3MgYW5k
+IHRoZSBzdWIgbm9kZXMgcG9pbnQgdG8gdGhlIHNwZWNpZmljIHJlZ2lzdGVyIGluIHRoZSBjbG9j
+ayBibG9jaykuDQpEbyB5b3Ugd2FudCB0byBjaGFuZ2UgdGhpcyBzdHJ1Y3R1cmUgY29tcGxldGVs
+eT8NCkknbSBub3Qgc3VyZSBJIHVuZGVyc3RhbmQgdGhlIGV4YWN0IHdheSB5b3Ugd2FudCBzZWUg
+dGhvc2Ugbm9kZXMgKGluIHRoZSBmaW5hbCBzdGF0ZSkuDQoNCj4gPiBIb3dldmVyLCBJJ20gbm90
+IHN1cmUgd2hpY2ggY2hhbmdlcyB5b3Ugd2FudCB0byBwZXJmb3JtIGluIHRoZSBub2RlDQo+IChi
+ZXNpZGUgYWRkaW5nIHJlZyBwcm9wZXJ0eSBmb3IgU29DIHdoaWNoIGhhcyBpdCBmb3IgRk1hbiBj
+bG9jaykuDQo+IA0KPiBBZ2FpbiwgdGhlIGNsb2NrZ2VuIG5vZGUgYWxyZWFkeSBoYXMgYSByZWcg
+cHJvcGVydHkuDQo+IA0KPiAtU2NvdHQNCj4gDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
