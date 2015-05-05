@@ -1,96 +1,94 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 7/8] ASoC: wm8998: Initial WM8998 codec
-	driver
-Date: Tue, 5 May 2015 11:53:27 +0100
-Message-ID: <20150505105327.GZ22845@sirena.org.uk>
-References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1430493319-23808-8-git-send-email-rf@opensource.wolfsonmicro.com>
- <20150504113943.GB15510@sirena.org.uk>
- <20150505092411.GA15549@opensource.wolfsonmicro.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: How to encode being an I2C slave in DT?
+Date: Tue, 5 May 2015 12:55:13 +0200
+Message-ID: <20150505105513.GA1841@katana>
+References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
+ <20150403194635.GC2016@katana>
+ <1549160.njMIY2NVTi@fb07-iapwap2>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2579490098064728190=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20150505092411.GA15549@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com, lee.jones@linaro.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1549160.njMIY2NVTi@fb07-iapwap2>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Cc: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============2579490098064728190==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4OzcLsYxzreNWMPE"
-Content-Disposition: inline
-
-
---4OzcLsYxzreNWMPE
+--VbJkn9YxBvnuCH5J
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 05, 2015 at 10:24:12AM +0100, Richard Fitzgerald wrote:
-> On Mon, May 04, 2015 at 12:39:43PM +0100, Mark Brown wrote:
-> > On Fri, May 01, 2015 at 04:15:18PM +0100, Richard Fitzgerald wrote:
 
-> > > +		val = snd_soc_read(codec, ARIZONA_ASYNC_SAMPLE_RATE_1 + val);
-> > > +		if (val >= 0x11)
-> > > +			dev_warn(codec->dev, "Unsupported ASRC rate2\n");
+I'm back in town. Sorry for the delay...
 
-> > ...some random other register.
+> One thing where we need your help as a I2C maintainer is how to represent=
+ an=20
+> i2c slave device using device-tree. You may remember our discussion in th=
+e=20
+> past from here [1] where you suggested to just make a slave client by its=
+=20
+> compatible name. Stephen Warren from NVIDIA raised some concerns about th=
+is=20
+> solution because it may not be appropriate in all possible future cases (=
+which=20
+> is what a proper device-tree representation should take care off). He ins=
+tead=20
+> suggested to mark a slave client by adding some flag to the reg property,=
+ to=20
+> be able to handle a situation where both master client and slave client h=
+ave=20
+> the same i2c bus address forming a loopback (e.g. for testing purpose) on=
+ the=20
+> same bus. More details here [2].
 
-> ARIZONA_ASRC_RATE2 register can only have the values 8 or 9 and we don't
-> provide a way to set it to illegal values.
+Well... I can agree that we shouldn't prevent a loopback from a DT point
+of view. (Despite the fact that it is really for development and I
+wonder how many I2C IP cores can do this flawlessly)
 
-That's trusting of future maintainers of this code, and it doesn't look
-great when bounds checking and validation code has some fairly obviously
-missing bounds checking and validation.
+However, I am still against putting that information into the reg
+property. I see devices coming which have multiple addresses, so people
+somewhen want to encode this in DT as well. I'd like to have that a
+simple array of addresses. Adding flags, rarely used, will create a mess
+IMO.
 
-> > > +static const char * const wm8998_inmux_texts[] = {
-> > > +	"A",
-> > > +	"B",
+So what about adding a new property "i2c-slave-reg"? This does not only
+prevent the confusion above, but also makes it very clear that this node
+is an I2C slave without the need to encode that somehow in the
+compatible property (although it probably should be described there as
+well, still).
 
-> > Those are some fun input names...
+> I hope with this post I can join the different discussions somehow so we =
+are=20
+> able to find a common sense which is acceptable for all.
 
-> ... that's what the mux positions are called and it seems nice to have consistent
-> naming for all similar muxes across channels and across future codecs. Like for
-> example to switch both muxes of a stereo input you set them both to the same
-> position name (both "A" or both "B") is clearer, and quicker to spot in a dump
-> of ALSA control settings, than having the two muxes set to different enumeration
-> strings that actually mean the same mux position.
+Thanks for doing this! I changed the subject to maybe raise interest a
+bit more.
 
-Equally when setting the muxes settings called A and B that's not really
-telling people what they do.
 
---4OzcLsYxzreNWMPE
+--VbJkn9YxBvnuCH5J
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQEcBAEBCAAGBQJVSKEnAAoJECTWi3JdVIfQUWkH/iAm+V+tRy2vusGvhDMPVdg3
-tYedikVyumurF5RLgPISiAv7mndeLSXb1R/Mhf/ugGMe4fZUkrE1CUGAI46TXX4K
-kPo/1qKN4V+Me7hEPTfMg1+KS9dgW1gjBgvDiIZrzRd79t8QQMpXolI3Xn+74h/6
-qPRDCelHwXDro5joFm9yTk+RhxdOaM15tQSPMzn1qj5Lf8kS2cDmlG9nyVnExcc7
-BeJT3bc9Z2w5BYGDFnSdkEw2difn2t983UjOZRVHlqRLv138bL6NlidnWMkfhP0a
-l0+9x0OWy3umKaJE5x8lynM0ZFNbK9t6oTTxjMSCrD0TzDENQc0f5HZLircReFU=
-=+uCo
+iQIcBAEBAgAGBQJVSKGQAAoJEBQN5MwUoCm2+iAP/2A+HXHgKk91e9GgTSj1qCIz
+vM9lSSzqenBQAkdL8n/BsFu2+p8GGc/wXPSEqBEv9TWYDHzdRlSR9jf0OT7JVymQ
+KMLWMbI9Xu/nVJQHRoqAGdGbxBsBvxwsERAi5nOD8cEY71KrOxksLVSqYwyn6faA
+ycZjct1/YTmtiaL9vf2wcN5f7jmNKIqO9i+MzvCRE8P043FUqQxsWJ54EzJi2wWh
+jCVFu5YNLCjwMsMSy9jRD0o+G1hx4L1j6OG7OzZAK6kiNLApabjotC5EpNAaM4Y+
+K/ZFQR+FVrC57thh5iRVi+/4+mKlNVT/HPcfTPy/lzO4P/4f8kAzsARNf47kOaQG
+npaPWpw6fLGk/UoIShKlLjJtRO7vBAN42z04BEmpDw1uD2zmiRKPwd8+erHjW8H4
+eTkeymEeNqE/HC/RpJTe/vUTxdWryCmOXxPN/ueD49eGo49boeh5oNsU/eq1wNHj
+fRiUhz/nWCsePfySJkw1HTi6E+qgYyxjPPQF3rUXExqL2Pv0Z69ZfyKkhF0k1ROJ
+b6lsSmVpyyTi1MLlcxD8ILGCwhdTsVBAGtdm4Tp3rGe3ZSZphiJbr6h8dCdrazFg
+CrCTazl7dqKknkLWaOvbZe09f/kTHUQLc1gpMwoDSJOslCpipDvqjE9GTn199FWC
+RaDfD74G70UqL2M62TVk
+=/kh/
 -----END PGP SIGNATURE-----
 
---4OzcLsYxzreNWMPE--
-
---===============2579490098064728190==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2579490098064728190==--
+--VbJkn9YxBvnuCH5J--
