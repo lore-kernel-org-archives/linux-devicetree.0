@@ -1,119 +1,84 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/2] doc: dt: add documentation for lpc1850-rgu reset driver
-Date: Wed,  6 May 2015 00:10:27 +0200
-Message-ID: <1430863827-21898-3-git-send-email-manabian@gmail.com>
-References: <1430863827-21898-1-git-send-email-manabian@gmail.com>
+From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH V4 1/5] regmap: Add a helper function for regcache sync test
+Date: Tue,  5 May 2015 15:14:13 -0700
+Message-ID: <1430864057-3848-2-git-send-email-cernekee@chromium.org>
+References: <1430864057-3848-1-git-send-email-cernekee@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430863827-21898-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1430864057-3848-1-git-send-email-cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the Reset Generation Unit
-(RGU) found on NXP LPC18xx and LPC43xx devies.
+We're going to add another "does this register need syncing?" check, so
+rather than repeating it in three places, we'll separate all of the
+relevant logic into a helper function.
 
-This documentation also includes a table which shows the RGU reset
-number and the connected peripheral.
-
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- .../devicetree/bindings/reset/nxp,lpc1850-rgu.txt  | 84 ++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/nxp,lpc1850-rgu.txt
+ drivers/base/regmap/regcache.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/nxp,lpc1850-rgu.txt b/Documentation/devicetree/bindings/reset/nxp,lpc1850-rgu.txt
-new file mode 100644
-index 000000000000..b4e96a278445
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/nxp,lpc1850-rgu.txt
-@@ -0,0 +1,84 @@
-+NXP LPC1850  Reset Generation Unit (RGU)
-+========================================
+diff --git a/drivers/base/regmap/regcache.c b/drivers/base/regmap/regcache.c
+index 7eb7b3b98794..c58493eaf050 100644
+--- a/drivers/base/regmap/regcache.c
++++ b/drivers/base/regmap/regcache.c
+@@ -249,6 +249,18 @@ int regcache_write(struct regmap *map,
+ 	return 0;
+ }
+ 
++static bool regcache_reg_needs_sync(struct regmap *map, unsigned int reg,
++				    unsigned int val)
++{
++	int ret;
 +
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
++	/* Is this the hardware default?  If so skip. */
++	ret = regcache_lookup_reg(map, reg);
++	if (ret >= 0 && val == map->reg_defaults[ret].def)
++		return false;
++	return true;
++}
 +
-+Required properties:
-+- compatible: Should be "nxp,lpc1850-rgu"
-+- reg: register base and length
-+- clocks: phandle and clock specifier to RGU clocks
-+- clock-names: should contain "delay" and "reg"
-+- #reset-cells: should be 1
-+
-+See table below for valid peripheral reset numbers. Numbers not
-+in the table below are either reserved or not applicable for
-+normal operation.
-+
-+Reset	Peripheral
-+  9	System control unit (SCU)
-+ 12	ARM Cortex-M0 subsystem core (LPC43xx only)
-+ 13	CPU core
-+ 16	LCD controller
-+ 17	USB0
-+ 18	USB1
-+ 19	DMA
-+ 20	SDIO
-+ 21	External memory controller (EMC)
-+ 22	Ethernet
-+ 25	Flash bank A
-+ 27	EEPROM
-+ 28	GPIO
-+ 29	Flash bank B
-+ 32	Timer0
-+ 33	Timer1
-+ 34	Timer2
-+ 35	Timer3
-+ 36	Repetitive Interrupt timer (RIT)
-+ 37	State Configurable Timer (SCT)
-+ 38	Motor control PWM (MCPWM)
-+ 39	QEI
-+ 40	ADC0
-+ 41	ADC1
-+ 42	DAC
-+ 44	USART0
-+ 45	UART1
-+ 46	USART2
-+ 47	USART3
-+ 48	I2C0
-+ 49	I2C1
-+ 50	SSP0
-+ 51	SSP1
-+ 52	I2S0 and I2S1
-+ 53	Serial Flash Interface (SPIFI)
-+ 54	C_CAN1
-+ 55	C_CAN0
-+ 56	ARM Cortex-M0 application core (LPC4370 only)
-+ 57	SGPIO (LPC43xx only)
-+ 58	SPI (LPC43xx only)
-+ 60	ADCHS (12-bit ADC) (LPC4370 only)
-+
-+Refer to NXP LPC18xx or LPC43xx user manual for more details about
-+the reset signals and the connected block/peripheral.
-+
-+Reset provider example:
-+rgu: reset-controller@40053000 {
-+	compatible = "nxp,lpc1850-rgu";
-+	reg = <0x40053000 0x1000>;
-+	clocks = <&cgu BASE_SAFE_CLK>, <&ccu1 CLK_CPU_BUS>;
-+	clock-names = "delay", "reg";
-+	#reset-cells = <1>;
-+};
-+
-+Reset consumer example:
-+mac: ethernet@40010000 {
-+	compatible = "nxp,lpc1850-dwmac", "snps,dwmac-3.611", "snps,dwmac";
-+	reg = <0x40010000 0x2000>;
-+	interrupts = <5>;
-+	interrupt-names = "macirq";
-+	clocks = <&ccu1 CLK_CPU_ETHERNET>;
-+	clock-names = "stmmaceth";
-+	resets = <&rgu 22>;
-+	reset-names = "stmmaceth";
-+	status = "disabled";
-+};
+ static int regcache_default_sync(struct regmap *map, unsigned int min,
+ 				 unsigned int max)
+ {
+@@ -266,9 +278,7 @@ static int regcache_default_sync(struct regmap *map, unsigned int min,
+ 		if (ret)
+ 			return ret;
+ 
+-		/* Is this the hardware default?  If so skip. */
+-		ret = regcache_lookup_reg(map, reg);
+-		if (ret >= 0 && val == map->reg_defaults[ret].def)
++		if (!regcache_reg_needs_sync(map, reg, val))
+ 			continue;
+ 
+ 		map->cache_bypass = 1;
+@@ -613,10 +623,7 @@ static int regcache_sync_block_single(struct regmap *map, void *block,
+ 			continue;
+ 
+ 		val = regcache_get_val(map, block, i);
+-
+-		/* Is this the hardware default?  If so skip. */
+-		ret = regcache_lookup_reg(map, regtmp);
+-		if (ret >= 0 && val == map->reg_defaults[ret].def)
++		if (!regcache_reg_needs_sync(map, regtmp, val))
+ 			continue;
+ 
+ 		map->cache_bypass = 1;
+@@ -688,10 +695,7 @@ static int regcache_sync_block_raw(struct regmap *map, void *block,
+ 		}
+ 
+ 		val = regcache_get_val(map, block, i);
+-
+-		/* Is this the hardware default?  If so skip. */
+-		ret = regcache_lookup_reg(map, regtmp);
+-		if (ret >= 0 && val == map->reg_defaults[ret].def) {
++		if (!regcache_reg_needs_sync(map, regtmp, val)) {
+ 			ret = regcache_sync_block_raw_flush(map, &data,
+ 							    base, regtmp);
+ 			if (ret != 0)
 -- 
-1.8.0
+2.2.0.rc0.207.ga3a616c
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
