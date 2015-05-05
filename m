@@ -1,145 +1,321 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-Date: Tue, 5 May 2015 16:16:33 -0500
-Message-ID: <1430860593.16357.269.camel@freescale.com>
-References: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
-	 <1429119357.22867.724.camel@freescale.com>
-	 <DM2PR03MB38330DBBFFD1BC45D58F447E6E40@DM2PR03MB383.namprd03.prod.outlook.com>
-	 <1429249281.32545.52.camel@freescale.com>
-	 <DM2PR03MB383E5F67C358CCE2E38EA71E6E00@DM2PR03MB383.namprd03.prod.outlook.com>
-	 <1429577504.4352.67.camel@freescale.com>
-	 <DM2PR03MB383C35FA5959662DD48D00BE6EE0@DM2PR03MB383.namprd03.prod.outlook.com>
-	 <1430353832.16357.138.camel@freescale.com>
-	 <DM2PR03MB3839C9D3FDFD7978C1A3497E6D60@DM2PR03MB383.namprd03.prod.outlook.com>
-	 <1430523775.16357.177.camel@freescale.com>
-	 <BY2PR03MB3794413FB3FF795DF520D23E6D10@BY2PR03MB379.namprd03.prod.outlook.com>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 1/2] MIPS: BMIPS: add BCM7435 dtsi
+Date: Tue, 5 May 2015 23:25:27 +0200
+Message-ID: <CAOiHx==xksGPppXh5SU5e7bfEf1foSb9x8RjyhtDGOQq-=oumw@mail.gmail.com>
+References: <1430788257-10244-1-git-send-email-f.fainelli@gmail.com> <1430788257-10244-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BY2PR03MB3794413FB3FF795DF520D23E6D10-+7O3WWA3DPtn35zppGJRk+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+In-Reply-To: <1430788257-10244-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tang Yuantian-B29983 <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, "Steven J. Hill" <Steven.Hill-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-05 at 16:02 -0500, Liberman Igal-B31950 wrote:
-> 
-> 
-> Regards,
-> Igal Liberman.
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Saturday, May 02, 2015 2:43 AM
-> > To: Liberman Igal-B31950
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Tang
-> > Yuantian-B29983
-> > Subject: Re: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-> > 
-> > On Thu, 2015-04-30 at 09:28 -0500, Liberman Igal-B31950 wrote:
-> > > > -----Original Message-----
-> > > > From: Wood Scott-B07421
-> > > > Sent: Thursday, April 30, 2015 3:31 AM
-> > > > To: Liberman Igal-B31950
-> > > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Tang
-> > > > Yuantian-B29983
-> > > > Subject: Re: [v3] dt/bindings: qoriq-clock: Add binding for FMan
-> > > > clock mux
-> > > >
-> > > > On Wed, 2015-04-22 at 05:47 -0500, Liberman Igal-B31950 wrote:
-> > > > > We have 2 cases:
-> > > > > 	- Devices (T2/T4/B4) with CLKCG1HWACSR register.
-> > > > > 	- Devices (Pxxxx, T1) without CLKCG1HWACSR register (Pxxxx
-> > > > devices
-> > > > > have many options, T1 has only one option)
-> > > > >
-> > > > > For the first group, we can have " qoriq-hwacsr" property in the clock
-> > node.
-> > > >
-> > > > No, we're not going to describe every register with its own property.
-> > > > Describe the chip and let the driver be the place with the knowledge
-> > > > of what each chip is like.
-> > > >
-> > >
-> > > I think that FMan clock mux (as we defined it) is similar to other muxes
-> > available in our SoC.
-> > 
-> > I realize that.  I'm saying the way we described existing muxes seems to be a
-> > mistake.  We're putting too much complexity in the device tree.
-> > Better to put the complexity in a place that isn't stable ABI.
-> > 
-> > > If we take T4 as example, it has 3 muxes defined in the device tree (mux0,
-> > mux1 and mux2).
-> > > Each mux has its own reg property (and clock providers).
-> > > 	mux2: mux2@40 {
-> > > 		#clock-cells = <0>;
-> > > 		reg = <0x40 0x4>;
-> > > 		compatible = "fsl,qoriq-core-mux-2.0";
-> > > 		clocks = <&pll3 0>, <&pll3 1>, <&pll3 2>,
-> > > 			<&pll4 0>, <&pll4 1>, <&pll4 2>;
-> > > 		clock-names = "pll3", "pll3-div2", "pll3-div4",
-> > > 			"pll4", "pll4-div2", "pll4-div4";
-> > > 		clock-output-names = "cmux2";
-> > > 	};
-> > >
-> > > I agree that "fm1-clk-mux" need to be moved from the "guts" node to
-> > "clockgen" node.
-> > 
-> > That's not what I was saying.  I'm saying get rid of the node entirely, in favor
-> > of having the clockgen node itself be a clock source with multiple post-mux
-> > outputs.
-> > 
-> 
-> Scott,
-> Currently the clockgen node has a number of sub nodes (platform clock, sysclock, PLLs and muxes, the number of muxes/PLLs is SoC dependent).
-> The clockgen node has reg property, however, all other nodes have reg property too (The clockgen points to the clocking block address and the sub nodes point to the specific register in the clock block).
-> Do you want to change this structure completely?
+Hi,
 
-Yes, I want to change it completely (while ensuring the kernel still
-works, albeit without new functionality, with older device trees).
+please CC devicetree on dts(i) submissions.
 
-> I'm not sure I understand the exact way you want see those nodes (in the final state).
+On Tue, May 5, 2015 at 3:10 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add the bare minimum required to boot a BCM7435-based system:
+>
+> - BMIPS5200 CPU nodes
+> - Level 1 and 2 interrupt controllers
+> - UARTs
+> - EHCI/OHCI controllers
+>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/mips/boot/dts/brcm/bcm7435.dtsi | 239 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 239 insertions(+)
+>  create mode 100644 arch/mips/boot/dts/brcm/bcm7435.dtsi
+>
+> diff --git a/arch/mips/boot/dts/brcm/bcm7435.dtsi b/arch/mips/boot/dts/brcm/bcm7435.dtsi
+> new file mode 100644
+> index 000000000000..8b9432cc062b
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/brcm/bcm7435.dtsi
+> @@ -0,0 +1,239 @@
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +       compatible = "brcm,bcm7435";
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               mips-hpt-frequency = <163125000>;
+> +
+> +               cpu@0 {
+> +                       compatible = "brcm,bmips5200";
+> +                       device_type = "cpu";
+> +                       reg = <0>;
+> +               };
+> +
+> +               cpu@1 {
+> +                       compatible = "brcm,bmips5200";
+> +                       device_type = "cpu";
+> +                       reg = <1>;
+> +               };
+> +
+> +               cpu@2 {
+> +                       compatible = "brcm,bmips5200";
+> +                       device_type = "cpu";
+> +                       reg = <2>;
+> +               };
+> +
+> +               cpu@3 {
+> +                       compatible = "brcm,bmips5200";
+> +                       device_type = "cpu";
+> +                       reg = <3>;
+> +               };
+> +       };
+> +
+> +       aliases {
+> +               uart0 = &uart0;
+> +       };
+> +
+> +       cpu_intc: cpu_intc {
+> +               #address-cells = <0>;
+> +               compatible = "mti,cpu-interrupt-controller";
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +       };
+> +
+> +       clocks {
+> +               uart_clk: uart_clk {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <81000000>;
 
-Something like:
+While optional, I think it might be a good idea to provide a
+clock-output-names property.
 
-clockgen: global-utilities@e1000 {
-	compatible = "fsl,<whatever>-clockgen";
-	clock-frequency = <...>;
-	reg = <0xe1000 0x1000>;
-	#clock-cells = <2>;
-};
+> +               };
+> +       };
+> +
+> +       rdb {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               compatible = "simple-bus";
+> +               ranges = <0 0x10000000 0x01000000>;
+> +
+> +               periph_intc: periph_intc@41b500 {
 
-cpu0: PowerPC,e6500@0 {
-	device_type = "cpu";
-	reg = <0 1>;
-	clocks = <&clockgen 0 0>;
-	next-level-cache = <&L2_1>;
-	fsl,portid-mapping = <0x80000000>;
-};
+This should be periph_intc: interrupt-controller@...
+
+> +                       compatible = "brcm,bcm7038-l1-intc";
+> +                       reg = <0x41b500 0x40>, <0x41b600 0x40>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <1>;
+> +
+> +                       interrupt-parent = <&cpu_intc>;
+> +                       interrupts = <2>, <3>;
+> +               };
+> +
+> +               sun_l2_intc: sun_l2_intc@403000 {
+
+similar here
+
+> +                       compatible = "brcm,l2-intc";
+
+This sounds overly generic, I think you missed a chip id there.
+
+> +                       reg = <0x403000 0x30>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <1>;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <52>;
+> +               };
+> +
+> +               gisb-arb@400000 {
+> +                       compatible = "brcm,bcm7400-gisb-arb";
+> +                       reg = <0x400000 0xdc>;
+> +                       native-endian;
+> +                       interrupt-parent = <&sun_l2_intc>;
+> +                       interrupts = <0>, <2>;
+> +                       brcm,gisb-arb-master-mask = <0xf77f>;
+> +                       brcm,gisb-arb-master-names = "ssp_0", "cpu_0", "webcpu_0",
+> +                                                    "pcie_0", "bsp_0",
+> +                                                    "rdc_0", "raaga_0",
+> +                                                    "avd_1", "jtag_0",
+> +                                                    "svd_0", "vice_0",
+> +                                                    "vice_1", "raaga_1",
+> +                                                    "scpu";
+> +               };
+> +
+> +               upg_irq0_intc: upg_irq0_intc@406780 {
+> +                       compatible = "brcm,bcm7120-l2-intc";
+> +                       reg = <0x406780 0x8>;
+> +
+> +                       brcm,int-map-mask = <0x44>;
+> +                       brcm,int-fwd-mask = <0x70000>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <1>;
+> +
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <60>;
+> +               };
+> +
+> +               sun_top_ctrl: syscon@404000 {
+> +                       compatible = "brcm,bcm7425-sun-top-ctrl", "syscon";
+> +                       reg = <0x404000 0x51c>;
+> +                       little-endian;
+
+So this one doesn't follow system endianness?
+
+> +               };
+> +
+> +               reboot {
+> +                       compatible = "brcm,brcmstb-reboot";
+> +                       syscon = <&sun_top_ctrl 0x304 0x308>;
+> +               };
+> +
+> +               uart0: serial@406b00 {
+> +                       compatible = "ns16550a";
+> +                       reg = <0x406b00 0x20>;
+> +                       reg-io-width = <0x4>;
+> +                       reg-shift = <0x2>;
+
+Do we really need a hex notation for these?
+
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <66>;
+> +                       clocks = <&uart_clk>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               enet0: ethernet@b80000 {
+> +                       phy-mode = "internal";
+> +                       phy-handle = <&phy1>;
+> +                       mac-address = [ 00 10 18 36 23 1a ];
+
+I hope this isn't the mac of your reference board ;-)
+
+> +                       compatible = "brcm,genet-v3";
+
+Usually the compatible property is the first one, a bit surprising to
+see it in the middle.
+
+> +                       #address-cells = <0x1>;
+> +                       #size-cells = <0x1>;
+
+Do we really need a hex notation for these?
+
+> +                       reg = <0xb80000 0x11c88>;
+> +                       interrupts = <17>, <18>;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       status = "disabled";
+> +
+> +                       mdio@e14 {
+> +                               compatible = "brcm,genet-mdio-v3";
+> +                               #address-cells = <0x1>;
+> +                               #size-cells = <0x0>;
+
+Do we really need a hex notation for these?
+
+> +                               reg = <0xe14 0x8>;
+> +
+> +                               phy1: ethernet-phy@1 {
+> +                                       max-speed = <100>;
+> +                                       reg = <0x1>;
+
+Do we really need a hex notation for this?
+
+Regards
+Jonas (keeping the rest of the patch intact so devicetree can see it)
 
 
-cpu4: PowerPC,e6500@0 {
-	device_type = "cpu";
-	reg = <4 5>;
-	clocks = <&clockgen 0 1>;
-	next-level-cache = <&L2_1>;
-	fsl,portid-mapping = <0x80000000>;
-};
-
-fman@... {
-	...
-	clocks = <&clockgen 1 0>;
-	...
-};
-
-...with the clockgen binding explaining the format of the clock
-specifier, and the clockgen driver containing the chip-specific muxing
-details.
-
--Scott
-
-
+> +                                       compatible = "brcm,40nm-ephy",
+> +                                               "ethernet-phy-ieee802.3-c22";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               ehci0: usb@480300 {
+> +                       compatible = "brcm,bcm7435-ehci", "generic-ehci";
+> +                       reg = <0x480300 0x100>;
+> +                       native-endian;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <70>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ohci0: usb@480400 {
+> +                       compatible = "brcm,bcm7435-ohci", "generic-ohci";
+> +                       reg = <0x480400 0x100>;
+> +                       native-endian;
+> +                       no-big-frame-no;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <72>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ehci1: usb@480500 {
+> +                       compatible = "brcm,bcm7435-ehci", "generic-ehci";
+> +                       reg = <0x480500 0x100>;
+> +                       native-endian;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <71>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ohci1: usb@480600 {
+> +                       compatible = "brcm,bcm7435-ohci", "generic-ohci";
+> +                       reg = <0x480600 0x100>;
+> +                       native-endian;
+> +                       no-big-frame-no;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <73>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ehci2: usb@490300 {
+> +                       compatible = "brcm,bcm7435-ehci", "generic-ehci";
+> +                       reg = <0x490300 0x100>;
+> +                       native-endian;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <75>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ohci2: usb@490400 {
+> +                       compatible = "brcm,bcm7435-ohci", "generic-ohci";
+> +                       reg = <0x490400 0x100>;
+> +                       native-endian;
+> +                       no-big-frame-no;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <77>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ehci3: usb@490500 {
+> +                       compatible = "brcm,bcm7435-ehci", "generic-ehci";
+> +                       reg = <0x490500 0x100>;
+> +                       native-endian;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <76>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ohci3: usb@490600 {
+> +                       compatible = "brcm,bcm7435-ohci", "generic-ohci";
+> +                       reg = <0x490600 0x100>;
+> +                       native-endian;
+> +                       no-big-frame-no;
+> +                       interrupt-parent = <&periph_intc>;
+> +                       interrupts = <78>;
+> +                       status = "disabled";
+> +               };
+> +       };
+> +};
+> --
+> 2.1.0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
