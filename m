@@ -1,61 +1,108 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH V2 0/3] Pistachio USB2.0 PHY
-Date: Tue, 5 May 2015 15:13:19 -0300
-Message-ID: <5549083F.8080505@imgtec.com>
-References: <1428444258-25852-1-git-send-email-abrestic@chromium.org> <CAL1qeaE0+aMLBgk8SKgJ3fXm==M2-Z_yEPYNVZ0yxSee-p7YOw@mail.gmail.com>
-Reply-To: <1428444258-25852-1-git-send-email-abrestic@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaE0+aMLBgk8SKgJ3fXm==M2-Z_yEPYNVZ0yxSee-p7YOw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>
-Cc: devicetree@vger.kernel.org, James Hartley <james.hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Bresticker <abrestic@chromium.org>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v5 1/3] libahci: Refactoring of ahci_single_irq_intr function.
+Date: Wed,  6 May 2015 00:51:10 +0530
+Message-ID: <1430853672-6227-2-git-send-email-stripathi@apm.com>
+References: <1430853672-6227-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1430853672-6227-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+This patch refactors the ahci_single_irq_intr function and also rename
+it to ahci_single_level_irq_intr as it handles a level triggered latch.
 
-> 
-> This series adds support for the USB2.0 PHY present on the IMG Pistachio SoC.
-> 
-> Based on mips-for-linux-next and tested on the IMG Pistachio BuB.  If possible,
-> I'd like this to go through the MIPS tree with Kishon's ACK.
-> 
+Signed-off-by: Suman tripathi <stripathi@apm.com>
+---
+ drivers/ata/libahci.c | 51 ++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 30 insertions(+), 21 deletions(-)
 
-Tested-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index 61a9c07..aa89c8e 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -1826,27 +1826,9 @@ static irqreturn_t ahci_multi_irqs_intr(int irq, void *dev_instance)
+ 	return IRQ_WAKE_THREAD;
+ }
 
-Can we have your Ack for this series so Ralf can pick it?
+-static irqreturn_t ahci_single_irq_intr(int irq, void *dev_instance)
++static u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
+ {
+-	struct ata_host *host = dev_instance;
+-	struct ahci_host_priv *hpriv;
+ 	unsigned int i, handled = 0;
+-	void __iomem *mmio;
+-	u32 irq_stat, irq_masked;
+-
+-	VPRINTK("ENTER\n");
+-
+-	hpriv = host->private_data;
+-	mmio = hpriv->mmio;
+-
+-	/* sigh.  0xffffffff is a valid return from h/w */
+-	irq_stat = readl(mmio + HOST_IRQ_STAT);
+-	if (!irq_stat)
+-		return IRQ_NONE;
+-
+-	irq_masked = irq_stat & hpriv->port_map;
+-
+-	spin_lock(&host->lock);
 
-Thanks!
-Ezequiel
+ 	for (i = 0; i < host->n_ports; i++) {
+ 		struct ata_port *ap;
+@@ -1868,6 +1850,33 @@ static irqreturn_t ahci_single_irq_intr(int irq, void *dev_instance)
+ 		handled = 1;
+ 	}
 
-> Cc: James Hartley <james.hartley@imgtec.com>
-> Cc: Damien Horsley <Damien.Horsley@imgtec.com>
-> 
-> Changes from v1:
->  - Added patch to enable PHY driver in pistachio_defconfig
->  - Fixed a couple of spelling errors
-> 
-> Andrew Bresticker (3):
->   phy: Add binding document for Pistachio USB2.0 PHY
->   phy: Add driver for Pistachio USB2.0 PHY
->   MIPS: pistachio: Enable USB PHY driver in defconfig
-> 
->  .../devicetree/bindings/phy/pistachio-usb-phy.txt  |  29 +++
->  arch/mips/configs/pistachio_defconfig              |   1 +
->  drivers/phy/Kconfig                                |   7 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-pistachio-usb.c                    | 206 +++++++++++++++++++++
->  include/dt-bindings/phy/phy-pistachio-usb.h        |  16 ++
->  6 files changed, 260 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->  create mode 100644 drivers/phy/phy-pistachio-usb.c
->  create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
-> 
-> --
-> 2.2.0.rc0.207.ga3a616c
-> 
++	return handled;
++}
++
++static irqreturn_t ahci_single_level_irq_intr(int irq, void *dev_instance)
++{
++	struct ata_host *host = dev_instance;
++	struct ahci_host_priv *hpriv;
++	unsigned int rc = 0;
++	void __iomem *mmio;
++	u32 irq_stat, irq_masked;
++
++	VPRINTK("ENTER\n");
++
++	hpriv = host->private_data;
++	mmio = hpriv->mmio;
++
++	/* sigh.  0xffffffff is a valid return from h/w */
++	irq_stat = readl(mmio + HOST_IRQ_STAT);
++	if (!irq_stat)
++		return IRQ_NONE;
++
++	irq_masked = irq_stat & hpriv->port_map;
++
++	spin_lock(&host->lock);
++
++	rc = ahci_handle_port_intr(host, irq_masked);
++
+ 	/* HOST_IRQ_STAT behaves as level triggered latch meaning that
+ 	 * it should be cleared after all the port events are cleared;
+ 	 * otherwise, it will raise a spurious interrupt after each
+@@ -1883,7 +1892,7 @@ static irqreturn_t ahci_single_irq_intr(int irq, void *dev_instance)
 
--- 
-Ezequiel
+ 	VPRINTK("EXIT\n");
+
+-	return IRQ_RETVAL(handled);
++	return IRQ_RETVAL(rc);
+ }
+
+ unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
+@@ -2487,7 +2496,7 @@ int ahci_host_activate(struct ata_host *host, int irq,
+ 	if (hpriv->flags & AHCI_HFLAG_MULTI_MSI)
+ 		rc = ahci_host_activate_multi_irqs(host, irq, sht);
+ 	else
+-		rc = ata_host_activate(host, irq, ahci_single_irq_intr,
++		rc = ata_host_activate(host, irq, ahci_single_level_irq_intr,
+ 				       IRQF_SHARED, sht);
+ 	return rc;
+ }
+--
+1.8.2.1
+
