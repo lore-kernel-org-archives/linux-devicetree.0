@@ -1,94 +1,72 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 1/6] ARM: l2c: Add DT support for Shared Override
-Date: Tue, 5 May 2015 13:42:21 +0200
-Message-ID: <CAMuHMdWE3HjGk73gCN3P-bBVEGrMbgfJ=FqvcTtGecs15R=A_g@mail.gmail.com>
-References: <1430753072-17145-1-git-send-email-geert+renesas@glider.be>
-	<1430753072-17145-2-git-send-email-geert+renesas@glider.be>
-	<20150505112145.GG22384@e104818-lin.cambridge.arm.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Tue, 5 May 2015 17:13:33 +0530
+Message-ID: <CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+	<d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+	<20150504121209.GM15510@sirena.org.uk>
+	<CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+	<20150505105714.GA22845@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150505112145.GG22384@e104818-lin.cambridge.arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tushar Behera <tushar.behera@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150505105714.GA22845-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
-Hi Catalin,
+On 5 May 2015 at 16:27, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> No, it doesn't - you're not answering the question about what this is
+> for.
 
-On Tue, May 5, 2015 at 1:21 PM, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> On Mon, May 04, 2015 at 05:24:27PM +0200, Geert Uytterhoeven wrote:
->> "CoreLink Level 2 Cache Controller L2C-310", p. 2-15, section 2.3.2
->> Shareable attribute" states:
->>
->>     "The default behavior of the cache controller with respect to the
->>      shareable attribute is to transform Normal Memory Non-cacheable
->>      transactions into:
->>         - cacheable no allocate for reads
->>         - write through no write allocate for writes."
->>
->> Depending on the system architecture, this may cause memory corruption
->> in the presence of bus mastering devices (e.g. OHCI). To avoid such
->> corruption, the default behavior can be disabled by setting the Shared
->> Override bit in the Auxiliary Control register.
->>
->> Currently the Shared Override bit can be set only using C code:
->>   - by calling l2x0_init() directly, which is deprecated,
->>   - by setting/clearing the bit in the machine_desc.l2c_aux_val/mask
->>     fields, but using values differing from 0/~0 is also deprecated.
->
-> Or you can set it in firmware/boot-loader before Linux starts.
+I don't know how this information will be used finally. Probably the
+platform driver will do the configuration based on the volt-cur pair.
 
-... together with all other additional settings cache-l2x0.c does?
+> To know if this makes sense I need to know what you beleive "setting the
+> current" does.  If you literally mean setting the current it makes no
+> sense at all.  If you mean something else that something else should
+> probably be written into the binding.
 
-I'm afraid this is not going to happen...
+Yeah, that was a wrong statement. We can't configure current separately.
 
->> Hence add support for an "arm,shared-override" device tree property for
->> the l2c device node. By specifying this property, affected systems can
->> indicate that non-cacheable transactions must not be transformed.
->>
->> If specified, the actual behavior of the kernel depends on whether CMA
->> is available or not:
->>   - If CMA is available, nothing needs to be done, as there won't be a
->>     kernel linear mappings and cacheable aliases for the DMA buffers,
->
-> I don't think this is true. See this thread:
->
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/329492.html
+Does this diff make it any better ?
 
-Doh, and I had hoped to please Russell...
 
-To bad, will drop this.
+diff --git a/Documentation/devicetree/bindings/power/opp.txt
+b/Documentation/devicetree/bindings/power/opp.txt
+index c96dc77121b7..a57e88ab4554 100644
+--- a/Documentation/devicetree/bindings/power/opp.txt
++++ b/Documentation/devicetree/bindings/power/opp.txt
+@@ -59,16 +59,18 @@ properties.
+   regulators are specified in device's DT node.
 
->>   - If CMA is not available, the "shared attribute override enable" bit
->>     will be set.
->
-> IMO, this should always be done, independent of any DT or kernel
-> configuration. I stated it several times already that I don't see why we
-> would ever need such bit cleared:
->
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330573.html
->
-> Personally I don't think this configuration belongs to the DT,
-> especially as it may depend on how the OS is configured. But since
+ - opp-microamp: current in micro Amperes. It can contain entries for multiple
+-  regulators.
++  regulators. This can be referenced (along with voltage and freqency) while
++  programming the regulator.
 
-That's why I worded the bindings like "[...] this property must be specified to
-indicate that such transforms are precluded.", not "[...] this property must be
-specified if the Shared Override bit must be set by the OS.".
-It's still up to the OS to decide (e.g. if CMA will get fixed).
+   A single regulator's current is specified with an array of size one or three.
+   Single entry is for target current and three entries are for <target min max>
+   currents.
 
-> Russell has refused to take patches setting this bit by default (I have
-> yet to see a valid argument), it's still better than nothing.
+   Entries for multiple regulators must be present in the same order as
+-  regulators are specified in device's DT node. If few regulators don't provide
+-  capability to configure current, then values for then should be marked as
+-  zero.
++  regulators are specified in device's DT node. If current value for few
++  regulators isn't required to be passed, then values for such
+regulators should
++  be marked as zero. If it isn't required for any regulator, then this property
++  need not be present.
 
-Thanks!
+ - clock-latency-ns: Specifies the maximum possible transition latency (in
+   nanoseconds) for switching to this OPP from any other OPP.
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
+(Restoring my laptop after a corrupted disk, and so sending it from gmail,
+might be a bit corrupted)..
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
