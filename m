@@ -1,91 +1,309 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v3 2/5] PCI: st: Add Device Tree bindings for sti pcie
-Date: Tue, 5 May 2015 17:09:04 -0500
-Message-ID: <20150505220904.GD24643@google.com>
-References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
- <1428657168-12495-3-git-send-email-gabriel.fernandez@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1428657168-12495-3-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edw>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/2] reset: add driver for lpc18xx rgu
+Date: Wed,  6 May 2015 00:10:26 +0200
+Message-ID: <1430863827-21898-2-git-send-email-manabian@gmail.com>
+References: <1430863827-21898-1-git-send-email-manabian@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430863827-21898-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2015 at 11:12:45AM +0200, Gabriel FERNANDEZ wrote:
-> sti pcie is built around a Synopsis Designware PCIe IP.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Add reset driver for the Reset Generation Unit (RGU) found on NXP
+LPC18xx and LPC43xx devies. This reset controller features up to 64
+reset lines connected to different blocks and peripheral in the SoC.
+Most reset lines on the controller are self clearing except for
+those dealing with the Cortex-M0 cores on LPC43xx devices.
 
-Arnd, Rob, can you ack this?
+This driver also registers a restart handler that can be used to
+reset the entire device.
 
-> ---
->  Documentation/devicetree/bindings/pci/st-pcie.txt | 53 +++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/st-pcie.txt b/Documentation/devicetree/bindings/pci/st-pcie.txt
-> new file mode 100644
-> index 0000000..25fcab3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/st-pcie.txt
-> @@ -0,0 +1,53 @@
-> +STMicroelectronics STi PCIe controller
-> +
-> +This PCIe host controller is based on the Synopsis Designware PCIe IP
-> +and thus inherits all the common properties defined in designware-pcie.txt.
-> +
-> +Required properties:
-> + - compatible: "st,stih407-pcie"
-> + - reg: base address and length of the pcie controller, mem-window address
-> +   and length available to the controller.
-> + - interrupts: A list of interrupt outputs of the controller. Must contain an
-> +   entry for each entry in the interrupt-names property.
-> + - interrupt-names: Should be "msi". STi interrupt that is asserted when an
-> +   MSI is received.
-> + - st,syscfg : should be a phandle of the syscfg node. Also contains syscfg
-> +   offset for IP configuration.
-> + - resets, reset-names: the power-down and soft-reset lines of PCIe IP.
-> +   Associated names must be "powerdown" and "softreset".
-> + - phys, phy-names: the phandle for the PHY device.
-> +   Associated name must be "pcie"
-> +
-> +Optional properties:
-> + - reset-gpio: a GPIO spec to define which pin is connected to the bus reset.
-> +
-> +Example:
-> +
-> +pcie0: pcie@9b00000 {
-> +	compatible = "st,pcie", "snps,dw-pcie";
-> +	device_type = "pci";
-> +	reg = <0x09b00000 0x4000>,	/* dbi cntrl registers */
-> +	      <0x2fff0000 0x00010000>,	/* configuration space */
-> +	      <0x40000000 0x80000000>;	/* lmi mem window */
-> +	reg-names = "dbi", "config", "mem-window";
-> +	st,syscfg = <&syscfg_core 0xd8 0xe0>;
-> +	#address-cells = <3>;
-> +	#size-cells = <2>;
-> +	ranges = <0x82000000 0 0x20000000 0x20000000 0 0x0FFF0000>; /* non-prefetchable memory */
-> +	num-lanes = <1>;
-> +	interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "msi";
-> +	#interrupt-cells = <1>;
-> +	interrupt-map-mask = <0 0 0 7>;
-> +	interrupt-map = <0 0 0 1 &intc GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>, /* INT A */
-> +			<0 0 0 2 &intc GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>, /* INT B */
-> +			<0 0 0 3 &intc GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>, /* INT C */
-> +			<0 0 0 4 &intc GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>; /* INT D */
-> +
-> +	resets = <&powerdown STIH407_PCIE0_POWERDOWN>,
-> +		 <&softreset STIH407_PCIE0_SOFTRESET>;
-> +	reset-names = "powerdown",
-> +		      "softreset";
-> +	phys = <&phy_port0 PHY_TYPE_PCIE>;
-> +	phy-names = "pcie";
-> +};
-> -- 
-> 1.9.1
-> 
+Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/reset/Makefile        |   1 +
+ drivers/reset/reset-lpc18xx.c | 258 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 259 insertions(+)
+ create mode 100644 drivers/reset/reset-lpc18xx.c
+
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 157d421f755b..1d41feeb2dce 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -1,4 +1,5 @@
+ obj-$(CONFIG_RESET_CONTROLLER) += core.o
++obj-$(CONFIG_ARCH_LPC18XX) += reset-lpc18xx.o
+ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+ obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
+ obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+diff --git a/drivers/reset/reset-lpc18xx.c b/drivers/reset/reset-lpc18xx.c
+new file mode 100644
+index 000000000000..70922e9ac27f
+--- /dev/null
++++ b/drivers/reset/reset-lpc18xx.c
+@@ -0,0 +1,258 @@
++/*
++ * Reset driver for NXP LPC18xx/43xx Reset Generation Unit (RGU).
++ *
++ * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/reboot.h>
++#include <linux/reset-controller.h>
++#include <linux/spinlock.h>
++
++/* LPC18xx RGU registers */
++#define LPC18XX_RGU_CTRL0		0x100
++#define LPC18XX_RGU_CTRL1		0x104
++#define LPC18XX_RGU_ACTIVE_STATUS0	0x150
++#define LPC18XX_RGU_ACTIVE_STATUS1	0x154
++
++#define LPC18XX_RGU_RESETS_PER_REG	32
++
++/* Internal reset outputs */
++#define LPC18XX_RGU_CORE_RST	0
++#define LPC43XX_RGU_M0SUB_RST	12
++#define LPC43XX_RGU_M0APP_RST	56
++
++struct lpc18xx_rgu_data {
++	struct reset_controller_dev rcdev;
++	struct clk *clk_delay;
++	struct clk *clk_reg;
++	void __iomem *base;
++	spinlock_t lock;
++	u32 delay_us;
++};
++
++#define to_rgu_data(p) container_of(p, struct lpc18xx_rgu_data, rcdev)
++
++static void __iomem *rgu_base;
++
++static int lpc18xx_rgu_restart(struct notifier_block *this, unsigned long mode,
++			       void *cmd)
++{
++	writel(BIT(LPC18XX_RGU_CORE_RST), rgu_base + LPC18XX_RGU_CTRL0);
++	mdelay(2000);
++
++	pr_emerg("%s: unable to restart system\n", __func__);
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block lpc18xx_rgu_restart_nb = {
++	.notifier_call = lpc18xx_rgu_restart,
++	.priority = 192,
++};
++
++/*
++ * The LPC18xx RGU has mostly self-deasserting resets except for the
++ * two reset lines going to the internal Cortex-M0 cores.
++ *
++ * To prevent the M0 core resets from accidentally getting deasserted
++ * status register must be check and bits in control register set to
++ * preserve the state.
++ */
++static int lpc18xx_rgu_setclear_reset(struct reset_controller_dev *rcdev,
++				      unsigned long id, bool set)
++{
++	struct lpc18xx_rgu_data *rc = to_rgu_data(rcdev);
++	u32 stat_offset = LPC18XX_RGU_ACTIVE_STATUS0;
++	u32 ctrl_offset = LPC18XX_RGU_CTRL0;
++	unsigned long flags;
++	u32 stat, rst_bit;
++
++	stat_offset += (id / LPC18XX_RGU_RESETS_PER_REG) * sizeof(u32);
++	ctrl_offset += (id / LPC18XX_RGU_RESETS_PER_REG) * sizeof(u32);
++	rst_bit = 1 << (id % LPC18XX_RGU_RESETS_PER_REG);
++
++	spin_lock_irqsave(&rc->lock, flags);
++	stat = ~readl(rc->base + stat_offset);
++	if (set)
++		writel(stat | rst_bit, rc->base + ctrl_offset);
++	else
++		writel(stat & ~rst_bit, rc->base + ctrl_offset);
++	spin_unlock_irqrestore(&rc->lock, flags);
++
++	return 0;
++}
++
++static int lpc18xx_rgu_assert(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	return lpc18xx_rgu_setclear_reset(rcdev, id, true);
++}
++
++static int lpc18xx_rgu_deassert(struct reset_controller_dev *rcdev,
++				unsigned long id)
++{
++	return lpc18xx_rgu_setclear_reset(rcdev, id, false);
++}
++
++/* Only M0 cores require explicit reset deassert */
++static int lpc18xx_rgu_reset(struct reset_controller_dev *rcdev,
++			     unsigned long id)
++{
++	struct lpc18xx_rgu_data *rc = to_rgu_data(rcdev);
++
++	lpc18xx_rgu_assert(rcdev, id);
++	udelay(rc->delay_us);
++
++	switch (id) {
++	case LPC43XX_RGU_M0SUB_RST:
++	case LPC43XX_RGU_M0APP_RST:
++		lpc18xx_rgu_setclear_reset(rcdev, id, false);
++	}
++
++	return 0;
++}
++
++static int lpc18xx_rgu_status(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	struct lpc18xx_rgu_data *rc = to_rgu_data(rcdev);
++	u32 bit, offset = LPC18XX_RGU_ACTIVE_STATUS0;
++
++	offset += (id / LPC18XX_RGU_RESETS_PER_REG) * sizeof(u32);
++	bit = 1 << (id % LPC18XX_RGU_RESETS_PER_REG);
++
++	return !(readl(rc->base + offset) & bit);
++}
++
++static struct reset_control_ops lpc18xx_rgu_ops = {
++	.reset		= lpc18xx_rgu_reset,
++	.assert		= lpc18xx_rgu_assert,
++	.deassert	= lpc18xx_rgu_deassert,
++	.status		= lpc18xx_rgu_status,
++};
++
++static int lpc18xx_rgu_probe(struct platform_device *pdev)
++{
++	struct lpc18xx_rgu_data *rc;
++	struct resource *res;
++	u32 fcclk, firc;
++	int ret;
++
++	rc = devm_kzalloc(&pdev->dev, sizeof(*rc), GFP_KERNEL);
++	if (!rc)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	rc->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(rc->base))
++		return PTR_ERR(rc->base);
++
++	rc->clk_reg = devm_clk_get(&pdev->dev, "reg");
++	if (IS_ERR(rc->clk_reg)) {
++		dev_err(&pdev->dev, "reg clock not found\n");
++		return PTR_ERR(rc->clk_reg);
++	}
++
++	rc->clk_delay = devm_clk_get(&pdev->dev, "delay");
++	if (IS_ERR(rc->clk_delay)) {
++		dev_err(&pdev->dev, "delay clock not found\n");
++		return PTR_ERR(rc->clk_delay);
++	}
++
++	ret = clk_prepare_enable(rc->clk_reg);
++	if (ret) {
++		dev_err(&pdev->dev, "unable to enable reg clock\n");
++		return ret;
++	}
++
++	ret = clk_prepare_enable(rc->clk_delay);
++	if (ret) {
++		dev_err(&pdev->dev, "unable to enable delay clock\n");
++		goto dis_clk_reg;
++	}
++
++	fcclk = clk_get_rate(rc->clk_reg) / USEC_PER_SEC;
++	firc = clk_get_rate(rc->clk_delay) / USEC_PER_SEC;
++	if (fcclk == 0 || firc == 0)
++		rc->delay_us = 2;
++	else
++		rc->delay_us = DIV_ROUND_UP(fcclk, firc * firc);
++
++	spin_lock_init(&rc->lock);
++
++	rc->rcdev.owner = THIS_MODULE;
++	rc->rcdev.nr_resets = 64;
++	rc->rcdev.ops = &lpc18xx_rgu_ops;
++	rc->rcdev.of_node = pdev->dev.of_node;
++
++	platform_set_drvdata(pdev, rc);
++
++	ret = reset_controller_register(&rc->rcdev);
++	if (ret) {
++		dev_err(&pdev->dev, "unable to register device\n");
++		goto dis_clks;
++	}
++
++	rgu_base = rc->base;
++	ret = register_restart_handler(&lpc18xx_rgu_restart_nb);
++	if (ret)
++		dev_warn(&pdev->dev, "failed to register restart handler\n");
++
++	return 0;
++
++dis_clks:
++	clk_disable_unprepare(rc->clk_delay);
++dis_clk_reg:
++	clk_disable_unprepare(rc->clk_reg);
++
++	return ret;
++}
++
++static int lpc18xx_rgu_remove(struct platform_device *pdev)
++{
++	struct lpc18xx_rgu_data *rc = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = unregister_restart_handler(&lpc18xx_rgu_restart_nb);
++	if (ret)
++		dev_warn(&pdev->dev, "failed to unregister restart handler\n");
++
++	reset_controller_unregister(&rc->rcdev);
++
++	clk_disable_unprepare(rc->clk_delay);
++	clk_disable_unprepare(rc->clk_reg);
++
++	return 0;
++}
++
++static const struct of_device_id lpc18xx_rgu_match[] = {
++	{ .compatible = "nxp,lpc1850-rgu" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lpc18xx_rgu_match);
++
++static struct platform_driver lpc18xx_rgu_driver = {
++	.probe	= lpc18xx_rgu_probe,
++	.remove	= lpc18xx_rgu_remove,
++	.driver	= {
++		.name		= "lpc18xx-reset",
++		.of_match_table	= lpc18xx_rgu_match,
++	},
++};
++module_platform_driver(lpc18xx_rgu_driver);
++
++MODULE_AUTHOR("Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
++MODULE_DESCRIPTION("Reset driver for LPC18xx/43xx RGU");
++MODULE_LICENSE("GPL v2");
+-- 
+1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
