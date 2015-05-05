@@ -1,69 +1,165 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Tue, 5 May 2015 18:12:52 +0100
-Message-ID: <20150505171252.GI22845@sirena.org.uk>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <20150504121209.GM15510@sirena.org.uk>
- <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
- <20150505105714.GA22845@sirena.org.uk>
- <CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 1/2] pinctrl: Add driver for Alphascale asm9260 pinctrl
+Date: Tue, 5 May 2015 17:12:06 +0200
+Message-ID: <CACRpkdakXbHL6ydeZrs4XZ9Z1odHL5bWRxiHtT_Jbg-ygTudgw@mail.gmail.com>
+References: <1428306169.634.51.camel@x220>
+	<1428311043-12012-1-git-send-email-linux@rempel-privat.de>
+	<1428311043-12012-2-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="v0UO8vuVPXJ4JTyq"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428311043-12012-2-git-send-email-linux@rempel-privat.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 6, 2015 at 11:04 AM, Oleksij Rempel <linux@rempel-privat.de> wrote:
 
---v0UO8vuVPXJ4JTyq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This patch adds driver for Alphascale asm9260 pinctrl support.
+> Alphascale asm9260t is SoC based on ARM926EJ (240MHz) in LQFP176 package.
+> On silicon are:
+> - 32MB SDRAM
+> - USB2.0 HS/OTG
+> - 2x CAN
+> - SD/MMC
+> - 5x Times/PWM
+> - 10x USART
+> - 24-channel DMA
+> - 2x i2c
+> - 2x SPI
+> - Quad SPI
+> - 10/100 Ethernet MAC
+> - Camera IF
+> - WD
+> - RTC
+> - i2s
+> - GPIO
+> - 12-bit A/D
+> - LCD IF
+> - 8-channel 12-bit ADC
+> - NAND
+>
+> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
 
-On Tue, May 05, 2015 at 05:13:33PM +0530, Viresh Kumar wrote:
-> On 5 May 2015 at 16:27, Mark Brown <broonie@kernel.org> wrote:
+Nice.
 
-> > No, it doesn't - you're not answering the question about what this is
-> > for.
+> +#define MUX_TABLE_SIZE         ARRAY_SIZE(asm9260_mux_table)
+> +struct asm9260_pmx_priv {
+> +       struct device           *dev;
+> +       struct pinctrl_dev      *pctl;
+> +       void __iomem            *iobase;
+> +
+> +       struct clk              *clk;
+> +       spinlock_t              lock;
+> +
+> +       struct pinctrl_pin_desc pin_desc[MUX_TABLE_SIZE];
+> +};
+> +
+> +static void __init asm9260_init_mux_pins(struct asm9260_pmx_priv *priv)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i = 0; i < MUX_TABLE_SIZE; i++) {
+> +               priv->pin_desc[i].name = asm9260_mux_table[i].name;
+> +               priv->pin_desc[i].number = asm9260_mux_table[i].number;
+> +       }
+> +}
 
-> I don't know how this information will be used finally. Probably the
-> platform driver will do the configuration based on the volt-cur pair.
+What is the point of copying this data from one array to the other?
 
-I don't think we should be defining a binding without understanding what
-it is supposed to mean. =20
+Just reference the statically defined array by a pointer instead,
+this just takes up a lot o memory for no reason.
 
->  - opp-microamp: current in micro Amperes. It can contain entries for mul=
-tiple
-> -  regulators.
-> +  regulators. This can be referenced (along with voltage and freqency) w=
-hile
-> +  programming the regulator.
+> +/* each GPIO pin has it's own pseudo pingroup containing only itself */
+> +static int asm9260_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+> +{
+> +       return MUX_TABLE_SIZE;
+> +}
 
-This still doesn't say what the value is supposed to mean which means
-it's not possible for someone to write generic code which handles the
-binding - saying that people can reference the value doesn't tell them
-how to interpret it.  A limit?  A nominal constant draw value?  A value
-to regulate to?  Those are all different things expressed as a current.
+Use return ARRAY_SIZE(foo) to return the size of a static table.
 
---v0UO8vuVPXJ4JTyq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +static int asm9260_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+> +                                        unsigned int group,
+> +                                        const unsigned int **pins,
+> +                                        unsigned int *num_pins)
+> +{
+> +       struct asm9260_pmx_priv *priv = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +       *pins = &priv->pin_desc[group].number;
+> +       *num_pins = 1;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+So I see you are using groups with one pin each. Is this how the
+hardware works?
 
-iQEcBAEBCAAGBQJVSPoUAAoJECTWi3JdVIfQaAcH/1csXdJjh1PCxKLq90jlOIfR
-F936bn9idfw8ojWyLPEQi3z8DUaFwwK4fkKaj4bOA7H8cevtamCfqTByXQo4V9zx
-MHdrO9l4CtlWv4dBa+unnVbCtMCzsyW7KYba8DKJuaoX2Nxl9R5TcB/vBnmhGrmg
-jBDw4w7hQOgNb4Uzj/SensRUgmOe+74fFUxvmu4fNdl6qAIbaOn03VhdPdbLLrnt
-LiLyeUlSp9eMhvYp7B4ITTU5KUNi5VkRm/akWVWUDgKXqD/2Y8ng6hqOvrksttCo
-OOm973yS4767qjKZrO4PA4zHoMt2U0jMwq8N8v7RHupDLeT/BnHod4zcYaDvYlU=
-=hI/C
------END PGP SIGNATURE-----
+> +static int asm9260_pinctrl_get_func_groups(struct pinctrl_dev *pctldev,
+> +                                         unsigned int function,
+> +                                         const char * const **groups,
+> +                                         unsigned int * const num_groups)
+> +{
 
---v0UO8vuVPXJ4JTyq--
+(...)
+> +       for (a = 0; a < MUX_TABLE_SIZE; a++) {
+> +               table = &asm9260_mux_table[a];
+> +
+> +               for (b = 0; b < MAX_FUNCS_PER_PIN; b++) {
+> +                       if (table->funcs[b] == function) {
+> +                               tmp[count] = a;
+> +                               count++;
+> +                       }
+> +
+> +               }
+> +
+> +       }
+
+Mory copying. I don't see why this is necessary at all.
+
+> +       for (a = 0; a < count; a++)
+> +               gr[a] = asm9260_mux_table[tmp[a]].name;
+
+And more copying.
+
+Try to just reference static tables.
+
+> +
+> +       asm9260_functions[function].groups = gr;
+> +       asm9260_functions[function].ngroups = count;
+> +done:
+> +       *groups = asm9260_functions[function].groups;
+> +       *num_groups = asm9260_functions[function].ngroups;
+
+Same comment.
+
+> +static struct pinmux_ops asm9260_pinmux_ops = {
+> +       .get_functions_count    = asm9260_pinctrl_get_funcs_count,
+> +       .get_function_name      = asm9260_pinctrl_get_func_name,
+> +       .get_function_groups    = asm9260_pinctrl_get_func_groups,
+> +       .set_mux                = asm9260_pinctrl_set_mux,
+> +       /* TODO: should we care about gpios here? gpio_request_enable? */
+
+I think you should, if you also have a matching GPIO driver.
+
+> +static int asm9260_pinconf_reg(struct pinctrl_dev *pctldev,
+> +                             unsigned int pin,
+> +                             enum pin_config_param param,
+> +                             void __iomem **reg, u32 *val)
+> +{
+> +       struct asm9260_pmx_priv *priv = pinctrl_dev_get_drvdata(pctldev);
+> +       struct asm9260_pingroup *table;
+> +       int a;
+> +
+> +       for (a = 0; a < MUX_TABLE_SIZE; a++) {
+> +               table = &asm9260_mux_table[a];
+> +               if (table->number == pin)
+> +                       break;
+> +       }
+
+No error check here. What if pin is not in table? We will never
+know for that case...
+
+Apart from that it looks OK.
+
+BTW this is a review of v3, I didn't find your v4 of this patch :/
+
+Yours,
+Linus Walleij
