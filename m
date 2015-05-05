@@ -1,65 +1,70 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v7 6/6] clk: cygnus: remove Cygnus dummy clock binding
-Date: Tue, 5 May 2015 11:13:23 -0700
-Message-ID: <1430849603-15849-7-git-send-email-rjui@broadcom.com>
-References: <1430849603-15849-1-git-send-email-rjui@broadcom.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] ARM: dts: cros-ec-keyboard: Add support for some Japanese keys
+Date: Tue, 5 May 2015 11:10:42 -0700
+Message-ID: <CAD=FV=VW0s=PHUvATPC_XRPFh=49RcSYxUP56B4KRXDM6F4mnQ@mail.gmail.com>
+References: <1430791657-28014-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430849603-15849-1-git-send-email-rjui@broadcom.com>
+In-Reply-To: <1430791657-28014-1-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>
+To: Chris Zhong <zyw@rock-chips.com>, Olof Johansson <olof@lixom.net>
+Cc: Dmitry Torokhov <dtor@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove old Cygnus dummy clock binding document, as it's replaced by
-Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+Chris,
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
----
- .../devicetree/bindings/clock/bcm-cygnus-clock.txt |   34 --------------------
- 1 file changed, 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+On Mon, May 4, 2015 at 7:07 PM, Chris Zhong <zyw@rock-chips.com> wrote:
+> Add support for 4 Japanese keys
+>
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>
+> ---
+>
+>  arch/arm/boot/dts/cros-ec-keyboard.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/cros-ec-keyboard.dtsi b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
+> index 9c7fb0a..4e42f30c 100644
+> --- a/arch/arm/boot/dts/cros-ec-keyboard.dtsi
+> +++ b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
+> @@ -22,6 +22,7 @@
+>                         MATRIX_KEY(0x00, 0x02, KEY_F1)
+>                         MATRIX_KEY(0x00, 0x03, KEY_B)
+>                         MATRIX_KEY(0x00, 0x04, KEY_F10)
+> +                       MATRIX_KEY(0x00, 0x05, KEY_RO)
+>                         MATRIX_KEY(0x00, 0x06, KEY_N)
+>                         MATRIX_KEY(0x00, 0x08, KEY_EQUAL)
+>                         MATRIX_KEY(0x00, 0x0a, KEY_RIGHTALT)
+> @@ -34,6 +35,7 @@
+>                         MATRIX_KEY(0x01, 0x08, KEY_APOSTROPHE)
+>                         MATRIX_KEY(0x01, 0x09, KEY_F9)
+>                         MATRIX_KEY(0x01, 0x0b, KEY_BACKSPACE)
+> +                       MATRIX_KEY(0x01, 0x0c, KEY_HENKAN)
+>
+>                         MATRIX_KEY(0x02, 0x00, KEY_LEFTCTRL)
+>                         MATRIX_KEY(0x02, 0x01, KEY_TAB)
+> @@ -45,6 +47,7 @@
+>                         MATRIX_KEY(0x02, 0x07, KEY_102ND)
+>                         MATRIX_KEY(0x02, 0x08, KEY_LEFTBRACE)
+>                         MATRIX_KEY(0x02, 0x09, KEY_F8)
+> +                       MATRIX_KEY(0x02, 0x0a, KEY_YEN)
+>
+>                         MATRIX_KEY(0x03, 0x01, KEY_GRAVE)
+>                         MATRIX_KEY(0x03, 0x02, KEY_F2)
+> @@ -53,6 +56,7 @@
+>                         MATRIX_KEY(0x03, 0x06, KEY_6)
+>                         MATRIX_KEY(0x03, 0x08, KEY_MINUS)
+>                         MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)
+> +                       MATRIX_KEY(0x03, 0x0c, KEY_MUHENKAN)
+>
+>                         MATRIX_KEY(0x04, 0x00, KEY_RIGHTCTRL)
+>                         MATRIX_KEY(0x04, 0x01, KEY_A)
 
-diff --git a/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt b/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
-deleted file mode 100644
-index 00d26ed..0000000
---- a/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--Broadcom Cygnus Clocks
--
--This binding uses the common clock binding:
--Documentation/devicetree/bindings/clock/clock-bindings.txt
--
--Currently various "fixed" clocks are declared for peripheral drivers that use
--the common clock framework to reference their core clocks. Proper support of
--these clocks will be added later
--
--Device tree example:
--
--	clocks {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		osc: oscillator {
--			compatible = "fixed-clock";
--			#clock-cells = <1>;
--			clock-frequency = <25000000>;
--		};
--
--		apb_clk: apb_clk {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			clock-frequency = <1000000000>;
--		};
--
--		periph_clk: periph_clk {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			clock-frequency = <500000000>;
--		};
--	};
--- 
-1.7.9.5
+Since there's no clear architecture here, I'd bet Olof would be the
+one to take this.  I added him to this email, but he might request
+that you resend the patch with him in the "To:" line.
+
+Other than that:
+
+Reviewed-by: Doug Anderson <dianders@chromium.org>
