@@ -1,88 +1,60 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 0/3] Add SDHCI support for APM X-Gene SoC using ARASAN
- SDHCI controller.
-Date: Tue, 5 May 2015 10:53:29 +0200
-Message-ID: <CAPDyKFp_tU-P-3ZM6Wt29v7BLcZ+Fy_-711XHYBQ1=9GAM=mkQ@mail.gmail.com>
-References: <1430746792-32574-1-git-send-email-stripathi@apm.com>
-	<CAPDyKFqva7jioEpf1qBv+sSo9-ZWU69+wb9qTF1X+4cxOgf2uQ@mail.gmail.com>
-	<CAOHikRAviwD=kPQpHeR5NCXdANWH8B+DqNW=qJQ0ACpeOppU2A@mail.gmail.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 2/2] mmc: sdhci: DT: Allow to specify that no write protect
+ signal is present
+Date: Tue, 05 May 2015 11:04:48 +0200
+Message-ID: <554887B0.4020407@metafoo.de>
+References: <1430214020-16816-1-git-send-email-lars@metafoo.de>	<1430214020-16816-2-git-send-email-lars@metafoo.de> <CAPDyKFpC9uc0n8HLiC1gWgdJOM-0DGVaNazkF3Q847r-sfXNtg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOHikRAviwD=kPQpHeR5NCXdANWH8B+DqNW=qJQ0ACpeOppU2A@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFpC9uc0n8HLiC1gWgdJOM-0DGVaNazkF3Q847r-sfXNtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 May 2015 at 10:42, Suman Tripathi <stripathi@apm.com> wrote:
-> On Tue, May 5, 2015 at 2:06 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> On 4 May 2015 at 15:39, Suman Tripathi <stripathi@apm.com> wrote:
->>> This patch adds the SDHCI support for APM X-Gene SoC using ARASAN SDHCI controller.
->>>
->>> v1 change:
->>>  * Use the CONFIG_ARM64_DMA_HAS_IOMMU for dma-mapping.
->>>
->>> v2 change:
->>>  * Drop the IOMMU support and switching to PIO mode for arasan.
->>>    controller integrated inside APM X-Gene SoC.
->>>
->>> v3 change:
->>>  * Change the sdhci-of-arasan.c to support arasan4.9a.
->>>  * Add quirks for arasan4.9a.
->>>
->>> v4 change:
->>>  * Cleanup the Documentation and dts.
->>>
->>> Signed-off-by: Suman Tripathi <stripathi@apm.com>
->>> ---
->>>
->>> Suman Tripathi (3):
->>>   arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
->>>   mmc: host: arasan: Add the support for sdhci-arasan4.9a in
->>>     sdhci-of-arasan.c
->>>   Documentation: mmc: Update Arasan SDHC documentation to support 4.9a
->>>     version of     Arasan SDHC controller.
->>>
->>>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  3 +-
->>>  arch/arm64/boot/dts/apm-mustang.dts                |  4 ++
->>>  arch/arm64/boot/dts/apm-storm.dtsi                 | 44 ++++++++++++++++++++++
->>>  drivers/mmc/host/sdhci-of-arasan.c                 |  7 ++++
->>>  4 files changed, 57 insertions(+), 1 deletion(-)
->>>
->>
->> Thanks!
->>
->> I have applied patch2 and patch3. Though, I decided to squash them
->> into one patch and changed the commit message header a bit.
->>
->> I couldn't apply patch 1, so I guess that will be taken through arm soc?
+On 05/05/2015 10:36 AM, Ulf Hansson wrote:
+[...]
+>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+>> index 438899e..b068549 100644
+>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+>> @@ -21,6 +21,7 @@ Optional properties:
+>>     below for the case, when a GPIO is used for the CD line
+>>   - wp-inverted: when present, polarity on the WP line is inverted. See the note
+>>     below for the case, when a GPIO is used for the WP line
+>> +- disable-wp: When set no physical WP line is present
 >
-> why it couldn't be applied?? I made it in top of
->
-> git git://git.linaro.org/people/ulf.hansson/mmc.git
->
-> Is this not correct ??
+> This requires some additional explanation, I believe. I assume this
+> property is only relevant for those controllers that have internal
+> logic to handle WP!?
 
-That's correct, but it apparently needs a rebase.
-The below files has moved:
-arch/arm64/boot/dts/apm-mustang.dts
-arch/arm64/boot/dts/apm-storm.dtsi
-
-Send a new version and I am happy to take it through my tree, since it
-got Arnd's ack.
-
-Kind regards
-Uffe
+Yes, currently drivers for controllers that have a built-in WP detection 
+logic typically assume that if no WP GPIO is specified the built-in WP logic 
+should be used. But for some of them the value returned by the internal 
+detection logic will be bogus if there is no WP signal connected. So we need 
+a way to specify that that there is no WP signal and the internal detection 
+logic shouldn't be used either.
 
 >
->>
->> Kind regards
->> Uffe
->
->
->
-> --
-> Thanks,
-> with regards,
-> Suman Tripathi
+> For those that uses GPIO, this can't ever be a correct configuration. Right?
+
+It wouldn't make much sense to use it with a GPIO based detection logic, 
+since you simply don't specify the wp-gpio property if it is not present. 
+One the other hand it wouldn't cause any harm to specify it in addition to 
+not specifying the wp-gpios property.
+
+How about:
+
+- disable-wp: When set no physical WP line is present. This property should 
+only be specified when the controller has a dedicated write-protect 
+detection logic. If a GPIO is used for write-protect detection logic is used 
+it is sufficient to not specify wp-gpios property in the absence of a WP line.
+
+[...]
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
