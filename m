@@ -1,46 +1,71 @@
 From: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 1/7] drivers: CCI: fix used_mask init in validate_group()
-Date: Tue,  5 May 2015 12:49:02 +0100
-Message-ID: <1430826548-29960-2-git-send-email-suzuki.poulose@arm.com>
-References: <1430826548-29960-1-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 0/7] ARM CCI-500 PMU driver support
+Date: Tue,  5 May 2015 12:49:01 +0100
+Message-ID: <1430826548-29960-1-git-send-email-suzuki.poulose@arm.com>
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430826548-29960-1-git-send-email-suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 
-Currently in validate_group(), there is a static initializer
-for fake_pmu.used_mask which is based on CPU_BITS_NONE but
-the used_mask array size is based on CCI_PMU_MAX_HW_EVENTS.
-CCI_PMU_MAX_HW_EVENTS is not based on NR_CPUS, so CPU_BITS_NONE
-is not correct and will cause a build failure if NR_CPUS
-is set high enough to make CPU_BITS_NONE larger than used_mask.
-This patch changes the used_mask initialization to be runtime
-based on the actual size of the array.
+This series adds the support for CCI-500 PMU,  by
+reusing and rearranging the CCI-400 PMU driver code.
 
-Signed-off-by: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/bus/arm-cci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+CCI-500 (the new Cache Coherent Interconnect IP) has
+a PMU with 8 independent event counters and supports
+profiling events related to master/slave interfaces
+along with the global events(cci internal events).
 
-diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index b854125..941b831 100644
---- a/drivers/bus/arm-cci.c
-+++ b/drivers/bus/arm-cci.c
-@@ -660,7 +660,7 @@ validate_group(struct perf_event *event)
- =09=09 * Initialise the fake PMU. We only need to populate the
- =09=09 * used_mask for the purposes of validation.
- =09=09 */
--=09=09.used_mask =3D CPU_BITS_NONE,
-+=09=09.used_mask =3D  { 0 },
- =09};
-=20
- =09if (!validate_event(event->pmu, &fake_pmu, leader))
+The series also adds aliases for events for all the
+supported CCI PMUs(CCI_400{r0,r1}, CCI_500).
+
+Patches 1/7 is a fix posted by Mark Salter, which has
+been posted to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org already. I have included
+it in this series, as this series applies on top of it.
+
+Patches 2-5 - Creates an abstraction of a CCI PMU and
+makes the CCI-400 driver code to make use of the abstraction.
+Patch 6 - Adds the CCI-500 PMU driver support
+Patch 7 - Adds the aliases for CCI PMU events (specific to chipsets).
+
+With the series, one can use named events for the CCI pmus.
+
+e.g, CCI-400
+
+ # perf list | grep CCI
+  CCI_400/cycles/                                    [Kernel PMU event]
+  CCI_400/mi_retry_speculative_fetch,source=3D?/       [Kernel PMU event]
+
+e.g, CCI-500
+
+ # perf list |grep CCI
+  CCI_500/cci_rq_stall_address_hazard/               [Kernel PMU event]
+  CCI_500/cci_snoop_access_filter_bank_0_1/          [Kernel PMU event]
+
+Testing was performed on a fast model, with perf fuzzer and functional
+tests for the CCI-500 PMU.
+
+Mark Salter (1):
+  drivers: CCI: fix used_mask init in validate_group()
+
+Suzuki K. Poulose (6):
+  arm-cci: Cleanup PMU driver code
+  arm-cci: Abstract out the PMU counter details
+  arm-cci: Abstract handling for CCI events
+  arm-cci: Sanitise CCI400 PMU driver specific code
+  arm-cci: Add CCI-500 PMU support
+  arm-cci: Add aliases for PMU events
+
+ Documentation/devicetree/bindings/arm/cci.txt |    4 +-
+ drivers/bus/Kconfig                           |   17 +
+ drivers/bus/arm-cci.c                         |  905 ++++++++++++++++++++-=
+----
+ 3 files changed, 756 insertions(+), 170 deletions(-)
+
 --=20
 1.7.9.5
 
