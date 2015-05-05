@@ -1,165 +1,72 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 1/2] pinctrl: Add driver for Alphascale asm9260 pinctrl
-Date: Tue, 5 May 2015 17:12:06 +0200
-Message-ID: <CACRpkdakXbHL6ydeZrs4XZ9Z1odHL5bWRxiHtT_Jbg-ygTudgw@mail.gmail.com>
-References: <1428306169.634.51.camel@x220>
-	<1428311043-12012-1-git-send-email-linux@rempel-privat.de>
-	<1428311043-12012-2-git-send-email-linux@rempel-privat.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Tue, 5 May 2015 18:13:49 +0100
+Message-ID: <20150505171349.GA30215@leverpostej>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+ <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428311043-12012-2-git-send-email-linux@rempel-privat.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bintian Wang <bintian.wang@huawei.com>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, puc
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2015 at 11:04 AM, Oleksij Rempel <linux@rempel-privat.de> wrote:
+Hi,
 
-> This patch adds driver for Alphascale asm9260 pinctrl support.
-> Alphascale asm9260t is SoC based on ARM926EJ (240MHz) in LQFP176 package.
-> On silicon are:
-> - 32MB SDRAM
-> - USB2.0 HS/OTG
-> - 2x CAN
-> - SD/MMC
-> - 5x Times/PWM
-> - 10x USART
-> - 24-channel DMA
-> - 2x i2c
-> - 2x SPI
-> - Quad SPI
-> - 10/100 Ethernet MAC
-> - Camera IF
-> - WD
-> - RTC
-> - i2s
-> - GPIO
-> - 12-bit A/D
-> - LCD IF
-> - 8-channel 12-bit ADC
-> - NAND
->
-> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+> +/*Reserved 1MB memory for MCU*/
+> +/memreserve/ 0x05e00000 0x00100000;
 
-Nice.
+What exactly is the MCU used for, and what does it use this memory for?
 
-> +#define MUX_TABLE_SIZE         ARRAY_SIZE(asm9260_mux_table)
-> +struct asm9260_pmx_priv {
-> +       struct device           *dev;
-> +       struct pinctrl_dev      *pctl;
-> +       void __iomem            *iobase;
-> +
-> +       struct clk              *clk;
-> +       spinlock_t              lock;
-> +
-> +       struct pinctrl_pin_desc pin_desc[MUX_TABLE_SIZE];
-> +};
-> +
-> +static void __init asm9260_init_mux_pins(struct asm9260_pmx_priv *priv)
-> +{
-> +       unsigned int i;
-> +
-> +       for (i = 0; i < MUX_TABLE_SIZE; i++) {
-> +               priv->pin_desc[i].name = asm9260_mux_table[i].name;
-> +               priv->pin_desc[i].number = asm9260_mux_table[i].number;
-> +       }
-> +}
+Can this be carved out from the memory node instead? If the OS doesn't
+need to access this memory to communicate with the MCU, preventing the
+OS from mapping the memory avoids a number of potential issues.
 
-What is the point of copying this data from one array to the other?
+I take it that with UEFI this region is not described to the OS?
 
-Just reference the statically defined array by a pointer instead,
-this just takes up a lot o memory for no reason.
+[...]
 
-> +/* each GPIO pin has it's own pseudo pingroup containing only itself */
-> +static int asm9260_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
-> +{
-> +       return MUX_TABLE_SIZE;
-> +}
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
 
-Use return ARRAY_SIZE(foo) to return the size of a static table.
+Are all the PSCI 0.2 mandatory features implemented?
 
-> +static int asm9260_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-> +                                        unsigned int group,
-> +                                        const unsigned int **pins,
-> +                                        unsigned int *num_pins)
-> +{
-> +       struct asm9260_pmx_priv *priv = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +       *pins = &priv->pin_desc[group].number;
-> +       *num_pins = 1;
+Can CPU0 be hot unplugged?
 
-So I see you are using groups with one pin each. Is this how the
-hardware works?
+[...]
 
-> +static int asm9260_pinctrl_get_func_groups(struct pinctrl_dev *pctldev,
-> +                                         unsigned int function,
-> +                                         const char * const **groups,
-> +                                         unsigned int * const num_groups)
-> +{
+> +		uart0: uart@f8015000 {	/* console */
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x0 0xf8015000 0x0 0x1000>;
+> +			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl HI6220_UART0_PCLK>;
+> +			clock-names = "uartclk", "apb_pclk";
+> +		};
 
-(...)
-> +       for (a = 0; a < MUX_TABLE_SIZE; a++) {
-> +               table = &asm9260_mux_table[a];
-> +
-> +               for (b = 0; b < MAX_FUNCS_PER_PIN; b++) {
-> +                       if (table->funcs[b] == function) {
-> +                               tmp[count] = a;
-> +                               count++;
-> +                       }
-> +
-> +               }
-> +
-> +       }
+In a previous discussion [1] the UART on HI6220 was described as not
+fully PL011 compliant, with a number of differences (e.g. the FIFO
+length).
 
-Mory copying. I don't see why this is necessary at all.
+Given that, I feel somewhat uncomfortable with the current compatible
+string list. What exactly are those differences? We may need a more
+specific compatible string (even if in addition to those existing ones),
+or perhaps other properties.
 
-> +       for (a = 0; a < count; a++)
-> +               gr[a] = asm9260_mux_table[tmp[a]].name;
+Thanks,
+Mark.
 
-And more copying.
-
-Try to just reference static tables.
-
-> +
-> +       asm9260_functions[function].groups = gr;
-> +       asm9260_functions[function].ngroups = count;
-> +done:
-> +       *groups = asm9260_functions[function].groups;
-> +       *num_groups = asm9260_functions[function].ngroups;
-
-Same comment.
-
-> +static struct pinmux_ops asm9260_pinmux_ops = {
-> +       .get_functions_count    = asm9260_pinctrl_get_funcs_count,
-> +       .get_function_name      = asm9260_pinctrl_get_func_name,
-> +       .get_function_groups    = asm9260_pinctrl_get_func_groups,
-> +       .set_mux                = asm9260_pinctrl_set_mux,
-> +       /* TODO: should we care about gpios here? gpio_request_enable? */
-
-I think you should, if you also have a matching GPIO driver.
-
-> +static int asm9260_pinconf_reg(struct pinctrl_dev *pctldev,
-> +                             unsigned int pin,
-> +                             enum pin_config_param param,
-> +                             void __iomem **reg, u32 *val)
-> +{
-> +       struct asm9260_pmx_priv *priv = pinctrl_dev_get_drvdata(pctldev);
-> +       struct asm9260_pingroup *table;
-> +       int a;
-> +
-> +       for (a = 0; a < MUX_TABLE_SIZE; a++) {
-> +               table = &asm9260_mux_table[a];
-> +               if (table->number == pin)
-> +                       break;
-> +       }
-
-No error check here. What if pin is not in table? We will never
-know for that case...
-
-Apart from that it looks OK.
-
-BTW this is a review of v3, I didn't find your v4 of this patch :/
-
-Yours,
-Linus Walleij
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/328978.html
