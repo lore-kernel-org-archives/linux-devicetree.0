@@ -1,37 +1,39 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH] Documentation/devicetree: document OCTEON USB bindings
-Date: Tue, 5 May 2015 20:57:52 +0300
-Message-ID: <20150505175752.GB2358@fuloong-minipc.musicnaut.iki.fi>
-References: <1430423040-2088-1-git-send-email-aaro.koskinen@iki.fi>
- <3842439.qIvEyqJvhE@wuerfel>
+From: Ray Jui <rjui@broadcom.com>
+Subject: [PATCH v7 3/6] clk: Change bcm clocks build dependency
+Date: Tue, 5 May 2015 11:13:20 -0700
+Message-ID: <1430849603-15849-4-git-send-email-rjui@broadcom.com>
+References: <1430849603-15849-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3842439.qIvEyqJvhE@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430849603-15849-1-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The clock code under drivers/clk/bcm now contains code for both the
+Broadcom mobile SoCs and the iProc SoCs. Change the the makefile
+dependency to be under config flag CONFIG_ARCH_BCM that's enabled for
+both families of SoCs
 
-On Tue, May 05, 2015 at 12:02:04PM +0200, Arnd Bergmann wrote:
-> What does that main node actually do?
-> 
-> The common setup is that you have regular ehci/ohci/uhci host bridges
-> connected to an mmio bus, plus with shared PHY driver that would nowadays
-> sit in drivers/phy/ and handle the setup of the physical USB interface.
+Signed-off-by: Ray Jui <rjui@broadcom.com>
+---
+ drivers/clk/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The main node is not just PHY and clock control, there is also DMA
-registers at least. Also the controller part is not generic ?hci.
-
-> Is Octeon different from everything else here?
-
-Certainly it's not like any generic COTS PC HW...
-
-A.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 3d00c25..999a25e 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -45,7 +45,7 @@ obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
+ obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
+ obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+ obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
+-obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
++obj-$(CONFIG_ARCH_BCM)			+= bcm/
+ obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
+ obj-$(CONFIG_ARCH_HI3xxx)		+= hisilicon/
+ obj-$(CONFIG_ARCH_HIP04)		+= hisilicon/
+-- 
+1.7.9.5
