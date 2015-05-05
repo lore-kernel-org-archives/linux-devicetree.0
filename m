@@ -1,86 +1,136 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: James Hogan <james.hogan@imgtec.com>
 Subject: Re: [PATCH V2 1/3] phy: Add binding document for Pistachio USB2.0 PHY
-Date: Tue, 5 May 2015 16:09:31 -0700
-Message-ID: <CAL1qeaG=O7LYo6RRxEMZw2da=eKAp0Dd+LxhBX32TojyBkr=xA@mail.gmail.com>
+Date: Wed, 6 May 2015 00:35:34 +0100
+Message-ID: <20150505233534.GB18183@jhogan-linux.le.imgtec.org>
 References: <1428444258-25852-1-git-send-email-abrestic@chromium.org>
-	<1428444258-25852-2-git-send-email-abrestic@chromium.org>
-	<20150505220116.GE17687@jhogan-linux.le.imgtec.org>
-	<CAL1qeaFacmDaCW6VSp247HZx+RwJKjYTWQhu5qxjH5JE3ET6Nw@mail.gmail.com>
-	<20150505224352.GA18183@jhogan-linux.le.imgtec.org>
+ <1428444258-25852-2-git-send-email-abrestic@chromium.org>
+ <20150505220116.GE17687@jhogan-linux.le.imgtec.org>
+ <CAL1qeaFacmDaCW6VSp247HZx+RwJKjYTWQhu5qxjH5JE3ET6Nw@mail.gmail.com>
+ <20150505224352.GA18183@jhogan-linux.le.imgtec.org>
+ <CAL1qeaG=O7LYo6RRxEMZw2da=eKAp0Dd+LxhBX32TojyBkr=xA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150505224352.GA18183-4bYivNCBEGTR3KXKvIWQxtm+Uo4AYnCiHZ5vskTnxNA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL1qeaG=O7LYo6RRxEMZw2da=eKAp0Dd+LxhBX32TojyBkr=xA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, James Hartley <james.hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 5, 2015 at 3:43 PM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> On Tue, May 05, 2015 at 03:16:23PM -0700, Andrew Bresticker wrote:
->> Hi James,
->>
->> On Tue, May 5, 2015 at 3:01 PM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> > Hi Andrew,
->> >
->> > On Tue, Apr 07, 2015 at 03:04:16PM -0700, Andrew Bresticker wrote:
->> >> Add a binding document for the USB2.0 PHY found on the IMG Pistachio SoC.
->> >>
->> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> >> ---
->> >> No changes from v1.
->> >> ---
->> >>  .../devicetree/bindings/phy/pistachio-usb-phy.txt  | 29 ++++++++++++++++++++++
->> >>  include/dt-bindings/phy/phy-pistachio-usb.h        | 16 ++++++++++++
->> >>  2 files changed, 45 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->> >>  create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->> >> new file mode 100644
->> >> index 0000000..afbc7e2
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->> >> @@ -0,0 +1,29 @@
->> >> +IMG Pistachio USB PHY
->> >> +=====================
->> >> +
->> >> +Required properties:
->> >> +--------------------
->> >> + - compatible: Must be "img,pistachio-usb-phy".
->> >> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
->> >> + - clocks: Must contain an entry for each entry in clock-names.
->> >> +   See ../clock/clock-bindings.txt for details.
->> >> + - clock-names: Must include "usb_phy".
->> >> + - img,cr-top: Must constain a phandle to the CR_TOP syscon node.
->> >> + - img,refclk: Indicates the reference clock source for the USB PHY.
->> >> +   See <dt-bindings/phy/phy-pistachio-usb.h> for a list of valid values.
->> >
->> > Possibly dumb question: why isn't the reference clock source specified
->> > in the normal ways like the "usb_phy" clock is?
->> >
->> > Does the value required here depend on what usb_phy clock gets muxed
->> > from or something?
->>
->> Right, the value indicates what clock "usb_phy" is: whether it comes
->> from the core clock controller, the XO crystal, or is some external
->> clock.  It's a mux internal to the PHY.
->
-> Okay. If its a software controllable mux, is there a particular reason
-> the DT doesn't describe it as such, i.e. have all 3 clock inputs, and
-> the driver somehow work out which to use?
+--St7VIuEGZ6dlpu13
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Well, I'm not sure how the driver would determine which clock to use
-without a device-tree property like the one I've got here :).  Also,
-all three clock need not be present.
+On Tue, May 05, 2015 at 04:09:31PM -0700, Andrew Bresticker wrote:
+> On Tue, May 5, 2015 at 3:43 PM, James Hogan <james.hogan@imgtec.com> wrot=
+e:
+> > On Tue, May 05, 2015 at 03:16:23PM -0700, Andrew Bresticker wrote:
+> >> Hi James,
+> >>
+> >> On Tue, May 5, 2015 at 3:01 PM, James Hogan <james.hogan@imgtec.com> w=
+rote:
+> >> > Hi Andrew,
+> >> >
+> >> > On Tue, Apr 07, 2015 at 03:04:16PM -0700, Andrew Bresticker wrote:
+> >> >> Add a binding document for the USB2.0 PHY found on the IMG Pistachi=
+o SoC.
+> >> >>
+> >> >> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> >> >> Cc: Rob Herring <robh+dt@kernel.org>
+> >> >> Cc: Pawel Moll <pawel.moll@arm.com>
+> >> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> >> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> >> >> Cc: Kumar Gala <galak@codeaurora.org>
+> >> >> ---
+> >> >> No changes from v1.
+> >> >> ---
+> >> >>  .../devicetree/bindings/phy/pistachio-usb-phy.txt  | 29 ++++++++++=
+++++++++++++
+> >> >>  include/dt-bindings/phy/phy-pistachio-usb.h        | 16 ++++++++++=
+++
+> >> >>  2 files changed, 45 insertions(+)
+> >> >>  create mode 100644 Documentation/devicetree/bindings/phy/pistachio=
+-usb-phy.txt
+> >> >>  create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
+> >> >>
+> >> >> diff --git a/Documentation/devicetree/bindings/phy/pistachio-usb-ph=
+y.txt b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+> >> >> new file mode 100644
+> >> >> index 0000000..afbc7e2
+> >> >> --- /dev/null
+> >> >> +++ b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+> >> >> @@ -0,0 +1,29 @@
+> >> >> +IMG Pistachio USB PHY
+> >> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> >> +
+> >> >> +Required properties:
+> >> >> +--------------------
+> >> >> + - compatible: Must be "img,pistachio-usb-phy".
+> >> >> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
+> >> >> + - clocks: Must contain an entry for each entry in clock-names.
+> >> >> +   See ../clock/clock-bindings.txt for details.
+> >> >> + - clock-names: Must include "usb_phy".
+> >> >> + - img,cr-top: Must constain a phandle to the CR_TOP syscon node.
+> >> >> + - img,refclk: Indicates the reference clock source for the USB PH=
+Y.
+> >> >> +   See <dt-bindings/phy/phy-pistachio-usb.h> for a list of valid v=
+alues.
+> >> >
+> >> > Possibly dumb question: why isn't the reference clock source specifi=
+ed
+> >> > in the normal ways like the "usb_phy" clock is?
+> >> >
+> >> > Does the value required here depend on what usb_phy clock gets muxed
+> >> > from or something?
+> >>
+> >> Right, the value indicates what clock "usb_phy" is: whether it comes
+> >> from the core clock controller, the XO crystal, or is some external
+> >> clock.  It's a mux internal to the PHY.
+> >
+> > Okay. If its a software controllable mux, is there a particular reason
+> > the DT doesn't describe it as such, i.e. have all 3 clock inputs, and
+> > the driver somehow work out which to use?
+>=20
+> Well, I'm not sure how the driver would determine which clock to use
+> without a device-tree property like the one I've got here :).  Also,
 
--Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Does it make sense to just look for the "best" usable source clock based
+on the supported rates listed in fsel_rate_map[] (for some definition of
+"best" such as "fastest" / "slowest" / "first usable"), or are things
+just not that simple?
+
+I'm just wondering how the DT writer would decide, since it seems to
+come down to a policy decision rather than a description of the
+hardware, which should probably be avoided in DT bindings if possible.
+
+If it really can't be avoided, then fair enough.
+
+Cheers
+James
+
+--St7VIuEGZ6dlpu13
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJVSVPGAAoJEGwLaZPeOHZ69KUP/3Cy3bs0jFywkCFDJ9m7qFd2
+spZmI/TLWzi7ooIl+R3o32cxK30XPVddvQg6ZddgkroIWjdzSCSK/08OyVWJb63z
+7dQ1SNgeSHOxOHa6Zy8MpDILk1ILUGw//TLWtGCxHE07h3XEfZffRB71YDxAxZ7N
+Awe7dueBcPvOhbHMwU7eg626xVQfzut+MP3zCVoEtCJPkf5rogtcJKokrnVcShrH
+TD6Fkm0plZvuI8nSN3rnTDwiQHK/7derOrP5YCJXUhn7thfI2AZXarnOFsWuPODh
+8AeVIilQrwZcNAkNlHfEngWmt2rViGHAjwcPqLwg9WLNe8k5Qwe1CW4JfU2EpwzP
+zJ0GUzYMKPLkutMdNWPIydCZfz4XdXZAuc7YC7QYODBptbQpcc0vIrYGhUFR5ZA5
+Vr52yqyYTure6+R6cm5i1zy2kM+gbfwTWClmvwgX8Voft4/GJ6Cpv2EB7ClmfGkp
+R/dC1rM+Mfs4nw5P08UDsnFo1zGaMtshsEkUc64I+ZwSmjFDCJnQwDu9jb5ttvsW
+UepoKvtO3qt19cjJkk2Hh3IqtJamRNP4UwR9uqg4uGdoCtygRP+A3VwXdEtpUNSd
+kY3iw4kmg+hW73A1Risso8w4yL1D7um4S7u8M5/pA7XR9n3h6Jifc2f/eesW8qab
+qo8rFnpG8qphkGPgNASU
+=lTAE
+-----END PGP SIGNATURE-----
+
+--St7VIuEGZ6dlpu13--
