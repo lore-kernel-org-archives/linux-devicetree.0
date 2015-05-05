@@ -1,72 +1,105 @@
-From: Roy Pledge <roy.pledge-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to
- cell-index
-Date: Tue, 5 May 2015 16:04:11 +0000
-Message-ID: <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
-References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 1/6] ARM: l2c: Add DT support for Shared Override
+Date: Tue, 5 May 2015 11:34:26 -0500
+Message-ID: <CAL_JsqJvRGFUzd8zo990Qz1EQmpAhgy7OC=9tXcDavD5zk5tdQ@mail.gmail.com>
+References: <1430753072-17145-1-git-send-email-geert+renesas@glider.be>
+ <1430753072-17145-2-git-send-email-geert+renesas@glider.be>
+ <20150505112145.GG22384@e104818-lin.cambridge.arm.com> <CAMuHMdWE3HjGk73gCN3P-bBVEGrMbgfJ=FqvcTtGecs15R=A_g@mail.gmail.com>
+ <20150505142211.GH22384@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429311187-19062-1-git-send-email-scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150505142211.GH22384@e104818-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Pawel Moll <pawel.moll@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tushar Behera <tushar.behera@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-U29ycnkgZm9yIHRoZSBzbG93IHJlcGx5Lg0KDQpJIGRvbid0IGJlbGlldmUgdGhpcyBpcyBjb3Jy
-ZWN0IC0gbGV0IG1lIGV4cGxhaW4gdGhlIHJhdGlvbmFsIHdoeSB3ZSBoYWQgdHdvIHByb3BlcnRp
-ZXMgaW4gdGhlIFFNYW4gcG9ydGFsIHRvIGJlZ2luIHdpdGguDQoNClRoZSB0d28gcHJvcGVydGll
-cyBpbiBxdWVzdGlvbiBhcmUgY2VsbC1pbmRleCBhbmQgZnNsLHFtYW4tY2hhbm5lbC1pZC4NCg0K
-VGhlIGNlbGwtaW5kZXggcHJvcGVydHkgaXMgdXNlZCBpbiB1LWJvb3QgYXMgYW4gaW5kZXggZm9y
-IHRoZSBzb2Z0d2FyZSBwb3J0YWwgSUQgd2hlbiBhZGRpbmcgdGhlIGZzbCxsaW9kbiBmcm9tIHRo
-ZSBVLWJvb3QgdGFibGUgaW50byB0aGUgZGV2aWNlIHRyZWUuDQoNClRoZSAgZnNsLHFtYW4tY2hh
-bm5lbC1pZCBwcm9wZXJ0eSBpcyB1c2VkIGluIExpbnV4IGFuZCBjb3JyZXNwb25kcyB0byBhIGhh
-cmR3YXJlIHZhbHVlIHRoYXQgaW5kaWNhdGVzIHdoaWNoIGNoYW5uZWwgaXMgZGVkaWNhdGVkIHRv
-IHRoZSBzb2Z0d2FyZSBwb3J0YWwuDQoNCldoaWxlIEknbSBub3QgYXdhcmUgb2YgYSBjdXJyZW50
-IFNvQyB3aGVyZSB0aGUgY2hhbm5lbCBJRCBmb3IgYSBzb2Z0d2FyZSBwb3J0YWwgZG9lcyBub3Qg
-bWF0Y2ggdGhlIGluZGV4IChpLmUuIFNXUCAwIHVzZXMgY2hhbm5lbCAwLCBldGMuKSBpdCBpcyBw
-b3NzaWJsZSB0aGF0IGZ1dHVyZSBTb0NzIGNvdWxkIHN0cmF5IGZyb20gdGhpcyBtb2RlbCwgdGhl
-cmUgaXMgbm8gcmVhc29uIGZvciBwb3J0YWwgaW5kZXggdG8gZXF1YWwgY2hhbm5lbCBJRCBhdCBh
-bGwgdGltZXMuDQoNClJveQ0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBM
-aW51eHBwYy1kZXYgW21haWx0bzpsaW51eHBwYy1kZXYtYm91bmNlcytyb3kucGxlZGdlPWZyZWVz
-Y2FsZS5jb21AbGlzdHMub3psYWJzLm9yZ10gT24gQmVoYWxmIE9mIFNjb3R0IFdvb2QNClNlbnQ6
-IEZyaWRheSwgQXByaWwgMTcsIDIwMTUgNjo1MyBQTQ0KVG86IGxpbnV4cHBjLWRldkBsaXN0cy5v
-emxhYnMub3JnDQpDYzogV29vZCBTY290dC1CMDc0MjE7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBCdWN1ciBNYWRhbGluLUNyaXN0aWFuLUIzMjcxNg0KU3ViamVjdDogW1BBVENIIDEvMl0g
-cG93ZXJwYy9xbWFuOiBDaGFuZ2UgZnNsLHFtYW4tY2hhbm5lbC1pZCB0byBjZWxsLWluZGV4DQoN
-Ckl0IHR1cm5zIG91dCB0aGF0IGV4aXN0aW5nIFUtQm9vdHMgd2lsbCBkZXJlZmVyZW5jZSBOVUxM
-IHBvaW50ZXJzIGlmIHRoZSBkZXZpY2UgdHJlZSBkb2VzIG5vdCBoYXZlIGNlbGwtaW5kZXggaW4g
-dGhlIHBvcnRhbCBub2Rlcy4NCg0KTm8gcGF0Y2ggaGFzIHlldCBiZWVuIG1lcmdlZCBhZGRpbmcg
-ZGV2aWNlIHRyZWUgbm9kZXMgZm9yIHRoaXMgYmluZGluZyAoZXhjZXB0IGEgZHRzaSB0aGF0IGhh
-cyBub3QgeWV0IGJlZW4gcmVmZXJlbmNlZCksIG5vciBoYXMgYW55IGRyaXZlciB5ZXQgYmVlbiBt
-ZXJnZWQgbWFraW5nIHVzZSBvZiB0aGUgYmluZGluZywgc28gaXQncyBub3QgdG9vIGxhdGUgdG8g
-Y2hhbmdlIHRoZSBiaW5kaW5nIGluIG9yZGVyIHRvIGtlZXAgY29tcGF0aWJpbGl0eSB3aXRoIGV4
-aXN0aW5nIFUtQm9vdHMuDQoNClNpZ25lZC1vZmYtYnk6IFNjb3R0IFdvb2QgPHNjb3R0d29vZEBm
-cmVlc2NhbGUuY29tPg0KQ2M6IE1hZGFsaW4tQ3Jpc3RpYW4gQnVjdXIgPG1hZGFsaW4uYnVjdXJA
-ZnJlZXNjYWxlLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b2MvZnNsL3FtYW4tcG9ydGFscy50eHQgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
-cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcW1hbi1wb3J0YWxzLnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL3FtYW4tcG9ydGFscy50eHQNCmluZGV4IDQ4
-YzRkYWUuLjQ3ZTQ2Y2MgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3Mvc29jL2ZzbC9xbWFuLXBvcnRhbHMudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9xbWFuLXBvcnRhbHMudHh0DQpAQCAtNDcsNyArNDcsNyBA
-QCBQUk9QRVJUSUVTDQogDQogCUZvciBhZGRpdGlvbmFsIGRldGFpbHMgYWJvdXQgdGhlIFBBTVUv
-TElPRE4gYmluZGluZyhzKSBzZWUgcGFtdS50eHQNCiANCi0tIGZzbCxxbWFuLWNoYW5uZWwtaWQN
-CistIGNlbGwtaW5kZXgNCiAJVXNhZ2U6CQlSZXF1aXJlZA0KIAlWYWx1ZSB0eXBlOgk8dTMyPg0K
-IAlEZWZpbml0aW9uOglUaGUgaGFyZHdhcmUgaW5kZXggb2YgdGhlIGNoYW5uZWwuIFRoaXMgY2Fu
-IGFsc28gYmUNCkBAIC0xMzYsNyArMTM2LDcgQEAgVGhlIGV4YW1wbGUgYmVsb3cgc2hvd3MgYSAo
-UDQwODApIFFNYW4gcG9ydGFscyBjb250YWluZXIvYnVzIG5vZGUgd2l0aCB0d28gcG9ydGENCiAJ
-CQlyZWcgPSA8MHg0MDAwIDB4NDAwMD4sIDwweDEwMTAwMCAweDEwMDA+Ow0KIAkJCWludGVycnVw
-dHMgPSA8MTA2IDIgMCAwPjsNCiAJCQlmc2wsbGlvZG4gPSA8MyA0PjsNCi0JCQlmc2wscW1hbi1j
-aGFubmVsLWlkID0gPDE+Ow0KKwkJCWNlbGwtaW5kZXggPSA8MT47DQogDQogCQkJZm1hbjAgew0K
-IAkJCQlmc2wsbGlvZG4gPSA8MHgyMj47DQotLQ0KMi4xLjANCg0KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QN
-CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQpodHRwczovL2xpc3RzLm96bGFicy5vcmcv
-bGlzdGluZm8vbGludXhwcGMtZGV2DQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, May 5, 2015 at 9:22 AM, Catalin Marinas <catalin.marinas@arm.com> wrote:
+> On Tue, May 05, 2015 at 01:42:21PM +0200, Geert Uytterhoeven wrote:
+>> On Tue, May 5, 2015 at 1:21 PM, Catalin Marinas <catalin.marinas@arm.com> wrote:
+>> > On Mon, May 04, 2015 at 05:24:27PM +0200, Geert Uytterhoeven wrote:
+>> >> "CoreLink Level 2 Cache Controller L2C-310", p. 2-15, section 2.3.2
+>> >> Shareable attribute" states:
+>> >>
+>> >>     "The default behavior of the cache controller with respect to the
+>> >>      shareable attribute is to transform Normal Memory Non-cacheable
+>> >>      transactions into:
+>> >>         - cacheable no allocate for reads
+>> >>         - write through no write allocate for writes."
+>> >>
+>> >> Depending on the system architecture, this may cause memory corruption
+>> >> in the presence of bus mastering devices (e.g. OHCI). To avoid such
+>> >> corruption, the default behavior can be disabled by setting the Shared
+>> >> Override bit in the Auxiliary Control register.
+>> >>
+>> >> Currently the Shared Override bit can be set only using C code:
+>> >>   - by calling l2x0_init() directly, which is deprecated,
+>> >>   - by setting/clearing the bit in the machine_desc.l2c_aux_val/mask
+>> >>     fields, but using values differing from 0/~0 is also deprecated.
+>> >
+>> > Or you can set it in firmware/boot-loader before Linux starts.
+>>
+>> ... together with all other additional settings cache-l2x0.c does?
+>>
+>> I'm afraid this is not going to happen...
+>
+> It's not that bad but, well, it requires changes elsewhere (U-Boot
+> already does this for some SoCs).
+>
+>> >> Hence add support for an "arm,shared-override" device tree property for
+>> >> the l2c device node. By specifying this property, affected systems can
+>> >> indicate that non-cacheable transactions must not be transformed.
+>> >>
+>> >> If specified, the actual behavior of the kernel depends on whether CMA
+>> >> is available or not:
+>> >>   - If CMA is available, nothing needs to be done, as there won't be a
+>> >>     kernel linear mappings and cacheable aliases for the DMA buffers,
+>> >
+>> > I don't think this is true. See this thread:
+>> >
+>> > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/329492.html
+>>
+>> Doh, and I had hoped to please Russell...
+>>
+>> To bad, will drop this.
+>
+> You should only drop the "if (dev_get_cma_area(NULL))" check.
+>
+>> >>   - If CMA is not available, the "shared attribute override enable" bit
+>> >>     will be set.
+>> >
+>> > IMO, this should always be done, independent of any DT or kernel
+>> > configuration. I stated it several times already that I don't see why we
+>> > would ever need such bit cleared:
+>> >
+>> > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330573.html
+>> >
+>> > Personally I don't think this configuration belongs to the DT,
+>> > especially as it may depend on how the OS is configured. But since
+>>
+>> That's why I worded the bindings like "[...] this property must be specified to
+>> indicate that such transforms are precluded.", not "[...] this property must be
+>> specified if the Shared Override bit must be set by the OS.".
+>> It's still up to the OS to decide (e.g. if CMA will get fixed).
+>
+> We are kind of stretching this definition if the CMA check is removed.
+> The check could added back if DMA allocations are ever fixed to avoid
+> memory attributes aliases (right now they still exist, even though
+> temporarily). A situation where this bit probably does not need to be
+> set (though it's harmless) is I/O coherent systems ("arm,io-coherent").
+
+IIRC, it still had to be set on highbank even when we had coherent i/o.
+
+> My view is that we should always set this bit without any additional DT
+> properties but if it's easier to get it accepted this way, I'm fine as
+> well.
+
++1
+
+> BTW, your patch mentions r2p0. My reading of the PL310 TRM shows this
+> bit as default from r0p0.
+
+I believe the change in behavior was from the L2x0 to PL310.
+
+Rob
