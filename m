@@ -1,45 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] Documentation/devicetree: document OCTEON USB bindings
-Date: Tue, 05 May 2015 22:42:36 +0200
-Message-ID: <2413453.XQqLtVJvlF@wuerfel>
-References: <1430423040-2088-1-git-send-email-aaro.koskinen@iki.fi> <3842439.qIvEyqJvhE@wuerfel> <20150505175752.GB2358@fuloong-minipc.musicnaut.iki.fi>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to
+ cell-index
+Date: Tue, 5 May 2015 15:45:34 -0500
+Message-ID: <1430858734.16357.256.camel@freescale.com>
+References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
+	 <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150505175752.GB2358-+UqvGBo8NkiJ/SmVcN9c7yH8jP4CeeTLqBW4ids5wwA@public.gmane.org>
+In-Reply-To: <BN3PR0301MB126796C0EC18EEBB26702C588CD10-CEkquS/Gb80KBjv5qxT+hJwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Pledge Roy-R01356 <roy.pledge-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bucur Madalin-Cristian-B32716 <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 May 2015 20:57:52 Aaro Koskinen wrote:
+On Tue, 2015-05-05 at 11:04 -0500, Pledge Roy-R01356 wrote:
+> Sorry for the slow reply.
 > 
-> On Tue, May 05, 2015 at 12:02:04PM +0200, Arnd Bergmann wrote:
-> > What does that main node actually do?
-> > 
-> > The common setup is that you have regular ehci/ohci/uhci host bridges
-> > connected to an mmio bus, plus with shared PHY driver that would nowadays
-> > sit in drivers/phy/ and handle the setup of the physical USB interface.
+> I don't believe this is correct - let me explain the rational why we had two properties in the QMan portal to begin with.
 > 
-> The main node is not just PHY and clock control, there is also DMA
-> registers at least. Also the controller part is not generic ?hci.
-
-Are you sure it's not one of the other common host implementations
-(synopsys dwc2, mentor musb, chipidea, ...) then? Maybe there is
-already a binding.
-
-If not, would it make sense to put the two nodes into one that is
-just handled by a single driver?
-
-> > Is Octeon different from everything else here?
+> The two properties in question are cell-index and fsl,qman-channel-id.
 > 
-> Certainly it's not like any generic COTS PC HW...
+> The cell-index property is used in u-boot as an index for the software portal ID when adding the fsl,liodn from the U-boot table into the device tree.
 
-I was asking about SoC implementations like the octeon-6335, 
-which seems to be more regular.
+The device tree is not supposed to contain arbitrary software
+identifiers.
 
-	Arnd
+> The  fsl,qman-channel-id property is used in Linux and corresponds to a
+> hardware value that indicates which channel is dedicated to the
+> software portal.
+> 
+> While I'm not aware of a current SoC where the channel ID for a
+> software portal does not match the index (i.e. SWP 0 uses channel 0,
+> etc.) 
+
+Thus there's no backward compatibility issue with redefining cell-index
+to mean the channel ID.
+
+> it is possible that future SoCs could stray from this model,
+> there is no reason for portal index to equal channel ID at all times.
+
+How can future SoCs dictate how we assign a software-defined identifier?
+If software wants it to be the same as the channel id, then it will be.
+
+If there is some aspect of the hardware itself (not the documentation)
+that cell-index currently corresponds to, other than the channel id,
+please make that clear.
+
+-Scott
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
