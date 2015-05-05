@@ -1,56 +1,42 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Tue, 5 May 2015 21:31:18 +0800
-Message-ID: <CAD6h2NQ2OCJmQhBG+-zT-dL=YJtpAk5T_1_m8C8SKm0RCg_D0Q@mail.gmail.com>
-References: <1430800212-6970-1-git-send-email-bintian.wang@huawei.com>
+From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v3 7/8] ASoC: wm8998: Initial WM8998 codec driver
+Date: Tue, 5 May 2015 14:31:29 +0100
+Message-ID: <20150505133129.GA26101@opensource.wolfsonmicro.com>
+References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com> <1430493319-23808-8-git-send-email-rf@opensource.wolfsonmicro.com> <20150504113943.GB15510@sirena.org.uk> <20150505092411.GA15549@opensource.wolfsonmicro.com> <20150505105327.GZ22845@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430800212-6970-1-git-send-email-bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150505105327.GZ22845-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Haifeng Yan <yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Russell
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 May 2015 at 12:30, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> Hi6220 is one mobile solution of Hisilicon, this patchset contains
-> initial support for Hi6220 SoC and HiKey development board, which
-> supports octal ARM Cortex A53 cores. Initial support is minimal and
-> includes just the arch configuration, clock driver, device tree
-> configuration.
->
-> PSCI is enabled in device tree and there is no problem to boot all the
-> octal cores, and the CPU hotplug is also working now, you can download
-> and compile the latest firmware based on the following link to run this
-> patch set:
-> https://github.com/96boards/documentation/wiki/UEFI
->
-> Changes v3:
-> * Verified the CPU hotplug based on the new released firmware
-> * Redefined the compatible strings of four system controllers in dts
-> * Setting COMMON_CLK_HI6220 to a bool symbol
-> * Keep CONFGI_ARCH_HISI sorted alphabetically
->
-> Changes v2:
-> * Split the DT bindings documents into earlier patches
-> * Change SMP enable method from spin-table to PSCI in device tree
-> * Remove "clock-frequency" from armv8-timer device node in device tree
-> * Add more description about Hisilicon designed system controllers
->   in DT bindings document
-> * Enable high speed clock on UART1 mux
-> * Other changes based on the discussion in the mailing list:
->   https://lkml.org/lkml/2015/2/5/147
->
-> Bintian Wang (5):
->   arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
->   arm64: hi6220: Document devicetree bindings for Hisilicon hi6220 SoC
->   clk: hi6220: Document devicetree bindings for hi6220 clock
->   clk: hi6220: Clock driver support for Hisilicon hi6220 SoC
->   arm64: dts: Add dts files for Hisilicon Hi6220 SoC
->
->
+> 
+> > > > +static const char * const wm8998_inmux_texts[] = {
+> > > > +	"A",
+> > > > +	"B",
+> 
+> > > Those are some fun input names...
+> 
+> > ... that's what the mux positions are called and it seems nice to have consistent
+> > naming for all similar muxes across channels and across future codecs. Like for
+> > example to switch both muxes of a stereo input you set them both to the same
+> > position name (both "A" or both "B") is clearer, and quicker to spot in a dump
+> > of ALSA control settings, than having the two muxes set to different enumeration
+> > strings that actually mean the same mux position.
+> 
+> Equally when setting the muxes settings called A and B that's not really
+> telling people what they do.
 
-Acked-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+We can't really tell people what the selection does because that depends on
+the external hardware. The A setting might be a headset mic, or a line in,
+or a builtin mic...
+
+All we can do is say what the selection is called generically by the codec.
+So take the IN1L signal, on the codec it has two inputs "A" and "B". The
+IN1L Mux control has two settings "A" and "B". That seems clear.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
