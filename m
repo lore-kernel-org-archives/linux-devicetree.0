@@ -1,77 +1,47 @@
-From: =?utf-8?q?J=C3=BCrgen_Borleis?= <jbe@pengutronix.de>
-Subject: Re: [PATCH V2 4/6] DT: add binding for mxs on-chip regulators
-Date: Tue, 5 May 2015 10:21:01 +0200
-Message-ID: <201505051021.01939.jbe@pengutronix.de>
-References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com> <201505041551.26355.jbe@pengutronix.de> <1858103470.878923.1430770850541.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mmc: pwrseq: dt: example with reset clock and active low pin
+Date: Tue, 5 May 2015 10:33:44 +0200
+Message-ID: <CAPDyKFrKK71u0WZgSgMszC+CzsvsO6P7KOLjb=0Zgu5d7BipYw@mail.gmail.com>
+References: <1429171394-16573-1-git-send-email-afenkart@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1858103470.878923.1430770850541.JavaMail.open-xchange@oxbaltgw08.schlund.de>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, fabio.estevam@freescale.com, David Woodhouse <dwmw2@infradead.org>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, sebastien.szymanski@armadeus.com, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429171394-16573-1-git-send-email-afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On 16 April 2015 at 10:03, Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Signed-off-by: Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-On Monday 04 May 2015 22:20:50 Stefan Wahren wrote:
-> [...]
-> >
-> > +------------+     VDD5V  +---------+  VDDIO
-> > | DC-DC      |   +--------> LINREG  +--------->+
-> > |            |            | VDDIO   |          |
-> > |            |            +---------+          |
-> > |            |                                 |
-> > | DCDC_VDDIO +->-+-----------------------------+
-> > |            |   |
-> > |            |   | VDDIO  +---------+ VDDMEM
-> > |            |   +--------> LINREG  +--------->
-> > |            |   |        | VDDMEM  |
-> > |            |   |        +---------+
-> > |            |   | VDDIO  +---------+  VDDA
-> > |            |   +--------> LINREG  +--------->+
-> > |            |            | VDDA    |          |
-> > |            |            +---------+          |
-> > | DCDC_VDDA  +->-+-----------------------------+
-> > |            |   |
-> > |            |   | VDDA   +---------+  VDDD
-> > |            |   +--------> LINREG  +--------->+
-> > |            |            | VDDD    |          |
-> > |            |            +---------+          |
-> > | DCDC_VDDD  +->-------------------------------+
-> > +------------+                                 |
-> >                                                v
->
-> damn! I didn't noticed that VDDMEM is powered by VDDIO and VDD1P5 is
-> powered by VDDA. Thank you very much.
->
-> From my understanding VDDMEM and VDD1P5 describe the same regulator
-> function (provides power to external memory such as SDRAM and mDDR which
-> doesn't fit to VDDD, VDDIO or VDDA). But the usage of
-> the name is not consistent across the documentation:
->                   | i.MX23 | i.MX28
-> ------------------------------------
-> Application note  | VDDMEM | VDD1P5
-> Reference manual  | VDDMEM | VDDMEM
-> Data sheet        | -      | VDD1P5
->
-> I would suggest to use VDDMEM, because the registers are always called
-> HW_VDDMEM (for both SoCs).
+Thanks, applied.
 
-Ack.
+Kind regards
+Uffe
 
-> I think we have 3 options here:
+
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> a) add the regulator daisy chain for the i.MX23 too
-> b) remove VDD1P5 from the i.MX28 diagram so it would fit for both again
-> c) remove the diagram complete
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> index a462c50..ce0e767 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> @@ -21,5 +21,7 @@ Example:
 >
-> I would prefer option b. What's your opinion?
-
-I prefer a) because once the details are known, we should keep them.
-
-Regards,
-Juergen
+>         sdhci0_pwrseq {
+>                 compatible = "mmc-pwrseq-simple";
+> -               reset-gpios = <&gpio1 12 0>;
+> +               reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
+> +               clocks = <&clk_32768_ck>;
+> +               clock-names = "ext_clock";
+>         }
+> --
+> 2.1.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
