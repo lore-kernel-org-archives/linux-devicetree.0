@@ -1,80 +1,82 @@
-From: =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski.k@gmail.com>
-Subject: Re: [PATCHv2] power_supply: Add support for Richtek rt9455 battery charger
-Date: Tue, 5 May 2015 14:35:16 +0900
-Message-ID: <CAJKOXPezR=gb7mNyG4OpumYq+NEzyhh8DaWmi_5P4j-F76onjg@mail.gmail.com>
-References: <1430338406-24012-1-git-send-email-anda-maria.nicolae@intel.com>
-	<20150430091648.GD10973@lpalcu-linux>
-	<11982715D62E664DBACA4351A418B0581437E182@IRSMSX107.ger.corp.intel.com>
-	<20150504152209.GF10973@lpalcu-linux>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: dts: mt8135: enable basic SMP bringup for
+ mt8135
+Date: Tue, 5 May 2015 13:37:07 +0800
+Message-ID: <1430804227.15346.6.camel@mtksdaap41>
+References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1430466210-22963-7-git-send-email-yingjoe.chen@mediatek.com>
+	 <20150504143105.GK4946@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150504152209.GF10973@lpalcu-linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: "Nicolae, Anda-maria" <anda-maria.nicolae@intel.com>, "sre@kernel.org" <sre@kernel.org>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150504143105.GK4946-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-05 0:22 GMT+09:00 Laurentiu Palcu <laurentiu.palcu@intel.com>:
-> Hi Anda,
->
-> Can you please use a decent mail client to reply to emails? It was
-> really hard for me to figure out which were my comments and which were
-> yours... And I tested 3 different clients: mutt, evolution and
-> outlook(the web app).
->
-> More comments inline.
->
-> laurentiu
->
-> On Mon, May 04, 2015 at 05:12:07PM +0300, Nicolae, Anda-maria wrote:
+On Mon, 2015-05-04 at 16:31 +0200, Sascha Hauer wrote:
+> On Fri, May 01, 2015 at 03:43:29PM +0800, Yingjoe Chen wrote:
+> > Add arch timer node to enable arch-timer support. MT8135 firmware
+> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
+> > properties to workaround this.
+> > 
+> > This also set cpu enable-method to enable SMP.
+> > 
+> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/mt8135.dtsi | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+> > index 612bd22..eb5e06f 100644
+> > --- a/arch/arm/boot/dts/mt8135.dtsi
+> > +++ b/arch/arm/boot/dts/mt8135.dtsi
+> > @@ -46,6 +46,7 @@
+> >  	cpus {
+> >  		#address-cells = <1>;
+> >  		#size-cells = <0>;
+> > +		enable-method = "mediatek,mt81xx-tz-smp";
+> >  
+> >  		cpu0: cpu@0 {
+> >  			device_type = "cpu";
+> > @@ -103,6 +104,21 @@
+> >  		};
+> >  	};
+> >  
+> > +	timer {
+> > +		compatible = "arm,armv7-timer";
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+> > +					  IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
+> > +					  IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
+> > +					  IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
+> > +					  IRQ_TYPE_LEVEL_LOW)>;
+> > +		clock-frequency = <13000000>;
+> > +		arm,cpu-registers-not-fw-configured;
+> > +	};
+> 
+> This is the SoC dtsi file. What you say here is that all MT8135
+> present and future firmwares on all boards do this wrong.
+> Shouldn't you fix the firmware instead? Shouldn't this property be board
+> specific?
 
-(...)
+Hi Sascha,
 
->> > +
->> (...)
->> > +
->> > +static int rt9455_charger_set_voltage_max(struct rt9455_info *info,
->> > +                                       const union power_supply_propval *val)
->> > +{
->> > +     return rt9455_set_field_val(info, F_VMREG,
->> > +                                 rt9455_vmreg_values,
->> > +                                 ARRAY_SIZE(rt9455_vmreg_values),
->> > +                                 val->intval);
->> > +}
->> > +
->> > +static int rt9455_charger_set_property(struct power_supply *psy,
->> > +                                    enum power_supply_property psp,
->> > +                                    const union power_supply_propval *val)
->> > +{
->> > +     struct rt9455_info *info = power_supply_get_drvdata(psy);
->> > +
->> > +     switch (psp) {
->> > +     case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
->> > +             return rt9455_charger_set_current(info, val);
->> > +     case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
->> > +             return rt9455_charger_set_voltage(info, val);
->> Personally, I'm against having these properties writable. A user might
->> play with the charging voltage or current and then complain that the
->> battery does not charge at all, or it takes ages to charge. I'd leave
->> these to be set by manufacturer through DT/ACPI. But, it's just an
->> opinion.
->>
->> If the user really wants to damage his/her battery, he/she can charge
->> the values from DT/ACPI.
+To fix this we'll have to change initial boot code. Since 8135 or 8127
+already MP for some time now, I'm afraid we won't be able to do that, even
+for new boards. I can put it in board dts, but this means we'll have to
+duplicate this in all board dts.
 
-No, the end user does not change the DT/ACPI. It just runs some Linux
-distro or Android phone. The userspace does not change DT either. So
-allowing userspace to set this through regular sysfs API is rather
-exceptional.
+Joe.C
 
->> Also, numerous charger drivers expose these
->> properties as writable.  I prefer leaving them as they are.
 
-I found only one mainline driver which exposes these properties as
-writeable: bq24190_charger.c. Others do not. Many other drivers uses
-power supply class only as a reading interface. The charger is
-actually operated through respective regulator driver.
 
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
