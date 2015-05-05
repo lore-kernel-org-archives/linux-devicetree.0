@@ -1,29 +1,72 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 0/2] Add driver and documentation for Alphascale
- asm9260 pinctrl
-Date: Tue, 5 May 2015 16:41:58 +0200
-Message-ID: <CACRpkdbGFw=1YFJNa_O_x8N5dr=i=LJA7m4n9e6tZ0gjTa948Q@mail.gmail.com>
-References: <1428306169.634.51.camel@x220>
-	<1428311043-12012-1-git-send-email-linux@rempel-privat.de>
-	<5537FB3B.1040303@rempel-privat.de>
+From: Roy Pledge <roy.pledge-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to
+ cell-index
+Date: Tue, 5 May 2015 16:04:11 +0000
+Message-ID: <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
+References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5537FB3B.1040303@rempel-privat.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429311187-19062-1-git-send-email-scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2015 at 9:49 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
-
-> Hallo all,
->
-> any updates here? :D
-
-Sorry for the delay. Merge window you know.
-
-Looking at it now.
-
-Yours,
-Linus Walleij
+U29ycnkgZm9yIHRoZSBzbG93IHJlcGx5Lg0KDQpJIGRvbid0IGJlbGlldmUgdGhpcyBpcyBjb3Jy
+ZWN0IC0gbGV0IG1lIGV4cGxhaW4gdGhlIHJhdGlvbmFsIHdoeSB3ZSBoYWQgdHdvIHByb3BlcnRp
+ZXMgaW4gdGhlIFFNYW4gcG9ydGFsIHRvIGJlZ2luIHdpdGguDQoNClRoZSB0d28gcHJvcGVydGll
+cyBpbiBxdWVzdGlvbiBhcmUgY2VsbC1pbmRleCBhbmQgZnNsLHFtYW4tY2hhbm5lbC1pZC4NCg0K
+VGhlIGNlbGwtaW5kZXggcHJvcGVydHkgaXMgdXNlZCBpbiB1LWJvb3QgYXMgYW4gaW5kZXggZm9y
+IHRoZSBzb2Z0d2FyZSBwb3J0YWwgSUQgd2hlbiBhZGRpbmcgdGhlIGZzbCxsaW9kbiBmcm9tIHRo
+ZSBVLWJvb3QgdGFibGUgaW50byB0aGUgZGV2aWNlIHRyZWUuDQoNClRoZSAgZnNsLHFtYW4tY2hh
+bm5lbC1pZCBwcm9wZXJ0eSBpcyB1c2VkIGluIExpbnV4IGFuZCBjb3JyZXNwb25kcyB0byBhIGhh
+cmR3YXJlIHZhbHVlIHRoYXQgaW5kaWNhdGVzIHdoaWNoIGNoYW5uZWwgaXMgZGVkaWNhdGVkIHRv
+IHRoZSBzb2Z0d2FyZSBwb3J0YWwuDQoNCldoaWxlIEknbSBub3QgYXdhcmUgb2YgYSBjdXJyZW50
+IFNvQyB3aGVyZSB0aGUgY2hhbm5lbCBJRCBmb3IgYSBzb2Z0d2FyZSBwb3J0YWwgZG9lcyBub3Qg
+bWF0Y2ggdGhlIGluZGV4IChpLmUuIFNXUCAwIHVzZXMgY2hhbm5lbCAwLCBldGMuKSBpdCBpcyBw
+b3NzaWJsZSB0aGF0IGZ1dHVyZSBTb0NzIGNvdWxkIHN0cmF5IGZyb20gdGhpcyBtb2RlbCwgdGhl
+cmUgaXMgbm8gcmVhc29uIGZvciBwb3J0YWwgaW5kZXggdG8gZXF1YWwgY2hhbm5lbCBJRCBhdCBh
+bGwgdGltZXMuDQoNClJveQ0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBM
+aW51eHBwYy1kZXYgW21haWx0bzpsaW51eHBwYy1kZXYtYm91bmNlcytyb3kucGxlZGdlPWZyZWVz
+Y2FsZS5jb21AbGlzdHMub3psYWJzLm9yZ10gT24gQmVoYWxmIE9mIFNjb3R0IFdvb2QNClNlbnQ6
+IEZyaWRheSwgQXByaWwgMTcsIDIwMTUgNjo1MyBQTQ0KVG86IGxpbnV4cHBjLWRldkBsaXN0cy5v
+emxhYnMub3JnDQpDYzogV29vZCBTY290dC1CMDc0MjE7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBCdWN1ciBNYWRhbGluLUNyaXN0aWFuLUIzMjcxNg0KU3ViamVjdDogW1BBVENIIDEvMl0g
+cG93ZXJwYy9xbWFuOiBDaGFuZ2UgZnNsLHFtYW4tY2hhbm5lbC1pZCB0byBjZWxsLWluZGV4DQoN
+Ckl0IHR1cm5zIG91dCB0aGF0IGV4aXN0aW5nIFUtQm9vdHMgd2lsbCBkZXJlZmVyZW5jZSBOVUxM
+IHBvaW50ZXJzIGlmIHRoZSBkZXZpY2UgdHJlZSBkb2VzIG5vdCBoYXZlIGNlbGwtaW5kZXggaW4g
+dGhlIHBvcnRhbCBub2Rlcy4NCg0KTm8gcGF0Y2ggaGFzIHlldCBiZWVuIG1lcmdlZCBhZGRpbmcg
+ZGV2aWNlIHRyZWUgbm9kZXMgZm9yIHRoaXMgYmluZGluZyAoZXhjZXB0IGEgZHRzaSB0aGF0IGhh
+cyBub3QgeWV0IGJlZW4gcmVmZXJlbmNlZCksIG5vciBoYXMgYW55IGRyaXZlciB5ZXQgYmVlbiBt
+ZXJnZWQgbWFraW5nIHVzZSBvZiB0aGUgYmluZGluZywgc28gaXQncyBub3QgdG9vIGxhdGUgdG8g
+Y2hhbmdlIHRoZSBiaW5kaW5nIGluIG9yZGVyIHRvIGtlZXAgY29tcGF0aWJpbGl0eSB3aXRoIGV4
+aXN0aW5nIFUtQm9vdHMuDQoNClNpZ25lZC1vZmYtYnk6IFNjb3R0IFdvb2QgPHNjb3R0d29vZEBm
+cmVlc2NhbGUuY29tPg0KQ2M6IE1hZGFsaW4tQ3Jpc3RpYW4gQnVjdXIgPG1hZGFsaW4uYnVjdXJA
+ZnJlZXNjYWxlLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b2MvZnNsL3FtYW4tcG9ydGFscy50eHQgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
+cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcW1hbi1wb3J0YWxzLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL3FtYW4tcG9ydGFscy50eHQNCmluZGV4IDQ4
+YzRkYWUuLjQ3ZTQ2Y2MgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvc29jL2ZzbC9xbWFuLXBvcnRhbHMudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9xbWFuLXBvcnRhbHMudHh0DQpAQCAtNDcsNyArNDcsNyBA
+QCBQUk9QRVJUSUVTDQogDQogCUZvciBhZGRpdGlvbmFsIGRldGFpbHMgYWJvdXQgdGhlIFBBTVUv
+TElPRE4gYmluZGluZyhzKSBzZWUgcGFtdS50eHQNCiANCi0tIGZzbCxxbWFuLWNoYW5uZWwtaWQN
+CistIGNlbGwtaW5kZXgNCiAJVXNhZ2U6CQlSZXF1aXJlZA0KIAlWYWx1ZSB0eXBlOgk8dTMyPg0K
+IAlEZWZpbml0aW9uOglUaGUgaGFyZHdhcmUgaW5kZXggb2YgdGhlIGNoYW5uZWwuIFRoaXMgY2Fu
+IGFsc28gYmUNCkBAIC0xMzYsNyArMTM2LDcgQEAgVGhlIGV4YW1wbGUgYmVsb3cgc2hvd3MgYSAo
+UDQwODApIFFNYW4gcG9ydGFscyBjb250YWluZXIvYnVzIG5vZGUgd2l0aCB0d28gcG9ydGENCiAJ
+CQlyZWcgPSA8MHg0MDAwIDB4NDAwMD4sIDwweDEwMTAwMCAweDEwMDA+Ow0KIAkJCWludGVycnVw
+dHMgPSA8MTA2IDIgMCAwPjsNCiAJCQlmc2wsbGlvZG4gPSA8MyA0PjsNCi0JCQlmc2wscW1hbi1j
+aGFubmVsLWlkID0gPDE+Ow0KKwkJCWNlbGwtaW5kZXggPSA8MT47DQogDQogCQkJZm1hbjAgew0K
+IAkJCQlmc2wsbGlvZG4gPSA8MHgyMj47DQotLQ0KMi4xLjANCg0KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QN
+CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQpodHRwczovL2xpc3RzLm96bGFicy5vcmcv
+bGlzdGluZm8vbGludXhwcGMtZGV2DQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
