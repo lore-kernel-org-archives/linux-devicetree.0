@@ -1,57 +1,64 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to
- cell-index
-Date: Tue, 5 May 2015 15:45:34 -0500
-Message-ID: <1430858734.16357.256.camel@freescale.com>
-References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
-	 <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
+From: NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 0/3] tty slave device support - version 3.
+Date: Wed, 6 May 2015 06:46:32 +1000
+Message-ID: <20150506064632.75ed1a24@notabene.brown>
+References: <20150318055437.21025.13990.stgit@notabene.brown>
+	<55492001.30806@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BN3PR0301MB126796C0EC18EEBB26702C588CD10-CEkquS/Gb80KBjv5qxT+hJwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pledge Roy-R01356 <roy.pledge-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bucur Madalin-Cristian-B32716 <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/VDAGAOTVC3fteOAvF/=LqJA"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55492001.30806@hurleysoftware.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-05 at 11:04 -0500, Pledge Roy-R01356 wrote:
-> Sorry for the slow reply.
-> 
-> I don't believe this is correct - let me explain the rational why we had two properties in the QMan portal to begin with.
-> 
-> The two properties in question are cell-index and fsl,qman-channel-id.
-> 
-> The cell-index property is used in u-boot as an index for the software portal ID when adding the fsl,liodn from the U-boot table into the device tree.
+--Sig_/VDAGAOTVC3fteOAvF/=LqJA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The device tree is not supposed to contain arbitrary software
-identifiers.
+On Tue, 05 May 2015 15:54:41 -0400 Peter Hurley <peter@hurleysoftware.com>
+wrote:
 
-> The  fsl,qman-channel-id property is used in Linux and corresponds to a
-> hardware value that indicates which channel is dedicated to the
-> software portal.
-> 
-> While I'm not aware of a current SoC where the channel ID for a
-> software portal does not match the index (i.e. SWP 0 uses channel 0,
-> etc.) 
+> Hi Neil,
+>=20
+> On 03/18/2015 01:58 AM, NeilBrown wrote:
+> >  here is version 3 of support for tty-slaves.
+>=20
+> Is there a v4 of this that I missed?
+>=20
 
-Thus there's no backward compatibility issue with redefining cell-index
-to mean the channel ID.
+No there isn't sorry.  This is part of a side-project that I get enthusiast=
+ic
+about for a while, and then get distracted and lose interest :-)
 
-> it is possible that future SoCs could stray from this model,
-> there is no reason for portal index to equal channel ID at all times.
+However, getting this sort of query is a big help - I'll try to make a V4
+within a week.
 
-How can future SoCs dictate how we assign a software-defined identifier?
-If software wants it to be the same as the channel id, then it will be.
+Thanks,
+NeilBrown
 
-If there is some aspect of the hardware itself (not the documentation)
-that cell-index currently corresponds to, other than the channel id,
-please make that clear.
+--Sig_/VDAGAOTVC3fteOAvF/=LqJA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--Scott
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQIVAwUBVUksKDnsnt1WYoG5AQLCtw/7BbAnV2HWyi32qUbSGkJqhaM2+SSqzHj4
+GitDHP/JaAeJnhlpPAxvy/S500lSFJAwkEi4+R1fVoeVoyT8j+GEN82mBC/AtCrK
+8/nfnBzWgbQadv4T0lu7DCZ92nXZkx8zSJww+7T43ww/GPWY72KBaGQ7wg8XRwei
+34zKMC5jgbBBrfkmF0P6iN2TdR7ymJNvgA7q9W2ImYp6skDf6FMEh62WwhFGa/4A
+QLpteBGBNPBx8Q4XaSMCfl042z9hg0IWjOT681HKTYZKRX0BDsW4Wb0seMLCWYRU
+Gos+ABLmKHXWzZ4HVOE5yrmtmrCnk89vT85tAwi9dA/boXW4Xg/aWgGAEDLdTSC7
+Ss3M2ZQ3wJFhKKpQ6hTFz38ecCkNczMRhb1rXNw5HAx12NLOvZYBOWZvN94U+i/+
+H9DVCW8YvL0jlWguJOgI6dqqJ1kEsOaAwG94SHRDJn5dfsGy9rqyiF316EN9Y6f+
+CB+NPL+B1viiui99K3m4RQjFxKiHwRqkWiB9j5s+lsBWmzbiNTPrG6b1JMJTreC3
+1N6sIlWgiNM0Fids6KitVxy5FE+ccRZWhc6Qayl0A152MzYY7kY0/dLLH0zQtefP
+B/FWIWjZz7946fBq9ff+wl2Oqdsum8f9ak+jJVoHlYgboXpCJkJgP4SuVwtN2Kkc
+3IYVIEVANoI=
+=qNBC
+-----END PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Sig_/VDAGAOTVC3fteOAvF/=LqJA--
