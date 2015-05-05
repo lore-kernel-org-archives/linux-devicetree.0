@@ -1,71 +1,41 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Invitation and RFC: Linux Plumbers Device Tree
- track proposed
-Date: Tue, 5 May 2015 14:32:44 -0500
-Message-ID: <CAL_Jsq+Us5v7t_2Othfubr5Lhp3bWtZrqE9V30WCPzbJuCftzQ@mail.gmail.com>
-References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
-	<5543EE80.5060109@landley.net>
-	<CAL_JsqKkZYEMdYmh=JkA6O34a+7mKy=SgB2XxzgTM70mihgQeQ@mail.gmail.com>
-	<CAMuHMdV7xfbBYL5fhudObdwNVJ0L_1_h0ozT+U4Lpx=Mu9UGhw@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 1/1] arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
+Date: Tue, 5 May 2015 14:41:21 -0500
+Message-ID: <CAL_JsqK0pCtL2pbG7RttYd7BDxQHxdECHN_9X9MpLTuVEOxzsQ@mail.gmail.com>
+References: <1430817426-5241-1-git-send-email-stripathi@apm.com> <1430817426-5241-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <celinux-dev-bounces-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>
-In-Reply-To: <CAMuHMdV7xfbBYL5fhudObdwNVJ0L_1_h0ozT+U4Lpx=Mu9UGhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.celinuxforum.org/mailman/options/celinux-dev>,
-	<mailto:celinux-dev-request-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.celinuxforum.org/pipermail/celinux-dev/>
-List-Post: <mailto:celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>
-List-Help: <mailto:celinux-dev-request-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.celinuxforum.org/mailman/listinfo/celinux-dev>,
-	<mailto:celinux-dev-request-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org?subject=subscribe>
-Sender: celinux-dev-bounces-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org
-Errors-To: celinux-dev-bounces-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1430817426-5241-2-git-send-email-stripathi@apm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: "chris@printf.net" <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ddutile@redhat.com, "jcm@redhat.com" <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, "patches@apm.com" <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-+Ian
+On Tue, May 5, 2015 at 4:17 AM, Suman Tripathi <stripathi@apm.com> wrote:
+> This patch adds the arasan sdhc nodes to reuse the of-arasan
+> driver for APM X-Gene SoC.
+>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> ---
+>  arch/arm64/boot/dts/apm/apm-mustang.dts |  4 +++
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi  | 44 +++++++++++++++++++++++++++++++++
+>  2 files changed, 48 insertions(+)
 
-On Tue, May 5, 2015 at 2:34 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Hi Rob
->
-> On Tue, May 5, 2015 at 1:20 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, May 1, 2015 at 4:22 PM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
->>> On 04/11/2015 02:20 PM, Rowand, Frank wrote:
->>>> In recent years there have been proposed tools to aid in the creation of valid
->>>> device trees and in debugging device tree issues.  An example of this is the
->>>> various approaches proposed (with source code provided) to validate device tree
->>>> source against valid bindings.  As of today, device tree related tools,
->>>> techniques, and debugging infrastructure have not progressed very far.  I have
->>>> submitted a device tree related proposal for the Linux Plumbers 2015 conference
->>>> to spur action and innovation in such tools, techniques, and debugging
->>>> infrastructure.
->>>>
->>>> The current title of the track is "Device Tree Tools, Validation, and
->>>> Troubleshooting".  The proposal is located at
->>>>
->>>>    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
->>>
->>> Want I want to do is:
->>>
->>> 1) Download an archive of device tree files describing a bunch of
->>> boards. (Both dts and corresponding dtb files, with maybe a .txt telling
->>> me about the board and the -append line qemu needs to give it any
->>> board-specific kernel command line stuff like "console=myserialport".)
->>
->> The dts half is here[1]. It is a kernel repository automatically
->> stripped of everything but dts files.
->>
->> [1] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
->
-> Great!
->
-> While "git log" has the "--nomerges" option, cgit hasn't, making it hard to see
-> the actual changes through the forest of merges.
->
-> Any chance merge commits not causing any changes can be stripped out, too?
+[...]
 
-That's a question for Ian.
+> @@ -533,6 +567,16 @@
+>                         interrupts = <0x0 0x4f 0x4>;
+>                 };
+>
+> +               sdhc0: sdhc@1c000000 {
+> +                       device_type = "sdhc";
+
+device_type generally should not be used (there are a few exceptions).
+
+> +                       compatible = "arasan,sdhci-4.9a";
+
+If you ever have an integration or xgene specific problem, you need a
+chip specific compatible.
 
 Rob
