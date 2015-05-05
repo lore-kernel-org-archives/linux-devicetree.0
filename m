@@ -1,72 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Tue, 5 May 2015 11:57:14 +0100
-Message-ID: <20150505105714.GA22845@sirena.org.uk>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <20150504121209.GM15510@sirena.org.uk>
- <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v3 1/6] ARM: l2c: Add DT support for Shared Override
+Date: Tue, 5 May 2015 12:21:46 +0100
+Message-ID: <20150505112145.GG22384@e104818-lin.cambridge.arm.com>
+References: <1430753072-17145-1-git-send-email-geert+renesas@glider.be>
+ <1430753072-17145-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9MumfqHRHGxgklkB"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
+In-Reply-To: <1430753072-17145-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tushar Behera <tushar.behera@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 04, 2015 at 05:24:27PM +0200, Geert Uytterhoeven wrote:
+> "CoreLink Level 2 Cache Controller L2C-310", p. 2-15, section 2.3.2
+> Shareable attribute" states:
+> 
+>     "The default behavior of the cache controller with respect to the
+>      shareable attribute is to transform Normal Memory Non-cacheable
+>      transactions into:
+>         - cacheable no allocate for reads
+>         - write through no write allocate for writes."
+> 
+> Depending on the system architecture, this may cause memory corruption
+> in the presence of bus mastering devices (e.g. OHCI). To avoid such
+> corruption, the default behavior can be disabled by setting the Shared
+> Override bit in the Auxiliary Control register.
+> 
+> Currently the Shared Override bit can be set only using C code:
+>   - by calling l2x0_init() directly, which is deprecated,
+>   - by setting/clearing the bit in the machine_desc.l2c_aux_val/mask
+>     fields, but using values differing from 0/~0 is also deprecated.
 
---9MumfqHRHGxgklkB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Or you can set it in firmware/boot-loader before Linux starts.
 
-On Tue, May 05, 2015 at 04:18:59PM +0530, Viresh Kumar wrote:
-> On 4 May 2015 at 17:42, Mark Brown <broonie@kernel.org> wrote:
-> > On Thu, Apr 30, 2015 at 05:37:59PM +0530, Viresh Kumar wrote:
+> Hence add support for an "arm,shared-override" device tree property for
+> the l2c device node. By specifying this property, affected systems can
+> indicate that non-cacheable transactions must not be transformed.
+> 
+> If specified, the actual behavior of the kernel depends on whether CMA
+> is available or not:
+>   - If CMA is available, nothing needs to be done, as there won't be a
+>     kernel linear mappings and cacheable aliases for the DMA buffers,
 
-> >> +- opp-microamp: current in micro Amperes. It can contain entries for multiple
-> >> +  regulators.
-> >> +
-> >> +  A single regulator's current is specified with an array of size one or three.
-> >> +  Single entry is for target current and three entries are for <target min max>
-> >> +  currents.
+I don't think this is true. See this thread:
 
-> > What is this for - are you trying to define OPPs for current regulators?
-> > If you are that's worrying, I can't think of a sensible use case.  If
-> > that's not what's happening then the binding needs to be more specific
-> > about what this is supposed to mean.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/329492.html
 
-> Its another property of the same voltage regulator we are using in
-> opp-microvolt.
-> I hope that makes sense ?
+>   - If CMA is not available, the "shared attribute override enable" bit
+>     will be set.
 
-No, it doesn't - you're not answering the question about what this is
-for.
+IMO, this should always be done, independent of any DT or kernel
+configuration. I stated it several times already that I don't see why we
+would ever need such bit cleared:
 
-> But, perhaps I need to write it with more clarity? Or this field doesn't make
-> sense ?
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330573.html
 
-To know if this makes sense I need to know what you beleive "setting the
-current" does.  If you literally mean setting the current it makes no
-sense at all.  If you mean something else that something else should
-probably be written into the binding.
+Personally I don't think this configuration belongs to the DT,
+especially as it may depend on how the OS is configured. But since
+Russell has refused to take patches setting this bit by default (I have
+yet to see a valid argument), it's still better than nothing.
 
---9MumfqHRHGxgklkB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVSKIJAAoJECTWi3JdVIfQdw0H/3bfWn84ToOCquYyePh3CfWw
-IjmSAk769j49AzLcqgU+zBXzjGT6asQ3Pz7NBF6Gbl4tqq1n5581SHyLB40AqdGl
-2A9Dym7eBCx4BGEPq0MZ7jcdu5cbpA/9aqsz3KRVcgfpbJnfN1c+WckYCLcbMV6z
-+OnZRIuzxOr+HLIu6zq7RirdMWLGNhoV4ejCEseOGvxBXDQyQP6LEHATU0UvgQ9P
-1IAGzBYjt9QPnwgyUpKXiCJCk4xRWfOJv4d1r7zWk3/ZMu2R5iT8iFnNacEhhr0F
-Up3q6q4nE6W9WeV0FYBNd7J3WRdTXrFu0zUWvNl3wXCrXjU0HO74UouQZn3RA6w=
-=uUx5
------END PGP SIGNATURE-----
-
---9MumfqHRHGxgklkB--
+-- 
+Catalin
