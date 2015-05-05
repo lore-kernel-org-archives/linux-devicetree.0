@@ -1,74 +1,145 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 7/8] ASoC: wm8998: Initial WM8998 codec driver
-Date: Tue, 5 May 2015 22:59:34 +0100
-Message-ID: <20150505215934.GH15510@sirena.org.uk>
-References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1430493319-23808-8-git-send-email-rf@opensource.wolfsonmicro.com>
- <20150504113943.GB15510@sirena.org.uk>
- <20150505092411.GA15549@opensource.wolfsonmicro.com>
- <20150505105327.GZ22845@sirena.org.uk>
- <20150505133129.GA26101@opensource.wolfsonmicro.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] phy: Add binding document for Pistachio USB2.0 PHY
+Date: Tue, 5 May 2015 23:01:17 +0100
+Message-ID: <20150505220116.GE17687@jhogan-linux.le.imgtec.org>
+References: <1428444258-25852-1-git-send-email-abrestic@chromium.org>
+ <1428444258-25852-2-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8qjQX3lIKI8OJLo6"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VdOwlNaOFKGAtAAV"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150505133129.GA26101-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <1428444258-25852-2-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---8qjQX3lIKI8OJLo6
-Content-Type: text/plain; charset=us-ascii
+--VdOwlNaOFKGAtAAV
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 05, 2015 at 02:31:29PM +0100, Richard Fitzgerald wrote:
+Hi Andrew,
 
-> We can't really tell people what the selection does because that depends on
-> the external hardware. The A setting might be a headset mic, or a line in,
-> or a builtin mic...
+On Tue, Apr 07, 2015 at 03:04:16PM -0700, Andrew Bresticker wrote:
+> Add a binding document for the USB2.0 PHY found on the IMG Pistachio SoC.
+>=20
+> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+> No changes from v1.
+> ---
+>  .../devicetree/bindings/phy/pistachio-usb-phy.txt  | 29 ++++++++++++++++=
+++++++
+>  include/dt-bindings/phy/phy-pistachio-usb.h        | 16 ++++++++++++
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-p=
+hy.txt
+>  create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt =
+b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+> new file mode 100644
+> index 0000000..afbc7e2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+> @@ -0,0 +1,29 @@
+> +IMG Pistachio USB PHY
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Required properties:
+> +--------------------
+> + - compatible: Must be "img,pistachio-usb-phy".
+> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
+> + - clocks: Must contain an entry for each entry in clock-names.
+> +   See ../clock/clock-bindings.txt for details.
+> + - clock-names: Must include "usb_phy".
+> + - img,cr-top: Must constain a phandle to the CR_TOP syscon node.
+> + - img,refclk: Indicates the reference clock source for the USB PHY.
+> +   See <dt-bindings/phy/phy-pistachio-usb.h> for a list of valid values.
 
-> All we can do is say what the selection is called generically by the codec.
-> So take the IN1L signal, on the codec it has two inputs "A" and "B". The
-> IN1L Mux control has two settings "A" and "B". That seems clear.
+Possibly dumb question: why isn't the reference clock source specified
+in the normal ways like the "usb_phy" clock is?
 
-So you're saying that you've got a mux on a single physical input which
-has two inputs?  Are you sure that this is actually a mux and not some
-sort of mode setting that should be in platform data or DT - what do
-these settinngs actually correspond to?  The routes in the driver look
-like there's two physical pins for each one of IN1L/R which the device
-can switch between for some reason which does correspond to a mux but
-that'd more normally be named IN1AL or similar.
+Does the value required here depend on what usb_phy clock gets muxed
+=66rom or something?
 
-Though if the left and right side need to be set to the same thing
-(which IIRC a previous version had code to check for and you did mention
-in your mail) all the time then why are there two separate muxes anyway?
+Cheers
+James
 
---8qjQX3lIKI8OJLo6
+> +
+> +Optional properties:
+> +--------------------
+> + - phy-supply: USB VBUS supply.  Must supply 5.0V.
+> +
+> +Example:
+> +--------
+> +usb_phy: usb-phy {
+> +	compatible =3D "img,pistachio-usb-phy";
+> +	clocks =3D <&clk_core CLK_USB_PHY>;
+> +	clock-names =3D "usb_phy";
+> +	phy-supply =3D <&usb_vbus>;
+> +	img,refclk =3D <REFCLK_CLK_CORE>;
+> +	img,cr-top =3D <&cr_top>;
+> +	#phy-cells =3D <0>;
+> +};
+> diff --git a/include/dt-bindings/phy/phy-pistachio-usb.h b/include/dt-bin=
+dings/phy/phy-pistachio-usb.h
+> new file mode 100644
+> index 0000000..d1877aa
+> --- /dev/null
+> +++ b/include/dt-bindings/phy/phy-pistachio-usb.h
+> @@ -0,0 +1,16 @@
+> +/*
+> + * Copyright (C) 2015 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify =
+it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_PHY_PISTACHIO
+> +#define _DT_BINDINGS_PHY_PISTACHIO
+> +
+> +#define REFCLK_XO_CRYSTAL	0x0
+> +#define REFCLK_X0_EXT_CLK	0x1
+> +#define REFCLK_CLK_CORE		0x2
+> +
+> +#endif /* _DT_BINDINGS_PHY_PISTACHIO */
+> --=20
+> 2.2.0.rc0.207.ga3a616c
+>=20
+>=20
+
+--VdOwlNaOFKGAtAAV
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJVST1DAAoJELSic+t+oim9m48P/1ECX/itDcM/IaY9mwUrneaa
-6dwMIGWH2zXRN5rWfgtMIT6AJjIkqAMM5aZzPsHAwrE6xn0AY/m9FrAnesQtLdW2
-f9dUu4GFb0YZ6jMjItTNswUM5EHM3KkOc4KIVHkq56yIG/gU3gXvy3UYQd8M/tEB
-3mXJcisaLSFTOVtbx87Y28ECbpG8IdIzRHAaug9OOC3IjLC7mk2nuwKXTURN5Zej
-O7mUXuJ4kApTJ0DlU04aXupw9zAuxnIxm1nEDOnZ1M5IGS8m/7OEIvpUSAlplGkb
-+tX/g/XFob1R/wlN/bS8eou1xPAro6Lud+eNRp3DtfoRTO9UC7utGfwsxVD9Vyx9
-eTT3titGjoS5RRlCxNa1FaKjPBYEuPi9IySgvrY+GAag8jcMx8rmS/8mHSDALP0k
-b7NwhZBr2xRod1h+zxPy0Z5oTtImRc6y3QFIo1dGoc3EiYcgO8T9cLfzW/qr1CBA
-Fn0GnzhKyCKdR51AwOCKVAHFlZM86n4QZoX9/eNiz96NbMHVV4xt+5+b5+YR+cwJ
-OoYTJpqxB7w0K1C4G3HZDqatRIDyrHCdhKsJDi7+jxTcsMaTgSKw8CDbfncMFkYg
-A1XjgcjIzHRksoqLQ80jBH1ZuQuvtsXBBjiIRWgnoE9t+eshsJcXSb9nGZNHnaJR
-EoGcfe3Jd6gOkiIA8PEi
-=NKOq
+iQIcBAEBAgAGBQJVST2sAAoJEGwLaZPeOHZ6h3EQAIWL5SPjeM4XQVqS8syp5m45
+9pAnlu3nfqJorWzkH5JMfe8bSRRoQ+HKCzGVZ3YoqUKT9ZeTM3cvBCu0OaK/dfWZ
++HFLDwukaibdOyIfvfk7527uOUwtwTnbX3bett6ECeXS0Ar3AxI54ibln936n9sW
+3XbSBY1YId+EE06uvuVFgib+mGRJQU9o8FqjhIGL/507CHsXfEzcaiT9rY/fs5FA
+3pAaoTNL7SODk9fnW+gXFt2gSC40yZ89qoIjwSjkjkYeojtX4+ZiloxlrJddK2sk
+2VtYLuXxK+4lnS4EB1X2DXyEe1utpy5JEo5vGsBXV5SYFbmDemxMIpKD7Llx/E9p
+P7hybOPpAr5yDx4xzQqMbS5wYf8IzlsJVLMYj9wyqSPPHzz+78YpF9Zi0kKrYsL5
+lRE3ejHYjBA8x3zQcihXf4Z0vD0mTT+l+VL7IOPVnQl78KSVUNNNU7DVrd7J+ewF
+Gnx4p1ZCvKKYGYNXH2wMubMs8p+pM+7DU+WEowCYWTRi1iaSVoonZ90XWV1oHiNJ
+VQ+v/Y5jdHgsfNZ/sGRWHhxl/dW3kwyYAKlEfu1juCnFrBw1/t1Ap2HrpgDaOJwJ
+otT/kWJHyE+f4iDtnD6Q52QdgC4+8Fov4kNpputOijQIuowV27jopYuUa0xU29+i
+5nj2MeKORszfDYANiOKb
+=lJGl
 -----END PGP SIGNATURE-----
 
---8qjQX3lIKI8OJLo6--
+--VdOwlNaOFKGAtAAV--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
