@@ -1,22 +1,23 @@
 From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 2/3 v7] mailbox: Enable BCM2835 mailbox support
-Date: Tue, 5 May 2015 07:48:31 +0530
-Message-ID: <CABb+yY2M-JLNrgtn+_Ti1F1S89BmV7ZuMpXuRCgUr0wf6E_V3A@mail.gmail.com>
+Date: Tue, 5 May 2015 08:00:01 +0530
+Message-ID: <CABb+yY2V5dXQ5fH3s2T4-j6-z68bOzaeUN9WQoNze2mc-quD+A@mail.gmail.com>
 References: <1430254460-26754-1-git-send-email-eric@anholt.net>
 	<1430327374-6562-1-git-send-email-eric@anholt.net>
 	<CABb+yY0+Dd6RMJfmcqWrJfsSkPS8KjtpctJteoTZrj3QttJ71g@mail.gmail.com>
-	<5542ECA3.8060104@wwwdotorg.org>
+	<871tivq1rp.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5542ECA3.8060104-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <871tivq1rp.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 1, 2015 at 8:31 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 04/29/2015 11:26 PM, Jassi Brar wrote:
+On Tue, May 5, 2015 at 6:27 AM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>
 >> On Wed, Apr 29, 2015 at 10:39 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
 >>
 >>> +
@@ -40,24 +41,39 @@ On Fri, May 1, 2015 at 8:31 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@p
 >> done.
 >>  Here you choose to waste 'dev_id' and hard-code dereferencing to channel-0
 >
-> Now that I look a bit harder at the registers, I think there are 2
-> mailbox register sets, but each is uni-directional, so a pair makes up
-> the typical bi-directional mailbox. There are multiple "owner" areas (or
-> sets of registers); I'm not quite sure what that implies.
+> There's only the one channel according to the docs.  I wish we wouldn't
+> get derailed by speculation on the list when the documentation is
+> available. :(
 >
-Probably a mailbox is the send-recv pair, and the controller could
-have many such pairs.
+Can I have the pointer to the doc please, if its publicly available.
 
-> As such, limiting this driver to a single mailbox is probably correct.
+>>> +       while (!(readl(mbox->regs + MAIL0_STA) & ARM_MS_EMPTY)) {
+>>> +               u32 msg = readl(mbox->regs + MAIL0_RD);
+>>> +               dev_dbg(dev, "Reply 0x%08X\n", msg);
+>>> +               mbox_chan_received_data(link, &msg);
+>>> +       }
+>>> +       return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static int bcm2835_send_data(struct mbox_chan *link, void *data)
+>>> +{
+>>> +       int ret = 0;
+>>> +       u32 msg = *(u32 *)data;
+>>> +
+>>> +       spin_lock(&mbox->lock);
+>>> +       writel(msg, mbox->regs + MAIL1_WRT);
+>>> +       dev_dbg(mbox->dev, "Request 0x%08X\n", msg);
+>>> +end:
+>>>
+>> Did you compile check the driver for errors and warnings?
 >
-OK
-
-> I would expect to see #mbox-cells=<0> in the DT, which would require a
-> custom of_xlate though (or modifying the default to work with a 0 cell
-> count; IIRC the default of_xlate for some other subsystems will work in
-> that scenario).
+> At this point I'm so burned out on repainting this bikeshed that I
+> missed a spot of the current color.
 >
-Yeah the api could simply return the first free channel for 0-cell spec.
+I have just rechecked the thread and I didn't find any revision that
+had only nits picked. Subsystems even dictate how the files are named
+and ordered in Makefile, and you have been insisting on hardcoding
+values.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
