@@ -1,88 +1,88 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V3 3/3] mfd: da9063: MFD support for OnKey driver
-Date: Tue, 5 May 2015 10:52:17 +0200
-Message-ID: <CAMuHMdWjSUqtrOC=CvhKQFb2oBHTJYSPUJknf_o92P=OuLS3NQ@mail.gmail.com>
-References: <cover.1430393194.git.stwiss.opensource@diasemi.com>
-	<639fd177d5ddd4ce80df45f9d774cc971b286ef9.1430393194.git.stwiss.opensource@diasemi.com>
-	<CAMuHMdW43GHj-iO1F9gjHsjYOvvycjrP6WPyCKSOvcpcwPsM-w@mail.gmail.com>
-	<6ED8E3B22081A4459DAC7699F3695FB7014B219017@SW-EX-MBX02.diasemi.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 0/3] Add SDHCI support for APM X-Gene SoC using ARASAN
+ SDHCI controller.
+Date: Tue, 5 May 2015 10:53:29 +0200
+Message-ID: <CAPDyKFp_tU-P-3ZM6Wt29v7BLcZ+Fy_-711XHYBQ1=9GAM=mkQ@mail.gmail.com>
+References: <1430746792-32574-1-git-send-email-stripathi@apm.com>
+	<CAPDyKFqva7jioEpf1qBv+sSo9-ZWU69+wb9qTF1X+4cxOgf2uQ@mail.gmail.com>
+	<CAOHikRAviwD=kPQpHeR5NCXdANWH8B+DqNW=qJQ0ACpeOppU2A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B219017@SW-EX-MBX02.diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOHikRAviwD=kPQpHeR5NCXdANWH8B+DqNW=qJQ0ACpeOppU2A@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
-
-On Tue, May 5, 2015 at 10:36 AM, Opensource [Steve Twiss]
-<stwiss.opensource@diasemi.com> wrote:
-> On 04 May 2015 08:47, Geert Uytterhoeven wrote:
->> On Thu, Apr 30, 2015 at 1:26 PM, S Twiss <stwiss.opensource@diasemi.com>
->> wrote:
->> > Add MFD support for the DA9063 OnKey driver
-
->> > +static int da9063_clear_fault_log(struct da9063 *da9063)
->> > +{
-
->> > +}
->> > +
->> >  int da9063_device_init(struct da9063 *da9063, unsigned int irq)
->> >  {
->> >         struct da9063_pdata *pdata = da9063->dev->platform_data;
->> >         int model, variant_id, variant_code;
->> >         int ret;
->> >
->> > +       ret = da9063_clear_fault_log(da9063);
->> > +       if (ret < 0)
->> > +               dev_err(da9063->dev, "Cannot clear fault log\n");
->> > +
->> >         if (pdata) {
->> >                 da9063->flags = pdata->flags;
->> >                 da9063->irq_base = pdata->irq_base;
+On 5 May 2015 at 10:42, Suman Tripathi <stripathi@apm.com> wrote:
+> On Tue, May 5, 2015 at 2:06 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> On 4 May 2015 at 15:39, Suman Tripathi <stripathi@apm.com> wrote:
+>>> This patch adds the SDHCI support for APM X-Gene SoC using ARASAN SDHCI controller.
+>>>
+>>> v1 change:
+>>>  * Use the CONFIG_ARM64_DMA_HAS_IOMMU for dma-mapping.
+>>>
+>>> v2 change:
+>>>  * Drop the IOMMU support and switching to PIO mode for arasan.
+>>>    controller integrated inside APM X-Gene SoC.
+>>>
+>>> v3 change:
+>>>  * Change the sdhci-of-arasan.c to support arasan4.9a.
+>>>  * Add quirks for arasan4.9a.
+>>>
+>>> v4 change:
+>>>  * Cleanup the Documentation and dts.
+>>>
+>>> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+>>> ---
+>>>
+>>> Suman Tripathi (3):
+>>>   arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
+>>>   mmc: host: arasan: Add the support for sdhci-arasan4.9a in
+>>>     sdhci-of-arasan.c
+>>>   Documentation: mmc: Update Arasan SDHC documentation to support 4.9a
+>>>     version of     Arasan SDHC controller.
+>>>
+>>>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  3 +-
+>>>  arch/arm64/boot/dts/apm-mustang.dts                |  4 ++
+>>>  arch/arm64/boot/dts/apm-storm.dtsi                 | 44 ++++++++++++++++++++++
+>>>  drivers/mmc/host/sdhci-of-arasan.c                 |  7 ++++
+>>>  4 files changed, 57 insertions(+), 1 deletion(-)
+>>>
 >>
->> The code above doesn't seem to match the patch description.
->> Can you please explain why it is needed?
+>> Thanks!
+>>
+>> I have applied patch2 and patch3. Though, I decided to squash them
+>> into one patch and changed the commit message header a bit.
+>>
+>> I couldn't apply patch 1, so I guess that will be taken through arm soc?
 >
-> Yes, at first it does seem that the fault-log clearing function is unrelated to the
-> "MFD support for the DA9063 OnKey driver", but there is an important connection
-> that makes it essential for the OnKey driver in this case.
+> why it couldn't be applied?? I made it in top of
 >
-> I have made some explanation of the OnKey's operation in this thread here:
-> https://lkml.org/lkml/2015/4/29/406
+> git git://git.linaro.org/people/ulf.hansson/mmc.git
 >
-> But I only described the OnKey's point-of-view for case (4) of the "OnKey operation"
-> Case (4): the long-long press and no key release -- the hardware power-cut when
-> software is unable to respond (for whatever reason).
+> Is this not correct ??
+
+That's correct, but it apparently needs a rebase.
+The below files has moved:
+arch/arm64/boot/dts/apm-mustang.dts
+arch/arm64/boot/dts/apm-storm.dtsi
+
+Send a new version and I am happy to take it through my tree, since it
+got Arnd's ack.
+
+Kind regards
+Uffe
+
 >
-> In this case, if the software was not responsive and a hardware shutdown of the
-> device was chosen, the FAULT_LOG would persist with information that would be
-> accessible when the device was restarted: it would be possible to take action the
-> next time the device was turned on again (maybe to trigger some mitigation exercise
-> in the bootloader -- e.g. say to complete memory checks or put the device into a
-> safe mode).
+>>
+>> Kind regards
+>> Uffe
 >
-> However this mitigation exercise and clearance of the fault-log cannot be counted on
-> outside the Linux kernel and so the clearance function da9063_clear_fault_log () has
-> been done here.
 >
-> If this clearance function did not exist, then after a hardware shutdown (due to S/W
-> failure), the next time the device is restarted the FAULT_LOG would persist with values
-> from the previous error.
-
-Thanks for your explanation!
-
-Please add (some parts of it) to the patch description.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> --
+> Thanks,
+> with regards,
+> Suman Tripathi
