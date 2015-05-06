@@ -1,611 +1,83 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: mvebu: add support for the new Armada 385 based
- Linksys boards
-Date: Wed, 06 May 2015 15:47:36 +0200
-Message-ID: <554A1B78.2030305@free-electrons.com>
-References: <1430918040-17307-1-git-send-email-kaloz@openwrt.org> <1430918040-17307-3-git-send-email-kaloz@openwrt.org>
+From: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: Re: [Linux-kernel] [RFC PATCH 5/7] mmc: sh_mobile_sdhi: Add UHS-I
+ mode support
+Date: Wed, 06 May 2015 14:49:03 +0100
+Message-ID: <1430920143.4222.74.camel@xylophone.i.decadent.org.uk>
+References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
+	 <1430397136.5802.44.camel@xylophone.i.decadent.org.uk>
+	 <CAPDyKFodZscxZJmKgYyMV8m8mNWYc9GitkoKbixTKS5r7rv_fA@mail.gmail.com>
+	 <554880C9.8080201@codethink.co.uk>
+	 <CAPDyKFpv0BOX0mAvhZx9j5Gnayt__YTiUa8SxvcmsEcuazsg0w@mail.gmail.com>
+	 <1430876333.4222.43.camel@xylophone.i.decadent.org.uk>
+	 <CAPDyKFo7WsE2wTLZc0E9ANrZ1amVsL3n71oxCLFG0+QrF0xH_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430918040-17307-3-git-send-email-kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFo7WsE2wTLZc0E9ANrZ1amVsL3n71oxCLFG0+QrF0xH_A@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Molton <ian@mnementh.co.uk>, linux-mmc <linux-mmc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Imre,
-
-On 06/05/2015 15:14, Imre Kaloz wrote:
-> This patch adds support for the Linksys WRT1200AC (Caiman) and
-> the Linksys WRT1900AC v2 (Cobra).
+On Wed, 2015-05-06 at 10:44 +0200, Ulf Hansson wrote:
+> On 6 May 2015 at 03:38, Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
+> > On Tue, 2015-05-05 at 10:47 +0200, Ulf Hansson wrote:
+> >> On 5 May 2015 at 10:35, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+> >> > On 05/05/15 10:56, Ulf Hansson wrote:
+> >> >> On 30 April 2015 at 14:32, Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
+> >> >>> Implement voltage switch, supporting modes up to SDR-50.
+> >> >>>
+> >> >>> Based on work by Shinobu Uehara, Rob Taylor, William Towle and Ian Molton.
+> >> >>>
+> >> >>> This uses two voltage regulators, one external and one on the pfc.
+> >> >>
+> >> >> Why two? If there is a parent child relation ship, that should be
+> >> >> handled through the regulator tree, right!? Please elaborate.
+> >> >
+> >> > The card main power is separate from the IO line voltages.
+> >> >
+> >> > To get to the high-speed, card power is left at 3.3V and the IO
+> >> > voltage is changed to 1.8V.
+> >> >
+> >> > In the systems we have the power gate is separate from the controls
+> >> > for the IO but not integrated into the MMC controller itself.
+> >
+> > In this case, there are *three* regulators:
+> >
+> > 1. External regulator for card power (VDD pin): "vmmc"
+> > 2. External regulator for pull-up voltage for the data pins: "vqmmc"
 > 
-> Both boards have:
+> Is this really a regulator and not just about changing a pinctrl setting?
+
+Looking at the Lager board, the pull-up voltage appears to be controlled
+by the external PMIC (DA9063), which is signalled using GPIOs (I don't
+know why, when it's also connected to I2C).
+
+> The reason why I wonder, is because there are several other mmc host
+> driver's the use a specific pinctrl state for this.
 > 
-> - 2 Marvell 88W8864 radios
-> - 1 USB 3.0 port
-> - 1 USB 2.0/eSATAp port
-> - 2 Ethernet interfaces connected to a 88E6176 switch (1x WAN + 4x LAN)
-> - 128MB NAND flash
-> - 512MB RAM
+> > 3. Internal regulator for input(?) level on the data pins:
+> >    "vqmmc_ref" (I'm open to suggestions of a better name)
+
+This one is implemented in the pinctrl (pfc) block.
+
+[...]
+> >> 3) The voltage levels changes for vmmc shall be handled via the
+> >> ->set_ios() callback.
+> >
+> > We don't support UHS-II so we never change the voltage of this
+> > regulator.
 > 
-> Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> 
-> ---
->  arch/arm/boot/dts/Makefile                      |   2 +
->  arch/arm/boot/dts/armada-385-linksys-caiman.dts | 114 ++++++++++
->  arch/arm/boot/dts/armada-385-linksys-cobra.dts  | 114 ++++++++++
->  arch/arm/boot/dts/armada-385-linksys.dtsi       | 288 ++++++++++++++++++++++++
->  4 files changed, 518 insertions(+)
->  create mode 100644 arch/arm/boot/dts/armada-385-linksys-caiman.dts
->  create mode 100644 arch/arm/boot/dts/armada-385-linksys-cobra.dts
->  create mode 100644 arch/arm/boot/dts/armada-385-linksys.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 86217db..0eaea61 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -633,6 +633,8 @@ dtb-$(CONFIG_MACH_ARMADA_375) += \
->  	armada-375-db.dtb
->  dtb-$(CONFIG_MACH_ARMADA_38X) += \
->  	armada-385-db-ap.dtb \
-> +	armada-385-linksys-caiman.dtb \
-> +	armada-385-linksys-cobra.dtb \
->  	armada-388-db.dtb \
->  	armada-388-gp.dtb \
->  	armada-388-rd.dtb
-> diff --git a/arch/arm/boot/dts/armada-385-linksys-caiman.dts b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-> new file mode 100644
-> index 0000000..f3cee91
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-> @@ -0,0 +1,114 @@
-> +/*
-> + * Device Tree include for the Linksys WRT1200AC (Caiman)
-> + *
-> + * Copyright (C) 2015 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> + *
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is licensed under the terms of the GNU General Public
-> + *     License version 2.  This program is licensed "as is" without
-> + *     any warranty of any kind, whether express or implied.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "armada-385-linksys.dtsi"
-> +
-> +/ {
-> +	model = "Linksys WRT1200AC";
-> +	compatible = "linksys,caiman", "linksys,armada385", "marvell,armada385",
-> +		     "marvell,armada380";
-> +
-> +	soc {
-> +		internal-regs{
-> +			i2c@11000 {
-> +
-> +				pca9635@68 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +					wan_amber@0 {
-> +						label = "caiman:amber:wan";
-> +						reg = <0x0>;
-> +					};
-> +
-> +					wan_white@1 {
-> +						label = "caiman:white:wan";
-> +						reg = <0x1>;
-> +					};
-> +
-> +					wlan_2g@2 {
-> +						label = "caiman:white:wlan_2g";
-> +						reg = <0x2>;
-> +					};
-> +
-> +					wlan_5g@3 {
-> +						label = "caiman:white:wlan_5g";
-> +						reg = <0x3>;
-> +					};
-> +
-> +					usb2@5 {
-> +						label = "caiman:white:usb2";
-> +						reg = <0x5>;
-> +					};
-> +
-> +					usb3_1@6 {
-> +						label = "caiman:white:usb3_1";
-> +						reg = <0x6>;
-> +					};
-> +
-> +					usb3_2@7 {
-> +						label = "caiman:white:usb3_2";
-> +						reg = <0x7>;
-> +					};
-> +
-> +					wps_white@8 {
-> +						label = "caiman:white:wps";
-> +						reg = <0x8>;
-> +					};
-> +
-> +					wps_amber@9 {
-> +						label = "caiman:amber:wps";
-> +						reg = <0x9>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	gpio-leds {
-> +		power {
-> +			label = "caiman:white:power";
-> +		};
-> +
-> +		sata {
-> +			label = "caiman:white:sata";
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/armada-385-linksys-cobra.dts b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-> new file mode 100644
-> index 0000000..1110718
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-> @@ -0,0 +1,114 @@
-> +/*
-> + * Device Tree file for the Linksys WRT1900ACv2 (Cobra)
-> + *
-> + * Copyright (C) 2015 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> + *
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is licensed under the terms of the GNU General Public
-> + *     License version 2.  This program is licensed "as is" without
-> + *     any warranty of any kind, whether express or implied.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "armada-385-linksys.dtsi"
-> +
-> +/ {
-> +	model = "Linksys WRT1900ACv2";
-> +	compatible = "linksys,cobra", "linksys,armada385", "marvell,armada385",
-> +		     "marvell,armada380";
-> +
-> +	soc {
-> +		internal-regs{
-> +			i2c@11000 {
-> +
-> +				pca9635@68 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +					wan_amber@0 {
-> +						label = "cobra:amber:wan";
-> +						reg = <0x0>;
-> +					};
-> +
-> +					wan_white@1 {
-> +						label = "cobra:white:wan";
-> +						reg = <0x1>;
-> +					};
-> +
-> +					wlan_2g@2 {
-> +						label = "cobra:white:wlan_2g";
-> +						reg = <0x2>;
-> +					};
-> +
-> +					wlan_5g@3 {
-> +						label = "cobra:white:wlan_5g";
-> +						reg = <0x3>;
-> +					};
-> +
-> +					usb2@5 {
-> +						label = "cobra:white:usb2";
-> +						reg = <0x5>;
-> +					};
-> +
-> +					usb3_1@6 {
-> +						label = "cobra:white:usb3_1";
-> +						reg = <0x6>;
-> +					};
-> +
-> +					usb3_2@7 {
-> +						label = "cobra:white:usb3_2";
-> +						reg = <0x7>;
-> +					};
-> +
-> +					wps_white@8 {
-> +						label = "cobra:white:wps";
-> +						reg = <0x8>;
-> +					};
-> +
-> +					wps_amber@9 {
-> +						label = "cobra:amber:wps";
-> +						reg = <0x9>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	gpio-leds {
-> +		power {
-> +			label = "cobra:white:power";
-> +		};
-> +
-> +		sata {
-> +			label = "cobra:white:sata";
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> new file mode 100644
-> index 0000000..f45afee
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> @@ -0,0 +1,288 @@
-> +/*
-> + * Device Tree include file for Armada 385 based Linksys boards
-> + *
-> + * Copyright (C) 2015 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> + *
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is licensed under the terms of the GNU General Public
-> + *     License version 2.  This program is licensed "as is" without
-> + *     any warranty of any kind, whether express or implied.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include "armada-385.dtsi"
-> +
-> +/ {
-> +	model = "Linksys boards based on Armada 385";
-> +	compatible = "linksys,armada385", "marvell,armada385",
-> +		     "marvell,armada380";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200";
-> +		stdout-path = &uart0;
+> That's not related to UHS-II. Voltage level negotiation for vmmc is
+> done even for legacy mode cards.
 
-you could even remove bootargs and just use:
-stdout-path = "serial0:115200n8";
+I'm looking at "SD Specifications, Part 1, Physical Layer Simplified
+Specifications, Version 4.10" and it seems clear from that, that only
+UHS-II cards have a variable supply voltage.  Maybe that changed in a
+later version?  Anyway, I don't have any board that can change the
+supply voltage.
+
+Ben.
 
 
-Thanks,
-
-Gregory
-
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x20000000>; /* 512 MB */
-> +	};
-> +
-> +	soc {
-> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
-> +			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
-> +
-> +		internal-regs {
-> +
-> +			spi@10600 {
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c@11000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&i2c0_pins>;
-> +				status = "okay";
-> +
-> +				tmp421@4c {
-> +					compatible = "ti,tmp421";
-> +					reg = <0x4c>;
-> +				};
-> +
-> +				pca9635@68 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					compatible = "nxp,pca9635";
-> +					reg = <0x68>;
-> +				};
-> +			};
-> +
-> +			/* J10: VCC, NC, RX, NC, TX, GND  */
-> +			serial@12000 {
-> +				status = "okay";
-> +			};
-> +
-> +			ethernet@70000 {
-> +				status = "okay";
-> +				phy-mode = "rgmii-id";
-> +				fixed-link {
-> +					speed = <1000>;
-> +					full-duplex;
-> +				};
-> +			};
-> +
-> +			ethernet@34000 {
-> +				status = "okay";
-> +				phy-mode = "sgmii";
-> +				fixed-link {
-> +					speed = <1000>;
-> +					full-duplex;
-> +				};
-> +			};
-> +
-> +			mdio {
-> +				status = "okay";
-> +			};
-> +
-> +			sata@a8000 {
-> +				status = "okay";
-> +			};
-> +
-> +			/* USB part of the eSATA/USB 2.0 port */
-> +			usb@50000 {
-> +				status = "okay";
-> +			};
-> +
-> +			usb3@f8000 {
-> +				status = "okay";
-> +				usb-phy = <&usb3_phy>;
-> +			};
-> +
-> +			flash@d0000 {
-> +				status = "okay";
-> +				num-cs = <1>;
-> +				marvell,nand-keep-config;
-> +				marvell,nand-enable-arbiter;
-> +				nand-on-flash-bbt;
-> +
-> +				partition@0 {
-> +					label = "u-boot";
-> +					reg = <0x0000000 0x200000>;  /* 2MB */
-> +					read-only;
-> +				};
-> +
-> +				partition@100000 {
-> +					label = "u_env";
-> +					reg = <0x200000 0x40000>;    /* 256KB */
-> +				};
-> +
-> +				partition@140000 {
-> +					label = "s_env";
-> +					reg = <0x240000 0x40000>;    /* 256KB */
-> +				};
-> +
-> +				partition@900000 {
-> +					label = "devinfo";
-> +					reg = <0x900000 0x100000>;   /* 1MB */
-> +					read-only;
-> +				};
-> +
-> +				/* kernel1 overlaps with rootfs1 by design */
-> +				partition@a00000 {
-> +					label = "kernel1";
-> +					reg = <0xa00000 0x2800000>;  /* 40MB */
-> +				};
-> +
-> +				partition@1000000 {
-> +					label = "rootfs1";
-> +					reg = <0x1000000 0x2200000>;  /* 34MB */
-> +				};
-> +
-> +				/* kernel2 overlaps with rootfs2 by design */
-> +				partition@3200000 {
-> +					label = "kernel2";
-> +					reg = <0x3200000 0x2800000>; /* 40MB */
-> +				};
-> +
-> +				partition@3800000 {
-> +					label = "rootfs2";
-> +					reg = <0x3800000 0x2200000>; /* 34MB */
-> +				};
-> +
-> +				/*
-> +				 * 38MB, last MB is for the BBT, not writable
-> +				 */
-> +				partition@5a00000 {
-> +					label = "syscfg";
-> +					reg = <0x5a00000 0x2600000>;
-> +				};
-> +
-> +				/*
-> +				 * Unused area between "s_env" and "devinfo".
-> +				 * Moved here because otherwise the renumbered
-> +				 * partitions would break the bootloader
-> +				 * supplied bootargs
-> +				 */
-> +				partition@180000 {
-> +					label = "unused_area";
-> +					reg = <0x280000 0x680000>;   /* 6.5MB */
-> +				};
-> +			};
-> +		};
-> +
-> +		pcie-controller {
-> +			status = "okay";
-> +
-> +			pcie@1,0 {
-> +				/* Marvell 88W8864, 5GHz-only */
-> +				status = "okay";
-> +			};
-> +
-> +			pcie@2,0 {
-> +				/* Marvell 88W8864, 2GHz-only */
-> +				status = "okay";
-> +			};
-> +		};
-> +	};
-> +
-> +	usb3_phy: usb3_phy {
-> +		compatible = "usb-nop-xceiv";
-> +		vcc-supply = <&reg_xhci0_vbus>;
-> +	};
-> +
-> +	reg_xhci0_vbus: xhci0-vbus {
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&xhci0_vbus_pins>;
-> +		regulator-name = "xhci0-vbus";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		enable-active-high;
-> +		gpio = <&gpio1 18 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-0 = <&keys_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		button@1 {
-> +			label = "WPS";
-> +			linux,code = <KEY_WPS_BUTTON>;
-> +			gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		button@2 {
-> +			label = "Factory Reset Button";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&power_led_pin &sata_led_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		power {
-> +			gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
-> +			default-state = "on";
-> +		};
-> +
-> +		sata {
-> +			gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	keys_pin: keys-pin {
-> +		marvell,pins = "mpp24", "mpp47";
-> +		marvell,function = "gpio";
-> +	};
-> +
-> +	power_led_pin: power-led-pin {
-> +		marvell,pins = "mpp55";
-> +		marvell,function = "gpio";
-> +	};
-> +
-> +	sata_led_pin: sata-led-pin {
-> +		marvell,pins = "mpp54";
-> +		marvell,function = "gpio";
-> +	};
-> +
-> +	xhci0_vbus_pins: xhci0-vbus-pins {
-> +		marvell,pins = "mpp50";
-> +		marvell,function = "gpio";
-> +	};
-> +};
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
