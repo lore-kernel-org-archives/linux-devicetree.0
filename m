@@ -1,56 +1,113 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Wed, 6 May 2015 11:51:20 +0800
-Message-ID: <20150506035120.GA20852@leoy-linaro>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
- <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
- <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5549877C.10408@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bintian <bintian.wang@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, heyunlei@hu
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC driver
+Date: Tue,  5 May 2015 22:02:22 -0600
+Message-ID: <1430884947-16787-1-git-send-email-lho@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 06, 2015 at 11:16:12AM +0800, Bintian Wang wrote:
-> On 2015/5/6 1:13, Mark Rutland wrote:
-> >[...]
-> >
-> >>+	psci {
-> >>+		compatible = "arm,psci-0.2";
-> >>+		method = "smc";
-> >>+	};
-> >
-> >Are all the PSCI 0.2 mandatory features implemented?
->
-> The system off/suspend is under development, and system off will
-> be released in next months, and system suspend may be released in the
-> following two months.
+This patch adds support for the APM X-Gene SoC memory controller EDAC driver
+for DT.
 
-Yes; now for mandatory features, except SYSTEM_OFF others have supported.
-for PSCI 0.2, SYSTEM_SUSPEND even is not supported, right?
+v8:
+* Change ASM_EDAC_H to __ASM_EDAC_H in file edac.h
+* Add WARN_ONCE in stub function atomic_scrub
+* Update DTS binding documentation (with only memory controller node)
+* Temporary remove L1/L2, L3, and SoC driver code and update memory driver
+  code accordingly
 
-> So can I keep "arm,psci-0.2" here?
-> 
-> >Can CPU0 be hot unplugged?
-> Yes, CPU0~CPU7 all can be hot unplugged.
+v7:
+* Update binding documentation for memory controller, PMD, L3, and SoC EDAC
+* Change resource for PCP, CSW, MCBA, MCBB, and efuse to syscon type nodes
+  and updae driver accordingly
+* Fix clearing L2 RTO register properly
+* Fix the MODULE_DEVICE_TABLE for OF
+* Update DT accordingly to binding documentation
 
-Just clarify: now use s/w method to emulate CPU and cluster's low
-power state; all cores can be hotplugged [1].
+v6:
+* Rebase to 4.0.0-rc3
+* Add memory scrub stub function and enable ARM64 EDAC support patch
+* Add bit definition defines for L2RTOS registers
+* Remove un-necessary clearing of all L1/L2 software generated registers
+* Remove wrong notification of LSU un-correctable error
+* Change L2 reporting of un-correcable error to correctable error
+* Change clearing of the L2C L2RTO registers
+* Add support for L2 HW version 1 and version 2 or above
+* Add support for L3 HW version 1 and version 2 or above
 
-[1] https://github.com/96boards/arm-trusted-firmware;
+v5:
+* Rebase to 3.17.rc1 (next)
+* Update binding documentation for additional SoC node binding resource
+* Enable MCU correctable and uncorrectable interrupts if not enabled by
+  firmware
+* Enable top level interrupt only after all MCU registered. Otherwise,
+  error interrupt will never get cleared by the corresponding MCU.
+* Remove clearing of L1 and L2 errors during initialization time. Otherwise,
+  they will not be captured between firmware booting and error configuration.
+* Add capture and clearing SoC register bus errors
+* Add register bus resource to SoC DT node
 
-Thanks,
-Leo Yan
+v4:
+* Fix PMD l1/l2 error reading address due to wrong variable type
+* Fix clearing of software generated and HW errors for l1/l2
+
+v3:
+* Update binding documentation for PMD DT node and exampples
+* Add binding documentation for SoC DT node
+* Change MC, PMD, and L3C driver error injection to use debugfs
+* Add missing IRQ for MC correctable error (code and DT)
+* Use true/false where appropriate instead 1/0
+* Add bit definition for L1 MMUESR register and fully decode this error
+* Remove the un-necessary dev variable from xgene_edac_pmd_ctx structure
+* Add check for disabled PMD (code and DT)
+* Switch to edac_printk instead pr_err
+* Some minor comments update
+
+v2:
+* Add EDAC entry in MAINTAINERS for APM EDAC driver
+* Remove the MC scrub patch
+* Remove the word 'Caches' from Kconfig
+* Change all MASK defines to use BIT(x)
+* Update comment or remove them
+* Wrap error injection code around CONFIG_EDAC_DEBUG
+* Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
+* Change all function XXX_hw_init to XXX_hw_ctl
+* Fix typo 'activie'
+* Move calling function edac_mc_alloc after resource retrieval
+* Check for NULL on platform_get_resource return if reference directly
+* Add documentation for struct xgene_edac_pmd_ctx
+* Move L1 and L2 check out of function xgene_edac_pmd_check to its own
+  functions
+* Use for loop for configure each CPU of an PMD
+* Replace /2 by >> 1
+* Remove unnecessary comment on edac_device_add_device failure
+* Make mem_err_ip static const
+* Unwind EDAC register correctly if failed
+---
+Loc Ho (5):
+  arm64: Enable EDAC on ARM64
+  MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
+  Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
+    binding
+  edac: Add APM X-Gene SoC EDAC driver
+  arm64: Add APM X-Gene SoC EDAC DTS entries
+
+ .../devicetree/bindings/edac/apm-xgene-edac.txt    |   50 ++
+ MAINTAINERS                                        |    8 +
+ arch/arm64/Kconfig                                 |    1 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   64 +++
+ arch/arm64/include/asm/edac.h                      |   28 +
+ drivers/edac/Kconfig                               |    7 +
+ drivers/edac/Makefile                              |    1 +
+ drivers/edac/xgene_edac_mc.c                       |  552 ++++++++++++++++++++
+ 8 files changed, 711 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+ create mode 100644 arch/arm64/include/asm/edac.h
+ create mode 100644 drivers/edac/xgene_edac_mc.c
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
