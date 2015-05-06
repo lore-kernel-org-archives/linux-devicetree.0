@@ -1,45 +1,77 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version
- 3.
-Date: Wed, 06 May 2015 08:05:59 -0400
-Message-ID: <554A03A7.2000504@hurleysoftware.com>
-References: <20150318055437.21025.13990.stgit@notabene.brown> <55492001.30806@hurleysoftware.com> <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com> <20150506092738.GB4508@amd> <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
+From: =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski.k@gmail.com>
+Subject: Re: [PATCH v3] power_supply: Add support for Richtek rt9455 battery charger
+Date: Wed, 6 May 2015 21:10:28 +0900
+Message-ID: <CAJKOXPdnmvNXUyt31NfXK8AAY1VCyz=2oPXCu9qdcfw3sHS7tA@mail.gmail.com>
+References: <1430843530-26252-1-git-send-email-anda-maria.nicolae@intel.com>
+	<20150506114003.GM10973@lpalcu-linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>
-Cc: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150506114003.GM10973@lpalcu-linux>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>, sre@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2015 07:50 AM, Dr. H. Nikolaus Schaller wrote:
-> No, I am not playing devil=E2=80=99s advocate (which would imply that=
- I am doing this
-> for fun to tease the dog), but I feel I have to be the advocate of fu=
-ture board
-> designers who want to easily import an existing board DT and overwrit=
-e device
-> tree nodes to describe design changes, i.e. what slave device is conn=
-ected to
-> which uart.
+2015-05-06 20:40 GMT+09:00 Laurentiu Palcu <laurentiu.palcu@intel.com>:
+> On Tue, May 05, 2015 at 07:32:10PM +0300, Anda-Maria Nicolae wrote:
+>> +static int rt9455_probe(struct i2c_client *client,
+>> +                     const struct i2c_device_id *id)
+>> +{
+>> +     struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+>> +     struct device *dev = &client->dev;
+>> +     struct rt9455_info *info;
+>> +     struct power_supply_config rt9455_charger_config = {};
+>> +     /* mandatory device-specific data values */
+>> +     u32 ichrg, ieoc_percentage, voreg;
+>> +     /* optional device-specific data values */
+>> +     u32 mivr = -1, iaicr = -1;
+>> +     int i, ret;
+>> +
+>> +     if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
+>> +             dev_err(dev, "No support for SMBUS_BYTE_DATA\n");
+>> +             return -ENODEV;
+>> +     }
+>> +     info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+>> +     if (!info)
+>> +             return -ENOMEM;
+>> +
+>> +     info->client = client;
+>> +     i2c_set_clientdata(client, info);
+>> +
+>> +     info->regmap = devm_regmap_init_i2c(client,
+>> +                                         &rt9455_regmap_config);
+>> +     if (IS_ERR(info->regmap)) {
+>> +             dev_err(dev, "Failed to initialize register map\n");
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     for (i = 0; i < F_MAX_FIELDS; i++) {
+>> +             info->regmap_fields[i] =
+>> +                     devm_regmap_field_alloc(dev, info->regmap,
+>> +                                             rt9455_reg_fields[i]);
+>> +             if (IS_ERR(info->regmap_fields[i])) {
+>> +                     dev_err(dev,
+>> +                             "Failed to allocate regmap field = %d\n", i);
+>> +                     return PTR_ERR(info->regmap_fields[i]);
+>> +             }
+>> +     }
+>> +
+>> +     ret = rt9455_discover_charger(info, &ichrg, &ieoc_percentage,
+>> +                                   &voreg, &mivr, &iaicr);
+>> +     if (ret) {
+>> +             dev_err(dev, "Failed to discover charger\n");
+>> +             return ret;
+>> +     }
+>> +
+>> +#if IS_ENABLED(CONFIG_USB_PHY)
+>> +     info->usb_phy = usb_get_phy(USB_PHY_TYPE_USB2);
+> If you used devm_usb_get_phy() you wouldn't have to worry about
+> releasing usb_phy(as Krzysztof suggested in the previous mail). It's up
+> to you.
 
-I dont' see a big distinction at the DTS source level, so your concern =
-is wrt
-binary dtbs?
+That's a good idea, it would simplify the exit and error paths. But
+still usb_unregister_notifier() would be needed.
 
-> At least in this regard, the alternatives are really differently easy=
- to handle.
->=20
-> And, the alternatives have some influence how a tty driver and a slav=
-e device
-> driver is designed. So that is for me the root question, before discu=
-ssing (some)
-> implementation details.
-
-I would expect _no_ impact on the tty driver; have I overlooked somethi=
-ng?
-
-Regards,
-Peter Hurley
+Best regards,
+Krzysztof
