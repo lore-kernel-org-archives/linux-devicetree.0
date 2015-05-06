@@ -1,87 +1,165 @@
-From: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [net-next PATCH v3 4/4] net: macb: Add change_mtu callback with jumbo support
-Date: Wed, 6 May 2015 22:27:18 +0530
-Message-ID: <1430931438-32592-4-git-send-email-harinik@xilinx.com>
-References: <1430931438-32592-1-git-send-email-harinik@xilinx.com>
+From: Brent Wang <wangbintian@gmail.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Thu, 7 May 2015 01:15:14 +0800
+Message-ID: <CAAS=xmi=vA7RGwZ6AeB-re9sebD+vwWXwSb-s+fF=z-xrfykrw@mail.gmail.com>
+References: <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
+ <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
+ <5549B9CC.1040709@huawei.com> <20150506093022.GB31001@leverpostej>
+ <5549EE97.3020801@huawei.com> <20150506104856.GC707@leverpostej>
+ <CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>
+ <20150506154406.GB2974@leverpostej>
+ <CAAS=xmjf+WYeZe7jPqVK26QWsv3tPqgdiy1TNUty6qWzZcsMkA@mail.gmail.com>
+ <20150506162301.GD2974@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430931438-32592-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150506162301.GD2974@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f>
 List-Id: devicetree@vger.kernel.org
 
-Add macb_change_mtu callback; if jumbo frame support is present allow
-mtu size changes upto (jumbo max length allowed - headers).
+Hi Mark,
 
-Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
+2015-05-07 0:23 GMT+08:00, Mark Rutland <mark.rutland@arm.com>:
+> On Wed, May 06, 2015 at 05:03:29PM +0100, Brent Wang wrote:
+>> Hi Mark,
+>>
+>> 2015-05-06 23:44 GMT+08:00, Mark Rutland <mark.rutland@arm.com>:
+>> > Hi,
+>> >
+>> >> How about add the following binding rule to my 2/5 patch:
+>> >> ---------------------------
+>> >> *Hisilicon Enhanced ARM AMBA Primecell PL011 serial UART
+>> >>
+>> >> Required properties:
+>> >> - compatible: must be "hisilicon,hi6220-uart", "arm,primecell",
+>> >> "arm,pl011"
+>> >
+>> > "arm,primecell" should come last.
+>> >
+>> >> - reg: exactly one register range with length 0x1000
+>> >> - interrupts: exactly one interrupt specifier
+>> >>
+>> >> See also bindings/serial/pl011.txt
+>> >>
+>> >> Example:
+>> >>
+>> >> uart0: uart@f8015000 {
+>> >>         compatible = "hisilicon,hi6220-uart", "arm,pl011",
+>> >> "arm,primecell";
+>> >>         reg = <0x0 0xf8015000 0x0 0x1000>;
+>> >>         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>> >>         clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl
+>> >> HI6220_UART0_PCLK>;
+>> >>         clock-names = "uartclk", "apb_pclk";
+>> >> };
+>> >
+>> > How about for the moment we just modify the existing pl011 binding
+>> > document to allow for the hi6220-specific string in addition to its
+>> > existing strings? We can always split it out later if the hi6220 UART
+>> > binding needs to be significantly divergent.
+>> How about adding the following rule to pl011.txt?
+>> ----------
+>> diff --git a/Documentation/devicetree/bindings/serial/pl011.txt
+>> b/Documentation/devicetree/bindings/serial/pl011.txt
+>> index ba3ecb8..1221ccb 100644
+>> --- a/Documentation/devicetree/bindings/serial/pl011.txt
+>> +++ b/Documentation/devicetree/bindings/serial/pl011.txt
+>> @@ -35,6 +35,10 @@ Optional properties:
+>>  - poll-timeout-ms:
+>>            Poll timeout when auto-poll is set, default
+>>            3000ms.
+>> +- compatible: "hisilicon,hi6220-uart":
+>> +          Hisilicon does some enhancements (e.g. larger FIFO length)
+>> +           based on PL011, so when using these UART hosts, this
+>> compatible
+>> +           string should be added.
+>
+> Up at the top of the document there's already a description of the
+> compatible property. Just change it into a list something like:
+>
+> - compatible: should contain one of the following sequences:
+>   * "arm,pl011", "arm,primecell"
+>   * "hisilicon,hi6220-pl011", "arm,pl011", "arm,primecell"
+OK, I will add in next version.
 
-v3:
-Check for jumbo capability in macb_config.
+>
+>>  See also bindings/arm/primecell.txt
+>> ------------
+>> >
+>> >> > Is UART 0 different from UART1 and UART2?
+>> >> Yes,  but my patch just includes UART0, we do some changements for
+>> >> UART1/2
+>> >> to improve performance.
+>> >
+>> > Sure, but we need to make sure we can choose a sane compatible string
+>> > for them, that won't clash with whatever we choose for UART0.
+>> OK, do I also need to add compatible ""hisilicon,hi6220-uart"," to UART0
+>> node?
+>
+> This depends on a number of factors. Questions below.
+>
+>> > Are they the same IP as UART0, or fundamentally different?
+>> The same IP.
+>> >
+>> > Are they also PL011 derived?
+>> Yes, just do some enhancements to improve performance.
+>
+> What exactly is different between UART0 and UART{1,2}, given they are
+> the same IP?
+I know they are the same IP, but UART{1,2} have larger FIFO length.
 
-v2:
-Move constant definition.
+>
+> Can UART{1,2} be used as if they are standard PL011 instances?
+Yes
 
----
- drivers/net/ethernet/cadence/macb.c |   24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+> Is the difference internal, or do they just have different
+> clocks/regulators/etc?
+The different FIFO length means internal?  Sure, they have different
+clocks/regualtors.
+>
+> Do they have feature control pins tied off differently?
+UART{1,2} have reset function, we must disable the reset before using
+them, is it the feature
+control pins you mentioned ?
+>
+> Are they simply programmed differently at reset by firmware?
+I think so.
 
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index cb84587..97c6646 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -54,6 +54,8 @@
- #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1))
- #define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1))
- 
-+#define GEM_MTU_MIN_SIZE	68
-+
- /*
-  * Graceful stop timeouts in us. We should allow up to
-  * 1 frame time (10 Mbits/s, full-duplex, ignoring collisions)
-@@ -1855,6 +1857,26 @@ static int macb_close(struct net_device *dev)
- 	return 0;
- }
- 
-+static int macb_change_mtu(struct net_device *dev, int new_mtu)
-+{
-+	struct macb *bp = netdev_priv(dev);
-+	u32 max_mtu;
-+
-+	if (netif_running(dev))
-+		return -EBUSY;
-+
-+	max_mtu = ETH_DATA_LEN;
-+	if (bp->caps | MACB_CAPS_JUMBO)
-+		max_mtu = gem_readl(bp, JML) - ETH_HLEN - ETH_FCS_LEN;
-+
-+	if ((new_mtu > max_mtu) || (new_mtu < GEM_MTU_MIN_SIZE))
-+		return -EINVAL;
-+
-+	dev->mtu = new_mtu;
-+
-+	return 0;
-+}
-+
- static void gem_update_stats(struct macb *bp)
- {
- 	int i;
-@@ -2131,7 +2153,7 @@ static const struct net_device_ops macb_netdev_ops = {
- 	.ndo_get_stats		= macb_get_stats,
- 	.ndo_do_ioctl		= macb_ioctl,
- 	.ndo_validate_addr	= eth_validate_addr,
--	.ndo_change_mtu		= eth_change_mtu,
-+	.ndo_change_mtu		= macb_change_mtu,
- 	.ndo_set_mac_address	= eth_mac_addr,
- #ifdef CONFIG_NET_POLL_CONTROLLER
- 	.ndo_poll_controller	= macb_poll_controller,
+For hi6220 uart{1,2} , I think add one "struct vendor_data
+vendor_hisilicon" to "amba-pl011.c" may be a good solution in the
+future.
+
+I am not the uart driver developer and the Hisilicon engineer who
+develop it may have a deep
+discussion with you when upstreaming UART{1,2}.
+
+I suggest not add "hisilicon,hi6220-uart" to UART0;
+
+Must go to bed, it's very late here :(
+
+Thanks,
+
+Bintian
+>
+> Thanks,
+> Mark.
+>
+
+
 -- 
-1.7.9.5
+Best Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bintian
+===========================
+Don't be nervous, just be happy!
