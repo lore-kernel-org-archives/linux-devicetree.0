@@ -1,85 +1,146 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/7] Add SMP bringup support for mt65xx socs
-Date: Wed, 6 May 2015 13:04:03 +0200
-Message-ID: <CABuKBeKLtgs56PDO3tEftWNv58-RwtDR2cyxzs4FLX1AFZSKbg@mail.gmail.com>
-References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
-	<CABuKBeJ406DUFoVs2p3-u6sW58Dm7XDd6uxCc==Mkq3dMhhd5Q@mail.gmail.com>
-	<1430896766.15346.13.camel@mtksdaap41>
-	<1430899182.4930.2.camel@mtksdaap41>
-	<CABuKBeLT8-sjPY6ZQXacMZZ_3iKX-g82AB0gPhsi7VW=WdjTTw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT revision
+Date: Wed, 06 May 2015 13:04:01 +0200
+Message-ID: <3529567.PeFp1NNa1q@wuerfel>
+References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com> <3577431.y872Foi4kj@wuerfel> <20150506103752.GG30910@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABuKBeLT8-sjPY6ZQXacMZZ_3iKX-g82AB0gPhsi7VW=WdjTTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150506103752.GG30910@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robherring2@gmail.com>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+On Wednesday 06 May 2015 12:37:52 Pali Roh=E1r wrote:
+> On Wednesday 06 May 2015 11:31:15 Arnd Bergmann wrote:
+> > On Wednesday 06 May 2015 10:49:01 Pali Roh=E1r wrote:
+> > > With this patch "revision" DT string entry is used to set global =
+system_rev
+> > > variable. DT "revision" is expected to be string with one hexadec=
+imal number.
+> > > So "Revision" line in /proc/cpuinfo will be same as "revision" DT=
+ value.
+> > >=20
+> > > Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
+> > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> >=20
+> > +devicetree mailing list
+> >=20
+> > The property needs to be specified in a binding somewhere.
+> >=20
+> > > @@ -246,5 +247,14 @@ const struct machine_desc * __init setup_mac=
+hine_fdt(unsigned int dt_phys)
+> > >     /* Change machine number to match the mdesc we're using */
+> > >     __machine_arch_type =3D mdesc->nr;
+> > > =20
+> > > +   /* Set system revision from DT */
+> > > +   prop =3D of_get_flat_dt_prop(dt_root, "revision", &size);
+> > > +   if (prop && size > 0) {
+> > > +           char revision[11];
+> > > +           strlcpy(revision, prop, min(size, (int)sizeof(revisio=
+n)));
+> > > +           if (kstrtouint(revision, 16, &system_rev) !=3D 0)
+> > > +                   system_rev =3D 0;
+> > > +   }
+> > > +
+> > >     return mdesc;
+> > >  }
+> > >=20
+> >=20
+> > What is the reason for doing it this early? I think it would be nic=
+er to do
+> > it after unflattening the DT.
+> >=20
+>=20
+> It needs to be done in this code, so "system_rev" variable is set
+> properly...
 
-2015-05-06 10:29 GMT+02:00 Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> 2015-05-06 9:59 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
->> On Wed, 2015-05-06 at 15:19 +0800, Yingjoe Chen wrote:
->>> Hi Matthias,
->> <...>
->>> > I tried on the mt8135 eval board but it fails to bring up the CPU.
->>> >
->>> > When booting:
->>> > [    1.048588] CPU1: failed to come online
->>> > [    2.049914] CPU2: failed to come online
->>> > [    3.051245] CPU3: failed to come online
->>>
->>>
->>> Thanks for testing, and the config file you provided.
->>> It seems you are running THUMB2 kernel, unfortunately mt8135 trustzone
->>> firmware doesn't support jump to THUMB2 code directly.
->>>
->>> I can workaround this with the following patch. I'll include it in my
->>> next round.
->>>
->>> Joe.C
->>>
->>> -----8<----------------
->>> diff --git a/arch/arm/mach-mediatek/platsmp.c
->>> b/arch/arm/mach-mediatek/platsmp.c
->>> index e266b3d..5dea55a 100644
->>> --- a/arch/arm/mach-mediatek/platsmp.c
->>> +++ b/arch/arm/mach-mediatek/platsmp.c
->>> @@ -57,6 +57,18 @@ static const struct of_device_id mtk_smp_boot_infos[]
->>> __initconst = {
->>>  static void __iomem *mtk_smp_base;
->>>  static const struct mtk_smp_boot_info *mtk_smp_info;
->>>
->>> +#ifdef CONFIG_THUMB2_KERNEL
->>> +__asm__(
->>> +     ".arm\n"
->>> +     "mtk_secondary_startup_fixup:\n"
->>> +     "       b secondary_startup\n"
->>> +     ".thumb\n"
->>> +);
->>> +
->>> +void mtk_secondary_startup_fixup(void);
->>> +#define secondary_startup mtk_secondary_startup_fixup
->>> +#endif
->>
->>
->> Replying myself.
->>
->> It seems kernel already have secondary_startup_arm which support this
->> usage. I'll use that in my next version instead.
->
-> With this I was able to get the board up and running. I will try mt6589 ASAP.
+What I mean is which code accesses this variable that early?
 
-I just realized, that your aforementioned patch for the THUMB2 kernel
-breaks SMP on mt6589. Strangely without this patch it works fine.
+> > Also, it seems strange to have a string property and then use kstrt=
+ouint
+> > to convert it into a number. I think it should either be specified =
+in a DT
+> > binding to be a string and then have the kernel not assume that it =
+is a number,
+> > or we should define it to be binary.
+> >=20
+> >       Arnd
+>=20
+> Variable "system_rev" is number and it always was. So chaning type wi=
+ll
+> break more parts.
+>=20
+> And it is string DT property to be human readable. Some other develop=
+ers
+> suggested for v2 to change it to string (from number).
 
-Regrads,
-Matthias
+Both of them would be human readable, you just use something else to
+read them ;-)
 
--- 
-motzblog.wordpress.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If we have a string here, we should just change all uses of system_rev
+in the kernel accordingly, there are only a few of them:
+
+$ git grep -w system_rev
+arch/arm/include/asm/system_info.h:extern unsigned int system_rev;
+arch/arm/kernel/atags_parse.c:  system_rev =3D tag->u.revision.rev;
+arch/arm/kernel/setup.c:unsigned int system_rev;
+arch/arm/kernel/setup.c:EXPORT_SYMBOL(system_rev);
+arch/arm/kernel/setup.c:        seq_printf(m, "Revision\t: %04x\n", sys=
+tem_rev);
+arch/arm/mach-clps711x/devices.c:       system_rev =3D SYSFLG1_VERID(re=
+adl(base + SYSFLG1));
+arch/arm/mach-clps711x/devices.c:       soc_dev_attr->revision =3D kasp=
+rintf(GFP_KERNEL, "%u", system_rev);
+arch/arm/mach-davinci/board-da850-evm.c:        switch (system_rev & 0x=
+=46) {
+arch/arm/mach-imx/mach-imx27_visstrim_m10.c:    system_rev =3D 0x27000;
+arch/arm/mach-imx/mach-imx27_visstrim_m10.c:    system_rev |=3D (mo_ver=
+sion << MOTHERBOARD_SHIFT);
+arch/arm/mach-imx/mach-imx27_visstrim_m10.c:    system_rev |=3D (exp_ve=
+rsion << EXPBOARD_SHIFT);
+arch/arm/mach-imx/mach-imx27_visstrim_m10.c:    mo_version =3D (system_=
+rev >> MOTHERBOARD_SHIFT) & VERSION_MASK;
+arch/arm/mach-ixp4xx/goramo_mlr.c:              system_rev =3D __raw_re=
+adl(flash + CFG_REV);
+arch/arm/mach-omap2/board-rx51-peripherals.c:   if ((system_rev >=3D SY=
+STEM_REV_S_USES_VAUX3 && system_rev < 0x100) ||
+arch/arm/mach-omap2/board-rx51-peripherals.c:       system_rev >=3D SYS=
+TEM_REV_B_USES_VAUX3) {
+arch/arm/mach-orion5x/dns323-setup.c:   if (machine_is_dns323() && syst=
+em_rev =3D=3D DNS323_REV_A1)
+arch/arm/mach-orion5x/dns323-setup.c:   system_rev =3D dns323_identify_=
+rev();
+arch/arm/mach-orion5x/dns323-setup.c:   pr_info("DNS-323: Identified HW=
+ revision %c1\n", 'A' + system_rev);
+arch/arm/mach-orion5x/dns323-setup.c:   switch(system_rev) {
+arch/arm/mach-orion5x/dns323-setup.c:   switch(system_rev) {
+arch/arm/mach-orion5x/dns323-setup.c:   switch(system_rev) {
+arch/arm/mach-pxa/cm-x300.c:    if (system_rev < 130)
+arch/arm/mach-pxa/cm-x300.c:    if (system_rev < 130) {
+arch/arm/mach-pxa/cm-x300.c:    if (system_rev < 130)
+arch/arm/mach-pxa/magician.c:           if (system_rev < 3)
+arch/arm/mach-pxa/magician.c:           if (system_rev < 3)
+arch/arm/mach-pxa/magician.c:           system_rev =3D board_id & 0x7;
+arch/arm/mach-pxa/magician.c:           if (lcd_select && (system_rev <=
+ 3))
+arch/arm/mach-pxa/raumfeld.c:   if ((system_rev & 0xff) =3D=3D 2) {
+arch/arm/mach-pxa/raumfeld.c:   if ((system_rev & 0xff) > 1) {
+arch/arm/mach-pxa/viper.c:              system_rev =3D (VIPER_BOARD_VER=
+SION(version) << 8) |
+arch/arm/mach-pxa/zeus.c:       system_rev =3D __raw_readw(ZEUS_CPLD_VE=
+RSION);
+arch/arm/mach-pxa/zeus.c:       pr_info("Zeus CPLD V%dI%d\n", (system_r=
+ev & 0xf0) >> 4, (system_rev & 0x0f));
+arch/arm/mach-zynq/common.c:    system_rev =3D zynq_get_revision();
+arch/arm/mach-zynq/common.c:    soc_dev_attr->revision =3D kasprintf(GF=
+P_KERNEL, "0x%x", system_rev);
+
+In fact, half the uses of this actually assign the revision number them=
+selves.
+code outside of arch/arm/mach-* and /proc/cpuinfo currently uses the va=
+riable.
+
+	Arnd
