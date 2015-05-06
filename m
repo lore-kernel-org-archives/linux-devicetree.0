@@ -1,64 +1,116 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 2/7] mmc: mediatek: Add Mediatek MMC driver
-Date: Wed, 6 May 2015 18:31:07 +0200
-Message-ID: <CAPDyKFr+FTXAzYVn3F41dmw2zW01pSbSHPfGJHXbUFLJfvQ5CA@mail.gmail.com>
-References: <1430214525-19198-1-git-send-email-chaotian.jing@mediatek.com>
-	<1430214525-19198-3-git-send-email-chaotian.jing@mediatek.com>
-	<CAPDyKFq=R9B6ZHHgmDcSg-TNSfqQKAUKc2NjACvpwxFpmk954g@mail.gmail.com>
-	<1430895299.15154.9.camel@mhfsdcap03>
+From: Brent Wang <wangbintian@gmail.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Thu, 7 May 2015 00:03:29 +0800
+Message-ID: <CAAS=xmjf+WYeZe7jPqVK26QWsv3tPqgdiy1TNUty6qWzZcsMkA@mail.gmail.com>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+ <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
+ <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
+ <5549B9CC.1040709@huawei.com> <20150506093022.GB31001@leverpostej>
+ <5549EE97.3020801@huawei.com> <20150506104856.GC707@leverpostej>
+ <CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>
+ <20150506154406.GB2974@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1430895299.15154.9.camel@mhfsdcap03>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "chaotian.jing" <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150506154406.GB2974@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f>
 List-Id: devicetree@vger.kernel.org
 
-On 6 May 2015 at 08:54, chaotian.jing <chaotian.jing@mediatek.com> wrote:
-> Dear Ulf,
+Hi Mark,
+
+2015-05-06 23:44 GMT+08:00, Mark Rutland <mark.rutland@arm.com>:
+> Hi,
 >
-> Thanks for your review.
-> I must do a explain of our MMC host:
-> Source clock is source clock of the MMC bus, MMC host has a divider to
-> get different bus clock frequency. now the runtime suspend is gating
-> this clock.
+>> How about add the following binding rule to my 2/5 patch:
+>> ---------------------------
+>> *Hisilicon Enhanced ARM AMBA Primecell PL011 serial UART
+>>
+>> Required properties:
+>> - compatible: must be "hisilicon,hi6220-uart", "arm,primecell",
+>> "arm,pl011"
 >
-> Hclk is the power domain of the MMC host, if Hclk is gated, the MMC host
-> cannot work(all registers readout is zero). and, all registers would be
-> reset to default value if Hclk is gated/ungated.
-> At MT8173, MSDC0 and MSDC2 has independent Hclk, MSDC1 and MSDC3's Hclk
-> was controlled by "Infra module".
+> "arm,primecell" should come last.
+>
+>> - reg: exactly one register range with length 0x1000
+>> - interrupts: exactly one interrupt specifier
+>>
+>> See also bindings/serial/pl011.txt
+>>
+>> Example:
+>>
+>> uart0: uart@f8015000 {
+>>         compatible = "hisilicon,hi6220-uart", "arm,pl011",
+>> "arm,primecell";
+>>         reg = <0x0 0xf8015000 0x0 0x1000>;
+>>         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>>         clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl
+>> HI6220_UART0_PCLK>;
+>>         clock-names = "uartclk", "apb_pclk";
+>> };
+>
+> How about for the moment we just modify the existing pl011 binding
+> document to allow for the hi6220-specific string in addition to its
+> existing strings? We can always split it out later if the hi6220 UART
+> binding needs to be significantly divergent.
+How about adding the following rule to pl011.txt?
+----------
+diff --git a/Documentation/devicetree/bindings/serial/pl011.txt
+b/Documentation/devicetree/bindings/serial/pl011.txt
+index ba3ecb8..1221ccb 100644
+--- a/Documentation/devicetree/bindings/serial/pl011.txt
++++ b/Documentation/devicetree/bindings/serial/pl011.txt
+@@ -35,6 +35,10 @@ Optional properties:
+ - poll-timeout-ms:
+           Poll timeout when auto-poll is set, default
+           3000ms.
++- compatible: "hisilicon,hi6220-uart":
++          Hisilicon does some enhancements (e.g. larger FIFO length)
++           based on PL011, so when using these UART hosts, this compatible
++           string should be added.
 
-Thanks for clarifying!
-
-I don't have enough knowledge about your SoC to understand the detail,
-but it seems like we are mixing clocks and power domains. I would
-rather keep this separate - if the HW allows it.
-
-I guess the key question I have is the following:
-1) Is it hardware wise possible to gate the hclk, but without gating
-the power domain?
-2) At what level is the reference counting done for each device in the
-power domain? In HW or in sofftware?
+ See also bindings/arm/primecell.txt
+------------
+>
+>> > Is UART 0 different from UART1 and UART2?
+>> Yes,  but my patch just includes UART0, we do some changements for
+>> UART1/2
+>> to improve performance.
+>
+> Sure, but we need to make sure we can choose a sane compatible string
+> for them, that won't clash with whatever we choose for UART0.
+OK, do I also need to add compatible ""hisilicon,hi6220-uart"," to UART0 node?
 
 >
-> And, our MMC host has ability to control the gate/ungate of bus clock
-> automatically, in MSDC_CFG bit 1, if this bit is set to 0, then "bus
-> clock is gated to 0 if no command or data is transmitted".
-> So, if the runtime PM do not control the Source clock, Hclk, then the
-> runtime PM is needless.
+> Are they the same IP as UART0, or fundamentally different?
+The same IP.
 >
-> if runtime PM do gate/ungate Hclk, then need do save/restore the
-> registers meanwhile.
+> Are they also PL011 derived?
+Yes, just do some enhancements to improve performance.
 
-Yes agree, that's a common thing to deal with from runtime PM callbacks.
+Thanks,
+
+Bintian
 
 >
-> So, how about your suggestion ?
-> do we still need runtime PM ?
+> Thanks,
+> Mark.
+>
 
-Yes, I definitely think you need it!
 
-Kind regards
-Uffe
+-- 
+Best Regards,
+
+Bintian
+===========================
+Don't be nervous, just be happy!
