@@ -1,13 +1,13 @@
 From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/6] clk: sunxi: Add H3 clocks support
-Date: Wed, 06 May 2015 12:18:11 +0200
-Message-ID: <5549EA63.5060602@gmail.com>
-References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com> <1430904693-1404-3-git-send-email-jenskuske@gmail.com> <CAGb2v67dHFTttPhddOo+a2Rh0jaCxHqRw=Eo3jkNnFGCOfawRQ@mail.gmail.com>
+Subject: Re: [PATCH 1/6] ARM: sunxi: Introduce Allwinner H3 support
+Date: Wed, 06 May 2015 12:23:49 +0200
+Message-ID: <5549EBB5.8040806@gmail.com>
+References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com> <1430904693-1404-2-git-send-email-jenskuske@gmail.com> <20150506100446.GA11057@lukather>
 Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBZWUU6VAKGQEKQGKFJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v67dHFTttPhddOo+a2Rh0jaCxHqRw=Eo3jkNnFGCOfawRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBN6XU6VAKGQE3CIS45Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150506100446.GA11057@lukather>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -15,205 +15,80 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?B?RW1pbGlvIA==?= =?UTF-8?B?TMOzcGV6?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?windows-1252?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/15 11:47, Chen-Yu Tsai wrote:
+On 06/05/15 12:04, Maxime Ripard wrote:
 > Hi,
 > 
-> On Wed, May 6, 2015 at 5:31 PM, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> The H3 clock control unit is similar to the those of other sun8i family
->> members like the A23.
->>
->> The AHB1 gates got split up into AHB1 and AHB2, with AHB2 clock source
->> being muxable between AHB1 and PLL6/2, but still sharing gate registers.
->> The documentation isn't totally clear about which devices belong to
->> AHB2 now, especially USB EHIC/OHIC, so it is mostly based on Allwinner
->> kernel source code.
+> On Wed, May 06, 2015 at 11:31:28AM +0200, Jens Kuske wrote:
+>> The Allwinner H3 is a quad-core Cortex-A7-based SoC. It is very similar
+>> to other sun8i family SoCs like the A23.
 >>
 >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >> ---
->>  Documentation/devicetree/bindings/clock/sunxi.txt |  7 ++++
->>  drivers/clk/sunxi/clk-sunxi.c                     | 46 ++++++++++++++++++++++-
->>  2 files changed, 52 insertions(+), 1 deletion(-)
+>>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>>  arch/arm/mach-sunxi/Kconfig                     | 2 +-
+>>  arch/arm/mach-sunxi/sunxi.c                     | 3 ++-
+>>  3 files changed, 4 insertions(+), 2 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
->> index 4fa11af..4eeb893 100644
->> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
->> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
->> @@ -14,6 +14,8 @@ Required properties:
->>         "allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
->>         "allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
->>         "allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
->> +       "allwinner,sun8i-h3-pll6-clk" - for the PLL6 clock on H3
->> +       "allwinner,sun8i-h3-pll8-clk" - for the PLL8 clock on H3
->>         "allwinner,sun9i-a80-gt-clk" - for the GT bus clock on A80
->>         "allwinner,sun4i-a10-cpu-clk" - for the CPU multiplexer clock
->>         "allwinner,sun4i-a10-axi-clk" - for the AXI clock
->> @@ -28,8 +30,11 @@ Required properties:
->>         "allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
->>         "allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
->>         "allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
->> +       "allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
->>         "allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
->>         "allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
->> +       "allwinner,sun8i-h3-ahb1-gates-clk" - for the AHB1 gates on H3
->> +       "allwinner,sun8i-h3-ahb2-gates-clk" - for the AHB2 gates on H3
->>         "allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
->>         "allwinner,sun9i-a80-ahb1-gates-clk" - for the AHB1 gates on A80
->>         "allwinner,sun9i-a80-ahb2-gates-clk" - for the AHB2 gates on A80
->> @@ -52,8 +57,10 @@ Required properties:
->>         "allwinner,sun6i-a31-apb1-gates-clk" - for the APB1 gates on A31
->>         "allwinner,sun7i-a20-apb1-gates-clk" - for the APB1 gates on A20
->>         "allwinner,sun8i-a23-apb1-gates-clk" - for the APB1 gates on A23
->> +       "allwinner,sun8i-h3-apb1-gates-clk" - for the APB1 gates on H3
->>         "allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
->>         "allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
->> +       "allwinner,sun8i-h3-apb2-gates-clk" - for the APB2 gates on H3
->>         "allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
->>         "allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
->>         "allwinner,sun4i-a10-mmc-clk" - for the MMC clock
->> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
->> index 7e1e2bd..152a1f7 100644
->> --- a/drivers/clk/sunxi/clk-sunxi.c
->> +++ b/drivers/clk/sunxi/clk-sunxi.c
->> @@ -727,6 +727,12 @@ static const struct factors_data sun5i_a13_ahb_data __initconst = {
->>         .getter = sun5i_a13_get_ahb_factors,
->>  };
->>
->> +static const struct factors_data sun8i_h3_pll8_data __initconst = {
->> +       .enable = 31,
->> +       .table = &sun6i_a31_pll6_config,
->> +       .getter = sun6i_a31_get_pll6_factors,
->> +};
->> +
+>> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+>> index 42941fd..3cb4b94 100644
+>> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+>> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+>> @@ -9,4 +9,5 @@ using one of the following compatible strings:
+>>    allwinner,sun6i-a31
+>>    allwinner,sun7i-a20
+>>    allwinner,sun8i-a23
+>> +  allwinner,sun8i-h3
+>>    allwinner,sun9i-a80
+>> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+>> index 81502b9..47ac5b4 100644
+>> --- a/arch/arm/mach-sunxi/Kconfig
+>> +++ b/arch/arm/mach-sunxi/Kconfig
+>> @@ -35,7 +35,7 @@ config MACH_SUN7I
+>>  	select SUN5I_HSTIMER
+>>  
+>>  config MACH_SUN8I
+>> -	bool "Allwinner A23 (sun8i) SoCs support"
+>> +	bool "Allwinner A23 / H3 (sun8i) SoCs support"
 > 
-> If it's fully compatible with sun6i-a31-pll6, please just use it.
+> I'd prefer that we have something similar to sun9i, just mentionning
+> the family here, instead of an ever-growing list of SoCs.
 > 
-> On second thought, maybe it's not working because of the .name field?
-> If so, you're missing one here.
+> This used to be easy to maintain, with the new naming scheme, we
+> already have at least 4 SoCs part of sun8i.
 
-It complained about the .name field.
-But I notice now, the name was correct, it gives us a pll8 running twice
-as fast as it should. pll8 doesn't have the x2 output.
-
-So, self-NACK
+According to Allwinners new naming scheme A20/A31/A31s are also part of
+sun8i (sun8iw[1,2]), but I think we can agree to use sun8i for the new
+SoCs, starting from A23.
 
 > 
->>  static const struct factors_data sun4i_apb1_data __initconst = {
->>         .mux = 24,
->>         .muxmask = BIT(1) | BIT(0),
->> @@ -777,6 +783,10 @@ static const struct mux_data sun6i_a31_ahb1_mux_data __initconst = {
->>         .shift = 12,
+>>  	default ARCH_SUNXI
+>>  	select ARM_GIC
+>>  	select MFD_SUN6I_PRCM
+>> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+>> index 1bc811a..bc63748 100644
+>> --- a/arch/arm/mach-sunxi/sunxi.c
+>> +++ b/arch/arm/mach-sunxi/sunxi.c
+>> @@ -67,10 +67,11 @@ MACHINE_END
+>>  
+>>  static const char * const sun8i_board_dt_compat[] = {
+>>  	"allwinner,sun8i-a23",
+>> +	"allwinner,sun8i-h3",
+>>  	NULL,
 >>  };
->>
->> +static const struct mux_data sun8i_h3_ahb2_mux_data __initconst = {
->> +       .shift = 0,
->> +};
->> +
->>  static void __init sunxi_mux_clk_setup(struct device_node *node,
->>                                        struct mux_data *data)
->>  {
->> @@ -892,7 +902,7 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
->>   * sunxi_gates_clk_setup() - Setup function for leaf gates on clocks
->>   */
->>
->> -#define SUNXI_GATES_MAX_SIZE   64
->> +#define SUNXI_GATES_MAX_SIZE   160
->>
->>  struct gates_data {
->>         DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
->> @@ -926,6 +936,10 @@ static const struct gates_data sun8i_a23_ahb1_gates_data __initconst = {
->>         .mask = {0x25386742, 0x2505111},
->>  };
->>
->> +static const struct gates_data sun8i_h3_ahb1_gates_data __initconst = {
->> +       .mask = {0x1fbc6760, 0x00701b39, 0x00000000, 0x00000000, 0x00000081},
->> +};
->> +
+>>  
+>> -DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i (A23) Family")
+>> +DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i (A23/H3) Family")
 > 
-> Wow, what's with the hardware design... :|
-
-Yeah, I don't like that too, but Allwinner's kernel source says EPHY is
-on AHB1.
-If anyone has a better idea how to implement this I'm happy to hear it.
-Maybe we should simply add a ahb1_gates2 for the new register.
-
+> Same comment here.
 > 
->>  static const struct gates_data sun9i_a80_ahb0_gates_data __initconst = {
->>         .mask = {0xF5F12B},
->>  };
->> @@ -938,6 +952,10 @@ static const struct gates_data sun9i_a80_ahb2_gates_data __initconst = {
->>         .mask = {0x9B7},
->>  };
->>
->> +static const struct gates_data sun8i_h3_ahb2_gates_data __initconst = {
->> +       .mask = {0xe0020000},
->> +};
->> +
->>  static const struct gates_data sun4i_apb0_gates_data __initconst = {
->>         .mask = {0x4EF},
->>  };
->> @@ -978,6 +996,10 @@ static const struct gates_data sun8i_a23_apb1_gates_data __initconst = {
->>         .mask = {0x3021},
->>  };
->>
->> +static const struct gates_data sun8i_h3_apb1_gates_data __initconst = {
->> +       .mask = {0x7123},
->> +};
->> +
->>  static const struct gates_data sun6i_a31_apb2_gates_data __initconst = {
->>         .mask = {0x3F000F},
->>  };
->> @@ -994,6 +1016,10 @@ static const struct gates_data sun8i_a23_apb2_gates_data __initconst = {
->>         .mask = {0x1F0007},
->>  };
->>
->> +static const struct gates_data sun8i_h3_apb2_gates_data __initconst = {
->> +       .mask = {0x1F0007},
->> +};
->> +
->>  static void __init sunxi_gates_clk_setup(struct device_node *node,
->>                                          struct gates_data *data)
->>  {
->> @@ -1106,6 +1132,16 @@ static const struct divs_data sun6i_a31_pll6_divs_data __initconst = {
->>         }
->>  };
->>
->> +static const struct divs_data sun8i_h3_pll6_divs_data __initconst = {
->> +       .factors = &sun6i_a31_pll6_data,
->> +       .ndivs = 3,
->> +       .div = {
->> +               { .fixed = 2 }, /* normal output, pll6 */
->> +               { .self = 1 }, /* base factor clock, pll6 x2 */
->> +               { .fixed = 4 }, /* divided output, pll6 /2 */
+> Could you also update Documentation/arm/sunxi/README with these infos
+> (and ideally, updating it with the new SoCs we've heard about) ?
 > 
-> Since you have the luxury of starting a new binding, maybe you could
-> put the ".self" clock first?
 
-I wanted to keep it compatible to the older SoCs, and it felt logical to
-have the normal output at first position.
-
-> 
->> +       }
->> +};
->> +
->>  /**
->>   * sunxi_divs_clk_setup() - Setup function for leaf divisors on clocks
->>   *
->> @@ -1252,6 +1288,7 @@ static const struct of_device_id clk_factors_match[] __initconst = {
->>         {.compatible = "allwinner,sun5i-a13-ahb-clk", .data = &sun5i_a13_ahb_data,},
->>         {.compatible = "allwinner,sun4i-a10-apb1-clk", .data = &sun4i_apb1_data,},
->>         {.compatible = "allwinner,sun7i-a20-out-clk", .data = &sun7i_a20_out_data,},
->> +       {.compatible = "allwinner,sun8i-h3-pll8-clk", .data = &sun8i_h3_pll8_data,},
-> 
-> Matching comment above, no need to add a new compatible for something that's
-> the same.
-
-PLL8 doesn't have a x2 output according to User Manual, but I did it
-wrong anyway, see first comment.
-
-This will need some more work I think.
+Will do.
 
 Jens
