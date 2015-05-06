@@ -1,123 +1,99 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH V4 2/2] pinctrl: Add Pistachio SoC pin control driver
-Date: Wed, 6 May 2015 11:45:03 -0700
-Message-ID: <CAL1qeaF9ykWLpmXBe7EhVcUGpUSaqMqj-ckTef=6Ng=t+pBOGQ@mail.gmail.com>
-References: <1430269982-24129-1-git-send-email-abrestic@chromium.org>
-	<1430269982-24129-3-git-send-email-abrestic@chromium.org>
-	<CACRpkdZXYcULynAVOU-K+8f2qnQkEFgzK2+Ku7xXzGQx0=uvBQ@mail.gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: BCM2836 (Raspberry Pi 2) port
+Date: Wed, 06 May 2015 11:51:33 -0700
+Message-ID: <87a8xh1qve.fsf@eliezer.anholt.net>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <5540443C.8070604@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZXYcULynAVOU-K+8f2qnQkEFgzK2+Ku7xXzGQx0=uvBQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5540443C.8070604-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 6, 2015 at 12:14 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> Hi Andrew and sorry for a slow review process, I've been
-> overloaded :(
->
-> On Wed, Apr 29, 2015 at 3:13 AM, Andrew Bresticker
-> <abrestic@chromium.org> wrote:
->
->> Add a driver for the pin controller present on the IMG Pistachio SoC.
->> This driver provides pinmux and pinconfig operations as well as GPIO
->> and IRQ chips for the GPIO banks.
->>
->> Signed-off-by: Damien Horsley <Damien.Horsley@imgtec.com>
->> Signed-off-by: Govindraj Raja <govindraj.raja@imgtec.com>
->> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
->> Signed-off-by: Kevin Cernekee <cernekee@chromium.org>
->> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->> ---
->> Changes from v3:
->>  - Addressed review comments from Ezequiel.
->
-> Overall this is a very very nice looking driver so expect it to
-> be merged after addressing or answering my last few
-> concerns.
->
->> +config PINCTRL_PISTACHIO
->> +       def_bool y if MACH_PISTACHIO
->> +       select PINMUX
->> +       select GENERIC_PINCONF
->> +       select GPIOLIB_IRQCHIP
->
-> I think you also need
-> depends on / select GPIOLIB
-> select OF_GPIO
->
-> x86_64 allmodconfig is usually the best way to test
-> if your GPIOs and pin control fragments are correctly Kconfig:ed.
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 
-Right, will fix.
+> On 04/21/2015 12:09 PM, Eric Anholt wrote:
+>> This is my first submission of a Raspberry Pi 2 port.  It can be found
+>> at https://github.com/anholt/linux/tree/bcm2836
+>>=20
+>> I'm using the 2835 interrupt controller support, without adding the
+>> checks for ARM local interrupts first.  That means no support for IPIs
+>> (and thus no SMP), no PMU events, and no local timer (I'm using the
+>> same 2835 peripheral one).
+>>=20
+>> It supports a similar featureset to Pi 1 at this point.  Serial and SD
+>> cards work.  Just one CPU supported.  USB (ethernet) works if you use
+>> U-Boot, or my mailbox series
+>> (https://github.com/anholt/linux/tree/bcm2836-mbox).
+>
+> Tested-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>
+> I applied the patches on top of korg's linux-rpi.git for-rpi-next,
+> resolved the io_map conflicts, and tested without U-Boot.
+>
+> I'll try to work out why it doesn't work with U-Boot. I can't
+> immediately see anything in /proc/device-tree that indicates the RPi
+> firmware is modifying the DT that's passed to the kernel to exclude any
+> CPU1..3 spin tables, so either the kernel isn't hitting those purely by
+> luck, or I'm guessing wrong re: the issue with U-Boot.
 
->> +#define GPIO_BANK(_bank, _pin_base, _npins)                            \
->> +       {                                                               \
->> +               .gpio_chip = {                                          \
->> +                       .label = "GPIO" #_bank,                         \
->> +                       .request = pistachio_gpio_request,              \
->> +                       .free = pistachio_gpio_free,                    \
->> +                       .get_direction = pistachio_gpio_get_direction,  \
->> +                       .direction_input = pistachio_gpio_direction_input, \
->> +                       .direction_output = pistachio_gpio_direction_output, \
->> +                       .get = pistachio_gpio_get,                      \
->> +                       .set = pistachio_gpio_set,                      \
->> +                       .base = _pin_base,                              \
->> +                       .ngpio = _npins,                                \
->> +               },                                                      \
->> +               .irq_chip = {                                           \
->> +                       .name = "GPIO" #_bank,                          \
->> +                       .irq_startup = pistachio_gpio_irq_startup,      \
->> +                       .irq_ack = pistachio_gpio_irq_ack,              \
->> +                       .irq_mask = pistachio_gpio_irq_mask,            \
->> +                       .irq_unmask = pistachio_gpio_irq_unmask,        \
->> +                       .irq_set_type = pistachio_gpio_irq_set_type,    \
->> +               },                                                      \
->> +               .gpio_range = {                                         \
->> +                       .name = "GPIO" #_bank,                          \
->> +                       .id = _bank,                                    \
->> +                       .base = _pin_base,                              \
->> +                       .pin_base = _pin_base,                          \
->> +                       .npins = _npins,                                \
->> +               },                                                      \
->> +       }
->
-> This -gpio_range is the only thing that bothers me a little, combined with
-> this:
->
->> +               bank->gpio_range.gc = &bank->gpio_chip;
->> +               pinctrl_add_gpio_range(pctl->pctldev, &bank->gpio_range);
->
-> Because it adds the ranges from the pinctrl side instead of
-> doing it from the gpiochip side using
-> gpiochip_add_pin_range() or gpiochip_add_pingroup_range().
->
-> Have you tried using those (from <linux/gpio/driver.h> instead?
->
-> They have the upside that .base is taken from the gpio_chip
-> meaning it is unnecessary to define .base for the gpiochip
-> too and you can just go for what gpiolib dynamically assigns
-> for you.
+2836 SMP is now booting on my branch.  Big thanks to Andrea Merello for
+doing most of the work on it.  Not-cleaned-up series is available at:
 
-Yup, switching to gpiochip_add_pin_range() works just fine here.
+https://github.com/anholt/linux/tree/bcm2836-smp
 
->> +static int __init pistachio_pinctrl_register(void)
->> +{
->> +       return platform_driver_register(&pistachio_pinctrl_driver);
->> +}
->> +arch_initcall(pistachio_pinctrl_register);
->
-> Is it necessary to have it registered so early?
+There's a bunch of stuff in here I'm not sure about:
 
-No, nothing depends on it being initialized this early.  When I was
-asked to remove the module stuff, I just picked arch_initcall since
-that's what most other pinctrl drivers not using
-module_platform_driver() use.  It also has the benefit of reducing the
-number of probe deferrals.
+How do we like the way I'm inheriting 2835 stuff with the includes now?
+(It's been a lot less merging work than my initial post had been, but
+the /delete-node/ lines for 2386's changes are gross).
 
-Thanks,
-Andrew
+How do people feel about putting the 2386 local IRQ handling in the 2835
+irqchip code?  Do we like the code sharing for GPU IRQs, or would we
+rather have a separate driver?  Could we separate the 2836 local irqs
+From=202835, and have it just call into 2835 for GPU IRQ handling?
+
+Where do people think the arch timer frequency initialization should go
+(commit "ARM: BCM2835: Set up the local timer frequency on 2836.")?  On
+2709 it's in init_time(), but I hear we've been trying to move away from
+these hooks.
+
+Is there a sensible way to share our mapping of the local regs between
+the driver and platform bits that need to access them?  (see
+arch/arm/mach-bcm/bcm2836_platsmp.c for what we're doing currently)
+
+Is there anything we would want to merge before getting a full working
+implementation ready to merge?
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVSmK1AAoJELXWKTbR/J7oZGsP+gNV+4VzQm+0qm46l3O+f42D
+aVig+z98mGMBS3BQTgzC2lRh4wX1QFxOkCi5DsXrJaC+q4bqJtZjqMBBVGgefNSj
+KGxv9Z6mt5S+Qg+2s2FwLgHJ37kf/afVix52tC8ZZG1xquaIUsVFxFug1Tzt0LLm
+VCPqEZib1pHWbc0jU5qlqmXiZ/+g0yL8lx3gPf1oVyEOy9xwPCmC2ZaYCc7+FyG4
+UkZ2XkEilIZPm/YAOf2WzjuYu+ftmzMe6O4BItRnRGcGYKwjYf84DAAJjqc0dNhw
+g1W/o9YXy5jYAw21nr24VGxeZAFNzop1RhUNCoTAkTzgwHIdH1GoLgtBjxnwlh1T
+Ej6pmU9+BqUihbMIPh50FMGvmAyRsI7bwXFJjnQ7Ukikjkw4M2coptGQbfU9tQKp
+eVaXzP+IORdqK+J8cEdArSrx6sdG6WDUh9ri0FkwuD6M1yyeP2IeLxwaXVN0xE0g
+poXWeU3KDEUkDo3B+/v6R1TGTrX4XXzViQoSDJuK5wU+Bc7TymdwYpRYdIZuHIhg
+Ye697feFgcWub4SJq2V1s6k1c6zGk15F/3U6pyflfPZPlCkYtgMr9OuzsHDeq8H9
+j47D1v7V19uIXTBx4Xysdm1wY8/ZbvxGQObUM20tHvd38ZX5SMuk6rkQCEQ+3bKM
+Dru2bhpidxcwpDPGCYVO
+=JahZ
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
