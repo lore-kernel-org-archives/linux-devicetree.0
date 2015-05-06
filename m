@@ -1,94 +1,251 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arch: arm: Show the serial number from
- devicetree in cpuinfo
-Date: Wed, 06 May 2015 11:37:26 +0200
-Message-ID: <1430905046.2577.1.camel@collins>
-References: <1429351135-11842-1-git-send-email-contact@paulk.fr>
-	 <1429351135-11842-2-git-send-email-contact@paulk.fr>
-	 <CAL_JsqKkw7n5p1ZH345BeKkyU=GKDrhaLef__0ET7t90Cm0Eog@mail.gmail.com>
-	 <1430145747.3081.5.camel@collins>
-	 <20150428160910.GE12732@n2100.arm.linux.org.uk>
-	 <1430581582.5339.0.camel@collins>
-	 <20150506090105.GC2067@n2100.arm.linux.org.uk>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 2/6] clk: sunxi: Add H3 clocks support
+Date: Wed, 6 May 2015 17:47:00 +0800
+Message-ID: <CAGb2v67dHFTttPhddOo+a2Rh0jaCxHqRw=Eo3jkNnFGCOfawRQ@mail.gmail.com>
+References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com> <1430904693-1404-3-git-send-email-jenskuske@gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-Sg01ovqq8MURl/x8eoyd"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150506090105.GC2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLOGU6VAKGQEFZ65MZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1430904693-1404-3-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---=-Sg01ovqq8MURl/x8eoyd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 6, 2015 at 5:31 PM, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The H3 clock control unit is similar to the those of other sun8i family
+> members like the A23.
+>
+> The AHB1 gates got split up into AHB1 and AHB2, with AHB2 clock source
+> being muxable between AHB1 and PLL6/2, but still sharing gate registers.
+> The documentation isn't totally clear about which devices belong to
+> AHB2 now, especially USB EHIC/OHIC, so it is mostly based on Allwinner
+> kernel source code.
+>
+> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/sunxi.txt |  7 ++++
+>  drivers/clk/sunxi/clk-sunxi.c                     | 46 ++++++++++++++++++++++-
+>  2 files changed, 52 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> index 4fa11af..4eeb893 100644
+> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> @@ -14,6 +14,8 @@ Required properties:
+>         "allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
+>         "allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
+>         "allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
+> +       "allwinner,sun8i-h3-pll6-clk" - for the PLL6 clock on H3
+> +       "allwinner,sun8i-h3-pll8-clk" - for the PLL8 clock on H3
+>         "allwinner,sun9i-a80-gt-clk" - for the GT bus clock on A80
+>         "allwinner,sun4i-a10-cpu-clk" - for the CPU multiplexer clock
+>         "allwinner,sun4i-a10-axi-clk" - for the AXI clock
+> @@ -28,8 +30,11 @@ Required properties:
+>         "allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
+>         "allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
+>         "allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
+> +       "allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
+>         "allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
+>         "allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
+> +       "allwinner,sun8i-h3-ahb1-gates-clk" - for the AHB1 gates on H3
+> +       "allwinner,sun8i-h3-ahb2-gates-clk" - for the AHB2 gates on H3
+>         "allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
+>         "allwinner,sun9i-a80-ahb1-gates-clk" - for the AHB1 gates on A80
+>         "allwinner,sun9i-a80-ahb2-gates-clk" - for the AHB2 gates on A80
+> @@ -52,8 +57,10 @@ Required properties:
+>         "allwinner,sun6i-a31-apb1-gates-clk" - for the APB1 gates on A31
+>         "allwinner,sun7i-a20-apb1-gates-clk" - for the APB1 gates on A20
+>         "allwinner,sun8i-a23-apb1-gates-clk" - for the APB1 gates on A23
+> +       "allwinner,sun8i-h3-apb1-gates-clk" - for the APB1 gates on H3
+>         "allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
+>         "allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+> +       "allwinner,sun8i-h3-apb2-gates-clk" - for the APB2 gates on H3
+>         "allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
+>         "allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+>         "allwinner,sun4i-a10-mmc-clk" - for the MMC clock
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 7e1e2bd..152a1f7 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -727,6 +727,12 @@ static const struct factors_data sun5i_a13_ahb_data __initconst = {
+>         .getter = sun5i_a13_get_ahb_factors,
+>  };
+>
+> +static const struct factors_data sun8i_h3_pll8_data __initconst = {
+> +       .enable = 31,
+> +       .table = &sun6i_a31_pll6_config,
+> +       .getter = sun6i_a31_get_pll6_factors,
+> +};
+> +
 
-Le mercredi 06 mai 2015 =C3=A0 10:01 +0100, Russell King - ARM Linux a
-=C3=A9crit :
-> On Sat, May 02, 2015 at 05:46:22PM +0200, Paul Kocialkowski wrote:
-> > Le mardi 28 avril 2015 =C3=A0 17:09 +0100, Russell King - ARM Linux a =
-=C3=A9crit :
-> > > On Mon, Apr 27, 2015 at 04:42:27PM +0200, Paul Kocialkowski wrote:
-> > > > Well, of_property_read_string is only defined when CONFIG_OF is set
-> > > > (base.c is always built in drivers/of but the directory is only inc=
-luded
-> > > > when CONFIG_OF is set).
-> > > >=20
-> > > > Of course, on ARM, we now expect that it is the case, but it seems =
-like
-> > > > good practice to check for it, since it could theoretically be disa=
-bled.
-> > >=20
-> > > That is _not_ "is the case" - there are a number of non-OF platforms.=
-..
-> > > including some which will probably never be converted.
-> >=20
-> > Right, so I think v4 should be fine too, given the empty functions in
-> > case CONFIG_OF is not set.
->=20
-> Yes, can you please put them in my patch system so we can get this
-> applied?
+If it's fully compatible with sun6i-a31-pll6, please just use it.
 
-What exactly do you mean?=20
+On second thought, maybe it's not working because of the .name field?
+If so, you're missing one here.
 
-I sent v4 to linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org and
-devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org with you and Rob in the CC list, on the 28th
-of April.
+>  static const struct factors_data sun4i_apb1_data __initconst = {
+>         .mux = 24,
+>         .muxmask = BIT(1) | BIT(0),
+> @@ -777,6 +783,10 @@ static const struct mux_data sun6i_a31_ahb1_mux_data __initconst = {
+>         .shift = 12,
+>  };
+>
+> +static const struct mux_data sun8i_h3_ahb2_mux_data __initconst = {
+> +       .shift = 0,
+> +};
+> +
+>  static void __init sunxi_mux_clk_setup(struct device_node *node,
+>                                        struct mux_data *data)
+>  {
+> @@ -892,7 +902,7 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
+>   * sunxi_gates_clk_setup() - Setup function for leaf gates on clocks
+>   */
+>
+> -#define SUNXI_GATES_MAX_SIZE   64
+> +#define SUNXI_GATES_MAX_SIZE   160
+>
+>  struct gates_data {
+>         DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
+> @@ -926,6 +936,10 @@ static const struct gates_data sun8i_a23_ahb1_gates_data __initconst = {
+>         .mask = {0x25386742, 0x2505111},
+>  };
+>
+> +static const struct gates_data sun8i_h3_ahb1_gates_data __initconst = {
+> +       .mask = {0x1fbc6760, 0x00701b39, 0x00000000, 0x00000000, 0x00000081},
+> +};
+> +
 
-> Rob - does your ack apply to the v4 patch?
->=20
-> Thanks.
->=20
+Wow, what's with the hardware design... :|
 
+>  static const struct gates_data sun9i_a80_ahb0_gates_data __initconst = {
+>         .mask = {0xF5F12B},
+>  };
+> @@ -938,6 +952,10 @@ static const struct gates_data sun9i_a80_ahb2_gates_data __initconst = {
+>         .mask = {0x9B7},
+>  };
+>
+> +static const struct gates_data sun8i_h3_ahb2_gates_data __initconst = {
+> +       .mask = {0xe0020000},
+> +};
+> +
+>  static const struct gates_data sun4i_apb0_gates_data __initconst = {
+>         .mask = {0x4EF},
+>  };
+> @@ -978,6 +996,10 @@ static const struct gates_data sun8i_a23_apb1_gates_data __initconst = {
+>         .mask = {0x3021},
+>  };
+>
+> +static const struct gates_data sun8i_h3_apb1_gates_data __initconst = {
+> +       .mask = {0x7123},
+> +};
+> +
+>  static const struct gates_data sun6i_a31_apb2_gates_data __initconst = {
+>         .mask = {0x3F000F},
+>  };
+> @@ -994,6 +1016,10 @@ static const struct gates_data sun8i_a23_apb2_gates_data __initconst = {
+>         .mask = {0x1F0007},
+>  };
+>
+> +static const struct gates_data sun8i_h3_apb2_gates_data __initconst = {
+> +       .mask = {0x1F0007},
+> +};
+> +
+>  static void __init sunxi_gates_clk_setup(struct device_node *node,
+>                                          struct gates_data *data)
+>  {
+> @@ -1106,6 +1132,16 @@ static const struct divs_data sun6i_a31_pll6_divs_data __initconst = {
+>         }
+>  };
+>
+> +static const struct divs_data sun8i_h3_pll6_divs_data __initconst = {
+> +       .factors = &sun6i_a31_pll6_data,
+> +       .ndivs = 3,
+> +       .div = {
+> +               { .fixed = 2 }, /* normal output, pll6 */
+> +               { .self = 1 }, /* base factor clock, pll6 x2 */
+> +               { .fixed = 4 }, /* divided output, pll6 /2 */
 
---=-Sg01ovqq8MURl/x8eoyd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Since you have the luxury of starting a new binding, maybe you could
+put the ".self" clock first?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> +       }
+> +};
+> +
+>  /**
+>   * sunxi_divs_clk_setup() - Setup function for leaf divisors on clocks
+>   *
+> @@ -1252,6 +1288,7 @@ static const struct of_device_id clk_factors_match[] __initconst = {
+>         {.compatible = "allwinner,sun5i-a13-ahb-clk", .data = &sun5i_a13_ahb_data,},
+>         {.compatible = "allwinner,sun4i-a10-apb1-clk", .data = &sun4i_apb1_data,},
+>         {.compatible = "allwinner,sun7i-a20-out-clk", .data = &sun7i_a20_out_data,},
+> +       {.compatible = "allwinner,sun8i-h3-pll8-clk", .data = &sun8i_h3_pll8_data,},
 
-iQIcBAABAgAGBQJVSeDWAAoJEIT9weqP7pUMjR8P/0/dNsYV6rnSzVoTcCIVhxcv
-P3uc4A1rIQGQQozN9aiMHWlSzeUBI21ohejjeN9Ey5oc9fLiUCsyov0UUX47+GeA
-+2+HoWNMco2G5J1tPSf/oAObB72jOmOOpCf7sNeSoE7h+Gta1JKfviEG5xNcIazJ
-A8JEFok6PyL+MLzw/pUEL69qlkKcqUZ9luwGOyHunTYuxc7Xk3YGr777gSDJkoqp
-VYd6lq0AbC4ec5GicgUOX38ir3mp9NztPQIvnuVaQ3rWa0oorUOGAC1kEycJEhyD
-oB8inUIFDQ+KGwItaOxk9xkvSykR7PPZvMfxBtOUCzVSiVbljgSDQMrNTVzkifXA
-Edut5uK8a7ZnMfKYROIbwn3TO8shrIss852W/sOIjailHQM+MyljM9NytcnOXnx2
-9CWvQ53irHk4ajg3YL6scmGfsfeku+yOY0ie2hxnjlMpY3k9g4A/SHMFqBYYpuyo
-T/K5mk7VlDVI/UklNwFPpdIqcLj5qPFNr3iqXhIcHLjPbDov9Gud8WLNVs3ACH1q
-1+ADRr74SqaIu6b1Q5K36FjVlaZyl09+9ziziza7pTr22cu34veNtsU0D2dfo+TD
-anpKKQHsXb1ZDXniTqduD71yTLEZRERvt6VfQSJ2mafw0nwJ8gvypeQYmoyVwqGG
-/Jhoy3r6rnFB34Ss0WJd
-=hCBg
------END PGP SIGNATURE-----
+Matching comment above, no need to add a new compatible for something that's
+the same.
 
---=-Sg01ovqq8MURl/x8eoyd--
+ChenYu
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         {}
+>  };
+>
+> @@ -1269,6 +1306,7 @@ static const struct of_device_id clk_divs_match[] __initconst = {
+>         {.compatible = "allwinner,sun4i-a10-pll5-clk", .data = &pll5_divs_data,},
+>         {.compatible = "allwinner,sun4i-a10-pll6-clk", .data = &pll6_divs_data,},
+>         {.compatible = "allwinner,sun6i-a31-pll6-clk", .data = &sun6i_a31_pll6_divs_data,},
+> +       {.compatible = "allwinner,sun8i-h3-pll6-clk", .data = &sun8i_h3_pll6_divs_data,},
+>         {}
+>  };
+>
+> @@ -1276,6 +1314,7 @@ static const struct of_device_id clk_divs_match[] __initconst = {
+>  static const struct of_device_id clk_mux_match[] __initconst = {
+>         {.compatible = "allwinner,sun4i-a10-cpu-clk", .data = &sun4i_cpu_mux_data,},
+>         {.compatible = "allwinner,sun6i-a31-ahb1-mux-clk", .data = &sun6i_a31_ahb1_mux_data,},
+> +       {.compatible = "allwinner,sun8i-h3-ahb2-clk", .data = &sun8i_h3_ahb2_mux_data,},
+>         {}
+>  };
+>
+> @@ -1288,9 +1327,11 @@ static const struct of_device_id clk_gates_match[] __initconst = {
+>         {.compatible = "allwinner,sun6i-a31-ahb1-gates-clk", .data = &sun6i_a31_ahb1_gates_data,},
+>         {.compatible = "allwinner,sun7i-a20-ahb-gates-clk", .data = &sun7i_a20_ahb_gates_data,},
+>         {.compatible = "allwinner,sun8i-a23-ahb1-gates-clk", .data = &sun8i_a23_ahb1_gates_data,},
+> +       {.compatible = "allwinner,sun8i-h3-ahb1-gates-clk", .data = &sun8i_h3_ahb1_gates_data,},
+>         {.compatible = "allwinner,sun9i-a80-ahb0-gates-clk", .data = &sun9i_a80_ahb0_gates_data,},
+>         {.compatible = "allwinner,sun9i-a80-ahb1-gates-clk", .data = &sun9i_a80_ahb1_gates_data,},
+>         {.compatible = "allwinner,sun9i-a80-ahb2-gates-clk", .data = &sun9i_a80_ahb2_gates_data,},
+> +       {.compatible = "allwinner,sun8i-h3-ahb2-gates-clk", .data = &sun8i_h3_ahb2_gates_data,},
+>         {.compatible = "allwinner,sun4i-a10-apb0-gates-clk", .data = &sun4i_apb0_gates_data,},
+>         {.compatible = "allwinner,sun5i-a10s-apb0-gates-clk", .data = &sun5i_a10s_apb0_gates_data,},
+>         {.compatible = "allwinner,sun5i-a13-apb0-gates-clk", .data = &sun5i_a13_apb0_gates_data,},
+> @@ -1302,9 +1343,11 @@ static const struct of_device_id clk_gates_match[] __initconst = {
+>         {.compatible = "allwinner,sun6i-a31-apb1-gates-clk", .data = &sun6i_a31_apb1_gates_data,},
+>         {.compatible = "allwinner,sun7i-a20-apb1-gates-clk", .data = &sun7i_a20_apb1_gates_data,},
+>         {.compatible = "allwinner,sun8i-a23-apb1-gates-clk", .data = &sun8i_a23_apb1_gates_data,},
+> +       {.compatible = "allwinner,sun8i-h3-apb1-gates-clk", .data = &sun8i_h3_apb1_gates_data,},
+>         {.compatible = "allwinner,sun9i-a80-apb1-gates-clk", .data = &sun9i_a80_apb1_gates_data,},
+>         {.compatible = "allwinner,sun6i-a31-apb2-gates-clk", .data = &sun6i_a31_apb2_gates_data,},
+>         {.compatible = "allwinner,sun8i-a23-apb2-gates-clk", .data = &sun8i_a23_apb2_gates_data,},
+> +       {.compatible = "allwinner,sun8i-h3-apb2-gates-clk", .data = &sun8i_h3_apb2_gates_data,},
+>         {}
+>  };
+>
+> @@ -1389,6 +1432,7 @@ static void __init sun6i_init_clocks(struct device_node *node)
+>  CLK_OF_DECLARE(sun6i_a31_clk_init, "allwinner,sun6i-a31", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun6i_a31s_clk_init, "allwinner,sun6i-a31s", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
+> +CLK_OF_DECLARE(sun8i_h3_clk_init, "allwinner,sun8i-h3", sun6i_init_clocks);
+>
+>  static void __init sun9i_init_clocks(struct device_node *node)
+>  {
+> --
+> 2.3.7
+>
