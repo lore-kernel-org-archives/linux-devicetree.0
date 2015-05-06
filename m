@@ -1,46 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: bt-sco: Add devicetree support for bt-sco codec
-Date: Wed, 6 May 2015 13:13:11 +0100
-Message-ID: <20150506121311.GP22845@sirena.org.uk>
-References: <1430856941-3938-1-git-send-email-marek@goldelico.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: Fwd: Re: [PATCH 2/2] ARM: mvebu: dts: Add dts file for DLink
+  DNS-327L
+Date: Wed, 06 May 2015 14:13:49 +0200
+Message-ID: <554A057D.3050007@free-electrons.com>
+References: <b6534b962d2cf9d21cb72d43f19a6574@mail.ncrmnt.org> <552A6209.9040903@gmail.com> <cd7445f789f1082f464d464f77807f12@mail.ncrmnt.org> <20150412145857.GA14038@lunn.ch> <b172d775afa24cea69a9490f531c6b37@mail.ncrmnt.org> <20150412194735.GA27921@lunn.ch> <552BCFAA.2020109@free-electrons.com> <1ec8906f00468ca5a9fa227f8c83fe69@mail.ncrmnt.org> <55351569.7000307@free-electrons.com> <d28764ea5d0d5f4c2e5d3e9ca1d7217a@mail.ncrmnt.org> <55351898.60604@free-electrons.com> <4e7e91562aac6a260885bf2d12174060@mail.ncrmnt.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lSMnNQgKosWEEuky"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430856941-3938-1-git-send-email-marek@goldelico.com>
+In-Reply-To: <4e7e91562aac6a260885bf2d12174060@mail.ncrmnt.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, hns@goldelico.com
+To: Andrew <andrew@ncrmnt.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
---lSMnNQgKosWEEuky
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, May 05, 2015 at 10:15:41PM +0200, Marek Belisko wrote:
+> 
+> Sorry for the long delay with testing, but here come the results.
+> I've rebased everything to 4.1-rc1
+> 
+> 1. WFI + DeepIdle => freeze after approx:
+>    * 1 hours and 30 minutes, first test
+>    * 3 hours and 40 minutes, second test
+> 2. WFI only (DeepIdle disabled via sysfs) => Still alive after 13 hours 
+> and counting
 
-> +static const struct of_device_id bt_sco_codec_of_match[] = {
-> +	{ .compatible = "delta,dfbmcs320", },
-> +	{ .compatible = "linux,bt-sco", },
+Thanks for testing it. So, to sum-up, WFI+DeepIdle makes the board freeze
+after a few hours in 4.1-rc1 and 4.0 for sure. Are you aware of any version
+that did not freeze? It would help to know if it was a regression or not.
 
-Is there any burning reason for adding the linux,bt-sco compatible?
+Andrew Lunn did not report any issue on his 370RD however I will test
+it also on an other Armada 370 base board (a Mirabox) using the .config
+you already sent.
 
---lSMnNQgKosWEEuky
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+But what I expect is either a hardware issue, or a hardware configuration
+issue in U-Boot. We still rely a lot on the bootloader and I fear that
+we have some implicit assumptions.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+By the way do you have access on the bootloader sources or at least could
+you give us the U-boot version used?
 
-iQEcBAEBCAAGBQJVSgVWAAoJECTWi3JdVIfQb2oH/j0vdyRU3yfYXdR14YhTiDjX
-QgfNgov7nxWrlEdOTfcHbyeijldQsPUfur4Wdks/kAxhAelNAqrgcXj3DcXj4hWm
-xRGXTG//cIxGKHYhO3CpS3yVMT2t1f2aLkLH1KgT/7uPjMQdLGstza122fZ8rgpK
-dAfSy5Tyc7+AW5Nl46ou2cxbGV+4eR56tpMbdBIc1AIiAqZA+2XKjeyJEJopYhoA
-n2Vz7xV9R1rV0l1nGMs/Y2OT4jTyX2Etpl0haasJ8gcyxUjbe9ZaimqHE9cnkchd
-Z5UIlhDkU+q/MxnL4hktjjVkyuTHrnCaGR/MqNrHmuu9TUqgQrFEyuTZrWSELtA=
-=lfws
------END PGP SIGNATURE-----
+Thanks,
 
---lSMnNQgKosWEEuky--
+Gregory
+
+
+
+> 
+> The proper patchset will follow as soon as I figure out what change 
+> broke
+> dns320l-daemon (The utility that speaks to weltrend mcu on ttyS1)
+> It was working on 3.18.6, on 3.19 and up - it writes data to the port 
+> (and mcu acks it),
+> but can't read any responses.
+> 
+> Same thing happens to the python (pyserial inside) implementation of the 
+> fan-daemon:
+> https://github.com/martignlo/DNS-320L
+> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
