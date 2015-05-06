@@ -1,61 +1,70 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH v3 3/5] PCI: st: Provide support for the sti PCIe controller
-Date: Wed, 6 May 2015 11:14:25 +0200
-Message-ID: <CAG374jAv9aHBPGV+x+xs2MyRGz+fw1ymwu78fqNXDPtPqehgZA@mail.gmail.com>
-References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1428657168-12495-4-git-send-email-gabriel.fernandez@linaro.org>
-	<20150505221646.GE24643@google.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Wed, 6 May 2015 10:20:56 +0100
+Message-ID: <20150506092056.GA31001@leverpostej>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+ <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
+ <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
+ <20150506035120.GA20852@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150505221646.GE24643@google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20150506035120.GA20852@leoy-linaro>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, heyun
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Wed, May 06, 2015 at 04:51:20AM +0100, Leo Yan wrote:
+> On Wed, May 06, 2015 at 11:16:12AM +0800, Bintian Wang wrote:
+> > On 2015/5/6 1:13, Mark Rutland wrote:
+> > >[...]
+> > >
+> > >>+	psci {
+> > >>+		compatible = "arm,psci-0.2";
+> > >>+		method = "smc";
+> > >>+	};
+> > >
+> > >Are all the PSCI 0.2 mandatory features implemented?
+> >
+> > The system off/suspend is under development, and system off will
+> > be released in next months, and system suspend may be released in the
+> > following two months.
+> 
+> Yes; now for mandatory features, except SYSTEM_OFF others have supported.
 
-On 6 May 2015 at 00:16, Bjorn Helgaas <bhelgaas@google.com> wrote:
-> On Fri, Apr 10, 2015 at 11:12:46AM +0200, Gabriel FERNANDEZ wrote:
->> sti pcie is built around a Synopsis Designware PCIe IP.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
->
->> +/* ST PCIe driver does not allow module unload */
->
-> Is there something that prevents module unload, or is it just untested?
->
-Yes we haven't tested
+Ok. Do you mean in the next month, or in a number of months?
 
->> +static int __init pcie_init(void)
->> +{
->> +     return platform_driver_probe(&st_pcie_driver, st_pcie_probe);
->> +}
->> +device_initcall(pcie_init);
->
-> Can you use module_platform_driver_probe() or module_init() here?
->
+> for PSCI 0.2, SYSTEM_SUSPEND even is not supported, right?
 
-Yes we can use module_init() here.
+SYSTEM_SUSPEND was introduced in PSCI 1.0, and is optional.
 
-By the way if figure out i removed __init attribute on st_pcie_probe()
-in previous version to follow Arnd's remark.
-But st_pcie_probe calls hook_fault_code() that has __init attribute.
-So I think we need to keep __init for probe routine ?
-Also, we have to restrict bind/unbind with "suppress_bind_attrs" in
-platform_driver structure.
-This is the main reason to not allow module unload/reload.
+So long as PSCI_VERSION reports 0.2 or PSCI_FEATURES reports
+NOT_SUPPORTED for SYSTEM_SUSPEND, it's ok to not implement.
 
-If you are ok i will send a v4 ?
+I guess PSCI_VERSION reports PSCI 0.2?
 
-BR
-Gabriel
+> > So can I keep "arm,psci-0.2" here?
+> > 
+> > >Can CPU0 be hot unplugged?
+> > Yes, CPU0~CPU7 all can be hot unplugged.
+> 
+> Just clarify: now use s/w method to emulate CPU and cluster's low
+> power state; all cores can be hotplugged [1].
 
->> +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
->> +MODULE_DESCRIPTION("PCI express Driver for ST SoCs");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 1.9.1
->>
+So long as CPUs brought online are reset appropriately, and "offline"
+CPUs can't bring down the system somehow, that should be fine. For now
+the important part is the interface.
+
+Thanks,
+Mark.
