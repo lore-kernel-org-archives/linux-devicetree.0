@@ -1,46 +1,74 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version 3.
-Date: Wed, 6 May 2015 11:27:38 +0200
-Message-ID: <20150506092738.GB4508@amd>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
- <55492001.30806@hurleysoftware.com>
- <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Wed, 6 May 2015 10:30:22 +0100
+Message-ID: <20150506093022.GB31001@leverpostej>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+ <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
+ <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
+ <5549B9CC.1040709@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <5549B9CC.1040709@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bintian <bintian.wang@huawei.com>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f@huawei.com>"zhangfei.gao@linaro.org" <zh>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2015-05-06 07:19:31, Dr. H. Nikolaus Schaller wrote:
-> Hi Peter,
+On Wed, May 06, 2015 at 07:50:52AM +0100, Bintian wrote:
+> Hello Mark,
 > 
-> Am 05.05.2015 um 21:54 schrieb Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>:
-> 
-> > Hi Neil,
-> > 
-> > On 03/18/2015 01:58 AM, NeilBrown wrote:
-> >> here is version 3 of support for tty-slaves.
-> > 
-> > Is there a v4 of this that I missed?
-> 
-> We did have a lengthy discussion about [PATCH 3/3] how to best (1)
-> represent the slave device in the device tree but as far as I am concerned,
-> I do not see that we have a consensus (2) and the device tree maintainers
-> have no comments or clear guidelines so far.
+> On 2015/5/6 11:16, Bintian wrote:
+> > Hello Mark,
+> >
+> > On 2015/5/6 1:13, Mark Rutland wrote:
+> [...]
+> >>> +        uart0: uart@f8015000 {    /* console */
+> >>> +            compatible = "arm,pl011", "arm,primecell";
+> >>> +            reg = <0x0 0xf8015000 0x0 0x1000>;
+> >>> +            interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> >>> +            clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl
+> >>> HI6220_UART0_PCLK>;
+> >>> +            clock-names = "uartclk", "apb_pclk";
+> >>> +        };
+> >>
+> >> In a previous discussion [1] the UART on HI6220 was described as not
+> >> fully PL011 compliant, with a number of differences (e.g. the FIFO
+> >> length).
+> >>
+> >> Given that, I feel somewhat uncomfortable with the current compatible
+> >> string list. What exactly are those differences? We may need a more
+> >> specific compatible string (even if in addition to those existing ones),
+> >> or perhaps other properties.
+> > The small system can be booted and the console also works well without
+> > changing any code of driver amba-pl011.c, so I think the compatible
+> > string is OK for this patch set.
+> >
+> > Hisilicon do some performance enhancements based on PL011, but the
+> > current driver "amba-pl011.c" also works on hi6220 without those
+> > enhancements driver code.
+> Checked with Hisilicon chip designer, the UART0 is used for DEBUG
+> console and compliant with PL011 fully.
 
-Yes. Everyone and their dog disagrees with Nikolaus, who is playing
-devil's advocate here, so we clearly have to get confirmation from
-device tree maintainers. And when they disagree with him, we'll need
-to get concensus from Linus, too...
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think that given that we know the UART is not quite a PL011 we should
+add an additional compatible string just in case some difference crops
+up later that is problematic.
+
+So we'd have something like:
+
+	compatible = "hisilicon,hi6220-uart", "arm,pl011", "arm,primecell";
+
+That way we can add any optimisations or workarounds later as required.
+
+Thanks,
+Mark.
