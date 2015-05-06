@@ -1,49 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4 2/5] regmap: Use regcache_mark_dirty() to indicate
- power loss or reset
-Date: Wed, 6 May 2015 13:01:57 +0100
-Message-ID: <20150506120157.GO22845@sirena.org.uk>
-References: <1430864057-3848-1-git-send-email-cernekee@chromium.org>
- <1430864057-3848-3-git-send-email-cernekee@chromium.org>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version
+ 3.
+Date: Wed, 06 May 2015 08:05:59 -0400
+Message-ID: <554A03A7.2000504@hurleysoftware.com>
+References: <20150318055437.21025.13990.stgit@notabene.brown> <55492001.30806@hurleysoftware.com> <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com> <20150506092738.GB4508@amd> <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hyMn90umCa8PZGeI"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430864057-3848-3-git-send-email-cernekee@chromium.org>
+In-Reply-To: <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@chromium.org>
-Cc: lgirdwood@gmail.com, lars@metafoo.de, dgreid@chromium.org, abrestic@chromium.org, olofj@chromium.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>
+Cc: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/06/2015 07:50 AM, Dr. H. Nikolaus Schaller wrote:
+> No, I am not playing devil=E2=80=99s advocate (which would imply that=
+ I am doing this
+> for fun to tease the dog), but I feel I have to be the advocate of fu=
+ture board
+> designers who want to easily import an existing board DT and overwrit=
+e device
+> tree nodes to describe design changes, i.e. what slave device is conn=
+ected to
+> which uart.
 
---hyMn90umCa8PZGeI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I dont' see a big distinction at the DTS source level, so your concern =
+is wrt
+binary dtbs?
 
-On Tue, May 05, 2015 at 03:14:14PM -0700, Kevin Cernekee wrote:
-> Existing regmap users call regcache_mark_dirty() as part of the
-> suspend/resume sequence, to tell regcache that non-default values need to
-> be resynced post-resume.  Add an internal "no_sync_defaults" regmap flag
-> to remember this state, so that regcache_sync() can differentiate between
-> these two cases:
+> At least in this regard, the alternatives are really differently easy=
+ to handle.
+>=20
+> And, the alternatives have some influence how a tty driver and a slav=
+e device
+> driver is designed. So that is for me the root question, before discu=
+ssing (some)
+> implementation details.
 
-Applied, thanks.
+I would expect _no_ impact on the tty driver; have I overlooked somethi=
+ng?
 
---hyMn90umCa8PZGeI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVSgK0AAoJECTWi3JdVIfQAqkH/2y3hwLyh+0HaVJNVJ7/pH+U
-aLY+IVe8Ar8eaqSKi6NNO5T+w0DTF8opBPriGszWKNy+Uwo/ZkXSedE7r1nyluKV
-te7WzMICBweVPvuznJPkkdLWPPHORIqhfydt0GYgjlqha3c/u2gxotqQLHKIXZQ+
-p2AJ6Zih7TtfEUIntStYrigrX4vc/dIJcV/FP1Fc0gskEtXoQQy6r0m65TonPZTm
-PgvcyuJd9HP4MPmX+51u5R07qyVMSZj0JwuEEwdFBVT4qBvDiKyaT0Q1BgRQ91aN
-m86HdtkZtyW/7GqB36XKZCL4P6qWtBVTkBIIO94j5Zqij+m0xlVaA5CX7CVWpLc=
-=MFvg
------END PGP SIGNATURE-----
-
---hyMn90umCa8PZGeI--
+Regards,
+Peter Hurley
