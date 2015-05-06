@@ -1,54 +1,47 @@
-From: Harini Katakam <harini.katakam@xilinx.com>
-Subject: [net-next PATCH v3 2/4] net: macb: Add compatible string for Zynq Ultrascale+ MPSoC
-Date: Wed, 6 May 2015 22:27:16 +0530
-Message-ID: <1430931438-32592-2-git-send-email-harinik@xilinx.com>
-References: <1430931438-32592-1-git-send-email-harinik@xilinx.com>
+From: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [net-next PATCH v3 1/4] devicetree: Add compatible string for Zynq Ultrascale+ MPSoC
+Date: Wed, 6 May 2015 22:27:15 +0530
+Message-ID: <1430931438-32592-1-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430931438-32592-1-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, michals@xilinx.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add compatible string and config structure for Zynq Ultrascale+ MPSoC
+Add "cdns,zynqmp-gem" to be used for Zynq Ultrascale+ MPSoC.
 
-Signed-off-by: Harini Katakam <harinik@xilinx.com>
-Reviewed-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
 
-Added in v3
+v3:
+No changes
+
+v2:
+Updated SoC name
 
 ---
- drivers/net/ethernet/cadence/macb.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/net/macb.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index 4104d49..bbe5656 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -2684,6 +2684,13 @@ static const struct macb_config emac_config = {
- 	.init = at91ether_init,
- };
- 
-+static const struct macb_config zynqmp_config = {
-+	.caps = MACB_CAPS_SG_DISABLED | MACB_CAPS_GIGABIT_MODE_AVAILABLE,
-+	.dma_burst_length = 16,
-+	.clk_init = macb_clk_init,
-+	.init = macb_init,
-+};
-+
- static const struct of_device_id macb_dt_ids[] = {
- 	{ .compatible = "cdns,at32ap7000-macb" },
- 	{ .compatible = "cdns,at91sam9260-macb", .data = &at91sam9260_config },
-@@ -2694,6 +2701,7 @@ static const struct of_device_id macb_dt_ids[] = {
- 	{ .compatible = "atmel,sama5d4-gem", .data = &sama5d4_config },
- 	{ .compatible = "cdns,at91rm9200-emac", .data = &emac_config },
- 	{ .compatible = "cdns,emac", .data = &emac_config },
-+	{ .compatible = "cdns,zynqmp-gem", .data = &zynqmp_config},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, macb_dt_ids);
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index ba19d67..8ec5fdf 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -9,6 +9,7 @@ Required properties:
+   the Cadence GEM, or the generic form: "cdns,gem".
+   Use "cdns,sama5d3-gem" for the Gigabit IP available on Atmel sama5d3 SoCs.
+   Use "cdns,sama5d4-gem" for the Gigabit IP available on Atmel sama5d4 SoCs.
++  Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
+ - reg: Address and length of the register set for the device
+ - interrupts: Should contain macb interrupt
+ - phy-mode: See ethernet.txt file in the same directory.
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
