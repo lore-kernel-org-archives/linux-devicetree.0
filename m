@@ -1,47 +1,89 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version
- 3.
-Date: Wed, 06 May 2015 07:10:37 -0400
-Message-ID: <5549F6AD.5010208@hurleysoftware.com>
-References: <20150318055437.21025.13990.stgit@notabene.brown> <55492001.30806@hurleysoftware.com> <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Wed, 6 May 2015 19:17:55 +0800
+Message-ID: <20150506111755.GA5590@leoy-linaro>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+ <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
+ <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
+ <20150506035120.GA20852@leoy-linaro>
+ <20150506092056.GA31001@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>
-Cc: NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20150506092056.GA31001@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, heyun
 List-Id: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+hi Mark,
 
-On 05/06/2015 01:19 AM, Dr. H. Nikolaus Schaller wrote:
-> Am 05.05.2015 um 21:54 schrieb Peter Hurley <peter@hurleysoftware.com>:
+Thanks for detailed reviewing, pls see below inline comments.
+
+On Wed, May 06, 2015 at 10:20:56AM +0100, Mark Rutland wrote:
+> On Wed, May 06, 2015 at 04:51:20AM +0100, Leo Yan wrote:
+> > On Wed, May 06, 2015 at 11:16:12AM +0800, Bintian Wang wrote:
+> > > On 2015/5/6 1:13, Mark Rutland wrote:
+> > > >[...]
+> > > >
+> > > >>+	psci {
+> > > >>+		compatible = "arm,psci-0.2";
+> > > >>+		method = "smc";
+> > > >>+	};
+> > > >
+> > > >Are all the PSCI 0.2 mandatory features implemented?
+> > >
+> > > The system off/suspend is under development, and system off will
+> > > be released in next months, and system suspend may be released in the
+> > > following two months.
+> > 
+> > Yes; now for mandatory features, except SYSTEM_OFF others have supported.
 > 
->> Hi Neil,
->>
->> On 03/18/2015 01:58 AM, NeilBrown wrote:
->>> here is version 3 of support for tty-slaves.
->>
->> Is there a v4 of this that I missed?
+> Ok. Do you mean in the next month, or in a number of months?
+
+We will finish it in May; the mainly work is to hook this API w/t PMIC
+to power down system.
+
+> > for PSCI 0.2, SYSTEM_SUSPEND even is not supported, right?
 > 
-> We did have a lengthy discussion about [PATCH 3/3] how to best (1)
-> represent the slave device in the device tree but as far as I am concerned,
-> I do not see that we have a consensus (2) and the device tree maintainers
-> have no comments or clear guidelines so far.
+> SYSTEM_SUSPEND was introduced in PSCI 1.0, and is optional.
+> 
+> So long as PSCI_VERSION reports 0.2 or PSCI_FEATURES reports
+> NOT_SUPPORTED for SYSTEM_SUSPEND, it's ok to not implement.
+> 
+> I guess PSCI_VERSION reports PSCI 0.2?
 
-I understand there are some design considerations still apparently
-unresolved wrt devicetree representation.
+This is depend on ARM trusted firmware's implementation, now we are
+using ATFv1.1, so it will declare to support PSCI 1.0; pls see below
+boot log:
 
-However, there were significant lifetime issues in v3 and I'd like some
-time to review v4 to understand how those were resolved, and study the
-implications.
+psci: probing for conduit method from DT.
+psci: PSCIv1.0 detected in firmware.
+psci: Using standard PSCI v0.2 function IDs
 
-Maintainers are busy people and often don't provide design steering
-until the other pieces are ack'd.
+> > > So can I keep "arm,psci-0.2" here?
+> > > 
+> > > >Can CPU0 be hot unplugged?
+> > > Yes, CPU0~CPU7 all can be hot unplugged.
+> > 
+> > Just clarify: now use s/w method to emulate CPU and cluster's low
+> > power state; all cores can be hotplugged [1].
+> 
+> So long as CPUs brought online are reset appropriately, and "offline"
+> CPUs can't bring down the system somehow, that should be fine. For now
+> the important part is the interface.
 
-I'd like to see _a_ solution eventually, so let's move this process along.
+Thanks for confirmation.
 
-Regards,
-Peter Hurley
+Thanks,
+Leo Yan
