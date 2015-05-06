@@ -1,128 +1,101 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add pxa1928 clock binding
-Date: Wed, 6 May 2015 00:17:08 -0700
-Message-ID: <20150506071708.GD27050@codeaurora.org>
-References: <1430455271-20195-1-git-send-email-robh@kernel.org>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/7] Add SMP bringup support for mt65xx socs
+Date: Wed, 6 May 2015 15:19:26 +0800
+Message-ID: <1430896766.15346.13.camel@mtksdaap41>
+References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
+ <CABuKBeJ406DUFoVs2p3-u6sW58Dm7XDd6uxCc==Mkq3dMhhd5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1430455271-20195-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CABuKBeJ406DUFoVs2p3-u6sW58Dm7XDd6uxCc==Mkq3dMhhd5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/30, Rob Herring wrote:
-> diff --git a/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt b/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt
-> new file mode 100644
-> index 0000000..809c5a2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt
-> @@ -0,0 +1,21 @@
-> +* Marvell PXA1928 Clock Controllers
-> +
-> +The PXA1928 clock subsystem generates and supplies clock to various
-> +controllers within the PXA1928 SoC. The PXA1928 contains 3 clock controller
-> +blocks called APMU, MPMU, and APBC roughly corresponding to internal buses.
-> +
-> +Required Properties:
-> +
-> +- compatible: should be one of the following.
-> +  - "marvell,pxa1928-apmu" - APMU controller compatible
-> +  - "marvell,pxa1928-mpmu" - MPMU controller compatible
-> +  - "marvell,pxa1928-apbc" - APBC controller compatible
-> +- reg: physical base address of the clock controller and length of memory mapped
-> +  region.
-> +- #clock-cells: should be 1.
-> +- #reset-cells: should be 1.
-> +
-> +Each clock is assigned an identifier and client nodes use the clock controller
-> +phandle and this identifier to specify the clock which they consume.
-> +
-> +All these identifiers can be found in <dt-bindings/clock/marvell,pxa1928.h>.
 
-No example?
+Hi Matthias,
 
-> diff --git a/include/dt-bindings/clock/marvell,pxa1928.h b/include/dt-bindings/clock/marvell,pxa1928.h
-> new file mode 100644
-> index 0000000..c393ca2
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/marvell,pxa1928.h
-> @@ -0,0 +1,57 @@
-> +#ifndef __DTS_MARVELL_PXA1928_CLOCK_H
-> +#define __DTS_MARVELL_PXA1928_CLOCK_H
-> +
-> +/*
-> + * Clock ID values here correspond to the control register offset/4.
-> + */
-> +
-> +/* apb periphrals */
+On Mon, 2015-05-04 at 09:48 +0200, Matthias Brugger wrote:
+> Hi Yingjoe,
+> 
+> 2015-05-01 9:43 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> > This series add SMP brinup support for mediatek SoCs. This is based
+> > on v4.1-rc1.
+> >
+> > There are 2 similar but different SMP bringup up methods on Mediatek
+> > mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
+> > firmware. Others, like MT6589, doesn't have trustzone, and run kernel
+> > directly in secure world.
+> >
+> > Patch 1~3 fix issues in mtk_timer(GPT) and enable arch timer support.
+> > Patch 4,5 add support for cpu enable-method "mediatek,mt65xx-smp" and
+> > "mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
+> > and TZ platform.
+> > Patch 6,7 finally enable SMP bringup for mt8135 and mt8127.
+> >
+> > Matthias Brugger (1):
+> >   arm: mediatek: enable gpt6 on boot up to make arch timer working
+> >
+> > Yingjoe Chen (6):
+> >   clocksource: mediatek: Don't run event_handler if it is NULL
+> >   clocksource: mediatek: Use GPT as sched clock source
+> >   devicetree: bindings: add new SMP enable method Mediatek SoC
+> >   ARM: mediatek: add smp bringup code
+> >   ARM: dts: mt8135: enable basic SMP bringup for mt8135
+> >   ARM: dts: mt8127: enable basic SMP bringup for mt8127
+> >
+> 
+> I tried on the mt8135 eval board but it fails to bring up the CPU.
+> 
+> When booting:
+> [    1.048588] CPU1: failed to come online
+> [    2.049914] CPU2: failed to come online
+> [    3.051245] CPU3: failed to come online
 
-s/periphrals/peripherals/ ?
 
-> +#define PXA1928_CLK_RTC			0
-> +#define PXA1928_CLK_TWSI0		1
-> +#define PXA1928_CLK_TWSI1		2
-> +#define PXA1928_CLK_TWSI2		3
-> +#define PXA1928_CLK_TWSI3		4
-> +#define PXA1928_CLK_OWIRE		5
-> +#define PXA1928_CLK_KPC			6
-> +#define PXA1928_CLK_TB_ROTARY		7
-> +#define PXA1928_CLK_SW_JTAG		8
-> +#define PXA1928_CLK_TIMER1		9
+Thanks for testing, and the config file you provided.
+It seems you are running THUMB2 kernel, unfortunately mt8135 trustzone
+firmware doesn't support jump to THUMB2 code directly.
 
-This is really nitpicky, but I find the jump from decimal to hex odd. 
-Is there any reason why we don't just use decimal or hex throughout?
-Perhaps it's related to why there are holes in the number space?
+I can workaround this with the following patch. I'll include it in my
+next round.
 
-> +#define PXA1928_CLK_UART0		0xb
-> +#define PXA1928_CLK_UART1		0xc
-> +#define PXA1928_CLK_UART2		0xd
-> +#define PXA1928_CLK_GPIO		0xe
-> +#define PXA1928_CLK_PWM0		0xf
-> +#define PXA1928_CLK_PWM1		0x10
-> +#define PXA1928_CLK_PWM2		0x11
-> +#define PXA1928_CLK_PWM3		0x12
-> +#define PXA1928_CLK_SSP0		0x13
-> +#define PXA1928_CLK_SSP1		0x14
-> +#define PXA1928_CLK_SSP2		0x15
-> +
-> +#define PXA1928_CLK_TWSI4		0x1f
-> +#define PXA1928_CLK_TWSI5		0x20
-> +#define PXA1928_CLK_UART3		0x22
-> +#define PXA1928_CLK_THSENS_GLOB		0x24
-> +#define PXA1928_CLK_THSENS_CPU		0x26
-> +#define PXA1928_CLK_THSENS_VPU		0x27
-> +#define PXA1928_CLK_THSENS_GC		0x28
-> +#define PXA1928_APBC_NR_CLKS		0x30
-> +
-> +
-> +/* axi periphrals */
+Joe.C
 
-s/periphrals/peripherals/ ?
-
-> +#define PXA1928_CLK_SDH0		0x15
-> +#define PXA1928_CLK_SDH1		0x16
-> +#define PXA1928_CLK_USB			0x17
-> +#define PXA1928_CLK_NAND		0x18
-> +#define PXA1928_CLK_DMA			0x19
-> +
-> +#define PXA1928_CLK_SDH2		0x3a
-> +#define PXA1928_CLK_SDH3		0x3b
-> +#define PXA1928_CLK_HSIC		0x3e
-> +#define PXA1928_CLK_SDH4		0x57
-> +#define PXA1928_CLK_GC3D		0x5d
-> +#define PXA1928_CLK_GC2D		0x5f
-> +
-> +#define PXA1928_APMU_NR_CLKS		0x60
-> +
-> +#endif
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----8<----------------
+diff --git a/arch/arm/mach-mediatek/platsmp.c
+b/arch/arm/mach-mediatek/platsmp.c
+index e266b3d..5dea55a 100644
+--- a/arch/arm/mach-mediatek/platsmp.c
++++ b/arch/arm/mach-mediatek/platsmp.c
+@@ -57,6 +57,18 @@ static const struct of_device_id mtk_smp_boot_infos[]
+__initconst = {
+ static void __iomem *mtk_smp_base;
+ static const struct mtk_smp_boot_info *mtk_smp_info;
+ 
++#ifdef CONFIG_THUMB2_KERNEL
++__asm__(
++	".arm\n"
++	"mtk_secondary_startup_fixup:\n"
++	"	b secondary_startup\n"
++	".thumb\n"
++);
++
++void mtk_secondary_startup_fixup(void);
++#define secondary_startup mtk_secondary_startup_fixup
++#endif
++
+ static int mtk_boot_secondary(unsigned int cpu, struct task_struct
+*idle)
+ {
+ 	if (!mtk_smp_base)
