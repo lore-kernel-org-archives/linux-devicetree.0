@@ -1,70 +1,54 @@
-From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v3 7/8] ASoC: wm8998: Initial WM8998 codec driver
-Date: Wed, 6 May 2015 10:24:05 +0100
-Message-ID: <20150506092405.GA17710@opensource.wolfsonmicro.com>
-References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com> <1430493319-23808-8-git-send-email-rf@opensource.wolfsonmicro.com> <20150504113943.GB15510@sirena.org.uk> <20150505092411.GA15549@opensource.wolfsonmicro.com> <20150505105327.GZ22845@sirena.org.uk> <20150505133129.GA26101@opensource.wolfsonmicro.com> <20150505215934.GH15510@sirena.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] PCI: st: Provide support for the sti PCIe controller
+Date: Wed, 06 May 2015 11:24:58 +0200
+Message-ID: <2236679.A9NfANRyhD@wuerfel>
+References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org> <20150505221646.GE24643@google.com> <CAG374jAv9aHBPGV+x+xs2MyRGz+fw1ymwu78fqNXDPtPqehgZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150505215934.GH15510-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <CAG374jAv9aHBPGV+x+xs2MyRGz+fw1ymwu78fqNXDPtPqehgZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Muralidharan Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TasMV2rI37PzA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 05, 2015 at 10:59:34PM +0100, Mark Brown wrote:
-> On Tue, May 05, 2015 at 02:31:29PM +0100, Richard Fitzgerald wrote:
+On Wednesday 06 May 2015 11:14:25 Gabriel Fernandez wrote:
 > 
-> > We can't really tell people what the selection does because that depends on
-> > the external hardware. The A setting might be a headset mic, or a line in,
-> > or a builtin mic...
+> >> +static int __init pcie_init(void)
+> >> +{
+> >> +     return platform_driver_probe(&st_pcie_driver, st_pcie_probe);
+> >> +}
+> >> +device_initcall(pcie_init);
+> >
+> > Can you use module_platform_driver_probe() or module_init() here?
+> >
 > 
-> > All we can do is say what the selection is called generically by the codec.
-> > So take the IN1L signal, on the codec it has two inputs "A" and "B". The
-> > IN1L Mux control has two settings "A" and "B". That seems clear.
+> Yes we can use module_init() here.
 > 
-> So you're saying that you've got a mux on a single physical input which
-> has two inputs?  Are you sure that this is actually a mux and not some
-> sort of mode setting that should be in platform data or DT - what do
-> these settinngs actually correspond to?  The routes in the driver look
-> like there's two physical pins for each one of IN1L/R which the device
-> can switch between for some reason which does correspond to a mux but
-> that'd more normally be named IN1AL or similar.
+> By the way if figure out i removed __init attribute on st_pcie_probe()
+> in previous version to follow Arnd's remark.
+> But st_pcie_probe calls hook_fault_code() that has __init attribute.
+> So I think we need to keep __init for probe routine ?
+> Also, we have to restrict bind/unbind with "suppress_bind_attrs" in
+> platform_driver structure.
+> This is the main reason to not allow module unload/reload.
+> 
+> If you are ok i will send a v4 ?
 > 
 
-No, I'm just saying I don't see how calling the mux positions "IN1AL"
-is any clearer than calling them "A" and "B". The "IN1AL" names of the
-DAPM widgets is purely an internal detail that you wouldn't see through
-the ALSA interface anyway so they don't relate any more closely to what
-Joe user is seeing in the control list. The IN1L mux is for IN1L
-so including that information in the mux position is redundant. For me
-the real benefit of the "A"/"B" naming is that if you're reading through
-a configuration script and saw something like
+If you mark the probe function as __init, you have to use
+module_platform_driver_probe() or platform_driver_probe() instead,
+to prevent the probe function from being deferred.
 
-    'IN1L Mux' = 'B'
-    'IN1R Mux' = 'B'
+Calling hook_fault_code() also means you need to prevent module
+unloading, by providing only a module_init but not a module_exit
+function, so module_platform_driver_probe() also won't work.
 
-It's much more readably obvious that both channels are set the same
-rather than
+It may be a good idea to work on improving the hook_fault_code()
+infrastructure to make it more usable with loadable device drivers.
 
-    'IN1L Mux' = 'IN1BL'
-    'IN1R Mux' = 'IN1BR'
-
-The second version doesn't tell you any more information than the first
-but makes it harder to scan so you have to read more carefully to check
-the settings
-
-
-> Though if the left and right side need to be set to the same thing
-> (which IIRC a previous version had code to check for and you did mention
-> in your mail) all the time then why are there two separate muxes anyway?
-
-They only need to be set the same if the "A" input is set to digital mic
-mode because that uses pins from both the left and right channel to
-run the single digital interface. If the A input is analogue the two
-channels are independant so the left/right muxes can be set to A or B
-inputs independantly.
+	Arnd
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
