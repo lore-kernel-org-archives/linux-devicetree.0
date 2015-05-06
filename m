@@ -1,33 +1,41 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] clk: bindings: Fix assigned-clock-rates property name
-Date: Wed, 06 May 2015 15:28:36 +0900
-Message-ID: <1430893716-1825-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V4 1/2] pinctrl: Add Pistachio SoC pin control binding document
+Date: Wed, 6 May 2015 08:35:36 +0200
+Message-ID: <CACRpkdbW8WNYy56U-KmsZPatQBFO8xSYAJV8R9BwsPMXnQzbwQ@mail.gmail.com>
+References: <1430269982-24129-1-git-send-email-abrestic@chromium.org>
+	<1430269982-24129-2-git-send-email-abrestic@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1430269982-24129-2-git-send-email-abrestic@chromium.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-In documentation the "assigned-clock-parents" name was used when
-describing the "assigned-clock-rates" property.
+On Wed, Apr 29, 2015 at 3:13 AM, Andrew Bresticker
+<abrestic@chromium.org> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- Documentation/devicetree/bindings/clock/clock-bindings.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Add a device-tree binding document for the pin controller present
+> on the IMG Pistachio SoC.
+>
+> Signed-off-by: Damien Horsley <Damien.Horsley@imgtec.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> ---
+> No changes from v2/v3.
+> Changes from v1:
+>  - Change compatible string to "img,pistachio-system-pinctrl".
+>  - Specify GPIO sub-node names rather than forcing the nodes to be in order.
 
-diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-index 06fc6d541c89..bf5b0414dc17 100644
---- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-+++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -138,7 +138,7 @@ Some platforms may require initial configuration of default parent clocks
- and clock frequencies. Such a configuration can be specified in a device tree
- node through assigned-clocks, assigned-clock-parents and assigned-clock-rates
- properties. The assigned-clock-parents property should contain a list of parent
--clocks in form of phandle and clock specifier pairs, the assigned-clock-parents
-+clocks in form of phandle and clock specifier pairs, the assigned-clock-rates
- property the list of assigned clock frequency values - corresponding to clocks
- listed in the assigned-clocks property.
- 
--- 
-1.9.1
+This binding looks nice.
+
+Patch applied.
+
+Yours,
+Linus Walleij
