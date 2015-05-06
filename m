@@ -1,113 +1,118 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version 3.
-Date: Wed, 6 May 2015 15:15:48 +0100
-Message-ID: <20150506141547.GB1764@leverpostej>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
- <55492001.30806@hurleysoftware.com>
- <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com>
- <20150506092738.GB4508@amd>
- <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
- <554A03A7.2000504@hurleysoftware.com>
- <D10E1092-E75F-48F7-86F1-F8987973CEB5@goldelico.com>
- <20150506123632.GA1764@leverpostej>
- <BD3D34DD-2FC8-44A2-89FA-35843065F50F@goldelico.com>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] Documentation: devicetree: root node
+ serial-number property documentation
+Date: Wed, 06 May 2015 16:26:13 +0200
+Message-ID: <1430922373.2577.24.camel@collins>
+References: <1430206196-3483-1-git-send-email-contact@paulk.fr>
+	 <CAL_JsqKbSgZ4gXVc=FG_RKic-JM4_Mhzdh3Lh26NCa6zrc74dA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BD3D34DD-2FC8-44A2-89FA-35843065F50F@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>, Pavel Machek <pavel@ucw.cz>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-JQH0TbBdpW1BTjDhWNLO"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKbSgZ4gXVc=FG_RKic-JM4_Mhzdh3Lh26NCa6zrc74dA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >>>> No, I am not playing devil=E2=80=99s advocate (which would imply=
- that I am doing this
-> >>>> for fun to tease the dog), but I feel I have to be the advocate =
-of future board
-> >>>> designers who want to easily import an existing board DT and ove=
-rwrite device
-> >>>> tree nodes to describe design changes, i.e. what slave device is=
- connected to
-> >>>> which uart.
 
-[...]
+--=-JQH0TbBdpW1BTjDhWNLO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > If this happens, you can move the slave device into a fragment that=
- you
-> > can include under the correct node. That's trivial.
+Le mercredi 06 mai 2015 =C3=A0 08:26 -0500, Rob Herring a =C3=A9crit :
+> On Tue, Apr 28, 2015 at 2:29 AM, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org> wro=
+te:
+> > Open firmware is already using the serial-number property for passing t=
+he
+> > device's serial number from the bootloader to the kernel. In addition, =
+lshw
+> > already has support for scanning this property.
+> >
+> > The serial number is a string that somewhat represents the device's ser=
+ial
+> > number. It might come from some form of storage (e.g. an eeprom) and be
+> > programmed at factory-time by the manufacturer or come from identificat=
+ion
+> > bits available in e.g. the SoC (note that the soc_id property in the So=
+C bus
+> > should hold a full account of those bits).
+> >
+> > The serial number is taken as-is from the bootloader, so it is up to th=
+e
+> > bootloader to define where the serial number comes from and what length=
+ it
+> > should be. Some use cases for the serial number require it to have a ma=
+ximum
+> > length (e.g. for USB serial number) and some other cases imply more res=
+trictions
+> > on what the serial number should look like (e.g. in Android, the ro.ser=
+ialno
+> > property is usually a 16-bytes (plus one null byte) representation of a=
+ 64 bit
+> > number).
+> >
+> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 >=20
-> But less readable. And that is important as well.
-
-I disagree. The manipulation you have to perform to override properties
-is at least as bad as including a file.
-
-> >> So the main difference is if the slave device tells to which uart =
-it is connected
-> >> or the uart which slave device it is connected to.
-> >>=20
-> >> And I think the second approach is easier and more straightforward=
- (on DT level).
-> >=20
-> > We already place child nodes under their respective busses
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >=20
-> I still wonder why UART is considered as a bus?
-
-As Neil mentioned earlier, ignore "bus". Here we're caring about a 1-1
-connection between master (UART) and slave (device), and it happens tha=
-t
-in most other cases the master is actually a bus, so that's how things
-happen to be named.
-
-> > for other
-> > interfaces like SPI and I2C. I do not see a compelling reason to do
-> > otherwise for devices
+> What Russell was referring to for submitting is his patch tracker:
 >=20
-> why the plural? Is there a practical example where multiple devices a=
-re
-> connected to a single UART and how is addressing solved?
+> http://www.arm.linux.org.uk/developer/patches/
 
-I'm talking about UART slaves in abstract rather than multiple slaves
-attached to the same UART.
+Thanks for the hint, that's done now.
 
-> > hanging off of UARTs -- doing so would make things
-> > less straightforward because you have a fundamentally different idi=
-om.
->=20
-> Yes, my proposal is fundamentally different from I2C and SPI practice=
-, but
-> it is the same that is heavily used for e.g. GPIOs and Regulators.
+> > ---
+> >  Documentation/devicetree/booting-without-of.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/booting-without-of.txt b/Document=
+ation/devicetree/booting-without-of.txt
+> > index 7768518..95fc385 100644
+> > --- a/Documentation/devicetree/booting-without-of.txt
+> > +++ b/Documentation/devicetree/booting-without-of.txt
+> > @@ -828,6 +828,10 @@ address which can extend beyond that limit.
+> >    name may clash with standard defined ones, you prefix them with your
+> >    vendor name and a comma.
+> >
+> > +  Additional properties for the root node:
+> > +
+> > +    - serial-number : a string representing the device's serial number
+> > +
+> >    b) The /cpus node
+> >
+> >    This node is the parent of all individual CPU nodes. It doesn't
+> > --
+> > 1.9.1
+> >
 
-Well, those cases are somewhat distinct, and I'd say that UART slaves
-are much closer to SPI/I2C devices than GPIOs or regulators.
 
-Let's say I have a GPIO described via a phandle. That GPIO is actually
-owned by some GPIO controller whose control interface is sat on an MMIO
-bus. What we're describing with the phandle is use of the GPIO, but not
-the main interface for interactive with the GPIO, which is the MMIO
-interface of the controller.
+--=-JQH0TbBdpW1BTjDhWNLO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-In the case of UART slave devices the control interface is attached to
-the UART, and effectively the slave sits on the UART's "bus". We could
-refer to it from elsewhere by phandle, but its canonical parent should
-be the UART, as that's what its main interface is attached to.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> From my DT designer PoV I would say the UART exists in some SoC
-> (independently of a device being connected) and then, a device is con=
-nected
-> to the UART. Hence the proposal of adding this connection link to the=
- device=E2=80=99s
-> node and not making the device a subnode. And having the device drive=
-r do
-> power management and only ask the uart/tty driver to be notified abou=
-t open()
-> and close() events. How power is managed in detail is then not any pa=
-rt of the
-> tty/serial drivers.
+iQIcBAABAgAGBQJVSiSFAAoJEIT9weqP7pUM0EkP/3cR67ULJyRcHcySA9vTS171
+AKvVxM7lEs8YWNM/Ys7IgwElKA18Eh1LdqF1MvqtBen1yYJq6DvER1nt9j/lilyP
+hThVu0SgWG8jI+7+Yfa6DeXDEhufrgDBMCoCtTREx2GWweFsG3q/ciT/8HghBtJ6
+oidcFAHMH9jq27VRwkOse0aStDYVBZF4ocrMvMI09HdHXDHnIssHyuxHNnMnguZ0
+opcfKBwn5Si8GVCZXxE1GLW0ANlM7ktvqntNWcGJt91ILXE5JrDqbqG1I+62uf/+
+99KQwK/Ono1OKl+b2ZlH72r6fwxBDms4EpfwLP8O7fhN69NwffzM3qwPl01IPs+g
+fvrYdfuCzDJIfG8AZk4GmnzM2d4+hwJnQU6yu5I5iMTSYpwbHyxTMxQOYJsHua1t
+wkP6jVQbIv3Yjwu6/RsMirV17eps/lF6LqgYgHLbcGUBsvyU05SJCCBZuN+7Yvj/
+5kduQhj3TyhGFrB/0VLMZYtSiybzpAgtlgMd9uiHpUKTbxxXALS4sAkRndJRyWfj
+Op52fuuTvowDmzXj86gjkojQr2aZkQuzAl0eKe+RxtrMXEurJoLIlF3p8lsFWlaV
+RWO8/yBAo34stE7Uga0DyxiLn8BjV9NZNgR03HO1ks51CUzklMSbSuqEgEAfnp6Z
+/3M4NS40+wHfF3oGFnJh
+=r7Ts
+-----END PGP SIGNATURE-----
 
-The way that the power management interfaces are organised within Linux
-is orthogonal to the way we describe things in the DT.
+--=-JQH0TbBdpW1BTjDhWNLO--
 
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
