@@ -1,82 +1,70 @@
-From: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: Re: [Linux-kernel] [RFC PATCH 5/7] mmc: sh_mobile_sdhi: Add UHS-I
- mode support
-Date: Wed, 06 May 2015 02:38:53 +0100
-Message-ID: <1430876333.4222.43.camel@xylophone.i.decadent.org.uk>
+From: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [RFC PATCH 5/7] mmc: sh_mobile_sdhi: Add UHS-I mode support
+Date: Wed, 06 May 2015 02:41:23 +0100
+Message-ID: <1430876483.4222.45.camel@xylophone.i.decadent.org.uk>
 References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
 	 <1430397136.5802.44.camel@xylophone.i.decadent.org.uk>
-	 <CAPDyKFodZscxZJmKgYyMV8m8mNWYc9GitkoKbixTKS5r7rv_fA@mail.gmail.com>
-	 <554880C9.8080201@codethink.co.uk>
-	 <CAPDyKFpv0BOX0mAvhZx9j5Gnayt__YTiUa8SxvcmsEcuazsg0w@mail.gmail.com>
+	 <554252A1.6070302@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpv0BOX0mAvhZx9j5Gnayt__YTiUa8SxvcmsEcuazsg0w@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Molton <ian@mnementh.co.uk>, linux-mmc <linux-mmc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <554252A1.6070302-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Ian Molton <ian-zdned+2MO1+9FHfhHBbuYA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-05 at 10:47 +0200, Ulf Hansson wrote:
-> On 5 May 2015 at 10:35, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-> > On 05/05/15 10:56, Ulf Hansson wrote:
-> >> On 30 April 2015 at 14:32, Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
-> >>> Implement voltage switch, supporting modes up to SDR-50.
-> >>>
-> >>> Based on work by Shinobu Uehara, Rob Taylor, William Towle and Ian Molton.
-> >>>
-> >>> This uses two voltage regulators, one external and one on the pfc.
-> >>
-> >> Why two? If there is a parent child relation ship, that should be
-> >> handled through the regulator tree, right!? Please elaborate.
-> >
-> > The card main power is separate from the IO line voltages.
-> >
-> > To get to the high-speed, card power is left at 3.3V and the IO
-> > voltage is changed to 1.8V.
-> >
-> > In the systems we have the power gate is separate from the controls
-> > for the IO but not integrated into the MMC controller itself.
-
-In this case, there are *three* regulators:
-
-1. External regulator for card power (VDD pin): "vmmc"
-2. External regulator for pull-up voltage for the data pins: "vqmmc"
-3. Internal regulator for input(?) level on the data pins:
-   "vqmmc_ref" (I'm open to suggestions of a better name)
-
-> Okay, that's what I was expecting and hoping for :-)
+On Thu, 2015-04-30 at 19:04 +0300, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Then you need to rework $subject patch according to below.
+> On 04/30/2015 03:32 PM, Ben Hutchings wrote:
 > 
-> 1) Use mmc_regulator_get_supply() to fetch both the I/O voltage
-> regulator (vqmmc) and the main power regulator (vmmc).
+> > Implement voltage switch, supporting modes up to SDR-50.
+> 
+> > Based on work by Shinobu Uehara, Rob Taylor, William Towle and Ian Molton.
+> 
+> > This uses two voltage regulators, one external and one on the pfc.
+> 
+> > Signed-off-by: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> > ---
+> >   drivers/mmc/host/sh_mobile_sdhi.c |   48 +++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 48 insertions(+)
+> 
+> > diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+> > index 92a58c6007fe..c8538a256e22 100644
+> > --- a/drivers/mmc/host/sh_mobile_sdhi.c
+> > +++ b/drivers/mmc/host/sh_mobile_sdhi.c
+> [...]
+> > @@ -148,6 +150,41 @@ static void sh_mobile_sdhi_set_clk_div(struct platform_device *pdev, int clk)
+> >   	}
+> >   }
+> >
+> > +static int sh_mobile_sdhi_start_signal_voltage_switch(
+> > +	struct tmio_mmc_host *host, unsigned char signal_voltage)
+> > +{
+> > +	struct sh_mobile_sdhi *priv = host_to_priv(host);
+> > +	int min_uV, max_uV;
+> > +	int ret;
+> > +
+> > +	if (signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
+> > +		min_uV = 2700000;
+> > +		max_uV = 3600000;
+> > +	} else if (signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
+> > +		min_uV = 1700000;
+> > +		max_uV = 1950000;
+> > +	} else {
+> > +		return -EINVAL;
+> > +	}
+> 
+>     The above is asking to be a *switch* statement.
 
-We already do that.
-
-> Your "vqmmc_ref" regulator should thus be renamed to "vmmc".
-
-No, we have one of those already.
-
-> 2) The vmmc regulator should not be handled from the
-> ->start_signal_voltage_switch() callback, since it's only vqmmc
-> voltage levels that should be changed from there.
-
-It isn't.
-
-> 3) The voltage levels changes for vmmc shall be handled via the
-> ->set_ios() callback.
-
-We don't support UHS-II so we never change the voltage of this
-regulator.
+I suppose so, yes.
 
 Ben.
 
-> I suggest you go and have a look in drivers/mmc/host/mmci.c, that
-> should provide you with a good inspiration.
-> 
-> Kind regards
-> Uffe
 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
