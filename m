@@ -1,112 +1,104 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
- platform
-Date: Wed, 6 May 2015 11:45:04 +0100
-Message-ID: <20150506104504.GM2067@n2100.arm.linux.org.uk>
-References: <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
- <20150409110634.GA27407@amd>
- <552660C7.4020805@ti.com>
- <552663C2.70308@ti.com>
- <55277650.8070607@codeaurora.org>
- <20150424132923.GA11729@amd>
- <553A47D3.2070107@ti.com>
- <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
- <20150428134848.GC12732@n2100.arm.linux.org.uk>
- <alpine.LFD.2.11.1504281127200.1582@knanqh.ubzr>
+From: Bintian <bintian.wang@huawei.com>
+Subject: Re: [PATCH v4 0/5] arm64,hi6220: Enable Hisilicon Hi6220 SoC
+Date: Wed, 6 May 2015 18:46:52 +0800
+Message-ID: <5549F11C.7080706@huawei.com>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com> <CANMBJr7KTcMRNv7PrKHcJJ3hCNUQAtFrMROQq4q4+_07=QxcaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.11.1504281127200.1582@knanqh.ubzr>
+In-Reply-To: <CANMBJr7KTcMRNv7PrKHcJJ3hCNUQAtFrMROQq4q4+_07=QxcaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Pavel Machek <pavel@ucw.cz>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, H Hartley Sweeten <hsweeten@visionengravers.com>
+To: Tyler Baker <tyler.baker@linaro.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Jaehoon Chung <jh80.chung@samsung.com>, Olof Johansson <olof@lixom.net>, Haifeng Yan <yanhaifeng@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "xuejiancheng@huawei.com" <xuejianch>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 11:28:53AM -0400, Nicolas Pitre wrote:
-> On Tue, 28 Apr 2015, Russell King - ARM Linux wrote:
-> 
-> > On Fri, Apr 24, 2015 at 03:46:56PM +0200, Geert Uytterhoeven wrote:
-> > > So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
-> > > That will benefit other drivers on ARM, too.
-> > 
-> > That's not going to happen.
-> > 
-> > I've had a patch which does that, but people are concerned that it changes
-> > the behaviour of the functions by changing the access size, which could
-> > cause regressions.  It seems people are far too worried about that to even
-> > consider trying. :(
-> 
-> What about making the optimized implementation available via kconfig?
+Thank you Tyler for testing this patch set.
 
-I'd prefer not to.  My personal feeling is to put the patch in and just be
-done with it - these functions are supposed to be used on IO areas which
-don't care about access size (in other words, are memory-like rather than
-being register-like.)  Here's the rather old patch:
-
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH] ARM: optimize memset_io()/memcpy_fromio()/memcpy_toio()
-
-If we are building for a LE platform, and we haven't overriden the
-MMIO ops, then we can optimize the mem*io operations using the
-standard string functions.
-
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- arch/arm/include/asm/io.h | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index d070741b2b37..358c8206419b 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -23,6 +23,7 @@
- 
- #ifdef __KERNEL__
- 
-+#include <linux/string.h>
- #include <linux/types.h>
- #include <asm/byteorder.h>
- #include <asm/memory.h>
-@@ -312,9 +313,33 @@ extern void _memset_io(volatile void __iomem *, int, size_t);
- #define writesw(p,d,l)		__raw_writesw(p,d,l)
- #define writesl(p,d,l)		__raw_writesl(p,d,l)
- 
-+#ifndef __ARMBE__
-+static inline void memset_io(volatile void __iomem *dst, unsigned c,
-+	size_t count)
-+{
-+	memset((void __force *)dst, c, count);
-+}
-+#define memset_io(dst,c,count) memset_io(dst,c,count)
-+
-+static inline void memcpy_fromio(void *to, const volatile void __iomem *from,
-+	size_t count)
-+{
-+	memcpy(to, (const void __force *)from, count);
-+}
-+#define memcpy_fromio(to,from,count) memcpy_fromio(to,from,count)
-+
-+static inline void memcpy_toio(volatile void __iomem *to, const void *from,
-+	size_t count)
-+{
-+	memcpy((void __force *)to, from, count);
-+}
-+#define memcpy_toio(to,from,count) memcpy_toio(to,from,count)
-+
-+#else
- #define memset_io(c,v,l)	_memset_io(c,(v),(l))
- #define memcpy_fromio(a,c,l)	_memcpy_fromio((a),c,(l))
- #define memcpy_toio(c,a,l)	_memcpy_toio(c,(a),(l))
-+#endif
- 
- #endif	/* readl */
- 
--- 
-1.8.3.1
-
-
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+On 2015/5/6 7:46, Tyler Baker wrote:
+> On 5 May 2015 at 05:06, Bintian Wang <bintian.wang@huawei.com> wrote:
+>> Hi6220 is one mobile solution of Hisilicon, this patchset contains
+>> initial support for Hi6220 SoC and HiKey development board, which
+>> supports octal ARM Cortex A53 cores. Initial support is minimal and
+>> includes just the arch configuration, clock driver, device tree
+>> configuration.
+>>
+>> PSCI is enabled in device tree and there is no problem to boot all the
+>> octal cores, and the CPU hotplug is also working now, you can download
+>> and compile the latest firmware based on the following link to run this
+>> patch set:
+>> https://github.com/96boards/documentation/wiki/UEFI
+>>
+>> Changes v4:
+>> * Rebase to kernel 4.1-rc1
+>> * Delete "arm,cortex-a15-gic" from the gic node in dts
+>
+> Tested by: Tyler Baker <tyler.baker@linaro.org>
+>
+> Built and booted all v4 patches in this series ontop a v4.1-rc1 based
+> tree. Tested with the UEFI load mentioned above, booting to a minimal
+> ramdisk userspace[0]. Confirmed all 8 CPUs were activated.
+>
+>>
+>> Changes v3:
+>> * Verified the CPU hotplug based on the new released firmware
+>> * Redefined the compatible strings of four system controllers in dts
+>> * Setting COMMON_CLK_HI6220 to a bool symbol
+>> * Keep CONFGI_ARCH_HISI sorted alphabetically
+>>
+>> Changes v2:
+>> * Split the DT bindings documents into earlier patches
+>> * Change SMP enable method from spin-table to PSCI in device tree
+>> * Remove "clock-frequency" from armv8-timer device node in device tree
+>> * Add more description about Hisilicon designed system controllers
+>>    in DT bindings document
+>> * Enable high speed clock on UART1 mux
+>> * Other changes based on the discussion in the mailing list:
+>>    https://lkml.org/lkml/2015/2/5/147
+>>
+>> Bintian Wang (5):
+>>    arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
+>>    arm64: hi6220: Document devicetree bindings for Hisilicon hi6220 SoC
+>>    clk: hi6220: Document devicetree bindings for hi6220 clock
+>>    clk: hi6220: Clock driver support for Hisilicon hi6220 SoC
+>>    arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+>>
+>>   .../bindings/arm/hisilicon/hisilicon.txt           |  87 ++++++
+>>   .../devicetree/bindings/clock/hi6220-clock.txt     |  34 +++
+>>   arch/arm64/Kconfig                                 |   5 +
+>>   arch/arm64/boot/dts/Makefile                       |   1 +
+>>   arch/arm64/boot/dts/hisilicon/Makefile             |   5 +
+>>   arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |  31 +++
+>>   arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 172 ++++++++++++
+>>   arch/arm64/configs/defconfig                       |   1 +
+>>   drivers/clk/Kconfig                                |   2 +
+>>   drivers/clk/Makefile                               |   4 +-
+>>   drivers/clk/hisilicon/Kconfig                      |   6 +
+>>   drivers/clk/hisilicon/Makefile                     |   3 +-
+>>   drivers/clk/hisilicon/clk-hi6220.c                 | 292 +++++++++++++++++++++
+>>   drivers/clk/hisilicon/clk.c                        |  29 ++
+>>   drivers/clk/hisilicon/clk.h                        |  17 ++
+>>   drivers/clk/hisilicon/clkdivider-hi6220.c          | 273 +++++++++++++++++++
+>>   include/dt-bindings/clock/hi6220-clock.h           | 173 ++++++++++++
+>>   17 files changed, 1131 insertions(+), 4 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/hi6220-clock.txt
+>>   create mode 100644 arch/arm64/boot/dts/hisilicon/Makefile
+>>   create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+>>   create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>>   create mode 100644 drivers/clk/hisilicon/Kconfig
+>>   create mode 100644 drivers/clk/hisilicon/clk-hi6220.c
+>>   create mode 100644 drivers/clk/hisilicon/clkdivider-hi6220.c
+>>   create mode 100644 include/dt-bindings/clock/hi6220-clock.h
+>>
+>> --
+>> 1.9.1
+>>
+>
+> Cheers,
+>
+> Tyler
+>
+> [0] http://kernelci.org/boot/hi6220-hikey/job/testing/kernel/v4.1-rc1-5-gf609561/defconfig/defconfig/lab/lab-tbaker/?_id=5549541559b51417e999c5cd
+>
+> .
+>
