@@ -1,61 +1,94 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT revision
-Date: Wed, 06 May 2015 11:31:15 +0200
-Message-ID: <3577431.y872Foi4kj@wuerfel>
-References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com> <1430902142-17035-2-git-send-email-pali.rohar@gmail.com>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] arch: arm: Show the serial number from
+ devicetree in cpuinfo
+Date: Wed, 06 May 2015 11:37:26 +0200
+Message-ID: <1430905046.2577.1.camel@collins>
+References: <1429351135-11842-1-git-send-email-contact@paulk.fr>
+	 <1429351135-11842-2-git-send-email-contact@paulk.fr>
+	 <CAL_JsqKkw7n5p1ZH345BeKkyU=GKDrhaLef__0ET7t90Cm0Eog@mail.gmail.com>
+	 <1430145747.3081.5.camel@collins>
+	 <20150428160910.GE12732@n2100.arm.linux.org.uk>
+	 <1430581582.5339.0.camel@collins>
+	 <20150506090105.GC2067@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430902142-17035-2-git-send-email-pali.rohar@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Rob Herring <robherring2@gmail.com>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-Sg01ovqq8MURl/x8eoyd"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150506090105.GC2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 May 2015 10:49:01 Pali Roh=E1r wrote:
-> With this patch "revision" DT string entry is used to set global syst=
-em_rev
-> variable. DT "revision" is expected to be string with one hexadecimal=
- number.
-> So "Revision" line in /proc/cpuinfo will be same as "revision" DT val=
-ue.
+
+--=-Sg01ovqq8MURl/x8eoyd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Le mercredi 06 mai 2015 =C3=A0 10:01 +0100, Russell King - ARM Linux a
+=C3=A9crit :
+> On Sat, May 02, 2015 at 05:46:22PM +0200, Paul Kocialkowski wrote:
+> > Le mardi 28 avril 2015 =C3=A0 17:09 +0100, Russell King - ARM Linux a =
+=C3=A9crit :
+> > > On Mon, Apr 27, 2015 at 04:42:27PM +0200, Paul Kocialkowski wrote:
+> > > > Well, of_property_read_string is only defined when CONFIG_OF is set
+> > > > (base.c is always built in drivers/of but the directory is only inc=
+luded
+> > > > when CONFIG_OF is set).
+> > > >=20
+> > > > Of course, on ARM, we now expect that it is the case, but it seems =
+like
+> > > > good practice to check for it, since it could theoretically be disa=
+bled.
+> > >=20
+> > > That is _not_ "is the case" - there are a number of non-OF platforms.=
+..
+> > > including some which will probably never be converted.
+> >=20
+> > Right, so I think v4 should be fine too, given the empty functions in
+> > case CONFIG_OF is not set.
 >=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Yes, can you please put them in my patch system so we can get this
+> applied?
 
-+devicetree mailing list
+What exactly do you mean?=20
 
-The property needs to be specified in a binding somewhere.
+I sent v4 to linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org and
+devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org with you and Rob in the CC list, on the 28th
+of April.
 
-> @@ -246,5 +247,14 @@ const struct machine_desc * __init setup_machine=
-_fdt(unsigned int dt_phys)
->  	/* Change machine number to match the mdesc we're using */
->  	__machine_arch_type =3D mdesc->nr;
-> =20
-> +	/* Set system revision from DT */
-> +	prop =3D of_get_flat_dt_prop(dt_root, "revision", &size);
-> +	if (prop && size > 0) {
-> +		char revision[11];
-> +		strlcpy(revision, prop, min(size, (int)sizeof(revision)));
-> +		if (kstrtouint(revision, 16, &system_rev) !=3D 0)
-> +			system_rev =3D 0;
-> +	}
-> +
->  	return mdesc;
->  }
+> Rob - does your ack apply to the v4 patch?
+>=20
+> Thanks.
 >=20
 
-What is the reason for doing it this early? I think it would be nicer t=
-o do
-it after unflattening the DT.
 
-Also, it seems strange to have a string property and then use kstrtouin=
-t
-to convert it into a number. I think it should either be specified in a=
- DT
-binding to be a string and then have the kernel not assume that it is a=
- number,
-or we should define it to be binary.
+--=-Sg01ovqq8MURl/x8eoyd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-	Arnd
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJVSeDWAAoJEIT9weqP7pUMjR8P/0/dNsYV6rnSzVoTcCIVhxcv
+P3uc4A1rIQGQQozN9aiMHWlSzeUBI21ohejjeN9Ey5oc9fLiUCsyov0UUX47+GeA
++2+HoWNMco2G5J1tPSf/oAObB72jOmOOpCf7sNeSoE7h+Gta1JKfviEG5xNcIazJ
+A8JEFok6PyL+MLzw/pUEL69qlkKcqUZ9luwGOyHunTYuxc7Xk3YGr777gSDJkoqp
+VYd6lq0AbC4ec5GicgUOX38ir3mp9NztPQIvnuVaQ3rWa0oorUOGAC1kEycJEhyD
+oB8inUIFDQ+KGwItaOxk9xkvSykR7PPZvMfxBtOUCzVSiVbljgSDQMrNTVzkifXA
+Edut5uK8a7ZnMfKYROIbwn3TO8shrIss852W/sOIjailHQM+MyljM9NytcnOXnx2
+9CWvQ53irHk4ajg3YL6scmGfsfeku+yOY0ie2hxnjlMpY3k9g4A/SHMFqBYYpuyo
+T/K5mk7VlDVI/UklNwFPpdIqcLj5qPFNr3iqXhIcHLjPbDov9Gud8WLNVs3ACH1q
+1+ADRr74SqaIu6b1Q5K36FjVlaZyl09+9ziziza7pTr22cu34veNtsU0D2dfo+TD
+anpKKQHsXb1ZDXniTqduD71yTLEZRERvt6VfQSJ2mafw0nwJ8gvypeQYmoyVwqGG
+/Jhoy3r6rnFB34Ss0WJd
+=hCBg
+-----END PGP SIGNATURE-----
+
+--=-Sg01ovqq8MURl/x8eoyd--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
