@@ -1,47 +1,55 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v3 7/8] ASoC: wm8998: Initial WM8998 codec driver
-Date: Wed, 6 May 2015 13:21:53 +0100
-Message-ID: <20150506122153.GA29266@opensource.wolfsonmicro.com>
-References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com> <1430493319-23808-8-git-send-email-rf@opensource.wolfsonmicro.com> <20150504113943.GB15510@sirena.org.uk> <20150505092411.GA15549@opensource.wolfsonmicro.com> <20150505105327.GZ22845@sirena.org.uk> <20150505133129.GA26101@opensource.wolfsonmicro.com> <20150505215934.GH15510@sirena.org.uk> <20150506092405.GA17710@opensource.wolfsonmicro.com> <20150506114849.GM22845@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/6] pinctrl: sunxi: Add H3 PIO controller support
+Date: Wed, 6 May 2015 14:23:02 +0200
+Message-ID: <20150506122302.GF11057@lukather>
+References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com>
+ <1430904693-1404-4-git-send-email-jenskuske@gmail.com>
+ <20150506101137.GB11057@lukather>
+ <5549EE36.4060603@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IvGM3kKqwtniy32b"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBH4QVCVAKGQEELX7FEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150506114849.GM22845@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
+In-Reply-To: <5549EE36.4060603-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 06, 2015 at 12:48:49PM +0100, Mark Brown wrote:
-> On Wed, May 06, 2015 at 10:24:05AM +0100, Richard Fitzgerald wrote:
-> 
-> > No, I'm just saying I don't see how calling the mux positions "IN1AL"
-> > is any clearer than calling them "A" and "B". The "IN1AL" names of the
-> > DAPM widgets is purely an internal detail that you wouldn't see through
-> > the ALSA interface anyway so they don't relate any more closely to what
-> > Joe user is seeing in the control list. The IN1L mux is for IN1L
-> > so including that information in the mux position is redundant. For me
-> 
-> Providing that people remember that this is what's going on here and
-> that they remember that for this mux this shortened name is used rather
-> than the full one.  We're relatively consistent in doing this for most
-> drivers, it's helpful that "I want to connect X to Y" usually translates
-> directly into one of "amixer cset X Y" or "amixer cset 'X Y' on".
-> 
-> > the real benefit of the "A"/"B" naming is that if you're reading through
-> > a configuration script and saw something like
-> 
-> >     'IN1L Mux' = 'B'
-> >     'IN1R Mux' = 'B'
-> 
-> > It's much more readably obvious that both channels are set the same
-> > rather than
-> 
-> Right, but as I said on the initial version in the case where you care
-> the user probably shouldn't have the ability to set them independently
-> in the first place.
+--IvGM3kKqwtniy32b
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-They don't. In this version I've got a custom put so that in the
-configuration where they must both change together changing one will force
-the other to the same state.
+On Wed, May 06, 2015 at 12:34:30PM +0200, Jens Kuske wrote:
+> >> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 6),
+> >> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> >> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> >> +		  SUNXI_FUNCTION(0x2, "scr"),		/* PWREN */
+> > 
+> > The datasheet uses "SIM" for this, why have you changed the name here?
+> 
+> Thought I had changed that back. I first used scr because the
+> responsible module is called scr everywhere else (clocks, memory map).
+> Looks like I messed it up now and called the clocks "sim" instead...
+> 
+> I think I should also redo the dtsi and use scr for the clock again, to
+> stay compatible with how it was called in Manual and earlier sunxi SoCs.
+
+It seems reasonable :)
+
+Thanks,
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--IvGM3kKqwtniy32b--
