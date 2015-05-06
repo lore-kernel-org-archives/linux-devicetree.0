@@ -1,49 +1,68 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC
- driver
-Date: Wed, 6 May 2015 20:29:00 +0200
-Message-ID: <20150506182900.GI22949@pd.tnic>
-References: <1430884947-16787-1-git-send-email-lho@apm.com>
- <2150970.xGYLhDU9BR@wuerfel>
- <CAPw-ZTkuZWNM9D_wJRfQq009KeL1coyYKXhqhWV+FWW6C=xRiA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: [PATCH v2 2/4] mmc: dt: Allow to specify that no write protect signal is present
+Date: Wed,  6 May 2015 20:31:20 +0200
+Message-ID: <1430937082-27149-2-git-send-email-lars@metafoo.de>
+References: <1430937082-27149-1-git-send-email-lars@metafoo.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPw-ZTkuZWNM9D_wJRfQq009KeL1coyYKXhqhWV+FWW6C=xRiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1430937082-27149-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 06, 2015 at 11:12:20AM -0700, Loc Ho wrote:
-> 1. Whether to have an single driver for APM EDAC or multiple instance
-> of 4 different drivers. With single driver, it does not scale in the
-> future when we add/remove memory controllers and CPU domains. This is
+Allow to specify in the device-tree that no physical write-protect signal
+is connected to a particular instance of a MMC controller. Setting the
+property will cause the core will assume that the SD card is always
+read-write.
 
-Why doesn't it scale? Please explain this to me more verbosely.
+The name for the new property is 'disable-wp' and was chosen based on the
+property with the same function from the Synopsys designware mobile storage
+host controller DT bindings specification.
 
-> also agreed by Rob Herring from review of the DTS nodes. For L3 and
-> SoC EDAC, they are less of an issue as I don't see a situation that we
-> would have multiple instances.
-> 
-> 2. With regard to the top level PCP interrupt, they are just for
-> status and once configured, it will not be touch. Therefore, I keep
-> the current implementation. With an single driver, there is no need to
-> worry about read/modify/write as it will be guarded with an lock. For
-> multiple instance, I am thinking that the xgene_edac_mc module will
-> provide exported lock functions for the other drivers.
+Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc.txt | 5 +++++
+ drivers/mmc/core/host.c                       | 3 +++
+ 2 files changed, 8 insertions(+)
 
-Doing this would be a very bad design and it would be a homegrown case
-only for this driver. Then other ARM drivers will appear which will do
-their own locking too. No no no. No ad-hoc hackery.
-
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index 438899e..0384fc3 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -21,6 +21,11 @@ Optional properties:
+   below for the case, when a GPIO is used for the CD line
+ - wp-inverted: when present, polarity on the WP line is inverted. See the note
+   below for the case, when a GPIO is used for the WP line
++- disable-wp: When set no physical WP line is present. This property should
++  only be specified when the controller has a dedicated write-protect
++  detection logic. If a GPIO is always used for the write-protect detection
++  logic it is sufficient to not specify wp-gpios property in the absence of a WP
++  line.
+ - max-frequency: maximum operating clock frequency
+ - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
+   this system, even if the controller claims it is.
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 8be0df7..1eabdd0 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -400,6 +400,9 @@ int mmc_of_parse(struct mmc_host *host)
+ 	else if (ret != -ENOENT)
+ 		return ret;
+ 
++	if (of_property_read_bool(np, "disable-wp"))
++		host->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
++
+ 	/* See the comment on CD inversion above */
+ 	if (ro_cap_invert ^ ro_gpio_invert)
+ 		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
 -- 
-Regards/Gruss,
-    Boris.
+1.8.0
 
-ECO tip #101: Trim your mails when you reply.
---
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
