@@ -1,53 +1,68 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Wed, 6 May 2015 21:39:31 +0300
-Message-ID: <A4E060DB-2799-4BF5-9CA6-DE53B7DF9A30@konsulko.com>
-References: <1422083789-18905-1-git-send-email-pantelis.antoniou@konsulko.com> <20150422074019.GA1511@katana> <CAMAWPa-HMhJK9UzwfaMPe-MO=4mzjvC=nRwPX-pbab_fb3YZ9A@mail.gmail.com> <20150506183733.GA1513@katana>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150506183733.GA1513@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC driver
+Date: Wed, 6 May 2015 11:43:36 -0700
+Message-ID: <CAPw-ZTmJ8C3KmujZJN1z21S3LFQ-TRouUeAjN0Y02HOTKAG1_g@mail.gmail.com>
+References: <1430884947-16787-1-git-send-email-lho@apm.com>
+	<2150970.xGYLhDU9BR@wuerfel>
+	<CAPw-ZTkuZWNM9D_wJRfQq009KeL1coyYKXhqhWV+FWW6C=xRiA@mail.gmail.com>
+	<20150506182900.GI22949@pd.tnic>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150506182900.GI22949-fF5Pk5pvG8Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Hi Borislav,
 
-> On May 6, 2015, at 21:37 , Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->=20
-> On Wed, May 06, 2015 at 10:51:07AM -0700, Kevin Hilman wrote:
->> On Wed, Apr 22, 2015 at 12:40 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> w=
-rote:
->>> On Sat, Jan 24, 2015 at 09:16:29AM +0200, Pantelis Antoniou wrote:
->>>> Mark (and unmark) device nodes with the POPULATE flag as appropria=
-te.
->>>> This is required to avoid multi probing when using I2C and device
->>>> overlays containing a mux.
->>>> This patch is also more careful with the release of the adapter de=
-vice
->>>> which caused a deadlock with muxes, and does not break the build
->>>> on !OF since the node flag accessors are not defined then.
->>>>=20
->>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>>=20
->>> Now, that the dependency is upstream: applied to for-current, thank=
-s!
->>=20
->> I'm not seeing this in linux-next, or in your for-current branch.
->>=20
->> Was this dropped or superseded by something else?
->=20
-> I dropped it because it caused a build bug. So, we need another
-> dependency in... I am not sure if this is already in.
->=20
+On Wed, May 6, 2015 at 11:29 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
+> On Wed, May 06, 2015 at 11:12:20AM -0700, Loc Ho wrote:
+>> 1. Whether to have an single driver for APM EDAC or multiple instance
+>> of 4 different drivers. With single driver, it does not scale in the
+>> future when we add/remove memory controllers and CPU domains. This is
+>
+> Why doesn't it scale? Please explain this to me more verbosely.
 
-=46WIW, I=E2=80=99ve posted the dependency patch already; it=E2=80=99s =
-trivial as you recall.
+Let me explain a bit more. We have four memory controller today.
+Therefore, I would like to have 4 DTS node and the same driver probe
+function called 4 times. If there is only one driver for the entire
+APM EDAC, I would have to merge all the resource registers into an
+single DTS node and its probe function called one time. In this one
+driver design, what would I do in future chip or variant of the chip
+in which it remove or add an addition memory controller? I would have
+to change the driver as well as the DTS node. In the four instance
+probe design, all I need is to add an additional DTS node.
 
-Lets hope it gets picked so that this one can go in.
 
-Regards
+>
+>> also agreed by Rob Herring from review of the DTS nodes. For L3 and
+>> SoC EDAC, they are less of an issue as I don't see a situation that we
+>> would have multiple instances.
+>>
+>> 2. With regard to the top level PCP interrupt, they are just for
+>> status and once configured, it will not be touch. Therefore, I keep
+>> the current implementation. With an single driver, there is no need to
+>> worry about read/modify/write as it will be guarded with an lock. For
+>> multiple instance, I am thinking that the xgene_edac_mc module will
+>> provide exported lock functions for the other drivers.
+>
+> Doing this would be a very bad design and it would be a homegrown case
+> only for this driver. Then other ARM drivers will appear which will do
+> their own locking too. No no no. No ad-hoc hackery.
+>
 
-=E2=80=94 Pantelis
+What if I move the locking function into a common module to be
+included by the EDAC framework? Or would you prefer that I go and
+write an common driver that all it does is provide locking?
+
+Any suggestion as all I need is an way to share access to an CSR which
+can't use atomic operations? It isn't an actual interrupt controller
+either.
+
+-Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
