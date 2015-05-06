@@ -1,42 +1,94 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [alsa-devel] [PATCH v2 RESEND] ARM: dts: Support audio on
- Exynos5422-odroidxu3 using simple-audio-card
-Date: Wed, 6 May 2015 15:23:44 +0200
-Message-ID: <CABxcv=mpPOfDDnD0RJGb-W313jpxqiW2O_o_tFJgSwEhOZnKew@mail.gmail.com>
-References: <1428651178-18186-1-git-send-email-ideal.song@samsung.com>
-	<552791A4.40203@fivetechno.de>
-	<CANAwSgS98n0kX8oBUk5Ehk1fwU4DA_DNuAqztp3LrOBcmrtAZw@mail.gmail.com>
-	<20150506104714.498f8da5@songinha-Samsung-DeskTop-System>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH  0/2] gpio: Allow userspace export from DT
+Date: Wed, 6 May 2015 15:25:20 +0200
+Message-ID: <20150506132520.GC5302@localhost>
+References: <20150413110515.9681.58848.stgit@localhost>
+ <20150504084925.GB4047@localhost>
+ <20150506112449.GQ2067@n2100.arm.linux.org.uk>
+ <20150506124354.GA5302@localhost>
+ <20150506125707.GV2067@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20150506104714.498f8da5@songinha-Samsung-DeskTop-System>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Anand Moon <linux.amoon@gmail.com>, Markus Reichl <m.reichl@fivetechno.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150506125707.GV2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+Krzysztof Kozlowski
-
-Hello Inha,
-
-On Wed, May 6, 2015 at 3:47 AM, Inha Song <ideal.song@samsung.com> wrote:
-> Hi Kukjin,
+On Wed, May 06, 2015 at 01:57:08PM +0100, Russell King - ARM Linux wrote:
+> On Wed, May 06, 2015 at 02:43:54PM +0200, Johan Hovold wrote:
+> > On Wed, May 06, 2015 at 12:24:50PM +0100, Russell King - ARM Linux wrote:
+> > > On Mon, May 04, 2015 at 10:49:25AM +0200, Johan Hovold wrote:
+> > > > Firmware should describe pin directionality and function, and undefined
+> > > > pins should never be allowed to be accessed from userspace.
+> > > 
+> > > No, that's totally wrong if you consider one of the most common use
+> > > cases out there...
+> > > 
+> > > Think about something like a Raspberry Pi, where you have a header with
+> > > GPIOs on it, which can be used for multiple different purposes (and are
+> > > even multiplexed with some on-SoC functions.)
+> > > 
+> > > "Firmware" can't know about all possible configurations of those IO pins.
+> > > 
+> > > That's why Raspberry Pi uses a userspace helper and programs stuff up
+> > > appropriately for the users application.
+> > 
+> > I'm not familiar with exactly how the RPi handles its pin muxing, but
+> > even if it requires userspace interaction that should not prevent having
+> > firmware describe the pins.
+> 
+> How it handles this is... it doesn't.  Userspace does it.
+> 
+> There is *no* "firmware" on these devices.  The only thing you have is a
+> boot loader and a DT blob, and people will hate you if you tell them that
+> they have to change the DT blob and then reboot their systems to change
+> the functionality of a GPIO pin.
 >
-> Any comments about this patch?
->
-> Best Regards,
-> Inha Song.
->
+> It's also entirely reasonable to assume that people are going to want to
+> change the configuration at runtime, given their diverse range of
+> applications.
 
-It seems Kukjin didn't have time lately to deal with the huge backlog
-of patches for Exynos so Krzysztof (added as cc) has kindly
-volunteered to help him by acting as a co-maintainer and queuing
-patches.
+DT can be changed at run-time using overlays.
 
-So could you please for any patches that my have been forgotten (like
-$subject),  rebase on current head, carry all the obtained tags and
-re-send cc'ing Krzysztof so he can be aware of them?
+This way the RPi users could define their i2c-clients, or whatever buses
+they choose to expose on those pins as well.
 
-Best regards,
-Javier
+> > In general, if the hardware configuration is static we use device trees.
+> > 
+> > If the configuration is dynamic we use device-tree overlays; either
+> > loaded manually or by some service (e.g. Beaglebone capes). Perhaps this
+> > could be handled by the RPi helper.
+> 
+> Yes, that _could_ work, but I bet asking millions of people to change
+> what they're doing is going to be extremely difficult.  Remember the
+> golden rule of the kernel: thou shalt not break userspace.
+> 
+> So, there is _no_ possibility of removing this GPIO exposure to userspace
+> because we _know_ that it will break people.
+> 
+> If you think differently on the "thou shalt not break userspace" please
+> don't discuss it with me, I'm not interested.  Linus isn't interested
+> either, and if you try and discuss it with him, he'll tell you to get
+> out of kernel programming. :)
+> 
+> This is a commonly used API.  You can't change it.
+
+I've never suggested that we remove the current API, but *only* exposing
+a totally non-restrictive interface for systems not used by school
+children and hardware hackers is not sane.
+
+You also cut out the part in my reply about continuing to allow
+unrestricted access for such cases. That could still continue to be the
+default (e.g. when there are no pin function names defined in DT).
+
+And if those people ever update their DTs they could benefit from the
+deterministic pin naming without loosing any flexibility too.
+
+Johan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
