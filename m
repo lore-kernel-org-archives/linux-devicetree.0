@@ -1,102 +1,74 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] phy: Add binding document for Pistachio USB2.0 PHY
-Date: Tue, 5 May 2015 18:06:08 -0700
-Message-ID: <CAL1qeaE9O3RBNVv9DrZZRu6sebkK2GOnbv6hWQsUR5MHKMcGgA@mail.gmail.com>
-References: <1428444258-25852-1-git-send-email-abrestic@chromium.org>
-	<1428444258-25852-2-git-send-email-abrestic@chromium.org>
-	<20150505220116.GE17687@jhogan-linux.le.imgtec.org>
-	<CAL1qeaFacmDaCW6VSp247HZx+RwJKjYTWQhu5qxjH5JE3ET6Nw@mail.gmail.com>
-	<20150505224352.GA18183@jhogan-linux.le.imgtec.org>
-	<CAL1qeaG=O7LYo6RRxEMZw2da=eKAp0Dd+LxhBX32TojyBkr=xA@mail.gmail.com>
-	<20150505233534.GB18183@jhogan-linux.le.imgtec.org>
+From: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: Re: [RFC PATCH 2/7] mmc: sh_mobile_sdhi: Add actual clock rate
+ support
+Date: Wed, 06 May 2015 02:10:28 +0100
+Message-ID: <1430874628.4222.20.camel@xylophone.i.decadent.org.uk>
+References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
+	 <1430397081.5802.41.camel@xylophone.i.decadent.org.uk>
+	 <554259A0.9030307@cogentembedded.com>
+	 <1430874332.4222.18.camel@xylophone.i.decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150505233534.GB18183-4bYivNCBEGTR3KXKvIWQxtm+Uo4AYnCiHZ5vskTnxNA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1430874332.4222.18.camel@xylophone.i.decadent.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Ian Molton <ian@mnementh.co.uk>, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@lists.codethink.co.uk, Shinobu Uehara <shinobu.uehara.xc@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 5, 2015 at 4:35 PM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> On Tue, May 05, 2015 at 04:09:31PM -0700, Andrew Bresticker wrote:
->> On Tue, May 5, 2015 at 3:43 PM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> > On Tue, May 05, 2015 at 03:16:23PM -0700, Andrew Bresticker wrote:
->> >> Hi James,
->> >>
->> >> On Tue, May 5, 2015 at 3:01 PM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> >> > Hi Andrew,
->> >> >
->> >> > On Tue, Apr 07, 2015 at 03:04:16PM -0700, Andrew Bresticker wrote:
->> >> >> Add a binding document for the USB2.0 PHY found on the IMG Pistachio SoC.
->> >> >>
->> >> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> >> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> >> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> >> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> >> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> >> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> >> >> ---
->> >> >> No changes from v1.
->> >> >> ---
->> >> >>  .../devicetree/bindings/phy/pistachio-usb-phy.txt  | 29 ++++++++++++++++++++++
->> >> >>  include/dt-bindings/phy/phy-pistachio-usb.h        | 16 ++++++++++++
->> >> >>  2 files changed, 45 insertions(+)
->> >> >>  create mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->> >> >>  create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
->> >> >>
->> >> >> diff --git a/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->> >> >> new file mode 100644
->> >> >> index 0000000..afbc7e2
->> >> >> --- /dev/null
->> >> >> +++ b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->> >> >> @@ -0,0 +1,29 @@
->> >> >> +IMG Pistachio USB PHY
->> >> >> +=====================
->> >> >> +
->> >> >> +Required properties:
->> >> >> +--------------------
->> >> >> + - compatible: Must be "img,pistachio-usb-phy".
->> >> >> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
->> >> >> + - clocks: Must contain an entry for each entry in clock-names.
->> >> >> +   See ../clock/clock-bindings.txt for details.
->> >> >> + - clock-names: Must include "usb_phy".
->> >> >> + - img,cr-top: Must constain a phandle to the CR_TOP syscon node.
->> >> >> + - img,refclk: Indicates the reference clock source for the USB PHY.
->> >> >> +   See <dt-bindings/phy/phy-pistachio-usb.h> for a list of valid values.
->> >> >
->> >> > Possibly dumb question: why isn't the reference clock source specified
->> >> > in the normal ways like the "usb_phy" clock is?
->> >> >
->> >> > Does the value required here depend on what usb_phy clock gets muxed
->> >> > from or something?
->> >>
->> >> Right, the value indicates what clock "usb_phy" is: whether it comes
->> >> from the core clock controller, the XO crystal, or is some external
->> >> clock.  It's a mux internal to the PHY.
->> >
->> > Okay. If its a software controllable mux, is there a particular reason
->> > the DT doesn't describe it as such, i.e. have all 3 clock inputs, and
->> > the driver somehow work out which to use?
->>
->> Well, I'm not sure how the driver would determine which clock to use
->> without a device-tree property like the one I've got here :).  Also,
->
-> Does it make sense to just look for the "best" usable source clock based
-> on the supported rates listed in fsel_rate_map[] (for some definition of
-> "best" such as "fastest" / "slowest" / "first usable"), or are things
-> just not that simple?
->
-> I'm just wondering how the DT writer would decide, since it seems to
-> come down to a policy decision rather than a description of the
-> hardware, which should probably be avoided in DT bindings if possible.
+On Wed, 2015-05-06 at 02:05 +0100, Ben Hutchings wrote:
+> On Thu, 2015-04-30 at 19:34 +0300, Sergei Shtylyov wrote:
+> > On 04/30/2015 03:31 PM, Ben Hutchings wrote:
+> > 
+> > > From: Shinobu Uehara <shinobu.uehara.xc@renesas.com>
+> > 
+> > > It is necessary to stop the SD clock before using
+> > > the actual clock in case of SDHI controller.
+> > 
+> > > Signed-off-by: Shinobu Uehara <shinobu.uehara.xc@renesas.com>
+> > > Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+> > > ---
+> > >   drivers/mmc/host/sh_mobile_sdhi.c |   14 ++++++++++++++
+> > >   1 file changed, 14 insertions(+)
+> > 
+> > > diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+> > > index 6906a905cd54..92a58c6007fe 100644
+> > > --- a/drivers/mmc/host/sh_mobile_sdhi.c
+> > > +++ b/drivers/mmc/host/sh_mobile_sdhi.c
+> > > @@ -136,6 +136,18 @@ static void sh_mobile_sdhi_clk_disable(struct platform_device *pdev)
+> > >   	clk_disable_unprepare(priv->clk);
+> > >   }
+> > >
+> > > +static void sh_mobile_sdhi_set_clk_div(struct platform_device *pdev, int clk)
+> > > +{
+> > > +	struct mmc_host *mmc = dev_get_drvdata(&pdev->dev);
+> > > +	struct tmio_mmc_host *host = mmc_priv(mmc);
+> > > +
+> > > +	if (clk == true) {
+> > 
+> >     'clk' is *int*. Perhaps, should be just *if* (clk)?
+> 
+> clk is either 0 or 1 and should maybe be bool.  But you're right,
+> regardless of its type, it doesn't make sense to compare with true.
+[...]
 
-Ah, sorry if that was unclear - this *is* describing a hardware
-property.  The DT author would pick a value by looking at which clock
-is connected to the PHY in the schematic.
+Anyway, I think this is redundant with:
 
--Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+commit b30d6958a014812158d9729a3e0b6d448f6e8968
+Author: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Date:   Sun Aug 24 20:02:16 2014 -0700
+
+    mmc: tmio: remove SCLKEN bit setting from tmio_mmc_set_clock()
+
+commit da29fe2bf573f0ae56fdc2e790387cb73fc8c6f8
+Author: Shinobu Uehara <shinobu.uehara.xc@renesas.com>
+Date:   Sun Aug 24 20:03:00 2014 -0700
+
+    mmc: tmio: add actual clock support as option
+
+so I will probably just drop it.
+
+Ben.
+
+
