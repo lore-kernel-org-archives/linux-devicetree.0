@@ -1,68 +1,123 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC driver
-Date: Wed, 6 May 2015 11:43:36 -0700
-Message-ID: <CAPw-ZTmJ8C3KmujZJN1z21S3LFQ-TRouUeAjN0Y02HOTKAG1_g@mail.gmail.com>
-References: <1430884947-16787-1-git-send-email-lho@apm.com>
-	<2150970.xGYLhDU9BR@wuerfel>
-	<CAPw-ZTkuZWNM9D_wJRfQq009KeL1coyYKXhqhWV+FWW6C=xRiA@mail.gmail.com>
-	<20150506182900.GI22949@pd.tnic>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH V4 2/2] pinctrl: Add Pistachio SoC pin control driver
+Date: Wed, 6 May 2015 11:45:03 -0700
+Message-ID: <CAL1qeaF9ykWLpmXBe7EhVcUGpUSaqMqj-ckTef=6Ng=t+pBOGQ@mail.gmail.com>
+References: <1430269982-24129-1-git-send-email-abrestic@chromium.org>
+	<1430269982-24129-3-git-send-email-abrestic@chromium.org>
+	<CACRpkdZXYcULynAVOU-K+8f2qnQkEFgzK2+Ku7xXzGQx0=uvBQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150506182900.GI22949-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZXYcULynAVOU-K+8f2qnQkEFgzK2+Ku7xXzGQx0=uvBQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Borislav,
+Hi Linus,
 
-On Wed, May 6, 2015 at 11:29 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
-> On Wed, May 06, 2015 at 11:12:20AM -0700, Loc Ho wrote:
->> 1. Whether to have an single driver for APM EDAC or multiple instance
->> of 4 different drivers. With single driver, it does not scale in the
->> future when we add/remove memory controllers and CPU domains. This is
+On Wed, May 6, 2015 at 12:14 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> Hi Andrew and sorry for a slow review process, I've been
+> overloaded :(
 >
-> Why doesn't it scale? Please explain this to me more verbosely.
-
-Let me explain a bit more. We have four memory controller today.
-Therefore, I would like to have 4 DTS node and the same driver probe
-function called 4 times. If there is only one driver for the entire
-APM EDAC, I would have to merge all the resource registers into an
-single DTS node and its probe function called one time. In this one
-driver design, what would I do in future chip or variant of the chip
-in which it remove or add an addition memory controller? I would have
-to change the driver as well as the DTS node. In the four instance
-probe design, all I need is to add an additional DTS node.
-
-
+> On Wed, Apr 29, 2015 at 3:13 AM, Andrew Bresticker
+> <abrestic@chromium.org> wrote:
 >
->> also agreed by Rob Herring from review of the DTS nodes. For L3 and
->> SoC EDAC, they are less of an issue as I don't see a situation that we
->> would have multiple instances.
+>> Add a driver for the pin controller present on the IMG Pistachio SoC.
+>> This driver provides pinmux and pinconfig operations as well as GPIO
+>> and IRQ chips for the GPIO banks.
 >>
->> 2. With regard to the top level PCP interrupt, they are just for
->> status and once configured, it will not be touch. Therefore, I keep
->> the current implementation. With an single driver, there is no need to
->> worry about read/modify/write as it will be guarded with an lock. For
->> multiple instance, I am thinking that the xgene_edac_mc module will
->> provide exported lock functions for the other drivers.
+>> Signed-off-by: Damien Horsley <Damien.Horsley@imgtec.com>
+>> Signed-off-by: Govindraj Raja <govindraj.raja@imgtec.com>
+>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+>> Signed-off-by: Kevin Cernekee <cernekee@chromium.org>
+>> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+>> ---
+>> Changes from v3:
+>>  - Addressed review comments from Ezequiel.
 >
-> Doing this would be a very bad design and it would be a homegrown case
-> only for this driver. Then other ARM drivers will appear which will do
-> their own locking too. No no no. No ad-hoc hackery.
+> Overall this is a very very nice looking driver so expect it to
+> be merged after addressing or answering my last few
+> concerns.
 >
+>> +config PINCTRL_PISTACHIO
+>> +       def_bool y if MACH_PISTACHIO
+>> +       select PINMUX
+>> +       select GENERIC_PINCONF
+>> +       select GPIOLIB_IRQCHIP
+>
+> I think you also need
+> depends on / select GPIOLIB
+> select OF_GPIO
+>
+> x86_64 allmodconfig is usually the best way to test
+> if your GPIOs and pin control fragments are correctly Kconfig:ed.
 
-What if I move the locking function into a common module to be
-included by the EDAC framework? Or would you prefer that I go and
-write an common driver that all it does is provide locking?
+Right, will fix.
 
-Any suggestion as all I need is an way to share access to an CSR which
-can't use atomic operations? It isn't an actual interrupt controller
-either.
+>> +#define GPIO_BANK(_bank, _pin_base, _npins)                            \
+>> +       {                                                               \
+>> +               .gpio_chip = {                                          \
+>> +                       .label = "GPIO" #_bank,                         \
+>> +                       .request = pistachio_gpio_request,              \
+>> +                       .free = pistachio_gpio_free,                    \
+>> +                       .get_direction = pistachio_gpio_get_direction,  \
+>> +                       .direction_input = pistachio_gpio_direction_input, \
+>> +                       .direction_output = pistachio_gpio_direction_output, \
+>> +                       .get = pistachio_gpio_get,                      \
+>> +                       .set = pistachio_gpio_set,                      \
+>> +                       .base = _pin_base,                              \
+>> +                       .ngpio = _npins,                                \
+>> +               },                                                      \
+>> +               .irq_chip = {                                           \
+>> +                       .name = "GPIO" #_bank,                          \
+>> +                       .irq_startup = pistachio_gpio_irq_startup,      \
+>> +                       .irq_ack = pistachio_gpio_irq_ack,              \
+>> +                       .irq_mask = pistachio_gpio_irq_mask,            \
+>> +                       .irq_unmask = pistachio_gpio_irq_unmask,        \
+>> +                       .irq_set_type = pistachio_gpio_irq_set_type,    \
+>> +               },                                                      \
+>> +               .gpio_range = {                                         \
+>> +                       .name = "GPIO" #_bank,                          \
+>> +                       .id = _bank,                                    \
+>> +                       .base = _pin_base,                              \
+>> +                       .pin_base = _pin_base,                          \
+>> +                       .npins = _npins,                                \
+>> +               },                                                      \
+>> +       }
+>
+> This -gpio_range is the only thing that bothers me a little, combined with
+> this:
+>
+>> +               bank->gpio_range.gc = &bank->gpio_chip;
+>> +               pinctrl_add_gpio_range(pctl->pctldev, &bank->gpio_range);
+>
+> Because it adds the ranges from the pinctrl side instead of
+> doing it from the gpiochip side using
+> gpiochip_add_pin_range() or gpiochip_add_pingroup_range().
+>
+> Have you tried using those (from <linux/gpio/driver.h> instead?
+>
+> They have the upside that .base is taken from the gpio_chip
+> meaning it is unnecessary to define .base for the gpiochip
+> too and you can just go for what gpiolib dynamically assigns
+> for you.
 
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yup, switching to gpiochip_add_pin_range() works just fine here.
+
+>> +static int __init pistachio_pinctrl_register(void)
+>> +{
+>> +       return platform_driver_register(&pistachio_pinctrl_driver);
+>> +}
+>> +arch_initcall(pistachio_pinctrl_register);
+>
+> Is it necessary to have it registered so early?
+
+No, nothing depends on it being initialized this early.  When I was
+asked to remove the module stuff, I just picked arch_initcall since
+that's what most other pinctrl drivers not using
+module_platform_driver() use.  It also has the benefit of reducing the
+number of probe deferrals.
+
+Thanks,
+Andrew
