@@ -1,51 +1,82 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 00/14] ASoC: qcom: add support to apq8016 audio
-Date: Wed, 06 May 2015 07:54:16 +0100
-Message-ID: <5549BA98.9080501@linaro.org>
-References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org> <20150502235704.GA27804@kwestfie-linux.qualcomm.com> <20150506054758.GD5639@kwestfie-linux.qualcomm.com>
+From: Bintian <bintian.wang@huawei.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Wed, 6 May 2015 14:50:52 +0800
+Message-ID: <5549B9CC.1040709@huawei.com>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+ <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
+ <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150506054758.GD5639-VfhoOQ2zEbNBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5549877C.10408@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Leo Yan <leo.yan@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f@huawei.com>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "z.liuxinliang@huawei.com" <z.liu>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kenneth,
+Hello Mark,
 
-On 06/05/15 06:47, Kenneth Westfield wrote:
->> >
->> >I will test the patches and let you know by Wednesday.  Also, I posted
->> >some comments, but Patrick should be posting his comments separately
->> >later next week.
-> Srinivas,
+On 2015/5/6 11:16, Bintian wrote:
+> Hello Mark,
 >
-> After applying the patches, audio playback is no longer functional on
-> the storm board.  Give me some time to debug this and I will get back
-> to you.
-I found atleast one issue with rdma audif bits in ipq806x lpass
+> On 2015/5/6 1:13, Mark Rutland wrote:
+[...]
+>>> +        uart0: uart@f8015000 {    /* console */
+>>> +            compatible = "arm,pl011", "arm,primecell";
+>>> +            reg = <0x0 0xf8015000 0x0 0x1000>;
+>>> +            interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>>> +            clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl
+>>> HI6220_UART0_PCLK>;
+>>> +            clock-names = "uartclk", "apb_pclk";
+>>> +        };
+>>
+>> In a previous discussion [1] the UART on HI6220 was described as not
+>> fully PL011 compliant, with a number of differences (e.g. the FIFO
+>> length).
+>>
+>> Given that, I feel somewhat uncomfortable with the current compatible
+>> string list. What exactly are those differences? We may need a more
+>> specific compatible string (even if in addition to those existing ones),
+>> or perhaps other properties.
+> The small system can be booted and the console also works well without
+> changing any code of driver amba-pl011.c, so I think the compatible
+> string is OK for this patch set.
+>
+> Hisilicon do some performance enhancements based on PL011, but the
+> current driver "amba-pl011.c" also works on hi6220 without those
+> enhancements driver code.
+Checked with Hisilicon chip designer, the UART0 is used for DEBUG
+console and compliant with PL011 fully.
 
-could you try change, this will be fixed properly in next version.
+Thanks,
 
------------------------><---------------------------------------------
-diff --git a/sound/soc/qcom/lpass-ipq806x.c b/sound/soc/qcom/lpass-ipq806x.c
-index 11a7053..2b00355 100644
---- a/sound/soc/qcom/lpass-ipq806x.c
-+++ b/sound/soc/qcom/lpass-ipq806x.c
-@@ -69,6 +69,7 @@ struct lpass_variant ipq806x_data = {
-         .rdma_reg_base          = 0x6000,
-         .rdma_reg_stride        = 0x1000,
-         .rdma_channels          = 4,
-+       .rdmactl_audif_start    = 4,
-         .dai_driver             = &lpass_cpu_dai_driver,
-         .num_dai                = 1,
-
------------------------><---------------------------------------------
-
-
---srini
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bintian
+>
+>>
+>> Thanks,
+>> Mark.
+>>
+>> [1]
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/328978.html
+>>
+>>
+>> .
+>>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> .
+>
