@@ -1,110 +1,42 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
- platform
-Date: Wed, 6 May 2015 16:32:28 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1505061630300.7750@knanqh.ubzr>
-References: <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com> <20150409110634.GA27407@amd> <552660C7.4020805@ti.com> <552663C2.70308@ti.com> <55277650.8070607@codeaurora.org> <20150424132923.GA11729@amd> <553A47D3.2070107@ti.com>
- <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com> <20150428134848.GC12732@n2100.arm.linux.org.uk> <alpine.LFD.2.11.1504281127200.1582@knanqh.ubzr> <20150506104504.GM2067@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150506104504.GM2067@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Pavel Machek <pavel@ucw.cz>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, H Hartley Sweeten <hsweeten@visionengravers.com>
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH v2 0/4] ASoC: Add gtm601 simple codec
+Date: Wed,  6 May 2015 22:38:46 +0200
+Message-ID: <1430944730-10480-1-git-send-email-marek@goldelico.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 May 2015, Russell King - ARM Linux wrote:
+Following patch series add support for gtm601 PCM audio.
+gtm601 is UMTS modem which provide I2S interface for rx/tx data.
+Codec is connected to cpu in master mode (rate is fixed 8kHz).
 
-> On Tue, Apr 28, 2015 at 11:28:53AM -0400, Nicolas Pitre wrote:
-> > On Tue, 28 Apr 2015, Russell King - ARM Linux wrote:
-> > 
-> > > On Fri, Apr 24, 2015 at 03:46:56PM +0200, Geert Uytterhoeven wrote:
-> > > > So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
-> > > > That will benefit other drivers on ARM, too.
-> > > 
-> > > That's not going to happen.
-> > > 
-> > > I've had a patch which does that, but people are concerned that it changes
-> > > the behaviour of the functions by changing the access size, which could
-> > > cause regressions.  It seems people are far too worried about that to even
-> > > consider trying. :(
-> > 
-> > What about making the optimized implementation available via kconfig?
-> 
-> I'd prefer not to.  My personal feeling is to put the patch in and just be
-> done with it - these functions are supposed to be used on IO areas which
-> don't care about access size (in other words, are memory-like rather than
-> being register-like.)  Here's the rather old patch:
-> 
-> From: Russell King <rmk+kernel@arm.linux.org.uk>
-> Subject: [PATCH] ARM: optimize memset_io()/memcpy_fromio()/memcpy_toio()
-> 
-> If we are building for a LE platform, and we haven't overriden the
-> MMIO ops, then we can optimize the mem*io operations using the
-> standard string functions.
-> 
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+changes from v1:
+- fix license mismatch
+- sort Kconfig and Makefiles additions
+- remove misleading comment
 
-Acked-by: Nicolas Pitre <nico@linaro.org>
+Marek Belisko (4):
+  ASoC: Add gtm601 codec driver
+  Documentation: devicetree: sound: Add documentation for gtm601 codec
+  Documentation: vendor-prefixes: Add option prefix
+  ARM: dts: omap3-gta04: Add GSM audio support
 
-> ---
->  arch/arm/include/asm/io.h | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-> index d070741b2b37..358c8206419b 100644
-> --- a/arch/arm/include/asm/io.h
-> +++ b/arch/arm/include/asm/io.h
-> @@ -23,6 +23,7 @@
->  
->  #ifdef __KERNEL__
->  
-> +#include <linux/string.h>
->  #include <linux/types.h>
->  #include <asm/byteorder.h>
->  #include <asm/memory.h>
-> @@ -312,9 +313,33 @@ extern void _memset_io(volatile void __iomem *, int, size_t);
->  #define writesw(p,d,l)		__raw_writesw(p,d,l)
->  #define writesl(p,d,l)		__raw_writesl(p,d,l)
->  
-> +#ifndef __ARMBE__
-> +static inline void memset_io(volatile void __iomem *dst, unsigned c,
-> +	size_t count)
-> +{
-> +	memset((void __force *)dst, c, count);
-> +}
-> +#define memset_io(dst,c,count) memset_io(dst,c,count)
-> +
-> +static inline void memcpy_fromio(void *to, const volatile void __iomem *from,
-> +	size_t count)
-> +{
-> +	memcpy(to, (const void __force *)from, count);
-> +}
-> +#define memcpy_fromio(to,from,count) memcpy_fromio(to,from,count)
-> +
-> +static inline void memcpy_toio(volatile void __iomem *to, const void *from,
-> +	size_t count)
-> +{
-> +	memcpy((void __force *)to, from, count);
-> +}
-> +#define memcpy_toio(to,from,count) memcpy_toio(to,from,count)
-> +
-> +#else
->  #define memset_io(c,v,l)	_memset_io(c,(v),(l))
->  #define memcpy_fromio(a,c,l)	_memcpy_fromio((a),c,(l))
->  #define memcpy_toio(c,a,l)	_memcpy_toio(c,(a),(l))
-> +#endif
->  
->  #endif	/* readl */
->  
-> -- 
-> 1.8.3.1
-> 
-> 
-> 
-> -- 
-> FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-> according to speedtest.net.
-> 
-> 
+ Documentation/devicetree/bindings/sound/gtm601.txt | 14 ++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/boot/dts/omap3-gta04.dtsi                 | 26 ++++++
+ sound/soc/codecs/Kconfig                           |  4 +
+ sound/soc/codecs/Makefile                          |  2 +
+ sound/soc/codecs/gtm601.c                          | 98 ++++++++++++++++++++++
+ 6 files changed, 145 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/gtm601.txt
+ create mode 100644 sound/soc/codecs/gtm601.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
