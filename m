@@ -1,106 +1,52 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v8 5/5] arm64: Add APM X-Gene SoC memory controller EDAC DTS entries
-Date: Tue,  5 May 2015 22:02:27 -0600
-Message-ID: <1430884947-16787-6-git-send-email-lho@apm.com>
+From: Jon Masters <jcm@redhat.com>
+Subject: Re: [PATCH v8 1/5] arm64: Enable EDAC on ARM64
+Date: Wed, 06 May 2015 00:10:03 -0400
+Message-ID: <5549941B.7060400@redhat.com>
 References: <1430884947-16787-1-git-send-email-lho@apm.com>
  <1430884947-16787-2-git-send-email-lho@apm.com>
- <1430884947-16787-3-git-send-email-lho@apm.com>
- <1430884947-16787-4-git-send-email-lho@apm.com>
- <1430884947-16787-5-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430884947-16787-5-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1430884947-16787-2-git-send-email-lho@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loc Ho <lho@apm.com>, dougthompson@xmission.com, bp@alien8.de, mchehab@osg.samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
+Cc: devicetree@vger.kernel.org, patches@apm.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC memory controller EDAC DTS entries.
+Hi Loc,
 
-Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm/apm-storm.dtsi |   64 ++++++++++++++++++++++++++++++++
- 1 files changed, 64 insertions(+), 0 deletions(-)
+Great to see v8 of the patches :) A comment below.
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index c8d3e0e..e0270a6 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -374,6 +374,70 @@
- 			};
- 		};
+On 05/06/2015 12:02 AM, Loc Ho wrote:
 
-+		pcp: pcp@78800000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x78800000 0x0 0x100>;
-+		};
-+
-+		csw: csw@7e200000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x7e200000 0x0 0x1000>;
-+		};
-+
-+		mcba: mcba@7e700000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x7e700000 0x0 0x1000>;
-+		};
-+
-+		mcbb: mcbb@7e720000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x7e720000 0x0 0x1000>;
-+		};
-+
-+		edacmc0: edacmc0@7e800000 {
-+			compatible = "apm,xgene-edac-mc";
-+			regmap-pcp = <&pcp>;
-+			regmap-csw = <&csw>;
-+			regmap-mcba = <&mcba>;
-+			regmap-mcbb = <&mcbb>;
-+			reg = <0x0 0x7e800000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc1: edacmc1@7e840000 {
-+			compatible = "apm,xgene-edac-mc";
-+			regmap-pcp = <&pcp>;
-+			regmap-csw = <&csw>;
-+			regmap-mcba = <&mcba>;
-+			regmap-mcbb = <&mcbb>;
-+			reg = <0x0 0x7e840000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc2: edacmc2@7e880000 {
-+			compatible = "apm,xgene-edac-mc";
-+			regmap-pcp = <&pcp>;
-+			regmap-csw = <&csw>;
-+			regmap-mcba = <&mcba>;
-+			regmap-mcbb = <&mcbb>;
-+			reg = <0x0 0x7e880000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc3: edacmc3@7e8c0000 {
-+			compatible = "apm,xgene-edac-mc";
-+			regmap-pcp = <&pcp>;
-+			regmap-csw = <&csw>;
-+			regmap-mcba = <&mcba>;
-+			regmap-mcbb = <&mcbb>;
-+			reg = <0x0 0x7e8c0000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
- 		pcie0: pcie@1f2b0000 {
- 			status = "disabled";
- 			device_type = "pci";
---
-1.7.1
+> Add an stub atomic_scrub function and enable EDAC for arm64.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +/*
+> + * ECC atomic, DMA, SMP and interrupt safe scrub function.
+> + */
+
+nit: I expect you'll still get a little push back on that (similar to
+last time) because it doesn't actually implement anything, so while it
+is "safe" it's only because it's empty :) Might be better to indicate
+that those are the features it is supposed to have when implemented.
+
+> +static inline void atomic_scrub(void *va, u32 size)
+> +{
+> +	/* Stub function for now until an ARM64 HW has a way to test it. */
+> +	WARN_ONCE(1, "not implemented");
+> +}
+
+That's great and seems to address the previous comment from v7.
+
+Thanks,
+
+Jon.
