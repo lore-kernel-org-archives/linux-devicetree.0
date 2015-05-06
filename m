@@ -1,86 +1,112 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT
- revision
-Date: Wed, 6 May 2015 12:37:52 +0200
-Message-ID: <20150506103752.GG30910@pali>
-References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
- <1430902142-17035-2-git-send-email-pali.rohar@gmail.com>
- <3577431.y872Foi4kj@wuerfel>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
+ platform
+Date: Wed, 6 May 2015 11:45:04 +0100
+Message-ID: <20150506104504.GM2067@n2100.arm.linux.org.uk>
+References: <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
+ <20150409110634.GA27407@amd>
+ <552660C7.4020805@ti.com>
+ <552663C2.70308@ti.com>
+ <55277650.8070607@codeaurora.org>
+ <20150424132923.GA11729@amd>
+ <553A47D3.2070107@ti.com>
+ <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
+ <20150428134848.GC12732@n2100.arm.linux.org.uk>
+ <alpine.LFD.2.11.1504281127200.1582@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3577431.y872Foi4kj@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <alpine.LFD.2.11.1504281127200.1582@knanqh.ubzr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Pavel Machek <pavel@ucw.cz>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, H Hartley Sweeten <hsweeten@visionengravers.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 May 2015 11:31:15 Arnd Bergmann wrote:
-> On Wednesday 06 May 2015 10:49:01 Pali Roh=C3=A1r wrote:
-> > With this patch "revision" DT string entry is used to set global sy=
-stem_rev
-> > variable. DT "revision" is expected to be string with one hexadecim=
-al number.
-> > So "Revision" line in /proc/cpuinfo will be same as "revision" DT v=
-alue.
-> >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
->=20
-> +devicetree mailing list
->=20
-> The property needs to be specified in a binding somewhere.
->=20
-> > @@ -246,5 +247,14 @@ const struct machine_desc * __init setup_machi=
-ne_fdt(unsigned int dt_phys)
-> >  	/* Change machine number to match the mdesc we're using */
-> >  	__machine_arch_type =3D mdesc->nr;
-> > =20
-> > +	/* Set system revision from DT */
-> > +	prop =3D of_get_flat_dt_prop(dt_root, "revision", &size);
-> > +	if (prop && size > 0) {
-> > +		char revision[11];
-> > +		strlcpy(revision, prop, min(size, (int)sizeof(revision)));
-> > +		if (kstrtouint(revision, 16, &system_rev) !=3D 0)
-> > +			system_rev =3D 0;
-> > +	}
-> > +
-> >  	return mdesc;
-> >  }
-> >=20
->=20
-> What is the reason for doing it this early? I think it would be nicer=
- to do
-> it after unflattening the DT.
->=20
+On Tue, Apr 28, 2015 at 11:28:53AM -0400, Nicolas Pitre wrote:
+> On Tue, 28 Apr 2015, Russell King - ARM Linux wrote:
+> 
+> > On Fri, Apr 24, 2015 at 03:46:56PM +0200, Geert Uytterhoeven wrote:
+> > > So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
+> > > That will benefit other drivers on ARM, too.
+> > 
+> > That's not going to happen.
+> > 
+> > I've had a patch which does that, but people are concerned that it changes
+> > the behaviour of the functions by changing the access size, which could
+> > cause regressions.  It seems people are far too worried about that to even
+> > consider trying. :(
+> 
+> What about making the optimized implementation available via kconfig?
 
-It needs to be done in this code, so "system_rev" variable is set
-properly...
+I'd prefer not to.  My personal feeling is to put the patch in and just be
+done with it - these functions are supposed to be used on IO areas which
+don't care about access size (in other words, are memory-like rather than
+being register-like.)  Here's the rather old patch:
 
-> Also, it seems strange to have a string property and then use kstrtou=
-int
-> to convert it into a number. I think it should either be specified in=
- a DT
-> binding to be a string and then have the kernel not assume that it is=
- a number,
-> or we should define it to be binary.
->=20
-> 	Arnd
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH] ARM: optimize memset_io()/memcpy_fromio()/memcpy_toio()
 
-Variable "system_rev" is number and it always was. So chaning type will
-break more parts.
+If we are building for a LE platform, and we haven't overriden the
+MMIO ops, then we can optimize the mem*io operations using the
+standard string functions.
 
-And it is string DT property to be human readable. Some other developer=
-s
-suggested for v2 to change it to string (from number).
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ arch/arm/include/asm/io.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
---=20
-Pali Roh=C3=A1r
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
+index d070741b2b37..358c8206419b 100644
+--- a/arch/arm/include/asm/io.h
++++ b/arch/arm/include/asm/io.h
+@@ -23,6 +23,7 @@
+ 
+ #ifdef __KERNEL__
+ 
++#include <linux/string.h>
+ #include <linux/types.h>
+ #include <asm/byteorder.h>
+ #include <asm/memory.h>
+@@ -312,9 +313,33 @@ extern void _memset_io(volatile void __iomem *, int, size_t);
+ #define writesw(p,d,l)		__raw_writesw(p,d,l)
+ #define writesl(p,d,l)		__raw_writesl(p,d,l)
+ 
++#ifndef __ARMBE__
++static inline void memset_io(volatile void __iomem *dst, unsigned c,
++	size_t count)
++{
++	memset((void __force *)dst, c, count);
++}
++#define memset_io(dst,c,count) memset_io(dst,c,count)
++
++static inline void memcpy_fromio(void *to, const volatile void __iomem *from,
++	size_t count)
++{
++	memcpy(to, (const void __force *)from, count);
++}
++#define memcpy_fromio(to,from,count) memcpy_fromio(to,from,count)
++
++static inline void memcpy_toio(volatile void __iomem *to, const void *from,
++	size_t count)
++{
++	memcpy((void __force *)to, from, count);
++}
++#define memcpy_toio(to,from,count) memcpy_toio(to,from,count)
++
++#else
+ #define memset_io(c,v,l)	_memset_io(c,(v),(l))
+ #define memcpy_fromio(a,c,l)	_memcpy_fromio((a),c,(l))
+ #define memcpy_toio(c,a,l)	_memcpy_toio(c,(a),(l))
++#endif
+ 
+ #endif	/* readl */
+ 
+-- 
+1.8.3.1
+
+
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
