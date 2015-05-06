@@ -1,79 +1,46 @@
-From: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [RFC PATCH 00/14] ASoC: qcom: add support to apq8016 audio
-Date: Tue, 5 May 2015 22:47:58 -0700
-Message-ID: <20150506054758.GD5639@kwestfie-linux.qualcomm.com>
-References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150502235704.GA27804@kwestfie-linux.qualcomm.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] dt-bindings: ARM: Mediatek: Document devicetree
+ bindings for clock/reset controllers
+Date: Tue, 5 May 2015 22:53:39 -0700
+Message-ID: <20150506055339.GB10871@codeaurora.org>
+References: <1429778143-2074-1-git-send-email-s.hauer@pengutronix.de>
+ <1429778143-2074-7-git-send-email-s.hauer@pengutronix.de>
+ <20150501012039.GG32407@codeaurora.org>
+ <20150504083852.GJ4946@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150502235704.GA27804-VfhoOQ2zEbNBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <20150504083852.GJ4946-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 02, 2015 at 04:57:04PM -0700, Kenneth Westfield wrote:
-> On Thu, Apr 30, 2015 at 06:15:48PM +0100, Srinivas Kandagatla wrote:
-> > Hi All,
+On 05/04, Sascha Hauer wrote:
+> On Thu, Apr 30, 2015 at 06:20:39PM -0700, Stephen Boyd wrote:
+> > On 04/23, Sascha Hauer wrote:
+> > > +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> > > +
+> > > +Example:
+> > > +
+> > > +apmixedsys: apmixedsys@10209000 {
 > > 
-> > This patchset adds apq8016 audio support into lpass driver. Existing
-> Lpass
-> > driver can not be used as-it-is for apq8016 as it contains code specific
-> to
-> > ipq806x. Also the driver only supports single i2s port, single dma
-> channel and
-> > single bitclk control.
+> > apmixedsys: clock-controller@10209000 {
 > > 
-> > APQ8016 has 4 MI2S( Primary, Secondary, Tertiary, Quaternary) which can
-> be routed
-> > to internal wcd codec or external codecs. This routing is controlled by
-> 2 mux
-> > registers.
-> > 
-> > This patch series firstly re-organizes the lpass driver such that the
-> SOC
-> > specific bits are moved away from the driver. And secondly the SOC
-> specifics
-> > are now passed as lpass variant data which would include various
-> register
-> > offsets, dma channel allocations and SOC specific clock handling.
-> > 
-> > Finally the patchset add apq8016 lpass and machine driver.
-> > 
-> > This patchset also has two trivial cleanup patches which are to do with
-> > redundant checks and removing unnecessary header files.
-> > 
-> > All these patches are tested for HDMI audio via adv7533 bridge and
-> Analog audio
-> > on APQ8016-SBC and msm8916-mtp boards. I dont have access to ipq806x
-> boards to
-> > test these patches.
-> > 
-> > This is very first version of the patches which was developed with very
-> > mimimal/no access to IP documentation. I would like to get your opinon
-> on the
-> > over all approch.
-> > 
-> > 
-> > Kenneth/Patrick,
-> > 	Could you please try these patches on storm board?
+> > would be more standard. The same comment applies throughout this
+> > patch. Otherwise it looks good to me.
 > 
-> I will test the patches and let you know by Wednesday.  Also, I posted
-> some comments, but Patrick should be posting his comments separately
-> later next week.
+> For apmixed this I agree, but the others are also reset controllers, so
+> I'm not sure if clock-controller is appropriate. Personally I don't care
+> much, I'll change to whatever you like.
 
-Srinivas,
-
-After applying the patches, audio playback is no longer functional on
-the storm board.  Give me some time to debug this and I will get back
-to you.
+I've already applied the patch, so if you like you can send a
+follow up. Perhaps power-controller is more appropriate? I'm not
+too worried about it though.
 
 -- 
-Kenneth Westfield
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
