@@ -1,116 +1,99 @@
-From: Brent Wang <wangbintian@gmail.com>
-Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Thu, 7 May 2015 00:03:29 +0800
-Message-ID: <CAAS=xmjf+WYeZe7jPqVK26QWsv3tPqgdiy1TNUty6qWzZcsMkA@mail.gmail.com>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
- <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
- <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
- <5549B9CC.1040709@huawei.com> <20150506093022.GB31001@leverpostej>
- <5549EE97.3020801@huawei.com> <20150506104856.GC707@leverpostej>
- <CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>
- <20150506154406.GB2974@leverpostej>
+From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V1 5/6] watchdog: da9062: DA9062 watchdog driver
+Date: Wed, 6 May 2015 16:30:50 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B21925B@SW-EX-MBX02.diasemi.com>
+References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
+ <2afd9f55c71553186e99bfe386312f0c7d7501ed.1429280614.git.stwiss.opensource@diasemi.com>
+ <55327DDA.4080003@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B21924A@SW-EX-MBX02.diasemi.com>
+ <20150506160227.GA28101@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150506154406.GB2974@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f>
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150506160227.GA28101-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-2015-05-06 23:44 GMT+08:00, Mark Rutland <mark.rutland@arm.com>:
-> Hi,
->
->> How about add the following binding rule to my 2/5 patch:
->> ---------------------------
->> *Hisilicon Enhanced ARM AMBA Primecell PL011 serial UART
->>
->> Required properties:
->> - compatible: must be "hisilicon,hi6220-uart", "arm,primecell",
->> "arm,pl011"
->
-> "arm,primecell" should come last.
->
->> - reg: exactly one register range with length 0x1000
->> - interrupts: exactly one interrupt specifier
->>
->> See also bindings/serial/pl011.txt
->>
->> Example:
->>
->> uart0: uart@f8015000 {
->>         compatible = "hisilicon,hi6220-uart", "arm,pl011",
->> "arm,primecell";
->>         reg = <0x0 0xf8015000 0x0 0x1000>;
->>         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
->>         clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl
->> HI6220_UART0_PCLK>;
->>         clock-names = "uartclk", "apb_pclk";
->> };
->
-> How about for the moment we just modify the existing pl011 binding
-> document to allow for the hi6220-specific string in addition to its
-> existing strings? We can always split it out later if the hi6220 UART
-> binding needs to be significantly divergent.
-How about adding the following rule to pl011.txt?
-----------
-diff --git a/Documentation/devicetree/bindings/serial/pl011.txt
-b/Documentation/devicetree/bindings/serial/pl011.txt
-index ba3ecb8..1221ccb 100644
---- a/Documentation/devicetree/bindings/serial/pl011.txt
-+++ b/Documentation/devicetree/bindings/serial/pl011.txt
-@@ -35,6 +35,10 @@ Optional properties:
- - poll-timeout-ms:
-           Poll timeout when auto-poll is set, default
-           3000ms.
-+- compatible: "hisilicon,hi6220-uart":
-+          Hisilicon does some enhancements (e.g. larger FIFO length)
-+           based on PL011, so when using these UART hosts, this compatible
-+           string should be added.
+On 06 May 2015 17:02 Guenter Roeck wrote:
 
- See also bindings/arm/primecell.txt
-------------
->
->> > Is UART 0 different from UART1 and UART2?
->> Yes,  but my patch just includes UART0, we do some changements for
->> UART1/2
->> to improve performance.
->
-> Sure, but we need to make sure we can choose a sane compatible string
-> for them, that won't clash with whatever we choose for UART0.
-OK, do I also need to add compatible ""hisilicon,hi6220-uart"," to UART0 node?
+> On Wed, May 06, 2015 at 02:54:37PM +0000, Opensource [Steve Twiss] wrote:
+> > On 18 April 2015 16:53 Guenter Roeck wrote:
+> >
+> > Hi Guenter,
+> >
+> > Thanks for your comments.
+> >
+> > > On 04/17/2015 07:23 AM, S Twiss wrote:
+> > > > From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> > > >
+> > > > Add watchdog driver support for DA9062
+> > > >
+> > > > Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> > > >
+> > > Hi Steve,
+> > >
+> > > Key question here is if the da9062 is really so much different to the da9062
+> > > that you can not use the same driver.
+> >
+> > The DA9062 watchdog driver does have some similarities with the DA9063 watchdog
+> > base functionality -- however the watchdog component in the DA9062 chip has more
+> > features yet to be added in software. I do intend to add these other features ...
+> > however, if "not adding them here" is a problem I can drop the DA9062 watchdog
+> > driver from this patch-set until I have time to write in the newer changes.
+> >
+> > > I am especially concerned about the added da9062_reset_watchdog_timer(),
+> > > given the delay it introduces.
+> >
+> > After giving this some thought, I am going to remove this 300ms delay from the
+> > reset_watchdog_timer() function for my next submission attempt. However
+> > I am adding a 300ms delay into the stop() and update_timeout_register() functions
+> > instead.
+> >
+> > The DA9062 watchdog ping (register CONTROL_F) is "windowed" for protection
+> > against spurious writes -- i.e. the ping function cannot be called within a 250ms
+> > time limit or the PMIC will reset. This windowing protection also extends to altering
+> > the timeout scale in the CONTROL_D register -- in which case if the timeout
+> > register is altered and the ping() function is called within the 250ms limit, the
+> > PMIC will reset. The delay is there to stop that from happening.
+> >
+> > I realised my previous patch was over-sanitised: by putting the time delay into the
+> > ping() function I was protecting CONTROL_D in stop() and update_timeout_register(),
+> > but I was being too over-protective of the ping() function. Therefore if there was an
+> > "incorrect trigger signal", the watchdog would not be allowed to fail because the
+> > driver would have filtered out the errors.
+> >
+> Hi Steve,
+> 
+> From your description, it sounds like the protection is only necessary if there
+> was a previous write to the same register(s). If so, it might make sense to
+> record the time of such writes, and only add the delay if necessary, and only
+> for the remainder of the time.
+> 
+> Would this be possible ?
+> 
 
->
-> Are they the same IP as UART0, or fundamentally different?
-The same IP.
->
-> Are they also PL011 derived?
-Yes, just do some enhancements to improve performance.
+Hi Guenter,
 
-Thanks,
+I think so -- sounds like it should be possible.
+Internally, there are several places where the two registers are written in succession.
+Also, I'll have to re-write my tests in several places.
 
-Bintian
+Probably the best solution would be to defer this watchdog driver for now, and I'll
+re-submit it at a later date once the other parts of the DA9062 driver are [hopefully :)]
+accepted. That way I can concentrate a solid block of time on the re-testing ... this
+is the most time consuming.
 
->
-> Thanks,
-> Mark.
->
+Is that acceptable to you? -- I don't want to lose your existing comments from your
+previous posts, so I will keep track of those changes you have already requested.
 
-
--- 
-Best Regards,
-
-Bintian
-===========================
-Don't be nervous, just be happy!
+Regards,
+Steve
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
