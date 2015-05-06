@@ -1,49 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 1/1] arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
-Date: Wed, 06 May 2015 10:40:03 +0200
-Message-ID: <2568634.iEosTvMJpM@wuerfel>
-References: <1430817426-5241-1-git-send-email-stripathi@apm.com> <4635229.bceBxngCoe@wuerfel> <5549C68B.9090602@xilinx.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC
+ driver
+Date: Wed, 6 May 2015 10:41:43 +0200
+Message-ID: <20150506084143.GA22949@pd.tnic>
+References: <1430884947-16787-1-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5549C68B.9090602@xilinx.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Suman Tripathi <stripathi@apm.com>, Rob Herring <robherring2@gmail.com>, "chris@printf.net" <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, "patches@apm.com" <patches@apm.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1430884947-16787-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 May 2015 09:45:15 Michal Simek wrote:
-> On 05/06/2015 09:31 AM, Arnd Bergmann wrote:
-> > On Wednesday 06 May 2015 10:41:07 Suman Tripathi wrote:
-> >>>> @@ -533,6 +567,16 @@
-> >>>>                         interrupts = <0x0 0x4f 0x4>;
-> >>>>                 };
-> >>>>
-> >>>> +               sdhc0: sdhc@1c000000 {
-> >>>> +                       device_type = "sdhc";
-> >>>
-> >>> device_type generally should not be used (there are a few exceptions).
-> >>
-> >> Okay !!
-> >>
-> > 
-> > While we're at it, please change sdhc@1c000000 to mmc@1c000000.
-> > Even though Linux does not care, we try to use the standard device
-> > names for consistency.
+On Tue, May 05, 2015 at 10:02:22PM -0600, Loc Ho wrote:
+> This patch adds support for the APM X-Gene SoC memory controller EDAC driver
+> for DT.
 > 
-> Do we have a list of these names somewhere?
-> Normally I do use ePARP - generic names recommendation but mmc or sdhci
-> are not listed there.
-> Both combination mmc@ or sdhci@ are used in the kernel.
-> 
-> On zynq and zynqmp we do use shdci@.
-> 
+> v8:
+> * Change ASM_EDAC_H to __ASM_EDAC_H in file edac.h
+> * Add WARN_ONCE in stub function atomic_scrub
+> * Update DTS binding documentation (with only memory controller node)
+> * Temporary remove L1/L2, L3, and SoC driver code and update memory driver
+>   code accordingly
 
-Ah, I thought ePAPR listed mmc already. Using "sdhci" is a little too
-specific here, since a lot of mmc hosts are not sdhci compliant, and
-"sdhc" is completely wrong, because that identifies a specific card
-type, but a host that supports SDHC cards will generally also work
-with SD (less than 4GB) or SDXC (more than 48GB) cards.
+What does that mean exactly? They'll get added later?
 
-	Arnd
+It is called now xgene_edac_mc.c. Am I to expect more
+xgene_edac_<functional_unit>.c submissions? What happened to building
+everything around the shared IRQ handler?
+
+Also, I see this SOB chain in some of the patches:
+
+Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+
+and it is not clear who did what, from looking at the chain.
+
+If you both authored the patches, you can write
+
+Originally-by: Feng
+[ Loc: did this and that]
+Signed-off-by: Loc
+
+for example.
+
+See Documentation/SubmittingPatches for more info.
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
