@@ -1,456 +1,168 @@
-From: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Subject: Re: [PATCH v3] power_supply: Add support for Richtek rt9455 battery
- charger
-Date: Wed, 6 May 2015 14:40:03 +0300
-Message-ID: <20150506114003.GM10973@lpalcu-linux>
-References: <1430843530-26252-1-git-send-email-anda-maria.nicolae@intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT
+ revision
+Date: Wed, 6 May 2015 13:44:17 +0200
+Message-ID: <20150506114417.GI30910@pali>
+References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
+ <3577431.y872Foi4kj@wuerfel>
+ <20150506103752.GG30910@pali>
+ <3529567.PeFp1NNa1q@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1430843530-26252-1-git-send-email-anda-maria.nicolae@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-Cc: sre@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <3529567.PeFp1NNa1q@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 05, 2015 at 07:32:10PM +0300, Anda-Maria Nicolae wrote:
-> Based on the datasheet found here:
-> http://www.richtek.com/download_ds.jsp?p=RT9455
-> 
-> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-> ---
-> 
-> Updates from v2 version:
-> - removed unused masks and keep the used ones. I have tried to access mask field
-> from struct regmap_field, but I have received the following compilation error:
-> "dereferencing pointer to incomplete type". I think this happens because I include
-> the file include/linux/regmap.h and in this file struct regmap_field is only declared
-> and not defined. Struct regmap_field is defined in drivers/base/regmap/internal.h.
-> If I include this file, compilation works. But I do not think it is a good idea
-> to include it; I did not find any other driver which includes this file. I also
-> could not find any driver that accesses mask field from struct regmap_field.
-If you want to go this path, which looks promising since you can get rid
-of all mask macros, you don't need regmap_field to compute your masks.
-You need reg_field (include/linux/regmap.h). When you setup your fields,
-you use:
+On Wednesday 06 May 2015 13:04:01 Arnd Bergmann wrote:
+> On Wednesday 06 May 2015 12:37:52 Pali Roh=C3=A1r wrote:
+> > On Wednesday 06 May 2015 11:31:15 Arnd Bergmann wrote:
+> > > On Wednesday 06 May 2015 10:49:01 Pali Roh=C3=A1r wrote:
+> > > > With this patch "revision" DT string entry is used to set globa=
+l system_rev
+> > > > variable. DT "revision" is expected to be string with one hexad=
+ecimal number.
+> > > > So "Revision" line in /proc/cpuinfo will be same as "revision" =
+DT value.
+> > > >=20
+> > > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> > >=20
+> > > +devicetree mailing list
+> > >=20
+> > > The property needs to be specified in a binding somewhere.
+> > >=20
+> > > > @@ -246,5 +247,14 @@ const struct machine_desc * __init setup_m=
+achine_fdt(unsigned int dt_phys)
+> > > >     /* Change machine number to match the mdesc we're using */
+> > > >     __machine_arch_type =3D mdesc->nr;
+> > > > =20
+> > > > +   /* Set system revision from DT */
+> > > > +   prop =3D of_get_flat_dt_prop(dt_root, "revision", &size);
+> > > > +   if (prop && size > 0) {
+> > > > +           char revision[11];
+> > > > +           strlcpy(revision, prop, min(size, (int)sizeof(revis=
+ion)));
+> > > > +           if (kstrtouint(revision, 16, &system_rev) !=3D 0)
+> > > > +                   system_rev =3D 0;
+> > > > +   }
+> > > > +
+> > > >     return mdesc;
+> > > >  }
+> > > >=20
+> > >=20
+> > > What is the reason for doing it this early? I think it would be n=
+icer to do
+> > > it after unflattening the DT.
+> > >=20
+> >=20
+> > It needs to be done in this code, so "system_rev" variable is set
+> > properly...
+>=20
+> What I mean is which code accesses this variable that early?
+>=20
 
-static const struct reg_field rt9455_reg_fields[] = {...};
+ATAG code is doing it at same early stage, so I added it to same early
+stage...
 
-Hence, you have access to both msb and lsb of each field and you can
-easily compute your mask. Just an idea.
+> > > Also, it seems strange to have a string property and then use kst=
+rtouint
+> > > to convert it into a number. I think it should either be specifie=
+d in a DT
+> > > binding to be a string and then have the kernel not assume that i=
+t is a number,
+> > > or we should define it to be binary.
+> > >=20
+> > >       Arnd
+> >=20
+> > Variable "system_rev" is number and it always was. So chaning type =
+will
+> > break more parts.
+> >=20
+> > And it is string DT property to be human readable. Some other devel=
+opers
+> > suggested for v2 to change it to string (from number).
+>=20
+> Both of them would be human readable, you just use something else to
+> read them ;-)
+>=20
+> If we have a string here, we should just change all uses of system_re=
+v
+> in the kernel accordingly, there are only a few of them:
+>=20
+> $ git grep -w system_rev
+> arch/arm/include/asm/system_info.h:extern unsigned int system_rev;
+> arch/arm/kernel/atags_parse.c:  system_rev =3D tag->u.revision.rev;
+> arch/arm/kernel/setup.c:unsigned int system_rev;
+> arch/arm/kernel/setup.c:EXPORT_SYMBOL(system_rev);
+> arch/arm/kernel/setup.c:        seq_printf(m, "Revision\t: %04x\n", s=
+ystem_rev);
+> arch/arm/mach-clps711x/devices.c:       system_rev =3D SYSFLG1_VERID(=
+readl(base + SYSFLG1));
+> arch/arm/mach-clps711x/devices.c:       soc_dev_attr->revision =3D ka=
+sprintf(GFP_KERNEL, "%u", system_rev);
+> arch/arm/mach-davinci/board-da850-evm.c:        switch (system_rev & =
+0xF) {
+> arch/arm/mach-imx/mach-imx27_visstrim_m10.c:    system_rev =3D 0x2700=
+0;
+> arch/arm/mach-imx/mach-imx27_visstrim_m10.c:    system_rev |=3D (mo_v=
+ersion << MOTHERBOARD_SHIFT);
+> arch/arm/mach-imx/mach-imx27_visstrim_m10.c:    system_rev |=3D (exp_=
+version << EXPBOARD_SHIFT);
+> arch/arm/mach-imx/mach-imx27_visstrim_m10.c:    mo_version =3D (syste=
+m_rev >> MOTHERBOARD_SHIFT) & VERSION_MASK;
+> arch/arm/mach-ixp4xx/goramo_mlr.c:              system_rev =3D __raw_=
+readl(flash + CFG_REV);
+> arch/arm/mach-omap2/board-rx51-peripherals.c:   if ((system_rev >=3D =
+SYSTEM_REV_S_USES_VAUX3 && system_rev < 0x100) ||
+> arch/arm/mach-omap2/board-rx51-peripherals.c:       system_rev >=3D S=
+YSTEM_REV_B_USES_VAUX3) {
+> arch/arm/mach-orion5x/dns323-setup.c:   if (machine_is_dns323() && sy=
+stem_rev =3D=3D DNS323_REV_A1)
+> arch/arm/mach-orion5x/dns323-setup.c:   system_rev =3D dns323_identif=
+y_rev();
+> arch/arm/mach-orion5x/dns323-setup.c:   pr_info("DNS-323: Identified =
+HW revision %c1\n", 'A' + system_rev);
+> arch/arm/mach-orion5x/dns323-setup.c:   switch(system_rev) {
+> arch/arm/mach-orion5x/dns323-setup.c:   switch(system_rev) {
+> arch/arm/mach-orion5x/dns323-setup.c:   switch(system_rev) {
+> arch/arm/mach-pxa/cm-x300.c:    if (system_rev < 130)
+> arch/arm/mach-pxa/cm-x300.c:    if (system_rev < 130) {
+> arch/arm/mach-pxa/cm-x300.c:    if (system_rev < 130)
+> arch/arm/mach-pxa/magician.c:           if (system_rev < 3)
+> arch/arm/mach-pxa/magician.c:           if (system_rev < 3)
+> arch/arm/mach-pxa/magician.c:           system_rev =3D board_id & 0x7=
+;
+> arch/arm/mach-pxa/magician.c:           if (lcd_select && (system_rev=
+ < 3))
+> arch/arm/mach-pxa/raumfeld.c:   if ((system_rev & 0xff) =3D=3D 2) {
+> arch/arm/mach-pxa/raumfeld.c:   if ((system_rev & 0xff) > 1) {
+> arch/arm/mach-pxa/viper.c:              system_rev =3D (VIPER_BOARD_V=
+ERSION(version) << 8) |
+> arch/arm/mach-pxa/zeus.c:       system_rev =3D __raw_readw(ZEUS_CPLD_=
+VERSION);
+> arch/arm/mach-pxa/zeus.c:       pr_info("Zeus CPLD V%dI%d\n", (system=
+_rev & 0xf0) >> 4, (system_rev & 0x0f));
+> arch/arm/mach-zynq/common.c:    system_rev =3D zynq_get_revision();
+> arch/arm/mach-zynq/common.c:    soc_dev_attr->revision =3D kasprintf(=
+GFP_KERNEL, "0x%x", system_rev);
+>=20
+> In fact, half the uses of this actually assign the revision number th=
+emselves.
+> code outside of arch/arm/mach-* and /proc/cpuinfo currently uses the =
+variable.
+>=20
+> 	Arnd
 
-> For instance, drivers/pwm/pwm-sti.c at lines 157, 158, also uses masks.
-> 
-> - I have also kept REG_FIELD definitions for interrupt registers, since, for instance,
-> I use F_BATAB to check battery presence property.
-> 
-> - cached regs 0x05 and 0x06. Also, I have added rt9455_is_writeable_reg function
-> for writeable_reg field of regmap_config.
-> 
-> - used POWER_STATUS_DISCHARGING, replaced break with and replaced it with return and
-> indented it correctly. I spent some time on this and I finally understood what is happening.
-> So, if PWR_RDY bit is set, but STAT bits value is 0, the charger may be in one
-> of the following cases:                        
-> 1. CHG_EN bit is 0.
-> 2. CHG_EN bit is 1 but the battery is not connected.
-> In any of these cases, POWER_SUPPLY_STATUS_NOT_CHARGING is returned.
-> If the PWR_RDY bit is cleared, POWER_SUPPLY_STATUS_DISCHARGING is returned.
-> 
-> - used VOREG bits value instead of VMREG in functions rt9455_charger_get_voltage_max()/
-> rt9455_charger_set_voltage_max(). Although RT9455 charger has VMREG bits which,
-> according to the datasheet, represent "Maximum battery regulation voltage", the
-> charger never uses VMREG value as maximum threshold for battery voltage. This
-> happens because TE and TE_SHDN_EN bits are set during rt9455_probe(), and charging
-> operation is terminated when charging current is less than ICHRG x IEOC. When charging
-> operation is terminated, battery voltage is almost equal to VOREG. Therefore,
-> VMREG value is not taken into account. This is the reason why VOREG value is
-> set/returned in these functions.
-Something's not right... What happens in the following scenario:
-VMREG=4.2V (default value) and user sets VOREG=4.45V? Did you test this
-case. I really doubt VMREG field is not used at all. Of course, you can set
-VMREG to maximum value in which case VMREG doesn't really matter.
-
-> 
-> - corrected comment from rt9455_usb_event_id() function.
-> 
-> - replaced IS_ERR_OR_NULL() with IS_ERR() to check the result of usb_get_phy()
-> function. Also, if usb_register_notifier() fails, since usb_put_phy() is immediately
-> called, I have set info->usb_phy to ERR_PTR(-ENODEV) so that in rt9455_remove()
-> usb_put_phy is not mistakenly called again.
-> 
->  .../devicetree/bindings/power/rt9455_charger.txt   |   43 +
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  drivers/power/Kconfig                              |    6 +
->  drivers/power/Makefile                             |    1 +
->  drivers/power/rt9455_charger.c                     | 1801 ++++++++++++++++++++
->  5 files changed, 1852 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/rt9455_charger.txt
->  create mode 100644 drivers/power/rt9455_charger.c
-> 
-(...)
-
-> +static int rt9455_charger_get_status(struct rt9455_info *info,
-> +				     union power_supply_propval *val)
-> +{
-> +	unsigned int v, pwr_rdy;
-> +	int ret;
-> +
-> +	ret = regmap_field_read(info->regmap_fields[F_STAT], &v);
-> +	if (ret) {
-> +		dev_err(&info->client->dev, "Failed to read STAT bits\n");
-> +		return ret;
-> +	}
-> +
-> +	switch (v) {
-> +	case 0:
-> +		ret = regmap_field_read(info->regmap_fields[F_PWR_RDY],
-> +					&pwr_rdy);
-> +		if (ret) {
-> +			dev_err(&info->client->dev, "Failed to read PWR_RDY bit\n");
-> +			return ret;
-> +		}
-> +
-> +		if (!pwr_rdy) {
-> +			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
-> +			return 0;
-> +		}
-> +		/*
-> +		 * If PWR_RDY bit is set, but STAT bits value is 0, the charger
-> +		 * may be in one of the following cases:
-> +		 * 1. CHG_EN bit is 0.
-> +		 * 2. CHG_EN bit is 1 but the battery is not connected.
-> +		 * In any of these cases, POWER_SUPPLY_STATUS_NOT_CHARGING is
-> +		 * returned.
-> +		 */
-> +		val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-> +		return 0;
-If STAT is always 0 when charger is removed, I guess this solution is
-fine. Though you could do the PWR_RDY check first and, if it's 1, you
-could then continue with STAT evaluation.
-
-> +	case 1:
-> +		val->intval = POWER_SUPPLY_STATUS_CHARGING;
-> +		return 0;
-> +	case 2:
-> +		val->intval = POWER_SUPPLY_STATUS_FULL;
-> +		return 0;
-> +	default:
-> +		val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
-> +		return 0;
-> +	}
-> +}
-> +
-(...)
-> +
-> +static int rt9455_charger_get_voltage(struct rt9455_info *info,
-> +				      union power_supply_propval *val)
-> +{
-> +	int voltage;
-> +	int ret;
-> +
-> +	ret = rt9455_get_field_val(info, F_VOREG,
-> +				   rt9455_voreg_values,
-> +				   ARRAY_SIZE(rt9455_voreg_values),
-> +				   &voltage);
-> +	if (ret) {
-> +		dev_err(&info->client->dev, "Failed to read VOREG value\n");
-> +		return ret;
-> +	}
-> +
-> +	val->intval = voltage;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rt9455_charger_get_voltage_max(struct rt9455_info *info,
-> +					  union power_supply_propval *val)
-> +{
-> +	/*
-> +	 * Although RT9455 charger has VMREG bits which, according to the
-> +	 * datasheet, represent "Maximum battery regulation voltage", the
-> +	 * charger never uses VMREG value as maximum threshold for battery
-> +	 * voltage. This happens because TE and TE_SHDN_EN bits are set during
-> +	 * rt9455_probe(), and charging operation is terminated when charging
-> +	 * current is less than ICHRG x IEOC. When charging operation is
-> +	 * terminated, battery voltage is almost equal to VOREG. Therefore,
-> +	 * VMREG value is not taken into account. This is the reason why maximum
-> +	 * VOREG value is returned in this function. Also, maximum VOREG value
-> +	 * equals maximum VMREG value: 4.45V.
-> +	 */
-> +	int idx = ARRAY_SIZE(rt9455_voreg_values) - 1;
-> +
-> +	val->intval = rt9455_voreg_values[idx];
-> +
-> +	return 0;
-> +}
-> +
-(...)
-> +
-> +static int rt9455_charger_set_voltage(struct rt9455_info *info,
-> +				      const union power_supply_propval *val)
-> +{
-> +	return rt9455_set_field_val(info, F_VOREG,
-> +				    rt9455_voreg_values,
-> +				    ARRAY_SIZE(rt9455_voreg_values),
-> +				    val->intval);
-> +}
-> +
-> +static int rt9455_charger_set_voltage_max(struct rt9455_info *info,
-> +					  const union power_supply_propval *val)
-> +{
-> +	/*
-> +	 * Although RT9455 charger has VMREG bits which, according to the
-> +	 * datasheet, represent "Maximum battery regulation voltage", the
-> +	 * charger never uses VMREG value as maximum threshold for battery
-> +	 * voltage. This happens because TE and TE_SHDN_EN bits are set during
-> +	 * rt9455_probe(), and charging operation is terminated when charging
-> +	 * current is less than ICHRG x IEOC. When charging operation is
-> +	 * terminated, battery voltage is almost equal to VOREG. Therefore,
-> +	 * VMREG value is not taken into account. This is the reason why VOREG
-> +	 * value is set in this function.
-> +	 */
-> +	return rt9455_set_field_val(info, F_VOREG,
-> +				    rt9455_voreg_values,
-> +				    ARRAY_SIZE(rt9455_voreg_values),
-> +				    val->intval);
-> +}
-Apparently, rt9455_charger_set_voltage_max() and
-rt9455_charger_set_voltage() do the same thing?
-
-(...)
-
-> +static int rt9455_usb_event_id(struct rt9455_info *info,
-> +			       u8 opa_mode, u8 iaicr)
-> +{
-> +	struct device *dev = &info->client->dev;
-> +	int ret;
-> +
-> +	if (opa_mode == RT9455_CHARGE_MODE) {
-> +		/*
-> +		 * If the charger is in charge mode, and it has received
-> +		 * USB_EVENT_ID, this means a consumer device is connected and
-> +		 * it should be powered by the charger.
-> +		 * In this case, the charger goes into boost mode.
-> +		 */
-> +		dev_dbg(dev, "USB_EVENT_ID received, therefore the charger goes into boost mode\n");
-> +		ret = regmap_field_write(info->regmap_fields[F_OPA_MODE],
-> +					 RT9455_BOOST_MODE);
-I missed this previously but, when you switch to boost mode here,
-shouldn't you set the boost output voltage somewhere? According to
-chip's specification, VOREG is used for both battery regulation and
-boost output. So, if the user sets the battery regulation to 4.45
-(maximum), when switching to boost mode you'll end up with 5.6V on VBUS
-rail. I'm not an expert in USB specifications but a quick google search
-revealed that the maximum VBUS voltage is 5.25V.
-
-Perhaps you should add a DT property to let the user choose boost output
-voltage.
-
-> +		if (ret) {
-> +			dev_err(dev, "Failed to set charger in boost mode\n");
-> +			return NOTIFY_DONE;
-> +		}
-> +	}
-> +
-> +	dev_dbg(dev, "USB_EVENT_ID received, therefore IAICR is set to its minimum value\n");
-> +	if (iaicr != RT9455_IAICR_100MA) {
-> +		ret = regmap_field_write(info->regmap_fields[F_IAICR],
-> +					 RT9455_IAICR_100MA);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to set IAICR value\n");
-> +			return NOTIFY_DONE;
-> +		}
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-(...)
-> +
-> +static int rt9455_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-> +	struct device *dev = &client->dev;
-> +	struct rt9455_info *info;
-> +	struct power_supply_config rt9455_charger_config = {};
-> +	/* mandatory device-specific data values */
-> +	u32 ichrg, ieoc_percentage, voreg;
-> +	/* optional device-specific data values */
-> +	u32 mivr = -1, iaicr = -1;
-> +	int i, ret;
-> +
-> +	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
-> +		dev_err(dev, "No support for SMBUS_BYTE_DATA\n");
-> +		return -ENODEV;
-> +	}
-> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	info->client = client;
-> +	i2c_set_clientdata(client, info);
-> +
-> +	info->regmap = devm_regmap_init_i2c(client,
-> +					    &rt9455_regmap_config);
-> +	if (IS_ERR(info->regmap)) {
-> +		dev_err(dev, "Failed to initialize register map\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i < F_MAX_FIELDS; i++) {
-> +		info->regmap_fields[i] =
-> +			devm_regmap_field_alloc(dev, info->regmap,
-> +						rt9455_reg_fields[i]);
-> +		if (IS_ERR(info->regmap_fields[i])) {
-> +			dev_err(dev,
-> +				"Failed to allocate regmap field = %d\n", i);
-> +			return PTR_ERR(info->regmap_fields[i]);
-> +		}
-> +	}
-> +
-> +	ret = rt9455_discover_charger(info, &ichrg, &ieoc_percentage,
-> +				      &voreg, &mivr, &iaicr);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to discover charger\n");
-> +		return ret;
-> +	}
-> +
-> +#if IS_ENABLED(CONFIG_USB_PHY)
-> +	info->usb_phy = usb_get_phy(USB_PHY_TYPE_USB2);
-If you used devm_usb_get_phy() you wouldn't have to worry about
-releasing usb_phy(as Krzysztof suggested in the previous mail). It's up
-to you.
-
-> +	if (IS_ERR(info->usb_phy)) {
-> +		dev_err(dev, "Failed to get USB transceiver\n");
-> +	} else {
-> +		info->nb.notifier_call = rt9455_usb_event;
-> +		ret = usb_register_notifier(info->usb_phy, &info->nb);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to register USB notifier\n");
-> +			usb_put_phy(info->usb_phy);
-> +			/*
-> +			 * Since usb_put_phy() has been called, info->usb_phy is
-> +			 * set to ERR_PTR so that in rt9455_remove()
-> +			 * usb_put_phy() is not mistakenly called again.
-> +			 */
-> +			info->usb_phy = ERR_PTR(-ENODEV);
-> +		}
-> +	}
-> +#endif
-> +
-> +	INIT_DEFERRABLE_WORK(&info->pwr_rdy_work, rt9455_pwr_rdy_work_callback);
-> +	INIT_DEFERRABLE_WORK(&info->max_charging_time_work,
-> +			     rt9455_max_charging_time_work_callback);
-> +	INIT_DEFERRABLE_WORK(&info->batt_presence_work,
-> +			     rt9455_batt_presence_work_callback);
-> +
-> +	rt9455_charger_config.of_node		= dev->of_node;
-> +	rt9455_charger_config.drv_data		= info;
-> +	rt9455_charger_config.supplied_to	= rt9455_charger_supplied_to;
-> +	rt9455_charger_config.num_supplicants	=
-> +					ARRAY_SIZE(rt9455_charger_supplied_to);
-> +	ret = devm_request_threaded_irq(dev, client->irq, NULL,
-> +					rt9455_irq_handler_thread,
-> +					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> +					RT9455_DRIVER_NAME, info);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register IRQ handler\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = rt9455_hw_init(info, ichrg, ieoc_percentage, voreg, mivr, iaicr);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set charger to its default values\n");
-> +		return ret;
-> +	}
-> +
-> +	info->charger = power_supply_register(dev, &rt9455_charger_desc,
-> +					      &rt9455_charger_config);
-> +	if (IS_ERR(info->charger)) {
-> +		dev_err(dev, "Failed to register charger\n");
-> +		ret = PTR_ERR(info->charger);
-> +		goto put_usb_phy;
-> +	}
-> +
-> +	return 0;
-> +
-> +put_usb_phy:
-> +#if IS_ENABLED(CONFIG_USB_PHY)
-> +	if (!IS_ERR(info->usb_phy))  {
-> +		usb_unregister_notifier(info->usb_phy, &info->nb);
-> +		usb_put_phy(info->usb_phy);
-> +		info->usb_phy = ERR_PTR(-ENODEV);
-> +	}
-> +#endif
-> +	return ret;
-> +}
-> +
-> +static int rt9455_remove(struct i2c_client *client)
-> +{
-> +	int ret;
-> +	struct rt9455_info *info = i2c_get_clientdata(client);
-> +
-> +	ret = rt9455_register_reset(info);
-> +	if (ret)
-> +		dev_err(&info->client->dev, "Failed to set charger to its default values\n");
-> +
-> +#if IS_ENABLED(CONFIG_USB_PHY)
-> +	if (!IS_ERR(info->usb_phy)) {
-> +		usb_unregister_notifier(info->usb_phy, &info->nb);
-> +		usb_put_phy(info->usb_phy);
-> +	}
-> +#endif
-> +
-> +	cancel_delayed_work_sync(&info->pwr_rdy_work);
-> +	cancel_delayed_work_sync(&info->max_charging_time_work);
-> +	cancel_delayed_work_sync(&info->batt_presence_work);
-> +
-> +	power_supply_unregister(info->charger);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct i2c_device_id rt9455_i2c_id_table[] = {
-> +	{ RT9455_DRIVER_NAME, 0 },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(i2c, rt9455_i2c_id_table);
-> +
-> +static const struct of_device_id rt9455_of_match[] = {
-> +	{ .compatible = "richtek,rt9455", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, rt9455_of_match);
-> +
-> +static const struct acpi_device_id rt9455_i2c_acpi_match[] = {
-> +	{ "RT945500", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, rt9455_i2c_acpi_match);
-> +
-> +static struct i2c_driver rt9455_driver = {
-> +	.probe		= rt9455_probe,
-> +	.remove		= rt9455_remove,
-> +	.id_table	= rt9455_i2c_id_table,
-> +	.driver = {
-> +		.name		= RT9455_DRIVER_NAME,
-> +		.of_match_table	= of_match_ptr(rt9455_of_match),
-> +		.acpi_match_table = ACPI_PTR(rt9455_i2c_acpi_match),
-> +	},
-> +};
-> +module_i2c_driver(rt9455_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Anda-Maria Nicolae <anda-maria.nicolae@intel.com>");
-> +MODULE_ALIAS("i2c:rt9455-charger");
-> +MODULE_DESCRIPTION("Richtek RT9455 Charger Driver");
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pali Roh=C3=A1r
+pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
