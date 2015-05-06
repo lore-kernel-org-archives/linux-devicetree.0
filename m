@@ -1,27 +1,46 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/3] regulator: max8973: get rid of extra variable for
- gpio validity
-Date: Wed, 6 May 2015 17:39:28 +0530
-Message-ID: <554A0478.6070007@nvidia.com>
-References: <1429534457-15515-1-git-send-email-ldewangan@nvidia.com> <1429534457-15515-2-git-send-email-ldewangan@nvidia.com> <20150420211939.GQ14892@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: bt-sco: Add devicetree support for bt-sco codec
+Date: Wed, 6 May 2015 13:13:11 +0100
+Message-ID: <20150506121311.GP22845@sirena.org.uk>
+References: <1430856941-3938-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lSMnNQgKosWEEuky"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150420211939.GQ14892@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1430856941-3938-1-git-send-email-marek@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
 
-On Tuesday 21 April 2015 02:49 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Mon, Apr 20, 2015 at 06:24:15PM +0530, Laxman Dewangan wrote:
->> To find that dvs-gpio is valid or not, gpio API gpio_is_valid()
->> can be directly used instead of intermediate variable.
-> Applied, thanks.
->
+--lSMnNQgKosWEEuky
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patch is not available on linux-next. Is it pending for any clean-up?
+On Tue, May 05, 2015 at 10:15:41PM +0200, Marek Belisko wrote:
+
+> +static const struct of_device_id bt_sco_codec_of_match[] = {
+> +	{ .compatible = "delta,dfbmcs320", },
+> +	{ .compatible = "linux,bt-sco", },
+
+Is there any burning reason for adding the linux,bt-sco compatible?
+
+--lSMnNQgKosWEEuky
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVSgVWAAoJECTWi3JdVIfQb2oH/j0vdyRU3yfYXdR14YhTiDjX
+QgfNgov7nxWrlEdOTfcHbyeijldQsPUfur4Wdks/kAxhAelNAqrgcXj3DcXj4hWm
+xRGXTG//cIxGKHYhO3CpS3yVMT2t1f2aLkLH1KgT/7uPjMQdLGstza122fZ8rgpK
+dAfSy5Tyc7+AW5Nl46ou2cxbGV+4eR56tpMbdBIc1AIiAqZA+2XKjeyJEJopYhoA
+n2Vz7xV9R1rV0l1nGMs/Y2OT4jTyX2Etpl0haasJ8gcyxUjbe9ZaimqHE9cnkchd
+Z5UIlhDkU+q/MxnL4hktjjVkyuTHrnCaGR/MqNrHmuu9TUqgQrFEyuTZrWSELtA=
+=lfws
+-----END PGP SIGNATURE-----
+
+--lSMnNQgKosWEEuky--
