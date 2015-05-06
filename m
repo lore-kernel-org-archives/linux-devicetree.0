@@ -1,36 +1,29 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v3 5/5] MAINTAINERS: Add pci-st.c to ARCH/STI architecture
-Date: Wed, 6 May 2015 08:45:15 +0200
-Message-ID: <5549B87B.709@st.com>
-References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org> <1428657168-12495-6-git-send-email-gabriel.fernandez@linaro.org> <20150505214225.GC24643@google.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Wed, 6 May 2015 12:23:19 +0530
+Message-ID: <CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+	<d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+	<20150504121209.GM15510@sirena.org.uk>
+	<CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+	<20150505105714.GA22845@sirena.org.uk>
+	<CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
+	<20150505171252.GI22845@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150505214225.GC24643@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edworthy@renesas.com>, Minghuan Lian <Minghuan>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150505171252.GI22845@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Bjorn,
+On 5 May 2015 at 22:42, Mark Brown <broonie@kernel.org> wrote:
+> This still doesn't say what the value is supposed to mean which means
+> it's not possible for someone to write generic code which handles the
+> binding - saying that people can reference the value doesn't tell them
+> how to interpret it.  A limit?  A nominal constant draw value?  A value
+> to regulate to?  Those are all different things expressed as a current.
 
-On 05/05/2015 11:42 PM, Bjorn Helgaas wrote:
-> On Fri, Apr 10, 2015 at 11:12:48AM +0200, Gabriel FERNANDEZ wrote:
->> This patch adds the pci-st.c pci driver found on STMicroelectronics
->> SoC's into the STI arch section of the maintainers file.
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> I'd like an ack from the current maintainers:
->
->    ARM/STI ARCHITECTURE
->    M:      Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
->    M:      Maxime Coquelin <maxime.coquelin@st.com>
->    M:      Patrice Chotard <patrice.chotard@st.com>
->
-> that they're OK with taking on this additional file.
-Yes, you can add my:
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
-
-Thanks,
-Maxime
+@Stephen: Can you please answer these queries please, so that we
+can get the bindings correctly ?
