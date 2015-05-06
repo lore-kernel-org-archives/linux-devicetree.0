@@ -1,63 +1,38 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 0/2] gpio: Allow userspace export from DT
-Date: Wed, 6 May 2015 15:06:15 +0200
-Message-ID: <20150506130615.GB5302@localhost>
-References: <20150413110515.9681.58848.stgit@localhost>
- <20150504084925.GB4047@localhost>
- <CACRpkdbFKs8mALw7q2d0EEDkhxKNLgeiFB5TyZ6ZPpfcW-c+oQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbFKs8mALw7q2d0EEDkhxKNLgeiFB5TyZ6ZPpfcW-c+oQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Johan Hovold <johan@kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: mvebu: add alias for mdio on Armada 38x
+Date: Wed,  6 May 2015 15:13:59 +0200
+Message-ID: <1430918040-17307-2-git-send-email-kaloz@openwrt.org>
+References: <1430918040-17307-1-git-send-email-kaloz@openwrt.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430918040-17307-1-git-send-email-kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 06, 2015 at 09:22:22AM +0200, Linus Walleij wrote:
-> On Mon, May 4, 2015 at 10:49 AM, Johan Hovold <johan@kernel.org> wrote:
-> > On Mon, Apr 13, 2015 at 01:05:15PM +0200, Martin Fuzzey wrote:
-> 
-> >> The above means that, in order to export the GPIO to userspace via
-> >> /sys/class/gpio/export the userspace code must know the exact hardware and
-> >> kernel version information.
-> >
-> > Not quite. You can still determine the gpio number in the above cases by
-> > walking the sysfs tree to find the chip and it's base. This is the only
-> > way to do this for dynamic buses such as USB.
-> 
-> Maybe we should start providing something like an
-> "lsgpio" utility in tools/gpio to do this, just as a hint
-> to userspace people on how things should be done.
+This allows us to reference it later.
 
-I think we should focus on defining a new user-space interface rather
-than make it easier to use the current one (it should really only be
-used for development or one-off hacks IMO).
+Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-38x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >> This patch series solves both problems by performing the external
-> >> signal => GPIO mapping in the device tree.
-> >
-> > As Rob already mentioned, what we want is some way to declare pin
-> > functions. These could then be requested from userspace (or used in DT,
-> > something which should allow for further refactoring there as well)
-> > unless a driver has already claimed them.
-> 
-> We have the ability to name the GPIO lines (I usually refer to
-> lines rather than pins, as pins are physical and not all GPIOs
-> are, actually) using the array "names" in struct gpio_chip,
-> however this has no DT binding, so maybe people should
-> work on that. These names appear as named line files
-> in sysfs IIRC. Or maybe you're thinking of something else?
-
-Yes, something like that. As you mention above, if it was possibly to
-define those names in firmware, even the current sysfs interface would
-expose the pins as
-
-	/sys/class/gpio/<function>
-
-rather than say /sys/class/gpio/gpio279, thereby solving the gpio-number
-look-up issue. Well, to actually make the pin available *from* userspace
-you'd currently still need the number...
-
-Johan
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index ed2dd8b..839e5bf 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -495,7 +495,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			mdio@72004 {
++			mdio: mdio@72004 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "marvell,orion-mdio";
+-- 
+2.1.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
