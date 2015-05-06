@@ -1,72 +1,67 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: How to encode being an I2C slave in DT?
-Date: Wed, 6 May 2015 10:09:51 +0200
-Message-ID: <20150506080951.GS25193@pengutronix.de>
-References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
- <20150505105513.GA1841@katana>
- <20150506065928.GP25193@pengutronix.de>
- <3394114.re5da8pjTi@fb07-iapwap2>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] clk: bindings: Fix assigned-clock-rates property name
+Date: Wed, 06 May 2015 17:10:04 +0900
+Message-ID: <5549CC5C.8090107@samsung.com>
+References: <1430893716-1825-1-git-send-email-k.kozlowski@samsung.com>
+ <20150506074518.GA11126@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3394114.re5da8pjTi@fb07-iapwap2>
+In-reply-to: <20150506074518.GA11126-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Marc,
+On 06.05.2015 16:45, Stephen Boyd wrote:
+> On 05/06, Krzysztof Kozlowski wrote:
+>> In documentation the "assigned-clock-parents" name was used when
+>> describing the "assigned-clock-rates" property.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>
+> Looks right. The whole sentence could use some work though.
+>
+>>   Documentation/devicetree/bindings/clock/clock-bindings.txt | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> index 06fc6d541c89..bf5b0414dc17 100644
+>> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> @@ -138,7 +138,7 @@ Some platforms may require initial configuration of default parent clocks
+>>   and clock frequencies. Such a configuration can be specified in a device tree
+>>   node through assigned-clocks, assigned-clock-parents and assigned-clock-rates
+>>   properties. The assigned-clock-parents property should contain a list of parent
+>> -clocks in form of phandle and clock specifier pairs, the assigned-clock-parents
+>> +clocks in form of phandle and clock specifier pairs, the assigned-clock-rates
+>>   property the list of assigned clock frequency values - corresponding to clocks
+>
+> This half-sentence:
+>
+> 	The assigned-clock-ratse property the list of assigned
+> 	clock frequency values
+>
+> doesn't read correctly. Maybe the whole thing should be rewritten
+> as:
+>
+> 	The assigned-clock-parents property should contain a list
+> 	of parent clocks in the form of a phandle and clock
+> 	specifier pair and the assigned-clock-rates property
+> 	should contain a list of frequencies in Hz. Both these
+> 	properties should correspond to the clocks listed in the
+> 	assigned-clocks property.
 
-On Wed, May 06, 2015 at 09:53:55AM +0200, Marc Dietrich wrote:
-> Am Mittwoch, 6. Mai 2015, 08:59:28 schrieb Uwe Kleine-K=F6nig:
-> > On Tue, May 05, 2015 at 12:55:13PM +0200, Wolfram Sang wrote:
-> > > So what about adding a new property "i2c-slave-reg"? This does no=
-t only
-> > > prevent the confusion above, but also makes it very clear that th=
-is node
-> > > is an I2C slave without the need to encode that somehow in the
-> > > compatible property (although it probably should be described the=
-re as
-> > > well, still).
-> >=20
-> > I admit I didn't follow the discussions referenced in the footnotes=
-, but
-> > I wonder if the slave part should be added to the device tree at al=
-l.
-> > AFAICT it could (and so should) be completely userspace-defined whi=
-ch
-> > slave driver is used on which address. I imagine that for most
-> > controllers the bus addresses to use can be chosen more or less fre=
-ely.
-> > So what am I missing?
->=20
-> if you had read the footnotes you would know :-) Our usecase is conne=
-ct an=20
-> embeedded controller via i2c to the host soc, similar to cros-ec, but=
- here the=20
-> ec is the i2c master. The ec connects keyboard, mouse, pwrmngt, and o=
-ther=20
-> stuff, for which the drivers are best implemented in kernel code AFAI=
-K.=20
-Right, the driver might sensibly be implemented in kernel space. But I'=
-d
-vote that you still need to do the binding of these drivers to your
-slave controller from userspace. Then there is no need to specify
-anything in your dtb.
+Looks much better. So actually this should be yours patch now, you can 
+add my Reported-by :).
 
-Best regards
-Uwe
+Best regards,
+Krzysztof
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
