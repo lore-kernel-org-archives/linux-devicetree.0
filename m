@@ -1,33 +1,116 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Wed, 6 May 2015 10:51:07 -0700
-Message-ID: <CAMAWPa-HMhJK9UzwfaMPe-MO=4mzjvC=nRwPX-pbab_fb3YZ9A@mail.gmail.com>
-References: <1422083789-18905-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<20150422074019.GA1511@katana>
+From: "Fuzzey, Martin" <mfuzzey@parkeon.com>
+Subject: Re: [PATCH 0/2] gpio: Allow userspace export from DT
+Date: Wed, 6 May 2015 19:56:05 +0200
+Message-ID: <CANh8Qzy7D=O0C7nw_M0LCvE887uxsCjRmvQ8fcKTcf4dJNm7iA@mail.gmail.com>
+References: <20150413110515.9681.58848.stgit@localhost> <20150504084925.GB4047@localhost>
+ <CACRpkdbFKs8mALw7q2d0EEDkhxKNLgeiFB5TyZ6ZPpfcW-c+oQ@mail.gmail.com> <20150506130615.GB5302@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150422074019.GA1511@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150506130615.GB5302@localhost>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2015 at 12:40 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> On Sat, Jan 24, 2015 at 09:16:29AM +0200, Pantelis Antoniou wrote:
->> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
->> This is required to avoid multi probing when using I2C and device
->> overlays containing a mux.
->> This patch is also more careful with the release of the adapter device
->> which caused a deadlock with muxes, and does not break the build
->> on !OF since the node flag accessors are not defined then.
->>
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+On 6 May 2015 at 15:06, Johan Hovold <johan@kernel.org> wrote:
 >
-> Now, that the dependency is upstream: applied to for-current, thanks!
+> On Wed, May 06, 2015 at 09:22:22AM +0200, Linus Walleij wrote:
+> > On Mon, May 4, 2015 at 10:49 AM, Johan Hovold <johan@kernel.org> wr=
+ote:
+> > > On Mon, Apr 13, 2015 at 01:05:15PM +0200, Martin Fuzzey wrote:
+> >
+> > >> The above means that, in order to export the GPIO to userspace v=
+ia
+> > >> /sys/class/gpio/export the userspace code must know the exact ha=
+rdware and
+> > >> kernel version information.
+> > >
+> > > Not quite. You can still determine the gpio number in the above c=
+ases by
+> > > walking the sysfs tree to find the chip and it's base. This is th=
+e only
+> > > way to do this for dynamic buses such as USB.
+> >
 
-I'm not seeing this in linux-next, or in your for-current branch.
+A problem with that is that the "label" sysfs attribute is not
+necessarilly unique (and is even documented as being non unique).
+Many drivers just use the chip name as the label so if you have more
+than one of them...
 
-Was this dropped or superseded by something else?
+Of course if you know the bus and bus address it is possible to find
+the associated GPIO base but why should userspace have to know that?
+Isn't the whole point of the DT to describe such hardware details?
 
-Kevin
+> > Maybe we should start providing something like an
+> > "lsgpio" utility in tools/gpio to do this, just as a hint
+> > to userspace people on how things should be done.
+>
+> I think we should focus on defining a new user-space interface rather
+> than make it easier to use the current one (it should really only be
+> used for development or one-off hacks IMO).
+>
+
+Doesn't the ability to name GPIOs, fix their direction, and "pre
+export" them  in the device tree remove most of the warts of the
+current interface? (for GPIOs for which it is used in any case)
+
+While I agree that the sysfs GPIO interface is sometimes abused (such
+as for LEDs and switches which already have proper kernel drivers)
+there are still cases where a full kernel driver doesn't really make
+sense (eg a signal to open a parking barrier) - is anyone suggesting
+this needs a custom driver or that the LED one should be used  -
+setting the heartbeat trigger on that would be interesting .... :)
+
+> > >> This patch series solves both problems by performing the externa=
+l
+> > >> signal =3D> GPIO mapping in the device tree.
+> > >
+> > > As Rob already mentioned, what we want is some way to declare pin
+> > > functions. These could then be requested from userspace (or used =
+in DT,
+> > > something which should allow for further refactoring there as wel=
+l)
+> > > unless a driver has already claimed them.
+> >
+> > We have the ability to name the GPIO lines (I usually refer to
+> > lines rather than pins, as pins are physical and not all GPIOs
+> > are, actually) using the array "names" in struct gpio_chip,
+> > however this has no DT binding, so maybe people should
+> > work on that. These names appear as named line files
+> > in sysfs IIRC. Or maybe you're thinking of something else?
+>
+
+>
+> Yes, something like that. As you mention above, if it was possibly to
+> define those names in firmware, even the current sysfs interface woul=
+d
+> expose the pins as
+>
+>         /sys/class/gpio/<function>
+>
+> rather than say /sys/class/gpio/gpio279, thereby solving the gpio-num=
+ber
+> look-up issue. Well, to actually make the pin available *from* usersp=
+ace
+> you'd currently still need the number...
+>
+Indeed that  doesn't solve the how to export it problem.
+AFAICT nothing is visible in sysfs until the export has been done.
+
+Martin
+
+
+
+--=20
+--=20
+Martin Fuzzey | Software Expertise
+Parc La Fayette - 6 rue Isaac Newton - 25075 Besan=C3=A7on - FR
++33381546880 | +33677158582
+mfuzzey@parkeon.com | www.parkeon.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
