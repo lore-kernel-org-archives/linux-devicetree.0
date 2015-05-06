@@ -1,61 +1,71 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH] ARM: dts: cros-ec-keyboard: Add support for some Japanese keys
-Date: Wed,  6 May 2015 09:03:38 +0800
-Message-ID: <1430874218-27738-1-git-send-email-zyw@rock-chips.com>
+From: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [RFC PATCH 2/7] mmc: sh_mobile_sdhi: Add actual clock rate
+ support
+Date: Wed, 06 May 2015 02:05:32 +0100
+Message-ID: <1430874332.4222.18.camel@xylophone.i.decadent.org.uk>
+References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
+	 <1430397081.5802.41.camel@xylophone.i.decadent.org.uk>
+	 <554259A0.9030307@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <554259A0.9030307-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Ian Molton <ian-zdned+2MO1+9FHfhHBbuYA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, Shinobu Uehara <shinobu.uehara.xc-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for 4 Japanese keys
+On Thu, 2015-04-30 at 19:34 +0300, Sergei Shtylyov wrote:
+> On 04/30/2015 03:31 PM, Ben Hutchings wrote:
+> 
+> > From: Shinobu Uehara <shinobu.uehara.xc-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> 
+> > It is necessary to stop the SD clock before using
+> > the actual clock in case of SDHI controller.
+> 
+> > Signed-off-by: Shinobu Uehara <shinobu.uehara.xc-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> > ---
+> >   drivers/mmc/host/sh_mobile_sdhi.c |   14 ++++++++++++++
+> >   1 file changed, 14 insertions(+)
+> 
+> > diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+> > index 6906a905cd54..92a58c6007fe 100644
+> > --- a/drivers/mmc/host/sh_mobile_sdhi.c
+> > +++ b/drivers/mmc/host/sh_mobile_sdhi.c
+> > @@ -136,6 +136,18 @@ static void sh_mobile_sdhi_clk_disable(struct platform_device *pdev)
+> >   	clk_disable_unprepare(priv->clk);
+> >   }
+> >
+> > +static void sh_mobile_sdhi_set_clk_div(struct platform_device *pdev, int clk)
+> > +{
+> > +	struct mmc_host *mmc = dev_get_drvdata(&pdev->dev);
+> > +	struct tmio_mmc_host *host = mmc_priv(mmc);
+> > +
+> > +	if (clk == true) {
+> 
+>     'clk' is *int*. Perhaps, should be just *if* (clk)?
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+clk is either 0 or 1 and should maybe be bool.  But you're right,
+regardless of its type, it doesn't make sense to compare with true.
 
----
+Ben.
 
- arch/arm/boot/dts/cros-ec-keyboard.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+> > +		sd_ctrl_write16(host, CTL_SD_CARD_CLK_CTL, ~0x0100 &
+> > +				sd_ctrl_read16(host, CTL_SD_CARD_CLK_CTL));
+> > +		sd_ctrl_write16(host, CTL_SD_CARD_CLK_CTL, 0x00ff);
+> > +	}
+> > +}
+> > +
+> >   static int sh_mobile_sdhi_wait_idle(struct tmio_mmc_host *host)
+> >   {
+> >   	int timeout = 1000;
+> [...]
+> 
+> WBR, Sergei
+> 
 
-diff --git a/arch/arm/boot/dts/cros-ec-keyboard.dtsi b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-index 9c7fb0a..4e42f30c 100644
---- a/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-+++ b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-@@ -22,6 +22,7 @@
- 			MATRIX_KEY(0x00, 0x02, KEY_F1)
- 			MATRIX_KEY(0x00, 0x03, KEY_B)
- 			MATRIX_KEY(0x00, 0x04, KEY_F10)
-+			MATRIX_KEY(0x00, 0x05, KEY_RO)
- 			MATRIX_KEY(0x00, 0x06, KEY_N)
- 			MATRIX_KEY(0x00, 0x08, KEY_EQUAL)
- 			MATRIX_KEY(0x00, 0x0a, KEY_RIGHTALT)
-@@ -34,6 +35,7 @@
- 			MATRIX_KEY(0x01, 0x08, KEY_APOSTROPHE)
- 			MATRIX_KEY(0x01, 0x09, KEY_F9)
- 			MATRIX_KEY(0x01, 0x0b, KEY_BACKSPACE)
-+			MATRIX_KEY(0x01, 0x0c, KEY_HENKAN)
- 
- 			MATRIX_KEY(0x02, 0x00, KEY_LEFTCTRL)
- 			MATRIX_KEY(0x02, 0x01, KEY_TAB)
-@@ -45,6 +47,7 @@
- 			MATRIX_KEY(0x02, 0x07, KEY_102ND)
- 			MATRIX_KEY(0x02, 0x08, KEY_LEFTBRACE)
- 			MATRIX_KEY(0x02, 0x09, KEY_F8)
-+			MATRIX_KEY(0x02, 0x0a, KEY_YEN)
- 
- 			MATRIX_KEY(0x03, 0x01, KEY_GRAVE)
- 			MATRIX_KEY(0x03, 0x02, KEY_F2)
-@@ -53,6 +56,7 @@
- 			MATRIX_KEY(0x03, 0x06, KEY_6)
- 			MATRIX_KEY(0x03, 0x08, KEY_MINUS)
- 			MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)
-+			MATRIX_KEY(0x03, 0x0c, KEY_MUHENKAN)
- 
- 			MATRIX_KEY(0x04, 0x00, KEY_RIGHTCTRL)
- 			MATRIX_KEY(0x04, 0x01, KEY_A)
--- 
-1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
