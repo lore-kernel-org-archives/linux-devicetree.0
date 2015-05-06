@@ -1,17 +1,19 @@
-From: Brent Wang <wangbintian@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Wed, 6 May 2015 23:31:12 +0800
-Message-ID: <CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>
+Date: Wed, 6 May 2015 16:44:06 +0100
+Message-ID: <20150506154406.GB2974@leverpostej>
 References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
  <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
  <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
  <5549B9CC.1040709@huawei.com> <20150506093022.GB31001@leverpostej>
  <5549EE97.3020801@huawei.com> <20150506104856.GC707@leverpostej>
+ <CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150506104856.GC707@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,81 +23,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
+To: Brent Wang <wangbintian@gmail.com>
 Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi,
 
-2015-05-06 18:55 GMT+08:00, Mark Rutland <mark.rutland@arm.com>:
-> Hi,
->
->> > I think that given that we know the UART is not quite a PL011 we should
->> > add an additional compatible string just in case some difference crops
->> > up later that is problematic.
->> >
->> > So we'd have something like:
->> >
->> > 	compatible = "hisilicon,hi6220-uart", "arm,pl011", "arm,primecell";
->> >
->> > That way we can add any optimisations or workarounds later as required.
->> I understand and thanks for your suggestion.
->>
->> Can I do not do this work in this patch set? Because I got the
->> information UART0 is PL011 compatible. Hisilicon uart engineer can do
->> this work in the future, maybe for UART1/UART2.
->
-> I am not asking you to do any driver work for this -- the current driver
-> should ignore the "hisilicon,hi6220-uart" string and recognise
-> "arm,pl011".
->
-> I am only asking you to add the additional string to the DTS, and to
-> update the binding document to list the new string. That way if and when
-> we need the kernel to distinguish between a regular PL011 and the
-> hi6220-specific variant, the DTB does not need to be updated in order to
-> do so.
-How about add the following binding rule to my 2/5 patch:
----------------------------
-*Hisilicon Enhanced ARM AMBA Primecell PL011 serial UART
+> How about add the following binding rule to my 2/5 patch:
+> ---------------------------
+> *Hisilicon Enhanced ARM AMBA Primecell PL011 serial UART
+> 
+> Required properties:
+> - compatible: must be "hisilicon,hi6220-uart", "arm,primecell", "arm,pl011"
 
-Required properties:
-- compatible: must be "hisilicon,hi6220-uart", "arm,primecell", "arm,pl011"
-- reg: exactly one register range with length 0x1000
-- interrupts: exactly one interrupt specifier
+"arm,primecell" should come last.
 
-See also bindings/serial/pl011.txt
+> - reg: exactly one register range with length 0x1000
+> - interrupts: exactly one interrupt specifier
+> 
+> See also bindings/serial/pl011.txt
+> 
+> Example:
+> 
+> uart0: uart@f8015000 {
+>         compatible = "hisilicon,hi6220-uart", "arm,pl011", "arm,primecell";
+>         reg = <0x0 0xf8015000 0x0 0x1000>;
+>         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>         clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl HI6220_UART0_PCLK>;
+>         clock-names = "uartclk", "apb_pclk";
+> };
 
-Example:
+How about for the moment we just modify the existing pl011 binding
+document to allow for the hi6220-specific string in addition to its
+existing strings? We can always split it out later if the hi6220 UART
+binding needs to be significantly divergent.
 
-uart0: uart@f8015000 {
-        compatible = "hisilicon,hi6220-uart", "arm,pl011", "arm,primecell";
-        reg = <0x0 0xf8015000 0x0 0x1000>;
-        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-        clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl HI6220_UART0_PCLK>;
-        clock-names = "uartclk", "apb_pclk";
-};
----------------------------
-> Is UART 0 different from UART1 and UART2?
-Yes,  but my patch just includes UART0, we do some changements for UART1/2
-to improve performance.
+> > Is UART 0 different from UART1 and UART2?
+> Yes,  but my patch just includes UART0, we do some changements for UART1/2
+> to improve performance.
+
+Sure, but we need to make sure we can choose a sane compatible string
+for them, that won't clash with whatever we choose for UART0.
+
+Are they the same IP as UART0, or fundamentally different?
+
+Are they also PL011 derived?
 
 Thanks,
-
-Bintian
->
-> Thanks,
-> Mark.
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-
-
--- 
-Best Regards,
-
-Bintian
-===========================
-Don't be nervous, just be happy!
+Mark.
