@@ -1,37 +1,42 @@
-From: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 0/2] ARM: mvebu: Linksys WRT1200AC and WRT1900AC v2 support
-Date: Wed,  6 May 2015 15:13:58 +0200
-Message-ID: <1430918040-17307-1-git-send-email-kaloz@openwrt.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [alsa-devel] [PATCH v2 RESEND] ARM: dts: Support audio on
+ Exynos5422-odroidxu3 using simple-audio-card
+Date: Wed, 6 May 2015 15:23:44 +0200
+Message-ID: <CABxcv=mpPOfDDnD0RJGb-W313jpxqiW2O_o_tFJgSwEhOZnKew@mail.gmail.com>
+References: <1428651178-18186-1-git-send-email-ideal.song@samsung.com>
+	<552791A4.40203@fivetechno.de>
+	<CANAwSgS98n0kX8oBUk5Ehk1fwU4DA_DNuAqztp3LrOBcmrtAZw@mail.gmail.com>
+	<20150506104714.498f8da5@songinha-Samsung-DeskTop-System>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150506104714.498f8da5@songinha-Samsung-DeskTop-System>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inha Song <ideal.song@samsung.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Anand Moon <linux.amoon@gmail.com>, Markus Reichl <m.reichl@fivetechno.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The following patches add support for the Linksys WRT1200AC (Caiman) and
-the Linksys WRT1900AC v2 (Cobra).
- 
-Both boards have:
- 
-- 2 Marvell 88W8864 radios
-- 1 USB 3.0 port
-- 1 USB 2.0/eSATAp port
-- 2 Ethernet interfaces connected to a 88E6176 switch (1x WAN + 4x LAN)
-- 128MB NAND flash
-- 512MB RAM
++Krzysztof Kozlowski
 
-I didn't have much luck getting DSA work in this configuration yet,
-so (for now) we use the bootloader configured layout for the switch.
- 
-The only difference between the two boards is the radio configuration
-(2x2 vs 3x3), so everything except the leds (to be named properly)
-is in the dtsi file. When the wireless driver will be submitted
-upstream, the powertables (calibration data) will end up in the board
-specific files, tho.
+Hello Inha,
 
+On Wed, May 6, 2015 at 3:47 AM, Inha Song <ideal.song@samsung.com> wrote:
+> Hi Kukjin,
+>
+> Any comments about this patch?
+>
+> Best Regards,
+> Inha Song.
+>
 
-Imre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It seems Kukjin didn't have time lately to deal with the huge backlog
+of patches for Exynos so Krzysztof (added as cc) has kindly
+volunteered to help him by acting as a co-maintainer and queuing
+patches.
+
+So could you please for any patches that my have been forgotten (like
+$subject),  rebase on current head, carry all the obtained tags and
+re-send cc'ing Krzysztof so he can be aware of them?
+
+Best regards,
+Javier
