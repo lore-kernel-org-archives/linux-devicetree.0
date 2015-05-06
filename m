@@ -1,48 +1,91 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH] ASoC: bt-sco: Add devicetree support for bt-sco codec
-Date: Wed, 6 May 2015 21:38:55 +0200
-Message-ID: <CAAfyv37jOJ=grVAM22-oLx2s6-8rXr2fVbgpNqkaJjwuEsHZ9Q@mail.gmail.com>
-References: <1430856941-3938-1-git-send-email-marek@goldelico.com>
-	<20150506121311.GP22845@sirena.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC driver
+Date: Wed, 06 May 2015 21:50:14 +0200
+Message-ID: <2154265.kZOTsisCx2@wuerfel>
+References: <1430884947-16787-1-git-send-email-lho@apm.com> <20150506182900.GI22949@pd.tnic> <CAPw-ZTmJ8C3KmujZJN1z21S3LFQ-TRouUeAjN0Y02HOTKAG1_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150506121311.GP22845@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, perex@perex.cz, tiwai@suse.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPw-ZTmJ8C3KmujZJN1z21S3LFQ-TRouUeAjN0Y02HOTKAG1_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Wednesday 06 May 2015 11:43:36 Loc Ho wrote:
+> Hi Borislav,
+> 
+> On Wed, May 6, 2015 at 11:29 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
+> > On Wed, May 06, 2015 at 11:12:20AM -0700, Loc Ho wrote:
+> >> 1. Whether to have an single driver for APM EDAC or multiple instance
+> >> of 4 different drivers. With single driver, it does not scale in the
+> >> future when we add/remove memory controllers and CPU domains. This is
+> >
+> > Why doesn't it scale? Please explain this to me more verbosely.
+> 
+> Let me explain a bit more. We have four memory controller today.
+> Therefore, I would like to have 4 DTS node and the same driver probe
+> function called 4 times. If there is only one driver for the entire
+> APM EDAC, I would have to merge all the resource registers into an
+> single DTS node and its probe function called one time. In this one
+> driver design, what would I do in future chip or variant of the chip
+> in which it remove or add an addition memory controller? I would have
+> to change the driver as well as the DTS node. In the four instance
+> probe design, all I need is to add an additional DTS node.
 
-On Wed, May 6, 2015 at 2:13 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, May 05, 2015 at 10:15:41PM +0200, Marek Belisko wrote:
->
->> +static const struct of_device_id bt_sco_codec_of_match[] = {
->> +     { .compatible = "delta,dfbmcs320", },
->> +     { .compatible = "linux,bt-sco", },
->
-> Is there any burning reason for adding the linux,bt-sco compatible?
-No no real reason just want to keep that if somebody would like use it from DT
-referenced by bt-sco entry (similar as platform data). I'm adding DT
-support for it because I want to use
-this for W2CBW003 chip and I can use simply "linux,bt-sco" property in
-DT or I instead of that add new vendor
-prefix + add new compatible entry which is IMO much harder that
-reference it by generic name.
+There are lots of possible representations in DT that would solve this.
 
-Thanks,
+First of all, a device node can be turned into a platform_device but
+does not have to, so you you could have one DT node for the common
+parts (the pcp), and then subnodes underneath it, and have the driver
+attach to the main device but parse the subnodes manually to see
+what registers are there. There is no magic involved here, and this
+would address the concerns that Boris and I have.
 
-marek
+Another option would be to have multiple drivers: have one driver
+that handles the common parts here, and make that export a shared
+interface to which the other drivers can register, then create
+five drivers that each do one thing. In my opinion that would work
+just as well, and be a nice abstraction, but I suspect that Boris
+would prefer doing it the other way.
 
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
 
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+> >> also agreed by Rob Herring from review of the DTS nodes. For L3 and
+> >> SoC EDAC, they are less of an issue as I don't see a situation that we
+> >> would have multiple instances.
+> >>
+> >> 2. With regard to the top level PCP interrupt, they are just for
+> >> status and once configured, it will not be touch. Therefore, I keep
+> >> the current implementation. With an single driver, there is no need to
+> >> worry about read/modify/write as it will be guarded with an lock. For
+> >> multiple instance, I am thinking that the xgene_edac_mc module will
+> >> provide exported lock functions for the other drivers.
+> >
+> > Doing this would be a very bad design and it would be a homegrown case
+> > only for this driver. Then other ARM drivers will appear which will do
+> > their own locking too. No no no. No ad-hoc hackery.
+
+I don't think there is a huge risk that other ARM drivers would copy a bad
+design, when it's obviously bad. In particular, other chips will most
+likely have other requirements in this area.
+
+> What if I move the locking function into a common module to be
+> included by the EDAC framework? Or would you prefer that I go and
+> write an common driver that all it does is provide locking?
+> 
+> Any suggestion as all I need is an way to share access to an CSR which
+> can't use atomic operations? It isn't an actual interrupt controller
+> either.
+
+If this is something that does not fit into existing categories, you
+probably want to create your own high-level abstraction between the
+accesses to the shared parts of the driver and the parts that can
+exist in multiple instances. This will work for either of the approaches
+I've described above.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
