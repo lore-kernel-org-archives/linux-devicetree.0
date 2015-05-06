@@ -1,96 +1,85 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Wed, 6 May 2015 12:01:35 +0100
-Message-ID: <20150506110135.GD707@leverpostej>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
- <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
- <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
- <5549B9CC.1040709@huawei.com> <20150506093022.GB31001@leverpostej>
- <CAD6h2NRtni=+pwkt7ng-gC_iu5B3+0mxbi96Pj01OY+PkfKBYA@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/7] Add SMP bringup support for mt65xx socs
+Date: Wed, 6 May 2015 13:04:03 +0200
+Message-ID: <CABuKBeKLtgs56PDO3tEftWNv58-RwtDR2cyxzs4FLX1AFZSKbg@mail.gmail.com>
+References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
+	<CABuKBeJ406DUFoVs2p3-u6sW58Dm7XDd6uxCc==Mkq3dMhhd5Q@mail.gmail.com>
+	<1430896766.15346.13.camel@mtksdaap41>
+	<1430899182.4930.2.camel@mtksdaap41>
+	<CABuKBeLT8-sjPY6ZQXacMZZ_3iKX-g82AB0gPhsi7VW=WdjTTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAD6h2NRtni=+pwkt7ng-gC_iu5B3+0mxbi96Pj01OY+PkfKBYA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f@huawei.com>, "zhangfei.gao@linaro.org" <zhangfei.gao@lin>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABuKBeLT8-sjPY6ZQXacMZZ_3iKX-g82AB0gPhsi7VW=WdjTTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 06, 2015 at 11:38:43AM +0100, Haojian Zhuang wrote:
-> On 6 May 2015 at 17:30, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Wed, May 06, 2015 at 07:50:52AM +0100, Bintian wrote:
-> >> Hello Mark,
-> >>
-> >> On 2015/5/6 11:16, Bintian wrote:
-> >> > Hello Mark,
-> >> >
-> >> > On 2015/5/6 1:13, Mark Rutland wrote:
-> >> [...]
-> >> >>> +        uart0: uart@f8015000 {    /* console */
-> >> >>> +            compatible = "arm,pl011", "arm,primecell";
-> >> >>> +            reg = <0x0 0xf8015000 0x0 0x1000>;
-> >> >>> +            interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> >> >>> +            clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl
-> >> >>> HI6220_UART0_PCLK>;
-> >> >>> +            clock-names = "uartclk", "apb_pclk";
-> >> >>> +        };
-> >> >>
-> >> >> In a previous discussion [1] the UART on HI6220 was described as not
-> >> >> fully PL011 compliant, with a number of differences (e.g. the FIFO
-> >> >> length).
-> >> >>
-> >> >> Given that, I feel somewhat uncomfortable with the current compatible
-> >> >> string list. What exactly are those differences? We may need a more
-> >> >> specific compatible string (even if in addition to those existing ones),
-> >> >> or perhaps other properties.
-> >> > The small system can be booted and the console also works well without
-> >> > changing any code of driver amba-pl011.c, so I think the compatible
-> >> > string is OK for this patch set.
-> >> >
-> >> > Hisilicon do some performance enhancements based on PL011, but the
-> >> > current driver "amba-pl011.c" also works on hi6220 without those
-> >> > enhancements driver code.
-> >> Checked with Hisilicon chip designer, the UART0 is used for DEBUG
-> >> console and compliant with PL011 fully.
-> >
-> > I think that given that we know the UART is not quite a PL011 we should
-> > add an additional compatible string just in case some difference crops
-> > up later that is problematic.
-> >
-> > So we'd have something like:
-> >
-> >         compatible = "hisilicon,hi6220-uart", "arm,pl011", "arm,primecell";
-> >
-> > That way we can add any optimisations or workarounds later as required.
-> >
-> 
-> There's no code to handle the feature of hi6220 uart in mainline.
+Hi Joe,
 
-Sure, I wasn't suggesting that there was.
+2015-05-06 10:29 GMT+02:00 Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> 2015-05-06 9:59 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+>> On Wed, 2015-05-06 at 15:19 +0800, Yingjoe Chen wrote:
+>>> Hi Matthias,
+>> <...>
+>>> > I tried on the mt8135 eval board but it fails to bring up the CPU.
+>>> >
+>>> > When booting:
+>>> > [    1.048588] CPU1: failed to come online
+>>> > [    2.049914] CPU2: failed to come online
+>>> > [    3.051245] CPU3: failed to come online
+>>>
+>>>
+>>> Thanks for testing, and the config file you provided.
+>>> It seems you are running THUMB2 kernel, unfortunately mt8135 trustzone
+>>> firmware doesn't support jump to THUMB2 code directly.
+>>>
+>>> I can workaround this with the following patch. I'll include it in my
+>>> next round.
+>>>
+>>> Joe.C
+>>>
+>>> -----8<----------------
+>>> diff --git a/arch/arm/mach-mediatek/platsmp.c
+>>> b/arch/arm/mach-mediatek/platsmp.c
+>>> index e266b3d..5dea55a 100644
+>>> --- a/arch/arm/mach-mediatek/platsmp.c
+>>> +++ b/arch/arm/mach-mediatek/platsmp.c
+>>> @@ -57,6 +57,18 @@ static const struct of_device_id mtk_smp_boot_infos[]
+>>> __initconst = {
+>>>  static void __iomem *mtk_smp_base;
+>>>  static const struct mtk_smp_boot_info *mtk_smp_info;
+>>>
+>>> +#ifdef CONFIG_THUMB2_KERNEL
+>>> +__asm__(
+>>> +     ".arm\n"
+>>> +     "mtk_secondary_startup_fixup:\n"
+>>> +     "       b secondary_startup\n"
+>>> +     ".thumb\n"
+>>> +);
+>>> +
+>>> +void mtk_secondary_startup_fixup(void);
+>>> +#define secondary_startup mtk_secondary_startup_fixup
+>>> +#endif
+>>
+>>
+>> Replying myself.
+>>
+>> It seems kernel already have secondary_startup_arm which support this
+>> usage. I'll use that in my next version instead.
+>
+> With this I was able to get the board up and running. I will try mt6589 ASAP.
 
-> It's meaningless to append "hisilicon,hi6220-uart" at here. I think
-> it's only required when those uart code are merged into mainline.
+I just realized, that your aforementioned patch for the THUMB2 kernel
+breaks SMP on mt6589. Strangely without this patch it works fine.
 
-I disagree. Given that the UART is not quite a PL011, it is likely to
-behave differently under certain circumstances, and may have its own
-errata that need to be worked around.
+Regrads,
+Matthias
 
-Even if the driver happens to currently work with it, a driver change
-could easily break that. By being explicit from the outset that this is
-a hi6220-specific PL011 variant, we can target workarounds far more
-effectively later, without requiring DTB updates.
-
-Having the additional string costs us nothing today.
-
-Thanks,
-Mark.
+-- 
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
