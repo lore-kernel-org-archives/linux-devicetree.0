@@ -1,147 +1,52 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 1/2] ARM: OMAP: AM43xx hwmod: Add data for am43xx emif hwmod
-Date: Wed, 6 May 2015 12:25:32 -0500
-Message-ID: <1430933133-33412-2-git-send-email-d-gerlach@ti.com>
-References: <1430933133-33412-1-git-send-email-d-gerlach@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 04/10] eeprom: Add a simple EEPROM framework for
+ eeprom consumers
+Date: Wed, 6 May 2015 18:28:46 +0100
+Message-ID: <20150506172846.GC22845@sirena.org.uk>
+References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1427752670-17219-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1430933133-33412-1-git-send-email-d-gerlach@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="QRZRoILo0Pq4YpTd"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1427752670-17219-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Without a hwmod for am43xx emif use counting for emif clockdomain does
-not happen correctly so it may be shut off by pm code unintentionally.
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  1 +
- .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 13 +++++++++++++
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 13 -------------
- arch/arm/mach-omap2/omap_hwmod_43xx_data.c         | 22 ++++++++++++++++++++++
- arch/arm/mach-omap2/prcm43xx.h                     |  1 +
- 5 files changed, 37 insertions(+), 13 deletions(-)
+--QRZRoILo0Pq4YpTd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-index 130332c..7f73796 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-@@ -145,6 +145,7 @@ extern struct omap_hwmod am33xx_uart5_hwmod;
- extern struct omap_hwmod am33xx_uart6_hwmod;
- extern struct omap_hwmod am33xx_wd_timer1_hwmod;
- 
-+extern struct omap_hwmod_class am33xx_emif_hwmod_class;
- extern struct omap_hwmod_class am33xx_l4_hwmod_class;
- extern struct omap_hwmod_class am33xx_wkup_m3_hwmod_class;
- extern struct omap_hwmod_class am33xx_control_hwmod_class;
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-index cabc569..09907e2 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-@@ -203,6 +203,19 @@ struct omap_hwmod am33xx_prcm_hwmod = {
- };
- 
- /*
-+ * 'emif' class
-+ * instance(s): emif
-+ */
-+static struct omap_hwmod_class_sysconfig am33xx_emif_sysc = {
-+	.rev_offs	= 0x0000,
-+};
-+
-+struct omap_hwmod_class am33xx_emif_hwmod_class = {
-+	.name		= "emif",
-+	.sysc		= &am33xx_emif_sysc,
-+};
-+
-+/*
-  * 'aes0' class
-  */
- static struct omap_hwmod_class_sysconfig am33xx_aes0_sysc = {
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-index 0cf7b56..cc0791d 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-@@ -34,19 +34,6 @@
-  * IP blocks
-  */
- 
--/*
-- * 'emif' class
-- * instance(s): emif
-- */
--static struct omap_hwmod_class_sysconfig am33xx_emif_sysc = {
--	.rev_offs	= 0x0000,
--};
--
--static struct omap_hwmod_class am33xx_emif_hwmod_class = {
--	.name		= "emif",
--	.sysc		= &am33xx_emif_sysc,
--};
--
- /* emif */
- static struct omap_hwmod am33xx_emif_hwmod = {
- 	.name		= "emif",
-diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-index e222314..ad0ee8f 100644
---- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-@@ -24,6 +24,20 @@
- 
- 
- /* IP blocks */
-+static struct omap_hwmod am43xx_emif_hwmod = {
-+	.name		= "emif",
-+	.class		= &am33xx_emif_hwmod_class,
-+	.clkdm_name	= "emif_clkdm",
-+	.flags		= HWMOD_INIT_NO_IDLE,
-+	.main_clk	= "dpll_ddr_m2_ck",
-+	.prcm		= {
-+		.omap4	= {
-+			.clkctrl_offs	= AM43XX_CM_PER_EMIF_CLKCTRL_OFFSET,
-+			.modulemode	= MODULEMODE_SWCTRL,
-+		},
-+	},
-+};
-+
- static struct omap_hwmod am43xx_l4_hs_hwmod = {
- 	.name		= "l4_hs",
- 	.class		= &am33xx_l4_hwmod_class,
-@@ -545,6 +559,13 @@ static struct omap_hwmod am43xx_hdq1w_hwmod = {
- };
- 
- /* Interfaces */
-+static struct omap_hwmod_ocp_if am43xx_l3_main__emif = {
-+	.master		= &am33xx_l3_main_hwmod,
-+	.slave		= &am43xx_emif_hwmod,
-+	.clk		= "dpll_core_m4_ck",
-+	.user		= OCP_USER_MPU | OCP_USER_SDMA,
-+};
-+
- static struct omap_hwmod_ocp_if am43xx_l3_main__l4_hs = {
- 	.master		= &am33xx_l3_main_hwmod,
- 	.slave		= &am43xx_l4_hs_hwmod,
-@@ -852,6 +873,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
- 	&am33xx_l3_main__l3_instr,
- 	&am33xx_l3_main__gfx,
- 	&am33xx_l3_s__l3_main,
-+	&am43xx_l3_main__emif,
- 	&am33xx_pruss__l3_main,
- 	&am43xx_wkup_m3__l4_wkup,
- 	&am33xx_gfx__l3_main,
-diff --git a/arch/arm/mach-omap2/prcm43xx.h b/arch/arm/mach-omap2/prcm43xx.h
-index 48df3b5..32bfab6 100644
---- a/arch/arm/mach-omap2/prcm43xx.h
-+++ b/arch/arm/mach-omap2/prcm43xx.h
-@@ -144,5 +144,6 @@
- #define AM43XX_CM_PER_USBPHYOCP2SCP1_CLKCTRL_OFFSET	0x05C0
- #define AM43XX_CM_PER_DSS_CLKCTRL_OFFSET		0x0a20
- #define AM43XX_CM_PER_HDQ1W_CLKCTRL_OFFSET		0x04a0
-+#define AM43XX_CM_PER_EMIF_CLKCTRL_OFFSET		0x0720
- 
- #endif
--- 
-2.3.6
+On Mon, Mar 30, 2015 at 10:57:50PM +0100, Srinivas Kandagatla wrote:
 
+> +
+> +	for (i = 0; i < cell->nblocks; i++) {
+> +		rc = regmap_raw_read(eeprom->regmap, cell->blocks[i].offset,
+> +				      buf + offset, cell->blocks[i].count);
+
+I *think* this is probably OK but please double check that the count
+here is in bytes rather than words, it's a bit confusing since I'd read
+a count as being in words.  Otherwise I think the regmap usage here all
+looks good.
+
+--QRZRoILo0Pq4YpTd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVSk9OAAoJECTWi3JdVIfQuNkH/RnXfz7KyQ5kGvUyl3+gaXeJ
+XwnfC+bEF1j2tRN6FTe/0w39Ll50q55jrTHgWHbTa3y0P1eKg7HXznlya/dHXy6S
+dgDjePF1thLsAWER3qeyW/jWNATd/sf0ZQzJuISX94KbLklkgxSVfkSDh1JdlPwl
+XPzFQzfm5qccmdc+LRu0sElChMPY11c+PXSNe1qHl+hoZVb5aKAiLzJj0TQl43xk
+AKJwA04mcEbj0xDKOXS6Dl4SRqMJiZrmEK9cYtwdLRW4A+r1yGwIwPxSHk8Mssxl
+vQ/mqBcpx56HKXeio46C/uJVgIX7toJlxmbSmQUT2B4YO5zm70Kbb8RgxEHxKZI=
+=wNz3
+-----END PGP SIGNATURE-----
+
+--QRZRoILo0Pq4YpTd--
