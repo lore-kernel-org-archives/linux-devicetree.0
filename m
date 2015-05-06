@@ -1,124 +1,128 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V4 2/2] pinctrl: Add Pistachio SoC pin control driver
-Date: Wed, 6 May 2015 09:14:58 +0200
-Message-ID: <CACRpkdZXYcULynAVOU-K+8f2qnQkEFgzK2+Ku7xXzGQx0=uvBQ@mail.gmail.com>
-References: <1430269982-24129-1-git-send-email-abrestic@chromium.org>
-	<1430269982-24129-3-git-send-email-abrestic@chromium.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Add pxa1928 clock binding
+Date: Wed, 6 May 2015 00:17:08 -0700
+Message-ID: <20150506071708.GD27050@codeaurora.org>
+References: <1430455271-20195-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430269982-24129-3-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1430455271-20195-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew and sorry for a slow review process, I've been
-overloaded :(
+On 04/30, Rob Herring wrote:
+> diff --git a/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt b/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt
+> new file mode 100644
+> index 0000000..809c5a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt
+> @@ -0,0 +1,21 @@
+> +* Marvell PXA1928 Clock Controllers
+> +
+> +The PXA1928 clock subsystem generates and supplies clock to various
+> +controllers within the PXA1928 SoC. The PXA1928 contains 3 clock controller
+> +blocks called APMU, MPMU, and APBC roughly corresponding to internal buses.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be one of the following.
+> +  - "marvell,pxa1928-apmu" - APMU controller compatible
+> +  - "marvell,pxa1928-mpmu" - MPMU controller compatible
+> +  - "marvell,pxa1928-apbc" - APBC controller compatible
+> +- reg: physical base address of the clock controller and length of memory mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+> +
+> +Each clock is assigned an identifier and client nodes use the clock controller
+> +phandle and this identifier to specify the clock which they consume.
+> +
+> +All these identifiers can be found in <dt-bindings/clock/marvell,pxa1928.h>.
 
-On Wed, Apr 29, 2015 at 3:13 AM, Andrew Bresticker
-<abrestic@chromium.org> wrote:
+No example?
 
-> Add a driver for the pin controller present on the IMG Pistachio SoC.
-> This driver provides pinmux and pinconfig operations as well as GPIO
-> and IRQ chips for the GPIO banks.
->
-> Signed-off-by: Damien Horsley <Damien.Horsley@imgtec.com>
-> Signed-off-by: Govindraj Raja <govindraj.raja@imgtec.com>
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-> Signed-off-by: Kevin Cernekee <cernekee@chromium.org>
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> ---
-> Changes from v3:
->  - Addressed review comments from Ezequiel.
+> diff --git a/include/dt-bindings/clock/marvell,pxa1928.h b/include/dt-bindings/clock/marvell,pxa1928.h
+> new file mode 100644
+> index 0000000..c393ca2
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/marvell,pxa1928.h
+> @@ -0,0 +1,57 @@
+> +#ifndef __DTS_MARVELL_PXA1928_CLOCK_H
+> +#define __DTS_MARVELL_PXA1928_CLOCK_H
+> +
+> +/*
+> + * Clock ID values here correspond to the control register offset/4.
+> + */
+> +
+> +/* apb periphrals */
 
-Overall this is a very very nice looking driver so expect it to
-be merged after addressing or answering my last few
-concerns.
+s/periphrals/peripherals/ ?
 
-> +config PINCTRL_PISTACHIO
-> +       def_bool y if MACH_PISTACHIO
-> +       select PINMUX
-> +       select GENERIC_PINCONF
-> +       select GPIOLIB_IRQCHIP
+> +#define PXA1928_CLK_RTC			0
+> +#define PXA1928_CLK_TWSI0		1
+> +#define PXA1928_CLK_TWSI1		2
+> +#define PXA1928_CLK_TWSI2		3
+> +#define PXA1928_CLK_TWSI3		4
+> +#define PXA1928_CLK_OWIRE		5
+> +#define PXA1928_CLK_KPC			6
+> +#define PXA1928_CLK_TB_ROTARY		7
+> +#define PXA1928_CLK_SW_JTAG		8
+> +#define PXA1928_CLK_TIMER1		9
 
-I think you also need
-depends on / select GPIOLIB
-select OF_GPIO
+This is really nitpicky, but I find the jump from decimal to hex odd. 
+Is there any reason why we don't just use decimal or hex throughout?
+Perhaps it's related to why there are holes in the number space?
 
-x86_64 allmodconfig is usually the best way to test
-if your GPIOs and pin control fragments are correctly Kconfig:ed.
+> +#define PXA1928_CLK_UART0		0xb
+> +#define PXA1928_CLK_UART1		0xc
+> +#define PXA1928_CLK_UART2		0xd
+> +#define PXA1928_CLK_GPIO		0xe
+> +#define PXA1928_CLK_PWM0		0xf
+> +#define PXA1928_CLK_PWM1		0x10
+> +#define PXA1928_CLK_PWM2		0x11
+> +#define PXA1928_CLK_PWM3		0x12
+> +#define PXA1928_CLK_SSP0		0x13
+> +#define PXA1928_CLK_SSP1		0x14
+> +#define PXA1928_CLK_SSP2		0x15
+> +
+> +#define PXA1928_CLK_TWSI4		0x1f
+> +#define PXA1928_CLK_TWSI5		0x20
+> +#define PXA1928_CLK_UART3		0x22
+> +#define PXA1928_CLK_THSENS_GLOB		0x24
+> +#define PXA1928_CLK_THSENS_CPU		0x26
+> +#define PXA1928_CLK_THSENS_VPU		0x27
+> +#define PXA1928_CLK_THSENS_GC		0x28
+> +#define PXA1928_APBC_NR_CLKS		0x30
+> +
+> +
+> +/* axi periphrals */
 
-> +#define PADS_DRIVE_STRENGTH_2MA                0x0
-> +#define PADS_DRIVE_STRENGTH_4MA                0x1
-> +#define PADS_DRIVE_STRENGTH_8MA                0x2
-> +#define PADS_DRIVE_STRENGTH_12MA       0x3
+s/periphrals/peripherals/ ?
 
-Thanks for being clear on the defines and not using magic
-values. This makes things so much easier for people
-using and maintaining the driver!
+> +#define PXA1928_CLK_SDH0		0x15
+> +#define PXA1928_CLK_SDH1		0x16
+> +#define PXA1928_CLK_USB			0x17
+> +#define PXA1928_CLK_NAND		0x18
+> +#define PXA1928_CLK_DMA			0x19
+> +
+> +#define PXA1928_CLK_SDH2		0x3a
+> +#define PXA1928_CLK_SDH3		0x3b
+> +#define PXA1928_CLK_HSIC		0x3e
+> +#define PXA1928_CLK_SDH4		0x57
+> +#define PXA1928_CLK_GC3D		0x5d
+> +#define PXA1928_CLK_GC2D		0x5f
+> +
+> +#define PXA1928_APMU_NR_CLKS		0x60
+> +
+> +#endif
 
-> +#define GPIO_BANK(_bank, _pin_base, _npins)                            \
-> +       {                                                               \
-> +               .gpio_chip = {                                          \
-> +                       .label = "GPIO" #_bank,                         \
-> +                       .request = pistachio_gpio_request,              \
-> +                       .free = pistachio_gpio_free,                    \
-> +                       .get_direction = pistachio_gpio_get_direction,  \
-> +                       .direction_input = pistachio_gpio_direction_input, \
-> +                       .direction_output = pistachio_gpio_direction_output, \
-> +                       .get = pistachio_gpio_get,                      \
-> +                       .set = pistachio_gpio_set,                      \
-> +                       .base = _pin_base,                              \
-> +                       .ngpio = _npins,                                \
-> +               },                                                      \
-> +               .irq_chip = {                                           \
-> +                       .name = "GPIO" #_bank,                          \
-> +                       .irq_startup = pistachio_gpio_irq_startup,      \
-> +                       .irq_ack = pistachio_gpio_irq_ack,              \
-> +                       .irq_mask = pistachio_gpio_irq_mask,            \
-> +                       .irq_unmask = pistachio_gpio_irq_unmask,        \
-> +                       .irq_set_type = pistachio_gpio_irq_set_type,    \
-> +               },                                                      \
-> +               .gpio_range = {                                         \
-> +                       .name = "GPIO" #_bank,                          \
-> +                       .id = _bank,                                    \
-> +                       .base = _pin_base,                              \
-> +                       .pin_base = _pin_base,                          \
-> +                       .npins = _npins,                                \
-> +               },                                                      \
-> +       }
-
-This -gpio_range is the only thing that bothers me a little, combined with
-this:
-
-> +               bank->gpio_range.gc = &bank->gpio_chip;
-> +               pinctrl_add_gpio_range(pctl->pctldev, &bank->gpio_range);
-
-Because it adds the ranges from the pinctrl side instead of
-doing it from the gpiochip side using
-gpiochip_add_pin_range() or gpiochip_add_pingroup_range().
-
-Have you tried using those (from <linux/gpio/driver.h> instead?
-
-They have the upside that .base is taken from the gpio_chip
-meaning it is unnecessary to define .base for the gpiochip
-too and you can just go for what gpiolib dynamically assigns
-for you.
-
-> +               pinctrl_remove_gpio_range(pctl->pctldev, &bank->gpio_range);
-
-And this will then be done automatically by gpiochio_remove().
-
-> +static int __init pistachio_pinctrl_register(void)
-> +{
-> +       return platform_driver_register(&pistachio_pinctrl_driver);
-> +}
-> +arch_initcall(pistachio_pinctrl_register);
-
-Is it necessary to have it registered so early?
-
-Apart from these, as noted it looks very nice.
-
-Yours,
-Linus Walleij
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
