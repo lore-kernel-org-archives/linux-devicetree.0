@@ -1,44 +1,38 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: device tree compiler with overlay support?
-Date: Wed, 6 May 2015 19:18:29 +0200
-Message-ID: <CAOMqctSD8XKdoFrxAW5sTHOVcqPJ7=5aFxGZ=sJ6+Hjy7nAgEA@mail.gmail.com>
-References: <CAOMqctSZObmoJQocCg3JvCA=ZDvvrxzKC9Ko=aq0J=LphNW+EA@mail.gmail.com>
- <CAOMqctT3WuqMTqaqUTN44zA2TEYmP9X7SN8ufTouQFoy=GjB1Q@mail.gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH 0/2] ARM: OMAP2+: AM4372: Add emif hwmod and dt node
+Date: Wed, 6 May 2015 12:25:31 -0500
+Message-ID: <1430933133-33412-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMqctT3WuqMTqaqUTN44zA2TEYmP9X7SN8ufTouQFoy=GjB1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5 May 2015 at 18:51, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 5 May 2015 at 17:18, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hello,
->>
->> where is a device tree compiler that can compile an overlay?
->>
->> The compiler at git://git.kernel.org/pub/scm/utils/dtc/dtc.git shrieks
->> there is a syntax error as soon as the /plugin/ tag is present.
->
-> ok, so I found a dtc patch here https://lkml.org/lkml/2013/1/4/295
->
-> This does not apply cleanly to current DTC but the parts that fail are
-> due to cosmetic changes in the code so I went ahead and applied it.
->
-> However, the created blob is not what the kernel can accept into
-> of_overlay_create so what do I do with the blob to load it?
+This series adds an hwmod for the emif on am4372. Also, we add a dt node
+in order to provide the reg address for the hwmod in order to have
+SYSCONFIG access.
 
-Looks like applying of_fdt_unflatten_tree on the blob is the thing to
-do. Now the kernel just rejects the tree and does not crash. I get no
-diagnostics as to why the overlay is rejected.
+Without the hwmod, once PM code is added for am437x, the emif_clkdm sees
+no users and may be idled even though we obviously still need it.
 
-Time to add some debugging I guess.
+Regards,
+Dave
 
-Thanks
+Dave Gerlach (2):
+  ARM: OMAP: AM43xx hwmod: Add data for am43xx emif hwmod
+  ARM: dts: am4372: Add emif node
 
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../bindings/memory-controllers/ti/emif.txt        |  1 +
+ arch/arm/boot/dts/am4372.dtsi                      |  6 ++++++
+ .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  1 +
+ .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 13 +++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 13 -------------
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c         | 22 ++++++++++++++++++++++
+ arch/arm/mach-omap2/prcm43xx.h                     |  1 +
+ 7 files changed, 44 insertions(+), 13 deletions(-)
+
+-- 
+2.3.6
+
