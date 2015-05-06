@@ -1,332 +1,97 @@
-From: Gregory Fong <gregory.0xf0@gmail.com>
-Subject: [PATCH 3/3] gpio: brcmstb: Add interrupt support
-Date: Wed,  6 May 2015 01:37:57 -0700
-Message-ID: <1430901477-10678-4-git-send-email-gregory.0xf0@gmail.com>
-References: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/7] ARM: mediatek: add smp bringup code
+Date: Wed, 6 May 2015 10:38:21 +0200
+Message-ID: <CABuKBeLbyzHfDqfdTh4Nh1ymg3=evKoQenLQ=VKhUkj55gGdVw@mail.gmail.com>
+References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
+ <1430466210-22963-6-git-send-email-yingjoe.chen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1430466210-22963-6-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Create an irq_chip for each GIO block.  Uses chained IRQ handling since
-known uses of this block have a BCM7120 L2 interrupt controller as a
-parent.  Supports interrupts for all GPIOs.
+2015-05-01 9:43 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> Add support for booting secondary CPUs on mt6589, mt8127
+> and mt8135.
+>
+> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/mach-mediatek/Makefile  |   3 +
+>  arch/arm/mach-mediatek/platsmp.c | 145 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 148 insertions(+)
+>  create mode 100644 arch/arm/mach-mediatek/platsmp.c
+>
+> diff --git a/arch/arm/mach-mediatek/Makefile b/arch/arm/mach-mediatek/Makefile
+> index 43e619f..2116460 100644
+> --- a/arch/arm/mach-mediatek/Makefile
+> +++ b/arch/arm/mach-mediatek/Makefile
+> @@ -1 +1,4 @@
+> +ifeq ($(CONFIG_SMP),y)
+> +obj-$(CONFIG_ARCH_MEDIATEK) += platsmp.o
+> +endif
+>  obj-$(CONFIG_ARCH_MEDIATEK) += mediatek.o
+> diff --git a/arch/arm/mach-mediatek/platsmp.c b/arch/arm/mach-mediatek/platsmp.c
+> new file mode 100644
+> index 0000000..e266b3d
+> --- /dev/null
+> +++ b/arch/arm/mach-mediatek/platsmp.c
+> @@ -0,0 +1,145 @@
+> +/*
+> + * arch/arm/mach-mediatek/platsmp.c
+> + *
+> + * Copyright (c) 2014 Mediatek Inc.
+> + * Author: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *         Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +#include <linux/io.h>
+> +#include <linux/memblock.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/string.h>
+> +#include <linux/threads.h>
+> +
+> +#define MTK_MAX_CPU            8
+> +#define MTK_SMP_REG_SIZE       0x1000
+> +
+> +struct mtk_smp_boot_info {
+> +       unsigned long smp_base;
+> +       unsigned int jump_reg;
+> +       unsigned int boot_reg;
 
-Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
----
- drivers/gpio/Kconfig        |    1 +
- drivers/gpio/gpio-brcmstb.c |  249 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 250 insertions(+)
+This variable is not used, right?
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 5f79b7f..2f9b913 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -131,6 +131,7 @@ config GPIO_BRCMSTB
- 	default y if ARCH_BRCMSTB
- 	depends on OF_GPIO && (ARCH_BRCMSTB || COMPILE_TEST)
- 	select GPIO_GENERIC
-+	select IRQ_DOMAIN
- 	help
- 	  Say yes here to enable GPIO support for Broadcom STB (BCM7XXX) SoCs.
- 
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index c8f9014..6195838 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -17,6 +17,8 @@
- #include <linux/of_irq.h>
- #include <linux/module.h>
- #include <linux/basic_mmio_gpio.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip/chained_irq.h>
- 
- #define GIO_BANK_SIZE           0x20
- #define GIO_ODEN(bank)          (((bank) * GIO_BANK_SIZE) + 0x00)
-@@ -40,7 +42,11 @@ struct brcmstb_gpio_priv {
- 	struct list_head bank_list;
- 	void __iomem *reg_base;
- 	int num_banks;
-+	int num_gpios;
- 	struct platform_device *pdev;
-+	struct irq_chip irq_chip;
-+	struct irq_domain *irq_domain;
-+	int parent_irq;
- 	int gpio_base;
- };
- 
-@@ -59,6 +65,226 @@ brcmstb_gpio_gc_to_priv(struct gpio_chip *gc)
- 	return bank->parent_priv;
- }
- 
-+static void brcmstb_gpio_set_imask(struct brcmstb_gpio_bank *bank,
-+		unsigned int offset, bool enable)
-+{
-+	struct bgpio_chip *bgc = &bank->bgc;
-+	struct brcmstb_gpio_priv *priv = bank->parent_priv;
-+	unsigned long mask = bgc->pin2mask(bgc, offset);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bgc->lock, flags);
-+
-+	if (enable)
-+		bank->imask |= mask;
-+	else
-+		bank->imask &= ~mask;
-+	bgc->write_reg(priv->reg_base + GIO_MASK(bank->id), bank->imask);
-+
-+	spin_unlock_irqrestore(&bgc->lock, flags);
-+}
-+
-+static int brcmstb_gpio_to_irq(struct gpio_chip *gc, unsigned gc_offset)
-+{
-+	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
-+	/* gc_offset is relative to this gpio_chip; want real offset */
-+	int offset = gc_offset + (gc->base - priv->gpio_base);
-+
-+	if (offset >= priv->num_gpios)
-+		return -ENXIO;
-+	return irq_create_mapping(priv->irq_domain, offset);
-+}
-+
-+/* -------------------- IRQ chip functions -------------------- */
-+
-+static int brcmstb_gpio_hwirq_to_offset(irq_hw_number_t hwirq,
-+		struct brcmstb_gpio_bank *bank)
-+{
-+	return hwirq - (bank->bgc.gc.base - bank->parent_priv->gpio_base);
-+}
-+
-+static void brcmstb_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct brcmstb_gpio_bank *bank = irq_data_get_irq_chip_data(d);
-+	int offset = brcmstb_gpio_hwirq_to_offset(d->hwirq, bank);
-+
-+	brcmstb_gpio_set_imask(bank, offset, false);
-+}
-+
-+static void brcmstb_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct brcmstb_gpio_bank *bank = irq_data_get_irq_chip_data(d);
-+	int offset = brcmstb_gpio_hwirq_to_offset(d->hwirq, bank);
-+
-+	brcmstb_gpio_set_imask(bank, offset, true);
-+}
-+
-+static int brcmstb_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct brcmstb_gpio_bank *bank = irq_data_get_irq_chip_data(d);
-+	struct brcmstb_gpio_priv *priv = bank->parent_priv;
-+	u32 mask = BIT(brcmstb_gpio_hwirq_to_offset(d->hwirq, bank));
-+	u32 edge_insensitive, iedge_insensitive;
-+	u32 edge_config, iedge_config;
-+	u32 level, ilevel;
-+	unsigned long flags;
-+
-+	switch (type) {
-+	case IRQ_TYPE_LEVEL_LOW:
-+		level = 0;
-+		edge_config = 0;
-+		edge_insensitive = 0;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		level = mask;
-+		edge_config = 0;
-+		edge_insensitive = 0;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		level = 0;
-+		edge_config = 0;
-+		edge_insensitive = 0;
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+		level = 0;
-+		edge_config = mask;
-+		edge_insensitive = 0;
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		level = 0;
-+		edge_config = 0;  /* don't care, but want known value */
-+		edge_insensitive = mask;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&bank->bgc.lock, flags);
-+
-+	iedge_config = bank->bgc.read_reg(priv->reg_base +
-+			GIO_EC(bank->id)) & ~mask;
-+	iedge_insensitive = bank->bgc.read_reg(priv->reg_base +
-+			GIO_EI(bank->id)) & ~mask;
-+	ilevel = bank->bgc.read_reg(priv->reg_base +
-+			GIO_LEVEL(bank->id)) & ~mask;
-+
-+	bank->bgc.write_reg(priv->reg_base + GIO_EC(bank->id),
-+			iedge_config | edge_config);
-+	bank->bgc.write_reg(priv->reg_base + GIO_EI(bank->id),
-+			iedge_insensitive | edge_insensitive);
-+	bank->bgc.write_reg(priv->reg_base + GIO_LEVEL(bank->id),
-+			ilevel | level);
-+
-+	spin_unlock_irqrestore(&bank->bgc.lock, flags);
-+	return 0;
-+}
-+
-+static void brcmstb_gpio_irq_bank_handler(int irq,
-+		struct brcmstb_gpio_bank *bank)
-+{
-+	void __iomem *reg_base = bank->parent_priv->reg_base;
-+	unsigned long status;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bank->bgc.lock, flags);
-+	while ((status = bank->bgc.read_reg(reg_base + GIO_STAT(bank->id)) &
-+			 bank->imask)) {
-+		int bit;
-+		for_each_set_bit(bit, &status, 32) {
-+			int hwirq = bank->bgc.gc.base -
-+				bank->parent_priv->gpio_base + bit;
-+			int child_irq =
-+				irq_find_mapping(bank->parent_priv->irq_domain,
-+						 hwirq);
-+			u32 stat = bank->bgc.read_reg(reg_base +
-+						      GIO_STAT(bank->id));
-+			bank->bgc.write_reg(reg_base + GIO_STAT(bank->id),
-+					    stat | BIT(bit));
-+			generic_handle_irq(child_irq);
-+		}
-+	}
-+	spin_unlock_irqrestore(&bank->bgc.lock, flags);
-+}
-+
-+/* Each UPG GIO block has one IRQ for all banks */
-+static void brcmstb_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct brcmstb_gpio_priv *priv = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct list_head *pos;
-+
-+	chained_irq_enter(chip, desc);
-+	list_for_each(pos, &priv->bank_list) {
-+		struct brcmstb_gpio_bank *bank =
-+			list_entry(pos, struct brcmstb_gpio_bank, node);
-+		brcmstb_gpio_irq_bank_handler(irq, bank);
-+	}
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static struct brcmstb_gpio_bank *brcmstb_gpio_hwirq_to_bank(
-+		struct brcmstb_gpio_priv *priv, irq_hw_number_t hwirq)
-+{
-+	struct list_head *pos;
-+	int i = 0;
-+
-+	/* banks are in descending order */
-+	list_for_each_prev(pos, &priv->bank_list) {
-+		struct brcmstb_gpio_bank *bank =
-+			list_entry(pos, struct brcmstb_gpio_bank, node);
-+		i += bank->bgc.gc.ngpio;
-+		if (hwirq < i)
-+			return bank;
-+	}
-+	return NULL;
-+}
-+
-+/*
-+ * This lock class tells lockdep that GPIO irqs are in a different
-+ * category than their parents, so it won't report false recursion.
-+ */
-+static struct lock_class_key brcmstb_gpio_irq_lock_class;
-+
-+
-+static int brcmstb_gpio_irq_map(struct irq_domain *d, unsigned int irq,
-+		irq_hw_number_t hwirq)
-+{
-+	struct brcmstb_gpio_priv *priv = d->host_data;
-+	struct brcmstb_gpio_bank *bank =
-+		brcmstb_gpio_hwirq_to_bank(priv, hwirq);
-+	struct platform_device *pdev = priv->pdev;
-+	int ret;
-+
-+	if (!bank)
-+		return -EINVAL;
-+
-+	dev_dbg(&pdev->dev, "Mapping irq %d for gpio line %d (bank %d)\n",
-+		irq, (int)hwirq, bank->id);
-+	ret = irq_set_chip_data(irq, bank);
-+	if (ret < 0)
-+		return ret;
-+	irq_set_lockdep_class(irq, &brcmstb_gpio_irq_lock_class);
-+	irq_set_chip_and_handler(irq, &priv->irq_chip, handle_simple_irq);
-+#ifdef CONFIG_ARM
-+	set_irq_flags(irq, IRQF_VALID);
-+#else
-+	irq_set_noprobe(irq);
-+#endif
-+	return 0;
-+}
-+
-+static void brcmstb_gpio_irq_unmap(struct irq_domain *d, unsigned int irq)
-+{
-+	irq_set_chip_and_handler(irq, NULL, NULL);
-+	irq_set_chip_data(irq, NULL);
-+}
-+
-+static struct irq_domain_ops brcmstb_gpio_irq_domain_ops = {
-+	.map = brcmstb_gpio_irq_map,
-+	.unmap = brcmstb_gpio_irq_unmap,
-+	.xlate = irq_domain_xlate_twocell,
-+};
-+
- /* Make sure that the number of banks matches up between properties */
- static int brcmstb_gpio_sanity_check_banks(struct device *dev,
- 		struct device_node *np, struct resource *res)
-@@ -140,6 +366,11 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 	priv->gpio_base = gpio_base;
- 	priv->reg_base = reg_base;
- 	priv->pdev = pdev;
-+	priv->parent_irq = platform_get_irq(pdev, 0);
-+	if (priv->parent_irq < 0) {
-+		dev_err(dev, "Couldn't get IRQ");
-+		return -ENOENT;
-+	}
- 
- 	INIT_LIST_HEAD(&priv->bank_list);
- 	if (brcmstb_gpio_sanity_check_banks(dev, np, res))
-@@ -181,6 +412,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 		gc->base = gpio_base;
- 		gc->of_gpio_n_cells = 2;
- 		gc->of_xlate = brcmstb_gpio_of_xlate;
-+		gc->to_irq = brcmstb_gpio_to_irq;
- 
- 		if (bank_width <= 0 || bank_width > GPIO_PER_BANK) {
- 			gc->ngpio = GPIO_PER_BANK;
-@@ -209,6 +441,23 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 		priv->num_banks++;
- 	}
- 
-+	priv->num_gpios = gpio_base - priv->gpio_base;
-+	priv->irq_chip.name = dev_name(dev);
-+	priv->irq_chip.irq_mask = brcmstb_gpio_irq_mask;
-+	priv->irq_chip.irq_unmask = brcmstb_gpio_irq_unmask;
-+	priv->irq_chip.irq_set_type = brcmstb_gpio_irq_set_type;
-+	priv->irq_domain =
-+		irq_domain_add_linear(np, priv->num_gpios,
-+				      &brcmstb_gpio_irq_domain_ops,
-+				      priv);
-+	if (!priv->irq_domain) {
-+		dev_err(dev, "Couldn't allocate IRQ domain\n");
-+		err = -ENXIO;
-+		goto fail;
-+	}
-+	irq_set_chained_handler(priv->parent_irq, brcmstb_gpio_irq_handler);
-+	irq_set_handler_data(priv->parent_irq, priv);
-+
- 	dev_info(dev, "Registered %d banks (GPIO(s): %d-%d)\n",
- 			priv->num_banks, priv->gpio_base, gpio_base - 1);
- 
+> +       unsigned int core_keys[MTK_MAX_CPU - 1];
+> +       unsigned int core_regs[MTK_MAX_CPU - 1];
+> +};
+> +
+> +static const struct mtk_smp_boot_info mtk_mt8135_tz_boot = {
+> +       0x80002000, 1020, 1012,
+> +       { 0x534c4131, 0x4c415332, 0x41534c33 },
+> +       { 1016, 1016, 1016},
+
+Please convert to hex values.
+
 -- 
-1.7.9.5
+motzblog.wordpress.com
