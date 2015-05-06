@@ -1,73 +1,86 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 7/8] ASoC: wm8998: Initial WM8998 codec driver
-Date: Wed, 6 May 2015 12:48:49 +0100
-Message-ID: <20150506114849.GM22845@sirena.org.uk>
-References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1430493319-23808-8-git-send-email-rf@opensource.wolfsonmicro.com>
- <20150504113943.GB15510@sirena.org.uk>
- <20150505092411.GA15549@opensource.wolfsonmicro.com>
- <20150505105327.GZ22845@sirena.org.uk>
- <20150505133129.GA26101@opensource.wolfsonmicro.com>
- <20150505215934.GH15510@sirena.org.uk>
- <20150506092405.GA17710@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jAzuEdEubtg2kr7a"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150506092405.GA17710@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version 3.
+Date: Wed, 6 May 2015 13:50:29 +0200
+Message-ID: <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
+References: <20150318055437.21025.13990.stgit@notabene.brown> <55492001.30806@hurleysoftware.com> <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com> <20150506092738.GB4508@amd>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150506092738.GB4508@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Pavel,
 
---jAzuEdEubtg2kr7a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Am 06.05.2015 um 11:27 schrieb Pavel Machek <pavel@ucw.cz>:
 
-On Wed, May 06, 2015 at 10:24:05AM +0100, Richard Fitzgerald wrote:
+> On Wed 2015-05-06 07:19:31, Dr. H. Nikolaus Schaller wrote:
+>> Hi Peter,
+>>=20
+>> Am 05.05.2015 um 21:54 schrieb Peter Hurley <peter@hurleysoftware.co=
+m>:
+>>=20
+>>> Hi Neil,
+>>>=20
+>>> On 03/18/2015 01:58 AM, NeilBrown wrote:
+>>>> here is version 3 of support for tty-slaves.
+>>>=20
+>>> Is there a v4 of this that I missed?
+>>=20
+>> We did have a lengthy discussion about [PATCH 3/3] how to best (1)
+>> represent the slave device in the device tree but as far as I am con=
+cerned,
+>> I do not see that we have a consensus (2) and the device tree mainta=
+iners
+>> have no comments or clear guidelines so far.
+>=20
+> Yes. Everyone and their dog disagrees
 
-> No, I'm just saying I don't see how calling the mux positions "IN1AL"
-> is any clearer than calling them "A" and "B". The "IN1AL" names of the
-> DAPM widgets is purely an internal detail that you wouldn't see through
-> the ALSA interface anyway so they don't relate any more closely to what
-> Joe user is seeing in the control list. The IN1L mux is for IN1L
-> so including that information in the mux position is redundant. For me
+What a wonderful argument=85
+I still ask myself who the dog is.
 
-Providing that people remember that this is what's going on here and
-that they remember that for this mux this shortened name is used rather
-than the full one.  We're relatively consistent in doing this for most
-drivers, it's helpful that "I want to connect X to Y" usually translates
-directly into one of "amixer cset X Y" or "amixer cset 'X Y' on".
+> with Nikolaus, who is playing
+> devil's advocate
 
-> the real benefit of the "A"/"B" naming is that if you're reading through
-> a configuration script and saw something like
+I hope you don't think that Linux users are devils=85
 
->     'IN1L Mux' = 'B'
->     'IN1R Mux' = 'B'
+No, I am not playing devil=92s advocate (which would imply that I am do=
+ing this
+for fun to tease the dog), but I feel I have to be the advocate of futu=
+re board
+designers who want to easily import an existing board DT and overwrite =
+device
+tree nodes to describe design changes, i.e. what slave device is connec=
+ted to
+which uart.
 
-> It's much more readably obvious that both channels are set the same
-> rather than
+At least in this regard, the alternatives are really differently easy t=
+o handle.
 
-Right, but as I said on the initial version in the case where you care
-the user probably shouldn't have the ability to set them independently
-in the first place.
+And, the alternatives have some influence how a tty driver and a slave =
+device
+driver is designed. So that is for me the root question, before discuss=
+ing (some)
+implementation details.
 
---jAzuEdEubtg2kr7a
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Because it is not resolved in a way that convinces me (and future board=
+ DT
+designers), I bring it up again and again. Even if you and some dog app=
+arently
+disagree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> here, so we clearly have to get confirmation from
+> device tree maintainers. And when they disagree with him, we'll need
+> to get concensus from Linus, too...
+> 									Pavel
 
-iQEcBAEBCAAGBQJVSf+gAAoJECTWi3JdVIfQN68H/Ai69amRA/CHNZi3t4Vw3w9j
-PJq14L93fji7fNJ+tOb3MCUkXXdiNdGDy8XnjERXcwp5n6lUidk2iUfKXwGxgf1U
-bf2kg81odLK2KN1rh1Ee02MN3159Ej/HZxCfghvGa1hrYQ1v22LBKoyD3BZnGTRp
-3PMr18mxMSpCjpxd/NBb/YG5cJsZ6LfMDSnw/P3LObKMBHkAUES2fxtAUZ3A4/3l
-b3CF2N5piVWZEDUGtZjg+iC/PQMyMnoOE2uTXP+zLwdOYqLph2WPZBTdJo0UBy7l
-bwU8m8yVuZWM7EefIn2vjvQsGfMxXB3RC912xfboTEym9CVYnQPLX3EE0p2EvhQ=
-=v9fh
------END PGP SIGNATURE-----
-
---jAzuEdEubtg2kr7a--
+BR,
+Nikolaus--
+To unsubscribe from this list: send the line "unsubscribe linux-kernel"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please read the FAQ at  http://www.tux.org/lkml/
