@@ -1,73 +1,76 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Wed, 6 May 2015 16:44:06 +0100
-Message-ID: <20150506154406.GB2974@leverpostej>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
- <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
- <20150505171349.GA30215@leverpostej> <5549877C.10408@huawei.com>
- <5549B9CC.1040709@huawei.com> <20150506093022.GB31001@leverpostej>
- <5549EE97.3020801@huawei.com> <20150506104856.GC707@leverpostej>
- <CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: How to encode being an I2C slave in DT?
+Date: Wed, 06 May 2015 09:57:37 -0600
+Message-ID: <554A39F1.9060507@wwwdotorg.org>
+References: <1427745615-5428-1-git-send-email-danindrey@mail.ru> <20150505105513.GA1841@katana> <20150506065928.GP25193@pengutronix.de> <3394114.re5da8pjTi@fb07-iapwap2> <20150506080951.GS25193@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Brent Wang <wangbintian@gmail.com>
-Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150506080951.GS25193-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 05/06/2015 02:09 AM, Uwe Kleine-K=F6nig wrote:
+> Hello Marc,
+>
+> On Wed, May 06, 2015 at 09:53:55AM +0200, Marc Dietrich wrote:
+>> Am Mittwoch, 6. Mai 2015, 08:59:28 schrieb Uwe Kleine-K=F6nig:
+>>> On Tue, May 05, 2015 at 12:55:13PM +0200, Wolfram Sang wrote:
+>>>> So what about adding a new property "i2c-slave-reg"? This does not=
+ only
+>>>> prevent the confusion above, but also makes it very clear that thi=
+s node
+>>>> is an I2C slave without the need to encode that somehow in the
+>>>> compatible property (although it probably should be described ther=
+e as
+>>>> well, still).
+>>>
+>>> I admit I didn't follow the discussions referenced in the footnotes=
+, but
+>>> I wonder if the slave part should be added to the device tree at al=
+l.
+>>> AFAICT it could (and so should) be completely userspace-defined whi=
+ch
+>>> slave driver is used on which address. I imagine that for most
+>>> controllers the bus addresses to use can be chosen more or less fre=
+ely.
+>>> So what am I missing?
+>>
+>> if you had read the footnotes you would know :-) Our usecase is conn=
+ect an
+>> embeedded controller via i2c to the host soc, similar to cros-ec, bu=
+t here the
+>> ec is the i2c master. The ec connects keyboard, mouse, pwrmngt, and =
+other
+>> stuff, for which the drivers are best implemented in kernel code AFA=
+IK.
+ >
+> Right, the driver might sensibly be implemented in kernel space. But =
+I'd
+> vote that you still need to do the binding of these drivers to your
+> slave controller from userspace. Then there is no need to specify
+> anything in your dtb.
 
-> How about add the following binding rule to my 2/5 patch:
-> ---------------------------
-> *Hisilicon Enhanced ARM AMBA Primecell PL011 serial UART
-> 
-> Required properties:
-> - compatible: must be "hisilicon,hi6220-uart", "arm,primecell", "arm,pl011"
+I think the set of I2C slave devices that are implemented by the Linux=20
+system can reasonably be considered part of the HW definition. Most DT=20
+content to date has been a definition of the HW that's available to SW,=
+=20
+but at least in this case, this I2C slave device is something that must=
+=20
+be implemented (admittedly in conjunction with SW) using the I2C slave=20
+HW on the main SoC, in order for the overall HW to work as intended.
 
-"arm,primecell" should come last.
-
-> - reg: exactly one register range with length 0x1000
-> - interrupts: exactly one interrupt specifier
-> 
-> See also bindings/serial/pl011.txt
-> 
-> Example:
-> 
-> uart0: uart@f8015000 {
->         compatible = "hisilicon,hi6220-uart", "arm,pl011", "arm,primecell";
->         reg = <0x0 0xf8015000 0x0 0x1000>;
->         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
->         clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl HI6220_UART0_PCLK>;
->         clock-names = "uartclk", "apb_pclk";
-> };
-
-How about for the moment we just modify the existing pl011 binding
-document to allow for the hi6220-specific string in addition to its
-existing strings? We can always split it out later if the hi6220 UART
-binding needs to be significantly divergent.
-
-> > Is UART 0 different from UART1 and UART2?
-> Yes,  but my patch just includes UART0, we do some changements for UART1/2
-> to improve performance.
-
-Sure, but we need to make sure we can choose a sane compatible string
-for them, that won't clash with whatever we choose for UART0.
-
-Are they the same IP as UART0, or fundamentally different?
-
-Are they also PL011 derived?
-
-Thanks,
-Mark.
+BTW, I believe devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org was created to address=20
+subsystem-level DT schema questions like this. It's much lower volume,=20
+so perhaps the thread would get noticed by the DT maintainers if posted=
+=20
+there (or perhaps just CC them)?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
