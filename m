@@ -1,62 +1,62 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] MAINTAINERS: Extend Samsung MFD drivers entry and add myself
-Date: Wed, 06 May 2015 14:19:36 +0900
-Message-ID: <1430889576-7779-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+From: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [alsa-devel] [RFC PATCH 03/14] ASoC: qcom: move ipq806x specific
+ bits out of lpass driver.
+Date: Tue, 5 May 2015 22:35:44 -0700
+Message-ID: <20150506053543.GA5639@kwestfie-linux.qualcomm.com>
+References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1430414213-10997-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150502235738.GB27804@kwestfie-linux.qualcomm.com>
+ <55486E5E.4010601@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55486E5E.4010601-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Extend the entry for Samsung MFD drivers for PMIC devices (Power
-Management Integrated Circuit) with bindings documentation, clock
-(clk-s2mps11.c) and RTC drivers (rtc-s5m.c).
+On Tue, May 05, 2015 at 12:16:46AM -0700, Srinivas Kandagatla wrote:
+> On 03/05/15 00:57, Kenneth Westfield wrote:
+> >On Thu, Apr 30, 2015 at 06:16:53PM +0100, Srinivas Kandagatla wrote:
+> >>This patch tries to make the lpass driver more generic by moving the
+> >>ipq806x specific bits out of the cpu and platform driver, also allows
+> the
+> >>SOC specific drivers to add the correct register offsets.
+> >>
+> >>This patch also renames the register definition header file into more
+> >>generic header file.
+> >
+> >>diff --git a/sound/soc/qcom/lpass-ipq806x.c
+> b/sound/soc/qcom/lpass-ipq806x.c
+> >>new file mode 100644
+> >>index 0000000..8e9a427
+> >>--- /dev/null
+> >>+++ b/sound/soc/qcom/lpass-ipq806x.c
+> >
+> >>+static const struct of_device_id ipq806x_lpass_cpu_device_id[] = {
+> >>+	{ .compatible = "qcom,lpass-cpu", .data = &ipq806x_data },
+> >>+	{}
+> >>+};
+> >>+MODULE_DEVICE_TABLE(of, ipq806x_lpass_cpu_device_id);
+> >
+> >Surround with #ifdef CONFIG_OF?
+> 
+> I was more of thinking adding "depends OF" in Kconfig.
 
-These PMIC devices are used on many Exynos-based boards like Arndale
-Octa (S2MPS11), Gear 2 (S2MPS14).
+Works for me.
 
-Add myself as a supporter for reviewing them.
-I am not the author of these drivers. However I have recently
-contributed to most of them and I have access to datasheets and hardware.
+> Is there any possibility that the driver would support non-DT?
 
-Cc: Sangbeom Kim <sbkim73@samsung.com>
-CC: Mike Turquette <mturquette@linaro.org>
-CC: Stephen Boyd <sboyd@codeaurora.org>
-CC: Alessandro Zummo <a.zummo@towertech.it>
-CC: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-CC: Lee Jones <lee.jones@linaro.org>
-CC: Liam Girdwood <lgirdwood@gmail.com>
-CC: Mark Brown <broonie@kernel.org>
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- MAINTAINERS | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Not that I am aware of.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e278814388f7..fc01dc9f96af 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8533,14 +8533,20 @@ L:	linux-fbdev@vger.kernel.org
- S:	Maintained
- F:	drivers/video/fbdev/s3c-fb.c
- 
--SAMSUNG MULTIFUNCTION DEVICE DRIVERS
-+SAMSUNG MULTIFUNCTION PMIC DEVICE DRIVERS
- M:	Sangbeom Kim <sbkim73@samsung.com>
-+M:	Krzysztof Kozlowski <k.kozlowski@samsung.com>
- L:	linux-kernel@vger.kernel.org
-+L:	linux-samsung-soc@vger.kernel.org
- S:	Supported
- F:	drivers/mfd/sec*.c
- F:	drivers/regulator/s2m*.c
- F:	drivers/regulator/s5m*.c
-+F:	drivers/clk/clk-s2mps11.c
-+F:	drivers/rtc/rtc-s5m.c
- F:	include/linux/mfd/samsung/
-+F:	Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
-+F:	Documentation/devicetree/bindings/mfd/s2mp*.txt
- 
- SAMSUNG S5P/EXYNOS4 SOC SERIES CAMERA SUBSYSTEM DRIVERS
- M:	Kyungmin Park <kyungmin.park@samsung.com>
 -- 
-1.9.1
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
