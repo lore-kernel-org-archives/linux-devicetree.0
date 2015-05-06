@@ -1,132 +1,70 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version 3.
-Date: Wed, 6 May 2015 13:36:33 +0100
-Message-ID: <20150506123632.GA1764@leverpostej>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
- <55492001.30806@hurleysoftware.com>
- <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com>
- <20150506092738.GB4508@amd>
- <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
- <554A03A7.2000504@hurleysoftware.com>
- <D10E1092-E75F-48F7-86F1-F8987973CEB5@goldelico.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v5 1/1] arm64: dts: Add the arasan sdhc nodes in
+ apm-storm.dtsi.
+Date: Wed, 6 May 2015 14:41:54 +0200
+Message-ID: <554A0C12.7080702@xilinx.com>
+References: <1430817426-5241-1-git-send-email-stripathi@apm.com>
+ <4635229.bceBxngCoe@wuerfel> <5549C68B.9090602@xilinx.com>
+ <2568634.iEosTvMJpM@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <D10E1092-E75F-48F7-86F1-F8987973CEB5@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>, Pavel Machek <pavel@ucw.cz>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2568634.iEosTvMJpM@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, Suman Tripathi <stripathi@apm.com>, "jcm@redhat.com" <jcm@redhat.com>, Anton Vorontsov <anton@enomsg.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "chris@printf.net" <chris@printf.net>, "patches@apm.com" <patches@apm.com>, Don Dutile <ddutile@redhat.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 06, 2015 at 01:27:03PM +0100, Dr. H. Nikolaus Schaller wrot=
-e:
-> Hi Peter,
->=20
-> Am 06.05.2015 um 14:05 schrieb Peter Hurley <peter@hurleysoftware.com=
->:
->=20
-> > On 05/06/2015 07:50 AM, Dr. H. Nikolaus Schaller wrote:
-> >> No, I am not playing devil=E2=80=99s advocate (which would imply t=
-hat I am doing this
-> >> for fun to tease the dog), but I feel I have to be the advocate of=
- future board
-> >> designers who want to easily import an existing board DT and overw=
-rite device
-> >> tree nodes to describe design changes, i.e. what slave device is c=
-onnected to
-> >> which uart.
-> >=20
-> > I dont' see a big distinction at the DTS source level, so your conc=
-ern is wrt
-> > binary dtbs?
->=20
-> No. My concern is wrt including existing board files and making small=
- modifications
-> on source level (or overlays).
->=20
-> We discuss:
->=20
-> board1.dts:
->=20
-> uart3 {	// subnode of some SoC
-> 	slave {	// slave connected to uart3
-> 		compatible =3D =E2=80=9E=E2=80=A6=E2=80=9C;
-> 		gpio =3D <&gpio5 12 0>
-> 	};
-> };
->=20
-> vs.
->=20
-> board1.dts:
->=20
-> / {
-> 	slave {
-> 		compatible =3D =E2=80=9E=E2=80=A6=E2=80=9C;
-> 		gpio =3D <&gpio5 12 0>
-> 		uart =3D &uart3;	// slave connected to uart3
-> 	};
-> };
->=20
-> uart3 {	// subnode of some SoC
-> };
->=20
-> now let=E2=80=99s have a spin of the board design which just rewires =
-the
-> slave to uart4 (somtimes hardware engineers do such things).
->=20
-> board2.dts:
->=20
-> #include <board-variant1.dts>
->=20
-> // reconnect device to uart4
->=20
-> uart4 {	// subnode of some SoC
-> 	slave {	// slave connected to uart4
-> 		compatible =3D =E2=80=9E=E2=80=A6=E2=80=9C;
-> 		gpio =3D <&gpio5 12 0>
-> 	};
-> };
->=20
-> uart3 {	// subnode of some SoC
-> 	slave {	// slave connected to uart3
-> 		compatible =3D =E2=80=9Enone=E2=80=9C		// we can=E2=80=99t delete i=
-mported subnodes
-> 	};
-> };
->=20
-> /// add another device to uart5?
->=20
-> uart5 {	// subnode of some SoC
-> 	slave2 {	// slave connected to uart5
-> 		compatible =3D =E2=80=9E=E2=80=A6=E2=80=9C;
-> 		gpio =3D <&gpio5 13 0>
-> 	};
-> };
+On 05/06/2015 10:40 AM, Arnd Bergmann wrote:
+> On Wednesday 06 May 2015 09:45:15 Michal Simek wrote:
+>> On 05/06/2015 09:31 AM, Arnd Bergmann wrote:
+>>> On Wednesday 06 May 2015 10:41:07 Suman Tripathi wrote:
+>>>>>> @@ -533,6 +567,16 @@
+>>>>>>                         interrupts = <0x0 0x4f 0x4>;
+>>>>>>                 };
+>>>>>>
+>>>>>> +               sdhc0: sdhc@1c000000 {
+>>>>>> +                       device_type = "sdhc";
+>>>>>
+>>>>> device_type generally should not be used (there are a few exceptions).
+>>>>
+>>>> Okay !!
+>>>>
+>>>
+>>> While we're at it, please change sdhc@1c000000 to mmc@1c000000.
+>>> Even though Linux does not care, we try to use the standard device
+>>> names for consistency.
+>>
+>> Do we have a list of these names somewhere?
+>> Normally I do use ePARP - generic names recommendation but mmc or sdhci
+>> are not listed there.
+>> Both combination mmc@ or sdhci@ are used in the kernel.
+>>
+>> On zynq and zynqmp we do use shdci@.
+>>
+> 
+> Ah, I thought ePAPR listed mmc already. Using "sdhci" is a little too
+> specific here, since a lot of mmc hosts are not sdhci compliant, and
+> "sdhc" is completely wrong, because that identifies a specific card
+> type, but a host that supports SDHC cards will generally also work
+> with SD (less than 4GB) or SDXC (more than 48GB) cards.
 
-If this happens, you can move the slave device into a fragment that you
-can include under the correct node. That's trivial.
+Yes "sdhc" is completely wrong.
 
-If you have a large amount of variation within a given platform, that i=
-s
-a problem with your platform.
+Based on our datasheet(also version used on Zynq and ZynqMP) this IP is
+compliant with SD HC 3.00, SDIO 3.0, SD MC 3.01 SD MCS 1.01, MMC 4.51.
+Not sure about the version which they use.
+Also not sure which spec the IP should have to be able to say that we
+can use sdhci name. Do you have exact SPEC name?
 
-> So the main difference is if the slave device tells to which uart it =
-is connected
-> or the uart which slave device it is connected to.
->=20
-> And I think the second approach is easier and more straightforward (o=
-n DT level).
-
-We already place child nodes under their respective busses for other
-interfaces like SPI and I2C. I do not see a compelling reason to do
-otherwise for devices hanging off of UARTs -- doing so would make thing=
-s
-less straightforward because you have a fundamentally different idiom.
-
-Having the slave live under the UART node also gives you sane probe
-ordering -- you must probe the parent before the slave as the parent
-driver (perhaps via common code) will trigger the scan of children.
-
-Mark.
+Thanks,
+Michal
