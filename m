@@ -1,96 +1,59 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: add helper function to retrive match data
-Date: Wed,  6 May 2015 20:09:09 +0200
-Message-ID: <1430935749-3881-1-git-send-email-manabian@gmail.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC driver
+Date: Wed, 6 May 2015 11:12:20 -0700
+Message-ID: <CAPw-ZTkuZWNM9D_wJRfQq009KeL1coyYKXhqhWV+FWW6C=xRiA@mail.gmail.com>
+References: <1430884947-16787-1-git-send-email-lho@apm.com>
+	<2150970.xGYLhDU9BR@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2150970.xGYLhDU9BR@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It's a common operation for device drivers to retrive the data
-member from of_device_id struct in their probe function.
+Hi Arnd/Borislav/Rob,
 
-Most driver end up doing:
-    const struct of_device_id *match;
-    match = of_match_device(driver_of_match, &pdev->dev);
-    driver->data = match->data;
+> > v8:
+> > * Change ASM_EDAC_H to __ASM_EDAC_H in file edac.h
+> > * Add WARN_ONCE in stub function atomic_scrub
+> > * Update DTS binding documentation (with only memory controller node)
+> > * Temporary remove L1/L2, L3, and SoC driver code and update memory driver
+> >   code accordingly
+> >
+> >
+>
+> I don't see how this is helping. You still use a syscon reference for the
+> pcp node after I told you not to, and you are completely leaving out the
+> other nodes, which makes it impossible to tell what your plan is for those.
+>
+>
+> Please come up with a plan that makes it possible to have proper support
+> for all the devices in the future. Leaving out bits because you know that
+> adding them later will be hard is not a good solution: if you screw up
+> the design now, adding them later will be even harder.
 
-With the of_device_get_match_data helper function all this can
-done in one go.
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Hi DT maintainers,
+Okay... Let me summary the issue at hand and let us all agree:
 
-Here is the patch to add of_device_get_match_data as indicated in:
-http://marc.info/?l=devicetree&m=143068795621692&w=2
+1. Whether to have an single driver for APM EDAC or multiple instance
+of 4 different drivers. With single driver, it does not scale in the
+future when we add/remove memory controllers and CPU domains. This is
+also agreed by Rob Herring from review of the DTS nodes. For L3 and
+SoC EDAC, they are less of an issue as I don't see a situation that we
+would have multiple instances.
 
-There are lot of device driver that can be simplified with this
-helper function. After the function has gone upstream I will
-spend some time getting some of them converted over.
+2. With regard to the top level PCP interrupt, they are just for
+status and once configured, it will not be touch. Therefore, I keep
+the current implementation. With an single driver, there is no need to
+worry about read/modify/write as it will be guarded with an lock. For
+multiple instance, I am thinking that the xgene_edac_mc module will
+provide exported lock functions for the other drivers.
 
-Maybe someone with Coccinelle skills could create a script to
-do some of the work also.
+If I am missing anything, let me know.
 
-regards,
-Joachim Eastwood
-
- drivers/of/device.c       | 12 ++++++++++++
- include/linux/of_device.h |  7 +++++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 20c1332a0018..8b91ea241b10 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -163,6 +163,18 @@ void of_device_unregister(struct platform_device *ofdev)
- }
- EXPORT_SYMBOL(of_device_unregister);
- 
-+const void *of_device_get_match_data(const struct device *dev)
-+{
-+	const struct of_device_id *match;
-+
-+	match = of_match_device(dev->driver->of_match_table, dev);
-+	if (!match)
-+		return NULL;
-+
-+	return match->data;
-+}
-+EXPORT_SYMBOL(of_device_get_match_data);
-+
- ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- {
- 	const char *compat;
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 22801b10cef5..3237d34e2ab1 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -33,6 +33,8 @@ extern int of_device_add(struct platform_device *pdev);
- extern int of_device_register(struct platform_device *ofdev);
- extern void of_device_unregister(struct platform_device *ofdev);
- 
-+extern const void *of_device_get_match_data(const struct device *dev);
-+
- extern ssize_t of_device_get_modalias(struct device *dev,
- 					char *str, ssize_t len);
- 
-@@ -65,6 +67,11 @@ static inline int of_driver_match_device(struct device *dev,
- static inline void of_device_uevent(struct device *dev,
- 			struct kobj_uevent_env *env) { }
- 
-+static const void *of_device_get_match_data(const struct device *dev)
-+{
-+	return NULL;
-+}
-+
- static inline int of_device_get_modalias(struct device *dev,
- 				   char *str, ssize_t len)
- {
--- 
-1.8.0
-
+-Loc
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
