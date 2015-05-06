@@ -1,11 +1,13 @@
 From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/6] ARM: sunxi: Introduce Allwinner H3 support
-Date: Wed,  6 May 2015 11:31:27 +0200
-Message-ID: <1430904693-1404-1-git-send-email-jenskuske@gmail.com>
+Subject: [PATCH 6/6] ARM: dts: sun8i: Add Orange Pi Plus support
+Date: Wed,  6 May 2015 11:31:33 +0200
+Message-ID: <1430904693-1404-7-git-send-email-jenskuske@gmail.com>
+References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com>
 Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBEN7U6VAKGQEBFYKDYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBGV7U6VAKGQEWBW3XOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1430904693-1404-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -17,60 +19,120 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The Orange Pi Plus is a SBC based on the Allwinner H3 SoC
+with 8GB eMMC, multiple USB ports through a USB hub chip, SATA through
+a USB-SATA bridge, one uSD slot, a 10/100/1000M ethernet port,
+WiFi, HDMI, headphone jack, IR receiver, a microphone, a CSI connector
+and a 40-pin GPIO header.
 
-This patch series introduces basic kernel support for Allwinner's H3 SoC,
-mainly basic clocks and pinctrl. It also adds interrupts, timers,
-watchdog, RTC, dmaengine, MMC and UARTs, which are mostly compatible to
-those in earlier SoCs like A23 and A31, and can simply be reused.
-
-These patches are based on Maxime's sunxi/for-next branch from
-git://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git
-
-Patch 1 adds machine support for the H3.
-
-Patch 2 adds support for the basic clocks. The AHB1/AHB2 split could
-need some discussion.
-
-Patch 3 adds the pin sets for the H3 main PIO. 
-
-Patch 4 adds the H3 specific parameters to the sun6i dmaengine driver.
-
-Patch 5 adds the DTSI for the H3.
-
-Patch 6 adds a DT for the Orange Pi Plus SBC, which these patches
-were developed and tested with.
-
-Regards,
-Jens
-
-
-Jens Kuske (6):
-  ARM: sunxi: Introduce Allwinner H3 support
-  clk: sunxi: Add H3 clocks support
-  pinctrl: sunxi: Add H3 PIO controller support
-  dmaengine: sun6i: Add support for Allwinner H3 (sun8i) variant
-  ARM: dts: sunxi: Add Allwinner H3 DTSI
-  ARM: dts: sun8i: Add Orange Pi Plus support
-
- Documentation/devicetree/bindings/arm/sunxi.txt    |   1 +
- Documentation/devicetree/bindings/clock/sunxi.txt  |   7 +
- .../devicetree/bindings/dma/sun6i-dma.txt          |   5 +-
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
- arch/arm/boot/dts/Makefile                         |   3 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  82 ++++
- arch/arm/boot/dts/sun8i-h3.dtsi                    | 468 ++++++++++++++++++
- arch/arm/mach-sunxi/Kconfig                        |   2 +-
- arch/arm/mach-sunxi/sunxi.c                        |   3 +-
- drivers/clk/sunxi/clk-sunxi.c                      |  46 +-
- drivers/dma/sun6i-dma.c                            |  12 +
- drivers/pinctrl/sunxi/Kconfig                      |   4 +
- drivers/pinctrl/sunxi/Makefile                     |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c           | 521 +++++++++++++++++++++
- 14 files changed, 1151 insertions(+), 5 deletions(-)
+Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                   |  3 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 82 ++++++++++++++++++++++++++++
+ 2 files changed, 84 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
- create mode 100644 arch/arm/boot/dts/sun8i-h3.dtsi
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 83a4e68..149cd82 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -570,7 +570,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-wexler-tab7200.dtb
+ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a23-ippo-q8h-v5.dtb \
+-	sun8i-a23-ippo-q8h-v1.2.dtb
++	sun8i-a23-ippo-q8h-v1.2.dtb \
++	sun8i-h3-orangepi-plus.dtb
+ dtb-$(CONFIG_MACH_SUN9I) += \
+ 	sun9i-a80-optimus.dtb \
+ 	sun9i-a80-cubieboard4.dtb
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+new file mode 100644
+index 0000000..50c8316
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+@@ -0,0 +1,82 @@
++/*
++ * Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Xunlong Orange Pi Plus";
++	compatible = "xunlong,orangepi-plus", "allwinner,sun8i-h3";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
 -- 
 2.3.7
