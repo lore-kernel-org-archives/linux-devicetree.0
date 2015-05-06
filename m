@@ -1,83 +1,72 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH v3 05/10] Documentation: devicetree: brcmstb_nand: add 'brcm,nand-soc' bindings
-Date: Wed,  6 May 2015 10:59:49 -0700
-Message-ID: <1430935194-7579-6-git-send-email-computersforpeace@gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 09/10] ARM: bcm63138: add NAND DT support
+Date: Wed,  6 May 2015 10:59:53 -0700
+Message-ID: <1430935194-7579-10-git-send-email-computersforpeace@gmail.com>
 References: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430935194-7579-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/mtd/brcm,brcmstb-nand.txt  | 39 +++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm63138.dtsi    | 17 +++++++++++++++++
+ arch/arm/boot/dts/bcm963138dvt.dts | 12 ++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmstb-nand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmstb-nand.txt
-index 662c857e74fe..6a3ab751db99 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmstb-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmstb-nand.txt
-@@ -30,7 +30,10 @@ Required properties:
-                      "flash-dma" and/or "nand-cache".
- - interrupts       : The NAND CTLRDY interrupt and (if Flash DMA is available)
-                      FLASH_DMA_DONE
--- interrupt-names  : May be "nand_ctlrdy" or "flash_dma_done"
-+- interrupt-names  : For hardware without a dedicated 'brcm,nand-soc' node, may
-+                     be "nand_ctlrdy" or "flash_dma_done"
-+                     For hardware with a dedicated 'brcm,nand-soc' node for
-+                     breaking out individual interrupt types, may be "nand"
- - interrupt-parent : See standard interrupt bindings
- - #address-cells   : <1> - subnodes give the chip-select number
- - #size-cells      : <0>
-@@ -40,6 +43,10 @@ Optional properties:
-                               (WP) control bit. It is always available on >=
-                               v7.0. Use this property to describe the rare
-                               earlier versions of this core that include WP
-+- brcm,nand-soc             : Phandle to SoC control node. This is necessary
-+                              for SoCs where NAND interrupts and bus
-+                              infrastructure are integrated in non-standard
-+                              ways.
- 
- * NAND chip-select
- 
-@@ -74,6 +81,36 @@ Optional properties:
- Each nandcs device node may optionally contain sub-nodes describing the flash
- partition mapping. See partition.txt for more detail.
- 
+diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
+index f46329c8ad75..5fb6f6d750f1 100644
+--- a/arch/arm/boot/dts/bcm63138.dtsi
++++ b/arch/arm/boot/dts/bcm63138.dtsi
+@@ -131,5 +131,22 @@
+ 			clock-names = "periph";
+ 			status = "disabled";
+ 		};
 +
-+* NAND SoC control node:
++		nand: nand@2000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "brcm,brcmnand-v7.0", "brcm,brcmnand";
++			reg = <0x2000 0x600>;
++			reg-names = "nand";
++			status = "disabled";
++			interrupts = <GIC_SPI 38 0>;
++			interrupt-names = "nand";
++			brcm,nand-soc = <&nand_int_base>;
++		};
 +
-+The NAND controller is integrated differently on the variety of SoCs on which it
-+is found. Part of this integration involves providing status and enable bits
-+with which to control the 8 exposed NAND interrupts, as well as hardware for
-+configuring the endianness of the data bus. On some SoCs, these features are
-+handled via standard, modular components (e.g., their interrupts look like a
-+normal IRQ chip), but on others, they are controlled in unique and interesting
-+ways, sometimes with registers that lump multiple NAND-related functions
-+together. The former case can be described simply by the standard interrupts
-+properties in the main controller node. But for the latter exceptional cases,
-+we can describe these extra SoC-specific integration hardware via the following
-+node, referenced from the brcm,brcmnand node above.
++		nand_int_base: nand-soc@f0 {
++			compatible = "brcm,nand-soc-bcm63138";
++			reg = <0xf0 0x10>;
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm963138dvt.dts b/arch/arm/boot/dts/bcm963138dvt.dts
+index 69c93395ecd2..370aa2cfddf2 100644
+--- a/arch/arm/boot/dts/bcm963138dvt.dts
++++ b/arch/arm/boot/dts/bcm963138dvt.dts
+@@ -28,3 +28,15 @@
+ &serial1 {
+ 	status = "okay";
+ };
 +
-+ - compatible: Can be one of several SoC-specific strings. Each SoC may have
-+   different requirements for its additional properties, as described below each
-+   bullet point below.
++&nand {
++	status = "okay";
 +
-+   * "brcm,nand-soc-bcm63138"
-+     - reg: (required) the 'NAND_INT_BASE' register range, with separate status
-+       and enable registers
-+
-+   * "brcm,nand-soc-iproc"
-+     - reg: (required) the "IDM" register range, for interrupt enable and APB
-+       bus access endianness configuration, and the "EXT" register range,
-+       for interrupt status/ack.
-+     - reg-names: (required) a list of the names corresponding to the previous
-+       register ranges. Should contain "idm" and "ext".
-+
- Example:
- 
- nand@f0442800 {
++	nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++		brcm,nand-oob-sectors-size = <16>;
++	};
++};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
