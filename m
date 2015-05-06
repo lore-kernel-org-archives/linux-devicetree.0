@@ -1,116 +1,77 @@
-From: "Fuzzey, Martin" <mfuzzey@parkeon.com>
-Subject: Re: [PATCH 0/2] gpio: Allow userspace export from DT
-Date: Wed, 6 May 2015 19:56:05 +0200
-Message-ID: <CANh8Qzy7D=O0C7nw_M0LCvE887uxsCjRmvQ8fcKTcf4dJNm7iA@mail.gmail.com>
-References: <20150413110515.9681.58848.stgit@localhost> <20150504084925.GB4047@localhost>
- <CACRpkdbFKs8mALw7q2d0EEDkhxKNLgeiFB5TyZ6ZPpfcW-c+oQ@mail.gmail.com> <20150506130615.GB5302@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150506130615.GB5302@localhost>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: [PATCH v3 00/10] mtd: nand: add Broadcom NAND controller support
+Date: Wed,  6 May 2015 10:59:44 -0700
+Message-ID: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6 May 2015 at 15:06, Johan Hovold <johan@kernel.org> wrote:
->
-> On Wed, May 06, 2015 at 09:22:22AM +0200, Linus Walleij wrote:
-> > On Mon, May 4, 2015 at 10:49 AM, Johan Hovold <johan@kernel.org> wr=
-ote:
-> > > On Mon, Apr 13, 2015 at 01:05:15PM +0200, Martin Fuzzey wrote:
-> >
-> > >> The above means that, in order to export the GPIO to userspace v=
-ia
-> > >> /sys/class/gpio/export the userspace code must know the exact ha=
-rdware and
-> > >> kernel version information.
-> > >
-> > > Not quite. You can still determine the gpio number in the above c=
-ases by
-> > > walking the sysfs tree to find the chip and it's base. This is th=
-e only
-> > > way to do this for dynamic buses such as USB.
-> >
+Hi,
 
-A problem with that is that the "label" sysfs attribute is not
-necessarilly unique (and is even documented as being non unique).
-Many drivers just use the chip name as the label so if you have more
-than one of them...
+This is version 3 of support for the Broadcom BCM7xxx Set-Top Box NAND
+controller. This controller has been used in a variety of Broadcom SoCs.
 
-Of course if you know the bus and bus address it is possible to find
-the associated GPIO base but why should userspace have to know that?
-Isn't the whole point of the DT to describe such hardware details?
+This series now adds support for a few new chips: BCM63138, and the iProc chip
+family. These add an additional 6 new patches to the original 4. If the only
+comments end up on the latter 6 patches, the first 4 might be worth merging
+independently.
 
-> > Maybe we should start providing something like an
-> > "lsgpio" utility in tools/gpio to do this, just as a hint
-> > to userspace people on how things should be done.
->
-> I think we should focus on defining a new user-space interface rather
-> than make it easier to use the current one (it should really only be
-> used for development or one-off hacks IMO).
->
+Summary changelog:
 
-Doesn't the ability to name GPIOs, fix their direction, and "pre
-export" them  in the device tree remove most of the warts of the
-current interface? (for GPIOs for which it is used in any case)
+v1 -> v2:
+ * add NAND to DTS for BCM7445 / BCM97445SVMB
+ * rename DT binding file to have 'brcm,' prefix
+ * catch DMA mapping errors
+ * fixup timeout / error messages (hex, remove misleading info)
+ * MODULE_LICENSE("GPL v2")
+ * fix incorrect comments
+ * print why we fail, when checking for supported controller revisions
+ * disable prefetch when using Flash DMA (see FIXME); will re-enable once we
+   get a good erased-page verification scheme merged
 
-While I agree that the sysfs GPIO interface is sometimes abused (such
-as for LEDs and switches which already have proper kernel drivers)
-there are still cases where a full kernel driver doesn't really make
-sense (eg a signal to open a parking barrier) - is anyone suggesting
-this needs a custom driver or that the LED one should be used  -
-setting the heartbeat trigger on that would be interesting .... :)
+v2 -> v3:
+ * rebase to v4.1-rc1
+ * add SoC-specific infrastructure, to help support other SoCs:
+   - add BCM63138 support
+   - add iProc/Cygnus support
+ * disable prefetch on v6.1
 
-> > >> This patch series solves both problems by performing the externa=
-l
-> > >> signal =3D> GPIO mapping in the device tree.
-> > >
-> > > As Rob already mentioned, what we want is some way to declare pin
-> > > functions. These could then be requested from userspace (or used =
-in DT,
-> > > something which should allow for further refactoring there as wel=
-l)
-> > > unless a driver has already claimed them.
-> >
-> > We have the ability to name the GPIO lines (I usually refer to
-> > lines rather than pins, as pins are physical and not all GPIOs
-> > are, actually) using the array "names" in struct gpio_chip,
-> > however this has no DT binding, so maybe people should
-> > work on that. These names appear as named line files
-> > in sysfs IIRC. Or maybe you're thinking of something else?
->
+Brian Norris (8):
+  mtd: nand: add common DT init code
+  Documentation: devicetree: add binding doc for Broadcom NAND
+    controller
+  mtd: nand: add NAND driver for Broadcom STB NAND controller
+  ARM: bcm7445: add NAND to DTS
+  Documentation: devicetree: brcmstb_nand: add 'brcm,nand-soc' bindings
+  mtd: brcmstb_nand: add SoC-specific support
+  mtd: brcsmtb_nand_soc: add support for BCM63138
+  ARM: bcm63138: add NAND DT support
 
->
-> Yes, something like that. As you mention above, if it was possibly to
-> define those names in firmware, even the current sysfs interface woul=
-d
-> expose the pins as
->
->         /sys/class/gpio/<function>
->
-> rather than say /sys/class/gpio/gpio279, thereby solving the gpio-num=
-ber
-> look-up issue. Well, to actually make the pin available *from* usersp=
-ace
-> you'd currently still need the number...
->
-Indeed that  doesn't solve the how to export it problem.
-AFAICT nothing is visible in sysfs until the export has been done.
+Ray Jui (2):
+  mtd: brcsmtb_nand_soc: add iProc support
+  ARM: dts: cygnus: Enable NAND support for Cygnus
 
-Martin
+ .../devicetree/bindings/mtd/brcm,brcmstb-nand.txt  |  147 ++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   20 +
+ arch/arm/boot/dts/bcm63138.dtsi                    |   17 +
+ arch/arm/boot/dts/bcm7445-bcm97445svmb.dts         |   23 +
+ arch/arm/boot/dts/bcm7445.dtsi                     |   22 +
+ arch/arm/boot/dts/bcm958300k.dts                   |   16 +
+ arch/arm/boot/dts/bcm963138dvt.dts                 |   12 +
+ drivers/mtd/nand/Kconfig                           |    8 +
+ drivers/mtd/nand/Makefile                          |    2 +
+ drivers/mtd/nand/brcmnand.h                        |   56 +
+ drivers/mtd/nand/brcmstb_nand.c                    | 2263 ++++++++++++++++++++
+ drivers/mtd/nand/brcmstb_nand_soc.c                |  244 +++
+ drivers/mtd/nand/nand_base.c                       |   41 +
+ include/linux/mtd/nand.h                           |    5 +
+ 14 files changed, 2876 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/brcm,brcmstb-nand.txt
+ create mode 100644 drivers/mtd/nand/brcmnand.h
+ create mode 100644 drivers/mtd/nand/brcmstb_nand.c
+ create mode 100644 drivers/mtd/nand/brcmstb_nand_soc.c
 
-
-
---=20
---=20
-Martin Fuzzey | Software Expertise
-Parc La Fayette - 6 rue Isaac Newton - 25075 Besan=C3=A7on - FR
-+33381546880 | +33677158582
-mfuzzey@parkeon.com | www.parkeon.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
