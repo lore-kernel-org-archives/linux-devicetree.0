@@ -1,174 +1,104 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: Re: [alsa-devel] [PATCH v2 RESEND] ARM: dts: Support audio on
- Exynos5422-odroidxu3 using simple-audio-card
-Date: Wed, 06 May 2015 10:47:14 +0900
-Message-ID: <20150506104714.498f8da5@songinha-Samsung-DeskTop-System>
-References: <1428651178-18186-1-git-send-email-ideal.song@samsung.com>
- <552791A4.40203@fivetechno.de>
- <CANAwSgS98n0kX8oBUk5Ehk1fwU4DA_DNuAqztp3LrOBcmrtAZw@mail.gmail.com>
+From: Bintian <bintian.wang@huawei.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Wed, 6 May 2015 11:16:12 +0800
+Message-ID: <5549877C.10408@huawei.com>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+ <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>
+ <20150505171349.GA30215@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CANAwSgS98n0kX8oBUk5Ehk1fwU4DA_DNuAqztp3LrOBcmrtAZw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Anand Moon <linux.amoon@gmail.com>, Markus Reichl <m.reichl@fivetechno.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, broonie@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150505171349.GA30215@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Leo Yan <leo.yan@linaro.org>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, puc
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+Hello Mark,
 
-Any comments about this patch?
+On 2015/5/6 1:13, Mark Rutland wrote:
+> Hi,
+>
+>> +/*Reserved 1MB memory for MCU*/
+>> +/memreserve/ 0x05e00000 0x00100000;
+>
+> What exactly is the MCU used for, and what does it use this memory for?
+>
+> Can this be carved out from the memory node instead? If the OS doesn't
+> need to access this memory to communicate with the MCU, preventing the
+> OS from mapping the memory avoids a number of potential issues.
+>
+> I take it that with UEFI this region is not described to the OS?
 
-Best Regards,
-Inha Song.
+MCU is used for system low power control, the reserved memory is hard
+coded by hardware and used by MCU, OS will access this memory to
+communicate with the MCU to change the CPU frequency.
 
-On Fri, 10 Apr 2015 14:48:13 +0530
-Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> [...]
+>
+>> +	psci {
+>> +		compatible = "arm,psci-0.2";
+>> +		method = "smc";
+>> +	};
+>
+> Are all the PSCI 0.2 mandatory features implemented?
+The system off/suspend is under development, and system off will
+be released in next months, and system suspend may be released in the
+following two months.
 
-> Hi Inha,
-> 
-> Tested-by: Anand Moon <linux.amoon@gmail.com>
-> 
-> -Anand Moon
-> 
-> On 10 April 2015 at 14:32, Markus Reichl <m.reichl@fivetechno.de> wrote:
-> > Hi Inha,
-> >
-> > I have tested this on XU3 (Headphone output).
-> >
-> > Tested-by: Markus Reichl <m.reichl@fivetechno.de>
-> >
-> > Best Regards
-> > --
-> > Markus Reichl
-> >
-> > Am 10.04.2015 um 09:32 schrieb Inha Song:
-> >> Add MAX98090 audio codec, I2S interface and the sound nodes to support
-> >> audio on Exynos5422 SoC Based Odroid-XU3 board. Now we can support audio
-> >> in Odroid-XU3 board using simple-audio-card DT binding.
-> >>
-> >> Signed-off-by: Inha Song <ideal.song@samsung.com>
-> >> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> ---
-> >>  arch/arm/boot/dts/exynos5420.dtsi          |  9 +++++
-> >>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 59 ++++++++++++++++++++++++++++++
-> >>  2 files changed, 68 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> >> index ac6f860..73886d6 100644
-> >> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> >> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> >> @@ -415,6 +415,9 @@
-> >>                       <&clock_audss EXYNOS_I2S_BUS>,
-> >>                       <&clock_audss EXYNOS_SCLK_I2S>;
-> >>               clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-> >> +             #clock-cells = <1>;
-> >> +             clock-output-names = "i2s_cdclk0";
-> >> +             #sound-dai-cells = <1>;
-> >>               samsung,idma-addr = <0x03000000>;
-> >>               pinctrl-names = "default";
-> >>               pinctrl-0 = <&i2s0_bus>;
-> >> @@ -429,6 +432,9 @@
-> >>               dma-names = "tx", "rx";
-> >>               clocks = <&clock CLK_I2S1>, <&clock CLK_SCLK_I2S1>;
-> >>               clock-names = "iis", "i2s_opclk0";
-> >> +             #clock-cells = <1>;
-> >> +             clock-output-names = "i2s_cdclk1";
-> >> +             #sound-dai-cells = <1>;
-> >>               pinctrl-names = "default";
-> >>               pinctrl-0 = <&i2s1_bus>;
-> >>               status = "disabled";
-> >> @@ -442,6 +448,9 @@
-> >>               dma-names = "tx", "rx";
-> >>               clocks = <&clock CLK_I2S2>, <&clock CLK_SCLK_I2S2>;
-> >>               clock-names = "iis", "i2s_opclk0";
-> >> +             #clock-cells = <1>;
-> >> +             clock-output-names = "i2s_cdclk2";
-> >> +             #sound-dai-cells = <1>;
-> >>               pinctrl-names = "default";
-> >>               pinctrl-0 = <&i2s2_bus>;
-> >>               status = "disabled";
-> >> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> >> index edc25cf..c038f0d 100644
-> >> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> >> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> >> @@ -11,6 +11,7 @@
-> >>  */
-> >>
-> >>  /dts-v1/;
-> >> +#include <dt-bindings/sound/samsung-i2s.h>
-> >>  #include "exynos5800.dtsi"
-> >>
-> >>  / {
-> >> @@ -285,6 +286,64 @@
-> >>       rtc@101E0000 {
-> >>               status = "okay";
-> >>       };
-> >> +
-> >> +     sound: sound {
-> >> +             compatible = "simple-audio-card";
-> >> +
-> >> +             simple-audio-card,name = "Odroid-XU3";
-> >> +             simple-audio-card,widgets =
-> >> +                     "Headphone", "Headphone Jack",
-> >> +                     "Speakers", "Speakers";
-> >> +             simple-audio-card,routing =
-> >> +                     "Headphone Jack", "HPL",
-> >> +                     "Headphone Jack", "HPR",
-> >> +                     "Headphone Jack", "MICBIAS",
-> >> +                     "IN1", "Headphone Jack",
-> >> +                     "Speakers", "SPKL",
-> >> +                     "Speakers", "SPKR";
-> >> +
-> >> +             simple-audio-card,format = "i2s";
-> >> +             simple-audio-card,bitclock-master = <&link0_codec>;
-> >> +             simple-audio-card,frame-master = <&link0_codec>;
-> >> +
-> >> +             simple-audio-card,cpu {
-> >> +                     sound-dai = <&i2s0 0>;
-> >> +                     system-clock-frequency = <19200000>;
-> >> +             };
-> >> +
-> >> +             link0_codec: simple-audio-card,codec {
-> >> +                     sound-dai = <&max98090>;
-> >> +                     clocks = <&i2s0 CLK_I2S_CDCLK>;
-> >> +             };
-> >> +     };
-> >> +};
-> >> +
-> >> +&clock_audss {
-> >> +     assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
-> >> +                     <&clock_audss EXYNOS_MOUT_I2S>,
-> >> +                     <&clock_audss EXYNOS_DOUT_AUD_BUS>;
-> >> +     assigned-clock-parents = <&clock CLK_FIN_PLL>,
-> >> +                     <&clock_audss EXYNOS_MOUT_AUDSS>;
-> >> +     assigned-clock-rates = <0>,
-> >> +                     <0>,
-> >> +                     <19200000>;
-> >> +};
-> >> +
-> >> +&hsi2c_5 {
-> >> +     status = "okay";
-> >> +     max98090: max98090@10 {
-> >> +             compatible = "maxim,max98090";
-> >> +             reg = <0x10>;
-> >> +             interrupt-parent = <&gpx3>;
-> >> +             interrupts = <2 0>;
-> >> +             clocks = <&i2s0 CLK_I2S_CDCLK>;
-> >> +             clock-names = "mclk";
-> >> +             #sound-dai-cells = <0>;
-> >> +     };
-> >> +};
-> >> +
-> >> +&i2s0 {
-> >> +     status = "okay";
-> >>  };
-> >>
-> >>  &hdmi {
-> >>
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Leo does the development of PSCI, and he can give more detailed plan.
+
+So can I keep "arm,psci-0.2" here?
+
+> Can CPU0 be hot unplugged?
+Yes, CPU0~CPU7 all can be hot unplugged.
+
+
+> [...]
+>
+>> +		uart0: uart@f8015000 {	/* console */
+>> +			compatible = "arm,pl011", "arm,primecell";
+>> +			reg = <0x0 0xf8015000 0x0 0x1000>;
+>> +			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl HI6220_UART0_PCLK>;
+>> +			clock-names = "uartclk", "apb_pclk";
+>> +		};
+>
+> In a previous discussion [1] the UART on HI6220 was described as not
+> fully PL011 compliant, with a number of differences (e.g. the FIFO
+> length).
+>
+> Given that, I feel somewhat uncomfortable with the current compatible
+> string list. What exactly are those differences? We may need a more
+> specific compatible string (even if in addition to those existing ones),
+> or perhaps other properties.
+The small system can be booted and the console also works well without
+changing any code of driver amba-pl011.c, so I think the compatible
+string is OK for this patch set.
+
+Hisilicon do some performance enhancements based on PL011, but the
+current driver "amba-pl011.c" also works on hi6220 without those
+enhancements driver code.
+
+Thanks,
+
+Bintian
+
+>
+> Thanks,
+> Mark.
+>
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/328978.html
+>
+> .
+>
