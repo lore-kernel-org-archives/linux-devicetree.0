@@ -1,41 +1,36 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V4 1/2] pinctrl: Add Pistachio SoC pin control binding document
-Date: Wed, 6 May 2015 08:35:36 +0200
-Message-ID: <CACRpkdbW8WNYy56U-KmsZPatQBFO8xSYAJV8R9BwsPMXnQzbwQ@mail.gmail.com>
-References: <1430269982-24129-1-git-send-email-abrestic@chromium.org>
-	<1430269982-24129-2-git-send-email-abrestic@chromium.org>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v3 5/5] MAINTAINERS: Add pci-st.c to ARCH/STI architecture
+Date: Wed, 6 May 2015 08:45:15 +0200
+Message-ID: <5549B87B.709@st.com>
+References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org> <1428657168-12495-6-git-send-email-gabriel.fernandez@linaro.org> <20150505214225.GC24643@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1430269982-24129-2-git-send-email-abrestic@chromium.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150505214225.GC24643@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edworthy@renesas.com>, Minghuan Lian <Minghuan>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2015 at 3:13 AM, Andrew Bresticker
-<abrestic@chromium.org> wrote:
+Hello Bjorn,
 
-> Add a device-tree binding document for the pin controller present
-> on the IMG Pistachio SoC.
+On 05/05/2015 11:42 PM, Bjorn Helgaas wrote:
+> On Fri, Apr 10, 2015 at 11:12:48AM +0200, Gabriel FERNANDEZ wrote:
+>> This patch adds the pci-st.c pci driver found on STMicroelectronics
+>> SoC's into the STI arch section of the maintainers file.
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> I'd like an ack from the current maintainers:
 >
-> Signed-off-by: Damien Horsley <Damien.Horsley@imgtec.com>
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> ---
-> No changes from v2/v3.
-> Changes from v1:
->  - Change compatible string to "img,pistachio-system-pinctrl".
->  - Specify GPIO sub-node names rather than forcing the nodes to be in order.
+>    ARM/STI ARCHITECTURE
+>    M:      Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
+>    M:      Maxime Coquelin <maxime.coquelin@st.com>
+>    M:      Patrice Chotard <patrice.chotard@st.com>
+>
+> that they're OK with taking on this additional file.
+Yes, you can add my:
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 
-This binding looks nice.
-
-Patch applied.
-
-Yours,
-Linus Walleij
+Thanks,
+Maxime
