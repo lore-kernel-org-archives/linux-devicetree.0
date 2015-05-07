@@ -1,41 +1,71 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: Gateworks GW5510 support (i.MX6)
-Date: Thu, 7 May 2015 15:18:27 -0300
-Message-ID: <CAOMZO5B6qFzp7sAtycF_BuzPfsp=PxF0+OG3ZjbHepp0AFnrpw@mail.gmail.com>
-References: <1431013080-13536-1-git-send-email-tharvey@gateworks.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V2 5/6] regulator: add mxs on-chip regulator driver
+Date: Thu, 7 May 2015 20:37:18 +0200 (CEST)
+Message-ID: <1875749167.82542.1431023838932.JavaMail.open-xchange@oxbsltgw04.schlund.de>
+References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
+ <1430346747-28728-6-git-send-email-stefan.wahren@i2se.com>
+ <20150504123648.GU15510@sirena.org.uk>
+ <1693367404.879766.1430771695242.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431013080-13536-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1693367404.879766.1430771695242.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: fabio.estevam@freescale.com, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-pm@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, sebastien.szymanski@armadeus.com, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 7, 2015 at 12:38 PM, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org> wrote:
-> Add support for the Gateworks GW5510 board featuring:
->  * i.MX6 SoC
->  * up to 512MB DDR3
->  * up to 2GB NAND flash
->  * 1x miniPCIe socket (with USB)
->  * HDMI out (micro-HDMI)
->  * HDMI in (micro-HDMI) (currently supported by only vendor kernel)
->  * TTL level I/O (supported by GW16111 breakout board):
->   * I2C
->   * 2x UART
->   * CAN
->   * 2x DIO (GPIO/PWM)
->   * USB OTG
->
-> For more details see:
->  http://www.gateworks.com/product/item/ventana-gw5510-single-board-computer
->
-> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Hi Mark,
 
-Looks good:
+> Stefan Wahren <stefan.wahren@i2se.com> hat am 4. Mai 2015 um 22:34
+> geschrieben:
+>
+>
+> Hi Mark,
+>
+> > Mark Brown <broonie@kernel.org> hat am 4. Mai 2015 um 14:36 geschrieben:
+> >
+> >
+> > On Wed, Apr 29, 2015 at 10:32:26PM +0000, Stefan Wahren wrote:
+> >
+> > > +static struct regulator_ops mxs_dcdc_ops = {
+> > > + .is_enabled = regulator_is_enabled_regmap,
+> > > +};
+> >
+> > Why do we have an is_enabled() operation but no enable or disable
+> > operation?
+>
+> i'm sorry, i forgot the following point in the changelog:
+>
+> - move dcdc handling from mxs_power to mxs-regulator
+>
+> I hope the change is okay. I implemented only is_enabled() to have at least 1
+> operation.
+> But it's not really necessary.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+do we need enable / disable operation?
+
+In the bootloader code enabling the DC-DC is critical. There is a known issue
+which falsely triggers the brownout detection.
+
+>
+> > I'm also not 100% clear what code the DCDCs and LDOs are
+> > sharing here...
+>
+> Actually only probing and the regulator info structure.
+
+How can i improve that?
+
+>
+> Best regards
+> Stefan
