@@ -1,41 +1,37 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH] ASoC: gtm601: Document GTM601 bindings
-Date: Thu,  7 May 2015 21:29:31 +0200
-Message-ID: <1431026971-17452-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: perex@perex.cz, tiwai@suse.de, lgirdwood@gmail.com, hns@goldelico.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH] of: Add vendor prefix for Option
+Date: Thu,  7 May 2015 21:33:08 +0200
+Message-ID: <1431027188-17539-1-git-send-email-marek@goldelico.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hs-xXXSsgcRVIAxpvK4C0GaPQ@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add small documentation for GTM601 UMTS modem audio interface.
+Add option to vendor-prefixes file which will be
+used for Option NV company.
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
+Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 ---
-This one was corrupted in V2 series so sending update only.
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/sound/gtm601.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/gtm601.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/gtm601.txt b/Documentation/devicetree/bindings/sound/gtm601.txt
-new file mode 100644
-index 0000000..5efc8c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/gtm601.txt
-@@ -0,0 +1,13 @@
-+GTM601 UMTS modem audio interface CODEC
-+
-+This device has no configuration interface. Sample rate is fixed - 8kHz.
-+
-+Required properties:
-+
-+  - compatible : "option,gtm601"
-+
-+Example:
-+
-+codec: gtm601_codec {
-+	compatible = "option,gtm601";
-+};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b6682ab..ed3bd55 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -142,6 +142,7 @@ nvidia	NVIDIA
+ nxp	NXP Semiconductors
+ onnn	ON Semiconductor Corp.
+ opencores	OpenCores.org
++option	Option NV
+ ortustech	Ortus Technology Co., Ltd.
+ ovti	OmniVision Technologies
+ panasonic	Panasonic Corporation
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
