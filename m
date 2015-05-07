@@ -1,63 +1,97 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version
- 3.
-Date: Thu, 07 May 2015 10:56:51 -0400
-Message-ID: <554B7D33.602@hurleysoftware.com>
-References: <55492001.30806@hurleysoftware.com> <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com> <20150506092738.GB4508@amd> <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com> <554A03A7.2000504@hurleysoftware.com> <D10E1092-E75F-48F7-86F1-F8987973CEB5@goldelico.com> <20150506123632.GA1764@leverpostej> <BD3D34DD-2FC8-44A2-89FA-35843065F50F@goldelico.com> <20150506141547.GB1764@leverpostej> <EA4AC398-CAEA-40E1-A998-BC528B3788E1@goldelico.com> <20150506171802.GE2974@leverpostej> <B4D487C5-C260-497B-A441-6C381D53616C@goldelico.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: device tree compiler with overlay support?
+Date: Thu, 7 May 2015 16:57:21 +0200
+Message-ID: <CAOMqctQSE6UZgK1xquBTMFjdeAyYD0XTUE96Yepeck0PSM_4JA@mail.gmail.com>
+References: <CAOMqctSZObmoJQocCg3JvCA=ZDvvrxzKC9Ko=aq0J=LphNW+EA@mail.gmail.com>
+ <CAOMqctT3WuqMTqaqUTN44zA2TEYmP9X7SN8ufTouQFoy=GjB1Q@mail.gmail.com>
+ <CAMuHMdU=WySZ8kfaVmU6Bed=ofvrDQ9s51m7zyXN0qu-G-d4cg@mail.gmail.com> <E8C27FD0-CF22-4D8F-AC05-55518BEF4B84@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <B4D487C5-C260-497B-A441-6C381D53616C-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <E8C27FD0-CF22-4D8F-AC05-55518BEF4B84-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2015 08:46 AM, Dr. H. Nikolaus Schaller wrote:
+On 7 May 2015 at 09:28, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Geert,
+>
+>> On May 7, 2015, at 10:17 , Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>=
+ wrote:
+>>
+>> On Tue, May 5, 2015 at 6:51 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
+ wrote:
+>>> On 5 May 2015 at 17:18, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> where is a device tree compiler that can compile an overlay?
+>>>>
+>>>> The compiler at git://git.kernel.org/pub/scm/utils/dtc/dtc.git shr=
+ieks
+>>>> there is a syntax error as soon as the /plugin/ tag is present.
+>>>
+>>> ok, so I found a dtc patch here https://lkml.org/lkml/2013/1/4/295
+>>>
+>>> This does not apply cleanly to current DTC but the parts that fail =
+are
+>>> due to cosmetic changes in the code so I went ahead and applied it.
+>>
+>> Thanks for the link! That patch indeed requires some manual rework.
+>>
+>>> However, the created blob is not what the kernel can accept into
+>>> of_overlay_create so what do I do with the blob to load it?
+>>
+>> Use "OF: DT-Overlay configfs interface" from Pantelis?
+>>
+>> That depends on "configfs: Implement binary attributes", also from P=
+antelis,
+>> which requires reverting commit 28444a2bde8d1695i ("configfs_add_fil=
+e:
+>> fold into its sole caller").
+>>
+>> All of the above require manual fixups to apply.
+>>
+>> Still have to try the actual loading, new to the overlay game on mai=
+nline
+>> kernels (I did use it on boneblack with its original kernel and its =
+overlay
+>> manager).
+>>
+>
+> Posted the patches recently, but for your convenience here=E2=80=99s =
+the git tree.
+>
+> https://github.com/pantoniou/dtc/tree/dt-overlays5
+>
+> FWIW, I=E2=80=99ll post the capemgr patch today too.
 
-> So I don=E2=80=99t think that being able to control the slave is a co=
-mmon property
-> of all UART-slave connections.
->=20
-> BTW: the GPS chip we use is doing something without any instructions.=
- It starts
-> to send NMEA records right after power on. It would even be useful wi=
-th a unidirectional
-> connection from GPS to UART. Hence there are no commands that need to=
- be
-> sent through UART. Rather it just needs some GPIO to be activated or =
-powered down
-> when /dev/tty is opened/closed.
+=46WIW here is a separate branch with the dt overlay stuff I am running=
+=2E
 
-In this example, the GPIO is a workaround for the lack of DTR.
+https://github.com/hramrach/linux-sunxi/commits/dt-overlay
 
+You might want to look at the small fixes there.
 
-> So one could argue that in this real case (which we try to solve in a=
-n acceptable way
-> since 2 years) the fundamental/main interface (control command interf=
-ace) of this chip
-> is the power on/off line. And UART isn=E2=80=99t involved at all. Or =
-just as an =E2=80=9Cactivity detector=E2=80=9D.
+It is worth noting that with your version of the patch adding -@ dtc
+option the built board dtbs do not contain the symbols needed for
+overlays unless overlays are enabled. So far dtbs were static wrt
+build options AFAIK. That is they were either built or not but unless
+the sources in question changed the dtbs would be the same.
+Introducing this option dynamically based on CONFIG_OF_OVERLAY makes
+dtbs content config dependent which does not seem like a very good
+idea.
 
-The indirect nature of control in this case only reflects the workaroun=
-d,
-not the underlying concept. Control is still derived from the UART stat=
-us.
+In fact I think -@ should be the default on compilers that support it
+and might be optionally turned off.
 
-Both devicetree and tty/serial can already represent independent contro=
-l;
-what is proposed is a way to express dependent control, and in all case=
-s,
-that control stems directly from either the UART state itself or via
-commands sent over that interface.
+Maybe some statistic of the size of the symbol table so generated and
+relative size increase  for various boards might be nice thing to
+have.
 
-Any target not requiring UART involvement doesn't (and probably, should=
-n't)
-be expressed as a slave device.
+Thanks
 
-Regards,
-Peter Hurley
+Michal
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
