@@ -1,37 +1,73 @@
-From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: [PATCH] of: Add vendor prefix for Option
-Date: Thu,  7 May 2015 21:33:08 +0200
-Message-ID: <1431027188-17539-1-git-send-email-marek@goldelico.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hs-xXXSsgcRVIAxpvK4C0GaPQ@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 5/6] regulator: add mxs on-chip regulator driver
+Date: Thu, 7 May 2015 20:32:36 +0100
+Message-ID: <20150507193236.GS22845@sirena.org.uk>
+References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
+ <1430346747-28728-6-git-send-email-stefan.wahren@i2se.com>
+ <20150504123648.GU15510@sirena.org.uk>
+ <1693367404.879766.1430771695242.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+ <1875749167.82542.1431023838932.JavaMail.open-xchange@oxbsltgw04.schlund.de>
+ <20150507185216.GP22845@sirena.org.uk>
+ <535744342.64563.1431026719818.JavaMail.open-xchange@oxbsltgw09.schlund.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HlaF2WMUX0OM2JlS"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <535744342.64563.1431026719818.JavaMail.open-xchange@oxbsltgw09.schlund.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Sebastian Reichel <sre@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, fabio.estevam@freescale.com, David Woodhouse <dwmw2@infradead.org>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, sebastien.szymanski@armadeus.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add option to vendor-prefixes file which will be
-used for Option NV company.
 
-Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+--HlaF2WMUX0OM2JlS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index b6682ab..ed3bd55 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -142,6 +142,7 @@ nvidia	NVIDIA
- nxp	NXP Semiconductors
- onnn	ON Semiconductor Corp.
- opencores	OpenCores.org
-+option	Option NV
- ortustech	Ortus Technology Co., Ltd.
- ovti	OmniVision Technologies
- panasonic	Panasonic Corporation
--- 
-1.9.1
+On Thu, May 07, 2015 at 09:25:19PM +0200, Stefan Wahren wrote:
+> > Mark Brown <broonie@kernel.org> hat am 7. Mai 2015 um 20:52 geschrieben:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > In the bootloader code enabling the DC-DC is critical. There is a kno=
+wn
+> > > issue
+> > > which falsely triggers the brownout detection.
+
+> > Why would the driver not provide these operations?
+
+> I didn't implement this operation because the suggested workaround for the
+> hardware issue isn't very nice=20
+> (disable brownout detection during enabling DC-DC). I was afraid of the
+> implementation.
+
+That doesn't sound too complicated?
+
+> > If the devices aren't sharing code then they should be separate drivers.
+
+> Okay.=20
+
+> mxs-regulator-ldo.c
+> mxs-regulator-dcdc.c
+
+> What do you think of?
+
+Sure.
+
+--HlaF2WMUX0OM2JlS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVS73TAAoJECTWi3JdVIfQZrIH/2giExvR8LhSg53DLrXeQgYh
+FF+sBNnXA6eRdvBDsnTWkkB8EUY9oWyjFqfdNHtsJiMndHgwxx/fyvT0ux4rgcDe
+4thlXBpFz2fQMkK3C4mvnLPxJpAos58t2AYT1o87OwOGZL9PCLtOKHAleepafi/G
+asguzXl9wqkJJHLNGqi0zv/Crq/hmkc6rCrdJKOXo3Fg6R3MO0lU46x1OR38Tttw
+V13Ls7OFQ+8T2+pEMib2yMq6a9zjyo/JRtEOfYOikLyUGe5DwtCFYk1nGqK5lLd9
+rn55DcFfnrv0RsnkFIm6jsYZW9TXW7kf/pPzPSZt4E2piJcsy/Da3X2/3aVr40Q=
+=rpxi
+-----END PGP SIGNATURE-----
+
+--HlaF2WMUX0OM2JlS--
