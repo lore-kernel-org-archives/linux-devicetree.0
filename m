@@ -1,230 +1,114 @@
-From: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Master-aware devices and sideband ID data
-Date: Thu, 7 May 2015 12:49:32 -0500
-Message-ID: <CALRxmdAE_=SubN7dY-W1K44cjVVRhKLKknpgG9af_g64+GHPtw@mail.gmail.com>
-References: <20150324155007.GC23005@leverpostej>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH V1 5/6] watchdog: da9062: DA9062 watchdog driver
+Date: Thu, 7 May 2015 10:57:47 -0700
+Message-ID: <20150507175747.GB30372@roeck-us.net>
+References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
+ <2afd9f55c71553186e99bfe386312f0c7d7501ed.1429280614.git.stwiss.opensource@diasemi.com>
+ <55327DDA.4080003@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B21924A@SW-EX-MBX02.diasemi.com>
+ <20150506160227.GA28101@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B21925B@SW-EX-MBX02.diasemi.com>
+ <20150506200631.GA25846@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B221DD2@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20150324155007.GC23005@leverpostej>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B221DD2-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2015 at 10:50 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi all,
->
-> For some devices, identification of particular masters is critical to
-> their operation (e.g. IOMMUs, MSI controllers). The identity of masters
-> is determined from sideband signals on the bus, and it may or may not be
-> possible to probe and/or configure this information. Worse still, these
-> information may be rewritten by intermediate buses, so the
-> information for a given master may differ at different points in the bus
-> hierarchy.
->
-> We currently describe this master information for devices attached to
-> IOMMUs, with a master ID being encoded in the iommu-cells. However this
-> only covers the ID between the master and its IOMMU(s), and we don't
-> currently have a mechanism to describe the master IDs as they are seen
-> by devices beyond the IOMMU(s),
+On Thu, May 07, 2015 at 05:45:13PM +0000, Opensource [Steve Twiss] wrote:
+> On 06 May 2015 21:07 Guenter Roeck wrote:
+> 
+> > > > > The DA9062 watchdog ping (register CONTROL_F) is "windowed" for protection
+> > > > > against spurious writes -- i.e. the ping function cannot be called within a 250ms
+> > > > > time limit or the PMIC will reset. This windowing protection also extends to altering
+> > > > > the timeout scale in the CONTROL_D register -- in which case if the timeout
+> > > > > register is altered and the ping() function is called within the 250ms limit, the
+> > > > > PMIC will reset. The delay is there to stop that from happening.
+> > > > >
+> > > > > I realised my previous patch was over-sanitised: by putting the time delay into the
+> > > > > ping() function I was protecting CONTROL_D in stop() and update_timeout_register(),
+> > > > > but I was being too over-protective of the ping() function. Therefore if there was an
+> > > > > "incorrect trigger signal", the watchdog would not be allowed to fail because the
+> > > > > driver would have filtered out the errors.
+> > > > >
+> > > > Hi Steve,
+> > > >
+> > > > From your description, it sounds like the protection is only necessary if there
+> > > > was a previous write to the same register(s).
+> 
+> Hi Guenter,
+> 
+> A clarification from me. It is not the CONTROL_D register that needs protecting, but when
+> the CONTROL_D register is altered the function call also performs a CONTROL_F watchdog
+> ping. Too many pings close together would cause the PMIC reset.
+> 
+> > > > If so, it might make sense to record the time of such writes, and only add the delay
+> > > > if necessary, and only for the remainder of the time.
+> 
+> I've tried it several ways, but my previous suggestion of putting the delays in the stop() and 
+> update_timeout_register() functions just cause even more lengthy delays.
+> 
+> So, I've followed your suggestion and used a variable delay inside the ping() function instead:
+> this seems to cause a lot less delay. A debug message can be used to notify the user if the
+> watchdog is trying to be kicked too quickly -- that would be more preferable than just shutting
+> the PMIC down and still provide a notification that something wasn't quite right.
+> 
+> > > > Would this be possible ?
+> 
+> I'll run the tests overnight.
+> I'm going to do something like this:
+> 
+> diff --git a/linux-next/v4.0/drivers/watchdog/da9062_wdt.c b/linux-next/v4.0/drivers/watchdog/da9062_wdt.c
+> index ad80261..d596910 100644
+> --- a/gp_sparse/linux-next/v4.0/drivers/watchdog/da9062_wdt.c
+> +++ b/gp_sparse/linux-next/v4.0/drivers/watchdog/da9062_wdt.c
+> 
+> @@ -32,12 +33,37 @@ static const unsigned int wdt_timeout[] = { 0, 2, 4, 8, 16, 32, 65, 131 };
+>  #define DA9062_WDT_MIN_TIMEOUT         wdt_timeout[DA9062_TWDSCALE_MIN]
+>  #define DA9062_WDT_MAX_TIMEOUT         wdt_timeout[DA9062_TWDSCALE_MAX]
+>  #define DA9062_WDG_DEFAULT_TIMEOUT     wdt_timeout[DA9062_TWDSCALE_MAX-1]
+> +#define DA9062_RESET_PROTECTION_MS     300
+>  
+>  struct da9062_watchdog {
+>         struct da9062 *hw;
+>         struct watchdog_device wdtdev;
+> +       unsigned long j_time_stamp;
+>  };
+>  
+> +static void da9062_set_window_start(struct da9062_watchdog *wdt)
+> +{
+> +       wdt->j_time_stamp = jiffies;
+> +}
+> +
+> +static void da9062_apply_window_protection(struct da9062_watchdog *wdt)
+> +{
+> +       unsigned long delay = msecs_to_jiffies(DA9062_RESET_PROTECTION_MS);
+> +       unsigned long timeout = wdt->j_time_stamp + delay;
+> +       unsigned long now = jiffies;
+> +       unsigned int diff_ms;
+> +
+> +       /* if time-limit has not elapsed then wait for remainder */
+> +       if (time_before(now, timeout)) {
+> +               diff_ms = jiffies_to_msecs(timeout-now);
+> +               dev_dbg(wdt->hw->dev,
+> +                       "Delaying watchdog ping by %u msecs\n", diff_ms);
 
-Is there a specific case you've run across where conveying this additional
-master info would be needed,  or are you just thinking through how to fully
-describe hardware?
+I would not bother about the dev_dbg, but that is your call.
 
-Are there really cases out there were there is a hardwired hardware
-relationship between RID and SID?
+> +               mdelay(diff_ms);
 
-> or in the absence of any IOMMU(s).
->
-> The following are example of master IDs:
-> * PCIe Requester IDs (RIDs) (bus:device.function AKA BDF)
-> * SMMU Stream IDs (SIDs)
-> * GICv3 ITS Device IDs (DIDs)
->
-> In the case of a system with PCIe, SMMU and GICv3, the master IDs are
-> rewritten in a chain of RID=>SID=>DID, as in the following diagram:
->
-> +-------------+
-> | PCIe master |
-> +-------------+
->     ||
->     || Requester ID (RID)
->     || Probeable from RC.
->     \/
-> +-------------------+
-> | PCIe Root Complex |
-> +-------------------+
->     ||
->     || SMMU Stream ID (SID)
->     || Derived from RID, static non-probeable mapping.
+Can you use usleep_range() ?
 
-The FSL LS2085A SoC has an actual RID->SID mapping table in the PCI
-controller, but it is not static in the sense of fixed in hardware or
-firmware.  It's
-a programmable mapping table, and we envision Linux programming this table.
+Othewise looks good. BTW, I had to do something similar in
+drivers/hwmon/pmbus/zl6100.c; this is where the idea comes from.
 
->     \/
-> +--------------+
-> | SMMU (IOMMU) |
-> +--------------+
->     ||
->     || ITS Device ID (DID)
->     || Derived from SID, static non-probeable mapping.
->     \/
-
-Is this even architecturally possible on ARM?  Can the SMMU transform stream
-IDs into some different number?
-
-> +----------------------------+
-> | GICv3 ITS (MSI controller) |
-> +----------------------------+
->
-> In simpler cases, you might have a simpler set of master ID
-> translations, e.g. just a DID:
->
-> +-----------------+
-> | Platform device |
-> +-----------------+
->     ||
->     || ITS Device ID (DID)
->     || Hard-wired on the bus.
->     \/
-> +----------------------------+
-> | GICv3 ITS (MSI controller) |
-> +----------------------------+
->
-> Ignoring current bindings for the moment, I can see how we can describe
-> this with a generic master id-binding, with master-id-map along the
-> lines of interrupt-map, with a tuple format like:
-> <child-id-base child-id-length parent parent-id-base>
->
-> For the PCIe example, this would look something like the following (with
-> properties omitted for brevity):
->
-> PCI: pci@af000000 {
->         ...
->
->         /* Requester ID of PCIe endpoints, implicit at runtime */
->         master-id-cells = <1>;
->
->         /* RIDS idmapped to SIDS @ SMMU */
->         master-id-map = <0 0x10000 &SMMU 0>;
-> }
->
-> SMMU: iommu@bf000000 {
->         ...
->
->         /* SID, derived from RID */
->         master-id-cells = <1>;
->
->         /*
->          * For some reason the high bit of the ID was negated.
->          */
->         master-id-map = <0x0000 0x8000 &ITS 0x0 0x8000>,
->                         <0x8000 0x8000 &ITS 0x0 0x0000>;
->
-> };
->
-> ITS: its@cf000000 {
->         ...
->
->         /* DID, derived from SID */
->         master-id-cells = <2>;
->
->         /*
->          * Master traffic not propagated beyond this point, so no
->          * master-id-ranges
->          */
-> };
->
-> For the simpler case, this would look something like:
->
-> DEV: device@af000000 {
->         master-id-cells = <1>;
->         master-ids = <0xf>, <0xb>;
->         master-id-map = <0 0xf &ITS 0 0>;
-> };
->
-> ITS: its@cf000000 {
->         ...
->
->         /* DID */
->         master-id-cells = <2>;
-> };
->
->
-> However, this conflicts/overlaps with existing bindings (at least iommus
-> and msi-parent), and I'm not sure how to reconcile them. Am I missing a
-> neat way of describing this that works with the existing bindings?
->
-> It's also not clear to me if it's sufficient to have a generic
-> "master-ids" property (with the relevant type being implicit from
-> context), or if each type of ID needs each type of ID (RID, SID, DID,
-> etc) needs its own.
->
-> Which other devices out there which require side-band master
-> information, and what do they require?
-
-For us, at least, the  master-id-map cannot be a static property.
-Our PCI controller's DID->SID mapping table is programmable
-and we won't know how to program it until Linux is running.  A PCI
-SRIOV card may have virtual functions that appear as hot-plugged
-devices and there is no way that boot firmware would have the knowledge
-to have set that table up ahead of time.
-
-What we do need is some way to have boot firmware convey to
-the OS what SIDs are available to be used in the DID->SID
-table.   We have a very limited number of SIDs available and boot
-firmware may need to convey to Linux that for example-- PCI controller #2
-has only 8 SIDs available for DID->SID mappings.
-
-We had invented a property called "available-stream-ids" for some
-proof of concept work, but perhaps the master-id-map property could
-be used to convey available stream IDs by using a child-id-length
-of 0.  So to convey that stream IDs 5,6,7,8 are available:
-
-  PCI: pci@af000000 {
-         ...
-         /* Requester ID of PCIe endpoints, implicit at runtime */
-         master-id-cells = <1>;
-
-         /* RIDS idmapped to SIDS @ SMMU */
-         master-id-map = <0 0 &SMMU 5
-                                    0 0 &SMMU 6
-                                    0 0 &SMMU 7
-                                    0 0 &SMMU 8>;
-  };
-
-I'm not sure the above would conflict with the existing IOMMU
-binding, but would seem to be an extension of it.
-
-If you have a simple master with 2 stream IDS do this:          ...
-          iommus = <&{/smmu} 23>, <&{/smmu} 24>;
-
-If you have a static DID->SID mapping to convey, use the map as
-you proposed:
-         master-id-cells = <1>;
-         master-id-map = <0 0x10000 &SMMU 0>;;
-
-If your DID->SID is not static, but you need to convey the SIDs that are
-available to this bus:
-         master-id-cells = <1>;
-         master-id-map = <0 0 &SMMU 23
-                                    0 0 &SMMU 24>;
-
-I am less sure about how to deal with expressing the relationship of masters to
-the GIC ITS, but is there really a problem there?
-
-Thanks,
-Stuart
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
