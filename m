@@ -1,84 +1,59 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/3 v8] mailbox: Enable BCM2835 mailbox support
-Date: Thu, 07 May 2015 12:54:20 -0700
-Message-ID: <87mw1grwnn.fsf@eliezer.anholt.net>
-References: <1430857666-18877-1-git-send-email-eric@anholt.net> <1430857666-18877-2-git-send-email-eric@anholt.net> <554BA0B7.8040600@tronnes.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 06/12] watchdog: bindings: Supply
+ knowledge of a third supported device - clocksource
+Date: Thu, 7 May 2015 20:55:29 +0100
+Message-ID: <20150507195529.GA28554@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+ <1431005924-21777-7-git-send-email-lee.jones@linaro.org>
+ <20150507141805.GC9793@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20150507191909.GC16220@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <554BA0B7.8040600@tronnes.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150507191909.GC16220@x1>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Hi Lee,
 
-Noralf Tr=C3=B8nnes <noralf@tronnes.org> writes:
+On Thu, 07 May 2015, Lee Jones wrote:
 
-> Den 05.05.2015 22:27, skrev Eric Anholt:
->> From: Lubomir Rintel <lkundrak@v3.sk>
->>
->> This mailbox driver provides a single mailbox channel to write 32-bit
->> values to the VPU and get a 32-bit response.  The Raspberry Pi
->> firmware uses this mailbox channel to implement firmware calls, while
->> Roku 2 (despite being derived from the same firmware tree) doesn't.
->>
->> The driver was originally submitted by Lubomir, based on the
->> out-of-tree 2708 mailbox driver.  Eric Anholt fixed it up for
->> upstreaming, with the major functional change being that it now has no
->> notion of multiple channels (since that is a firmware-dependent
->> concept) and instead the raspberrypi-firmware driver will do that
->> bit-twiddling in its own messages.
-> ...
->> +static struct platform_driver bcm2835_mbox_driver =3D {
->> +	.driver =3D {
->> +		.name =3D "bcm2835-mbox",
->> +		.owner =3D THIS_MODULE,
->> +		.of_match_table =3D bcm2835_mbox_of_match,
->> +	},
->> +	.probe		=3D bcm2835_mbox_probe,
->> +	.remove		=3D bcm2835_mbox_remove,
->> +};
->> +module_platform_driver(bcm2835_mbox_driver);
->
-> I have tested this driver and the firmware driver booting directly
-> from the VideoCore bootloader (no uboot).
-> The mailbox driver loads too late to turn on USB power:
+<snip>
 
-Yeah, I have a patch on my branches that returns -EPROBE_DEFER when
-trying to get a power domain and not finding the provider.  It was
-rejected by the maintainers in favor of a proposed solution whose
-description I didn't quite follow.
+> > >  Required properties
+> > >  
+> > > -- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
+> > > -				  "st,stih415-lpc" "st,stid127-lpc"
+> > > +- compatible 	: Must be one of: "st,stih407-lpc"
+> > 
+> > The same comment as the RTC DT patch, you are removing the compatibles
+> > documentation for the other supported platforms like stih416-lpc.
+> > AFAIK they are required in the driver to get the correct sysconfig register.
+> 
+> That's intentional.  I haven't yet tested any of this IP on
+> STiH41{5,6} & STiH127.  Due to lack of documentation, I'm not even
+> sure if this IP even exists on some of the other platforms.  I will
+> add them back when support is added to both driver and DTB and I've
+> been able to test them.
 
-> This silences the warning:
-> struct raspberrypi_power_domain raspberrypi_power_domain_usb =3D {
->      .base =3D {
->          .power_on_latency_ns =3D 600000000,
+That was kind of my point, the driver code AFAIK already contains support
+for these SoC's.
 
-Oh, nice.  Thanks!
+I would either expect the patch to remove support from the DT docs AND the
+driver, or leave it as is.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+It seems odd to only change the DT docs, and become unaligned to the
+code (this assumes I'm looking at the latest patchset here 
+https://lkml.org/lkml/2015/3/4/1088 which includes support for these SoCs).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+regards,
 
-iQIcBAEBCgAGBQJVS8LsAAoJELXWKTbR/J7oat4P/jLZGA7Rx1DtQaAUUm3fMwq/
-ax8C6lvDDh3XUa1AQRa4DlNn/5zhlzBzcGLg5R+XbQwNFfMDKunnpcMUt4dBvNxi
-Go7xbz2eAq3u6I3YbTG5pPoG0bO3GxHpSsKcZlWjr04w1Xwvv6hYG3+39AhjfykP
-yH9lS4Ax9edq2MfMXkkBpRzXAr2dolsqchV0G11J0uSYwwpvR43h18J8ZqajW805
-Qw21TvSIfB1U4gAQi91YRMtrFIC2Yl31abYQFKAI3IV+nfWEgpNKctJrIVVAz8vZ
-WOMJ5gbFN8IS72n4AfZPUf4dOIFCEDln7GDt7PjF7VnLsppIBN3vx8Wv9f9oqZXa
-X1ihJmgxeC65FKwjvxrD7AJiqerlj2HY/D8j1N3ffpOx8gPEgSn0wb+r3VH7qE1I
-MTAmAFLTWFcT8kata9q2Wipr2Xwu96F6aBZUFmCZyawWbiz5Hwr0UKGNHCevb11H
-/SVXo45fq2LAGUkQr/QikQ+bcR/2WCKiFlpU5mZSybv34ghMTSuKAlErlarHaQ0U
-g/R0oUuvOIvsy7Uzxhny6+y3V8tq9Meqi6POFQ7XkW96UXSDiGjyrSo4bqpt9CNN
-yBKcpzJoETicxI4edd08WcGgXreeJ3epNNrFmcyyhUaaomnSWTv3wHgHANIepmW2
-xIDP9hnowWxBShXnKWLs
-=MMva
------END PGP SIGNATURE-----
---=-=-=--
+Peter.
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
