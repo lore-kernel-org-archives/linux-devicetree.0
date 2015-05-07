@@ -1,105 +1,86 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3 06/10] mtd: brcmstb_nand: add SoC-specific support
-Date: Thu, 7 May 2015 11:42:46 -0700
-Message-ID: <20150507184246.GO32500@ld-irv-0074>
-References: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com>
- <7101952.uOJDgn7tgf@wuerfel>
- <20150506204910.GJ32500@ld-irv-0074>
- <20781942.cIPodTiNzG@wuerfel>
+From: <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V8 1/6] Document: dt: binding: imx: update document for imx7d support
+Date: Fri, 8 May 2015 01:35:53 +0800
+Message-ID: <1431020158-13789-2-git-send-email-Frank.Li@freescale.com>
+References: <1431020158-13789-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20781942.cIPodTiNzG@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mtd@lists.infradead.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431020158-13789-1-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 07, 2015 at 12:01:02PM +0200, Arnd Bergmann wrote:
-> On Wednesday 06 May 2015 13:49:10 Brian Norris wrote:
-> > On Wed, May 06, 2015 at 09:12:43PM +0200, Arnd Bergmann wrote:
-> > > On Wednesday 06 May 2015 10:59:50 Brian Norris wrote:
-> > > > +       /*
-> > > > +        * Some SoCs integrate this controller (e.g., its interrupt bits) in
-> > > > +        * interesting ways
-> > > > +        */
-> > > > +       if (of_property_read_bool(dn, "brcm,nand-soc")) {
-> > > > +               struct device_node *soc_dn;
-> > > > +
-> > > > +               soc_dn = of_parse_phandle(dn, "brcm,nand-soc", 0);
-> > > > +               if (!soc_dn)
-> > > > +                       return -ENODEV;
-> > > > +
-> > > > +               ctrl->soc = devm_brcmnand_probe_soc(dev, soc_dn);
-> > > > +               if (!ctrl->soc) {
-> > > > +                       dev_err(dev, "could not probe SoC data\n");
-> > > > +                       of_node_put(soc_dn);
-> > > > +                       return -ENODEV;
-> > > > +               }
-> > > > +
-> > > > +               ret = devm_request_irq(dev, ctrl->irq, brcmnand_irq, 0,
-> > > > +                                      DRV_NAME, ctrl);
-> > > > +
-> > > > +               /* Enable interrupt */
-> > > > +               ctrl->soc->ctlrdy_set_enabled(ctrl->soc, true);
-> > > > +
-> > > > +               of_node_put(soc_dn);
-> > > > +       } else {
-> > > > +               /* Use standard interrupt infrastructure */
-> > > > +               ret = devm_request_irq(dev, ctrl->irq, brcmnand_ctlrdy_irq, 0,
-> > > > +                                      DRV_NAME, ctrl);
-> > > > +       }
-> > > > 
-> > > 
-> > > It looks to me like this should be handled as a nested irqchip, so the node
-> > > you look up gets used as the "interrupt-parent" instead, making the behavior
-> > > of this SoC transparent to the nand driver.
-> > 
-> > You snipped the rest of the patch, which involves more than just IRQ
-> > handling. The same registers touch both interrupts and data bus endian
-> > configuration, so it can't possibly be done transparently to the NAND
-> > driver.
-> 
-> Anything else in there?
+From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Looks like miscellaneous NAND-related control bits. AXI and APB endian
-configuration; several interrupt-enable bits (we only use one for now);
-a clock-enable; and some timing test mode bits.
+This part just add necessary change to boot imx7d.
+Update clock, pinctrl and gpt for imx7d
 
-> The bus configuration would just involve writing
-> a constant value in some register, right?
+Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../devicetree/bindings/clock/imx7d-clock.txt      | 13 +++++++++++
+ .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         | 27 ++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
 
-I'm not an expert on the Cygnus/iProc chips, but I believe the answer is
-no: we *must* reconfigure the bus before and after each data
-transaction, because it affects the rest of the core too. Others on the
-CC list can probably elaborate.
+diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.txt b/Documentation/devicetree/bindings/clock/imx7d-clock.txt
+new file mode 100644
+index 0000000..9d3026d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx7d-clock.txt
+@@ -0,0 +1,13 @@
++* Clock bindings for Freescale i.MX7 Dual
++
++Required properties:
++- compatible: Should be "fsl,imx7d-ccm"
++- reg: Address and length of the register set
++- #clock-cells: Should be <1>
++- clocks: list of clock specifiers, must contain an entry for each required
++  entry in clock-names
++- clock-names: should include entries "ckil", "osc"
++
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx7d-clock.h
++for the full list of i.MX7 Dual clock IDs.
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+new file mode 100644
+index 0000000..8bbf25d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+@@ -0,0 +1,27 @@
++* Freescale i.MX7 Dual IOMUX Controller
++
++Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
++and usage.
++
++Required properties:
++- compatible: "fsl,imx7d-iomuxc"
++- fsl,pins: each entry consists of 6 integers and represents the mux and config
++  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
++  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
++  imx7d-pinfunc.h under device tree source folder.  The last integer CONFIG is
++  the pad setting value like pull-up on this pin.  Please refer to i.MX7 Dual
++  Reference Manual for detailed CONFIG settings.
++
++CONFIG bits definition:
++PAD_CTL_PUS_100K_DOWN           (0 << 5)
++PAD_CTL_PUS_5K_UP               (1 << 5)
++PAD_CTL_PUS_47K_UP              (2 << 5)
++PAD_CTL_PUS_100K_UP             (3 << 5)
++PAD_CTL_PUE                     (1 << 4)
++PAD_CTL_HYS                     (1 << 3)
++PAD_CTL_SRE_SLOW                (1 << 2)
++PAD_CTL_SRE_FAST                (0 << 2)
++PAD_CTL_DSE_X1                  (0 << 0)
++PAD_CTL_DSE_X2                  (1 << 0)
++PAD_CTL_DSE_X3                  (2 << 0)
++PAD_CTL_DSE_X4                  (3 << 0)
+-- 
+1.9.1
 
-> Doing that in the irqchip
-> is also a bit ugly, but may still be better overall than doing it the
-> way you have above.
-
-Well, the Cygnus/iProc case is more complicated as I mention. But I
-agree that other cases could be nicer, like bcm63138 (which only has
-separate interrupt status/enable registers). Do you expect a new irqchip
-driver for every arrangement of registers like this? There are a few
-similar chips that have status/enable registers in different orders, and
-some that combine them into a single word. Do we really need a new
-irqchip driver for each one? I might have done that for bcm63138 and
-bcm3384, except that I thought I'd have to fall back to this extra
-per-SoC support driver for Cygnus anyway.
-
-> > > We recently merged nested irqdomain support as well, which might help here,
-> > > or might not be needed.
-> > 
-> > I'm not familiar with nested irqdomains. Do they address anything like
-> > the above problem?
-> 
-> The problem that nested irqdomains address is when an interrupt is handled
-> by two irqchips, in particular when one irqchip handles a virtual interrupt
-> number that was claimed by another irqchip already.
-
-I'll do some reading on that, but it definitely doesn't address the main
-problem here.
-
-Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
