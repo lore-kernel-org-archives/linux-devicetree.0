@@ -1,69 +1,40 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 5/6] regulator: add mxs on-chip regulator driver
-Date: Thu, 7 May 2015 19:52:16 +0100
-Message-ID: <20150507185216.GP22845@sirena.org.uk>
-References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
- <1430346747-28728-6-git-send-email-stefan.wahren@i2se.com>
- <20150504123648.GU15510@sirena.org.uk>
- <1693367404.879766.1430771695242.JavaMail.open-xchange@oxbaltgw08.schlund.de>
- <1875749167.82542.1431023838932.JavaMail.open-xchange@oxbsltgw04.schlund.de>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH v2 1/4] ASoC: Add gtm601 codec driver
+Date: Thu, 7 May 2015 20:57:59 +0200
+Message-ID: <CAAfyv34E_AqzbW5o19eNO8AyEaDERwXXt4dzNxo07BVo3RzXdg@mail.gmail.com>
+References: <1430944730-10480-1-git-send-email-marek@goldelico.com>
+	<1430944730-10480-2-git-send-email-marek@goldelico.com>
+	<20150507185052.GO22845@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4fsOrigxu51SYCTq"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1875749167.82542.1431023838932.JavaMail.open-xchange@oxbsltgw04.schlund.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Sebastian Reichel <sre@kernel.org>, fabio.estevam@freescale.com, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, sebastien.szymanski@armadeus.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150507185052.GO22845@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: perex@perex.cz, tiwai@suse.de, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 7, 2015 at 8:50 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, May 06, 2015 at 10:38:47PM +0200, Marek Belisko wrote:
+>> This driver add PCM interface to a GTM601 UMTS modem chip.
+>> There is no configuration interface.
+>
+> Applied, thanks.  Please remember to CC maintainers on patches, you've
+> missed Liam for some reason.
+OK thanks. I'll fix Documentation patches and post them to correct maintainers.
 
---4fsOrigxu51SYCTq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+BR,
 
-On Thu, May 07, 2015 at 08:37:18PM +0200, Stefan Wahren wrote:
-> > Stefan Wahren <stefan.wahren@i2se.com> hat am 4. Mai 2015 um 22:34
+marek
 
-> > i'm sorry, i forgot the following point in the changelog:
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
 
-> > - move dcdc handling from mxs_power to mxs-regulator
-
-> > I hope the change is okay. I implemented only is_enabled() to have at least 1
-> > operation.
-> > But it's not really necessary.
-
-> do we need enable / disable operation?
-
-> In the bootloader code enabling the DC-DC is critical. There is a known issue
-> which falsely triggers the brownout detection.
-
-Why would the driver not provide these operations?
-
-> > > I'm also not 100% clear what code the DCDCs and LDOs are
-> > > sharing here...
-
-> > Actually only probing and the regulator info structure.
-
-> How can i improve that?
-
-If the devices aren't sharing code then they should be separate drivers.
-
---4fsOrigxu51SYCTq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVS7RfAAoJECTWi3JdVIfQmGoH/10VsepwZEibzdV2dY6UO9lu
-mmNB2eoQRn+vJddku1a6LpJwIIfUMXOFe8TymVUoRp0qjmHfJViMR/NgkJRhWkJd
-2hwoZ8nuxrHw8Qf0NQVwqGwp4pyLnNy4qOX+czJnQQQnniUjZfkoZ2+t1vN7cFiN
-UirXeTZ38dRj3QuIDEa7l8t4+CNP/7N6PJgG2w2BkscCsPG9Q22JPPABhDJpfaIv
-ssDaut+siwaaCMDvBKC1HAiBo05qjGXGtkM/pkR7TpD+CV73sUvhZgR+jUwcieYz
-tD0nj3eBgnfObip3kcZDXxLrTSpcUPowLzyeAR0eUfPOkSRX7WKVQ7Cm1egKaaE=
-=NGkv
------END PGP SIGNATURE-----
-
---4fsOrigxu51SYCTq--
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
