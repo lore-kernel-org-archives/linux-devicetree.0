@@ -1,65 +1,65 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Thu, 7 May 2015 17:43:39 +0530
-Message-ID: <CAKohpomYQw67KuX29PLawmd1dSXHx7pMt7+8BzmLPfHSqhMB2g@mail.gmail.com>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
-	<d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
-	<20150504121209.GM15510@sirena.org.uk>
-	<CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
-	<20150505105714.GA22845@sirena.org.uk>
-	<CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
-	<20150505171252.GI22845@sirena.org.uk>
-	<CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
-	<20150507055231.GB32399@codeaurora.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH  0/2] gpio: Allow userspace export from DT
+Date: Thu, 7 May 2015 13:28:40 +0100
+Message-ID: <20150507122840.GB2067@n2100.arm.linux.org.uk>
+References: <20150413110515.9681.58848.stgit@localhost>
+ <20150504084925.GB4047@localhost>
+ <20150506112449.GQ2067@n2100.arm.linux.org.uk>
+ <20150506124354.GA5302@localhost>
+ <20150506125707.GV2067@n2100.arm.linux.org.uk>
+ <20150506132520.GC5302@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150507055231.GB32399@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150506132520.GC5302@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 May 2015 at 11:22, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> If you look at the cpufreq/clock/pmic code on our codeaurora.org
-> tree you'll see that it's used to pass a value with uA units
-> through the regulator_set_optimum_mode() API. The call to
-> regulator_set_optimum_mode() is here[1], and the place where we
-> parse the OPP table from DT is here[2]. My understanding is that
-> with recent changes to the regulator framework, we would do a
-> s/regulator_set_optimum_mode/regulator_set_load/ and things would
-> otherwise be the same on the consumer side. On the regulator
-> side, we would move the .get_optimum_mode op to .set_load instead
-> of the hack where we write to the hardware in
-> .get_optimum_mode[3].
->
-> So does that mean it corresponds to a limit, or a nominal
-> constant draw value, or a value to regulator to? From what I can
-> tell it's used to figure out how many phases to enable[4]. I
-> suspect that means it's being used to figure out what value it
-> should regulate to. In newer PMICs this is all done
-> automatically, but at least for some of the PMICs we need to do
-> it manually.
+On Wed, May 06, 2015 at 03:25:20PM +0200, Johan Hovold wrote:
+> On Wed, May 06, 2015 at 01:57:08PM +0100, Russell King - ARM Linux wrote:
+> > There is *no* "firmware" on these devices.  The only thing you have is a
+> > boot loader and a DT blob, and people will hate you if you tell them that
+> > they have to change the DT blob and then reboot their systems to change
+> > the functionality of a GPIO pin.
+> >
+> > It's also entirely reasonable to assume that people are going to want to
+> > change the configuration at runtime, given their diverse range of
+> > applications.
+> 
+> DT can be changed at run-time using overlays.
 
-By current phases, you probably meant [1], right ?
+Yes, I'm aware of that, but that code is really not nice.  There is no
+notification system to drivers that something has changed, and with a
+GPIO driver, you really don't want the driver to be unbound and
+re-bound just because something changed.  That has the very real
+possibility to disrupt users of other GPIOs.
 
-Also what I couldn't understand is how are you controlling the
-current here?
+I'm not sure what kind of driver you'd attach userspace GPIO pinctrl
+settings to other than the GPIO driver.
 
-- Is this a current only regulator ? Probably not as your code has
-a uv value as well..
+Sure, if you're wanting to configure a couple of GPIOs as I2C, then
+yes, you certainly should put the binding in the I2C device block in
+DT, but you don't always have a device to do that with.
 
-- Now if uV is fixed, how is the target current controlled separately ?
+> You also cut out the part in my reply about continuing to allow
+> unrestricted access for such cases. That could still continue to be the
+> default (e.g. when there are no pin function names defined in DT).
 
-- Should we have a min/max/target value of this current ? Like what
-we are doing for voltage. Or is this just the 'target' current ?
+Yes, that's standard Internet email etiquette - cut everything from
+the message you're replying to which is not part of the context of the
+immediate reply.  I'd include a URL to that, but unfortunately google
+seems broken (it's inserting a refresh into the results page which causes
+elinks to continually refetch the same page, eventually triggering a
+violation of googles terms of use... yea, quite funny that google is
+instructing browsers to violate their own terms of use.)
 
-- And finally how exactly should we write this in bindings to make
-it clear to all users ?
-
-Thanks.
-
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
 --
-viresh
-
-[1] http://en.wikipedia.org/wiki/Three-phase_electric_power
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
