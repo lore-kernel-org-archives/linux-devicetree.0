@@ -1,35 +1,40 @@
 From: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
-Subject: [PATCH 1/6] ARM: Zynq: DT: Disable xadc node by default in zynq-7000.dtsi
-Date: Thu, 7 May 2015 17:32:20 -0500
-Message-ID: <1431037945-40360-1-git-send-email-xander.huff@ni.com>
+Subject: [PATCH 2/6] ARM: Zynq: DT: Enable xadc node in zynq-parallella.dts
+Date: Thu, 7 May 2015 17:32:21 -0500
+Message-ID: <1431037945-40360-2-git-send-email-xander.huff@ni.com>
+References: <1431037945-40360-1-git-send-email-xander.huff@ni.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431037945-40360-1-git-send-email-xander.huff-acOepvfBmUk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org, Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the de-facto practice.
+Now that zynq-7000 disables xadc by default, enable in zynq-parallella
+to retain existing behavior.
 
 Signed-off-by: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
-Reviewed-by: Ben Shelton <ben.shelton-acOepvfBmUk@public.gmane.org>
-Reviewed-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
-Reviewed-by: Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>
 ---
- arch/arm/boot/dts/zynq-7000.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/zynq-parallella.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index a5cd2ed..7640bdc 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -66,6 +66,7 @@
+diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/zynq-parallella.dts
+index 1745712..b1a1f7a 100644
+--- a/arch/arm/boot/dts/zynq-parallella.dts
++++ b/arch/arm/boot/dts/zynq-parallella.dts
+@@ -32,6 +32,12 @@
+ 		bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait";
+ 		linux,stdout-path = "/amba/serial@e0001000";
+ 	};
++
++	amba {
++		adc: adc@f8007100 {
++			status = "okay";
++		};
++	};
+ };
  
- 		adc: adc@f8007100 {
- 			compatible = "xlnx,zynq-xadc-1.00.a";
-+			status = "disabled";
- 			reg = <0xf8007100 0x20>;
- 			interrupts = <0 7 4>;
- 			interrupt-parent = <&intc>;
+ &clkc {
 -- 
 1.9.1
 
