@@ -1,57 +1,51 @@
-From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Subject: [PATCH] devicetree: Misc fix for the AR7100 SPI controller binding
-Date: Thu,  7 May 2015 23:18:31 +0200
-Message-ID: <1431033511-30220-1-git-send-email-albeu@free.fr>
-References: <553A7F62.80108@cogentembedded.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <553A7F62.80108-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Thu, 7 May 2015 14:18:55 -0700
+Message-ID: <20150507211855.GA2455@codeaurora.org>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+ <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+ <20150504121209.GM15510@sirena.org.uk>
+ <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+ <20150505105714.GA22845@sirena.org.uk>
+ <CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
+ <20150505171252.GI22845@sirena.org.uk>
+ <CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
+ <20150507055231.GB32399@codeaurora.org>
+ <20150507110233.GR15510@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150507110233.GR15510@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
-Fix the clocks property documentation and use lower case for
-hex values in the example.
+On 05/07, Mark Brown wrote:
+> On Wed, May 06, 2015 at 10:52:31PM -0700, Stephen Boyd wrote:
+> 
+> > If you look at the cpufreq/clock/pmic code on our codeaurora.org
+> > tree you'll see that it's used to pass a value with uA units
+> > through the regulator_set_optimum_mode() API. The call to
+> > regulator_set_optimum_mode() is here[1], and the place where we
+> > parse the OPP table from DT is here[2]. My understanding is that
+> 
+> I'm not looking for anyone to explain this to me in e-mail, what I'm
+> looking for is for the binding document to be clear so someone can tell
+> what the binding means by reading the documentation for the binding.
 
-Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
----
 
-This patch can be applied as is or as a fixup to the original patch:
-"spi: spi-ath79: add binding documentation for the AR7100 SPI controller"
-or I can resend the whole patch/serie if that's preferable.
----
- Documentation/devicetree/bindings/spi/spi-ath79.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Ok. Perhaps the simplest thing to do then is to reuse wording
+from the regulator_set_load() API documentation? That's the only
+usage of this value I'm aware of. Something like:
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-ath79.txt b/Documentation/devicetree/bindings/spi/spi-ath79.txt
-index f1ad9c3..9c696fa 100644
---- a/Documentation/devicetree/bindings/spi/spi-ath79.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-ath79.txt
-@@ -3,7 +3,7 @@ Binding for Qualcomm Atheros AR7xxx/AR9xxx SPI controller
- Required properties:
- - compatible: has to be "qca,<soc-type>-spi", "qca,ar7100-spi" as fallback.
- - reg: Base address and size of the controllers memory area
--- clocks: phandle to the AHB clock.
-+- clocks: phandle of the AHB clock.
- - clock-names: has to be "ahb".
- - #address-cells: <1>, as required by generic SPI binding.
- - #size-cells: <0>, also as required by generic SPI binding.
-@@ -12,9 +12,9 @@ Child nodes as per the generic SPI binding.
- 
- Example:
- 
--	spi@1F000000 {
-+	spi@1f000000 {
- 		compatible = "qca,ar9132-spi", "qca,ar7100-spi";
--		reg = <0x1F000000 0x10>;
-+		reg = <0x1f000000 0x10>;
- 
- 		clocks = <&pll 2>;
- 		clock-names = "ahb";
+	The current load of the device when using this OPP. Used
+	to set the most efficient regulator operating mode.
+
+We don't need any sort of min/max for this property either, so a
+single value should be all that's required.
+
 -- 
-2.0.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
