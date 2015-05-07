@@ -1,39 +1,72 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH 3/4] pinctrl: sh-pfc: Add renesas,pfc-r8a7793 to binding documentation
-Date: Thu,  7 May 2015 18:10:36 +0200
-Message-ID: <1431015037-25254-4-git-send-email-ulrich.hecht+renesas@gmail.com>
-References: <1431015037-25254-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1431015037-25254-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: geert@linux-m68k.org, horms@verge.net.au, linux-sh@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com
-Cc: magnus.damm@gmail.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, devicetree@vger.kernel.org
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 3/6] usb: dwc3: dwc3-st: Update the incorrect DT dwc3
+ example.
+Date: Thu, 7 May 2015 11:15:55 -0500
+Message-ID: <20150507161555.GA29183@saruman.tx.rr.com>
+References: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
+ <1430400652-3366-4-git-send-email-peter.griffin@linaro.org>
+ <20150507151358.GA14123@griffinp-ThinkPad-X1-Carbon-2nd>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150507151358.GA14123@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, balbi@ti.com, srinivas.kandagatla@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Also renames "R-Car M2" to "R-Car M2-W" to avoid confusion.
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu, May 07, 2015 at 04:13:58PM +0100, Peter Griffin wrote:
+> Hi Felipe,
+>=20
+> On Thu, 30 Apr 2015, Peter Griffin wrote:
+>=20
+> > There is a subtle typo phys-names should be phy-names. Using the
+> > current example means you don't have working usb (as you fail to
+> > obtain the phys). Also update the example to use the generic phy
+> > type constants which are now used for miphy28.
+> >=20
+> > Additionally also remove the unnecessary new line in the example.
+> >=20
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+>=20
+> Can you take this dwc3 DT doc update patch via your tree?
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index bfe72ec..6bcf851 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -16,7 +16,8 @@ Required Properties:
-     - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible pin-controller.
-     - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
-     - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible pin-controller.
--    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2) compatible pin-controller.
-+    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2-W) compatible pin-controller.
-+    - "renesas,pfc-r8a7793": for R8A7793 (R-Car M2-N) compatible pin-controller.
-     - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-controller.
- 
-   - reg: Base address and length of each memory resource used by the pin
--- 
-2.3.5
+only this patch ? Sure. Just post on linux-usb and I'll fetch it from
+there.
 
+--=20
+balbi
+
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVS4+7AAoJEIaOsuA1yqRE8a0QAI3u2PIaAOgLnRnPz0zVExax
+gwMDZZqSKH4ty6Fh6XySbIP5FiMquyLL5DNLEnKBqgiiE0fLYOuuAj0UCrk9czmK
+VDpKs1AaoBlMcK3e+dihZpsVh9dWyqmY6LzU/mX1SE9r5x64GreuS8R8FW1Riwzm
+v3Q/jbDa7LYQPKDJARMbrstsPo3QW969amSwHnBmuNdrxBlSFF6rnLcI+lct6YOB
+9sHAidnSF1/9YLqOsMttm0ZMibRktr8meEpXJkWy8QqC9NySTnyVjXMWF4x1DASd
+Hpp5pOS3CI4Uv/y1XZgjaovISmNNxTzNOvvwuHkhvqa6Co+TU9BvQ72iuSlMQC+h
+pR0M6uPvRW3BDjcDCuOa4OH2ygusbOlsJXAaLK2Yp9WiMkcY3xu5kMlX+VGrbtDE
+yRqqzu7I9RVh2BECXiRBuR2TdS//lrTVAJPsMy5ARD9qKMwiVrf2b2yt4mZlOrUU
+CkpLWeWZ8NUKM/yxlrMd1lWOzR9H39jOCj9F3Aw4jTuIHrSqldOvexE+a0iWrKrb
+CWfSqvaHNKbiijhTFSli4fXegNaucI4Saelk05M0ZF9hbGpwLCGtov+uOQuuzjT+
+Vxp+V06ak/nGxwRFlz5R8GK0HMoHCFXUn7FXuR+ozOyIsssaxd6hIl6R7jMfMoma
+2NlUndBK+G1OobRlphNL
+=PfdX
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
