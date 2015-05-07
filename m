@@ -1,42 +1,33 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 07/12] rtc: st: Update IP layout information to include Clocksource
-Date: Thu,  7 May 2015 14:38:39 +0100
-Message-ID: <1431005924-21777-8-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 11/12] ARM: STi: Enable LPC Clocksource
+Date: Thu,  7 May 2015 14:38:43 +0100
+Message-ID: <1431005924-21777-12-git-send-email-lee.jones@linaro.org>
 References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431005924-21777-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de, wim@iguana.be, a.zummo@towertech.it, linux-watchdog@vger.kernel.org, rtc-linux@googlegroups.com, linux@roeck-us.net, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Initial submission adding support for this IP only included Watchdog and
-the Real-Time Clock.  Now the third (and final) device is enabled this
-trivial patch is required to update the comment in the RTC driver to
-encompass Clocksource.
+This timer can be used as the system (tick) timer.
 
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/rtc/rtc-st-lpc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-sti/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-st-lpc.c b/drivers/rtc/rtc-st-lpc.c
-index 3f9d0ac..74c0a33 100644
---- a/drivers/rtc/rtc-st-lpc.c
-+++ b/drivers/rtc/rtc-st-lpc.c
-@@ -208,7 +208,7 @@ static int st_rtc_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	/* LPC can either run in RTC or WDT mode */
-+	/* LPC can either run as a Clocksource or in RTC or WDT mode */
- 	if (mode != ST_LPC_MODE_RTC)
- 		return -ENODEV;
- 
+diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+index 3b1ac46..cb886de 100644
+--- a/arch/arm/mach-sti/Kconfig
++++ b/arch/arm/mach-sti/Kconfig
+@@ -2,6 +2,7 @@ menuconfig ARCH_STI
+ 	bool "STMicroelectronics Consumer Electronics SOCs" if ARCH_MULTI_V7
+ 	select ARM_GIC
+ 	select ARM_GLOBAL_TIMER
++	select CLKSRC_ST_LPC
+ 	select PINCTRL
+ 	select PINCTRL_ST
+ 	select MFD_SYSCON
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
