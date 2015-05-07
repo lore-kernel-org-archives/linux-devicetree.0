@@ -1,47 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
-Date: Fri, 08 May 2015 00:25:36 +0300
-Message-ID: <554BD850.8040601@cogentembedded.com>
-References: <32501816.HtkLenWQpn@wasted.cogentembedded.com> <552C4554.2070608@gmail.com> <552D8898.3060905@cogentembedded.com> <55382D4E.5070708@gmail.com> <553A9123.3010906@cogentembedded.com> <554BD4CC.3020308@cogentembedded.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Thu, 7 May 2015 14:30:16 -0700
+Message-ID: <20150507213015.GB2455@codeaurora.org>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+ <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+ <20150504121209.GM15510@sirena.org.uk>
+ <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+ <20150505105714.GA22845@sirena.org.uk>
+ <CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
+ <20150505171252.GI22845@sirena.org.uk>
+ <CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
+ <20150507055231.GB32399@codeaurora.org>
+ <CAKohpomYQw67KuX29PLawmd1dSXHx7pMt7+8BzmLPfHSqhMB2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <554BD4CC.3020308@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com
-Cc: linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, Ben Hutchings <ben.hutchings@codethink.co.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpomYQw67KuX29PLawmd1dSXHx7pMt7+8BzmLPfHSqhMB2g@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2015 12:10 AM, Sergei Shtylyov wrote:
+On 05/07, Viresh Kumar wrote:
+> On 7 May 2015 at 11:22, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > If you look at the cpufreq/clock/pmic code on our codeaurora.org
+> > tree you'll see that it's used to pass a value with uA units
+> > through the regulator_set_optimum_mode() API. The call to
+> > regulator_set_optimum_mode() is here[1], and the place where we
+> > parse the OPP table from DT is here[2]. My understanding is that
+> > with recent changes to the regulator framework, we would do a
+> > s/regulator_set_optimum_mode/regulator_set_load/ and things would
+> > otherwise be the same on the consumer side. On the regulator
+> > side, we would move the .get_optimum_mode op to .set_load instead
+> > of the hack where we write to the hardware in
+> > .get_optimum_mode[3].
+> >
+> > So does that mean it corresponds to a limit, or a nominal
+> > constant draw value, or a value to regulator to? From what I can
+> > tell it's used to figure out how many phases to enable[4]. I
+> > suspect that means it's being used to figure out what value it
+> > should regulate to. In newer PMICs this is all done
+> > automatically, but at least for some of the PMICs we need to do
+> > it manually.
+> 
+> By current phases, you probably meant [1], right ?
+> 
+> Also what I couldn't understand is how are you controlling the
+> current here?
+> 
+> - Is this a current only regulator ? Probably not as your code has
+> a uv value as well..
 
-[...]
+No.
 
->>>>>> +    desc->ds = skb->len;
->>>>>> +    desc->dptr = dma_map_single(&ndev->dev, buffer, skb->len,
->>>>>> +                    DMA_TO_DEVICE);
->>>>>> +    if (dma_mapping_error(&ndev->dev, desc->dptr)) {
->>>>>> +        dev_kfree_skb_any(skb);
->>>>>> +        priv->tx_skb[q][entry] = NULL;
+> 
+> - Now if uV is fixed, how is the target current controlled separately ?
 
->>>>> Don't you need to make sure this NULL is properly seen by ravb_tx_free()?
+uV is not fixed
 
->>>>     You mean doing this before releasing the spinlock? Or what?
+> 
+> - Should we have a min/max/target value of this current ? Like what
+> we are doing for voltage. Or is this just the 'target' current ?
 
->>> Yes, the locking your transmit function seems to open windows during
->>> which it is possible for the interrupt handler running on another CPU to
->>> mess up with the data you are using here.
+I don't think so. It's just about setting the load through the
+regulator_set_load() API when this OPP is used.
 
->>     Will look into that too...
+> 
+> - And finally how exactly should we write this in bindings to make
+> it clear to all users ?
+> 
 
->     I have looked into the code and I must admit I don't understand how the
-> data can be messed up with. ravb_tx_free() only advances 'priv->dirty_tx' and
-> doesn't go beyond (or change) 'priv->cur_tx' which is used here...
-
-    Nevermind, now I'm seeing the race. :-(
-
->>> --
->>> Florian
-
-WBR, Sergei
-
+Let's take this up on my reply to Mark.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
