@@ -1,7 +1,7 @@
 From: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
-Subject: [PATCH 6/6] ARM: Zynq: DT: Enable xadc node in zynq-zybo.dts
-Date: Thu, 7 May 2015 17:32:25 -0500
-Message-ID: <1431037945-40360-6-git-send-email-xander.huff@ni.com>
+Subject: [PATCH 3/6] ARM: Zynq: DT: Enable xadc node in zynq-zc702.dts
+Date: Thu, 7 May 2015 17:32:22 -0500
+Message-ID: <1431037945-40360-3-git-send-email-xander.huff@ni.com>
 References: <1431037945-40360-1-git-send-email-xander.huff@ni.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1431037945-40360-1-git-send-email-xander.huff-acOepvfBmUk@public.gmane.org>
@@ -10,31 +10,31 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@publ
 Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org, Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that zynq-7000 disables xadc by default, enable in zynq-zybo
+Now that zynq-7000 disables xadc by default, enable in zynq-zc702
 to retain existing behavior.
 
 Signed-off-by: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
 ---
- arch/arm/boot/dts/zynq-zybo.dts | 6 ++++++
+ arch/arm/boot/dts/zynq-zc702.dts | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/zynq-zybo.dts b/arch/arm/boot/dts/zynq-zybo.dts
-index a9a12ce..a6298fb 100644
---- a/arch/arm/boot/dts/zynq-zybo.dts
-+++ b/arch/arm/boot/dts/zynq-zybo.dts
-@@ -27,6 +27,12 @@
- 		bootargs = "console=ttyPS0,115200 earlyprintk";
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index 1fc1d39..74b3b8a 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -47,6 +47,12 @@
+ 		compatible = "usb-nop-xceiv";
+ 		#phy-cells = <0>;
  	};
- 
++
 +	amba {
 +		adc: adc@f8007100 {
 +			status = "okay";
 +		};
 +	};
-+
  };
  
- &clkc {
+ &can0 {
 -- 
 1.9.1
 
