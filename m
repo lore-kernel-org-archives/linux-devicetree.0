@@ -1,7 +1,7 @@
 From: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 6/6] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Thu, 7 May 2015 22:00:25 +0800
-Message-ID: <1431007225-8513-7-git-send-email-bintian.wang@huawei.com>
+Subject: [PATCH v5 2/6] arm64: hi6220: Document devicetree bindings for Hisilicon hi6220 SoC
+Date: Thu, 7 May 2015 22:00:21 +0800
+Message-ID: <1431007225-8513-3-git-send-email-bintian.wang@huawei.com>
 References: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,266 +12,127 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ke
 Cc: xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial dtsi file to support Hisilicon Hi6220 SoC with
-support of Octal core CPUs in two clusters and each cluster
-has quard Cortex-A53.
-
-Also add dts file to support HiKey development board which
-based on Hi6220 SoC.
+This patch adds documentation for the devicetree bindings used by the
+DT files of Hisilicon hi6220 SoC mobile platform.
 
 Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Suggested-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Acked-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Tested-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/Makefile                   |    1 +
- arch/arm64/boot/dts/hisilicon/Makefile         |    5 +
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts |   31 +++++
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  172 ++++++++++++++++++++++++
- 4 files changed, 209 insertions(+)
- create mode 100644 arch/arm64/boot/dts/hisilicon/Makefile
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+ .../bindings/arm/hisilicon/hisilicon.txt           |   87 ++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index ad26a75..38913be 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -4,6 +4,7 @@ dts-dirs += arm
- dts-dirs += cavium
- dts-dirs += exynos
- dts-dirs += freescale
-+dts-dirs += hisilicon
- dts-dirs += mediatek
- dts-dirs += qcom
- dts-dirs += sprd
-diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
-new file mode 100644
-index 0000000..fa81a6e
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/Makefile
-@@ -0,0 +1,5 @@
-+dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
+diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+index 35b1bd4..f67d0f3 100644
+--- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
++++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+@@ -1,5 +1,8 @@
+ Hisilicon Platforms Device Tree Bindings
+ ----------------------------------------------------
++Hi6220 SoC
++Required root node properties:
++	- compatible = "hisilicon,hi6220";
+ 
+ Hi4511 Board
+ Required root node properties:
+@@ -13,6 +16,9 @@ HiP01 ca9x2 Board
+ Required root node properties:
+ 	- compatible = "hisilicon,hip01-ca9x2";
+ 
++HiKey Board
++Required root node properties:
++	- compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
+ 
+ Hisilicon system controller
+ 
+@@ -41,6 +47,87 @@ Example:
+ 	};
+ 
+ -----------------------------------------------------------------------
++Hisilicon Hi6220 system controller
 +
-+always		:= $(dtb-y)
-+subdir-y	:= $(dts-dirs)
-+clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-new file mode 100644
-index 0000000..e36a539
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -0,0 +1,31 @@
-+/*
-+ * dts file for Hisilicon HiKey Development Board
-+ *
-+ * Copyright (C) 2015, Hisilicon Ltd.
-+ *
-+ */
++Required properties:
++- compatible : "hisilicon,hi6220-sysctrl"
++- reg : Register address and size
++- #clock-cells: should be set to 1, many clock registers are defined
++  under this controller and this property must be present.
 +
-+/dts-v1/;
++Hisilicon designs this controller as one of the system controllers,
++its main functions are the same as Hisilicon system controller, but
++the register offset of some core modules are different.
 +
-+/*Reserved 1MB memory for MCU*/
-+/memreserve/ 0x05e00000 0x00100000;
-+
-+#include "hi6220.dtsi"
-+
-+/ {
-+	model = "HiKey Development Board";
-+	compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
-+
-+	aliases {
-+		serial0 = &uart0;
++Example:
++	/*for Hi6220*/
++	sys_ctrl: sys_ctrl {
++		compatible = "hisilicon,hi6220-sysctrl", "syscon";
++		reg = <0x0 0xf7030000 0x0 0x2000>;
++		#clock-cells = <1>;
 +	};
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
++
++Hisilicon Hi6220 Power Always ON domain controller
++
++Required properties:
++- compatible : "hisilicon,hi6220-aoctrl"
++- reg : Register address and size
++- #clock-cells: should be set to 1, many clock registers are defined
++  under this controller and this property must be present.
++
++Hisilicon designs this system controller to control the power always
++on domain for mobile platform.
++
++Example:
++	/*for Hi6220*/
++	ao_ctrl: ao_ctrl {
++		compatible = "hisilicon,hi6220-aoctrl", "syscon";
++		reg = <0x0 0xf7800000 0x0 0x2000>;
++		#clock-cells = <1>;
 +	};
 +
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-new file mode 100644
-index 0000000..229937f
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -0,0 +1,172 @@
-+/*
-+ * dts file for Hisilicon Hi6220 SoC
-+ *
-+ * Copyright (C) 2015, Hisilicon Ltd.
-+ */
 +
-+#include <dt-bindings/clock/hi6220-clock.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++Hisilicon Hi6220 Media domain controller
 +
-+/ {
-+	compatible = "hisilicon,hi6220";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
++Required properties:
++- compatible : "hisilicon,hi6220-mediactrl"
++- reg : Register address and size
++- #clock-cells: should be set to 1, many clock registers are defined
++  under this controller and this property must be present.
 +
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
++Hisilicon designs this system controller to control the multimedia
++domain(e.g. codec, G3D ...) for mobile platform.
++
++Example:
++	/*for Hi6220*/
++	media_ctrl: media_ctrl {
++		compatible = "hisilicon,hi6220-mediactrl", "syscon";
++		reg = <0x0 0xf4410000 0x0 0x1000>;
++		#clock-cells = <1>;
 +	};
 +
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
 +
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+				core2 {
-+					cpu = <&cpu2>;
-+				};
-+				core3 {
-+					cpu = <&cpu3>;
-+				};
-+			};
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu4>;
-+				};
-+				core1 {
-+					cpu = <&cpu5>;
-+				};
-+				core2 {
-+					cpu = <&cpu6>;
-+				};
-+				core3 {
-+					cpu = <&cpu7>;
-+				};
-+			};
-+		};
++Hisilicon Hi6220 Power Management domain controller
 +
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
++Required properties:
++- compatible : "hisilicon,hi6220-pmctrl"
++- reg : Register address and size
++- #clock-cells: should be set to 1, some clock registers are define
++  under this controller and this property must be present.
 +
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+		};
++Hisilicon designs this system controller to control the power management
++domain for mobile platform.
 +
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu4: cpu@100 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu5: cpu@101 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu6: cpu@102 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x102>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu7: cpu@103 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x103>;
-+			enable-method = "psci";
-+		};
++Example:
++	/*for Hi6220*/
++	pm_ctrl: pm_ctrl {
++		compatible = "hisilicon,hi6220-pmctrl", "syscon";
++		reg = <0x0 0xf7032000 0x0 0x1000>;
++		#clock-cells = <1>;
 +	};
 +
-+	gic: interrupt-controller@f6801000 {
-+		compatible = "arm,gic-400";
-+		reg = <0x0 0xf6801000 0 0x1000>, /* GICD */
-+		      <0x0 0xf6802000 0 0x2000>, /* GICC */
-+		      <0x0 0xf6804000 0 0x2000>, /* GICH */
-+		      <0x0 0xf6806000 0 0x2000>; /* GICV */
-+		#address-cells = <0>;
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ao_ctrl: ao_ctrl {
-+			compatible = "hisilicon,hi6220-aoctrl", "syscon";
-+			reg = <0x0 0xf7800000 0x0 0x2000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		sys_ctrl: sys_ctrl {
-+			compatible = "hisilicon,hi6220-sysctrl", "syscon";
-+			reg = <0x0 0xf7030000 0x0 0x2000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		media_ctrl: media_ctrl {
-+			compatible = "hisilicon,hi6220-mediactrl", "syscon";
-+			reg = <0x0 0xf4410000 0x0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		pm_ctrl: pm_ctrl {
-+			compatible = "hisilicon,hi6220-pmctrl", "syscon";
-+			reg = <0x0 0xf7032000 0x0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		uart0: uart@f8015000 {	/* console */
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xf8015000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl HI6220_UART0_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+	};
-+};
++-----------------------------------------------------------------------
+ Hisilicon HiP01 system controller
+ 
+ Required properties:
 -- 
 1.7.9.5
 
