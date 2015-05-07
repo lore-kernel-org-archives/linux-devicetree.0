@@ -1,64 +1,41 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V2 5/6] regulator: add mxs on-chip regulator driver
-Date: Thu, 7 May 2015 21:25:19 +0200 (CEST)
-Message-ID: <535744342.64563.1431026719818.JavaMail.open-xchange@oxbsltgw09.schlund.de>
-References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com> <1430346747-28728-6-git-send-email-stefan.wahren@i2se.com> <20150504123648.GU15510@sirena.org.uk> <1693367404.879766.1430771695242.JavaMail.open-xchange@oxbaltgw08.schlund.de> <1875749167.82542.1431023838932.JavaMail.open-xchange@oxbsltgw04.schlund.de> <20150507185216.GP22845@sirena.org.uk>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150507185216.GP22845-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH] ASoC: gtm601: Document GTM601 bindings
+Date: Thu,  7 May 2015 21:29:31 +0200
+Message-ID: <1431026971-17452-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: perex@perex.cz, tiwai@suse.de, lgirdwood@gmail.com, hns@goldelico.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 7. Mai 2015 um 20:52 geschrieben:
->
->
-> On Thu, May 07, 2015 at 08:37:18PM +0200, Stefan Wahren wrote:
-> > > Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> hat am 4. Mai 2015 um 22:34
->
-> > > i'm sorry, i forgot the following point in the changelog:
->
-> > > - move dcdc handling from mxs_power to mxs-regulator
->
-> > > I hope the change is okay. I implemented only is_enabled() to have at
-> > > least 1
-> > > operation.
-> > > But it's not really necessary.
->
-> > do we need enable / disable operation?
->
-> > In the bootloader code enabling the DC-DC is critical. There is a known
-> > issue
-> > which falsely triggers the brownout detection.
->
-> Why would the driver not provide these operations?
+Add small documentation for GTM601 UMTS modem audio interface.
 
-I didn't implement this operation because the suggested workaround for the
-hardware issue isn't very nice 
-(disable brownout detection during enabling DC-DC). I was afraid of the
-implementation.
+Signed-off-by: Marek Belisko <marek@goldelico.com>
+---
+This one was corrupted in V2 series so sending update only.
 
->
-> > > > I'm also not 100% clear what code the DCDCs and LDOs are
-> > > > sharing here...
->
-> > > Actually only probing and the regulator info structure.
->
-> > How can i improve that?
->
-> If the devices aren't sharing code then they should be separate drivers.
+ Documentation/devicetree/bindings/sound/gtm601.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/gtm601.txt
 
-Okay. 
-
-mxs-regulator-ldo.c
-mxs-regulator-dcdc.c
-
-What do you think of?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/gtm601.txt b/Documentation/devicetree/bindings/sound/gtm601.txt
+new file mode 100644
+index 0000000..5efc8c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/gtm601.txt
+@@ -0,0 +1,13 @@
++GTM601 UMTS modem audio interface CODEC
++
++This device has no configuration interface. Sample rate is fixed - 8kHz.
++
++Required properties:
++
++  - compatible : "option,gtm601"
++
++Example:
++
++codec: gtm601_codec {
++	compatible = "option,gtm601";
++};
+-- 
+1.9.1
