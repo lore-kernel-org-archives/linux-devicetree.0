@@ -1,43 +1,50 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 2/7] crypto: add new driver for Marvell CESA
-Date: Thu, 7 May 2015 11:01:00 +0800
-Message-ID: <20150507030100.GA29395@gondor.apana.org.au>
-References: <1430742426-21202-1-git-send-email-boris.brezillon@free-electrons.com>
- <1430742426-21202-3-git-send-email-boris.brezillon@free-electrons.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: interrupts or interrupts-extended ?
+Date: Thu, 7 May 2015 13:19:11 +0900
+Message-ID: <CAK7LNASr0QwgvQqKsWbib0B79nznMjm0UzhVS1EHGc4YgrSWOg@mail.gmail.com>
+References: <CAK7LNATcFzCV_3uaOnRDHLb=A+TPPDUeAoH_1QTUZDxYAB7VDg@mail.gmail.com>
+	<3035159.qyhQB5YNxD@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430742426-21202-3-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3035159.qyhQB5YNxD@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 04, 2015 at 02:27:01PM +0200, Boris Brezillon wrote:
-> The existing mv_cesa driver supports some features of the CESA IP but is
-> quite limited, and reworking it to support new features (like involving the
-> TDMA engine to offload the CPU) is almost impossible.
-> This driver has been rewritten from scratch to take those new features into
-> account.
-> 
-> This new driver adds support for:
-> - new armada SoCs (up to 38x) while keeping support for older ones (Orion
->   and Kirkwood)
-> - DMA mode to offload the CPU in case of intensive crypto usage
-> - new algorithms: SHA256, DES and 3DES
-> 
-> The existing CESA driver is kept around to ease transition to this new
-> driver (take some time to audit the code and/or wait for users feedback).
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+Hi Arnd,
 
-This patch is too big for the mailing list.  Please provide a
-URL for people to download and review.
+2015-04-30 16:37 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Thursday 30 April 2015 14:57:19 Masahiro Yamada wrote:
+>> Hello, device tree folks,
+>>
+>>
+>> Can I ask a little piece of advice?
+>>
+>> Which is a preferred way for specifying an interrupt property,
+>> interrupt-parent & interrupts, or interrupts-extended ?
+>>
+>>
+>> There is only one interrupt controller on my SoC,
+>> so I think either should work enough for me.
+>>
+>
+> interrupts is well-understood by more people, I would pick that one normally,
+> unless there is a need.
+>
+> The main purpose of interrupts-extended is to allow one device to have
+> multiple interrupts that are handled by different controllers, without
+> introducing a (more complex) interrupt-map property in the parent.
 
-Thanks,
+OK, I will use interrupt-parent & interrupts.
+Thanks for you advice!
+
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
