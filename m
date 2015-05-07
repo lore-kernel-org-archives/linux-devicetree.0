@@ -1,14 +1,27 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v6 4/4] MAINTAINERS: add myself as ARM/UniPhier maintainer
-Date: Thu,  7 May 2015 13:32:38 +0900
-Message-ID: <1430973158-12264-5-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH v6 2/4] ARM: multi_v7_defconfig: enable UniPhier SoC family
+Date: Thu,  7 May 2015 13:32:36 +0900
+Message-ID: <1430973158-12264-3-git-send-email-yamada.masahiro@socionext.com>
 References: <1430973158-12264-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1430973158-12264-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
+
+Add UniPhier, a new citizen in the ARM multi platform.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
@@ -19,26 +32,20 @@ Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b399b34..3f4060f4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1525,6 +1525,13 @@ F:	drivers/rtc/rtc-ab3100.c
- F:	drivers/rtc/rtc-coh901331.c
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-stericsson.git
- 
-+ARM/UNIPHIER ARCHITECTURE
-+M:	Masahiro Yamada <yamada.masahiro@socionext.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	arch/arm/mach-uniphier/
-+N:	uniphier
-+
- ARM/Ux500 ARM ARCHITECTURE
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index dca6983..a80ed4e 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -83,6 +83,7 @@ CONFIG_ARCH_TEGRA_3x_SOC=y
+ CONFIG_ARCH_TEGRA_114_SOC=y
+ CONFIG_ARCH_TEGRA_124_SOC=y
+ CONFIG_TEGRA_EMC_SCALING_ENABLE=y
++CONFIG_ARCH_UNIPHIER=y
+ CONFIG_ARCH_U8500=y
+ CONFIG_MACH_HREFV60=y
+ CONFIG_MACH_SNOWBALL=y
 -- 
 1.9.1
