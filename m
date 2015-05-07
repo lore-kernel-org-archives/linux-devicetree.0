@@ -1,99 +1,42 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: device tree compiler with overlay support?
-Date: Thu, 7 May 2015 16:57:21 +0200
-Message-ID: <CAOMqctQSE6UZgK1xquBTMFjdeAyYD0XTUE96Yepeck0PSM_4JA@mail.gmail.com>
-References: <CAOMqctSZObmoJQocCg3JvCA=ZDvvrxzKC9Ko=aq0J=LphNW+EA@mail.gmail.com>
- <CAOMqctT3WuqMTqaqUTN44zA2TEYmP9X7SN8ufTouQFoy=GjB1Q@mail.gmail.com>
- <CAMuHMdU=WySZ8kfaVmU6Bed=ofvrDQ9s51m7zyXN0qu-G-d4cg@mail.gmail.com> <E8C27FD0-CF22-4D8F-AC05-55518BEF4B84@konsulko.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 02/12] clocksource: sti: Provide support
+ for the ST LPC Clocksource IP
+Date: Thu, 7 May 2015 16:04:40 +0100
+Message-ID: <20150507150440.GA13336@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+ <1431005924-21777-3-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E8C27FD0-CF22-4D8F-AC05-55518BEF4B84-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1431005924-21777-3-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 May 2015 at 09:28, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Geert,
->
->> On May 7, 2015, at 10:17 , Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>=
- wrote:
->>
->> On Tue, May 5, 2015 at 6:51 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
- wrote:
->>> On 5 May 2015 at 17:18, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> where is a device tree compiler that can compile an overlay?
->>>>
->>>> The compiler at git://git.kernel.org/pub/scm/utils/dtc/dtc.git shr=
-ieks
->>>> there is a syntax error as soon as the /plugin/ tag is present.
->>>
->>> ok, so I found a dtc patch here https://lkml.org/lkml/2013/1/4/295
->>>
->>> This does not apply cleanly to current DTC but the parts that fail =
-are
->>> due to cosmetic changes in the code so I went ahead and applied it.
->>
->> Thanks for the link! That patch indeed requires some manual rework.
->>
->>> However, the created blob is not what the kernel can accept into
->>> of_overlay_create so what do I do with the blob to load it?
->>
->> Use "OF: DT-Overlay configfs interface" from Pantelis?
->>
->> That depends on "configfs: Implement binary attributes", also from P=
-antelis,
->> which requires reverting commit 28444a2bde8d1695i ("configfs_add_fil=
-e:
->> fold into its sole caller").
->>
->> All of the above require manual fixups to apply.
->>
->> Still have to try the actual loading, new to the overlay game on mai=
-nline
->> kernels (I did use it on boneblack with its original kernel and its =
-overlay
->> manager).
->>
->
-> Posted the patches recently, but for your convenience here=E2=80=99s =
-the git tree.
->
-> https://github.com/pantoniou/dtc/tree/dt-overlays5
->
-> FWIW, I=E2=80=99ll post the capemgr patch today too.
+Hi Lee,
 
-=46WIW here is a separate branch with the dt overlay stuff I am running=
-=2E
+On Thu, 07 May 2015, Lee Jones wrote:
 
-https://github.com/hramrach/linux-sunxi/commits/dt-overlay
+> This IP is shared with Watchdog and RTC functionality.  Only one of
+> these IPs can be used at the same time.  We use the device-driver
+> model combined with a DT 'mode' property to enforce this.
 
-You might want to look at the small fixes there.
+Which means my previous assertion in V1 that the IP didn't exist on stih415/6
+SoC is most likely wrong, as the watchdog driver has bindings already for those
+platforms.
 
-It is worth noting that with your version of the patch adding -@ dtc
-option the built board dtbs do not contain the symbols needed for
-overlays unless overlays are enabled. So far dtbs were static wrt
-build options AFAIK. That is they were either built or not but unless
-the sources in question changed the dtbs would be the same.
-Introducing this option dynamically based on CONFIG_OF_OVERLAY makes
-dtbs content config dependent which does not seem like a very good
-idea.
+I did try this before and couldn't get it working (driver failed on clk_get_rate)
+on stih416-b2020.
 
-In fact I think -@ should be the default on compilers that support it
-and might be optionally turned off.
+Did you try and see if you can get this also working for stih415/6 SoCs? It would
+mean we can move away from arm_global_timer for all upstreamed STI platforms.
 
-Maybe some statistic of the size of the symbol table so generated and
-relative size increase  for various boards might be nice thing to
-have.
+regards,
 
-Thanks
-
-Michal
+Peter.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
