@@ -1,41 +1,513 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version
- 3.
-Date: Thu, 07 May 2015 11:37:57 -0400
-Message-ID: <554B86D5.8080403@hurleysoftware.com>
-References: <20150318055437.21025.13990.stgit@notabene.brown> <55492001.30806@hurleysoftware.com> <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com> <20150506092738.GB4508@amd> <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com> <554A03A7.2000504@hurleysoftware.com> <D10E1092-E75F-48F7-86F1-F8987973CEB5@goldelico.com> <20150506123632.GA1764@leverpostej> <BD3D34DD-2FC8-44A2-89FA-35843065F50F@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BD3D34DD-2FC8-44A2-89FA-35843065F50F@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Pavel Machek <pavel@ucw.cz>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: Gateworks GW5510 support (i.MX6)
+Date: Thu,  7 May 2015 08:38:00 -0700
+Message-ID: <1431013080-13536-1-git-send-email-tharvey@gateworks.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2015 09:28 AM, Dr. H. Nikolaus Schaller wrote:
+Add support for the Gateworks GW5510 board featuring:
+ * i.MX6 SoC
+ * up to 512MB DDR3
+ * up to 2GB NAND flash
+ * 1x miniPCIe socket (with USB)
+ * HDMI out (micro-HDMI)
+ * HDMI in (micro-HDMI) (currently supported by only vendor kernel)
+ * TTL level I/O (supported by GW16111 breakout board):
+  * I2C
+  * 2x UART
+  * CAN
+  * 2x DIO (GPIO/PWM)
+  * USB OTG
 
-> The key point appears to be how we want to see the serial connection.=
- Is the
-> device connected to the uart or the uart to a device?
->=20
-> In OO terminology: =E2=80=9Edevice connects to uart=E2=80=9C vs. =E2=80=
-=9Euart has device connected=E2=80=9C.
-> "d -> u=E2=80=9C vs. "u <- d=E2=80=9C.
+For more details see:
+ http://www.gateworks.com/product/item/ventana-gw5510-single-board-computer
 
-This is not a very good analogy because both relationships need to be
-represented.
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+---
+v2:
+ - updated license to dual-license
+ - removed unneeded 'regulator-always-on'
 
-The practical consideration is the lifetime of the target device.
-If the target device should/must have a lifetime (as viewed from the ho=
-st)
-outside that of the uart, then the target device should not be a slave =
-device.
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile            |   2 +
+ arch/arm/boot/dts/imx6dl-gw551x.dts   |  55 ++++++
+ arch/arm/boot/dts/imx6q-gw551x.dts    |  55 ++++++
+ arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 314 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 426 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw551x.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw551x.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw551x.dtsi
 
-Object lifetime is controlled by expressions of ownership or scope.
-Since devicetree offers no expression of ownership, scope is the
-obvious and natural way to control lifetime.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a1c776b..1b17f2e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -254,6 +254,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-gw52xx.dtb \
+ 	imx6dl-gw53xx.dtb \
+ 	imx6dl-gw54xx.dtb \
++	imx6dl-gw551x.dtb \
+ 	imx6dl-gw552x.dtb \
+ 	imx6dl-hummingboard.dtb \
+ 	imx6dl-nitrogen6x.dtb \
+@@ -280,6 +281,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw53xx.dtb \
+ 	imx6q-gw5400-a.dtb \
+ 	imx6q-gw54xx.dtb \
++	imx6q-gw551x.dtb \
+ 	imx6q-gw552x.dtb \
+ 	imx6q-hummingboard.dtb \
+ 	imx6q-nitrogen6x.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-gw551x.dts b/arch/arm/boot/dts/imx6dl-gw551x.dts
+new file mode 100644
+index 0000000..82d5f85
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-gw551x.dts
+@@ -0,0 +1,55 @@
++/*
++ * Copyright 2014 Gateworks Corporation
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of
++ *     the License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6dl.dtsi"
++#include "imx6qdl-gw551x.dtsi"
++
++/ {
++	model = "Gateworks Ventana i.MX6 DualLite/Solo GW551X";
++	compatible = "gw,imx6dl-gw551x", "gw,ventana", "fsl,imx6dl";
++};
+diff --git a/arch/arm/boot/dts/imx6q-gw551x.dts b/arch/arm/boot/dts/imx6q-gw551x.dts
+new file mode 100644
+index 0000000..2c7feee
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-gw551x.dts
+@@ -0,0 +1,55 @@
++/*
++ * Copyright 2014 Gateworks Corporation
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of
++ *     the License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6q.dtsi"
++#include "imx6qdl-gw551x.dtsi"
++
++/ {
++	model = "Gateworks Ventana i.MX6 Dual/Quad GW551X";
++	compatible = "gw,imx6q-gw551x", "gw,ventana", "fsl,imx6q";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+new file mode 100644
+index 0000000..d1866a0
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+@@ -0,0 +1,314 @@
++/*
++ * Copyright 2014 Gateworks Corporation
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of
++ *     the License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	/* these are used by bootloader for disabling nodes */
++	aliases {
++		led0 = &led0;
++		nand = &gpmi;
++		ssi0 = &ssi1;
++		usb0 = &usbh1;
++		usb1 = &usbotg;
++	};
++
++	chosen {
++		bootargs = "console=ttymxc1,115200";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		led0: user1 {
++			label = "user1";
++			gpios = <&gpio4 7 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	memory {
++		reg = <0x10000000 0x20000000>;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_5p0v: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "5P0V";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
++
++		reg_usb_h1_vbus: regulator@1 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			regulator-name = "usb_h1_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
++
++		reg_usb_otg_vbus: regulator@2 {
++			compatible = "regulator-fixed";
++			reg = <2>;
++			regulator-name = "usb_otg_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
++	};
++};
++
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	status = "okay";
++};
++
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	status = "okay";
++};
++
++&hdmi {
++	ddc-i2c-bus = <&i2c3>;
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	eeprom1: eeprom@50 {
++		compatible = "atmel,24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++
++	eeprom2: eeprom@51 {
++		compatible = "atmel,24c02";
++		reg = <0x51>;
++		pagesize = <16>;
++	};
++
++	eeprom3: eeprom@52 {
++		compatible = "atmel,24c02";
++		reg = <0x52>;
++		pagesize = <16>;
++	};
++
++	eeprom4: eeprom@53 {
++		compatible = "atmel,24c02";
++		reg = <0x53>;
++		pagesize = <16>;
++	};
++
++	gpio: pca9555@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	rtc: ds1672@68 {
++		compatible = "dallas,ds1672";
++		reg = <0x68>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	gpio_exp: pca9555@24 {
++		compatible = "nxp,pca9555";
++		reg = <0x24>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++};
++
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie>;
++	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&ssi1 {
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	disable-over-current;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	status = "okay";
++};
++
++&iomuxc {
++	imx6qdl-gw51xx {
++		pinctrl_flexcan1: flexcan1grp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x1b0b1
++				MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x1b0b1
++				MX6QDL_PAD_GPIO_9__GPIO1_IO09		0x4001b0b0 /* CAN_STBY */
++			>;
++		};
++
++		pinctrl_gpio_leds: gpioledsgrp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_ROW0__GPIO4_IO07   0x1b0b0
++			>;
++		};
++
++		pinctrl_gpmi_nand: gpminandgrp {
++			fsl,pins = <
++				MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
++				MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
++				MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
++				MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
++				MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
++				MX6QDL_PAD_NANDF_CS1__NAND_CE1_B	0xb0b1
++				MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
++				MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
++				MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
++				MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
++				MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
++				MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
++				MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
++				MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
++				MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
++				MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
++			>;
++		};
++
++		pinctrl_i2c1: i2c1grp {
++			fsl,pins = <
++				MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
++				MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
++				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_i2c3: i2c3grp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
++				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_pcie: pciegrp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0 /* PCIE RST */
++			>;
++		};
++
++		pinctrl_uart2: uart2grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
++				MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
++			>;
++		};
++
++		pinctrl_uart3: uart3grp {
++			fsl,pins = <
++				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
++				MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
++			>;
++		};
++
++		pinctrl_usbotg: usbotggrp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
++			>;
++		};
++	};
++};
+-- 
+1.9.1
 
-Regards,
-Peter Hurley
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
