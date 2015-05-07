@@ -1,50 +1,41 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v3 3/6] usb: dwc3: dwc3-st: Update the incorrect DT dwc3 example.
-Date: Thu,  7 May 2015 19:16:53 +0100
-Message-ID: <1431022613-26018-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: Gateworks GW5510 support (i.MX6)
+Date: Thu, 7 May 2015 15:18:27 -0300
+Message-ID: <CAOMZO5B6qFzp7sAtycF_BuzPfsp=PxF0+OG3ZjbHepp0AFnrpw@mail.gmail.com>
+References: <1431013080-13536-1-git-send-email-tharvey@gateworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431013080-13536-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There is a subtle typo phys-names should be phy-names. Using the
-current example means you don't have working usb (as you fail to
-obtain the phys). Also update the example to use the generic phy
-type constants which are now used for miphy28.
+On Thu, May 7, 2015 at 12:38 PM, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org> wrote:
+> Add support for the Gateworks GW5510 board featuring:
+>  * i.MX6 SoC
+>  * up to 512MB DDR3
+>  * up to 2GB NAND flash
+>  * 1x miniPCIe socket (with USB)
+>  * HDMI out (micro-HDMI)
+>  * HDMI in (micro-HDMI) (currently supported by only vendor kernel)
+>  * TTL level I/O (supported by GW16111 breakout board):
+>   * I2C
+>   * 2x UART
+>   * CAN
+>   * 2x DIO (GPIO/PWM)
+>   * USB OTG
+>
+> For more details see:
+>  http://www.gateworks.com/product/item/ventana-gw5510-single-board-computer
+>
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 
-Additionally also remove the unnecessary new line in the example.
+Looks good:
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
----
- Documentation/devicetree/bindings/usb/dwc3-st.txt | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/dwc3-st.txt b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-index f9d7025..01c71b1 100644
---- a/Documentation/devicetree/bindings/usb/dwc3-st.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-@@ -49,8 +49,7 @@ st_dwc3: dwc3@8f94000 {
- 	st,syscfg	= <&syscfg_core>;
- 	resets		= <&powerdown STIH407_USB3_POWERDOWN>,
- 			  <&softreset STIH407_MIPHY2_SOFTRESET>;
--	reset-names	= "powerdown",
--			  "softreset";
-+	reset-names	= "powerdown", "softreset";
- 	#address-cells	= <1>;
- 	#size-cells	= <1>;
- 	pinctrl-names	= "default";
-@@ -62,7 +61,7 @@ st_dwc3: dwc3@8f94000 {
- 		reg		= <0x09900000 0x100000>;
- 		interrupts	= <GIC_SPI 155 IRQ_TYPE_NONE>;
- 		dr_mode		= "host";
--		phys-names      = "usb2-phy", "usb3-phy";
--		phys            = <&usb2_picophy2>, <&phy_port2 MIPHY_TYPE_USB>;
-+		phy-names	= "usb2-phy", "usb3-phy";
-+		phys		= <&usb2_picophy2>, <&phy_port2 PHY_TYPE_USB3>;
- 	};
- };
--- 
-1.9.1
+Reviewed-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
