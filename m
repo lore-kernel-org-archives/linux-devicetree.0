@@ -1,38 +1,111 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6qdl: Add power-domain phandle to CODA device node
-Date: Thu,  7 May 2015 15:24:16 +0200
-Message-ID: <1431005056-10575-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH V7 03/10] Document: dt: binding: imx: update document for
+ imx7d support
+Date: Thu, 7 May 2015 21:30:35 +0800
+Message-ID: <20150507133033.GL3162@dragon>
+References: <1430317210-18333-1-git-send-email-Frank.Li@freescale.com>
+ <1430317210-18333-4-git-send-email-Frank.Li@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430317210-18333-4-git-send-email-Frank.Li@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Frank.Li@freescale.com
+Cc: lznuaa@gmail.com, linus.walleij@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The CODA960 VPU is part of the PU power domain. Add power-domains
-phandle so it can be associated with the PU generic pm domain for
-power gating.
+On Wed, Apr 29, 2015 at 10:20:03PM +0800, Frank.Li@freescale.com wrote:
+> From: Frank Li <Frank.Li@freescale.com>
+> 
+> This part just add necessary change to boot imx7d.
+> Update clock, pinctrl and gpt for imx7d
+> 
+> Signed-off-by: Frank Li <Frank.Li@freescale.com>
+> ---
+>  .../devicetree/bindings/clock/imx7d-clock.txt      | 13 +++++++++++
+>  .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         | 27 ++++++++++++++++++++++
+>  .../devicetree/bindings/timer/fsl,imxgpt.txt       |  3 +++
+>  3 files changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.txt b/Documentation/devicetree/bindings/clock/imx7d-clock.txt
+> new file mode 100644
+> index 0000000..3db0076
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx7d-clock.txt
+> @@ -0,0 +1,13 @@
+> +* Clock bindings for Freescale i.MX7 Dual
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx7d-ccm"
+> +- reg: Address and length of the register set
+> +- #clock-cells: Should be <1>
+> +- clocks: list of clock specifiers, must contain an entry for each required
+> +  entry in clock-names
+> +- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
+> +
+> +The clock consumer should specify the desired clock by having the clock
+> +ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx7d-clock.h
+> +for the full list of i.MX7 Dual clock IDs.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> new file mode 100644
+> index 0000000..3c9d8ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> @@ -0,0 +1,27 @@
+> +* Freescale i.MX7 Dual IOMUX Controller
+> +
+> +Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
+> +and usage.
+> +
+> +Required properties:
+> +- compatible: "fsl,imx7d-iomuxc"
+> +- fsl,pins: each entry consists of 6 integers and represents the mux and config
+> +  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+> +  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+> +  imx6sx-pinfunc.h under device tree source folder.  The last integer CONFIG is
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+s/imx6sx/imx7d
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index f74a8de..1cd17f4 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -343,6 +343,7 @@
- 				clocks = <&clks IMX6QDL_CLK_VPU_AXI>,
- 					 <&clks IMX6QDL_CLK_MMDC_CH0_AXI>;
- 				clock-names = "per", "ahb";
-+				power-domains = <&gpc 1>;
- 				resets = <&src 1>;
- 				iram = <&ocram>;
- 			};
--- 
-2.1.4
+> +  the pad setting value like pull-up on this pin.  Please refer to i.MX7 Dual
+> +  Reference Manual for detailed CONFIG settings.
+> +
+> +CONFIG bits definition:
+> +PAD_CTL_PUS_100K_DOWN           (0 << 5)
+> +PAD_CTL_PUS_5K_UP               (1 << 5)
+> +PAD_CTL_PUS_47K_UP              (2 << 5)
+> +PAD_CTL_PUS_100K_UP             (3 << 5)
+> +PAD_CTL_PUE                     (1 << 4)
+> +PAD_CTL_HYS                     (1 << 3)
+> +PAD_CTL_SRE_SLOW                (1 << 2)
+> +PAD_CTL_SRE_FAST                (0 << 2)
+> +PAD_CTL_DSE_X1                  (0 << 0)
+> +PAD_CTL_DSE_X2                  (1 << 0)
+> +PAD_CTL_DSE_X3                  (2 << 0)
+> +PAD_CTL_DSE_X4                  (3 << 0)
+> diff --git a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
+> index 9809b11..c14843b 100644
+> --- a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
+> +++ b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
+> @@ -7,6 +7,9 @@ Required properties:
+>  - interrupts : A list of 4 interrupts; one per timer channel.
+>  - clocks : The clocks provided by the SoC to drive the timer.
+>  
+> +Supported <soc>:
+> +	imx1,imx27,imx51,imx53,imx6q,imx6dl,imx6sl,imx6sx,imx7d.
+> +
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shenwei is trying to clean up gpt driver and the compatible, so I
+suggest you skip fsl,imxgpt.txt and leave it to be handled by Shenwei's
+patch series.
+
+Shawn
+
+>  Example:
+>  
+>  gpt1: timer@10003000 {
+> -- 
+> 1.9.1
+> 
