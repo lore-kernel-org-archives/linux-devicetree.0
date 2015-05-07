@@ -1,82 +1,57 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
-Date: Fri, 08 May 2015 00:10:36 +0300
-Message-ID: <554BD4CC.3020308@cogentembedded.com>
-References: <32501816.HtkLenWQpn@wasted.cogentembedded.com> <552C4554.2070608@gmail.com> <552D8898.3060905@cogentembedded.com> <55382D4E.5070708@gmail.com> <553A9123.3010906@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <553A9123.3010906@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com
-Cc: linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, Ben Hutchings <ben.hutchings@codethink.co.uk>
+From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Subject: [PATCH] devicetree: Misc fix for the AR7100 SPI controller binding
+Date: Thu,  7 May 2015 23:18:31 +0200
+Message-ID: <1431033511-30220-1-git-send-email-albeu@free.fr>
+References: <553A7F62.80108@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <553A7F62.80108-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Fix the clocks property documentation and use lower case for
+hex values in the example.
 
-On 04/24/2015 09:53 PM, Sergei Shtylyov wrote:
+Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+---
 
-[...]
+This patch can be applied as is or as a fixup to the original patch:
+"spi: spi-ath79: add binding documentation for the AR7100 SPI controller"
+or I can resend the whole patch/serie if that's preferable.
+---
+ Documentation/devicetree/bindings/spi/spi-ath79.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->>>>> +static int ravb_start_xmit(struct sk_buff *skb, struct net_device
->>>>> *ndev)
->>>>> +{
->>>>> +    struct ravb_private *priv = netdev_priv(ndev);
->>>>> +    struct ravb_tstamp_skb *ts_skb = NULL;
->>>>> +    struct ravb_tx_desc *desc;
->>>>> +    unsigned long flags;
->>>>> +    void *buffer;
->>>>> +    u32 entry;
->>>>> +    u32 tccr;
->>>>> +    int q;
->>>>> +
->>>>> +    /* If skb needs TX timestamp, it is handled in network control
->>>>> queue */
->>>>> +    q = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) ? RAVB_NC :
->>>>> RAVB_BE;
->>>>> +
->>>>> +    spin_lock_irqsave(&priv->lock, flags);
->>>>> +    if (priv->cur_tx[q] - priv->dirty_tx[q] >= priv->num_tx_ring[q]
->>>>> - 4) {
+diff --git a/Documentation/devicetree/bindings/spi/spi-ath79.txt b/Documentation/devicetree/bindings/spi/spi-ath79.txt
+index f1ad9c3..9c696fa 100644
+--- a/Documentation/devicetree/bindings/spi/spi-ath79.txt
++++ b/Documentation/devicetree/bindings/spi/spi-ath79.txt
+@@ -3,7 +3,7 @@ Binding for Qualcomm Atheros AR7xxx/AR9xxx SPI controller
+ Required properties:
+ - compatible: has to be "qca,<soc-type>-spi", "qca,ar7100-spi" as fallback.
+ - reg: Base address and size of the controllers memory area
+-- clocks: phandle to the AHB clock.
++- clocks: phandle of the AHB clock.
+ - clock-names: has to be "ahb".
+ - #address-cells: <1>, as required by generic SPI binding.
+ - #size-cells: <0>, also as required by generic SPI binding.
+@@ -12,9 +12,9 @@ Child nodes as per the generic SPI binding.
+ 
+ Example:
+ 
+-	spi@1F000000 {
++	spi@1f000000 {
+ 		compatible = "qca,ar9132-spi", "qca,ar7100-spi";
+-		reg = <0x1F000000 0x10>;
++		reg = <0x1f000000 0x10>;
+ 
+ 		clocks = <&pll 2>;
+ 		clock-names = "ahb";
+-- 
+2.0.0
 
->>>> What's so special about 4 here, you don't seem to be using 4 descriptors
-
->>>     Not sure, this was clearly copied from sh_eth.c. Perhaps it's just a
->>> threshold for calling ravb_tx_free()...
->
->> Then 1 inclusive or 0 exclusive is probably what you should be comparing
->> to, otherwise you may just stop the tx queue earlier than needed.
-
->     Will look into this...
-
-     OK, I've fixed this.
-
-[...]
-
->>>>> +    desc->ds = skb->len;
->>>>> +    desc->dptr = dma_map_single(&ndev->dev, buffer, skb->len,
->>>>> +                    DMA_TO_DEVICE);
->>>>> +    if (dma_mapping_error(&ndev->dev, desc->dptr)) {
->>>>> +        dev_kfree_skb_any(skb);
->>>>> +        priv->tx_skb[q][entry] = NULL;
-
->>>> Don't you need to make sure this NULL is properly seen by ravb_tx_free()?
-
->>>     You mean doing this before releasing the spinlock? Or what?
-
->> Yes, the locking your transmit function seems to open windows during
->> which it is possible for the interrupt handler running on another CPU to
->> mess up with the data you are using here.
-
->     Will look into that too...
-
-    I have looked into the code and I must admit I don't understand how the 
-data can be messed up with. ravb_tx_free() only advances 'priv->dirty_tx' and 
-doesn't go beyond (or change) 'priv->cur_tx' which is used here...
-
->> --
->> Florian
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
