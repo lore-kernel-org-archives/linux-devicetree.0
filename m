@@ -1,57 +1,39 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2] ARM: l2c: Add support for the "arm, shared-override"
- property
-Date: Thu, 7 May 2015 17:02:57 +0100
-Message-ID: <20150507160257.GA11067@e104818-lin.cambridge.arm.com>
-References: <1430990831-23825-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH 3/4] pinctrl: sh-pfc: Add renesas,pfc-r8a7793 to binding documentation
+Date: Thu,  7 May 2015 18:10:36 +0200
+Message-ID: <1431015037-25254-4-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1431015037-25254-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430990831-23825-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1431015037-25254-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
+To: geert@linux-m68k.org, horms@verge.net.au, linux-sh@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com
+Cc: magnus.damm@gmail.com, kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 07, 2015 at 11:27:11AM +0200, Geert Uytterhoeven wrote:
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index 0dbabe9a6b0abb91..2484aed78c86546d 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -67,6 +67,12 @@ Optional properties:
->    disable if zero.
->  - arm,prefetch-offset : Override prefetch offset value. Valid values are
->    0-7, 15, 23, and 31.
-> +- arm,shared-override : The default behavior of the pl310 cache controller with
-> +  respect to the shareable attribute is to transform "normal memory
-> +  non-cacheable transactions" into "cacheable no allocate" (for reads) or
-> +  "write through no write allocate" (for writes).
-> +  On systems where this may cause DMA buffer corruption, this property must be
-> +  specified to indicate that such transforms are precluded.
->  
->  Example:
->  
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index e309c8f35af5af61..86d0e7461e5b0b18 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -1149,6 +1149,11 @@ static void __init l2c310_of_parse(const struct device_node *np,
->  		}
->  	}
->  
-> +	if (of_property_read_bool(np, "arm,shared-override")) {
-> +		*aux_val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
-> +		*aux_mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
-> +	}
-> +
->  	prefetch = l2x0_saved_regs.prefetch_ctrl;
->  
->  	ret = of_property_read_u32(np, "arm,double-linefill", &val);
+Also renames "R-Car M2" to "R-Car M2-W" to avoid confusion.
 
-It looks fine to me.
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+index bfe72ec..6bcf851 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+@@ -16,7 +16,8 @@ Required Properties:
+     - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible pin-controller.
+     - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
+     - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible pin-controller.
+-    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2) compatible pin-controller.
++    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2-W) compatible pin-controller.
++    - "renesas,pfc-r8a7793": for R8A7793 (R-Car M2-N) compatible pin-controller.
+     - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-controller.
+ 
+   - reg: Base address and length of each memory resource used by the pin
+-- 
+2.3.5
 
-(even better if a subsequent patch adds this property to all the dts
-files containing "arm,pl310" ;))
