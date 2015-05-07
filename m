@@ -1,121 +1,100 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 03/10] mtd: nand: add NAND driver for Broadcom STB NAND controller
-Date: Thu, 07 May 2015 11:25:29 +0200
-Message-ID: <2668469.V5VmYNtzFN@wuerfel>
-References: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com> <20150506210534.GK32500@ld-irv-0074> <554A8537.8050404@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <554A8537.8050404@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] ARM: l2c: Add support for the "arm,shared-override" property
+Date: Thu,  7 May 2015 11:27:11 +0200
+Message-ID: <1430990831-23825-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 May 2015 14:18:47 Ray Jui wrote:
-> 
-> On 5/6/2015 2:05 PM, Brian Norris wrote:
-> > On Wed, May 06, 2015 at 09:17:36PM +0200, Arnd Bergmann wrote:
-> >> On Wednesday 06 May 2015 10:59:47 Brian Norris wrote:
-> >>> +
-> >>> +static inline u32 nand_readreg(struct brcmnand_controller *ctrl, u32 offs)
-> >>> +{
-> >>> +       return __raw_readl(ctrl->nand_base + offs);
-> >>> +}
-> >>> +
-> >>> +static inline void nand_writereg(struct brcmnand_controller *ctrl, u32 offs,
-> >>> +                                u32 val)
-> >>> +{
-> >>> +       __raw_writel(val, ctrl->nand_base + offs);
-> >>> +}
-> >>> +
-> >>>
-> >>
-> >> You had mentioned previously that there might be an endianess issue in this
-> >> driver.
-> > 
-> > Might. I have a patch already, but I failed to boot a BE kernel, so I
-> > kept it out for now. If you don't mind, I'd prefer patching something
-> > like this once it's testable on ARM BE. This *is*, however, extensively
-> > tested on MIPS (LE and BE) and ARM (LE).
-> 
-> Correct, extensive test and pass all MTD test cases. We should
-> eventually be able to test this on a working ARM BE platform, within the
-> next couple months.
+"CoreLink Level 2 Cache Controller L2C-310", p. 2-15, section 2.3.2
+Shareable attribute" states:
 
-I'm fine with not testing it on ARM, as long as the code is written in a
-way that is plausible to be correct and not obviously broken.
+    "The default behavior of the cache controller with respect to the
+     shareable attribute is to transform Normal Memory Non-cacheable
+     transactions into:
+        - cacheable no allocate for reads
+        - write through no write allocate for writes."
 
+Depending on the system architecture, this may cause memory corruption
+in the presence of bus mastering devices (e.g. OHCI). To avoid such
+corruption, the default behavior can be disabled by setting the Shared
+Override bit in the Auxiliary Control register.
 
-> >> I think this won't work on big-endian architectures other than MIPS,
-> >> so it would be good to either list in the DT the endianess of the device
-> >> and use appropriate accessors here, or hardcode it based on the architecture
-> >> (using ioread32_be in big-endian mips, but readl elsewhere).
-> > 
-> > I suspect we wouldn't need a DT property but could just special-case
-> > MIPS BE, as you note.
+Currently the Shared Override bit can be set only using C code:
+  - by calling l2x0_init() directly, which is deprecated,
+  - by setting/clearing the bit in the machine_desc.l2c_aux_val/mask
+    fields, but using values differing from 0/~0 is also deprecated.
 
-Ok
+Hence add support for an "arm,shared-override" device tree property for
+the l2c device node. By specifying this property, affected systems can
+indicate that non-cacheable transactions must not be transformed.
+Then, it's up to the OS to decide. The current behavior is to set the
+"shared attribute override enable" bit, as there may exist kernel linear
+mappings and cacheable aliases for the DMA buffers, even if CMA is
+enabled.
 
+See also commit 1a8e41cd672f894b ("ARM: 6395/1: VExpress: Set bit 22 in
+the PL310 (cache controller) AuxCtlr register"):
 
-There is one twist here that I forgot to mention:
+    "Clearing bit 22 in the PL310 Auxiliary Control register (shared
+     attribute override enable) has the side effect of transforming
+     Normal Shared Non-cacheable reads into Cacheable no-allocate reads.
 
-This loop in brcmnand_read_by_pio() and the respective one in
-brcmnand_write_by_pio():
+     Coherent DMA buffers in Linux always have a Cacheable alias via the
+     kernel linear mapping and the processor can speculatively load
+     cache lines into the PL310 controller. With bit 22 cleared,
+     Non-cacheable reads would unexpectedly hit such cache lines leading
+     to buffer corruption."
 
-+               if (likely(buf))
-+                       for (j = 0; j < FC_WORDS; j++, buf++)
-+                               *buf = brcmnand_read_fc(ctrl, j);
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Set the "shared attribute override enable" bit, irrespective of CMA
+    being used or not,
+  - Drop reference to "r2p0" from the binding doc, as it was not
+    correct,
+  - Extract from series "[PATCH v3 0/6] ARM: l2c / shmobile: r8a7740 :
+    Shared Override".
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt | 6 ++++++
+ arch/arm/mm/cache-l2x0.c                       | 5 +++++
+ 2 files changed, 11 insertions(+)
 
-should be converted to use ioread32_rep(). There are two reasons for
-this: 
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index 0dbabe9a6b0abb91..2484aed78c86546d 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -67,6 +67,12 @@ Optional properties:
+   disable if zero.
+ - arm,prefetch-offset : Override prefetch offset value. Valid values are
+   0-7, 15, 23, and 31.
++- arm,shared-override : The default behavior of the pl310 cache controller with
++  respect to the shareable attribute is to transform "normal memory
++  non-cacheable transactions" into "cacheable no allocate" (for reads) or
++  "write through no write allocate" (for writes).
++  On systems where this may cause DMA buffer corruption, this property must be
++  specified to indicate that such transforms are precluded.
+ 
+ Example:
+ 
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index e309c8f35af5af61..86d0e7461e5b0b18 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1149,6 +1149,11 @@ static void __init l2c310_of_parse(const struct device_node *np,
+ 		}
+ 	}
+ 
++	if (of_property_read_bool(np, "arm,shared-override")) {
++		*aux_val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
++		*aux_mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
++	}
++
+ 	prefetch = l2x0_saved_regs.prefetch_ctrl;
+ 
+ 	ret = of_property_read_u32(np, "arm,double-linefill", &val);
+-- 
+1.9.1
 
-a) accessing the flash data is inherently different from accessing an
-   mmio register, and you want the bytes to end up in memory in the same
-   order that they are in flash. ioread32_rep() uses __raw_readl()
-   internally for this purpose, except on architectures that have a
-   byte flipping hardware on the bus interface.
-
-b) The implementation is optimized on ARM and will likely give you
-   higher throughput than a manual loop using readl().
-
-> >> Using __raw_writel has another problem regarding the DMA capability of this
-> >> driver, as it will not flush any write buffers or synchronize caches before
-> >> sending data off to the device, so you risk data corruption.
-> > 
-> > We use mb() before kicking off DMA or other commands.
-
-Ok, that should work, but will be a stronger barrier than necessary on some
-architectures. On ARM, mb() is 'dsb(); outer_sync();', while readl only
-needs a 'dsb()' and writel() can use dsb(st) that is slightly weaker than
-a full dsb().
-
-> >> Also, the
-> >> compiler can choose to split up the 32-bit word access into byte accesses,
-> >> which on most hardware does not do what you want.
-> > 
-> > Huh? Wouldn't that break just about every driver in existence? And how
-> > is writel() any different than __raw_writel() in that regard? From
-> > include/asm-generic/io.h:
-> > 
-> > static inline void writel(u32 value, volatile void __iomem *addr)
-> > {
-> >         __raw_writel(__cpu_to_le32(value), addr);
-> > }
-> > 
-> > And BTW, splitting isn't possible on ARM. From
-> > arch/arm/include/asm/io.h:
-> > 
-> > static inline void __raw_writel(u32 val, volatile void __iomem *addr)
-> > {
-> >         asm volatile("str %1, %0"
-> >                      : "+Qo" (*(volatile u32 __force *)addr)
-> >                      : "r" (val));
-> > }
-> > 
-
-Ah right, we changed that one to simplify KVM support. It used to just
-do a volatile store for __raw_* but use an assembly for writel_relaxed().
-
-	Arnd
