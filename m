@@ -1,44 +1,33 @@
-From: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
-Subject: [PATCH 3/6] ARM: Zynq: DT: Enable xadc node in zynq-zc702.dts
-Date: Thu, 7 May 2015 17:32:22 -0500
-Message-ID: <1431037945-40360-3-git-send-email-xander.huff@ni.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 1/6] ARM: Zynq: DT: Disable xadc node by default in
+ zynq-7000.dtsi
+Date: Thu, 7 May 2015 15:36:35 -0700
+Message-ID: <20150507223635.GH8150@xsjsorenbubuntu>
 References: <1431037945-40360-1-git-send-email-xander.huff@ni.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431037945-40360-1-git-send-email-xander.huff-acOepvfBmUk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org, Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1431037945-40360-1-git-send-email-xander.huff@ni.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Xander Huff <xander.huff@ni.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, ben.shelton@ni.com, joshc@ni.com, michal.simek@xilinx.com, joe.hershberger@ni.com, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Now that zynq-7000 disables xadc by default, enable in zynq-zc702
-to retain existing behavior.
-
-Signed-off-by: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
----
- arch/arm/boot/dts/zynq-zc702.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index 1fc1d39..74b3b8a 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -47,6 +47,12 @@
- 		compatible = "usb-nop-xceiv";
- 		#phy-cells = <0>;
- 	};
-+
-+	amba {
-+		adc: adc@f8007100 {
-+			status = "okay";
-+		};
-+	};
- };
- 
- &can0 {
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCAyMDE1LTA1LTA3IGF0IDA1OjMyUE0gLTA1MDAsIFhhbmRlciBIdWZmIHdyb3RlOgo+
+IFRoaXMgaXMgdGhlIGRlLWZhY3RvIHByYWN0aWNlLgoKRm9yIHBlcmlwaGVyYWxzIHRoYXQgbWln
+aHQgbm90IGJlIHBpbm5lZCBvdXQgb24gYSBib2FyZC4gQnV0IHRoZSBYQURDIGlzCmFsd2F5cyBw
+cmVzZW50IGluIFp5bnEgYW5kIGNhbiBiZSB1c2VkIHRvIHJlYWQgdGhlIHRlbXBlcmF0dXJlIGlu
+IGFueQpjYXNlLgoKCVPDtnJlbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
