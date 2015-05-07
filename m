@@ -1,45 +1,63 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH 02/12] clocksource: sti: Provide support
- for the ST LPC Clocksource IP
-Date: Thu, 7 May 2015 20:13:24 +0100
-Message-ID: <20150507191324.GB16220@x1>
+Subject: Re: [STLinux Kernel] [PATCH 06/12] watchdog: bindings: Supply
+ knowledge of a third supported device - clocksource
+Date: Thu, 7 May 2015 20:19:09 +0100
+Message-ID: <20150507191909.GC16220@x1>
 References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
- <1431005924-21777-3-git-send-email-lee.jones@linaro.org>
- <20150507150440.GA13336@griffinp-ThinkPad-X1-Carbon-2nd>
+ <1431005924-21777-7-git-send-email-lee.jones@linaro.org>
+ <20150507141805.GC9793@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150507150440.GA13336@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20150507141805.GC9793@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > This IP is shared with Watchdog and RTC functionality.  Only one of
-> > these IPs can be used at the same time.  We use the device-driver
-> > model combined with a DT 'mode' property to enforce this.
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt | 15 +++=
+++++++------
+> >  1 file changed, 9 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.=
+txt b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+> > index 388c88a..0b1a784 100644
+> > --- a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+> > +++ b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+> > @@ -1,20 +1,23 @@
+> >  STMicroelectronics Low Power Controller (LPC) - Watchdog
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > =20
+> > -LPC currently supports Watchdog OR Real Time Clock functionality.
+> > +LPC currently supports Watchdog OR Real Time Clock OR Clocksource
+> > +functionality.
+> > =20
+> >  [See: ../rtc/rtc-st-lpc.txt for RTC options]
+> > +[See: ../timer/st,stih407-lpc for Clocksource options]
+> > =20
+> >  Required properties
+> > =20
+> > -- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
+> > -				  "st,stih415-lpc" "st,stid127-lpc"
+> > +- compatible 	: Must be one of: "st,stih407-lpc"
 >=20
-> Which means my previous assertion in V1 that the IP didn't exist on s=
-tih415/6
-> SoC is most likely wrong, as the watchdog driver has bindings already=
- for those
-> platforms.
->=20
-> I did try this before and couldn't get it working (driver failed on c=
-lk_get_rate)
-> on stih416-b2020.
->=20
-> Did you try and see if you can get this also working for stih415/6 So=
-Cs? It would
-> mean we can move away from arm_global_timer for all upstreamed STI pl=
-atforms.
+> The same comment as the RTC DT patch, you are removing the compatible=
+s
+> documentation for the other supported platforms like stih416-lpc.
+> AFAIK they are required in the driver to get the correct sysconfig re=
+gister.
 
-This patch-set only supports STiH4{07,10}, which is the only platform
-it's been tested on until this point.  I can investigate porting it to
-Orly/Orly2 as a subsequent piece of work if it's going to be useful
-for ST.
+That's intentional.  I haven't yet tested any of this IP on
+STiH41{5,6} & STiH127.  Due to lack of documentation, I'm not even
+sure if this IP even exists on some of the other platforms.  I will
+add them back when support is added to both driver and DTB and I've
+been able to test them.
 
 --=20
 Lee Jones
@@ -47,7 +65,7 @@ Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
-g" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
