@@ -1,37 +1,82 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH v5 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Thu, 07 May 2015 13:30:25 -0700
-Message-ID: <7ha8xgi10e.fsf@linaro.org>
-References: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
+Date: Fri, 08 May 2015 00:10:36 +0300
+Message-ID: <554BD4CC.3020308@cogentembedded.com>
+References: <32501816.HtkLenWQpn@wasted.cogentembedded.com> <552C4554.2070608@gmail.com> <552D8898.3060905@cogentembedded.com> <55382D4E.5070708@gmail.com> <553A9123.3010906@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com>
-	(Bintian Wang's message of "Thu, 7 May 2015 22:00:19 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bintian Wang <bintian.wang@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, pebolle@tiscali.nl, arnd@arndb.de, marc.zyngier@arm.com, xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.c
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <553A9123.3010906@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com
+Cc: linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, Ben Hutchings <ben.hutchings@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Bintian Wang <bintian.wang@huawei.com> writes:
+Hello.
 
-> Hi6220 is one mobile solution of Hisilicon, this patchset contains
-> initial support for Hi6220 SoC and HiKey development board, which
-> supports octal ARM Cortex A53 cores. Initial support is minimal and
-> includes just the arch configuration, clock driver, device tree
-> configuration.
+On 04/24/2015 09:53 PM, Sergei Shtylyov wrote:
+
+[...]
+
+>>>>> +static int ravb_start_xmit(struct sk_buff *skb, struct net_device
+>>>>> *ndev)
+>>>>> +{
+>>>>> +    struct ravb_private *priv = netdev_priv(ndev);
+>>>>> +    struct ravb_tstamp_skb *ts_skb = NULL;
+>>>>> +    struct ravb_tx_desc *desc;
+>>>>> +    unsigned long flags;
+>>>>> +    void *buffer;
+>>>>> +    u32 entry;
+>>>>> +    u32 tccr;
+>>>>> +    int q;
+>>>>> +
+>>>>> +    /* If skb needs TX timestamp, it is handled in network control
+>>>>> queue */
+>>>>> +    q = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) ? RAVB_NC :
+>>>>> RAVB_BE;
+>>>>> +
+>>>>> +    spin_lock_irqsave(&priv->lock, flags);
+>>>>> +    if (priv->cur_tx[q] - priv->dirty_tx[q] >= priv->num_tx_ring[q]
+>>>>> - 4) {
+
+>>>> What's so special about 4 here, you don't seem to be using 4 descriptors
+
+>>>     Not sure, this was clearly copied from sh_eth.c. Perhaps it's just a
+>>> threshold for calling ravb_tx_free()...
 >
-> PSCI is enabled in device tree and there is no problem to boot all the
-> octal cores, and the CPU hotplug is also working now, you can download
-> and compile the latest firmware based on the following link to run this
-> patch set:
-> https://github.com/96boards/documentation/wiki/UEFI 
+>> Then 1 inclusive or 0 exclusive is probably what you should be comparing
+>> to, otherwise you may just stop the tx queue earlier than needed.
 
-Do you have any tips for booting this using the HiSi bootloader?  It
-seems that I need to add the magic hisi,boardid property for dtbTool to
-work.  Could you share what that magic value is?  and maybe add it to
-the wiki someplace?
+>     Will look into this...
 
-Thanks,
+     OK, I've fixed this.
 
-Kevin
+[...]
+
+>>>>> +    desc->ds = skb->len;
+>>>>> +    desc->dptr = dma_map_single(&ndev->dev, buffer, skb->len,
+>>>>> +                    DMA_TO_DEVICE);
+>>>>> +    if (dma_mapping_error(&ndev->dev, desc->dptr)) {
+>>>>> +        dev_kfree_skb_any(skb);
+>>>>> +        priv->tx_skb[q][entry] = NULL;
+
+>>>> Don't you need to make sure this NULL is properly seen by ravb_tx_free()?
+
+>>>     You mean doing this before releasing the spinlock? Or what?
+
+>> Yes, the locking your transmit function seems to open windows during
+>> which it is possible for the interrupt handler running on another CPU to
+>> mess up with the data you are using here.
+
+>     Will look into that too...
+
+    I have looked into the code and I must admit I don't understand how the 
+data can be messed up with. ravb_tx_free() only advances 'priv->dirty_tx' and 
+doesn't go beyond (or change) 'priv->cur_tx' which is used here...
+
+>> --
+>> Florian
+
+WBR, Sergei
+
