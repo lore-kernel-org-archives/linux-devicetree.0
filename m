@@ -1,33 +1,45 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/6] ARM: Zynq: DT: Disable xadc node by default in
- zynq-7000.dtsi
-Date: Thu, 7 May 2015 15:36:35 -0700
-Message-ID: <20150507223635.GH8150@xsjsorenbubuntu>
-References: <1431037945-40360-1-git-send-email-xander.huff@ni.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1431037945-40360-1-git-send-email-xander.huff@ni.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xander Huff <xander.huff@ni.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, ben.shelton@ni.com, joshc@ni.com, michal.simek@xilinx.com, joe.hershberger@ni.com, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+From: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
+Subject: [PATCH 1/2] devicetree: xilinx-xadc: Add optional xlnx,extend-name property
+Date: Thu, 7 May 2015 17:44:03 -0500
+Message-ID: <1431038644-41600-1-git-send-email-xander.huff@ni.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org, Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE1LTA1LTA3IGF0IDA1OjMyUE0gLTA1MDAsIFhhbmRlciBIdWZmIHdyb3RlOgo+
-IFRoaXMgaXMgdGhlIGRlLWZhY3RvIHByYWN0aWNlLgoKRm9yIHBlcmlwaGVyYWxzIHRoYXQgbWln
-aHQgbm90IGJlIHBpbm5lZCBvdXQgb24gYSBib2FyZC4gQnV0IHRoZSBYQURDIGlzCmFsd2F5cyBw
-cmVzZW50IGluIFp5bnEgYW5kIGNhbiBiZSB1c2VkIHRvIHJlYWQgdGhlIHRlbXBlcmF0dXJlIGlu
-IGFueQpjYXNlLgoKCVPDtnJlbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+To better facilitate user-mode access to optional aux channels, allow
+device trees to specify a custom extended name for defined channels.
+
+Signed-off-by: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
+Reviewed-by: Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>
+Reviewed-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
+--
+Natinst-ReviewBoard-ID: 97119
+---
+ Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+index d71258e..4c5a60b 100644
+--- a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+@@ -68,6 +68,8 @@ Optional properties:
+ 			  Note each channel number should only be used at most
+ 			  once.
+ 		Optional properties:
++			* xlnx,extend-name: Custom extended name for the
++			  channel.
+ 			* xlnx,bipolar: If set the channel is used in bipolar
+ 			  mode.
+ 
+@@ -107,6 +109,7 @@ Examples:
+ 			#size-cells = <0>;
+ 			channel@0 {
+ 				reg = <0>;
++				xlnx,extend-name = "vin_v";
+ 				xlnx,bipolar;
+ 			};
+ 		};
+-- 
+1.9.1
