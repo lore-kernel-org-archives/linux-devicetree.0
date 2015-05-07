@@ -1,156 +1,167 @@
-From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] power_supply: Add support for Richtek rt9455 battery
- charger
-Date: Thu, 7 May 2015 10:22:58 +0300
-Message-ID: <20150507072258.GP10973@lpalcu-linux>
-References: <1430843530-26252-1-git-send-email-anda-maria.nicolae@intel.com>
- <20150506114003.GM10973@lpalcu-linux>
- <554A360C.7020401@intel.com>
+From: Bintian <bintian.wang@huawei.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Thu, 7 May 2015 15:24:39 +0800
+Message-ID: <554B1337.6010209@huawei.com>
+References: <1430827599-11560-6-git-send-email-bintian.wang@huawei.com>	<20150505171349.GA30215@leverpostej>	<5549877C.10408@huawei.com>	<5549B9CC.1040709@huawei.com>	<20150506093022.GB31001@leverpostej>	<5549EE97.3020801@huawei.com>	<20150506104856.GC707@leverpostej>	<CAAS=xmh=tQRJymDCAevNC_gv+aCQnJH0tPjXX2L0BBhKbhZOYg@mail.gmail.com>	<20150506154406.GB2974@leverpostej>	<CAAS=xmjf+WYeZe7jPqVK26QWsv3tPqgdiy1TNUty6qWzZcsMkA@mail.gmail.com>	<20150506162301.GD2974@leverpostej>
+ <CAAS=xmi=vA7RGwZ6AeB-re9sebD+vwWXwSb-s+fF=z-xrfykrw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <554A360C.7020401-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAAS=xmi=vA7RGwZ6AeB-re9sebD+vwWXwSb-s+fF=z-xrfykrw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, Brent Wang <wangbintian@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f@huawei>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anda,
+Hi Mark,
 
-On Wed, May 06, 2015 at 06:41:00PM +0300, Anda-Maria Nicolae wrote:
-(...)
-> >>Updates from v2 version:
-> >>- removed unused masks and keep the used ones. I have tried to access mask field
-> >>from struct regmap_field, but I have received the following compilation error:
-> >>"dereferencing pointer to incomplete type". I think this happens because I include
-> >>the file include/linux/regmap.h and in this file struct regmap_field is only declared
-> >>and not defined. Struct regmap_field is defined in drivers/base/regmap/internal.h.
-> >>If I include this file, compilation works. But I do not think it is a good idea
-> >>to include it; I did not find any other driver which includes this file. I also
-> >>could not find any driver that accesses mask field from struct regmap_field.
-> >If you want to go this path, which looks promising since you can get rid
-> >of all mask macros, you don't need regmap_field to compute your masks.
-> >You need reg_field (include/linux/regmap.h). When you setup your fields,
-> >you use:
-> >
-> >static const struct reg_field rt9455_reg_fields[] = {...};
-> >
-> >Hence, you have access to both msb and lsb of each field and you can
-> >easily compute your mask. Just an idea.
-> >
-> Because the masks are constant, I believe it is better to define
-> macros for them instead of calculating every time the driver uses
-> one of them. This is why I wanted to use mask field: to avoid
-> calculating them and to remove the macros.
-How about using a macro like the one below?
+On 2015/5/7 1:15, Brent Wang wrote:
+> Hi Mark,
+>
+> 2015-05-07 0:23 GMT+08:00, Mark Rutland <mark.rutland@arm.com>:
+>> On Wed, May 06, 2015 at 05:03:29PM +0100, Brent Wang wrote:
+>>> Hi Mark,
+>>>
+>>> 2015-05-06 23:44 GMT+08:00, Mark Rutland <mark.rutland@arm.com>:
+>>>> Hi,
+>>>>
+>>>>> How about add the following binding rule to my 2/5 patch:
+>>>>> ---------------------------
+>>>>> *Hisilicon Enhanced ARM AMBA Primecell PL011 serial UART
+>>>>>
+>>>>> Required properties:
+>>>>> - compatible: must be "hisilicon,hi6220-uart", "arm,primecell",
+>>>>> "arm,pl011"
+>>>>
+>>>> "arm,primecell" should come last.
+>>>>
+>>>>> - reg: exactly one register range with length 0x1000
+>>>>> - interrupts: exactly one interrupt specifier
+>>>>>
+>>>>> See also bindings/serial/pl011.txt
+>>>>>
+>>>>> Example:
+>>>>>
+>>>>> uart0: uart@f8015000 {
+>>>>>          compatible = "hisilicon,hi6220-uart", "arm,pl011",
+>>>>> "arm,primecell";
+>>>>>          reg = <0x0 0xf8015000 0x0 0x1000>;
+>>>>>          interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>          clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl
+>>>>> HI6220_UART0_PCLK>;
+>>>>>          clock-names = "uartclk", "apb_pclk";
+>>>>> };
+>>>>
+>>>> How about for the moment we just modify the existing pl011 binding
+>>>> document to allow for the hi6220-specific string in addition to its
+>>>> existing strings? We can always split it out later if the hi6220 UART
+>>>> binding needs to be significantly divergent.
+>>> How about adding the following rule to pl011.txt?
+>>> ----------
+>>> diff --git a/Documentation/devicetree/bindings/serial/pl011.txt
+>>> b/Documentation/devicetree/bindings/serial/pl011.txt
+>>> index ba3ecb8..1221ccb 100644
+>>> --- a/Documentation/devicetree/bindings/serial/pl011.txt
+>>> +++ b/Documentation/devicetree/bindings/serial/pl011.txt
+>>> @@ -35,6 +35,10 @@ Optional properties:
+>>>   - poll-timeout-ms:
+>>>             Poll timeout when auto-poll is set, default
+>>>             3000ms.
+>>> +- compatible: "hisilicon,hi6220-uart":
+>>> +          Hisilicon does some enhancements (e.g. larger FIFO length)
+>>> +           based on PL011, so when using these UART hosts, this
+>>> compatible
+>>> +           string should be added.
+>>
+>> Up at the top of the document there's already a description of the
+>> compatible property. Just change it into a list something like:
+>>
+>> - compatible: should contain one of the following sequences:
+>>    * "arm,pl011", "arm,primecell"
+>>    * "hisilicon,hi6220-pl011", "arm,pl011", "arm,primecell"
+> OK, I will add in next version.
+>
+>>
+>>>   See also bindings/arm/primecell.txt
+>>> ------------
+>>>>
+>>>>>> Is UART 0 different from UART1 and UART2?
+>>>>> Yes,  but my patch just includes UART0, we do some changements for
+>>>>> UART1/2
+>>>>> to improve performance.
+>>>>
+>>>> Sure, but we need to make sure we can choose a sane compatible string
+>>>> for them, that won't clash with whatever we choose for UART0.
+>>> OK, do I also need to add compatible ""hisilicon,hi6220-uart"," to UART0
+>>> node?
+>>
+>> This depends on a number of factors. Questions below.
+>>
+>>>> Are they the same IP as UART0, or fundamentally different?
+>>> The same IP.
+>>>>
+>>>> Are they also PL011 derived?
+>>> Yes, just do some enhancements to improve performance.
+>>
+>> What exactly is different between UART0 and UART{1,2}, given they are
+>> the same IP?
+> I know they are the same IP, but UART{1,2} have larger FIFO length.
+>
+>>
+>> Can UART{1,2} be used as if they are standard PL011 instances?
+> Yes
+>
+>> Is the difference internal, or do they just have different
+>> clocks/regulators/etc?
+> The different FIFO length means internal?  Sure, they have different
+> clocks/regualtors.
+>>
+>> Do they have feature control pins tied off differently?
+> UART{1,2} have reset function, we must disable the reset before using
+> them, is it the feature
+> control pins you mentioned ?
+>>
+>> Are they simply programmed differently at reset by firmware?
+> I think so.
+>
+> For hi6220 uart{1,2} , I think add one "struct vendor_data
+> vendor_hisilicon" to "amba-pl011.c" may be a good solution in the
+> future.
+>
+> I am not the uart driver developer and the Hisilicon engineer who
+> develop it may have a deep
+> discussion with you when upstreaming UART{1,2}.
+>
+> I suggest not add "hisilicon,hi6220-uart" to UART0;
+How about not adding "hisilicon,hi6220-uart" to UART0, and just add this
+compatible string for future use?  you know, the UART0 is PL011
+compatible and I checked this with chip designer.
 
-GET_MASK(fid)	(BIT(rt9455_reg_fields[fid].msb] + 1) - BIT(rt9455_reg_fields[fid].lsb))
+If there is no problem, I will send another version of this patch set
+and add this compatible string to pl011.txt as you suggested.
 
-You can just do: v & GET_MASK(F_TSDI)
+Thanks,
 
-instead of: v & RT9455_REG_IRQ1_TSDI_MASK
+Bintian
 
-It looks simple enough and uses the information that you already have when
-declaring the reg_fields. The runtime performance will not be impacted
-since the compiler will compute the value at compile time. Does that
-sound good to you?
-
-> >>For instance, drivers/pwm/pwm-sti.c at lines 157, 158, also uses masks.
-> >>
-> >>- I have also kept REG_FIELD definitions for interrupt registers, since, for instance,
-> >>I use F_BATAB to check battery presence property.
-> >>
-> >>- cached regs 0x05 and 0x06. Also, I have added rt9455_is_writeable_reg function
-> >>for writeable_reg field of regmap_config.
-> >>
-> >>- used POWER_STATUS_DISCHARGING, replaced break with and replaced it with return and
-> >>indented it correctly. I spent some time on this and I finally understood what is happening.
-> >>So, if PWR_RDY bit is set, but STAT bits value is 0, the charger may be in one
-> >>of the following cases:
-> >>1. CHG_EN bit is 0.
-> >>2. CHG_EN bit is 1 but the battery is not connected.
-> >>In any of these cases, POWER_SUPPLY_STATUS_NOT_CHARGING is returned.
-> >>If the PWR_RDY bit is cleared, POWER_SUPPLY_STATUS_DISCHARGING is returned.
-> >>
-> >>- used VOREG bits value instead of VMREG in functions rt9455_charger_get_voltage_max()/
-> >>rt9455_charger_set_voltage_max(). Although RT9455 charger has VMREG bits which,
-> >>according to the datasheet, represent "Maximum battery regulation voltage", the
-> >>charger never uses VMREG value as maximum threshold for battery voltage. This
-> >>happens because TE and TE_SHDN_EN bits are set during rt9455_probe(), and charging
-> >>operation is terminated when charging current is less than ICHRG x IEOC. When charging
-> >>operation is terminated, battery voltage is almost equal to VOREG. Therefore,
-> >>VMREG value is not taken into account. This is the reason why VOREG value is
-> >>set/returned in these functions.
-> >Something's not right... What happens in the following scenario:
-> >VMREG=4.2V (default value) and user sets VOREG=4.45V? Did you test this
-> >case. I really doubt VMREG field is not used at all. Of course, you can set
-> >VMREG to maximum value in which case VMREG doesn't really matter.
-> 
-> I have set VMREG to its maximum value in rt9455_hw_init() function.
-> Please take a look at my last patch.
-Yes, I saw that.
-
-> Yes, I have tested this case with a battery whose voltage is 3.97V,
-> VOREG = 4.45V and VMREG = 4.2V. The charger drains current from the
-> power source. If I set VOREG to 4V, from 4.45V, Charge done
-> interrupt is triggered and no current is drained from the power
-> source. If I increase VMREG to 4.45V, and keep VOREG to 4V, no input
-> current is drained from the power source, but if I increase VOREG to
-> 4.2V, the charger drains current from the power source. This is why
-> I have decided to use VOREG instead of VMREG.
-OK, the behavior you're describing looks as expected. But VMREG and
-VOREG is about voltages, not currents. Did you measure the output
-voltage when VOREG=4.45V and VMREG=4.2? What is it? I suspect it will be
-4.2V.
-
-So, my point is, I'm pretty sure VMREG is not ignored if one chooses to
-use it.
-
-(...)
-> >>+
-> >>+static int rt9455_charger_set_voltage(struct rt9455_info *info,
-> >>+				      const union power_supply_propval *val)
-> >>+{
-> >>+	return rt9455_set_field_val(info, F_VOREG,
-> >>+				    rt9455_voreg_values,
-> >>+				    ARRAY_SIZE(rt9455_voreg_values),
-> >>+				    val->intval);
-> >>+}
-> >>+
-> >>+static int rt9455_charger_set_voltage_max(struct rt9455_info *info,
-> >>+					  const union power_supply_propval *val)
-> >>+{
-> >>+	/*
-> >>+	 * Although RT9455 charger has VMREG bits which, according to the
-> >>+	 * datasheet, represent "Maximum battery regulation voltage", the
-> >>+	 * charger never uses VMREG value as maximum threshold for battery
-> >>+	 * voltage. This happens because TE and TE_SHDN_EN bits are set during
-> >>+	 * rt9455_probe(), and charging operation is terminated when charging
-> >>+	 * current is less than ICHRG x IEOC. When charging operation is
-> >>+	 * terminated, battery voltage is almost equal to VOREG. Therefore,
-> >>+	 * VMREG value is not taken into account. This is the reason why VOREG
-> >>+	 * value is set in this function.
-> >>+	 */
-> >>+	return rt9455_set_field_val(info, F_VOREG,
-> >>+				    rt9455_voreg_values,
-> >>+				    ARRAY_SIZE(rt9455_voreg_values),
-> >>+				    val->intval);
-> >>+}
-> >Apparently, rt9455_charger_set_voltage_max() and
-> >rt9455_charger_set_voltage() do the same thing?
-> 
-> Yes, they do the same thing. If I increase VMREG instead of VOREG,
-> the charger does not drain current if the battery voltage is almost
-> equal to VOREG and I think the user wants the contrary.
-I'm sorry but your explanation has nothing to do with the fact that you
-are duplicating code here... You could've had one function, instead of
-2. Never mind though, it looks like you decided not to have these
-properties writable and these functions will probably be gone
-altogether.
-
-laurentiu 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Must go to bed, it's very late here :(
+>
+> Thanks,
+>
+> Bintian
+>>
+>> Thanks,
+>> Mark.
+>>
+>
+>
