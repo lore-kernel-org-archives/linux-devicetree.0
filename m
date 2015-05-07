@@ -1,76 +1,53 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V1 5/6] watchdog: da9062: DA9062 watchdog driver
-Date: Thu, 7 May 2015 19:02:29 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B223DE8@SW-EX-MBX02.diasemi.com>
-References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
- <2afd9f55c71553186e99bfe386312f0c7d7501ed.1429280614.git.stwiss.opensource@diasemi.com>
- <55327DDA.4080003@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B21924A@SW-EX-MBX02.diasemi.com>
- <20150506160227.GA28101@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B21925B@SW-EX-MBX02.diasemi.com>
- <20150506200631.GA25846@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B221DD2@SW-EX-MBX02.diasemi.com>
- <20150507175747.GB30372@roeck-us.net>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 02/12] clocksource: sti: Provide support
+ for the ST LPC Clocksource IP
+Date: Thu, 7 May 2015 20:13:24 +0100
+Message-ID: <20150507191324.GB16220@x1>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+ <1431005924-21777-3-git-send-email-lee.jones@linaro.org>
+ <20150507150440.GA13336@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150507175747.GB30372@roeck-us.net>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150507150440.GA13336@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07 May 2015 18:58 Guenter Roeck wrote:
+> > This IP is shared with Watchdog and RTC functionality.  Only one of
+> > these IPs can be used at the same time.  We use the device-driver
+> > model combined with a DT 'mode' property to enforce this.
+>=20
+> Which means my previous assertion in V1 that the IP didn't exist on s=
+tih415/6
+> SoC is most likely wrong, as the watchdog driver has bindings already=
+ for those
+> platforms.
+>=20
+> I did try this before and couldn't get it working (driver failed on c=
+lk_get_rate)
+> on stih416-b2020.
+>=20
+> Did you try and see if you can get this also working for stih415/6 So=
+Cs? It would
+> mean we can move away from arm_global_timer for all upstreamed STI pl=
+atforms.
 
-Hi Guenter,
+This patch-set only supports STiH4{07,10}, which is the only platform
+it's been tested on until this point.  I can investigate porting it to
+Orly/Orly2 as a subsequent piece of work if it's going to be useful
+for ST.
 
-> > +static void da9062_apply_window_protection(struct da9062_watchdog *wdt)
-> > +{
-> > +       unsigned long delay = msecs_to_jiffies(DA9062_RESET_PROTECTION_MS);
-> > +       unsigned long timeout = wdt->j_time_stamp + delay;
-> > +       unsigned long now = jiffies;
-> > +       unsigned int diff_ms;
-> > +
-> > +       /* if time-limit has not elapsed then wait for remainder */
-> > +       if (time_before(now, timeout)) {
-> > +               diff_ms = jiffies_to_msecs(timeout-now);
-> > +               dev_dbg(wdt->hw->dev,
-> > +                       "Delaying watchdog ping by %u msecs\n", diff_ms);
->
-> I would not bother about the dev_dbg, but that is your call.
-> 
-
-.. easily removed ... I only have it in because I am worried about the case when the
-watchdog gets kicked too often & quickly. If it is okay, I will leave that in because the
-edge-case should be made known somewhere. Perhaps I will make it a better
-debug description like "Watchdog kicked too quickly. Delaying %d ms"
-
-> > +               mdelay(diff_ms);
->
-> Can you use usleep_range() ?
-> 
-
-I put mdelay() ?? I meant to put msleep(). That's probably what I need to do now.
-
-I did take a look at usleep_range() as I trawled for the best delay call, but usleep_range()
-requires a lower and upper bound and I only have a lower bound in my case -- also, the
-kernel docs "Documentation/timers/timers-howto.txt" suggest:
-
-	SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):
-		* Use usleep_range
-	SLEEPING FOR LARGER MSECS ( 10ms+ )
-		* Use msleep [...]
-
-I guess the majority of the time there would be zero delay-time and the code branch
-wouldn't be triggered anyway, but when it is triggered the time can be anything up to
-300 msecs. So I was intending to use msleep().
-
-> Othewise looks good. BTW, I had to do something similar in
-> drivers/hwmon/pmbus/zl6100.c; this is where the idea comes from.
-
-Ah, I see, thanks.
-
-Regards,
-Steve
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
