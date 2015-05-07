@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 06/12] watchdog: bindings: Supply knowledge of a third supported device - clocksource
-Date: Thu,  7 May 2015 14:38:38 +0100
-Message-ID: <1431005924-21777-7-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH 05/12] watchdog: st_wdt: Update IP layout information to include Clocksource
+Date: Thu,  7 May 2015 14:38:37 +0100
+Message-ID: <1431005924-21777-6-git-send-email-lee.jones@linaro.org>
 References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1431005924-21777-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,44 +10,28 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ke
 Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Initial submission adding support for this IP only included Watchdog and
+the Real-Time Clock.  Now the third (and final) device is enabled this
+trivial patch is required to update the comment in the Watchdog driver
+to encompass Clocksource.
+
 Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/watchdog/st_lpc_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
-index 388c88a..0b1a784 100644
---- a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
-@@ -1,20 +1,23 @@
- STMicroelectronics Low Power Controller (LPC) - Watchdog
- ========================================================
+diff --git a/drivers/watchdog/st_lpc_wdt.c b/drivers/watchdog/st_lpc_wdt.c
+index f32be15..6785afd 100644
+--- a/drivers/watchdog/st_lpc_wdt.c
++++ b/drivers/watchdog/st_lpc_wdt.c
+@@ -197,7 +197,7 @@ static int st_wdog_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
  
--LPC currently supports Watchdog OR Real Time Clock functionality.
-+LPC currently supports Watchdog OR Real Time Clock OR Clocksource
-+functionality.
- 
- [See: ../rtc/rtc-st-lpc.txt for RTC options]
-+[See: ../timer/st,stih407-lpc for Clocksource options]
- 
- Required properties
- 
--- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
--				  "st,stih415-lpc" "st,stid127-lpc"
-+- compatible 	: Must be one of: "st,stih407-lpc"
- - reg		: LPC registers base address + size
- - interrupts    : LPC interrupt line number and associated flags
- - clocks	: Clock used by LPC device (See: ../clock/clock-bindings.txt)
--- st,lpc-mode	: The LPC can run either one of two modes ST_LPC_MODE_RTC [0] or
--		  ST_LPC_MODE_WDT [1].  One (and only one) mode must be
--		  selected.
-+- st,lpc-mode	: The LPC can run either one of three modes:
-+                  ST_LPC_MODE_RTC    [0]
-+                  ST_LPC_MODE_WDT    [1]
-+                  ST_LPC_MODE_CLKSRC [2]
-+		 One (and only one) mode must be selected.
- 
- Required properties [watchdog mode]
+-	/* LPC can either run in RTC or WDT mode */
++	/* LPC can either run as a Clocksource or in RTC or WDT mode */
+ 	if (mode != ST_LPC_MODE_WDT)
+ 		return -ENODEV;
  
 -- 
 1.9.1
