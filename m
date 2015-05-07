@@ -1,70 +1,58 @@
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH v4 0/5] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Thu, 07 May 2015 06:44:51 -0400
-Message-ID: <554B4223.7080507@linaro.org>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>	<20150507090210.GB22115@arm.com>
- <CAD6h2NRbzdX8a+D8UUNkmaMpf1uw2nfriCHwY7L20j=VM7NOFQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Thu, 7 May 2015 12:02:33 +0100
+Message-ID: <20150507110233.GR15510@sirena.org.uk>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+ <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+ <20150504121209.GM15510@sirena.org.uk>
+ <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+ <20150505105714.GA22845@sirena.org.uk>
+ <CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
+ <20150505171252.GI22845@sirena.org.uk>
+ <CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
+ <20150507055231.GB32399@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD6h2NRbzdX8a+D8UUNkmaMpf1uw2nfriCHwY7L20j=VM7NOFQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, "tyler.baker@linaro.org" <tyler.baker@linaro.org>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, heyunlei
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="licyFknwe5IHJaJi"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150507055231.GB32399@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2015 05:33 AM, Haojian Zhuang wrote:
-> On 7 May 2015 at 17:02, Will Deacon <will.deacon@arm.com> wrote:
->> Hi Bintian,
->>
->> On Tue, May 05, 2015 at 01:06:34PM +0100, Bintian Wang wrote:
->>> Hi6220 is one mobile solution of Hisilicon, this patchset contains
->>> initial support for Hi6220 SoC and HiKey development board, which
->>> supports octal ARM Cortex A53 cores. Initial support is minimal and
->>> includes just the arch configuration, clock driver, device tree
->>> configuration.
->>>
->>> PSCI is enabled in device tree and there is no problem to boot all the
->>> octal cores, and the CPU hotplug is also working now, you can download
->>> and compile the latest firmware based on the following link to run this
->>> patch set:
->>> https://github.com/96boards/documentation/wiki/UEFI
->>>
->>> Changes v4:
->>> * Rebase to kernel 4.1-rc1
->>> * Delete "arm,cortex-a15-gic" from the gic node in dts
->> I gave these patches a go on top of -rc2 using the ATF and UEFI you link to
->> above.
->>
->> The good news is that the thing booted and all the cores entered at EL2.
->> Thanks!
->>
->> The bad news is that running hackbench quickly got the *heatsink*
->> temperature to 73 degress C and rising (measured with an infrared
->> thermometer).
-> Because you're just testing with minimum patch set. If you can choose
-> our release
-> on v3.10 & v3.18, you can observe lower temperature. Because we have thermal
-> framework and cpufreq driver. We're also upstreaming the thermal driver, but
-> it's not merged yet.
 
-the thermal driver is now on v4 (see below)
-https://lkml.org/lkml/2015/4/24/1
+--licyFknwe5IHJaJi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
->> So my question is, does this SoC have an automatic thermal cut out?
-> It's a low cost board. This feature is implemente by software. So we
-> need thermal
-> driver and cpufreq driver.
->
-> Regards
-> Haojian
+On Wed, May 06, 2015 at 10:52:31PM -0700, Stephen Boyd wrote:
+
+> If you look at the cpufreq/clock/pmic code on our codeaurora.org
+> tree you'll see that it's used to pass a value with uA units
+> through the regulator_set_optimum_mode() API. The call to
+> regulator_set_optimum_mode() is here[1], and the place where we
+> parse the OPP table from DT is here[2]. My understanding is that
+
+I'm not looking for anyone to explain this to me in e-mail, what I'm
+looking for is for the binding document to be clear so someone can tell
+what the binding means by reading the documentation for the binding.
+
+--licyFknwe5IHJaJi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVS0ZGAAoJECTWi3JdVIfQe3cH/3O1Wd+4JIBVbJWoc/3q/yiw
+uEj28NlVWpcMHsyxL0XceY+MhqWlwBuWJquqBbZH0A9z7aDDLCbwbEpYmJ8QUkOm
+BkfYFrkzkGq0IjLTwc/Ne/u8iBHw4ygkTi8povYd6+qwyFRJ2HWTGMXPd/HjyZTe
+c+fHgpdDAo9uXAZvc32vE8xzphnX7GuhrHO9LfqZSwH9jdBudNJ6KIwm7Xgj9YVa
+qmsxrqbp7EpiZRgYdhPUrAjOYq4EHf1WZPeq/qAjLWp0DsBQ5tKTDAIz6ps3IL6u
+4dQipQayQyWPdy3wXdf052biMWh2t5XEVO/qEeS9O8LrLXe/vO78DcTGUhK5a0g=
+=392P
+-----END PGP SIGNATURE-----
+
+--licyFknwe5IHJaJi--
