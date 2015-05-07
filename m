@@ -1,57 +1,49 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v4 0/5] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Thu, 7 May 2015 13:57:53 +0100
-Message-ID: <20150507125752.GE22115@arm.com>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
- <20150507090210.GB22115@arm.com> <554B305F.4080907@huawei.com>
- <20150507112536.GD22115@arm.com> <554B542B.6040006@huawei.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] reset driver for NXP LPC18xx family
+Date: Thu, 07 May 2015 15:01:05 +0200
+Message-ID: <1431003665.3014.36.camel@pengutronix.de>
+References: <1430863827-21898-1-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <554B542B.6040006@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bintian <bintian.wang@huawei.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, "tyler.baker@linaro.org" <tyler.baker@linaro.org>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "khilman@kernel.org" <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.co>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430863827-21898-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 07, 2015 at 01:01:47PM +0100, Bintian wrote:
-> On 2015/5/7 19:25, Will Deacon wrote:
-> > On Thu, May 07, 2015 at 10:29:03AM +0100, Bintian wrote:
-> >> Hikey is a low cost board, I think it doesn't have an automatic thermal
-> >> cut out; I always use HiKey to test my patch, in the normal case,
-> >> temperature is not a problem.
-> >
-> > I don't see why the cost has anything to do with this issue; any money I
-> > save on the board will quickly be re-invested in my increased insurance
-> > premium.
-> >
-> > All I think we need is for secure software to keep an eye on the temperature
-> > and hit the power controller if it goes over some `fatal' threshold.
-> > Ideally, you'd be able to use a secure interrupt for this, but I suspect
-> > that you don't have the right hardware features for that (please correct me
-> > if I'm wrong). An alternative would be to hang something off a secure timer
-> > and get the firmware to check the board temperature on some low-frequency
-> > periodic tick.
-> If there is exception occurred on A core, there are two methods to
-> handle it:
-> (1) Delay for a period of time, watchdog will trigger the system reset.
-> (2) If the temperature is over 105 degree, the CPU will trigger reset(I
-> guess it's chip level).
+Am Mittwoch, den 06.05.2015, 00:10 +0200 schrieb Joachim Eastwood:
+> This patch set adds a reset driver for NXP LPC18xx/43xx devices.
+> 
+> Changes in v3:
+> * add patch descriptions
+> * change parameter name in to_rgu_data macro to avoid a potential
+>   issue if code is changed.
+> 
+> Changes in v2:
+> * clean up header includes
+> * prefix M0 reset defines with LPC43XX
+> * fix comment about M0 reset lines
+> * reorganize reset call chains
+> * add reset number table to dt doc
+> 
+> There are no dependencies in this patch set. The DTS changes will
+> be sent separately to arm-soc once this patch set goes upstream.
+> 
+> Base support for the NXP LPC18xx family can be found here:
+> http://marc.info/?l=linux-arm-kernel&m=143016894704253&w=2
+> 
+> Joachim Eastwood (2):
+>   reset: add driver for lpc18xx rgu
+>   doc: dt: add documentation for lpc1850-rgu reset driver
 
-Aha, so now you're saying that there *is* a hardware shut-off at 105
-degrees, regardless of what the kernel is doing? If that's the case, then
-we're fine and the current patches make sense in isolation.
+Applied both, thanks.
 
-Cheers,
+regards
+Philipp
 
-Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
