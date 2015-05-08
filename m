@@ -1,39 +1,64 @@
-From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] MIPS: BMIPS: dts: remove unsupported entry for bcm7362
-Date: Fri,  8 May 2015 21:59:17 +0900
-Message-ID: <1431089958-2626-2-git-send-email-jaedon.shin@gmail.com>
-References: <1431089958-2626-1-git-send-email-jaedon.shin@gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Overlays and aliases
+Date: Fri, 8 May 2015 15:20:24 +0200
+Message-ID: <CAMuHMdVK0oLR2UPh-A=-mNayX5HwHoiUrvrKkgmW9=7yZOEJSQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431089958-2626-1-git-send-email-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove unsupported memory entry for the bcm7362 platform. The BMIPS4380
-processor only supports ZONE_NORMAL is not available for HIGHMEM.
+Kalimera Pantelis,
 
-Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/mips/boot/dts/brcm/bcm97362svmb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm trying to use an overlay to enable an additional serial port on an
+expansion port. The serial driver relies on of_alias_get_id() to find the
+serial index, so I have to update /aliases.
 
-diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-index b7b88e5dc9e7..ab8b01fa7dcf 100644
---- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-@@ -8,7 +8,7 @@
- 
- 	memory@0 {
- 		device_type = "memory";
--		reg = <0x00000000 0x10000000>, <0x20000000 0x30000000>;
-+		reg = <0x00000000 0x10000000>;
- 	};
- 
- 	chosen {
--- 
-2.4.0
+My first naive try:
 
+        fragment@0 {
+                target-path = "/aliases";
+
+                __overlay__ {
+                        serial3 = <&scif3>;
+                };
+        };
+
+didn't work, as now /aliases/serial3 is a phandle, not a string.
+
+Next try:
+
+                        serial3 = &scif3;
+
+That one isn't liked by dtc:
+
+    ERROR (path_references): Reference to non-existent node or label "scif3"
+
+Am I correct in assuming that fixup_path_references() needs updating to
+support this, cfr. fixup_phandle_references()?
+
+Finally, let's hardcode the path:
+
+                        serial3 = "/serial@e6ea8000";
+
+Now /sys/firmware/devicetree/base/aliases/serial3 is correct, but it
+still doesn't
+work, as the list of aliases is created only once (by of_alias_scan_aliases()),
+after unpacking the device tree. I guess of_alias_add() should be called when
+adding a property to /aliases.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
