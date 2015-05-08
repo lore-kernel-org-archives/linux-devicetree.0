@@ -1,122 +1,47 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v4 04/10] eeprom: Add a simple EEPROM framework for
- eeprom consumers
-Date: Fri, 8 May 2015 07:23:18 +0200
-Message-ID: <20150508052318.GZ6325@pengutronix.de>
-References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1427752670-17219-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150407184533.GA10278@codeaurora.org>
- <55243982.7020907@linaro.org>
- <20150409144522.GB9663@codeaurora.org>
- <5548AD98.50801@linaro.org>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Fri, 8 May 2015 12:17:44 +0530
+Message-ID: <CAKohpomU8wm0T=A7EkosdOjXbP8q2Cb726Hsjh08KTKYjoz3-A@mail.gmail.com>
+References: <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+	<20150504121209.GM15510@sirena.org.uk>
+	<CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+	<20150505105714.GA22845@sirena.org.uk>
+	<CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
+	<20150505171252.GI22845@sirena.org.uk>
+	<CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
+	<20150507055231.GB32399@codeaurora.org>
+	<20150507110233.GR15510@sirena.org.uk>
+	<20150507211855.GA2455@codeaurora.org>
+	<20150507221842.GW22845@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5548AD98.50801@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150507221842.GW22845-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 05, 2015 at 12:46:32PM +0100, Srinivas Kandagatla wrote:
-> Hi Stephen,
-> 
-> Sorry I took so long to reply.
-> 
-> 
-> On 09/04/15 15:45, Stephen Boyd wrote:
-> >On 04/07, Srinivas Kandagatla wrote:
-> >>On 07/04/15 19:45, Stephen Boyd wrote:
-> >>>On 03/30, Srinivas Kandagatla wrote:
-> >>>
-> >>>Do you have an overview of how to use these APIs? Maybe some
-> >>>Documentation/ is in order? I'm mostly interested in how the
-> >>>blocks array is supposed to work and how this hooks up to drivers
-> >>>that are using DT.
-> >>
-> >>Only doc ATM is function level kernel doc in c file.
-> >>May be I can explain you for now and I will try to add some
-> >>documentation with some usage examples in next version.
-> >
-> >Thanks.
-> >
-> >>
-> >>eeprom block array is just another way intended to get hold of
-> >>eeprom content for non-DT providers/consumers, but DT
-> >>consumers/providers can also use it. As of today SOC/mach level code
-> >>could use it as well.
-> >>
-> >>In eeprom_cell_get() case the lookup of provider is done based on
-> >>provider name, this provider name is generally supplied by all the
-> >>providers (both DT/non DT).
-> >>
-> >>for example in qfprom case,
-> >>provider is registered from DT with eeprom config containing a unique name:
-> >>static struct eeprom_config econfig = {
-> >>	.name = "qfprom",
-> >>	.id = 0,
-> >>};
-> >>
-> >>In the consumer case, the tsens driver could do some like in non DT way:
-> >>
-> >>	struct eeprom_block blocks[4] ={
-> >>		{
-> >>		.offset = 0x404,
-> >>		.count = 0x4,
-> >>		},
-> >>		{
-> >>		.offset = 0x408,
-> >>		.count = 0x4,
-> >>		},
-> >>		{
-> >>		.offset = 0x40c,
-> >>		.count = 0x4,
-> >>		},
-> >>		{
-> >>		.offset = 0x410,
-> >>		.count = 0x4,
-> >>		},
-> >>	};
-> >>	calib_cell = eeprom_cell_get("qfprom0", blocks, 4);
-> >>
-> >>
-> >>Or in DT way
-> >>calib_cell  = of_eeprom_cell_get(np, "calib");
-> >>
-> >
-> >Ok. I guess I was hoping for a more device centric approach like
-> >we have for clks/regulators/etc. That way a driver doesn't need
-> >to know it's using DT or not to figure out which API to call.
-> 
-> That would be the best. Its easy to wrap up whats in eeprom core to
-> eeprom_get_cell(dev, "cell-name") for both DT and non-dt cases, if I
-> remove the nasty global name space thing.
-> 
-> Only thing which is limiting it is the existing bindings which are
-> just phandle based. For eeprom to be more of device centric we need
-> more
-> generic bindings/property names like
-> 
-> nvrom-cell = <&abc>, <&edf>
-> nvrom-cell-names = "cell1", "cell2";
-> 
-> Also we can have name associated to each eeprom cell which would
-> help for non-dt cases. So they can just lookup by the cell name.
-> 
-> 
-> Sacha, Are you ok with such binding?  As this can provide a single
-> interface for dt and non-dt. I remember you requested for changing
-> from generic properties to specific property names.
+On 8 May 2015 at 03:48, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Yes, I am fine with such a binding. The same type of binding is used for
-clocks and other stuff already, so it has proven good and people are
-famliar with it.
+> That makes sense to me.  Perhaps "current drawn by the device" rather
+> than "current load of the device" since current is sadly overloaded :/
 
-Sascha
+Thanks Mark. I have reworded it as:
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+- opp-microamp: Current drawn by the device in micro Amperes. It is used to set
+  the most efficient regulator operating mode.
+
+  Should only be set if opp-microvolt is set for the OPP.
+
+  Entries for multiple regulators must be present in the same order as
+  regulators are specified in device's DT node. If this property isn't required
+  for few regulators, then this should be marked as zero for them. If it isn't
+  required for any regulator, then this property need not be present.
+
+
+Please let me know if this looks fine now.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
