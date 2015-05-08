@@ -1,63 +1,148 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] MIPS: BMIPS: dts: remove unsupported entry for bcm7362
-Date: Fri, 8 May 2015 09:40:03 -0700
-Message-ID: <CAJiQ=7Ajkae60eKfzr=mjPDov=bzoq7jBVDdQhGO37G8GGKK3w@mail.gmail.com>
-References: <1431089958-2626-1-git-send-email-jaedon.shin@gmail.com>
- <1431089958-2626-2-git-send-email-jaedon.shin@gmail.com> <CAJiQ=7CQshXhGJ7ftWQSu_UxgKVaRprZPEPXWNP6ci_1bLrJrw@mail.gmail.com>
- <10776752.kPn2ooXz5Z@wuerfel>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v11 19/19] h8300: devicetree source
+Date: Fri, 8 May 2015 17:50:00 +0100
+Message-ID: <20150508165000.GB11680@leverpostej>
+References: <1431097479-21101-1-git-send-email-ysato@users.sourceforge.jp>
+ <1431097479-21101-20-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10776752.kPn2ooXz5Z@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1431097479-21101-20-git-send-email-ysato@users.sourceforge.jp>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 8, 2015 at 8:32 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 08 May 2015 07:40:44 Kevin Cernekee wrote:
->> On Fri, May 8, 2015 at 5:59 AM, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > Remove unsupported memory entry for the bcm7362 platform. The BMIPS4380
->> > processor only supports ZONE_NORMAL is not available for HIGHMEM.
->> >
->> > Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > ---
->> >  arch/mips/boot/dts/brcm/bcm97362svmb.dts | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
->> > index b7b88e5dc9e7..ab8b01fa7dcf 100644
->> > --- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
->> > +++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
->> > @@ -8,7 +8,7 @@
->> >
->> >         memory@0 {
->> >                 device_type = "memory";
->> > -               reg = <0x00000000 0x10000000>, <0x20000000 0x30000000>;
->> > +               reg = <0x00000000 0x10000000>;
->>
->> Hmm, this is more of a kernel limitation than a hardware limitation,
->> though.  The board physically has 1GB of memory, right?  It is best if
->> the DT entry reflects the actual hardware configuration.
->>
->> The Broadcom kernels enable the CPU's special "XKS01" feature to put
->> 1GB of memory in ZONE_NORMAL:
->>
->> https://github.com/Broadcom/stblinux-3.3/tree/master/linux
->>
->
-> What exactly is the kernel limitation here?
+Hi,
 
-If we can't enable HIGHMEM, e.g. because the MIPS CPU has D$ aliases,
-then Linux is supposed to ignore any RAM above the highmem/lowmem
-boundary.
+> +++ b/Documentation/devicetree/bindings/h8300/cpu.txt
+> @@ -0,0 +1,17 @@
+> +* H8/300 CPU bindings
+> +
+> +Required properties:
+> +
+> +- compatible: Compatible property value should be "renesas,h8300".
+> +- reg: Contains CPU index.
 
-There is code in paging_init() that tries to do this.  Several years
-ago it used to work, but the last time I tried it (~Oct 2014) it was
-broken due to some other changes in MIPS early memory init, so Linux
-hangs on boot unless you take the excess RAM out of DT.  Jaedon may be
-running into the same issue.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What does the "CPU index" correspond to physically on the CPU?
+
+Can h8300 support SMP?
+
+> +- clock-frequency: Contains the clock frequency for CPU, in Hz.
+
+Is this strictly necessary?
+
+> +- renesas,bus-width: Contain the memory bus width.
+
+What's this needed for?
+
+[...]
+
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,h8300h-intc.txt
+> @@ -0,0 +1,20 @@
+> +* H8/300H Interrupt controller
+> +
+> +Required properties:
+> +
+> +- compatible: has to be "renesas,h8300h-intc", "renesas,h8300-intc" as fallback.
+> +- #interrupt-cells: has to be <1>: an interrupt index and flags, as defined in
+> +  interrupts.txt in this directory
+
+Surely you need two cells to encode index and flags?
+
+> +
+> +Optional properties:
+> +
+> +- any properties, listed in interrupts.txt, and any standard resource allocation
+> +  properties
+> +
+> +Example:
+> +
+> +	h8intc: intc@0 {
+
+Nit: call this "interrupt-controller" rather than "ntc".
+
+Without a reg you shouldn't have a unit-address (the '@0' part).
+
+How does the CPU communicate with this controller? I assume it's not
+MMIO.
+
+These comments also apply to "renesas,h8s-intc".
+
+> diff --git a/arch/h8300/boot/dts/edosk2674.dts b/arch/h8300/boot/dts/edosk2674.dts
+> new file mode 100644
+> index 0000000..60e73b9
+> --- /dev/null
+> +++ b/arch/h8300/boot/dts/edosk2674.dts
+> @@ -0,0 +1,109 @@
+> +#include <dt-bindings/clock/renesas,8bit-timer.h>
+> +
+> +/dts-v1/;
+> +/ {
+> +	compatible = "renesas,edosk2674";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	interrupt-parent = <&h8intc>;
+> +
+> +	chosen {
+> +		bootargs = "console=ttySC2,38400";
+> +	};
+
+It would be great if you could use stdout-path from the start rather
+than passing console= in bootargs. That makes things far less fragile
+w.r.t. physical vs logical naming, and keeps console and earlycon in
+sync.
+
+It also means that a user can replace bootargs and still expect the
+console to work by default (unless overridden explicitly).
+
+> +	aliases {
+> +		serial0 = &sci0;
+> +		serial1 = &sci1;
+> +		serial2 = &sci2;
+> +	};
+> +
+> +	clocks {
+> +		ranges;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+
+Please get rid of the clocks container node and place the clocks
+directly under the root node. There's nothing magic about a /clocks
+node, and it's not been listed as a bus of any sort.
+
+> +		pllclk: pllclk {
+> +			compatible = "renesas,h8s2678-pll-clock";
+> +			clocks = <&xclk>;
+> +			#clock-cells = <0>;
+> +			reg = <0xfee03b 2>, <0xfee045 2>;
+> +		};
+> +		cclk: cclk {
+> +			compatible = "renesas,h8300-div-clock";
+> +			clocks = <&pllclk>;
+> +			#clock-cells = <0>;
+> +			reg = <0xfee03b 2>;
+> +			renesas,width = <3>;
+> +		};
+
+Are there existing bindings for these? I didn't see any as part of the
+portion of the series I was Cc'd for.
+
+> +	memory@0 {
+
+Nit: the unit-address should math the address in the reg entry (here it
+should be 400000 rather than 0).
+
+[...]
+
+> +	chosen {
+> +		bootargs = "earlyprintk=h8300-sim console=ttySC0";
+> +	};
+
+If you implement earlycon you'd only need a single stdout-path entry
+here, which would make this much nicer.
+
+Thanks,
+Mark.
