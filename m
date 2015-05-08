@@ -1,112 +1,87 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock
- support
-Date: Fri, 8 May 2015 08:22:46 +0100
-Message-ID: <20150508072246.GH16220@x1>
-References: <20150408103832.GG5162@x1>
- <20150408155705.GF26727@lukather>
- <20150408172344.GH5162@x1>
- <20150422093446.GA28007@lukather>
- <20150429141751.GR9169@x1>
- <20150429202332.GG6062@lukather>
- <20150430095722.GB1815@x1>
- <20150501053406.GI4946@pengutronix.de>
- <20150501064405.GB4047@x1>
- <20150507212052.GM11057@lukather>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 06/12] watchdog: bindings: Supply
+ knowledge of a third supported device - clocksource
+Date: Fri, 8 May 2015 08:25:27 +0100
+Message-ID: <20150508072527.GI16220@x1>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+ <1431005924-21777-7-git-send-email-lee.jones@linaro.org>
+ <20150507141805.GC9793@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20150507191909.GC16220@x1>
+ <20150507195529.GA28554@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20150508064918.GF16220@x1>
+ <20150508071604.GA2232@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150507212052.GM11057@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org
+In-Reply-To: <20150508071604.GA2232@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 07 May 2015, Maxime Ripard wrote:
-
-> On Fri, May 01, 2015 at 07:44:05AM +0100, Lee Jones wrote:
-> > > > Does Sascha's antidote patch change your opinion?  We can use D=
-T to
-> > > > declare critical clocks, and in the rare case of the introducti=
-on of a
-> > > > new DDRFreq-like feature, which doesn't adapt the DT will still=
- be
-> > > > able to unlock the criticalness of the clock and use it as expe=
-cted?
+On Fri, 08 May 2015, Peter Griffin wrote:
+> On Fri, 08 May 2015, Lee Jones wrote:
+> > > > > > =20
+> > > > > > -- compatible 	: Must be one of: "st,stih407-lpc" "st,stih4=
+16-lpc"
+> > > > > > -				  "st,stih415-lpc" "st,stid127-lpc"
+> > > > > > +- compatible 	: Must be one of: "st,stih407-lpc"
+> > > > >=20
+> > > > > The same comment as the RTC DT patch, you are removing the co=
+mpatibles
+> > > > > documentation for the other supported platforms like stih416-=
+lpc.
+> > > > > AFAIK they are required in the driver to get the correct sysc=
+onfig register.
+> > > >=20
+> > > > That's intentional.  I haven't yet tested any of this IP on
+> > > > STiH41{5,6} & STiH127.  Due to lack of documentation, I'm not e=
+ven
+> > > > sure if this IP even exists on some of the other platforms.  I =
+will
+> > > > add them back when support is added to both driver and DTB and =
+I've
+> > > > been able to test them.
 > > >=20
-> > > Honestly I'm not very fond of declaring these in the device tree,=
- but
+> > > That was kind of my point, the driver code AFAIK already contains=
+ support
+> > > for these SoC's.
+> > >=20
+> > > I would either expect the patch to remove support from the DT doc=
+s AND the
+> > > driver, or leave it as is.
+> > >=20
+> > > It seems odd to only change the DT docs, and become unaligned to =
+the
+> > > code (this assumes I'm looking at the latest patchset here=20
+> > > https://lkml.org/lkml/2015/3/4/1088 which includes support for th=
+ese SoCs).
 > >=20
-> > I know why you guys are saying that, but I'd like you to understand
-> > the reasons for me pushing for this.  Rather than be being delibera=
-tely
-> > obtuse, I'm thinking of the mess that not having this stuff in DT w=
-ill
-> > cause for clock implementations like ours, which describe more of a
-> > framework than a description.
+> > The decision to remove these 'supported' platforms was made on the =
+RTC
+> > side, where there is only support for "st,stih407-lpc" in the drive=
+r.
 >=20
-> The DT should dictate our implementation, not the other way around. I
-> know that we are pretty bad at doing this, and that there's some clea=
-r
-> abstraction violations already widely used, but really, using this
-> kind of argument is pretty bad.
-
-I guess then you haven't correctly understood my argument, as that's
-exactly what's happened.  We have a DT implementation which accurately
-describes the clock architecture on each of our platforms. The
-associated C code in drivers/clk/ is written to extract the
-information from it, the hardware description and register the clocks
-properly.
-
-What makes you think differently?
-
-> The DT can (and is) shared between several OS and bootloaders, what i=
-f
-> the *BSDs or barebox, or whatever, guys come up with the exact same
-> argument to make a completely different binding?
+> The change makes sense in the RTC case then.
 >=20
-> We'd end up either in a deadlock, or forcing our solution down the
-> throat to some other system. I'm not sure any of these outcomes is
-> something we want.
-
-Not sure I understand why this is different from any other binding?
-
-> > The providers in drivers/clock/st are blissfully ignorant of platfo=
-rm
-> > specifics.  Per-platform configuration is described in DT.
+> > I thought it best to mirror that thought over to the Watchdog LPC
+> > bindings,
 >=20
-> Maybe they just need a small amount of education then.
+> Why? This is the bit I disagree with, the wdt DT docs IMHO should mat=
+ch the wdt
+> driver code.
 
-Easy to say (and implement), but that means duplicating the hardware
-description in DT, which is not a design win.
-
-> > So we'd have 2 options to use a C-only based API; 1) duplicate
-> > platform information in drivers/clk/st, or 2) supply a vendor
-> > specific st,critical-clocks binding, pull out those references then
-> > run them though the aforementioned framework.  It is my opinion tha=
-t
-> > neither of those methods are desirable.
->=20
-> 3) have a generic solution for this in the clock framework, like Mike
-> suggested.
-
-Did you actually read and understand the points here?  If not, just
-say so and I'll figure out a way to explain the issues better.  3) is
-not an alternative to 1) and 2).  Instead 1) and 2) imply 3).
-
-I *want* to have a generic solution, and have made several passes at
-writing one.  The question here is; what does that look like?  Some
-people don't like the idea of having it in DT due to possible abuse of
-the property.  But we can't have anything only in C because our clock
-implementation (rightly) doesn't know or (shouldn't have to) care
-about platform specifics.  Instead all platform description is in DT,
-where it should be.  So to specify critical-clocks we need either 1)
-or 2) above to pull the info out and send to 3).
+=46air enough.  I'll add the 'supported' compatibles back in.
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
