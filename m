@@ -1,47 +1,83 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 8 May 2015 12:17:44 +0530
-Message-ID: <CAKohpomU8wm0T=A7EkosdOjXbP8q2Cb726Hsjh08KTKYjoz3-A@mail.gmail.com>
-References: <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
-	<20150504121209.GM15510@sirena.org.uk>
-	<CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
-	<20150505105714.GA22845@sirena.org.uk>
-	<CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
-	<20150505171252.GI22845@sirena.org.uk>
-	<CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
-	<20150507055231.GB32399@codeaurora.org>
-	<20150507110233.GR15510@sirena.org.uk>
-	<20150507211855.GA2455@codeaurora.org>
-	<20150507221842.GW22845@sirena.org.uk>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 06/12] watchdog: bindings: Supply
+ knowledge of a third supported device - clocksource
+Date: Fri, 8 May 2015 07:49:18 +0100
+Message-ID: <20150508064918.GF16220@x1>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+ <1431005924-21777-7-git-send-email-lee.jones@linaro.org>
+ <20150507141805.GC9793@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20150507191909.GC16220@x1>
+ <20150507195529.GA28554@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150507221842.GW22845-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, santosh
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150507195529.GA28554@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 8 May 2015 at 03:48, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Thu, 07 May 2015, Peter Griffin wrote:
 
-> That makes sense to me.  Perhaps "current drawn by the device" rather
-> than "current load of the device" since current is sadly overloaded :/
+> Hi Lee,
+>=20
+> On Thu, 07 May 2015, Lee Jones wrote:
+>=20
+> <snip>
+>=20
+> > > >  Required properties
+> > > > =20
+> > > > -- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-l=
+pc"
+> > > > -				  "st,stih415-lpc" "st,stid127-lpc"
+> > > > +- compatible 	: Must be one of: "st,stih407-lpc"
+> > >=20
+> > > The same comment as the RTC DT patch, you are removing the compat=
+ibles
+> > > documentation for the other supported platforms like stih416-lpc.
+> > > AFAIK they are required in the driver to get the correct sysconfi=
+g register.
+> >=20
+> > That's intentional.  I haven't yet tested any of this IP on
+> > STiH41{5,6} & STiH127.  Due to lack of documentation, I'm not even
+> > sure if this IP even exists on some of the other platforms.  I will
+> > add them back when support is added to both driver and DTB and I've
+> > been able to test them.
+>=20
+> That was kind of my point, the driver code AFAIK already contains sup=
+port
+> for these SoC's.
+>=20
+> I would either expect the patch to remove support from the DT docs AN=
+D the
+> driver, or leave it as is.
+>=20
+> It seems odd to only change the DT docs, and become unaligned to the
+> code (this assumes I'm looking at the latest patchset here=20
+> https://lkml.org/lkml/2015/3/4/1088 which includes support for these =
+SoCs).
 
-Thanks Mark. I have reworded it as:
+The decision to remove these 'supported' platforms was made on the RTC
+side, where there is only support for "st,stih407-lpc" in the driver.
+I thought it best to mirror that thought over to the Watchdog LPC
+bindings, but thought it not really worth ripping out existing support
+from the driver.  If others wish to test/use the Watchdog on other
+platforms and can read C code, they'll know what to do.
 
-- opp-microamp: Current drawn by the device in micro Amperes. It is used to set
-  the most efficient regulator operating mode.
+Hopefully all of this will be a non-issue anyway, as I plan to test
+this on the other boards I have in my farm and make the necessary
+changes in the upcoming weeks.  All should be squared away by the next
+merge-window.
 
-  Should only be set if opp-microvolt is set for the OPP.
-
-  Entries for multiple regulators must be present in the same order as
-  regulators are specified in device's DT node. If this property isn't required
-  for few regulators, then this should be marked as zero for them. If it isn't
-  required for any regulator, then this property need not be present.
-
-
-Please let me know if this looks fine now.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
