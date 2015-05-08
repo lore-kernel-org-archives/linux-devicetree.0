@@ -1,71 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 02/12] clocksource: sti: Provide support for the ST LPC
- Clocksource IP
-Date: Fri, 8 May 2015 11:28:34 +0100
-Message-ID: <20150508102834.GC29044@x1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/12] clocksource: sti: Provide 'use timer as sched
+ clock' capability
+Date: Fri, 8 May 2015 11:29:38 +0100
+Message-ID: <20150508102938.GD29044@x1>
 References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
- <1431005924-21777-3-git-send-email-lee.jones@linaro.org>
- <1431079797.13593.28.camel@x220>
+ <1431005924-21777-4-git-send-email-lee.jones@linaro.org>
+ <1431074699.13593.4.camel@x220>
+ <20150508093603.GB29044@x1>
+ <1431078730.13593.14.camel@x220>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1431079797.13593.28.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de, wim@iguana.be, a.zummo@towertech.it, linux-watchdog@vger.kernel.org, rtc-linux@googlegroups.com, linux@roeck-us.net
+In-Reply-To: <1431078730.13593.14.camel@x220>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 08 May 2015, Paul Bolle wrote:
 
-> On Thu, 2015-05-07 at 14:38 +0100, Lee Jones wrote:
-> > --- a/drivers/clocksource/Kconfig
-> > +++ b/drivers/clocksource/Kconfig
+> On Fri, 2015-05-08 at 10:36 +0100, Lee Jones wrote:
+> > On Fri, 08 May 2015, Paul Bolle wrote:
+> > > On Thu, 2015-05-07 at 14:38 +0100, Lee Jones wrote:
+> > > > --- a/drivers/clocksource/Kconfig
+> > > > +++ b/drivers/clocksource/Kconfig
+> > >=20
+> > > > +config CLKSRC_ST_LPC_TIMER_SCHED_CLOCK
+> > > > +	bool
+> > > > +	depends on CLKSRC_ST_LPC
+> > > > +	default y
+> > > > +	help
+> > > > +	  Use Low Power controller timer clock source as sched_clock
+> > >=20
+> > > This adds, as far as I can see, a Kconfig symbol that will always=
+ be in
+> > > lockstep with CLKSRC_ST_LPC. Ie, CLKSRC_ST_LPC and
+> > > CLKSRC_ST_LPC_TIMER_SCHED_CLOCK will always both be 'n' or both b=
+e 'y'.
+> > >=20
+> > > Are there plans to break that lockstep in the future?
+> >=20
+> > What's stopping CONFIG_CLKSRC_ST_LPC_TIMER_SCHED_CLOCK=3Dn?
 >=20
-> > +config CLKSRC_ST_LPC
-> > +	bool
-> > +	depends on ARCH_STI
+> If CLKSRC_ST_LPC=3Dy you mean? The lack of a prompt, I'd say. Ie, you
+> would need
+> 	bool "A very short description"
 >=20
-> By itself this does nothing. You can't set this symbol to 'y', even i=
-f
-> ARCH_STI is 'y', right? Of course, ARCH_STI will select this symbol (=
-see
-> 11/12) otherwise it would be inert. But as ARCH_STI selects
-> CLKSRC_ST_LPC I'd say this dependency isn't actually needed.
-
-I guess this is more of a representative dependency, but you're right,
-the likelihood is that no one is likely to accidentally enable it.
-
-I can remove it.
-
-> Are other selects of CLKSRC_ST_LPC expected to be added in the future=
-?
-> If not, CLKSRC_ST_LPC should operate in lockstep with ARCH_STI. In th=
-at
-> case you might as well not bother with CLKSRC_ST_LPC and use ARCH_STI
-> directly. (But that forces you to move the select statement below int=
-o
-> the ARCH_STI entry, which might be ugly.)
-
-Although true, there might be cases where we need to stop this from
-being enabled on all ARCH_STI platforms.  It'll be easier to move
-CLKSRC_ST_LPC around in arch code than to start renaming this symbol.
-
-I'd prefer to keep this as CLKSRC_ST_LPC if you're not passionate
-about the alternative.
-
-> > +	select CLKSRC_OF if OF
-> > +	help
-> > +	  Enable this option to use the Low Power controller timer
-> > +	  as clocksource.
+> to be able to set these independently.
 >=20
-> (Please add an empty line.)
+> But now I notice that I missed that there appears to be a problem wit=
+h
+> CLKSRC_ST_LPC too. I'll reply to 2/12 shortly.
 
-I believe the new line comes in the next patch.
+Ah, you mean from menuconfig.  I almost forgot what that was. ;)
+
+I can add a menu option, no problem.
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
