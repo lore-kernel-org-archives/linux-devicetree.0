@@ -1,70 +1,89 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: Add msm8916 CoreSight components
-Date: Fri, 8 May 2015 10:17:02 -0600
-Message-ID: <CANLsYkxFzQPCWXb0w8BddtuJB_cXUtUHBTapYFDF9zqhDBQHrw@mail.gmail.com>
-References: <1431012969-16338-1-git-send-email-ivan.ivanov@linaro.org>
-	<1431012969-16338-3-git-send-email-ivan.ivanov@linaro.org>
-	<CANLsYkzNXBH0d6v1Ny_JwpW6NcKr9v0oAi9K3YfipwDgHWfMMA@mail.gmail.com>
-	<1431092877.21307.18.camel@linaro.org>
-	<CANLsYkyNYQf80c+8uMbZDr=kQ2YEOqy2aS8muEJsLsanDRGLOQ@mail.gmail.com>
-	<1431094640.21307.23.camel@linaro.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 3/6] usb: dwc3: dwc3-st: Update the incorrect DT dwc3
+ example.
+Date: Fri, 8 May 2015 11:36:13 -0500
+Message-ID: <20150508163613.GH16571@saruman.tx.rr.com>
+References: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
+ <1430400652-3366-4-git-send-email-peter.griffin@linaro.org>
+ <20150507151358.GA14123@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20150507161555.GA29183@saruman.tx.rr.com>
+ <20150508103140.GA15502@griffinp-ThinkPad-X1-Carbon-2nd>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431094640.21307.23.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="K1n7F7fSdjvFAEnM"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150508103140.GA15502@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: Felipe Balbi <balbi@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8 May 2015 at 08:17, Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
-> On Fri, 2015-05-08 at 08:13 -0600, Mathieu Poirier wrote:
->> On 8 May 2015 at 07:47, Ivan T. Ivanov ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Fri, 2015-05-08 at 07:38 -0600, Mathieu Poirier wrote:
->> > > On 7 May 2015 at 09:36, Ivan T. Ivanov ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > > > Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
->> > > >
->> > > >
->> > > > +       replicator@824000 {
->> > > > +               compatible = "qcom,coresight-replicator", "arm,primecell";
->> > >
->> > > Shouldn't it be "qcom,coresight-replicator1x" ?
->> > >
->> >
->> >
->> >
->> > True, I still wonder, why we have to have this compatible string?
->> > Drivers are probed by amba_id and "arm,primecell", after all.
->> >
->>
->> Drivers have their own compatible strings for historical reasons,
->> something I've been meaning to fix for a long time now...
->>
->
-> Yep, I see that they have been platform drivers in the past, but now
-> they are not, except coresight-replicator driver. IMHO, having
-> additional compatible string could lead just to confusion.
+--K1n7F7fSdjvFAEnM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I did a little more research on this and based on what I found in the
-kernel it may not need "fixing" after all.  The majority of drivers
-that do specify "arm,primecell" also specify a device-specific
-compatible string.  And in the case of CoreSight devices were
-implementers can do pretty much whatever they  want with the ID
-strings, it is only a matter of time before we need to call something
-like of_device_is_compatible() to fix a quirk.
+On Fri, May 08, 2015 at 11:31:40AM +0100, Peter Griffin wrote:
+> Hi Felipe,
+>=20
+> On Thu, 07 May 2015, Felipe Balbi wrote:
+>=20
+> > On Thu, May 07, 2015 at 04:13:58PM +0100, Peter Griffin wrote:
+> > > Hi Felipe,
+> > >=20
+> > > On Thu, 30 Apr 2015, Peter Griffin wrote:
+> > >=20
+> > > > There is a subtle typo phys-names should be phy-names. Using the
+> > > > current example means you don't have working usb (as you fail to
+> > > > obtain the phys). Also update the example to use the generic phy
+> > > > type constants which are now used for miphy28.
+> > > >=20
+> > > > Additionally also remove the unnecessary new line in the example.
+> > > >=20
+> > > > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > > > Acked-by: Rob Herring <robh@kernel.org>
+> > > > Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+> > >=20
+> > > Can you take this dwc3 DT doc update patch via your tree?
+> >=20
+> > only this patch ?
+>=20
+> Yes, I think the test will go via Maximes STI tree
+>=20
+> > Sure. Just post on linux-usb and I'll fetch it from
+> > there.
+>=20
+> Brilliant, thanks. I've sent it see here https://lkml.org/lkml/2015/5/7/8=
+09
+> with linux-usb on CC (sorry for missing that off the first time round)
 
-Unless someone heavy asks to remove the device-specific compatible
-strings I'd prefer keeping the current trend set forth by other
-drivers and as such, will ask you to add the "1x" in this bindings.
+it's in my testing/next now.
 
-Thanks,
-Mathieu
+--=20
+balbi
 
->
-> Regards,
-> Ivan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--K1n7F7fSdjvFAEnM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVTOX8AAoJEIaOsuA1yqRECLcP/2lAub6R8/+Xjbk3VKPnjFS7
+BM9Yh2qKlnpAUD1P1vW9h5s9iHSKQBLa0h4qno4sp8IQxtO21SsRuMtZ+tnuvp3D
+BsIQfpHk8gFKMi3Ov6manIehR6ZWp5nLG7m3jvXTyBpQ1hal//jOVQGTs/hJaBp6
+WfQzcsDoOVRKowXihktbh4c9RI5AF39iGgraRs8Nj7d9i5NrAtQ81RaMD3h5SVCO
+vgCpozP0wDDU1bMw9/nt+4Z0LYey4BnLce2e2f+CuIbE93ipzdNdFjnBxObkYSl6
+i1LQws0ZzE6zUF5x9HYIJW/r6liqYUSNx0L3Sqe8wvId0UtL11LQYLO+mY49Z/mW
+hk510MkVnVCmKQUyvgFINC8tDeBgcWNTbUl7zlxQL33Hdd/EoLdx4dbFve7lQD2B
+SkaC987+33BDruJdvDF7d3ZRrNAJ6hF0mqf4ja5tTcSCndE5EmWI4rUJ+htPGdVp
+Ye73uXw/bh+HWYzJdWR+ge5AomRJCGJeU7FmgejE0fC7uYLmooLDnVohce9sbrjy
++cjKNYDjzc3LrrXftu84cV/n/4qh7N8xUl2YuAQNSAJwRK/VTrlGG1GuFfCYKzsQ
+m+qSFvhiZPyKt4n3HPMzeZlTMTN1admJSEasr9FyeI/4wLxGAgaHnoihKwFLWSwx
+FFxvFz01F8lNBVU3x9GF
+=mfbB
+-----END PGP SIGNATURE-----
+
+--K1n7F7fSdjvFAEnM--
