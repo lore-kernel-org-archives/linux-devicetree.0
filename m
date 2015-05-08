@@ -1,70 +1,43 @@
-From: Alexander Stein <alexanders83@web.de>
-Subject: Re: Re: [PATCH 2/3 v8] mailbox: Enable BCM2835 mailbox support
-Date: Fri, 08 May 2015 10:33:53 +0200
-Message-ID: <2464203.68HkYCAlx7@kongar>
-References: <1430857666-18877-1-git-send-email-eric@anholt.net> <554BA0B7.8040600@tronnes.org> <87mw1grwnn.fsf@eliezer.anholt.net>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 03/12] clocksource: sti: Provide 'use timer as sched
+ clock' capability
+Date: Fri, 08 May 2015 10:44:59 +0200
+Message-ID: <1431074699.13593.4.camel@x220>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+	 <1431005924-21777-4-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87mw1grwnn.fsf@eliezer.anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: Eric Anholt <eric@anholt.net>, Noralf =?ISO-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431005924-21777-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 07 May 2015, 12:54:20 wrote Eric Anholt:
-> Noralf Tr=C3=B8nnes <noralf@tronnes.org> writes:
->=20
-> > Den 05.05.2015 22:27, skrev Eric Anholt:
-> >> From: Lubomir Rintel <lkundrak@v3.sk>
-> >>
-> >> This mailbox driver provides a single mailbox channel to write 32-=
-bit
-> >> values to the VPU and get a 32-bit response.  The Raspberry Pi
-> >> firmware uses this mailbox channel to implement firmware calls, wh=
-ile
-> >> Roku 2 (despite being derived from the same firmware tree) doesn't=
-=2E
-> >>
-> >> The driver was originally submitted by Lubomir, based on the
-> >> out-of-tree 2708 mailbox driver.  Eric Anholt fixed it up for
-> >> upstreaming, with the major functional change being that it now ha=
-s no
-> >> notion of multiple channels (since that is a firmware-dependent
-> >> concept) and instead the raspberrypi-firmware driver will do that
-> >> bit-twiddling in its own messages.
-> > ...
-> >> +static struct platform_driver bcm2835_mbox_driver =3D {
-> >> +	.driver =3D {
-> >> +		.name =3D "bcm2835-mbox",
-> >> +		.owner =3D THIS_MODULE,
-> >> +		.of_match_table =3D bcm2835_mbox_of_match,
-> >> +	},
-> >> +	.probe		=3D bcm2835_mbox_probe,
-> >> +	.remove		=3D bcm2835_mbox_remove,
-> >> +};
-> >> +module_platform_driver(bcm2835_mbox_driver);
-> >
-> > I have tested this driver and the firmware driver booting directly
-> > from the VideoCore bootloader (no uboot).
-> > The mailbox driver loads too late to turn on USB power:
->=20
-> Yeah, I have a patch on my branches that returns -EPROBE_DEFER when
-> trying to get a power domain and not finding the provider.  It was
-> rejected by the maintainers in favor of a proposed solution whose
-> description I didn't quite follow.
+On Thu, 2015-05-07 at 14:38 +0100, Lee Jones wrote:
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
 
-Do you have a link for this thread?
+> +config CLKSRC_ST_LPC_TIMER_SCHED_CLOCK
+> +	bool
+> +	depends on CLKSRC_ST_LPC
+> +	default y
+> +	help
+> +	  Use Low Power controller timer clock source as sched_clock
 
-> > This silences the warning:
-> > struct raspberrypi_power_domain raspberrypi_power_domain_usb =3D {
-> >      .base =3D {
-> >          .power_on_latency_ns =3D 600000000,
->=20
-> Oh, nice.  Thanks!
+This adds, as far as I can see, a Kconfig symbol that will always be in
+lockstep with CLKSRC_ST_LPC. Ie, CLKSRC_ST_LPC and
+CLKSRC_ST_LPC_TIMER_SCHED_CLOCK will always both be 'n' or both be 'y'.
 
-Well, Using a timeout for dependencies seems odd to me.
+Are there plans to break that lockstep in the future?
 
-Regards,
-Alexander
+Thanks,
+
+
+Paul Bolle
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
