@@ -1,291 +1,91 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: Add msm8916 CoreSight components
-Date: Fri, 8 May 2015 07:38:35 -0600
-Message-ID: <CANLsYkzNXBH0d6v1Ny_JwpW6NcKr9v0oAi9K3YfipwDgHWfMMA@mail.gmail.com>
-References: <1431012969-16338-1-git-send-email-ivan.ivanov@linaro.org>
-	<1431012969-16338-3-git-send-email-ivan.ivanov@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 06/10] mtd: brcmstb_nand: add SoC-specific support
+Date: Fri, 08 May 2015 15:41:10 +0200
+Message-ID: <2731660.FLCdTmWWOZ@wuerfel>
+References: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com> <20781942.cIPodTiNzG@wuerfel> <20150507184246.GO32500@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1431012969-16338-3-git-send-email-ivan.ivanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150507184246.GO32500@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7 May 2015 at 09:36, Ivan T. Ivanov <ivan.ivanov@linaro.org> wrote:
-> Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
->
-> Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi | 254 ++++++++++++++++++++++++
->  1 file changed, 254 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
-> new file mode 100644
-> index 0000000..33ae981
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
-> @@ -0,0 +1,254 @@
-> +/*
-> + * Copyright (c) 2013 - 2015, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +&soc {
-> +
-> +       tpiu@820000 {
-> +               compatible = "arm,coresight-tpiu", "arm,primecell";
-> +               reg = <0x820000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               port {
-> +                       tpiu_in: endpoint {
-> +                               slave-mode;
-> +                               remote-endpoint = <&replicator_out1>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       funnel@821000 {
-> +               compatible = "arm,coresight-funnel", "arm,primecell";
-> +               reg = <0x821000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       /*
-> +                        * Not described input ports:
-> +                        * 0 - connected to Resource and Power Manger CPU ETM
-> +                        * 1 - not-connected
-> +                        * 2 - connected to Modem CPU ETM
-> +                        * 3 - not-connected
-> +                        * 5 - not-connected
-> +                        * 6 - connected trought funnel to Wireless CPU ETM
-> +                        * 7 - connected to STM component
-> +                        */
-> +                       port@4 {
-> +                               reg = <4>;
-> +                               funnel0_in4: endpoint {
-> +                                       slave-mode;
-> +                                       remote-endpoint = <&funnel1_out>;
-> +                               };
-> +                       };
-> +                       port@8 {
-> +                               reg = <0>;
-> +                               funnel0_out: endpoint {
-> +                                       remote-endpoint = <&etf_in>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       replicator@824000 {
-> +               compatible = "qcom,coresight-replicator", "arm,primecell";
+On Thursday 07 May 2015 11:42:46 Brian Norris wrote:
+> On Thu, May 07, 2015 at 12:01:02PM +0200, Arnd Bergmann wrote:
+> > On Wednesday 06 May 2015 13:49:10 Brian Norris wrote:
+> > > On Wed, May 06, 2015 at 09:12:43PM +0200, Arnd Bergmann wrote:
+> > > > It looks to me like this should be handled as a nested irqchip, so the node
+> > > > you look up gets used as the "interrupt-parent" instead, making the behavior
+> > > > of this SoC transparent to the nand driver.
+> > > 
+> > > You snipped the rest of the patch, which involves more than just IRQ
+> > > handling. The same registers touch both interrupts and data bus endian
+> > > configuration, so it can't possibly be done transparently to the NAND
+> > > driver.
+> > 
+> > Anything else in there?
+> 
+> Looks like miscellaneous NAND-related control bits. AXI and APB endian
+> configuration; several interrupt-enable bits (we only use one for now);
+> a clock-enable; and some timing test mode bits.
 
-Shouldn't it be "qcom,coresight-replicator1x" ?
+I see. Describing that as an irqchip would indeed be too much of a stretch.
 
+> > The bus configuration would just involve writing
+> > a constant value in some register, right?
+> 
+> I'm not an expert on the Cygnus/iProc chips, but I believe the answer is
+> no: we *must* reconfigure the bus before and after each data
+> transaction, because it affects the rest of the core too. Others on the
+> CC list can probably elaborate.
 
-> +               reg = <0x824000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               reg = <0>;
-> +                               replicator_out0: endpoint {
-> +                                       remote-endpoint = <&etr_in>;
-> +                               };
-> +                       };
-> +                       port@1 {
-> +                               reg = <1>;
-> +                               replicator_out1: endpoint {
-> +                                       remote-endpoint = <&tpiu_in>;
-> +                               };
-> +                       };
-> +                       port@2 {
-> +                               reg = <0>;
-> +                               replicator_in: endpoint {
-> +                                       slave-mode;
-> +                                       remote-endpoint = <&etf_out>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       etf@825000 {
-> +               compatible = "arm,coresight-tmc", "arm,primecell";
-> +               reg = <0x825000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               reg = <0>;
-> +                               etf_out: endpoint {
-> +                                       slave-mode;
-> +                                       remote-endpoint = <&funnel0_out>;
-> +                               };
-> +                       };
-> +                       port@1 {
-> +                               reg = <0>;
-> +                               etf_in: endpoint {
-> +                                       remote-endpoint = <&replicator_in>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       etr@826000 {
-> +               compatible = "arm,coresight-tmc", "arm,primecell";
-> +               reg = <0x826000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               port {
-> +                       etr_in: endpoint {
-> +                               slave-mode;
-> +                               remote-endpoint = <&replicator_out0>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       funnel@841000 { /* APSS funnel only 4 inputs are used */
-> +               compatible = "arm,coresight-funnel", "arm,primecell";
-> +               reg = <0x841000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               reg = <0>;
-> +                               funnel1_in0: endpoint {
-> +                                       slave-mode;
-> +                                       remote-endpoint = <&etm0_out>;
-> +                               };
-> +                       };
-> +                       port@1 {
-> +                               reg = <1>;
-> +                               funnel1_in1: endpoint {
-> +                                       slave-mode;
-> +                                       remote-endpoint = <&etm1_out>;
-> +                               };
-> +                       };
-> +                       port@2 {
-> +                               reg = <2>;
-> +                               funnel1_in2: endpoint {
-> +                                       slave-mode;
-> +                                       remote-endpoint = <&etm2_out>;
-> +                               };
-> +                       };
-> +                       port@3 {
-> +                               reg = <3>;
-> +                               funnel1_in3: endpoint {
-> +                                       slave-mode;
-> +                                       remote-endpoint = <&etm3_out>;
-> +                               };
-> +                       };
-> +                       port@4 {
-> +                               reg = <0>;
-> +                               funnel1_out: endpoint {
-> +                                       remote-endpoint = <&funnel0_in4>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       etm@85c000 {
-> +               compatible = "arm,coresight-etm4x", "arm,primecell";
-> +               reg = <0x85c000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               cpu = <&CPU0>;
-> +
-> +               port {
-> +                       etm0_out: endpoint {
-> +                               remote-endpoint = <&funnel1_in0>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       etm@85d000 {
-> +               compatible = "arm,coresight-etm4x", "arm,primecell";
-> +               reg = <0x85d000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               cpu = <&CPU1>;
-> +
-> +               port {
-> +                       etm1_out: endpoint {
-> +                               remote-endpoint = <&funnel1_in1>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       etm@85e000 {
-> +               compatible = "arm,coresight-etm4x", "arm,primecell";
-> +               reg = <0x85e000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               cpu = <&CPU2>;
-> +
-> +               port {
-> +                       etm2_out: endpoint {
-> +                               remote-endpoint = <&funnel1_in2>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       etm@85f000 {
-> +               compatible = "arm,coresight-etm4x", "arm,primecell";
-> +               reg = <0x85f000 0x1000>;
-> +
-> +               clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +               clock-names = "apb_pclk", "atclk";
-> +
-> +               cpu = <&CPU3>;
-> +
-> +               port {
-> +                       etm3_out: endpoint {
-> +                               remote-endpoint = <&funnel1_in3>;
-> +                       };
-> +               };
-> +       };
-> +};
-> --
-> 1.9.1
->
+That would not be a problem I think: the irqchip driver would always
+get initialized first, because the main driver would get an -EPROBE_DEFER
+when requesting the interrupt line otherwise.
+
+> > Doing that in the irqchip
+> > is also a bit ugly, but may still be better overall than doing it the
+> > way you have above.
+> 
+> Well, the Cygnus/iProc case is more complicated as I mention. But I
+> agree that other cases could be nicer, like bcm63138 (which only has
+> separate interrupt status/enable registers). Do you expect a new irqchip
+> driver for every arrangement of registers like this? There are a few
+> similar chips that have status/enable registers in different orders, and
+> some that combine them into a single word. Do we really need a new
+> irqchip driver for each one? I might have done that for bcm63138 and
+> bcm3384, except that I thought I'd have to fall back to this extra
+> per-SoC support driver for Cygnus anyway.
+
+I assumed this one was the only odd one.
+
+> > > > We recently merged nested irqdomain support as well, which might help here,
+> > > > or might not be needed.
+> > > 
+> > > I'm not familiar with nested irqdomains. Do they address anything like
+> > > the above problem?
+> > 
+> > The problem that nested irqdomains address is when an interrupt is handled
+> > by two irqchips, in particular when one irqchip handles a virtual interrupt
+> > number that was claimed by another irqchip already.
+> 
+> I'll do some reading on that, but it definitely doesn't address the main
+> problem here.
+
+Ok, back to the drawing board then: How about turning the probe order around
+and splitting the SoC-specific part out into its own platform_driver:
+
+Instead of bus_prepare/bus_unprepare for bcm63138, you'd get a
+bcm63138_nand_driver with its own probe() function that calls the
+common probe function. That would make the soc specific parts
+better contained and match how we normally do abstractions of
+similar drivers.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
