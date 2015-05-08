@@ -1,49 +1,115 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 05/12] watchdog: st_wdt: Update IP layout information
- to include Clocksource
-Date: Thu, 07 May 2015 17:04:05 -0700
-Message-ID: <554BFD75.1070601@roeck-us.net>
-References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org> <1431005924-21777-6-git-send-email-lee.jones@linaro.org>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH 0/4] clk: si5351: Some fixes
+Date: Thu, 7 May 2015 19:52:20 -0500
+Message-ID: <20150508005220.GA3404@deathray>
+References: <1430415954-29517-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20150430193317.GC22000@deathray>
+ <55429417.4070103@gmail.com>
+ <20150430212059.GA14026@deathray>
+ <5542AAE0.5020204@gmail.com>
+ <20150430223603.GA18006@deathray>
+ <5543369F.2070207@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431005924-21777-6-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5543369F.2070207@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Jean-Francois Moine <moinejf@free.fr>, Russell King <rmk+linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2015 06:38 AM, Lee Jones wrote:
-> Initial submission adding support for this IP only included Watchdog and
-> the Real-Time Clock.  Now the third (and final) device is enabled this
-> trivial patch is required to update the comment in the Watchdog driver
-> to encompass Clocksource.
->
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Fri, May 01, 2015 at 10:17:35AM +0200, Sebastian Hesselbarth wrote:
+> On 01.05.2015 00:36, Michael Welling wrote:
+> >On Fri, May 01, 2015 at 12:21:20AM +0200, Sebastian Hesselbarth wrote:
+> >>On 30.04.2015 23:20, Michael Welling wrote:
+> >>>On Thu, Apr 30, 2015 at 10:44:07PM +0200, Sebastian Hesselbarth wrote:
+> >>[...]
+> >>>>What I noticed about your clk2 that you always measure as 0 Hz is
+> >>>>that none of your clocks is prepared/enabled.
+> >>>>
+> >>>>Currently, the si5351 driver only ensures the output is enabled
+> >>>>when si5351_clkout_prepare() is called.
+> >>>>
+> >>>>As long as you do not have a clk consumer that properly prepare/enables
+> >>>>the clock output, it may remain disabled.
+> >>>>
+> >>>>We should probably have additional DT properties and corresponding
+> >>>>pdata to force clkoutN always on.
+> >>>
+> >>>Does the silabs,disable-state of 3 (SI5351_DISABLE_NEVER) take care
+> >>>of this?
+> >>
+> >>That would be the HW version of never disabling the clock output.
+> >>I never really tried the property, does it work as expected?
+> >
+> >This did not appear to effect the behavior.
+> 
+> I think it is also a good idea to expose register values to debugfs,
+> so we can easily check what is really written into internal registers.
+> 
+> >>
+> >>>Otherwise is there a simple registration that will do this?
+> >>
+> >>The SW version of such a property would involve CLK_IGNORE_UNUSED
+> >>and enabling all requested clock outputs on probe().
+> >>
+> >>If above HW property already works, I think it should be enough.
+> >>
+> >>[...]
+> >>>>>It should be noted that if I program the device's register map in the
+> >>>>>bootloader the device keeps the correct frequency outputs.
+> >>>>
+> >>>>"keeps"? You mean "generates", don't you?
+> >>>>
+> >>>
+> >>>Yes the clocks are generated and do not get effected by the driver.
+> >>
+> >>IIRC, clk API does check if requested rate and current rate match
+> >>already. If they do, it does not request the same rate again.
+> >
+> >So I found that the audio codec that I am driving with clk2 could
+> >register the clock and allowed the clock to be enabled and disabled
+> >by playing audio.
+> >
+> >This is when I noticed some strange behavior. The first time I attempt
+> >to play audio the clock does not turn on blocking the audio from playing.
+> >After I interrupt and the clock is disabled for the first time, the
+> >successive clock enables work as expected.
+> 
+> Does "does not turn on" mean you cannot measure any clock on the
+> output or is it just a guess because audio does not play?
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+The clock is stuck at around 2 volts until the first clk_disable.
+When the clock is disabled it drops to GND. Future clk_enables make the
+clock come at the reported frequency.
 
-> ---
->   drivers/watchdog/st_lpc_wdt.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/watchdog/st_lpc_wdt.c b/drivers/watchdog/st_lpc_wdt.c
-> index f32be15..6785afd 100644
-> --- a/drivers/watchdog/st_lpc_wdt.c
-> +++ b/drivers/watchdog/st_lpc_wdt.c
-> @@ -197,7 +197,7 @@ static int st_wdog_probe(struct platform_device *pdev)
->   		return -EINVAL;
->   	}
->
-> -	/* LPC can either run in RTC or WDT mode */
-> +	/* LPC can either run as a Clocksource or in RTC or WDT mode */
->   	if (mode != ST_LPC_MODE_WDT)
->   		return -ENODEV;
->
->
+As for the clock being initialized incorrectly, I selectively added
+mdelay(100) at each dev_dbg with debugging disabled until the 
+initialization came up correct.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I found that adding a delay at the end of si5351_msynth_round_rate
+appears to be magically fixing the incorrect frequency settings.
+Not sure if this sheds any light on the issue but I figured I would 
+share this information.
+
+> 
+> It could be that we just need to add some delay when we enable a clock
+> output. Datasheet just says 10us max from OEB pin pulled low to valid
+> clock output - not exactly what we are looking for but it could be a
+> good start.
+> 
+> >Something tells me that a fault off some kind is occurring on initial
+> >configuration.
+> 
+> What I noticed when adding the pll reset and checking DEVICE_STATUS is
+> that SYS_INIT is still set. According to the datasheet, the meaning of
+> the bit is that si5351 is still copying NVM content to its internal
+> registers and therefore, we shouldn't try to access them.
+> 
+> What really irritates me about it is that it is seconds after power-up
+> and copying the contents shouldn't really take _that_ long. However,
+> the datasheet does not mention anything about how long it may take.
+> 
+> Sebastian
+> 
