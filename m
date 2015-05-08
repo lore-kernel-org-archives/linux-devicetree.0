@@ -1,181 +1,128 @@
-From: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Master-aware devices and sideband ID data
-Date: Fri, 8 May 2015 14:30:00 -0500
-Message-ID: <CALRxmdAEvQPGN_xvwU5Xb4eNfKegPfTyM-GKXg4jRD7JyRxHJA@mail.gmail.com>
-References: <20150324155007.GC23005@leverpostej>
-	<CALRxmdAE_=SubN7dY-W1K44cjVVRhKLKknpgG9af_g64+GHPtw@mail.gmail.com>
-	<20150508154903.GH25587@arm.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 06/10] mtd: brcmstb_nand: add SoC-specific support
+Date: Fri, 8 May 2015 12:38:50 -0700
+Message-ID: <20150508193850.GB32500@ld-irv-0074>
+References: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com>
+ <20781942.cIPodTiNzG@wuerfel>
+ <20150507184246.GO32500@ld-irv-0074>
+ <2731660.FLCdTmWWOZ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150508154903.GH25587-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2731660.FLCdTmWWOZ@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 8, 2015 at 10:49 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Stuart,
->
-> On Thu, May 07, 2015 at 06:49:32PM +0100, Stuart Yoder wrote:
->> On Tue, Mar 24, 2015 at 10:50 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> > Hi all,
->> >
->> > For some devices, identification of particular masters is critical to
->> > their operation (e.g. IOMMUs, MSI controllers). The identity of masters
->> > is determined from sideband signals on the bus, and it may or may not be
->> > possible to probe and/or configure this information. Worse still, these
->> > information may be rewritten by intermediate buses, so the
->> > information for a given master may differ at different points in the bus
->> > hierarchy.
->> >
->> > We currently describe this master information for devices attached to
->> > IOMMUs, with a master ID being encoded in the iommu-cells. However this
->> > only covers the ID between the master and its IOMMU(s), and we don't
->> > currently have a mechanism to describe the master IDs as they are seen
->> > by devices beyond the IOMMU(s),
->>
->> Is there a specific case you've run across where conveying this additional
->> master info would be needed,  or are you just thinking through how to fully
->> describe hardware?
->
-> It's a combination of a few things:
->
->   1. We are aware of hardware that has ID transformations
->   2. ACPI allows this to be described in IORT
->   3. We need to be general enough to encompass current and future designs
->      in the device-tree binding.
->
->> Are there really cases out there were there is a hardwired hardware
->> relationship between RID and SID?
->
-> Yes, I believe it's actually the common case (at least, from Linux's
-> perspective).
->
->> > or in the absence of any IOMMU(s).
->> >
->> > The following are example of master IDs:
->> > * PCIe Requester IDs (RIDs) (bus:device.function AKA BDF)
->> > * SMMU Stream IDs (SIDs)
->> > * GICv3 ITS Device IDs (DIDs)
->> >
->> > In the case of a system with PCIe, SMMU and GICv3, the master IDs are
->> > rewritten in a chain of RID=>SID=>DID, as in the following diagram:
->> >
->> > +-------------+
->> > | PCIe master |
->> > +-------------+
->> >     ||
->> >     || Requester ID (RID)
->> >     || Probeable from RC.
->> >     \/
->> > +-------------------+
->> > | PCIe Root Complex |
->> > +-------------------+
->> >     ||
->> >     || SMMU Stream ID (SID)
->> >     || Derived from RID, static non-probeable mapping.
->>
->> The FSL LS2085A SoC has an actual RID->SID mapping table in the PCI
->> controller, but it is not static in the sense of fixed in hardware or
->> firmware.  It's
->> a programmable mapping table, and we envision Linux programming this table.
->
-> Ok, so I assume you're not planning to use ACPI with this system?
+On Fri, May 08, 2015 at 03:41:10PM +0200, Arnd Bergmann wrote:
+> On Thursday 07 May 2015 11:42:46 Brian Norris wrote:
+> > On Thu, May 07, 2015 at 12:01:02PM +0200, Arnd Bergmann wrote:
+> > > The bus configuration would just involve writing
+> > > a constant value in some register, right?
+> > 
+> > I'm not an expert on the Cygnus/iProc chips, but I believe the answer is
+> > no: we *must* reconfigure the bus before and after each data
+> > transaction, because it affects the rest of the core too. Others on the
+> > CC list can probably elaborate.
+> 
+> That would not be a problem I think: the irqchip driver would always
+> get initialized first, because the main driver would get an -EPROBE_DEFER
+> when requesting the interrupt line otherwise.
 
-Not initially, but perhaps in the future.  I guess I don't know the implications
-to ACPI yet.
+Huh? I wasn't worried about initialization order. I was worried about
+the fact that the "NAND" and "SoC" portions are very integrated when
+handling the data path. And I think you agreed that this means we can't
+do a straight-up irqchip.
 
-> Also, we can't just program this table willy-nilly, as I'm sure you're
-> aware. For example, updating a the SMRs in a live SMMU is a big no-no,
-> so although Linux may initialise the table, it can only be safely changed
-> at device init/teardown time, surely?
+FWIW, I agree that -EPROBE_DEFER can handle initialization ordering
+issues...
 
-Correct.  That would not be updated when a device is live.
+> > > Doing that in the irqchip
+> > > is also a bit ugly, but may still be better overall than doing it the
+> > > way you have above.
+> > 
+> > Well, the Cygnus/iProc case is more complicated as I mention. But I
+> > agree that other cases could be nicer, like bcm63138 (which only has
+> > separate interrupt status/enable registers). Do you expect a new irqchip
+> > driver for every arrangement of registers like this? There are a few
+> > similar chips that have status/enable registers in different orders, and
+> > some that combine them into a single word. Do we really need a new
+> > irqchip driver for each one? I might have done that for bcm63138 and
+> > bcm3384, except that I thought I'd have to fall back to this extra
+> > per-SoC support driver for Cygnus anyway.
+> 
+> I assumed this one was the only odd one.
 
->> >     \/
->> > +--------------+
->> > | SMMU (IOMMU) |
->> > +--------------+
->> >     ||
->> >     || ITS Device ID (DID)
->> >     || Derived from SID, static non-probeable mapping.
->> >     \/
->>
->> Is this even architecturally possible on ARM?  Can the SMMU transform stream
->> IDs into some different number?
->
-> From the OS perspective, this is what it looks like. What we'd actually
-> have in hardware is multiple SMMUs sharing an ITS, so there would need
-> to be something prepending an SMMU ID onto the StreamID to construct a
-> device ID, otherwise you'd have devices inexplicably sharing MSIs.
->
->> > However, this conflicts/overlaps with existing bindings (at least iommus
->> > and msi-parent), and I'm not sure how to reconcile them. Am I missing a
->> > neat way of describing this that works with the existing bindings?
->> >
->> > It's also not clear to me if it's sufficient to have a generic
->> > "master-ids" property (with the relevant type being implicit from
->> > context), or if each type of ID needs each type of ID (RID, SID, DID,
->> > etc) needs its own.
->> >
->> > Which other devices out there which require side-band master
->> > information, and what do they require?
->>
->> For us, at least, the  master-id-map cannot be a static property.
->> Our PCI controller's DID->SID mapping table is programmable
->> and we won't know how to program it until Linux is running.  A PCI
->> SRIOV card may have virtual functions that appear as hot-plugged
->> devices and there is no way that boot firmware would have the knowledge
->> to have set that table up ahead of time.
->>
->> What we do need is some way to have boot firmware convey to
->> the OS what SIDs are available to be used in the DID->SID
->> table.   We have a very limited number of SIDs available and boot
->> firmware may need to convey to Linux that for example-- PCI controller #2
->> has only 8 SIDs available for DID->SID mappings.
->>
->> We had invented a property called "available-stream-ids" for some
->> proof of concept work, but perhaps the master-id-map property could
->> be used to convey available stream IDs by using a child-id-length
->> of 0.  So to convey that stream IDs 5,6,7,8 are available:
->>
->>   PCI: pci@af000000 {
->>          ...
->>          /* Requester ID of PCIe endpoints, implicit at runtime */
->>          master-id-cells = <1>;
->>
->>          /* RIDS idmapped to SIDS @ SMMU */
->>          master-id-map = <0 0 &SMMU 5
->>                                     0 0 &SMMU 6
->>                                     0 0 &SMMU 7
->>                                     0 0 &SMMU 8>;
->>   };
->>
->> I'm not sure the above would conflict with the existing IOMMU
->> binding, but would seem to be an extension of it.
->>
->> If you have a simple master with 2 stream IDS do this:          ...
->>           iommus = <&{/smmu} 23>, <&{/smmu} 24>;
->>
->> If you have a static DID->SID mapping to convey, use the map as
->> you proposed:
->>          master-id-cells = <1>;
->>          master-id-map = <0 0x10000 &SMMU 0>;;
->>
->> If your DID->SID is not static, but you need to convey the SIDs that are
->> available to this bus:
->>          master-id-cells = <1>;
->>          master-id-map = <0 0 &SMMU 23
->>                                     0 0 &SMMU 24>;
->
-> We need to be careful with terminology here. Can we use RID to mean the PCI
-> requester ID and DID to mean the GIC ITS device ID?
+Yes, the Cygnus/iProc are the oddest. The others (BCM33xx (not yet
+supported) and BCM63xxx) just have separate one-off interrupt register
+blocks.
 
-Sorry, that was a typo on my part...where I said DID I meant RID.
+To be clear, since I'm not sure if you're confused below:
 
-Thanks,
-Stuart
+ * Cygnus is a family of chips using the IPROC architecture, coming from
+   the Infrastructure/Networking Group; there are BCMxxxx numbers noted
+   in arch/arm/mach-bcm/Kconfig for them, but I usually just refer to
+   the Cygnus family or the IPROC architecture.
+
+ * BCM63xxx is a class of DSL chips from the Broadband/Connectivity
+   Group.
+
+> > > > > We recently merged nested irqdomain support as well, which might help here,
+> > > > > or might not be needed.
+> > > > 
+> > > > I'm not familiar with nested irqdomains. Do they address anything like
+> > > > the above problem?
+> > > 
+> > > The problem that nested irqdomains address is when an interrupt is handled
+> > > by two irqchips, in particular when one irqchip handles a virtual interrupt
+> > > number that was claimed by another irqchip already.
+> > 
+> > I'll do some reading on that, but it definitely doesn't address the main
+> > problem here.
+> 
+> Ok, back to the drawing board then: How about turning the probe order around
+> and splitting the SoC-specific part out into its own platform_driver:
+> 
+> Instead of bus_prepare/bus_unprepare for bcm63138, you'd get a
+
+bcm63138 does not need the bus_{,un}prepare. That's for IPROC/Cygnus.
+
+> bcm63138_nand_driver with its own probe() function that calls the
+> common probe function. That would make the soc specific parts
+> better contained and match how we normally do abstractions of
+> similar drivers.
+
+OK, so I can imagine this might require changing the DT binding a bit [1]
+(is that your goal?). But what's the intended software difference? [2]
+I'll still be passing around the same sorts of callbacks from the
+'iproc_nand' probe to the common probe function.
+
+Brian
+
+[1] e.g.:
+
+       nand: nand@18046000 {
+               compatible = "brcm,iproc-nand", "brcm,brcmnand-v6.1", "brcm,brcmnand";
+               reg = <0x18046000 0x600>, <0xf8105408 0x600>, <0x18046f00 0x20>;
+               reg-names = "nand", "iproc-idm", "iproc-ext";
+               interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+
+               #address-cells = <1>;
+               #size-cells = <0>;
+
+               brcm,nand-has-wp;
+       };
+
+This captures the extra "iproc-*" register ranges. Then we could have
+the iproc_nand driver bind against "brcm,iproc-nand", then call into the
+common probe, which would then accept/reject based on
+"brcm,brcmnand-vX.Y".
+
+[2] The DT structure from [1] could actually accommodate either driver
+structure just fine. So maybe that means it's a better hardware
+description?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
