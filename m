@@ -1,43 +1,32 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v3 3/8] mfd: arizona: Add support for WM8998 and WM1814
-Date: Fri, 8 May 2015 10:11:45 +0100
-Message-ID: <20150508091145.GA9991@opensource.wolfsonmicro.com>
-References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com> <1430493319-23808-4-git-send-email-rf@opensource.wolfsonmicro.com> <20150507085238.GA16220@x1>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/6] dmaengine: sun6i: Add support for
+ Allwinner H3 (sun8i) variant
+Date: Fri, 8 May 2015 14:56:05 +0530
+Message-ID: <20150508092605.GG3521@localhost>
+References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com>
+ <1430904693-1404-5-git-send-email-jenskuske@gmail.com>
+Reply-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDLNNTP63EBBB7UBWKVAKGQENUR2U4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150507085238.GA16220@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
+In-Reply-To: <1430904693-1404-5-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 07, 2015 at 09:52:38AM +0100, Lee Jones wrote:
-> On Fri, 01 May 2015, Richard Fitzgerald wrote:
-> 
-> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> > ---
-> >  drivers/mfd/Kconfig                   |    6 +
-> >  drivers/mfd/Makefile                  |    3 +
-> >  drivers/mfd/arizona-core.c            |  105 ++-
-> >  drivers/mfd/arizona-i2c.c             |    8 +
-> >  drivers/mfd/arizona-irq.c             |    9 +
-> >  drivers/mfd/arizona.h                 |    5 +
-> >  drivers/mfd/wm8998-tables.c           | 1592 +++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/arizona/core.h      |    3 +
-> >  include/linux/mfd/arizona/pdata.h     |    2 +
-> >  include/linux/mfd/arizona/registers.h |  220 +++++
-> >  10 files changed, 1945 insertions(+), 8 deletions(-)
-> >  create mode 100644 drivers/mfd/wm8998-tables.c
-> 
-> How orthogonal is this patch?  Can I just take it?
-> 
-> For my own reference:
->   Acked-by: Lee Jones <lee.jones@linaro.org>
+On Wed, May 06, 2015 at 11:31:31AM +0200, Jens Kuske wrote:
+> The H3 SoC has the same dma engine as the A31 (sun6i), with a
+> reduced amount of endpoints and physical channels. Add the proper
+> config data and compatible string to support it.
+Applied, thanks
 
-
-This patches code added by patch 1 "mfd: arizona: Split INx_MODE into two fields" so you'll
-need to take that one as well. But if you are ok with that change too then yes it's ok to
-take both of them into mfd.
-
+-- 
+~Vinod
