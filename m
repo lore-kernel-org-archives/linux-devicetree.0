@@ -1,27 +1,69 @@
-From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Subject: Re: Re: BCM2836 (Raspberry Pi 2) port
-Date: Fri, 08 May 2015 18:14:54 +0200
-Message-ID: <4137213.WVJY1et48u@kongar>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <5539C5A4.5070409@wwwdotorg.org>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Fri, 8 May 2015 10:17:02 -0600
+Message-ID: <CANLsYkxFzQPCWXb0w8BddtuJB_cXUtUHBTapYFDF9zqhDBQHrw@mail.gmail.com>
+References: <1431012969-16338-1-git-send-email-ivan.ivanov@linaro.org>
+	<1431012969-16338-3-git-send-email-ivan.ivanov@linaro.org>
+	<CANLsYkzNXBH0d6v1Ny_JwpW6NcKr9v0oAi9K3YfipwDgHWfMMA@mail.gmail.com>
+	<1431092877.21307.18.camel@linaro.org>
+	<CANLsYkyNYQf80c+8uMbZDr=kQ2YEOqy2aS8muEJsLsanDRGLOQ@mail.gmail.com>
+	<1431094640.21307.23.camel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5539C5A4.5070409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1431094640.21307.23.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 23 April 2015, 22:25:08 wrote Stephen Warren:
-> > Hit any key to stop autoboot:  0 
-> > U-Boot> setenv fdt_high fffffff
+On 8 May 2015 at 08:17, Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+> On Fri, 2015-05-08 at 08:13 -0600, Mathieu Poirier wrote:
+>> On 8 May 2015 at 07:47, Ivan T. Ivanov ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Fri, 2015-05-08 at 07:38 -0600, Mathieu Poirier wrote:
+>> > > On 7 May 2015 at 09:36, Ivan T. Ivanov ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > > > Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
+>> > > >
+>> > > >
+>> > > > +       replicator@824000 {
+>> > > > +               compatible = "qcom,coresight-replicator", "arm,primecell";
+>> > >
+>> > > Shouldn't it be "qcom,coresight-replicator1x" ?
+>> > >
+>> >
+>> >
+>> >
+>> > True, I still wonder, why we have to have this compatible string?
+>> > Drivers are probed by amba_id and "arm,primecell", after all.
+>> >
+>>
+>> Drivers have their own compatible strings for historical reasons,
+>> something I've been meaning to fix for a long time now...
+>>
+>
+> Yep, I see that they have been platform drivers in the past, but now
+> they are not, except coresight-replicator driver. IMHO, having
+> additional compatible string could lead just to confusion.
 
-Any specific reason to set fdt_high to fffffff?
+I did a little more research on this and based on what I found in the
+kernel it may not need "fixing" after all.  The majority of drivers
+that do specify "arm,primecell" also specify a device-specific
+compatible string.  And in the case of CoreSight devices were
+implementers can do pretty much whatever they  want with the ID
+strings, it is only a matter of time before we need to call something
+like of_device_is_compatible() to fix a quirk.
 
-Best regards,
-Alexander
+Unless someone heavy asks to remove the device-specific compatible
+strings I'd prefer keeping the current trend set forth by other
+drivers and as such, will ask you to add the "1x" in this bindings.
 
+Thanks,
+Mathieu
+
+>
+> Regards,
+> Ivan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
