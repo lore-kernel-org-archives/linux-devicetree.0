@@ -1,59 +1,29 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: xilinx-xadc: Add optional xlnx,extend-name
- property
-Date: Fri, 08 May 2015 14:43:14 -0400
-Message-ID: <554D03C2.8030106@kernel.org>
-References: <1431038644-41600-1-git-send-email-xander.huff@ni.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add "nor-jedec" flash compatible binding
+Date: Fri, 8 May 2015 11:47:54 -0700
+Message-ID: <20150508184754.GA32500@ld-irv-0074>
+References: <1431066098-19821-1-git-send-email-zajec5@gmail.com>
+ <554CDD8C.7050000@wwwdotorg.org>
+ <20150508184317.GZ32500@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431038644-41600-1-git-send-email-xander.huff-acOepvfBmUk@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150508184317.GZ32500@ld-irv-0074>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/15 18:44, Xander Huff wrote:
-> To better facilitate user-mode access to optional aux channels, allow
-> device trees to specify a custom extended name for defined channels.
-> 
-> Signed-off-by: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
-> Reviewed-by: Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>
-> Reviewed-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
-> --
-> Natinst-ReviewBoard-ID: 97119
-Interesting idea. I'd like to let this sit for a fair while to see what
-comments it gets.  If it makes sense for this driver, it probably makes
-sense for a lot of others.  As such we may well want to have a general
-binding for this, rather than one for just this part.
+On Fri, May 08, 2015 at 11:43:17AM -0700, Brian Norris wrote:
+> I'm open to change, as this binding is new in 4.1-rc1.
 
-Thanks,
+Though we'd need to make sure any change to "nor-jedec" gets applied to
+the shmobile platforms that have started using this string in
+linux-next.
 
-Jonathan
-> ---
->  Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-> index d71258e..4c5a60b 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-> @@ -68,6 +68,8 @@ Optional properties:
->  			  Note each channel number should only be used at most
->  			  once.
->  		Optional properties:
-> +			* xlnx,extend-name: Custom extended name for the
-> +			  channel.
->  			* xlnx,bipolar: If set the channel is used in bipolar
->  			  mode.
->  
-> @@ -107,6 +109,7 @@ Examples:
->  			#size-cells = <0>;
->  			channel@0 {
->  				reg = <0>;
-> +				xlnx,extend-name = "vin_v";
->  				xlnx,bipolar;
->  			};
->  		};
-> 
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
