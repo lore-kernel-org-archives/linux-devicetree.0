@@ -1,48 +1,96 @@
-From: Mark Rutland <mark.rutland@arm.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
 Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: Add msm8916 CoreSight components
-Date: Fri, 8 May 2015 19:00:53 +0100
-Message-ID: <20150508180052.GD11680@leverpostej>
+Date: Fri, 8 May 2015 12:01:28 -0600
+Message-ID: <CANLsYkwyBF=T8F_4Eth3tRj10gFxfZWpRZTe9GT2DDMjNALzXw@mail.gmail.com>
 References: <1431012969-16338-1-git-send-email-ivan.ivanov@linaro.org>
- <1431012969-16338-3-git-send-email-ivan.ivanov@linaro.org>
- <CANLsYkzNXBH0d6v1Ny_JwpW6NcKr9v0oAi9K3YfipwDgHWfMMA@mail.gmail.com>
- <1431092877.21307.18.camel@linaro.org>
+	<1431012969-16338-3-git-send-email-ivan.ivanov@linaro.org>
+	<CANLsYkzNXBH0d6v1Ny_JwpW6NcKr9v0oAi9K3YfipwDgHWfMMA@mail.gmail.com>
+	<1431092877.21307.18.camel@linaro.org>
+	<CANLsYkyNYQf80c+8uMbZDr=kQ2YEOqy2aS8muEJsLsanDRGLOQ@mail.gmail.com>
+	<1431094640.21307.23.camel@linaro.org>
+	<CANLsYkxFzQPCWXb0w8BddtuJB_cXUtUHBTapYFDF9zqhDBQHrw@mail.gmail.com>
+	<7DD9F545-FA01-427B-BB6E-9A54F1DFF94E@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431092877.21307.18.camel@linaro.org>
+In-Reply-To: <7DD9F545-FA01-427B-BB6E-9A54F1DFF94E@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 08, 2015 at 02:47:57PM +0100, Ivan T. Ivanov wrote:
->=20
-> On Fri, 2015-05-08 at 07:38 -0600, Mathieu Poirier wrote:
-> > On 7 May 2015 at 09:36, Ivan T. Ivanov ivanov@linaro.org> wrote:
-> > > Add initial set of CoreSight components found on Qualcomm's 8x16 =
-chipset.
-> > >=20
-> > >=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0replicator@824000 {
-> > > +               compatible =3D "qcom,coresight-replicator", "arm,=
-primecell";
-> >=20
-> > Shouldn't it be "qcom,coresight-replicator1x" ?
-> >=20
->=20
->=20
->=20
-> True, I still wonder, why we have to have this compatible string?=20
-> Drivers are probed by amba_id and "arm,primecell", after all.
+On 8 May 2015 at 11:57, Ivan T. Ivanov <ivan.ivanov@linaro.org> wrote:
+>
+>> On May 8, 2015, at 7:17 PM, Mathieu Poirier <mathieu.poirier@linaro.=
+org> wrote:
+>>
+>> On 8 May 2015 at 08:17, Ivan T. Ivanov <ivan.ivanov@linaro.org> wrot=
+e:
+>>>
+>>> On Fri, 2015-05-08 at 08:13 -0600, Mathieu Poirier wrote:
+>>>> On 8 May 2015 at 07:47, Ivan T. Ivanov ivanov@linaro.org> wrote:
+>>>>> On Fri, 2015-05-08 at 07:38 -0600, Mathieu Poirier wrote:
+>>>>>> On 7 May 2015 at 09:36, Ivan T. Ivanov ivanov@linaro.org> wrote:
+>>>>>>> Add initial set of CoreSight components found on Qualcomm's 8x1=
+6 chipset.
+>>>>>>>
+>>>>>>>
+>>>>>>> +       replicator@824000 {
+>>>>>>> +               compatible =3D "qcom,coresight-replicator", "ar=
+m,primecell";
+>>>>>>
+>>>>>> Shouldn't it be "qcom,coresight-replicator1x" ?
+>>>>>>
+>>>>>
+>>>>>
+>>>>>
+>>>>> True, I still wonder, why we have to have this compatible string?
+>>>>> Drivers are probed by amba_id and "arm,primecell", after all.
+>>>>>
+>>>>
+>>>> Drivers have their own compatible strings for historical reasons,
+>>>> something I've been meaning to fix for a long time now...
+>>>>
+>>>
+>>> Yep, I see that they have been platform drivers in the past, but no=
+w
+>>> they are not, except coresight-replicator driver. IMHO, having
+>>> additional compatible string could lead just to confusion.
+>>
+>> I did a little more research on this and based on what I found in th=
+e
+>> kernel it may not need "fixing" after all.  The majority of drivers
+>> that do specify "arm,primecell" also specify a device-specific
+>> compatible string.  And in the case of CoreSight devices were
+>> implementers can do pretty much whatever they  want with the ID
+>> strings, it is only a matter of time before we need to call somethin=
+g
+>> like of_device_is_compatible() to fix a quirk.
+>>
+>> Unless someone heavy asks to remove the device-specific compatible
+>> strings I'd prefer keeping the current trend set forth by other
+>> drivers and as such, will ask you to add the "1x" in this bindings.
+>
+>
+> Well, I don=E2=80=99t strongly object against this =E2=80=9C1x=E2=80=9D=
+, I will add it.
+> My point is that if we can dynamically detect device version,
+> which we can do in this case, it will be more robust to do it
+> in this way.
 
-The compatible string tells you both the device _and_ the format of the
-other properties, because it tells you which binding applies.
+I agree with you.  The device specific bindings will come handy when
+there is a problem with the device version, something that is bound to
+happen.
 
-So the compatible string should be present regardless, as
-"arm,primecell" does not define the majority of the properties you need
-for the replicator node.
+>
+> If there are not issues with patch 1/2, I will like to fix and
+> resend only this patch.
 
-Thanks,
-Mark.
+I'm good with 1/2, just this patch will be fine.
+
+>
+> Regards,
+> Ivan
+>
+>
