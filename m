@@ -1,104 +1,51 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 0/2] gpio: Allow userspace export from DT
-Date: Fri, 8 May 2015 11:31:53 +0200
-Message-ID: <20150508093153.GD1942@localhost>
-References: <20150413110515.9681.58848.stgit@localhost>
- <20150504084925.GB4047@localhost>
- <CACRpkdbFKs8mALw7q2d0EEDkhxKNLgeiFB5TyZ6ZPpfcW-c+oQ@mail.gmail.com>
- <20150506130615.GB5302@localhost>
- <CANh8Qzy7D=O0C7nw_M0LCvE887uxsCjRmvQ8fcKTcf4dJNm7iA@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/12] clocksource: sti: Provide 'use timer as sched
+ clock' capability
+Date: Fri, 8 May 2015 10:36:03 +0100
+Message-ID: <20150508093603.GB29044@x1>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+ <1431005924-21777-4-git-send-email-lee.jones@linaro.org>
+ <1431074699.13593.4.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CANh8Qzy7D=O0C7nw_M0LCvE887uxsCjRmvQ8fcKTcf4dJNm7iA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Fuzzey, Martin" <mfuzzey@parkeon.com>
-Cc: Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1431074699.13593.4.camel@x220>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 06, 2015 at 07:56:05PM +0200, Fuzzey, Martin wrote:
-> On 6 May 2015 at 15:06, Johan Hovold <johan@kernel.org> wrote:
-> > On Wed, May 06, 2015 at 09:22:22AM +0200, Linus Walleij wrote:
-> > > On Mon, May 4, 2015 at 10:49 AM, Johan Hovold <johan@kernel.org> wrote:
-> > > > On Mon, Apr 13, 2015 at 01:05:15PM +0200, Martin Fuzzey wrote:
-> > >
-> > > >> The above means that, in order to export the GPIO to userspace via
-> > > >> /sys/class/gpio/export the userspace code must know the exact hardware and
-> > > >> kernel version information.
-> > > >
-> > > > Not quite. You can still determine the gpio number in the above cases by
-> > > > walking the sysfs tree to find the chip and it's base. This is the only
-> > > > way to do this for dynamic buses such as USB.
-> > >
-> 
-> A problem with that is that the "label" sysfs attribute is not
-> necessarilly unique (and is even documented as being non unique).
-> Many drivers just use the chip name as the label so if you have more
-> than one of them...
-> 
-> Of course if you know the bus and bus address it is possible to find
-> the associated GPIO base but why should userspace have to know that?
-> Isn't the whole point of the DT to describe such hardware details?
+On Fri, 08 May 2015, Paul Bolle wrote:
+> On Thu, 2015-05-07 at 14:38 +0100, Lee Jones wrote:
+> > --- a/drivers/clocksource/Kconfig
+> > +++ b/drivers/clocksource/Kconfig
+>=20
+> > +config CLKSRC_ST_LPC_TIMER_SCHED_CLOCK
+> > +	bool
+> > +	depends on CLKSRC_ST_LPC
+> > +	default y
+> > +	help
+> > +	  Use Low Power controller timer clock source as sched_clock
+>=20
+> This adds, as far as I can see, a Kconfig symbol that will always be =
+in
+> lockstep with CLKSRC_ST_LPC. Ie, CLKSRC_ST_LPC and
+> CLKSRC_ST_LPC_TIMER_SCHED_CLOCK will always both be 'n' or both be 'y=
+'.
+>=20
+> Are there plans to break that lockstep in the future?
 
-Yes, eventually, but the current gpio sysfs-interface does not allow for
-that information to be confined to DT. It has always required knowledge
-of the hardware (e.g. the pin numbers), but people eventually discovered
-that those numbers may actually change.
+What's stopping CONFIG_CLKSRC_ST_LPC_TIMER_SCHED_CLOCK=3Dn?
 
-I'm only pointing out that *that* particular quirk can be worked around
-by providing different information about the hardware (e.g. the bus
-topology).
-
-IMO, the current interface should remain to be a pain to use so that
-people either fix the drivers or start working on a replacement
-user-space interface.
-
-> > > Maybe we should start providing something like an
-> > > "lsgpio" utility in tools/gpio to do this, just as a hint
-> > > to userspace people on how things should be done.
-> >
-> > I think we should focus on defining a new user-space interface rather
-> > than make it easier to use the current one (it should really only be
-> > used for development or one-off hacks IMO).
-> >
-> Doesn't the ability to name GPIOs, fix their direction, and "pre
-> export" them  in the device tree remove most of the warts of the
-> current interface? (for GPIOs for which it is used in any case)
-
-I agree with you that such properties (e.g. direction and function)
-should be defined in DT. A gpio should not be exported until requested
-by userspace though. This allow for the case where a userspace driver
-can be used as a fall back if a kernel driver isn't available or loaded.
-
-> > > >> This patch series solves both problems by performing the external
-> > > >> signal => GPIO mapping in the device tree.
-> > > >
-> > > > As Rob already mentioned, what we want is some way to declare pin
-> > > > functions. These could then be requested from userspace (or used in DT,
-> > > > something which should allow for further refactoring there as well)
-> > > > unless a driver has already claimed them.
-> > >
-> > > We have the ability to name the GPIO lines (I usually refer to
-> > > lines rather than pins, as pins are physical and not all GPIOs
-> > > are, actually) using the array "names" in struct gpio_chip,
-> > > however this has no DT binding, so maybe people should
-> > > work on that. These names appear as named line files
-> > > in sysfs IIRC. Or maybe you're thinking of something else?
-> >
-> > Yes, something like that. As you mention above, if it was possibly to
-> > define those names in firmware, even the current sysfs interface would
-> > expose the pins as
-> >
-> >         /sys/class/gpio/<function>
-> >
-> > rather than say /sys/class/gpio/gpio279, thereby solving the gpio-number
-> > look-up issue. Well, to actually make the pin available *from* userspace
-> > you'd currently still need the number...
-> >
-> Indeed that  doesn't solve the how to export it problem.
-> AFAICT nothing is visible in sysfs until the export has been done.
-
-That will be solved by the new userspace interface. ;)
-
-Johan
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
