@@ -1,60 +1,69 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] usb: dwc3: dwc3-st: Update the incorrect DT dwc3
- example.
-Date: Fri, 8 May 2015 11:31:40 +0100
-Message-ID: <20150508103140.GA15502@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
- <1430400652-3366-4-git-send-email-peter.griffin@linaro.org>
- <20150507151358.GA14123@griffinp-ThinkPad-X1-Carbon-2nd>
- <20150507161555.GA29183@saruman.tx.rr.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Fri, 8 May 2015 11:58:57 +0100
+Message-ID: <20150508105857.GB22845@sirena.org.uk>
+References: <CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
+ <20150505105714.GA22845@sirena.org.uk>
+ <CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
+ <20150505171252.GI22845@sirena.org.uk>
+ <CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
+ <20150507055231.GB32399@codeaurora.org>
+ <20150507110233.GR15510@sirena.org.uk>
+ <20150507211855.GA2455@codeaurora.org>
+ <20150507221842.GW22845@sirena.org.uk>
+ <CAKohpomU8wm0T=A7EkosdOjXbP8q2Cb726Hsjh08KTKYjoz3-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="laBhmkiQtYGknO4U"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150507161555.GA29183-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAKohpomU8wm0T=A7EkosdOjXbP8q2Cb726Hsjh08KTKYjoz3-A@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
 
-On Thu, 07 May 2015, Felipe Balbi wrote:
+--laBhmkiQtYGknO4U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, May 07, 2015 at 04:13:58PM +0100, Peter Griffin wrote:
-> > Hi Felipe,
-> > 
-> > On Thu, 30 Apr 2015, Peter Griffin wrote:
-> > 
-> > > There is a subtle typo phys-names should be phy-names. Using the
-> > > current example means you don't have working usb (as you fail to
-> > > obtain the phys). Also update the example to use the generic phy
-> > > type constants which are now used for miphy28.
-> > > 
-> > > Additionally also remove the unnecessary new line in the example.
-> > > 
-> > > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-> > 
-> > Can you take this dwc3 DT doc update patch via your tree?
-> 
-> only this patch ?
+On Fri, May 08, 2015 at 12:17:44PM +0530, Viresh Kumar wrote:
 
-Yes, I think the test will go via Maximes STI tree
+> Thanks Mark. I have reworded it as:
+>=20
+> - opp-microamp: Current drawn by the device in micro Amperes. It is used =
+to set
+>   the most efficient regulator operating mode.
+>=20
+>   Should only be set if opp-microvolt is set for the OPP.
+>=20
+>   Entries for multiple regulators must be present in the same order as
+>   regulators are specified in device's DT node. If this property isn't re=
+quired
+>   for few regulators, then this should be marked as zero for them. If it =
+isn't
+>   required for any regulator, then this property need not be present.
 
-> Sure. Just post on linux-usb and I'll fetch it from
-> there.
+> Please let me know if this looks fine now.
 
-Brilliant, thanks. I've sent it see here https://lkml.org/lkml/2015/5/7/809
-with linux-usb on CC (sorry for missing that off the first time round)
+That should be fine, microamperes is usually one word.
 
-regards,
+--laBhmkiQtYGknO4U
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Peter.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBCAAGBQJVTJbwAAoJECTWi3JdVIfQ4ZUH/0827Tk+IkaZuV7pkqOgRkRT
+w09VJXpZANXGr5OFBuEwTUOJQn37Sh5L8Rnvt22jiWnZOD0cdFVqZC+dWIZkdFXf
+aflaDgosK+hb381FRzN4di+r1DQLVcH1Gtnr6IHf31T+5LJf0D9mBxZaFzOF+lc1
+d8tkps3NOVm/HFrJi30CdZ26ZLU5oUSoF+eGBvB6dOwkPxWK2SDLuHGXgkWxj74p
+e28G57VnXbDdNxmY0vk+eIdOOLtNUlTvenIRHfMSDDKC6UG7QWhyPqQGMOSfJTRT
+kWFi4reCtgq8GiAzXxd8UFXMpGiu6JXZTQ0lZlmJzZtWmZhNtU5PGeBc/5TyKYk=
+=0S5J
+-----END PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--laBhmkiQtYGknO4U--
