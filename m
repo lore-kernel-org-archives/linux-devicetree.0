@@ -1,29 +1,79 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add "nor-jedec" flash compatible binding
-Date: Fri, 8 May 2015 11:47:54 -0700
-Message-ID: <20150508184754.GA32500@ld-irv-0074>
-References: <1431066098-19821-1-git-send-email-zajec5@gmail.com>
- <554CDD8C.7050000@wwwdotorg.org>
- <20150508184317.GZ32500@ld-irv-0074>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150508184317.GZ32500@ld-irv-0074>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH v2] ASoC: bt-sco: Add devicetree support for bt-sco codec
+Date: Fri,  8 May 2015 21:02:34 +0200
+Message-ID: <1431111754-14562-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 08, 2015 at 11:43:17AM -0700, Brian Norris wrote:
-> I'm open to change, as this binding is new in 4.1-rc1.
+Add devicetree support for bluetooth SCO link codec.
 
-Though we'd need to make sure any change to "nor-jedec" gets applied to
-the shmobile platforms that have started using this string in
-linux-next.
+Signed-off-by: Marek Belisko <marek@goldelico.com>
+---
+changes from v1:
+- removed "linux,bt-sco" compatible property + update documentation
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/sound/bt-sco.txt    | 13 +++++++++++++
+ Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
+ sound/soc/codecs/bt-sco.c                             |  9 +++++++++
+ 3 files changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/bt-sco.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/bt-sco.txt b/Documentation/devicetree/bindings/sound/bt-sco.txt
+new file mode 100644
+index 0000000..29b8e5d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/bt-sco.txt
+@@ -0,0 +1,13 @@
++Bluetooth-SCO audio CODEC
++
++This device support generic Bluetooth SCO link.
++
++Required properties:
++
++  - compatible : "delta,dfbmcs320"
++
++Example:
++
++codec: bt_sco {
++	compatible = "delta,dfbmcs320";
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ed3bd55..7a3a657 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -55,6 +55,7 @@ crystalfontz	Crystalfontz America, Inc.
+ cubietech	Cubietech, Ltd.
+ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+ davicom	DAVICOM Semiconductor, Inc.
++delta	Delta Electronics, Inc.
+ denx	Denx Software Engineering
+ digi	Digi International Inc.
+ digilent	Diglent, Inc.
+diff --git a/sound/soc/codecs/bt-sco.c b/sound/soc/codecs/bt-sco.c
+index e7238b8..18c9357 100644
+--- a/sound/soc/codecs/bt-sco.c
++++ b/sound/soc/codecs/bt-sco.c
+@@ -74,9 +74,18 @@ static struct platform_device_id bt_sco_driver_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(platform, bt_sco_driver_ids);
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id bt_sco_codec_of_match[] = {
++	{ .compatible = "delta,dfbmcs320", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, bt_sco_codec_of_match);
++#endif
++
+ static struct platform_driver bt_sco_driver = {
+ 	.driver = {
+ 		.name = "bt-sco",
++		.of_match_table = of_match_ptr(bt_sco_codec_of_match),
+ 	},
+ 	.probe = bt_sco_probe,
+ 	.remove = bt_sco_remove,
+-- 
+1.9.1
