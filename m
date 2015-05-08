@@ -1,29 +1,57 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v12 1/6] drm/edid: add function to help find SADs
-Date: Fri, 8 May 2015 12:33:25 +0100
-Message-ID: <20150508113325.GH2067@n2100.arm.linux.org.uk>
-References: <cover.1431083916.git.moinejf@free.fr>
- <61f4eab5f21cc5eea1b74858852c4569dd839ac8.1431083916.git.moinejf@free.fr>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 03/12] clocksource: sti: Provide 'use timer as sched
+ clock' capability
+Date: Fri, 08 May 2015 13:47:05 +0200
+Message-ID: <1431085625.13593.39.camel@x220>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+	 <1431005924-21777-4-git-send-email-lee.jones@linaro.org>
+	 <1431074699.13593.4.camel@x220> <20150508093603.GB29044@x1>
+	 <1431078730.13593.14.camel@x220> <20150508102938.GD29044@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <61f4eab5f21cc5eea1b74858852c4569dd839ac8.1431083916.git.moinejf@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Mark Brown <broonie@kernel.org>, Dave Airlie <airlied@gmail.com>, Andrew Jackson <Andrew.Jackson@arm.com>, Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150508102938.GD29044@x1>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 08, 2015 at 09:39:33AM +0200, Jean-Francois Moine wrote:
-> From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+On Fri, 2015-05-08 at 11:29 +0100, Lee Jones wrote:
+> Ah, you mean from menuconfig.  I almost forgot what that was. ;)
 > 
-> Add a function to find the start of the SADs in the ELD.  This
-> complements the helper to retrieve the SAD count.
-> 
-> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+> I can add a menu option, no problem.
 
-NAK.  Where's my sign-off gone?  This is unacceptable behaviour.
+It's not just menuconfig:
+    $ grep -e CONFIG_ARCH_STI -e CONFIG_CLKSRC_ST_LPC .config 
+    CONFIG_ARCH_STI=y
+    CONFIG_CLKSRC_ST_LPC=y
+    CONFIG_CLKSRC_ST_LPC_TIMER_SCHED_CLOCK=y
+    $ vim .config 
+    $ grep -e CONFIG_ARCH_STI -e CONFIG_CLKSRC_ST_LPC .config 
+    CONFIG_ARCH_STI=y
+    # CONFIG_CLKSRC_ST_LPC is not set
+    # CONFIG_CLKSRC_ST_LPC_TIMER_SCHED_CLOCK is not set
+    $ make ARCH=arm silentoldconfig
+    scripts/kconfig/conf  --silentoldconfig Kconfig
+    #
+    # configuration written to .config
+    #
+    $ grep -e CONFIG_ARCH_STI -e CONFIG_CLKSRC_ST_LPC .config 
+    CONFIG_ARCH_STI=y
+    CONFIG_CLKSRC_ST_LPC=y
+    CONFIG_CLKSRC_ST_LPC_TIMER_SCHED_CLOCK=y
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+So I think that, if you want to be able to set
+CLKSRC_ST_LPC_TIMER_SCHED_CLOCK to 'n' even though CLKSRC_ST_LPC is 'y',
+you need to add a prompt. Or have you found a way around this?
+
+Thanks,
+
+
+Paul Bolle
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
