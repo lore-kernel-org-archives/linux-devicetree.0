@@ -1,126 +1,248 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 02/19] memory: tegra: Add MC flush support
-Date: Mon, 20 Jul 2015 15:14:25 +0200
-Message-ID: <20150720131410.GA1098@ulmo>
-References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
- <1436791197-32358-3-git-send-email-jonathanh@nvidia.com>
- <20150717095754.GG3057@ulmo>
- <20150717102049.GQ6287@tbergstrom-lnx.Nvidia.com>
- <20150717113124.GP3057@ulmo>
- <20150720095941.GZ6287@tbergstrom-lnx.Nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150720095941.GZ6287-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v13 1/3] drm/i2c: tda998x: Add support of a DT graph of ports
+Date: Fri, 8 May 2015 10:18:45 +0200
+Message-ID: <3ac20722ba6bb8204af5f6408d2efdf44ce38417.1437397271.git.moinejf@free.fr>
+References: <cover.1437397270.git.moinejf@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1437397270.git.moinejf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Two kinds of ports may be declared in a DT graph of ports: video and audio.
+This patch accepts the port value from a video port as an alternative
+to the video-ports property.
+It also accepts audio ports in the case the transmitter is not used as
+a slave encoder.
+The new file include/sound/tda998x.h prepares to the definition of
+a tda998x CODEC.
 
---3uo+9/B/ebqu+fSQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+---
+ .../devicetree/bindings/drm/i2c/tda998x.txt        | 51 ++++++++++++
+ drivers/gpu/drm/i2c/tda998x_drv.c                  | 90 +++++++++++++++++++---
+ include/sound/tda998x.h                            |  8 ++
+ 3 files changed, 140 insertions(+), 9 deletions(-)
+ create mode 100644 include/sound/tda998x.h
 
-On Mon, Jul 20, 2015 at 12:59:41PM +0300, Peter De Schrijver wrote:
-> On Fri, Jul 17, 2015 at 01:31:24PM +0200, Thierry Reding wrote:
-> > * PGP Signed by an unknown key
-> >=20
-> > On Fri, Jul 17, 2015 at 01:20:49PM +0300, Peter De Schrijver wrote:
-> > > On Fri, Jul 17, 2015 at 11:57:55AM +0200, Thierry Reding wrote:
-> > > > > Old Signed by an unknown key
-> > > >=20
-> > > > On Mon, Jul 13, 2015 at 01:39:40PM +0100, Jon Hunter wrote:
-> > > > > The Tegra memory controller implements a flush feature to flush p=
-ending
-> > > > > accesses and prevent further accesses from occurring. This featur=
-e is
-> > > > > used when powering down IP blocks to ensure the IP block is in a =
-good
-> > > > > state. The flushes are organised by software groups and IP blocks=
- are
-> > > > > assigned in hardware to the different software groups. Add helper
-> > > > > functions for requesting a handle to an MC flush for a given
-> > > > > software group and enabling/disabling the MC flush itself.
-> > > > >=20
-> > > > > This is based upon a change by Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
-> > > > >=20
-> > > > > Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > > ---
-> > > > >  drivers/memory/tegra/mc.c | 110 ++++++++++++++++++++++++++++++++=
-++++++++++++++
-> > > > >  drivers/memory/tegra/mc.h |   2 +
-> > > > >  include/soc/tegra/mc.h    |  34 ++++++++++++++
-> > > > >  3 files changed, 146 insertions(+)
-> > > >=20
-> > > > Do we know if this is actually necessary? I remember having a discu=
-ssion
-> > > > with Arnd Bergmann a while ago, and the Linux driver model kind of
-> > > > assumes that by the time a device is disabled all outstanding acces=
-ses
-> > > > will have stopped.
-> > > >=20
-> > > > Do we have a way to determine that this even makes a difference? Ca=
-n we
-> > > > trigger a case where not doing this would cause breakage and see th=
-at
-> > > > adding this fixes that particular issue?
-> > > >=20
-> > >=20
-> > > Most likely it is. The memory controller can still be processing requ=
-ests
-> > > when the peripheral domain is powergated. This would mean the respons=
-e cannot
-> > > be delivered in that case. So we need to be sure there are no outstan=
-ding
-> > > requests before shutting down the domain.
-> >=20
-> > My point is that that's the driver's responsibility anyway, hence making
-> > the explicit flush unnecessary.
-> >=20
->=20
-> The peripheral driver doesn't know how long a request is queued in the me=
-mory
-> controller. So it can't be responsible for ensuring this.
+diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+index e9e4bce..386b6c3 100644
+--- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
++++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+@@ -16,6 +16,35 @@ Optional properties:
+ 
+   - video-ports: 24 bits value which defines how the video controller
+ 	output is wired to the TDA998x input - default: <0x230145>
++	This property is not used when ports are defined.
++
++Optional nodes:
++
++  - port: up to three ports.
++	The ports are defined according to [1].
++
++    Video port.
++	There may be only one video port.
++	This one must contain the following property:
++
++	- port-type: must be "rgb"
++
++	and may contain the optional property:
++
++	- reg: 24 bits value which defines how the video controller
++		output is wired to the TDA998x input (video pins)
++		When absent, the default value is <0x230145>.
++
++    Audio ports.
++	There may be one or two audio ports.
++	These ones must contain the following properties:
++
++	- port-type: must be "i2s" or "spdif"
++
++	- reg: 8 bits value which defines how the audio controller
++		output is wired to the TDA998x input (audio pins)
++
++[1] Documentation/devicetree/bindings/graph.txt
+ 
+ Example:
+ 
+@@ -26,4 +55,26 @@ Example:
+ 		interrupts = <27 2>;		/* falling edge */
+ 		pinctrl-0 = <&pmx_camera>;
+ 		pinctrl-names = "default";
++
++		port@230145 {
++			port-type = "rgb";
++			reg = <0x230145>;
++			hdmi_0: endpoint {
++				remote-endpoint = <&lcd0_0>;
++			};
++		};
++		port@3 {			/* AP1 = I2S */
++			port-type = "i2s";
++			reg = <0x03>;
++			tda998x_i2s: endpoint {
++				remote-endpoint = <&audio1_i2s>;
++			};
++		};
++		port@4 {			 /* AP2 = S/PDIF */
++			port-type = "spdif";
++			reg = <0x04>;
++			tda998x_spdif: endpoint {
++				remote-endpoint = <&audio1_spdif1>;
++			};
++		};
+ 	};
+diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+index 424228b..b0a730a 100644
+--- a/drivers/gpu/drm/i2c/tda998x_drv.c
++++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+@@ -27,6 +27,7 @@
+ #include <drm/drm_edid.h>
+ #include <drm/drm_of.h>
+ #include <drm/i2c/tda998x.h>
++#include <sound/tda998x.h>
+ 
+ #define DBG(fmt, ...) DRM_DEBUG(fmt"\n", ##__VA_ARGS__)
+ 
+@@ -47,6 +48,8 @@ struct tda998x_priv {
+ 	wait_queue_head_t wq_edid;
+ 	volatile int wq_edid_wait;
+ 	struct drm_encoder *encoder;
++
++	struct tda998x_audio_s audio;
+ };
+ 
+ #define to_tda998x_priv(x)  ((struct tda998x_priv *)to_encoder_slave(x)->slave_priv)
+@@ -774,6 +777,8 @@ static void tda998x_encoder_set_config(struct tda998x_priv *priv,
+ 			    (p->mirr_f ? VIP_CNTRL_2_MIRR_F : 0);
+ 
+ 	priv->params = *p;
++	priv->audio.port_types[0] = p->audio_format;
++	priv->audio.ports[0] = p->audio_cfg;
+ }
+ 
+ static void tda998x_encoder_dpms(struct tda998x_priv *priv, int mode)
+@@ -1230,9 +1235,57 @@ static struct drm_encoder_slave_funcs tda998x_encoder_slave_funcs = {
+ 
+ /* I2C driver functions */
+ 
++static int tda998x_parse_ports(struct tda998x_priv *priv,
++				struct device_node *np)
++{
++	struct device_node *of_port;
++	const char *port_type;
++	int ret, audio_index, reg, afmt;
++
++	audio_index = 0;
++	for_each_child_of_node(np, of_port) {
++		if (!of_port->name
++		 || of_node_cmp(of_port->name, "port") != 0)
++			continue;
++		ret = of_property_read_string(of_port, "port-type",
++					&port_type);
++		if (ret < 0)
++			continue;
++		ret = of_property_read_u32(of_port, "reg", &reg);
++		if (strcmp(port_type, "rgb") == 0) {
++			if (!ret) {		/* video reg is optional */
++				priv->vip_cntrl_0 = reg >> 16;
++				priv->vip_cntrl_1 = reg >> 8;
++				priv->vip_cntrl_2 = reg;
++			}
++			continue;
++		}
++		if (strcmp(port_type, "i2s") == 0)
++			afmt = AFMT_I2S;
++		else if (strcmp(port_type, "spdif") == 0)
++			afmt = AFMT_SPDIF;
++		else
++			continue;
++		if (ret < 0) {
++			dev_err(&priv->hdmi->dev, "missing reg for %s\n",
++				port_type);
++			return ret;
++		}
++		if (audio_index >= ARRAY_SIZE(priv->audio.ports)) {
++			dev_err(&priv->hdmi->dev, "too many audio ports\n");
++			break;
++		}
++		priv->audio.ports[audio_index] = reg;
++		priv->audio.port_types[audio_index] = afmt;
++		audio_index++;
++	}
++	return 0;
++}
++
+ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
+ {
+ 	struct device_node *np = client->dev.of_node;
++	struct device_node *of_port;
+ 	u32 video;
+ 	int rev_lo, rev_hi, ret;
+ 	unsigned short cec_addr;
+@@ -1337,15 +1390,34 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
+ 	/* enable EDID read irq: */
+ 	reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
+ 
+-	if (!np)
+-		return 0;		/* non-DT */
+-
+-	/* get the optional video properties */
+-	ret = of_property_read_u32(np, "video-ports", &video);
+-	if (ret == 0) {
+-		priv->vip_cntrl_0 = video >> 16;
+-		priv->vip_cntrl_1 = video >> 8;
+-		priv->vip_cntrl_2 = video;
++	/* get the device tree parameters */
++	if (np) {
++		of_port = of_get_child_by_name(np, "port");
++		if (of_port) {				/* graph of ports */
++			of_node_put(of_port);
++			ret = tda998x_parse_ports(priv, np);
++			if (ret < 0)
++				goto fail;
++
++			/* initialize the default audio configuration */
++			if (priv->audio.ports[0]) {
++				priv->params.audio_cfg = priv->audio.ports[0];
++				priv->params.audio_format =
++						priv->audio.port_types[0];
++				priv->params.audio_clk_cfg =
++					priv->params.audio_format ==
++							AFMT_SPDIF ? 0 : 1;
++			}
++		} else {
++
++			/* optional video properties */
++			ret = of_property_read_u32(np, "video-ports", &video);
++			if (ret == 0) {
++				priv->vip_cntrl_0 = video >> 16;
++				priv->vip_cntrl_1 = video >> 8;
++				priv->vip_cntrl_2 = video;
++			}
++		}
+ 	}
+ 
+ 	return 0;
+diff --git a/include/sound/tda998x.h b/include/sound/tda998x.h
+new file mode 100644
+index 0000000..487a809
+--- /dev/null
++++ b/include/sound/tda998x.h
+@@ -0,0 +1,8 @@
++#ifndef SND_TDA998X_H
++#define SND_TDA998X_H
++
++struct tda998x_audio_s {
++	u8 ports[2];			/* AP value */
++	u8 port_types[2];		/* AFMT_xxx */
++};
++#endif
+-- 
+2.1.4
 
-Surely whenever the peripheral reports that the operation is done (be
-that via some DMA controller interrupt or syncpoint increment) the
-operation would have flushed from the memory controller. Drivers are
-already supposed to make sure this is the case when they are removed or
-suspended, so this would mean that we'd be adding all this code for no
-real gain.
-
-It would also explain why we're currently not seeing any such problems.
-
-Also note that I'm not saying no to this, I merely want to make sure
-that it's necessary, and in order to prove so we need tests to produce
-enough traffic for this to be exposed, and then we can also verify that
-the patches actually do what they're supposed to.
-
-Thierry
-
---3uo+9/B/ebqu+fSQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJVrPQuAAoJEN0jrNd/PrOh1YgP/0pKCp1K5Ls2NT9Jp94Vy/56
-Ndk/R294ioHDRPy9V+QnT9DwDLzxNHMeFlAIy3rLqqmtLrtaJjUx5Sj6FaiRLXi3
-thofS0a4TqIFWUKNW7UeNHmkyYWZHjSGsoxq/11oPw3mreHzgxKPwuYWnElD1S3C
-F3FQAlVe1w+W//Fa1wO1CJEtX7/hXGT+M9MERyyzmZTTwOJGfvdeEg5/+PAc7wL7
-74NPVAAu0mbNQ0RH2gTiON/jfJu7ueyM1CdDCD2uhNjMUGVI/LSZjpyGgf4q7kAH
-dUWxaZvU8GfJeqkdowWgZOz+z/M8I3a8sZo9yaz3pvCo9XOrbKKGKYE9rMixzuOA
-teAJiFE267q6x9U0U7kOhUy7fTK0kimIdKnLgMwxZwcGQ4lEugLpCjtnEFOG/z6q
-nopP1gr3O54BT7DmRPpLQ0uJXdz6+aXtvgMkr5M1ps1/h5rGSy14rt7TslAFiHCH
-fdAcLnCJM15gSde2vcXBi9reKQgvCRZ72gk1P9UjOhIx8U1/Y3Ht9Kz0QWUidNre
-hqqjFpYg7kqzXTIRIMxZkQ7V7+Bo2qoreIJgZMhZ0E6u556PJy8+/RoSpyeyHQol
-hd9gc/qQsUpcLIT5prL/F57D8X7PZDDHg7gFBnTA/q5mh0s3OjBWvSa7jVNMBkF0
-zp0eYjYakTh/lC8lSltJ
-=K7SK
------END PGP SIGNATURE-----
-
---3uo+9/B/ebqu+fSQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
