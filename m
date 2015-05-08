@@ -1,88 +1,103 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add "nor-jedec" flash compatible binding
-Date: Fri, 8 May 2015 14:34:14 -0700
-Message-ID: <20150508213414.GE32500@ld-irv-0074>
-References: <1431066098-19821-1-git-send-email-zajec5@gmail.com>
- <554CDD8C.7050000@wwwdotorg.org>
- <20150508184317.GZ32500@ld-irv-0074>
- <CAMuHMdXeen3cU2bb8TXxxtdDjgMCU_FS1Yxdu1b-Tq2xE+x0ZA@mail.gmail.com>
- <554D24DA.8060601@wwwdotorg.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 06/10] mtd: brcmstb_nand: add SoC-specific support
+Date: Fri, 08 May 2015 23:38:11 +0200
+Message-ID: <22310765.EUWHaqSZZD@wuerfel>
+References: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com> <2213714.99tu5uLKxT@wuerfel> <20150508204725.GD32500@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <554D24DA.8060601-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150508204725.GD32500@ld-irv-0074>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-mtd@lists.infradead.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 08, 2015 at 03:04:26PM -0600, Stephen Warren wrote:
-> On 05/08/2015 02:57 PM, Geert Uytterhoeven wrote:
-> >On Fri, May 8, 2015 at 8:43 PM, Brian Norris
-> ><computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>On Fri, May 08, 2015 at 10:00:12AM -0600, Stephen Warren wrote:
-> >>>On 05/08/2015 12:21 AM, Rafa=C5=82 Mi=C5=82ecki wrote:
-> >>>>Starting with commits
-> >>>>8ff16cf ("Documentation: devicetree: m25p80: add "nor-jedec" bind=
-ing")
-> >>>>1103b85 ("mtd: m25p80: bind to "nor-jedec" ID, for auto-detection=
-")
-> >>>>we have "nor-jedec" binding indicating support for JEDEC identifi=
-cation.
-> >>>
-> >>>The documentation looks quite incomplete. "nor-jedec" sounds like
-> >>>it's intended to be something generic. As such, it should be
-> >>>documented in e.g.
-> >>>Documentation/devicetree/bindings/mtd/nor-jedec.txt, not buried in
-> >>>one particular flash device's binding. If it's not intended to be
-> >>>generic, why isn't the existing "winbond,w25q32dw" enough?
-> >>
-> >>It is generic, though there are plenty of additional manufacturer/d=
-evice
-> >>pairs that could go on top of it. m25p80 was (one of?) the first
-> >>supported, so the naming has been based on legacy, and we're in the
-> >>process of unwinding a bit of that. If it helps, we could move the =
-doc
-> >>to .../mtd/spi-nor,nor-jedec.txt or something like that.
-> >>
-> >>>Equally, "nor-jedec" doesn't sound like the right name. It doesn't
-> >>>differentiate between SPI and parallel NOR flash, which presumably
-> >>>need different compatible values, since the programming model is
-> >>>quite different, and the compatible value is supposed to
-> >>>define/imply the SW-visible programming model.
-> >>
-> >>It's definitely for SPI only. There was much discussion about this =
-a
-> >>few months back. Somewhere along the way, it was mentioned that the
-> >>context (SPI slave is a child of SPI master) would make this clear.=
- I'm
-> >>still not sure why we didn't end up with something more descriptive=
-,
-> >>though, like "spi-nor,nor-jedec".
-> >
-> >What about "jedec,spi-nor"?
->=20
-> That seems unique enough to me, or the options below if they're
-> actually applicable.
+On Friday 08 May 2015 13:47:25 Brian Norris wrote:
+> On Fri, May 08, 2015 at 09:49:02PM +0200, Arnd Bergmann wrote:
+> > On Friday 08 May 2015 12:38:50 Brian Norris wrote:
+> > > On Fri, May 08, 2015 at 03:41:10PM +0200, Arnd Bergmann wrote:
+> [...]
+> 
+> > > To be clear, since I'm not sure if you're confused below:
+> > > 
+> > >  * Cygnus is a family of chips using the IPROC architecture, coming from
+> > >    the Infrastructure/Networking Group; there are BCMxxxx numbers noted
+> > >    in arch/arm/mach-bcm/Kconfig for them, but I usually just refer to
+> > >    the Cygnus family or the IPROC architecture.
+> > > 
+> > >  * BCM63xxx is a class of DSL chips from the Broadband/Connectivity
+> > >    Group.
+> > 
+> > Thanks for the clarification, I think that is roughly what I thought it was,
+> > but I'm still not sure about brcmstb. Is that related to bcm63xxx or separate?
+> 
+> I think arch/arm/mach-bcm/Kconfig has the best summary. brcmstb is
+> separate; BCM7xxx is generally (always?) Set-Top Box.
+> 
+> Another potentially confusing point: the main driver is named
+> 'brcsmtb_nand' since the NAND core (and driver) originated from STB
+> chips. But that core was applied to other non-STB chips, and so the
+> driver has been extended.
 
-That could be OK with me. If I can get the magic blessing from the DT
-folks, then I'll send patches to update everything.
+Ok, I see.
 
-> >Is this "SERIAL FLASH DISCOVERABLE PARAMETERS (SFDP)"?
-> >https://www.jedec.org/standards-documents/docs/jesd216b
-> >(Don't have time to register with jedec now...)
-> >
-> >If yes, "jedec,sfdp"? "jedec,jesd216b"?
+> > > > bcm63138_nand_driver with its own probe() function that calls the
+> > > > common probe function. That would make the soc specific parts
+> > > > better contained and match how we normally do abstractions of
+> > > > similar drivers.
+> > > 
+> > > OK, so I can imagine this might require changing the DT binding a bit [1]
+> > > (is that your goal?). But what's the intended software difference? [2]
+> > > I'll still be passing around the same sorts of callbacks from the
+> > > 'iproc_nand' probe to the common probe function.
+> 
+> ^^ before getting bogged down on the DT details (which can be changed
+> independently), I'd like to address this point.
 
-It's not SFDP. We're looking at SPI flash that are detected simply by
-the READ ID (9Fh) opcode. SFDP is on newer SPI flash which support the
-5Ah opcode, for reading a parameter table. (I'd like to support this
-soon, actually, and one of those sorts of strings might work.)
+The intended change is to make it work according to
+Documentation/driver-model/design-patterns.txt
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+basically, by having all the shared code be a "library" module that gets
+called by the actual hardware specific drivers, rather than having the
+shared code be the central driver that fans out into all possible subdrivers.
+
+> > 
+> > Yes, I think this makes sense overall. Regarding the specific example, can you
+> > clarify how the register areas in iproc are structured?
+> > 
+> > The 0xf8105408 and 0x18046f00 start addresses are not aligned to large powers
+> > of two, which often indicates that they are part of some other, larger,
+> > unit that might need to have a driver of its own, so before we specify
+> > a binding like the one you proposed above I'd like to make sure we're not
+> > getting ourselves into trouble later.
+> 
+> I may want the Cygnus guys to speak up here, partly for technical
+> expertise and partly to know how much they care to share...
+> 
+> <0xf8105408 0x600>: covers a series of NAND_IDM registers. NAND has a
+> few bits we don't care about (for debugging, logging, and resetting), as
+> well as its interrupt enable bits. The adjacent blocks cover similar IDM
+> blocks for other cores (SPI, PNOR, DDR), and they are similarly
+> unaligned. Not sure why, exactly; probably just a compact layout.
+> 
+> <0x18046f00 0x20>: a series of 8 NAND interrupt registers, each word
+> containing a single bit representing status/clear. There is nothing
+> between the "nand" range and this range, and the SPI core register range
+> follows.
+> 
+> So I think these are pretty clearly-delineated register ranges for NAND,
+> and the alignment is not really missing anything. Adjacent hardware
+> (e.g., SPI) is independent, though pieces look similar. For one, it has
+> similar:
+> 
+>  * interrupt enable bits in the IDM range (0xf8106408 to 0xf8106a00);
+>    and
+>  * interrupt status/clear following the SPI block (0x180473a0 to
+>    0x180473b8)
+
+This would in turn indicate that we should treat these ranges as
+an irqchip that handles all sorts of devices, but it really depends
+on the particular register layout.
+
+	Arnd
