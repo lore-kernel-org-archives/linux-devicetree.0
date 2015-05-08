@@ -1,119 +1,40 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 06/10] mtd: brcmstb_nand: add SoC-specific support
-Date: Fri, 8 May 2015 13:47:25 -0700
-Message-ID: <20150508204725.GD32500@ld-irv-0074>
-References: <1430935194-7579-1-git-send-email-computersforpeace@gmail.com>
- <2731660.FLCdTmWWOZ@wuerfel>
- <20150508193850.GB32500@ld-irv-0074>
- <2213714.99tu5uLKxT@wuerfel>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 6/9] mailbox: Add NVIDIA Tegra XUSB mailbox binding
+Date: Fri, 8 May 2015 13:53:36 -0700
+Message-ID: <CAL1qeaGfZtwNKxn=dT9DQ-c-j2X7Vi5jLtXx86zq2KscM8AFfg@mail.gmail.com>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+	<1430761002-9327-7-git-send-email-abrestic@chromium.org>
+	<CANLzEksWtzSmz=OCuwVdY5RSG6gDrOoMyGsW3i9jMcjD3WtPKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2213714.99tu5uLKxT@wuerfel>
+In-Reply-To: <CANLzEksWtzSmz=OCuwVdY5RSG6gDrOoMyGsW3i9jMcjD3WtPKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 08, 2015 at 09:49:02PM +0200, Arnd Bergmann wrote:
-> On Friday 08 May 2015 12:38:50 Brian Norris wrote:
-> > On Fri, May 08, 2015 at 03:41:10PM +0200, Arnd Bergmann wrote:
-[...]
+On Fri, May 8, 2015 at 1:42 PM, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Mon, May 4, 2015 at 10:36 AM, Andrew Bresticker
+> <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> + - compatible: For Tegra124, must contain "nvidia,tegra124-xusb-mbox".
+>> +   Otherwise, must contain '"nvidia,<chip>-xusb-mbox",
+>> +   "nvidia,tegra124-xusb-mbox"' where <chip> is tegra132.
+>
+> The driver doesn't seem to have any particular entry for tegra132, so
+> that would be a bad example.
 
-> > To be clear, since I'm not sure if you're confused below:
-> > 
-> >  * Cygnus is a family of chips using the IPROC architecture, coming from
-> >    the Infrastructure/Networking Group; there are BCMxxxx numbers noted
-> >    in arch/arm/mach-bcm/Kconfig for them, but I usually just refer to
-> >    the Cygnus family or the IPROC architecture.
-> > 
-> >  * BCM63xxx is a class of DSL chips from the Broadband/Connectivity
-> >    Group.
-> 
-> Thanks for the clarification, I think that is roughly what I thought it was,
-> but I'm still not sure about brcmstb. Is that related to bcm63xxx or separate?
+The convention on Tegra is to use "nvidia,<chip>-<ip>" for each IP
+block.  Additionally, since the XUSB-related blocks on Tegra132 are
+identical to Tegra124, these devices on Tegra132 are 'compatible' with
+their Tegra124 variants.
 
-I think arch/arm/mach-bcm/Kconfig has the best summary. brcmstb is
-separate; BCM7xxx is generally (always?) Set-Top Box.
+For some context, see Paul's comments in commit 193c9d23
+("Documentation: DT bindings: add more Tegra chip compatible
+strings").
 
-Another potentially confusing point: the main driver is named
-'brcsmtb_nand' since the NAND core (and driver) originated from STB
-chips. But that core was applied to other non-STB chips, and so the
-driver has been extended.
-
-> > > bcm63138_nand_driver with its own probe() function that calls the
-> > > common probe function. That would make the soc specific parts
-> > > better contained and match how we normally do abstractions of
-> > > similar drivers.
-> > 
-> > OK, so I can imagine this might require changing the DT binding a bit [1]
-> > (is that your goal?). But what's the intended software difference? [2]
-> > I'll still be passing around the same sorts of callbacks from the
-> > 'iproc_nand' probe to the common probe function.
-
-^^ before getting bogged down on the DT details (which can be changed
-independently), I'd like to address this point.
-
-> > Brian
-> > 
-> > [1] e.g.:
-> > 
-> >        nand: nand@18046000 {
-> >                compatible = "brcm,iproc-nand", "brcm,brcmnand-v6.1", "brcm,brcmnand";
-> >                reg = <0x18046000 0x600>, <0xf8105408 0x600>, <0x18046f00 0x20>;
-> >                reg-names = "nand", "iproc-idm", "iproc-ext";
-> >                interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-> > 
-> >                #address-cells = <1>;
-> >                #size-cells = <0>;
-> > 
-> >                brcm,nand-has-wp;
-> >        };
-> > 
-> > This captures the extra "iproc-*" register ranges. Then we could have
-> > the iproc_nand driver bind against "brcm,iproc-nand", then call into the
-> > common probe, which would then accept/reject based on
-> > "brcm,brcmnand-vX.Y".
-> > 
-> > [2] The DT structure from [1] could actually accommodate either driver
-> > structure just fine. So maybe that means it's a better hardware
-> > description?
-> 
-> Yes, I think this makes sense overall. Regarding the specific example, can you
-> clarify how the register areas in iproc are structured?
-> 
-> The 0xf8105408 and 0x18046f00 start addresses are not aligned to large powers
-> of two, which often indicates that they are part of some other, larger,
-> unit that might need to have a driver of its own, so before we specify
-> a binding like the one you proposed above I'd like to make sure we're not
-> getting ourselves into trouble later.
-
-I may want the Cygnus guys to speak up here, partly for technical
-expertise and partly to know how much they care to share...
-
-<0xf8105408 0x600>: covers a series of NAND_IDM registers. NAND has a
-few bits we don't care about (for debugging, logging, and resetting), as
-well as its interrupt enable bits. The adjacent blocks cover similar IDM
-blocks for other cores (SPI, PNOR, DDR), and they are similarly
-unaligned. Not sure why, exactly; probably just a compact layout.
-
-<0x18046f00 0x20>: a series of 8 NAND interrupt registers, each word
-containing a single bit representing status/clear. There is nothing
-between the "nand" range and this range, and the SPI core register range
-follows.
-
-So I think these are pretty clearly-delineated register ranges for NAND,
-and the alignment is not really missing anything. Adjacent hardware
-(e.g., SPI) is independent, though pieces look similar. For one, it has
-similar:
-
- * interrupt enable bits in the IDM range (0xf8106408 to 0xf8106a00);
-   and
- * interrupt status/clear following the SPI block (0x180473a0 to
-   0x180473b8)
-
-Brian
+Thanks,
+Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
