@@ -1,508 +1,83 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: [PATCH v8 3/3] leds: Add ktd2692 flash LED driver
-Date: Fri, 08 May 2015 12:03:45 +0900
-Message-ID: <1431054225-16635-4-git-send-email-ingi2.kim@samsung.com>
-References: <1431054225-16635-1-git-send-email-ingi2.kim@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1431054225-16635-1-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/8] dmaengine: Add driver for TI DMA crossbar on DRA7x
+Date: Fri, 8 May 2015 09:11:10 +0530
+Message-ID: <20150508034110.GW3521@localhost>
+References: <1428572154-3548-1-git-send-email-peter.ujfalusi@ti.com>
+ <1428572154-3548-4-git-send-email-peter.ujfalusi@ti.com>
+ <20150504053851.GY3521@localhost>
+ <554B34F2.5050306@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <554B34F2.5050306-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a driver to support the ktd2692 flash LEDs.
-ktd2692 can control flash current by ExpressWire interface.
+On Thu, May 07, 2015 at 12:48:34PM +0300, Peter Ujfalusi wrote:
+> On 05/04/2015 08:38 AM, Vinod Koul wrote:
+> > On Thu, Apr 09, 2015 at 12:35:49PM +0300, Peter Ujfalusi wrote:
+> >> +int omap_dmaxbar_init(void)
+> >> +{
+> >> +	return platform_driver_register(&ti_dma_xbar_driver);
+> >> +}
+> >> +arch_initcall(omap_dmaxbar_init);
+> > All looks fine except this bit, I think I did point out this last time as
+> > well, though dont recall your answer. We rather depend on defered probe and
+> > not rely on module ordering.
+> 
+> Can not find my previous response in my mailbox anymore thanks to Thunderbird:
+> it corrupted all of my local mbox files when I did a backup from the server :(
+> 
+> I don't think the deferred probing is working with dmaengine since we return
+> NULL in any case when the channel can not be requested for whatever reason.
+> The request calls are eating up the error code (if any) which is coming when
+> the channel is requested. With the exception of
+> dma_request_slave_channel_reason(), which will return the reason for the
+> failure, but most drivers are not using this.
+Yes that was the reason for this API and I was expecting people ot start
+using this and eliminate the init level dependecy
 
-Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
-Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-Reviewed-by: Varka Bhadram <varkabhadram@gmail.com>
----
- drivers/leds/Kconfig        |   9 +
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-ktd2692.c | 443 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 453 insertions(+)
- create mode 100644 drivers/leds/leds-ktd2692.c
+> 
+> There is also a fallback in dma_request_slave_channel_compat() if the channel
+> can not be requested via of/acpi it will try to get the channel via legacy
+> mode also.
+> 
+> Should all drivers using DMA via dmaengine should return with -EPROBE_DEFER
+> from their probe if they can not get the DMA channel? Some drivers uses the
+> existence/non existence of the DMA resource as a means to decide to use DMA or
+> PIO mode...
+Yes we should do that.
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 51059bb..bfbdbd1 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -505,6 +505,15 @@ config LEDS_MENF21BMC
- 	  This driver can also be built as a module. If so the module
- 	  will be called leds-menf21bmc.
- 
-+config LEDS_KTD2692
-+	tristate "KTD2692 LED flash support"
-+	depends on LEDS_CLASS_FLASH && GPIOLIB && OF
-+	help
-+	  This option enables support for KTD2692 LED flash connected
-+	  through ExpressWire interface.
-+
-+	  Say Y to enable this driver.
-+
- comment "LED driver for blink(1) USB RGB LED is under Special HID drivers (HID_THINGM)"
- 
- config LEDS_BLINKM
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index a739ae2..ed5ed79 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -59,6 +59,7 @@ obj-$(CONFIG_LEDS_BLINKM)		+= leds-blinkm.o
- obj-$(CONFIG_LEDS_SYSCON)		+= leds-syscon.o
- obj-$(CONFIG_LEDS_VERSATILE)		+= leds-versatile.o
- obj-$(CONFIG_LEDS_MENF21BMC)		+= leds-menf21bmc.o
-+obj-$(CONFIG_LEDS_KTD2692)		+= leds-ktd2692.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
-diff --git a/drivers/leds/leds-ktd2692.c b/drivers/leds/leds-ktd2692.c
-new file mode 100644
-index 0000000..9d878a4
---- /dev/null
-+++ b/drivers/leds/leds-ktd2692.c
-@@ -0,0 +1,443 @@
-+/*
-+ * LED driver : leds-ktd2692.c
-+ *
-+ * Copyright (C) 2015 Samsung Electronics
-+ * Ingi Kim <ingi2.kim@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/led-class-flash.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/workqueue.h>
-+
-+/* Value related the movie mode */
-+#define KTD2692_MOVIE_MODE_CURRENT_LEVELS	16
-+#define KTD2692_MM_TO_FL_RATIO(x)		((x) / 3)
-+#define KTD2962_MM_MIN_CURR_THRESHOLD_SCALE	8
-+
-+/* Value related the flash mode */
-+#define KTD2692_FLASH_MODE_TIMEOUT_LEVELS	8
-+#define KTD2692_FLASH_MODE_TIMEOUT_DISABLE	0
-+#define KTD2692_FLASH_MODE_CURR_PERCENT(x)	(((x) * 16) / 100)
-+
-+/* Macro for getting offset of flash timeout */
-+#define GET_TIMEOUT_OFFSET(timeout, step)	((timeout) / (step))
-+
-+/* Base register address */
-+#define KTD2692_REG_LVP_BASE			0x00
-+#define KTD2692_REG_FLASH_TIMEOUT_BASE		0x20
-+#define KTD2692_REG_MM_MIN_CURR_THRESHOLD_BASE	0x40
-+#define KTD2692_REG_MOVIE_CURRENT_BASE		0x60
-+#define KTD2692_REG_FLASH_CURRENT_BASE		0x80
-+#define KTD2692_REG_MODE_BASE			0xA0
-+
-+/* Set bit coding time for expresswire interface */
-+#define KTD2692_TIME_RESET_US			700
-+#define KTD2692_TIME_DATA_START_TIME_US		10
-+#define KTD2692_TIME_HIGH_END_OF_DATA_US	350
-+#define KTD2692_TIME_LOW_END_OF_DATA_US		10
-+#define KTD2692_TIME_SHORT_BITSET_US		4
-+#define KTD2692_TIME_LONG_BITSET_US		12
-+
-+/* KTD2692 default length of name */
-+#define KTD2692_NAME_LENGTH			20
-+
-+enum ktd2692_bitset {
-+	KTD2692_LOW = 0,
-+	KTD2692_HIGH,
-+};
-+
-+/* Movie / Flash Mode Control */
-+enum ktd2692_led_mode {
-+	KTD2692_MODE_DISABLE = 0,	/* default */
-+	KTD2692_MODE_MOVIE,
-+	KTD2692_MODE_FLASH,
-+};
-+
-+struct ktd2692_led_config_data {
-+	/* maximum LED current in movie mode */
-+	u32 movie_max_microamp;
-+	/* maximum LED current in flash mode */
-+	u32 flash_max_microamp;
-+	/* maximum flash timeout */
-+	u32 flash_max_timeout;
-+	/* max LED brightness level */
-+	enum led_brightness max_brightness;
-+};
-+
-+struct ktd2692_context {
-+	/* Related LED Flash class device */
-+	struct led_classdev_flash fled_cdev;
-+
-+	/* secures access to the device */
-+	struct mutex lock;
-+	struct regulator *regulator;
-+	struct work_struct work_brightness_set;
-+
-+	struct gpio_desc *aux_gpio;
-+	struct gpio_desc *ctrl_gpio;
-+
-+	enum ktd2692_led_mode mode;
-+	enum led_brightness torch_brightness;
-+};
-+
-+static struct ktd2692_context *fled_cdev_to_led(
-+				struct led_classdev_flash *fled_cdev)
-+{
-+	return container_of(fled_cdev, struct ktd2692_context, fled_cdev);
-+}
-+
-+static void ktd2692_expresswire_start(struct ktd2692_context *led)
-+{
-+	gpiod_direction_output(led->ctrl_gpio, KTD2692_HIGH);
-+	udelay(KTD2692_TIME_DATA_START_TIME_US);
-+}
-+
-+static void ktd2692_expresswire_reset(struct ktd2692_context *led)
-+{
-+	gpiod_direction_output(led->ctrl_gpio, KTD2692_LOW);
-+	udelay(KTD2692_TIME_RESET_US);
-+}
-+
-+static void ktd2692_expresswire_end(struct ktd2692_context *led)
-+{
-+	gpiod_direction_output(led->ctrl_gpio, KTD2692_LOW);
-+	udelay(KTD2692_TIME_LOW_END_OF_DATA_US);
-+	gpiod_direction_output(led->ctrl_gpio, KTD2692_HIGH);
-+	udelay(KTD2692_TIME_HIGH_END_OF_DATA_US);
-+}
-+
-+static void ktd2692_expresswire_set_bit(struct ktd2692_context *led, bool bit)
-+{
-+	/*
-+	 * The Low Bit(0) and High Bit(1) is based on a time detection
-+	 * algorithm between time low and time high
-+	 * Time_(L_LB) : Low time of the Low Bit(0)
-+	 * Time_(H_LB) : High time of the LOW Bit(0)
-+	 * Time_(L_HB) : Low time of the High Bit(1)
-+	 * Time_(H_HB) : High time of the High Bit(1)
-+	 *
-+	 * It can be simplified to:
-+	 * Low Bit(0) : 2 * Time_(H_LB) < Time_(L_LB)
-+	 * High Bit(1) : 2 * Time_(L_HB) < Time_(H_HB)
-+	 * HIGH  ___           ____    _..     _________    ___
-+	 *          |_________|    |_..  |____|         |__|
-+	 * LOW        <L_LB>  <H_LB>     <L_HB>  <H_HB>
-+	 *          [  Low Bit (0) ]     [  High Bit(1) ]
-+	 */
-+	if (bit) {
-+		gpiod_direction_output(led->ctrl_gpio, KTD2692_LOW);
-+		udelay(KTD2692_TIME_SHORT_BITSET_US);
-+		gpiod_direction_output(led->ctrl_gpio, KTD2692_HIGH);
-+		udelay(KTD2692_TIME_LONG_BITSET_US);
-+	} else {
-+		gpiod_direction_output(led->ctrl_gpio, KTD2692_LOW);
-+		udelay(KTD2692_TIME_LONG_BITSET_US);
-+		gpiod_direction_output(led->ctrl_gpio, KTD2692_HIGH);
-+		udelay(KTD2692_TIME_SHORT_BITSET_US);
-+	}
-+}
-+
-+static void ktd2692_expresswire_write(struct ktd2692_context *led, u8 value)
-+{
-+	int i;
-+
-+	ktd2692_expresswire_start(led);
-+	for (i = 7; i >= 0; i--)
-+		ktd2692_expresswire_set_bit(led, value & BIT(i));
-+	ktd2692_expresswire_end(led);
-+}
-+
-+static void ktd2692_brightness_set(struct ktd2692_context *led,
-+				   enum led_brightness brightness)
-+{
-+	mutex_lock(&led->lock);
-+
-+	if (brightness == LED_OFF) {
-+		led->mode = KTD2692_MODE_DISABLE;
-+		gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
-+	} else {
-+		ktd2692_expresswire_write(led, brightness |
-+					KTD2692_REG_MOVIE_CURRENT_BASE);
-+		led->mode = KTD2692_MODE_MOVIE;
-+	}
-+
-+	ktd2692_expresswire_write(led, led->mode | KTD2692_REG_MODE_BASE);
-+	mutex_unlock(&led->lock);
-+}
-+
-+static void ktd2692_brightness_set_work(struct work_struct *work)
-+{
-+	struct ktd2692_context *led =
-+		container_of(work, struct ktd2692_context, work_brightness_set);
-+
-+	ktd2692_brightness_set(led, led->torch_brightness);
-+}
-+
-+static void ktd2692_led_brightness_set(struct led_classdev *led_cdev,
-+				       enum led_brightness brightness)
-+{
-+	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-+	struct ktd2692_context *led = fled_cdev_to_led(fled_cdev);
-+
-+	led->torch_brightness = brightness;
-+	schedule_work(&led->work_brightness_set);
-+}
-+
-+static int ktd2692_led_brightness_set_sync(struct led_classdev *led_cdev,
-+					   enum led_brightness brightness)
-+{
-+	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-+	struct ktd2692_context *led = fled_cdev_to_led(fled_cdev);
-+
-+	ktd2692_brightness_set(led, brightness);
-+
-+	return 0;
-+}
-+
-+static int ktd2692_led_flash_strobe_set(struct led_classdev_flash *fled_cdev,
-+					bool state)
-+{
-+	struct ktd2692_context *led = fled_cdev_to_led(fled_cdev);
-+	struct led_flash_setting *timeout = &fled_cdev->timeout;
-+	u32 flash_tm_reg;
-+
-+	mutex_lock(&led->lock);
-+
-+	if (state == 0) {
-+		led->mode = KTD2692_MODE_DISABLE;
-+		gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
-+	} else {
-+		flash_tm_reg = GET_TIMEOUT_OFFSET(timeout->val, timeout->step);
-+		ktd2692_expresswire_write(led, flash_tm_reg
-+				| KTD2692_REG_FLASH_TIMEOUT_BASE);
-+
-+		led->mode = KTD2692_MODE_FLASH;
-+		gpiod_direction_output(led->aux_gpio, KTD2692_HIGH);
-+	}
-+
-+	ktd2692_expresswire_write(led, led->mode | KTD2692_REG_MODE_BASE);
-+
-+	fled_cdev->led_cdev.brightness = LED_OFF;
-+	led->mode = KTD2692_MODE_DISABLE;
-+
-+	mutex_unlock(&led->lock);
-+
-+	return 0;
-+}
-+
-+static int ktd2692_led_flash_timeout_set(struct led_classdev_flash *fled_cdev,
-+					 u32 timeout)
-+{
-+	return 0;
-+}
-+
-+static void ktd2692_init_movie_current_max(struct ktd2692_led_config_data *cfg)
-+{
-+	u32 offset, step;
-+	u32 movie_current_microamp;
-+
-+	offset = KTD2692_MOVIE_MODE_CURRENT_LEVELS;
-+	step = KTD2692_MM_TO_FL_RATIO(cfg->flash_max_microamp)
-+		/ KTD2692_MOVIE_MODE_CURRENT_LEVELS;
-+
-+	do {
-+		movie_current_microamp = step * offset;
-+		offset--;
-+	} while ((movie_current_microamp > cfg->movie_max_microamp) &&
-+		(offset > 0));
-+
-+	cfg->max_brightness = offset;
-+}
-+
-+static void ktd2692_init_flash_timeout(struct led_classdev_flash *fled_cdev,
-+				       struct ktd2692_led_config_data *cfg)
-+{
-+	struct led_flash_setting *setting;
-+
-+	setting = &fled_cdev->timeout;
-+	setting->min = KTD2692_FLASH_MODE_TIMEOUT_DISABLE;
-+	setting->max = cfg->flash_max_timeout;
-+	setting->step = cfg->flash_max_timeout
-+			/ (KTD2692_FLASH_MODE_TIMEOUT_LEVELS - 1);
-+	setting->val = cfg->flash_max_timeout;
-+}
-+
-+static void ktd2692_setup(struct ktd2692_context *led)
-+{
-+	led->mode = KTD2692_MODE_DISABLE;
-+	ktd2692_expresswire_reset(led);
-+	gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
-+
-+	ktd2692_expresswire_write(led, (KTD2962_MM_MIN_CURR_THRESHOLD_SCALE - 1)
-+				 | KTD2692_REG_MM_MIN_CURR_THRESHOLD_BASE);
-+	ktd2692_expresswire_write(led, KTD2692_FLASH_MODE_CURR_PERCENT(45)
-+				 | KTD2692_REG_FLASH_CURRENT_BASE);
-+}
-+
-+static int ktd2692_parse_dt(struct ktd2692_context *led, struct device *dev,
-+			    struct ktd2692_led_config_data *cfg)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct device_node *child_node;
-+	int ret;
-+
-+	if (!dev->of_node)
-+		return -ENXIO;
-+
-+	led->ctrl_gpio = devm_gpiod_get(dev, "ctrl");
-+	if (IS_ERR(led->ctrl_gpio)) {
-+		ret = PTR_ERR(led->ctrl_gpio);
-+		dev_err(dev, "cannot get ctrl-gpio %d\n", ret);
-+		return ret;
-+	}
-+
-+	led->aux_gpio = devm_gpiod_get(dev, "aux");
-+	if (IS_ERR(led->aux_gpio)) {
-+		ret = PTR_ERR(led->aux_gpio);
-+		dev_err(dev, "cannot get aux-gpio %d\n", ret);
-+		return ret;
-+	}
-+
-+	led->regulator = devm_regulator_get(dev, "vin");
-+	if (IS_ERR(led->regulator))
-+		led->regulator = NULL;
-+
-+	if (led->regulator) {
-+		ret = regulator_enable(led->regulator);
-+		if (ret)
-+			dev_err(dev, "Failed to enable supply: %d\n", ret);
-+	}
-+
-+	child_node = of_get_next_available_child(np, NULL);
-+	if (!child_node) {
-+		dev_err(dev, "No DT child node found for connected LED.\n");
-+		return -EINVAL;
-+	}
-+
-+	led->fled_cdev.led_cdev.name =
-+		of_get_property(child_node, "label", NULL) ? : child_node->name;
-+
-+	ret = of_property_read_u32(child_node, "led-max-microamp",
-+				   &cfg->movie_max_microamp);
-+	if (ret) {
-+		dev_err(dev, "failed to parse led-max-microamp\n");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(child_node, "flash-max-microamp",
-+				   &cfg->flash_max_microamp);
-+	if (ret) {
-+		dev_err(dev, "failed to parse flash-max-microamp\n");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(child_node, "flash-max-timeout-us",
-+				   &cfg->flash_max_timeout);
-+	if (ret)
-+		dev_err(dev, "failed to parse flash-max-timeout-us\n");
-+
-+	of_node_put(child_node);
-+	return ret;
-+}
-+
-+static const struct led_flash_ops flash_ops = {
-+	.strobe_set = ktd2692_led_flash_strobe_set,
-+	.timeout_set = ktd2692_led_flash_timeout_set,
-+};
-+
-+static int ktd2692_probe(struct platform_device *pdev)
-+{
-+	struct ktd2692_context *led;
-+	struct led_classdev *led_cdev;
-+	struct led_classdev_flash *fled_cdev;
-+	struct ktd2692_led_config_data led_cfg;
-+	int ret;
-+
-+	led = devm_kzalloc(&pdev->dev, sizeof(*led), GFP_KERNEL);
-+	if (!led)
-+		return -ENOMEM;
-+
-+	fled_cdev = &led->fled_cdev;
-+	led_cdev = &fled_cdev->led_cdev;
-+
-+	ret = ktd2692_parse_dt(led, &pdev->dev, &led_cfg);
-+	if (ret)
-+		return ret;
-+
-+	ktd2692_init_flash_timeout(fled_cdev, &led_cfg);
-+	ktd2692_init_movie_current_max(&led_cfg);
-+
-+	fled_cdev->ops = &flash_ops;
-+
-+	led_cdev->max_brightness = led_cfg.max_brightness;
-+	led_cdev->brightness_set = ktd2692_led_brightness_set;
-+	led_cdev->brightness_set_sync = ktd2692_led_brightness_set_sync;
-+	led_cdev->flags |= LED_CORE_SUSPENDRESUME | LED_DEV_CAP_FLASH;
-+
-+	mutex_init(&led->lock);
-+	INIT_WORK(&led->work_brightness_set, ktd2692_brightness_set_work);
-+
-+	platform_set_drvdata(pdev, led);
-+
-+	ret = led_classdev_flash_register(&pdev->dev, fled_cdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "can't register LED %s\n", led_cdev->name);
-+		mutex_destroy(&led->lock);
-+		return ret;
-+	}
-+
-+	ktd2692_setup(led);
-+
-+	return 0;
-+}
-+
-+static int ktd2692_remove(struct platform_device *pdev)
-+{
-+	struct ktd2692_context *led = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	led_classdev_flash_unregister(&led->fled_cdev);
-+	cancel_work_sync(&led->work_brightness_set);
-+
-+	if (led->regulator) {
-+		ret = regulator_disable(led->regulator);
-+		if (ret)
-+			dev_err(&pdev->dev,
-+				"Failed to disable supply: %d\n", ret);
-+	}
-+
-+	mutex_destroy(&led->lock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ktd2692_match[] = {
-+	{ .compatible = "kinetic,ktd2692", },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver ktd2692_driver = {
-+	.driver = {
-+		.name  = "ktd2692",
-+		.of_match_table = ktd2692_match,
-+	},
-+	.probe  = ktd2692_probe,
-+	.remove = ktd2692_remove,
-+};
-+
-+module_platform_driver(ktd2692_driver);
-+
-+MODULE_AUTHOR("Ingi Kim <ingi2.kim@samsung.com>");
-+MODULE_DESCRIPTION("Kinetic KTD2692 LED driver");
-+MODULE_LICENSE("GPL v2");
+> 
+> If the crossbar is not in the same initcall level we can have bad race
+> conditions also:
+> omap-dma can handle up to 127 DMA requests.
+> omap-dma is loaded but the crossbar driver is not.
+> 
+> A driver requests DMA for crossbar line 135:
+> We will have failure from of_dma_request_slave_channel() since the CB driver
+> is not yet loaded (returning with -EPROBE_DEFER), then the legacy call will
+> try to get the channel from the loaded DMA driver, but that is going to fail
+> as well (135 is not valid for omap-dma).
+> 
+> Another driver would request DMA for crossbar line 100:
+> The legacy call will actually find it a valid request and get the channel from
+> omap-dma driver, but this will not work in reality: the crossbar also need to
+> be configured to route the signal to the correct line.
+> This driver would think it has valid DMA, but in fact it has non working DMA.
+I think you cna start doing the conversion of omap driver thuis you dont
+have dependency on others.
+
+Now as far as this series is concerned, rest of it looks good so I am
+willing to merge to if you plan to work on defered probe :) I think its a
+fair bargain!
+
 -- 
-2.0.5
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
