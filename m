@@ -1,36 +1,56 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 8 May 2015 12:19:40 +0530
-Message-ID: <CAKohpo=Eq=Eno6PThDkNFm_tDKv47mTPWhjb_JHPs7+78x3Q-g@mail.gmail.com>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
-	<d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
-	<20150504121209.GM15510@sirena.org.uk>
-	<CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>
-	<20150505105714.GA22845@sirena.org.uk>
-	<CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
-	<20150505171252.GI22845@sirena.org.uk>
-	<CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
-	<20150507055231.GB32399@codeaurora.org>
-	<CAKohpomYQw67KuX29PLawmd1dSXHx7pMt7+8BzmLPfHSqhMB2g@mail.gmail.com>
-	<20150507213015.GB2455@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150507213015.GB2455@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH] clk: bindings: Fix assigned-clock-rates description
+Date: Thu,  7 May 2015 23:51:14 -0700
+Message-ID: <1431067874-7877-1-git-send-email-sboyd@codeaurora.org>
+References: <5549CC5C.8090107@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5549CC5C.8090107-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 8 May 2015 at 03:00, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 05/07, Viresh Kumar wrote:
+The binding uses assigned-clock-parents when it should use
+assigned-clock-rates. Furthermore, the part that describes how
+they relate to the assigned-clocks property is not clear about
+what is related. Correct and clarify this part of the binding.
 
->> - Now if uV is fixed, how is the target current controlled separately ?
->
-> uV is not fixed
+Reported-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
 
-I meant uV is fixed for this particular OPP, i.e. min/tar/max value.
+On 05/06, Krzysztof Kozlowski wrote:
+> Looks much better. So actually this should be yours patch now, you
+> can add my Reported-by :).
 
+Ok. I'll queue up this patch unless there are any other objections.
 
-What about the other changes? Does these fix the use cases you shared
-earlier ? I will send a new updated version then..
+ Documentation/devicetree/bindings/clock/clock-bindings.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+index 06fc6d541c89..2ec489eebe72 100644
+--- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
++++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+@@ -138,9 +138,10 @@ Some platforms may require initial configuration of default parent clocks
+ and clock frequencies. Such a configuration can be specified in a device tree
+ node through assigned-clocks, assigned-clock-parents and assigned-clock-rates
+ properties. The assigned-clock-parents property should contain a list of parent
+-clocks in form of phandle and clock specifier pairs, the assigned-clock-parents
+-property the list of assigned clock frequency values - corresponding to clocks
+-listed in the assigned-clocks property.
++clocks in the form of a phandle and clock specifier pair and the
++assigned-clock-rates property should contain a list of frequencies in Hz. Both
++these properties should correspond to the clocks listed in the assigned-clocks
++property.
+ 
+ To skip setting parent or rate of a clock its corresponding entry should be
+ set to 0, or can be omitted if it is not followed by any non-zero entry.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
