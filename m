@@ -1,58 +1,116 @@
-From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] MIPS: BMIPS: dts: remove unsupported entry for bcm7362
-Date: Sat, 9 May 2015 00:55:07 +0900
-Message-ID: <BABEE235-D7C4-4897-B3ED-778A5FB7F538@gmail.com>
-References: <1431089958-2626-1-git-send-email-jaedon.shin@gmail.com> <1431089958-2626-2-git-send-email-jaedon.shin@gmail.com> <CAJiQ=7CQshXhGJ7ftWQSu_UxgKVaRprZPEPXWNP6ci_1bLrJrw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJiQ=7CQshXhGJ7ftWQSu_UxgKVaRprZPEPXWNP6ci_1bLrJrw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] phy-sun4i-usb: Add a sunxi specific
+ function for setting squelch-detect
+Date: Fri, 8 May 2015 11:06:36 -0500
+Message-ID: <20150508160636.GD16571@saruman.tx.rr.com>
+References: <1427626248-6257-1-git-send-email-hdegoede@redhat.com>
+ <1427626248-6257-2-git-send-email-hdegoede@redhat.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
+Return-path: <linux-sunxi+bncBC5M7T4HYEKRB656WOVAKGQEILNC4CI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1427626248-6257-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--VMt1DrMGOVs3KQwf
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> On May 8, 2015, at 11:40 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> On Fri, May 8, 2015 at 5:59 AM, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Remove unsupported memory entry for the bcm7362 platform. The BMIPS4380
->> processor only supports ZONE_NORMAL is not available for HIGHMEM.
->> 
->> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> arch/mips/boot/dts/brcm/bcm97362svmb.dts | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
->> index b7b88e5dc9e7..ab8b01fa7dcf 100644
->> --- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
->> +++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
->> @@ -8,7 +8,7 @@
->> 
->>        memory@0 {
->>                device_type = "memory";
->> -               reg = <0x00000000 0x10000000>, <0x20000000 0x30000000>;
->> +               reg = <0x00000000 0x10000000>;
-> 
-> Hmm, this is more of a kernel limitation than a hardware limitation,
-> though.  The board physically has 1GB of memory, right?  It is best if
-> the DT entry reflects the actual hardware configuration.
-> 
-> The Broadcom kernels enable the CPU's special "XKS01" feature to put
-> 1GB of memory in ZONE_NORMAL:
-> 
-> https://github.com/Broadcom/stblinux-3.3/tree/master/linux
-> 
-> Maybe this would be worth adding to mainline.
+Hi,
 
-Yes, It is right to have 1GB of memory.
+On Sun, Mar 29, 2015 at 12:50:46PM +0200, Hans de Goede wrote:
+> The sunxi otg phy has a bug where it wrongly detects a high speed squelch
+> when reset on the root port gets de-asserted with a lo-speed device.
+> 
+> The workaround for this is to disable squelch detect before de-asserting
+> reset, and re-enabling it after the reset de-assert is done. Add a sunxi
+> specific phy function to allow the sunxi-musb glue to do this.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/phy/phy-sun4i-usb.c       |  9 +++++++++
+>  include/linux/phy/phy-sun4i-usb.h | 26 ++++++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
+>  create mode 100644 include/linux/phy/phy-sun4i-usb.h
+> 
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index 221e8ab..01eb08d 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/phy/phy.h>
+> +#include <linux/phy/phy-sun4i-usb.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/reset.h>
+> @@ -75,6 +76,7 @@
+>  #define PHY_OTG_FUNC_EN			0x28
+>  #define PHY_VBUS_DET_EN			0x29
+>  #define PHY_DISCON_TH_SEL		0x2a
+> +#define PHY_SQUELCH_DETECT		0x3c  
+>  
+>  #define MAX_PHYS			3
+>  
+> @@ -322,6 +324,13 @@ static int sun4i_usb_phy_power_off(struct phy *_phy)
+>  	return 0;
+>  }
+>  
+> +void sun4i_usb_phy_set_squelch_detect(struct phy *_phy, bool enabled)
+> +{
+> +	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+> +
+> +	sun4i_usb_phy_write(phy, PHY_SQUELCH_DETECT, enabled ? 0 : 2, 2);
+> +}
+> +
+>  static struct phy_ops sun4i_usb_phy_ops = {
+>  	.init		= sun4i_usb_phy_init,
+>  	.exit		= sun4i_usb_phy_exit,
+> diff --git a/include/linux/phy/phy-sun4i-usb.h b/include/linux/phy/phy-sun4i-usb.h
+> new file mode 100644
+> index 0000000..50aed92
+> --- /dev/null
+> +++ b/include/linux/phy/phy-sun4i-usb.h
+> @@ -0,0 +1,26 @@
+> +/*
+> + * Copyright (c) 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef PHY_SUN4I_USB_H_
+> +#define PHY_SUN4I_USB_H_
+> +
+> +#include "phy.h"
+> +
+> +/**
+> + * sun4i_usb_phy_set_squelch_detect() - Enable/disable squelch detect
+> + * @phy: reference to a sun4i usb phy
+> + * @enabled: wether to enable or disable squelch detect
+> + */
+> +void sun4i_usb_phy_set_squelch_detect(struct phy *phy, bool enabled);
 
-In order to add XKS01 ioremap, keg, tlb, dma, etc. change is required.
-However, there is no assurance they'll take those changes to the mainline.
+breaks build if MUSB=y and SUN41_PHY=m
 
-Anyway, I also hope it added.--
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+balbi
+--VMt1DrMGOVs3KQwf--
