@@ -1,69 +1,47 @@
-From: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Subject: [PATCH v11 04/19] sh-sci: Add h8300 SCI
-Date: Sat,  9 May 2015 00:04:24 +0900
-Message-ID: <1431097479-21101-5-git-send-email-ysato@users.sourceforge.jp>
-References: <1431097479-21101-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431097479-21101-1-git-send-email-ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 3/8] dmaengine: Add driver for TI DMA crossbar on DRA7x
+Date: Fri, 8 May 2015 08:09:27 -0700
+Message-ID: <20150508150926.GC15563@atomide.com>
+References: <1428572154-3548-1-git-send-email-peter.ujfalusi@ti.com>
+ <1428572154-3548-4-git-send-email-peter.ujfalusi@ti.com>
+ <20150504053851.GY3521@localhost>
+ <554B34F2.5050306@ti.com>
+ <20150508034110.GW3521@localhost>
+ <554C6034.4020004@ti.com>
+ <20150508090330.GB3521@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150508090330.GB3521@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, linux@arm.linux.org.uk, grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com, arnd@arndb.de, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 1 +
- drivers/tty/serial/Kconfig                                      | 2 +-
- drivers/tty/serial/sh-sci.c                                     | 6 ++++++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+* Vinod Koul <vinod.koul@intel.com> [150508 02:04]:
+> On Fri, May 08, 2015 at 10:05:24AM +0300, Peter Ujfalusi wrote:
+> > On 05/08/2015 06:41 AM, Vinod Koul wrote:
+> > > Now as far as this series is concerned, rest of it looks good so I am
+> > > willing to merge to if you plan to work on defered probe :) I think its a
+> > > fair bargain!
+> > 
+> > Deal ;)
+> Wonderful :)
+> 
+> > 
+> > I'll take care of the OMAP/daVinci drivers for omap-dma and edma.
+> Okay, I had asked for ACK on last patch as its ARM one, or do you want me to
+> go ahead and apply it.. will wait till today
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-index ae73bb0..7534d46 100644
---- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -29,6 +29,7 @@ Required properties:
-     - "renesas,scifa" for generic SCIFA compatible UART.
-     - "renesas,scifb" for generic SCIFB compatible UART.
-     - "renesas,hscif" for generic HSCIF compatible UART.
-+    - "renesas,sci" for generic SCI compatible UART.
- 
-     When compatible with the generic version, nodes must list the
-     SoC-specific version corresponding to the platform first followed by the
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index f8120c1..dea1eff 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -728,7 +728,7 @@ config SERIAL_IP22_ZILOG_CONSOLE
- 
- config SERIAL_SH_SCI
- 	tristate "SuperH SCI(F) serial port support"
--	depends on SUPERH || ARCH_SHMOBILE || COMPILE_TEST
-+	depends on SUPERH || ARCH_SHMOBILE || H8300 || COMPILE_TEST
- 	select SERIAL_CORE
- 
- config SERIAL_SH_SCI_NR_UARTS
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index e7d6566..1468ec5 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -2536,6 +2536,12 @@ static const struct of_device_id of_sci_match[] = {
- 			.regtype = SCIx_HSCIF_REGTYPE,
- 		},
- 	}, {
-+		.compatible = "renesas,sci",
-+		.data = &(const struct sci_port_info) {
-+			.type = PORT_SCI,
-+			.regtype = SCIx_SCI_REGTYPE,
-+		},
-+	}, {
- 		/* Terminator */
- 	},
- };
--- 
-2.1.4
+It's best that I queue the .dts change as a follow-up patch once
+the DMA changes are merged. Otherwise it's almost guaranteed to
+produce merge conflicts with other dts changes.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Peter, let us know if there's an issue with that. If so, we need
+to set up an immutable branch against v4.1-rc1 with just these
+patches so we can merge it in as needed.
+
+Regards,
+
+Tony
