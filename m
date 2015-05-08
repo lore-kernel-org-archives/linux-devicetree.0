@@ -1,85 +1,58 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 2/4] soc: Mediatek: Add SCPSYS power domain driver
-Date: Fri, 8 May 2015 17:51:55 +0200
-Message-ID: <CABuKBe+H+kRc9s0kgsua--VUoTKi54S_gbX5pKTUnrg97uJnGw@mail.gmail.com>
-References: <1426002063-25713-1-git-send-email-s.hauer@pengutronix.de>
-	<1426002063-25713-3-git-send-email-s.hauer@pengutronix.de>
-	<CABuKBeLvBfeXw+b+SxAEjGA2dzPhYBs-SiJUyP5dUA28R=Rjkg@mail.gmail.com>
-	<20150508121944.GD6325@pengutronix.de>
-	<CABuKBeJ=HrwNMvV5N+6pnBgbB9k7e=8UPi3WWBTnpRFeEbTWvA@mail.gmail.com>
-	<20150508125102.GE6325@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150508125102.GE6325@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =Sascha Hauer <kernel@pengutronix.de>, Kevin Hilman <khilman@kernel.org>
+From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] MIPS: BMIPS: dts: remove unsupported entry for bcm7362
+Date: Sat, 9 May 2015 00:55:07 +0900
+Message-ID: <BABEE235-D7C4-4897-B3ED-778A5FB7F538@gmail.com>
+References: <1431089958-2626-1-git-send-email-jaedon.shin@gmail.com> <1431089958-2626-2-git-send-email-jaedon.shin@gmail.com> <CAJiQ=7CQshXhGJ7ftWQSu_UxgKVaRprZPEPXWNP6ci_1bLrJrw@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJiQ=7CQshXhGJ7ftWQSu_UxgKVaRprZPEPXWNP6ci_1bLrJrw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-08 14:51 GMT+02:00 Sascha Hauer <s.hauer@pengutronix.de>:
-> On Fri, May 08, 2015 at 02:28:37PM +0200, Matthias Brugger wrote:
->> 2015-05-08 14:19 GMT+02:00 Sascha Hauer <s.hauer@pengutronix.de>:
->> > On Fri, May 08, 2015 at 02:16:06PM +0200, Matthias Brugger wrote:
->> >> 2015-03-10 16:41 GMT+01:00 Sascha Hauer <s.hauer@pengutronix.de>:
->> >> > +static int scpsys_power_on(struct generic_pm_domain *genpd)
->> >> > +{
->> >> > +       struct scp_domain *scpd = container_of(genpd, struct scp_domain, pmd);
->> >> > +       struct scp *scp = scpd->scp;
->> >> > +       struct scp_domain_data *data = scpd->data;
->> >> > +       unsigned long expired;
->> >> > +       void __iomem *ctl_addr = scpd->scp->base + data->ctl_offs;
->> >> > +       u32 sram_pdn_ack = data->sram_pdn_ack_bits;
->> >> > +       u32 val;
->> >> > +       int ret;
->> >> > +
->> >> > +       val = readl(ctl_addr);
->> >> > +       val |= PWR_ON_BIT;
->> >> > +       writel(val, ctl_addr);
->> >> > +       val |= PWR_ON_2ND_BIT;
->> >> > +       writel(val, ctl_addr);
->> >> > +
->> >> > +       /* wait until PWR_ACK = 1 */
->> >> > +       expired = jiffies + HZ;
->> >> > +       while (!(readl(scp->base + SPM_PWR_STATUS) & data->sta_mask) ||
->> >> > +                       !(readl(scp->base + SPM_PWR_STATUS_2ND) & data->sta_mask)) {
->> >> > +               cpu_relax();
->> >> > +               if (time_after(jiffies, expired)) {
->> >> > +                       ret = -EIO;
->> >> > +                       goto out;
->> >> > +               }
->> >> > +       }
->> >> > +
->> >> > +       val &= ~PWR_CLK_DIS_BIT;
->> >> > +       writel(val, ctl_addr);
->> >> > +
->> >> > +       val &= ~PWR_ISO_BIT;
->> >> > +       writel(val, ctl_addr);
->> >> > +
->> >> > +       val |= PWR_RST_B_BIT;
->> >> > +       writel(val, ctl_addr);
->> >> > +
->> >> > +       val &= ~data->sram_pdn_bits;
->> >> > +       writel(val, ctl_addr);
->> >> > +
->> >> > +       /* wait until SRAM_PDN_ACK all 0 */
->> >> > +       expired = jiffies + HZ;
->> >> > +       while (sram_pdn_ack && (readl(ctl_addr) & sram_pdn_ack)) {
->> >>
->> >> I think "sram_pdn_ack &&" was added accidently here. It is always
->> >> bigger then zero.
->> >
->> > Nope, it's zero for MT8173_POWER_DOMAIN_MFG_ASYNC.
->>
->> In probe you turn on all power domains defined in scp_domain_data[].
->> So all but MT8173_POWER_DOMAIN_MFG_ASYNC will fail.
->> Does this make sense?
->
-> What makes you think that enabling the domains will fail? That doesn't
-> happen.
 
-You are right, I got confused, seems to be the friday-effect.
-Sorry for the noise.
+> On May 8, 2015, at 11:40 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> On Fri, May 8, 2015 at 5:59 AM, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Remove unsupported memory entry for the bcm7362 platform. The BMIPS4380
+>> processor only supports ZONE_NORMAL is not available for HIGHMEM.
+>> 
+>> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>> arch/mips/boot/dts/brcm/bcm97362svmb.dts | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+>> index b7b88e5dc9e7..ab8b01fa7dcf 100644
+>> --- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+>> +++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+>> @@ -8,7 +8,7 @@
+>> 
+>>        memory@0 {
+>>                device_type = "memory";
+>> -               reg = <0x00000000 0x10000000>, <0x20000000 0x30000000>;
+>> +               reg = <0x00000000 0x10000000>;
+> 
+> Hmm, this is more of a kernel limitation than a hardware limitation,
+> though.  The board physically has 1GB of memory, right?  It is best if
+> the DT entry reflects the actual hardware configuration.
+> 
+> The Broadcom kernels enable the CPU's special "XKS01" feature to put
+> 1GB of memory in ZONE_NORMAL:
+> 
+> https://github.com/Broadcom/stblinux-3.3/tree/master/linux
+> 
+> Maybe this would be worth adding to mainline.
 
--- 
-motzblog.wordpress.com
+Yes, It is right to have 1GB of memory.
+
+In order to add XKS01 ioremap, keg, tlb, dma, etc. change is required.
+However, there is no assurance they'll take those changes to the mainline.
+
+Anyway, I also hope it added.--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
