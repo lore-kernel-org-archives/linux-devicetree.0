@@ -1,52 +1,48 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: Add msm8916 CoreSight
- components
-Date: Fri, 08 May 2015 17:17:20 +0300
-Message-ID: <1431094640.21307.23.camel@linaro.org>
-References: <1431012969-16338-1-git-send-email-ivan.ivanov@linaro.org>
-	 <1431012969-16338-3-git-send-email-ivan.ivanov@linaro.org>
-	 <CANLsYkzNXBH0d6v1Ny_JwpW6NcKr9v0oAi9K3YfipwDgHWfMMA@mail.gmail.com>
-	 <1431092877.21307.18.camel@linaro.org>
-	 <CANLsYkyNYQf80c+8uMbZDr=kQ2YEOqy2aS8muEJsLsanDRGLOQ@mail.gmail.com>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] MIPS: BMIPS: dts: remove unsupported entry for bcm7362
+Date: Fri, 8 May 2015 07:40:44 -0700
+Message-ID: <CAJiQ=7CQshXhGJ7ftWQSu_UxgKVaRprZPEPXWNP6ci_1bLrJrw@mail.gmail.com>
+References: <1431089958-2626-1-git-send-email-jaedon.shin@gmail.com> <1431089958-2626-2-git-send-email-jaedon.shin@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkyNYQf80c+8uMbZDr=kQ2YEOqy2aS8muEJsLsanDRGLOQ@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431089958-2626-2-git-send-email-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, May 8, 2015 at 5:59 AM, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Remove unsupported memory entry for the bcm7362 platform. The BMIPS4380
+> processor only supports ZONE_NORMAL is not available for HIGHMEM.
+>
+> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/mips/boot/dts/brcm/bcm97362svmb.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+> index b7b88e5dc9e7..ab8b01fa7dcf 100644
+> --- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+> +++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+> @@ -8,7 +8,7 @@
+>
+>         memory@0 {
+>                 device_type = "memory";
+> -               reg = <0x00000000 0x10000000>, <0x20000000 0x30000000>;
+> +               reg = <0x00000000 0x10000000>;
 
-On Fri, 2015-05-08 at 08:13 -0600, Mathieu Poirier wrote:
-> On 8 May 2015 at 07:47, Ivan T. Ivanov ivanov@linaro.org> wrote:
-> > On Fri, 2015-05-08 at 07:38 -0600, Mathieu Poirier wrote:
-> > > On 7 May 2015 at 09:36, Ivan T. Ivanov ivanov@linaro.org> wrote:
-> > > > Add initial set of CoreSight components found on Qualcomm's 8x1=
-6 chipset.
-> > > >=20
-> > > >=20
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0replicator@824000 {
-> > > > +               compatible =3D "qcom,coresight-replicator", "ar=
-m,primecell";
-> > >=20
-> > > Shouldn't it be "qcom,coresight-replicator1x" ?
-> > >=20
-> >=20
-> >=20
-> >=20
-> > True, I still wonder, why we have to have this compatible string?
-> > Drivers are probed by amba_id and "arm,primecell", after all.
-> >=20
->=20
-> Drivers have their own compatible strings for historical reasons,
-> something I've been meaning to fix for a long time now...
->=20
+Hmm, this is more of a kernel limitation than a hardware limitation,
+though.  The board physically has 1GB of memory, right?  It is best if
+the DT entry reflects the actual hardware configuration.
 
-Yep, I see that they have been platform drivers in the past, but now=20
-they are not, except coresight-replicator driver. IMHO, having
-additional compatible string could lead just to confusion.=20
+The Broadcom kernels enable the CPU's special "XKS01" feature to put
+1GB of memory in ZONE_NORMAL:
 
-Regards,
-Ivan
+https://github.com/Broadcom/stblinux-3.3/tree/master/linux
+
+Maybe this would be worth adding to mainline.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
