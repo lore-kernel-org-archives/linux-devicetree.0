@@ -1,74 +1,54 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH  0/2] gpio: Allow userspace export from DT
-Date: Fri, 8 May 2015 12:04:15 +0200
-Message-ID: <20150508100415.GE1942@localhost>
-References: <20150413110515.9681.58848.stgit@localhost>
- <20150504084925.GB4047@localhost>
- <20150506112449.GQ2067@n2100.arm.linux.org.uk>
- <20150506124354.GA5302@localhost>
- <20150506125707.GV2067@n2100.arm.linux.org.uk>
- <20150506132520.GC5302@localhost>
- <20150507122840.GB2067@n2100.arm.linux.org.uk>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 02/12] clocksource: sti: Provide support for the ST LPC
+ Clocksource IP
+Date: Fri, 08 May 2015 12:09:57 +0200
+Message-ID: <1431079797.13593.28.camel@x220>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
+	 <1431005924-21777-3-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150507122840.GB2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431005924-21777-3-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 07, 2015 at 01:28:40PM +0100, Russell King - ARM Linux wrote:
-> On Wed, May 06, 2015 at 03:25:20PM +0200, Johan Hovold wrote:
-> > On Wed, May 06, 2015 at 01:57:08PM +0100, Russell King - ARM Linux wrote:
-> > > There is *no* "firmware" on these devices.  The only thing you have is a
-> > > boot loader and a DT blob, and people will hate you if you tell them that
-> > > they have to change the DT blob and then reboot their systems to change
-> > > the functionality of a GPIO pin.
-> > >
-> > > It's also entirely reasonable to assume that people are going to want to
-> > > change the configuration at runtime, given their diverse range of
-> > > applications.
-> > 
-> > DT can be changed at run-time using overlays.
-> 
-> Yes, I'm aware of that, but that code is really not nice.  There is no
-> notification system to drivers that something has changed, and with a
-> GPIO driver, you really don't want the driver to be unbound and
-> re-bound just because something changed.  That has the very real
-> possibility to disrupt users of other GPIOs.
+On Thu, 2015-05-07 at 14:38 +0100, Lee Jones wrote:
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
 
-Yes, you'd need to configure your gpio chip before you start using it.
+> +config CLKSRC_ST_LPC
+> +	bool
+> +	depends on ARCH_STI
 
-And for your RPi use case, things need not change much if the default
-mode if undefined, or the default DT, continue to allow for full
-flexibility.
+By itself this does nothing. You can't set this symbol to 'y', even if
+ARCH_STI is 'y', right? Of course, ARCH_STI will select this symbol (see
+11/12) otherwise it would be inert. But as ARCH_STI selects
+CLKSRC_ST_LPC I'd say this dependency isn't actually needed.
 
-But I imagine that even for such use cases some people will want to
-configure pin directionality and default modes in DT (blob or overlay)
-to limit potential damage from bugs in userspace applications.
+Are other selects of CLKSRC_ST_LPC expected to be added in the future?
+If not, CLKSRC_ST_LPC should operate in lockstep with ARCH_STI. In that
+case you might as well not bother with CLKSRC_ST_LPC and use ARCH_STI
+directly. (But that forces you to move the select statement below into
+the ARCH_STI entry, which might be ugly.)
 
-And everyone should benefit from persistent, predictable pin names.
+> +	select CLKSRC_OF if OF
+> +	help
+> +	  Enable this option to use the Low Power controller timer
+> +	  as clocksource.
 
-> > You also cut out the part in my reply about continuing to allow
-> > unrestricted access for such cases. That could still continue to be the
-> > default (e.g. when there are no pin function names defined in DT).
-> 
-> Yes, that's standard Internet email etiquette - cut everything from
-> the message you're replying to which is not part of the context of the
-> immediate reply.  I'd include a URL to that, but unfortunately google
-> seems broken (it's inserting a refresh into the results page which causes
-> elinks to continually refetch the same page, eventually triggering a
-> violation of googles terms of use... yea, quite funny that google is
-> instructing browsers to violate their own terms of use.)
+(Please add an empty line.)
 
-Yes, but in this case you argued using an example that I had already
-discussed in the part of the email that you left out (i.e. how to not
-break userspace by continuing to allow full flexibility if desired).
+>  endmenu
 
-Johan
+Thanks,
+
+
+Paul Bolle
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
