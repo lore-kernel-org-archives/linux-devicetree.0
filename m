@@ -1,53 +1,82 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH 0/6] ARM: sunxi: Introduce Allwinner H3
- support
-Date: Sat, 09 May 2015 17:58:43 +0200
-Message-ID: <554E2EB3.1000603@redhat.com>
-References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430904693-1404-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v6 03/12] irqchip: nvic: support hierarchy irq domain
+Date: Sat,  9 May 2015 22:39:33 +0200
+Message-ID: <1431203982-13217-4-git-send-email-stefan@agner.ch>
+References: <1431203982-13217-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431203982-13217-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+Cc: linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add support for hierarchy irq domains. This is required to stack
+the MSCM interrupt router and the NVIC controller found in Vybrid
+SoC.
 
-On 06-05-15 11:31, Jens Kuske wrote:
-> Hi everyone,
->
-> This patch series introduces basic kernel support for Allwinner's H3 SoC,
-> mainly basic clocks and pinctrl. It also adds interrupts, timers,
-> watchdog, RTC, dmaengine, MMC and UARTs, which are mostly compatible to
-> those in earlier SoCs like A23 and A31, and can simply be reused.
->
-> These patches are based on Maxime's sunxi/for-next branch from
-> git://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git
->
-> Patch 1 adds machine support for the H3.
->
-> Patch 2 adds support for the basic clocks. The AHB1/AHB2 split could
-> need some discussion.
->
-> Patch 3 adds the pin sets for the H3 main PIO.
->
-> Patch 4 adds the H3 specific parameters to the sun6i dmaengine driver.
->
-> Patch 5 adds the DTSI for the H3.
->
-> Patch 6 adds a DT for the Orange Pi Plus SBC, which these patches
-> were developed and tested with.
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ drivers/irqchip/Kconfig    |  1 +
+ drivers/irqchip/irq-nvic.c | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 1 deletion(-)
 
-Cool stuff, thanks for your work on this. Do you have any plans to also
-add support for the H3 to upstream u-boot ?
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 6de62a9..99b9a97 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -30,6 +30,7 @@ config ARM_GIC_V3_ITS
+ config ARM_NVIC
+ 	bool
+ 	select IRQ_DOMAIN
++	select IRQ_DOMAIN_HIERARCHY
+ 	select GENERIC_IRQ_CHIP
+ 
+ config ARM_VIC
+diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
+index 4ff0805..5fac910 100644
+--- a/drivers/irqchip/irq-nvic.c
++++ b/drivers/irqchip/irq-nvic.c
+@@ -49,6 +49,31 @@ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
+ 	handle_IRQ(irq, regs);
+ }
+ 
++static int nvic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				unsigned int nr_irqs, void *arg)
++{
++	int i, ret;
++	irq_hw_number_t hwirq;
++	unsigned int type = IRQ_TYPE_NONE;
++	struct of_phandle_args *irq_data = arg;
++
++	ret = irq_domain_xlate_onecell(domain, irq_data->np, irq_data->args,
++				   irq_data->args_count, &hwirq, &type);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < nr_irqs; i++)
++		irq_map_generic_chip(domain, virq + i, hwirq + i);
++
++	return 0;
++}
++
++static const struct irq_domain_ops nvic_irq_domain_ops = {
++	.xlate = irq_domain_xlate_onecell,
++	.alloc = nvic_irq_domain_alloc,
++	.free = irq_domain_free_irqs_top,
++};
++
+ static int __init nvic_of_init(struct device_node *node,
+ 			       struct device_node *parent)
+ {
+@@ -70,7 +95,8 @@ static int __init nvic_of_init(struct device_node *node,
+ 		irqs = NVIC_MAX_IRQ;
+ 
+ 	nvic_irq_domain =
+-		irq_domain_add_linear(node, irqs, &irq_generic_chip_ops, NULL);
++		irq_domain_add_linear(node, irqs, &nvic_irq_domain_ops, NULL);
++
+ 	if (!nvic_irq_domain) {
+ 		pr_warn("Failed to allocate irq domain\n");
+ 		return -ENOMEM;
+-- 
+2.4.0
