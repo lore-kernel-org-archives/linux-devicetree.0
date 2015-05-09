@@ -1,50 +1,41 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v6 08/12] ARM: introduce ARM_SINGLE_ARMV7M for ARMv7-M platforms
-Date: Sat,  9 May 2015 22:39:38 +0200
-Message-ID: <1431203982-13217-9-git-send-email-stefan@agner.ch>
-References: <1431203982-13217-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431203982-13217-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc: linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] imx27: dt: only map 1 Kbyte for fec registers
+Date: Sat,  9 May 2015 22:54:30 +0200
+Message-ID: <1431204870-17233-1-git-send-email-tremyfr@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This introduces a new top level config symbol ARM_SINGLE_ARMV7M
-for non-MMU, ARMv7-M platforms. It also support multiple ARMv7-M
-platforms in one kernel image since the cores share the same
-basic memory layout and interrupt controller. However, this works
-only if the combined platforms also have a similar (main) memory
-layout.
+According to the imx27 documentation, fec has a 1 Kbyte
+memory space map, spitted in two regions of 512 bytes.
+The first one for control/status registers, and the
+second one for event/statistic registers. So, we don't
+need to map 16 Kbyte for registers, 1 Kbyte is enough.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/Kconfig | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/imx27.dtsi |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 45df48b..2361efc 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -329,6 +329,19 @@ config ARCH_MULTIPLATFORM
- 	select SPARSE_IRQ
- 	select USE_OF
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index 6951b66..56bb917 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -533,7 +533,7 @@
  
-+config ARM_SINGLE_ARMV7M
-+	bool "ARMv7-M based platforms (Cortex-M0/M3/M4)"
-+	depends on !MMU
-+	select ARCH_WANT_OPTIONAL_GPIOLIB
-+	select ARM_NVIC
-+	select CLKSRC_OF
-+	select COMMON_CLK
-+	select CPU_V7M
-+	select GENERIC_CLOCKEVENTS
-+	select NO_IOPORT_MAP
-+	select SPARSE_IRQ
-+	select USE_OF
-+
- config ARCH_REALVIEW
- 	bool "ARM Ltd. RealView family"
- 	select ARCH_WANT_OPTIONAL_GPIOLIB
+ 			fec: ethernet@1002b000 {
+ 				compatible = "fsl,imx27-fec";
+-				reg = <0x1002b000 0x4000>;
++				reg = <0x1002b000 0x400>;
+ 				interrupts = <50>;
+ 				clocks = <&clks IMX27_CLK_FEC_IPG_GATE>,
+ 					 <&clks IMX27_CLK_FEC_AHB_GATE>;
 -- 
-2.4.0
+1.7.4.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
