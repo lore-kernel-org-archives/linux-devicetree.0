@@ -1,83 +1,115 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v6 09/12] ARM: efm32: use ARM_SINGLE_ARMV7M
-Date: Sat,  9 May 2015 22:39:39 +0200
-Message-ID: <1431203982-13217-10-git-send-email-stefan@agner.ch>
+Subject: [PATCH v6 04/12] irqchip: vf610-mscm: support NVIC parent
+Date: Sat,  9 May 2015 22:39:34 +0200
+Message-ID: <1431203982-13217-5-git-send-email-stefan@agner.ch>
 References: <1431203982-13217-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1431203982-13217-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc: linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, u.kleine-koenig@pengutronix.de, olof@lixom.net, galak@codeaurora.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the new config symbol ARM_SINGLE_ARMV7M which groups config
-symbols used by modern ARMv7-M platforms. It also support multiple
-ARMv7-M platforms in one kernel image. However, this only works if
-the combined platforms share the same (main) memory layout.
+Support the NVIC interrupt controller as node parent of the MSCM
+interrupt router. On the dual-core variants of Vybird (VF6xx), the
+NVIC interrupt controller is used by the Cortex-M4. To support
+running Linux on this core too, MSCM needs NVIC parent support too.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/Kconfig                 | 28 ++++++++++------------------
- arch/arm/configs/efm32_defconfig |  1 +
- 2 files changed, 11 insertions(+), 18 deletions(-)
+ drivers/irqchip/irq-vf610-mscm-ir.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 2361efc..d1c035d 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -411,24 +411,6 @@ config ARCH_EBSA110
- 	  Ethernet interface, two PCMCIA sockets, two serial ports and a
- 	  parallel port.
+diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
+index 9521057..40b7d8d 100644
+--- a/drivers/irqchip/irq-vf610-mscm-ir.c
++++ b/drivers/irqchip/irq-vf610-mscm-ir.c
+@@ -47,6 +47,7 @@ struct vf610_mscm_ir_chip_data {
+ 	void __iomem *mscm_ir_base;
+ 	u16 cpu_mask;
+ 	u16 saved_irsprc[MSCM_IRSPRC_NUM];
++	bool is_nvic;
+ };
  
--config ARCH_EFM32
--	bool "Energy Micro efm32"
--	depends on !MMU
--	select ARCH_REQUIRE_GPIOLIB
--	select ARM_NVIC
--	select AUTO_ZRELADDR
--	select CLKSRC_OF
--	select COMMON_CLK
--	select CPU_V7M
--	select GENERIC_CLOCKEVENTS
--	select NO_DMA
--	select NO_IOPORT_MAP
--	select SPARSE_IRQ
--	select USE_OF
--	help
--	  Support for Energy Micro's (now Silicon Labs) efm32 Giant Gecko
--	  processors.
--
- config ARCH_EP93XX
- 	bool "EP93xx-based"
- 	select ARCH_HAS_HOLES_MEMORYMODEL
-@@ -963,6 +945,16 @@ source "arch/arm/mach-w90x900/Kconfig"
+ static struct vf610_mscm_ir_chip_data *mscm_ir_data;
+@@ -91,6 +92,7 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
+ {
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
++	struct irq_data *parent = data->parent_data;
+ 	u16 irsprc;
  
- source "arch/arm/mach-zynq/Kconfig"
+ 	irsprc = readw_relaxed(chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+@@ -101,17 +103,25 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
+ 	writew_relaxed(chip_data->cpu_mask,
+ 		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
  
-+# ARMv7-M architecture
-+config ARCH_EFM32
-+	bool "Energy Micro efm32"
-+	depends on ARM_SINGLE_ARMV7M
-+	select ARCH_REQUIRE_GPIOLIB
-+	select AUTO_ZRELADDR
-+	help
-+	  Support for Energy Micro's (now Silicon Labs) efm32 Giant Gecko
-+	  processors.
+-	irq_chip_unmask_parent(data);
++	if (parent->chip->irq_enable)
++		parent->chip->irq_enable(parent);
++	else
++		parent->chip->irq_unmask(parent);
 +
- # Definitions to make life easier
- config ARCH_ACORN
- 	bool
-diff --git a/arch/arm/configs/efm32_defconfig b/arch/arm/configs/efm32_defconfig
-index c4c17e3..e969f78 100644
---- a/arch/arm/configs/efm32_defconfig
-+++ b/arch/arm/configs/efm32_defconfig
-@@ -16,6 +16,7 @@ CONFIG_EMBEDDED=y
- # CONFIG_IOSCHED_DEADLINE is not set
- # CONFIG_IOSCHED_CFQ is not set
- # CONFIG_MMU is not set
-+CONFIG_ARM_SINGLE_ARMV7M=y
- CONFIG_ARCH_EFM32=y
- CONFIG_SET_MEM_PARAM=y
- CONFIG_DRAM_BASE=0x88000000
+ }
+ 
+ static void vf610_mscm_ir_disable(struct irq_data *data)
+ {
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
++	struct irq_data *parent = data->parent_data;
+ 
+ 	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_mask_parent(data);
++	if (parent->chip->irq_disable)
++		parent->chip->irq_disable(parent);
++	else
++		parent->chip->irq_mask(parent);
+ }
+ 
+ static struct irq_chip vf610_mscm_ir_irq_chip = {
+@@ -143,10 +153,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
+ 					      domain->host_data);
+ 
+ 	gic_data.np = domain->parent->of_node;
+-	gic_data.args_count = 3;
+-	gic_data.args[0] = GIC_SPI;
+-	gic_data.args[1] = irq_data->args[0];
+-	gic_data.args[2] = irq_data->args[1];
++
++	if (mscm_ir_data->is_nvic) {
++		gic_data.args_count = 1;
++		gic_data.args[0] = irq_data->args[0];
++	} else {
++		gic_data.args_count = 3;
++		gic_data.args[0] = GIC_SPI;
++		gic_data.args[1] = irq_data->args[0];
++		gic_data.args[2] = irq_data->args[1];
++	}
++
+ 	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
+ }
+ 
+@@ -199,6 +216,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
+ 		goto out_unmap;
+ 	}
+ 
++	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
++		mscm_ir_data->is_nvic = true;
++
+ 	cpu_pm_register_notifier(&mscm_ir_notifier_block);
+ 
+ 	return 0;
 -- 
 2.4.0
