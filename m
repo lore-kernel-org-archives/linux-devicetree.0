@@ -1,13 +1,13 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 6/6] ARM: dts: sun8i: Add ET-Q8 A33 support
-Date: Sun, 10 May 2015 12:16:23 +0530
-Message-ID: <1431240383-12763-7-git-send-email-vishnupatekar0510@gmail.com>
-References: <1431240383-12763-1-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: sunxi: Add Machine support for A33
+Date: Sun, 10 May 2015 10:49:51 +0200
+Message-ID: <554F1BAF.8020709@redhat.com>
+References: <1431240383-12763-1-git-send-email-vishnupatekar0510@gmail.com> <1431240383-12763-2-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBOX6XOVAKGQET37BPCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1431240383-12763-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBNVXXSVAKGQEIYES73Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1431240383-12763-2-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -15,148 +15,95 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ET-Q8_A33 is A33 based cheap tablet in common Q8 format.
+Hi,
 
-It has 512MB RAM, 4GB Nand, 7" Display, RDA5900P wifi, GSL1680 touch, etc.
+On 10-05-15 08:46, Vishnu Patekar wrote:
+> Allwinnner A33 quad core cortex-a7 based SOC.
+> It is similar to A23.
+>
+> Renamed cpu method to "allwinner,sun8i" for common sun8i smp.
+> smp code is generic for A23, A33 and hopefully H3.
+>
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>   arch/arm/mach-sunxi/Kconfig                     | 2 +-
+>   arch/arm/mach-sunxi/platsmp.c                   | 2 +-
+>   arch/arm/mach-sunxi/sunxi.c                     | 4 ++--
+>   4 files changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+> index 42941fd..e32f082 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+> @@ -9,4 +9,5 @@ using one of the following compatible strings:
+>     allwinner,sun6i-a31
+>     allwinner,sun7i-a20
+>     allwinner,sun8i-a23
+> +  allwinner,sun8i-a33
+>     allwinner,sun9i-a80
+> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+> index 81502b9..38bedd8 100644
+> --- a/arch/arm/mach-sunxi/Kconfig
+> +++ b/arch/arm/mach-sunxi/Kconfig
+> @@ -35,7 +35,7 @@ config MACH_SUN7I
+>   	select SUN5I_HSTIMER
+>
+>   config MACH_SUN8I
+> -	bool "Allwinner A23 (sun8i) SoCs support"
+> +	bool "Allwinner (sun8i) SoCs support"
+>   	default ARCH_SUNXI
+>   	select ARM_GIC
+>   	select MFD_SUN6I_PRCM
+> diff --git a/arch/arm/mach-sunxi/platsmp.c b/arch/arm/mach-sunxi/platsmp.c
+> index e8483ec..c56b501 100644
+> --- a/arch/arm/mach-sunxi/platsmp.c
+> +++ b/arch/arm/mach-sunxi/platsmp.c
+> @@ -189,4 +189,4 @@ struct smp_operations sun8i_smp_ops __initdata = {
+>   	.smp_prepare_cpus	= sun8i_smp_prepare_cpus,
+>   	.smp_boot_secondary	= sun8i_smp_boot_secondary,
+>   };
+> -CPU_METHOD_OF_DECLARE(sun8i_a23_smp, "allwinner,sun8i-a23", &sun8i_smp_ops);
+> +CPU_METHOD_OF_DECLARE(sun8i_smp, "allwinner,sun8i", &sun8i_smp_ops);
+> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+> index 1bc811a..8937d0d 100644
+> --- a/arch/arm/mach-sunxi/sunxi.c
+> +++ b/arch/arm/mach-sunxi/sunxi.c
+> @@ -66,11 +66,11 @@ DT_MACHINE_START(SUN7I_DT, "Allwinner sun7i (A20) Family")
+>   MACHINE_END
+>
+>   static const char * const sun8i_board_dt_compat[] = {
+> -	"allwinner,sun8i-a23",
+> +	"allwinner,sun8i",
+>   	NULL,
+>   };
 
-Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/Makefile            |   3 +-
- arch/arm/boot/dts/sun8i-a33-et-q8.dts | 108 ++++++++++++++++++++++++++++++++++
- 2 files changed, 110 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun8i-a33-et-q8.dts
+This is wrong it should be:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 82f4b9b..d44b1d6 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -570,7 +570,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-wexler-tab7200.dtb
- dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a23-ippo-q8h-v5.dtb \
--	sun8i-a23-ippo-q8h-v1.2.dtb
-+	sun8i-a23-ippo-q8h-v1.2.dtb \
-+	sun8i-a33-et-q8.dtb
- dtb-$(CONFIG_MACH_SUN9I) += \
- 	sun9i-a80-optimus.dtb \
- 	sun9i-a80-cubieboard4.dtb
-diff --git a/arch/arm/boot/dts/sun8i-a33-et-q8.dts b/arch/arm/boot/dts/sun8i-a33-et-q8.dts
-new file mode 100644
-index 0000000..260d5a3
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a33-et-q8.dts
-@@ -0,0 +1,108 @@
-+/*
-+ * Copyright 2015 Vishnu Patekar
-+ * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a33.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "ET Q8 A33 ";
-+	compatible = "et-q8-q33", "allwinner,sun8i", "allwinner,sun8i-a33";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		bootargs = "earlyprintk console=ttyS0,115200";
-+	};
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_vcc3v0>;
-+	status = "okay";
-+
-+	button@200 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <200000>;
-+	};
-+
-+	button@400 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <400000>;
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	/* pull-ups and devices require PMIC regulator */
-+	status = "failed";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
--- 
-1.9.1
+static const char * const sun8i_board_dt_compat[] = {
+	"allwinner,sun8i-a23",
+	"allwinner,sun8i-a33",
+  	NULL,
+};
+
+To match what you've said it will be in Documentation/devicetree/bindings/arm/sunxi.txt
+(which is correct).
+
+Otherwise this patch looks good, thanks for your work on this.
+
+Regards,
+
+Hans
+
+
+>
+> -DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i (A23) Family")
+> +DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
+>   	.dt_compat	= sun8i_board_dt_compat,
+>   	.init_late	= sunxi_dt_cpufreq_init,
+>   MACHINE_END
+>
