@@ -1,16 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: dts: sunxi: Add Allwinner A33 DTSI
-Date: Sun, 10 May 2015 12:43:40 +0200
-Message-ID: <20150510104340.GG11057@lukather>
+Subject: Re: [PATCH 6/6] ARM: dts: sun8i: Add ET-Q8 A33 support
+Date: Sun, 10 May 2015 12:47:13 +0200
+Message-ID: <20150510104713.GH11057@lukather>
 References: <1431240383-12763-1-git-send-email-vishnupatekar0510@gmail.com>
- <1431240383-12763-6-git-send-email-vishnupatekar0510@gmail.com>
+ <1431240383-12763-7-git-send-email-vishnupatekar0510@gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="peRj85VDUce1fu/0"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMHNXSVAKGQETT23UVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="wXC5D88JtmMokAwr"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWXPXSVAKGQEC5OKNDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1431240383-12763-6-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1431240383-12763-7-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -22,33 +22,45 @@ To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---peRj85VDUce1fu/0
+--wXC5D88JtmMokAwr
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-Hi,
-
-On Sun, May 10, 2015 at 12:16:22PM +0530, Vishnu Patekar wrote:
-> this is based on common sun8i.dtsi patch.
-> sun8i-a23.dtsi and sun8i-a33.dtsi are same, A33 specific features
-> e.g. clocks can be added in future.
+On Sun, May 10, 2015 at 12:16:23PM +0530, Vishnu Patekar wrote:
+> ET-Q8_A33 is A33 based cheap tablet in common Q8 format.
+> 
+> It has 512MB RAM, 4GB Nand, 7" Display, RDA5900P wifi, GSL1680 touch, etc.
 > 
 > Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun8i-a33.dtsi | 217 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 217 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-a33.dtsi
+>  arch/arm/boot/dts/Makefile            |   3 +-
+>  arch/arm/boot/dts/sun8i-a33-et-q8.dts | 108 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 110 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/sun8i-a33-et-q8.dts
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 82f4b9b..d44b1d6 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -570,7 +570,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>  	sun7i-a20-wexler-tab7200.dtb
+>  dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-a23-ippo-q8h-v5.dtb \
+> -	sun8i-a23-ippo-q8h-v1.2.dtb
+> +	sun8i-a23-ippo-q8h-v1.2.dtb \
+> +	sun8i-a33-et-q8.dtb
+>  dtb-$(CONFIG_MACH_SUN9I) += \
+>  	sun9i-a80-optimus.dtb \
+>  	sun9i-a80-cubieboard4.dtb
+> diff --git a/arch/arm/boot/dts/sun8i-a33-et-q8.dts b/arch/arm/boot/dts/sun8i-a33-et-q8.dts
 > new file mode 100644
-> index 0000000..32489fc
+> index 0000000..260d5a3
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-> @@ -0,0 +1,217 @@
+> +++ b/arch/arm/boot/dts/sun8i-a33-et-q8.dts
+> @@ -0,0 +1,108 @@
 > +/*
-> + * Copyright 2014 Chen-Yu Tsai
-> + *
-> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> + * Copyright 2015 Vishnu Patekar
+> + * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > + *
 > + * This file is dual-licensed: you can use it either under the terms
 > + * of the GPL or the X11 license, at your option. Note that this dual
@@ -90,129 +102,85 @@ On Sun, May 10, 2015 at 12:16:22PM +0530, Vishnu Patekar wrote:
 > + *     OTHER DEALINGS IN THE SOFTWARE.
 > + */
 > +
-> +#include "sun8i.dtsi"
+> +/dts-v1/;
+> +#include "sun8i-a33.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
 > +
 > +/ {
-> +	cpus {
-> +		enable-method = "allwinner,sun8i";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <0>;
-> +		};
-> +
-> +		cpu@1 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <1>;
-> +		};
-> +
-> +		cpu@2 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <2>;
-> +		};
-> +
-> +		cpu@3 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <3>;
-> +		};
-> +	};
-> +
-> +	memory {
-> +		reg = <0x40000000 0x80000000>;
-> +	};
-> +
-> +	clocks {
-> +		/* dummy clock until actually implemented */
-> +		pll5: pll5_clk {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <0>;
-> +			clock-output-names = "pll5";
-> +		};
-> +
-> +		axi: axi_clk@01c20050 {
-> +			#clock-cells = <0>;
-> +			compatible = "allwinner,sun8i-a23-axi-clk";
-> +			reg = <0x01c20050 0x4>;
-> +			clocks = <&cpu>;
-> +			clock-output-names = "axi";
-> +		};
-> +
-> +		ahb1_gates: clk@01c20060 {
-> +			#clock-cells = <1>;
-> +			compatible = "allwinner,sun8i-a23-ahb1-gates-clk";
-> +			reg = <0x01c20060 0x8>;
-> +			clocks = <&ahb1>;
-> +			clock-output-names = "ahb1_mipidsi", "ahb1_dma",
-> +					"ahb1_mmc0", "ahb1_mmc1", "ahb1_mmc2",
-> +					"ahb1_nand", "ahb1_sdram",
-> +					"ahb1_hstimer", "ahb1_spi0",
-> +					"ahb1_spi1", "ahb1_otg", "ahb1_ehci",
-> +					"ahb1_ohci", "ahb1_ve", "ahb1_lcd",
-> +					"ahb1_csi", "ahb1_be",	"ahb1_fe",
-> +					"ahb1_gpu", "ahb1_spinlock",
-> +					"ahb1_drc";
-> +		};
-> +
-> +		apb1_gates: clk@01c20068 {
-> +			#clock-cells = <1>;
-> +			compatible = "allwinner,sun8i-a23-apb1-gates-clk";
-> +			reg = <0x01c20068 0x4>;
-> +			clocks = <&apb1>;
-> +			clock-output-names = "apb1_codec", "apb1_pio",
-> +					"apb1_daudio0",	"apb1_daudio1";
-> +		};
-> +
-> +		apb2: clk@01c20058 {
-> +			#clock-cells = <0>;
-> +			compatible = "allwinner,sun4i-a10-apb1-clk";
-> +			reg = <0x01c20058 0x4>;
-> +			clocks = <&osc32k>, <&osc24M>, <&pll6 0>, <&pll6 0>;
-> +			clock-output-names = "apb2";
-> +		};
-> +
-> +		apb2_gates: clk@01c2006c {
-> +			#clock-cells = <1>;
-> +			compatible = "allwinner,sun8i-a23-apb2-gates-clk";
-> +			reg = <0x01c2006c 0x4>;
-> +			clocks = <&apb2>;
-> +			clock-output-names = "apb2_i2c0", "apb2_i2c1",
-> +					"apb2_i2c2", "apb2_uart0",
-> +					"apb2_uart1", "apb2_uart2",
-> +					"apb2_uart3", "apb2_uart4";
-> +		};
-> +
-> +		mbus_clk: clk@01c2015c {
-> +			#clock-cells = <0>;
-> +			compatible = "allwinner,sun8i-a23-mbus-clk";
-> +			reg = <0x01c2015c 0x4>;
-> +			clocks = <&osc24M>, <&pll6 1>, <&pll5>;
-> +			clock-output-names = "mbus";
-> +		};
-> +	};
-> +
-> +	soc@01c00000 {
-> +		dma: dma-controller@01c02000 {
-> +			compatible = "allwinner,sun8i-a23-dma";
-> +			reg = <0x01c02000 0x1000>;
-> +			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ahb1_gates 6>;
-> +			resets = <&ahb1_rst 6>;
-> +			#dma-cells = <1>;
-> +		};
+> +	model = "ET Q8 A33 ";
 
-With what device did you test DMA?
+There's one trailing space here.
 
+> +	compatible = "et-q8-q33", "allwinner,sun8i", "allwinner,sun8i-a33";
+
+All compatibles must be under the vendor,IP format.
+
+What is the maker of your board? That should also be in the DT name,
+under the format sun8i-a33-vendor-board.dts
+
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "earlyprintk console=ttyS0,115200";
+> +	};
+
+Please use stdout-path here, just like we're doing on the other
+boards.
+
+> +};
+> +
+> +&lradc {
+> +	vref-supply = <&reg_vcc3v0>;
+> +	status = "okay";
+> +
+> +	button@200 {
+> +		label = "Volume Up";
+> +		linux,code = <KEY_VOLUMEUP>;
+> +		channel = <0>;
+> +		voltage = <200000>;
+> +	};
+> +
+> +	button@400 {
+> +		label = "Volume Down";
+> +		linux,code = <KEY_VOLUMEDOWN>;
+> +		channel = <0>;
+> +		voltage = <400000>;
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c0_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins_a>;
+> +	/* pull-ups and devices require PMIC regulator */
+> +	status = "failed";
+> +};
+
+Is this still true, or is it just a copy/paste mistake?
+
+Thanks,
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---peRj85VDUce1fu/0--
+--wXC5D88JtmMokAwr--
