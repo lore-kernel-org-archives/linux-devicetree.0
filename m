@@ -1,60 +1,33 @@
-From: Pratyush Anand <pratyush.anand@gmail.com>
-Subject: Re: [RFC] PCI: designware: missing *config* reg space
-Date: Sun, 10 May 2015 18:24:11 +0530
-Message-ID: <CAHM4w1krq0vHd6EMpKV-NhHGggDBrrDGZw=V3XLcQDZ7XsXbsQ@mail.gmail.com>
-References: <553E9B9A.5090000@ti.com>
+From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] libahci: Add support to handle HOST_IRQ_STAT as
+ edge trigger latch.
+Date: Sun, 10 May 2015 11:54:20 -0400
+Message-ID: <20150510155420.GC5856@htj.duckdns.org>
+References: <1430853672-6227-1-git-send-email-stripathi@apm.com>
+ <1430853672-6227-3-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <553E9B9A.5090000@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jg1.han@samsung.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, KISHON VIJAY <kishon@ti.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Mohit ST <mohit.kumar.dhaka@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1430853672-6227-3-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 1:57 AM, Murali Karicheri <m-karicheri2@ti.com> wrote:
-> All,
->
-> I would like to take action to resolve the following print message thrown by
-> PCI designware core driver when kernel boots up on Keystone.
->
-> [    0.415778] keystone-pcie 21801000.pcie: missing *config* reg space
->
-> As per DT documentation introduced by commit
-> 4dd964df36d0e548e1806ec2ec275b62d4dc46e8 "PCI: designware: Look for
-> configuration space in 'reg', not 'ranges'
->
-> This is introduced to stop abusing the range property for defining resource
-> for config space. However if the device binding doesn't have
-> reg-name = "config" defined, this throws out an unnecessary log message
-> at boot which seems to me not right. AFAIK, reg-names is not mandatory.
-> config space address in Keystone case is defined using index. So for
-> keystone this needs to be fixed.
->
-> I propose to add the following check in the designware code to address
-> this. Keystone uses an older version of the Designware IP and doesn't have
-> the ATU support. So va_cfg0_base and va_cfg1_base are already set up in
-> ks_dw_pcie_host_init() before calling dw_pcie_host_init() and points to the
-> remote config space address (both same for keystone). I think for other DW
-> drivers, these variables are NULL. So add a check and avoid this error
-> message for Keystone. Any comments?
->
+On Wed, May 06, 2015 at 12:51:11AM +0530, Suman Tripathi wrote:
+> This patch adds the support to handle HOST_IRQ_STAT as edge trigger
+> latch.
+> 
+> Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
 
-or may be just following one liner should do the job for you.
+Applied 1-2 to libata/for-4.2.
 
-diff --git a/drivers/pci/host/pcie-designware.c
-b/drivers/pci/host/pcie-designware.c
-index 2e9f84fdd9ce..4ff5308f0cc6 100644
---- a/drivers/pci/host/pcie-designware.c
-+++ b/drivers/pci/host/pcie-designware.c
-@@ -371,7 +371,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-                addrp = of_get_address(np, index, NULL, NULL);
-                pp->cfg0_mod_base = of_read_number(addrp, ns);
-                pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
--       } else {
-+       } else if (!pp->va_cfg0_base) {
-                dev_err(pp->dev, "missing *config* reg space\n");
-        }
+Thanks.
 
-
-~Pratyush
+-- 
+tejun
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
