@@ -1,63 +1,64 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC driver
-Date: Mon, 11 May 2015 15:29:10 -0700
-Message-ID: <CAPw-ZT=ubrjAvgTHBthzYQC7faSbaOvyFgX81=vcaiWKA8+bug@mail.gmail.com>
-References: <1430884947-16787-1-git-send-email-lho@apm.com>
-	<20150506182900.GI22949@pd.tnic>
-	<CAPw-ZTmJ8C3KmujZJN1z21S3LFQ-TRouUeAjN0Y02HOTKAG1_g@mail.gmail.com>
-	<2154265.kZOTsisCx2@wuerfel>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add "nor-jedec" flash compatible binding
+Date: Mon, 11 May 2015 15:46:46 -0700
+Message-ID: <20150511224646.GJ32500@ld-irv-0074>
+References: <1431066098-19821-1-git-send-email-zajec5@gmail.com>
+ <554CDD8C.7050000@wwwdotorg.org>
+ <20150508184317.GZ32500@ld-irv-0074>
+ <CAMuHMdXeen3cU2bb8TXxxtdDjgMCU_FS1Yxdu1b-Tq2xE+x0ZA@mail.gmail.com>
+ <554D24DA.8060601@wwwdotorg.org>
+ <20150508213414.GE32500@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2154265.kZOTsisCx2@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150508213414.GE32500@ld-irv-0074>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi DT maintainers,
 
->>
->> On Wed, May 6, 2015 at 11:29 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
->> > On Wed, May 06, 2015 at 11:12:20AM -0700, Loc Ho wrote:
->> >> 1. Whether to have an single driver for APM EDAC or multiple instance
->> >> of 4 different drivers. With single driver, it does not scale in the
->> >> future when we add/remove memory controllers and CPU domains. This is
->> >
->> > Why doesn't it scale? Please explain this to me more verbosely.
->>
->> Let me explain a bit more. We have four memory controller today.
->> Therefore, I would like to have 4 DTS node and the same driver probe
->> function called 4 times. If there is only one driver for the entire
->> APM EDAC, I would have to merge all the resource registers into an
->> single DTS node and its probe function called one time. In this one
->> driver design, what would I do in future chip or variant of the chip
->> in which it remove or add an addition memory controller? I would have
->> to change the driver as well as the DTS node. In the four instance
->> probe design, all I need is to add an additional DTS node.
->
-> There are lots of possible representations in DT that would solve this.
->
-> First of all, a device node can be turned into a platform_device but
-> does not have to, so you you could have one DT node for the common
-> parts (the pcp), and then subnodes underneath it, and have the driver
-> attach to the main device but parse the subnodes manually to see
-> what registers are there. There is no magic involved here, and this
-> would address the concerns that Boris and I have.
->
-> Another option would be to have multiple drivers: have one driver
-> that handles the common parts here, and make that export a shared
-> interface to which the other drivers can register, then create
-> five drivers that each do one thing. In my opinion that would work
-> just as well, and be a nice abstraction, but I suspect that Boris
-> would prefer doing it the other way.
+On Fri, May 08, 2015 at 02:34:14PM -0700, Brian Norris wrote:
+> On Fri, May 08, 2015 at 03:04:26PM -0600, Stephen Warren wrote:
+> > On 05/08/2015 02:57 PM, Geert Uytterhoeven wrote:
+> > >On Fri, May 8, 2015 at 8:43 PM, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > >>On Fri, May 08, 2015 at 10:00:12AM -0600, Stephen Warren wrote:
+> > >>>Equally, "nor-jedec" doesn't sound like the right name. It doesn't
+> > >>>differentiate between SPI and parallel NOR flash, which presumably
+> > >>>need different compatible values, since the programming model is
+> > >>>quite different, and the compatible value is supposed to
+> > >>>define/imply the SW-visible programming model.
+> > >>
+> > >>It's definitely for SPI only. There was much discussion about this a
+> > >>few months back. Somewhere along the way, it was mentioned that the
+> > >>context (SPI slave is a child of SPI master) would make this clear. I'm
+> > >>still not sure why we didn't end up with something more descriptive,
+> > >>though, like "spi-nor,nor-jedec".
+> > >
+> > >What about "jedec,spi-nor"?
+> > 
+> > That seems unique enough to me, or the options below if they're
+> > actually applicable.
+> 
+> That could be OK with me. If I can get the magic blessing from the DT
+> folks, then I'll send patches to update everything.
 
-Thanks all for the comment. I will follow the design as with
-gpio-dwapb driver. This would take care of Borislav concern as
-mentioned by Arnd.
+Can I get an 'ack' for this change? We merged a binding for "nor-jedec"
+in 4.1-rc1, with review (but no explicit 'ack') from Mark, and a few
+DTS's are starting to use it. But we're now seeing objections, with a
+request to change this to "jedec,spi-nor". I don't care too much, but I
+can understand Stephen's point.
 
--Loc
+Anyway, I don't want to go through too many more patch cycles without an
+explicit ack here on the "jedec,spi-nor" binding (i.e.,
+s/nor-jedec/jedec,spi-nor/g). With an ack, then I can make sure the
+binding and current users get changed before 4.1 is minted, and prevent
+other ARM subarchitectures from pulling in the "wrong" binding for 4.2.
+
+Brian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
