@@ -1,43 +1,53 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH 07/12] rtc: st: Update IP layout information
- to include Clocksource
-Date: Mon, 11 May 2015 12:52:26 +0100
-Message-ID: <20150511115226.GC20742@x1>
-References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
- <1431005924-21777-8-git-send-email-lee.jones@linaro.org>
- <20150509135854.GE3338@piout.net>
- <20150511105433.GB20742@x1>
- <20150511110307.GL3338@piout.net>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] imx27: dt: only map 1 Kbyte for fec registers
+Date: Mon, 11 May 2015 20:01:01 +0800
+Message-ID: <20150511120101.GA25495@tiger>
+References: <1431204870-17233-1-git-send-email-tremyfr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150511110307.GL3338-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+In-Reply-To: <1431204870-17233-1-git-send-email-tremyfr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Reynes <tremyfr@gmail.com>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 May 2015, Alexandre Belloni wrote:
-> On 11/05/2015 at 11:54:33 +0100, Lee Jones wrote :
-> > On Sat, 09 May 2015, Alexandre Belloni wrote:
-> > > I'm guessing this will go through the mfd tree along with the dri=
-ver?
-> >=20
-> > Yes, that is the plan, if that's okay with you?
->=20
-> Sure!
+On Sat, May 09, 2015 at 10:54:30PM +0200, Philippe Reynes wrote:
+> According to the imx27 documentation, fec has a 1 Kbyte
+> memory space map, spitted in two regions of 512 bytes.
+> The first one for control/status registers, and the
+> second one for event/statistic registers. So, we don't
+> need to map 16 Kbyte for registers, 1 Kbyte is enough.
+> 
+> Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+> ---
+>  arch/arm/boot/dts/imx27.dtsi |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+> index 6951b66..56bb917 100644
+> --- a/arch/arm/boot/dts/imx27.dtsi
+> +++ b/arch/arm/boot/dts/imx27.dtsi
+> @@ -533,7 +533,7 @@
+>  
+>  			fec: ethernet@1002b000 {
+>  				compatible = "fsl,imx27-fec";
+> -				reg = <0x1002b000 0x4000>;
+> +				reg = <0x1002b000 0x400>;
 
-Perfect.  Thanks Alexandre.
+No.  Per MCIMX27RM.pdf, Table 2-7. AIPI2 Memory Map, it should be 4KiB.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
-g" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
+
+>  				interrupts = <50>;
+>  				clocks = <&clks IMX27_CLK_FEC_IPG_GATE>,
+>  					 <&clks IMX27_CLK_FEC_AHB_GATE>;
+> -- 
+> 1.7.4.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
