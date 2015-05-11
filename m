@@ -1,102 +1,31 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] Documentation: dt: add bindings for TI Wakeup M3
- processor
-Date: Mon, 11 May 2015 10:28:58 -0700
-Message-ID: <20150511172858.GD15563@atomide.com>
-References: <1427917039-43206-1-git-send-email-d-gerlach@ti.com>
- <1427917039-43206-4-git-send-email-d-gerlach@ti.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [v4.0: PATCH 0/3] ARM: dts: keystone: dt fixes for netcp driver
+Date: Mon, 11 May 2015 14:05:27 -0400
+Message-ID: <1431367530-4924-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427917039-43206-4-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ssantosh@kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+There are few fixes required in the dt bindings for netcp driver to
+make the reg and range sizes to match with data sheet. Also fix the
+typical size error (last bit 1 instead of 0). Please apply this for
+to next branch for v4.2.
 
-* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150401 12:38]:
-> Add the device tree bindings document for the TI Wakeup M3 remote
-> processor devices on AM33xx and AM43xx SoCs. These devices are used
-> to offload low-level power management functionality, and are handled
-> by the wkup_m3 remoteproc driver.
-> 
-> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Thanks
 
-This binding looks OK to me now, thanks for updating it:
+Murali Karicheri (3):
+  ARM: dts: k2hk: fix the netcp range size
+  ARM: dts: k2e: fix the netcp range size
+  ARM: dts: k2l: fix the netcp range size
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+ arch/arm/boot/dts/k2e-netcp.dtsi  | 4 ++--
+ arch/arm/boot/dts/k2hk-netcp.dtsi | 2 +-
+ arch/arm/boot/dts/k2l-netcp.dtsi  | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-> ---
->  .../bindings/remoteproc/wkup_m3_rproc.txt          | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/wkup_m3_rproc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/wkup_m3_rproc.txt b/Documentation/devicetree/bindings/remoteproc/wkup_m3_rproc.txt
-> new file mode 100644
-> index 0000000..3a70073
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/wkup_m3_rproc.txt
-> @@ -0,0 +1,52 @@
-> +TI Wakeup M3 Remoteproc Driver
-> +==============================
-> +
-> +The TI AM33xx and AM43xx family of devices use a small Cortex M3 co-processor
-> +(commonly referred to as Wakeup M3 or CM3) to help with various low power tasks
-> +that cannot be controlled from the MPU. This CM3 processor requires a firmware
-> +binary to accomplish this. The wkup_m3 remoteproc driver handles the loading of
-> +the firmware and booting of the CM3.
-> +
-> +Wkup M3 Device Node:
-> +====================
-> +A wkup_m3 device node is used to represent the Wakeup M3 processor instance
-> +within the SoC. It is added as a child node of the parent interconnect bus
-> +(l4_wkup) through which it is accessible to the MPU.
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:		Should be one of,
-> +				"ti,am3352-wkup-m3" for AM33xx SoCs
-> +				"ti,am4372-wkup-m3" for AM43xx SoCs
-> +- reg:			Should contain the address ranges for the two internal
-> +			memory regions, UMEM and DMEM. The parent node should
-> +			provide an appropriate ranges property for properly
-> +			translating these into bus addresses.
-> +- reg-names:		Contains the corresponding names for the two memory
-> +			regions. These should be named "umem" & "dmem".
-> +- ti,hwmods:		Name of the hwmod associated with the wkupm3 device.
-> +- ti,pm-firmware:	Name of firmware file to be used for loading and
-> +			booting the wkup_m3 remote processor.
-> +
-> +Example:
-> +--------
-> +/* AM33xx */
-> +ocp {
-> +	 l4_wkup: l4_wkup@44c00000 {
-> +		compatible = "am335-l4-wkup", "simple-bus";
-> +		ranges = <0 0x44c00000 0x400000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		wkup_m3: wkup_m3@100000 {
-> +			compatible = "ti,am3352-wkup-m3";
-> +			reg = <0x100000 0x4000>,
-> +			      <0x180000 0x2000>;
-> +			reg-names = "umem", "dmem";
-> +			ti,hwmods = "wkup_m3";
-> +			ti,pm-firmware = "am335x-pm-firmware.elf";
-> +		};
-> +	};
-> +
-> +	...
-> +};
-> -- 
-> 2.3.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
