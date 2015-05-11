@@ -1,19 +1,19 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/2] ARM: shmobile: r8a7790: add for USB-DMAC
-Date: Tue, 12 May 2015 08:56:18 +0900
-Message-ID: <20150511235617.GC445@verge.net.au>
-References: <1431069187-6088-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v3 0/2] ARM: shmobile: r8a7791: add for USB-DMAC
+Date: Tue, 12 May 2015 08:56:26 +0900
+Message-ID: <20150511235626.GD445@verge.net.au>
+References: <1431069214-8052-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1431069187-6088-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1431069214-8052-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 08, 2015 at 04:13:05PM +0900, Yoshihiro Shimoda wrote:
+On Fri, May 08, 2015 at 04:13:32PM +0900, Yoshihiro Shimoda wrote:
 > This patch set is based on renesas.git / renesas-devel-20150507-v4.1-rc1
 > tag. (commit id = c3059b3fff4ed6568783fdabdee1d62a55aa469c)
 > 
