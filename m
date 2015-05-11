@@ -1,64 +1,65 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 0/5] AHCI and SATA PHY support for Broadcom STB SoCs
-Date: Mon, 11 May 2015 20:11:01 +0530
-Message-ID: <5550BF7D.6010107@ti.com>
-References: <1429757950-28789-1-git-send-email-computersforpeace@gmail.com>
+Subject: Re: [PATCH V2 0/3] Pistachio USB2.0 PHY
+Date: Mon, 11 May 2015 20:15:01 +0530
+Message-ID: <5550C06D.2010409@ti.com>
+References: <1428444258-25852-1-git-send-email-abrestic@chromium.org> <CAL1qeaE0+aMLBgk8SKgJ3fXm==M2-Z_yEPYNVZ0yxSee-p7YOw@mail.gmail.com> <5549083F.8080505@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429757950-28789-1-git-send-email-computersforpeace@gmail.com>
+In-Reply-To: <5549083F.8080505@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Tejun Heo <tj@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, bcm-kernel-feedback-list@broadcom.com
+To: 1428444258-25852-1-git-send-email-abrestic@chromium.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+Cc: devicetree@vger.kernel.org, James Hartley <james.hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Bresticker <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thursday 23 April 2015 08:29 AM, Brian Norris wrote:
-> Hi,
->
-> Here are my updates based on everyone's feedback. I'll try to include most of
-> the changelog info in each patch, but a few summary points for v1 -> v2:
->
->   - reworked the PHY DT binding so that we don't need do any custom xlate in the
->     PHY driver
->
->   - moved all handling of the 'SATA_TOP_CTRL' block into the SATA driver,
->     instead of sharing it between SATA and PHY drivers. This means we have to do
->     a little extra work in sata_brcmstb.c to decide which ports to power on, but
->     at least this way, we're really describing the hardware, not just how the SW
->     frameworks want to use the hardware.
 
-I don't see any problems with the PHY patches. Let me know If I can take this 
-via linux-phy tree.
+On Tuesday 05 May 2015 11:43 PM, Ezequiel Garcia wrote:
+> Hi Kishon,
+>
+>>
+>> This series adds support for the USB2.0 PHY present on the IMG Pistachio SoC.
+>>
+>> Based on mips-for-linux-next and tested on the IMG Pistachio BuB.  If possible,
+>> I'd like this to go through the MIPS tree with Kishon's ACK.
+>>
+>
+> Tested-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+>
+> Can we have your Ack for this series so Ralf can pick it?
 
-Cheers
-Kishon
+sure..
 
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 >
-> Enjoy,
-> Brian
+> Thanks!
+> Ezequiel
 >
-> Brian Norris (5):
->    Documentation: devicetree: add Broadcom SATA binding
->    Documentation: devicetree: add Broadcom SATA PHY binding
->    ata: add Broadcom AHCI SATA3 driver for STB chips
->    phy: add Broadcom SATA3 PHY driver for Broadcom STB SoCs
->    ARM: dts: brcmstb: add nodes for SATA controller and PHY
->
->   .../devicetree/bindings/ata/brcm,sata-brcmstb.txt  |  35 +++
->   .../bindings/phy/brcm,brcmstb-sata-phy.txt         |  40 +++
->   arch/arm/boot/dts/bcm7445.dtsi                     |  37 +++
->   drivers/ata/Kconfig                                |   9 +
->   drivers/ata/Makefile                               |   1 +
->   drivers/ata/sata_brcmstb.c                         | 285 +++++++++++++++++++++
->   drivers/phy/Kconfig                                |   9 +
->   drivers/phy/Makefile                               |   1 +
->   drivers/phy/phy-brcmstb-sata.c                     | 216 ++++++++++++++++
->   9 files changed, 632 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt
->   create mode 100644 Documentation/devicetree/bindings/phy/brcm,brcmstb-sata-phy.txt
->   create mode 100644 drivers/ata/sata_brcmstb.c
->   create mode 100644 drivers/phy/phy-brcmstb-sata.c
+>> Cc: James Hartley <james.hartley@imgtec.com>
+>> Cc: Damien Horsley <Damien.Horsley@imgtec.com>
+>>
+>> Changes from v1:
+>>   - Added patch to enable PHY driver in pistachio_defconfig
+>>   - Fixed a couple of spelling errors
+>>
+>> Andrew Bresticker (3):
+>>    phy: Add binding document for Pistachio USB2.0 PHY
+>>    phy: Add driver for Pistachio USB2.0 PHY
+>>    MIPS: pistachio: Enable USB PHY driver in defconfig
+>>
+>>   .../devicetree/bindings/phy/pistachio-usb-phy.txt  |  29 +++
+>>   arch/mips/configs/pistachio_defconfig              |   1 +
+>>   drivers/phy/Kconfig                                |   7 +
+>>   drivers/phy/Makefile                               |   1 +
+>>   drivers/phy/phy-pistachio-usb.c                    | 206 +++++++++++++++++++++
+>>   include/dt-bindings/phy/phy-pistachio-usb.h        |  16 ++
+>>   6 files changed, 260 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+>>   create mode 100644 drivers/phy/phy-pistachio-usb.c
+>>   create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
+>>
+>> --
+>> 2.2.0.rc0.207.ga3a616c
+>>
 >
