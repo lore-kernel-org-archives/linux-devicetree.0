@@ -1,40 +1,123 @@
-From: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: Re: [RFC PATCH 1/7] mmc: tmio: Add UHS-I mode support
-Date: Mon, 11 May 2015 15:10:55 +0100
-Message-ID: <1431353455.4222.109.camel@xylophone.i.decadent.org.uk>
-References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
-	 <1430397051.5802.40.camel@xylophone.i.decadent.org.uk>
-	 <87egmn4wfo.wl%kuninori.morimoto.gx@renesas.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 2/3] Phy: DT binding documentation for Broadcom Cygnus
+ USB PHY driver
+Date: Mon, 11 May 2015 19:41:04 +0530
+Message-ID: <5550B878.7060608@ti.com>
+References: <1429744479-10410-1-git-send-email-arun.ramamurthy@broadcom.com> <1429744479-10410-3-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <87egmn4wfo.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Ian Molton <ian@mnementh.co.uk>, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@lists.codethink.co.uk
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429744479-10410-3-git-send-email-arun.ramamurthy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-05-11 at 03:38 +0000, Kuninori Morimoto wrote:
-> Hi Ben
-> 
-> Thank you for your patch
-> 
-> > Based on work by Shinobu Uehara and Ben Dooks.  This adds the
-> > voltage switch operation needed for all UHS-I modes, but not
-> > the tuning needed for SDR-104 which will come later.
-> > 
-> > XXX The card_busy implementation is a bit of a guess.
-> > 
-> > Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-> 
-> If original patch was created by Shinobu/Ben Dooks,
-> and you updated it, I prefer to add these guys on Signed-off-by line.
-[...]
+Hi,
 
-It's not correct to keep someone else's Signed-off-by when making
-substantial changes.
+On Thursday 23 April 2015 04:44 AM, Arun Ramamurthy wrote:
+> Broadcom's Cygnus chip has a USB 2.0 host controller connected to
+> three separate phys. One of the phs (port 2) is also connectd to
+> a usb 2.0 device controller
+>
+> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>   .../bindings/phy/brcm,cygnus-usb-phy.txt           | 69 ++++++++++++++++++++++
+>   include/dt-bindings/phy/phy.h                      |  2 +
+>   2 files changed, 71 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+> new file mode 100644
+> index 0000000..ec62044
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+> @@ -0,0 +1,69 @@
+> +BROADCOM CYGNUS USB PHY
+> +
+> +Required Properties:
+> +	- compatible:  brcm,cygnus-usb-phy
+> +	- reg : usbphy_regs - Base address of phy registers
+> +			usb2h_idm_regs - Base address of host idm registers
+> +			usb2d_idm_regs - Base address of device idm registers
+> +	- phy-cells - must be 1 for each port declared. The node
+> +		      that uses the phy must provide either PHY_CONFIG_DEVICE for device
+> +		      or PHY_CONFIG_HOST for host
+> +
+> +NOTE: port 0 and port 1 are host only and port 2 can be configured for host or
+> +device.
+> +
+> +Example of phy :
+> +	usbphy0: usbphy@0x0301c000 {
+> +		compatible = "brcm,cygnus-usb-phy";
+> +		reg = <0x0301c000 0x2000>,
+> +		      <0x18115000 0x1000>,
+> +		      <0x18111000 0x1000>;
+> +		status = "okay";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		usbphy0_0: usbphy0@0 {
+> +			#phy-cells = <1>;
+> +			reg = <0>;
+> +			status = "okay";
+> +			phy-supply = <&vbus_p0>;
+> +		};
+> +
+> +		usbphy0_1: usbphy0@1 {
+> +			#phy-cells = <1>;
+> +			reg = <1>;
+> +			status = "okay";
+> +		};
+> +
+> +		usbphy0_2: usbphy0@2 {
+> +			#phy-cells = <1>;
+> +			reg = <2>;
+> +			status = "okay";
+> +			phy-supply = <&vbus_p2>;
+> +		};
+> +	};
+> +
+> +Example of node using the phy:
+> +
+> +	/* This nodes declares all three ports as host */
+> +
+> +	ehci0: usb@0x18048000 {
+> +		compatible = "generic-ehci";
+> +		reg = <0x18048000 0x100>;
+> +		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+> +		phys = <&usbphy0_0 PHY_CONFIG_HOST &usbphy0_1 PHY_CONFIG_HOST &usbphy0_2 PHY_CONFIG_HOST>;
+> +		status = "okay";
+> +	};
+> +
+> +	/*
+> +	 * This node declares port 2 phy
+> +	 * and configures it for device
+> +	 */
+> +
+> +	usbd_udc_dwc1: usbd_udc_dwc@0x1804c000 {
+> +		compatible = "iproc-udc";
+> +		reg = <0x1804c000 0x2000>;
+> +		interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+> +		phys = <&usbphy0_2 PHY_CONFIG_DEVICE>;
+> +		phy-names = "usb";
+> +	};
+> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+> index 6c90193..3f6b1ac 100644
+> --- a/include/dt-bindings/phy/phy.h
+> +++ b/include/dt-bindings/phy/phy.h
+> @@ -15,5 +15,7 @@
+>   #define PHY_TYPE_PCIE		2
+>   #define PHY_TYPE_USB2		3
+>   #define PHY_TYPE_USB3		4
+> +#define PHY_CONFIG_HOST		1
+> +#define PHY_CONFIG_DEVICE	0
 
-Ben.
+'0' and '1' are already defined for "PHY_NONE" and "PHY_TYPE_SATA". Is this for 
+USB2 or for USB3?
 
-
+Thanks
+Kishon
