@@ -1,31 +1,53 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 03/12] clocksource: sti: Provide 'use timer as sched
- clock' capability
-Date: Mon, 11 May 2015 11:22:50 +0200
-Message-ID: <1431336170.2398.73.camel@x220>
-References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
-		 <1431005924-21777-4-git-send-email-lee.jones@linaro.org>
-		 <1431074699.13593.4.camel@x220> <20150508093603.GB29044@x1>
-		 <1431078730.13593.14.camel@x220> <20150508102938.GD29044@x1>
-	 <1431085625.13593.39.camel@x220> <55506CB0.2030909@linaro.org>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: why configfs for devicetree overlay loading?
+Date: Mon, 11 May 2015 11:22:41 +0200
+Message-ID: <CAOMqctTPH0aVDz3Xv+uDSZC7cTYuWK_HONbXFUb75u_QaNLLbA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55506CB0.2030909@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, tglx@linutronix.de, wim@iguana.be, a.zummo@towertech.it, linux-watchdog@vger.kernel.org, rtc-linux@googlegroups.com, linux@roeck-us.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-05-11 at 10:47 +0200, Daniel Lezcano wrote:
-> The general policy is to have non-prompted options in the clocksource's 
-> Kconfig and let the platform's config to select the right components.
+Hello,
 
-If you want to stick to that policy here there's no reason to add
-CLKSRC_ST_LPC_TIMER_SCHED_CLOCK in this patch. It currently adds
-nothing, as it will always be equal to whatever value CLKSRC_ST_LPC will
-have, right?
+since I did not find the patches for loading device tree overlays I
+used the already merged infrastructure and implemented loading device
+tree overlays in sysfs.
 
+I see that the preexisting patches use configfs for loading overlays.
 
-Paul Bolle
+However, there is no clear distinction for using configfs vs sysfs.
+
+Technically the capabilities of both filesystems are the same - at
+least according  to the docs I read.
+
+Implementation complexity is also about the same disregarding the
+extra patches to fix configfs deficiencies.
+
+Using configfs requires extra option in the kernel which is often not
+present in preexisting configuration.
+
+Using configfs requires the user to assign some unique identifier to
+the overlay that will be used as directory name beforehand whereas
+using sysfs I interface directly to the create() function which takes
+an unflattened overlay blob.
+
+Given that information about the overlays is exported in sysfs anyway
+and the extra directory name for the overlay in configfs is redundant
+and it may be hard to figure out a collision-free scheme for it in
+some cases I prefer the sysfs interface.
+
+It has also the extra advantage that the interface that exports
+information about the device tree and the interface for managing it is
+in one place.
+
+Please CC me
+
+Thanks
+
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
