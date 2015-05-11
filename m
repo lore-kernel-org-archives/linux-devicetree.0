@@ -1,56 +1,109 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Sun, 10 May 2015 20:07:02 -0500
-Message-ID: <555000B6.2010107@ti.com>
-References: <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>	<20150504121209.GM15510@sirena.org.uk>	<CAKohponRXiWbgT26=tO83jJgbteBf38ggE7mKvLCv+wFMW1cvA@mail.gmail.com>	<20150505105714.GA22845@sirena.org.uk>	<CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>	<20150505171252.GI22845@sirena.org.uk>	<CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>	<20150507055231.GB32399@codeaurora.org>	<20150507110233.GR15510@sirena.org.uk>	<20150507211855.GA2455@codeaurora.org>	<20150507221842.GW22845@sirena.org.uk> <CAKohpomU8wm0T=A7EkosdOjXbP8q2Cb726Hsjh08KTKYjoz3-A@mail.gmail.com>
+From: NeilBrown <neil@brown.name>
+Subject: [PATCH 0/4] UART slave device support - version 4
+Date: Mon, 11 May 2015 11:56:14 +1000
+Message-ID: <20150511013540.5709.93626.stgit@notabene.brown>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpomU8wm0T=A7EkosdOjXbP8q2Cb726Hsjh08KTKYjoz3-A@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Mark Brown <broonie@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>
+Cc: GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2015 01:47 AM, Viresh Kumar wrote:
-> On 8 May 2015 at 03:48, Mark Brown <broonie@kernel.org> wrote:
-> 
->> That makes sense to me.  Perhaps "current drawn by the device" rather
->> than "current load of the device" since current is sadly overloaded :/
-> 
-> Thanks Mark. I have reworded it as:
-> 
-> - opp-microamp: Current drawn by the device in micro Amperes. It is used to set
->   the most efficient regulator operating mode.
+Hi all,
+ here is version 4 of my "UART slave device" patch set, previously
+ known as "tty slave devices".
 
-just one minor concern being in the SoC end of the world :). In most
-times, the current consumption for a specific OPP varies depending on
-the specific location in the process node the die is -> this is even
-true among a single lot of wafers as well. some SoC vendors use hot,
-nominal and cold terminology to indicate the characteristics of the
-specific sample.
+ The most obvious change is the name.  I realized that this isn't
+ really about "tty"s at all - it is about UARTs.
 
-it might help state which sample end of the spectrum we are talking
-about here. reason being: if I put in values based on my board
-measurement, the results may not be similar to what someone else's
-sample be. Depending on technology, speed binning strategy used by the
-vendor, temperature and few other characteristics, these numbers could
-be widely divergent.
+ When a device is connected to a UART via RS-232 (or similar), there
+ is a DTR line that can be used for power management, and other "modem
+ control" lines.
 
-> 
->   Should only be set if opp-microvolt is set for the OPP.
-> 
->   Entries for multiple regulators must be present in the same order as
->   regulators are specified in device's DT node. If this property isn't required
->   for few regulators, then this should be marked as zero for them. If it isn't
->   required for any regulator, then this property need not be present.
-> 
-> 
-> Please let me know if this looks fine now.
-> 
+ On an embedded board, it is very likely that there is no "DTR", and
+ any power management need to be done using some completely separate
+ mechanism.
+
+ So these "slaves" are really just for devices permanently attached to
+ UARTs without a full "RS-232" (or similar) connection.  The driver
+ does all the extra control beyond Tx/Rx.
+
+ The core serial code now "initializes" the "tty device" but may not
+ "add" it.
+ If it successfully finds a slave device, it gives the tty device to
+ the slave.  If not, it calls "device_add()" itself.
+
+ The slave device is responsible for adding the tty device when it is
+ ready.
+
+ There are two things that I'm not entirely happy with.
+
+ Firstly there is the "uart_slave_activate()" call in tty_init_dev().
+ Possibly this belongs more in tty_driver_install_tty(), but it is a
+ bit out-off-place in either.
+ To make it really clean I think I would need to create my own
+ "tty_driver" which mirrors the one supplied by the uart but has a
+ few little modification.  But that seems like a lot of clumsy work
+ for very little gain.
+
+ Secondly, between the creation of the slave device and the binding of
+ a driver to it I'm holding an extra reference to the "tty_driver".
+ This is to prevent calls to destruct_tty_driver().
+ destruct_tty_driver() will unregister all the tty devices.
+ But it cannot get at the uart_slave devices.
+ I'm not at all sure I have the device unregistering side of things
+ right.  As I was writing the code I imagined that I could arrange it
+ so that then the tty was unregistered, that would drop the last ref
+ on the slave and it would go away... I don't think that is right
+ after all.  So that bit needs more work.
+
+ Should the slave devices only be removed when the "uart_slave_core"
+ modules is removed?
+
+ And I'd very much like comment on the changed to be uart-based
+ rather than tty-based.
+
+ I've tested this set and it seems to work ... except that something
+ is sadly broken with bluetooth support in 4.1-rc1 so I've only really
+ tested the GPS driver.  I guess it is time to rebase to -rc3.
 
 
--- 
-Regards,
-Nishanth Menon
+Thanks,
+NeilBrown
+
+---
+
+NeilBrown (4):
+      TTY: use class_find_device to find port in uart_suspend/resume.
+      TTY: split tty_register_device_attr into 'initialize' and 'add' parts.
+      TTY: add support for uart_slave devices.
+      tty/slaves: add a driver to power on/off UART attached devices.
+
+
+ .../bindings/uart_slave/wi2wi,w2cbw003.txt         |   19 +
+ .../bindings/uart_slave/wi2wi,w2sg0004.txt         |   37 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 
+ drivers/tty/serial/Kconfig                         |    1 
+ drivers/tty/serial/Makefile                        |    2 
+ drivers/tty/serial/serial_core.c                   |   30 +
+ drivers/tty/serial/slave/Kconfig                   |   21 +
+ drivers/tty/serial/slave/Makefile                  |    3 
+ drivers/tty/serial/slave/serial-power-manager.c    |  510 ++++++++++++++++++++
+ drivers/tty/serial/slave/uart_slave_core.c         |  168 +++++++
+ drivers/tty/tty_io.c                               |  111 +++-
+ drivers/tty/tty_port.c                             |   24 +
+ include/linux/tty.h                                |   10 
+ include/linux/uart_slave.h                         |   29 +
+ 14 files changed, 918 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt
+ create mode 100644 Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt
+ create mode 100644 drivers/tty/serial/slave/Kconfig
+ create mode 100644 drivers/tty/serial/slave/Makefile
+ create mode 100644 drivers/tty/serial/slave/serial-power-manager.c
+ create mode 100644 drivers/tty/serial/slave/uart_slave_core.c
+ create mode 100644 include/linux/uart_slave.h
+
+--
+Signature
