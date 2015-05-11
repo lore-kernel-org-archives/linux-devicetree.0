@@ -1,121 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: Add pxa1928 clock binding
-Date: Mon, 11 May 2015 17:25:19 -0500
-Message-ID: <1431383120-16957-1-git-send-email-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Chao Xie <xiechao.mail@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v8 0/4] edac: Add APM X-Gene SoC memory controller EDAC driver
+Date: Mon, 11 May 2015 15:29:10 -0700
+Message-ID: <CAPw-ZT=ubrjAvgTHBthzYQC7faSbaOvyFgX81=vcaiWKA8+bug@mail.gmail.com>
+References: <1430884947-16787-1-git-send-email-lho@apm.com>
+	<20150506182900.GI22949@pd.tnic>
+	<CAPw-ZTmJ8C3KmujZJN1z21S3LFQ-TRouUeAjN0Y02HOTKAG1_g@mail.gmail.com>
+	<2154265.kZOTsisCx2@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2154265.kZOTsisCx2@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the clock binding documentation for the Marvell PXA1928 SOC.
-The PXA1928 has 3 clock control blocks for different subsystems of the
-chip.
+Hi,
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
----
-- s/periphral/peripheral/
-- Make all clock IDs hex
+>>
+>> On Wed, May 6, 2015 at 11:29 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
+>> > On Wed, May 06, 2015 at 11:12:20AM -0700, Loc Ho wrote:
+>> >> 1. Whether to have an single driver for APM EDAC or multiple instance
+>> >> of 4 different drivers. With single driver, it does not scale in the
+>> >> future when we add/remove memory controllers and CPU domains. This is
+>> >
+>> > Why doesn't it scale? Please explain this to me more verbosely.
+>>
+>> Let me explain a bit more. We have four memory controller today.
+>> Therefore, I would like to have 4 DTS node and the same driver probe
+>> function called 4 times. If there is only one driver for the entire
+>> APM EDAC, I would have to merge all the resource registers into an
+>> single DTS node and its probe function called one time. In this one
+>> driver design, what would I do in future chip or variant of the chip
+>> in which it remove or add an addition memory controller? I would have
+>> to change the driver as well as the DTS node. In the four instance
+>> probe design, all I need is to add an additional DTS node.
+>
+> There are lots of possible representations in DT that would solve this.
+>
+> First of all, a device node can be turned into a platform_device but
+> does not have to, so you you could have one DT node for the common
+> parts (the pcp), and then subnodes underneath it, and have the driver
+> attach to the main device but parse the subnodes manually to see
+> what registers are there. There is no magic involved here, and this
+> would address the concerns that Boris and I have.
+>
+> Another option would be to have multiple drivers: have one driver
+> that handles the common parts here, and make that export a shared
+> interface to which the other drivers can register, then create
+> five drivers that each do one thing. In my opinion that would work
+> just as well, and be a nice abstraction, but I suspect that Boris
+> would prefer doing it the other way.
 
- .../devicetree/bindings/clock/marvell,pxa1928.txt  | 21 ++++++++
- include/dt-bindings/clock/marvell,pxa1928.h        | 57 ++++++++++++++++++++++
- 2 files changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa1928.txt
- create mode 100644 include/dt-bindings/clock/marvell,pxa1928.h
+Thanks all for the comment. I will follow the design as with
+gpio-dwapb driver. This would take care of Borislav concern as
+mentioned by Arnd.
 
-diff --git a/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt b/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt
-new file mode 100644
-index 0000000..809c5a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/marvell,pxa1928.txt
-@@ -0,0 +1,21 @@
-+* Marvell PXA1928 Clock Controllers
-+
-+The PXA1928 clock subsystem generates and supplies clock to various
-+controllers within the PXA1928 SoC. The PXA1928 contains 3 clock controller
-+blocks called APMU, MPMU, and APBC roughly corresponding to internal buses.
-+
-+Required Properties:
-+
-+- compatible: should be one of the following.
-+  - "marvell,pxa1928-apmu" - APMU controller compatible
-+  - "marvell,pxa1928-mpmu" - MPMU controller compatible
-+  - "marvell,pxa1928-apbc" - APBC controller compatible
-+- reg: physical base address of the clock controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Each clock is assigned an identifier and client nodes use the clock controller
-+phandle and this identifier to specify the clock which they consume.
-+
-+All these identifiers can be found in <dt-bindings/clock/marvell,pxa1928.h>.
-diff --git a/include/dt-bindings/clock/marvell,pxa1928.h b/include/dt-bindings/clock/marvell,pxa1928.h
-new file mode 100644
-index 0000000..d4f2e18
---- /dev/null
-+++ b/include/dt-bindings/clock/marvell,pxa1928.h
-@@ -0,0 +1,57 @@
-+#ifndef __DTS_MARVELL_PXA1928_CLOCK_H
-+#define __DTS_MARVELL_PXA1928_CLOCK_H
-+
-+/*
-+ * Clock ID values here correspond to the control register offset/4.
-+ */
-+
-+/* apb peripherals */
-+#define PXA1928_CLK_RTC			0x00
-+#define PXA1928_CLK_TWSI0		0x01
-+#define PXA1928_CLK_TWSI1		0x02
-+#define PXA1928_CLK_TWSI2		0x03
-+#define PXA1928_CLK_TWSI3		0x04
-+#define PXA1928_CLK_OWIRE		0x05
-+#define PXA1928_CLK_KPC			0x06
-+#define PXA1928_CLK_TB_ROTARY		0x07
-+#define PXA1928_CLK_SW_JTAG		0x08
-+#define PXA1928_CLK_TIMER1		0x09
-+#define PXA1928_CLK_UART0		0x0b
-+#define PXA1928_CLK_UART1		0x0c
-+#define PXA1928_CLK_UART2		0x0d
-+#define PXA1928_CLK_GPIO		0x0e
-+#define PXA1928_CLK_PWM0		0x0f
-+#define PXA1928_CLK_PWM1		0x10
-+#define PXA1928_CLK_PWM2		0x11
-+#define PXA1928_CLK_PWM3		0x12
-+#define PXA1928_CLK_SSP0		0x13
-+#define PXA1928_CLK_SSP1		0x14
-+#define PXA1928_CLK_SSP2		0x15
-+
-+#define PXA1928_CLK_TWSI4		0x1f
-+#define PXA1928_CLK_TWSI5		0x20
-+#define PXA1928_CLK_UART3		0x22
-+#define PXA1928_CLK_THSENS_GLOB		0x24
-+#define PXA1928_CLK_THSENS_CPU		0x26
-+#define PXA1928_CLK_THSENS_VPU		0x27
-+#define PXA1928_CLK_THSENS_GC		0x28
-+#define PXA1928_APBC_NR_CLKS		0x30
-+
-+
-+/* axi peripherals */
-+#define PXA1928_CLK_SDH0		0x15
-+#define PXA1928_CLK_SDH1		0x16
-+#define PXA1928_CLK_USB			0x17
-+#define PXA1928_CLK_NAND		0x18
-+#define PXA1928_CLK_DMA			0x19
-+
-+#define PXA1928_CLK_SDH2		0x3a
-+#define PXA1928_CLK_SDH3		0x3b
-+#define PXA1928_CLK_HSIC		0x3e
-+#define PXA1928_CLK_SDH4		0x57
-+#define PXA1928_CLK_GC3D		0x5d
-+#define PXA1928_CLK_GC2D		0x5f
-+
-+#define PXA1928_APMU_NR_CLKS		0x60
-+
-+#endif
--- 
-2.1.0
+-Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
