@@ -1,54 +1,101 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Master-aware devices and sideband ID data
-Date: Mon, 11 May 2015 10:52:36 +0100
-Message-ID: <20150511095236.GC1549@arm.com>
-References: <20150324155007.GC23005@leverpostej>
- <CALRxmdAE_=SubN7dY-W1K44cjVVRhKLKknpgG9af_g64+GHPtw@mail.gmail.com>
- <20150508154903.GH25587@arm.com>
- <CALRxmdAEvQPGN_xvwU5Xb4eNfKegPfTyM-GKXg4jRD7JyRxHJA@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 2/7] mmc: mediatek: Add Mediatek MMC driver
+Date: Mon, 11 May 2015 12:29:42 +0200
+Message-ID: <CAPDyKFqeAzjpbZsyfcwb_WarC=dzoCsEeLTmxAbtvOo3Y4cYyg@mail.gmail.com>
+References: <1430214525-19198-1-git-send-email-chaotian.jing@mediatek.com>
+	<1430214525-19198-3-git-send-email-chaotian.jing@mediatek.com>
+	<CAPDyKFq=R9B6ZHHgmDcSg-TNSfqQKAUKc2NjACvpwxFpmk954g@mail.gmail.com>
+	<1430895299.15154.9.camel@mhfsdcap03>
+	<CAPDyKFr+FTXAzYVn3F41dmw2zW01pSbSHPfGJHXbUFLJfvQ5CA@mail.gmail.com>
+	<1430962956.15154.48.camel@mhfsdcap03>
+	<CAPDyKFr5N_08HbLuY=4Wfv1BoVQLVR-VW+NKh_umL1hzi_KozA@mail.gmail.com>
+	<1431335885.26820.7.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALRxmdAEvQPGN_xvwU5Xb4eNfKegPfTyM-GKXg4jRD7JyRxHJA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1431335885.26820.7.camel@mhfsdcap03>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 08, 2015 at 08:30:00PM +0100, Stuart Yoder wrote:
-> On Fri, May 8, 2015 at 10:49 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Thu, May 07, 2015 at 06:49:32PM +0100, Stuart Yoder wrote:
-> >> The FSL LS2085A SoC has an actual RID->SID mapping table in the PCI
-> >> controller, but it is not static in the sense of fixed in hardware or
-> >> firmware.  It's
-> >> a programmable mapping table, and we envision Linux programming this table.
-> >
-> > Ok, so I assume you're not planning to use ACPI with this system?
-> 
-> Not initially, but perhaps in the future.  I guess I don't know the implications
-> to ACPI yet.
+On 11 May 2015 at 11:18, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> On Fri, 2015-05-08 at 14:12 +0200, Ulf Hansson wrote:
+>> On 7 May 2015 at 03:42, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+>> > Dear Ulf,
+>> >
+>> > Thanks!
+>> > Below is my comment:
+>> >
+>> > On Wed, 2015-05-06 at 18:31 +0200, Ulf Hansson wrote:
+>> >> On 6 May 2015 at 08:54, chaotian.jing <chaotian.jing@mediatek.com> wrote:
+>> >> > Dear Ulf,
+>> >> >
+>> >> > Thanks for your review.
+>> >> > I must do a explain of our MMC host:
+>> >> > Source clock is source clock of the MMC bus, MMC host has a divider to
+>> >> > get different bus clock frequency. now the runtime suspend is gating
+>> >> > this clock.
+>> >> >
+>> >> > Hclk is the power domain of the MMC host, if Hclk is gated, the MMC host
+>> >> > cannot work(all registers readout is zero). and, all registers would be
+>> >> > reset to default value if Hclk is gated/ungated.
+>> >> > At MT8173, MSDC0 and MSDC2 has independent Hclk, MSDC1 and MSDC3's Hclk
+>> >> > was controlled by "Infra module".
+>> > Sorry for mistake, MSDC0 and MSDC3 has independent Hclk, MSDC1 and
+>> > MSDC2's Hclk was controlled by "Infra module". the Infra module is a
+>> > "power saving module", when the system go to sleep, Infra module will be
+>> > set and MSDC1 & MSDC2's Hclk will be gated automatically.
+>> >>
+>> >> Thanks for clarifying!
+>> >>
+>> >> I don't have enough knowledge about your SoC to understand the detail,
+>> >> but it seems like we are mixing clocks and power domains. I would
+>> >> rather keep this separate - if the HW allows it.
+>> >>
+>> >> I guess the key question I have is the following:
+>> >> 1) Is it hardware wise possible to gate the hclk, but without gating
+>> >> the power domain?
+>> >> 2) At what level is the reference counting done for each device in the
+>> >> power domain? In HW or in sofftware?
+>> >>
+>> >
+>> > Actually, Our MMC host do not have power domain, all the control of the
+>> > host is the Hclk.
+>>
+>> Okay, but I am not sure that fully answered my question.
+>>
+>> You said that hclk will be gated when the power domain gets gated. And
+>> the power domain (infra module, right?) will be gated at system PM
+>> sleep. And when that happens the mmc controller loses register
+>> context.
+>>
+>> But, again, can hclk be gated without gating the power domain?
+>>
+>> No matter what, it seems like a good idea to gate the power domain
+>> when all clients of it are idle. Yes we would need to manage register
+>> save/restore context, but on the other hand allow you to save more
+>> power, right?
+>>
+> For MSDC0 & MSDC3, it has independent HCLK, do not have power domain.
+> For MSDC1 & MSDC2, its HCLK was controlled by Infra module(This is a big
+> power domain for many modules).
+> So, for msdc0 & msdc3, we can control its Hclk, for msdc1 & msdc2, we
+> cannot control it.
 
-Well, I suggest you take a look at the IORT spec[1] asap, because I don't think
-it can describe your system if you want to go in the direction of dynamic
-mappings.
+Okay, thanks for the clarification!
 
-> > Also, we can't just program this table willy-nilly, as I'm sure you're
-> > aware. For example, updating a the SMRs in a live SMMU is a big no-no,
-> > so although Linux may initialise the table, it can only be safely changed
-> > at device init/teardown time, surely?
-> 
-> Correct.  That would not be updated when a device is live.
+>
+> Yes, I will do gate/ungate HCLK & source clock in PM.
+> In addition, Since the gate/ungate HCLK is done by runtime PM, and all
+> register operation should work at HCLK is on, so the msdc_init_hw() only
+> can be called at set_ios(), because in probe(), the HCLK may have not
+> been enabled.
 
-Ok, so the best way for Linux is probably to abstract this in the bus code
-and have that allocate the IDs when a device is `hotplugged' on. This would
-also fit well with consolidating the group creation for platform and PCI
-devices.
+I suggest you to enable HCLK in ->probe() and thus you may also call
+msdc_init_hw() from there.
 
-Will
+This should simplify for you, when adding the runtime PM support.
 
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0049a/DEN0049A_IO_Remapping_Table.pdf
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
