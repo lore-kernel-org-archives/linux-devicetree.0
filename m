@@ -1,55 +1,83 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v6 1/1] ata: ahci_xgene: Add AHCI Support for 2nd HW
- version of APM X-Gene SoC AHCI SATA Host controller.
-Date: Mon, 11 May 2015 19:01:32 +0530
-Message-ID: <CAOHikRBC_KOtL=hJHp7D+9DWNOnuN=VE=RQEnU_TJJ6wOXkO9g@mail.gmail.com>
-References: <1431333375-30433-1-git-send-email-stripathi@apm.com>
-	<1431333375-30433-2-git-send-email-stripathi@apm.com>
-	<20150511112800.GA11388@htj.duckdns.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20150511112800.GA11388@htj.duckdns.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>
+From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Subject: [PATCH v4 00/13] ARM: dts: exynos4: labels for overriding nodes
+Date: Mon, 11 May 2015 22:42:40 +0900
+Message-ID: <1431351773-2031-1-git-send-email-k.kozlowski.k@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tejun,
-
-On Mon, May 11, 2015 at 4:58 PM, Tejun Heo <tj@kernel.org> wrote:
-> Hello, Suman.
->
-> On Mon, May 11, 2015 at 02:06:15PM +0530, Suman Tripathi wrote:
->> -#ifdef CONFIG_ACPI
->> -static const struct acpi_device_id xgene_ahci_acpi_match[] = {
->> -     { "APMC0D0D", },
->> -     { }
->> -};
->> -MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
->> -#endif
->> -
->> -static const struct of_device_id xgene_ahci_of_match[] = {
->> -     {.compatible = "apm,xgene-ahci"},
->> -     {},
->> -};
->> -MODULE_DEVICE_TABLE(of, xgene_ahci_of_match);
->
-> I applied the patch as-is this time but please don't combine code
-> movement with actual changes in the future.  Split them out to
-> separate patches.  It makes the changes a lot easier to follow and
-> verify.
-
-Sorry . I will take care of it next time onwards.
->
-> Thanks.
->
-> --
-> tejun
+Hi,
 
 
+Changes since v3
+================
+1. New patches (12 and 13) for Exynos4412 Origen and Tiny4412.
+2. Rebased on top of my DTS-for-next branch:
+   repo: https://github.com/krzk/linux/
+   tag: samsung-dt-for-next-4.2-2
+
+Changes since v2
+================
+1. Fix typo in commit msg (lablels -> labels).
+
+
+Changes since v1
+================
+1. Re-phrased the description (phandle->label). Suggested by Arnd.
+
+Description
+===========
+
+The label-based notation reduces possible mistakes when overriding
+nodes by child DTSI and board files and reduces duplication
+of addresses.
+
+The patchset refactors Exynos4 boards to use labels for overriding nodes.
+
+Tested by comparison of decompiled DTB for each commit. The output DTB
+is the same.
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (13):
+  ARM: dts: Add labels to Exynos4 nodes
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4210
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4210
+    Origen
+  ARM: dts: exynos4: Use labels for overriding nodes in SMDKv310
+  ARM: dts: exynos4: Use labels for overriding nodes in Trats
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4212
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4x12
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4412
+  ARM: dts: exynos4: Use labels for overriding nodes in Odroid
+  ARM: dts: exynos4: Use labels for overriding nodes in SMDK4412
+  ARM: dts: exynos4: Use labels for overriding nodes in Trats2
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4412
+    Origen
+  ARM: dts: exynos4: Use labels for overriding nodes in Tiny4412
+
+ arch/arm/boot/dts/exynos4.dtsi                  |   22 +-
+ arch/arm/boot/dts/exynos4210-origen.dts         |  418 +++----
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi       |    6 +-
+ arch/arm/boot/dts/exynos4210-smdkv310.dts       |  280 ++---
+ arch/arm/boot/dts/exynos4210-trats.dts          |  592 +++++-----
+ arch/arm/boot/dts/exynos4210.dtsi               |   49 +-
+ arch/arm/boot/dts/exynos4212.dtsi               |   12 +-
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi |  732 ++++++-------
+ arch/arm/boot/dts/exynos4412-odroidx.dts        |   16 +-
+ arch/arm/boot/dts/exynos4412-origen.dts         |  892 +++++++--------
+ arch/arm/boot/dts/exynos4412-smdk4412.dts       |  210 ++--
+ arch/arm/boot/dts/exynos4412-tiny4412.dts       |   54 +-
+ arch/arm/boot/dts/exynos4412-trats2.dts         | 1332 ++++++++++++-----------
+ arch/arm/boot/dts/exynos4412.dtsi               |   20 +-
+ arch/arm/boot/dts/exynos4x12-pinctrl.dtsi       |    8 +-
+ arch/arm/boot/dts/exynos4x12.dtsi               |  218 ++--
+ 16 files changed, 2431 insertions(+), 2430 deletions(-)
 
 -- 
-Thanks,
-with regards,
-Suman Tripathi
+2.1.4
