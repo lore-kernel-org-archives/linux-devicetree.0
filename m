@@ -1,24 +1,65 @@
-From: santosh shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [v4.0: PATCH 0/3] ARM: dts: keystone: dt fixes for netcp driver
-Date: Mon, 11 May 2015 12:20:28 -0700
-Message-ID: <555100FC.5070901@oracle.com>
-References: <1431367530-4924-1-git-send-email-m-karicheri2@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431367530-4924-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ssantosh@kernel.org
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/5] dt-bindings: soc: Add documentation for the MediaTek SCPSYS unit
+Date: Mon, 11 May 2015 21:23:23 +0200
+Message-ID: <1431372206-1237-3-git-send-email-s.hauer@pengutronix.de>
+References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431372206-1237-1-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/11/2015 11:05 AM, Murali Karicheri wrote:
-> There are few fixes required in the dt bindings for netcp driver to
-> make the reg and range sizes to match with data sheet. Also fix the
-> typical size error (last bit 1 instead of 0). Please apply this for
-> to next branch for v4.2.
->
-Applied... It should show up in linux-next soon.
+This adds documentation for the MediaTek SCPSYS unit found in MT8173 SoCs.
 
-Regards,
-Santosh
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+new file mode 100644
+index 0000000..4764a03
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+@@ -0,0 +1,32 @@
++MediaTek SCPSYS
++===============
++
++The System Control Processor System (SCPSYS) has several power management
++related tasks in the system. The tasks include thermal measurement, dynamic
++voltage frequency scaling (DVFS), interrupt filter and lowlevel sleep control.
++The System Power Manager (SPM) inside the SCPSYS is for the MTCMOS power
++domain control.
++
++The driver implements the Generic PM domain bindings described in
++power/power_domain.txt. It provides the power domains defined in
++include/dt-bindings/power/mt8173-power.h.
++
++Required properties:
++- compatible: Must be "mediatek,mt8173-scpsys"
++- #power-domain-cells: Must be 1
++- reg: Address range of the SCPSYS unit
++
++Example:
++
++	scpsys: scpsys@10006000 {
++		#power-domain-cells = <1>;
++		compatible = "mediatek,mt8173-scpsys";
++		reg = <0 0x10006000 0 0x1000>;
++	};
++
++Example consumer:
++
++	afe: mt8173-afe-pcm@11220000 {
++		compatible = "mediatek,mt8173-afe-pcm";
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
++	};
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
