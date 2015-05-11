@@ -1,56 +1,75 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/6] clk: sunxi: Add A33 clock for compilation
-Date: Mon, 11 May 2015 14:23:54 +0530
-Message-ID: <CAEzqOZv5pDPJgBfvNKk7vZuTr5H9hLdEOweyxStRFtarNxtFhQ@mail.gmail.com>
-References: <1431240383-12763-1-git-send-email-vishnupatekar0510@gmail.com>
-	<1431240383-12763-4-git-send-email-vishnupatekar0510@gmail.com>
-	<20150510101750.GC11057@lukather>
-Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [Linux-kernel] [RFC PATCH 5/7] mmc: sh_mobile_sdhi: Add UHS-I
+ mode support
+Date: Mon, 11 May 2015 10:54:43 +0200
+Message-ID: <CAPDyKFq6pGmk5eiSLqEkVnQ1b5FVyVyXNfOmkFAm-x40v5jWZg@mail.gmail.com>
+References: <1430396995.5802.39.camel@xylophone.i.decadent.org.uk>
+	<1430397136.5802.44.camel@xylophone.i.decadent.org.uk>
+	<CAPDyKFodZscxZJmKgYyMV8m8mNWYc9GitkoKbixTKS5r7rv_fA@mail.gmail.com>
+	<554880C9.8080201@codethink.co.uk>
+	<CAPDyKFpv0BOX0mAvhZx9j5Gnayt__YTiUa8SxvcmsEcuazsg0w@mail.gmail.com>
+	<1430876333.4222.43.camel@xylophone.i.decadent.org.uk>
+	<CAPDyKFo7WsE2wTLZc0E9ANrZ1amVsL3n71oxCLFG0+QrF0xH_A@mail.gmail.com>
+	<1430920143.4222.74.camel@xylophone.i.decadent.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBIW4YGVAKGQEW5FTYJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150510101750.GC11057@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1430920143.4222.74.camel@xylophone.i.decadent.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Molton <ian@mnementh.co.uk>, linux-mmc <linux-mmc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Sun, May 10, 2015 at 3:47 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Sun, May 10, 2015 at 12:16:20PM +0530, Vishnu Patekar wrote:
->> A33 clock control unit is similar to A23.
+On 6 May 2015 at 15:49, Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
+> On Wed, 2015-05-06 at 10:44 +0200, Ulf Hansson wrote:
+>> On 6 May 2015 at 03:38, Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
+>> > On Tue, 2015-05-05 at 10:47 +0200, Ulf Hansson wrote:
+>> >> On 5 May 2015 at 10:35, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>> >> > On 05/05/15 10:56, Ulf Hansson wrote:
+>> >> >> On 30 April 2015 at 14:32, Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
+>> >> >>> Implement voltage switch, supporting modes up to SDR-50.
+>> >> >>>
+>> >> >>> Based on work by Shinobu Uehara, Rob Taylor, William Towle and Ian Molton.
+>> >> >>>
+>> >> >>> This uses two voltage regulators, one external and one on the pfc.
+>> >> >>
+>> >> >> Why two? If there is a parent child relation ship, that should be
+>> >> >> handled through the regulator tree, right!? Please elaborate.
+>> >> >
+>> >> > The card main power is separate from the IO line voltages.
+>> >> >
+>> >> > To get to the high-speed, card power is left at 3.3V and the IO
+>> >> > voltage is changed to 1.8V.
+>> >> >
+>> >> > In the systems we have the power gate is separate from the controls
+>> >> > for the IO but not integrated into the MMC controller itself.
+>> >
+>> > In this case, there are *three* regulators:
+>> >
+>> > 1. External regulator for card power (VDD pin): "vmmc"
+>> > 2. External regulator for pull-up voltage for the data pins: "vqmmc"
 >>
->> A33 specific clocks are not yet implemented, added CLK_OF_DECLARE
->> to get it compiled for A33.
+>> Is this really a regulator and not just about changing a pinctrl setting?
 >
-> That commit log doesn't make any sense.
+> Looking at the Lager board, the pull-up voltage appears to be controlled
+> by the external PMIC (DA9063), which is signalled using GPIOs (I don't
+> know why, when it's also connected to I2C).
+
+Okay, thus we should have a regulator for it.
+
 >
-> What you're doing isn't about whether or not that will be compiled,
-> but whether you're registering the clocks and which clocks you
-> protect.
-Actually, It's just registering the a33 clocks and reusing a23 code.
-nothing to do with compile. I'll correct it in next patch version.
+>> The reason why I wonder, is because there are several other mmc host
+>> driver's the use a specific pinctrl state for this.
+>>
+>> > 3. Internal regulator for input(?) level on the data pins:
+>> >    "vqmmc_ref" (I'm open to suggestions of a better name)
 >
->> Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Isn't it supposed to have a space in the middle of your name, just
-> like you have in your mail address?
-Yes, There should be space.
->
-> Thanks,
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+> This one is implemented in the pinctrl (pfc) block.
+
+I understand this as we should have a specific UHS pinctrl state,
+instead of a regulator. Right?
+
+[...]
+
+Kind regards
+Uffe
