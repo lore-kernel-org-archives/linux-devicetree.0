@@ -1,53 +1,40 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] imx27: dt: only map 1 Kbyte for fec registers
-Date: Mon, 11 May 2015 20:01:01 +0800
-Message-ID: <20150511120101.GA25495@tiger>
-References: <1431204870-17233-1-git-send-email-tremyfr@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: Gateworks GW5510 support (i.MX6)
+Date: Mon, 11 May 2015 20:34:03 +0800
+Message-ID: <20150511123403.GC9347@dragon>
+References: <1431013080-13536-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1431204870-17233-1-git-send-email-tremyfr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Reynes <tremyfr@gmail.com>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1431013080-13536-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 09, 2015 at 10:54:30PM +0200, Philippe Reynes wrote:
-> According to the imx27 documentation, fec has a 1 Kbyte
-> memory space map, spitted in two regions of 512 bytes.
-> The first one for control/status registers, and the
-> second one for event/statistic registers. So, we don't
-> need to map 16 Kbyte for registers, 1 Kbyte is enough.
+On Thu, May 07, 2015 at 08:38:00AM -0700, Tim Harvey wrote:
+> Add support for the Gateworks GW5510 board featuring:
+>  * i.MX6 SoC
+>  * up to 512MB DDR3
+>  * up to 2GB NAND flash
+>  * 1x miniPCIe socket (with USB)
+>  * HDMI out (micro-HDMI)
+>  * HDMI in (micro-HDMI) (currently supported by only vendor kernel)
+>  * TTL level I/O (supported by GW16111 breakout board):
+>   * I2C
+>   * 2x UART
+>   * CAN
+>   * 2x DIO (GPIO/PWM)
+>   * USB OTG
 > 
-> Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
-> ---
->  arch/arm/boot/dts/imx27.dtsi |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+> For more details see:
+>  http://www.gateworks.com/product/item/ventana-gw5510-single-board-computer
 > 
-> diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-> index 6951b66..56bb917 100644
-> --- a/arch/arm/boot/dts/imx27.dtsi
-> +++ b/arch/arm/boot/dts/imx27.dtsi
-> @@ -533,7 +533,7 @@
->  
->  			fec: ethernet@1002b000 {
->  				compatible = "fsl,imx27-fec";
-> -				reg = <0x1002b000 0x4000>;
-> +				reg = <0x1002b000 0x400>;
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 
-No.  Per MCIMX27RM.pdf, Table 2-7. AIPI2 Memory Map, it should be 4KiB.
-
-Shawn
-
->  				interrupts = <50>;
->  				clocks = <&clks IMX27_CLK_FEC_IPG_GATE>,
->  					 <&clks IMX27_CLK_FEC_AHB_GATE>;
-> -- 
-> 1.7.4.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
