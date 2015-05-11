@@ -1,44 +1,70 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 4/4] ARM64: MediaTek MT8173: Add SCPSYS device node
-Date: Mon, 11 May 2015 15:11:22 +0200
-Message-ID: <1431349882-12260-5-git-send-email-s.hauer@pengutronix.de>
-References: <1431349882-12260-1-git-send-email-s.hauer@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431349882-12260-1-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: mvebu: add alias for mdio on Armada 38x
+Date: Mon, 11 May 2015 15:15:50 +0200
+Message-ID: <5550AB86.1010400@free-electrons.com>
+References: <1430918040-17307-1-git-send-email-kaloz@openwrt.org> <1430918040-17307-2-git-send-email-kaloz@openwrt.org> <554A17DE.7090702@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <554A17DE.7090702-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the SCPSYS device node to the MT8173 dtsi file.
+Hi Imre,
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On 06/05/2015 15:32, Gregory CLEMENT wrote:
+> Hi Imre,
+> 
+> On 06/05/2015 15:13, Imre Kaloz wrote:
+>> This allows us to reference it later.
+>>
+>> Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> 
+> Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 924fdb6..3c569b5 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -125,6 +125,18 @@
- 						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		scpsys: scpsys@10006000 {
-+			compatible = "mediatek,mt8173-scpsys";
-+			#power-domain-cells = <1>;
-+			reg = <0 0x10006000 0 0x1000>;
-+			clocks = <&topckgen CLK_TOP_VDEC_SEL>,
-+				<&topckgen CLK_TOP_MFG_SEL>,
-+				<&topckgen CLK_TOP_VENC_SEL>,
-+				<&topckgen CLK_TOP_MM_SEL>,
-+				<&topckgen CLK_TOP_VENC_LT_SEL>;
-+			clock-names = "vdec", "mfg", "venc", "disp", "ven2";
-+		};
-+
- 		sysirq: intpol-controller@10200620 {
- 			compatible = "mediatek,mt8173-sysirq",
- 					"mediatek,mt6577-sysirq";
+applied on mvebu/dt
+
+Thanks,
+
+Gregory
+
+> 
+> 
+> Thanks,
+> 
+> Gregory
+> 
+>> ---
+>>  arch/arm/boot/dts/armada-38x.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+>> index ed2dd8b..839e5bf 100644
+>> --- a/arch/arm/boot/dts/armada-38x.dtsi
+>> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+>> @@ -495,7 +495,7 @@
+>>  				status = "disabled";
+>>  			};
+>>  
+>> -			mdio@72004 {
+>> +			mdio: mdio@72004 {
+>>  				#address-cells = <1>;
+>>  				#size-cells = <0>;
+>>  				compatible = "marvell,orion-mdio";
+>>
+> 
+> 
+
+
 -- 
-2.1.4
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
