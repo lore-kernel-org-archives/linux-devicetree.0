@@ -1,37 +1,65 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH 07/12] rtc: st: Update IP layout information
- to include Clocksource
-Date: Mon, 11 May 2015 13:03:07 +0200
-Message-ID: <20150511110307.GL3338@piout.net>
-References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org>
- <1431005924-21777-8-git-send-email-lee.jones@linaro.org>
- <20150509135854.GE3338@piout.net>
- <20150511105433.GB20742@x1>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Mon, 11 May 2015 12:04:22 +0100
+Message-ID: <20150511110422.GA4595@leverpostej>
+References: <1431012969-16338-1-git-send-email-ivan.ivanov@linaro.org>
+ <1431012969-16338-3-git-send-email-ivan.ivanov@linaro.org>
+ <CANLsYkzNXBH0d6v1Ny_JwpW6NcKr9v0oAi9K3YfipwDgHWfMMA@mail.gmail.com>
+ <1431092877.21307.18.camel@linaro.org>
+ <20150508180052.GD11680@leverpostej>
+ <B19B6A91-0CF2-428B-8CAC-FFEDD5D3D094@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150511105433.GB20742@x1>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+In-Reply-To: <B19B6A91-0CF2-428B-8CAC-FFEDD5D3D094@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2015 at 11:54:33 +0100, Lee Jones wrote :
-> On Sat, 09 May 2015, Alexandre Belloni wrote:
-> > I'm guessing this will go through the mfd tree along with the driver?
-> 
-> Yes, that is the plan, if that's okay with you?
-> 
+On Fri, May 08, 2015 at 07:17:12PM +0100, Ivan T. Ivanov wrote:
+>=20
+> > On May 8, 2015, at 9:00 PM, Mark Rutland <mark.rutland@arm.com> wro=
+te:
+> >=20
+> > On Fri, May 08, 2015 at 02:47:57PM +0100, Ivan T. Ivanov wrote:
+> >>=20
+> >> On Fri, 2015-05-08 at 07:38 -0600, Mathieu Poirier wrote:
+> >>> On 7 May 2015 at 09:36, Ivan T. Ivanov ivanov@linaro.org> wrote:
+> >>>> Add initial set of CoreSight components found on Qualcomm's 8x16=
+ chipset.
+> >>>>=20
+> >>>>=20
+> >>>> +       replicator@824000 {
+> >>>> +               compatible =3D "qcom,coresight-replicator", "arm=
+,primecell";
+> >>>=20
+> >>> Shouldn't it be "qcom,coresight-replicator1x" ?
+> >>>=20
+> >>=20
+> >>=20
+> >>=20
+> >> True, I still wonder, why we have to have this compatible string?=20
+> >> Drivers are probed by amba_id and "arm,primecell", after all.
+> >=20
+> > The compatible string tells you both the device _and_ the format of=
+ the
+> > other properties, because it tells you which binding applies.
+> >=20
+> > So the compatible string should be present regardless, as
+> > "arm,primecell" does not define the majority of the properties you =
+need
+> > for the replicator node.
+>=20
+> Mmm, only if vendors don=E2=80=99t bother to update version informati=
+on
+> fused to revision id registers, which happens. And this could=20
+> be workaround by "arm,primecell-periphid=E2=80=9D, no?
 
-Sure!
+No. That only tells you the identity of the device, not the format of
+the binding.
 
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
