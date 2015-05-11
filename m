@@ -1,371 +1,675 @@
-From: NeilBrown <neil@brown.name>
-Subject: [PATCH 3/4] TTY: add support for uart_slave devices.
+From: NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>
+Subject: [PATCH 4/4] tty/slaves: add a driver to power on/off UART attached
+ devices.
 Date: Mon, 11 May 2015 11:56:14 +1000
-Message-ID: <20150511015614.5709.16746.stgit@notabene.brown>
+Message-ID: <20150511015614.5709.25308.stgit@notabene.brown>
 References: <20150511013540.5709.93626.stgit@notabene.brown>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150511013540.5709.93626.stgit@notabene.brown>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>
-Cc: GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150511013540.5709.93626.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
+Cc: GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A "uart slave" is a device permanently connected via UART.
-Such a device may need its own driver, e.g. for powering
-it up on tty open and powering it down on tty release.
+If a platform has a particular device permanently attached to a UART,
+there may be out-of-band signaling necessary to power the device
+on and off.
 
-When a device is connected to a UART by a 'standard' bus, such as
-RS-232, signaling for power control typically uses "DTR".  When the
-connection is permanent, as is common on "embedded" boards, separate
-signaling may be needed and this requires a separate driver.
+This driver controls that signalling for a number of different devices.
+It can
+ - enable/disable a regulator
+ - toggle a GPIO
+ - register an 'rfkill' which can force the device to be off.
 
-uart-slave is a new bus-type which drivers can be written and devices
-created.
+When the rfkill is absent or unblocked, the device will be on when the
+associated tty device is open, and closed otherwise.
 
-A "uart slave" device is declared as a child of the uart in
-device-tree:
-
-&uart1 {
-    bluetooth {
-        compatible = "wi2wi,w2cbw003";
-        vdd-supply = <&vaux4>;
-    };
-};
-
-This device will be inserted in the driver-model tree between the uart
-and the tty.
-
-The uart-slave driver can replace any of the tty_operations functions
-so a call by the tty can be intercepted before being handled by the
-uart.
-
-When the tty port is initialized, the uart_slave device is created and
-waits for a driver to be bound to it.  Once this happens the tty
-device, which was previously initialized, will be added.  This slave
-is now considered "finalized".
-
-Any "finalized" slaves will be removed when the tty device is
-unregistered.  e.g. by destruct_tty_driver.
-While slaves are non-finalized they hold a reference to the tty driver
-to prevent destruct_tty_driver from being called, as it cannot find
-and free slave devices.
-
-Signed-off-by: NeilBrown <neil@brown.name>
+Signed-off-by: NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>
 ---
- drivers/tty/serial/Kconfig                 |    1 
- drivers/tty/serial/Makefile                |    2 
- drivers/tty/serial/serial_core.c           |    9 +-
- drivers/tty/serial/slave/Kconfig           |    6 +
- drivers/tty/serial/slave/Makefile          |    2 
- drivers/tty/serial/slave/uart_slave_core.c |  168 ++++++++++++++++++++++++++++
- drivers/tty/tty_io.c                       |    3 +
- include/linux/uart_slave.h                 |   29 +++++
- 8 files changed, 219 insertions(+), 1 deletion(-)
- create mode 100644 drivers/tty/serial/slave/Kconfig
- create mode 100644 drivers/tty/serial/slave/Makefile
- create mode 100644 drivers/tty/serial/slave/uart_slave_core.c
- create mode 100644 include/linux/uart_slave.h
+ .../bindings/uart_slave/wi2wi,w2cbw003.txt         |   19 +
+ .../bindings/uart_slave/wi2wi,w2sg0004.txt         |   37 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 
+ drivers/tty/serial/slave/Kconfig                   |   15 +
+ drivers/tty/serial/slave/Makefile                  |    1 
+ drivers/tty/serial/slave/serial-power-manager.c    |  510 ++++++++++++++++++++
+ 6 files changed, 583 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt
+ create mode 100644 Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt
+ create mode 100644 drivers/tty/serial/slave/serial-power-manager.c
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index f8120c1bde14..2601a8fb41a3 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1594,4 +1594,5 @@ endmenu
- config SERIAL_MCTRL_GPIO
- 	tristate
- 
-+source drivers/tty/serial/slave/Kconfig
- endif # TTY
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index c3ac3d930b33..7a6ed85257f6 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -96,3 +96,5 @@ obj-$(CONFIG_SERIAL_SPRD) += sprd_serial.o
- 
- # GPIOLIB helpers for modem control lines
- obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o
+diff --git a/Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt b/Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt
+new file mode 100644
+index 000000000000..cfe6ee5e01e9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt
+@@ -0,0 +1,19 @@
++wi2wi bluetooth module
 +
-+obj-y += slave/
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 3ea16f524e89..fcad5b30486f 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -34,6 +34,7 @@
- #include <linux/serial_core.h>
- #include <linux/delay.h>
- #include <linux/mutex.h>
-+#include <linux/uart_slave.h>
- 
- #include <asm/irq.h>
- #include <asm/uaccess.h>
-@@ -2710,10 +2711,16 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
- 	 * Register the port whether it's detected or not.  This allows
- 	 * setserial to be used to alter this port's parameters.
- 	 */
--	tty_dev = tty_port_register_device_attr(port, drv->tty_driver,
-+	tty_dev = tty_port_initialize_device_attr(port, drv->tty_driver,
- 			uport->line, uport->dev, port, uport->tty_groups);
- 	if (likely(!IS_ERR(tty_dev))) {
- 		device_set_wakeup_capable(tty_dev, 1);
-+		if (uart_slave_register(uport->dev, tty_dev,
-+					drv->tty_driver) < 0) {
-+			ret = tty_device_add(drv->tty_driver, tty_dev);
-+			if (ret)
-+				put_device(tty_dev);
-+		}
- 	} else {
- 		dev_err(uport->dev, "Cannot register tty device on line %d\n",
- 		       uport->line);
++This is accessed via a serial port and is largely controlled via that
++link.  Extra configuration is needed to enable power on/off
++
++Required properties:
++- compatible: "wi2wi,w2cbw003"
++- vdd-supply: regulator used to power the device.
++
++The node for this device must be the child of a UART.
++
++Example:
++
++&uart1 {
++       bluetooth {
++               compatible = "wi2wi,w2cbw003";
++               vdd-supply = <&vaux4>;
++       };
++};
+diff --git a/Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt b/Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt
+new file mode 100644
+index 000000000000..6bcf3006c1a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt
+@@ -0,0 +1,37 @@
++wi2wi GPS device
++
++This is accessed via a serial port and is largely controlled via that
++link.  Extra configuration is needed to enable power on/off
++
++Required properties:
++- compatible: "wi2wi,w2sg0004"
++- gpios: gpio used to toggle 'on/off' pin
++- interrupts: interrupt generated by RX pin when device
++      should be off
++
++Optional properties:
++- vdd-supply: regulator used to power antenna
++- pinctrl: "default", "off"
++      if "off" setting is provided it is imposed when device should
++      be off.  This can route the RX pin to a GPIO interrupt.
++
++The w2sg0004 uses a pin-toggle both to power-on and to
++power-off, so the driver needs to detect what state it is in.
++It does this by detecting characters on the RX line.
++When it should be off, these can optionally be detected by a GPIO.
++
++The node for this device must be the child of a UART.
++
++Example:
++&uart2 {
++       gps {
++               compatible = "wi2iw,w2sg0004";
++               vdd-supply = <&vsim>;
++               gpios = <&gpio5 17 0>; /* GPIO_145 */
++               interrupts-extended = <&gpio5 19 0>; /* GPIO_147 */
++               /* When off, switch RX to be an interrupt */
++               pinctrl-names = "default", "off";
++               pinctrl-0 = <&uart2_pins>;
++               pinctrl-1 = <&uart2_pins_rx_gpio>;
++       };
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 80339192c93e..45c703a3b29d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -202,6 +202,7 @@ variscite	Variscite Ltd.
+ via	VIA Technologies, Inc.
+ virtio	Virtual I/O Device Specification, developed by the OASIS consortium
+ voipac	Voipac Technologies s.r.o.
++wi2wi	wi2wi Inc.  http://www.wi2wi.com/
+ winbond Winbond Electronics corp.
+ wlf	Wolfson Microelectronics
+ wm	Wondermedia Technologies, Inc.
 diff --git a/drivers/tty/serial/slave/Kconfig b/drivers/tty/serial/slave/Kconfig
-new file mode 100644
-index 000000000000..6620e78b763e
---- /dev/null
+index 6620e78b763e..46285d8895b7 100644
+--- a/drivers/tty/serial/slave/Kconfig
 +++ b/drivers/tty/serial/slave/Kconfig
-@@ -0,0 +1,6 @@
-+menuconfig UART_SLAVE
-+	tristate "UART slave devices"
-+	depends on OF
+@@ -4,3 +4,18 @@ menuconfig UART_SLAVE
+ 	help
+ 	 Devices which attach via a uart, but need extra
+ 	 driver support for power management etc.
++
++if UART_SLAVE
++
++config SERIAL_POWER_MANAGER
++	tristate "Power Management controller for serial-attached devices"
++	default n
 +	help
-+	 Devices which attach via a uart, but need extra
-+	 driver support for power management etc.
++	 Some devices permanently attached via a UART can benefit from
++	 being power-managed when the tty device is opened or closed.
++	 This driver can support several such devices with simple
++	 power requirements such as enabling a regulator.
++
++	 If in doubt, say 'N'
++
++endif
 diff --git a/drivers/tty/serial/slave/Makefile b/drivers/tty/serial/slave/Makefile
-new file mode 100644
-index 000000000000..aac8697fa406
---- /dev/null
+index aac8697fa406..5d9b3d373138 100644
+--- a/drivers/tty/serial/slave/Makefile
 +++ b/drivers/tty/serial/slave/Makefile
-@@ -0,0 +1,2 @@
-+
-+obj-$(CONFIG_UART_SLAVE) += uart_slave_core.o
-diff --git a/drivers/tty/serial/slave/uart_slave_core.c b/drivers/tty/serial/slave/uart_slave_core.c
+@@ -1,2 +1,3 @@
+ 
+ obj-$(CONFIG_UART_SLAVE) += uart_slave_core.o
++obj-$(CONFIG_SERIAL_POWER_MANAGER) += serial-power-manager.o
+diff --git a/drivers/tty/serial/slave/serial-power-manager.c b/drivers/tty/serial/slave/serial-power-manager.c
 new file mode 100644
-index 000000000000..d48d672300c2
+index 000000000000..81b8f909fd3a
 --- /dev/null
-+++ b/drivers/tty/serial/slave/uart_slave_core.c
-@@ -0,0 +1,168 @@
++++ b/drivers/tty/serial/slave/serial-power-manager.c
+@@ -0,0 +1,510 @@
 +/*
-+ * uart slave core - device bus for uart slaves
++ * Serial-power-manager
++ * uart-slave device that intercepts open/close events on the tty,
++ * and turns power on/off for the device which is connected.
 + *
-+ * Copyright (C) 2015 NeilBrown <neil@brown.name>
++ * Currently supported devices:
++ *  wi2wi,w2sg0004 - GPS with on/off toggle on a GPIO
++ *  wi2wi,w2cbw003 - bluetooth port; powered by regulator.
 + *
-+ *    This program is free software; you can redistribute it and/or modify
-+ *   it under the terms of the GNU General Public License as published by
-+ *   the Free Software Foundation; either version 2 of the License, or
-+ *   (at your option) any later version.
++ * When appropriate, an RFKILL will be registered which
++ * can power-down the device even when it is open.
 + *
-+ *    This program is distributed in the hope that it will be useful,
-+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *   GNU General Public License for more details.
++ * Device can be turned on either by
++ *  - enabling a regulator.  Disable to turn off
++ *  - toggling a GPIO.  Toggle again to turn off.  This requires
++ *     that we know the current state.  It is assumed to be 'off'
++ *     at boot, however if an interrupt can be generated when on,
++ *     such as by connecting RX to a GPIO, that can be used to detect
++ *     if the device is on when it should be off.
 + */
 +
-+/*
-+ * A "uart-slave" is a device permanently attached to a particular
-+ * wired to a UART.
-+ * A uart-slave has two particular roles.
-+ * Firstly it can intercept any tty_operations to provide extra control
-+ * of the device.  For example it might intercept "open" and "close"
-+ * in order to power the device up and down.  It might intercept
-+ * "hangup" to toggle a reset line on the device.
-+ *
-+ * Secondly it appears as a parent of the tty in the device model, so
-+ * that any attributes it presents are visible to udev when the tty
-+ * is added.  This allows udev to start appropriate handlers such as
-+ * hciattach or inputattach.
-+ *
-+ * uart-slave devices must be described in devicetree as a child node
-+ * of the node which described the attaching UART.
-+ *
-+ * If such a child is present, the tty device will not be registered
-+ * until the slave device is fully probed and initialized.
-+ */
-+#include <linux/types.h>
 +#include <linux/module.h>
-+#include <linux/kernel.h>
 +#include <linux/slab.h>
-+#include <linux/errno.h>
-+#include <linux/device.h>
-+#include <linux/of.h>
++#include <linux/err.h>
++#include <linux/regulator/consumer.h>
++#include <linux/platform_device.h>
 +#include <linux/of_device.h>
 +#include <linux/tty.h>
-+#include <linux/tty_driver.h>
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
++#include <linux/of_irq.h>
++#include <linux/interrupt.h>
++#include <linux/delay.h>
++#include <linux/rfkill.h>
++
 +#include <linux/uart_slave.h>
 +
-+static int uart_slave_match(struct device *dev, struct device_driver *drv)
-+{
-+	return of_driver_match_device(dev, drv);
++/* This is used for testing. Setting this module parameter
++ * will simulate booting with the device "on"
++ */
++static bool toggle_on_probe = false;
++module_param(toggle_on_probe, bool, 0);
++MODULE_PARM_DESC(toggle_on_probe, "simulate power-on with devices active");
++
++struct spm_config {
++	int	rfkill_type;		/* type of rfkill to register */
++	int	toggle_time;		/* msec to pulse GPIO for on/off */
++	int	toggle_gap;		/* minimum msecs between toggles */
++	bool	off_in_suspend;
 +}
++	simple_config = {
++		.off_in_suspend = true,
++	},
++	w2sg_config = {
++		.rfkill_type = RFKILL_TYPE_GPS,
++		.toggle_time = 10,
++		.toggle_gap = 500,
++		.off_in_suspend = true,
++	};
 +
-+static void uart_slave_release(struct device *dev)
-+{
-+	struct uart_slave *slave =
-+		container_of(dev, struct uart_slave, dev);
-+
-+	if (!slave->finalized) {
-+		put_device(slave->tty_dev);
-+		tty_driver_kref_put(slave->tty_drv);
-+	}
-+	of_node_put(dev->of_node);
-+	kfree(slave);
-+}
-+
-+struct bus_type uart_slave_bus_type = {
-+	.name		= "uart-slave",
-+	.match		= uart_slave_match,
++const static struct of_device_id spm_dt_ids[] = {
++       { .compatible = "wi2wi,w2sg0004", .data = &w2sg_config},
++       { .compatible = "wi2wi,w2cbw003", .data = &simple_config},
++       {}
 +};
 +
-+int uart_slave_register(struct device *parent,
-+			struct device *tty, struct tty_driver *drv)
++struct spm_data {
++	const struct spm_config *config;
++	struct gpio_desc *gpiod;
++	int		irq;	/* irq line from RX pin when pinctrl
++				 * set to 'idle' */
++	struct regulator *reg;
++
++	unsigned long	toggle_time;
++	unsigned long	toggle_gap;
++	unsigned long	last_toggle;	/* jiffies when last toggle completed. */
++	unsigned long	backoff;	/* jiffies since last_toggle when
++					 * we try again
++					 */
++	enum {Idle, Down, Up} state;	/* state-machine state. */
++
++	int		open_cnt;
++	bool		requested, is_on;
++	bool		suspended;
++	bool		reg_enabled;
++
++	struct pinctrl	*pins;
++	struct pinctrl_state *pins_off;
++
++	struct delayed_work work;
++	spinlock_t	lock;
++	struct device	*dev;
++
++	struct rfkill	*rfkill;
++
++	int (*old_open)(struct tty_struct * tty, struct file * filp);
++	void (*old_close)(struct tty_struct * tty, struct file * filp);
++
++};
++
++/* When a device is powered on/off by toggling a GPIO we perform
++ * all the toggling via a workqueue to ensure only one toggle happens
++ * at a time and to allow easy timing.
++ * This is managed as a state machine which transitions
++ *  Idle -> Down -> Up -> Idle
++ * The GPIO is held down for toggle_time and then up for toggle_time,
++ * and then we assume the device has changed state.
++ * We never toggle until at least toggle_gap has passed since the
++ * last toggle.
++ */
++static void toggle_work(struct work_struct *work)
 +{
-+	struct device_node *node, *found = NULL;
-+	struct uart_slave *slave;
-+	int retval;
++	struct spm_data *data = container_of(
++		work, struct spm_data, work.work);
 +
-+	if (!parent || !parent->of_node)
-+		return -ENODEV;
++	if (data->gpiod == NULL)
++		return;
 +
-+	for_each_available_child_of_node(parent->of_node, node) {
-+		if (!of_get_property(node, "compatible", NULL))
-+			continue;
-+		if (found) {
-+			dev_err(parent, "Multiple connected children found - non registered");
-+			return -ENODEV;
++	spin_lock_irq(&data->lock);
++	switch (data->state) {
++	case Up:
++		data->state = Idle;
++		if (data->requested == data->is_on)
++			break;
++		if (!data->requested)
++			/* Assume it is off unless activity is detected */
++			break;
++		/* Try again in a while unless we get some activity */
++		dev_dbg(data->dev, "Wait %dusec until retry\n",
++			jiffies_to_msecs(data->backoff));
++		schedule_delayed_work(&data->work, data->backoff);
++		break;
++	case Idle:
++		if (data->requested == data->is_on)
++			break;
++
++		/* Time to toggle */
++		dev_dbg(data->dev, "Starting toggle to turn %s\n",
++			data->requested ? "on" : "off");
++		data->state = Down;
++		spin_unlock_irq(&data->lock);
++		gpiod_set_value_cansleep(data->gpiod, 1);
++		schedule_delayed_work(&data->work, data->toggle_time);
++
++		return;
++
++	case Down:
++		data->state = Up;
++		data->last_toggle = jiffies;
++		dev_dbg(data->dev, "Toggle completed, should be %s now.\n",
++			data->is_on ? "off" : "on");
++		data->is_on = ! data->is_on;
++		spin_unlock_irq(&data->lock);
++
++		gpiod_set_value_cansleep(data->gpiod, 0);
++		schedule_delayed_work(&data->work, data->toggle_time);
++
++		return;
++	}
++	spin_unlock_irq(&data->lock);
++}
++
++static irqreturn_t spm_isr(int irq, void *dev_id)
++{
++	struct spm_data *data = dev_id;
++	unsigned long flags;
++
++	spin_lock_irqsave(&data->lock, flags);
++	if (!data->requested && !data->is_on && data->state == Idle &&
++	    time_after(jiffies, data->last_toggle + data->backoff)) {
++		data->is_on = 1;
++		data->backoff *= 2;
++		dev_dbg(data->dev, "Received data, must be on. Try to turn off\n");
++		if (!data->suspended)
++			schedule_delayed_work(&data->work, 0);
++	}
++	spin_unlock_irqrestore(&data->lock, flags);
++	return IRQ_HANDLED;
++}
++
++static void spm_on(struct spm_data *data)
++{
++	if (!data->rfkill || !rfkill_blocked(data->rfkill)) {
++		unsigned long flags;
++
++		if (!data->reg_enabled &&
++		    data->reg &&
++		    regulator_enable(data->reg) == 0)
++			data->reg_enabled = true;
++
++		spin_lock_irqsave(&data->lock, flags);
++		if (!data->requested) {
++			dev_dbg(data->dev, "TTY open - turn device on\n");
++			data->requested = true;
++			data->backoff = data->toggle_gap;
++			if (data->irq > 0) {
++				disable_irq(data->irq);
++				pinctrl_pm_select_default_state(data->dev);
++			}
++			if (!data->suspended && data->state == Idle)
++				schedule_delayed_work(&data->work, 0);
 +		}
-+		found = node;
-+	}
-+	if (!found)
-+		return -ENODEV;
-+
-+	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
-+	if (!slave)
-+		return -ENOMEM;
-+
-+	slave->dev.bus = &uart_slave_bus_type;
-+	slave->dev.parent = parent;
-+	slave->dev.release = uart_slave_release;
-+	slave->dev.of_node = of_node_get(found);
-+	dev_set_name(&slave->dev, "%s", found->name);
-+	slave->tty_dev = tty;
-+	slave->tty_drv = tty_driver_kref_get(drv);
-+	slave->ops = *drv->ops;
-+	retval = device_register(&slave->dev);
-+	if (retval)
-+		put_device(&slave->dev);
-+	return retval;
-+}
-+EXPORT_SYMBOL(uart_slave_register);
-+
-+void uart_slave_activate(struct tty_struct *tty)
-+{
-+	struct device *parent = NULL;
-+	if (tty->dev)
-+		parent = tty->dev->parent;
-+	if (parent &&
-+	    parent->bus == &uart_slave_bus_type)
-+	{
-+		struct uart_slave *dev =
-+			container_of(parent, struct uart_slave, dev);
-+		tty->ops = &dev->ops;
++		spin_unlock_irqrestore(&data->lock, flags);
 +	}
 +}
-+EXPORT_SYMBOL(uart_slave_activate);
 +
-+int uart_slave_add_tty(struct uart_slave *slave)
++static int spm_open(struct tty_struct *tty, struct file *filp)
 +{
-+	int retval;
-+	if (slave->finalized)
-+		return -EBUSY;
-+	slave->tty_dev->parent = &slave->dev;
-+	retval = tty_device_add(slave->tty_drv,
-+				slave->tty_dev);
-+	/* If that succeeded, the tty now holds a reference to
-+	 * the slave through ->parent, so that ref we hold
-+	 * can be dropped, as can our ref on the tty driver.
-+	 */
-+	slave->finalized = true;
-+	tty_driver_kref_put(slave->tty_drv);
-+	put_device(&slave->dev);
-+	return retval;
-+}
-+EXPORT_SYMBOL(uart_slave_add_tty);
++	struct spm_data *data = dev_get_drvdata(tty->dev->parent);
 +
-+int uart_slave_driver_register(struct device_driver *drv)
-+{
-+	drv->bus = &uart_slave_bus_type;
-+	return driver_register(drv);
-+}
-+EXPORT_SYMBOL(uart_slave_driver_register);
-+
-+static int __init uart_slave_init(void)
-+{
-+	return bus_register(&uart_slave_bus_type);
-+}
-+
-+static void __exit uart_slave_exit(void)
-+{
-+	bus_unregister(&uart_slave_bus_type);
-+}
-+
-+postcore_initcall(uart_slave_init);
-+module_exit(uart_slave_exit);
-+MODULE_AUTHOR("NeilBrown <neil@brown.name>");
-+MODULE_DESCRIPTION("UART-slave core support.");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 83ca25b9c2da..2bf516f99dd2 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -95,6 +95,7 @@
- #include <linux/seq_file.h>
- #include <linux/serial.h>
- #include <linux/ratelimit.h>
-+#include <linux/uart_slave.h>
- 
- #include <linux/uaccess.h>
- 
-@@ -1531,6 +1532,8 @@ struct tty_struct *tty_init_dev(struct tty_driver *driver, int idx)
- 	if (retval < 0)
- 		goto err_deinit_tty;
- 
-+	uart_slave_activate(tty);
-+
- 	if (!tty->port)
- 		tty->port = driver->ports[idx];
- 
-diff --git a/include/linux/uart_slave.h b/include/linux/uart_slave.h
-new file mode 100644
-index 000000000000..9a19825ce47a
---- /dev/null
-+++ b/include/linux/uart_slave.h
-@@ -0,0 +1,29 @@
-+#ifndef _LINUX_UART_SLAVE_H
-+#define _LINUX_UART_SLAVE_H
-+struct uart_slave {
-+	struct device *tty_dev;
-+	struct tty_driver *tty_drv;
-+	struct tty_operations ops;
-+	struct device dev;
-+	bool finalized;
-+};
-+
-+int uart_slave_add_tty(struct uart_slave *slave);
-+int uart_slave_driver_register(struct device_driver *drv);
-+#if IS_ENABLED(CONFIG_UART_SLAVE)
-+void uart_slave_activate(struct tty_struct *tty);
-+int uart_slave_register(struct device *parent,
-+			struct device *tty, struct tty_driver *drv);
-+#else
-+static inline void uart_slave_activate(struct tty_struct *tty)
-+{
-+}
-+static inline int uart_slave_register(struct device *parent,
-+				     struct device *tty,
-+				     struct tty_driver *drv)
-+{
++	data->open_cnt++;
++	spm_on(data);
++	if (data->old_open)
++		return data->old_open(tty, filp);
 +	return -ENODEV;
 +}
-+#endif
 +
-+#endif /* _LINUX_UART_SLAVE_H */
++static void spm_off(struct spm_data *data)
++{
++	unsigned long flags;
++
++	if (data->reg && data->reg_enabled)
++		if (regulator_disable(data->reg) == 0)
++			data->reg_enabled = false;
++
++	spin_lock_irqsave(&data->lock, flags);
++	if (data->requested) {
++		data->requested = false;
++		data->backoff = data->toggle_gap;
++		if (data->pins_off) {
++			pinctrl_select_state(data->pins,
++					     data->pins_off);
++			enable_irq(data->irq);
++		}
++		if (!data->suspended && data->state == Idle)
++			schedule_delayed_work(&data->work, 0);
++	}
++	spin_unlock_irqrestore(&data->lock, flags);
++}
++
++static void spm_close(struct tty_struct *tty, struct file *filp)
++{
++	struct spm_data *data = dev_get_drvdata(tty->dev->parent);
++
++	data->open_cnt--;
++	if (!data->open_cnt) {
++		dev_dbg(data->dev, "TTY closed - turn device off\n");
++		spm_off(data);
++	}
++
++	if (data->old_close)
++		data->old_close(tty, filp);
++}
++
++static int spm_rfkill_set_block(void *vdata, bool blocked)
++{
++	struct spm_data *data = vdata;
++
++	dev_dbg(data->dev, "rfkill_set_blocked %d\n", blocked);
++	if (blocked)
++		spm_off(data);
++
++	if (!blocked &&
++	    data->open_cnt)
++		spm_on(data);
++
++	return 0;
++}
++
++static struct rfkill_ops spm_rfkill_ops = {
++	.set_block = spm_rfkill_set_block,
++};
++
++static int spm_suspend(struct device *dev)
++{
++	/* Ignore incoming data and just turn device off.
++	 * we cannot really wait for a separate thread to
++	 * do things, so we disable that and do it all
++	 * here
++	 */
++	struct spm_data *data = dev_get_drvdata(dev);
++
++	spin_lock_irq(&data->lock);
++	data->suspended = true;
++	spin_unlock_irq(&data->lock);
++	if (!data->config->off_in_suspend)
++		return 0;
++
++	if (data->gpiod) {
++
++		cancel_delayed_work_sync(&data->work);
++		if (data->state == Down) {
++			dev_dbg(data->dev, "Suspending while GPIO down - raising\n");
++			msleep(data->config->toggle_time);
++			gpiod_set_value_cansleep(data->gpiod, 0);
++			data->last_toggle = jiffies;
++			data->is_on = !data->is_on;
++			data->state = Up;
++		}
++		if (data->state == Up) {
++			msleep(data->config->toggle_time);
++			data->state = Idle;
++		}
++		if (data->is_on) {
++			dev_dbg(data->dev, "Suspending while device on: toggling\n");
++			gpiod_set_value_cansleep(data->gpiod, 1);
++			msleep(data->config->toggle_time);
++			gpiod_set_value_cansleep(data->gpiod, 0);
++			data->is_on = 0;
++		}
++	}
++
++	if (data->reg && data->reg_enabled)
++		if (regulator_disable(data->reg) == 0)
++			data->reg_enabled = false;
++
++	return 0;
++}
++
++static int spm_resume(struct device *dev)
++{
++	struct spm_data *data = dev_get_drvdata(dev);
++
++	spin_lock_irq(&data->lock);
++	data->suspended = false;
++	spin_unlock_irq(&data->lock);
++	schedule_delayed_work(&data->work, 0);
++
++	if (data->open_cnt &&
++	    (!data->rfkill || !rfkill_blocked(data->rfkill))) {
++		if (!data->reg_enabled &&
++		    data->reg &&
++		    regulator_enable(data->reg) == 0)
++			data->reg_enabled = true;
++	}
++	return 0;
++}
++
++static const struct dev_pm_ops spm_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(spm_suspend, spm_resume)
++};
++
++static int spm_probe(struct device *dev)
++{
++	struct uart_slave *slave = container_of(dev, struct uart_slave, dev);
++	struct spm_data *data;
++	struct regulator *reg;
++	int err;
++	const struct of_device_id *id;
++	const char *name;
++
++	if (dev->parent == NULL)
++		return -ENODEV;
++
++	id = of_match_device(spm_dt_ids, dev);
++	if (!id)
++		return -ENODEV;
++
++	if (dev->of_node && dev->of_node->name)
++		name = dev->of_node->name;
++	else
++		name = "serial-power-manager";
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->config = id->data;
++	data->toggle_time = msecs_to_jiffies(data->config->toggle_time) + 1;
++	data->toggle_gap = msecs_to_jiffies(data->config->toggle_gap) + 1;
++	data->last_toggle = jiffies;
++	data->backoff = data->toggle_gap;
++	data->state = Idle;
++	spin_lock_init(&data->lock);
++	INIT_DELAYED_WORK(&data->work, toggle_work);
++
++	/* If a regulator is provided, it is enabled on 'open'
++	 * and disabled on 'release'
++	 */
++	reg = devm_regulator_get(dev, "vdd");
++	if (IS_ERR(reg)) {
++		err = PTR_ERR(reg);
++		if (err != -ENODEV)
++			goto out;
++	} else
++		data->reg = reg;
++
++	/* If an irq is provided, any transitions are taken as
++	 * indication that the device is currently "on"
++	 */
++	data->irq = of_irq_get(dev->of_node, 0);
++	if (data->irq < 0) {
++		err = data->irq;
++		if (err != -EINVAL)
++			goto out;
++	} else {
++		dev_dbg(dev, "IRQ configured: %d\n", data->irq);
++
++		irq_set_status_flags(data->irq, IRQ_NOAUTOEN);
++		err = devm_request_irq(dev, data->irq, spm_isr,
++				       IRQF_TRIGGER_FALLING,
++				       name, data);
++
++		if (err)
++			goto out;
++
++	}
++
++	/* If a gpio is provided, then it is used to turn the device
++	 * on/off.
++	 * The GPIO is toggled to change the state of the device.
++	 * A "toggle" involves holding the GPIO active for toggle_time.
++	 */
++	data->gpiod = devm_gpiod_get(dev, NULL, GPIOD_OUT_LOW);
++	if (IS_ERR(data->gpiod)) {
++		err = PTR_ERR(data->gpiod);
++		if (err != -ENOENT)
++			goto out;
++		data->gpiod = NULL;
++	} else
++		dev_dbg(dev, "GPIO configured: %d\n",
++			desc_to_gpio(data->gpiod));
++
++	/* If an 'off' pinctrl state is defined, we apply that
++	 * when the device is assumed to be off.  This is expected to
++	 * route the 'rx' line to the 'irq' interrupt.
++	 */
++	data->pins = devm_pinctrl_get(dev);
++	if (data->pins && data->irq > 0) {
++		data->pins_off = pinctrl_lookup_state(data->pins, "off");
++		if (IS_ERR(data->pins_off))
++			data->pins_off = NULL;
++	}
++
++	if (data->config->rfkill_type) {
++		data->rfkill = rfkill_alloc(name, dev,
++					    data->config->rfkill_type,
++					    &spm_rfkill_ops, data);
++		if (!data->rfkill) {
++			err = -ENOMEM;
++			goto out;
++		}
++		err = rfkill_register(data->rfkill);
++		if (err) {
++			dev_err(dev, "Cannot register rfkill device");
++			rfkill_destroy(data->rfkill);
++			goto out;
++		}
++	}
++	dev_set_drvdata(dev, data);
++	data->dev = dev;
++	data->old_open = slave->ops.open;
++	data->old_close = slave->ops.close;
++	slave->ops.open = spm_open;
++	slave->ops.close = spm_close;
++	uart_slave_add_tty(slave);
++
++	if (data->pins_off)
++		pinctrl_select_state(data->pins, data->pins_off);
++	if (data->irq > 0)
++		enable_irq(data->irq);
++
++	if (toggle_on_probe && data->gpiod) {
++		dev_dbg(data->dev, "Performing initial toggle\n");
++		gpiod_set_value_cansleep(data->gpiod, 1);
++		msleep(data->config->toggle_time);
++		gpiod_set_value_cansleep(data->gpiod, 0);
++		msleep(data->config->toggle_time);
++	}
++	err = 0;
++out:
++	dev_dbg(data->dev, "Probed: err=%d\n", err);
++	return err;
++}
++
++static int spm_remove(struct device *dev)
++{
++       struct spm_data *data = dev_get_drvdata(dev);
++
++       if (data->rfkill) {
++               rfkill_unregister(data->rfkill);
++               rfkill_destroy(data->rfkill);
++       }
++       return 0;
++}
++
++static struct device_driver spm_driver = {
++	.name		= "serial-power-manager",
++	.owner		= THIS_MODULE,
++	.of_match_table	= spm_dt_ids,
++	.probe		= spm_probe,
++	.remove		= spm_remove,
++};
++
++static int __init spm_init(void)
++{
++       return uart_slave_driver_register(&spm_driver);
++}
++module_init(spm_init);
++
++static void __exit spm_exit(void)
++{
++	driver_unregister(&spm_driver);
++}
++module_exit(spm_exit);
++
++MODULE_AUTHOR("NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>");
++MODULE_DEVICE_TABLE(of, spm_dt_ids);
++MODULE_DESCRIPTION("Power management for Serial-attached device.");
++MODULE_LICENSE("GPL v2");
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
