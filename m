@@ -1,35 +1,298 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v2 04/13] musb: Do not use musb_read[b|w] / _write[b|w] wrappers in generic fifo functions
-Date: Mon, 11 May 2015 20:53:49 +0200
-Message-ID: <10106387.CZmapdhaD3@wuerfel>
-References: <1426878682-14521-1-git-send-email-hdegoede@redhat.com> <20150511155846.GH19476@saruman.tx.rr.com> <5550F174.6000709@redhat.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v2 1/2] coresight: replicator: Add Qualcomm CoreSight
+ Replicator driver
+Date: Mon, 11 May 2015 13:07:18 -0600
+Message-ID: <CANLsYkx289yPQo3rJK0tCaDt+_axWjh1i2_6=rmL2p_Yw4Qr8w@mail.gmail.com>
+References: <1431012969-16338-1-git-send-email-ivan.ivanov@linaro.org>
+	<1431012969-16338-2-git-send-email-ivan.ivanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5550F174.6000709-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431012969-16338-2-git-send-email-ivan.ivanov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 11 May 2015 20:14:12 Hans de Goede wrote:
-> Also note, that as I've tried to explain in the commit message already this commit
-> makes no functional changes what so ever, the generic musb_default_read/write_fifo
-> functions are only used by musb platforms which do not overwrite musb_write* /
-> musb_read* and musb_write* / musb_read* are already just thin wrappers around
-> the __raw_* functions.
+On 7 May 2015 at 09:36, Ivan T. Ivanov <ivan.ivanov@linaro.org> wrote:
+> From: Pratik Patel <pratikp@codeaurora.org>
+>
+> This driver manages Qualcomm CoreSight Replicator device, which
+> resides on the AMBA bus. Replicator has been made programmable to
+> allow software to turn of the replicator branch to sink that is not
+> being used. This avoids trace traffic to the unused/non-current sink
+> from causing back pressure that results in overflows at the source.
+>
+> Signed-off-by: Pratik Patel <pratikp@codeaurora.org>
+> Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+> ---
+>  .../devicetree/bindings/arm/coresight.txt          |   1 +
+>  drivers/hwtracing/coresight/Kconfig                |   8 +
+>  drivers/hwtracing/coresight/Makefile               |   1 +
+>  .../coresight/coresight-replicator-qcom.c          | 214 +++++++++++++++++++++
+>  4 files changed, 224 insertions(+)
+>  create mode 100644 drivers/hwtracing/coresight/coresight-replicator-qcom.c
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index f4d6a86..661a1be 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -18,6 +18,7 @@ its hardware characteristcs.
+>                 - "arm,coresight-funnel", "arm,primecell";
+>                 - "arm,coresight-etm3x", "arm,primecell";
+>                 - "arm,coresight-etm4x", "arm,primecell";
+> +               - "qcom,coresight-replicator1x", "arm,primecell";
+>
+>         * reg: physical base address and length of the register
+>           set(s) of the component.
+> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> index 6b331d4..a57a51d 100644
+> --- a/drivers/hwtracing/coresight/Kconfig
+> +++ b/drivers/hwtracing/coresight/Kconfig
+> @@ -68,4 +68,12 @@ config CORESIGHT_SOURCE_ETM4X
+>           instructions that a processor is executing. This is primarily useful
+>           for instruction level tracing. Depending on the implemented version
+>           data tracing may also be available.
+> +
+> +config CORESIGHT_QCOM_REPLICATOR
+> +       bool "Qualcomm CoreSight Replicator driver"
+> +       help
+> +         This enables support for Qualcomm CoreSight link driver. The programmable
+> +         ATB replicator sends the ATB trace stream from the ETB/ETF to the TPIU
+> +         and ETR.
+> +
+>  endif
+> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> index 0af28d4..99f8e5f 100644
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_CORESIGHT_LINKS_AND_SINKS) += coresight-funnel.o \
+>                                            coresight-replicator.o
+>  obj-$(CONFIG_CORESIGHT_SOURCE_ETM3X) += coresight-etm3x.o coresight-etm-cp14.o
+>  obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o
+> +obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator-qcom.c b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
+> new file mode 100644
+> index 0000000..deacea4
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
+> @@ -0,0 +1,214 @@
+> +/*
+> + * Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/amba/bus.h>
+> +#include <linux/clk.h>
+> +#include <linux/coresight.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +
+> +#include "coresight-priv.h"
+> +
+> +#define REPLICATOR_IDFILTER0           0x000
+> +#define REPLICATOR_IDFILTER1           0x004
+> +
+> +/**
+> + * struct replicator_state - specifics associated to a replicator component
+> + * @base:      memory mapped base address for this component.
+> + * @dev:       the device entity associated with this component
+> + * @atclk:     optional clock for the core parts of the replicator.
+> + * @csdev:     component vitals needed by the framework
+> + */
+> +struct replicator_state {
+> +       void __iomem            *base;
+> +       struct device           *dev;
+> +       struct clk              *atclk;
+> +       struct coresight_device *csdev;
+> +};
+> +
+> +static int replicator_enable(struct coresight_device *csdev, int inport,
+> +                             int outport)
+> +{
+> +       struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+> +
+> +       pm_runtime_get_sync(drvdata->dev);
+> +
+> +       CS_UNLOCK(drvdata->base);
+> +
+> +       /*
+> +        * Ensure that the other port is disabled
+> +        * 0x00 - passing through the replicator unimpeded
+> +        * 0xff - disable (or impede) the flow of ATB data
+> +        */
+> +       if (outport == 0) {
+> +               writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER0);
+> +               writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
+> +       } else {
+> +               writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER1);
+> +               writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+> +       }
+> +
+> +       CS_LOCK(drvdata->base);
+> +
+> +       dev_info(drvdata->dev, "REPLICATOR enabled\n");
+> +       return 0;
+> +}
+> +
+> +static void replicator_disable(struct coresight_device *csdev, int inport,
+> +                               int outport)
+> +{
+> +       struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+> +
+> +       CS_UNLOCK(drvdata->base);
+> +
+> +       /* disable the flow of ATB data through port */
+> +       if (outport == 0)
+> +               writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+> +       else
+> +               writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
+> +
+> +       CS_LOCK(drvdata->base);
+> +
+> +       pm_runtime_put(drvdata->dev);
+> +
+> +       dev_info(drvdata->dev, "REPLICATOR disabled\n");
+> +}
+> +
+> +static const struct coresight_ops_link replicator_link_ops = {
+> +       .enable         = replicator_enable,
+> +       .disable        = replicator_disable,
+> +};
+> +
+> +static const struct coresight_ops replicator_cs_ops = {
+> +       .link_ops       = &replicator_link_ops,
+> +};
+> +
+> +static int replicator_probe(struct amba_device *adev, const struct amba_id *id)
+> +{
+> +       int ret;
+> +       struct device *dev = &adev->dev;
+> +       struct resource *res = &adev->res;
+> +       struct coresight_platform_data *pdata = NULL;
+> +       struct replicator_state *drvdata;
+> +       struct coresight_desc *desc;
+> +       struct device_node *np = adev->dev.of_node;
+> +       void __iomem *base;
+> +
+> +       if (np) {
+> +               pdata = of_get_coresight_platform_data(dev, np);
+> +               if (IS_ERR(pdata))
+> +                       return PTR_ERR(pdata);
+> +               adev->dev.platform_data = pdata;
+> +       }
+> +
+> +       drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +       if (!drvdata)
+> +               return -ENOMEM;
+> +
+> +       drvdata->dev = &adev->dev;
+> +       drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
+> +       if (!IS_ERR(drvdata->atclk)) {
+> +               ret = clk_prepare_enable(drvdata->atclk);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       /* Validity for the resource is already checked by the AMBA core */
+> +       base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       drvdata->base = base;
+> +       dev_set_drvdata(dev, drvdata);
+> +       pm_runtime_put(&adev->dev);
+> +
+> +       desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
+> +       if (!desc)
+> +               return -ENOMEM;
+> +
+> +       desc->type = CORESIGHT_DEV_TYPE_LINK;
+> +       desc->subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
+> +       desc->ops = &replicator_cs_ops;
+> +       desc->pdata = adev->dev.platform_data;
+> +       desc->dev = &adev->dev;
+> +       drvdata->csdev = coresight_register(desc);
+> +       if (IS_ERR(drvdata->csdev))
+> +               return PTR_ERR(drvdata->csdev);
+> +
+> +       dev_info(dev, "%s initialized\n", (char *)id->data);
+> +       return 0;
+> +}
+> +
+> +static int replicator_remove(struct amba_device *adev)
+> +{
+> +       struct replicator_state *drvdata = amba_get_drvdata(adev);
+> +
+> +       pm_runtime_disable(&adev->dev);
+> +       coresight_unregister(drvdata->csdev);
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +static int replicator_runtime_suspend(struct device *dev)
+> +{
+> +       struct replicator_state *drvdata = dev_get_drvdata(dev);
+> +
+> +       if (drvdata && !IS_ERR(drvdata->atclk))
+> +               clk_disable_unprepare(drvdata->atclk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int replicator_runtime_resume(struct device *dev)
+> +{
+> +       struct replicator_state *drvdata = dev_get_drvdata(dev);
+> +
+> +       if (drvdata && !IS_ERR(drvdata->atclk))
+> +               clk_prepare_enable(drvdata->atclk);
+> +
+> +       return 0;
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops replicator_dev_pm_ops = {
+> +       SET_RUNTIME_PM_OPS(replicator_runtime_suspend,
+> +                          replicator_runtime_resume,
+> +                          NULL)
+> +};
+> +
+> +static struct amba_id replicator_ids[] = {
+> +       {
+> +               .id     = 0x0003b909,
+> +               .mask   = 0x0003ffff,
+> +               .data   = "REPLICATOR 1.0",
+> +       },
+> +       { 0, 0 },
+> +};
+> +
+> +static struct amba_driver replicator_driver = {
+> +       .drv = {
+> +               .name   = "coresight-replicator-qcom",
+> +               .pm     = &replicator_dev_pm_ops,
+> +       },
+> +       .probe          = replicator_probe,
+> +       .remove         = replicator_remove,
+> +       .id_table       = replicator_ids,
+> +};
+> +
+> +module_amba_driver(replicator_driver);
+> --
+> 1.9.1
+>
 
-Oh, that's a bit odd:  That would mean that the defaults are also broken on
-big-endian platforms, and fixing them would introduce the bug here, unless your
-patch is applied.
-
-Any idea why musb uses the __raw_* functions to start with? Can we change
-them to read?_relaxed()/write?_relaxed() now that those are available on
-all architectures?
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied - thanks.
