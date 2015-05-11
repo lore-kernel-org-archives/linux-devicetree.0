@@ -1,317 +1,69 @@
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v12 17/21] h8300: clock driver
-Date: Mon, 11 May 2015 15:26:36 +0900
-Message-ID: <1431325600-12333-18-git-send-email-ysato@users.sourceforge.jp>
+From: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Subject: [PATCH v12 04/21] sh-sci: Add h8300 SCI
+Date: Mon, 11 May 2015 15:26:23 +0900
+Message-ID: <1431325600-12333-5-git-send-email-ysato@users.sourceforge.jp>
 References: <1431325600-12333-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431325600-12333-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431325600-12333-1-git-send-email-ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- .../bindings/clock/renesas,h8300-div-clock.txt     |  24 ++++
- .../bindings/clock/renesas,h8s2678-pll-clock.txt   |  23 ++++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/h8300/Makefile                         |   2 +
- drivers/clk/h8300/clk-div.c                        |  53 ++++++++
- drivers/clk/h8300/clk-h8s2678.c                    | 147 +++++++++++++++++++++
- 6 files changed, 250 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,h8300-div-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,h8s2678-pll-clock.txt
- create mode 100644 drivers/clk/h8300/Makefile
- create mode 100644 drivers/clk/h8300/clk-div.c
- create mode 100644 drivers/clk/h8300/clk-h8s2678.c
+ Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 1 +
+ drivers/tty/serial/Kconfig                                      | 2 +-
+ drivers/tty/serial/sh-sci.c                                     | 6 ++++++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,h8300-div-clock.txt b/Documentation/devicetree/bindings/clock/renesas,h8300-div-clock.txt
-new file mode 100644
-index 0000000..36c2b52
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,h8300-div-clock.txt
-@@ -0,0 +1,24 @@
-+* Renesas H8/300 divider clock
-+
-+Required Properties:
-+
-+  - compatible: Must be "renesas,sh73a0-h8300-div-clock"
-+
-+  - clocks: Reference to the parent clocks ("extal1" and "extal2")
-+
-+  - #clock-cells: Must be 1
-+
-+  - reg: Base address and length of the divide rate selector
-+
-+  - renesas,width: bit width of selector
-+
-+Example
-+-------
-+
-+		cclk: cclk {
-+			compatible = "renesas,h8300-div-clock";
-+			clocks = <&xclk>;
-+			#clock-cells = <0>;
-+			reg = <0xfee01b 2>;
-+			renesas,width = <2>;
-+		};
-diff --git a/Documentation/devicetree/bindings/clock/renesas,h8s2678-pll-clock.txt b/Documentation/devicetree/bindings/clock/renesas,h8s2678-pll-clock.txt
-new file mode 100644
-index 0000000..500cdadb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,h8s2678-pll-clock.txt
-@@ -0,0 +1,23 @@
-+Renesas H8S2678 PLL clock
-+
-+This device is Clock multiplyer
-+
-+Required Properties:
-+
-+  - compatible: Must be "renesas,h8s2678-pll-clock"
-+
-+  - clocks: Reference to the parent clocks
-+
-+  - #clock-cells: Must be 0
-+
-+  - reg: Two rate selector (Multiply / Divide) register address
-+
-+Example
-+-------
-+
-+		pllclk: pllclk {
-+			compatible = "renesas,h8s2678-pll-clock";
-+			clocks = <&xclk>;
-+			#clock-cells = <0>;
-+			reg = <0xfee03b 2>, <0xfee045 2>;
-+		};
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 3d00c25..9df871d 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -73,3 +73,4 @@ obj-$(CONFIG_ARCH_U8500)		+= ux500/
- obj-$(CONFIG_COMMON_CLK_VERSATILE)	+= versatile/
- obj-$(CONFIG_X86)			+= x86/
- obj-$(CONFIG_ARCH_ZYNQ)			+= zynq/
-+obj-$(CONFIG_H8300)		+= h8300/
-diff --git a/drivers/clk/h8300/Makefile b/drivers/clk/h8300/Makefile
-new file mode 100644
-index 0000000..b86427c3
---- /dev/null
-+++ b/drivers/clk/h8300/Makefile
-@@ -0,0 +1,2 @@
-+obj-y += clk-div.o
-+obj-$(CONFIG_H8S2678) += clk-h8s2678.o
-diff --git a/drivers/clk/h8300/clk-div.c b/drivers/clk/h8300/clk-div.c
-new file mode 100644
-index 0000000..56f9eba
---- /dev/null
-+++ b/drivers/clk/h8300/clk-div.c
-@@ -0,0 +1,53 @@
-+/*
-+ * H8/300 divide clock driver
-+ *
-+ * Copyright 2015 Yoshinori Sato <ysato@users.sourceforge.jp>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+static DEFINE_SPINLOCK(clklock);
-+
-+static void __init h8300_div_clk_setup(struct device_node *node)
-+{
-+	unsigned int num_parents;
-+	struct clk *clk;
-+	const char *clk_name = node->name;
-+	const char *parent_name;
-+	void __iomem *divcr = NULL;
-+	int width;
-+
-+	num_parents = of_clk_get_parent_count(node);
-+	if (num_parents < 1) {
-+		pr_err("%s: no parent found", clk_name);
-+		return;
-+	}
-+
-+	divcr = of_iomap(node, 0);
-+	if (divcr == NULL) {
-+		pr_err("%s: failed to map divide register", clk_name);
-+		goto error;
-+	}
-+
-+	parent_name = of_clk_get_parent_name(node, 0);
-+	of_property_read_u32(node, "renesas,width", &width);
-+	clk = clk_register_divider(NULL, clk_name, parent_name,
-+				   CLK_SET_RATE_GATE, divcr, 0, width,
-+				   CLK_DIVIDER_POWER_OF_TWO, &clklock);
-+	if (!IS_ERR(clk)) {
-+		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+		return;
-+	}
-+	pr_err("%s: failed to register %s div clock (%ld)\n",
-+	       __func__, clk_name, PTR_ERR(clk));
-+error:
-+	if (divcr)
-+		iounmap(divcr);
-+}
-+
-+CLK_OF_DECLARE(h8300_div_clk, "renesas,h8300-div-clock", h8300_div_clk_setup);
-diff --git a/drivers/clk/h8300/clk-h8s2678.c b/drivers/clk/h8300/clk-h8s2678.c
-new file mode 100644
-index 0000000..4de7ee5
---- /dev/null
-+++ b/drivers/clk/h8300/clk-h8s2678.c
-@@ -0,0 +1,147 @@
-+/*
-+ * H8S2678 clock driver
-+ *
-+ * Copyright 2015 Yoshinori Sato <ysato@users.sourceforge.jp>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/device.h>
-+#include <linux/of_address.h>
-+
-+static DEFINE_SPINLOCK(clklock);
-+
-+#define MAX_FREQ 33333333
-+#define MIN_FREQ  8000000
-+
-+struct pll_clock {
-+	struct clk_hw hw;
-+	void __iomem *sckcr;
-+	void __iomem *pllcr;
-+};
-+
-+#define to_pll_clock(_hw) container_of(_hw, struct pll_clock, hw)
-+
-+static unsigned long pll_recalc_rate(struct clk_hw *hw,
-+		unsigned long parent_rate)
-+{
-+	struct pll_clock *pll_clock = to_pll_clock(hw);
-+	int mul = 1 << (ctrl_inb((unsigned long)pll_clock->pllcr) & 3);
-+
-+	return parent_rate * mul;
-+}
-+
-+static long pll_round_rate(struct clk_hw *hw, unsigned long rate,
-+				unsigned long *prate)
-+{
-+	int i, m = -1;
-+	long offset[3];
-+
-+	if (rate > MAX_FREQ)
-+		rate = MAX_FREQ;
-+	if (rate < MIN_FREQ)
-+		rate = MIN_FREQ;
-+
-+	for (i = 0; i < 3; i++)
-+		offset[i] = abs(rate - (*prate * (1 << i)));
-+	for (i = 0; i < 3; i++)
-+		if (m < 0)
-+			m = i;
-+		else
-+			m = (offset[i] < offset[m])?i:m;
-+
-+	return *prate * (1 << m);
-+}
-+
-+static int pll_set_rate(struct clk_hw *hw, unsigned long rate,
-+			unsigned long parent_rate)
-+{
-+	int pll;
-+	unsigned char val;
-+	unsigned long flags;
-+	struct pll_clock *pll_clock = to_pll_clock(hw);
-+
-+	pll = ((rate / parent_rate) / 2) & 0x03;
-+	spin_lock_irqsave(&clklock, flags);
-+	val = ctrl_inb((unsigned long)pll_clock->sckcr);
-+	val |= 0x08;
-+	ctrl_outb(val, (unsigned long)pll_clock->sckcr);
-+	val = ctrl_inb((unsigned long)pll_clock->pllcr);
-+	val &= ~0x03;
-+	val |= pll;
-+	ctrl_outb(val, (unsigned long)pll_clock->pllcr);
-+	spin_unlock_irqrestore(&clklock, flags);
-+	return 0;
-+}
-+
-+static const struct clk_ops pll_ops = {
-+	.recalc_rate = pll_recalc_rate,
-+	.round_rate = pll_round_rate,
-+	.set_rate = pll_set_rate,
-+};
-+
-+static void __init h8s2678_pll_clk_setup(struct device_node *node)
-+{
-+	unsigned int num_parents;
-+	struct clk *clk;
-+	const char *clk_name = node->name;
-+	const char *parent_name;
-+	struct pll_clock *pll_clock;
-+	struct clk_init_data init;
-+
-+	num_parents = of_clk_get_parent_count(node);
-+	if (num_parents < 1) {
-+		pr_err("%s: no parent found", clk_name);
-+		return;
-+	}
-+
-+
-+	pll_clock = kzalloc(sizeof(struct pll_clock), GFP_KERNEL);
-+	if (!pll_clock) {
-+		pr_err("%s: failed to alloc memory", clk_name);
-+		return;
-+	}
-+
-+	pll_clock->sckcr = of_iomap(node, 0);
-+	if (pll_clock->sckcr == NULL) {
-+		pr_err("%s: failed to map divide register", clk_name);
-+		goto error;
-+	}
-+
-+	pll_clock->pllcr = of_iomap(node, 1);
-+	if (pll_clock->pllcr == NULL) {
-+		pr_err("%s: failed to map multiply register", clk_name);
-+		goto error;
-+	}
-+
-+	parent_name = of_clk_get_parent_name(node, 0);
-+	init.name = clk_name;
-+	init.ops = &pll_ops;
-+	init.flags = CLK_IS_BASIC;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	pll_clock->hw.init = &init;
-+
-+	clk = clk_register(NULL, &pll_clock->hw);
-+	if (IS_ERR(clk))
-+		kfree(pll_clock);
-+	if (!IS_ERR(clk)) {
-+		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+		return;
-+	}
-+	pr_err("%s: failed to register %s div clock (%ld)\n",
-+	       __func__, clk_name, PTR_ERR(clk));
-+error:
-+	if (pll_clock) {
-+		if (pll_clock->sckcr)
-+			iounmap(pll_clock->sckcr);
-+		if (pll_clock->pllcr)
-+			iounmap(pll_clock->pllcr);
-+		kfree(pll_clock);
-+	}
-+}
-+
-+CLK_OF_DECLARE(h8s2678_div_clk, "renesas,h8s2678-pll-clock",
-+	       h8s2678_pll_clk_setup);
+diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+index ae73bb0..7534d46 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
++++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -29,6 +29,7 @@ Required properties:
+     - "renesas,scifa" for generic SCIFA compatible UART.
+     - "renesas,scifb" for generic SCIFB compatible UART.
+     - "renesas,hscif" for generic HSCIF compatible UART.
++    - "renesas,sci" for generic SCI compatible UART.
+ 
+     When compatible with the generic version, nodes must list the
+     SoC-specific version corresponding to the platform first followed by the
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index f8120c1..dea1eff 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -728,7 +728,7 @@ config SERIAL_IP22_ZILOG_CONSOLE
+ 
+ config SERIAL_SH_SCI
+ 	tristate "SuperH SCI(F) serial port support"
+-	depends on SUPERH || ARCH_SHMOBILE || COMPILE_TEST
++	depends on SUPERH || ARCH_SHMOBILE || H8300 || COMPILE_TEST
+ 	select SERIAL_CORE
+ 
+ config SERIAL_SH_SCI_NR_UARTS
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index e7d6566..1468ec5 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -2536,6 +2536,12 @@ static const struct of_device_id of_sci_match[] = {
+ 			.regtype = SCIx_HSCIF_REGTYPE,
+ 		},
+ 	}, {
++		.compatible = "renesas,sci",
++		.data = &(const struct sci_port_info) {
++			.type = PORT_SCI,
++			.regtype = SCIx_SCI_REGTYPE,
++		},
++	}, {
+ 		/* Terminator */
+ 	},
+ };
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
