@@ -1,675 +1,581 @@
-From: NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>
-Subject: [PATCH 4/4] tty/slaves: add a driver to power on/off UART attached
- devices.
-Date: Mon, 11 May 2015 11:56:14 +1000
-Message-ID: <20150511015614.5709.25308.stgit@notabene.brown>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH v8 3/3] leds: Add ktd2692 flash LED driver
+Date: Mon, 11 May 2015 11:24:19 +0900
+Message-ID: <555012D3.2060206@samsung.com>
+References: <1431054225-16635-1-git-send-email-ingi2.kim@samsung.com>
+ <1431054225-16635-4-git-send-email-ingi2.kim@samsung.com>
+ <554C74EB.8070905@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150511013540.5709.93626.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
-Cc: GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <554C74EB.8070905@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sakari.ailus@iki.fi, varkabhadram@gmail.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-If a platform has a particular device permanently attached to a UART,
-there may be out-of-band signaling necessary to power the device
-on and off.
+Hi Jacek,
+Thanks for the review
 
-This driver controls that signalling for a number of different devices.
-It can
- - enable/disable a regulator
- - toggle a GPIO
- - register an 'rfkill' which can force the device to be off.
+I can improve this driver for your attention
+I'm trying to rebase source code for merging it and resending soon.
 
-When the rfkill is absent or unblocked, the device will be on when the
-associated tty device is open, and closed otherwise.
+Thank you
 
-Signed-off-by: NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>
----
- .../bindings/uart_slave/wi2wi,w2cbw003.txt         |   19 +
- .../bindings/uart_slave/wi2wi,w2sg0004.txt         |   37 +
- .../devicetree/bindings/vendor-prefixes.txt        |    1 
- drivers/tty/serial/slave/Kconfig                   |   15 +
- drivers/tty/serial/slave/Makefile                  |    1 
- drivers/tty/serial/slave/serial-power-manager.c    |  510 ++++++++++++++++++++
- 6 files changed, 583 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt
- create mode 100644 Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt
- create mode 100644 drivers/tty/serial/slave/serial-power-manager.c
+On 2015=EB=85=84 05=EC=9B=94 08=EC=9D=BC 17:33, Jacek Anaszewski wrote:
+> Hi Ingi,
+>=20
+> Thanks for the update. It looks like we're almost there.
+> I can see only two minor issues.
+>=20
+> On 05/08/2015 05:03 AM, Ingi Kim wrote:
+>> This patch adds a driver to support the ktd2692 flash LEDs.
+>> ktd2692 can control flash current by ExpressWire interface.
+>>
+>> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+>> Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+>> Reviewed-by: Varka Bhadram <varkabhadram@gmail.com>
+>> ---
+>>   drivers/leds/Kconfig        |   9 +
+>>   drivers/leds/Makefile       |   1 +
+>>   drivers/leds/leds-ktd2692.c | 443 ++++++++++++++++++++++++++++++++=
+++++++++++++
+>>   3 files changed, 453 insertions(+)
+>>   create mode 100644 drivers/leds/leds-ktd2692.c
+>>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 51059bb..bfbdbd1 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -505,6 +505,15 @@ config LEDS_MENF21BMC
+>>         This driver can also be built as a module. If so the module
+>>         will be called leds-menf21bmc.
+>>
+>> +config LEDS_KTD2692
+>> +    tristate "KTD2692 LED flash support"
+>=20
+> Please keep the style of description in line with the existing
+> drivers. How about:
+>=20
+> "LED support for KTD2692 flash LED controller"
+>=20
 
-diff --git a/Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt b/Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt
-new file mode 100644
-index 000000000000..cfe6ee5e01e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/uart_slave/wi2wi,w2cbw003.txt
-@@ -0,0 +1,19 @@
-+wi2wi bluetooth module
-+
-+This is accessed via a serial port and is largely controlled via that
-+link.  Extra configuration is needed to enable power on/off
-+
-+Required properties:
-+- compatible: "wi2wi,w2cbw003"
-+- vdd-supply: regulator used to power the device.
-+
-+The node for this device must be the child of a UART.
-+
-+Example:
-+
-+&uart1 {
-+       bluetooth {
-+               compatible = "wi2wi,w2cbw003";
-+               vdd-supply = <&vaux4>;
-+       };
-+};
-diff --git a/Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt b/Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt
-new file mode 100644
-index 000000000000..6bcf3006c1a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/uart_slave/wi2wi,w2sg0004.txt
-@@ -0,0 +1,37 @@
-+wi2wi GPS device
-+
-+This is accessed via a serial port and is largely controlled via that
-+link.  Extra configuration is needed to enable power on/off
-+
-+Required properties:
-+- compatible: "wi2wi,w2sg0004"
-+- gpios: gpio used to toggle 'on/off' pin
-+- interrupts: interrupt generated by RX pin when device
-+      should be off
-+
-+Optional properties:
-+- vdd-supply: regulator used to power antenna
-+- pinctrl: "default", "off"
-+      if "off" setting is provided it is imposed when device should
-+      be off.  This can route the RX pin to a GPIO interrupt.
-+
-+The w2sg0004 uses a pin-toggle both to power-on and to
-+power-off, so the driver needs to detect what state it is in.
-+It does this by detecting characters on the RX line.
-+When it should be off, these can optionally be detected by a GPIO.
-+
-+The node for this device must be the child of a UART.
-+
-+Example:
-+&uart2 {
-+       gps {
-+               compatible = "wi2iw,w2sg0004";
-+               vdd-supply = <&vsim>;
-+               gpios = <&gpio5 17 0>; /* GPIO_145 */
-+               interrupts-extended = <&gpio5 19 0>; /* GPIO_147 */
-+               /* When off, switch RX to be an interrupt */
-+               pinctrl-names = "default", "off";
-+               pinctrl-0 = <&uart2_pins>;
-+               pinctrl-1 = <&uart2_pins_rx_gpio>;
-+       };
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 80339192c93e..45c703a3b29d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -202,6 +202,7 @@ variscite	Variscite Ltd.
- via	VIA Technologies, Inc.
- virtio	Virtual I/O Device Specification, developed by the OASIS consortium
- voipac	Voipac Technologies s.r.o.
-+wi2wi	wi2wi Inc.  http://www.wi2wi.com/
- winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
- wm	Wondermedia Technologies, Inc.
-diff --git a/drivers/tty/serial/slave/Kconfig b/drivers/tty/serial/slave/Kconfig
-index 6620e78b763e..46285d8895b7 100644
---- a/drivers/tty/serial/slave/Kconfig
-+++ b/drivers/tty/serial/slave/Kconfig
-@@ -4,3 +4,18 @@ menuconfig UART_SLAVE
- 	help
- 	 Devices which attach via a uart, but need extra
- 	 driver support for power management etc.
-+
-+if UART_SLAVE
-+
-+config SERIAL_POWER_MANAGER
-+	tristate "Power Management controller for serial-attached devices"
-+	default n
-+	help
-+	 Some devices permanently attached via a UART can benefit from
-+	 being power-managed when the tty device is opened or closed.
-+	 This driver can support several such devices with simple
-+	 power requirements such as enabling a regulator.
-+
-+	 If in doubt, say 'N'
-+
-+endif
-diff --git a/drivers/tty/serial/slave/Makefile b/drivers/tty/serial/slave/Makefile
-index aac8697fa406..5d9b3d373138 100644
---- a/drivers/tty/serial/slave/Makefile
-+++ b/drivers/tty/serial/slave/Makefile
-@@ -1,2 +1,3 @@
- 
- obj-$(CONFIG_UART_SLAVE) += uart_slave_core.o
-+obj-$(CONFIG_SERIAL_POWER_MANAGER) += serial-power-manager.o
-diff --git a/drivers/tty/serial/slave/serial-power-manager.c b/drivers/tty/serial/slave/serial-power-manager.c
-new file mode 100644
-index 000000000000..81b8f909fd3a
---- /dev/null
-+++ b/drivers/tty/serial/slave/serial-power-manager.c
-@@ -0,0 +1,510 @@
-+/*
-+ * Serial-power-manager
-+ * uart-slave device that intercepts open/close events on the tty,
-+ * and turns power on/off for the device which is connected.
-+ *
-+ * Currently supported devices:
-+ *  wi2wi,w2sg0004 - GPS with on/off toggle on a GPIO
-+ *  wi2wi,w2cbw003 - bluetooth port; powered by regulator.
-+ *
-+ * When appropriate, an RFKILL will be registered which
-+ * can power-down the device even when it is open.
-+ *
-+ * Device can be turned on either by
-+ *  - enabling a regulator.  Disable to turn off
-+ *  - toggling a GPIO.  Toggle again to turn off.  This requires
-+ *     that we know the current state.  It is assumed to be 'off'
-+ *     at boot, however if an interrupt can be generated when on,
-+ *     such as by connecting RX to a GPIO, that can be used to detect
-+ *     if the device is on when it should be off.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/err.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_device.h>
-+#include <linux/tty.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
-+#include <linux/rfkill.h>
-+
-+#include <linux/uart_slave.h>
-+
-+/* This is used for testing. Setting this module parameter
-+ * will simulate booting with the device "on"
-+ */
-+static bool toggle_on_probe = false;
-+module_param(toggle_on_probe, bool, 0);
-+MODULE_PARM_DESC(toggle_on_probe, "simulate power-on with devices active");
-+
-+struct spm_config {
-+	int	rfkill_type;		/* type of rfkill to register */
-+	int	toggle_time;		/* msec to pulse GPIO for on/off */
-+	int	toggle_gap;		/* minimum msecs between toggles */
-+	bool	off_in_suspend;
-+}
-+	simple_config = {
-+		.off_in_suspend = true,
-+	},
-+	w2sg_config = {
-+		.rfkill_type = RFKILL_TYPE_GPS,
-+		.toggle_time = 10,
-+		.toggle_gap = 500,
-+		.off_in_suspend = true,
-+	};
-+
-+const static struct of_device_id spm_dt_ids[] = {
-+       { .compatible = "wi2wi,w2sg0004", .data = &w2sg_config},
-+       { .compatible = "wi2wi,w2cbw003", .data = &simple_config},
-+       {}
-+};
-+
-+struct spm_data {
-+	const struct spm_config *config;
-+	struct gpio_desc *gpiod;
-+	int		irq;	/* irq line from RX pin when pinctrl
-+				 * set to 'idle' */
-+	struct regulator *reg;
-+
-+	unsigned long	toggle_time;
-+	unsigned long	toggle_gap;
-+	unsigned long	last_toggle;	/* jiffies when last toggle completed. */
-+	unsigned long	backoff;	/* jiffies since last_toggle when
-+					 * we try again
-+					 */
-+	enum {Idle, Down, Up} state;	/* state-machine state. */
-+
-+	int		open_cnt;
-+	bool		requested, is_on;
-+	bool		suspended;
-+	bool		reg_enabled;
-+
-+	struct pinctrl	*pins;
-+	struct pinctrl_state *pins_off;
-+
-+	struct delayed_work work;
-+	spinlock_t	lock;
-+	struct device	*dev;
-+
-+	struct rfkill	*rfkill;
-+
-+	int (*old_open)(struct tty_struct * tty, struct file * filp);
-+	void (*old_close)(struct tty_struct * tty, struct file * filp);
-+
-+};
-+
-+/* When a device is powered on/off by toggling a GPIO we perform
-+ * all the toggling via a workqueue to ensure only one toggle happens
-+ * at a time and to allow easy timing.
-+ * This is managed as a state machine which transitions
-+ *  Idle -> Down -> Up -> Idle
-+ * The GPIO is held down for toggle_time and then up for toggle_time,
-+ * and then we assume the device has changed state.
-+ * We never toggle until at least toggle_gap has passed since the
-+ * last toggle.
-+ */
-+static void toggle_work(struct work_struct *work)
-+{
-+	struct spm_data *data = container_of(
-+		work, struct spm_data, work.work);
-+
-+	if (data->gpiod == NULL)
-+		return;
-+
-+	spin_lock_irq(&data->lock);
-+	switch (data->state) {
-+	case Up:
-+		data->state = Idle;
-+		if (data->requested == data->is_on)
-+			break;
-+		if (!data->requested)
-+			/* Assume it is off unless activity is detected */
-+			break;
-+		/* Try again in a while unless we get some activity */
-+		dev_dbg(data->dev, "Wait %dusec until retry\n",
-+			jiffies_to_msecs(data->backoff));
-+		schedule_delayed_work(&data->work, data->backoff);
-+		break;
-+	case Idle:
-+		if (data->requested == data->is_on)
-+			break;
-+
-+		/* Time to toggle */
-+		dev_dbg(data->dev, "Starting toggle to turn %s\n",
-+			data->requested ? "on" : "off");
-+		data->state = Down;
-+		spin_unlock_irq(&data->lock);
-+		gpiod_set_value_cansleep(data->gpiod, 1);
-+		schedule_delayed_work(&data->work, data->toggle_time);
-+
-+		return;
-+
-+	case Down:
-+		data->state = Up;
-+		data->last_toggle = jiffies;
-+		dev_dbg(data->dev, "Toggle completed, should be %s now.\n",
-+			data->is_on ? "off" : "on");
-+		data->is_on = ! data->is_on;
-+		spin_unlock_irq(&data->lock);
-+
-+		gpiod_set_value_cansleep(data->gpiod, 0);
-+		schedule_delayed_work(&data->work, data->toggle_time);
-+
-+		return;
-+	}
-+	spin_unlock_irq(&data->lock);
-+}
-+
-+static irqreturn_t spm_isr(int irq, void *dev_id)
-+{
-+	struct spm_data *data = dev_id;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&data->lock, flags);
-+	if (!data->requested && !data->is_on && data->state == Idle &&
-+	    time_after(jiffies, data->last_toggle + data->backoff)) {
-+		data->is_on = 1;
-+		data->backoff *= 2;
-+		dev_dbg(data->dev, "Received data, must be on. Try to turn off\n");
-+		if (!data->suspended)
-+			schedule_delayed_work(&data->work, 0);
-+	}
-+	spin_unlock_irqrestore(&data->lock, flags);
-+	return IRQ_HANDLED;
-+}
-+
-+static void spm_on(struct spm_data *data)
-+{
-+	if (!data->rfkill || !rfkill_blocked(data->rfkill)) {
-+		unsigned long flags;
-+
-+		if (!data->reg_enabled &&
-+		    data->reg &&
-+		    regulator_enable(data->reg) == 0)
-+			data->reg_enabled = true;
-+
-+		spin_lock_irqsave(&data->lock, flags);
-+		if (!data->requested) {
-+			dev_dbg(data->dev, "TTY open - turn device on\n");
-+			data->requested = true;
-+			data->backoff = data->toggle_gap;
-+			if (data->irq > 0) {
-+				disable_irq(data->irq);
-+				pinctrl_pm_select_default_state(data->dev);
-+			}
-+			if (!data->suspended && data->state == Idle)
-+				schedule_delayed_work(&data->work, 0);
-+		}
-+		spin_unlock_irqrestore(&data->lock, flags);
-+	}
-+}
-+
-+static int spm_open(struct tty_struct *tty, struct file *filp)
-+{
-+	struct spm_data *data = dev_get_drvdata(tty->dev->parent);
-+
-+	data->open_cnt++;
-+	spm_on(data);
-+	if (data->old_open)
-+		return data->old_open(tty, filp);
-+	return -ENODEV;
-+}
-+
-+static void spm_off(struct spm_data *data)
-+{
-+	unsigned long flags;
-+
-+	if (data->reg && data->reg_enabled)
-+		if (regulator_disable(data->reg) == 0)
-+			data->reg_enabled = false;
-+
-+	spin_lock_irqsave(&data->lock, flags);
-+	if (data->requested) {
-+		data->requested = false;
-+		data->backoff = data->toggle_gap;
-+		if (data->pins_off) {
-+			pinctrl_select_state(data->pins,
-+					     data->pins_off);
-+			enable_irq(data->irq);
-+		}
-+		if (!data->suspended && data->state == Idle)
-+			schedule_delayed_work(&data->work, 0);
-+	}
-+	spin_unlock_irqrestore(&data->lock, flags);
-+}
-+
-+static void spm_close(struct tty_struct *tty, struct file *filp)
-+{
-+	struct spm_data *data = dev_get_drvdata(tty->dev->parent);
-+
-+	data->open_cnt--;
-+	if (!data->open_cnt) {
-+		dev_dbg(data->dev, "TTY closed - turn device off\n");
-+		spm_off(data);
-+	}
-+
-+	if (data->old_close)
-+		data->old_close(tty, filp);
-+}
-+
-+static int spm_rfkill_set_block(void *vdata, bool blocked)
-+{
-+	struct spm_data *data = vdata;
-+
-+	dev_dbg(data->dev, "rfkill_set_blocked %d\n", blocked);
-+	if (blocked)
-+		spm_off(data);
-+
-+	if (!blocked &&
-+	    data->open_cnt)
-+		spm_on(data);
-+
-+	return 0;
-+}
-+
-+static struct rfkill_ops spm_rfkill_ops = {
-+	.set_block = spm_rfkill_set_block,
-+};
-+
-+static int spm_suspend(struct device *dev)
-+{
-+	/* Ignore incoming data and just turn device off.
-+	 * we cannot really wait for a separate thread to
-+	 * do things, so we disable that and do it all
-+	 * here
-+	 */
-+	struct spm_data *data = dev_get_drvdata(dev);
-+
-+	spin_lock_irq(&data->lock);
-+	data->suspended = true;
-+	spin_unlock_irq(&data->lock);
-+	if (!data->config->off_in_suspend)
-+		return 0;
-+
-+	if (data->gpiod) {
-+
-+		cancel_delayed_work_sync(&data->work);
-+		if (data->state == Down) {
-+			dev_dbg(data->dev, "Suspending while GPIO down - raising\n");
-+			msleep(data->config->toggle_time);
-+			gpiod_set_value_cansleep(data->gpiod, 0);
-+			data->last_toggle = jiffies;
-+			data->is_on = !data->is_on;
-+			data->state = Up;
-+		}
-+		if (data->state == Up) {
-+			msleep(data->config->toggle_time);
-+			data->state = Idle;
-+		}
-+		if (data->is_on) {
-+			dev_dbg(data->dev, "Suspending while device on: toggling\n");
-+			gpiod_set_value_cansleep(data->gpiod, 1);
-+			msleep(data->config->toggle_time);
-+			gpiod_set_value_cansleep(data->gpiod, 0);
-+			data->is_on = 0;
-+		}
-+	}
-+
-+	if (data->reg && data->reg_enabled)
-+		if (regulator_disable(data->reg) == 0)
-+			data->reg_enabled = false;
-+
-+	return 0;
-+}
-+
-+static int spm_resume(struct device *dev)
-+{
-+	struct spm_data *data = dev_get_drvdata(dev);
-+
-+	spin_lock_irq(&data->lock);
-+	data->suspended = false;
-+	spin_unlock_irq(&data->lock);
-+	schedule_delayed_work(&data->work, 0);
-+
-+	if (data->open_cnt &&
-+	    (!data->rfkill || !rfkill_blocked(data->rfkill))) {
-+		if (!data->reg_enabled &&
-+		    data->reg &&
-+		    regulator_enable(data->reg) == 0)
-+			data->reg_enabled = true;
-+	}
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops spm_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(spm_suspend, spm_resume)
-+};
-+
-+static int spm_probe(struct device *dev)
-+{
-+	struct uart_slave *slave = container_of(dev, struct uart_slave, dev);
-+	struct spm_data *data;
-+	struct regulator *reg;
-+	int err;
-+	const struct of_device_id *id;
-+	const char *name;
-+
-+	if (dev->parent == NULL)
-+		return -ENODEV;
-+
-+	id = of_match_device(spm_dt_ids, dev);
-+	if (!id)
-+		return -ENODEV;
-+
-+	if (dev->of_node && dev->of_node->name)
-+		name = dev->of_node->name;
-+	else
-+		name = "serial-power-manager";
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->config = id->data;
-+	data->toggle_time = msecs_to_jiffies(data->config->toggle_time) + 1;
-+	data->toggle_gap = msecs_to_jiffies(data->config->toggle_gap) + 1;
-+	data->last_toggle = jiffies;
-+	data->backoff = data->toggle_gap;
-+	data->state = Idle;
-+	spin_lock_init(&data->lock);
-+	INIT_DELAYED_WORK(&data->work, toggle_work);
-+
-+	/* If a regulator is provided, it is enabled on 'open'
-+	 * and disabled on 'release'
-+	 */
-+	reg = devm_regulator_get(dev, "vdd");
-+	if (IS_ERR(reg)) {
-+		err = PTR_ERR(reg);
-+		if (err != -ENODEV)
-+			goto out;
-+	} else
-+		data->reg = reg;
-+
-+	/* If an irq is provided, any transitions are taken as
-+	 * indication that the device is currently "on"
-+	 */
-+	data->irq = of_irq_get(dev->of_node, 0);
-+	if (data->irq < 0) {
-+		err = data->irq;
-+		if (err != -EINVAL)
-+			goto out;
-+	} else {
-+		dev_dbg(dev, "IRQ configured: %d\n", data->irq);
-+
-+		irq_set_status_flags(data->irq, IRQ_NOAUTOEN);
-+		err = devm_request_irq(dev, data->irq, spm_isr,
-+				       IRQF_TRIGGER_FALLING,
-+				       name, data);
-+
-+		if (err)
-+			goto out;
-+
-+	}
-+
-+	/* If a gpio is provided, then it is used to turn the device
-+	 * on/off.
-+	 * The GPIO is toggled to change the state of the device.
-+	 * A "toggle" involves holding the GPIO active for toggle_time.
-+	 */
-+	data->gpiod = devm_gpiod_get(dev, NULL, GPIOD_OUT_LOW);
-+	if (IS_ERR(data->gpiod)) {
-+		err = PTR_ERR(data->gpiod);
-+		if (err != -ENOENT)
-+			goto out;
-+		data->gpiod = NULL;
-+	} else
-+		dev_dbg(dev, "GPIO configured: %d\n",
-+			desc_to_gpio(data->gpiod));
-+
-+	/* If an 'off' pinctrl state is defined, we apply that
-+	 * when the device is assumed to be off.  This is expected to
-+	 * route the 'rx' line to the 'irq' interrupt.
-+	 */
-+	data->pins = devm_pinctrl_get(dev);
-+	if (data->pins && data->irq > 0) {
-+		data->pins_off = pinctrl_lookup_state(data->pins, "off");
-+		if (IS_ERR(data->pins_off))
-+			data->pins_off = NULL;
-+	}
-+
-+	if (data->config->rfkill_type) {
-+		data->rfkill = rfkill_alloc(name, dev,
-+					    data->config->rfkill_type,
-+					    &spm_rfkill_ops, data);
-+		if (!data->rfkill) {
-+			err = -ENOMEM;
-+			goto out;
-+		}
-+		err = rfkill_register(data->rfkill);
-+		if (err) {
-+			dev_err(dev, "Cannot register rfkill device");
-+			rfkill_destroy(data->rfkill);
-+			goto out;
-+		}
-+	}
-+	dev_set_drvdata(dev, data);
-+	data->dev = dev;
-+	data->old_open = slave->ops.open;
-+	data->old_close = slave->ops.close;
-+	slave->ops.open = spm_open;
-+	slave->ops.close = spm_close;
-+	uart_slave_add_tty(slave);
-+
-+	if (data->pins_off)
-+		pinctrl_select_state(data->pins, data->pins_off);
-+	if (data->irq > 0)
-+		enable_irq(data->irq);
-+
-+	if (toggle_on_probe && data->gpiod) {
-+		dev_dbg(data->dev, "Performing initial toggle\n");
-+		gpiod_set_value_cansleep(data->gpiod, 1);
-+		msleep(data->config->toggle_time);
-+		gpiod_set_value_cansleep(data->gpiod, 0);
-+		msleep(data->config->toggle_time);
-+	}
-+	err = 0;
-+out:
-+	dev_dbg(data->dev, "Probed: err=%d\n", err);
-+	return err;
-+}
-+
-+static int spm_remove(struct device *dev)
-+{
-+       struct spm_data *data = dev_get_drvdata(dev);
-+
-+       if (data->rfkill) {
-+               rfkill_unregister(data->rfkill);
-+               rfkill_destroy(data->rfkill);
-+       }
-+       return 0;
-+}
-+
-+static struct device_driver spm_driver = {
-+	.name		= "serial-power-manager",
-+	.owner		= THIS_MODULE,
-+	.of_match_table	= spm_dt_ids,
-+	.probe		= spm_probe,
-+	.remove		= spm_remove,
-+};
-+
-+static int __init spm_init(void)
-+{
-+       return uart_slave_driver_register(&spm_driver);
-+}
-+module_init(spm_init);
-+
-+static void __exit spm_exit(void)
-+{
-+	driver_unregister(&spm_driver);
-+}
-+module_exit(spm_exit);
-+
-+MODULE_AUTHOR("NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>");
-+MODULE_DEVICE_TABLE(of, spm_dt_ids);
-+MODULE_DESCRIPTION("Power management for Serial-attached device.");
-+MODULE_LICENSE("GPL v2");
+Sure, I'll change it
 
+>> +    depends on LEDS_CLASS_FLASH && GPIOLIB && OF
+>> +    help
+>> +      This option enables support for KTD2692 LED flash connected
+>> +      through ExpressWire interface.
+>> +
+>> +      Say Y to enable this driver.
+>> +
+>>   comment "LED driver for blink(1) USB RGB LED is under Special HID =
+drivers (HID_THINGM)"
+>>
+>>   config LEDS_BLINKM
+>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>> index a739ae2..ed5ed79 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -59,6 +59,7 @@ obj-$(CONFIG_LEDS_BLINKM)        +=3D leds-blinkm.=
+o
+>>   obj-$(CONFIG_LEDS_SYSCON)        +=3D leds-syscon.o
+>>   obj-$(CONFIG_LEDS_VERSATILE)        +=3D leds-versatile.o
+>>   obj-$(CONFIG_LEDS_MENF21BMC)        +=3D leds-menf21bmc.o
+>> +obj-$(CONFIG_LEDS_KTD2692)        +=3D leds-ktd2692.o
+>>
+>>   # LED SPI Drivers
+>>   obj-$(CONFIG_LEDS_DAC124S085)        +=3D leds-dac124s085.o
+>> diff --git a/drivers/leds/leds-ktd2692.c b/drivers/leds/leds-ktd2692=
+=2Ec
+>> new file mode 100644
+>> index 0000000..9d878a4
+>> --- /dev/null
+>> +++ b/drivers/leds/leds-ktd2692.c
+>> @@ -0,0 +1,443 @@
+>> +/*
+>> + * LED driver : leds-ktd2692.c
+>> + *
+>> + * Copyright (C) 2015 Samsung Electronics
+>> + * Ingi Kim <ingi2.kim@samsung.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or mo=
+dify
+>> + * it under the terms of the GNU General Public License version 2 a=
+s
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/led-class-flash.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/workqueue.h>
+>> +
+>> +/* Value related the movie mode */
+>> +#define KTD2692_MOVIE_MODE_CURRENT_LEVELS    16
+>> +#define KTD2692_MM_TO_FL_RATIO(x)        ((x) / 3)
+>> +#define KTD2962_MM_MIN_CURR_THRESHOLD_SCALE    8
+>> +
+>> +/* Value related the flash mode */
+>> +#define KTD2692_FLASH_MODE_TIMEOUT_LEVELS    8
+>> +#define KTD2692_FLASH_MODE_TIMEOUT_DISABLE    0
+>> +#define KTD2692_FLASH_MODE_CURR_PERCENT(x)    (((x) * 16) / 100)
+>> +
+>> +/* Macro for getting offset of flash timeout */
+>> +#define GET_TIMEOUT_OFFSET(timeout, step)    ((timeout) / (step))
+>> +
+>> +/* Base register address */
+>> +#define KTD2692_REG_LVP_BASE            0x00
+>> +#define KTD2692_REG_FLASH_TIMEOUT_BASE        0x20
+>> +#define KTD2692_REG_MM_MIN_CURR_THRESHOLD_BASE    0x40
+>> +#define KTD2692_REG_MOVIE_CURRENT_BASE        0x60
+>> +#define KTD2692_REG_FLASH_CURRENT_BASE        0x80
+>> +#define KTD2692_REG_MODE_BASE            0xA0
+>> +
+>> +/* Set bit coding time for expresswire interface */
+>> +#define KTD2692_TIME_RESET_US            700
+>> +#define KTD2692_TIME_DATA_START_TIME_US        10
+>> +#define KTD2692_TIME_HIGH_END_OF_DATA_US    350
+>> +#define KTD2692_TIME_LOW_END_OF_DATA_US        10
+>> +#define KTD2692_TIME_SHORT_BITSET_US        4
+>> +#define KTD2692_TIME_LONG_BITSET_US        12
+>> +
+>> +/* KTD2692 default length of name */
+>> +#define KTD2692_NAME_LENGTH            20
+>> +
+>> +enum ktd2692_bitset {
+>> +    KTD2692_LOW =3D 0,
+>> +    KTD2692_HIGH,
+>> +};
+>> +
+>> +/* Movie / Flash Mode Control */
+>> +enum ktd2692_led_mode {
+>> +    KTD2692_MODE_DISABLE =3D 0,    /* default */
+>> +    KTD2692_MODE_MOVIE,
+>> +    KTD2692_MODE_FLASH,
+>> +};
+>> +
+>> +struct ktd2692_led_config_data {
+>> +    /* maximum LED current in movie mode */
+>> +    u32 movie_max_microamp;
+>> +    /* maximum LED current in flash mode */
+>> +    u32 flash_max_microamp;
+>> +    /* maximum flash timeout */
+>> +    u32 flash_max_timeout;
+>> +    /* max LED brightness level */
+>> +    enum led_brightness max_brightness;
+>> +};
+>> +
+>> +struct ktd2692_context {
+>> +    /* Related LED Flash class device */
+>> +    struct led_classdev_flash fled_cdev;
+>> +
+>> +    /* secures access to the device */
+>> +    struct mutex lock;
+>> +    struct regulator *regulator;
+>> +    struct work_struct work_brightness_set;
+>> +
+>> +    struct gpio_desc *aux_gpio;
+>> +    struct gpio_desc *ctrl_gpio;
+>> +
+>> +    enum ktd2692_led_mode mode;
+>> +    enum led_brightness torch_brightness;
+>> +};
+>> +
+>> +static struct ktd2692_context *fled_cdev_to_led(
+>> +                struct led_classdev_flash *fled_cdev)
+>> +{
+>> +    return container_of(fled_cdev, struct ktd2692_context, fled_cde=
+v);
+>> +}
+>> +
+>> +static void ktd2692_expresswire_start(struct ktd2692_context *led)
+>> +{
+>> +    gpiod_direction_output(led->ctrl_gpio, KTD2692_HIGH);
+>> +    udelay(KTD2692_TIME_DATA_START_TIME_US);
+>> +}
+>> +
+>> +static void ktd2692_expresswire_reset(struct ktd2692_context *led)
+>> +{
+>> +    gpiod_direction_output(led->ctrl_gpio, KTD2692_LOW);
+>> +    udelay(KTD2692_TIME_RESET_US);
+>> +}
+>> +
+>> +static void ktd2692_expresswire_end(struct ktd2692_context *led)
+>> +{
+>> +    gpiod_direction_output(led->ctrl_gpio, KTD2692_LOW);
+>> +    udelay(KTD2692_TIME_LOW_END_OF_DATA_US);
+>> +    gpiod_direction_output(led->ctrl_gpio, KTD2692_HIGH);
+>> +    udelay(KTD2692_TIME_HIGH_END_OF_DATA_US);
+>> +}
+>> +
+>> +static void ktd2692_expresswire_set_bit(struct ktd2692_context *led=
+, bool bit)
+>> +{
+>> +    /*
+>> +     * The Low Bit(0) and High Bit(1) is based on a time detection
+>> +     * algorithm between time low and time high
+>> +     * Time_(L_LB) : Low time of the Low Bit(0)
+>> +     * Time_(H_LB) : High time of the LOW Bit(0)
+>> +     * Time_(L_HB) : Low time of the High Bit(1)
+>> +     * Time_(H_HB) : High time of the High Bit(1)
+>> +     *
+>> +     * It can be simplified to:
+>> +     * Low Bit(0) : 2 * Time_(H_LB) < Time_(L_LB)
+>> +     * High Bit(1) : 2 * Time_(L_HB) < Time_(H_HB)
+>> +     * HIGH  ___           ____    _..     _________    ___
+>> +     *          |_________|    |_..  |____|         |__|
+>> +     * LOW        <L_LB>  <H_LB>     <L_HB>  <H_HB>
+>> +     *          [  Low Bit (0) ]     [  High Bit(1) ]
+>> +     */
+>> +    if (bit) {
+>> +        gpiod_direction_output(led->ctrl_gpio, KTD2692_LOW);
+>> +        udelay(KTD2692_TIME_SHORT_BITSET_US);
+>> +        gpiod_direction_output(led->ctrl_gpio, KTD2692_HIGH);
+>> +        udelay(KTD2692_TIME_LONG_BITSET_US);
+>> +    } else {
+>> +        gpiod_direction_output(led->ctrl_gpio, KTD2692_LOW);
+>> +        udelay(KTD2692_TIME_LONG_BITSET_US);
+>> +        gpiod_direction_output(led->ctrl_gpio, KTD2692_HIGH);
+>> +        udelay(KTD2692_TIME_SHORT_BITSET_US);
+>> +    }
+>> +}
+>> +
+>> +static void ktd2692_expresswire_write(struct ktd2692_context *led, =
+u8 value)
+>> +{
+>> +    int i;
+>> +
+>> +    ktd2692_expresswire_start(led);
+>> +    for (i =3D 7; i >=3D 0; i--)
+>> +        ktd2692_expresswire_set_bit(led, value & BIT(i));
+>> +    ktd2692_expresswire_end(led);
+>> +}
+>> +
+>> +static void ktd2692_brightness_set(struct ktd2692_context *led,
+>> +                   enum led_brightness brightness)
+>> +{
+>> +    mutex_lock(&led->lock);
+>> +
+>> +    if (brightness =3D=3D LED_OFF) {
+>> +        led->mode =3D KTD2692_MODE_DISABLE;
+>> +        gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
+>> +    } else {
+>> +        ktd2692_expresswire_write(led, brightness |
+>> +                    KTD2692_REG_MOVIE_CURRENT_BASE);
+>> +        led->mode =3D KTD2692_MODE_MOVIE;
+>> +    }
+>> +
+>> +    ktd2692_expresswire_write(led, led->mode | KTD2692_REG_MODE_BAS=
+E);
+>> +    mutex_unlock(&led->lock);
+>> +}
+>> +
+>> +static void ktd2692_brightness_set_work(struct work_struct *work)
+>> +{
+>> +    struct ktd2692_context *led =3D
+>> +        container_of(work, struct ktd2692_context, work_brightness_=
+set);
+>> +
+>> +    ktd2692_brightness_set(led, led->torch_brightness);
+>> +}
+>> +
+>> +static void ktd2692_led_brightness_set(struct led_classdev *led_cde=
+v,
+>> +                       enum led_brightness brightness)
+>> +{
+>> +    struct led_classdev_flash *fled_cdev =3D lcdev_to_flcdev(led_cd=
+ev);
+>> +    struct ktd2692_context *led =3D fled_cdev_to_led(fled_cdev);
+>> +
+>> +    led->torch_brightness =3D brightness;
+>> +    schedule_work(&led->work_brightness_set);
+>> +}
+>> +
+>> +static int ktd2692_led_brightness_set_sync(struct led_classdev *led=
+_cdev,
+>> +                       enum led_brightness brightness)
+>> +{
+>> +    struct led_classdev_flash *fled_cdev =3D lcdev_to_flcdev(led_cd=
+ev);
+>> +    struct ktd2692_context *led =3D fled_cdev_to_led(fled_cdev);
+>> +
+>> +    ktd2692_brightness_set(led, brightness);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int ktd2692_led_flash_strobe_set(struct led_classdev_flash *=
+fled_cdev,
+>> +                    bool state)
+>> +{
+>> +    struct ktd2692_context *led =3D fled_cdev_to_led(fled_cdev);
+>> +    struct led_flash_setting *timeout =3D &fled_cdev->timeout;
+>> +    u32 flash_tm_reg;
+>> +
+>> +    mutex_lock(&led->lock);
+>> +
+>> +    if (state =3D=3D 0) {
+>=20
+> Coccinelle raises a warning here:
+>=20
+> drivers/leds/leds-ktd2692.c:217:5-10: WARNING: Comparison of bool to =
+0/1
+>=20
+> I had to fix it also in my leds-aat1290 driver recently:)
+>=20
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, I'll refer to your driver code
+Thank you, so kindly :)
+
+>> +        led->mode =3D KTD2692_MODE_DISABLE;
+>> +        gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
+>> +    } else {
+>> +        flash_tm_reg =3D GET_TIMEOUT_OFFSET(timeout->val, timeout->=
+step);
+>> +        ktd2692_expresswire_write(led, flash_tm_reg
+>> +                | KTD2692_REG_FLASH_TIMEOUT_BASE);
+>> +
+>> +        led->mode =3D KTD2692_MODE_FLASH;
+>> +        gpiod_direction_output(led->aux_gpio, KTD2692_HIGH);
+>> +    }
+>> +
+>> +    ktd2692_expresswire_write(led, led->mode | KTD2692_REG_MODE_BAS=
+E);
+>> +
+>> +    fled_cdev->led_cdev.brightness =3D LED_OFF;
+>> +    led->mode =3D KTD2692_MODE_DISABLE;
+>> +
+>> +    mutex_unlock(&led->lock);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int ktd2692_led_flash_timeout_set(struct led_classdev_flash =
+*fled_cdev,
+>> +                     u32 timeout)
+>> +{
+>> +    return 0;
+>> +}
+>> +
+>> +static void ktd2692_init_movie_current_max(struct ktd2692_led_confi=
+g_data *cfg)
+>> +{
+>> +    u32 offset, step;
+>> +    u32 movie_current_microamp;
+>> +
+>> +    offset =3D KTD2692_MOVIE_MODE_CURRENT_LEVELS;
+>> +    step =3D KTD2692_MM_TO_FL_RATIO(cfg->flash_max_microamp)
+>> +        / KTD2692_MOVIE_MODE_CURRENT_LEVELS;
+>> +
+>> +    do {
+>> +        movie_current_microamp =3D step * offset;
+>> +        offset--;
+>> +    } while ((movie_current_microamp > cfg->movie_max_microamp) &&
+>> +        (offset > 0));
+>> +
+>> +    cfg->max_brightness =3D offset;
+>> +}
+>> +
+>> +static void ktd2692_init_flash_timeout(struct led_classdev_flash *f=
+led_cdev,
+>> +                       struct ktd2692_led_config_data *cfg)
+>> +{
+>> +    struct led_flash_setting *setting;
+>> +
+>> +    setting =3D &fled_cdev->timeout;
+>> +    setting->min =3D KTD2692_FLASH_MODE_TIMEOUT_DISABLE;
+>> +    setting->max =3D cfg->flash_max_timeout;
+>> +    setting->step =3D cfg->flash_max_timeout
+>> +            / (KTD2692_FLASH_MODE_TIMEOUT_LEVELS - 1);
+>> +    setting->val =3D cfg->flash_max_timeout;
+>> +}
+>> +
+>> +static void ktd2692_setup(struct ktd2692_context *led)
+>> +{
+>> +    led->mode =3D KTD2692_MODE_DISABLE;
+>> +    ktd2692_expresswire_reset(led);
+>> +    gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
+>> +
+>> +    ktd2692_expresswire_write(led, (KTD2962_MM_MIN_CURR_THRESHOLD_S=
+CALE - 1)
+>> +                 | KTD2692_REG_MM_MIN_CURR_THRESHOLD_BASE);
+>> +    ktd2692_expresswire_write(led, KTD2692_FLASH_MODE_CURR_PERCENT(=
+45)
+>> +                 | KTD2692_REG_FLASH_CURRENT_BASE);
+>> +}
+>> +
+>> +static int ktd2692_parse_dt(struct ktd2692_context *led, struct dev=
+ice *dev,
+>> +                struct ktd2692_led_config_data *cfg)
+>> +{
+>> +    struct device_node *np =3D dev->of_node;
+>> +    struct device_node *child_node;
+>> +    int ret;
+>> +
+>> +    if (!dev->of_node)
+>> +        return -ENXIO;
+>> +
+>> +    led->ctrl_gpio =3D devm_gpiod_get(dev, "ctrl");
+>> +    if (IS_ERR(led->ctrl_gpio)) {
+>> +        ret =3D PTR_ERR(led->ctrl_gpio);
+>> +        dev_err(dev, "cannot get ctrl-gpio %d\n", ret);
+>> +        return ret;
+>> +    }
+>> +
+>> +    led->aux_gpio =3D devm_gpiod_get(dev, "aux");
+>> +    if (IS_ERR(led->aux_gpio)) {
+>> +        ret =3D PTR_ERR(led->aux_gpio);
+>> +        dev_err(dev, "cannot get aux-gpio %d\n", ret);
+>> +        return ret;
+>> +    }
+>> +
+>> +    led->regulator =3D devm_regulator_get(dev, "vin");
+>> +    if (IS_ERR(led->regulator))
+>> +        led->regulator =3D NULL;
+>> +
+>> +    if (led->regulator) {
+>> +        ret =3D regulator_enable(led->regulator);
+>> +        if (ret)
+>> +            dev_err(dev, "Failed to enable supply: %d\n", ret);
+>> +    }
+>> +
+>> +    child_node =3D of_get_next_available_child(np, NULL);
+>> +    if (!child_node) {
+>> +        dev_err(dev, "No DT child node found for connected LED.\n")=
+;
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    led->fled_cdev.led_cdev.name =3D
+>> +        of_get_property(child_node, "label", NULL) ? : child_node->=
+name;
+>> +
+>> +    ret =3D of_property_read_u32(child_node, "led-max-microamp",
+>> +                   &cfg->movie_max_microamp);
+>> +    if (ret) {
+>> +        dev_err(dev, "failed to parse led-max-microamp\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    ret =3D of_property_read_u32(child_node, "flash-max-microamp",
+>> +                   &cfg->flash_max_microamp);
+>> +    if (ret) {
+>> +        dev_err(dev, "failed to parse flash-max-microamp\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    ret =3D of_property_read_u32(child_node, "flash-max-timeout-us"=
+,
+>> +                   &cfg->flash_max_timeout);
+>> +    if (ret)
+>> +        dev_err(dev, "failed to parse flash-max-timeout-us\n");
+>> +
+>> +    of_node_put(child_node);
+>> +    return ret;
+>> +}
+>> +
+>> +static const struct led_flash_ops flash_ops =3D {
+>> +    .strobe_set =3D ktd2692_led_flash_strobe_set,
+>> +    .timeout_set =3D ktd2692_led_flash_timeout_set,
+>> +};
+>> +
+>> +static int ktd2692_probe(struct platform_device *pdev)
+>> +{
+>> +    struct ktd2692_context *led;
+>> +    struct led_classdev *led_cdev;
+>> +    struct led_classdev_flash *fled_cdev;
+>> +    struct ktd2692_led_config_data led_cfg;
+>> +    int ret;
+>> +
+>> +    led =3D devm_kzalloc(&pdev->dev, sizeof(*led), GFP_KERNEL);
+>> +    if (!led)
+>> +        return -ENOMEM;
+>> +
+>> +    fled_cdev =3D &led->fled_cdev;
+>> +    led_cdev =3D &fled_cdev->led_cdev;
+>> +
+>> +    ret =3D ktd2692_parse_dt(led, &pdev->dev, &led_cfg);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    ktd2692_init_flash_timeout(fled_cdev, &led_cfg);
+>> +    ktd2692_init_movie_current_max(&led_cfg);
+>> +
+>> +    fled_cdev->ops =3D &flash_ops;
+>> +
+>> +    led_cdev->max_brightness =3D led_cfg.max_brightness;
+>> +    led_cdev->brightness_set =3D ktd2692_led_brightness_set;
+>> +    led_cdev->brightness_set_sync =3D ktd2692_led_brightness_set_sy=
+nc;
+>> +    led_cdev->flags |=3D LED_CORE_SUSPENDRESUME | LED_DEV_CAP_FLASH=
+;
+>> +
+>> +    mutex_init(&led->lock);
+>> +    INIT_WORK(&led->work_brightness_set, ktd2692_brightness_set_wor=
+k);
+>> +
+>> +    platform_set_drvdata(pdev, led);
+>> +
+>> +    ret =3D led_classdev_flash_register(&pdev->dev, fled_cdev);
+>> +    if (ret) {
+>> +        dev_err(&pdev->dev, "can't register LED %s\n", led_cdev->na=
+me);
+>> +        mutex_destroy(&led->lock);
+>> +        return ret;
+>> +    }
+>> +
+>> +    ktd2692_setup(led);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int ktd2692_remove(struct platform_device *pdev)
+>> +{
+>> +    struct ktd2692_context *led =3D platform_get_drvdata(pdev);
+>> +    int ret;
+>> +
+>> +    led_classdev_flash_unregister(&led->fled_cdev);
+>> +    cancel_work_sync(&led->work_brightness_set);
+>> +
+>> +    if (led->regulator) {
+>> +        ret =3D regulator_disable(led->regulator);
+>> +        if (ret)
+>> +            dev_err(&pdev->dev,
+>> +                "Failed to disable supply: %d\n", ret);
+>> +    }
+>> +
+>> +    mutex_destroy(&led->lock);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct of_device_id ktd2692_match[] =3D {
+>> +    { .compatible =3D "kinetic,ktd2692", },
+>> +    { /* sentinel */ },
+>> +};
+>> +
+>> +static struct platform_driver ktd2692_driver =3D {
+>> +    .driver =3D {
+>> +        .name  =3D "ktd2692",
+>> +        .of_match_table =3D ktd2692_match,
+>> +    },
+>> +    .probe  =3D ktd2692_probe,
+>> +    .remove =3D ktd2692_remove,
+>> +};
+>> +
+>> +module_platform_driver(ktd2692_driver);
+>> +
+>> +MODULE_AUTHOR("Ingi Kim <ingi2.kim@samsung.com>");
+>> +MODULE_DESCRIPTION("Kinetic KTD2692 LED driver");
+>> +MODULE_LICENSE("GPL v2");
+>>
+>=20
+>=20
