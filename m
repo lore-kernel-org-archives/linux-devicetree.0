@@ -1,56 +1,34 @@
-From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Subject: [PATCH v4 08/13] ARM: dts: exynos4: Use labels for overriding nodes in Exynos4412
-Date: Mon, 11 May 2015 22:42:48 +0900
-Message-ID: <1431351773-2031-9-git-send-email-k.kozlowski.k@gmail.com>
-References: <1431351773-2031-1-git-send-email-k.kozlowski.k@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1431351773-2031-1-git-send-email-k.kozlowski.k@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V8 2/6] ARM: dts: add imx7d soc dtsi file
+Date: Mon, 11 May 2015 21:51:42 +0800
+Message-ID: <20150511135141.GJ9347@dragon>
+References: <1431020158-13789-1-git-send-email-Frank.Li@freescale.com>
+ <1431020158-13789-3-git-send-email-Frank.Li@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1431020158-13789-3-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Usage of labels instead of full paths reduces possible mistakes when
-overriding nodes.
+On Fri, May 08, 2015 at 01:35:54AM +0800, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Add i.mx7d support:
+> 	imx7d dtsi part
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
----
- arch/arm/boot/dts/exynos4412.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+The commit log should be really improved a bit to briefly describe this
+new SoC.
 
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index 68ad43b391ae..b78ada70bd05 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -54,19 +54,19 @@
- 		};
- 	};
- 
--	combiner: interrupt-controller@10440000 {
--		samsung,combiner-nr = <20>;
--	};
--
- 	pmu {
- 		interrupts = <2 2>, <3 2>, <18 2>, <19 2>;
- 	};
-+};
- 
--	gic: interrupt-controller@10490000 {
--		cpu-offset = <0x4000>;
--	};
-+&pmu_system_controller {
-+	compatible = "samsung,exynos4412-pmu", "syscon";
-+};
- 
--	pmu_system_controller: system-controller@10020000 {
--		compatible = "samsung,exynos4412-pmu", "syscon";
--	};
-+&combiner {
-+	samsung,combiner-nr = <20>;
-+};
-+
-+&gic {
-+	cpu-offset = <0x4000>;
- };
--- 
-2.1.4
+Shawn
+
+> 
+> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
