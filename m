@@ -1,55 +1,72 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [v4.0: PATCH 2/3] ARM: dts: k2e: fix the netcp range size
-Date: Mon, 11 May 2015 14:05:29 -0400
-Message-ID: <1431367530-4924-3-git-send-email-m-karicheri2@ti.com>
-References: <1431367530-4924-1-git-send-email-m-karicheri2@ti.com>
+Subject: Re: [RFC] PCI: designware: missing *config* reg space
+Date: Mon, 11 May 2015 14:11:54 -0400
+Message-ID: <5550F0EA.7010906@ti.com>
+References: <553E9B9A.5090000@ti.com> <CAHM4w1krq0vHd6EMpKV-NhHGggDBrrDGZw=V3XLcQDZ7XsXbsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1431367530-4924-1-git-send-email-m-karicheri2@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ssantosh@kernel.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAHM4w1krq0vHd6EMpKV-NhHGggDBrrDGZw=V3XLcQDZ7XsXbsQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pratyush Anand <pratyush.anand@gmail.com>, Jingoo Han <jg1.han@samsung.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, KISHON VIJAY <kishon@ti.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Mohit ST <mohit.kumar.dhaka@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-k2e netcp range size is 16M (0x1000000) and not 0xffffff. This patch fixes
-this. Similarly fix the size of switch module register space to 0x20000.
+On 05/10/2015 08:54 AM, Pratyush Anand wrote:
+> On Tue, Apr 28, 2015 at 1:57 AM, Murali Karicheri <m-karicheri2@ti.com> wrote:
+>> All,
+>>
+>> I would like to take action to resolve the following print message thrown by
+>> PCI designware core driver when kernel boots up on Keystone.
+>>
+>> [    0.415778] keystone-pcie 21801000.pcie: missing *config* reg space
+>>
+>> As per DT documentation introduced by commit
+>> 4dd964df36d0e548e1806ec2ec275b62d4dc46e8 "PCI: designware: Look for
+>> configuration space in 'reg', not 'ranges'
+>>
+>> This is introduced to stop abusing the range property for defining resource
+>> for config space. However if the device binding doesn't have
+>> reg-name = "config" defined, this throws out an unnecessary log message
+>> at boot which seems to me not right. AFAIK, reg-names is not mandatory.
+>> config space address in Keystone case is defined using index. So for
+>> keystone this needs to be fixed.
+>>
+>> I propose to add the following check in the designware code to address
+>> this. Keystone uses an older version of the Designware IP and doesn't have
+>> the ATU support. So va_cfg0_base and va_cfg1_base are already set up in
+>> ks_dw_pcie_host_init() before calling dw_pcie_host_init() and points to the
+>> remote config space address (both same for keystone). I think for other DW
+>> drivers, these variables are NULL. So add a check and avoid this error
+>> message for Keystone. Any comments?
+>>
+> or may be just following one liner should do the job for you.
+>
+> diff --git a/drivers/pci/host/pcie-designware.c
+> b/drivers/pci/host/pcie-designware.c
+> index 2e9f84fdd9ce..4ff5308f0cc6 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -371,7 +371,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                  addrp = of_get_address(np, index, NULL, NULL);
+>                  pp->cfg0_mod_base = of_read_number(addrp, ns);
+>                  pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
+> -       } else {
+> +       } else if (!pp->va_cfg0_base) {
+>                  dev_err(pp->dev, "missing *config* reg space\n");
+>          }
+Yes. That will work. I will post a patch for this.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- arch/arm/boot/dts/k2e-netcp.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Murali
+>
+> ~Pratyush
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-diff --git a/arch/arm/boot/dts/k2e-netcp.dtsi b/arch/arm/boot/dts/k2e-netcp.dtsi
-index 4ab94c3..b13b3c9 100644
---- a/arch/arm/boot/dts/k2e-netcp.dtsi
-+++ b/arch/arm/boot/dts/k2e-netcp.dtsi
-@@ -113,7 +113,7 @@ netcp: netcp@24000000 {
- 	#size-cells = <1>;
- 
- 	/* NetCP address range */
--	ranges = <0 0x24000000 0xffffff>;
-+	ranges = <0 0x24000000 0x1000000>;
- 
- 	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
- 	dma-coherent;
-@@ -130,7 +130,7 @@ netcp: netcp@24000000 {
- 		gbe@200000 { /* ETHSS */
- 			label = "netcp-gbe";
- 			compatible = "ti,netcp-gbe-9";
--			reg = <0x200000 0x900>, <0x220000 0x1ffff>;
-+			reg = <0x200000 0x900>, <0x220000 0x20000>;
- 			/* enable-ale; */
- 			tx-queue = <896>;
- 			tx-channel = "nettx";
+
 -- 
-1.9.1
+Murali Karicheri
+Linux Kernel, Keystone
