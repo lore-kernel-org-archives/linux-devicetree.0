@@ -1,65 +1,58 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH V2 0/3] Pistachio USB2.0 PHY
-Date: Mon, 11 May 2015 20:15:01 +0530
-Message-ID: <5550C06D.2010409@ti.com>
-References: <1428444258-25852-1-git-send-email-abrestic@chromium.org> <CAL1qeaE0+aMLBgk8SKgJ3fXm==M2-Z_yEPYNVZ0yxSee-p7YOw@mail.gmail.com> <5549083F.8080505@imgtec.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v3 2/4] remoteproc: add a rproc ops for performing address
+ translation
+Date: Mon, 11 May 2015 09:55:09 -0500
+Message-ID: <5550C2CD.5070207@ti.com>
+References: <1427917039-43206-1-git-send-email-d-gerlach@ti.com> <1427917039-43206-3-git-send-email-d-gerlach@ti.com> <CAK=WgbaSD9tGVKhUkbL3JjtW9GuAR_fbWHG6rx1m_v9TDW0Osw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5549083F.8080505@imgtec.com>
+In-Reply-To: <CAK=WgbaSD9tGVKhUkbL3JjtW9GuAR_fbWHG6rx1m_v9TDW0Osw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 1428444258-25852-1-git-send-email-abrestic@chromium.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: devicetree@vger.kernel.org, James Hartley <james.hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Bresticker <abrestic@chromium.org>
+To: Ohad Ben-Cohen <ohad@wizery.com>, Dave Gerlach <d-gerlach@ti.com>
+Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ohad,
 
+On 05/09/2015 02:54 AM, Ohad Ben-Cohen wrote:
+> Hi Dave,
+> 
+> On Wed, Apr 1, 2015 at 10:37 PM, Dave Gerlach <d-gerlach@ti.com> wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> The rproc_da_to_va API is currently used to perform any device to
+>> kernel address translations to meet the different needs of the remoteproc
+>> core/drivers (eg: loading). The functionality is achieved within the
+>> remoteproc core, and is limited only for carveouts allocated within the
+>> core.
+>>
+>> A new rproc ops, da_to_va, is added to provide flexibility to platform
+>> implementations to perform the address translation themselves when the
+>> above conditions cannot be met by the implementations. The rproc_da_to_va()
+>> API is extended to invoke this ops if present, and fallback to regular
+>> processing if the platform implementation cannot provide the translation.
+>> This will allow any remoteproc implementations to translate addresses for
+>> dedicated memories like internal memories.
+> 
+> Can you please provide specific examples where this is needed and how
+> it is going to be used?
 
-On Tuesday 05 May 2015 11:43 PM, Ezequiel Garcia wrote:
-> Hi Kishon,
->
->>
->> This series adds support for the USB2.0 PHY present on the IMG Pistachio SoC.
->>
->> Based on mips-for-linux-next and tested on the IMG Pistachio BuB.  If possible,
->> I'd like this to go through the MIPS tree with Kishon's ACK.
->>
->
-> Tested-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
->
-> Can we have your Ack for this series so Ralf can pick it?
+We will be using this for the WkupM3 remoteproc driver, and also using
+it for a PRUSS remoteproc driver (on downstream kernel for now) on TI
+AM335x/AM437x SoCs. The driver uses a firmware where all segments are
+placed only in internal RAMs (nothing in DDR), and we use the remoteproc
+core's ELF loader code to perform the loading. We need a way for the
+remoteproc elf loader core to be able to translate these device
+addresses into a kernel mapped addresses so that the loader code can
+copy the firmware segments.
 
-sure..
+The previous attempt on this was to use a new resource type through the
+resource table, whereby we are publishing and storing the internal
+memory translations were stored in the remoteproc core [1].
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
->
-> Thanks!
-> Ezequiel
->
->> Cc: James Hartley <james.hartley@imgtec.com>
->> Cc: Damien Horsley <Damien.Horsley@imgtec.com>
->>
->> Changes from v1:
->>   - Added patch to enable PHY driver in pistachio_defconfig
->>   - Fixed a couple of spelling errors
->>
->> Andrew Bresticker (3):
->>    phy: Add binding document for Pistachio USB2.0 PHY
->>    phy: Add driver for Pistachio USB2.0 PHY
->>    MIPS: pistachio: Enable USB PHY driver in defconfig
->>
->>   .../devicetree/bindings/phy/pistachio-usb-phy.txt  |  29 +++
->>   arch/mips/configs/pistachio_defconfig              |   1 +
->>   drivers/phy/Kconfig                                |   7 +
->>   drivers/phy/Makefile                               |   1 +
->>   drivers/phy/phy-pistachio-usb.c                    | 206 +++++++++++++++++++++
->>   include/dt-bindings/phy/phy-pistachio-usb.h        |  16 ++
->>   6 files changed, 260 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->>   create mode 100644 drivers/phy/phy-pistachio-usb.c
->>   create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
->>
->> --
->> 2.2.0.rc0.207.ga3a616c
->>
->
+regards
+Suman
+
+[1] https://patchwork.kernel.org/patch/5602981/
