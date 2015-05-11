@@ -1,101 +1,229 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH RESEND v6 1/2] arm64: dts: Add the arasan sdhci nodes in apm-storm.dtsi
-Date: Mon, 11 May 2015 14:08:50 +0530
-Message-ID: <1431333531-30491-2-git-send-email-stripathi@apm.com>
-References: <1431333531-30491-1-git-send-email-stripathi@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431333531-30491-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 02/12] clocksource: sti: Provide support for the ST LPC
+ Clocksource IP
+Date: Mon, 11 May 2015 10:42:47 +0200
+Message-ID: <55506B87.3070807@linaro.org>
+References: <1431005924-21777-1-git-send-email-lee.jones@linaro.org> <1431005924-21777-3-git-send-email-lee.jones@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431005924-21777-3-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the arasan sdhci nodes to reuse the of-arasan
-driver for APM X-Gene SoC.
+On 05/07/2015 03:38 PM, Lee Jones wrote:
+> This IP is shared with Watchdog and RTC functionality.  Only one of
+> these IPs can be used at the same time.  We use the device-driver
+> model combined with a DT 'mode' property to enforce this.
+>
+> The ST LPC Clocksource IP can be used as the system (tick) timer.
+>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   drivers/clocksource/Kconfig         |   8 +++
+>   drivers/clocksource/Makefile        |   1 +
+>   drivers/clocksource/clksrc_st_lpc.c | 123 +++++++++++++++++++++++++=
++++++++++++
+>   3 files changed, 132 insertions(+)
+>   create mode 100644 drivers/clocksource/clksrc_st_lpc.c
+>
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
+g
+> index 68161f7..ac424cf 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -250,4 +250,12 @@ config CLKSRC_PXA
+>   	help
+>   	  This enables OST0 support available on PXA and SA-11x0
+>   	  platforms.
+> +
+> +config CLKSRC_ST_LPC
+> +	bool
+> +	depends on ARCH_STI
+> +	select CLKSRC_OF if OF
+> +	help
+> +	  Enable this option to use the Low Power controller timer
+> +	  as clocksource.
+>   endmenu
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makef=
+ile
+> index 752d5c7..e08da4d 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -51,3 +51,4 @@ obj-$(CONFIG_ARCH_INTEGRATOR_AP)	+=3D timer-integra=
+tor-ap.o
+>   obj-$(CONFIG_CLKSRC_VERSATILE)		+=3D versatile.o
+>   obj-$(CONFIG_CLKSRC_MIPS_GIC)		+=3D mips-gic-timer.o
+>   obj-$(CONFIG_ASM9260_TIMER)		+=3D asm9260_timer.o
+> +obj-$(CONFIG_CLKSRC_ST_LPC)		+=3D clksrc_st_lpc.o
+> diff --git a/drivers/clocksource/clksrc_st_lpc.c b/drivers/clocksourc=
+e/clksrc_st_lpc.c
+> new file mode 100644
+> index 0000000..18a7dcd0
+> --- /dev/null
+> +++ b/drivers/clocksource/clksrc_st_lpc.c
+> @@ -0,0 +1,123 @@
+> +/*
+> + * Clocksource using the Low Power Timer found in the Low Power Cont=
+roller (LPC)
+> + *
+> + * Copyright (C) 2015 STMicroelectronics =E2=80=93 All Rights Reserv=
+ed
+> + *
+> + * Author(s): Francesco Virlinzi <francesco.virlinzi-qxv4g6HH51o@public.gmane.org>
+> + *	      Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License as published=
+ by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/init.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +
+> +#include <dt-bindings/mfd/st-lpc.h>
+> +
+> +/* Low Power Timer */
+> +#define LPC_LPT_LSB_OFF		0x400
+> +#define LPC_LPT_MSB_OFF		0x404
+> +#define LPC_LPT_START_OFF	0x408
+> +
+> +static struct st_clksrc_ddata {
+> +	struct clk		*clk;
+> +	void __iomem		*base;
+> +} ddata;
+> +
+> +static void st_clksrc_reset(void)
+> +{
+> +	writel_relaxed(0, ddata.base + LPC_LPT_START_OFF);
+> +	writel_relaxed(0, ddata.base + LPC_LPT_MSB_OFF);
+> +	writel_relaxed(0, ddata.base + LPC_LPT_LSB_OFF);
+> +	writel_relaxed(1, ddata.base + LPC_LPT_START_OFF);
+> +}
+> +
+> +static int __init st_clksrc_init(void)
+> +{
+> +	unsigned long rate;
+> +	int ret;
+> +
+> +	st_clksrc_reset();
+> +
+> +	rate =3D clk_get_rate(ddata.clk);
+> +
+> +	ret =3D clocksource_mmio_init(ddata.base + LPC_LPT_LSB_OFF,
+> +				    "clksrc-st-lpc", rate, 300, 32,
+> +				    clocksource_mmio_readl_up);
+> +	if (ret) {
+> +		pr_err("clksrc-st-lpc: Failed to register clocksource\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int st_clksrc_setup_clk(struct device_node *np)
+> +{
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	clk =3D of_clk_get(np, 0);
+> +	if (IS_ERR(clk)) {
+> +		pr_err("clksrc-st-lpc: Failed to get LPC clock\n");
+> +		ret =3D PTR_ERR(clk);
+> +		return ret;
 
-Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm/apm-mustang.dts |  4 +++
- arch/arm64/boot/dts/apm/apm-storm.dtsi  | 43 +++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
+return PTR_ERR(clk);
 
-diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
-index 83578e7..7ccd517 100644
---- a/arch/arm64/boot/dts/apm/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
-@@ -52,3 +52,7 @@
- &xgenet {
- 	status = "ok";
- };
-+
-+&sdhci0 {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index c8d3e0e..b5d2698 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -145,6 +145,40 @@
- 				clock-output-names = "socplldiv2";
- 			};
+so you can get rid of the 'int ret' variable.
 
-+			ahbclk: ahbclk@1f2ac000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2ac000 0x0 0x1000
-+					0x0 0x17000000 0x0 0x2000>;
-+				reg-names = "csr-reg", "div-reg";
-+				csr-offset = <0x0>;
-+				csr-mask = <0x1>;
-+				enable-offset = <0x8>;
-+				enable-mask = <0x1>;
-+				divider-offset = <0x164>;
-+				divider-width = <0x5>;
-+				divider-shift = <0x0>;
-+				clock-output-names = "ahbclk";
-+			};
-+
-+			sdioclk: sdioclk@1f2ac000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2ac000 0x0 0x1000
-+					0x0 0x17000000 0x0 0x2000>;
-+				reg-names = "csr-reg", "div-reg";
-+				csr-offset = <0x0>;
-+				csr-mask = <0x2>;
-+				enable-offset = <0x8>;
-+				enable-mask = <0x2>;
-+				divider-offset = <0x178>;
-+				divider-width = <0x8>;
-+				divider-shift = <0x0>;
-+				clock-output-names = "sdioclk";
-+			};
-+
- 			qmlclk: qmlclk {
- 				compatible = "apm,xgene-device-clock";
- 				#clock-cells = <1>;
-@@ -533,6 +567,15 @@
- 			interrupts = <0x0 0x4f 0x4>;
- 		};
+> +	}
+> +
+> +	if (clk_prepare_enable(clk)) {
+> +		pr_err("clksrc-st-lpc: Failed to enable LPC clock\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!clk_get_rate(clk)) {
+> +		pr_err("clksrc-st-lpc: Failed to get LPC clock rate\n");
+> +		clk_disable_unprepare(clk);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ddata.clk =3D clk;
+> +
+> +	return 0;
+> +}
+> +
+> +static void __init st_clksrc_of_register(struct device_node *np)
+> +{
+> +	int ret;
+> +	uint32_t mode;
+> +
+> +	ret =3D of_property_read_u32(np, "st,lpc-mode", &mode);
+> +	if (ret) {
+> +		pr_err("clksrc-st-lpc: An LPC mode must be provided\n");
+> +		return;
+> +	}
+> +
+> +	/* LPC can either run as a Clocksource or in RTC or WDT mode */
+> +	if (mode !=3D ST_LPC_MODE_CLKSRC)
+> +		return;
 
-+		sdhci0: sdhci@1c000000 {
-+			compatible = "arasan,sdhci-4.9a";
-+			reg = <0x0 0x1c000000 0x0 0x100>;
-+			interrupts = <0x0 0x49 0x4>;
-+			dma-coherent;
-+			clock-names = "clk_xin", "clk_ahb";
-+			clocks = <&sdioclk 0>, <&ahbclk 0>;
-+		};
-+
- 		phy1: phy@1f21a000 {
- 			compatible = "apm,xgene-phy";
- 			reg = <0x0 0x1f21a000 0x0 0x100>;
+I am confused with this patch description + comment and the patch 1's=20
+description.
+
+=46or the former, I understand the LPC could be in RTC or WDT mode and=20
+used as a clocksource (clksrc + rtc / clksrc + wdt), for the latter I=20
+understand there are three modes clocksource, rtc and watchdog (mutuall=
+y=20
+exclusive). Could you clarify ?
+
+> +
+> +	ddata.base =3D of_iomap(np, 0);
+> +	if (!ddata.base) {
+> +		pr_err("clksrc-st-lpc: Unable to map iomem\n");
+> +		return;
+> +	}
+> +
+> +	if (st_clksrc_setup_clk(np)) {
+> +		iounmap(ddata.base);
+> +		return;
+> +	}
+> +
+> +	if (st_clksrc_init()) {
+> +		iounmap(ddata.base);
+> +		return;
+> +	}
+> +
+> +	pr_info("clksrc-st-lpc: clocksource initialised - running @ %luHz\n=
+",
+> +		clk_get_rate(ddata.clk));
+> +}
+> +CLOCKSOURCE_OF_DECLARE(ddata, "st,stih407-lpc", st_clksrc_of_registe=
+r);
+>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
 --
-1.8.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
