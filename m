@@ -1,81 +1,70 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: [PATCH v9 2/3] leds: ktd2692: add device tree bindings for ktd2692
-Date: Tue, 12 May 2015 17:37:56 +0900
-Message-ID: <1431419877-28339-3-git-send-email-ingi2.kim@samsung.com>
-References: <1431419877-28339-1-git-send-email-ingi2.kim@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1431419877-28339-1-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
+ platform
+Date: Tue, 12 May 2015 10:52:53 +0200
+Message-ID: <20150512085253.GA4606@amd>
+References: <20150409110634.GA27407@amd>
+ <552660C7.4020805@ti.com>
+ <552663C2.70308@ti.com>
+ <55277650.8070607@codeaurora.org>
+ <20150424132923.GA11729@amd>
+ <553A47D3.2070107@ti.com>
+ <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
+ <20150428134848.GC12732@n2100.arm.linux.org.uk>
+ <alpine.LFD.2.11.1504281127200.1582@knanqh.ubzr>
+ <20150506104504.GM2067@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150506104504.GM2067@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, H Hartley Sweeten <hsweeten@visionengravers.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree bindings for ktd2692 flash LEDs.
-Add Optional properties of child node for Flash LED
+On Wed 2015-05-06 11:45:04, Russell King - ARM Linux wrote:
+> On Tue, Apr 28, 2015 at 11:28:53AM -0400, Nicolas Pitre wrote:
+> > On Tue, 28 Apr 2015, Russell King - ARM Linux wrote:
+> > 
+> > > On Fri, Apr 24, 2015 at 03:46:56PM +0200, Geert Uytterhoeven wrote:
+> > > > So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
+> > > > That will benefit other drivers on ARM, too.
+> > > 
+> > > That's not going to happen.
+> > > 
+> > > I've had a patch which does that, but people are concerned that it changes
+> > > the behaviour of the functions by changing the access size, which could
+> > > cause regressions.  It seems people are far too worried about that to even
+> > > consider trying. :(
+> > 
+> > What about making the optimized implementation available via kconfig?
+> 
+> I'd prefer not to.  My personal feeling is to put the patch in and just be
+> done with it - these functions are supposed to be used on IO areas which
+> don't care about access size (in other words, are memory-like rather than
+> being register-like.)  Here's the rather old patch:
+> 
+> From: Russell King <rmk+kernel@arm.linux.org.uk>
+> Subject: [PATCH] ARM: optimize memset_io()/memcpy_fromio()/memcpy_toio()
+> 
+> If we are building for a LE platform, and we haven't overriden the
+> MMIO ops, then we can optimize the mem*io operations using the
+> standard string functions.
+> 
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 
-Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
-Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-Reviewed-by: Varka Bhadram <varkabhadram@gmail.com>
----
- .../devicetree/bindings/leds/leds-ktd2692.txt      | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-new file mode 100644
-index 0000000..8537374
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-@@ -0,0 +1,50 @@
-+* Kinetic Technologies - KTD2692 Flash LED Driver
-+
-+KTD2692 is the ideal power solution for high-power flash LEDs.
-+It uses ExpressWire single-wire programming for maximum flexibility.
-+
-+The ExpressWire interface through CTRL pin can control LED on/off and
-+enable/disable the IC, Movie(max 1/3 of Flash current) / Flash mode current,
-+Flash timeout, LVP(low voltage protection).
-+
-+Also, When the AUX pin is pulled high while CTRL pin is high,
-+LED current will be ramped up to the flash-mode current level.
-+
-+Required properties:
-+- compatible : Should be "kinetic,ktd2692".
-+- ctrl-gpios : Specifier of the GPIO connected to CTRL pin.
-+- aux-gpios : Specifier of the GPIO connected to AUX pin.
-+
-+Optional properties:
-+- vin-supply : "vin" LED supply (2.7V to 5.5V).
-+  See Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+A discrete LED element connected to the device must be represented by a child
-+node - See Documentation/devicetree/bindings/leds/common.txt
-+
-+Required properties for flash LED child nodes:
-+  See Documentation/devicetree/bindings/leds/common.txt
-+- led-max-microamp : Minimum Threshold for Timer protection
-+  is defined internally (Maximum 300mA).
-+- flash-max-microamp : Flash LED maximum current
-+  Formula : I(mA) = 15000 / Rset.
-+- flash-max-timeout-us : Flash LED maximum timeout.
-+
-+Optional properties for flash LED child nodes:
-+- label : See Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+
-+ktd2692 {
-+	compatible = "kinetic,ktd2692";
-+	ctrl-gpios = <&gpc0 1 0>;
-+	aux-gpios = <&gpc0 2 0>;
-+	vin-supply = <&vbat>;
-+
-+	flash-led {
-+		label = "ktd2692-flash";
-+		led-max-microamp = <300000>;
-+		flash-max-microamp = <1500000>;
-+		flash-max-timeout-us = <1835000>;
-+	};
-+};
+Works for me, framebuffer performance is back in "too fast to measure"
+range.
+
+When this is merged, should 981409b25e2a99409b26daa67293ca1cfd5ea0a0
+be reverted in -stable?
+
+Thanks,
+									Pavel
 -- 
-2.0.5
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
