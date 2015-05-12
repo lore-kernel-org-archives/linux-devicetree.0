@@ -1,36 +1,42 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 09/12] MAINTAINERS: Add the LPC Clocksource to STi maintained driver list
-Date: Tue, 12 May 2015 13:58:17 +0100
-Message-ID: <1431435500-22899-10-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2 12/12] ARM: STi: Update platform level menuconfig 'help'
+Date: Tue, 12 May 2015 13:58:20 +0100
+Message-ID: <1431435500-22899-13-git-send-email-lee.jones@linaro.org>
 References: <1431435500-22899-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431435500-22899-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431435500-22899-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de, wim@iguana.be, a.zummo@towertech.it, linux-watchdog@vger.kernel.org, rtc-linux@googlegroups.com, linux@roeck-us.net
+Cc: kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Encompass newer STiH4{07,10} and STiH418 SoC based platforms.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2bc71e7..af9e952 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1454,6 +1454,7 @@ S:	Maintained
- F:	arch/arm/mach-sti/
- F:	arch/arm/boot/dts/sti*
- F:	drivers/clocksource/arm_global_timer.c
-+F:	drivers/clocksource/clksrc_st_lpc.c
- F:	drivers/i2c/busses/i2c-st.c
- F:	drivers/media/rc/st_rc.c
- F:	drivers/mmc/host/sdhci-st.c
+Acked-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm/mach-sti/Kconfig | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+index cb886de..2a3bfaa 100644
+--- a/arch/arm/mach-sti/Kconfig
++++ b/arch/arm/mach-sti/Kconfig
+@@ -16,11 +16,10 @@ menuconfig ARCH_STI
+ 	select PL310_ERRATA_769419 if CACHE_L2X0
+ 	select RESET_CONTROLLER
+ 	help
+-	  Include support for STiH41x SOCs like STiH415/416 using the device tree
+-	  for discovery
+-	  More information at Documentation/arm/STiH41x and
+-	  at Documentation/devicetree
+-
++	  Include support for STMicroelectronics' STiH415/416, STiH407/10 and
++	  STiH418 family SoCs using the Device Tree for discovery.  More
++	  information can be found in Documentation/arm/sti/ and
++	  Documentation/devicetree.
+ 
+ if ARCH_STI
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
