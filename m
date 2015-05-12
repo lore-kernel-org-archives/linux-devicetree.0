@@ -1,100 +1,56 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] pwm: add Mediatek display PWM driver support
-Date: Tue, 12 May 2015 15:00:05 +0200
-Message-ID: <20150512130005.GS6325@pengutronix.de>
-References: <1431336382-13167-1-git-send-email-yh.huang@mediatek.com>
- <1431336382-13167-3-git-send-email-yh.huang@mediatek.com>
+From: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Subject: Re: [PATCH v7 3/3] I2C: mediatek: Add driver for MediaTek MT8173 I2C
+ controller
+Date: Tue, 12 May 2015 15:00:57 +0200
+Message-ID: <20150512130057.GC4447@schokonusskuchen.bad>
+References: <1430901427-65146-1-git-send-email-eddie.huang@mediatek.com>
+ <1430901427-65146-4-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1431336382-13167-3-git-send-email-yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1430901427-65146-4-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Liguo
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 11, 2015 at 05:26:22PM +0800, YH Huang wrote:
-> +
-> +static int mtk_disp_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct mtk_disp_pwm_chip *pwm;
 
-The struct mtk_disp_pwm_chip * is named 'mpc' in the other functions.
-For consistency reasons you should do that here aswell.
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +	struct resource *r;
-> +	int ret;
-> +
-> +	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
-> +	if (!pwm)
-> +		return -ENOMEM;
-> +
-> +	pwm->dev = &pdev->dev;
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pwm->mmio_base = devm_ioremap_resource(&pdev->dev, r);
-> +	if (IS_ERR(pwm->mmio_base))
-> +		return PTR_ERR(pwm->mmio_base);
-> +
-> +	pwm->clk_main = devm_clk_get(&pdev->dev, "main");
-> +	if (IS_ERR(pwm->clk_main))
-> +		return PTR_ERR(pwm->clk_main);
-> +	pwm->clk_mm = devm_clk_get(&pdev->dev, "mm");
-> +	if (IS_ERR(pwm->clk_mm))
-> +		return PTR_ERR(pwm->clk_mm);
-> +
-> +	ret = clk_prepare_enable(pwm->clk_main);
-> +	if (ret < 0)
-> +		return ret;
-> +	ret = clk_prepare_enable(pwm->clk_mm);
-> +	if (ret < 0) {
-> +		clk_disable_unprepare(pwm->clk_main);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pwm);
-> +
-> +	pwm->chip.dev = &pdev->dev;
-> +	pwm->chip.ops = &mtk_disp_pwm_ops;
-> +	pwm->chip.base = -1;
-> +	pwm->chip.npwm = NUM_PWM;
-> +
-> +	ret = pwmchip_add(&pwm->chip);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-> +		return ret;
+> +	if (i2c->irq_stat & I2C_RS_TRANSFER)
+> +		dev_dbg(i2c->dev, "addr: %x, restart transfer interrupt.\n",
+> +				msgs->addr);
 
-This error path leaves the clocks enabled.
+I'd tend to leave out this debug message. But you may leave it if you
+like. Rest of the patch looks okay.
 
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_disp_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct mtk_disp_pwm_chip *pc = platform_get_drvdata(pdev);
-> +
-> +	if (WARN_ON(!pc))
-> +		return -ENODEV;
-> +
-> +	clk_disable_unprepare(pc->clk_main);
-> +	clk_disable_unprepare(pc->clk_mm);
-> +
-> +	return pwmchip_remove(&pc->chip);
+Thanks!
 
-You should first remove the pwmchip and disable the clocks afterwards.
-Also note that this function can fail.
 
-Sascha
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJVUfmJAAoJEBQN5MwUoCm2DdoP/3ZYoROZlW7IDuykTUQw4iUl
+5dalmTI1vfkGW9EUBKCda6VawpgAMCD2ZED98QLIVnAiIr9R+V5QAts55pZhCuRF
+DMZjUQBeyhgFg3I5WQ6tyv2BH2J1UaTgR1NASf/KNwkQPxdafmySePiSkdmKFVgv
+UEGPulLfpwEC2pvfwuzQKrQFawp30L5j+tYB4l169CBUIHhCE6juXIZXM5/+5fTc
+Iz6F+xKsoRXqZejO1r/uUs2tKruzOxwxLl91WJNJZGvccq2Ycuusw/+csxuTMzjO
+XEnq9DjCcy9s4rNrUdJjJlQS1T6+SJezLlj05+6N7/juto/LhrMkB4pdVTGsvsEL
+qLs3AjaC/MeMkIuzl/umFP4UdbwEsi0AgB0NF2o2dDEXCE5TTRMlaMXp79tCtK8s
+8N/hN7W1lZvP5fgeqs79Tw8ZUfZhEw9D1KZ+frHYD5JXvET0JeFPqEhucW2hZ7rp
+yDl5FyZke7dkUuIs7/nBZtG7KbFeFutKkRgDXYRIhk7oURuHfkHJkLMHtdHJFOUD
+9ZoaOSHGi7UGAvXoOosMGtido/tyGBmE5bOdrnbOdqhGXqDW7IqTekfuo0yyCLal
+YepaTyCWpYo2DiBZKYJLI7S/jtubRNJVYO3hP6BoW5n8CnsHd8B6UHU4MClwroL4
+L+ymMrCbeRoT26Ct7/4u
+=1Pos
+-----END PGP SIGNATURE-----
+
+--oC1+HKm2/end4ao3--
