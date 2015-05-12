@@ -1,42 +1,111 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Tue, 12 May 2015 10:50:33 +0530
-Message-ID: <20150512052033.GC32300@linux>
-References: <20150505105714.GA22845@sirena.org.uk>
- <CAKohpo=09ZhXxh5Cm7Ww9Gy-AYRp9=j82tup6atVN+aOF8twdA@mail.gmail.com>
- <20150505171252.GI22845@sirena.org.uk>
- <CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com>
- <20150507055231.GB32399@codeaurora.org>
- <20150507110233.GR15510@sirena.org.uk>
- <20150507211855.GA2455@codeaurora.org>
- <20150507221842.GW22845@sirena.org.uk>
- <CAKohpomU8wm0T=A7EkosdOjXbP8q2Cb726Hsjh08KTKYjoz3-A@mail.gmail.com>
- <555000B6.2010107@ti.com>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: Re: [PATCH RESEND v6 1/2] arm64: dts: Add the arasan sdhci nodes in apm-storm.dtsi
+Date: Tue, 12 May 2015 11:03:46 +0530
+Message-ID: <CAOHikRAeOH5Pt4WZFk1C29dUytO7H0ox_dgq578oW19ue8Eb8Q@mail.gmail.com>
+References: <1431333531-30491-1-git-send-email-stripathi@apm.com>
+	<1431333531-30491-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <555000B6.2010107@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mike Turquette <mike.turquette@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1431333531-30491-2-git-send-email-stripathi@apm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10-05-15, 20:07, Nishanth Menon wrote:
-> just one minor concern being in the SoC end of the world :). In most
-> times, the current consumption for a specific OPP varies depending on
-> the specific location in the process node the die is -> this is even
-> true among a single lot of wafers as well. some SoC vendors use hot,
-> nominal and cold terminology to indicate the characteristics of the
-> specific sample.
-> 
-> it might help state which sample end of the spectrum we are talking
-> about here. reason being: if I put in values based on my board
-> measurement, the results may not be similar to what someone else's
-> sample be. Depending on technology, speed binning strategy used by the
-> vendor, temperature and few other characteristics, these numbers could
-> be widely divergent.
+Hi ,
 
-I don't have any clue about this.. :(
+On Mon, May 11, 2015 at 2:08 PM, Suman Tripathi <stripathi@apm.com> wrote:
+> This patch adds the arasan sdhci nodes to reuse the of-arasan
+> driver for APM X-Gene SoC.
+>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> ---
+>  arch/arm64/boot/dts/apm/apm-mustang.dts |  4 +++
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi  | 43 +++++++++++++++++++++++++++++++++
+>  2 files changed, 47 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> index 83578e7..7ccd517 100644
+> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> @@ -52,3 +52,7 @@
+>  &xgenet {
+>         status = "ok";
+>  };
+> +
+> +&sdhci0 {
+> +       status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> index c8d3e0e..b5d2698 100644
+> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> @@ -145,6 +145,40 @@
+>                                 clock-output-names = "socplldiv2";
+>                         };
+>
+> +                       ahbclk: ahbclk@1f2ac000 {
+> +                               compatible = "apm,xgene-device-clock";
+> +                               #clock-cells = <1>;
+> +                               clocks = <&socplldiv2 0>;
+> +                               reg = <0x0 0x1f2ac000 0x0 0x1000
+> +                                       0x0 0x17000000 0x0 0x2000>;
+> +                               reg-names = "csr-reg", "div-reg";
+> +                               csr-offset = <0x0>;
+> +                               csr-mask = <0x1>;
+> +                               enable-offset = <0x8>;
+> +                               enable-mask = <0x1>;
+> +                               divider-offset = <0x164>;
+> +                               divider-width = <0x5>;
+> +                               divider-shift = <0x0>;
+> +                               clock-output-names = "ahbclk";
+> +                       };
+> +
+> +                       sdioclk: sdioclk@1f2ac000 {
+> +                               compatible = "apm,xgene-device-clock";
+> +                               #clock-cells = <1>;
+> +                               clocks = <&socplldiv2 0>;
+> +                               reg = <0x0 0x1f2ac000 0x0 0x1000
+> +                                       0x0 0x17000000 0x0 0x2000>;
+> +                               reg-names = "csr-reg", "div-reg";
+> +                               csr-offset = <0x0>;
+> +                               csr-mask = <0x2>;
+> +                               enable-offset = <0x8>;
+> +                               enable-mask = <0x2>;
+> +                               divider-offset = <0x178>;
+> +                               divider-width = <0x8>;
+> +                               divider-shift = <0x0>;
+> +                               clock-output-names = "sdioclk";
+> +                       };
+> +
+>                         qmlclk: qmlclk {
+>                                 compatible = "apm,xgene-device-clock";
+>                                 #clock-cells = <1>;
+> @@ -533,6 +567,15 @@
+>                         interrupts = <0x0 0x4f 0x4>;
+>                 };
+>
+> +               sdhci0: sdhci@1c000000 {
+> +                       compatible = "arasan,sdhci-4.9a";
+> +                       reg = <0x0 0x1c000000 0x0 0x100>;
+> +                       interrupts = <0x0 0x49 0x4>;
+> +                       dma-coherent;
+> +                       clock-names = "clk_xin", "clk_ahb";
+> +                       clocks = <&sdioclk 0>, <&ahbclk 0>;
+> +               };
+> +
+>                 phy1: phy@1f21a000 {
+>                         compatible = "apm,xgene-phy";
+>                         reg = <0x0 0x1f21a000 0x0 0x100>;
+> --
+> 1.8.2.1
+>
 
-@Mark/stephen: Any inputs ?
+Can anyone from dt community review this patch ? I have changed the dts node
+names from sdhc to sdhci as per Arnd, Michael comments .
+
+-- 
+Thanks,
+with regards,
+Suman Tripathi
