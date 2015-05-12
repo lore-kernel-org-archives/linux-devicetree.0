@@ -1,102 +1,52 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 12/12] ARM: shmobile: koelsch dts: Add overlay for SCIFA5(c) on EXIO C
-Date: Tue, 12 May 2015 19:37:15 +0200
-Message-ID: <1431452235-11692-13-git-send-email-geert+renesas@glider.be>
-References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] of: base: upgrade initcall level of of_init from core to pure
+Date: Tue, 12 May 2015 18:38:02 +0100
+Message-ID: <1431452282-10207-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Provide access to SCIFA5(c) on EXIO Connector C.
+Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+devices with an OF node") adds the symlink `of_node` for each device
+pointing to it's device tree node while creating/initialising it.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+However the devicetree sysfs is created and setup in of_init which is
+executed at core_initcall level. For all the devices created at the core
+initcall before of_init, the following error is thrown:
+	"Error -2(-ENOENT) creating of_node link"
+
+Since the core_initcall is the earliest point where devices get
+registered, push initcall level of of_init from core to pure so that
+the devicetree sysfs is ready before any devices are registered.
+
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                         |  1 +
- .../boot/dts/r8a7791-koelsch-exio-c-scifa5-c.dtso  | 60 ++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-c.dtso
+ drivers/of/base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a5cf8a6daf12ea1a..096d4939991b33c5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -678,6 +678,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7791-koelsch-exio-c-scif3.dtbo \
- 	r8a7791-koelsch-exio-c-scif5.dtbo \
- 	r8a7791-koelsch-exio-c-scifa5-b.dtbo \
-+	r8a7791-koelsch-exio-c-scifa5-c.dtbo
- endif
- endif
- 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-c.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-c.dtso
-new file mode 100644
-index 0000000000000000..062cf6740207ddcf
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-c.dtso
-@@ -0,0 +1,60 @@
-+/*
-+ * Device Tree Overlay for SCIFA5(c) on r8a7791/Koelsch EXIO Connector C
-+ *
-+ * Copyright (C) 2015 Glider bvba
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ *
-+ * Pinout:
-+ *   - RXD = EXIO Connector C pin 39
-+ *   - TXD = EXIO Connector C pin 37
-+ *
-+ * Notes:
-+ *   - As these pins are shared with SDHI2, the latter is disabled first.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+/ {
-+	fragment@0 {
-+		target-path = "/aliases";
-+
-+		__overlay__ {
-+			/* serial11 = &scifa5; */
-+			serial11 = "/serial@e6c80000";
-+		};
-+	};
-+
-+	fragment@1 {
-+		target = <&pfc>;
-+
-+		__overlay__ {
-+			scifa5_pins_c: serial11_c {
-+				renesas,groups = "scifa5_data_c";
-+				renesas,function = "scifa5";
-+			};
-+		};
-+	};
-+
-+	fragment@2 {
-+		target = <&sdhi2>;
-+
-+		__overlay__ {
-+			status = "disabled";
-+		};
-+	};
-+
-+	fragment@3 {
-+		target = <&scifa5>;
-+
-+		__overlay__ {
-+			pinctrl-0 = <&scifa5_pins_c>;
-+			pinctrl-names = "default";
-+
-+			status = "okay";
-+		};
-+	};
-+};
--- 
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 99764db0875a..8c3d6b04c585 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -210,7 +210,7 @@ static int __init of_init(void)
+
+ 	return 0;
+ }
+-core_initcall(of_init);
++pure_initcall(of_init);
+
+ static struct property *__of_find_property(const struct device_node *np,
+ 					   const char *name, int *lenp)
+--
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
