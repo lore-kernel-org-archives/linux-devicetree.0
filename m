@@ -1,70 +1,27 @@
-From: Roy Pledge <roy.pledge@freescale.com>
-Subject: RE: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to cell-index
-Date: Tue, 12 May 2015 21:19:24 +0000
-Message-ID: <BN3PR0301MB1267E5A61E7E5BC2789F9E898CDA0@BN3PR0301MB1267.namprd03.prod.outlook.com>
-References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
- <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
- <1430858734.16357.256.camel@freescale.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Tue, 12 May 2015 23:21:06 +0200
+Message-ID: <2789447.8FUTAOJOHR@wuerfel>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com> <1431158038-3813-15-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1430858734.16357.256.camel@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Madalin-Cristian Bucur <madalin.bucur@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431158038-3813-15-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, peter@hurleysoftware.com, andy.shevchenko@gmail.com, cw00.choi@samsung.com, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, joe@perches.com, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, lee.jones@linaro.org, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.>
 List-Id: devicetree@vger.kernel.org
 
-PiA+DQo+ID4gSSBkb24ndCBiZWxpZXZlIHRoaXMgaXMgY29ycmVjdCAtIGxldCBtZSBleHBsYWlu
-IHRoZSByYXRpb25hbCB3aHkgd2UgaGFkIHR3bw0KPiBwcm9wZXJ0aWVzIGluIHRoZSBRTWFuIHBv
-cnRhbCB0byBiZWdpbiB3aXRoLg0KPiA+DQo+ID4gVGhlIHR3byBwcm9wZXJ0aWVzIGluIHF1ZXN0
-aW9uIGFyZSBjZWxsLWluZGV4IGFuZCBmc2wscW1hbi1jaGFubmVsLWlkLg0KPiA+DQo+ID4gVGhl
-IGNlbGwtaW5kZXggcHJvcGVydHkgaXMgdXNlZCBpbiB1LWJvb3QgYXMgYW4gaW5kZXggZm9yIHRo
-ZSBzb2Z0d2FyZSBwb3J0YWwNCj4gSUQgd2hlbiBhZGRpbmcgdGhlIGZzbCxsaW9kbiBmcm9tIHRo
-ZSBVLWJvb3QgdGFibGUgaW50byB0aGUgZGV2aWNlIHRyZWUuDQo+IA0KPiBUaGUgZGV2aWNlIHRy
-ZWUgaXMgbm90IHN1cHBvc2VkIHRvIGNvbnRhaW4gYXJiaXRyYXJ5IHNvZnR3YXJlIGlkZW50aWZp
-ZXJzLg0KDQpJIGFncmVlIC0gdGhpcyBpcyB3aHkgdGhlIG9yaWdpbmFsIGRldmljZSB0cmVlIGJp
-bmRpbmdzIHJlbW92ZWQgY2VsbC1pbmRleCBhcyBpdCBjYW4gYmUgY2FsY3VsYXRlZC4NClVuZm9y
-dHVuYXRlbHkgdS1ib290IHJlbGllZCBvbiB0aGlzIHZhbHVlIGJlaW5nIHByZXNlbnQgc28gdG8g
-YmUgYmFja3dhcmQgY29tcGF0aWJsZSB3ZSBkb24ndCBoYXZlIGEgd2F5IHRvIHJlbW92ZSBpdC4g
-IEknbSBub3Qgc3VyZSBvbiB3aGF0IHRoZSBwcm9jZWR1cmUgaXMgdG8gY2hhbmdlIHRoaW5ncyB1
-LWJvb3QgcmVsaWVzIG9uLCBJIHBlcnNvbmFsIGhhdmUgYWx3YXlzIGJlZW4gdmVyeSB1bmNvbWZv
-cnRhYmxlIHdpdGggdGhlIGNvdXBsaW5nIGJldHdlZW4gdS1ib290IGFuZCBMaW51eCBmb3IgdGhp
-bmdzIGxpa2UgdGhpcy4gDQoNCj4gDQo+ID4gVGhlICBmc2wscW1hbi1jaGFubmVsLWlkIHByb3Bl
-cnR5IGlzIHVzZWQgaW4gTGludXggYW5kIGNvcnJlc3BvbmRzIHRvDQo+ID4gYSBoYXJkd2FyZSB2
-YWx1ZSB0aGF0IGluZGljYXRlcyB3aGljaCBjaGFubmVsIGlzIGRlZGljYXRlZCB0byB0aGUNCj4g
-PiBzb2Z0d2FyZSBwb3J0YWwuDQo+ID4NCj4gPiBXaGlsZSBJJ20gbm90IGF3YXJlIG9mIGEgY3Vy
-cmVudCBTb0Mgd2hlcmUgdGhlIGNoYW5uZWwgSUQgZm9yIGENCj4gPiBzb2Z0d2FyZSBwb3J0YWwg
-ZG9lcyBub3QgbWF0Y2ggdGhlIGluZGV4IChpLmUuIFNXUCAwIHVzZXMgY2hhbm5lbCAwLA0KPiA+
-IGV0Yy4pDQo+IA0KPiBUaHVzIHRoZXJlJ3Mgbm8gYmFja3dhcmQgY29tcGF0aWJpbGl0eSBpc3N1
-ZSB3aXRoIHJlZGVmaW5pbmcgY2VsbC1pbmRleCB0bw0KPiBtZWFuIHRoZSBjaGFubmVsIElELg0K
-DQpDaGFubmVsIElEcyBkbyBjaGFuZ2UgYW5kIGFyZSBkZWZpbmVkIHdoZW4gdGhlIFNvQyBpcyBj
-cmVhdGVkIChsb29rIGF0IGNoZWNrcyBmb3IgUU1hbiB2ZXJzaW9ucyBhbmQgYWRqdXN0bWVudHMg
-Zm9yIFBvb2wgQ2hhbm5lbCBJRHMgaW4gdGhlIGRyaXZlcikuICBJZiB0aGUgY2hhbm5lbCBJRCBm
-b3IgcG9ydGFsIDAgZXZlciBiZWNvbWVzIG5vbiB6ZXJvIHdlIGp1c3QgZW5kIHVwIGhhdmluZyB0
-byBtYWtlIGEgbWVzcyBpbiB0aGUgY29kZSBvciByZWludHJvZHVjZSB0aGlzIGZpZWxkLg0KDQo+
-IA0KPiA+IGl0IGlzIHBvc3NpYmxlIHRoYXQgZnV0dXJlIFNvQ3MgY291bGQgc3RyYXkgZnJvbSB0
-aGlzIG1vZGVsLCB0aGVyZSBpcw0KPiA+IG5vIHJlYXNvbiBmb3IgcG9ydGFsIGluZGV4IHRvIGVx
-dWFsIGNoYW5uZWwgSUQgYXQgYWxsIHRpbWVzLg0KPiANCj4gSG93IGNhbiBmdXR1cmUgU29DcyBk
-aWN0YXRlIGhvdyB3ZSBhc3NpZ24gYSBzb2Z0d2FyZS1kZWZpbmVkIGlkZW50aWZpZXI/DQo+IElm
-IHNvZnR3YXJlIHdhbnRzIGl0IHRvIGJlIHRoZSBzYW1lIGFzIHRoZSBjaGFubmVsIGlkLCB0aGVu
-IGl0IHdpbGwgYmUuDQo+IA0KPiBJZiB0aGVyZSBpcyBzb21lIGFzcGVjdCBvZiB0aGUgaGFyZHdh
-cmUgaXRzZWxmIChub3QgdGhlIGRvY3VtZW50YXRpb24pIHRoYXQNCj4gY2VsbC1pbmRleCBjdXJy
-ZW50bHkgY29ycmVzcG9uZHMgdG8sIG90aGVyIHRoYW4gdGhlIGNoYW5uZWwgaWQsIHBsZWFzZSBt
-YWtlDQo+IHRoYXQgY2xlYXIuDQoNCkNoYW5uZWwgSUQgaXMgZGVmaW5lZCBpbiB0aGUgU29DIFJU
-TCAtIGl0IGlzIG5vdCBjb250cm9sbGVkIGJ5IHNvZnR3YXJlIGFuZCBpdCBpcyBub3QgYSBzb2Z0
-d2FyZSBhc3NpZ25lZCBpZGVudGlmaWVyLiAgSXQgaXMgbm90IHBvc3NpYmxlIGZvciBTVyB0byBz
-ZXQgdGhlc2UgdmFsdWVzLg0KDQpSb3kNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxp
-c3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBj
-LWRldg==
+On Saturday 09 May 2015 09:53:56 Maxime Coquelin wrote:
+> +#include  <dt-bindings/mfd/stm32f4-rcc.h>
+> +
+> 
+
+Can you find a way to avoid this dependency?
+
+Maybe you can change the bindings so that the numbers you pass as
+arguments to the reset and clock specifiers reflect the numbers that
+the hardware use?
+
+	Arnd
