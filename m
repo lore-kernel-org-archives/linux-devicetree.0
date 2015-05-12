@@ -1,50 +1,140 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: BCM2836 (Raspberry Pi 2) port
-Date: Tue, 12 May 2015 16:03:38 -0600
-Message-ID: <555278BA.50903@wwwdotorg.org>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <4137213.WVJY1et48u@kongar> <55516738.306@wwwdotorg.org> <1701192.WcfjCoBWQN@kongar> <55522468.3050606@wwwdotorg.org> <87d2254s6y.fsf@eliezer.anholt.net>
+From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] Phy: DT binding documentation for Broadcom Cygnus
+ USB PHY driver
+Date: Tue, 12 May 2015 15:05:41 -0700
+Message-ID: <55527935.5060907@broadcom.com>
+References: <1429744479-10410-1-git-send-email-arun.ramamurthy@broadcom.com> <1429744479-10410-3-git-send-email-arun.ramamurthy@broadcom.com> <5550B878.7060608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87d2254s6y.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+In-Reply-To: <5550B878.7060608-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/2015 11:32 AM, Eric Anholt wrote:
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->
->> On 05/12/2015 09:39 AM, Alexander Stein wrote:
->>> On Monday 11 May 2015, 20:36:40 wrote Stephen Warren:
->>>> On 05/08/2015 10:14 AM, Alexander Stein wrote:
->>>>> On Thursday 23 April 2015, 22:25:08 wrote Stephen Warren:
->>>>>>> Hit any key to stop autoboot:  0
->>>>>>> U-Boot> setenv fdt_high fffffff
->>>>>
->>>>> Any specific reason to set fdt_high to fffffff?
->>>>
->>>> Yes, it prevents U-Boot's annoying habit of moving the DTB from where it
->>>> was loaded to some other place. This was especially important in this
->>>> case since I was trying to find out exactly which piece of RAM being
->>>> over-written caused the issues I was seeing.
->>>
->>> Shouldn't this then be part of the default raspberry (2 only?) environment?
->>
->> Eventually yes. So far, nobody seems to know which areas of RAM are
->> off-limits (presumably since the RAM is used as a CPU1..3 pen), so I was
->> experimenting to try and find that out.
->
-> If I'm reading this right, the CPU1-3 pen is in the bottom 8k of memory
-> (actually much less than 8k).
+Hi
 
-Hmm. I wondered if that was the case. I don't think anything I was doing 
-in U-Boot /should/ touch those pages, but there have been bugs before 
-where some pointer was left at NULL, and some DM (U-Boot Device Model) 
-code ended up putting structures in page 0 by mistake. Perhaps something 
-like that has resurfaced. I'll try to find time to diff page 0 
-before/after various U-Boot operations, and see if it's getting modified...
+On 15-05-11 07:11 AM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Thursday 23 April 2015 04:44 AM, Arun Ramamurthy wrote:
+>> Broadcom's Cygnus chip has a USB 2.0 host controller connected to
+>> three separate phys. One of the phs (port 2) is also connectd to
+>> a usb 2.0 device controller
+>>
+>> Signed-off-by: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   .../bindings/phy/brcm,cygnus-usb-phy.txt           | 69
+>> ++++++++++++++++++++++
+>>   include/dt-bindings/phy/phy.h                      |  2 +
+>>   2 files changed, 71 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+>> b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+>> new file mode 100644
+>> index 0000000..ec62044
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+>> @@ -0,0 +1,69 @@
+>> +BROADCOM CYGNUS USB PHY
+>> +
+>> +Required Properties:
+>> +    - compatible:  brcm,cygnus-usb-phy
+>> +    - reg : usbphy_regs - Base address of phy registers
+>> +            usb2h_idm_regs - Base address of host idm registers
+>> +            usb2d_idm_regs - Base address of device idm registers
+>> +    - phy-cells - must be 1 for each port declared. The node
+>> +              that uses the phy must provide either PHY_CONFIG_DEVICE
+>> for device
+>> +              or PHY_CONFIG_HOST for host
+>> +
+>> +NOTE: port 0 and port 1 are host only and port 2 can be configured
+>> for host or
+>> +device.
+>> +
+>> +Example of phy :
+>> +    usbphy0: usbphy@0x0301c000 {
+>> +        compatible = "brcm,cygnus-usb-phy";
+>> +        reg = <0x0301c000 0x2000>,
+>> +              <0x18115000 0x1000>,
+>> +              <0x18111000 0x1000>;
+>> +        status = "okay";
+>> +
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        usbphy0_0: usbphy0@0 {
+>> +            #phy-cells = <1>;
+>> +            reg = <0>;
+>> +            status = "okay";
+>> +            phy-supply = <&vbus_p0>;
+>> +        };
+>> +
+>> +        usbphy0_1: usbphy0@1 {
+>> +            #phy-cells = <1>;
+>> +            reg = <1>;
+>> +            status = "okay";
+>> +        };
+>> +
+>> +        usbphy0_2: usbphy0@2 {
+>> +            #phy-cells = <1>;
+>> +            reg = <2>;
+>> +            status = "okay";
+>> +            phy-supply = <&vbus_p2>;
+>> +        };
+>> +    };
+>> +
+>> +Example of node using the phy:
+>> +
+>> +    /* This nodes declares all three ports as host */
+>> +
+>> +    ehci0: usb@0x18048000 {
+>> +        compatible = "generic-ehci";
+>> +        reg = <0x18048000 0x100>;
+>> +        interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+>> +        phys = <&usbphy0_0 PHY_CONFIG_HOST &usbphy0_1 PHY_CONFIG_HOST
+>> &usbphy0_2 PHY_CONFIG_HOST>;
+>> +        status = "okay";
+>> +    };
+>> +
+>> +    /*
+>> +     * This node declares port 2 phy
+>> +     * and configures it for device
+>> +     */
+>> +
+>> +    usbd_udc_dwc1: usbd_udc_dwc@0x1804c000 {
+>> +        compatible = "iproc-udc";
+>> +        reg = <0x1804c000 0x2000>;
+>> +        interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+>> +        phys = <&usbphy0_2 PHY_CONFIG_DEVICE>;
+>> +        phy-names = "usb";
+>> +    };
+>> diff --git a/include/dt-bindings/phy/phy.h
+>> b/include/dt-bindings/phy/phy.h
+>> index 6c90193..3f6b1ac 100644
+>> --- a/include/dt-bindings/phy/phy.h
+>> +++ b/include/dt-bindings/phy/phy.h
+>> @@ -15,5 +15,7 @@
+>>   #define PHY_TYPE_PCIE        2
+>>   #define PHY_TYPE_USB2        3
+>>   #define PHY_TYPE_USB3        4
+>> +#define PHY_CONFIG_HOST        1
+>> +#define PHY_CONFIG_DEVICE    0
+>
+> '0' and '1' are already defined for "PHY_NONE" and "PHY_TYPE_SATA". Is
+> this for USB2 or for USB3?
+>
+This is for USB2, do you want me to prefix the defines with USB2?
+I think It would be misleading to use PHY_TYPE_SATA or PHY_NONE in this 
+scenario
+> Thanks
+> Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
