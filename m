@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 04/12] ARM: shmobile: armadillo dts: Add overlay for SCIFB on CON15
-Date: Tue, 12 May 2015 19:37:07 +0200
-Message-ID: <1431452235-11692-5-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC 10/12] ARM: shmobile: koelsch dts: Add overlay for SCIF5 on EXIO C
+Date: Tue, 12 May 2015 19:37:13 +0200
+Message-ID: <1431452235-11692-11-git-send-email-geert+renesas@glider.be>
 References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
@@ -10,37 +10,35 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Provide access to SCIFB on the Expansion Interface Connector (CON15), as
-documented in Table 18.15 of the "Armadillo-800 EVA Product Manual".
+Provide access to SCIF5 on EXIO Connector C.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
  arch/arm/boot/dts/Makefile                         |  1 +
- .../dts/r8a7740-armadillo800eva-con15-scifb.dtso   | 52 ++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7740-armadillo800eva-con15-scifb.dtso
+ .../arm/boot/dts/r8a7791-koelsch-exio-c-scif5.dtso | 60 ++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif5.dtso
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 5366e2112ad1ea18..1f2478d6254ea70f 100644
+index ec2abfe19329b791..655a967b0566a3d1 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -670,6 +670,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
- ifeq ($(CONFIG_OF_OVERLAY),y)
- dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7740-armadillo800eva-con15-scifa0.dtbo \
-+	r8a7740-armadillo800eva-con15-scifb.dtbo \
+@@ -676,6 +676,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+ 	r8a7791-koelsch-exio-a-scifb0.dtbo \
+ 	r8a7791-koelsch-exio-a-scifb1.dtbo \
+ 	r8a7791-koelsch-exio-c-scif3.dtbo \
++	r8a7791-koelsch-exio-c-scif5.dtbo \
  endif
  endif
  
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-con15-scifb.dtso b/arch/arm/boot/dts/r8a7740-armadillo800eva-con15-scifb.dtso
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif5.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif5.dtso
 new file mode 100644
-index 0000000000000000..34e46580e09565a9
+index 0000000000000000..37ec7006e1174a37
 --- /dev/null
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-con15-scifb.dtso
-@@ -0,0 +1,52 @@
++++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif5.dtso
+@@ -0,0 +1,60 @@
 +/*
-+ * Device Tree Overlay for SCIFB on r8a7740/Armadillo-800 EVA Expansion
-+ * Interface Connector
++ * Device Tree Overlay for SCIF5 on r8a7791/Koelsch EXIO Connector C
 + *
 + * Copyright (C) 2015 Glider bvba
 + *
@@ -49,9 +47,11 @@ index 0000000000000000..34e46580e09565a9
 + * kind, whether express or implied.
 + *
 + * Pinout:
-+ *   - RXD = CON15 pin 41
-+ *   - TXD = CON15 pin 40
-+ *   - SCK = CON15 pin 42
++ *   - RXD = EXIO Connector C pin 39
++ *   - TXD = EXIO Connector C pin 37
++ *
++ * Notes:
++ *   - As these pins are shared with SDHI2, the latter is disabled first.
 + */
 +
 +/dts-v1/;
@@ -62,8 +62,8 @@ index 0000000000000000..34e46580e09565a9
 +		target-path = "/aliases";
 +
 +		__overlay__ {
-+			/* serial8 = &scifb; */
-+			serial8 = "/serial@e6c30000";
++			/* serial5 = &scif5; */
++			serial5 = "/serial@e6ee8000";
 +		};
 +	};
 +
@@ -71,21 +71,28 @@ index 0000000000000000..34e46580e09565a9
 +		target = <&pfc>;
 +
 +		__overlay__ {
-+			scifb_pins: serial8 {
-+				renesas,groups = "scifb_data_0";
-+				renesas,function = "scifb";
++			scif5_pins: serial5 {
++				renesas,groups = "scif5_data_b";
++				renesas,function = "scif5";
 +			};
 +		};
 +	};
 +
 +	fragment@2 {
-+		target = <&scifb>;
++		target = <&sdhi2>;
 +
 +		__overlay__ {
-+			pinctrl-0 = <&scifb_pins>;
++			status = "disabled";
++		};
++	};
++
++	fragment@3 {
++		target = <&scif5>;
++
++		__overlay__ {
++			pinctrl-0 = <&scif5_pins>;
 +			pinctrl-names = "default";
 +
-+			ctsrts;
 +			status = "okay";
 +		};
 +	};
