@@ -1,40 +1,58 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v2 3/3] pinctrl: sh-pfc: Add renesas,pfc-r8a7793 to binding documentation
-Date: Tue, 12 May 2015 11:13:21 +0200
-Message-ID: <1431422001-530-4-git-send-email-ulrich.hecht+renesas@gmail.com>
-References: <1431422001-530-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1431422001-530-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: geert@linux-m68k.org, horms@verge.net.au, linux-sh@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, linus.walleij@linaro.org
-Cc: magnus.damm@gmail.com, kuninori.morimoto.gx@renesas.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, devicetree@vger.kernel.org
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] soc: mediatek: Add infracfg misc driver support
+Date: Tue, 12 May 2015 11:24:31 +0200
+Message-ID: <1431422671.2398.155.camel@x220>
+References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
+	 <1431372206-1237-2-git-send-email-s.hauer@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431372206-1237-2-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Also renames "R-Car M2" to "R-Car M2-W" to avoid confusion.
+On Mon, 2015-05-11 at 21:23 +0200, Sascha Hauer wrote:
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
 
-Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> +config MTK_INFRACFG
+> +	tristate "MediaTek INFRACFG Support"
+> +	depends on ARCH_MEDIATEK
+> +	select REGMAP
+> +	help
+> +	  Say yes here to add support for the MediaTek INFRACFG controller. The
+> +	  INFRACFG controller contains various infrastructure registers not
+> +	  directly associated to any device.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index bfe72ec..6bcf851 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -16,7 +16,8 @@ Required Properties:
-     - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible pin-controller.
-     - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
-     - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible pin-controller.
--    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2) compatible pin-controller.
-+    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2-W) compatible pin-controller.
-+    - "renesas,pfc-r8a7793": for R8A7793 (R-Car M2-N) compatible pin-controller.
-     - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-controller.
- 
-   - reg: Base address and length of each memory resource used by the pin
--- 
-2.3.5
+> --- a/drivers/soc/mediatek/Makefile
+> +++ b/drivers/soc/mediatek/Makefile
 
+> +obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
+
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mtk-infracfg.c
+
+> +EXPORT_SYMBOL_GPL(mtk_infracfg_set_bus_protection);
+
+> +EXPORT_SYMBOL_GPL(mtk_infracfg_clear_bus_protection);
+
+As I understand it, if both MTK_INFRACFG and MTK_SCPSYS (see 3/5) are m
+we will get mtk-infracfg.ko and mtk-scpsys.ko (see 3/5). And loading
+mtk-scpsys.ko will trigger loading mtk-infracfg.ko, right?
+
+But since this file has no MODULE_LICENSE() that should generate a
+warning and taint the kernel. (I haven't tested this. Please correct me
+if I'm overlooking something here.)
+
+Thanks,
+
+
+Paul Bolle
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
