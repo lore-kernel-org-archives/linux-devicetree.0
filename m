@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 11/13] ARM: STi: STiH407: Enable Cortex-A9 PMU support
-Date: Tue, 12 May 2015 13:51:48 +0100
-Message-ID: <1431435110-22595-12-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH 10/13] ARM: STi: STiH416: Enable PMU IRQs
+Date: Tue, 12 May 2015 13:51:47 +0100
+Message-ID: <1431435110-22595-11-git-send-email-lee.jones@linaro.org>
 References: <1431435110-22595-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1431435110-22595-1-git-send-email-lee.jones@linaro.org>
@@ -10,29 +10,44 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: kernel@stlinux.com, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This is ARM's generic Performance Monitoring Unit.
+This driver is used to enable System Configuration Register controlled
+External, CTI (Core Sight), PMU (Performance Management), and PL310 L2
+Cache IRQs prior to use.
+
+Here we are enabling PMU IRQs on both channels.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/stih416.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 46e6a38..412206e 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -58,6 +58,12 @@
- 		cache-level = <2>;
- 	};
+diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
+index cc5b78d..9dca173 100644
+--- a/arch/arm/boot/dts/stih416.dtsi
++++ b/arch/arm/boot/dts/stih416.dtsi
+@@ -13,6 +13,7 @@
+ #include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset-controller/stih416-resets.h>
++#include <dt-bindings/interrupt-controller/irq-st.h>
+ / {
+ 	L2: cache-controller {
+ 		compatible = "arm,pl310-cache";
+@@ -98,6 +99,15 @@
+ 			reg		= <0xfe4b5100 0x8>;
+ 		};
  
-+	arm-pmu {
-+		interrupt-parent = <&intc>;
-+		compatible = "arm,cortex-a9-pmu";
-+		interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+	};
++		irq-syscfg {
++			compatible    = "st,stih416-irq-syscfg";
++			st,syscfg     = <&syscfg_cpu>;
++			st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
++					<ST_IRQ_SYSCFG_PMU_1>;
++			st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
++					<ST_IRQ_SYSCFG_DISABLED>;
++		};
 +
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+ 		serial2: serial@fed32000{
+ 			compatible	= "st,asc";
+ 			status 		= "disabled";
 -- 
 1.9.1
