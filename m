@@ -1,35 +1,38 @@
-From: Michael Turquette <mike.turquette@linaro.org>
-Subject: Re: [PATCH V4 3/3] OPP: Add 'opp-next' in operating-points-v2 bindings
-Date: Tue, 12 May 2015 14:47:14 -0700
-Message-ID: <20150512214714.16410.59831@quantum>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <1ee98ae5b45083e681c7f530e0ae9195e5636119.1430394884.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1ee98ae5b45083e681c7f530e0ae9195e5636119.1430394884.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, sboyd@codeaurora.org
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com, Viresh Kumar <viresh.kumar@linaro.org>
+From: Philippe Reynes <tremyfr@gmail.com>
+Subject: [PATCH v2] imx27: dt: only map 4 Kbyte for fec registers
+Date: Tue, 12 May 2015 23:51:30 +0200
+Message-ID: <1431467490-22253-1-git-send-email-tremyfr@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Philippe Reynes <tremyfr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Viresh Kumar (2015-04-30 05:08:01)
-> Many platforms require to switch to a intermediate frequency before
-> switching to a final frequency. Or they can switch to only particular
-> OPPs from any OPP.
-> 
-> For these add another property in OPP-v2, 'opp-next'.
-> 
-> Refer to the bindings for more details.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+According to the imx27 documentation, fec has a 4 Kbyte
+memory space map. So, we don't need to map 16 Kbyte for
+registers, 4 Kbyte is enough.
 
-We should never encode any aspect of the dvfs transition sequence into
-DT. Raw data such as clock frequency or supply voltage might be OK, but
-the programming steps should be left entirely to drivers.
+Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+---
+ arch/arm/boot/dts/imx27.dtsi |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-So this patch gets a NAK from me.
+Changelog:
+v2: (thanks Shawn Guo and Uwe Kleine-Konig)
+- map 4 Kbyte instead of 1 Kbyte
 
-Regards,
-Mike
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index 6951b66..bc215e4 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -533,7 +533,7 @@
+ 
+ 			fec: ethernet@1002b000 {
+ 				compatible = "fsl,imx27-fec";
+-				reg = <0x1002b000 0x4000>;
++				reg = <0x1002b000 0x1000>;
+ 				interrupts = <50>;
+ 				clocks = <&clks IMX27_CLK_FEC_IPG_GATE>,
+ 					 <&clks IMX27_CLK_FEC_AHB_GATE>;
+-- 
+1.7.4.4
