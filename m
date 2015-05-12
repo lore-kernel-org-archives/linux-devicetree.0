@@ -1,34 +1,58 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/2] ARM: shmobile: r8a7791: add for USB-DMAC
-Date: Tue, 12 May 2015 08:56:26 +0900
-Message-ID: <20150511235626.GD445@verge.net.au>
-References: <1431069214-8052-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH v5 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
+Date: Mon, 11 May 2015 17:20:54 -0700
+Message-ID: <CAGa+x85QDAzP_8_rPF3H0KpXO9rR2OhzYnMnAFydmBMicDzmEw@mail.gmail.com>
+References: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com>
+	<7ha8xgi10e.fsf@linaro.org>
+	<CAAS=xmjR9a-M961-7+9LF2G18qiXYhT+1sb5TEbbrQcW1fnRtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431069214-8052-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAS=xmjR9a-M961-7+9LF2G18qiXYhT+1sb5TEbbrQcW1fnRtw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brent Wang <wangbintian@gmail.com>
+Cc: Bintian Wang <bintian.wang@huawei.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Jaehoon Chung <jh80.chung@samsung.com>, Olof Johansson <olof@lixom.net>, Haifeng Yan <yanhaifeng@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, "xuejiancheng@huawei.com" <xuejiancheng@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 08, 2015 at 04:13:32PM +0900, Yoshihiro Shimoda wrote:
-> This patch set is based on renesas.git / renesas-devel-20150507-v4.1-rc1
-> tag. (commit id = c3059b3fff4ed6568783fdabdee1d62a55aa469c)
-> 
-> This patch set is related to the usb-dmac driver and renesas_usbhs driver.
-> Almost all patches for the drivers have been merged in Linus tree.
-> And a fixed patch for renesas_usbhs driver have beed merged in the subsystem:
-> 
-> [ linux repository ]
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/sh/usb-dmac.c?id=0c1c8ff32fa29e425b4938934c21afdb81104431
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/sh/usb-dmac.c?id=d7d8e892aa6fe280a2e2974d9fd1ec9253ee1a05
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/usb/renesas_usbhs?id=7a96b78464bd8ba72c1c3095c543c1402db59e35
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/usb/renesas_usbhs?id=9b53d9af7aac09cf249d72bfbf15f08e47c4f7fe
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/usb/renesas_usbhs?id=ab330cf3888d8e0779fa05a243d53ba9f53a7ba9
-> 
-> [ usb repository ]
-> https://git.kernel.org/cgit/linux/kernel/git/balbi/usb.git/commit/?h=testing/next&id=5a294e5469891d0701183049c4a9678887fa7091
+On Thu, May 7, 2015 at 4:11 PM, Brent Wang <wangbintian@gmail.com> wrote:
+> Hello Kevin,
+>
+> 2015-05-08 4:30 GMT+08:00 Kevin Hilman <khilman@linaro.org>:
+>> Bintian Wang <bintian.wang@huawei.com> writes:
+>>
+>>> Hi6220 is one mobile solution of Hisilicon, this patchset contains
+>>> initial support for Hi6220 SoC and HiKey development board, which
+>>> supports octal ARM Cortex A53 cores. Initial support is minimal and
+>>> includes just the arch configuration, clock driver, device tree
+>>> configuration.
+>>>
+>>> PSCI is enabled in device tree and there is no problem to boot all the
+>>> octal cores, and the CPU hotplug is also working now, you can download
+>>> and compile the latest firmware based on the following link to run this
+>>> patch set:
+>>> https://github.com/96boards/documentation/wiki/UEFI
+>>
+>> Do you have any tips for booting this using the HiSi bootloader?  It
+>> seems that I need to add the magic hisi,boardid property for dtbTool to
+>> work.  Could you share what that magic value is?
+> Yes, you need it.
+> Hisilicon has many different development boards and those boards have some
+> different hardware configuration, so we need different device tree
+> files for them.
+> the original hisi,boardid is used to distinguish different boards and
+> used by the
+> bootloader to judge which device tree to use at boot-up.
+>
+>> and maybe add it to the wiki someplace?
+> Maybe add to section "Known Issues" in
+> "https://github.com/96boards/documentation/wiki/UEFI"
+> is a good choice, I will update this section later.
 
-Thanks, I have queued these up for v4.2.
+You updated the wiki, but you didn't specify what the value should be
+for this to work with the old bootloader.
+
+Can you please give the value of that property?
+
+Also, have you tested this series with the old bootloader as well?
+
+Kevin
