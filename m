@@ -1,95 +1,70 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] mailbox: arm-mhu: update the binding document
-Date: Tue, 12 May 2015 15:27:00 +0100
-Message-ID: <55520DB4.6060903@arm.com>
-References: <1430131945-20628-1-git-send-email-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430131945-20628-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou@gmail.com>
+Subject: Re: [PATCH/RFC] kbuild: Create a rule for building device tree overlay objects
+Date: Tue, 12 May 2015 17:33:29 +0300
+Message-ID: <D4386733-8722-478F-8BB6-FB86597D9E37@gmail.com>
+References: <1431431816-24612-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1431431816-24612-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Hi Geert,
 
-On 27/04/15 11:52, Sudeep Holla wrote:
-> The initial version of the binding document pushed along with the driver
-> is not clear/explicit about couple of the required properties namely:
-> clocks and clock-names, though the AMBA primecell binding used by the
-> arm-mhu specifies them clearly. Without these property the driver will
-> not even get probed, so it is mandatory to have them in DT.
->
-> This patch adds the above mentioned required properties to the binding.
-> It also adds the optional interrupt-names property which is good to have
-> along with some minor updates to replace references to the driver with
-> the hardware IP.
->
-
-Can you review this ? It will be good to get this before v4.1 gets
-released, otherwise the binding will remain incomplete in v4.1 ?
-
-Regards,
-Sudeep
-
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> On May 12, 2015, at 14:56 , Geert Uytterhoeven <geert+renesas@glider.=
+be> wrote:
+>=20
+> This allows to handle device tree overlays like plain device trees.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->   .../devicetree/bindings/mailbox/arm-mhu.txt        | 29 ++++++++++++++--------
->   1 file changed, 19 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> index 4971f03f0b33..68146c9a0332 100644
-> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> @@ -1,14 +1,15 @@
-> -ARM MHU Mailbox Driver
-> -======================
-> +ARM Message Handling Unit(MHU)
-> +==============================
->
-> -The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
-> +The ARM's Message Handling Unit (MHU) is a mailbox controller that has
->   3 independent channels/links to communicate with remote processor(s).
-> - MHU links are hardwired on a platform. A link raises interrupt for any
-> -received data. However, there is no specified way of knowing if the sent
-> -data has been read by the remote. This driver assumes the sender polls
-> -STAT register and the remote clears it after having read the data.
-> -The last channel is specified to be a 'Secure' resource, hence can't be
-> -used by Linux running NS.
-> +MHU links are hardwired on a platform. A link raises interrupt for any
-> +received data. The platform/firmware must clear the STAT register after
-> +having receiving the data and sender can poll on the same if the platform
-> +lacks interrupt mechanism for sending data to remote processor.
+> Questions:
+>  - Do we want dtso files under arch/<arch>/boot/dts/, too?
+>  - Do we want to move the dts files outside the kernel repository
+>    first?
+>=20
+
+Oh that=E2=80=99s a nice hornet=E2=80=99s nest you=E2=80=99ve kicked he=
+re.
+
+arch/<arch>/boot/dts should not be the place, cause overlays are not re=
+lated with boot per se.
+As they are right now are board (family) specific.
+
+I think we should try to keep an external kernel repo with them for now=
+ until we
+figure out where to put them.
+
+> scripts/Makefile.lib | 3 +++
+> 1 file changed, 3 insertions(+)
+>=20
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 79e86613712f2230..4b14eef1d4b2ce8f 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -292,6 +292,9 @@ cmd_dtc =3D mkdir -p $(dir ${dtc-tmp}) ; \
+> $(obj)/%.dtb: $(src)/%.dts FORCE
+> 	$(call if_changed_dep,dtc)
+>=20
+> +$(obj)/%.dtbo: $(src)/%.dtso FORCE
+> +	$(call if_changed_dep,dtc)
 > +
-> +Out of 3 channels, the last channel is 'Secure', hence must not be used
-> +by OS or any software running in non-secure state.
->
->   Mailbox Device Node:
->   ====================
-> @@ -20,7 +21,15 @@ used by Linux running NS.
->   			address and length)
->   - #mbox-cells		Shall be 1 - the index of the channel needed.
->   - interrupts:		Contains the interrupt information corresponding to
-> -			each of the 3 links of MHU.
-> +			each of the MHU links.
-> +- clocks		phandle to clock for apb pclk as specified in the
-> +			primecell binding
-> +- clock-names		Shall be "apb_pclk"
-> +
-> +Optional properties:
-> +--------------------
-> +- interrupt-names	contains names of the interrupt in the order in which
-> +			they were specified in the interrupts property
->
->   Example:
->   --------
->
+> dtc-tmp =3D $(subst $(comma),_,$(dot-target).dts.tmp)
+>=20
+> # Bzip2
+> --=20
+> 1.9.1
+
+Regards
+
+=E2=80=94 Pantelis
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-kbuild"=
+ in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
