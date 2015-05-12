@@ -1,46 +1,44 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH/RFC 06/12] ARM: shmobile: koelsch dts: Add overlay for HSCIF2 on EXIO A
-Date: Tue, 12 May 2015 19:37:09 +0200
-Message-ID: <1431452235-11692-7-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 11/12] ARM: shmobile: koelsch dts: Add overlay for SCIFA5(b) on EXIO C
+Date: Tue, 12 May 2015 19:37:14 +0200
+Message-ID: <1431452235-11692-12-git-send-email-geert+renesas@glider.be>
 References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Provide access to HSCIF2 on EXIO Connector A.
+Provide access to SCIFA5(b) on EXIO Connector C.
 
-FIXME Document "ctsrts" DT property.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
  arch/arm/boot/dts/Makefile                         |  1 +
- .../boot/dts/r8a7791-koelsch-exio-a-hscif2.dtso    | 53 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif2.dtso
+ .../boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso  | 60 ++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d800690e3aaf7bab..d5d2386694d57391 100644
+index 655a967b0566a3d1..a5cf8a6daf12ea1a 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -672,6 +672,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7740-armadillo800eva-con15-scifa0.dtbo \
- 	r8a7740-armadillo800eva-con15-scifb.dtbo \
- 	r8a7791-koelsch-exio-a-hscif1.dtbo \
-+	r8a7791-koelsch-exio-a-hscif2.dtbo \
+@@ -677,6 +677,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+ 	r8a7791-koelsch-exio-a-scifb1.dtbo \
+ 	r8a7791-koelsch-exio-c-scif3.dtbo \
+ 	r8a7791-koelsch-exio-c-scif5.dtbo \
++	r8a7791-koelsch-exio-c-scifa5-b.dtbo \
  endif
  endif
  
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif2.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif2.dtso
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso
 new file mode 100644
-index 0000000000000000..7570096b0377fc89
+index 0000000000000000..f8b7ea5ffc4b7247
 --- /dev/null
-+++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif2.dtso
-@@ -0,0 +1,53 @@
++++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso
+@@ -0,0 +1,60 @@
 +/*
-+ * Device Tree Overlay for HSCIF2 on r8a7791/Koelsch EXIO Connector A
++ * Device Tree Overlay for SCIFA5(b) on r8a7791/Koelsch EXIO Connector C
 + *
 + * Copyright (C) 2015 Glider bvba
 + *
@@ -49,10 +47,11 @@ index 0000000000000000..7570096b0377fc89
 + * kind, whether express or implied.
 + *
 + * Pinout:
-+ *   - RXD = EXIO Connector A pin 66
-+ *   - TXD = EXIO Connector A pin 62
-+ *   - CTS = EXIO Connector A pin 60
-+ *   - RTS = EXIO Connector A pin 65
++ *   - RXD = EXIO Connector C pin 40
++ *   - TXD = EXIO Connector C pin 38
++ *
++ * Notes:
++ *   - As these pins are shared with SDHI0, the latter is disabled first.
 + */
 +
 +/dts-v1/;
@@ -63,8 +62,8 @@ index 0000000000000000..7570096b0377fc89
 +		target-path = "/aliases";
 +
 +		__overlay__ {
-+			/* serial17 = &hscif2; */
-+			serial17 = "/serial@e62d0000";
++			/* serial11 = &scifa5; */
++			serial11 = "/serial@e6c80000";
 +		};
 +	};
 +
@@ -72,22 +71,28 @@ index 0000000000000000..7570096b0377fc89
 +		target = <&pfc>;
 +
 +		__overlay__ {
-+			hscif2_pins: serial17 {
-+				renesas,groups = "hscif2_data_b",
-+						 "hscif2_ctrl_b";
-+				renesas,function = "hscif2";
++			scifa5_pins_b: serial11_b {
++				renesas,groups = "scifa5_data_b";
++				renesas,function = "scifa5";
 +			};
 +		};
 +	};
 +
 +	fragment@2 {
-+		target = <&hscif2>;
++		target = <&sdhi0>;
 +
 +		__overlay__ {
-+			pinctrl-0 = <&hscif2_pins>;
++			status = "disabled";
++		};
++	};
++
++	fragment@3 {
++		target = <&scifa5>;
++
++		__overlay__ {
++			pinctrl-0 = <&scifa5_pins_b>;
 +			pinctrl-names = "default";
 +
-+			ctsrts;
 +			status = "okay";
 +		};
 +	};
@@ -95,7 +100,3 @@ index 0000000000000000..7570096b0377fc89
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
