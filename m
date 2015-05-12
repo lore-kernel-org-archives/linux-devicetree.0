@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 07/12] ARM: shmobile: koelsch dts: Add overlay for SCIFB0 on EXIO A
-Date: Tue, 12 May 2015 19:37:10 +0200
-Message-ID: <1431452235-11692-8-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC 09/12] ARM: shmobile: koelsch dts: Add overlay for SCIF3 on EXIO C
+Date: Tue, 12 May 2015 19:37:12 +0200
+Message-ID: <1431452235-11692-10-git-send-email-geert+renesas@glider.be>
 References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
@@ -10,37 +10,35 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Provide access to SCIFB0 on EXIO Connector A.
-
-FIXME Document "ctsrts" DT property.
+Provide access to SCIF3 on EXIO Connector C.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
  arch/arm/boot/dts/Makefile                         |  1 +
- .../boot/dts/r8a7791-koelsch-exio-a-scifb0.dtso    | 53 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-a-scifb0.dtso
+ .../arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso | 60 ++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d5d2386694d57391..576fa500e987ad2b 100644
+index 19e36347aeb302b1..ec2abfe19329b791 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -673,6 +673,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7740-armadillo800eva-con15-scifb.dtbo \
- 	r8a7791-koelsch-exio-a-hscif1.dtbo \
+@@ -675,6 +675,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
  	r8a7791-koelsch-exio-a-hscif2.dtbo \
-+	r8a7791-koelsch-exio-a-scifb0.dtbo \
+ 	r8a7791-koelsch-exio-a-scifb0.dtbo \
+ 	r8a7791-koelsch-exio-a-scifb1.dtbo \
++	r8a7791-koelsch-exio-c-scif3.dtbo \
  endif
  endif
  
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-a-scifb0.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-a-scifb0.dtso
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso
 new file mode 100644
-index 0000000000000000..30b83c5d36b4fbe6
+index 0000000000000000..3cb5fd138c0997c6
 --- /dev/null
-+++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-a-scifb0.dtso
-@@ -0,0 +1,53 @@
++++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso
+@@ -0,0 +1,60 @@
 +/*
-+ * Device Tree Overlay for SCIFB0 on r8a7791/Koelsch EXIO Connector A
++ * Device Tree Overlay for SCIF3 on r8a7791/Koelsch EXIO Connector C
 + *
 + * Copyright (C) 2015 Glider bvba
 + *
@@ -49,10 +47,11 @@ index 0000000000000000..30b83c5d36b4fbe6
 + * kind, whether express or implied.
 + *
 + * Pinout:
-+ *   - RXD = EXIO Connector A pin 66
-+ *   - TXD = EXIO Connector A pin 60
-+ *   - CTS = EXIO Connector A pin 65
-+ *   - RTS = EXIO Connector A pin 62
++ *   - RXD = EXIO Connector C pin 40
++ *   - TXD = EXIO Connector C pin 38
++ *
++ * Notes:
++ *   - As these pins are shared with SDHI0, the latter is disabled first.
 + */
 +
 +/dts-v1/;
@@ -63,8 +62,8 @@ index 0000000000000000..30b83c5d36b4fbe6
 +		target-path = "/aliases";
 +
 +		__overlay__ {
-+			/* serial12 = &scifb0; */
-+			serial12 = "/serial@e6c20000";
++			/* serial3 = &scif3; */
++			serial3 = "/serial@e6ea8000";
 +		};
 +	};
 +
@@ -72,22 +71,28 @@ index 0000000000000000..30b83c5d36b4fbe6
 +		target = <&pfc>;
 +
 +		__overlay__ {
-+			scifb0_pins: serial12 {
-+				renesas,groups = "scifb0_data_b",
-+						 "scifb0_ctrl_b";
-+				renesas,function = "scifb0";
++			scif3_pins: serial3 {
++				renesas,groups = "scif3_data_c";
++				renesas,function = "scif3";
 +			};
 +		};
 +	};
 +
 +	fragment@2 {
-+		target = <&scifb0>;
++		target = <&sdhi0>;
 +
 +		__overlay__ {
-+			pinctrl-0 = <&scifb0_pins>;
++			status = "disabled";
++		};
++	};
++
++	fragment@3 {
++		target = <&scif3>;
++
++		__overlay__ {
++			pinctrl-0 = <&scif3_pins>;
 +			pinctrl-names = "default";
 +
-+			ctsrts;
 +			status = "okay";
 +		};
 +	};
