@@ -1,43 +1,34 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 05/12] watchdog: st_wdt: Update IP layout information to include Clocksource
-Date: Tue, 12 May 2015 13:58:13 +0100
-Message-ID: <1431435500-22899-6-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2 10/12] ARM: STi: DT: STih407: Switch LPC mode from RTC to Clocksource
+Date: Tue, 12 May 2015 13:58:18 +0100
+Message-ID: <1431435500-22899-11-git-send-email-lee.jones@linaro.org>
 References: <1431435500-22899-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431435500-22899-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431435500-22899-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de, wim@iguana.be, a.zummo@towertech.it, linux-watchdog@vger.kernel.org, rtc-linux@googlegroups.com, linux@roeck-us.net
+Cc: kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Initial submission adding support for this IP only included Watchdog and
-the Real-Time Clock.  Now the third (and final) device is enabled this
-trivial patch is required to update the comment in the Watchdog driver
-to encompass Clocksource.
+This aligns with the internal configuration.
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/watchdog/st_lpc_wdt.c | 2 +-
+ arch/arm/boot/dts/stih407-family.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/st_lpc_wdt.c b/drivers/watchdog/st_lpc_wdt.c
-index f32be15..6785afd 100644
---- a/drivers/watchdog/st_lpc_wdt.c
-+++ b/drivers/watchdog/st_lpc_wdt.c
-@@ -197,7 +197,7 @@ static int st_wdog_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	/* LPC can either run in RTC or WDT mode */
-+	/* LPC can either run as a Clocksource or in RTC or WDT mode */
- 	if (mode != ST_LPC_MODE_WDT)
- 		return -ENODEV;
- 
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 2b2315d..bf1c7f5 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -354,7 +354,7 @@
+ 			reg = <0x8788000 0x1000>;
+ 			interrupts = <GIC_SPI 130 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clk_s_d3_flexgen CLK_LPC_1>;
+-			st,lpc-mode = <ST_LPC_MODE_RTC>;
++			st,lpc-mode = <ST_LPC_MODE_CLKSRC>;
+ 		};
+ 	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
