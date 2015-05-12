@@ -1,176 +1,52 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 1/5] soc: mediatek: Add infracfg misc driver support
-Date: Tue, 12 May 2015 09:12:24 +0200
-Message-ID: <20150512071224.GQ6325@pengutronix.de>
-References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
- <1431372206-1237-2-git-send-email-s.hauer@pengutronix.de>
+From: "=?UTF-8?Q?Michael=20Niew=C3=B6hner?=" <mniewoeh-0BV18Q16miHGpFsiFCTsGXqWYbMAw+HU@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add
+ system-power-controller toact8846
+Date: Tue, 12 May 2015 09:22:42 +0200
+Message-ID: <5551C66C020000D0000AFA23@gwia2.rz.hs-offenburg.de>
+References: <64DE272A-FD25-406C-A51B-6C5B76DA5171@stud.hs-offenburg.de>
+ <2270228.43yCmaWq86@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <2270228.43yCmaWq86@phil>
 Content-Disposition: inline
-In-Reply-To: <1431372206-1237-2-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Matthias Brugger <matthias.bgg@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 11, 2015 at 09:23:22PM +0200, Sascha Hauer wrote:
-> This adds support for some miscellaneous bits of the infracfg controller.
-> The mtk_infracfg_set/clear_bus_protection functions are necessary for
-> the scpsys power domain driver to handle the bus protection bits which
-> are contained in the infacfg register space.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  drivers/soc/mediatek/Kconfig        |  9 +++++
->  drivers/soc/mediatek/Makefile       |  1 +
->  drivers/soc/mediatek/mtk-infracfg.c | 80 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 90 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-infracfg.c
-> 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index bcdb22d..6fae66f 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -9,3 +9,12 @@ config MTK_PMIC_WRAP
->  	  Say yes here to add support for MediaTek PMIC Wrapper found
->  	  on different MediaTek SoCs. The PMIC wrapper is a proprietary
->  	  hardware to connect the PMIC.
-> +
-> +config MTK_INFRACFG
-> +	tristate "MediaTek INFRACFG Support"
-> +	depends on ARCH_MEDIATEK
-> +	select REGMAP
-> +	help
-> +	  Say yes here to add support for the MediaTek INFRACFG controller. The
-> +	  INFRACFG controller contains various infrastructure registers not
-> +	  directly associated to any device.
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index ecaf4de..ce39119 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -1 +1,2 @@
->  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
-> +obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
-> diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
-> new file mode 100644
-> index 0000000..b3ebfae
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-infracfg.c
-> @@ -0,0 +1,80 @@
-> +#include <linux/regmap.h>
-> +#include <linux/export.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/soc/mediatek/infracfg.h>
-> +#include <asm/processor.h>
-> +
-> +#define INFRA_TOPAXI_PROTECTEN		0x0220
-> +#define INFRA_TOPAXI_PROTECTSTA1	0x0228
-> +
-> +/**
-> + * mtk_infracfg_set_bus_protection - enable bus protection
-> + * @regmap: The infracfg regmap
-> + * @mask: The mask containing the protection bits to be enabled.
-> + *
-> + * This function enables the bus protection bits for disabled power
-> + * domains so that the system does not hanf when some unit accesses the
-> + * bus while in power down.
-> + */
-> +int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask)
-> +{
-> +	unsigned long expired;
-> +	u32 val;
-> +	int ret;
-> +
-> +	regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, mask);
-> +
-> +	expired = jiffies + HZ;
-> +
-> +	while (1) {
-> +		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if ((val & mask) == mask)
-> +			break;
-> +
-> +		cpu_relax();
-> +		if (time_after(jiffies, expired))
-> +			return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_infracfg_set_bus_protection);
-> +
-> +/**
-> + * mtk_infracfg_clear_bus_protection - disable bus protection
-> + * @regmap: The infracfg regmap
-> + * @mask: The mask containing the protection bits to be disabled.
-> + *
-> + * This function disables the bus protection bits previously enabled with
-> + * mtk_infracfg_set_bus_protection.
-> + */
-> +int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask)
-> +{
-> +	unsigned long expired;
-> +	int ret;
-> +
-> +	regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
-> +
-> +	expired = jiffies + HZ;
-> +
-> +	while (1) {
-> +		u32 val;
-> +
-> +		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (!(val & mask))
-> +			break;
-> +
-> +		cpu_relax();
-> +		if (time_after(jiffies, expired))
-> +			return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_infracfg_clear_bus_protection);
-
-Forgot to git add include/linux/soc/mediatek/infracfg.h, this file
-contains:
-
-#ifndef __SOC_MEDIATEK_INFRACFG_H
-#define __SOC_MEDIATEK_INFRACFG_H
-
-#define MT8173_TOP_AXI_PROT_EN_MCI_M2		BIT(0)
-#define MT8173_TOP_AXI_PROT_EN_MM_M0		BIT(1)
-#define MT8173_TOP_AXI_PROT_EN_MM_M1		BIT(2)
-#define MT8173_TOP_AXI_PROT_EN_MMAPB_S		BIT(6)
-#define MT8173_TOP_AXI_PROT_EN_L2C_M2		BIT(9)
-#define MT8173_TOP_AXI_PROT_EN_L2SS_SMI		BIT(11)
-#define MT8173_TOP_AXI_PROT_EN_L2SS_ADD		BIT(12)
-#define MT8173_TOP_AXI_PROT_EN_CCI_M2		BIT(13)
-#define MT8173_TOP_AXI_PROT_EN_MFG_S		BIT(14)
-#define MT8173_TOP_AXI_PROT_EN_PERI_M0		BIT(15)
-#define MT8173_TOP_AXI_PROT_EN_PERI_M1		BIT(16)
-#define MT8173_TOP_AXI_PROT_EN_DEBUGSYS		BIT(17)
-#define MT8173_TOP_AXI_PROT_EN_CQ_DMA		BIT(18)
-#define MT8173_TOP_AXI_PROT_EN_GCPU		BIT(19)
-#define MT8173_TOP_AXI_PROT_EN_IOMMU		BIT(20)
-#define MT8173_TOP_AXI_PROT_EN_MFG_M0		BIT(21)
-#define MT8173_TOP_AXI_PROT_EN_MFG_M1		BIT(22)
-#define MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT	BIT(23)
-
-int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask);
-int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask);
-
-#endif /* __SOC_MEDIATEK_INFRACFG_H */
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SSBhZ3JlZSBvbiByZWxpY2Vuc2luZyB0byBncGwyL3gxMS4KCk1pY2hhZWwKCgoKCgo+IEFtIDEx
+LjA1LjIwMTUgdW0gMjM6NTggc2NocmllYiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRl
+PjoKPiAKPiBBbSBNb250YWcsIDExLiBNYWkgMjAxNSwgMjI6NTc6MjEgc2NocmllYiBNaWNoYWVs
+IE5pZXfDtmhuZXI6Cj4+IEFkZCBzeXN0ZW0tcG93ZXItY29udHJvbGxlciB0byBhY3Q4ODQ2IGlu
+IHJrMzE4OC1yYWR4YXJvY2suZHRzIGluCmFkZGl0aW9uCj4+IHRvIHRoZSBhY3Q4ODQ2IHBhdGNo
+IGZpeGluZyB0aGUgcmVib290IGtlcm5lbCBwYW5pYwo+PiAKPj4gU2lnbmVkLW9mZi1ieTogTWlj
+aGFlbCBOaWV3b2VobmVyIDxtbmlld29laEBzdHVkLmhzLW9mZmVuYnVyZy5kZT4KPiAKPiBJIGhh
+dmUgdG8gYXNrLCBhcmUgeW91IG9rIHdpdGggdGhlIHBlbmRpbmcgZHRzIHJlbGljZW5zaW5nIHRv
+IGEKZ3BsMi94MTEgZHVhbCAKPiBsaWNlbnNlIFswXT8KPiAKPiBPdGhlcndpc2UgdGhpcyBsb29r
+cyBmaW5lIGFuZCB0aGUgYWN0ODg0NiBpcyB0aGUgcG93ZXItY29udHJvbGxlciBvZgp0aGUgCj4g
+cmFkeGFyb2NrIGluIGFueSBjYXNlLCBzbyBJJ2xsIHRha2UgdGhpcyBvbmUgaW4gYW55IGNhc2Uu
+Cj4gCj4gCj4gSGVpa28KPiAKPiBbMF0KaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJt
+YWlsL2xpbnV4LXJvY2tjaGlwLzIwMTUtTWFyY2gvMDAyNjQ0Lmh0bWwKPiAKPiAKPj4gLS0tCj4+
+IGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzE4OC1yYWR4YXJvY2suZHRzIHwgMSArCj4+IDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3JrMzE4OC1yYWR4YXJvY2suZHRzCj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMTg4LXJh
+ZHhhcm9jay5kdHMgaW5kZXggYmRmODU3MC4uMjI1YTBlYgoxMDA2NDQKPj4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvcmszMTg4LXJhZHhhcm9jay5kdHMKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvcmszMTg4LXJhZHhhcm9jay5kdHMKPj4gQEAgLTE1Miw2ICsxNTIsNyBAQAo+PiAgICAgICAg
+Y29tcGF0aWJsZSA9ICJhY3RpdmUtc2VtaSxhY3Q4ODQ2IjsKPj4gICAgICAgIHJlZyA9IDwweDVh
+PjsKPj4gICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gKyAgICAgICAgc3lzdGVtLXBvd2VyLWNv
+bnRyb2xsZXI7Cj4+IAo+PiAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gICAg
+ICAgIHBpbmN0cmwtMCA9IDwmYWN0ODg0Nl9kdnMwX2N0bD47Cj4gCgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBs
+aXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
