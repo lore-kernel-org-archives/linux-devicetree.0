@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 09/12] ARM: shmobile: koelsch dts: Add overlay for SCIF3 on EXIO C
-Date: Tue, 12 May 2015 19:37:12 +0200
-Message-ID: <1431452235-11692-10-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC 05/12] ARM: shmobile: koelsch dts: Add overlay for HSCIF1 on EXIO A
+Date: Tue, 12 May 2015 19:37:08 +0200
+Message-ID: <1431452235-11692-6-git-send-email-geert+renesas@glider.be>
 References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
@@ -10,35 +10,35 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Provide access to SCIF3 on EXIO Connector C.
+Provide access to HSCIF1 on EXIO Connector A.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
  arch/arm/boot/dts/Makefile                         |  1 +
- .../arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso | 60 ++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso
+ .../boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso    | 49 ++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 19e36347aeb302b1..ec2abfe19329b791 100644
+index 1f2478d6254ea70f..d800690e3aaf7bab 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -675,6 +675,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7791-koelsch-exio-a-hscif2.dtbo \
- 	r8a7791-koelsch-exio-a-scifb0.dtbo \
- 	r8a7791-koelsch-exio-a-scifb1.dtbo \
-+	r8a7791-koelsch-exio-c-scif3.dtbo \
+@@ -671,6 +671,7 @@ ifeq ($(CONFIG_OF_OVERLAY),y)
+ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+ 	r8a7740-armadillo800eva-con15-scifa0.dtbo \
+ 	r8a7740-armadillo800eva-con15-scifb.dtbo \
++	r8a7791-koelsch-exio-a-hscif1.dtbo \
  endif
  endif
  
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso
 new file mode 100644
-index 0000000000000000..3cb5fd138c0997c6
+index 0000000000000000..03793154b6fa2cb1
 --- /dev/null
-+++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scif3.dtso
-@@ -0,0 +1,60 @@
++++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso
+@@ -0,0 +1,49 @@
 +/*
-+ * Device Tree Overlay for SCIF3 on r8a7791/Koelsch EXIO Connector C
++ * Device Tree Overlay for HSCIF1 on r8a7791/Koelsch EXIO Connector A
 + *
 + * Copyright (C) 2015 Glider bvba
 + *
@@ -47,11 +47,8 @@ index 0000000000000000..3cb5fd138c0997c6
 + * kind, whether express or implied.
 + *
 + * Pinout:
-+ *   - RXD = EXIO Connector C pin 40
-+ *   - TXD = EXIO Connector C pin 38
-+ *
-+ * Notes:
-+ *   - As these pins are shared with SDHI0, the latter is disabled first.
++ *   - RXD = EXIO Connector A pin 72
++ *   - TXD = EXIO Connector A pin 53
 + */
 +
 +/dts-v1/;
@@ -62,8 +59,8 @@ index 0000000000000000..3cb5fd138c0997c6
 +		target-path = "/aliases";
 +
 +		__overlay__ {
-+			/* serial3 = &scif3; */
-+			serial3 = "/serial@e6ea8000";
++			/* serial16 = &hscif1; */
++			serial16 = "/serial@e62c8000";
 +		};
 +	};
 +
@@ -71,26 +68,18 @@ index 0000000000000000..3cb5fd138c0997c6
 +		target = <&pfc>;
 +
 +		__overlay__ {
-+			scif3_pins: serial3 {
-+				renesas,groups = "scif3_data_c";
-+				renesas,function = "scif3";
++			hscif1_pins: serial16 {
++				renesas,groups = "hscif1_data_b";
++				renesas,function = "hscif1";
 +			};
 +		};
 +	};
 +
 +	fragment@2 {
-+		target = <&sdhi0>;
++		target = <&hscif1>;
 +
 +		__overlay__ {
-+			status = "disabled";
-+		};
-+	};
-+
-+	fragment@3 {
-+		target = <&scif3>;
-+
-+		__overlay__ {
-+			pinctrl-0 = <&scif3_pins>;
++			pinctrl-0 = <&hscif1_pins>;
 +			pinctrl-names = "default";
 +
 +			status = "okay";
