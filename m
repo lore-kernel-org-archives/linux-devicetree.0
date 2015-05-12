@@ -1,102 +1,57 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 11/12] ARM: shmobile: koelsch dts: Add overlay for SCIFA5(b) on EXIO C
-Date: Tue, 12 May 2015 19:37:14 +0200
-Message-ID: <1431452235-11692-12-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH/RFC 02/12] ARM: shmobile: koelsch dts: Add aliases for all serial ports
+Date: Tue, 12 May 2015 19:37:05 +0200
+Message-ID: <1431452235-11692-3-git-send-email-geert+renesas@glider.be>
 References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Provide access to SCIFA5(b) on EXIO Connector C.
+Add aliases for the remaining serial ports that don't already have an
+alias.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This is a temporary workaround, until of_alias_add() is called when
+loading a device tree overlay that adds an alias.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                         |  1 +
- .../boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso  | 60 ++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso
+ arch/arm/boot/dts/r8a7791-koelsch.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 655a967b0566a3d1..a5cf8a6daf12ea1a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -677,6 +677,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7791-koelsch-exio-a-scifb1.dtbo \
- 	r8a7791-koelsch-exio-c-scif3.dtbo \
- 	r8a7791-koelsch-exio-c-scif5.dtbo \
-+	r8a7791-koelsch-exio-c-scifa5-b.dtbo \
- endif
- endif
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index e9c24036f00027c9..c1cd047173b6aed7 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -50,6 +50,22 @@
+ 	aliases {
+ 		serial0 = &scif0;
+ 		serial1 = &scif1;
++		serial2 = &scif2;
++		serial3 = &scif3;
++		serial4 = &scif4;
++		serial5 = &scif5;
++		serial6 = &scifa0;
++		serial7 = &scifa1;
++		serial8 = &scifa2;
++		serial9 = &scifa3;
++		serial10 = &scifa4;
++		serial11 = &scifa5;
++		serial12 = &scifb0;
++		serial13 = &scifb1;
++		serial14 = &scifb2;
++		serial15 = &hscif0;
++		serial16 = &hscif1;
++		serial17 = &hscif2;
+ 	};
  
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso
-new file mode 100644
-index 0000000000000000..f8b7ea5ffc4b7247
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-c-scifa5-b.dtso
-@@ -0,0 +1,60 @@
-+/*
-+ * Device Tree Overlay for SCIFA5(b) on r8a7791/Koelsch EXIO Connector C
-+ *
-+ * Copyright (C) 2015 Glider bvba
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ *
-+ * Pinout:
-+ *   - RXD = EXIO Connector C pin 40
-+ *   - TXD = EXIO Connector C pin 38
-+ *
-+ * Notes:
-+ *   - As these pins are shared with SDHI0, the latter is disabled first.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+/ {
-+	fragment@0 {
-+		target-path = "/aliases";
-+
-+		__overlay__ {
-+			/* serial11 = &scifa5; */
-+			serial11 = "/serial@e6c80000";
-+		};
-+	};
-+
-+	fragment@1 {
-+		target = <&pfc>;
-+
-+		__overlay__ {
-+			scifa5_pins_b: serial11_b {
-+				renesas,groups = "scifa5_data_b";
-+				renesas,function = "scifa5";
-+			};
-+		};
-+	};
-+
-+	fragment@2 {
-+		target = <&sdhi0>;
-+
-+		__overlay__ {
-+			status = "disabled";
-+		};
-+	};
-+
-+	fragment@3 {
-+		target = <&scifa5>;
-+
-+		__overlay__ {
-+			pinctrl-0 = <&scifa5_pins_b>;
-+			pinctrl-names = "default";
-+
-+			status = "okay";
-+		};
-+	};
-+};
+ 	chosen {
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
