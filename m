@@ -1,61 +1,90 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: Add binding for Broadcom MSPI driver.
-Date: Tue, 12 May 2015 11:38:57 -0700
-Message-ID: <555248C1.2010203@gmail.com>
-References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com> <1431452293-16697-2-git-send-email-jonathar@broadcom.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm SMD based
+ RPM DT binding
+Date: Tue, 12 May 2015 11:35:55 -0700
+Message-ID: <20150512183555.GB23554@sonymobile.com>
+References: <1428962282-32430-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1428962282-32430-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <5552435E.4040407@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431452293-16697-2-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5552435E.4040407-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/15 10:38, Jonathan Richardson wrote:
+On Tue 12 May 11:15 PDT 2015, Stephen Boyd wrote:
+
+> On 04/13/15 14:58, Bjorn Andersson wrote:
+> > +
+> > +== Regulators
+> > +
+> > +Regulator nodes are identified by their compatible:
+> > +
+> > +- compatible:
+> > +	Usage: required
+> > +	Value type: <string>
+> > +	Definition: must be one of:
+> > +		    "qcom,rpm-pm8841-regulators"
+> > +		    "qcom,rpm-pm8941-regulators"
+> > +
+> > +- vdd_s1-supply:
+> > +- vdd_s2-supply:
+> > +- vdd_s3-supply:
+> > +- vdd_s4-supply:
+> > +- vdd_s5-supply:
+> > +- vdd_s6-supply:
+> > +- vdd_s7-supply:
+> > +- vdd_s8-supply:
+> > +	Usage: optional (pm8841 only)
+> > +	Value type: <phandle>
+> > +	Definition: reference to regulator supplying the input pin, as
+> > +		    described in the data sheet
+> > +
+> > +- vdd_s1-supply:
+> > +- vdd_s2-supply:
+> > +- vdd_s3-supply:
+> > +- vdd_l1_l3-supply:
+> > +- vdd_l2_lvs1_2_3-supply:
+> > +- vdd_l1_l3-supply:
+> > +- vdd_l4_l11-supply:
+> > +- vdd_l5_l7-supply:
+> > +- vdd_l6_l12_l14_l15-supply:
+> > +- vdd_l5_l7-supply:
+> > +- vdd_l8_l16_l18_l19-supply:
+> > +- vdd_l9_l10_l17_l22-supply:
+> > +- vdd_l9_l10_l17_l22-supply:
+> > +- vdd_l4_l11-supply:
+> > +- vdd_l6_l12_l14_l15-supply:
+> > +- vdd_l13_l20_l23_l24-supply:
+> > +- vdd_l6_l12_l14_l15-supply:
+> > +- vdd_l6_l12_l14_l15-supply:
+> > +- vdd_l8_l16_l18_l19-supply:
+> > +- vdd_l9_l10_l17_l22-supply:
+> > +- vdd_l8_l16_l18_l19-supply:
+> > +- vdd_l8_l16_l18_l19-supply:
+> > +- vdd_l13_l20_l23_l24-supply:
+> > +- vdd_l21-supply:
+> > +- vdd_l9_l10_l17_l22-supply:
+> > +- vdd_l13_l20_l23_l24-supply:
+> > +- vdd_l13_l20_l23_l24-supply:
+> > +- vdd_l2_lvs1_2_3-supply:
+> > +- vdd_l2_lvs1_2_3-supply:
+> > +- vdd_l2_lvs1_2_3-supply:
+> > +- vin_5vs-supply:
+> > +- vin_5vs-supply:
 > 
-> Signed-off-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/spi/brcm,mspi-spi.txt      |   39 ++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
+> Can you remove the duplicates here please?
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt b/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
-> new file mode 100644
-> index 0000000..e86a7a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
-> @@ -0,0 +1,39 @@
-> +Broadcom MSPI controller
-> +
-> +The Broadcom MSPI controller is a SPI controller found on various chips such
-> +as Cygnus.
-> +
-> +Required properties:
-> +- compatible: Must be "brcm,mspi-v0".
-> +
-> +- reg:  The first register is the physical base address of the MSPI controller.
-> +  The second register is the address of the MSPI interrupt control registers. It
-> +  is only required for chips that have a separate register set for extended
-> +  interrupt control. This is required for Cygnus.
 
-In which case we would want to mandate the use of a "reg-names"
-property, because there could be other kinds of controllers, such as the
-one found on BCM7xxx where we have the 3 "reg" units, the first one is
-the MSPI controller register range, while the two others are used for
-the Boot SPI portion of the controller to accelerate flash reads, so
-completely unrelated here.
+Yes of course, sorry about missing the "!uniq" pass...
 
-Right now, using your driver on this Device Tree/configuration makes
-bcm_mspi request the second register range and mistakenly assuming this
-is the extended interrupt control register.
-
-You could argue that the BSPI portion should be a separate node, but
-even so, better be safe than sorry.
--- 
-Florian
+Regards,
+Bjorn
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
