@@ -1,80 +1,44 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm SMD based
- RPM DT binding
-Date: Tue, 12 May 2015 11:15:58 -0700
-Message-ID: <5552435E.4040407@codeaurora.org>
-References: <1428962282-32430-1-git-send-email-bjorn.andersson@sonymobile.com> <1428962282-32430-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] ASoC: bt-sco: Add devicetree support for bt-sco codec
+Date: Tue, 12 May 2015 19:37:22 +0100
+Message-ID: <20150512183722.GO3066@sirena.org.uk>
+References: <1431111754-14562-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Vy1A5eXR7jld12ZH"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428962282-32430-2-git-send-email-bjorn.andersson@sonymobile.com>
+Content-Disposition: inline
+In-Reply-To: <1431111754-14562-1-git-send-email-marek@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/13/15 14:58, Bjorn Andersson wrote:
-> +
-> +== Regulators
-> +
-> +Regulator nodes are identified by their compatible:
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,rpm-pm8841-regulators"
-> +		    "qcom,rpm-pm8941-regulators"
-> +
-> +- vdd_s1-supply:
-> +- vdd_s2-supply:
-> +- vdd_s3-supply:
-> +- vdd_s4-supply:
-> +- vdd_s5-supply:
-> +- vdd_s6-supply:
-> +- vdd_s7-supply:
-> +- vdd_s8-supply:
-> +	Usage: optional (pm8841 only)
-> +	Value type: <phandle>
-> +	Definition: reference to regulator supplying the input pin, as
-> +		    described in the data sheet
-> +
-> +- vdd_s1-supply:
-> +- vdd_s2-supply:
-> +- vdd_s3-supply:
-> +- vdd_l1_l3-supply:
-> +- vdd_l2_lvs1_2_3-supply:
-> +- vdd_l1_l3-supply:
-> +- vdd_l4_l11-supply:
-> +- vdd_l5_l7-supply:
-> +- vdd_l6_l12_l14_l15-supply:
-> +- vdd_l5_l7-supply:
-> +- vdd_l8_l16_l18_l19-supply:
-> +- vdd_l9_l10_l17_l22-supply:
-> +- vdd_l9_l10_l17_l22-supply:
-> +- vdd_l4_l11-supply:
-> +- vdd_l6_l12_l14_l15-supply:
-> +- vdd_l13_l20_l23_l24-supply:
-> +- vdd_l6_l12_l14_l15-supply:
-> +- vdd_l6_l12_l14_l15-supply:
-> +- vdd_l8_l16_l18_l19-supply:
-> +- vdd_l9_l10_l17_l22-supply:
-> +- vdd_l8_l16_l18_l19-supply:
-> +- vdd_l8_l16_l18_l19-supply:
-> +- vdd_l13_l20_l23_l24-supply:
-> +- vdd_l21-supply:
-> +- vdd_l9_l10_l17_l22-supply:
-> +- vdd_l13_l20_l23_l24-supply:
-> +- vdd_l13_l20_l23_l24-supply:
-> +- vdd_l2_lvs1_2_3-supply:
-> +- vdd_l2_lvs1_2_3-supply:
-> +- vdd_l2_lvs1_2_3-supply:
-> +- vin_5vs-supply:
-> +- vin_5vs-supply:
 
-Can you remove the duplicates here please?
+--Vy1A5eXR7jld12ZH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Fri, May 08, 2015 at 09:02:34PM +0200, Marek Belisko wrote:
+> Add devicetree support for bluetooth SCO link codec.
+
+Applied with a bit of effort, you seem to have sent this against some
+non-mainline tree - please check that in future.
+
+--Vy1A5eXR7jld12ZH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVUkhhAAoJECTWi3JdVIfQzfMH/2b1lj4+U04NqgPk2+ucrZt3
+MOFDBTflDSjQ1WxjAUIuG7cNzwRPZ5SgOITrCsFKPxPIUopJQ6MzpkWjqYHgLReD
+EmdMqGLUHfUAOCsYHob+3F39enkPa21iN7tZzZybzZiktaYakzlyiBQw7tlEi01K
+YyMFrH70tTgSsmTQr0E9Kk4AW0xZ3wA60tBOj7YLO/cpMG+xDRe1lCUN957HHCP2
+905AepZuEq928uYSIN5PWB+ezmhFjQJESQO/uERrsGJrBd7l+IZ8T8vwUY3JsYy4
+dxk4V+3rsS9FQC+oa3fP7k7bKwU4HwN/uzQdFNSEZ3GgHziVEvI3H6Eo64VDk08=
+=TsBO
+-----END PGP SIGNATURE-----
+
+--Vy1A5eXR7jld12ZH--
