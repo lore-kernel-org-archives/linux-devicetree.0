@@ -1,78 +1,127 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Tue, 12 May 2015 14:14:19 -0500
-Message-ID: <5552510B.9010306@ti.com>
-References: <20150505105714.GA22845@sirena.org.uk> <20150505171252.GI22845@sirena.org.uk> <CAKohpo=kJs076afzERPMqjELgwpN6nR2yoyEjW6XY7YSEbRuCA@mail.gmail.com> <20150507055231.GB32399@codeaurora.org> <20150507110233.GR15510@sirena.org.uk> <20150507211855.GA2455@codeaurora.org> <20150507221842.GW22845@sirena.org.uk> <CAKohpomU8wm0T=A7EkosdOjXbP8q2Cb726Hsjh08KTKYjoz3-A@mail.gmail.com> <555000B6.2010107@ti.com> <20150512052033.GC32300@linux> <20150512190134.16410.89041@quantum>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: bcm-mspi: Add support for Broadcom MSPI driver.
+Date: Tue, 12 May 2015 20:17:18 +0100
+Message-ID: <20150512191718.GW3066@sirena.org.uk>
+References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com>
+ <1431452293-16697-3-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150512190134.16410.89041@quantum>
-Sender: linux-pm-owner@vger.kernel.org
-To: Michael Turquette <mike.turquette@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, santosh shilimkar <santosh.shilimkar@oracle.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aXNiKu4lnbRqA5kZ"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1431452293-16697-3-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mike,
-On 05/12/2015 02:01 PM, Michael Turquette wrote:
-> Quoting Viresh Kumar (2015-05-11 22:20:33)
->> On 10-05-15, 20:07, Nishanth Menon wrote:
->>> just one minor concern being in the SoC end of the world :). In most
->>> times, the current consumption for a specific OPP varies depending on
->>> the specific location in the process node the die is -> this is even
->>> true among a single lot of wafers as well. some SoC vendors use hot,
->>> nominal and cold terminology to indicate the characteristics of the
->>> specific sample.
->>>
->>> it might help state which sample end of the spectrum we are talking
->>> about here. reason being: if I put in values based on my board
->>> measurement, the results may not be similar to what someone else's
->>> sample be. Depending on technology, speed binning strategy used by the
->>> vendor, temperature and few other characteristics, these numbers could
->>> be widely divergent.
->>
->> I don't have any clue about this.. :(
->>
->> @Mark/stephen: Any inputs ?
-> 
-> I do not think the idea of the mA property is to perfectly model current
-> consumption at a given opp. Instead it is a nominal value that may be
-> useful, e.g. for configuring a regulator in Stephen's case.
-> 
-> The TWLxxxx series of PMICs from TI have configurable SMPS which could
-> possibly benefit from this info as well. Most of the time those are left
-> in an "automatic mode", but there are manual programming steps to
-> achieve higher efficiencies and this property could potentially help you
-> do that.
 
-While TWLxx series was kind of nascent in it's ability of choosing
-PWM/PFM or auto mode depending on the current targets, newer PMICs
-have their own unique techniques -> but, that said, this is a
-description of power consumption for a given OPP for the "device", How
-would stephen's case work with a PMIC and 2 devices which have
-different leakage characteristics (based on which end of the process
-spectrum they come from), Lets take an example:
-device X consumes 800mA for OPPx
-device Y consumes 900mA for OPPy
+--aXNiKu4lnbRqA5kZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Taking the simpler example of TWLxxx, the PMIC switches to PWM mode at
-850mA for efficiency reasons, below 850mA, it is better to operate for
-accuracy and efficiency reasons at PFM mode.
+On Tue, May 12, 2015 at 10:38:13AM -0700, Jonathan Richardson wrote:
 
-by putting 800mA we break efficiency on device Y, and if we choose to
-put 900mA or 850mA, we break efficiency on device X.
+> +	/* Wait for interrupt indicating transfer is complete. */
+> +	if (!wait_for_completion_timeout(&mspi->xfer_done,
+> +		msecs_to_jiffies(10))) {
 
-It is a lot more impactful than using relative numbers for other
-purposes - for example energy aware scheduling as an example -> here
-the actuals might have better optimization, but hints of relative
-power numbers by itself is pretty powerful information to help
-scheduling. The usage, in this case, unlike the usage for a PMIC
-efficiency selection, is not based on absolutes and is meant more of a
-hint (closer to usage such as clock transition latency numbers).
+What if we have a large transfer on a slow bus?
 
-This is the reason I suggested to have a clear guidance in the
-bindings, since we'd very much like bindings to be ABI.
+> +	while (bytes_processed < transfer->len) {
 
--- 
-Regards,
-Nishanth Menon
+> +		/* Start transfer and wait until complete. */
+> +		err = bcm_mspi_start_transfer(mspi, !last_slot, slot);
+> +		if (err)
+> +			return err;
+
+This isn't really start_transfer() is it?  It's doing the entire
+operation.
+
+> +		/* Delay requested amount before next transfer. */
+> +		udelay(transfer->delay_usecs);
+> +	}
+
+This is buggy, it's applying the per-transfer delay every timme we fill
+the FIFO.
+
+> +	/* The rx data will go into RXRAM0/1 + last tx length. */
+> +	if (slot + 1 >= NUM_SLOTS)
+> +		mspi->rx_slot = 0;
+> +	else
+> +		mspi->rx_slot = slot + 1;
+
+How is this going to work for full duplex transfers if we had to fill
+the FIFO more than once?
+
+> +static int bcm_mspi_transfer_one(struct spi_master *master,
+> +	struct spi_device *spidev, struct spi_transfer *transfer)
+> +{
+> +	int err;
+> +
+> +	/* 8 bit transfers only are currently supported. */
+> +	if (transfer->bits_per_word > 8)
+> +		return -ENOTSUPP;
+
+Tell the core what the device supports and it will check for you.
+
+> +
+> +	err = bcm_mspi_tx_data(master, spidev, transfer);
+> +	if (err)
+> +		return err;
+> +
+> +	err = bcm_mspi_rx_data(master, spidev, transfer);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+
+I would expect the recieve and transmit operations to be running in
+parallel, not executed one after another, given the need to keep
+manually filling and draining the FIFOs.
+
+> +	struct spi_master *master;
+> +	struct device *dev = &pdev->dev;
+> +	int err;
+> +	struct resource *res;
+> +	unsigned int irq;
+> +
+> +	dev_info(dev, "Initializing BCM MSPI\n");
+
+Don't spam the logs like this, there's no content in this message.
+
+> +	master = spi_alloc_master(dev, sizeof(*data));
+> +	if (!master) {
+
+devm_spi_alloc_master().
+
+> +	/* Map base memory address. */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	data->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(data->base)) {
+> +		dev_err(&pdev->dev, "unable to map base address\n");
+
+devm_ioremap_resource() will complain for you.
+
+--aXNiKu4lnbRqA5kZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVUlG+AAoJECTWi3JdVIfQcfAH/31CJDZtGYr/iXyEKOTtt7oV
+UCr8DyxtC71Mo3dJ+8qwQkiAs+3XxJ95WfbS2K46tGTn1LKBpWSWKJaRirJcrMK1
+WTR7uevPAlJm6qM8/rcrTFrE+mt2kOnbJ4oGKX9kj2z9CcwEfyY+oFY2I75rn2q2
+2ovTRhZyhmd2Hs9Jk0L4W61gYJZlM3T8OEUXnwuBd6u0LxYeVgxSjN7evbQi4O0d
+EeFXfibv2KU8ktfMiuV53u10/LVjXipkGFhrlKzC/hnTpvSOREnPpA5zhgTSGUIt
+cps1htq19/T49fJlEVGwFBr7nER0LcKchgfrlJZmdd0bS2hcLkA1wOSu8aJxMcY=
+=Huax
+-----END PGP SIGNATURE-----
+
+--aXNiKu4lnbRqA5kZ--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
