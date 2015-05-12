@@ -1,37 +1,60 @@
-From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Subject: Re: Re: BCM2836 (Raspberry Pi 2) port
-Date: Tue, 12 May 2015 17:39:28 +0200
-Message-ID: <1701192.WcfjCoBWQN@kongar>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <4137213.WVJY1et48u@kongar> <55516738.306@wwwdotorg.org>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 02/12] clocksource: sti: Provide support for the ST
+ LPC Clocksource IP
+Date: Tue, 12 May 2015 17:55:24 +0200 (CEST)
+Message-ID: <alpine.DEB.2.11.1505121751560.4225@nanos>
+References: <1431435500-22899-1-git-send-email-lee.jones@linaro.org> <1431435500-22899-3-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55516738.306-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431435500-22899-3-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, wim@iguana.be, a.zummo@towertech.it, linux-watchdog@vger.kernel.org, rtc-linux@googlegroups.com, linux@roeck-us.net, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday 11 May 2015, 20:36:40 wrote Stephen Warren:
-> On 05/08/2015 10:14 AM, Alexander Stein wrote:
-> > On Thursday 23 April 2015, 22:25:08 wrote Stephen Warren:
-> >>> Hit any key to stop autoboot:  0 
-> >>> U-Boot> setenv fdt_high fffffff
-> > 
-> > Any specific reason to set fdt_high to fffffff?
-> 
-> Yes, it prevents U-Boot's annoying habit of moving the DTB from where it
-> was loaded to some other place. This was especially important in this
-> case since I was trying to find out exactly which piece of RAM being
-> over-written caused the issues I was seeing.
+On Tue, 12 May 2015, Lee Jones wrote:
+> +static void st_clksrc_reset(void)
 
-Shouldn't this then be part of the default raspberry (2 only?) environment?
+__init
 
-Regards,
-Alexander
+> +static int st_clksrc_setup_clk(struct device_node *np)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+__init
+
+> +static void __init st_clksrc_of_register(struct device_node *np)
+> +{
+> +	int ret;
+> +	uint32_t mode;
+> +
+> +	ret = of_property_read_u32(np, "st,lpc-mode", &mode);
+> +	if (ret) {
+> +		pr_err("clksrc-st-lpc: An LPC mode must be provided\n");
+> +		return;
+> +	}
+> +
+> +	/* LPC can either run as a Clocksource or in RTC or WDT mode */
+> +	if (mode != ST_LPC_MODE_CLKSRC)
+> +		return;
+> +
+> +	ddata.base = of_iomap(np, 0);
+> +	if (!ddata.base) {
+> +		pr_err("clksrc-st-lpc: Unable to map iomem\n");
+> +		return;
+> +	}
+> +
+> +	if (st_clksrc_setup_clk(np)) {
+> +		iounmap(ddata.base);
+> +		return;
+> +	}
+> +
+> +	if (st_clksrc_init()) {
+
+Keeps the clock enabled.
+
+> +		iounmap(ddata.base);
+> +		return;
+
+Thanks,
+
+	tglx
