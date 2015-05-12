@@ -1,214 +1,105 @@
-From: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Tue, 12 May 2015 13:06:38 +0800
-Message-ID: <55518A5E.7090608@huawei.com>
-References: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com> <7ha8xgi10e.fsf@linaro.org> <CAAS=xmjR9a-M961-7+9LF2G18qiXYhT+1sb5TEbbrQcW1fnRtw@mail.gmail.com> <CAGa+x85QDAzP_8_rPF3H0KpXO9rR2OhzYnMnAFydmBMicDzmEw@mail.gmail.com> <20150512030542.GA5889@leoy-linaro>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Tue, 12 May 2015 10:46:33 +0530
+Message-ID: <20150512051633.GB32300@linux>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+ <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+ <554FFFA3.1060801@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150512030542.GA5889@leoy-linaro>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org" <btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haifeng Yan <yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhangfei
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <554FFFA3.1060801@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Kevin,
+Hi Nishanth,
 
-On 2015/5/12 11:05, Leo Yan wrote:
-> hi Kevin,
->
-> On Mon, May 11, 2015 at 05:20:54PM -0700, Kevin Hilman wrote:
->> On Thu, May 7, 2015 at 4:11 PM, Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> Hello Kevin,
->>>
->>> 2015-05-08 4:30 GMT+08:00 Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->>>> Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> writes:
->>>>
->>>>> Hi6220 is one mobile solution of Hisilicon, this patchset contains
->>>>> initial support for Hi6220 SoC and HiKey development board, which
->>>>> supports octal ARM Cortex A53 cores. Initial support is minimal and
->>>>> includes just the arch configuration, clock driver, device tree
->>>>> configuration.
->>>>>
->>>>> PSCI is enabled in device tree and there is no problem to boot all the
->>>>> octal cores, and the CPU hotplug is also working now, you can download
->>>>> and compile the latest firmware based on the following link to run this
->>>>> patch set:
->>>>> https://github.com/96boards/documentation/wiki/UEFI
->>>>
->>>> Do you have any tips for booting this using the HiSi bootloader?  It
->>>> seems that I need to add the magic hisi,boardid property for dtbTool to
->>>> work.  Could you share what that magic value is?
->>> Yes, you need it.
->>> Hisilicon has many different development boards and those boards have some
->>> different hardware configuration, so we need different device tree
->>> files for them.
->>> the original hisi,boardid is used to distinguish different boards and
->>> used by the
->>> bootloader to judge which device tree to use at boot-up.
->>>
->>>> and maybe add it to the wiki someplace?
->>> Maybe add to section "Known Issues" in
->>> "https://github.com/96boards/documentation/wiki/UEFI"
->>> is a good choice, I will update this section later.
->>
->> You updated the wiki, but you didn't specify what the value should be
->> for this to work with the old bootloader.
->>
->> Can you please give the value of that property?
-hisi,boardid = <0 0 4 3>
-It is needed by the old hisilicon bootloader.
+On 10-05-15, 20:02, Nishanth Menon wrote:
+> On 04/30/2015 07:07 AM, Viresh Kumar wrote:
 
-I also updated the wiki page.
->>
->> Also, have you tested this series with the old bootloader as well?
->
-> Below are my testing result w/t Bintian's patches and Hisilicon old
-> bootloader:
-> - Need add property "hisi,boardid" into dts;
-> - Need change cpu enable-method from "psci" to "spin-table";
-> - The bootloader has not initialized register *cntfrq_el0* so will
->    introduce the failure during init arch timer.
->
-> For init cntfrq_el0, we need fix this issue in Hisilicon's old
-> bootloader, rather than directly add "clock-frequency" for arch
-> timer's node in DTS. i will try to commit one patch for fix this
-> issue for Hisilicon's old bootloader.
->
-> So i think upper issues mainly are introduced by Hisilicon's old
-> bootloader but not come from Bintian's patches. How about u think for
-> this?
->
-> Below is my local diff which is used to compatible w/t Hisilicon's
-> old bootloader; Just for your reference.
->
-> Thanks,
-> Leo Yan
->
-> ---8<---
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> index e36a539..fd1f89e 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> @@ -14,6 +14,7 @@
->
->   / {
->   	model = "HiKey Development Board";
-> +	hisi,boardid = <0 0 4 3>;
->   	compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
->
->   	aliases {
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index 229937f..8ade3d9 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -13,11 +13,6 @@
->   	#address-cells = <2>;
->   	#size-cells = <2>;
->
-> -	psci {
-> -		compatible = "arm,psci-0.2";
-> -		method = "smc";
-> -	};
-> -
->   	cpus {
->   		#address-cells = <2>;
->   		#size-cells = <0>;
-> @@ -57,56 +52,64 @@
->   			compatible = "arm,cortex-a53", "arm,armv8";
->   			device_type = "cpu";
->   			reg = <0x0 0x0>;
-> -			enable-method = "psci";
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x740fff8>;
->   		};
->
->   		cpu1: cpu@1 {
->   			compatible = "arm,cortex-a53", "arm,armv8";
->   			device_type = "cpu";
->   			reg = <0x0 0x1>;
-> -			enable-method = "psci";
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x740fff8>;
->   		};
->
->   		cpu2: cpu@2 {
->   			compatible = "arm,cortex-a53", "arm,armv8";
->   			device_type = "cpu";
->   			reg = <0x0 0x2>;
-> -			enable-method = "psci";
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x740fff8>;
->   		};
->
->   		cpu3: cpu@3 {
->   			compatible = "arm,cortex-a53", "arm,armv8";
->   			device_type = "cpu";
->   			reg = <0x0 0x3>;
-> -			enable-method = "psci";
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x740fff8>;
->   		};
->
->   		cpu4: cpu@100 {
->   			compatible = "arm,cortex-a53", "arm,armv8";
->   			device_type = "cpu";
->   			reg = <0x0 0x100>;
-> -			enable-method = "psci";
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x740fff8>;
->   		};
->
->   		cpu5: cpu@101 {
->   			compatible = "arm,cortex-a53", "arm,armv8";
->   			device_type = "cpu";
->   			reg = <0x0 0x101>;
-> -			enable-method = "psci";
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x740fff8>;
->   		};
->
->   		cpu6: cpu@102 {
->   			compatible = "arm,cortex-a53", "arm,armv8";
->   			device_type = "cpu";
->   			reg = <0x0 0x102>;
-> -			enable-method = "psci";
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x740fff8>;
->   		};
->
->   		cpu7: cpu@103 {
->   			compatible = "arm,cortex-a53", "arm,armv8";
->   			device_type = "cpu";
->   			reg = <0x0 0x103>;
-> -			enable-method = "psci";
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x740fff8>;
->   		};
->   	};
->
-> @@ -129,6 +132,7 @@
->   			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->   			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->   			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <1200000>;
->   	};
->
->   	soc {
-Thanks for Leo's replies, Leo is responsible for bootloader
-development, you can contact him if you have any problem about
-bootloader.
+> > +the liberty of choosing these. These triplets are called Operating Performance
+> 
+> I suggest we dont call them as triplets either -> note, we have added
+> clk transition latency per OPP, so they are not exactly triplets either.
 
-Thanks,
+Sure.
 
-Bintian
->
-> .
->
+> > +Points aka OPPs. This document defines bindings for these OPPs applicable across
+> > +wide range of devices. For illustration purpose, this document uses CPU as a
+> > +device.
+> > +
+> > +
+> 
+> Would be good to point to operating-points (the legacy document) as
+> well. It might be good to state that only one of the properties should
+> be used for the device node OPP description.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hmm, okay.
+
+> > +Optional properties:
+> > +- shared-opp: Indicates that device nodes using this OPP descriptor's phandle
+> > +  switch their DVFS state together, i.e. they share clock/voltage/current lines.
+> > +  Missing property means devices have independent clock/voltage/current lines,
+> > +  but they share OPP tables.
+> 
+> Is'nt this property redundant? by the fact that phandle is reused for
+> cpu1 should indicate shared OPP table, correct?
+
+There are two things we can share:
+- OPP tables (And not the clock lines themselves). For example,
+  consider a quad-core platform with independent clock/voltage lines
+  for all CPUs but all the CPUs have same OPP table.
+
+- Clock/voltage rails: This is described by the above property. I
+  thought the examples should have made this clear, anything left
+  there ?
+
+> > +- turbo-mode: Marks the OPP to be used only for turbo modes.
+> 
+> Might be great to add some description for what "turbo mode" means here.
+
+Okay.
+
+> That said, flexibility of this approach is awesome, thanks for doing
+> this, I believe we did have a discussion about "safe OPP" for thermal
+> behavior -> now that we have phandles for OPPs, we  can give phandle
+> pointer to the thermal framework. in addition, we can also use phandle
+> for marking throttling information in thermal framework instead of
+> indices as well. which allows a lot of flexibility.
+> 
+> in some systems, we'd have need to mark certain OPPs for entry into
+> suspend(tegra?) or during shutdown (for example) - do we allow for such
+> description as phandle pointer back to the OPP nodes (from cpu0 device)
+> OR do we describe them as additional properties?
+
+Haven't thought about it earlier. In case we need them, probably it
+should go in the OPP table.
+
+NOTE: Mike T. once told me that we shouldn't over-abuse the bindings
+by putting every detail there. And I am not sure at all on how to draw
+that line.
+
+> > +- status: Marks the node enabled/disabled.
+> 
+> One question we'd probably want the new framework to address is the need
+> for OPPs based on Efuse options - Am I correct in believing that the
+> solution that iMX, and TI SoCs probably need is something similar to
+> modifying the status to disabled? or do we have Vendor specfic modifier
+> properties that would be allowed?
+
+See PATCH 2/3 for that.
+ 
+> One additional behavior need I noticed in various old threads is a need
+> to restrict transition OPPs -> certain SoCs might have constraints on
+> next OPP they can transition from certain OPPs in-order to achieve a new
+> OPP. again, such behavior could be phandle lists OR properties that link
+> the chain up together. Number of such needs did sound less, but still
+> just thought to bring it up.
+
+See 0/3 and 3/3 for that. Its present in my solution but Mike T. is
+strictly against keeping that in OPP table. And so 3/3 may get Nak'd.
+
+Thanks a lot for your reviews.
