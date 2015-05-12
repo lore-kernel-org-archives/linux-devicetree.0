@@ -1,69 +1,65 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: Zynq: DT: Enable xadc node in zynq-parallella.dts
-Date: Tue, 12 May 2015 14:13:20 +0200
-Message-ID: <5551EE60.40601@suse.de>
-References: <1431037945-40360-1-git-send-email-xander.huff@ni.com> <1431037945-40360-2-git-send-email-xander.huff@ni.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v6 1/2] arm64: dts: Add the arasan sdhci nodes in apm-storm.dtsi
+Date: Tue, 12 May 2015 14:30:29 +0200
+Message-ID: <CAPDyKFrY+UQETZy3cgtrS5UTGYLq6JyFsGXaNsAfg=9Eat6ooA@mail.gmail.com>
+References: <1431333531-30491-1-git-send-email-stripathi@apm.com>
+	<1431333531-30491-2-git-send-email-stripathi@apm.com>
+	<CAOHikRAeOH5Pt4WZFk1C29dUytO7H0ox_dgq578oW19ue8Eb8Q@mail.gmail.com>
+	<5446694.nHWK6QO1on@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431037945-40360-2-git-send-email-xander.huff-acOepvfBmUk@public.gmane.org>
+In-Reply-To: <5446694.nHWK6QO1on@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 08.05.2015 um 00:32 schrieb Xander Huff:
-> Now that zynq-7000 disables xadc by default, enable in zynq-parallell=
-a
-> to retain existing behavior.
->=20
-> Signed-off-by: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
-> ---
->  arch/arm/boot/dts/zynq-parallella.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dt=
-s/zynq-parallella.dts
-> index 1745712..b1a1f7a 100644
-> --- a/arch/arm/boot/dts/zynq-parallella.dts
-> +++ b/arch/arm/boot/dts/zynq-parallella.dts
-> @@ -32,6 +32,12 @@
->  		bootargs =3D "console=3DttyPS0,115200 earlyprintk root=3D/dev/mmcb=
-lk0p2 rootfstype=3Dext4 rw rootwait";
->  		linux,stdout-path =3D "/amba/serial@e0001000";
->  	};
-> +
-> +	amba {
-> +		adc: adc@f8007100 {
-> +			status =3D "okay";
-> +		};
-> +	};
+On 12 May 2015 at 09:28, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tuesday 12 May 2015 11:03:46 Suman Tripathi wrote:
+>> > @@ -533,6 +567,15 @@
+>> >                         interrupts = <0x0 0x4f 0x4>;
+>> >                 };
+>> >
+>> > +               sdhci0: sdhci@1c000000 {
+>> > +                       compatible = "arasan,sdhci-4.9a";
+>> > +                       reg = <0x0 0x1c000000 0x0 0x100>;
+>> > +                       interrupts = <0x0 0x49 0x4>;
+>> > +                       dma-coherent;
+>> > +                       clock-names = "clk_xin", "clk_ahb";
+>> > +                       clocks = <&sdioclk 0>, <&ahbclk 0>;
+>> > +               };
+>> > +
+>> >                 phy1: phy@1f21a000 {
+>> >                         compatible = "apm,xgene-phy";
+>> >                         reg = <0x0 0x1f21a000 0x0 0x100>;
+>> > --
+>> > 1.8.2.1
+>> >
+>>
+>> Can anyone from dt community review this patch ? I have changed the dts node
+>> names from sdhc to sdhci as per Arnd, Michael comments .
+>
+> I was actually asking for it to be named 'mmc', not 'sdhci', because the
+> name is supposed to indicate the purpose of the device, not the
+> implementation. I realize that we are inconsistent here, just as with
+> 'uart' vs 'serial', and that ePAPR does not define what to do.
 
-You've already discarded this patchset, but please note for the future
-that the desired style would've been the one you see below, i.e.
+Then we need a common name to address the following purposes: SD, MMC,
+eMMC, SDIO.
 
->  };
+>
+> We should probably add something to Documentation/devicetree/bindings/mmc/mmc.txt
+> about this topic and change all the dts files accordingly (unless there
+> is a risk for regressions). At the moment, the mmc.txt file also includes
+> an example with 'sdhci', not 'mmc'.
+>
 
-&adc {
-	status =3D "okay";
-};
+I am happy to change, as long as we can come up with something better.
 
-Regards,
-Andreas
-
-> =20
->  &clkc {
->=20
-
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Dilip Upmanyu, Graham Norton; H=
-RB
-21284 (AG N=FCrnberg)
+Kind regards
+Uffe
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
