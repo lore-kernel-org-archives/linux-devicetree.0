@@ -1,56 +1,72 @@
 From: Xing Zheng <acgzxing@gmail.com>
-Subject: [PATCH 0/4] ASoC: rockchip: add rockchip machine driver
-Date: Tue, 12 May 2015 17:26:33 +0800
-Message-ID: <1431422797-31903-1-git-send-email-zhengxing@rock-chips.com>
+Subject: [PATCH 4/4] ASoC: rockchip-audio-machine: add rockchip machine driver bindings
+Date: Tue, 12 May 2015 17:26:37 +0800
+Message-ID: <1431422797-31903-5-git-send-email-zhengxing@rock-chips.com>
+References: <1431422797-31903-1-git-send-email-zhengxing@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431422797-31903-1-git-send-email-zhengxing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dgreid@chromium.org, dianders@chromium.org, heiko@sntech.de, sonnyrao@chromium.org
-Cc: linux-rockchip@lists.infradead.org, zhengxing <zhengxing@rock-chips.com>, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org, zhengxing <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: zhengxing <zhengxing@rock-chips.com>
 
+Add documentation to the machine driver of the device-tree
+bindings for the soundcard of the Rockchip board.
 
-Hi,
+Signed-off-by: zhengxing <zhengxing@rock-chips.com>
 
-These patches to add machine driver for rockchip platform.
+---
 
-We intended to use simple-card on the project, but it seem like that have
-some issues(jack detection). We need the following features on the project,
-but simple-card is temporarily unable to provide them:
-1. We need dynamically recognize and select one codec from supported codecs
-   in dts.
-2. Simple-card don't provide to call the codec jack detection callback via dts
-   description (ts3a227e_enable_jack_detect for max98090, rt5645_set_jack_detect
-   for rt5645/rt5650).
-3. Simple-card support simple-widght only, but codec may use cunstom the name of
-   widget (rk_dapm_widgets: "Headset Mic", "Int Mic" in max98090).
-
-Simple-card is good generic machine driver, but if we want to replace simple-card
-in the exsiting work, it may bring other problems. Therefore, we want to upload
-these functions that we need.
-
-
-
-zhengxing (4):
-  ASoC: rockchip: add rockchip machine driver
-  ASoC: rockchip: add rockchip machine driver for max98090
-  ASoC: rockchip: add rockchip machine driver for rt5650/rt5645
-  ASoC: rockchip-audio-machine: add rockchip machine driver bindings
-
- .../sound/rockchip,rockchip-audio-machine.txt      |   38 ++++
- sound/soc/rockchip/Kconfig                         |   26 +++
- sound/soc/rockchip/Makefile                        |    9 +
- sound/soc/rockchip/rockchip_machine_driver.c       |  222 ++++++++++++++++++++
- sound/soc/rockchip/rockchip_machine_driver.h       |   41 ++++
- sound/soc/rockchip/rockchip_max98090.c             |  185 ++++++++++++++++
- sound/soc/rockchip/rockchip_rt5645.c               |  220 +++++++++++++++++++
- 7 files changed, 741 insertions(+)
+ .../sound/rockchip,rockchip-audio-machine.txt      |   38 ++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-machine.txt
- create mode 100644 sound/soc/rockchip/rockchip_machine_driver.c
- create mode 100644 sound/soc/rockchip/rockchip_machine_driver.h
- create mode 100644 sound/soc/rockchip/rockchip_max98090.c
- create mode 100644 sound/soc/rockchip/rockchip_rt5645.c
 
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-machine.txt b/Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-machine.txt
+new file mode 100644
+index 0000000..36864fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-machine.txt
+@@ -0,0 +1,38 @@
++ROCKCHIP rk3288 audio complex, with AUDIO CODEC
++
++Required properties:
++- (machine) compatible : "rockchip,rockchip-audio-machine"
++- (codec) compatible : The child node name of compatible.
++- rockchip,model : The user-visible name of this sound complex.
++
++- rockchip,i2s-controller : The phandle of the Rockchip I2S controller that's
++  connected to the CODEC.
++- rockchip,audio-codec : The phandle of the audio codec.
++- rockchip,headset-codec : The phandle of the jack detection ic.
++
++Optional properties:
++- rockchip,hp-det-gpios : The GPIO that detect headphones are plugged in
++- rockchip,mic-det-gpios : The GPIO that detect microphones are plugged in
++
++Example:
++
++sound {
++	compatible = "rockchip,rockchip-audio-machine";
++
++	/* child node */
++	sound_rtl {
++		compatible = "rockchip,rockchip-audio-rt5645";
++		rockchip,model = "I2S-RT5650";
++		rockchip,i2s-controller = <&i2s>;
++		rockchip,audio-codec = <&rt5645>;
++	};
++
++	/* child node */
++	sound_maxim {
++		compatible = "rockchip,rockchip-audio-max98090";
++		rockchip,model = "ROCKCHIP-I2S";
++		rockchip,i2s-controller = <&i2s>;
++		rockchip,audio-codec = <&max98090>;
++		rockchip,headset-codec = <&headsetcodec>;
++	};
++};
+\ No newline at end of file
 -- 
 1.7.9.5
