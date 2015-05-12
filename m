@@ -1,44 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] ASoC: bt-sco: Add devicetree support for bt-sco codec
-Date: Tue, 12 May 2015 19:37:22 +0100
-Message-ID: <20150512183722.GO3066@sirena.org.uk>
-References: <1431111754-14562-1-git-send-email-marek@goldelico.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Add binding for Broadcom MSPI driver.
+Date: Tue, 12 May 2015 11:38:57 -0700
+Message-ID: <555248C1.2010203@gmail.com>
+References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com> <1431452293-16697-2-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Vy1A5eXR7jld12ZH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431111754-14562-1-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, hns@goldelico.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431452293-16697-2-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/05/15 10:38, Jonathan Richardson wrote:
+> 
+> Signed-off-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/spi/brcm,mspi-spi.txt      |   39 ++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt b/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
+> new file mode 100644
+> index 0000000..e86a7a0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
+> @@ -0,0 +1,39 @@
+> +Broadcom MSPI controller
+> +
+> +The Broadcom MSPI controller is a SPI controller found on various chips such
+> +as Cygnus.
+> +
+> +Required properties:
+> +- compatible: Must be "brcm,mspi-v0".
+> +
+> +- reg:  The first register is the physical base address of the MSPI controller.
+> +  The second register is the address of the MSPI interrupt control registers. It
+> +  is only required for chips that have a separate register set for extended
+> +  interrupt control. This is required for Cygnus.
 
---Vy1A5eXR7jld12ZH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In which case we would want to mandate the use of a "reg-names"
+property, because there could be other kinds of controllers, such as the
+one found on BCM7xxx where we have the 3 "reg" units, the first one is
+the MSPI controller register range, while the two others are used for
+the Boot SPI portion of the controller to accelerate flash reads, so
+completely unrelated here.
 
-On Fri, May 08, 2015 at 09:02:34PM +0200, Marek Belisko wrote:
-> Add devicetree support for bluetooth SCO link codec.
+Right now, using your driver on this Device Tree/configuration makes
+bcm_mspi request the second register range and mistakenly assuming this
+is the extended interrupt control register.
 
-Applied with a bit of effort, you seem to have sent this against some
-non-mainline tree - please check that in future.
-
---Vy1A5eXR7jld12ZH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVUkhhAAoJECTWi3JdVIfQzfMH/2b1lj4+U04NqgPk2+ucrZt3
-MOFDBTflDSjQ1WxjAUIuG7cNzwRPZ5SgOITrCsFKPxPIUopJQ6MzpkWjqYHgLReD
-EmdMqGLUHfUAOCsYHob+3F39enkPa21iN7tZzZybzZiktaYakzlyiBQw7tlEi01K
-YyMFrH70tTgSsmTQr0E9Kk4AW0xZ3wA60tBOj7YLO/cpMG+xDRe1lCUN957HHCP2
-905AepZuEq928uYSIN5PWB+ezmhFjQJESQO/uERrsGJrBd7l+IZ8T8vwUY3JsYy4
-dxk4V+3rsS9FQC+oa3fP7k7bKwU4HwN/uzQdFNSEZ3GgHziVEvI3H6Eo64VDk08=
-=TsBO
------END PGP SIGNATURE-----
-
---Vy1A5eXR7jld12ZH--
+You could argue that the BSPI portion should be a separate node, but
+even so, better be safe than sorry.
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
