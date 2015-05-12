@@ -1,169 +1,48 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] doc: dt: add documentation for pl172 memory bindings
-Date: Tue, 12 May 2015 19:44:35 +0200
-Message-ID: <CAGhQ9VybD9Oar8fdW5cJnFpqVK1pniz0-nHkK-wGAETBoXk97g@mail.gmail.com>
-References: <1430241879-30046-1-git-send-email-manabian@gmail.com>
-	<1430241879-30046-3-git-send-email-manabian@gmail.com>
+From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 3/3] leds: Add ktd2692 flash LED driver
+Date: Tue, 12 May 2015 10:44:27 -0700
+Message-ID: <CAK5ve-LTuQWS59m=O2YyO1bAryAezYhre4eW3ZA34sraJ53AZA@mail.gmail.com>
+References: <1431419877-28339-1-git-send-email-ingi2.kim@samsung.com>
+ <1431419877-28339-4-git-send-email-ingi2.kim@samsung.com> <5551F4AE.9050900@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430241879-30046-3-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <5551F4AE.9050900-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi DT maintainers,
-
-Do you have any comments on the bindings below?
-
-These bindings are based on bindings for "ti,davinci-aemif" found
-under memory-controllers/ti-aemif.txt
-
-regards,
-Joachim Eastwood
-
-On 28 April 2015 at 19:24, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../bindings/memory-controllers/arm,pl172.txt      | 125 +++++++++++++++++++++
->  1 file changed, 125 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt
+On Tue, May 12, 2015 at 5:40 AM, Jacek Anaszewski
+<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Ingi,
 >
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt b/Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt
-> new file mode 100644
-> index 000000000000..e6df32f9986d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt
-> @@ -0,0 +1,125 @@
-> +* Device tree bindings for ARM PL172 MultiPort Memory Controller
-> +
-> +Required properties:
-> +
-> +- compatible:          "arm,pl172", "arm,primecell"
-> +
-> +- reg:                 Must contains offset/length value for controller.
-> +
-> +- #address-cells:      Must be 2. The partition number has to be encoded in the
-> +                       first address cell and it may accept values 0..N-1
-> +                       (N - total number of partitions). The second cell is the
-> +                       offset into the partition.
-> +
-> +- #size-cells:         Must be set to 1.
-> +
-> +- ranges:              Must contain one or more chip select memory regions.
-> +
-> +- clocks:              Must contain references to controller clocks.
-> +
-> +- clock-names:         Must contain "mpmcclk" and "apb_pclk".
-> +
-> +- clock-ranges:                Empty property indicating that child nodes can inherit
-> +                       named clocks. Required only if clock tree data present
-> +                       in device tree.
-> +                       See clock-bindings.txt
-> +
-> +Child chip-select (cs) nodes contain the memory devices nodes connected to
-> +such as NOR (e.g. cfi-flash) and NAND.
-> +
-> +Required child cs node properties:
-> +
-> +- #address-cells:      Must be 2.
-> +
-> +- #size-cells:         Must be 1.
-> +
-> +- ranges:              Empty property indicating that child nodes can inherit
-> +                       memory layout.
-> +
-> +- clock-ranges:                Empty property indicating that child nodes can inherit
-> +                       named clocks. Required only if clock tree data present
-> +                       in device tree.
-> +
-> +- mpmc,cs:             Chip select number. Indicates to the pl0172 driver
-> +                       which chipselect is used for accessing the memory.
-> +
-> +- mpmc,memory-width:   Width of the chip select memory. Must be equal to
-> +                       either 8, 16 or 32.
-> +
-> +Optional child cs node config properties:
-> +
-> +- mpmc,async-page-mode:        Enable asynchronous page mode.
-> +
-> +- mpmc,cs-active-high: Set chip select polarity to active high.
-> +
-> +- mpmc,byte-lane-low:  Set byte lane state to low.
-> +
-> +- mpmc,extended-wait:  Enable extended wait.
-> +
-> +- mpmc,buffer-enable:  Enable write buffer.
-> +
-> +- mpmc,write-protect:  Enable write protect.
-> +
-> +Optional child cs node timing properties:
-> +
-> +- mpmc,write-enable-delay:     Delay from chip select assertion to write
-> +                               enable (WE signal) in nano seconds.
-> +
-> +- mpmc,output-enable-delay:    Delay from chip select assertion to output
-> +                               enable (OE signal) in nano seconds.
-> +
-> +- mpmc,write-access-delay:     Delay from chip select assertion to write
-> +                               access in nano seconds.
-> +
-> +- mpmc,read-access-delay:      Delay from chip select assertion to read
-> +                               access in nano seconds.
-> +
-> +- mpmc,page-mode-read-delay:   Delay for asynchronous page mode sequential
-> +                               accesses in nano seconds.
-> +
-> +- mpmc,turn-round-delay:       Delay between access to memory banks in nano
-> +                               seconds.
-> +
-> +If any of the above timing parameters are absent, current parameter value will
-> +be taken from the corresponding HW reg.
-> +
-> +Example for pl172 with nor flash on chip select 0 shown below.
-> +
-> +emc: memory-controller@40005000 {
-> +       compatible = "arm,pl172", "arm,primecell";
-> +       reg = <0x40005000 0x1000>;
-> +       clocks = <&ccu1 CLK_CPU_EMCDIV>, <&ccu1 CLK_CPU_EMC>;
-> +       clock-names = "mpmcclk", "apb_pclk";
-> +       #address-cells = <2>;
-> +       #size-cells = <1>;
-> +       ranges = <0 0 0x1c000000 0x1000000
-> +                 1 0 0x1d000000 0x1000000
-> +                 2 0 0x1e000000 0x1000000
-> +                 3 0 0x1f000000 0x1000000>;
-> +
-> +       cs0 {
-> +               #address-cells = <2>;
-> +               #size-cells = <1>;
-> +               ranges;
-> +
-> +               mpmc,cs = <0>;
-> +               mpmc,memory-width = <16>;
-> +               mpmc,byte-lane-low;
-> +               mpmc,write-enable-delay = <0>;
-> +               mpmc,output-enable-delay = <0>;
-> +               mpmc,read-enable-delay = <70>;
-> +               mpmc,page-mode-read-delay = <70>;
-> +
-> +               flash@0,0 {
-> +                       compatible = "sst,sst39vf320", "cfi-flash";
-> +                       reg = <0 0 0x400000>;
-> +                       bank-width = <2>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       partition@0 {
-> +                               label = "data";
-> +                               reg = <0 0x400000>;
-> +                       };
-> +               };
-> +       };
-> +};
+> On 05/12/2015 10:37 AM, Ingi Kim wrote:
+>>
+>> This patch adds a driver to support the ktd2692 flash LEDs.
+>> ktd2692 can control flash current by ExpressWire interface.
+>>
+>> Signed-off-by: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Acked-by: Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Reviewed-by: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   drivers/leds/Kconfig        |   9 +
+>>   drivers/leds/Makefile       |   1 +
+>>   drivers/leds/leds-ktd2692.c | 443
+>> ++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 453 insertions(+)
+>>   create mode 100644 drivers/leds/leds-ktd2692.c
+>
+>
+> Acked-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+
+Merged, thanks.
+-Bryan
+
 > --
-> 1.8.0
->
+> Best Regards,
+> Jacek Anaszewski
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
