@@ -1,74 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
-Date: Tue, 12 May 2015 17:05:40 +0100
-Message-ID: <20150512160540.GB3066@sirena.org.uk>
-References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
- <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
- <20150508175306.GG2761@sirena.org.uk>
- <1431434356.2128.9.camel@mhfsdcap03>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V4 2/3] OPP: Allow multiple OPP tables to be passed via
+ DT
+Date: Tue, 12 May 2015 11:09:04 -0500
+Message-ID: <555225A0.8050707@ti.com>
+References: <cover.1430394884.git.viresh.kumar@linaro.org> <d734a94af2263285fe8cef9f177212f15f218944.1430394884.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431434356.2128.9.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: leilk liu <leilk.liu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <d734a94af2263285fe8cef9f177212f15f218944.1430394884.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
+On 04/30/2015 07:08 AM, Viresh Kumar wrote:
+> On some platforms (Like Qualcomm's SoCs), it is not decided until
+> runtime on what OPPs to use. The OPP tables can be fixed at compile
+> time, but which table to use is found out only after reading some efuses
+> (sort of an eeprom) and knowing characteristics of the SoC.
 
---ZfOjI3PrQbgiZnxM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+they are more like prom than eeprom in many instances.
 
-On Tue, May 12, 2015 at 08:39:16PM +0800, leilk liu wrote:
-> On Fri, 2015-05-08 at 18:53 +0100, Mark Brown wrote:
-> > On Fri, May 08, 2015 at 04:55:42PM +0800, leilk.liu@mediatek.com wrote:
+> 
+> To support such platform we need to pass multiple OPP tables per device
+> and hardware should be able to choose one and only one table out of
+> those.
+> 
+> Update OPP-v2 bindings to support that.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/power/opp.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> index 3b67a5c8d965..07959903ec32 100644
+> --- a/Documentation/devicetree/bindings/power/opp.txt
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -14,6 +14,9 @@ Devices supporting OPPs must set their "operating-points-v2" property with
+>  phandle to a OPP descriptor in their DT node. The OPP core will use this phandle
+>  to find the operating points for the device.
+>  
+> +Devices may want to choose OPP tables at runtime and so can provide a list of
+> +phandles here. But only *one* of them should be chosen at runtime.
+> +
+>  
+>  * OPP Descriptor Node
+>  
+> @@ -28,6 +31,8 @@ This describes the OPPs belonging to a device. This node can have following
+>    reference an OPP.
+>  
+>  Optional properties:
+> +- opp-name: Name of the OPP table, to uniquely identify it if more than one OPP
+> +  table is supplied in "operating-points-v2" property of device.
+>  - shared-opp: Indicates that device nodes using this OPP descriptor's phandle
+>    switch their DVFS state together, i.e. they share clock/voltage/current lines.
+>    Missing property means devices have independent clock/voltage/current lines,
+> 
 
-> Could you tell me more details about "You should also be using the core
-> helpers for DMA mapping"?
+With some SoCs like AM335x - thanks to some brain dead incompatible
+hardware design choices, this might end up as a big list or various
+OPP tables. but overall, I must prefer this approach as well.
 
-Implement can_dma() - look for drivers providing that for examples.
+Thanks for proposing this. will be great to see examples documented in
+bindings doc as well.
 
-> > > +static const struct of_device_id mtk_spi_of_match[] =3D {
-> > > +	{ .compatible =3D "mediatek,mt6589-spi", .data =3D (void *)COMPAT_M=
-T6589},
-> > > +	{ .compatible =3D "mediatek,mt8173-spi", .data =3D (void *)COMPAT_M=
-T8173},
-> > > +	{}
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
+With no further issues,
+Acked-by: Nishanth Menon <nm@ti.com>
 
-> > There were three compatible strings listed in the DT binding but only
-> > two here.
-
-> MT6589 and MT8135 is compatible;=20
-> For MT8135 IC, it can use the follow way in dts to probe:
->   compatible =3D "mediatek,mt8135-spi",=20
-> 	       "mediatek,mt6589-spi";
-
-> And I test it's ok on MT8135 platform. So I add struct of_device_id
-> mtk_spi_of_match like this in spi driver code.
-
-You should list all the compatibles documented in the binding here, if
-some of them are the same just have them map to a single constant.
-
---ZfOjI3PrQbgiZnxM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVUiTUAAoJECTWi3JdVIfQyRsH/RIfXC/axE4Vnj/fc10xN1sA
-ouHn1R2VNR2a22+BW2TiEV50STna+tHzOd/O3jbnLzt8PFwQhFzQEiWJnkm0l1ZP
-zi+fFz48mMUuCuzEuW5qKyyw6jI2zXrngAE3Pn/dDIbhxNQJOGmNxsZbShNF0Gf9
-3/KSrnI8lter1xWXJojNkfA8BYPy0PHDCECqIVBEWpd4BaOf0RKnZTeDUW3fU9ZB
-73zwIKWNCWvPjdx7igOPi2Th6fICK8wfVEW2ByR1pEEsHclbTCYAT08+jzzAU1Vp
-SP70datG78Pi/ttBJuh3fgZ9UCGy/pJjb0gnTj6gD+DCyuTrW62WIf/faTtT5NA=
-=2z4G
------END PGP SIGNATURE-----
-
---ZfOjI3PrQbgiZnxM--
+-- 
+Regards,
+Nishanth Menon
