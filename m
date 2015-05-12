@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 01/13] ARM: STi: STiH407: Add DT nodes for for PWM
-Date: Tue, 12 May 2015 13:51:38 +0100
-Message-ID: <1431435110-22595-2-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH 04/13] ARM: STi: STiH416-b2020e: Enable PWM on the B2020 Rev-E
+Date: Tue, 12 May 2015 13:51:41 +0100
+Message-ID: <1431435110-22595-5-git-send-email-lee.jones@linaro.org>
 References: <1431435110-22595-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,52 +21,33 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Ajit Pal Singh <ajitpal.singh@st.com>, Lee Jones <lee.jones@linaro.org>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Supply top level nodes for the STiH407 based development boards.
-The Pinctrl configuration has already been applied, so the only
-missing piece of the DT puzzle is for a board's DTB to enable
-the nodes.
+All the infrastructure is now in place for ST's PWM controller.  This
+patch takes the final step and enables the IP on the 2020 Rev-E
+development platform.
 
 Signed-off-by: Ajit Pal Singh <ajitpal.singh@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/stih416-b2020e.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
-index 3efa3b2..2c560fc3 100644
---- a/arch/arm/boot/dts/stih407.dtsi
-+++ b/arch/arm/boot/dts/stih407.dtsi
-@@ -147,5 +147,33 @@
- 				};
- 			};
+diff --git a/arch/arm/boot/dts/stih416-b2020e.dts b/arch/arm/boot/dts/stih416-b2020e.dts
+index 961799e..f1ceee1 100644
+--- a/arch/arm/boot/dts/stih416-b2020e.dts
++++ b/arch/arm/boot/dts/stih416-b2020e.dts
+@@ -51,5 +51,15 @@
+ 		sata0: sata@fe380000{
+ 			status = "okay";
  		};
 +
-+		/* COMMS PWM Module */
-+		pwm0: pwm@9810000 {
-+			compatible	= "st,sti-pwm";
-+			status		= "disabled";
-+			#pwm-cells	= <2>;
-+			reg		= <0x9810000 0x68>;
-+			pinctrl-names	= "default";
-+			pinctrl-0	= <&pinctrl_pwm0_chan0_default>;
-+			clock-names	= "pwm";
-+			clocks		= <&clk_sysin>;
++		/* SAS PWM Module */
++		pwm0: pwm@fed10000 {
++			status		= "okay";
 +		};
 +
 +		/* SBC PWM Module */
-+		pwm1: pwm@9510000 {
-+			compatible	= "st,sti-pwm";
-+			status		= "disabled";
-+			#pwm-cells	= <2>;
-+			reg		= <0x9510000 0x68>;
-+			pinctrl-names	= "default";
-+			pinctrl-0	= <&pinctrl_pwm1_chan0_default
-+					&pinctrl_pwm1_chan1_default
-+					&pinctrl_pwm1_chan2_default
-+					&pinctrl_pwm1_chan3_default>;
-+			clock-names	= "pwm";
-+			clocks		= <&clk_sysin>;
-+			st,pwm-num-chan = <4>;
++		pwm1: pwm@fe510000 {
++			status		= "okay";
 +		};
  	};
  };
