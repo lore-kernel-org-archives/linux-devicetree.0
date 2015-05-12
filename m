@@ -1,60 +1,37 @@
-From: =?windows-1252?Q?Noralf_Tr=F8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH 2/3 v8] mailbox: Enable BCM2835 mailbox support
-Date: Tue, 12 May 2015 17:28:47 +0200
-Message-ID: <55521C2F.5030809@tronnes.org>
-References: <1430857666-18877-1-git-send-email-eric@anholt.net> <1430857666-18877-2-git-send-email-eric@anholt.net>
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: Re: Re: BCM2836 (Raspberry Pi 2) port
+Date: Tue, 12 May 2015 17:39:28 +0200
+Message-ID: <1701192.WcfjCoBWQN@kongar>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <4137213.WVJY1et48u@kongar> <55516738.306@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430857666-18877-2-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Phil <phil@raspberrypi.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55516738.306-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Monday 11 May 2015, 20:36:40 wrote Stephen Warren:
+> On 05/08/2015 10:14 AM, Alexander Stein wrote:
+> > On Thursday 23 April 2015, 22:25:08 wrote Stephen Warren:
+> >>> Hit any key to stop autoboot:  0 
+> >>> U-Boot> setenv fdt_high fffffff
+> > 
+> > Any specific reason to set fdt_high to fffffff?
+> 
+> Yes, it prevents U-Boot's annoying habit of moving the DTB from where it
+> was loaded to some other place. This was especially important in this
+> case since I was trying to find out exactly which piece of RAM being
+> over-written caused the issues I was seeing.
 
-Den 05.05.2015 22:27, skrev Eric Anholt:
-> From: Lubomir Rintel <lkundrak@v3.sk>
->
-> This mailbox driver provides a single mailbox channel to write 32-bit
-> values to the VPU and get a 32-bit response.  The Raspberry Pi
-> firmware uses this mailbox channel to implement firmware calls, while
-> Roku 2 (despite being derived from the same firmware tree) doesn't.
->
-> The driver was originally submitted by Lubomir, based on the
-> out-of-tree 2708 mailbox driver.  Eric Anholt fixed it up for
-> upstreaming, with the major functional change being that it now has no
-> notion of multiple channels (since that is a firmware-dependent
-> concept) and instead the raspberrypi-firmware driver will do that
-> bit-twiddling in its own messages.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Signed-off-by: Craig McGeachie <slapdau@yahoo.com.au>
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> Cc: Jassi Brar <jassisinghbrar@gmail.com>
-> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-> ---
-[...]
-> diff --git a/drivers/mailbox/bcm2835-mailbox.c b/drivers/mailbox/bcm2835-mailbox.c
-[...]
-> +static bool bcm2835_last_tx_done(struct mbox_chan *link)
-> +{
-> +	struct bcm2835_mbox *mbox = bcm2835_link_mbox(link);
-> +	bool ret;
-> +
-> +	spin_lock(&mbox->lock);
-> +	ret = !(readl(mbox->regs + MAIL0_STA) & ARM_MS_FULL);
+Shouldn't this then be part of the default raspberry (2 only?) environment?
 
-I don't know how the mailbox framework uses this function,
-but MAIL0_STA might be wrong here.
+Regards,
+Alexander
 
-Phil Elwell detected a bug in the downstream mailbox driver in
-the mbox_write function where it waits for space to be available
-in the FIFO. His observation:
-With the VC reader blocked and the ARM writing, MAIL0_STA reads
-empty permanently while MAIL1_STA goes from empty (0x40000000)
-to non-empty (0x00000001-0x00000007) to full (0x80000008).
-
-See:
-https://github.com/raspberrypi/linux/commit/3018d8a0996ad2340ba1b3f473f705ef285b01b5
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
