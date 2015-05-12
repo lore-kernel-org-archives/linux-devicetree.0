@@ -1,78 +1,224 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Tue, 12 May 2015 11:19:45 -0500
-Message-ID: <20150512161945.GE8699@saruman.tx.rr.com>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
-Reply-To: <balbi@ti.com>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: Re: [PATCH v4 1/2] pinctrl: Add driver for Alphascale asm9260 pinctrl
+Date: Tue, 12 May 2015 18:25:55 +0200
+Message-ID: <55522993.6090104@rempel-privat.de>
+References: <1428306169.634.51.camel@x220>	<1428311043-12012-1-git-send-email-linux@rempel-privat.de>	<1428311043-12012-2-git-send-email-linux@rempel-privat.de> <CACRpkdakXbHL6ydeZrs4XZ9Z1odHL5bWRxiHtT_Jbg-ygTudgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HnQK338I3UIa/qiP"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, kesavan.abhilash@gmail.com, linaro-kernel@lists.linaro.org, ta.omasab@gmail.com, linux-pm@vger.kernel.org, viswanath.puttagunta@linaro.org, santosh.shilimkar@oracle.com, olof@lixom.net, khilman@linaro.org, Sudeep.Holla@arm.com, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="icbLFTnAxkST5JM0uRhEt81wgp7GwhWu3"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdakXbHL6ydeZrs4XZ9Z1odHL5bWRxiHtT_Jbg-ygTudgw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---HnQK338I3UIa/qiP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--icbLFTnAxkST5JM0uRhEt81wgp7GwhWu3
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 30, 2015 at 05:37:59PM +0530, Viresh Kumar wrote:
-> Current OPP (Operating performance point) DT bindings are proven to be
-> insufficient at multiple instances.
+Am 05.05.2015 um 17:12 schrieb Linus Walleij:
+> On Mon, Apr 6, 2015 at 11:04 AM, Oleksij Rempel <linux@rempel-privat.de=
+> wrote:
 >=20
-> The shortcomings we are trying to solve here:
+>> This patch adds driver for Alphascale asm9260 pinctrl support.
+>> Alphascale asm9260t is SoC based on ARM926EJ (240MHz) in LQFP176 packa=
+ge.
+>> On silicon are:
+>> - 32MB SDRAM
+>> - USB2.0 HS/OTG
+>> - 2x CAN
+>> - SD/MMC
+>> - 5x Times/PWM
+>> - 10x USART
+>> - 24-channel DMA
+>> - 2x i2c
+>> - 2x SPI
+>> - Quad SPI
+>> - 10/100 Ethernet MAC
+>> - Camera IF
+>> - WD
+>> - RTC
+>> - i2s
+>> - GPIO
+>> - 12-bit A/D
+>> - LCD IF
+>> - 8-channel 12-bit ADC
+>> - NAND
+>>
+>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
 >=20
-> - Getting clock sharing information between CPUs. Single shared clock vs
->   independent clock per core vs shared clock per cluster.
+> Nice.
 >=20
-> - Support for specifying current levels along with voltages.
+>> +#define MUX_TABLE_SIZE         ARRAY_SIZE(asm9260_mux_table)
+>> +struct asm9260_pmx_priv {
+>> +       struct device           *dev;
+>> +       struct pinctrl_dev      *pctl;
+>> +       void __iomem            *iobase;
+>> +
+>> +       struct clk              *clk;
+>> +       spinlock_t              lock;
+>> +
+>> +       struct pinctrl_pin_desc pin_desc[MUX_TABLE_SIZE];
+>> +};
+>> +
+>> +static void __init asm9260_init_mux_pins(struct asm9260_pmx_priv *pri=
+v)
+>> +{
+>> +       unsigned int i;
+>> +
+>> +       for (i =3D 0; i < MUX_TABLE_SIZE; i++) {
+>> +               priv->pin_desc[i].name =3D asm9260_mux_table[i].name;
+>> +               priv->pin_desc[i].number =3D asm9260_mux_table[i].numb=
+er;
+>> +       }
+>> +}
 >=20
-> - Support for multiple regulators.
+> What is the point of copying this data from one array to the other?
 >=20
-> - Support for turbo modes.
->=20
-> - Other per OPP settings: transition latencies, disabled status, etc.?
->=20
-> - Expandability of OPPs in future.
->=20
-> This patch introduces new bindings "operating-points-v2" to get these pro=
-blems
+> Just reference the statically defined array by a pointer instead,
+> this just takes up a lot o memory for no reason.
 
-operating-points-v2 is kinda awkward, how about
-operating-points-extended, much like interrupts-extended ?
+This two arrays have different types this is why i convert it.
+priv->pin_desc[i].name - here i copy pointer any ways, and
+priv->pin_desc[i].number can be smaller then pointer.
 
-Other than this, I very much like the new approach.
+>> +/* each GPIO pin has it's own pseudo pingroup containing only itself =
+*/
+>> +static int asm9260_pinctrl_get_groups_count(struct pinctrl_dev *pctld=
+ev)
+>> +{
+>> +       return MUX_TABLE_SIZE;
+>> +}
+>=20
+> Use return ARRAY_SIZE(foo) to return the size of a static table.
 
-Regards
+see #define MUX_TABLE_SIZE          ARRAY_SIZE(asm9260_mux_table
+
+>> +static int asm9260_pinctrl_get_group_pins(struct pinctrl_dev *pctldev=
+,
+>> +                                        unsigned int group,
+>> +                                        const unsigned int **pins,
+>> +                                        unsigned int *num_pins)
+>> +{
+>> +       struct asm9260_pmx_priv *priv =3D pinctrl_dev_get_drvdata(pctl=
+dev);
+>> +
+>> +       *pins =3D &priv->pin_desc[group].number;
+>> +       *num_pins =3D 1;
+>=20
+> So I see you are using groups with one pin each. Is this how the
+> hardware works?
+
+Yes, each pin can be configured separately.
+
+>> +static int asm9260_pinctrl_get_func_groups(struct pinctrl_dev *pctlde=
+v,
+>> +                                         unsigned int function,
+>> +                                         const char * const **groups,=
+
+>> +                                         unsigned int * const num_gro=
+ups)
+>> +{
+>=20
+> (...)
+>> +       for (a =3D 0; a < MUX_TABLE_SIZE; a++) {
+>> +               table =3D &asm9260_mux_table[a];
+>> +
+>> +               for (b =3D 0; b < MAX_FUNCS_PER_PIN; b++) {
+>> +                       if (table->funcs[b] =3D=3D function) {
+>> +                               tmp[count] =3D a;
+>> +                               count++;
+>> +                       }
+>> +
+>> +               }
+>> +
+>> +       }
+>=20
+> Mory copying. I don't see why this is necessary at all.
+
+I hadn't seen the point to define groups statically, especially because
+they are used only  to make curious user happy. So, memory will be used
+only if you request the list over sysfs. Or miss some thing?
+
+>> +       for (a =3D 0; a < count; a++)
+>> +               gr[a] =3D asm9260_mux_table[tmp[a]].name;
+>=20
+> And more copying.
+>=20
+> Try to just reference static tables.
+>=20
+>> +
+>> +       asm9260_functions[function].groups =3D gr;
+>> +       asm9260_functions[function].ngroups =3D count;
+>> +done:
+>> +       *groups =3D asm9260_functions[function].groups;
+>> +       *num_groups =3D asm9260_functions[function].ngroups;
+>=20
+> Same comment.
+>=20
+>> +static struct pinmux_ops asm9260_pinmux_ops =3D {
+>> +       .get_functions_count    =3D asm9260_pinctrl_get_funcs_count,
+>> +       .get_function_name      =3D asm9260_pinctrl_get_func_name,
+>> +       .get_function_groups    =3D asm9260_pinctrl_get_func_groups,
+>> +       .set_mux                =3D asm9260_pinctrl_set_mux,
+>> +       /* TODO: should we care about gpios here? gpio_request_enable?=
+ */
+>=20
+> I think you should, if you also have a matching GPIO driver.
+
+I fear it would cause unpredictable bugs. GPIO mode is just one of mux
+modes. If some one will request gpio some busy or dangerous line it
+would do more harm then use. So, i assume limiting this only to device
+tree would be better.
+
+>=20
+>> +static int asm9260_pinconf_reg(struct pinctrl_dev *pctldev,
+>> +                             unsigned int pin,
+>> +                             enum pin_config_param param,
+>> +                             void __iomem **reg, u32 *val)
+>> +{
+>> +       struct asm9260_pmx_priv *priv =3D pinctrl_dev_get_drvdata(pctl=
+dev);
+>> +       struct asm9260_pingroup *table;
+>> +       int a;
+>> +
+>> +       for (a =3D 0; a < MUX_TABLE_SIZE; a++) {
+>> +               table =3D &asm9260_mux_table[a];
+>> +               if (table->number =3D=3D pin)
+>> +                       break;
+>> +       }
+>
+> No error check here. What if pin is not in table? We will never
+> know for that case...
+
+Ok, i agree.
+
+> Apart from that it looks OK.
+>=20
+> BTW this is a review of v3, I didn't find your v4 of this patch :/
+
+I'll wait for answers first, then provide next version. Thank you for
+review :)
 
 --=20
-balbi
+Regards,
+Oleksij
 
---HnQK338I3UIa/qiP
+
+--icbLFTnAxkST5JM0uRhEt81wgp7GwhWu3
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJVUighAAoJEIaOsuA1yqRE1/YP/A3nLJGjm1qsghOFoEkVMolt
-EVD1eYqOREbQOoHNgJloy/D9gCyz8kLJEjHj4ITslxfrpHhQQvQkWhjUEJsX2YDT
-bd3KomL5oHinmgpK5qMQBKsKYFXK90pYfRFWoUY+Va4MAOCLkSrlob9GmxwfLbiA
-XTJs2JYyncYzMqSNliAUzP//eJCL7VfnMZXoZSDlJrqfNR8exu+R+4MVLQdG3iLB
-zl9ZxAfIRlDPJeOB9ow6veL9KwxI8cE9QyeTh0cYt0T9SvupvJXCDvDN7Y8VJmiQ
-osEFLJFsa0JF1IkEgRUtDqv4h9CJAubYUOo1nU/8IcavWGOARVdCBNk/CfNeGGob
-BT88NM77JA1iiuaYKn2BFd518yK+EOYyz7JKZy+qvc3tvGyiTKV2iFVX9dRnzRrz
-lrBEQufXPzzZ3O2060DnxI/U+bTG2E/q2xL209C105UhW2KclS4BDAP0rXO1TUJ7
-vdUxd+vUuWlOKmekMHv2D+RPRTXTV5jizqIqxhRsixak4uzqkKu+qKSBFBO0O7lX
-OPcUECWumgkA/7z5hM4kuUAsKSjh2UuejiUZlzmdm8EVB3M8ReTqvhaAJYv7I4no
-Y+rBj3zvhsHkxRBme+wwf2QTsaAv5emiXvAxZZgy32/i3rjL84vzdpjIoh2s/A2Y
-YLN+9UZdryV9Y9zgGRCi
-=8m7v
+iF4EAREIAAYFAlVSKZcACgkQHwImuRkmbWnQKwD6Aim5UZvIPiyEQjAud6pHVl6K
+7pi73rtmbkU++xn6io4A/11yx/cUXBs4n/uytai1qZS45UIKz4282GV9qcirRSaG
+=nQOA
 -----END PGP SIGNATURE-----
 
---HnQK338I3UIa/qiP--
+--icbLFTnAxkST5JM0uRhEt81wgp7GwhWu3--
