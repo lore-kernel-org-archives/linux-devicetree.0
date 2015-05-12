@@ -1,65 +1,195 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/3 v8] mailbox: Enable BCM2835 mailbox support
-Date: Mon, 11 May 2015 20:41:43 -0600
-Message-ID: <55516867.3020203@wwwdotorg.org>
-References: <1430857666-18877-1-git-send-email-eric@anholt.net> <554BA0B7.8040600@tronnes.org> <87mw1grwnn.fsf@eliezer.anholt.net> <2464203.68HkYCAlx7@kongar> <87a8xenagd.fsf@eliezer.anholt.net>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v5 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
+Date: Tue, 12 May 2015 11:05:42 +0800
+Message-ID: <20150512030542.GA5889@leoy-linaro>
+References: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com>
+ <7ha8xgi10e.fsf@linaro.org>
+ <CAAS=xmjR9a-M961-7+9LF2G18qiXYhT+1sb5TEbbrQcW1fnRtw@mail.gmail.com>
+ <CAGa+x85QDAzP_8_rPF3H0KpXO9rR2OhzYnMnAFydmBMicDzmEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87a8xenagd.fsf@eliezer.anholt.net>
+Content-Disposition: inline
+In-Reply-To: <CAGa+x85QDAzP_8_rPF3H0KpXO9rR2OhzYnMnAFydmBMicDzmEw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Alexander Stein <alexanders83@web.de>, linux-rpi-kernel@lists.infradead.org, =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf@tronnes.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Brent Wang <wangbintian@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <catalin.marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <will.deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Haifeng Yan <yanhaifeng@gmail.com>, Rob Herring <rob.herring@linaro.org>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Jaehoon Chung <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "puck.chen@hisilicon.com" <puck.chen@hisilicon.com>, Zhangfei
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2015 01:19 PM, Eric Anholt wrote:
-> Alexander Stein <alexanders83@web.de> writes:
->=20
->> On Thursday 07 May 2015, 12:54:20 wrote Eric Anholt:
->>> Noralf Tr=C3=B8nnes <noralf@tronnes.org> writes:
->>>=20
->>>> Den 05.05.2015 22:27, skrev Eric Anholt:
->>>>> From: Lubomir Rintel <lkundrak@v3.sk>
->>>>>=20
->>>>> This mailbox driver provides a single mailbox channel to
->>>>> write 32-bit values to the VPU and get a 32-bit response.
->>>>> The Raspberry Pi firmware uses this mailbox channel to
->>>>> implement firmware calls, while Roku 2 (despite being
->>>>> derived from the same firmware tree) doesn't.
->>>>>=20
->>>>> The driver was originally submitted by Lubomir, based on
->>>>> the out-of-tree 2708 mailbox driver.  Eric Anholt fixed it
->>>>> up for upstreaming, with the major functional change being
->>>>> that it now has no notion of multiple channels (since that
->>>>> is a firmware-dependent concept) and instead the
->>>>> raspberrypi-firmware driver will do that bit-twiddling in
->>>>> its own messages.
->>>> ...
->>>>> +static struct platform_driver bcm2835_mbox_driver =3D { +
->>>>> .driver =3D { +		.name =3D "bcm2835-mbox", +		.owner =3D
->>>>> THIS_MODULE, +		.of_match_table =3D bcm2835_mbox_of_match, +
->>>>> }, +	.probe		=3D bcm2835_mbox_probe, +	.remove		=3D
->>>>> bcm2835_mbox_remove, +};=20
->>>>> +module_platform_driver(bcm2835_mbox_driver);
->>>>=20
->>>> I have tested this driver and the firmware driver booting
->>>> directly from the VideoCore bootloader (no uboot). The
->>>> mailbox driver loads too late to turn on USB power:
->>>=20
->>> Yeah, I have a patch on my branches that returns -EPROBE_DEFER
->>> when trying to get a power domain and not finding the provider.
->>> It was rejected by the maintainers in favor of a proposed
->>> solution whose description I didn't quite follow.
->>=20
->> Do you have a link for this thread?
->=20
-> https://lkml.org/lkml/2015/3/11/483
+hi Kevin,
 
-That's really odd; -EPROBE_DEFER was clearly invented exactly to
-handle dependencies just like this. Playing with initcall levels
-simply isn't scalable, and in the main people are actively working not
-to use them for dependencies like this; they're far too implicit.
-While the timeout mentioned earlier in the thread might work (I didn't
-really look at the details), again it's far too indirect/accidental to
-be a good solution.
+On Mon, May 11, 2015 at 05:20:54PM -0700, Kevin Hilman wrote:
+> On Thu, May 7, 2015 at 4:11 PM, Brent Wang <wangbintian@gmail.com> wrote:
+> > Hello Kevin,
+> >
+> > 2015-05-08 4:30 GMT+08:00 Kevin Hilman <khilman@linaro.org>:
+> >> Bintian Wang <bintian.wang@huawei.com> writes:
+> >>
+> >>> Hi6220 is one mobile solution of Hisilicon, this patchset contains
+> >>> initial support for Hi6220 SoC and HiKey development board, which
+> >>> supports octal ARM Cortex A53 cores. Initial support is minimal and
+> >>> includes just the arch configuration, clock driver, device tree
+> >>> configuration.
+> >>>
+> >>> PSCI is enabled in device tree and there is no problem to boot all the
+> >>> octal cores, and the CPU hotplug is also working now, you can download
+> >>> and compile the latest firmware based on the following link to run this
+> >>> patch set:
+> >>> https://github.com/96boards/documentation/wiki/UEFI
+> >>
+> >> Do you have any tips for booting this using the HiSi bootloader?  It
+> >> seems that I need to add the magic hisi,boardid property for dtbTool to
+> >> work.  Could you share what that magic value is?
+> > Yes, you need it.
+> > Hisilicon has many different development boards and those boards have some
+> > different hardware configuration, so we need different device tree
+> > files for them.
+> > the original hisi,boardid is used to distinguish different boards and
+> > used by the
+> > bootloader to judge which device tree to use at boot-up.
+> >
+> >> and maybe add it to the wiki someplace?
+> > Maybe add to section "Known Issues" in
+> > "https://github.com/96boards/documentation/wiki/UEFI"
+> > is a good choice, I will update this section later.
+> 
+> You updated the wiki, but you didn't specify what the value should be
+> for this to work with the old bootloader.
+> 
+> Can you please give the value of that property?
+> 
+> Also, have you tested this series with the old bootloader as well?
+
+Below are my testing result w/t Bintian's patches and Hisilicon old
+bootloader:
+- Need add property "hisi,boardid" into dts;
+- Need change cpu enable-method from "psci" to "spin-table";
+- The bootloader has not initialized register *cntfrq_el0* so will
+  introduce the failure during init arch timer.
+
+For init cntfrq_el0, we need fix this issue in Hisilicon's old
+bootloader, rather than directly add "clock-frequency" for arch
+timer's node in DTS. i will try to commit one patch for fix this
+issue for Hisilicon's old bootloader.
+
+So i think upper issues mainly are introduced by Hisilicon's old
+bootloader but not come from Bintian's patches. How about u think for
+this?
+
+Below is my local diff which is used to compatible w/t Hisilicon's
+old bootloader; Just for your reference.
+
+Thanks,
+Leo Yan
+
+---8<---
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index e36a539..fd1f89e 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -14,6 +14,7 @@
+ 
+ / {
+ 	model = "HiKey Development Board";
++	hisi,boardid = <0 0 4 3>;
+ 	compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
+ 
+ 	aliases {
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 229937f..8ade3d9 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -13,11 +13,6 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
+-	psci {
+-		compatible = "arm,psci-0.2";
+-		method = "smc";
+-	};
+-
+ 	cpus {
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+@@ -57,56 +52,64 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x0>;
+-			enable-method = "psci";
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x740fff8>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x1>;
+-			enable-method = "psci";
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x740fff8>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x2>;
+-			enable-method = "psci";
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x740fff8>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x3>;
+-			enable-method = "psci";
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x740fff8>;
+ 		};
+ 
+ 		cpu4: cpu@100 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x100>;
+-			enable-method = "psci";
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x740fff8>;
+ 		};
+ 
+ 		cpu5: cpu@101 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x101>;
+-			enable-method = "psci";
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x740fff8>;
+ 		};
+ 
+ 		cpu6: cpu@102 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x102>;
+-			enable-method = "psci";
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x740fff8>;
+ 		};
+ 
+ 		cpu7: cpu@103 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x103>;
+-			enable-method = "psci";
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x740fff8>;
+ 		};
+ 	};
+ 
+@@ -129,6 +132,7 @@
+ 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <1200000>;
+ 	};
+ 
+ 	soc {
