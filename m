@@ -1,55 +1,80 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [RFC][PATCH] devicetree: Add hardware rng entry to qcom-apq8064.dtsi
-Date: Tue, 12 May 2015 10:53:21 -0700
-Message-ID: <1431453201-29066-1-git-send-email-john.stultz@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm SMD based
+ RPM DT binding
+Date: Tue, 12 May 2015 11:15:58 -0700
+Message-ID: <5552435E.4040407@codeaurora.org>
+References: <1428962282-32430-1-git-send-email-bjorn.andersson@sonymobile.com> <1428962282-32430-2-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428962282-32430-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree data to add support for hw_rng support
-to the apq8064 dts.
+On 04/13/15 14:58, Bjorn Andersson wrote:
+> +
+> +== Regulators
+> +
+> +Regulator nodes are identified by their compatible:
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8841-regulators"
+> +		    "qcom,rpm-pm8941-regulators"
+> +
+> +- vdd_s1-supply:
+> +- vdd_s2-supply:
+> +- vdd_s3-supply:
+> +- vdd_s4-supply:
+> +- vdd_s5-supply:
+> +- vdd_s6-supply:
+> +- vdd_s7-supply:
+> +- vdd_s8-supply:
+> +	Usage: optional (pm8841 only)
+> +	Value type: <phandle>
+> +	Definition: reference to regulator supplying the input pin, as
+> +		    described in the data sheet
+> +
+> +- vdd_s1-supply:
+> +- vdd_s2-supply:
+> +- vdd_s3-supply:
+> +- vdd_l1_l3-supply:
+> +- vdd_l2_lvs1_2_3-supply:
+> +- vdd_l1_l3-supply:
+> +- vdd_l4_l11-supply:
+> +- vdd_l5_l7-supply:
+> +- vdd_l6_l12_l14_l15-supply:
+> +- vdd_l5_l7-supply:
+> +- vdd_l8_l16_l18_l19-supply:
+> +- vdd_l9_l10_l17_l22-supply:
+> +- vdd_l9_l10_l17_l22-supply:
+> +- vdd_l4_l11-supply:
+> +- vdd_l6_l12_l14_l15-supply:
+> +- vdd_l13_l20_l23_l24-supply:
+> +- vdd_l6_l12_l14_l15-supply:
+> +- vdd_l6_l12_l14_l15-supply:
+> +- vdd_l8_l16_l18_l19-supply:
+> +- vdd_l9_l10_l17_l22-supply:
+> +- vdd_l8_l16_l18_l19-supply:
+> +- vdd_l8_l16_l18_l19-supply:
+> +- vdd_l13_l20_l23_l24-supply:
+> +- vdd_l21-supply:
+> +- vdd_l9_l10_l17_l22-supply:
+> +- vdd_l13_l20_l23_l24-supply:
+> +- vdd_l13_l20_l23_l24-supply:
+> +- vdd_l2_lvs1_2_3-supply:
+> +- vdd_l2_lvs1_2_3-supply:
+> +- vdd_l2_lvs1_2_3-supply:
+> +- vin_5vs-supply:
+> +- vin_5vs-supply:
 
-Tested on the Nexus7 (2013).
+Can you remove the duplicates here please?
 
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-
-I'm not totally sure this is the right place for this entry,
-but wanted to send it out for review.
-thanks
--john
-
- arch/arm/boot/dts/qcom-apq8064.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index b3154c0..c760f2f 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -226,6 +226,13 @@
- 			};
- 		};
- 
-+		rng@1a500000 {
-+			compatible = "qcom,prng";
-+			reg = <0x1A500000 0x200>;
-+			clocks = <&gcc PRNG_CLK>;
-+			clock-names = "core";
-+		};
-+
- 		qcom,ssbi@500000 {
- 			compatible = "qcom,ssbi";
- 			reg = <0x00500000 0x1000>;
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
