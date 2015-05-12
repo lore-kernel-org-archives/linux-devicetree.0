@@ -1,87 +1,124 @@
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Subject: Re: [PATCH RESEND v4 0/2] 96boards: add thermal senor support to
- hikey board
-Date: Tue, 12 May 2015 11:12:39 +0800
-Message-ID: <55516FA7.3040808@hisilicon.com>
-References: <1430707940-14468-1-git-send-email-kong.kongxinwei@hisilicon.com> <20150512013107.GE4810@localhost.localdomain>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 0/9] Tegra xHCI support
+Date: Tue, 12 May 2015 09:26:24 +0530
+Message-ID: <CABb+yY2WhH2gGbCr4n=m9HOa_843MuZDp=QWNDHbtB8AMYYwYA@mail.gmail.com>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150512013107.GE4810@localhost.localdomain>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: rui.zhuang@intel.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, liguozhu@hisilicon.com, mporter@konsulko.com, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, leo.yan@linaro.org, zhenwei.wang@hisilicon.com, zhangfei.gao@linaro.org, z.liuxinliang@huawei.com, xuwei5@hisilicon.com, w.f@huawei.com, yuanzhichang@hisilicon.com, mark.rutland@arm.comLeo Yan <leo.yan@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430761002-9327-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 4, 2015 at 11:06 PM, Andrew Bresticker
+<abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> This series adds support for xHCI on NVIDIA Tegra SoCs.  This includes:
+>  - patches 1, 2, and 3: minor cleanups for mailbox framework and xHCI,
+>  - patches 4 and 5: adding an MFD driver for the XUSB cmoplex,
+>  - patches 6 and 7: adding a driver for the mailbox used to communicate
+>    with the xHCI controller's firmware, and
+>  - patches 8 and 9: adding a xHCI host-controller driver.
+>
+> The addition of USB PHY support to the XUSB padctl driver has been dropped.
+> Thierry will be posting those patches later.
+>
+> Given the many compile and run-time dependencies in this series, it is probably
+> best if the first 3 patches are picked up by the relevant maintainers in topic
+> branches so that the remainder of the series can go through the Tegra tree.
+>
+> Tested on Jetson TK1 and Nyan-Big with a variety of USB2.0 and USB3.0 memory
+> sticks and ethernet dongles.  This has also been tested, with additional
+> out-of-tree patches, on Tegra132 and Tegra210 based boards.
+>
+> Based on v4.1-rc2.  A branch with the entire series is available at:
+>   https://github.com/abrestic/linux/tree/tegra-xhci-v8
+>
+> Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> Changes from v7:
+>  - Move non-shared resources into child nodes of MFD.
+>  - Fixed a couple of mailbox driver bugs.
+>
+> Changes from v6:
+>  - Dropped PHY changes from series.  Will be posted later by Thierry.
+>  - Added an MFD device with the mailbox and xHCI host as sub-devices.
+>
+> Changes from v5:
+>  - Addressed review comments from Jassi and Felipe.
+>
+> Changes from v4:
+>  - Made USB support optional in padctl driver.
+>  - Made usb3-port a pinconfig property again.
+>  - Cleaned up mbox_request_channel() error handling and allowed it to defer
+>    probing (patch 3).
+>  - Minor xHCI (patch 1) and mailbox framework (patch 2) cleanups suggested
+>    by Thierry.
+>  - Addressed Thierry's review comments.
+>
+> Changes from v3:
+>  - Fixed USB2.0 flakiness on Jetson-TK1.
+>  - Switched to 32-bit DMA mask for host.
+>  - Addressed Stephen's review comments.
+>
+> Chagnes from v2:
+>  - Dropped mailbox channel specifier.  The mailbox driver allocates virtual
+>    channels backed by the single physical channel.
+>  - Added support for HS_CURR_LEVEL adjustment pinconfig property, which
+>    will be required for the Blaze board.
+>  - Addressed Stephen's review comments.
+>
+> Changes from v1:
+>  - Converted mailbox driver to use the common mailbox framework.
+>  - Fixed up host driver so that it can now be built and used as a module.
+>  - Addressed Stephen's review comments.
+>  - Misc. cleanups.
+>
+> Andrew Bresticker (8):
+>   xhci: Set shared HCD's hcd_priv in xhci_gen_setup
+>   mailbox: Make mbox_chan_ops const
+>   mfd: Add binding document for NVIDIA Tegra XUSB
+>   mfd: Add driver for NVIDIA Tegra XUSB
+>   mailbox: Add NVIDIA Tegra XUSB mailbox binding
+>   mailbox: Add NVIDIA Tegra XUSB mailbox driver
+>   usb: Add NVIDIA Tegra xHCI controller binding
+>   usb: xhci: Add NVIDIA Tegra xHCI host-controller driver
+>
+> Benson Leung (1):
+>   mailbox: Fix up error handling in mbox_request_channel()
+>
+>  .../bindings/mailbox/nvidia,tegra124-xusb-mbox.txt |  32 +
+>  .../bindings/mfd/nvidia,tegra124-xusb.txt          |  37 +
+>  .../bindings/usb/nvidia,tegra124-xhci.txt          |  96 +++
+>  drivers/mailbox/Kconfig                            |   8 +
+>  drivers/mailbox/Makefile                           |   2 +
+>  drivers/mailbox/arm_mhu.c                          |   2 +-
+>  drivers/mailbox/mailbox-altera.c                   |   2 +-
+>  drivers/mailbox/mailbox.c                          |  11 +-
+>  drivers/mailbox/omap-mailbox.c                     |   8 +-
+>  drivers/mailbox/pcc.c                              |   2 +-
+>  drivers/mailbox/tegra-xusb-mailbox.c               | 290 +++++++
+>  drivers/mfd/Kconfig                                |   7 +
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/tegra-xusb.c                           |  75 ++
+>  drivers/usb/host/Kconfig                           |  10 +
+>  drivers/usb/host/Makefile                          |   1 +
+>  drivers/usb/host/xhci-pci.c                        |   5 -
+>  drivers/usb/host/xhci-plat.c                       |   5 -
+>  drivers/usb/host/xhci-tegra.c                      | 947 +++++++++++++++++++++
+>  drivers/usb/host/xhci.c                            |   6 +-
+>  include/linux/mailbox_controller.h                 |   2 +-
+>  include/soc/tegra/xusb.h                           |  43 +
+>  22 files changed, 1568 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
+>  create mode 100644 drivers/mailbox/tegra-xusb-mailbox.c
+>  create mode 100644 drivers/mfd/tegra-xusb.c
+>  create mode 100644 drivers/usb/host/xhci-tegra.c
+>  create mode 100644 include/soc/tegra/xusb.h
+>
+Applied patches 2, 3, 6 & 7
 
-
-On 2015/5/12 9:31, Eduardo Valentin wrote:
-> On Mon, May 04, 2015 at 10:52:18AM +0800, Xinwei Kong wrote:
->> From: kongxinwei <kong.kongxinwei@hisilicon.com>
->>
->> The Linaro connect introduce 96boards series in Hong Kong,The HiKey board
->> is the first board to be certified 96Boards Consumer Edition compatible.
->> This board is based on the HiSilicon SoC. you can get more information
->> from https://www.96boards.org.
->>
->> The hisilicon SoC contains thermal module, this thermal module has 4 sensors,
->>
->> 	- sensor 0: local sensor;
->> 	- sensor 1: remote sensor for ACPU cluster 1;
->> 	- sensor 2: remote sensor for ACPU cluster 2;
->> 	- sensor 3: remote sensor for GPU;
->>
->> It can obtain this device temperature by operating this hardware. The new
->> sensor driver satisfies thermal framework and to realize the ACPU ,GPU and
->> so on to cool function.
->>
->> Changes v0->v1;
->> * Delete this hi6220 dtsi.
->> * Fix documentation and error checks.
->> * Modify this driver which makes use of kernel to decide how to dynamically
->>   bind the interrupt to hottest sensor.
->> * Delete "sensor-thres-temp" property and read thermal_zone trips points
->>   replace of it.
->> * Delete "sensor-reset-temp" property and define the fixed value replace
->>   of it.
->>
->> Changes v1->v2;
->> * change patch's position between binding document and driver file
->> * clean up some regiser for enabling thermal sensor
->> * use mutex lock to replace the spin lock
->>
->> Changes v2->v3;
->> * delete sensor id property in binding document 
->> * fix sensor driver to satisfy sensor register after deleting sensor id
->>   property
->>
->> Changes v3->v4;
->> * using "usleep_range" function instead of "msleep" function
->> * delete code detail error
->>
->> kongxinwei (2):
->>   dt-bindings: Document the hi6220 thermal sensor bindings
->>   thermal: hisilicon: add new hisilicon thermal sensor driver
->>
->>  .../bindings/thermal/hisilicon-thermal.txt         |  23 ++
->>  drivers/thermal/Kconfig                            |   8 +
->>  drivers/thermal/Makefile                           |   1 +
->>  drivers/thermal/hisi_thermal.c                     | 437 +++++++++++++++++++++
-> 
-> Can you please include a patch adding the DT bindings for a board in you
-> next version? Even if the patches don't go in one single tree, it is
-> good to review all patches (DT and drivers) in one single patch series.
-> 
-
-Ok, accept it.
-
->>  4 files changed, 469 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
->>  create mode 100644 drivers/thermal/hisi_thermal.c
->>
->> -- 
->> 1.9.1
->>
->>
-
+Thanks.
