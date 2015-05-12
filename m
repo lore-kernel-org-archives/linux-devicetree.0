@@ -1,146 +1,214 @@
-From: Kenneth Westfield <kwestfie@codeaurora.org>
-Subject: Re: [alsa-devel] [RFC PATCH 00/14] ASoC: qcom: add support to
-	apq8016 audio
-Date: Mon, 11 May 2015 21:06:02 -0700
-Message-ID: <20150512040600.GA24087@kwestfie-linux.qualcomm.com>
-References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150502235704.GA27804@kwestfie-linux.qualcomm.com>
- <20150506054758.GD5639@kwestfie-linux.qualcomm.com>
- <5549BA98.9080501@linaro.org>
+From: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
+Date: Tue, 12 May 2015 13:06:38 +0800
+Message-ID: <55518A5E.7090608@huawei.com>
+References: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com> <7ha8xgi10e.fsf@linaro.org> <CAAS=xmjR9a-M961-7+9LF2G18qiXYhT+1sb5TEbbrQcW1fnRtw@mail.gmail.com> <CAGa+x85QDAzP_8_rPF3H0KpXO9rR2OhzYnMnAFydmBMicDzmEw@mail.gmail.com> <20150512030542.GA5889@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5549BA98.9080501@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150512030542.GA5889@leoy-linaro>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org" <btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haifeng Yan <yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhangfei
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 05, 2015 at 11:54:16PM -0700, Srinivas Kandagatla wrote:
-> Hi Kenneth,
-> 
-> On 06/05/15 06:47, Kenneth Westfield wrote:
-> >>>
-> >>>I will test the patches and let you know by Wednesday.  Also, I posted
-> >>>some comments, but Patrick should be posting his comments separately
-> >>>later next week.
-> >Srinivas,
-> >
-> >After applying the patches, audio playback is no longer functional on
-> >the storm board.  Give me some time to debug this and I will get back
-> >to you.
-> I found atleast one issue with rdma audif bits in ipq806x lpass
-> 
-> could you try change, this will be fixed properly in next version.
-> 
-> -----------------------><---------------------------------------------
-> diff --git a/sound/soc/qcom/lpass-ipq806x.c
-> b/sound/soc/qcom/lpass-ipq806x.c
-> index 11a7053..2b00355 100644
-> --- a/sound/soc/qcom/lpass-ipq806x.c
-> +++ b/sound/soc/qcom/lpass-ipq806x.c
-> @@ -69,6 +69,7 @@ struct lpass_variant ipq806x_data = {
->         .rdma_reg_base          = 0x6000,
->         .rdma_reg_stride        = 0x1000,
->         .rdma_channels          = 4,
-> +       .rdmactl_audif_start    = 4,
->         .dai_driver             = &lpass_cpu_dai_driver,
->         .num_dai                = 1,
-> 
-> -----------------------><---------------------------------------------
+Hello Kevin,
 
-Srinivas,
+On 2015/5/12 11:05, Leo Yan wrote:
+> hi Kevin,
+>
+> On Mon, May 11, 2015 at 05:20:54PM -0700, Kevin Hilman wrote:
+>> On Thu, May 7, 2015 at 4:11 PM, Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Hello Kevin,
+>>>
+>>> 2015-05-08 4:30 GMT+08:00 Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>>>> Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> writes:
+>>>>
+>>>>> Hi6220 is one mobile solution of Hisilicon, this patchset contains
+>>>>> initial support for Hi6220 SoC and HiKey development board, which
+>>>>> supports octal ARM Cortex A53 cores. Initial support is minimal and
+>>>>> includes just the arch configuration, clock driver, device tree
+>>>>> configuration.
+>>>>>
+>>>>> PSCI is enabled in device tree and there is no problem to boot all the
+>>>>> octal cores, and the CPU hotplug is also working now, you can download
+>>>>> and compile the latest firmware based on the following link to run this
+>>>>> patch set:
+>>>>> https://github.com/96boards/documentation/wiki/UEFI
+>>>>
+>>>> Do you have any tips for booting this using the HiSi bootloader?  It
+>>>> seems that I need to add the magic hisi,boardid property for dtbTool to
+>>>> work.  Could you share what that magic value is?
+>>> Yes, you need it.
+>>> Hisilicon has many different development boards and those boards have some
+>>> different hardware configuration, so we need different device tree
+>>> files for them.
+>>> the original hisi,boardid is used to distinguish different boards and
+>>> used by the
+>>> bootloader to judge which device tree to use at boot-up.
+>>>
+>>>> and maybe add it to the wiki someplace?
+>>> Maybe add to section "Known Issues" in
+>>> "https://github.com/96boards/documentation/wiki/UEFI"
+>>> is a good choice, I will update this section later.
+>>
+>> You updated the wiki, but you didn't specify what the value should be
+>> for this to work with the old bootloader.
+>>
+>> Can you please give the value of that property?
+hisi,boardid = <0 0 4 3>
+It is needed by the old hisilicon bootloader.
 
-I was able to get audio working on the Storm board.  There were several
-issues.  First, the I2S control port was saved in the DAI driver id field
-(which was 4), but the DAI id field was used by the macro (which was 0).
-The patch below fixed it:
+I also updated the wiki page.
+>>
+>> Also, have you tested this series with the old bootloader as well?
+>
+> Below are my testing result w/t Bintian's patches and Hisilicon old
+> bootloader:
+> - Need add property "hisi,boardid" into dts;
+> - Need change cpu enable-method from "psci" to "spin-table";
+> - The bootloader has not initialized register *cntfrq_el0* so will
+>    introduce the failure during init arch timer.
+>
+> For init cntfrq_el0, we need fix this issue in Hisilicon's old
+> bootloader, rather than directly add "clock-frequency" for arch
+> timer's node in DTS. i will try to commit one patch for fix this
+> issue for Hisilicon's old bootloader.
+>
+> So i think upper issues mainly are introduced by Hisilicon's old
+> bootloader but not come from Bintian's patches. How about u think for
+> this?
+>
+> Below is my local diff which is used to compatible w/t Hisilicon's
+> old bootloader; Just for your reference.
+>
+> Thanks,
+> Leo Yan
+>
+> ---8<---
+>
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> index e36a539..fd1f89e 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> @@ -14,6 +14,7 @@
+>
+>   / {
+>   	model = "HiKey Development Board";
+> +	hisi,boardid = <0 0 4 3>;
+>   	compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
+>
+>   	aliases {
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index 229937f..8ade3d9 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -13,11 +13,6 @@
+>   	#address-cells = <2>;
+>   	#size-cells = <2>;
+>
+> -	psci {
+> -		compatible = "arm,psci-0.2";
+> -		method = "smc";
+> -	};
+> -
+>   	cpus {
+>   		#address-cells = <2>;
+>   		#size-cells = <0>;
+> @@ -57,56 +52,64 @@
+>   			compatible = "arm,cortex-a53", "arm,armv8";
+>   			device_type = "cpu";
+>   			reg = <0x0 0x0>;
+> -			enable-method = "psci";
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x740fff8>;
+>   		};
+>
+>   		cpu1: cpu@1 {
+>   			compatible = "arm,cortex-a53", "arm,armv8";
+>   			device_type = "cpu";
+>   			reg = <0x0 0x1>;
+> -			enable-method = "psci";
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x740fff8>;
+>   		};
+>
+>   		cpu2: cpu@2 {
+>   			compatible = "arm,cortex-a53", "arm,armv8";
+>   			device_type = "cpu";
+>   			reg = <0x0 0x2>;
+> -			enable-method = "psci";
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x740fff8>;
+>   		};
+>
+>   		cpu3: cpu@3 {
+>   			compatible = "arm,cortex-a53", "arm,armv8";
+>   			device_type = "cpu";
+>   			reg = <0x0 0x3>;
+> -			enable-method = "psci";
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x740fff8>;
+>   		};
+>
+>   		cpu4: cpu@100 {
+>   			compatible = "arm,cortex-a53", "arm,armv8";
+>   			device_type = "cpu";
+>   			reg = <0x0 0x100>;
+> -			enable-method = "psci";
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x740fff8>;
+>   		};
+>
+>   		cpu5: cpu@101 {
+>   			compatible = "arm,cortex-a53", "arm,armv8";
+>   			device_type = "cpu";
+>   			reg = <0x0 0x101>;
+> -			enable-method = "psci";
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x740fff8>;
+>   		};
+>
+>   		cpu6: cpu@102 {
+>   			compatible = "arm,cortex-a53", "arm,armv8";
+>   			device_type = "cpu";
+>   			reg = <0x0 0x102>;
+> -			enable-method = "psci";
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x740fff8>;
+>   		};
+>
+>   		cpu7: cpu@103 {
+>   			compatible = "arm,cortex-a53", "arm,armv8";
+>   			device_type = "cpu";
+>   			reg = <0x0 0x103>;
+> -			enable-method = "psci";
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x740fff8>;
+>   		};
+>   	};
+>
+> @@ -129,6 +132,7 @@
+>   			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+>   			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+>   			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+> +		clock-frequency = <1200000>;
+>   	};
+>
+>   	soc {
+Thanks for Leo's replies, Leo is responsible for bootloader
+development, you can contact him if you have any problem about
+bootloader.
 
------------------------><---------------------------------------------
-diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-index 17ad20d..58ae8af 100644
---- a/sound/soc/qcom/lpass-cpu.c
-+++ b/sound/soc/qcom/lpass-cpu.c
-@@ -146,7 +146,7 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
- 	}
- 
- 	ret = regmap_write(drvdata->lpaif_map,
--			   LPAIF_I2SCTL_REG(drvdata->variant, dai->id),
-+			   LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
- 			   regval);
- 	if (ret) {
- 		dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
-@@ -171,7 +171,7 @@ static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
- 	int ret;
- 
- 	ret = regmap_write(drvdata->lpaif_map,
--			   LPAIF_I2SCTL_REG(drvdata->variant, dai->id), 0);
-+			   LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id), 0);
- 	if (ret)
- 		dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
- 				__func__, ret);
-@@ -186,7 +186,7 @@ static int lpass_cpu_daiops_prepare(struct snd_pcm_substream *substream,
- 	int ret;
- 
- 	ret = regmap_update_bits(drvdata->lpaif_map,
--			LPAIF_I2SCTL_REG(drvdata->variant, dai->id),
-+			LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
- 			LPAIF_I2SCTL_SPKEN_MASK, LPAIF_I2SCTL_SPKEN_ENABLE);
- 	if (ret)
- 		dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
-@@ -206,7 +206,7 @@ static int lpass_cpu_daiops_trigger(struct snd_pcm_substream *substream,
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
- 		ret = regmap_update_bits(drvdata->lpaif_map,
--				LPAIF_I2SCTL_REG(drvdata->variant, dai->id),
-+				LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
- 				LPAIF_I2SCTL_SPKEN_MASK,
- 				LPAIF_I2SCTL_SPKEN_ENABLE);
- 		if (ret)
-@@ -217,7 +217,7 @@ static int lpass_cpu_daiops_trigger(struct snd_pcm_substream *substream,
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
- 		ret = regmap_update_bits(drvdata->lpaif_map,
--				LPAIF_I2SCTL_REG(drvdata->variant, dai->id),
-+				LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
- 				LPAIF_I2SCTL_SPKEN_MASK,
- 				LPAIF_I2SCTL_SPKEN_DISABLE);
- 		if (ret)
-@@ -247,7 +247,7 @@ int lpass_cpu_dai_probe(struct snd_soc_dai *dai)
- 
- 	/* ensure audio hardware is disabled */
- 	ret = regmap_write(drvdata->lpaif_map,
--			LPAIF_I2SCTL_REG(drvdata->variant, dai->id), 0);
-+			LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id), 0);
- 	if (ret)
- 		dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
- 				__func__, ret);
------------------------><---------------------------------------------
+Thanks,
 
-In addition to your patch above, I also needed to correct the rdma_port
-assignment by removing the i2s port reference:
+Bintian
+>
+> .
+>
 
------------------------><---------------------------------------------
-diff --git a/sound/soc/qcom/lpass-platform.c b/sound/soc/qcom/lpass-platform.c
-index c5907d5..580cae1 100644
---- a/sound/soc/qcom/lpass-platform.c
-+++ b/sound/soc/qcom/lpass-platform.c
-@@ -91,7 +91,7 @@ static int lpass_platform_pcmops_hw_params(struct snd_pcm_substream *substream,
- 	unsigned int channels = params_channels(params);
- 	unsigned int regval;
- 	int bitwidth;
--	int ret, rdma_port = pcm_data->i2s_port + v->rdmactl_audif_start;
-+	int ret, rdma_port = v->rdmactl_audif_start;
- 
- 	bitwidth = snd_pcm_format_width(format);
- 	if (bitwidth < 0) {
------------------------><---------------------------------------------
-
-Please incorporate these fixes into your next patch series.
-
--- 
-Kenneth Westfield
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
