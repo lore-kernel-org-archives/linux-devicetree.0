@@ -1,52 +1,45 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] of: base: upgrade initcall level of of_init from core to pure
-Date: Tue, 12 May 2015 18:38:02 +0100
-Message-ID: <1431452282-10207-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v9 1/3] of: Add vendor prefix for Kinetic technologies
+Date: Tue, 12 May 2015 10:41:31 -0700
+Message-ID: <CAK5ve-KnBPq=4LhVP6f2TS=T4bkEaoBPe1JrJ91R_rUcWaOQwA@mail.gmail.com>
+References: <1431419877-28339-1-git-send-email-ingi2.kim@samsung.com> <1431419877-28339-2-git-send-email-ingi2.kim@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1431419877-28339-2-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sakari Ailus <sakari.ailus@iki.fi>, Jacek Anaszewski <j.anaszewski@samsung.com>, varkabhadram@gmail.com, Joe Perches <joe@perches.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, jh80.chung@samsung.com, ideal.song@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-devices with an OF node") adds the symlink `of_node` for each device
-pointing to it's device tree node while creating/initialising it.
+On Tue, May 12, 2015 at 1:37 AM, Ingi Kim <ingi2.kim@samsung.com> wrote:
+> This patch adds vendor prefix for Kinetic technologies
+>
+> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+> Reviewed-by: Varka Bhadram <varkabhadram@gmail.com>
 
-However the devicetree sysfs is created and setup in of_init which is
-executed at core_initcall level. For all the devices created at the core
-initcall before of_init, the following error is thrown:
-	"Error -2(-ENOENT) creating of_node link"
+Merged into my tree with DT reviewer's acks.
+Thanks,
+-Bryan
 
-Since the core_initcall is the earliest point where devices get
-registered, push initcall level of of_init from core to pure so that
-the devicetree sysfs is ready before any devices are registered.
-
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
----
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 99764db0875a..8c3d6b04c585 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -210,7 +210,7 @@ static int __init of_init(void)
-
- 	return 0;
- }
--core_initcall(of_init);
-+pure_initcall(of_init);
-
- static struct property *__of_find_property(const struct device_node *np,
- 					   const char *name, int *lenp)
---
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index b6682ab..0a50533 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -108,6 +108,7 @@ isee        ISEE 2007 S.L.
+>  isil   Intersil
+>  karo   Ka-Ro electronics GmbH
+>  keymile        Keymile GmbH
+> +kinetic Kinetic Technologies
+>  lacie  LaCie
+>  lantiq Lantiq Semiconductor
+>  lenovo Lenovo Group Ltd.
+> --
+> 2.0.5
+>
