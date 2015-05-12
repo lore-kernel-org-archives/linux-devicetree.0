@@ -1,68 +1,71 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [alsa-devel] [RFC PATCH 00/14] ASoC: qcom: add support to apq8016
- audio
-Date: Tue, 12 May 2015 19:04:51 +0200
-Message-ID: <555232B3.3090205@metafoo.de>
-References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org> <20150502235704.GA27804@kwestfie-linux.qualcomm.com> <20150506054758.GD5639@kwestfie-linux.qualcomm.com> <5549BA98.9080501@linaro.org> <20150512040600.GA24087@kwestfie-linux.qualcomm.com> <5551D436.2070600@linaro.org>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: BCM2836 (Raspberry Pi 2) port
+Date: Tue, 12 May 2015 10:32:53 -0700
+Message-ID: <87d2254s6y.fsf@eliezer.anholt.net>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <4137213.WVJY1et48u@kongar> <55516738.306@wwwdotorg.org> <1701192.WcfjCoBWQN@kongar> <55522468.3050606@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5551D436.2070600@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55522468.3050606-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/2015 12:21 PM, Srinivas Kandagatla wrote:
-> + adding Lars
->
-> On 12/05/15 05:06, Kenneth Westfield wrote:
->> Srinivas,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+
+> On 05/12/2015 09:39 AM, Alexander Stein wrote:
+>> On Monday 11 May 2015, 20:36:40 wrote Stephen Warren:
+>>> On 05/08/2015 10:14 AM, Alexander Stein wrote:
+>>>> On Thursday 23 April 2015, 22:25:08 wrote Stephen Warren:
+>>>>>> Hit any key to stop autoboot:  0
+>>>>>> U-Boot> setenv fdt_high fffffff
+>>>>
+>>>> Any specific reason to set fdt_high to fffffff?
+>>>
+>>> Yes, it prevents U-Boot's annoying habit of moving the DTB from where it
+>>> was loaded to some other place. This was especially important in this
+>>> case since I was trying to find out exactly which piece of RAM being
+>>> over-written caused the issues I was seeing.
 >>
->> I was able to get audio working on the Storm board.  There were several
->> issues.  First, the I2S control port was saved in the DAI driver id field
->> (which was 4), but the DAI id field was used by the macro (which was 0).
->> The patch below fixed it:
+>> Shouldn't this then be part of the default raspberry (2 only?) environme=
+nt?
 >
-> Ah, I did not expect that to happen, dai->id and dai->driver->id should be
-> same. Surprisingly this is not true for IPQ806x platform only because dais
-> count == 1. Which results in dai->id not getting assigned to dai->driver->id
-> due to below code snippet in  sound/soc/soc-core.c
->
-> --------------------><------------------------------------------
-> /*
->   * Back in the old days when we still had component-less DAIs,
->   * instead of having a static name, component-less DAIs would
->   * inherit the name of the parent device so it is possible to
->   * register multiple instances of the DAI. We still need to keep
->   * the same naming style even though those DAIs are not
->   * component-less anymore.
->   */
-> if (count == 1 && legacy_dai_naming) {
->      dai->name = fmt_single_name(dev, &dai->id);
-> } else {
->      dai->name = fmt_multiple_name(dev, &dai_drv[i]);
->      if (dai_drv[i].id)
->          dai->id = dai_drv[i].id;
->      else
->          dai->id = i;
-> }
-> --------------------><------------------------------------------
->
-> Its not clear from code, why should we enter to legacy naming if the dais
-> count == 1 even-though the dai_drv has has valid name and id information.
->
-> Mark/Lars,
->
-> I can workaround this by using dai->driver->id in the driver, But do you
-> think that dai name and id should be assigned from dai drv if present?
+> Eventually yes. So far, nobody seems to know which areas of RAM are=20
+> off-limits (presumably since the RAM is used as a CPU1..3 pen), so I was=
+=20
+> experimenting to try and find that out.
 
-I think it should be OK to extend that if condition to
+If I'm reading this right, the CPU1-3 pen is in the bottom 8k of memory
+(actually much less than 8k).
 
-if (count == 1 && dai_drv[0].id == 0 && legacy_dai_naming) ...
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It doesn't look like any of the systems for which we currently take the 
-legacy path do set id to non 0. And the less new systems following legacy 
-naming scheme the better.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-- Lars
+iQIcBAEBCgAGBQJVUjlGAAoJELXWKTbR/J7oKocP/Rqb2jaqJuNElrElchqnB3M8
+2PjJQ0it+X7a3PkFYWqrk8dx5b7oI0JH/pOmFU6Xul6Pc5KSGRumCOyMxz4q6me9
+EttMxE82W4S7NwlwabZy6qnWsz76ZZuW522iXTogvqnK7JGYhZnJ3kCVgv3uRRHP
+cKZb+/l8z+2Budfg6mYDh/y6yPQSFcQH6ME92J3Z29ZsJhwP3cPB9lpfQzzt4zyC
+RzkCZvrzZuNgETEDJT2PM3cmu46dKxWvx5PmUt4W0S/P+uTZ9olK0W+1AGwe9zie
+TI849WnyRYGyuCeZDrp0F139HwS8cALRGyvM8eq9gz7SXPMvUDiPaELLmRPv+4c5
+2pofziLILsJoBywoPhxe5rT2ksSdN7syAg/N04VwhJxJUhOu3juffpGfubvHFtLB
+1odOq6n+FNpYPD6ykS2tL1W5AalMDyz8sbc471dAn1uUyG8TR6m3VKv2bis61DK8
+EJE9k+/Eo9uZecMrllv8RgH0foSgR1PoFa1GbyDir0pvFtVJQfhDbW+FBJBTB0si
+l4pSKxiR1Kv7UoIAJJd27utVL6Uxv/74o/QWfGMSYn3B+Yb4mnccZF1RkwVv0B2t
+U+OlTCGFecJTrIenmaa/l6BpSUWYBzU1Lgk1FtccIsMpHMC2POZGNszu8xtlRMRv
+YJ9FEDF3MS+YF5s0we8Z
+=Ui0u
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
