@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 05/12] ARM: shmobile: koelsch dts: Add overlay for HSCIF1 on EXIO A
-Date: Tue, 12 May 2015 19:37:08 +0200
-Message-ID: <1431452235-11692-6-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC 04/12] ARM: shmobile: armadillo dts: Add overlay for SCIFB on CON15
+Date: Tue, 12 May 2015 19:37:07 +0200
+Message-ID: <1431452235-11692-5-git-send-email-geert+renesas@glider.be>
 References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
@@ -10,35 +10,37 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Provide access to HSCIF1 on EXIO Connector A.
+Provide access to SCIFB on the Expansion Interface Connector (CON15), as
+documented in Table 18.15 of the "Armadillo-800 EVA Product Manual".
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
  arch/arm/boot/dts/Makefile                         |  1 +
- .../boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso    | 49 ++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso
+ .../dts/r8a7740-armadillo800eva-con15-scifb.dtso   | 52 ++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7740-armadillo800eva-con15-scifb.dtso
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 1f2478d6254ea70f..d800690e3aaf7bab 100644
+index 5366e2112ad1ea18..1f2478d6254ea70f 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -671,6 +671,7 @@ ifeq ($(CONFIG_OF_OVERLAY),y)
+@@ -670,6 +670,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+ ifeq ($(CONFIG_OF_OVERLAY),y)
  dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
  	r8a7740-armadillo800eva-con15-scifa0.dtbo \
- 	r8a7740-armadillo800eva-con15-scifb.dtbo \
-+	r8a7791-koelsch-exio-a-hscif1.dtbo \
++	r8a7740-armadillo800eva-con15-scifb.dtbo \
  endif
  endif
  
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso b/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-con15-scifb.dtso b/arch/arm/boot/dts/r8a7740-armadillo800eva-con15-scifb.dtso
 new file mode 100644
-index 0000000000000000..03793154b6fa2cb1
+index 0000000000000000..34e46580e09565a9
 --- /dev/null
-+++ b/arch/arm/boot/dts/r8a7791-koelsch-exio-a-hscif1.dtso
-@@ -0,0 +1,49 @@
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-con15-scifb.dtso
+@@ -0,0 +1,52 @@
 +/*
-+ * Device Tree Overlay for HSCIF1 on r8a7791/Koelsch EXIO Connector A
++ * Device Tree Overlay for SCIFB on r8a7740/Armadillo-800 EVA Expansion
++ * Interface Connector
 + *
 + * Copyright (C) 2015 Glider bvba
 + *
@@ -47,8 +49,9 @@ index 0000000000000000..03793154b6fa2cb1
 + * kind, whether express or implied.
 + *
 + * Pinout:
-+ *   - RXD = EXIO Connector A pin 72
-+ *   - TXD = EXIO Connector A pin 53
++ *   - RXD = CON15 pin 41
++ *   - TXD = CON15 pin 40
++ *   - SCK = CON15 pin 42
 + */
 +
 +/dts-v1/;
@@ -59,8 +62,8 @@ index 0000000000000000..03793154b6fa2cb1
 +		target-path = "/aliases";
 +
 +		__overlay__ {
-+			/* serial16 = &hscif1; */
-+			serial16 = "/serial@e62c8000";
++			/* serial8 = &scifb; */
++			serial8 = "/serial@e6c30000";
 +		};
 +	};
 +
@@ -68,20 +71,21 @@ index 0000000000000000..03793154b6fa2cb1
 +		target = <&pfc>;
 +
 +		__overlay__ {
-+			hscif1_pins: serial16 {
-+				renesas,groups = "hscif1_data_b";
-+				renesas,function = "hscif1";
++			scifb_pins: serial8 {
++				renesas,groups = "scifb_data_0";
++				renesas,function = "scifb";
 +			};
 +		};
 +	};
 +
 +	fragment@2 {
-+		target = <&hscif1>;
++		target = <&scifb>;
 +
 +		__overlay__ {
-+			pinctrl-0 = <&hscif1_pins>;
++			pinctrl-0 = <&scifb_pins>;
 +			pinctrl-names = "default";
 +
++			ctsrts;
 +			status = "okay";
 +		};
 +	};
