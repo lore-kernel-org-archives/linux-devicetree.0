@@ -1,152 +1,102 @@
-From: S Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH V4 3/3] mfd: da9063: MFD support for OnKey driver
-Date: Tue, 12 May 2015 14:31:06 +0100
-Message-ID: <81dec245f0d1a3a0713e6e2966d2278e422208f2.1431437466.git.stwiss.opensource@diasemi.com>
-References: <cover.1431437466.git.stwiss.opensource@diasemi.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 3/5] soc: Mediatek: Add SCPSYS power domain driver
+Date: Tue, 12 May 2015 15:47:37 +0200
+Message-ID: <20150512134737.GW6325@pengutronix.de>
+References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
+ <1431372206-1237-4-git-send-email-s.hauer@pengutronix.de>
+ <CABuKBe+cuE=NVjm8UOC9=z2rgxR8_fmn_UEMSQbK8ywCGvskTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1431437466.git.stwiss.opensource@diasemi.com>
+Content-Disposition: inline
+In-Reply-To: <CABuKBe+cuE=NVjm8UOC9=z2rgxR8_fmn_UEMSQbK8ywCGvskTg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, =Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+On Tue, May 12, 2015 at 01:52:06PM +0200, Matthias Brugger wrote:
+> 2015-05-11 21:23 GMT+02:00 Sascha Hauer <s.hauer@pengutronix.de>:
+> > This adds a power domain driver for the Mediatek SCPSYS unit.
+> >
+> > The System Control Processor System (SCPSYS) has several power
+> > management related tasks in the system. The tasks include thermal
+> > measurement, dynamic voltage frequency scaling (DVFS), interrupt
+> > filter and lowlevel sleep control. The System Power Manager (SPM)
+> > inside the SCPSYS is for the MTCMOS power domain control.
+> >
+> > For now this driver only adds power domain support, the more
+> > advanced features are not yet supported. The driver implements
+> > the generic PM domain device tree bindings, the first user will
+> > most likely be the Mediatek AFE audio driver.
+> >
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/soc/mediatek/scpsys.txt    |   2 +
+> >  drivers/soc/mediatek/Kconfig                       |   8 +
+> >  drivers/soc/mediatek/Makefile                      |   1 +
+> >  drivers/soc/mediatek/mtk-scpsys.c                  | 416 +++++++++++++++++++++
+> >  include/dt-bindings/power/mt8173-power.h           |  15 +
+> >  5 files changed, 442 insertions(+)
+> >  create mode 100644 drivers/soc/mediatek/mtk-scpsys.c
+> >  create mode 100644 include/dt-bindings/power/mt8173-power.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > index 4764a03..87f2091 100644
+> > --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > @@ -15,6 +15,7 @@ Required properties:
+> >  - compatible: Must be "mediatek,mt8173-scpsys"
+> >  - #power-domain-cells: Must be 1
+> >  - reg: Address range of the SCPSYS unit
+> > +- infracfg: must contain a phandle to the infracfg controller
+> >
+> >  Example:
+> >
+> > @@ -22,6 +23,7 @@ Example:
+> >                 #power-domain-cells = <1>;
+> >                 compatible = "mediatek,mt8173-scpsys";
+> >                 reg = <0 0x10006000 0 0x1000>;
+> > +               infracfg = <&infracfg>;
+> >         };
 
-Add MFD support for the DA9063 OnKey driver
+This hunk shouldn't be here btw, fixed.
 
-The function da9063_clear_fault_log() is added to mitigate the case of a
-hardware power-cut after a long-long OnKey press. Although there is no
-software intervention in this case (by definition) such a shutdown would
-cause persistent information within the DA9063 FAULT_LOG that would be
-available during the next device restart.
+> > +       pd_data->num_domains = NUM_DOMAINS;
+> > +
+> > +       for (i = 0; i < NUM_DOMAINS; i++) {
+> > +               struct scp_domain *scpd = &scp->domains[i];
+> > +
+> > +               if (scp_domain_data[i].clk_name) {
+> > +                       const char *name = scp_domain_data[i].clk_name;
+> > +
+> > +                       scpd->clk = devm_clk_get(&pdev->dev, name);
+> > +                       if (IS_ERR(scpd->clk)) {
+> > +                               dev_err(&pdev->dev, "Failed to get %s clk: %ld\n",
+> > +                                               name, PTR_ERR(scpd->clk));
+> > +                               return PTR_ERR(scpd->clk);
+> > +                       }
+> > +               }
+> > +       }
+> > +
+> > +       for (i = 0; i < NUM_DOMAINS; i++) {
+> 
+> Why two for loops?
 
-Clearance of this persistent register must be completed after such a
-hardware power-cut operation has happened so that the FAULT_LOG does not
-continue with previous values. The clearance function has been added here
-in the kernel driver because wiping the fault-log cannot be counted on
-outside the Linux kernel.
+I'm sure there was a reason in earlier versions, but now it seems rather
+useless. I'll make this a single loop.
 
+> 
+> static const?
 
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Yes.
 
----
-Version History
+Thanks for reviewing.
 
-Changes in V4
- - Additional description of MFD patch changes for FAULT_LOG in relation to
-   the requirements of the OnKey driver. Please see a further explanation of
-   the OnKey's operation in this thread: https://lkml.org/lkml/2015/4/29/406
+Sascha
 
-Changes in V3
- - The MFD code was originally in [PATCH V2 1/2]. This is now been moved into
-   this patch [PATCH V3 3/3].
- - Whitespace cleanup
-
-This patch applies against linux-next and v4.1-rc3 
-
-
- drivers/mfd/da9063-core.c        | 54 ++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/da9063/pdata.h |  1 +
- 2 files changed, 55 insertions(+)
-
-diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
-index facd361..af841c1 100644
---- a/drivers/mfd/da9063-core.c
-+++ b/drivers/mfd/da9063-core.c
-@@ -60,6 +60,7 @@ static struct resource da9063_rtc_resources[] = {
- 
- static struct resource da9063_onkey_resources[] = {
- 	{
-+		.name	= "ONKEY",
- 		.start	= DA9063_IRQ_ONKEY,
- 		.end	= DA9063_IRQ_ONKEY,
- 		.flags	= IORESOURCE_IRQ,
-@@ -97,6 +98,7 @@ static const struct mfd_cell da9063_devs[] = {
- 		.name		= DA9063_DRVNAME_ONKEY,
- 		.num_resources	= ARRAY_SIZE(da9063_onkey_resources),
- 		.resources	= da9063_onkey_resources,
-+		.of_compatible = "dlg,da9063-onkey",
- 	},
- 	{
- 		.name		= DA9063_DRVNAME_RTC,
-@@ -109,12 +111,64 @@ static const struct mfd_cell da9063_devs[] = {
- 	},
- };
- 
-+static int da9063_clear_fault_log(struct da9063 *da9063)
-+{
-+	int ret = 0;
-+	int fault_log = 0;
-+
-+	ret = regmap_read(da9063->regmap, DA9063_REG_FAULT_LOG, &fault_log);
-+	if (ret < 0) {
-+		dev_err(da9063->dev, "Cannot read FAULT_LOG.\n");
-+		return -EIO;
-+	}
-+
-+	if (fault_log) {
-+		if (fault_log & DA9063_TWD_ERROR)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_TWD_ERROR\n");
-+		if (fault_log & DA9063_POR)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_POR\n");
-+		if (fault_log & DA9063_VDD_FAULT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_VDD_FAULT\n");
-+		if (fault_log & DA9063_VDD_START)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_VDD_START\n");
-+		if (fault_log & DA9063_TEMP_CRIT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_TEMP_CRIT\n");
-+		if (fault_log & DA9063_KEY_RESET)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_KEY_RESET\n");
-+		if (fault_log & DA9063_NSHUTDOWN)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_NSHUTDOWN\n");
-+		if (fault_log & DA9063_WAIT_SHUT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_WAIT_SHUT\n");
-+	}
-+
-+	ret = regmap_write(da9063->regmap,
-+			   DA9063_REG_FAULT_LOG,
-+			   fault_log);
-+	if (ret < 0)
-+		dev_err(da9063->dev,
-+			"Cannot reset FAULT_LOG values %d\n", ret);
-+
-+	return ret;
-+}
-+
- int da9063_device_init(struct da9063 *da9063, unsigned int irq)
- {
- 	struct da9063_pdata *pdata = da9063->dev->platform_data;
- 	int model, variant_id, variant_code;
- 	int ret;
- 
-+	ret = da9063_clear_fault_log(da9063);
-+	if (ret < 0)
-+		dev_err(da9063->dev, "Cannot clear fault log\n");
-+
- 	if (pdata) {
- 		da9063->flags = pdata->flags;
- 		da9063->irq_base = pdata->irq_base;
-diff --git a/include/linux/mfd/da9063/pdata.h b/include/linux/mfd/da9063/pdata.h
-index 95c8742..612383b 100644
---- a/include/linux/mfd/da9063/pdata.h
-+++ b/include/linux/mfd/da9063/pdata.h
-@@ -103,6 +103,7 @@ struct da9063;
- struct da9063_pdata {
- 	int				(*init)(struct da9063 *da9063);
- 	int				irq_base;
-+	bool				key_power;
- 	unsigned			flags;
- 	struct da9063_regulators_pdata	*regulators_pdata;
- 	struct led_platform_data	*leds_pdata;
 -- 
-end-of-patch for PATCH V4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
