@@ -1,52 +1,50 @@
-From: "=?UTF-8?Q?Michael=20Niew=C3=B6hner?=" <mniewoeh-0BV18Q16miHGpFsiFCTsGXqWYbMAw+HU@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add
- system-power-controller toact8846
-Date: Tue, 12 May 2015 09:22:42 +0200
-Message-ID: <5551C66C020000D0000AFA23@gwia2.rz.hs-offenburg.de>
-References: <64DE272A-FD25-406C-A51B-6C5B76DA5171@stud.hs-offenburg.de>
- <2270228.43yCmaWq86@phil>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RESEND v6 1/2] arm64: dts: Add the arasan sdhci nodes in apm-storm.dtsi
+Date: Tue, 12 May 2015 09:28:10 +0200
+Message-ID: <5446694.nHWK6QO1on@wuerfel>
+References: <1431333531-30491-1-git-send-email-stripathi@apm.com> <1431333531-30491-2-git-send-email-stripathi@apm.com> <CAOHikRAeOH5Pt4WZFk1C29dUytO7H0ox_dgq578oW19ue8Eb8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <2270228.43yCmaWq86@phil>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOHikRAeOH5Pt4WZFk1C29dUytO7H0ox_dgq578oW19ue8Eb8Q@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Suman Tripathi <stripathi@apm.com>, Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Michal Simek <michal.simek@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, linux-mmc <linux-mmc@vger.kernel.org>, patches <patches@apm.com>, Don Dutile <ddutile@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SSBhZ3JlZSBvbiByZWxpY2Vuc2luZyB0byBncGwyL3gxMS4KCk1pY2hhZWwKCgoKCgo+IEFtIDEx
-LjA1LjIwMTUgdW0gMjM6NTggc2NocmllYiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRl
-PjoKPiAKPiBBbSBNb250YWcsIDExLiBNYWkgMjAxNSwgMjI6NTc6MjEgc2NocmllYiBNaWNoYWVs
-IE5pZXfDtmhuZXI6Cj4+IEFkZCBzeXN0ZW0tcG93ZXItY29udHJvbGxlciB0byBhY3Q4ODQ2IGlu
-IHJrMzE4OC1yYWR4YXJvY2suZHRzIGluCmFkZGl0aW9uCj4+IHRvIHRoZSBhY3Q4ODQ2IHBhdGNo
-IGZpeGluZyB0aGUgcmVib290IGtlcm5lbCBwYW5pYwo+PiAKPj4gU2lnbmVkLW9mZi1ieTogTWlj
-aGFlbCBOaWV3b2VobmVyIDxtbmlld29laEBzdHVkLmhzLW9mZmVuYnVyZy5kZT4KPiAKPiBJIGhh
-dmUgdG8gYXNrLCBhcmUgeW91IG9rIHdpdGggdGhlIHBlbmRpbmcgZHRzIHJlbGljZW5zaW5nIHRv
-IGEKZ3BsMi94MTEgZHVhbCAKPiBsaWNlbnNlIFswXT8KPiAKPiBPdGhlcndpc2UgdGhpcyBsb29r
-cyBmaW5lIGFuZCB0aGUgYWN0ODg0NiBpcyB0aGUgcG93ZXItY29udHJvbGxlciBvZgp0aGUgCj4g
-cmFkeGFyb2NrIGluIGFueSBjYXNlLCBzbyBJJ2xsIHRha2UgdGhpcyBvbmUgaW4gYW55IGNhc2Uu
-Cj4gCj4gCj4gSGVpa28KPiAKPiBbMF0KaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJt
-YWlsL2xpbnV4LXJvY2tjaGlwLzIwMTUtTWFyY2gvMDAyNjQ0Lmh0bWwKPiAKPiAKPj4gLS0tCj4+
-IGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzE4OC1yYWR4YXJvY2suZHRzIHwgMSArCj4+IDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3JrMzE4OC1yYWR4YXJvY2suZHRzCj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMTg4LXJh
-ZHhhcm9jay5kdHMgaW5kZXggYmRmODU3MC4uMjI1YTBlYgoxMDA2NDQKPj4gLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvcmszMTg4LXJhZHhhcm9jay5kdHMKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvcmszMTg4LXJhZHhhcm9jay5kdHMKPj4gQEAgLTE1Miw2ICsxNTIsNyBAQAo+PiAgICAgICAg
-Y29tcGF0aWJsZSA9ICJhY3RpdmUtc2VtaSxhY3Q4ODQ2IjsKPj4gICAgICAgIHJlZyA9IDwweDVh
-PjsKPj4gICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gKyAgICAgICAgc3lzdGVtLXBvd2VyLWNv
-bnRyb2xsZXI7Cj4+IAo+PiAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gICAg
-ICAgIHBpbmN0cmwtMCA9IDwmYWN0ODg0Nl9kdnMwX2N0bD47Cj4gCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBs
-aXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+On Tuesday 12 May 2015 11:03:46 Suman Tripathi wrote:
+> > @@ -533,6 +567,15 @@
+> >                         interrupts = <0x0 0x4f 0x4>;
+> >                 };
+> >
+> > +               sdhci0: sdhci@1c000000 {
+> > +                       compatible = "arasan,sdhci-4.9a";
+> > +                       reg = <0x0 0x1c000000 0x0 0x100>;
+> > +                       interrupts = <0x0 0x49 0x4>;
+> > +                       dma-coherent;
+> > +                       clock-names = "clk_xin", "clk_ahb";
+> > +                       clocks = <&sdioclk 0>, <&ahbclk 0>;
+> > +               };
+> > +
+> >                 phy1: phy@1f21a000 {
+> >                         compatible = "apm,xgene-phy";
+> >                         reg = <0x0 0x1f21a000 0x0 0x100>;
+> > --
+> > 1.8.2.1
+> >
+> 
+> Can anyone from dt community review this patch ? I have changed the dts node
+> names from sdhc to sdhci as per Arnd, Michael comments .
+
+I was actually asking for it to be named 'mmc', not 'sdhci', because the
+name is supposed to indicate the purpose of the device, not the
+implementation. I realize that we are inconsistent here, just as with
+'uart' vs 'serial', and that ePAPR does not define what to do.
+
+We should probably add something to Documentation/devicetree/bindings/mmc/mmc.txt
+about this topic and change all the dts files accordingly (unless there
+is a risk for regressions). At the moment, the mmc.txt file also includes
+an example with 'sdhci', not 'mmc'.
+
+	Arnd
