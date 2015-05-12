@@ -1,49 +1,70 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add system-power-controller to  act8846
-Date: Tue, 12 May 2015 22:44:09 +0200
-Message-ID: <2003800.TXlUqeQVab@phil>
-References: <64DE272A-FD25-406C-A51B-6C5B76DA5171@stud.hs-offenburg.de>
+From: Roy Pledge <roy.pledge@freescale.com>
+Subject: RE: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to cell-index
+Date: Tue, 12 May 2015 21:19:24 +0000
+Message-ID: <BN3PR0301MB1267E5A61E7E5BC2789F9E898CDA0@BN3PR0301MB1267.namprd03.prod.outlook.com>
+References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
+ <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
+ <1430858734.16357.256.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <64DE272A-FD25-406C-A51B-6C5B76DA5171-0BV18Q16miHGpFsiFCTsGXqWYbMAw+HU@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael =?ISO-8859-1?Q?Niew=F6hner?= <mniewoeh-0BV18Q16miHGpFsiFCTsGXqWYbMAw+HU@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1430858734.16357.256.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Madalin-Cristian Bucur <madalin.bucur@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 11. Mai 2015, 22:57:21 schrieb Michael Niew=F6hner:
-> Add system-power-controller to act8846 in rk3188-radxarock.dts in add=
-ition
-> to the act8846 patch fixing the reboot kernel panic
->=20
-> Signed-off-by: Michael Niewoehner <mniewoeh-0BV18Q16miHGpFsiFCTsGXqWYbMAw+HU@public.gmane.org>
-
-As the act8846 is the system-power-controller in any case (for example =
-to
-powerdown the board) I've applied this patch to my dts branch for 4.2 [=
-0],
-after adapting the commit message slightly to make it a bit more generi=
-c:
-----
-ARM: dts: rockchip: add system-power-controller to act8846 on radxarock
-The act8846 is the main pmic and system-power-controller on radxarock b=
-oards,
-so add the necessary property.
-----
-
-Hope that is ok with you :-)
-
-Heiko
-
-
-[0] https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.g=
-it/commit/?h=3Dv4.2-armsoc/dts&id=3D9ab79be0da98e371f1d2f9c01ac25745639=
-718d1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiA+DQo+ID4gSSBkb24ndCBiZWxpZXZlIHRoaXMgaXMgY29ycmVjdCAtIGxldCBtZSBleHBsYWlu
+IHRoZSByYXRpb25hbCB3aHkgd2UgaGFkIHR3bw0KPiBwcm9wZXJ0aWVzIGluIHRoZSBRTWFuIHBv
+cnRhbCB0byBiZWdpbiB3aXRoLg0KPiA+DQo+ID4gVGhlIHR3byBwcm9wZXJ0aWVzIGluIHF1ZXN0
+aW9uIGFyZSBjZWxsLWluZGV4IGFuZCBmc2wscW1hbi1jaGFubmVsLWlkLg0KPiA+DQo+ID4gVGhl
+IGNlbGwtaW5kZXggcHJvcGVydHkgaXMgdXNlZCBpbiB1LWJvb3QgYXMgYW4gaW5kZXggZm9yIHRo
+ZSBzb2Z0d2FyZSBwb3J0YWwNCj4gSUQgd2hlbiBhZGRpbmcgdGhlIGZzbCxsaW9kbiBmcm9tIHRo
+ZSBVLWJvb3QgdGFibGUgaW50byB0aGUgZGV2aWNlIHRyZWUuDQo+IA0KPiBUaGUgZGV2aWNlIHRy
+ZWUgaXMgbm90IHN1cHBvc2VkIHRvIGNvbnRhaW4gYXJiaXRyYXJ5IHNvZnR3YXJlIGlkZW50aWZp
+ZXJzLg0KDQpJIGFncmVlIC0gdGhpcyBpcyB3aHkgdGhlIG9yaWdpbmFsIGRldmljZSB0cmVlIGJp
+bmRpbmdzIHJlbW92ZWQgY2VsbC1pbmRleCBhcyBpdCBjYW4gYmUgY2FsY3VsYXRlZC4NClVuZm9y
+dHVuYXRlbHkgdS1ib290IHJlbGllZCBvbiB0aGlzIHZhbHVlIGJlaW5nIHByZXNlbnQgc28gdG8g
+YmUgYmFja3dhcmQgY29tcGF0aWJsZSB3ZSBkb24ndCBoYXZlIGEgd2F5IHRvIHJlbW92ZSBpdC4g
+IEknbSBub3Qgc3VyZSBvbiB3aGF0IHRoZSBwcm9jZWR1cmUgaXMgdG8gY2hhbmdlIHRoaW5ncyB1
+LWJvb3QgcmVsaWVzIG9uLCBJIHBlcnNvbmFsIGhhdmUgYWx3YXlzIGJlZW4gdmVyeSB1bmNvbWZv
+cnRhYmxlIHdpdGggdGhlIGNvdXBsaW5nIGJldHdlZW4gdS1ib290IGFuZCBMaW51eCBmb3IgdGhp
+bmdzIGxpa2UgdGhpcy4gDQoNCj4gDQo+ID4gVGhlICBmc2wscW1hbi1jaGFubmVsLWlkIHByb3Bl
+cnR5IGlzIHVzZWQgaW4gTGludXggYW5kIGNvcnJlc3BvbmRzIHRvDQo+ID4gYSBoYXJkd2FyZSB2
+YWx1ZSB0aGF0IGluZGljYXRlcyB3aGljaCBjaGFubmVsIGlzIGRlZGljYXRlZCB0byB0aGUNCj4g
+PiBzb2Z0d2FyZSBwb3J0YWwuDQo+ID4NCj4gPiBXaGlsZSBJJ20gbm90IGF3YXJlIG9mIGEgY3Vy
+cmVudCBTb0Mgd2hlcmUgdGhlIGNoYW5uZWwgSUQgZm9yIGENCj4gPiBzb2Z0d2FyZSBwb3J0YWwg
+ZG9lcyBub3QgbWF0Y2ggdGhlIGluZGV4IChpLmUuIFNXUCAwIHVzZXMgY2hhbm5lbCAwLA0KPiA+
+IGV0Yy4pDQo+IA0KPiBUaHVzIHRoZXJlJ3Mgbm8gYmFja3dhcmQgY29tcGF0aWJpbGl0eSBpc3N1
+ZSB3aXRoIHJlZGVmaW5pbmcgY2VsbC1pbmRleCB0bw0KPiBtZWFuIHRoZSBjaGFubmVsIElELg0K
+DQpDaGFubmVsIElEcyBkbyBjaGFuZ2UgYW5kIGFyZSBkZWZpbmVkIHdoZW4gdGhlIFNvQyBpcyBj
+cmVhdGVkIChsb29rIGF0IGNoZWNrcyBmb3IgUU1hbiB2ZXJzaW9ucyBhbmQgYWRqdXN0bWVudHMg
+Zm9yIFBvb2wgQ2hhbm5lbCBJRHMgaW4gdGhlIGRyaXZlcikuICBJZiB0aGUgY2hhbm5lbCBJRCBm
+b3IgcG9ydGFsIDAgZXZlciBiZWNvbWVzIG5vbiB6ZXJvIHdlIGp1c3QgZW5kIHVwIGhhdmluZyB0
+byBtYWtlIGEgbWVzcyBpbiB0aGUgY29kZSBvciByZWludHJvZHVjZSB0aGlzIGZpZWxkLg0KDQo+
+IA0KPiA+IGl0IGlzIHBvc3NpYmxlIHRoYXQgZnV0dXJlIFNvQ3MgY291bGQgc3RyYXkgZnJvbSB0
+aGlzIG1vZGVsLCB0aGVyZSBpcw0KPiA+IG5vIHJlYXNvbiBmb3IgcG9ydGFsIGluZGV4IHRvIGVx
+dWFsIGNoYW5uZWwgSUQgYXQgYWxsIHRpbWVzLg0KPiANCj4gSG93IGNhbiBmdXR1cmUgU29DcyBk
+aWN0YXRlIGhvdyB3ZSBhc3NpZ24gYSBzb2Z0d2FyZS1kZWZpbmVkIGlkZW50aWZpZXI/DQo+IElm
+IHNvZnR3YXJlIHdhbnRzIGl0IHRvIGJlIHRoZSBzYW1lIGFzIHRoZSBjaGFubmVsIGlkLCB0aGVu
+IGl0IHdpbGwgYmUuDQo+IA0KPiBJZiB0aGVyZSBpcyBzb21lIGFzcGVjdCBvZiB0aGUgaGFyZHdh
+cmUgaXRzZWxmIChub3QgdGhlIGRvY3VtZW50YXRpb24pIHRoYXQNCj4gY2VsbC1pbmRleCBjdXJy
+ZW50bHkgY29ycmVzcG9uZHMgdG8sIG90aGVyIHRoYW4gdGhlIGNoYW5uZWwgaWQsIHBsZWFzZSBt
+YWtlDQo+IHRoYXQgY2xlYXIuDQoNCkNoYW5uZWwgSUQgaXMgZGVmaW5lZCBpbiB0aGUgU29DIFJU
+TCAtIGl0IGlzIG5vdCBjb250cm9sbGVkIGJ5IHNvZnR3YXJlIGFuZCBpdCBpcyBub3QgYSBzb2Z0
+d2FyZSBhc3NpZ25lZCBpZGVudGlmaWVyLiAgSXQgaXMgbm90IHBvc3NpYmxlIGZvciBTVyB0byBz
+ZXQgdGhlc2UgdmFsdWVzLg0KDQpSb3kNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxp
+c3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBj
+LWRldg==
