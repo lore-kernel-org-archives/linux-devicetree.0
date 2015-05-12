@@ -1,95 +1,74 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Tue, 12 May 2015 11:04:50 -0500
-Message-ID: <555224A2.7000308@ti.com>
-References: <cover.1430394884.git.viresh.kumar@linaro.org> <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org> <554FFFA3.1060801@ti.com> <20150512051633.GB32300@linux>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Tue, 12 May 2015 17:05:40 +0100
+Message-ID: <20150512160540.GB3066@sirena.org.uk>
+References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
+ <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
+ <20150508175306.GG2761@sirena.org.uk>
+ <1431434356.2128.9.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150512051633.GB32300@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1431434356.2128.9.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: leilk liu <leilk.liu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
-On 05/12/2015 12:16 AM, Viresh Kumar wrote:
-[..]
-> On 10-05-15, 20:02, Nishanth Menon wrote:
->> On 04/30/2015 07:07 AM, Viresh Kumar wrote:
 
-One additional comment - after re-reading the bindings again..
-> 
-> +- opp-microvolt: voltage in micro Volts. It can contain entries for multiple
-> +  regulators.
-> +
-> +  A single regulator's voltage is specified with an array of size one or three.
-> +  Single entry is for target voltage and three entries are for <target min max>
-> +  voltages.
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just curious -> is'nt it better to just have min<->max range? binding
-as it stands right now is open to interpretation as to what will be
-attempted and in what sequence? with a valid min, target or max -
-is'nt it more power efficient always to go for a "min" than a target?
+On Tue, May 12, 2015 at 08:39:16PM +0800, leilk liu wrote:
+> On Fri, 2015-05-08 at 18:53 +0100, Mark Brown wrote:
+> > On Fri, May 08, 2015 at 04:55:42PM +0800, leilk.liu@mediatek.com wrote:
 
-Further, min<->max implies anywhere in that range and is more
-consistent with "regulator like" description.
+> Could you tell me more details about "You should also be using the core
+> helpers for DMA mapping"?
 
+Implement can_dma() - look for drivers providing that for examples.
 
->> That said, flexibility of this approach is awesome, thanks for doing
->> this, I believe we did have a discussion about "safe OPP" for thermal
->> behavior -> now that we have phandles for OPPs, we  can give phandle
->> pointer to the thermal framework. in addition, we can also use phandle
->> for marking throttling information in thermal framework instead of
->> indices as well. which allows a lot of flexibility.
->>
->> in some systems, we'd have need to mark certain OPPs for entry into
->> suspend(tegra?) or during shutdown (for example) - do we allow for such
->> description as phandle pointer back to the OPP nodes (from cpu0 device)
->> OR do we describe them as additional properties?
-> 
-> Haven't thought about it earlier. In case we need them, probably it
-> should go in the OPP table.
+> > > +static const struct of_device_id mtk_spi_of_match[] =3D {
+> > > +	{ .compatible =3D "mediatek,mt6589-spi", .data =3D (void *)COMPAT_M=
+T6589},
+> > > +	{ .compatible =3D "mediatek,mt8173-spi", .data =3D (void *)COMPAT_M=
+T8173},
+> > > +	{}
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
 
-> 
-> NOTE: Mike T. once told me that we shouldn't over-abuse the bindings
-> by putting every detail there. And I am not sure at all on how to draw
-> that line.
+> > There were three compatible strings listed in the DT binding but only
+> > two here.
 
-True. one option might be to allow for vendor specific property
-extensions - that will let vendors add in additional quirky data
-custom to their SoCs as needed.
+> MT6589 and MT8135 is compatible;=20
+> For MT8135 IC, it can use the follow way in dts to probe:
+>   compatible =3D "mediatek,mt8135-spi",=20
+> 	       "mediatek,mt6589-spi";
 
-> 
->>> +- status: Marks the node enabled/disabled.
->>
->> One question we'd probably want the new framework to address is the need
->> for OPPs based on Efuse options - Am I correct in believing that the
->> solution that iMX, and TI SoCs probably need is something similar to
->> modifying the status to disabled? or do we have Vendor specfic modifier
->> properties that would be allowed?
-> 
-> See PATCH 2/3 for that.
+> And I test it's ok on MT8135 platform. So I add struct of_device_id
+> mtk_spi_of_match like this in spi driver code.
 
-Sorry about that. I had kind of expected all bindings to be a single
-patch :)..
+You should list all the compatibles documented in the binding here, if
+some of them are the same just have them map to a single constant.
 
->  
->> One additional behavior need I noticed in various old threads is a need
->> to restrict transition OPPs -> certain SoCs might have constraints on
->> next OPP they can transition from certain OPPs in-order to achieve a new
->> OPP. again, such behavior could be phandle lists OR properties that link
->> the chain up together. Number of such needs did sound less, but still
->> just thought to bring it up.
-> 
-> See 0/3 and 3/3 for that. Its present in my solution but Mike T. is
-> strictly against keeping that in OPP table. And so 3/3 may get Nak'd.
-> 
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-missed this as well :(
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBCAAGBQJVUiTUAAoJECTWi3JdVIfQyRsH/RIfXC/axE4Vnj/fc10xN1sA
+ouHn1R2VNR2a22+BW2TiEV50STna+tHzOd/O3jbnLzt8PFwQhFzQEiWJnkm0l1ZP
+zi+fFz48mMUuCuzEuW5qKyyw6jI2zXrngAE3Pn/dDIbhxNQJOGmNxsZbShNF0Gf9
+3/KSrnI8lter1xWXJojNkfA8BYPy0PHDCECqIVBEWpd4BaOf0RKnZTeDUW3fU9ZB
+73zwIKWNCWvPjdx7igOPi2Th6fICK8wfVEW2ByR1pEEsHclbTCYAT08+jzzAU1Vp
+SP70datG78Pi/ttBJuh3fgZ9UCGy/pJjb0gnTj6gD+DCyuTrW62WIf/faTtT5NA=
+=2z4G
+-----END PGP SIGNATURE-----
 
--- 
-Regards,
-Nishanth Menon
+--ZfOjI3PrQbgiZnxM--
