@@ -1,29 +1,41 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
 Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Wed, 13 May 2015 10:15:09 +0530
-Message-ID: <20150513044509.GD28858@linux>
+Date: Wed, 13 May 2015 10:35:59 +0530
+Message-ID: <20150513050559.GE28858@linux>
 References: <cover.1430394884.git.viresh.kumar@linaro.org>
  <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <20150512161945.GE8699@saruman.tx.rr.com>
+ <554FFFA3.1060801@ti.com>
+ <20150512051633.GB32300@linux>
+ <555224A2.7000308@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150512161945.GE8699@saruman.tx.rr.com>
+In-Reply-To: <555224A2.7000308@ti.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, kesavan.abhilash@gmail.com, linaro-kernel@lists.linaro.org, ta.omasab@gmail.com, linux-pm@vger.kernel.org, viswanath.puttagunta@linaro.org, santosh.shilimkar@oracle.com, olof@lixom.net, khilman@linaro.org, Sudeep.Holla@arm.com, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+To: broonie@kernel.org, Nishanth Menon <nm@ti.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-On 12-05-15, 11:19, Felipe Balbi wrote:
-> operating-points-v2 is kinda awkward, how about
-> operating-points-extended, much like interrupts-extended ?
+On 12-05-15, 11:04, Nishanth Menon wrote:
+> Just curious -> is'nt it better to just have min<->max range? binding
+> as it stands right now is open to interpretation as to what will be
+> attempted and in what sequence? with a valid min, target or max -
+> is'nt it more power efficient always to go for a "min" than a target?
+> 
+> Further, min<->max implies anywhere in that range and is more
+> consistent with "regulator like" description.
 
-What about the next version if required ? :)
+It came out after some discussions on the list, you may want to go
+through that.
 
-> Other than this, I very much like the new approach.
+https://lists.linaro.org/pipermail/linaro-kernel/2015-January/019844.html
 
-Thanks.
+> True. one option might be to allow for vendor specific property
+> extensions - that will let vendors add in additional quirky data
+> custom to their SoCs as needed.
+
+Yeah, I am planning to support them.
 
 -- 
 viresh
