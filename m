@@ -1,90 +1,99 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH v4 00/11] mtd: nand: add Broadcom NAND controller support
-Date: Tue, 12 May 2015 17:53:33 -0700
-Message-ID: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
+Subject: [PATCH v4 03/11] mtd: brcmnand: add support for STB chips
+Date: Tue, 12 May 2015 17:53:36 -0700
+Message-ID: <1431478424-29230-4-git-send-email-computersforpeace@gmail.com>
+References: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mtd@lists.infradead.org
 Cc: Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+BCM7xxx chips are supported entirely by the library code, since they us=
+e
+generic irqchip interfaces and don't need any extra SoC-specific
+configuration.
 
-This is the fourth (and final?) version of support for the Broadcom BCM7xxx
-Set-Top Box NAND controller. This controller has been used in a variety of
-Broadcom SoCs.
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+---
+v4: pulled stub platform driver into its own file as part of the
+    library-ization. This is also important, to keep the STB driver fro=
+m
+    overriding the iproc_nand driver, when seeing a compatible property=
+ like:
 
-Tested to work on Cygnus, BCM7445, and BCM63138.
+      compatible =3D "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brc=
+mnand";
 
-Summary changelog:
-
-v1 -> v2:
- * add NAND to DTS for BCM7445 / BCM97445SVMB
- * rename DT binding file to have 'brcm,' prefix
- * catch DMA mapping errors
- * fixup timeout / error messages (hex, remove misleading info)
- * MODULE_LICENSE("GPL v2")
- * fix incorrect comments
- * print why we fail, when checking for supported controller revisions
- * disable prefetch when using Flash DMA (see FIXME); will re-enable once we
-   get a good erased-page verification scheme merged
-
-v2 -> v3:
- * rebase to v4.1-rc1
- * add SoC-specific infrastructure, to help support other SoCs:
-   - add BCM63138 support
-   - add iProc/Cygnus support
- * disable prefetch on v6.1
-
-v3 -> v4:
- * move to brcmnand/ subdirectory
- * add MAINTAINERS entry
- * fixup endianness issues (only use __raw_xxx on MIPS BE)
- * split core NAND support into library, with tiny platform drivers for STB
-   (BCM7xxx), iProc, and BCM63138
- * restructure DT binding, so all SoC extras become part of main controller
-   node
-
-Brian Norris (10):
-  Documentation: devicetree: add binding doc for Broadcom NAND
-    controller
-  mtd: nand: add NAND driver "library" for Broadcom STB NAND controller
-  mtd: brcmnand: add support for STB chips
-  ARM: bcm7445: add NAND to DTS
-  Documentation: devicetree: brcmstb_nand: add BCM63138 and Cygnus/iProc
-  mtd: brcmnand: add extra SoC support to library
-  mtd: brcmnand: add support for Broadcom's IPROC family
-  mtd: brcmnand: add BCM63138 support
-  ARM: bcm63138: add NAND DT support
-  MAINTAINERS: add entry for new brcmnand/ directory
-
-Ray Jui (1):
-  ARM: dts: cygnus: Enable NAND support for Cygnus
-
- .../devicetree/bindings/mtd/brcm,brcmnand.txt      |  150 ++
- MAINTAINERS                                        |    6 +
- arch/arm/boot/dts/bcm-cygnus.dtsi                  |   12 +
- arch/arm/boot/dts/bcm63138.dtsi                    |   11 +
- arch/arm/boot/dts/bcm7445-bcm97445svmb.dts         |   23 +
- arch/arm/boot/dts/bcm7445.dtsi                     |   22 +
- arch/arm/boot/dts/bcm958300k.dts                   |   16 +
- arch/arm/boot/dts/bcm963138dvt.dts                 |   12 +
- drivers/mtd/nand/Kconfig                           |    8 +
- drivers/mtd/nand/Makefile                          |    1 +
- drivers/mtd/nand/brcmnand/Makefile                 |    6 +
- drivers/mtd/nand/brcmnand/bcm63138_nand.c          |  111 +
- drivers/mtd/nand/brcmnand/brcmnand.c               | 2246 ++++++++++++++++++++
- drivers/mtd/nand/brcmnand/brcmnand.h               |   73 +
- drivers/mtd/nand/brcmnand/brcmstb_nand.c           |   44 +
- drivers/mtd/nand/brcmnand/iproc_nand.c             |  150 ++
- 16 files changed, 2891 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
- create mode 100644 drivers/mtd/nand/brcmnand/Makefile
- create mode 100644 drivers/mtd/nand/brcmnand/bcm63138_nand.c
- create mode 100644 drivers/mtd/nand/brcmnand/brcmnand.c
- create mode 100644 drivers/mtd/nand/brcmnand/brcmnand.h
+ drivers/mtd/nand/brcmnand/Makefile       |  1 +
+ drivers/mtd/nand/brcmnand/brcmstb_nand.c | 44 ++++++++++++++++++++++++=
+++++++++
+ 2 files changed, 45 insertions(+)
  create mode 100644 drivers/mtd/nand/brcmnand/brcmstb_nand.c
- create mode 100644 drivers/mtd/nand/brcmnand/iproc_nand.c
 
--- 
+diff --git a/drivers/mtd/nand/brcmnand/Makefile b/drivers/mtd/nand/brcm=
+nand/Makefile
+index a1b3e3ebe440..b7b24f8277cc 100644
+--- a/drivers/mtd/nand/brcmnand/Makefile
++++ b/drivers/mtd/nand/brcmnand/Makefile
+@@ -1 +1,2 @@
++obj-$(CONFIG_MTD_NAND_BRCMSTB)		+=3D brcmstb_nand.o
+ obj-$(CONFIG_MTD_NAND_BRCMSTB)		+=3D brcmnand.o
+diff --git a/drivers/mtd/nand/brcmnand/brcmstb_nand.c b/drivers/mtd/nan=
+d/brcmnand/brcmstb_nand.c
+new file mode 100644
+index 000000000000..5c271077ac87
+--- /dev/null
++++ b/drivers/mtd/nand/brcmnand/brcmstb_nand.c
+@@ -0,0 +1,44 @@
++/*
++ * Copyright =C2=A9 2015 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include "brcmnand.h"
++
++static const struct of_device_id brcmstb_nand_of_match[] =3D {
++	{ .compatible =3D "brcm,brcmnand" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, brcmstb_nand_of_match);
++
++static int brcmstb_nand_probe(struct platform_device *pdev)
++{
++	return brcmnand_probe(pdev, NULL);
++}
++
++static struct platform_driver brcmstb_nand_driver =3D {
++	.probe			=3D brcmstb_nand_probe,
++	.remove			=3D brcmnand_remove,
++	.driver =3D {
++		.name		=3D "brcmstb_nand",
++		.pm		=3D &brcmnand_pm_ops,
++		.of_match_table =3D brcmstb_nand_of_match,
++	}
++};
++module_platform_driver(brcmstb_nand_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Brian Norris");
++MODULE_DESCRIPTION("NAND driver for Broadcom STB chips");
+--=20
 1.9.1
