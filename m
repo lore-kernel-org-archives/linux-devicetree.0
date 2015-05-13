@@ -1,96 +1,90 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v4 08/11] mtd: brcmnand: add BCM63138 support
-Date: Wed, 13 May 2015 13:24:15 -0700
-Message-ID: <20150513202415.GI11598@ld-irv-0074>
-References: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
- <7133995.DH7aRmliCR@wuerfel>
- <20150513194521.GF11598@ld-irv-0074>
- <5685584.0QXUdSHDpG@wuerfel>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
+ for cygnus
+Date: Wed, 13 May 2015 22:27:16 +0200
+Message-ID: <20150513202716.GA15878@localhost.localdomain>
+References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com>
+ <5543CD73.2030902@broadcom.com>
+ <20150501203004.3add2c95@lxorguk.ukuu.org.uk>
+ <9193036.7UYD2OGJHk@wuerfel>
+ <554D1649.2030106@broadcom.com>
+ <20150513153544.GC2065@localhost.localdomain>
+ <5553AAEA.30503@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5685584.0QXUdSHDpG@wuerfel>
+In-Reply-To: <5553AAEA.30503@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mtd@lists.infradead.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
+To: Jonathan Richardson <jonathar@broadcom.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Darren Edamura <dedamura@broadcom.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 10:02:49PM +0200, Arnd Bergmann wrote:
-> On Wednesday 13 May 2015 12:45:21 Brian Norris wrote:
-> > I could still avoid one pointer chase and one extra memory allocation by
-> > embedding 'struct brcmnand_soc' in a 'struct bcm63138_nand_soc'. e.g.:
+On Wed, May 13, 2015 at 12:50:02PM -0700, Jonathan Richardson wrote:
+> ptp_clock_adjtime() casts it to an unsigned and returns an error:
+> 
+>    if ((unsigned long) ts.tv_nsec >= NSEC_PER_SEC)
+>        return -EINVAL;
+
+The value of a timeval is the sum of its fields, but the field tv_usec
+must always be non-negative.  The tv_sec field can be negative.  So,
+your application simply needs to do this:
+
+	if (tx.time.tv_usec < 0) {
+		tx.time.tv_sec  -= 1;
+		tx.time.tv_usec += 1000000000;
+	}
+
+> >> IRQ interval: I mentioned before that we may be able to calculate the
+> >> isochronous interrupt rate automatically but this isn't possible because
+> >> the DTE doesn't know the frequency of the clients. One solution is to
+> >> use the 'PTP_PEROUT_REQUEST' ioctl to set a periodic timer frequency.
+> >> Not really a timer but good enough for our purposes.
 > > 
-> > struct bcm63138_nand_soc {
-> > 	void __iomem *base;
-> > 	struct brcmnand_soc soc;
-> > };
+> > As I said in my other reply, I don't understand what the problem is.
+> 
+> See reply to previous email. We can use this ioctl or add a new one as
+> Arnd suggested. It doesn't matter to me.
+
+Still makes no sense.  Why should the interrupt rate depend on the
+clock frequency?
+
+If the ISR is delivering batches of time stamps, then the interrupt
+rate aught to be the highest rate that the system can support.
+
+> >> Set divider: There is no ability to set a frequency or do anything to a
+> >> channel. We could re-use the PTP_EXTTS_REQUEST ioctl but extend 'struct
+> >> ptp_extts_request' by using the reserved field rsv to allow setting an
+> >> integer value representing either a frequency or divider value in our
+> >> case - some value to configure a channel. A new flag would have to be
+> >> added to the existing PTP_ENABLE_FEATURE, RISING and FALLING EDGE.
 > > 
-> > static bool bcm63138_nand_intc_ack(struct brcmnand_soc *soc)
-> > {
-> > 	struct bcm63138_nand_soc *priv;
-> > 	priv = container_of(soc, struct bcm63138_nand_soc, soc);
-> > 
-> > 	...
-> > }
-> > 
-> > static int bcm63138_nand_probe(...)
-> > {
-> > 	struct bcm63138_nand_soc *priv;
-> > 
-> > 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > 	...
-> > 	return brcmnand_probe(pdev, &priv->soc);
-> > }
+> > I don't get this, either.
 > 
-> That would make struct brcmnand_soc an empty structure, right?
+> See reply to previous email.
 
-No, it still contains the function pointers for our callbacks, which is
-the entire point. I guess it's more of a 'nand_soc_ops' structure than a
-'nand_soc' pointer now though.
+Didn't help me too much :(
 
-> I think that's fine though, at least it avoids passing void pointers
-> and it avoids one of the two allocations you do.
+> > The PTP interface supports poll/read just fine already.
 > 
-> There is another variation of this model, which some drivers use:
+> Yes that's why I wanted to re-use it. As it currently is, it's not going
+> to work for reasons I explained in previous follow up yesterday:
 > 
-> static int bcm63138_nand_probe(...)
-> {
-> 	struct bcm63138_nand_soc *priv;
-> 	struct brcmnand_controller *controller;
-> 
-> 	controller = brcmnand_controller_alloc(dev, sizeof (*priv));
-> 
-> 	priv = brcmnand_controller_priv(controller);
-> 
-> 	...
-> 
-> 	return brcmnand_register(controller);
-> }
-> 
-> struct brcmnand_controller *brcmnand_controller_alloc(struct device *pdev, size_t extra)
-> {
-> 	struct brcmnand_controller *p = dev_kzalloc(dev, sizeof(*p) + extra);
-> 
-> 	...
-> 
-> 	return p;
-> }
-> 
-> void *brcmnand_controller_priv(brcmnand_controller *p)
-> {
-> 	/* extra data follows at the next byte after the controller structure */
-> 	return p + 1;
-> }
+> http://marc.info/?l=linux-kernel&m=143147907431947&w=2
 
-Ah, so this allows the driver to still be agnostic about the contents of
-brcmnand_controller.
+You said:
 
-> Some subsystem maintainers prefer this model over the other one, up to you.
+   one user space process would have to read timestamps for all
+   channels/clients and then leave it up to user space IPC to get them
+   to other processes, which isn't great.
 
-I'll probably stick with mine. But thanks for the suggestion. I'll keep
-it in mind. I was actually thinking of imitating this model for other
-larger portions of drivers/mtd/nand/, to aid in bounding what drivers
-are expected to do vs. allowing the core subsystem to handle things.
+I disagree.  I think having tons of fifos isn't great.
 
-Brian
+Ideally, there will be kernel consumers for most of the channels, and
+they will forward the time stamps in a way appropriate to their
+subsystem.  For example, network devices will use so_timestamping. 
+Any "leftover" channels can go through the generic PTP interface.
+
+
+Thanks,
+Richard
