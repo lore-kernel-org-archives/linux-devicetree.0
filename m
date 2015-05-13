@@ -1,68 +1,32 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCHv5 2/5] ARM: dts: Odroid-XU3 Enable TMU at Exynos5422 base
-Date: Wed, 13 May 2015 17:32:43 +0900
-Message-ID: <CAJKOXPfC9nGEsYJ3qJ6m_iMsB=D8_6sOEpLQzEvmLry5zS5j3g@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
-	<1431499020-3912-3-git-send-email-linux.amoon@gmail.com>
-	<CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
-	<CANAwSgQ=30j4A_nCd26kzxi=rdsh32+Srwuc5EaJigLhJ2r4jA@mail.gmail.com>
+From: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: h8300: device tree: undefined CONFIG_EDOSK2674
+Date: Wed, 13 May 2015 10:33:13 +0200
+Message-ID: <CAD3Xx4+4E_ueLzP9Jn+ZcxkbBbAEby=gyH-bUVKo_5WKpB-K-A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgQ=30j4A_nCd26kzxi=rdsh32+Srwuc5EaJigLhJ2r4jA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org
+Cc: dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Andreas Ruprecht <andreas.ruprecht-d40JDW7QUjc@public.gmane.org>, hengelein Stefan <stefan.hengelein-d40JDW7QUjc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-13 17:21 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
-> On 13 May 2015 at 12:51, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
->> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->>> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
->>> device.
->>>
->>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
->>> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
->>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>> ---
->>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 25 +++++++++++++++++++++++++
->>>  1 file changed, 25 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>> index 9446e28..cd78816 100644
->>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>> @@ -319,6 +319,31 @@
->>>                 #cooling-cells = <2>;
->>>                 cooling-levels = <0 130 170 230>;
->>>         };
->>> +
->>> +       tmu@10060000 {
->>
->> Here and for other overrides please use label notation, like:
->>
->> &tmu_cpu0 {
->>               ...
->> };
->>
->>> +               vtmu-supply = <&ldo10_reg>;
->>
->> I am curious, how did you find that LDO10 supplies TMU unit?
->>
->> Best regards,
->> Krzysztof
->
-> Hi Krzysztof,
->
-> I have re-base my work on earlier Lukasz Majewski patches.
->
-> https://patchwork.kernel.org/patch/5693201/
+Hi Yoshinori,
 
-NAK.
-I am sorry, but this is not sufficient explanation. Actually such
-explanation could mean that you did just blindly copied everything
-instead of developing it.
+your commit 5befaa907481 ("h8300: devicetree source") is in today's
+linux-next tree (i.e., next-20150513) and adds the following line:
 
-You cannot use some regulator here just because some Exynos4 boards
-use it. You have to be sure that this regulator supplies this part of
-SoC or device.
++dtb-$(CONFIG_EDOSK2674) := edosk2674.dtb
+
+EDOSK2674 is not defined in Kconfig so that the device tree source
+won't be touched.  Some grepping indicates that it's just a typo and
+'H8S_EDOSK2674' may be the correct option.  Is that right?
+
+I detected this issue with scripts/checkkconfigsymbols.py by diffing
+yesterday's and today's linux-next tree.
+
+Kind regards,
+ Valentin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
