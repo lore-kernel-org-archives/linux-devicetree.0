@@ -1,44 +1,121 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Wed, 13 May 2015 11:34:13 -0500
-Message-ID: <55537D05.4080009@ti.com>
-References: <cover.1430394884.git.viresh.kumar@linaro.org> <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org> <554FFFA3.1060801@ti.com> <20150512051633.GB32300@linux> <555224A2.7000308@ti.com> <20150513050559.GE28858@linux> <55536719.5050208@ti.com> <20150513151652.GX2761@sirena.org.uk> <5553784F.7040905@ti.com> <20150513162127.GA2761@sirena.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: base: upgrade initcall level of of_init from core to pure
+Date: Wed, 13 May 2015 11:34:40 -0500
+Message-ID: <CAL_JsqK6cZ+rYiox0=EE5wjwtk6T8edCzDG0=uj2ZdK-QHoX3g@mail.gmail.com>
+References: <1431452282-10207-1-git-send-email-sudeep.holla@arm.com>
+ <CAL_JsqJ19OfTJjtrZ9vs_9VYRHzOyF=GZdz4ftHT=nonEVWWgw@mail.gmail.com>
+ <55532186.5060803@arm.com> <CAL_JsqL_pEZ0qMgk3j7fwuWLTVZEm2UpPR=e4jAMN4shHAtNnA@mail.gmail.com>
+ <555364AA.7030703@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150513162127.GA2761@sirena.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <555364AA.7030703-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2015 11:21 AM, Mark Brown wrote:
-> On Wed, May 13, 2015 at 11:14:07AM -0500, Nishanth Menon wrote:
-> 
->> To illustrate: What does it mean for a driver using regulator API?
->> Attempt X <-> (X+Y), if that fails (example PMIC SMPS max < X), try
->> (X-Y)<->(X)? If yes, then we do expect (X-Y)<->(X+Y) should be stable
->> for all operating conditions for the device, correct? If this is is
->> not stable at (X-Y), then we have a wrong specification for the device
->> for claiming X +/- Y is a valid range for the device.
-> 
-> We have an explicit regulator API call for setting by tolerance which
-> tries to get as close as possible to the target voltage (currently the
-> implementation is very cheap and nasty but ideally it'll get improved).
-> 
+On Wed, May 13, 2015 at 9:50 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 13/05/15 14:46, Rob Herring wrote:
+>> On Wed, May 13, 2015 at 5:03 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> wrote:
 
-Thanks - I think the original implementation was triggered by the old
-"voltage-tolerance" mess, so wont be too surprised.
+[...]
 
-With respect to the property itself, I still am not completely
-convinced that having typ actually helps. but having it does not hurt
-either, since min could be == typ in SoC description if desired.
+>>> Yes I read and was bit hesitant initially to do this change, but found
+>>> no better way. I posted mainly to discuss other possibilities to solve
+>>> the issue.
+>>
+>>
+>> Perhaps of_init should not be an initcall at all and it should go into
+>> driver_init().
+>
+>
+> That seems ideal place to me as most of kset and kobjects are created
+> there. Something like below patch ? However found that PPC had a
+> function with same name which can conflict and we need to rename one of
+> these two.
 
-So, since I dont strongly feel either way here to reject things
-completely, and supposedly, it does help some other SoC vendors(which
-I am not convinced how), will leave the discussion alone for the moment.
+It looks like the PPC one is in the boot wrapper. They shouldn't
+collide. If they do, then how about of_core_init.
 
--- 
-Regards,
-Nishanth Menon
+>
+> --->8
+>
+> diff --git a/drivers/base/init.c b/drivers/base/init.c
+> index da033d3bab3c..fa149c7678d2 100644
+> --- a/drivers/base/init.c
+> +++ b/drivers/base/init.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/device.h>
+>  #include <linux/init.h>
+>  #include <linux/memory.h>
+> +#include <linux/of.h>
+>
+>  #include "base.h"
+>
+> @@ -34,4 +35,5 @@ void __init driver_init(void)
+>         cpu_dev_init();
+>         memory_dev_init();
+>         container_dev_init();
+> +       of_init();
+>  }
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 8c3d6b04c585..927800548b75 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -189,7 +189,7 @@ int __of_attach_node_sysfs(struct device_node *np)
+>         return 0;
+>  }
+>
+> -static int __init of_init(void)
+> +int __init of_init(void)
+
+You can make this return void.
+
+>  {
+>         struct device_node *np;
+>
+> @@ -210,7 +210,6 @@ static int __init of_init(void)
+>
+>         return 0;
+>  }
+> -pure_initcall(of_init);
+>
+>  static struct property *__of_find_property(const struct device_node *np,
+>                                            const char *name, int *lenp)
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index ddeaae6d2083..7b68e9248722 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -121,6 +121,8 @@ extern struct device_node *of_stdout;
+>  extern raw_spinlock_t devtree_lock;
+>
+>  #ifdef CONFIG_OF
+> +extern int of_init(void);
+
+You don't need extern.
+
+> +
+>  static inline bool is_of_node(struct fwnode_handle *fwnode)
+>  {
+>         return fwnode && fwnode->type == FWNODE_OF;
+> @@ -376,6 +378,10 @@ bool of_console_check(struct device_node *dn, char
+> *name, int index);
+>
+>  #else /* CONFIG_OF */
+>
+> +static int of_init(void)
+
+static inline
+
+> +{
+> +       return 0;
+> +}
+>  static inline bool is_of_node(struct fwnode_handle *fwnode)
+>  {
+>         return false;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
