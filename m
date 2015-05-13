@@ -1,108 +1,123 @@
-From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
- for cygnus
-Date: Wed, 13 May 2015 12:50:02 -0700
-Message-ID: <5553AAEA.30503@broadcom.com>
-References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com> <5543CD73.2030902@broadcom.com> <20150501203004.3add2c95@lxorguk.ukuu.org.uk> <9193036.7UYD2OGJHk@wuerfel> <554D1649.2030106@broadcom.com> <20150513153544.GC2065@localhost.localdomain>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 08/11] mtd: brcmnand: add BCM63138 support
+Date: Wed, 13 May 2015 22:02:49 +0200
+Message-ID: <5685584.0QXUdSHDpG@wuerfel>
+References: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com> <7133995.DH7aRmliCR@wuerfel> <20150513194521.GF11598@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150513153544.GC2065-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Edamura <dedamura-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150513194521.GF11598@ld-irv-0074>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-mtd@lists.infradead.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15-05-13 08:35 AM, Richard Cochran wrote:
-> On Fri, May 08, 2015 at 01:02:17PM -0700, Jonathan Richardson wrote:
->> For the clock functions I think we can use the existing framework
->> unchanged with one exception: ptp_clock_adjtime() doesn't allow negative
->> time adjustments and we would like to allow this.
+On Wednesday 13 May 2015 12:45:21 Brian Norris wrote:
+> On Wed, May 13, 2015 at 12:49:01PM +0200, Arnd Bergmann wrote:
+> > On Tuesday 12 May 2015 17:53:41 Brian Norris wrote:
+> > 
+> > This is a slightly unconventional method of doing the abstraction.
+> > For consistency with a lot of other drivers, I'd do it like this:
+> > 
+> > struct bcm63138_controller {
+> > 	void __iomem *base;
+> > 	brcmnand_controller parent;
+> > };
 > 
-> ???
+> Does it really make sense to publicize all of the brcmnand_controller
+> details to each of the constituent drivers? I was intentionally keeping
+> them private, with a very small and well-defined interface provided for
+> shim SoC drivers.
 > 
-> /**
->  * struct ptp_clock_info - decribes a PTP hardware clock
->    ...
-> 
->  * @adjtime:  Shifts the time of the hardware clock.
->  *            parameter delta: Desired change in nanoseconds.
->    ...
-> 
-> 	int (*adjtime)(struct ptp_clock_info *ptp, s64 delta);
-> 
-> That s64 is 's' as in "signed".
+> This is kind of a problem that has plagued the wider MTD (and esp. NAND)
+> subsystem in general; we expose a ton of details to low-level drivers,
+> and they're free to muck with things however they want, as long as it
+> ends up working. I'd rather be more intentional in what I expose.
 
-ptp_clock_adjtime() casts it to an unsigned and returns an error:
+In most cases like this, the soc-specific glue drivers eventually need
+access to some of the struct members anyway, but of course it's possible
+that you don't need that here.
 
-   if ((unsigned long) ts.tv_nsec >= NSEC_PER_SEC)
-       return -EINVAL;
->  
->> IRQ interval: I mentioned before that we may be able to calculate the
->> isochronous interrupt rate automatically but this isn't possible because
->> the DTE doesn't know the frequency of the clients. One solution is to
->> use the 'PTP_PEROUT_REQUEST' ioctl to set a periodic timer frequency.
->> Not really a timer but good enough for our purposes.
+> > static bool bcm63138_nand_intc_ack(struct brcmnand_controller *parent)
+> > {
+> > 	struct bcm63138_controller *controller;
+> > 	controller = container_of(parent, struct brcmnand_controller, parent);
+> > 
+> > 	...
+> > }
+> > 
+> > static int bcm63138_nand_probe(...)
+> > {
+> > 	struct bcm63138_controller *controller;
+> > 
+> > 	controller = devm_kzalloc(dev, sizeof(*controller), GFP_KERNEL);
+> > 	...
+> > 	return brcmnand_probe(pdev, &controller->parent);
+> > }
+> > 
+> > This also simplifies the probe() functions and means less pointer chasing.
 > 
-> As I said in my other reply, I don't understand what the problem is.
+> I could still avoid one pointer chase and one extra memory allocation by
+> embedding 'struct brcmnand_soc' in a 'struct bcm63138_nand_soc'. e.g.:
+> 
+> struct bcm63138_nand_soc {
+> 	void __iomem *base;
+> 	struct brcmnand_soc soc;
+> };
+> 
+> static bool bcm63138_nand_intc_ack(struct brcmnand_soc *soc)
+> {
+> 	struct bcm63138_nand_soc *priv;
+> 	priv = container_of(soc, struct bcm63138_nand_soc, soc);
+> 
+> 	...
+> }
+> 
+> static int bcm63138_nand_probe(...)
+> {
+> 	struct bcm63138_nand_soc *priv;
+> 
+> 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> 	...
+> 	return brcmnand_probe(pdev, &priv->soc);
+> }
 
-See reply to previous email. We can use this ioctl or add a new one as
-Arnd suggested. It doesn't matter to me.
+That would make struct brcmnand_soc an empty structure, right?
+I think that's fine though, at least it avoids passing void pointers
+and it avoids one of the two allocations you do.
 
->  
->> Set divider: There is no ability to set a frequency or do anything to a
->> channel. We could re-use the PTP_EXTTS_REQUEST ioctl but extend 'struct
->> ptp_extts_request' by using the reserved field rsv to allow setting an
->> integer value representing either a frequency or divider value in our
->> case - some value to configure a channel. A new flag would have to be
->> added to the existing PTP_ENABLE_FEATURE, RISING and FALLING EDGE.
-> 
-> I don't get this, either.
+There is another variation of this model, which some drivers use:
 
-See reply to previous email.
+static int bcm63138_nand_probe(...)
+{
+	struct bcm63138_nand_soc *priv;
+	struct brcmnand_controller *controller;
 
->  
->> Get timestamp: This is a bit more complicated. Currently the PTP driver
->> does list management for timestamps from external timestamp channels.
->> Timestamps from all channels go into the same list. In our driver we
->> have a s/w FIFO for each client and it closely matches the h/w FIFO and
->> handles any overflow. We would like to keep it this way because it also
->> allows multiple user space processes to only fetch timestamps for the
->> client it's handling. 
-> 
-> But having many readers is less efficient and more complex.
-> 
-> Also, we can adjust the buffer if needed to prevent HW FIFO overflows.
-> 
->> We could add a new ioctl to get a timestamp from
->> the driver instead of doing it through ptp_read() but it would be nice
->> if we could let ptp_read() allow the driver to do timestamp management
->> instead of PTP. Maybe provide an option to obtain the timestamps from a
->> container in the driver instead of the one managed by PTP. I like being
->> able to use read/poll to obtain data instead of polling the kernel with
->> ioctls as we are currently doing.
-> 
-> The PTP interface supports poll/read just fine already.
+	controller = brcmnand_controller_alloc(dev, sizeof (*priv));
 
-Yes that's why I wanted to re-use it. As it currently is, it's not going
-to work for reasons I explained in previous follow up yesterday:
+	priv = brcmnand_controller_priv(controller);
 
-http://marc.info/?l=linux-kernel&m=143147907431947&w=2
+	...
 
-> 
->> Also, avoiding the kmalloc in ptp_read
->> would be nice because this of the frequency it would be called at. Do
->> you have any preference on how to handle this?
-> 
-> Originally I had the buffer on the stack, but DaveM didn't like it,
-> saying performance is no excuse for not doing it "the right way".
-> 
-> Thanks,
-> Richard
-> 
+	return brcmnand_register(controller);
+}
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+struct brcmnand_controller *brcmnand_controller_alloc(struct device *pdev, size_t extra)
+{
+	struct brcmnand_controller *p = dev_kzalloc(dev, sizeof(*p) + extra);
+
+	...
+
+	return p;
+}
+
+void *brcmnand_controller_priv(brcmnand_controller *p)
+{
+	/* extra data follows at the next byte after the controller structure */
+	return p + 1;
+}
+
+Some subsystem maintainers prefer this model over the other one, up to you.
+
+	Arnd
