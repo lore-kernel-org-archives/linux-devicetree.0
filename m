@@ -1,35 +1,107 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv5 3/5] ARM: dts: define default thermal-zones for exynos5422
-Date: Wed, 13 May 2015 17:02:05 +0900
-Message-ID: <CAJKOXPeTvB2J0KjTc-YGqgaptXAyNM3Gv7Xsm5F74NmUwALQbQ@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
-	<1431499020-3912-4-git-send-email-linux.amoon@gmail.com>
-	<CAJKOXPerF9xgGzFuU+HC_9QaOAAMkoQo2DxH0Y=NwLJ7TMWH0A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPerF9xgGzFuU+HC_9QaOAAMkoQo2DxH0Y=NwLJ7TMWH0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH] arm: dts: Beaglebone i2c definitions
+Date: Wed, 13 May 2015 11:04:34 +0300
+Message-ID: <1431504274-32084-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Robert Nelson <robertcnelson@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-13 16:23 GMT+09:00 Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
-> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> Trip points corresponding to the one defined in the exynos_tmu_data.c
->> for Exynos5 have been included.
->> This thermal-zones attribute is afterwards reused for Exynos5422.
->>
->> Tested-by: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
->> Acked-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+The beaglebone family of boards contain two I2C busses enabled.
+The first one with a baseboard identification EEPROM and a
+cape I2C bus.
 
-I cannot find email with Lukasz's acked-by. Could you point me to it?
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 66 +++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-Lukasz, is the file OK?
-
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index c3255e0..236b7db 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -81,6 +81,13 @@
+ 		>;
+ 	};
+ 
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			0x178 (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_ctsn.i2c2_sda */
++			0x17c (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_rtsn.i2c2_scl */
++		>;
++	};
++
+ 	uart0_pins: pinmux_uart0_pins {
+ 		pinctrl-single,pins = <
+ 			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
+@@ -218,8 +225,67 @@
+ 		reg = <0x24>;
+ 	};
+ 
++	baseboard_eeprom: baseboard_eeprom@50 {
++		compatible = "at,24c256";
++		reg = <0x50>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++		baseboard_data: baseboard_data@0 {
++			reg = <0 0x100>;
++		};
++	};
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++
++	status = "okay";
++	clock-frequency = <100000>;
++
++	cape_eeprom0: cape_eeprom0@54 {
++		compatible = "at,24c256";
++		reg = <0x54>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		cape0_data: cape_data@0 {
++			reg = <0 0x100>;
++		};
++	};
++
++	cape_eeprom1: cape_eeprom1@55 {
++		compatible = "at,24c256";
++		reg = <0x55>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		cape1_data: cape_data@0 {
++			reg = <0 0x100>;
++		};
++	};
++
++	cape_eeprom2: cape_eeprom2@56 {
++		compatible = "at,24c256";
++		reg = <0x56>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		cape2_data: cape_data@0 {
++			reg = <0 0x100>;
++		};
++	};
++
++	cape_eeprom3: cape_eeprom3@57 {
++		compatible = "at,24c256";
++		reg = <0x57>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		cape3_data: cape_data@0 {
++			reg = <0 0x100>;
++		};
++	};
+ };
+ 
++
+ /include/ "tps65217.dtsi"
+ 
+ &tps {
+-- 
+1.7.12
