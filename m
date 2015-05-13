@@ -1,62 +1,96 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] clk: add lpc18xx ccu clk driver
-Date: Wed, 13 May 2015 10:09:18 +0200
-Message-ID: <CAGhQ9VzvvBCWu2+8zrAvpFRTWr3o9uhOeuucHB39s91fOPk8Mw@mail.gmail.com>
-References: <1430170693-28303-1-git-send-email-manabian@gmail.com>
-	<1430170693-28303-4-git-send-email-manabian@gmail.com>
-	<20150512223241.16410.79958@quantum>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH/RFC v6 5/7] PM / Domains: Add helper variable np = dev->of_node
+Date: Wed, 13 May 2015 10:10:01 +0200
+Message-ID: <CAPDyKFoTe8hk1-T9_Tz5HdUcUbitR7nuuawB9iG16yCYiycKRA@mail.gmail.com>
+References: <1430138622-14029-1-git-send-email-geert+renesas@glider.be>
+	<1430138622-14029-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150512223241.16410.79958@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ariel D'Alessandro <ariel.dalessandro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1430138622-14029-6-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Axel Haslam <ahaslam@baylibre.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 May 2015 at 00:32, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Quoting Joachim Eastwood (2015-04-27 14:38:12)
->> +static int of_clk_get_parent_arg(struct device_node *np, int index)
->> +{
->> +       struct of_phandle_args clkspec;
->> +       int rc;
->> +
->> +       if (index < 0)
->> +               return -EINVAL;
->> +
->> +       rc = of_parse_phandle_with_args(np, "clocks", "#clock-cells", index,
->> +                                       &clkspec);
->> +       if (rc)
->> +               return -EINVAL;
->> +
->> +       return clkspec.args_count ? clkspec.args[0] : -EINVAL;
->> +}
+On 27 April 2015 at 14:43, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> Just a cleanup, no functional changes.
 >
-> Hi Joachim,
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Kevin Hilman <khilman@linaro.org>
+
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+> ---
+> v6:
+>   - Rebased on top of v4.1-rc1 for new RFC,
 >
-> I'm not sure why you need this. I guess it is related to my question in
-> patch #2 about using clock-indices?
-
-Yes. I basically need the clock id without grabbing the clock using a
-clk_get function. See below.
-
->Can you explain why this function is required?
-
-Since the CCU doesn't act like a normal clock consumer using clk_get
-type functions I use this function to retrieve the CGU clock id. This
-drivers is used on two CCUs blocks and I need to match the id with one
-in the clk_branches array so that the driver itself can be generic.
-
-> Anyways if returning the clock index is something that is really needed
-> then why not rename it to "of_clk_get_index" and put it in
-> drivers/clk/clk.c?
-
-Okey, I'll do that in the next version if we agree that the function
-is still needed.
-
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> v4:
+>   - Add more explanations,
+>   - Add Acked-by,
+>
+> v3:
+>   - No changes,
+>
+> v2:
+>   - New.
+> ---
+>  drivers/base/power/domain.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index d1531602ae64528d..d20caa2c92b57edf 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2190,17 +2190,18 @@ static void genpd_dev_pm_sync(struct device *dev)
+>   */
+>  int genpd_dev_pm_attach(struct device *dev)
+>  {
+> +       struct device_node *np = dev->of_node;
+>         struct of_phandle_args pd_args;
+>         struct generic_pm_domain *pd;
+>         int ret;
+>
+> -       if (!dev->of_node)
+> +       if (!np)
+>                 return -ENODEV;
+>
+>         if (dev->pm_domain)
+>                 return -EEXIST;
+>
+> -       ret = of_parse_phandle_with_args(dev->of_node, "power-domains",
+> +       ret = of_parse_phandle_with_args(np, "power-domains",
+>                                         "#power-domain-cells", 0, &pd_args);
+>         if (ret < 0) {
+>                 if (ret != -ENOENT)
+> @@ -2211,8 +2212,7 @@ int genpd_dev_pm_attach(struct device *dev)
+>                  * (for backwards compatibility of DT ABI)
+>                  */
+>                 pd_args.args_count = 0;
+> -               pd_args.np = of_parse_phandle(dev->of_node,
+> -                                               "samsung,power-domain", 0);
+> +               pd_args.np = of_parse_phandle(np, "samsung,power-domain", 0);
+>                 if (!pd_args.np)
+>                         return -ENOENT;
+>         }
+> @@ -2221,7 +2221,7 @@ int genpd_dev_pm_attach(struct device *dev)
+>         if (IS_ERR(pd)) {
+>                 dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+>                         __func__, PTR_ERR(pd));
+> -               of_node_put(dev->of_node);
+> +               of_node_put(np);
+>                 return PTR_ERR(pd);
+>         }
+>
+> @@ -2237,7 +2237,7 @@ int genpd_dev_pm_attach(struct device *dev)
+>         if (ret < 0) {
+>                 dev_err(dev, "failed to add to PM domain %s: %d",
+>                         pd->name, ret);
+> -               of_node_put(dev->of_node);
+> +               of_node_put(np);
+>                 return ret;
+>         }
+>
+> --
+> 1.9.1
+>
