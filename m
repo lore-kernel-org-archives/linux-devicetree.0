@@ -1,114 +1,183 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver for cygnus
-Date: Wed, 13 May 2015 14:19:53 +0200
-Message-ID: <2067273.o6GGiUQkQC@wuerfel>
-References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com> <9193036.7UYD2OGJHk@wuerfel> <554D1649.2030106@broadcom.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/8] mfd: arizona: Split INx_MODE into two fields
+Date: Wed, 13 May 2015 13:28:27 +0100
+Message-ID: <20150513122827.GV3394@x1>
+References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1430493319-23808-2-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <554D1649.2030106@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Jonathan Richardson <jonathar@broadcom.com>, Darren Edamura <dedamura@broadcom.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Richard Cochran <richardcochran@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430493319-23808-2-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 08 May 2015 13:02:17 Jonathan Richardson wrote:
-> On 15-05-01 12:40 PM, Arnd Bergmann wrote:
-> > On Friday 01 May 2015 20:30:04 One Thousand Gnomes wrote:
-> >>
-> >>> channel control, unless I'm missing something. If people are flexible
-> >>> with extending that I could propose something. Let me know which way you
-> >>> prefer to go. Thanks.
-> >>
-> >> I would strongly favour fixing PTP to do this right. Otherwise we will
-> >> have 2 or 3 adhoc drivers, then end up moving them to PTP and then end up
-> >> dealing with the compat mess.
-> > 
-> > Agreed. I was hoping that there was already a subsystem in the kernel that
-> > could be extended to work with this driver. If all that is needed is to
-> > pass more fields of the existing timex to ptp drivers, that should be
-> > fairly easy to do.
-> > 
-> > We also have some padding bytes available in struct timex in case some
-> > extra data needs to be passed, or we could add another clock_* system call
-> > if it's absolutely required to have another entry into the driver, and
-> > connect that through struct k_clock and posix_clock_operations(). I would
-> > hope we don't even need that.
-> > 
-> > 	Arnd
-> > 
-> 
-> Thanks Arnd/Alan for the feedback. I looked into PTP further to see what
-> exactly would need changing.
-> 
-> For the clock functions I think we can use the existing framework
-> unchanged with one exception: ptp_clock_adjtime() doesn't allow negative
-> time adjustments and we would like to allow this.
+On Fri, 01 May 2015, Richard Fitzgerald wrote:
 
-Ah, very good. Extending this one function should be fairly straightforward,
-just discuss with the PTP maintainer how to best do it.
+> Later arizona silicon has the single/differential selector
+> in a different register, and IN1_MODE only selects between
+> analogue or digital. Prepare for this by splitting the
+> INx_MODE definition into two fields.
+>=20
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> ---
+>  drivers/mfd/arizona-core.c            |    8 ++++++--
+>  include/linux/mfd/arizona/pdata.h     |    5 ++++-
+>  include/linux/mfd/arizona/registers.h |   27 ++++++++++++++++++-----=
+----
+>  3 files changed, 28 insertions(+), 12 deletions(-)
 
-> The other client events (set IRQ interval, enable client, set client
-> divider, get client timestamp) could be handled as follows:
-> 
-> IRQ interval: I mentioned before that we may be able to calculate the
-> isochronous interrupt rate automatically but this isn't possible because
-> the DTE doesn't know the frequency of the clients. One solution is to
-> use the 'PTP_PEROUT_REQUEST' ioctl to set a periodic timer frequency.
-> Not really a timer but good enough for our purposes.
->
-> Enable Client: The external timestamping channel handling in PTP allows
-> channels to be enabled so we can re-use this (PTP_EXTTS_REQUEST ioctl).
+Applied, thanks.
 
-In each case, it might be better to add a new ioctl command instead, if
-the existing command does not fit perfectly. This again would be up to
-Richard.
- 
-> Set divider: There is no ability to set a frequency or do anything to a
-> channel. We could re-use the PTP_EXTTS_REQUEST ioctl but extend 'struct
-> ptp_extts_request' by using the reserved field rsv to allow setting an
-> integer value representing either a frequency or divider value in our
-> case - some value to configure a channel. A new flag would have to be
-> added to the existing PTP_ENABLE_FEATURE, RISING and FALLING EDGE.
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index 6ca6dfa..33fa5b5 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -977,12 +977,16 @@ int arizona_dev_init(struct arizona *arizona)
+>  		/* Default for both is 0 so noop with defaults */
+>  		val =3D arizona->pdata.dmic_ref[i]
+>  			<< ARIZONA_IN1_DMIC_SUP_SHIFT;
+> -		val |=3D arizona->pdata.inmode[i] << ARIZONA_IN1_MODE_SHIFT;
+> +		if (arizona->pdata.inmode[i] & ARIZONA_INMODE_DMIC)
+> +			val |=3D 1 << ARIZONA_IN1_MODE_SHIFT;
+> +		if (arizona->pdata.inmode[i] & ARIZONA_INMODE_SE)
+> +			val |=3D 1 << ARIZONA_IN1_SINGLE_ENDED_SHIFT;
+> =20
+>  		regmap_update_bits(arizona->regmap,
+>  				   ARIZONA_IN1L_CONTROL + (i * 8),
+>  				   ARIZONA_IN1_DMIC_SUP_MASK |
+> -				   ARIZONA_IN1_MODE_MASK, val);
+> +				   ARIZONA_IN1_MODE_MASK |
+> +				   ARIZONA_IN1_SINGLE_ENDED_MASK, val);
+>  	}
+> =20
+>  	for (i =3D 0; i < ARIZONA_MAX_OUTPUT; i++) {
+> diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/ar=
+izona/pdata.h
+> index 1789cb0..f672267 100644
+> --- a/include/linux/mfd/arizona/pdata.h
+> +++ b/include/linux/mfd/arizona/pdata.h
+> @@ -156,7 +156,10 @@ struct arizona_pdata {
+>  	/** MICBIAS configurations */
+>  	struct arizona_micbias micbias[ARIZONA_MAX_MICBIAS];
+> =20
+> -	/** Mode of input structures */
+> +	/**
+> +	 * Mode of input structures
+> +	 * One of the ARIZONA_INMODE_xxx values
+> +	 */
+>  	int inmode[ARIZONA_MAX_INPUT];
+> =20
+>  	/** Mode for outputs */
+> diff --git a/include/linux/mfd/arizona/registers.h b/include/linux/mf=
+d/arizona/registers.h
+> index aacc10d..3499d36 100644
+> --- a/include/linux/mfd/arizona/registers.h
+> +++ b/include/linux/mfd/arizona/registers.h
+> @@ -2515,9 +2515,12 @@
+>  #define ARIZONA_IN1_DMIC_SUP_MASK                0x1800  /* IN1_DMIC=
+_SUP - [12:11] */
+>  #define ARIZONA_IN1_DMIC_SUP_SHIFT                   11  /* IN1_DMIC=
+_SUP - [12:11] */
+>  #define ARIZONA_IN1_DMIC_SUP_WIDTH                    2  /* IN1_DMIC=
+_SUP - [12:11] */
+> -#define ARIZONA_IN1_MODE_MASK                    0x0600  /* IN1_MODE=
+ - [10:9] */
+> -#define ARIZONA_IN1_MODE_SHIFT                        9  /* IN1_MODE=
+ - [10:9] */
+> -#define ARIZONA_IN1_MODE_WIDTH                        2  /* IN1_MODE=
+ - [10:9] */
+> +#define ARIZONA_IN1_MODE_MASK                    0x0400  /* IN1_MODE=
+ - [10] */
+> +#define ARIZONA_IN1_MODE_SHIFT                       10  /* IN1_MODE=
+ - [10] */
+> +#define ARIZONA_IN1_MODE_WIDTH                        1  /* IN1_MODE=
+ - [10] */
+> +#define ARIZONA_IN1_SINGLE_ENDED_MASK            0x0200  /* IN1_MODE=
+ - [9] */
+> +#define ARIZONA_IN1_SINGLE_ENDED_SHIFT                9  /* IN1_MODE=
+ - [9] */
+> +#define ARIZONA_IN1_SINGLE_ENDED_WIDTH                1  /* IN1_MODE=
+ - [9] */
+>  #define ARIZONA_IN1L_PGA_VOL_MASK                0x00FE  /* IN1L_PGA=
+_VOL - [7:1] */
+>  #define ARIZONA_IN1L_PGA_VOL_SHIFT                    1  /* IN1L_PGA=
+_VOL - [7:1] */
+>  #define ARIZONA_IN1L_PGA_VOL_WIDTH                    7  /* IN1L_PGA=
+_VOL - [7:1] */
+> @@ -2588,9 +2591,12 @@
+>  #define ARIZONA_IN2_DMIC_SUP_MASK                0x1800  /* IN2_DMIC=
+_SUP - [12:11] */
+>  #define ARIZONA_IN2_DMIC_SUP_SHIFT                   11  /* IN2_DMIC=
+_SUP - [12:11] */
+>  #define ARIZONA_IN2_DMIC_SUP_WIDTH                    2  /* IN2_DMIC=
+_SUP - [12:11] */
+> -#define ARIZONA_IN2_MODE_MASK                    0x0600  /* IN2_MODE=
+ - [10:9] */
+> -#define ARIZONA_IN2_MODE_SHIFT                        9  /* IN2_MODE=
+ - [10:9] */
+> -#define ARIZONA_IN2_MODE_WIDTH                        2  /* IN2_MODE=
+ - [10:9] */
+> +#define ARIZONA_IN2_MODE_MASK                    0x0400  /* IN2_MODE=
+ - [10] */
+> +#define ARIZONA_IN2_MODE_SHIFT                       10  /* IN2_MODE=
+ - [10] */
+> +#define ARIZONA_IN2_MODE_WIDTH                        1  /* IN2_MODE=
+ - [10] */
+> +#define ARIZONA_IN2_SINGLE_ENDED_MASK            0x0200  /* IN2_MODE=
+ - [9] */
+> +#define ARIZONA_IN2_SINGLE_ENDED_SHIFT                9  /* IN2_MODE=
+ - [9] */
+> +#define ARIZONA_IN2_SINGLE_ENDED_WIDTH                1  /* IN2_MODE=
+ - [9] */
+>  #define ARIZONA_IN2L_PGA_VOL_MASK                0x00FE  /* IN2L_PGA=
+_VOL - [7:1] */
+>  #define ARIZONA_IN2L_PGA_VOL_SHIFT                    1  /* IN2L_PGA=
+_VOL - [7:1] */
+>  #define ARIZONA_IN2L_PGA_VOL_WIDTH                    7  /* IN2L_PGA=
+_VOL - [7:1] */
+> @@ -2661,9 +2667,12 @@
+>  #define ARIZONA_IN3_DMIC_SUP_MASK                0x1800  /* IN3_DMIC=
+_SUP - [12:11] */
+>  #define ARIZONA_IN3_DMIC_SUP_SHIFT                   11  /* IN3_DMIC=
+_SUP - [12:11] */
+>  #define ARIZONA_IN3_DMIC_SUP_WIDTH                    2  /* IN3_DMIC=
+_SUP - [12:11] */
+> -#define ARIZONA_IN3_MODE_MASK                    0x0600  /* IN3_MODE=
+ - [10:9] */
+> -#define ARIZONA_IN3_MODE_SHIFT                        9  /* IN3_MODE=
+ - [10:9] */
+> -#define ARIZONA_IN3_MODE_WIDTH                        2  /* IN3_MODE=
+ - [10:9] */
+> +#define ARIZONA_IN3_MODE_MASK                    0x0400  /* IN3_MODE=
+ - [10] */
+> +#define ARIZONA_IN3_MODE_SHIFT                       10  /* IN3_MODE=
+ - [10] */
+> +#define ARIZONA_IN3_MODE_WIDTH                        1  /* IN3_MODE=
+ - [10] */
+> +#define ARIZONA_IN3_SINGLE_ENDED_MASK            0x0200  /* IN3_MODE=
+ - [9] */
+> +#define ARIZONA_IN3_SINGLE_ENDED_SHIFT                9  /* IN3_MODE=
+ - [9] */
+> +#define ARIZONA_IN3_SINGLE_ENDED_WIDTH                1  /* IN3_MODE=
+ - [9] */
+>  #define ARIZONA_IN3L_PGA_VOL_MASK                0x00FE  /* IN3L_PGA=
+_VOL - [7:1] */
+>  #define ARIZONA_IN3L_PGA_VOL_SHIFT                    1  /* IN3L_PGA=
+_VOL - [7:1] */
+>  #define ARIZONA_IN3L_PGA_VOL_WIDTH                    7  /* IN3L_PGA=
+_VOL - [7:1] */
 
-Seems reasonable, or again you could add a new command with 
-a different structure if Richard prefers that.
-
-> Get timestamp: This is a bit more complicated. Currently the PTP driver
-> does list management for timestamps from external timestamp channels.
-> Timestamps from all channels go into the same list. In our driver we
-> have a s/w FIFO for each client and it closely matches the h/w FIFO and
-> handles any overflow. We would like to keep it this way because it also
-> allows multiple user space processes to only fetch timestamps for the
-> client it's handling. We could add a new ioctl to get a timestamp from
-> the driver instead of doing it through ptp_read() but it would be nice
-> if we could let ptp_read() allow the driver to do timestamp management
-> instead of PTP. Maybe provide an option to obtain the timestamps from a
-> container in the driver instead of the one managed by PTP. I like being
-> able to use read/poll to obtain data instead of polling the kernel with
-> ioctls as we are currently doing. Also, avoiding the kmalloc in ptp_read
-> would be nice because this of the frequency it would be called at. Do
-> you have any preference on how to handle this?
-> 
-> I've tried to minimize the changes to PTP.
-
-On Tuesday 12 May 2015 18:03:40 Jonathan Richardson wrote:
-> Using read() we can't specify a channel to get the timestamp for. It
-> would imply that one user space process would have to read timestamps
-> for all channels/clients and then leave it up to user space IPC to get
-> them to other processes, which isn't great. That means either we
-> introduce an ioctl such as the DTE_GET_TIMESTAMP we had before which
-> allows us to specify a channel, or we need to look at creating one dev
-> node per external timestamping channel.
-> 
-> The ioctl limitation is that it pounds the kernel polling for timestamps
-> and the multiple dev nodes per channel is a big change to PTP. I will
-> have to look further into this to really have a good idea of what the
-> implications would be. Advice/ideas?
-
-Would it help if you register each channel as a separate ptp clock? That
-way you could open them separately from user space in order to just
-read from one of them.
-
-	Arnd
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
