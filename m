@@ -1,91 +1,94 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] Documentation: Add WM8998/WM1814 device tree
- bindings
-Date: Wed, 13 May 2015 13:29:42 +0100
-Message-ID: <20150513122942.GW3394@x1>
-References: <1430493319-23808-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1430493319-23808-9-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH v4 0/4] Fix null pointer deference when calling of_platform_depopulate
+Date: Wed, 13 May 2015 14:31:12 +0200
+Message-ID: <CAPybu_1M3o6R7N_hxQ8tZL9k0ukUY0gTKHi-G5pBjgafdwrgVA@mail.gmail.com>
+References: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1430493319-23808-9-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jakub Sitnicki <jsitnicki@gmail.com>, Vivek Goyal <vgoyal@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Jiang Liu <jiang.liu@linux.intel.com>, Mike Travis <travis@sgi.com>, Thierry Reding <treding@nvidia.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 01 May 2015, Richard Fitzgerald wrote:
+Ping?
 
-> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt |   13 +++++++++--=
---
->  1 files changed, 9 insertions(+), 4 deletions(-)
+On Thu, Apr 23, 2015 at 3:58 PM, Ricardo Ribalda Delgado
+<ricardo.ribalda@gmail.com> wrote:
+> of_platform_depopulate can lead to a kernel error when calling release_resource()
+>
+> The reason is that it is trying to release a resource that was not allocated
+> via insert_resource()
+>
+> of_platform_depopulate()
+>       of_platform_device_destroy()
+>         platform_device_unregister(platform_device *pdev)
+>           platform_device_del(platform_device *pdev)
+>             for (i = 0; i < pdev->num_resources; i++)
+>                       release_resource()
+>
+> of_platform_populate()
+>       ...
+>         of_device_alloc()
+>           pdev = platform_device_alloc()
+>           # set pdev->resource, similar to platform_device_add_resources()
+>           of_device_add(platform_device *pdev)
+>             # similar to platform_device_add(), but note there's no
+>             # insert_resource() in this path
+>             device_add(&pdev->dev)
+>
+> On this patchset:
+>
+> base/platform has been fixed for an hypothetical condition where parent is
+> set but the platform is neither MEM or IO.
+>
+> Then platform_device_alloc has been modified so it supports of and amba
+> devices.
+>
+> Finally of_device_add has been modified to use platform_device_add().
+>
+> v1: https://lkml.org/lkml/2015/4/20/435
+>
+> v2: From: Bjorn Helgaas <bhelgaas@google.com>
+>      -Fix caller, not callee
+>
+>     https://lkml.org/lkml/2015/4/21/99
+>     https://lkml.org/lkml/2015/4/21/100
+>
+> v3: From: Rob Herring <robherring2@gmail.com>
+>       - Modify plaform_device_alloc to support of and ambda devices
+>
+>     https://lkml.org/lkml/2015/4/22/369
+>     https://lkml.org/lkml/2015/4/22/370
+>     https://lkml.org/lkml/2015/4/22/371
+>     https://lkml.org/lkml/2015/4/22/374
+>     https://lkml.org/lkml/2015/4/22/373
+>
+> v4: From: Bjorn Helgaas <bhelgaas@google.com>
+>      -Remove WARN() patch
+>      -Show conflicting resources
+>      -Code Style
+>      -Fix descriptions
+>
+>     From: Rob Herring <robherring2@gmail.com>
+>        -Fix descriptions
+>
+> Ricardo Ribalda Delgado (4):
+>   base/platform: Only insert MEM and IO resources
+>   base/platform: Continue on insert_resource() error
+>   of/platform: Use platform_device interface
+>   base/platform: Remove code duplication
+>
+>  drivers/base/platform.c | 84 ++++++++++++++++++++++++-------------------------
+>  drivers/of/platform.c   |  3 +-
+>  2 files changed, 43 insertions(+), 44 deletions(-)
+>
+> --
+> 2.1.4
+>
 
-Applied, thanks.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
-mentation/devicetree/bindings/mfd/arizona.txt
-> index 7665aa9..64fa3b2 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -10,6 +10,9 @@ Required properties:
->          "wlf,wm5110"
->          "wlf,wm8280"
->          "wlf,wm8997"
-> +        "wlf,wm8998"
-> +        "wlf,wm1814"
-> +
->    - reg : I2C slave address when connected using I2C, chip select nu=
-mber when
->      using SPI.
-> =20
-> @@ -31,10 +34,10 @@ Required properties:
->      as covered in Documentation/devicetree/bindings/regulator/regula=
-tor.txt
-> =20
->    - DBVDD2-supply, DBVDD3-supply : Additional databus power supplies=
- (wm5102,
-> -    wm5110, wm8280)
-> +    wm5110, wm8280, wm8998, wm1814)
-> =20
->    - SPKVDDL-supply, SPKVDDR-supply : Speaker driver power supplies (=
-wm5102,
-> -    wm5110, wm8280)
-> +    wm5110, wm8280, wm8998, wm1814)
-> =20
->    - SPKVDD-supply : Speaker driver power supply (wm8997)
-> =20
-> @@ -53,8 +56,10 @@ Optional properties:
->      of input signals. Valid values are 0 (Differential), 1 (Single-e=
-nded) and
->      2 (Digital Microphone). If absent, INn_MODE registers set to 0 b=
-y default.
->      If present, values must be specified less than or equal to the n=
-umber of
-> -    input singals. If values less than the number of input signals, =
-elements
-> -    that has not been specifed are set to 0 by default.
-> +    input signals. If values less than the number of input signals, =
-elements
-> +    that have not been specified are set to 0 by default. Entries ar=
-e:
-> +    <IN1, IN2, IN3, IN4> (wm5102, wm5110, wm8280, wm8997)
-> +    <IN1A, IN2A, IN1B, IN2B> (wm8998, wm1814)
-> =20
->    - wlf,dmic-ref : DMIC reference voltage source for each input, can=
- be
->      selected from either MICVDD or one of the MICBIAS's, defines
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Ricardo Ribalda
