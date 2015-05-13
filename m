@@ -1,73 +1,33 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
-Date: Wed, 13 May 2015 17:26:06 +0800
-Message-ID: <1431509166.25254.12.camel@mtksdaap41>
-References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
-	 <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
-	 <20150508175306.GG2761@sirena.org.uk> <1431434356.2128.9.camel@mhfsdcap03>
-	 <20150512160540.GB3066@sirena.org.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/2] pwm: Add support for R-Car PWM Timer
+Date: Wed, 13 May 2015 18:27:16 +0900
+Message-ID: <1431509238-7648-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150512160540.GB3066-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: leilk liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-12 at 17:05 +0100, Mark Brown wrote:
-> On Tue, May 12, 2015 at 08:39:16PM +0800, leilk liu wrote:
-<...>
-> > > > +static const struct of_device_id mtk_spi_of_match[] = {
-> > > > +	{ .compatible = "mediatek,mt6589-spi", .data = (void *)COMPAT_MT6589},
-> > > > +	{ .compatible = "mediatek,mt8173-spi", .data = (void *)COMPAT_MT8173},
-> > > > +	{}
-> > > > +};
-> > > > +MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
-> 
-> > > There were three compatible strings listed in the DT binding but only
-> > > two here.
-> 
-> > MT6589 and MT8135 is compatible; 
-> > For MT8135 IC, it can use the follow way in dts to probe:
-> >   compatible = "mediatek,mt8135-spi", 
-> > 	       "mediatek,mt6589-spi";
-> 
-> > And I test it's ok on MT8135 platform. So I add struct of_device_id
-> > mtk_spi_of_match like this in spi driver code.
-> 
-> You should list all the compatibles documented in the binding here, if
-> some of them are the same just have them map to a single constant.
+R-Car SoCs have a seven-channel pulse width modulation (PWM) timer.
+This driver adds support for the PWM Timer as a single PWM chip and
+seven PWM devices.
 
-Hi Mark,
+This patch set is based on the linux-pwm.git / for-next branch.
+(commit id = efb0de55b6a2ec15fc424e660601f22ae2fa487a)
 
-Just for clarification. If we want to add spi support for a new soc, say
-mt8127, which we think is compatible to mt6589. Since it may turn out we
-need special handling for this soc latter, it is suggested to write
-compatible like this in mt8127.dtsi:
+Yoshihiro Shimoda (2):
+  pwm: Add device tree binding document for R-Car PWM Timer
+  pwm: Add support for R-Car PWM Timer
 
-   compatible = "mediatek,mt8127-spi",
- 	        "mediatek,mt6589-spi";
+ .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   |  21 ++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-rcar.c                             | 282 +++++++++++++++++++++
+ 4 files changed, 315 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+ create mode 100644 drivers/pwm/pwm-rcar.c
 
-Device tree binding should list all possible compatible string in .dts,
-so we'll have to add that to binding as well.
-
-     - mediatek,mt6589-spi: for mt6589 platforms
-+    - mediatek,mt8127-spi: for mt8127 platforms
-
-Then we'll also need to add this to source code to reflect this.
-
-	{ .compatible = "mediatek,mt6589-spi", .data = (void *)COMPAT_MT6589},
-+	{ .compatible = "mediatek,mt8127-spi", .data = (void *)COMPAT_MT6589},
-
-This seems to introduce lots of trivial patches just to add a compatible
-device to me...
-
-Joe.C
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
