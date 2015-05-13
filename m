@@ -1,55 +1,69 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv5 5/5] ARM: dts: Enable thermal_zone for exynos5422-odroidxu3
-Date: Wed, 13 May 2015 14:09:43 +0530
-Message-ID: <CANAwSgTaM+Fthmu=bVjsg-5-iojWRS+om32APY=NDG5nK2iPQQ@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
- <1431499020-3912-6-git-send-email-linux.amoon@gmail.com> <CAJKOXPeNB=BXoY6CAxE8MNZ90cchhbdbUg3Xgef3qAgBR2UWJA@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH/RFC v6 0/7] PM / Domains: DT power-on/off and QoS device latencies
+Date: Wed, 13 May 2015 10:44:48 +0200
+Message-ID: <CAPDyKFqGEuzqb7NC-OJzHYeAuEfaGukgn=in-tbC+Oz8Uo4vgA@mail.gmail.com>
+References: <1430138622-14029-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPeNB=BXoY6CAxE8MNZ90cchhbdbUg3Xgef3qAgBR2UWJA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1430138622-14029-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Axel Haslam <ahaslam@baylibre.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 May 2015 at 13:10, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> 2015-05-13 15:37 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->> Include exynos5-cpu-thermal.dtsi to enable thermal_zone support.
+On 27 April 2015 at 14:43, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+>         Hi all,
 >
-> I am a little confused because you named this file as
-> exynos5-cpu-thermal, meaning it is common for all Exynos5 boards. But:
-> 1. It references some specific phandles like &fan0 (cooling-device =
-> <&fan0 2 3>).
-> 2. You include it only here.
+> This patch series is an RFC to add (1) PM Domain power-on/off latencies
+> and (2) QoS device latencies to DT.
 >
-> So the question: is "exynos5-cpu-thermal.dtsi" a generic thermal DTSI?
-> What is your intention?
+> To provide a good quality of service, the PM subsystem suspends PM
+> Domains and devices only if this doesn't break QoS constraints.  While
+> the PM subsystem performs measurements of the various latencies
+> involved, and adapts automatically according to these measurements, it's
+> still beneficial to provide initial values for these latencies.
+> Currently these initial values, which are properties of the hardware,
+> can only be specified from C code. This RFC adds DT support for
+> specifying them.
 >
-> Lukasz, you acked the patchset, is it fine?
+> All of these patches have been sent before (change logs are available in
+> the individual patches). I'm resending them upon request from Kevin
+> Hilman, and synced them all to the same version number (v6).
 >
-> Best regards,
-> Krzysztof
+>   - Patch 1 adds DT bindings for PM Domain power-on/off latencies,
+>   - Patches 2 and 3 update the DT bindings and support code for the
+>     Renesas R-Mobile system controller, providing a sample
+>     implementation,
+>   - Patch 4 adds DT bindings for QoS device latencies,
+>   - Patches 5 and 6 implement retrieving the QoS device latencies in the
+>     genpd code,
+>   - Patch 7 updates the DT bindings for the Renesas R-Mobile system
+>     controller, adding an example.
+>
+> Compared to previous submissions, I've left out the (preliminary)
+> patches adding the actual latency values to the .dtsi files, as they
+> just used a single default value taken from the legacy code[*].
+>
+> In the mean time, support for PM Domains with multiple states has been
+> proposed, cfr. "[RFC v5 0/8]  genpd multiple states v5"
+> (http://marc.info/?l=linux-pm&m=142989694214237&w=2).
+> If this is accepted, I think we have to rethink how to specify PM Domain
+> latencies (and be happy we didn't have the DT part cast in stone yet
+> ;-), as they won't be limited to power-on/off latencies anymore.
 
-Hi Krysxtof,
+In regard to the above, how about posting patch 4 and onwards separately?
 
-This file almost similar to below patch
+Then we can come back to patch 1 -> 3, once the above patchset has
+been thoroughly discussed.
 
-https://patchwork.kernel.org/patch/5693321/
+>
+> Perhaps we should switch to a mechanism similar to what's used for idle
+> states (cfr. Documentation/devicetree/bindings/arm/idle-states.txt)?
+> I.e. a single "idle-states" node, with subnodes for each state, being
+> pointed to by phandles in the actual PM domain provider nodes.
 
-I had to create this new file as I was not able to register
-#thermal-sensors to tmu_cpu0.
+Seems reasonable.
 
-+       thermal-zones {
-+               cpu0_thermal: cpu0-thermal {
-+                       thermal-sensors = <&tmu_cpu0 0>;
-+                       polling-delay-passive = <0>;
-+                       polling-delay = <0>;
-
-Earlier the DTS sensor's were not getting registers to the tmu_cpu0 sensors.
-
-I am not aware If this file will be common to Exynos5 series.
-I could not include any common dts file as I would through me
-compilation error hence .dtsi  extension,
-
--Anand Moon
+Kind regards
+Uffe
