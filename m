@@ -1,107 +1,43 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH] arm: dts: Beaglebone i2c definitions
-Date: Wed, 13 May 2015 11:04:34 +0300
-Message-ID: <1431504274-32084-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Robert Nelson <robertcnelson@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCHv5 4/5] ARM: dts: exynos5420 update the cooling cells for
+ core cpu0
+Date: Wed, 13 May 2015 17:05:27 +0900
+Message-ID: <CAJKOXPcxrdkwZmHKfw+YWJ4=XDBTTutK_5-d6SmZ8QQGKyvfCA@mail.gmail.com>
+References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
+	<1431499020-3912-5-git-send-email-linux.amoon@gmail.com>
+	<CAJKOXPdKtMO3f8YzHXtuZ042jkFRL4wa978=TggSQk8FahubRg@mail.gmail.com>
+	<CANAwSgTa=7rjcocYocxn+yv6AdH1PVtNu2NTZV6BWgBK3RXCDw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgTa=7rjcocYocxn+yv6AdH1PVtNu2NTZV6BWgBK3RXCDw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The beaglebone family of boards contain two I2C busses enabled.
-The first one with a baseboard identification EEPROM and a
-cape I2C bus.
+2015-05-13 16:58 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+> Hi Krzysztof,
+>
+> You are correct.
+>
+> #cooling-cells property are required by the thermal-zone.
+>
+> http://lxr.free-electrons.com/source/drivers/thermal/of-thermal.c#L607
+>
+> So I picked this values from earlier series of CPU frequency by Thomas.
+>
+> Hope this explains the changes. I will update the commit log.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- arch/arm/boot/dts/am335x-bone-common.dtsi | 66 +++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+I still don't get it. I do not ask about cooling-cells but levels.
 
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index c3255e0..236b7db 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -81,6 +81,13 @@
- 		>;
- 	};
- 
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			0x178 (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_ctsn.i2c2_sda */
-+			0x17c (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_rtsn.i2c2_scl */
-+		>;
-+	};
-+
- 	uart0_pins: pinmux_uart0_pins {
- 		pinctrl-single,pins = <
- 			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
-@@ -218,8 +225,67 @@
- 		reg = <0x24>;
- 	};
- 
-+	baseboard_eeprom: baseboard_eeprom@50 {
-+		compatible = "at,24c256";
-+		reg = <0x50>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		baseboard_data: baseboard_data@0 {
-+			reg = <0 0x100>;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	cape_eeprom0: cape_eeprom0@54 {
-+		compatible = "at,24c256";
-+		reg = <0x54>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		cape0_data: cape_data@0 {
-+			reg = <0 0x100>;
-+		};
-+	};
-+
-+	cape_eeprom1: cape_eeprom1@55 {
-+		compatible = "at,24c256";
-+		reg = <0x55>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		cape1_data: cape_data@0 {
-+			reg = <0 0x100>;
-+		};
-+	};
-+
-+	cape_eeprom2: cape_eeprom2@56 {
-+		compatible = "at,24c256";
-+		reg = <0x56>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		cape2_data: cape_data@0 {
-+			reg = <0 0x100>;
-+		};
-+	};
-+
-+	cape_eeprom3: cape_eeprom3@57 {
-+		compatible = "at,24c256";
-+		reg = <0x57>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		cape3_data: cape_data@0 {
-+			reg = <0 0x100>;
-+		};
-+	};
- };
- 
-+
- /include/ "tps65217.dtsi"
- 
- &tps {
--- 
-1.7.12
+>>> +
+>>> +                       cooling-min-level = <10>;
+>>> +                       cooling-max-level = <7>;
+>>> +                       #cooling-cells = <2>; /* min followed by max */
+
+Which cooling levels are referenced here? Where are they defined?
+
+Please, don't top-post.
+
+Krzysztof
