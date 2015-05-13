@@ -1,74 +1,163 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND v6 0/6] mfd: axp20x: add AXP221 PMIC support
-Date: Wed, 13 May 2015 16:41:25 +0100
-Message-ID: <20150513154125.GA19543@x1>
-References: <1428638946-24890-1-git-send-email-wens@csie.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Wed, 13 May 2015 16:20:34 +0100
+Message-ID: <55536BC2.30603@linaro.org>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <CALszF6CS8Q9DWX+ERtu=k=Bzr1-25N3oZQyWyxDZBF3an4nFKQ@mail.gmail.com>
+ <55534A5D.6050904@linaro.org> <3125409.QXbEmPolyh@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBKXBZWVAKGQEYLZ7LQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1428638946-24890-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3125409.QXbEmPolyh@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Kees Cook <keescook@chromium.org>, Linux-Arch <linux-arch@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, =?windows-1252?Q
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On 13/05/15 14:27, Arnd Bergmann wrote:
+> On Wednesday 13 May 2015 13:58:05 Daniel Thompson wrote:
+>> On 13/05/15 12:45, Maxime Coquelin wrote:
+>>> 2015-05-12 23:21 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>>>> On Saturday 09 May 2015 09:53:56 Maxime Coquelin wrote:
+>>>>> +#include  <dt-bindings/mfd/stm32f4-rcc.h>
+>>>>> +
+>>>>>
+>>>>
+>>>> Can you find a way to avoid this dependency?
+>>>>
+>>>> Maybe you can change the bindings so that the numbers you pass as
+>>>> arguments to the reset and clock specifiers reflect the numbers that
+>>>> the hardware use?
+>>>
+>>> If I understand correctly, you prefer the way I did in v7 [0]?
+>
+> Yes, that looks better. I would probably not list all the possible
+> values in the binding though, when the intention is to use the
+> hardware specific values, and being able to reuse the binding
+> and driver for variations of the same chip.
 
-Enjoy!
+Indeed. It was that long list that originally provoked me to comment in 
+the first place.
 
-The following changes since commit 5ebe6afaf0057ac3eaeb98defd5456894b446d22=
-:
 
-  Linux 4.1-rc2 (2015-05-03 19:22:23 -0700)
+>>> Note that doing that won't break the DT binary compatibility, as the
+>>> raw reset values, or the ones from defines are the same.
+>>>
+>>> Daniel, could you share an example of the bindings you would use for the clocks?
+>>
+>> For the most cases, where there is a clock gate just before the
+>> peripheral it looks pretty much like the reset driver and I use the bit
+>> offset of the clock gating bit as the index.
+>
+> Is this bit always the same index as the one for the reset driver?
 
-are available in the git repository at:
+For the all reset bits:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-reg=
-ulator-v4.2
+   clock idx = reset idx + 256
 
-for you to fetch changes up to 6d4fa89dcd85e2427da83319ce75e5df5febcc96:
+The opposite is not true; the clock bits are a superset of the reset 
+bits (the reset bits act on cells but some cells have >1 clock).
 
-  mfd: axp20x: Enable AXP22X regulators (2015-05-13 16:26:34 +0100)
+>> However there are a couple of clocks without gating just before the
+>> clock reaches the peripheral:
+>>
+>> 1. A hard coded /8. I think this will have to be given a synthetic
+>>      number.
+>
+> If this is just a divider, why not use a separate DT node for that,
+> like this:
+>
+>          clock {
+>                  compatible = "fixed-factor-clock";
+>                  clocks = <&parentclk>;
+>                  #clock-cells = <0>;
+>                  clock-div = <8>;
+>                  clock-mult = <1>;
+>          };
+>
+> No need to assign a number for this.
 
-----------------------------------------------------------------
-Immutable branch between MFD and Regulator, due for v4.2
+I'd wondered about doing that.
 
-----------------------------------------------------------------
-Boris BREZILLON (3):
-      mfd: axp20x: Add AXP22x PMIC support
-      regulator: axp20x: Prepare support for multiple AXP chip families
-      regulator: axp20x: Add support for AXP22X regulators
+It will certainly work but it seemed a bit odd to me to have one (really 
+tiny) part of the RCC cell included seperately in the platform 
+description whilst all the complicated bits end up aggregated into the 
+RCC cell.
 
-Chen-Yu Tsai (3):
-      mfd: axp20x: Update DT bindings with AXP22x compatibles
-      mfd: axp20x: Add AXP22x regulator information to DT bindings
-      mfd: axp20x: Enable AXP22X regulators
+Is there much prior art that uses this type of trick to avoid having 
+magic numbers into the bindings?
 
- Documentation/devicetree/bindings/mfd/axp20x.txt |  32 ++-
- drivers/mfd/axp20x.c                             | 100 ++++++++++
- drivers/regulator/axp20x-regulator.c             | 239 ++++++++++++++++++-=
-----
- include/linux/mfd/axp20x.h                       |  86 ++++++++
- 4 files changed, 405 insertions(+), 52 deletions(-)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>> 2. Ungated dividers. For these I am using the bit offset of the LSB of
+>>      the mux field.
+>
+> Do these ones also come with resets?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+No. They mostly run to the core and its intimate peripherals (i.e. only 
+reset line comes from WDT).
+
+
+>> So I think there is only one value that is completely unrelated to the
+>> hardware and will use a magic constant instead.
+>>
+>> I had planned to macros similar to the STM32F4_AxB_RESET() family of
+>> macros in both clk driver and DT in order to reuse the bit layouts from
+>> dt-bindings/mfd/stm32f4-rcc.h .
+>>
+>> Normal case would have looked like this:
+>>
+>>                  timer3: timer@40000000 {
+>>                          compatible = "st,stm32-timer";
+>>                          reg = <0x40000000 0x400>;
+>>                          interrupts = <28>;
+>>                          resets = <&rcc STM32F4_APB1_RESET(TIM3)>;
+>>                          clocks = <&rcc STM32F4_APB1_CLK(TIM3)>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> Without the macros it looks like this:
+>>
+>>                  timer3: timer@40000000 {
+>>                          compatible = "st,stm32-timer";
+>>                          reg = <0x40000000 0x400>;
+>>                          interrupts = <28>;
+>>                          resets = <&rcc 257>;
+>>                          clocks = <&rcc 513>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> However we could perhaps be more literate even if we don't use the macros?
+>>
+>>                  timer3: timer@40000000 {
+>>                          compatible = "st,stm32-timer";
+>>                          reg = <0x40000000 0x400>;
+>>                          interrupts = <28>;
+>>                          resets = <&rcc ((0x20*8) + 1)>;
+>>                          clocks = <&rcc ((0x40*8) + 1)>;
+>>                          status = "disabled";
+>>                  };
+>
+> How about #address-cells = <2>, so you can do
+>
+> 		resets = <&rcc 8 1>;
+> 		clocks = <&rcc 8 1>;
+>
+> with the first cell being an index for the block and the second cell the
+> bit number within that block.
+
+That would suit me very well (although is the 0x20/0x40 not the 8 that 
+we would need in the middle column).
+
+Maxime: Does that suit reset driver?
+
+
+Daniel.
