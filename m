@@ -1,32 +1,58 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx5: Add dts files for USB armory.
-Date: Wed, 13 May 2015 15:08:28 -0300
-Message-ID: <CAOMZO5A2Pg8+puvrtD_ek3gRMFE4A433qECL0KAXuRFP-e_cmw@mail.gmail.com>
-References: <87h9t6i40r.fsf@aikidev.net>
-	<20150427081428.GC9231@dragon>
-	<87y4ldnvqd.fsf@aikidev.net>
-	<87vbfwe547.fsf@aikidev.net>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv2] ARM: socfpga: dts: Add a clock node for sdmmc CIU
+Date: Wed, 13 May 2015 11:09:36 -0700
+Message-ID: <20150513180936.GG15988@codeaurora.org>
+References: <1429027519-22209-1-git-send-email-dinguyen@opensource.altera.com>
+ <20150513075438.GE15988@codeaurora.org>
+ <5553671E.3070301@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87vbfwe547.fsf-LkDtOWtB3X7R7s880joybQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5553671E.3070301-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrej Rosano <andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, setka-3PjVBYxTQDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 2:53 PM, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+On 05/13, Dinh Nguyen wrote:
+> 
+> 
+> On 5/13/15 2:54 AM, Stephen Boyd wrote:
+> > On 04/14, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> >> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> >>
+> >> The CIU(Card Interface Unit) get its clock from the sdmmc_clk_divided clock
+> >> which is used to clock the card. The sdmmc_clk_divided clock is the sdmmc_clk
+> >> passed through a fixed divider of 4. This patch adds the sdmmc_clk_divided
+> >> node and makes the sdmmc_clk it's parent.
+> >>
+> >> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> >> ---
+> > 
+> > Is this a fix of some sort? I'm confused why this was sent to the
+> > clk maintainers when it seems to be more appropriate to go
+> > through the arm-soc tree.
+> > 
+> 
+> Ok, sorry about that. I thought since it was clock nodes, it would
+> appropriate to CC clk maintainers.
 
-> Given that it is possible to set from u-boot, I'm wondering if it
-> wouldn't be worth reworking the patch to only generate a single .dtb for
-> now, and revisit the options for switching between USB host mode and
-> peripheral mode later?
+Sure, Cc is fine, but I believe the mail was sent "To" us so that
+led to my confusion.
 
-I think this is a good idea.
+> 
+> BTW, can I take patches from drivers/clk/socfpga/* through the arm-soc
+> tree or would that go through you guys?
+> 
 
-Regards,
+Unless there's some sort of complicated dependency between the
+clk tree and the arm-soc tree I'd prefer any patches against
+drivers/clk/* go through the clk tree.
 
-Fabio Estevam
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
