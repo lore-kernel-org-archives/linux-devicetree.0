@@ -1,47 +1,49 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/5] misc: Beaglebone capemanager
-Date: Wed, 13 May 2015 16:47:33 +0200
-Message-ID: <CAMuHMdUDxQEbmfQ=YTtK=2Tza1JLPkij6oTZw1HS7fgeEHJJhQ@mail.gmail.com>
-References: <1431503985-31853-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1431503985-31853-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH] ARM: dts: am335x-bone* enable pmic-shutdown-controller
+Date: Wed, 13 May 2015 16:48:46 +0200
+Message-ID: <20150513144846.GC6605@localhost>
+References: <1431525001-5747-1-git-send-email-robertcnelson@gmail.com>
+ <20150513141658.GB6605@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431503985-31853-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousso?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150513141658.GB6605@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: tony@atomide.com, devicetree@vger.kernel.org, matthijsvanduin@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 9:59 AM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> diff --git a/drivers/misc/bone_capemgr.c b/drivers/misc/bone_capemgr.c
-> new file mode 100644
-> index 0000000..423719c
-> --- /dev/null
-> +++ b/drivers/misc/bone_capemgr.c
+On Wed, May 13, 2015 at 04:16:58PM +0200, Johan Hovold wrote:
+> On Wed, May 13, 2015 at 08:50:01AM -0500, Robert Nelson wrote:
+> > Fixes: http://bugs.elinux.org/issues/143
+> > 
+> > Commit 672e2b147 which introduced proper shutdown chose to let the PMIC go into sleep-state (aka "RTC-only mode") rather than off-state. This was fine for rev A5 on which that patch was tested, but since then two changes have been made to the power supply scheme:
+> > 
+> > (rev A6) enable of the 3v3b regulator moved from LDO2 to LDO4 (3v3a)
+> > side-effect: 3v3b rail remains on in sleep-mode (also in off-mode when battery-powered)
+> > 
+> > (rev A6A) am335x vdds supply moved from LDO3 to LDO1
+> > side-effect: vdds remains supplied in sleep-mode
+> > 
+> > As a result heavy leakage occurs from vdds (directly) and 3v3b (via i/o pins) to the 3v3a. The amount of current depends on external connections, but for example leaving a serial console cable connected in this state resulted in serious violation of am335x absolute maximum ratings, with potential for hardware damage.
+> > 
+> > Reported-by: Matthijs van Duin <matthijsvanduin@gmail.com>
+> > Tested-by: Matthijs van Duin <matthijsvanduin@gmail.com>
+> > Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> > Cc: Tony Lindgren <tony@atomide.com>
+> > Cc: Felipe Balbi <balbi@ti.com>
+> > Cc: Johan Hovold <johan@kernel.org>
+> 
+> This should go into stable as well:
+> 
+> Fixes: 672e2b147413 ("ARM: dts: am335x-boneblack: enable power off and
+> rtc wake up")
+> Cc: stable <stable@vger.kernel.org>	# 3.19
+> Acked-by: Johan Hovold <johan@kernel.org>
 
-> +static int capemgr_load_slot(struct bone_cape_slot *slot)
-> +{
+By the way, perhaps you should add a comment in the tps node explaining
+why ti,pmic-shutdown-controller must not be disabled (on what revisions
+of hardware) as well?
 
-[...]
-
-> +       of_fdt_unflatten_tree((void *)slot->fw->data, &slot->overlay);
-
-After "[PATCH] of/fdt: Make fdt blob input parameters of unflatten functions
-const", you can remove the cast.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Johan
