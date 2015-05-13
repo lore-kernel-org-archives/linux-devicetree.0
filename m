@@ -1,78 +1,73 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 08/11] mtd: brcmnand: add BCM63138 support
-Date: Wed, 13 May 2015 12:49:01 +0200
-Message-ID: <7133995.DH7aRmliCR@wuerfel>
-References: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com> <1431478424-29230-9-git-send-email-computersforpeace@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 1/2] pinctrl: Add driver for Alphascale asm9260 pinctrl
+Date: Wed, 13 May 2015 13:00:07 +0200
+Message-ID: <CACRpkdZn+bkDKzAD6gpnysezGZ6fzizD2o4zdBfEamFgUbzcvg@mail.gmail.com>
+References: <1428306169.634.51.camel@x220>
+	<1428311043-12012-1-git-send-email-linux@rempel-privat.de>
+	<1428311043-12012-2-git-send-email-linux@rempel-privat.de>
+	<CACRpkdakXbHL6ydeZrs4XZ9Z1odHL5bWRxiHtT_Jbg-ygTudgw@mail.gmail.com>
+	<55522993.6090104@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431478424-29230-9-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55522993.6090104@rempel-privat.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 12 May 2015 17:53:41 Brian Norris wrote:
-> +static bool bcm63138_nand_intc_ack(struct brcmnand_soc *soc)
-> +{
-> +       struct bcm63138_nand_soc_priv *priv = soc->priv;
-> +       void __iomem *mmio = priv->base + BCM63138_NAND_INT_STATUS;
-> +       u32 val = brcmnand_readl(mmio);
-> +
-> +       if (val & BCM63138_CTLRDY) {
-> +               brcmnand_writel(val & ~BCM63138_CTLRDY, mmio);
-> +               return true;
-> +       }
-> +
-> +       return false;
-> +}
-...
-> +static int bcm63138_nand_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct bcm63138_nand_soc_priv *priv;
-> +       struct brcmnand_soc *soc;
-> +       struct resource *res;
-> +
-> +       soc = devm_kzalloc(dev, sizeof(*soc), GFP_KERNEL);
-> +       if (!soc)
-> +               return -ENOMEM;
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
+On Tue, May 12, 2015 at 6:25 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
+> Am 05.05.2015 um 17:12 schrieb Linus Walleij:
 
-This is a slightly unconventional method of doing the abstraction.
-For consistency with a lot of other drivers, I'd do it like this:
+>> Just reference the statically defined array by a pointer instead,
+>> this just takes up a lot o memory for no reason.
+>
+> This two arrays have different types this is why i convert it.
+> priv->pin_desc[i].name - here i copy pointer any ways, and
+> priv->pin_desc[i].number can be smaller then pointer.
 
-struct bcm63138_controller {
-	void __iomem *base;
-	brcmnand_controller parent;
-};
+I probably do not understand what you're trying to do, sorry :(
 
-static bool bcm63138_nand_intc_ack(struct brcmnand_controller *parent)
-{
-	struct bcm63138_controller *controller;
-	controller = container_of(parent, struct brcmnand_controller, parent);
+Why is it necessary for the driver to copy one description of
+the pin into another?
 
-	...
-}
+>> Mory copying. I don't see why this is necessary at all.
+>
+> I hadn't seen the point to define groups statically, especially because
+> they are used only  to make curious user happy. So, memory will be used
+> only if you request the list over sysfs. Or miss some thing?
 
-static int bcm63138_nand_probe(...)
-{
-	struct bcm63138_controller *controller;
+pinctrl does not even use sysfs.
 
-	controller = devm_kzalloc(dev, sizeof(*controller), GFP_KERNEL);
-	...
-	return brcmnand_probe(pdev, &controller->parent);
-}
+The group names are usually there for matching with a function,
+it is part of the core functionality. The group name + function name
+matching is even more obvious in the dt case.
 
-This also simplifies the probe() functions and means less pointer chasing.
+They also make things easier to read in debugfs yes, but
+the core of the crux is to make it easy to config function+groups
+states with e.g. DT or board files.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> +static struct pinmux_ops asm9260_pinmux_ops = {
+>>> +       .get_functions_count    = asm9260_pinctrl_get_funcs_count,
+>>> +       .get_function_name      = asm9260_pinctrl_get_func_name,
+>>> +       .get_function_groups    = asm9260_pinctrl_get_func_groups,
+>>> +       .set_mux                = asm9260_pinctrl_set_mux,
+>>> +       /* TODO: should we care about gpios here? gpio_request_enable? */
+>>
+>> I think you should, if you also have a matching GPIO driver.
+>
+> I fear it would cause unpredictable bugs. GPIO mode is just one of mux
+> modes. If some one will request gpio some busy or dangerous line it
+> would do more harm then use. So, i assume limiting this only to device
+> tree would be better.
+
+Device tree or not doesn't matter, .gpio_request_enable() is used
+as a shortcut to mux in GPIO pins.
+
+If the simultaneous use of a pin for a device and GPIO bothers
+you there is nowadays (linux-next or my devel branch) a .strict
+option in pinmux_ops that you can set to disallow simultaneous
+use by devices and GPIO of the same pin.
+
+Yours,
+Linus Walleij
