@@ -1,120 +1,65 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: base: upgrade initcall level of of_init from core to pure
-Date: Wed, 13 May 2015 11:34:40 -0500
-Message-ID: <CAL_JsqK6cZ+rYiox0=EE5wjwtk6T8edCzDG0=uj2ZdK-QHoX3g@mail.gmail.com>
-References: <1431452282-10207-1-git-send-email-sudeep.holla@arm.com>
- <CAL_JsqJ19OfTJjtrZ9vs_9VYRHzOyF=GZdz4ftHT=nonEVWWgw@mail.gmail.com>
- <55532186.5060803@arm.com> <CAL_JsqL_pEZ0qMgk3j7fwuWLTVZEm2UpPR=e4jAMN4shHAtNnA@mail.gmail.com>
- <555364AA.7030703@arm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Wed, 13 May 2015 18:37:46 +0200
+Message-ID: <2282066.NWoIT9ZyLc@wuerfel>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com> <11310179.epfRucfQKB@wuerfel> <CALszF6DHazhN6+hGShyrmqtMrPod0hdb8mHAwK-GWfRxXzy7wQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <555364AA.7030703-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CALszF6DHazhN6+hGShyrmqtMrPod0hdb8mHAwK-GWfRxXzy7wQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 9:50 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 13/05/15 14:46, Rob Herring wrote:
->> On Wed, May 13, 2015 at 5:03 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> wrote:
+On Wednesday 13 May 2015 18:29:05 Maxime Coquelin wrote:
+> 2015-05-13 17:28 GMT+02:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> > On Wednesday 13 May 2015 16:20:34 Daniel Thompson wrote:
+> >>
+> >> That would suit me very well (although is the 0x20/0x40 not the 8 that
+> >> we would need in the middle column).
+> >
+> > We don't normally use register offsets in DT. The number 8 here instead
+> > would indicate block 8, where each block is four bytes wide. Using the
+> > same index here for reset and clock would also help readability.
+> 
+> My view is that it makes the bindings usage very complex.
+> Also, it implies we have a specific compatible for stm32f429, whereas
+> we didn't need with my earlier proposals.
+> Indeed, the reset driver will need to know the offset of every reset
+> registers, because:
+>   1. The AHB registers start at RCC offset 0x10 (up to 0x18)
+>   2. The APB registers start at RCC offset 0x20 (up to 0x24).
+> We have a gap between AHB and APB registers, so how do we map the
+> index for the block you propose?
+> Should the gap be considered as a block, or we should skip it?
+>
+> I'm afraid it will not be straightforward for a reset user to
+> understand how to use this bindings.
+> 
+> Either my v7 or v8 versions would have made possible to use a single
+> compatible for STM32 series.
+> If we stick with one of these, we could even think to have a "generic"
+> reset driver, as it could be compatible with sunxi driver bindings.
 
-[...]
+We should definitely try to use the same compatible string for all of
+them, and make a binding that is easy to use.
 
->>> Yes I read and was bit hesitant initially to do this change, but found
->>> no better way. I posted mainly to discuss other possibilities to solve
->>> the issue.
->>
->>
->> Perhaps of_init should not be an initcall at all and it should go into
->> driver_init().
->
->
-> That seems ideal place to me as most of kset and kobjects are created
-> there. Something like below patch ? However found that PPC had a
-> function with same name which can conflict and we need to rename one of
-> these two.
+I haven't fully understood the requirements for the various parts that
+are involved here. My understanding so far was that the driver could
+use the index from the first cell and compute
 
-It looks like the PPC one is in the boot wrapper. They shouldn't
-collide. If they do, then how about of_core_init.
+	void __iomem *reset_reg = rcc_base + 0x10 + 4 * index;
+	void __iomem *clock_reg = rcc_base + 0x30 + 4 * index;
 
->
-> --->8
->
-> diff --git a/drivers/base/init.c b/drivers/base/init.c
-> index da033d3bab3c..fa149c7678d2 100644
-> --- a/drivers/base/init.c
-> +++ b/drivers/base/init.c
-> @@ -8,6 +8,7 @@
->  #include <linux/device.h>
->  #include <linux/init.h>
->  #include <linux/memory.h>
-> +#include <linux/of.h>
->
->  #include "base.h"
->
-> @@ -34,4 +35,5 @@ void __init driver_init(void)
->         cpu_dev_init();
->         memory_dev_init();
->         container_dev_init();
-> +       of_init();
->  }
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 8c3d6b04c585..927800548b75 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -189,7 +189,7 @@ int __of_attach_node_sysfs(struct device_node *np)
->         return 0;
->  }
->
-> -static int __init of_init(void)
-> +int __init of_init(void)
+Are there parts that need something else? If the 0x10 offset is
+different, we probably want a different compatible string, and I'd
+consider it a different part at that point. If there are chips
+that do not spread the clock from the reset by exactly 256 bits,
+we could add a DT property in the rcc node for that.
 
-You can make this return void.
-
->  {
->         struct device_node *np;
->
-> @@ -210,7 +210,6 @@ static int __init of_init(void)
->
->         return 0;
->  }
-> -pure_initcall(of_init);
->
->  static struct property *__of_find_property(const struct device_node *np,
->                                            const char *name, int *lenp)
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index ddeaae6d2083..7b68e9248722 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -121,6 +121,8 @@ extern struct device_node *of_stdout;
->  extern raw_spinlock_t devtree_lock;
->
->  #ifdef CONFIG_OF
-> +extern int of_init(void);
-
-You don't need extern.
-
-> +
->  static inline bool is_of_node(struct fwnode_handle *fwnode)
->  {
->         return fwnode && fwnode->type == FWNODE_OF;
-> @@ -376,6 +378,10 @@ bool of_console_check(struct device_node *dn, char
-> *name, int index);
->
->  #else /* CONFIG_OF */
->
-> +static int of_init(void)
-
-static inline
-
-> +{
-> +       return 0;
-> +}
->  static inline bool is_of_node(struct fwnode_handle *fwnode)
->  {
->         return false;
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
