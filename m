@@ -1,43 +1,69 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCHv5 4/5] ARM: dts: exynos5420 update the cooling cells for
- core cpu0
-Date: Wed, 13 May 2015 17:05:27 +0900
-Message-ID: <CAJKOXPcxrdkwZmHKfw+YWJ4=XDBTTutK_5-d6SmZ8QQGKyvfCA@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
-	<1431499020-3912-5-git-send-email-linux.amoon@gmail.com>
-	<CAJKOXPdKtMO3f8YzHXtuZ042jkFRL4wa978=TggSQk8FahubRg@mail.gmail.com>
-	<CANAwSgTa=7rjcocYocxn+yv6AdH1PVtNu2NTZV6BWgBK3RXCDw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgTa=7rjcocYocxn+yv6AdH1PVtNu2NTZV6BWgBK3RXCDw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH] arm: dts: Enable beaglebone cape-manager
+Date: Wed, 13 May 2015 11:04:52 +0300
+Message-ID: <1431504292-32132-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Robert Nelson <robertcnelson@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-13 16:58 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
-> Hi Krzysztof,
->
-> You are correct.
->
-> #cooling-cells property are required by the thermal-zone.
->
-> http://lxr.free-electrons.com/source/drivers/thermal/of-thermal.c#L607
->
-> So I picked this values from earlier series of CPU frequency by Thomas.
->
-> Hope this explains the changes. I will update the commit log.
+Enable the cape manager on the beaglebone family of boards.
 
-I still don't get it. I do not ask about cooling-cells but levels.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 42 +++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
->>> +
->>> +                       cooling-min-level = <10>;
->>> +                       cooling-max-level = <7>;
->>> +                       #cooling-cells = <2>; /* min followed by max */
-
-Which cooling levels are referenced here? Where are they defined?
-
-Please, don't top-post.
-
-Krzysztof
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 236b7db..28d9764 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -375,3 +375,45 @@
+ &sham {
+ 	status = "okay";
+ };
++
++/* the cape manager */
++/ {
++	bone_capemgr {
++		compatible = "ti,bone-capemgr";
++		status = "okay";
++
++		eeprom = <&baseboard_data>;
++
++		/* map board revisions to compatible definitions */
++		baseboardmaps {
++			baseboard_beaglebone: board@0 {
++				board-name = "A335BONE";
++				compatible-name = "ti,beaglebone";
++			};
++
++			baseboard_beaglebone_black: board@1 {
++				board-name = "A335BNLT";
++				compatible-name = "ti,beaglebone-black";
++			};
++		};
++
++		/* only 4 slots defined */
++		slots {
++			slot@0 {
++				eeprom = <&cape0_data>;
++			};
++
++			slot@1 {
++				eeprom = <&cape1_data>;
++			};
++
++			slot@2 {
++				eeprom = <&cape2_data>;
++			};
++
++			slot@3 {
++				eeprom = <&cape3_data>;
++			};
++		};
++	};
++};
+-- 
+1.7.12
