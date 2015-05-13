@@ -1,37 +1,42 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
- for cygnus
-Date: Wed, 13 May 2015 21:42:40 +0200
-Message-ID: <20150513194240.GB11130@localhost.localdomain>
-References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com>
- <1429744923-2007-3-git-send-email-jonathar@broadcom.com>
- <6346218.3x3hbSlxMs@wuerfel>
- <5543CD73.2030902@broadcom.com>
- <20150513152130.GB2065@localhost.localdomain>
- <5553A82E.7070304@broadcom.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] clk: bindings: Fix assigned-clock-rates description
+Date: Wed, 13 May 2015 12:43:03 -0700
+Message-ID: <20150513194303.GA32166@codeaurora.org>
+References: <5549CC5C.8090107@samsung.com>
+ <1431067874-7877-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5553A82E.7070304@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Richardson <jonathar@broadcom.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Darren Edamura <dedamura@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1431067874-7877-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 12:38:22PM -0700, Jonathan Richardson wrote:
-> The input events may occur at a rate greater than we want to generate
-> timestamps at. Maybe we need a better term than divider. The h/w sees x
-> input signals over x period of time and then samples the input signal at
-> a divided down period of time to limit the timestamp rate. Timestamp
-> input sample rate?
+On 05/07, Stephen Boyd wrote:
+> The binding uses assigned-clock-parents when it should use
+> assigned-clock-rates. Furthermore, the part that describes how
+> they relate to the assigned-clocks property is not clear about
+> what is related. Correct and clarify this part of the binding.
+> 
+> Reported-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+> 
+> On 05/06, Krzysztof Kozlowski wrote:
+> > Looks much better. So actually this should be yours patch now, you
+> > can add my Reported-by :).
+> 
+> Ok. I'll queue up this patch unless there are any other objections.
+> 
 
-Uhm, you mean time stamp resolution?
+Applied to clk-next.
 
-Or discarding events?
-
--EDOESNOTPARSE;
-
-
-Thanks,
-Richard
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
