@@ -1,40 +1,53 @@
-From: Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>
-Subject: Re: [RFC][PATCH 2/2] drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.
-Date: Wed, 13 May 2015 17:01:50 +0100
-Message-ID: <CAPj87rMCHK7FFgeHVwFNTwx7s6WHKx9-s70MbDsuc6WfwxVoSw@mail.gmail.com>
-References: <1431530626-31493-1-git-send-email-ck.hu@mediatek.com>
-	<1431530626-31493-3-git-send-email-ck.hu@mediatek.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Wed, 13 May 2015 11:14:07 -0500
+Message-ID: <5553784F.7040905@ti.com>
+References: <cover.1430394884.git.viresh.kumar@linaro.org> <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org> <554FFFA3.1060801@ti.com> <20150512051633.GB32300@linux> <555224A2.7000308@ti.com> <20150513050559.GE28858@linux> <55536719.5050208@ti.com> <20150513151652.GX2761@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431530626-31493-3-git-send-email-ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:ABI/API" <linux-api-u79uwXL29TaqPxH82wqD4g@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150513151652.GX2761@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 05/13/2015 10:16 AM, Mark Brown wrote:
+> On Wed, May 13, 2015 at 10:00:41AM -0500, Nishanth Menon wrote:
+> 
+>> What I dont see in the thread, and the point I raised here, why have
+>> nominal/typical voltage at all? min<->max should be sufficient,
+>> correct? If the device cannot function at min, then it should not be
+>> documented as part of valid range at all.
+> 
+> Going for the minimum specified voltage is asking for trouble with
+> regard to tolerances and so on, see also your concern about process
+> corners.  If the electrical engineers specify things as X +/- Y the
+> most conservative thing to do is to try to hit X rather than going
+> straight for the limits.
 
-On 13 May 2015 at 16:23, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> +       /*
-> +        * copy the mode data adjusted by mode_fixup() into crtc->mode
-> +        * so that hardware can be seet to proper mode.
-> +        */
-> +       memcpy(&crtc->mode, adjusted_mode, sizeof(*adjusted_mode));
 
-Please do not do this. adjusted_mode is already available in crtc->hwmode.
+I've had the same debate with my company's SoC designers as well on
+various occasions as well. At least for the SoCs I deal with, X +/- Y
+range specification involves PMIC/Board variations, where X is the
+least voltage that is attempted to be set on PMIC, X-Y is the min
+voltage allowed at the SoC ball, due to SMPS noise/IRDrop and other
+board specific behavior.
 
-Please also restructure this driver to use the atomic infrastructure.
-A good example of how to do this can be found in the Rockchip RK3288
-driver which was submitted a while ago: it started off as a legacy
-driver like this, but was converted during the submission phase.
+I am not saying all SoC vendors do specifications the same way, but
+our interest from device tree description is the operating voltage
+range for the device that we can control on the PMIC. if setting (X-Y)
+is not stable voltage for the device, then it should not be stated in
+the description.
 
-I'm sure there are many more comments to come, but certainly
-converting to be an atomic driver is the very first step.
+To illustrate: What does it mean for a driver using regulator API?
+Attempt X <-> (X+Y), if that fails (example PMIC SMPS max < X), try
+(X-Y)<->(X)? If yes, then we do expect (X-Y)<->(X+Y) should be stable
+for all operating conditions for the device, correct? If this is is
+not stable at (X-Y), then we have a wrong specification for the device
+for claiming X +/- Y is a valid range for the device.
 
-Cheers,
-Daniel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
