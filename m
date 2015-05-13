@@ -1,42 +1,33 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 3/3 v2] ARM: bcm2835: Add the firmware driver information to the RPi DT
-Date: Wed, 13 May 2015 12:00:09 -0700
-Message-ID: <1431543609-19646-4-git-send-email-eric@anholt.net>
-References: <1431543609-19646-1-git-send-email-eric@anholt.net>
+Subject: RPi firmware driver v2
+Date: Wed, 13 May 2015 12:00:06 -0700
+Message-ID: <1431543609-19646-1-git-send-email-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431543609-19646-1-git-send-email-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Acked-by: Lee Jones <lee@kernel.org> (previous version with pm-domains)
----
+Here's a new version of the firmware driver.  This series applies on
+top of for-rpi-next from Lee Jones's tree:
 
-v2: Drop pm-domains stuff since I've dropped it from the firmware
-    driver for now, until we get drivers/base fixed.
+git://git.kernel.org/pub/scm/linux/kernel/git/rpi/linux-rpi.git
 
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+But it won't actually probe without merging in mailbox-for-next:
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index 46780bb..ace33f6 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -14,6 +14,13 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
-+
-+	soc {
-+		firmware: firmware {
-+			compatible = "raspberrypi,firmware";
-+			mboxes = <&mailbox>;
-+		};
-+	};
- };
- 
- &gpio {
--- 
-2.1.4
+https://git.linaro.org/landing-teams/working/fujitsu/integration.git
+
+I've dropped the pm-domains code for now, since it wasn't doing
+anything useful for us yet without the drivers/base support.  However,
+this code has been useful for building a proper clk provider for the
+Pi, which can be found at:
+
+https://github.com/anholt/linux/tree/rpi-dt-clocks
+
+Andrea Merello apparently got a cpufreq driver working on top of the
+non-DT version of this clk provider:
+
+https://github.com/andreamerello/linux-mach-bcm/tree/bcm2836-cpufreq
+
+I think we might manage with a generic dt-cpufreq implementation,
+though.
