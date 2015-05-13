@@ -1,303 +1,210 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH 2/5] arm64: Juno: Split juno.dts into juno-base.dtsi and
- juno.dts.
-Date: Wed, 13 May 2015 18:11:29 +0100
-Message-ID: <1431537092-19597-3-git-send-email-Liviu.Dudau@arm.com>
-References: <1431537092-19597-1-git-send-email-Liviu.Dudau@arm.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: adc: ti_am335x_adc: make sample delay, open
+ delay, averaging DT parameters
+Date: Wed, 13 May 2015 18:38:07 +0100
+Message-ID: <55538BFF.5010401@kernel.org>
+References: <1427800357-21680-1-git-send-email-vigneshr@ti.com> <1427800357-21680-3-git-send-email-vigneshr@ti.com> <55268A7C.1050307@kernel.org> <5553006B.1050306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1431537092-19597-1-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5553006B.1050306-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Cooper Jr., Franklin" <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Prepare the device tree for adding more boards based on Juno r0.
+On 13/05/15 08:42, Vignesh R wrote:
+> 
+> 
+> On Thursday 09 April 2015 07:49 PM, Jonathan Cameron wrote:
+>> On 31/03/15 12:12, Vignesh R wrote:
+>>> Add optional DT properties to set open delay, sample delay and number
+>>> of averages per sample for each adc step. Open delay, sample delay
+>>> and averaging are some of the parameters that affect the sampling rate
+>>> and accuracy of the sample. Making these parameters configurable via
+>>> DT will help in balancing speed vs accuracy.
+>>>
+>>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+>> All looks fine to me, but I would ideally like a devicetree
+>> ack on this one.
+>>
+>> Jonathan
+> 
+> Gentle ping...
+Thanks. Had forgotten about this one.  Ah well, no device tree response...
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
----
- arch/arm64/boot/dts/arm/juno-base.dtsi | 125 +++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/arm/juno.dts       | 122 +-------------------------------
- 2 files changed, 126 insertions(+), 121 deletions(-)
- create mode 100644 arch/arm64/boot/dts/arm/juno-base.dtsi
+Applied to the togreg branch of iio.git, initially pushed out as testing.
 
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-new file mode 100644
-index 0000000..2faa68a
---- /dev/null
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -0,0 +1,125 @@
-+	/*
-+	 *  Devices shared by all Juno boards
-+	 */
-+
-+	gic: interrupt-controller@2c010000 {
-+		compatible = "arm,gic-400", "arm,cortex-a15-gic";
-+		reg = <0x0 0x2c010000 0 0x1000>,
-+		      <0x0 0x2c02f000 0 0x2000>,
-+		      <0x0 0x2c04f000 0 0x2000>,
-+		      <0x0 0x2c06f000 0 0x2000>;
-+		#address-cells = <0>;
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	/include/ "juno-clocks.dtsi"
-+
-+	dma@7ff00000 {
-+		compatible = "arm,pl330", "arm,primecell";
-+		reg = <0x0 0x7ff00000 0 0x1000>;
-+		#dma-cells = <1>;
-+		#dma-channels = <8>;
-+		#dma-requests = <32>;
-+		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&soc_faxiclk>;
-+		clock-names = "apb_pclk";
-+	};
-+
-+	soc_uart0: uart@7ff80000 {
-+		compatible = "arm,pl011", "arm,primecell";
-+		reg = <0x0 0x7ff80000 0x0 0x1000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&soc_uartclk>, <&soc_refclk100mhz>;
-+		clock-names = "uartclk", "apb_pclk";
-+	};
-+
-+	i2c@7ffa0000 {
-+		compatible = "snps,designware-i2c";
-+		reg = <0x0 0x7ffa0000 0x0 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <400000>;
-+		i2c-sda-hold-time-ns = <500>;
-+		clocks = <&soc_smc50mhz>;
-+
-+		dvi0: dvi-transmitter@70 {
-+			compatible = "nxp,tda998x";
-+			reg = <0x70>;
-+		};
-+
-+		dvi1: dvi-transmitter@71 {
-+			compatible = "nxp,tda998x";
-+			reg = <0x71>;
-+		};
-+	};
-+
-+	ohci@7ffb0000 {
-+		compatible = "generic-ohci";
-+		reg = <0x0 0x7ffb0000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&soc_usb48mhz>;
-+	};
-+
-+	ehci@7ffc0000 {
-+		compatible = "generic-ehci";
-+		reg = <0x0 0x7ffc0000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&soc_usb48mhz>;
-+	};
-+
-+	memory-controller@7ffd0000 {
-+		compatible = "arm,pl354", "arm,primecell";
-+		reg = <0 0x7ffd0000 0 0x1000>;
-+		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+	};
-+
-+	smb {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0 0x08000000 0x04000000>,
-+			 <1 0 0 0x14000000 0x04000000>,
-+			 <2 0 0 0x18000000 0x04000000>,
-+			 <3 0 0 0x1c000000 0x04000000>,
-+			 <4 0 0 0x0c000000 0x04000000>,
-+			 <5 0 0 0x10000000 0x04000000>;
-+
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 15>;
-+		interrupt-map = <0 0  0 &gic 0  68 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  1 &gic 0  69 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  2 &gic 0  70 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  3 &gic 0 160 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  4 &gic 0 161 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  5 &gic 0 162 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  6 &gic 0 163 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  7 &gic 0 164 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  8 &gic 0 165 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  9 &gic 0 166 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 10 &gic 0 167 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 11 &gic 0 168 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 12 &gic 0 169 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		/include/ "juno-motherboard.dtsi"
-+	};
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index 7ab0713..60e8928 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -98,26 +98,6 @@
- 		      <0x00000008 0x80000000 0x1 0x80000000>;
- 	};
- 
--	gic: interrupt-controller@2c010000 {
--		compatible = "arm,gic-400", "arm,cortex-a15-gic";
--		reg = <0x0 0x2c010000 0 0x1000>,
--		      <0x0 0x2c02f000 0 0x2000>,
--		      <0x0 0x2c04f000 0 0x2000>,
--		      <0x0 0x2c06f000 0 0x2000>;
--		#address-cells = <0>;
--		#interrupt-cells = <3>;
--		interrupt-controller;
--		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
--	};
--
--	timer {
--		compatible = "arm,armv8-timer";
--		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
--			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
--			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
--			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
--	};
--
- 	pmu {
- 		compatible = "arm,armv8-pmuv3";
- 		interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
-@@ -134,105 +114,5 @@
- 				     <&A53_3>;
- 	};
- 
--	/include/ "juno-clocks.dtsi"
--
--	dma@7ff00000 {
--		compatible = "arm,pl330", "arm,primecell";
--		reg = <0x0 0x7ff00000 0 0x1000>;
--		#dma-cells = <1>;
--		#dma-channels = <8>;
--		#dma-requests = <32>;
--		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&soc_faxiclk>;
--		clock-names = "apb_pclk";
--	};
--
--	soc_uart0: uart@7ff80000 {
--		compatible = "arm,pl011", "arm,primecell";
--		reg = <0x0 0x7ff80000 0x0 0x1000>;
--		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&soc_uartclk>, <&soc_refclk100mhz>;
--		clock-names = "uartclk", "apb_pclk";
--	};
--
--	i2c@7ffa0000 {
--		compatible = "snps,designware-i2c";
--		reg = <0x0 0x7ffa0000 0x0 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
--		clock-frequency = <400000>;
--		i2c-sda-hold-time-ns = <500>;
--		clocks = <&soc_smc50mhz>;
--
--		dvi0: dvi-transmitter@70 {
--			compatible = "nxp,tda998x";
--			reg = <0x70>;
--		};
--
--		dvi1: dvi-transmitter@71 {
--			compatible = "nxp,tda998x";
--			reg = <0x71>;
--		};
--	};
--
--	ohci@7ffb0000 {
--		compatible = "generic-ohci";
--		reg = <0x0 0x7ffb0000 0x0 0x10000>;
--		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&soc_usb48mhz>;
--	};
--
--	ehci@7ffc0000 {
--		compatible = "generic-ehci";
--		reg = <0x0 0x7ffc0000 0x0 0x10000>;
--		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&soc_usb48mhz>;
--	};
--
--	memory-controller@7ffd0000 {
--		compatible = "arm,pl354", "arm,primecell";
--		reg = <0 0x7ffd0000 0 0x1000>;
--		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&soc_smc50mhz>;
--		clock-names = "apb_pclk";
--	};
--
--	smb {
--		compatible = "simple-bus";
--		#address-cells = <2>;
--		#size-cells = <1>;
--		ranges = <0 0 0 0x08000000 0x04000000>,
--			 <1 0 0 0x14000000 0x04000000>,
--			 <2 0 0 0x18000000 0x04000000>,
--			 <3 0 0 0x1c000000 0x04000000>,
--			 <4 0 0 0x0c000000 0x04000000>,
--			 <5 0 0 0x10000000 0x04000000>;
--
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 15>;
--		interrupt-map = <0 0  0 &gic 0  68 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  1 &gic 0  69 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  2 &gic 0  70 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  3 &gic 0 160 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  4 &gic 0 161 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  5 &gic 0 162 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  6 &gic 0 163 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  7 &gic 0 164 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  8 &gic 0 165 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  9 &gic 0 166 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 10 &gic 0 167 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 11 &gic 0 168 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 12 &gic 0 169 IRQ_TYPE_LEVEL_HIGH>;
--
--		/include/ "juno-motherboard.dtsi"
--	};
-+	#include "juno-base.dtsi"
- };
--- 
-2.3.6
+Thanks,
+
+Jonathan
+> 
+> Regards
+> Vignesh
+>>> ---
+>>>  .../bindings/input/touchscreen/ti-tsc-adc.txt      | 24 ++++++++++
+>>>  drivers/iio/adc/ti_am335x_adc.c                    | 54 +++++++++++++++++++---
+>>>  2 files changed, 72 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+>>> index 6c4fb34823d3..8aafbe87f0eb 100644
+>>> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+>>> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+>>> @@ -42,6 +42,27 @@ Optional properties:
+>>>  			 hardware knob for adjusting the amount of "settling
+>>>  			 time".
+>>>  
+>>> +- child "adc"
+>>> +	ti,chan-step-opendelay: List of open delays for each channel of
+>>> +				ADC in the order of ti,adc-channels. The
+>>> +				value corresponds to the number of ADC
+>>> +				clock cycles to wait after applying the
+>>> +				step configuration registers and before
+>>> +				sending the start of ADC conversion.
+>>> +				Maximum value is 0x3FFFF.
+>>> +       ti,chan-step-sampledelay: List of sample delays for each channel
+>>> +				  of ADC in the order of ti,adc-channels.
+>>> +				  The value corresponds to the number of
+>>> +				  ADC clock cycles to sample (to hold
+>>> +				  start of conversion high).
+>>> +				  Maximum value is 0xFF.
+>>> +       ti,chan-step-avg: Number of averages to be performed for each
+>>> +			  channel of ADC. If average is 16 then input
+>>> +			  is sampled 16 times and averaged to get more
+>>> +			  accurate value. This increases the time taken
+>>> +			  by ADC to generate a sample. Valid range is 0
+>>> +			  average to 16 averages. Maximum value is 16.
+>>> +
+>>>  Example:
+>>>  	tscadc: tscadc@44e0d000 {
+>>>  		compatible = "ti,am3359-tscadc";
+>>> @@ -55,5 +76,8 @@ Example:
+>>>  
+>>>  		adc {
+>>>  			ti,adc-channels = <4 5 6 7>;
+>>> +			ti,chan-step-opendelay = <0x098 0x3ffff 0x098 0x0>;
+>>> +			ti,chan-step-sampledelay = <0xff 0x0 0xf 0x0>;
+>>> +			ti,chan-step-avg = <16 2 4 8>;
+>>>  		};
+>>>  	}
+>>> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
+>>> index 2f818405ffbe..5ee597b4a1af 100644
+>>> --- a/drivers/iio/adc/ti_am335x_adc.c
+>>> +++ b/drivers/iio/adc/ti_am335x_adc.c
+>>> @@ -37,6 +37,7 @@ struct tiadc_device {
+>>>  	u8 channel_step[8];
+>>>  	int buffer_en_ch_steps;
+>>>  	u16 data[8];
+>>> +	u32 open_delay[8], sample_delay[8], step_avg[8];
+>>>  };
+>>>  
+>>>  static unsigned int tiadc_readl(struct tiadc_device *adc, unsigned int reg)
+>>> @@ -85,6 +86,7 @@ static u32 get_adc_step_bit(struct tiadc_device *adc_dev, int chan)
+>>>  static void tiadc_step_config(struct iio_dev *indio_dev)
+>>>  {
+>>>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+>>> +	struct device *dev = adc_dev->mfd_tscadc->dev;
+>>>  	unsigned int stepconfig;
+>>>  	int i, steps = 0;
+>>>  
+>>> @@ -98,20 +100,47 @@ static void tiadc_step_config(struct iio_dev *indio_dev)
+>>>  	 * needs to be given to ADC to digitalize data.
+>>>  	 */
+>>>  
+>>> -	if (iio_buffer_enabled(indio_dev))
+>>> -		stepconfig = STEPCONFIG_AVG_16 | STEPCONFIG_FIFO1
+>>> -					| STEPCONFIG_MODE_SWCNT;
+>>> -	else
+>>> -		stepconfig = STEPCONFIG_AVG_16 | STEPCONFIG_FIFO1;
+>>>  
+>>>  	for (i = 0; i < adc_dev->channels; i++) {
+>>>  		int chan;
+>>>  
+>>>  		chan = adc_dev->channel_line[i];
+>>> +
+>>> +		if (adc_dev->step_avg[i] > STEPCONFIG_AVG_16) {
+>>> +			dev_warn(dev, "chan %d step_avg truncating to %d\n",
+>>> +				 chan, STEPCONFIG_AVG_16);
+>>> +			adc_dev->step_avg[i] = STEPCONFIG_AVG_16;
+>>> +		}
+>>> +
+>>> +		if (adc_dev->step_avg[i])
+>>> +			stepconfig =
+>>> +			STEPCONFIG_AVG(ffs(adc_dev->step_avg[i]) - 1) |
+>>> +			STEPCONFIG_FIFO1;
+>>> +		else
+>>> +			stepconfig = STEPCONFIG_FIFO1;
+>>> +
+>>> +		if (iio_buffer_enabled(indio_dev))
+>>> +			stepconfig |= STEPCONFIG_MODE_SWCNT;
+>>> +
+>>>  		tiadc_writel(adc_dev, REG_STEPCONFIG(steps),
+>>>  				stepconfig | STEPCONFIG_INP(chan));
+>>> +
+>>> +		if (adc_dev->open_delay[i] > STEPDELAY_OPEN_MASK)alue corresponds to the number of ADC
+>>> +				clock cycles to wait after applying the
+>>> +				step configuration registers and before
+>>> +				sending the start of ADC conversion.
+>>> +				Maximum value is 0x3FFFF.
+>>> +       ti,chan-step-sampledelay: List of sample delays for each channel
+>>> +				  of ADC in the order of ti,adc-channels.
+>>> +				  The value corresponds to the number of
+>>> +				  ADC clock cycles to sample (to hold
+>>> +				  start of conversion high).
+>>> +				  Maximum value is 0xFF.
+>>> +       ti,chan-step-avg: Number of averages to be performed for each
+>>> +			  channel of ADC. If average is 16 then input
+>>> +			  is sampled 16 times and averaged to get more
+>>> +			  accurate value. This increases the time taken
+>>> +			  by ADC to generate a sample. Valid range is 0
+>>> +			  average to 16 averages. Maximum value is 16. {
+>>> +			dev_warn(dev, "chan %d open delay truncating to 0x3FFFF\n",
+>>> +				 chan);
+>>> +			adc_dev->open_delay[i] = STEPDELAY_OPEN_MASK;
+>>> +		}
+>>> +
+>>> +		if (adc_dev->sample_delay[i] > 0xFF) {
+>>> +			dev_warn(dev, "chan %d sample delay truncating to 0xFF\n",
+>>> +				 chan);
+>>> +			adc_dev->sample_delay[i] = 0xFF;
+>>> +		}
+>>> +
+>>>  		tiadc_writel(adc_dev, REG_STEPDELAY(steps),
+>>> -				STEPCONFIG_OPENDLY);
+>>> +				STEPDELAY_OPEN(adc_dev->open_delay[i]) |
+>>> +				STEPDELAY_SAMPLE(adc_dev->sample_delay[i]));
+>>> +
+>>>  		adc_dev->channel_step[i] = steps;
+>>>  		steps++;
+>>>  	}
+>>> @@ -407,9 +436,22 @@ static int tiadc_parse_dt(struct platform_device *pdev,
+>>>  
+>>>  	of_property_for_each_u32(node, "ti,adc-channels", prop, cur, val) {
+>>>  		adc_dev->channel_line[channels] = val;
+>>> +
+>>> +		/* Set Default values for optional DT parameters */
+>>> +		adc_dev->open_delay[channels] = STEPCONFIG_OPENDLY;
+>>> +		adc_dev->sample_delay[channels] = STEPCONFIG_SAMPLEDLY;
+>>> +		adc_dev->step_avg[channels] = 16;
+>>> +
+>>>  		channels++;
+>>>  	}
+>>>  
+>>> +	of_property_read_u32_array(node, "ti,chan-step-avg",
+>>> +				   adc_dev->step_avg, channels);
+>>> +	of_property_read_u32_array(node, "ti,chan-step-opendelay",
+>>> +				   adc_dev->open_delay, channels);
+>>> +	of_property_read_u32_array(node, "ti,chan-step-sampledelay",
+>>> +				   adc_dev->sample_delay, channels);
+>>> +
+>>>  	adc_dev->channels = channels;
+>>>  	return 0;
+>>>  }
+>>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
