@@ -1,43 +1,31 @@
-From: Romain Izard <romain.izard.pro@gmail.com>
-Subject: [PATCH] ARM: dts: Fix WLAN interrupt line for AM335x EVM-SK
-Date: Wed, 13 May 2015 09:37:35 +0200
-Message-ID: <1431502655-23255-1-git-send-email-romain.izard.pro@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Romain Izard <romain.izard.pro@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCHv5 5/5] ARM: dts: Enable thermal_zone for exynos5422-odroidxu3
+Date: Wed, 13 May 2015 16:40:36 +0900
+Message-ID: <CAJKOXPeNB=BXoY6CAxE8MNZ90cchhbdbUg3Xgef3qAgBR2UWJA@mail.gmail.com>
+References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
+	<1431499020-3912-6-git-send-email-linux.amoon@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1431499020-3912-6-git-send-email-linux.amoon@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-While Sitara AM335x SoCs are very close to OMAP SoCs, the 32-line GPIO
-controllers are numbered from 0 on AM335x and from 1 on OMAP. But when
-the configuration for the TI WLAN controllers was converted from
-platform data to device tree, this detail was overlooked, as 10 boards
-were using OMAP with the WL12xx and WL18xx controllers, and only one
-was based on AM335x.
+2015-05-13 15:37 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+> Include exynos5-cpu-thermal.dtsi to enable thermal_zone support.
 
-This invalid configuration prevents the WL1271 module on the AM335x
-EVM-SK from notifying interrupts to the SoC, and breaks the wlan driver.
+I am a little confused because you named this file as
+exynos5-cpu-thermal, meaning it is common for all Exynos5 boards. But:
+1. It references some specific phandles like &fan0 (cooling-device =
+<&fan0 2 3>).
+2. You include it only here.
 
-The DTS must be corrected to use the correct GPIO controller.
+So the question: is "exynos5-cpu-thermal.dtsi" a generic thermal DTSI?
+What is your intention?
 
-Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
----
- arch/arm/boot/dts/am335x-evmsk.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Lukasz, you acked the patchset, is it fine?
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index 87fc7a35e802..156d05efcb70 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -654,7 +654,7 @@
- 	wlcore: wlcore@2 {
- 		compatible = "ti,wl1271";
- 		reg = <2>;
--		interrupt-parent = <&gpio1>;
-+		interrupt-parent = <&gpio0>;
- 		interrupts = <31 IRQ_TYPE_LEVEL_HIGH>; /* gpio 31 */
- 		ref-clock-frequency = <38400000>;
- 	};
--- 
-2.1.4
-
+Best regards,
+Krzysztof
