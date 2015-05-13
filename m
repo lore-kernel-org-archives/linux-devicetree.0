@@ -1,57 +1,79 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Wed, 13 May 2015 16:16:52 +0100
-Message-ID: <20150513151652.GX2761@sirena.org.uk>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <554FFFA3.1060801@ti.com>
- <20150512051633.GB32300@linux>
- <555224A2.7000308@ti.com>
- <20150513050559.GE28858@linux>
- <55536719.5050208@ti.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
+ for cygnus
+Date: Wed, 13 May 2015 17:21:30 +0200
+Message-ID: <20150513152130.GB2065@localhost.localdomain>
+References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com>
+ <1429744923-2007-3-git-send-email-jonathar@broadcom.com>
+ <6346218.3x3hbSlxMs@wuerfel>
+ <5543CD73.2030902@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="v6gilOcl2gU05R9Q"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55536719.5050208@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+In-Reply-To: <5543CD73.2030902-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Edamura <dedamura-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, May 01, 2015 at 12:01:07PM -0700, Jonathan Richardson wrote:
+> The DTE creates timestamps of hardware based events such as GPIO, I2S
+> signals for audio, etc. It was also intended to provide 802.1AS / PTP
+> timestamps for network packets. The h/w has up to 32 "clients" -- the
+> hardware inputs into a timestamping engine. These clients are specific
+> to the chip the DTE is used on. For Cygnus you can see what they are in
+> our 'enum dte_client' from bcm_cygnus_dte.h.
 
---v6gilOcl2gU05R9Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+These 32 channels should either go to kernel consumers (i2s audio) or,
+if there aren't any, to the generic PTP ioctl.
 
-On Wed, May 13, 2015 at 10:00:41AM -0500, Nishanth Menon wrote:
+> The DTE timestamper creates timestamps based on the current clock wall
+> time.
 
-> What I dont see in the thread, and the point I raised here, why have
-> nominal/typical voltage at all? min<->max should be sufficient,
-> correct? If the device cannot function at min, then it should not be
-> documented as part of valid range at all.
+What do you mean by "wall time"?  CLOCK_REALTIME?
 
-Going for the minimum specified voltage is asking for trouble with
-regard to tolerances and so on, see also your concern about process
-corners.  If the electrical engineers specify things as X +/- Y the
-most conservative thing to do is to try to hit X rather than going
-straight for the limits.
+> When an event occurs it stores the timestamp in a h/w FIFO. Each
+> client also has a divider that can be set to control the rate that
+> timestamps are generated at by the timestamper and these are adjustable
+> at run time.
 
---v6gilOcl2gU05R9Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+This does not make sense.  If you time stamp events, then the rate is
+determined by the events themselves.
+ 
+> It's a bit more than a PTP hardware clock on a NIC. It's a clock for PTP
+> plus timestamping 32 other hardware inputs that can be enabled at any
+> time with timestamps being generated at varying frequencies. As clients
+> are enabled that generate timestamps at higher frequencies, the
+> isochronous interrupt frequency needs to be increased so that overflows
+> in the the h/w and s/w FIFO's don't occur (this frequency could possibly
+> be automated instead of changing it manually as we currently do).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Yes, the driver should configure an appropriate rate automatically.
 
-iQEcBAEBCAAGBQJVU2rjAAoJECTWi3JdVIfQVT0H/jwEtVz9hfDkKV0igf1v3Z4p
-pbIoes+V+zwfpswH+YZzIgqHwaUnUF5ZMcjXvfhO1yiENVCcOBSDvaYX4ScFaUr7
-Dlkbw5UQ2eOKghY10CF6Pg02KLcyzAm/qnXInb2iV2e13QXdfhB73KHahwExrXjv
-bnOy820KJirp8Bd32QQipJwEQwuMgp7hLWWRcdbag7Mu+5qYyyHQc8WCOLwfKDkI
-+QaC5Hqiwy0gjzAT9pUayjRQbYzvLXMj+Frkr4VH/dBFScm+l1wyjbt0BVZ1ZpMD
-fNGowVjj/opMLXQS01Gwy/i+W88I6hAI0TlO2f8vachBhOVJLtqsrotZ4qd9a9c=
-=5CRW
------END PGP SIGNATURE-----
+> It looks like the driver could almost be a PTP driver instead of a char
+> driver controlled with ioctls. PTP does this already using
+> clock_gettime(), clock_settime(), clock_adjtime(). But we want to set
+> the frequency as well as adjust the clock and I don't see how that is
+> possible with the stripped down timex data passed to the driver from
+> ptp_clock_adjtime().
 
---v6gilOcl2gU05R9Q--
+You can convert ppb into your time base using simple math.
+ 
+> We have the additional requirement of controlling multiple clients and
+> retrieving the timestamps, etc. The PTP driver allows for some control
+> of external time stamp channels already using 'n_ext_ts' in struct
+> ptp_clock_info. We could use that to enable clients and get timestamps,
+> but we also need to be able to change dividers for the clients at run
+> time if desired. It doesn't look like additional ioctls could be passed
+> to a PTP driver because ptp_ioctl() is the ioctl handler.
+
+I don't see any need for use space to set dividers.  Let the driver do
+that.
+
+Thanks,
+Richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
