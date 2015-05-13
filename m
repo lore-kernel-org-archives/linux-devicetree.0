@@ -1,109 +1,119 @@
-From: Bintian <bintian.wang@huawei.com>
-Subject: Re: [PATCH v5 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Wed, 13 May 2015 18:28:00 +0800
-Message-ID: <55532730.4080503@huawei.com>
-References: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V4 2/3] devicetree: Add bindings for DA9063 OnKey
+Date: Wed, 13 May 2015 11:34:25 +0100
+Message-ID: <20150513103425.GF3394@x1>
+References: <cover.1431437466.git.stwiss.opensource@diasemi.com>
+ <507b01ea2d4717b07cea0ea937949e11cb89d58e.1431437466.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <507b01ea2d4717b07cea0ea937949e11cb89d58e.1431437466.git.stwiss.opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bintian Wang <bintian.wang@huawei.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, khilman@kernel.org, pebolle@tiscali.nl, arnd@arndb.de, marc.zyngier@arm.com
-Cc: xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.chen@hisilicon.com, dan.zhao@hisilicon.com, huxinwei@huawei.com, z.liuxinliang@huawei.com, heyunlei@huawei.com, kong.kongxinwei@hisilicon.com, btw@mail.itp.ac.cn, w.f@huawei.com, liguozhu@hisilicon.com
+To: S Twiss <stwiss.opensource@diasemi.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Wei,
+On Tue, 12 May 2015, S Twiss wrote:
 
- >To be more specific here, I expect the patches to be picked up by Wei >Xu
- >and forwarded to arm@kernel.org when he's made sure that everybody
- >including himself is happy with the outcome.
- >
- >	Arnd
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
+>=20
+> Add device tree bindings for the DA9063 OnKey driver
+>=20
+>=20
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+>=20
+> ---
+> Version History
+>=20
+> Changes in V4
+>  - No change
+>=20
+> Changes in V3
+>  - No change
+>=20
+> Changes in V2
+>  - Remove the circular dependency comment linking patches in the main=
+ e-mail
+>  - Search and replace 'keyword' with 'property' in onkey sub-node des=
+cription
+>  - Reformat onkey sub-node content to move the description for key-po=
+wer into
+>    a new optional properties sub-section so it has a more promiment p=
+osition
+>=20
+> This patch applies against linux-next and v4.1-rc3=20
+>=20
+>=20
+>  Documentation/devicetree/bindings/mfd/da9063.txt | 18 ++++++++++++++=
+++++
+>  1 file changed, 18 insertions(+)
 
-Could you help review and do those works based on Arnd's suggestion?
+I'll wait to see what Dmitry has to say before applying, but for my
+own reference:
 
-Thanks,
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Also thanks to all engineers who help review/test this patch set.
+> diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Docum=
+entation/devicetree/bindings/mfd/da9063.txt
+> index 42c6fa6..05b21bc 100644
+> --- a/Documentation/devicetree/bindings/mfd/da9063.txt
+> +++ b/Documentation/devicetree/bindings/mfd/da9063.txt
+> @@ -5,6 +5,7 @@ DA9093 consists of a large and varied group of sub-de=
+vices (I2C Only):
+>  Device                   Supply Names    Description
+>  ------                   ------------    -----------
+>  da9063-regulator        :               : LDOs & BUCKs
+> +da9063-onkey            :               : On Key
+>  da9063-rtc              :               : Real-Time Clock
+>  da9063-watchdog         :               : Watchdog
+> =20
+> @@ -51,6 +52,18 @@ Sub-nodes:
+>    the DA9063. There are currently no entries in this binding, howeve=
+r
+>    compatible =3D "dlg,da9063-rtc" should be added if a node is creat=
+ed.
+> =20
+> +- onkey : This node defines the OnKey settings for controlling the k=
+ey
+> +  functionality of the device. The node should contain the compatibl=
+e property
+> +  with the value "dlg,da9063-onkey".
+> +
+> +  Optional onkey properties:
+> +
+> +  - dlg,disable-key-power : Disable power-down using a long key-pres=
+s. If this
+> +    entry exists the OnKey driver will remove support for the KEY_PO=
+WER key
+> +    press. If this entry does not exist then by default the key-pres=
+s
+> +    triggered power down is enabled and the OnKey will support both =
+KEY_POWER
+> +    and KEY_SLEEP.
+> +
+>  - watchdog : This node defines settings for the Watchdog timer assoc=
+iated
+>    with the DA9063. There are currently no entries in this binding, h=
+owever
+>    compatible =3D "dlg,da9063-watchdog" should be added if a node is =
+created.
+> @@ -73,6 +86,11 @@ Example:
+>  			compatible =3D "dlg,da9063-watchdog";
+>  		};
+> =20
+> +		onkey {
+> +			compatible =3D "dlg,da9063-onkey";
+> +			dlg,disable-key-power;
+> +		};
+> +
+>  		regulators {
+>  			DA9063_BCORE1: bcore1 {
+>  				regulator-name =3D "BCORE1";
 
-Bintian
-
-
-On 2015/5/7 22:00, Bintian Wang wrote:
-> Hi6220 is one mobile solution of Hisilicon, this patchset contains
-> initial support for Hi6220 SoC and HiKey development board, which
-> supports octal ARM Cortex A53 cores. Initial support is minimal and
-> includes just the arch configuration, clock driver, device tree
-> configuration.
->
-> PSCI is enabled in device tree and there is no problem to boot all the
-> octal cores, and the CPU hotplug is also working now, you can download
-> and compile the latest firmware based on the following link to run this
-> patch set:
-> https://github.com/96boards/documentation/wiki/UEFI
->
-> Changes v5:
-> * Rebase to kernel 4.1-rc2
-> * Add compatible string "hisilicon,hi6220-pl011" for Hisilicon designed
->    UART
-> * clk-hi6220.c: use __initdata for non-const arrays based on the commit
->    692d8328e8c039f9497eb862c6cf835de922c061
->
-> Changes v4:
-> * Rebase to kernel 4.1-rc1
-> * Delete "arm,cortex-a15-gic" from the gic node in dts
->
-> Changes v3:
-> * Verified the CPU hotplug based on the new released firmware
-> * Redefined the compatible strings of four system controllers in dts
-> * Setting COMMON_CLK_HI6220 to a bool symbol
-> * Keep CONFGI_ARCH_HISI sorted alphabetically
->
-> Changes v2:
-> * Split the DT bindings documents into earlier patches
-> * Change SMP enable method from spin-table to PSCI in device tree
-> * Remove "clock-frequency" from armv8-timer device node in device tree
-> * Add more description about Hisilicon designed system controllers
->    in DT bindings document
-> * Enable high speed clock on UART1 mux
-> * Other changes based on the discussion in the mailing list:
->    https://lkml.org/lkml/2015/2/5/147
->
-> Bintian Wang (6):
->    arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
->    arm64: hi6220: Document devicetree bindings for Hisilicon hi6220 SoC
->    clk: hi6220: Document devicetree bindings for hi6220 clock
->    Documentation: DT: PL011: hi6220: add compatible string for Hisilicon
->          designed UART
->    clk: hi6220: Clock driver support for Hisilicon hi6220 SoC
->    arm64: dts: Add dts files for Hisilicon Hi6220 SoC
->
->   .../bindings/arm/hisilicon/hisilicon.txt           |   87 ++++++
->   .../devicetree/bindings/clock/hi6220-clock.txt     |   34 +++
->   Documentation/devicetree/bindings/serial/pl011.txt |    4 +-
->   arch/arm64/Kconfig                                 |    5 +
->   arch/arm64/boot/dts/Makefile                       |    1 +
->   arch/arm64/boot/dts/hisilicon/Makefile             |    5 +
->   arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   31 +++
->   arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  172 ++++++++++++
->   arch/arm64/configs/defconfig                       |    1 +
->   drivers/clk/Kconfig                                |    2 +
->   drivers/clk/Makefile                               |    4 +-
->   drivers/clk/hisilicon/Kconfig                      |    6 +
->   drivers/clk/hisilicon/Makefile                     |    3 +-
->   drivers/clk/hisilicon/clk-hi6220.c                 |  292 ++++++++++++++++++++
->   drivers/clk/hisilicon/clk.c                        |   29 ++
->   drivers/clk/hisilicon/clk.h                        |   17 ++
->   drivers/clk/hisilicon/clkdivider-hi6220.c          |  273 ++++++++++++++++++
->   include/dt-bindings/clock/hi6220-clock.h           |  173 ++++++++++++
->   18 files changed, 1134 insertions(+), 5 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/clock/hi6220-clock.txt
->   create mode 100644 arch/arm64/boot/dts/hisilicon/Makefile
->   create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
->   create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->   create mode 100644 drivers/clk/hisilicon/Kconfig
->   create mode 100644 drivers/clk/hisilicon/clk-hi6220.c
->   create mode 100644 drivers/clk/hisilicon/clkdivider-hi6220.c
->   create mode 100644 include/dt-bindings/clock/hi6220-clock.h
->
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
