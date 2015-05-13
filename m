@@ -1,43 +1,82 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv5 1/5] ARM: dts: exynos5422-odroidxu3 Add pwm-fan node to
- the Odroid-XU3 board
-Date: Wed, 13 May 2015 13:16:38 +0530
-Message-ID: <CANAwSgTCaBgmBQ9HNb_2O+eUeZK2XngMkGon7x8Q4h86xP5hKA@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
- <1431499020-3912-2-git-send-email-linux.amoon@gmail.com> <CAJKOXPefJwqvfZPDovQ6EjEOBfuJkidgeYDF_=KC9O+=2=_KoQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 0/4] ARM: SoC: add a new platform, UniPhier (arch/arm/mach-uniphier)
+Date: Wed, 13 May 2015 09:48:33 +0200
+Message-ID: <2230140.n6kW8LSSaP@wuerfel>
+References: <1431058034-5508-1-git-send-email-yamada.masahiro@socionext.com> <2101307.fSn8Z2ZyBq@wuerfel> <CAK7LNASyJmyUcKNecdhWjXbd615=9XcMxeLxC7y_z+psO03BbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPefJwqvfZPDovQ6EjEOBfuJkidgeYDF_=KC9O+=2=_KoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAK7LNASyJmyUcKNecdhWjXbd615=9XcMxeLxC7y_z+psO03BbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-Will make the changes.
-
-Thanks for the review.
-
--Anand Moon
-
-On 13 May 2015 at 12:41, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> Add pwm-fan node to the Odroid-XU3 board.
->>
->> Tested-by: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
->> Acked-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Wednesday 13 May 2015 16:00:21 Masahiro Yamada wrote:
+> 2015-05-13 0:00 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> > On Friday 08 May 2015 13:07:10 Masahiro Yamada wrote:
+> > Welcome as our latest new maintainer. In the future, please send
+> > any follow-up patches for the architecture specific code to
+> > arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org in addition to the normal recipients, once you
+> > consider them ready to be applied.
+> 
+> 
+> Please teach me a little more because I am not experienced enough
+> in this community.
+> 
+> 
+> I checked MAINTAINERS, but I could not find arm-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org
+> Is it documented somewhere?
+> 
+> I found ARM SUB-ARCHITECTURES entry in that file, but it does not mention
+> the responsible individuals.
+> (I assume, you and Olof are the ones.)
 >
-> Please fix the title of commit (missing colon, duplicated name of board) to:
-> "ARM: dts: exynos5422-odroidxu3: Add pwm-fan node"
->
-> Rest looks good:
-> Acked-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> Best regards,
-> Krzysztof
+
+We normally only take patches from subarch maintainers that know who
+we are and how it works, but we don't want to be Cc'd on every single
+patch, so we don't have an entry in MAINTAINERS directly.
+ 
+> I have one more question.
+> 
+> Are you receiving pull requests from each sub-arch maintainer?
+> Or should every patch be submitted to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org and
+> applied by you (or other ARM-SoC maintainers)?
+> 
+> I have not earned enough reputations in this ML, so I know
+> it is too early for me to handle pull-reqs.
+> 
+> I understand the general development process of Linux, but
+> the maintainership of the ARM-SoC subsystem looks more hierarchized, so
+> I just want to know its development process correctly.
+
+No worries, if you are unsure you can always ask us on the mailing
+list or on the #armlinux channel on irc.freenode.net.
+
+If you have more than a few patches at once, we'd always appreciate
+a pull request, for a couple of patches, emails to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org plus
+linux-arm-kernel are fine as well.
+
+When you do pull requests, please split them up according to larger
+topics, e.g. send dts changes separately from code changes, and
+separate bug fixes, cleanups and new feature support.
+
+Often when you add a new driver, that will require sending the driver
+code to a subsystem maintainer, and the dts changes to us. If everything
+goes well, your DT bindings are both forward and backward compatible,
+so they can get merged independently. If you ever have interdependencies
+between them, talk to us first so we can find a solution.
+
+For sending pull requests, it would be good to have a gpg key that
+is signed by other well-known kernel developers. If you have such
+a key, you can also request a kernel.org account to host a git tree
+there, or you can host a git tree somewhere on your company's domain.
+A public hosting service like github is not as good for us, but we
+can deal with it when you are still ramping up your infrastructure.
+Let me know if you need help finding kernel developers to sign your key.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
