@@ -1,67 +1,52 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: BCM2836 (Raspberry Pi 2) port
-Date: Wed, 13 May 2015 10:46:24 -0700
-Message-ID: <87wq0c4bgv.fsf@eliezer.anholt.net>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <4137213.WVJY1et48u@kongar> <55516738.306@wwwdotorg.org> <1701192.WcfjCoBWQN@kongar> <55522468.3050606@wwwdotorg.org> <87d2254s6y.fsf@eliezer.anholt.net> <555278BA.50903@wwwdotorg.org>
+From: Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx5: Add dts files for USB armory.
+Date: Wed, 13 May 2015 10:53:28 -0700
+Message-ID: <87vbfwe547.fsf@aikidev.net>
+References: <87h9t6i40r.fsf@aikidev.net> <20150427081428.GC9231@dragon> <87y4ldnvqd.fsf@aikidev.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <555278BA.50903-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <87y4ldnvqd.fsf-LkDtOWtB3X7R7s880joybQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrej Rosano <andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
-
-> On 05/12/2015 11:32 AM, Eric Anholt wrote:
->> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+On 2015-04-27, Vagrant Cascadian wrote:
+> On 2015-04-27, Shawn Guo wrote:
+>> On Fri, Mar 27, 2015 at 01:23:00PM -0700, Vagrant Cascadian wrote:
+>>> Add support for the USB armory board by Inverse Path. This board
+>>> features a Freescale iMX53 SoC, 512MB RAM, and USB OTG operating in
+>>> either peripheral or host mode, and 5 GPIO pins.
+>>>=20
+>>> One .dtb is generated for operating in peripheral mode, and one is
+>>> generated for operating in host mode.
 >>
->>> On 05/12/2015 09:39 AM, Alexander Stein wrote:
->>>> On Monday 11 May 2015, 20:36:40 wrote Stephen Warren:
->>>>> On 05/08/2015 10:14 AM, Alexander Stein wrote:
->>>>>> On Thursday 23 April 2015, 22:25:08 wrote Stephen Warren:
->>>>>>>> Hit any key to stop autoboot:  0
->>>>>>>> U-Boot> setenv fdt_high fffffff
->>>>>>
->>>>>> Any specific reason to set fdt_high to fffffff?
->>>>>
->>>>> Yes, it prevents U-Boot's annoying habit of moving the DTB from where=
- it
->>>>> was loaded to some other place. This was especially important in this
->>>>> case since I was trying to find out exactly which piece of RAM being
->>>>> over-written caused the issues I was seeing.
->>>>
->>>> Shouldn't this then be part of the default raspberry (2 only?) environ=
-ment?
->>>
->>> Eventually yes. So far, nobody seems to know which areas of RAM are
->>> off-limits (presumably since the RAM is used as a CPU1..3 pen), so I was
->>> experimenting to try and find that out.
->>
->> If I'm reading this right, the CPU1-3 pen is in the bottom 8k of memory
->> (actually much less than 8k).
+>> Is it possible to ask bootloader to patch the dtb instead of maintaining
+>> a new one for just changing one USB property?
 >
-> Hmm. I wondered if that was the case. I don't think anything I was doing=
-=20
-> in U-Boot /should/ touch those pages, but there have been bugs before=20
-> where some pointer was left at NULL, and some DM (U-Boot Device Model)=20
-> code ended up putting structures in page 0 by mistake. Perhaps something=
-=20
-> like that has resurfaced. I'll try to find time to diff page 0=20
-> before/after various U-Boot operations, and see if it's getting modified.=
-..
+> It does appear to be possible with u-boot:
+>
+>   load mmc 0:1 $fdt_addr_r $fdtfile
+>   fdt addr $fdt_addr_r
+>   fdt set /soc/aips@50000000/usb@53f80000 dr_mode host
+>
+> Since the user would have to manually select the appropriate .dtb
+> anyways, it may be reasonable to drop the host_mode.dtb and rely on the
+> u-boot to tweak the fdt on boot to switch between usb modes.
 
-How about on the Linux side?  What's reserving that memory for us, if
-anything?  Weird things happen if I put "ARM: bcm2836: Add a DT binding
-for the ARM local registers." and "ARM: bcm2835: Use a syscon regmap to
-set up timer frequency." before the SMP support in the bcm2836-smp tree
-(init crashes).
+Given that it is possible to set from u-boot, I'm wondering if it
+wouldn't be worth reworking the patch to only generate a single .dtb for
+now, and revisit the options for switching between USB host mode and
+peripheral mode later?
+
+live well,
+  vagrant
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
@@ -69,19 +54,19 @@ Content-Type: application/pgp-signature; name="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJVU43wAAoJELXWKTbR/J7o7Y0QAJwKymFmvnfmtuXF8ZFXMyfO
-1SNFeozT+CjjVL+wiA7IfrkEcAdYZdQteab+bt7B6MvpO+8t4oDJOrD59rU/6fCb
-GUm1NtNNvnrTvTF0ioAsVClgxKTRyyYxHRG1SE5C28OZhnu8g689T4NuywWyZCI0
-2qgiQMQ2YqLMeV0Yrpp1atwJrNy/JR+XcyR7HYQk8GCJvWBhcUWKOVLwMzfeyKsh
-TJiFjVqSNQAEcs7kI7Nmc37SKig8XyO7zMlBNFmlfhXkT00vA1VVi5sxXcRnua/Q
-HY60M8QVmAq4TxYvWt/KbdjBXx+cr0fuuIkEf7zu8FJaBWnSHMR4Z2n3He3H4dr3
-Rxxz13FcScZy7+W/eYf7e8VZv606EUiJ3kpFLjDkBZ9ZBtopZF+LVwNOm7XJGAYF
-tfRDa+hXoRBP+QNPw+jl0vRK/ieEhHUhkbsRHcnTHLmNwg7X6Kamk769nkynM8hM
-RauCP25spYPBJoqktGRi7nr1rm3Yf/L1p0bDa51HHdDnPVRQ1ok9VHn9SAZn6mTl
-0LHk4t07AY8rXqgOw4w0zC3VuUaqHJjLlFN9IMf8rnkVhQsO1e/aaVPTLWMBfUkC
-GluFvkNYa0vsKjLZFDq5Eh+IOGINULCDO9YALxijUwRBxS3yhlAu2YoYdExcGfmV
-qsUYgEjQ0ojga26qOshO
-=Uply
+iQIcBAEBCgAGBQJVU4+YAAoJELeLgtSBS5G2XaMP/A5Hqy5Mfu963tC2Bn1Zmb5m
+FSLc1kaWf3ILFyIv8hiYIh2NRQpCIU+Jd1kMKCiTufcyUk3kc1eiBuLdIRqjfQ5T
+IiZEZFh/edHLLmEMGoKxwchOTBhNo1KctoV6BbFt2nJXS9NFRTvn/Da8chWtGIul
+cFkIDZsoTcZ7LdLFEKuaHYsCIL/eHz/9RvVbFUu6ZTzOzOkBqzJiGTvl8OGCeZ2J
+DQfYOyUmf+4XijzfpqCHzPoPgzlTmy1pBHeFQQ4VD+ajXmSuub3iwrfR/fDIveq4
+TblrWeXIrPd0gXJ+/exl0BQw7QQ3JWDnAvMfwL8/MUncWE2MlqBWoO9IEfVYT5D3
+faqltfD14XFNvjkzJyShSs9l9/BHmGWdFElTy8Ski5Dku15as7V/5BqGcRLH5k5w
+4pFzzUgW9ryF16omc5ENhGcUjf7VpVqWQ1i81INPJAfiqsq7ng9PNlROYUn1kxc7
+XHbieW7arAGujbKsaklXs6rrL8Uj30FGVoePLYwNeKkqV5XHaw5gZpPr2CBXIjoT
+57+IQ5U+eR2ZRYzjTt5dGMfXFum1FdoLn0eIW5eHUfW3j8ZZxQEv3oJ+eKPMVeBT
+qrbL7GvgVgiP15XJONS+uUf2zsVjTk7o+lgiXRHs3/qkpQPzxUELBNrehj3LEd8G
+uOozT5kG3WK1lkhbDMH+
+=U/Yk
 -----END PGP SIGNATURE-----
 --=-=-=--
 --
