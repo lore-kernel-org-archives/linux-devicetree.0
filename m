@@ -1,61 +1,323 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [rtc-linux] [PATCH V1 3/6] rtc: da9062: DA9062 RTC driver
-Date: Wed, 13 May 2015 14:56:04 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22A465@SW-EX-MBX02.diasemi.com>
-References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
- <860a3b6dc7f8dac95c0e36967f24551af8805f7b.1429280614.git.stwiss.opensource@diasemi.com>
- <20150510095838.GF3338@piout.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B22A3F3@SW-EX-MBX02.diasemi.com>
- <20150513125858.GX3338@piout.net> <55534BEF.7020409@roeck-us.net>
- <20150513133741.GY3338@piout.net> <555355C1.9090907@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <555355C1.9090907@roeck-us.net>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>, Alessandro Zummo <a.zummo@towertech.it>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 4/6] arm64: tegra: Add NVIDIA P2530 compute module support
+Date: Wed, 13 May 2015 16:57:43 +0200
+Message-ID: <1431529065-20128-4-git-send-email-thierry.reding@gmail.com>
+References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431529065-20128-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter & Alexandre,
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-On 13 May 2015 14:47 Guenter Roeck wrote:
-> On 05/13/2015 06:37 AM, Alexandre Belloni wrote:
-> > On 13/05/2015 at 06:04:47 -0700, Guenter Roeck wrote :
-> >> Don't know how this is handled for rtc drivers, but in other subsystems
-> >> we just live with the original name. I don't see a need to rename a driver
-> >> just because it starts supporting more hardware, and xxx is weird anyway
-> >> since it suggests everything from 000 to 999, which is much worse than
-> >> just sticking with 9063.
-> >>
-> >
-> > Yes, in particular if at some point in time a new IP matching those xxx
-> > is completely different from the previous one. I'm not fond of renaming
-> > the driver either but if diasemi thinks that what they want, I'm open to
-> > let it happen. But clearly, I don't want to end up in a situation like
-> > the tlv320aic where you don't know which driver correspond to which
-> > chip:
-> >
-> > sound/soc/codecs/tlv320aic31xx.c
-> > sound/soc/codecs/tlv320aic31xx.h
-> > sound/soc/codecs/tlv320aic32x4.c
-> > sound/soc/codecs/tlv320aic32x4.h
-> > sound/soc/codecs/tlv320aic3x.c
-> > sound/soc/codecs/tlv320aic3x.h
-> > sound/soc/codecs/tlv320dac33.c
-> > sound/soc/codecs/tlv320dac33.h
-> >
-> > Go figure that the tlv320aic3104 can be supported by both tlv320aic3x.c
-> > and tlv320aic32x4.c but not tlv320aic31xx.c...
-> >
-> 
-> Unfortunately that is exactly what is going to happen.
+The NVIDIA P2530 is a compute module used in several reference designs.
+It features a Tegra210 SoC, 4 GiB of LPDDR4 RAM, 16 GiB eMMC and various
+other essentials. It is typically connected to some base board that
+provides the connectors needed to hook it up to the outside world.
 
-Thanks for this clarification.
-We'll follow your advice and keep the name as da9063
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p2530-e03.dtsi | 285 +++++++++++++++++++++
+ 1 file changed, 285 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-p2530-e03.dtsi
 
-Regards,
-Steve
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2530-e03.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2530-e03.dtsi
+new file mode 100644
+index 000000000000..8221f6588397
+--- /dev/null
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2530-e03.dtsi
+@@ -0,0 +1,285 @@
++#include "tegra210.dtsi"
++
++/ {
++	model = "NVIDIA Tegra210 P2530 main board";
++	compatible = "nvidia,p2530-e03", "nvidia,tegra210";
++
++	aliases {
++		rtc0 = "/i2c@0,7000d000/pmic@3c";
++		rtc1 = "/rtc@0,7000e000";
++		serial0 = &uarta;
++	};
++
++	memory {
++		reg = <0x0 0x80000000 0x0 0xc0000000>;
++	};
++
++	/* debug port */
++	serial@0,70006000 {
++		status = "okay";
++	};
++
++	i2c@0,7000d000 {
++		status = "okay";
++		clock-frequency = <400000>;
++
++		pmic: pmic@3c {
++			compatible = "maxim,max77620";
++			reg = <0x3c>;
++			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++
++			#interrupt-cells = <2>;
++			interrupt-controller;
++
++			#gpio-cells = <2>;
++			gpio-controller;
++
++			maxim,enable-clock32k-out;
++
++			maxim,system-pmic-power-off;
++
++			maxim,hot-die-threshold-temp = <110000>;
++			#thermal-sensor-cells = <0>;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&max77620_default>;
++
++			gpio-init-names = "default";
++			gpio-init-0 = <&max77620_gpio_default>;
++
++			max77620_default: pinmux@0 {
++				pin_gpio0 {
++					pins = "gpio0";
++					function = "gpio";
++				};
++
++				pin_gpio1 {
++					pins = "gpio1";
++					function = "fps-out";
++					drive-push-pull = <1>;
++					maxim,fps-source = <0>;
++					maxim,fps-power-up-period = <7>;
++					maxim,fps-power-down-period = <0>;
++				};
++
++				pin_gpio2 {
++					pins = "gpio2", "gpio3";
++					function = "fps-out";
++					drive-open-drain = <1>;
++					maxim,fps-source = <0>;
++				};
++
++				pin_gpio4 {
++					pins = "gpio4";
++					function = "32k-out1";
++				};
++
++				pin_gpio5_6_7 {
++					pins = "gpio5", "gpio6", "gpio7";
++					function = "gpio";
++					drive-push-pull = <1>;
++				};
++			};
++
++			max77620_gpio_default: gpio_default {
++				gpio-output-high = <2>;
++			};
++
++			watchdog {
++				maxim,wdt-timeout = <16>;
++				maxim,wdt-clear-time = <13>;
++				status = "disabled";
++				dt-override-status-odm-data = <0x00020000 0x00020000>;
++			};
++
++			fps {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				fps@0 {
++					reg = <0>;
++					maxim,fps-time-period = <2560>;
++					maxim,fps-enable-input = <0>;
++				};
++
++				fps@1 {
++					reg = <1>;
++					maxim,fps-time-period = <2560>;
++					maxim,fps-enable-input = <1>;
++					maxim,enable-sleep;
++				};
++
++				fps@2 {
++					reg = <2>;
++					maxim,fps-enable-input = <0>;
++				};
++			};
++
++			backup-battery {
++				maxim,backup-battery-charging-current = <100>;
++				maxim,backup-battery-charging-voltage = <3000000>;
++				maxim,backup-battery-output-resister = <100>;
++			};
++
++			regulators {
++				in-ldo0-1-supply = <&max77620_sd2>;
++				in-ldo7-8-supply = <&max77620_sd2>;
++
++				max77620_sd0: sd0 {
++					regulator-name = "VDD_SOC";
++					regulator-min-microvolt = <600000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,fps-source = <1>;
++					regulator-init-mode = <2>;
++				};
++
++				max77620_sd1: sd1 {
++					regulator-name = "VDD_DDR_1V1_PMIC";
++					regulator-always-on;
++					regulator-boot-on;
++					regulator-init-mode = <2>;
++					maxim,fps-source = <0>;
++				};
++
++				max77620_sd2: sd2 {
++					regulator-name = "VDD_PRE_REG_1V35";
++					regulator-min-microvolt = <1350000>;
++					regulator-max-microvolt = <1350000>;
++					maxim,fps-source = <1>;
++				};
++
++				vdd_1v8: sd3 {
++					regulator-name = "VDD_1V8";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,fps-source = <0>;
++					regulator-init-mode = <2>;
++				};
++
++				vdd_sys_1v2: ldo0 {
++					regulator-name = "AVDD_SYS_1V2";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,fps-source = <3>;
++				};
++
++				vdd_pex_1v05: ldo1 {
++					regulator-name = "VDD_PEX_1V05";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1050000>;
++					maxim,fps-source = <3>;
++				};
++
++				vddio_sdmmc: ldo2 {
++					regulator-name = "VDDIO_SDMMC";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3300000>;
++					maxim,fps-source = <3>;
++				};
++
++				max77620_ldo3: ldo3 {
++					regulator-name = "VDD_CAM_HV";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					maxim,fps-source = <3>;
++				};
++
++				max77620_ldo4: ldo4 {
++					regulator-name = "VDD_RTC";
++					regulator-min-microvolt = <1250000>;
++					regulator-max-microvolt = <1250000>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,fps-source = <0>;
++				};
++
++				max77620_ldo5: ldo5 {
++					regulator-name = "VDD_TS_HV";
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++					maxim,fps-source = <3>;
++				};
++
++				max77620_ldo6: ldo6 {
++					regulator-name = "VDD_TS_1V8";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,fps-source = <0>;
++					maxim,fps-power-up-period = <7>;
++					maxim,fps-power-down-period = <0>;
++				};
++
++				avdd_1v05_pll: ldo7 {
++					regulator-name = "AVDD_1V05_PLL";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1050000>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,fps-source = <1>;
++				};
++
++				avdd_1v05: ldo8 {
++					regulator-name = "AVDD_SATA_HDMI_DP_1V05";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1050000>;
++					maxim,fps-source = <3>;
++				};
++			};
++		};
++	};
++
++	pmc@0,7000e400 {
++		nvidia,invert-interrupt;
++	};
++
++	/* eMMC */
++	sdhci@0,700b0600 {
++		status = "okay";
++		bus-width = <8>;
++		non-removable;
++	};
++
++	clocks {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		clk32k_in: clock@0 {
++			compatible = "fixed-clock";
++			reg = <0>;
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++		};
++	};
++
++	cpus {
++		cpu@0 {
++			enable-method = "psci";
++		};
++
++		cpu@1 {
++			enable-method = "psci";
++		};
++
++		cpu@2 {
++			enable-method = "psci";
++		};
++
++		cpu@3 {
++			enable-method = "psci";
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		status = "disabled";
++		method = "smc";
++	};
++};
+-- 
+2.3.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
