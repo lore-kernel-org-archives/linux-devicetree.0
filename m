@@ -1,64 +1,194 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND v6 6/6] mfd: axp20x: Enable AXP22X regulators
-Date: Wed, 13 May 2015 16:31:09 +0100
-Message-ID: <20150513153109.GH3394@x1>
-References: <1428638946-24890-1-git-send-email-wens@csie.org>
- <1428638946-24890-7-git-send-email-wens@csie.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] OF: DT-Overlay configfs interface (v3)
+Date: Wed, 13 May 2015 17:31:02 +0200
+Message-ID: <CAMuHMdXdw42PpWe4C1Kf1uLz8NxHLX12+875qhoxoUUUi--C7Q@mail.gmail.com>
+References: <1417605808-23327-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBQW4ZWVAKGQE5Y35IAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1428638946-24890-7-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417605808-23327-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Apr 2015, Chen-Yu Tsai wrote:
+Hi Pantelis,
 
-> Now that the axp20x-regulators driver supports different variants of the
-> AXP family, we can enable regulator support for AXP22X without the risk
-> of incorrectly configuring regulators.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/mfd/axp20x.c | 2 ++
->  1 file changed, 2 insertions(+)
+On Wed, Dec 3, 2014 at 12:23 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Add a runtime interface to using configfs for generic device tree overlay
+> usage. With it its possible to use device tree overlays without having
+> to use a per-platform overlay manager.
 
-Applied, thanks.
+When loading more than one overlay, I got strange behavior:
 
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index cfbb7d7aead6..6df91556faf3 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -370,6 +370,8 @@ static struct mfd_cell axp22x_cells[] =3D {
->  		.name			=3D "axp20x-pek",
->  		.num_resources		=3D ARRAY_SIZE(axp22x_pek_resources),
->  		.resources		=3D axp22x_pek_resources,
-> +	}, {
-> +		.name			=3D "axp20x-regulator",
->  	},
->  };
-> =20
+    __allocate_fw_buf: fw-r8a7791-koelsch-exio-a-scifb0.dtbo buf=ee27b140
+    (NULL device *): firmware: direct-loading firmware
+r8a7791-koelsch-exio-a-scifb0.dtbo
+    fw_set_page_data: fw-r8a7791-koelsch-exio-a-scifb0.dtbo
+buf=ee27b140 data=f0bee000 size=820
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+    [ loaded overlay is activated!! ]
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+    __fw_free_buf: fw-r8a7791-koelsch-exio-a-scifb0.dtbo buf=ee27b140
+data=f0bee000 size=820
+    __allocate_fw_buf: fw-8a7791-koelsch-exio-a-scifb0.dtbo buf=ee3d96c0
+    (NULL device *): Direct firmware load for
+8a7791-koelsch-exio-a-scifb0.dtbo failed with error -2
+    __fw_free_buf: fw-8a7791-koelsch-exio-a-scifb0.dtbo buf=ee3d96c0
+data=  (null) size=0
+
+After that:
+  - The overlay itself works fine,
+  - The "status" file in configfs says "applied".
+  - The "path" file in configfs is empty?
+
+Note that an "r" was dropped from the filename in front of the "8a7791".
+Hence I suspected some obscure memory corruption bug....
+
+
+> --- /dev/null
+> +++ b/drivers/of/configfs.c
+> @@ -0,0 +1,332 @@
+
+> +static int create_overlay(struct cfs_overlay_item *overlay, void *blob)
+> +{
+> +       int err;
+> +
+> +       /* unflatten the tree */
+> +       of_fdt_unflatten_tree(blob, &overlay->overlay);
+> +       if (overlay->overlay == NULL) {
+> +               pr_err("%s: failed to unflatten tree\n", __func__);
+> +               err = -EINVAL;
+> +               goto out_err;
+> +       }
+> +       pr_debug("%s: unflattened OK\n", __func__);
+> +
+> +       /* mark it as detached */
+> +       of_node_set_flag(overlay->overlay, OF_DETACHED);
+> +
+> +       /* perform resolution */
+> +       err = of_resolve_phandles(overlay->overlay);
+> +       if (err != 0) {
+> +               pr_err("%s: Failed to resolve tree\n", __func__);
+> +               goto out_err;
+> +       }
+> +       pr_debug("%s: resolved OK\n", __func__);
+> +
+> +       err = of_overlay_create(overlay->overlay);
+> +       if (err < 0) {
+> +               pr_err("%s: Failed to create overlay (err=%d)\n",
+> +                               __func__, err);
+> +               goto out_err;
+> +       }
+> +       overlay->ov_id = err;
+> +
+> +out_err:
+> +       return err;
+
+This returns either a strict negative error code, or a positive overlay ID.
+
+> +}
+
+> +static ssize_t cfs_overlay_item_path_store(struct cfs_overlay_item *overlay,
+> +               const char *page, size_t count)
+> +{
+> +       const char *p = page;
+> +       char *s;
+> +       int err;
+> +
+> +       /* if it's set do not allow changes */
+> +       if (overlay->path[0] != '\0' || overlay->dtbo_size > 0)
+> +               return -EPERM;
+> +
+> +       /* copy to path buffer (and make sure it's always zero terminated */
+> +       count = snprintf(overlay->path, sizeof(overlay->path) - 1, "%s", p);
+> +       overlay->path[sizeof(overlay->path) - 1] = '\0';
+> +
+> +       /* strip trailing newlines */
+> +       s = overlay->path + strlen(overlay->path);
+> +       while (s > overlay->path && *--s == '\n')
+> +               *s = '\0';
+> +
+> +       pr_debug("%s: path is '%s'\n", __func__, overlay->path);
+> +
+> +       err = request_firmware(&overlay->fw, overlay->path, NULL);
+> +       if (err != 0)
+> +               goto out_err;
+> +
+> +       err = create_overlay(overlay, (void *)overlay->fw->data);
+> +       if (err != 0)
+
+Woops, this test should be "if (err < 0)"!
+For the first overlay, err == 0, and everything works fine.
+For subsequent overlays, err > 0, and ...
+
+> +               goto out_err;
+> +
+> +       return count;
+> +
+> +out_err:
+> +
+> +       release_firmware(overlay->fw);
+> +       overlay->fw = NULL;
+> +
+> +       overlay->path[0] = '\0';
+
+... the path is cleared...
+
+> +       return err;
+
+...and a positive number is returned, smaller than the passed filename length.
+This makes VFS believe the write was truncated, hence it retries, writing only
+the remaining part of the filename again. That explains the dropped first
+character of the filename, and the firmware load failure.
+
+> +}
+
+> +ssize_t cfs_overlay_item_dtbo_write(struct cfs_overlay_item *overlay,
+> +               const void *buf, size_t count)
+> +{
+> +       int err;
+> +
+> +       /* if it's set do not allow changes */
+> +       if (overlay->path[0] != '\0' || overlay->dtbo_size > 0)
+> +               return -EPERM;
+> +
+> +       /* copy the contents */
+> +       overlay->dtbo = kmemdup(buf, count, GFP_KERNEL);
+> +       if (overlay->dtbo == NULL)
+> +               return -ENOMEM;
+> +
+> +       overlay->dtbo_size = count;
+> +
+> +       err = create_overlay(overlay, overlay->dtbo);
+> +       if (err != 0)
+
+Same here: "if (err < 0)"
+
+> +               goto out_err;
+> +
+> +       return count;
+> +
+> +out_err:
+> +       kfree(overlay->dtbo);
+> +       overlay->dtbo = NULL;
+> +       overlay->dtbo_size = 0;
+> +
+> +       return err;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
