@@ -1,78 +1,90 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
- for cygnus
-Date: Wed, 13 May 2015 17:21:30 +0200
-Message-ID: <20150513152130.GB2065@localhost.localdomain>
-References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com>
- <1429744923-2007-3-git-send-email-jonathar@broadcom.com>
- <6346218.3x3hbSlxMs@wuerfel>
- <5543CD73.2030902@broadcom.com>
+From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [RFC][PATCH 0/2] MT8173 DRM support
+Date: Wed, 13 May 2015 23:23:44 +0800
+Message-ID: <1431530626-31493-1-git-send-email-ck.hu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5543CD73.2030902-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Edamura <dedamura-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 01, 2015 at 12:01:07PM -0700, Jonathan Richardson wrote:
-> The DTE creates timestamps of hardware based events such as GPIO, I2S
-> signals for audio, etc. It was also intended to provide 802.1AS / PTP
-> timestamps for network packets. The h/w has up to 32 "clients" -- the
-> hardware inputs into a timestamping engine. These clients are specific
-> to the chip the DTE is used on. For Cygnus you can see what they are in
-> our 'enum dte_client' from bcm_cygnus_dte.h.
+MT8173 DRM include one master drm device and three sub device: dsi device,
+crtc main device, and ddp device.
 
-These 32 channels should either go to kernel consumers (i2s audio) or,
-if there aren't any, to the generic PTP ioctl.
+Master drm device control the drm sub device and memory management.
+dsi device is a drm connector/encoder device which control MIPI/DSI hw block.
+crtc main is a drm crtc device which control hw components in the display data
+path.
+ddp is a device which control display data path.
 
-> The DTE timestamper creates timestamps based on the current clock wall
-> time.
+Display data path of crtc main is:
+[OVL0] -> [COLOR0] -> [AAL] -> [OD] -> [UFOE] -> [RDMA0]
 
-What do you mean by "wall time"?  CLOCK_REALTIME?
+This patch depends on the other patches:
+1. MT8173 IOMMU support
+	http://lists.infradead.org/pipermail/linux-mediatek/2015-March/000058.html
+2. add IOMMU dma_ops
+	cherry picked from git://linux-arm.org/linux-rm iommu/dma
+		commit d76a1911b02185bdc5f8b5525f9228cf266725c5
 
-> When an event occurs it stores the timestamp in a h/w FIFO. Each
-> client also has a divider that can be set to control the rate that
-> timestamps are generated at by the timestamper and these are adjustable
-> at run time.
+CK Hu (2):
+  dt-bindings: drm/mediatek: Add Mediatek DRM dts binding
+  drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.
 
-This does not make sense.  If you time stamp events, then the rate is
-determined by the events themselves.
- 
-> It's a bit more than a PTP hardware clock on a NIC. It's a clock for PTP
-> plus timestamping 32 other hardware inputs that can be enabled at any
-> time with timestamps being generated at varying frequencies. As clients
-> are enabled that generate timestamps at higher frequencies, the
-> isochronous interrupt frequency needs to be increased so that overflows
-> in the the h/w and s/w FIFO's don't occur (this frequency could possibly
-> be automated instead of changing it manually as we currently do).
+ .../bindings/drm/mediatek/mediatek,crtc-main.txt   |   38 +
+ .../bindings/drm/mediatek/mediatek,ddp.txt         |   22 +
+ .../bindings/drm/mediatek/mediatek,drm.txt         |   27 +
+ .../bindings/drm/mediatek/mediatek,dsi.txt         |   20 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/mediatek/Kconfig                   |   28 +
+ drivers/gpu/drm/mediatek/Makefile                  |   13 +
+ drivers/gpu/drm/mediatek/mediatek_drm_crtc.c       |  246 ++++
+ drivers/gpu/drm/mediatek/mediatek_drm_crtc.h       |   80 ++
+ drivers/gpu/drm/mediatek/mediatek_drm_crtc_main.c  |  420 ++++++
+ drivers/gpu/drm/mediatek/mediatek_drm_ddp.c        |  202 +++
+ drivers/gpu/drm/mediatek/mediatek_drm_ddp.h        |   23 +
+ drivers/gpu/drm/mediatek/mediatek_drm_ddp_comp.c   |  346 +++++
+ drivers/gpu/drm/mediatek/mediatek_drm_ddp_comp.h   |   33 +
+ drivers/gpu/drm/mediatek/mediatek_drm_drv.c        |  369 ++++++
+ drivers/gpu/drm/mediatek/mediatek_drm_drv.h        |   37 +
+ drivers/gpu/drm/mediatek/mediatek_drm_dsi.c        | 1333 ++++++++++++++++++++
+ drivers/gpu/drm/mediatek/mediatek_drm_dsi.h        |   71 ++
+ drivers/gpu/drm/mediatek/mediatek_drm_fb.c         |  339 +++++
+ drivers/gpu/drm/mediatek/mediatek_drm_fb.h         |   43 +
+ drivers/gpu/drm/mediatek/mediatek_drm_gem.c        |  315 +++++
+ drivers/gpu/drm/mediatek/mediatek_drm_gem.h        |   94 ++
+ include/uapi/drm/mediatek_drm.h                    |   59 +
+ 24 files changed, 4161 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/drm/mediatek/mediatek,crtc-main.txt
+ create mode 100644 Documentation/devicetree/bindings/drm/mediatek/mediatek,ddp.txt
+ create mode 100644 Documentation/devicetree/bindings/drm/mediatek/mediatek,drm.txt
+ create mode 100644 Documentation/devicetree/bindings/drm/mediatek/mediatek,dsi.txt
+ create mode 100644 drivers/gpu/drm/mediatek/Kconfig
+ create mode 100644 drivers/gpu/drm/mediatek/Makefile
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_crtc.c
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_crtc.h
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_crtc_main.c
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_ddp.c
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_ddp.h
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_ddp_comp.c
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_ddp_comp.h
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_drv.c
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_drv.h
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_dsi.c
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_dsi.h
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_fb.c
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_fb.h
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_gem.c
+ create mode 100644 drivers/gpu/drm/mediatek/mediatek_drm_gem.h
+ create mode 100644 include/uapi/drm/mediatek_drm.h
 
-Yes, the driver should configure an appropriate rate automatically.
+-- 
+1.8.1.1.dirty
 
-> It looks like the driver could almost be a PTP driver instead of a char
-> driver controlled with ioctls. PTP does this already using
-> clock_gettime(), clock_settime(), clock_adjtime(). But we want to set
-> the frequency as well as adjust the clock and I don't see how that is
-> possible with the stripped down timex data passed to the driver from
-> ptp_clock_adjtime().
 
-You can convert ppb into your time base using simple math.
- 
-> We have the additional requirement of controlling multiple clients and
-> retrieving the timestamps, etc. The PTP driver allows for some control
-> of external time stamp channels already using 'n_ext_ts' in struct
-> ptp_clock_info. We could use that to enable clients and get timestamps,
-> but we also need to be able to change dividers for the clients at run
-> time if desired. It doesn't look like additional ioctls could be passed
-> to a PTP driver because ptp_ioctl() is the ioctl handler.
-
-I don't see any need for use space to set dividers.  Let the driver do
-that.
-
-Thanks,
-Richard
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
