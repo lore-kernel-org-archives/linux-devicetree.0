@@ -1,52 +1,85 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH V1 3/6] rtc: da9062: DA9062 RTC driver
-Date: Wed, 13 May 2015 06:46:41 -0700
-Message-ID: <555355C1.9090907@roeck-us.net>
-References: <cover.1429280614.git.stwiss.opensource@diasemi.com> <860a3b6dc7f8dac95c0e36967f24551af8805f7b.1429280614.git.stwiss.opensource@diasemi.com> <20150510095838.GF3338@piout.net> <6ED8E3B22081A4459DAC7699F3695FB7014B22A3F3@SW-EX-MBX02.diasemi.com> <20150513125858.GX3338@piout.net> <55534BEF.7020409@roeck-us.net> <20150513133741.GY3338@piout.net>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: base: upgrade initcall level of of_init from core to pure
+Date: Wed, 13 May 2015 08:46:47 -0500
+Message-ID: <CAL_JsqL_pEZ0qMgk3j7fwuWLTVZEm2UpPR=e4jAMN4shHAtNnA@mail.gmail.com>
+References: <1431452282-10207-1-git-send-email-sudeep.holla@arm.com>
+ <CAL_JsqJ19OfTJjtrZ9vs_9VYRHzOyF=GZdz4ftHT=nonEVWWgw@mail.gmail.com> <55532186.5060803@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150513133741.GY3338-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55532186.5060803@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2015 06:37 AM, Alexandre Belloni wrote:
-> On 13/05/2015 at 06:04:47 -0700, Guenter Roeck wrote :
->> Don't know how this is handled for rtc drivers, but in other subsystems
->> we just live with the original name. I don't see a need to rename a driver
->> just because it starts supporting more hardware, and xxx is weird anyway
->> since it suggests everything from 000 to 999, which is much worse than
->> just sticking with 9063.
+On Wed, May 13, 2015 at 5:03 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 12/05/15 23:55, Rob Herring wrote:
+>>
+>> On Tue, May 12, 2015 at 12:38 PM, Sudeep Holla <sudeep.holla@arm.com>
+>> wrote:
+>>>
+>>> Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+>>> devices with an OF node") adds the symlink `of_node` for each device
+>>> pointing to it's device tree node while creating/initialising it.
+>>>
+>>> However the devicetree sysfs is created and setup in of_init which is
+>>> executed at core_initcall level. For all the devices created at the core
+>>> initcall before of_init, the following error is thrown:
+>>>          "Error -2(-ENOENT) creating of_node link"
+>>
+>>
+>> What devices have you seen the problem with? I'd rather see if those
+>> devices could now be moved later.
 >>
 >
-> Yes, in particular if at some point in time a new IP matching those xxx
-> is completely different from the previous one. I'm not fond of renaming
-> the driver either but if diasemi thinks that what they want, I'm open to
-> let it happen. But clearly, I don't want to end up in a situation like
-> the tlv320aic where you don't know which driver correspond to which
-> chip:
+> Yes that's exactly what I attempted first after seeing the issue, but
+> failed miserably due to the dependency mentioned below.
 >
-> sound/soc/codecs/tlv320aic31xx.c
-> sound/soc/codecs/tlv320aic31xx.h
-> sound/soc/codecs/tlv320aic32x4.c
-> sound/soc/codecs/tlv320aic32x4.h
-> sound/soc/codecs/tlv320aic3x.c
-> sound/soc/codecs/tlv320aic3x.h
-> sound/soc/codecs/tlv320dac33.c
-> sound/soc/codecs/tlv320dac33.h
+> It's on vexpress platforms with the following initcall sequence:
+> 1. core - vexpress system control registers block(sysreg)
+> 2. postcore - vexpress configuration controllers(config-bridge)
+> 3. arch - customize_machine->of_platform_populate
+
+I'd argue we should move this later, but that's a big hammer.
+
+> of_platform_populate creates amba_devices which need clocks and
+> depend on the vexpress-config and clocks which in turn depends on
+> vexpress-sysreg
+
+Personally, I think all this stuff is overly complicated and perhaps
+too much stuff in DT. vexpress-config and vexpress-sysreq are tightly
+coupled and perhaps should be handled with 1 driver. Also, calling
+vexpress-config a bus is a bit of an abuse.
+
+> I would like to know if with commit 5590f3196b29 are we mandating
+> all the device creation to be done only after core_initcall or
+> is it OK get the errors mentioned above and ignore them as harmless
+> as the comment in the code states:
+> "An error here doesn't warrant bringing down the device"
+
+I don't think it really changed with that commit, but there has to be
+some mechanism for core/infrastructure to initialize before
+drivers/devices.
+
+>>> Since the core_initcall is the earliest point where devices get
+>>> registered, push initcall level of of_init from core to pure so that
+>>> the devicetree sysfs is ready before any devices are registered.
+>>
+>>
+>> Read the definition of pure:
+>>
+>>   * A "pure" initcall has no dependencies on anything else, and purely
+>>   * initializes variables that couldn't be statically initialized.
+>>
 >
-> Go figure that the tlv320aic3104 can be supported by both tlv320aic3x.c
-> and tlv320aic32x4.c but not tlv320aic31xx.c...
->
+> Yes I read and was bit hesitant initially to do this change, but found
+> no better way. I posted mainly to discuss other possibilities to solve
+> the issue.
 
-Unfortunately that is exactly what is going to happen.
+Perhaps of_init should not be an initcall at all and it should go into
+driver_init().
 
-Guenter
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
