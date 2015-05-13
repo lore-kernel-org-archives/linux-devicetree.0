@@ -1,49 +1,114 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] of: base: upgrade initcall level of of_init from core
- to pure
-Date: Wed, 13 May 2015 17:54:16 +0100
-Message-ID: <555381B8.5020504@arm.com>
-References: <1431452282-10207-1-git-send-email-sudeep.holla@arm.com> <CAL_JsqJ19OfTJjtrZ9vs_9VYRHzOyF=GZdz4ftHT=nonEVWWgw@mail.gmail.com> <55532186.5060803@arm.com> <CAL_JsqL_pEZ0qMgk3j7fwuWLTVZEm2UpPR=e4jAMN4shHAtNnA@mail.gmail.com> <555364AA.7030703@arm.com> <CAL_JsqK6cZ+rYiox0=EE5wjwtk6T8edCzDG0=uj2ZdK-QHoX3g@mail.gmail.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
+Date: Wed, 13 May 2015 10:03:16 -0700
+Message-ID: <CAL1qeaE7XHmreQ_b52iop6fOY1osAhjij81c4vVr7_8wO_cYxQ@mail.gmail.com>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+	<1430761002-9327-5-git-send-email-abrestic@chromium.org>
+	<20150513143954.GA3394@x1>
+	<CAL1qeaF-7aAx0gqPe-_D4ZaZET0Kejr801KrbvuQ_2w6c8mcnA@mail.gmail.com>
+	<20150513165014.GC19543@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK6cZ+rYiox0=EE5wjwtk6T8edCzDG0=uj2ZdK-QHoX3g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150513165014.GC19543@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 13/05/15 17:34, Rob Herring wrote:
-> On Wed, May 13, 2015 at 9:50 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> On 13/05/15 14:46, Rob Herring wrote:
->>> On Wed, May 13, 2015 at 5:03 AM, Sudeep Holla <sudeep.holla@arm.com>
->>> wrote:
+On Wed, May 13, 2015 at 9:50 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, 13 May 2015, Andrew Bresticker wrote:
 >
-> [...]
->
->>>> Yes I read and was bit hesitant initially to do this change, but found
->>>> no better way. I posted mainly to discuss other possibilities to solve
->>>> the issue.
->>>
->>>
->>> Perhaps of_init should not be an initcall at all and it should go into
->>> driver_init().
+>> Lee,
 >>
+>> On Wed, May 13, 2015 at 7:39 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Mon, 04 May 2015, Andrew Bresticker wrote:
+>> >
+>> >> Add a binding document for the XUSB host complex on NVIDIA Tegra124
+>> >> and later SoCs.  The XUSB host complex includes a mailbox for
+>> >> communication with the XUSB micro-controller and an xHCI host-controller.
+>> >>
+>> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> >> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >> ---
+>> >> Changes from v7:
+>> >>  - Move non-shared resources into child nodes.
+>> >> New for v7.
+>> >> ---
+>> >>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 37 ++++++++++++++++++++++
+>> >>  1 file changed, 37 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> >> new file mode 100644
+>> >> index 0000000..bc50110
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> >> @@ -0,0 +1,37 @@
+>> >> +NVIDIA Tegra XUSB host copmlex
+>> >> +==============================
+>> >> +
+>> >> +The XUSB host complex on Tegra124 and later SoCs contains an xHCI host
+>> >> +controller and a mailbox for communication with the XUSB micro-controller.
+>> >> +
+>> >> +Required properties:
+>> >> +--------------------
+>> >> + - compatible: For Tegra124, must contain "nvidia,tegra124-xusb".
+>> >> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,tegra124-xusb"'
+>> >> +   where <chip> is tegra132.
+>> >> + - reg: Must contain the base and length of the XUSB FPCI registers.
+>> >> + - ranges: Bus address mapping for the XUSB block.  Can be empty since the
+>> >> +   mapping is 1:1.
+>> >> + - #address-cells: Must be 2.
+>> >> + - #size-cells: Must be 2.
+>> >> +
+>> >> +Example:
+>> >> +--------
+>> >> +     usb@0,70098000 {
+>> >> +             compatible = "nvidia,tegra124-xusb";
+>> >> +             reg = <0x0 0x70098000 0x0 0x1000>;
+>> >> +             ranges;
+>> >> +
+>> >> +             #address-cells = <2>;
+>> >> +             #size-cells = <2>;
+>> >> +
+>> >> +             usb-host@0,70090000 {
+>> >> +                     compatible = "nvidia,tegra124-xhci";
+>> >> +                     ...
+>> >> +             };
+>> >> +
+>> >> +             mailbox {
+>> >> +                     compatible = "nvidia,tegra124-xusb-mbox";
+>> >> +                     ...
+>> >> +             };
+>> >
+>> > This doesn't appear to be a proper MFD.  I would have the USB and
+>> > Mailbox devices probe seperately and use a phandle to point the USB
+>> > device to its Mailbox.
+>> >
+>> > usb@xyz {
+>> >         mboxes = <&xusb-mailbox, [chan]>;
+>> > };
 >>
->> That seems ideal place to me as most of kset and kobjects are created
->> there. Something like below patch ? However found that PPC had a
->> function with same name which can conflict and we need to rename one of
->> these two.
+>> Then what will set up the shared regmap?  The point of using an MFD
+>> here was to share a register set with both the mailbox and xHCI
+>> drivers and avoid having to map the same register set twice in two
+>> separate drivers.
 >
-> It looks like the PPC one is in the boot wrapper. They shouldn't
-> collide. If they do, then how about of_core_init.
->
+> Can you share the mapping please?
 
-Thanks for the review, will check the PPC build and change accordingly
-if required.
+What do you mean?  That's what the MFD is doing now by setting up an
+MMIO regmap to be shared between the two devices.
 
-Regards,
-Sudeep
+Thanks,
+Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
