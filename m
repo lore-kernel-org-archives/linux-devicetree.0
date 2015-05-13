@@ -1,94 +1,54 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH v4 0/4] Fix null pointer deference when calling of_platform_depopulate
-Date: Wed, 13 May 2015 14:31:12 +0200
-Message-ID: <CAPybu_1M3o6R7N_hxQ8tZL9k0ukUY0gTKHi-G5pBjgafdwrgVA@mail.gmail.com>
-References: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [rtc-linux] [PATCH V1 3/6] rtc: da9062: DA9062 RTC driver
+Date: Wed, 13 May 2015 12:31:36 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22A3F3@SW-EX-MBX02.diasemi.com>
+References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
+ <860a3b6dc7f8dac95c0e36967f24551af8805f7b.1429280614.git.stwiss.opensource@diasemi.com>
+ <20150510095838.GF3338@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
+In-Reply-To: <20150510095838.GF3338@piout.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jakub Sitnicki <jsitnicki@gmail.com>, Vivek Goyal <vgoyal@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Jiang Liu <jiang.liu@linux.intel.com>, Mike Travis <travis@sgi.com>, Thierry Reding <treding@nvidia.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-Ping?
+On 10 May 2015 10:59 Alexandre Belloni wrote:
 
-On Thu, Apr 23, 2015 at 3:58 PM, Ricardo Ribalda Delgado
-<ricardo.ribalda@gmail.com> wrote:
-> of_platform_depopulate can lead to a kernel error when calling release_resource()
->
-> The reason is that it is trying to release a resource that was not allocated
-> via insert_resource()
->
-> of_platform_depopulate()
->       of_platform_device_destroy()
->         platform_device_unregister(platform_device *pdev)
->           platform_device_del(platform_device *pdev)
->             for (i = 0; i < pdev->num_resources; i++)
->                       release_resource()
->
-> of_platform_populate()
->       ...
->         of_device_alloc()
->           pdev = platform_device_alloc()
->           # set pdev->resource, similar to platform_device_add_resources()
->           of_device_add(platform_device *pdev)
->             # similar to platform_device_add(), but note there's no
->             # insert_resource() in this path
->             device_add(&pdev->dev)
->
-> On this patchset:
->
-> base/platform has been fixed for an hypothetical condition where parent is
-> set but the platform is neither MEM or IO.
->
-> Then platform_device_alloc has been modified so it supports of and amba
-> devices.
->
-> Finally of_device_add has been modified to use platform_device_add().
->
-> v1: https://lkml.org/lkml/2015/4/20/435
->
-> v2: From: Bjorn Helgaas <bhelgaas@google.com>
->      -Fix caller, not callee
->
->     https://lkml.org/lkml/2015/4/21/99
->     https://lkml.org/lkml/2015/4/21/100
->
-> v3: From: Rob Herring <robherring2@gmail.com>
->       - Modify plaform_device_alloc to support of and ambda devices
->
->     https://lkml.org/lkml/2015/4/22/369
->     https://lkml.org/lkml/2015/4/22/370
->     https://lkml.org/lkml/2015/4/22/371
->     https://lkml.org/lkml/2015/4/22/374
->     https://lkml.org/lkml/2015/4/22/373
->
-> v4: From: Bjorn Helgaas <bhelgaas@google.com>
->      -Remove WARN() patch
->      -Show conflicting resources
->      -Code Style
->      -Fix descriptions
->
->     From: Rob Herring <robherring2@gmail.com>
->        -Fix descriptions
->
-> Ricardo Ribalda Delgado (4):
->   base/platform: Only insert MEM and IO resources
->   base/platform: Continue on insert_resource() error
->   of/platform: Use platform_device interface
->   base/platform: Remove code duplication
->
->  drivers/base/platform.c | 84 ++++++++++++++++++++++++-------------------------
->  drivers/of/platform.c   |  3 +-
->  2 files changed, 43 insertions(+), 44 deletions(-)
->
-> --
-> 2.1.4
->
+> Hi,
+> 
+> On 17/04/2015 at 15:23:33 +0100, S Twiss wrote :
+> > From: S Twiss <stwiss.opensource@diasemi.com>
+> >
+> > Add RTC driver support for DA9062
+
+[...]
+
+> This is an almost exact copy of drivers/rtc/rtc-da9063.c, apart from the
+> retry mechanism in read_time. Can you simply add support for the da9062
+> in that driver?
 
 
+Hi Alexandre,
 
--- 
-Ricardo Ribalda
+Something similar is being discussed for the OnKey component of the DA9062.
+https://lkml.org/lkml/2015/4/24/304
+
+It is only the OnKey and RTC components that are similar to the DA9063 chip
+and I was hoping to keep the 62 RTC separate in this case ... however it should
+definitely be possible to re-use the DA9063 RTC driver if this is your requirement.
+If this will block my submission of the DA9062 then I will drop the RTC from my
+next patch set and try to re-work the existing 63 RTC driver accordingly.
+
+I think this sort of thing has been done before:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/rtc/rtc-pm8xxx.c
+ ... at first glance -- it seems to support that sort of thing.
+
+I guess it would be possible to rename the da9063-rtc to something more sensible like
+da9xxx-rtc.c if this goes ahead?
+
+Regards,
+Steve
