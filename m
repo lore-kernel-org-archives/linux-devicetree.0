@@ -1,210 +1,90 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: adc: ti_am335x_adc: make sample delay, open
- delay, averaging DT parameters
-Date: Wed, 13 May 2015 18:38:07 +0100
-Message-ID: <55538BFF.5010401@kernel.org>
-References: <1427800357-21680-1-git-send-email-vigneshr@ti.com> <1427800357-21680-3-git-send-email-vigneshr@ti.com> <55268A7C.1050307@kernel.org> <5553006B.1050306@ti.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: BCM2836 (Raspberry Pi 2) port
+Date: Wed, 13 May 2015 10:46:24 -0700
+Message-ID: <87wq0c4bgv.fsf@eliezer.anholt.net>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <4137213.WVJY1et48u@kongar> <55516738.306@wwwdotorg.org> <1701192.WcfjCoBWQN@kongar> <55522468.3050606@wwwdotorg.org> <87d2254s6y.fsf@eliezer.anholt.net> <555278BA.50903@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5553006B.1050306-l0cyMroinI0@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Cooper Jr., Franklin" <fcooper-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <555278BA.50903-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/05/15 08:42, Vignesh R wrote:
-> 
-> 
-> On Thursday 09 April 2015 07:49 PM, Jonathan Cameron wrote:
->> On 31/03/15 12:12, Vignesh R wrote:
->>> Add optional DT properties to set open delay, sample delay and number
->>> of averages per sample for each adc step. Open delay, sample delay
->>> and averaging are some of the parameters that affect the sampling rate
->>> and accuracy of the sample. Making these parameters configurable via
->>> DT will help in balancing speed vs accuracy.
->>>
->>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
->> All looks fine to me, but I would ideally like a devicetree
->> ack on this one.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+
+> On 05/12/2015 11:32 AM, Eric Anholt wrote:
+>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 >>
->> Jonathan
-> 
-> Gentle ping...
-Thanks. Had forgotten about this one.  Ah well, no device tree response...
-
-Applied to the togreg branch of iio.git, initially pushed out as testing.
-
-Thanks,
-
-Jonathan
-> 
-> Regards
-> Vignesh
->>> ---
->>>  .../bindings/input/touchscreen/ti-tsc-adc.txt      | 24 ++++++++++
->>>  drivers/iio/adc/ti_am335x_adc.c                    | 54 +++++++++++++++++++---
->>>  2 files changed, 72 insertions(+), 6 deletions(-)
+>>> On 05/12/2015 09:39 AM, Alexander Stein wrote:
+>>>> On Monday 11 May 2015, 20:36:40 wrote Stephen Warren:
+>>>>> On 05/08/2015 10:14 AM, Alexander Stein wrote:
+>>>>>> On Thursday 23 April 2015, 22:25:08 wrote Stephen Warren:
+>>>>>>>> Hit any key to stop autoboot:  0
+>>>>>>>> U-Boot> setenv fdt_high fffffff
+>>>>>>
+>>>>>> Any specific reason to set fdt_high to fffffff?
+>>>>>
+>>>>> Yes, it prevents U-Boot's annoying habit of moving the DTB from where=
+ it
+>>>>> was loaded to some other place. This was especially important in this
+>>>>> case since I was trying to find out exactly which piece of RAM being
+>>>>> over-written caused the issues I was seeing.
+>>>>
+>>>> Shouldn't this then be part of the default raspberry (2 only?) environ=
+ment?
 >>>
->>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
->>> index 6c4fb34823d3..8aafbe87f0eb 100644
->>> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
->>> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
->>> @@ -42,6 +42,27 @@ Optional properties:
->>>  			 hardware knob for adjusting the amount of "settling
->>>  			 time".
->>>  
->>> +- child "adc"
->>> +	ti,chan-step-opendelay: List of open delays for each channel of
->>> +				ADC in the order of ti,adc-channels. The
->>> +				value corresponds to the number of ADC
->>> +				clock cycles to wait after applying the
->>> +				step configuration registers and before
->>> +				sending the start of ADC conversion.
->>> +				Maximum value is 0x3FFFF.
->>> +       ti,chan-step-sampledelay: List of sample delays for each channel
->>> +				  of ADC in the order of ti,adc-channels.
->>> +				  The value corresponds to the number of
->>> +				  ADC clock cycles to sample (to hold
->>> +				  start of conversion high).
->>> +				  Maximum value is 0xFF.
->>> +       ti,chan-step-avg: Number of averages to be performed for each
->>> +			  channel of ADC. If average is 16 then input
->>> +			  is sampled 16 times and averaged to get more
->>> +			  accurate value. This increases the time taken
->>> +			  by ADC to generate a sample. Valid range is 0
->>> +			  average to 16 averages. Maximum value is 16.
->>> +
->>>  Example:
->>>  	tscadc: tscadc@44e0d000 {
->>>  		compatible = "ti,am3359-tscadc";
->>> @@ -55,5 +76,8 @@ Example:
->>>  
->>>  		adc {
->>>  			ti,adc-channels = <4 5 6 7>;
->>> +			ti,chan-step-opendelay = <0x098 0x3ffff 0x098 0x0>;
->>> +			ti,chan-step-sampledelay = <0xff 0x0 0xf 0x0>;
->>> +			ti,chan-step-avg = <16 2 4 8>;
->>>  		};
->>>  	}
->>> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
->>> index 2f818405ffbe..5ee597b4a1af 100644
->>> --- a/drivers/iio/adc/ti_am335x_adc.c
->>> +++ b/drivers/iio/adc/ti_am335x_adc.c
->>> @@ -37,6 +37,7 @@ struct tiadc_device {
->>>  	u8 channel_step[8];
->>>  	int buffer_en_ch_steps;
->>>  	u16 data[8];
->>> +	u32 open_delay[8], sample_delay[8], step_avg[8];
->>>  };
->>>  
->>>  static unsigned int tiadc_readl(struct tiadc_device *adc, unsigned int reg)
->>> @@ -85,6 +86,7 @@ static u32 get_adc_step_bit(struct tiadc_device *adc_dev, int chan)
->>>  static void tiadc_step_config(struct iio_dev *indio_dev)
->>>  {
->>>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
->>> +	struct device *dev = adc_dev->mfd_tscadc->dev;
->>>  	unsigned int stepconfig;
->>>  	int i, steps = 0;
->>>  
->>> @@ -98,20 +100,47 @@ static void tiadc_step_config(struct iio_dev *indio_dev)
->>>  	 * needs to be given to ADC to digitalize data.
->>>  	 */
->>>  
->>> -	if (iio_buffer_enabled(indio_dev))
->>> -		stepconfig = STEPCONFIG_AVG_16 | STEPCONFIG_FIFO1
->>> -					| STEPCONFIG_MODE_SWCNT;
->>> -	else
->>> -		stepconfig = STEPCONFIG_AVG_16 | STEPCONFIG_FIFO1;
->>>  
->>>  	for (i = 0; i < adc_dev->channels; i++) {
->>>  		int chan;
->>>  
->>>  		chan = adc_dev->channel_line[i];
->>> +
->>> +		if (adc_dev->step_avg[i] > STEPCONFIG_AVG_16) {
->>> +			dev_warn(dev, "chan %d step_avg truncating to %d\n",
->>> +				 chan, STEPCONFIG_AVG_16);
->>> +			adc_dev->step_avg[i] = STEPCONFIG_AVG_16;
->>> +		}
->>> +
->>> +		if (adc_dev->step_avg[i])
->>> +			stepconfig =
->>> +			STEPCONFIG_AVG(ffs(adc_dev->step_avg[i]) - 1) |
->>> +			STEPCONFIG_FIFO1;
->>> +		else
->>> +			stepconfig = STEPCONFIG_FIFO1;
->>> +
->>> +		if (iio_buffer_enabled(indio_dev))
->>> +			stepconfig |= STEPCONFIG_MODE_SWCNT;
->>> +
->>>  		tiadc_writel(adc_dev, REG_STEPCONFIG(steps),
->>>  				stepconfig | STEPCONFIG_INP(chan));
->>> +
->>> +		if (adc_dev->open_delay[i] > STEPDELAY_OPEN_MASK)alue corresponds to the number of ADC
->>> +				clock cycles to wait after applying the
->>> +				step configuration registers and before
->>> +				sending the start of ADC conversion.
->>> +				Maximum value is 0x3FFFF.
->>> +       ti,chan-step-sampledelay: List of sample delays for each channel
->>> +				  of ADC in the order of ti,adc-channels.
->>> +				  The value corresponds to the number of
->>> +				  ADC clock cycles to sample (to hold
->>> +				  start of conversion high).
->>> +				  Maximum value is 0xFF.
->>> +       ti,chan-step-avg: Number of averages to be performed for each
->>> +			  channel of ADC. If average is 16 then input
->>> +			  is sampled 16 times and averaged to get more
->>> +			  accurate value. This increases the time taken
->>> +			  by ADC to generate a sample. Valid range is 0
->>> +			  average to 16 averages. Maximum value is 16. {
->>> +			dev_warn(dev, "chan %d open delay truncating to 0x3FFFF\n",
->>> +				 chan);
->>> +			adc_dev->open_delay[i] = STEPDELAY_OPEN_MASK;
->>> +		}
->>> +
->>> +		if (adc_dev->sample_delay[i] > 0xFF) {
->>> +			dev_warn(dev, "chan %d sample delay truncating to 0xFF\n",
->>> +				 chan);
->>> +			adc_dev->sample_delay[i] = 0xFF;
->>> +		}
->>> +
->>>  		tiadc_writel(adc_dev, REG_STEPDELAY(steps),
->>> -				STEPCONFIG_OPENDLY);
->>> +				STEPDELAY_OPEN(adc_dev->open_delay[i]) |
->>> +				STEPDELAY_SAMPLE(adc_dev->sample_delay[i]));
->>> +
->>>  		adc_dev->channel_step[i] = steps;
->>>  		steps++;
->>>  	}
->>> @@ -407,9 +436,22 @@ static int tiadc_parse_dt(struct platform_device *pdev,
->>>  
->>>  	of_property_for_each_u32(node, "ti,adc-channels", prop, cur, val) {
->>>  		adc_dev->channel_line[channels] = val;
->>> +
->>> +		/* Set Default values for optional DT parameters */
->>> +		adc_dev->open_delay[channels] = STEPCONFIG_OPENDLY;
->>> +		adc_dev->sample_delay[channels] = STEPCONFIG_SAMPLEDLY;
->>> +		adc_dev->step_avg[channels] = 16;
->>> +
->>>  		channels++;
->>>  	}
->>>  
->>> +	of_property_read_u32_array(node, "ti,chan-step-avg",
->>> +				   adc_dev->step_avg, channels);
->>> +	of_property_read_u32_array(node, "ti,chan-step-opendelay",
->>> +				   adc_dev->open_delay, channels);
->>> +	of_property_read_u32_array(node, "ti,chan-step-sampledelay",
->>> +				   adc_dev->sample_delay, channels);
->>> +
->>>  	adc_dev->channels = channels;
->>>  	return 0;
->>>  }
->>>
+>>> Eventually yes. So far, nobody seems to know which areas of RAM are
+>>> off-limits (presumably since the RAM is used as a CPU1..3 pen), so I was
+>>> experimenting to try and find that out.
 >>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+>> If I'm reading this right, the CPU1-3 pen is in the bottom 8k of memory
+>> (actually much less than 8k).
+>
+> Hmm. I wondered if that was the case. I don't think anything I was doing=
+=20
+> in U-Boot /should/ touch those pages, but there have been bugs before=20
+> where some pointer was left at NULL, and some DM (U-Boot Device Model)=20
+> code ended up putting structures in page 0 by mistake. Perhaps something=
+=20
+> like that has resurfaced. I'll try to find time to diff page 0=20
+> before/after various U-Boot operations, and see if it's getting modified.=
+..
+
+How about on the Linux side?  What's reserving that memory for us, if
+anything?  Weird things happen if I put "ARM: bcm2836: Add a DT binding
+for the ARM local registers." and "ARM: bcm2835: Use a syscon regmap to
+set up timer frequency." before the SMP support in the bcm2836-smp tree
+(init crashes).
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVU43wAAoJELXWKTbR/J7o7Y0QAJwKymFmvnfmtuXF8ZFXMyfO
+1SNFeozT+CjjVL+wiA7IfrkEcAdYZdQteab+bt7B6MvpO+8t4oDJOrD59rU/6fCb
+GUm1NtNNvnrTvTF0ioAsVClgxKTRyyYxHRG1SE5C28OZhnu8g689T4NuywWyZCI0
+2qgiQMQ2YqLMeV0Yrpp1atwJrNy/JR+XcyR7HYQk8GCJvWBhcUWKOVLwMzfeyKsh
+TJiFjVqSNQAEcs7kI7Nmc37SKig8XyO7zMlBNFmlfhXkT00vA1VVi5sxXcRnua/Q
+HY60M8QVmAq4TxYvWt/KbdjBXx+cr0fuuIkEf7zu8FJaBWnSHMR4Z2n3He3H4dr3
+Rxxz13FcScZy7+W/eYf7e8VZv606EUiJ3kpFLjDkBZ9ZBtopZF+LVwNOm7XJGAYF
+tfRDa+hXoRBP+QNPw+jl0vRK/ieEhHUhkbsRHcnTHLmNwg7X6Kamk769nkynM8hM
+RauCP25spYPBJoqktGRi7nr1rm3Yf/L1p0bDa51HHdDnPVRQ1ok9VHn9SAZn6mTl
+0LHk4t07AY8rXqgOw4w0zC3VuUaqHJjLlFN9IMf8rnkVhQsO1e/aaVPTLWMBfUkC
+GluFvkNYa0vsKjLZFDq5Eh+IOGINULCDO9YALxijUwRBxS3yhlAu2YoYdExcGfmV
+qsUYgEjQ0ojga26qOshO
+=Uply
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
