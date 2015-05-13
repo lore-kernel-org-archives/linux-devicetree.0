@@ -1,74 +1,82 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH v4 01/13] ARM: dts: Add labels to Exynos4 nodes
-Date: Wed, 13 May 2015 17:59:06 +0900
-Message-ID: <5553125A.6090404@kernel.org>
-References: <1431351773-2031-1-git-send-email-k.kozlowski.k@gmail.com> <1431351773-2031-2-git-send-email-k.kozlowski.k@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] GPIO support for BRCMSTB
+Date: Wed, 13 May 2015 10:59:30 +0200
+Message-ID: <CACRpkdaTYAr-7K5_QZh1CyeyA1224obqEB2Sz8UHZmrWcfv+ow@mail.gmail.com>
+References: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
+	<CACRpkda3EDa7YdzeT6FQ=cQw1RrDath7pQsCos-JeB2y4r18gw@mail.gmail.com>
+	<CADtm3G45-u82Rp_0dHf2EfdMokf8E4FaQ84PHnocpvXxU+5_+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431351773-2031-2-git-send-email-k.kozlowski.k@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADtm3G45-u82Rp_0dHf2EfdMokf8E4FaQ84PHnocpvXxU+5_+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/11/15 22:42, Krzysztof Kozlowski wrote:
-> Add new labels to certain nodes so they could be easily referenced by
-> Exynos4 board DTS files.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-> ---
->  arch/arm/boot/dts/exynos4.dtsi            | 22 +++++++++++-----------
->  arch/arm/boot/dts/exynos4210-pinctrl.dtsi |  6 +++---
->  arch/arm/boot/dts/exynos4210.dtsi         |  6 +++---
->  arch/arm/boot/dts/exynos4x12-pinctrl.dtsi |  8 ++++----
->  arch/arm/boot/dts/exynos4x12.dtsi         |  2 +-
->  5 files changed, 22 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> index 1c74c1296ab7..0ec292d25b6e 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
+On Tue, May 12, 2015 at 9:38 PM, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, May 12, 2015 at 3:59 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Wed, May 6, 2015 at 10:37 AM, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>>> There is only one IRQ for each GIO IP block (i.e. several register banks share
+>>> an IRQ).  After briefly looking into the generic IRQ chip implementation, it
+>>> seemed like in this case that using it would result in the driver being more
+>>> complex than necessary because AFAICT it expects a 1:1 mapping of
+>>> irq_chip_generic to gpio_chip.  It seemed like less of a pain to have a single
+>>> irq_chip since we have a single IRQ for all register banks (multiple
+>>> gpio_chips).  I might be missing something, maybe using a shared IRQ across
+>>> multiple irq_chips is easier than I think?  Suggestions welcome.
+>>
+>> What is needed is a 1:1 mapping between GPIO offsets and IRQ
+>> offsets.
+>>
+>> If you just number your GPIOs 0...n and your IRQs 0...n
+>> it should work just fine with one irqchip for all banks.
+>>
+>> What screws things up is likely that the hardware supports
+>> 32 lines per bank and not all are used.
+>>
+>> I suggest you enable 32 line and 32 IRQs per bank,
+>> so that hwirq maps nicely 1:1 on the GPIO offsets,
+>> then just use the width thing to NACK operations on
+>> GPIO lines you are not using. This way you can also
+>> decode and warn on spurious IRQs on the unused lines.
+>
+> For having 32 lines per bank, the big problem here is the upper limit
+> of 256 GPIOs.
 
-[...]
+Which arch is this?
+Usually this limit comes from
+arch/*/include/asm/gpio.h
 
-> diff --git a/arch/arm/boot/dts/exynos4210-pinctrl.dtsi b/arch/arm/boot/dts/exynos4210-pinctrl.dtsi
-> index a7c212891674..4704e7bb2628 100644
-> --- a/arch/arm/boot/dts/exynos4210-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/exynos4210-pinctrl.dtsi
-> @@ -15,7 +15,7 @@
->  */
->  
->  / {
-> -	pinctrl@11400000 {
-> +	pinctrl_0: pinctrl@11400000 {
->  		gpa0: gpa0 {
->  			gpio-controller;
->  			#gpio-cells = <2>;
-> @@ -421,7 +421,7 @@
->  		};
->  	};
->  
-> -	pinctrl@11000000 {
-> +	pinctrl_1: pinctrl@11000000 {
->  		gpj0: gpj0 {
->  			gpio-controller;
->  			#gpio-cells = <2>;
-> @@ -822,7 +822,7 @@
->  		};
->  	};
->  
-> -	pinctrl@03860000 {
-> +	pinctrl_3: pinctrl@03860000 {
+For ARM that was bumped to 512 a while back. It is also possible
+to define a custom value for your system by defining
+ARCH_NR_GPIOS
 
-Maybe,
-+	pinctrl_2: pinctrl@03860000 { ?
+> Anyway, I don't think I understand IRQ domains and irq_chip_generic
+> very well.  One possibility _might_ be to use multiple irq_chips.
 
->  		gpz: gpz {
->  			gpio-controller;
->  			#gpio-cells = <2>;
+That is probably not possible if there is just one IRQ for all
+banks.
 
-[...]
+The task of the irqdomain is a 1-to-1 translation from one
+hardware numberspace to the Linux IRQ number space.
 
-- Kukjin
+In your case the hardware IRQ (hwirq) numberspace
+should be:
+
+bank0: 0..31
+bank1: 32..63
+....
+bankn: 32*n..32*n+31
+
+I think the gpiolib irqchip code can translate that properly
+as it is just a simple 0...x mapping, the irq handler need
+some magic to loop over all banks from 0..n though.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
