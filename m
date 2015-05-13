@@ -1,54 +1,172 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [rtc-linux] [PATCH V1 3/6] rtc: da9062: DA9062 RTC driver
-Date: Wed, 13 May 2015 12:31:36 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22A3F3@SW-EX-MBX02.diasemi.com>
-References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
- <860a3b6dc7f8dac95c0e36967f24551af8805f7b.1429280614.git.stwiss.opensource@diasemi.com>
- <20150510095838.GF3338@piout.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150510095838.GF3338@piout.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/5] doc: ABI: bone_capemgr sysfs API
+Date: Wed, 13 May 2015 15:42:12 +0300
+Message-ID: <F6CE4BD7-D409-407E-8E42-0E79965C6855@konsulko.com>
+References: <1431503985-31853-1-git-send-email-pantelis.antoniou@konsulko.com> <1431503985-31853-5-git-send-email-pantelis.antoniou@konsulko.com> <20150513115259.GA1021@kroah.com> <28C3D47C-8D31-4DD9-8751-F72A7F09DF6F@konsulko.com> <20150513120854.GA1516@kroah.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150513120854.GA1516-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt_Cousso?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10 May 2015 10:59 Alexandre Belloni wrote:
+Hi Greg,
 
-> Hi,
-> 
-> On 17/04/2015 at 15:23:33 +0100, S Twiss wrote :
-> > From: S Twiss <stwiss.opensource@diasemi.com>
-> >
-> > Add RTC driver support for DA9062
+> On May 13, 2015, at 15:08 , Greg Kroah-Hartman <gregkh@linuxfoundatio=
+n.org> wrote:
+>=20
+> On Wed, May 13, 2015 at 02:56:49PM +0300, Pantelis Antoniou wrote:
+>> Hi Greg,
+>>=20
+>>> On May 13, 2015, at 14:52 , Greg Kroah-Hartman <gregkh@linuxfoundat=
+ion.org> wrote:
+>>>=20
+>>> On Wed, May 13, 2015 at 10:59:44AM +0300, Pantelis Antoniou wrote:
+>>>> Document the beaglebone's capemgr sysfs API
+>>>>=20
+>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>> ---
+>>>> .../testing/sysfs-devices-platform-bone_capemgr    | 63 ++++++++++=
+++++++++++++
+>>>> 1 file changed, 63 insertions(+)
+>>>> create mode 100644 Documentation/ABI/testing/sysfs-devices-platfor=
+m-bone_capemgr
+>>>>=20
+>>>> diff --git a/Documentation/ABI/testing/sysfs-devices-platform-bone=
+_capemgr b/Documentation/ABI/testing/sysfs-devices-platform-bone_capemg=
+r
+>>>> new file mode 100644
+>>>> index 0000000..e2df613
+>>>> --- /dev/null
+>>>> +++ b/Documentation/ABI/testing/sysfs-devices-platform-bone_capemg=
+r
+>>>> @@ -0,0 +1,63 @@
+>>>> +What:		/sys/devices/platform/bone_capemgr/slots
+>>>> +Date:		May 2015
+>>>> +KernelVersion:	4.0
+>>>=20
+>>> I don't think that version is correct :)
+>>>=20
+>>=20
+>> Bah, ++
+>>=20
+>>>> +Contact:	Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>> +Description:
+>>>> +		READ:
+>>>> +		  Describe the state of all the slots of the beaglebone capemgr=
+=2E
+>>>> +		  Each line of the output describes a slot:
+>>>=20
+>>> sysfs files are "one value per file", so a sysfs file that displays
+>>> multiple lines like this is not allowed at all, sorry.
+>>>=20
+>>> Please either make it a debugfs file (if this is only for debugging=
+, or
+>>> split it out into individual files, one per slot (hint, one per slo=
+t is
+>>> probably best.)
+>>>=20
+>>=20
+>> Well, it=E2=80=99s a status file. And it=E2=80=99s been used as is f=
+or a couple of years
+>> so it was worth a shot for backward compatibility.
+>=20
+> There is not "backwards compatiblity" for when you do things wrong in
+> the first place, you can't claim that here, sorry.
+>=20
+> And don't "try" to introduce things you know is wrong, that just make=
+s
+> maintainers _very_ suspicious of everything else you are doing here=E2=
+=80=A6
+>=20
 
-[...]
+OK
 
-> This is an almost exact copy of drivers/rtc/rtc-da9063.c, apart from the
-> retry mechanism in read_time. Can you simply add support for the da9062
-> in that driver?
+>>>> +		  The slot format is as following:
+>>>> +		  <slot-id>: [P-][F-][O-][l-][L-][D-] \
+>>>> +			  <overlay-id> <board-name>,<version>,
+>>>> +			  <manufacturer>,<part-number>
+>>>> +
+>>>> +		Where the flags are:
+>>>> +		P: Slot has been probed
+>>>> +		F: Slot has failed probing (i.e. no EEPROM detected)
+>>>> +		O: Slot has been overridden by the user
+>>>> +		l: Slot is current loading
+>>>> +		L: Slot has completed loading and is ready
+>>>> +		D: Slot has been disabled
+>>>> +
+>>>> +		Example:
+>>>> +		0: P---L-  -1 BeagleBone RS232 CAPE,00A1,Beagleboardtoys,BB-BON=
+E-SERL-03
+>>>> +		1: PF----  -1
+>>>> +		2: PF----  -1
+>>>> +		3: PF----  -1
+>>>> +
+>>>> +		WRITE:
+>>>> +		  Writing a string of the form <part-number>[:version] issues a=
+ request to
+>>>> +		  load a firmware blob containing an overlay. The name of the f=
+irmware blob
+>>>> +		  is <part-number>-[version|00A0].dtbo. This act is defined as =
+a slot override.
+>>>> +
+>>>> +		  Writing a negative slot id removes the slot if it was an over=
+ridden one, or
+>>>> +		  unloads a slot that was probed.
+>>>> +
+>>>> +What:		/sys/devices/platform/bone_capemgr/baseboard/<eeprom-field=
+>
+>>>> +Date:		May 2015
+>>>> +KernelVersion:	4.0
+>>>> +Contact:	Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>> +Description:	Contains the probed base board EEPROM field; one of:
+>>>> +		board-name		- board-name as stored in cape EEPROM
+>>>> +		dc-supplied		- whether the cape draws or supplies DC
+>>>> +		eeprom-format-revision	- EEPROM format rev, only 00A0 supported
+>>>> +		header			- header; should be 'aa 55 33 ee'
+>>>=20
+>>> If it's always this value, why have the file?
+>>>=20
+>>=20
+>> These are the contents of the EEPROM. If the format of the EEPROM ch=
+anges then the
+>> header information will change.
+>=20
+> Then don't say "should be", because what happens in the future if it =
+is
+> not.
+>=20
 
+OK
 
-Hi Alexandre,
+>>>> +		manufacturer		- manufacturer string
+>>>> +		part-number		- part-number of the cape
+>>>> +		serial-number		- serial number of the cape
+>>>> +		version			- version of the cape, i.e. 00A0
+>>>> +		number-of-pins		- displayed but ignored
+>>>> +		pin-usage		- displayed but ignored
+>>>> +		sys-5v			- displayed but ignored
+>>>> +		vdd-3v3exp		- displayed but ignored
+>>>> +		vdd-5v			- displayed but ignored
+>>>=20
+>>> Are these all individual different files?
+>>>=20
+>>=20
+>> Yes
+>=20
+> Then write out the individual files please as different entries.
+>=20
+> Also, the "displayed but ignored" doesn't make sense, please fix that
+> up.
+>=20
 
-Something similar is being discussed for the OnKey component of the DA9062.
-https://lkml.org/lkml/2015/4/24/304
+OK
 
-It is only the OnKey and RTC components that are similar to the DA9063 chip
-and I was hoping to keep the 62 RTC separate in this case ... however it should
-definitely be possible to re-use the DA9063 RTC driver if this is your requirement.
-If this will block my submission of the DA9062 then I will drop the RTC from my
-next patch set and try to re-work the existing 63 RTC driver accordingly.
+> greg k-h
 
-I think this sort of thing has been done before:
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/rtc/rtc-pm8xxx.c
- ... at first glance -- it seems to support that sort of thing.
+Regards
 
-I guess it would be possible to rename the da9063-rtc to something more sensible like
-da9xxx-rtc.c if this goes ahead?
-
-Regards,
-Steve
+=E2=80=94 Pantelis
