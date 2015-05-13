@@ -1,130 +1,44 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH] ARM: tegra: Enable TPM on tegra124 nyan boards
-Date: Wed, 13 May 2015 08:13:47 -0600
-Message-ID: <1431526427-13340-1-git-send-email-sjg@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH] ARM: dts: am335x-bone* enable pmic-shutdown-controller
+Date: Wed, 13 May 2015 16:16:58 +0200
+Message-ID: <20150513141658.GB6605@localhost>
+References: <1431525001-5747-1-git-send-email-robertcnelson@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1431525001-5747-1-git-send-email-robertcnelson@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: tony@atomide.com, devicetree@vger.kernel.org, matthijsvanduin@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Regenerate the pinmux from the latest tegra-pinmux-scripts.
+On Wed, May 13, 2015 at 08:50:01AM -0500, Robert Nelson wrote:
+> Fixes: http://bugs.elinux.org/issues/143
+> 
+> Commit 672e2b147 which introduced proper shutdown chose to let the PMIC go into sleep-state (aka "RTC-only mode") rather than off-state. This was fine for rev A5 on which that patch was tested, but since then two changes have been made to the power supply scheme:
+> 
+> (rev A6) enable of the 3v3b regulator moved from LDO2 to LDO4 (3v3a)
+> side-effect: 3v3b rail remains on in sleep-mode (also in off-mode when battery-powered)
+> 
+> (rev A6A) am335x vdds supply moved from LDO3 to LDO1
+> side-effect: vdds remains supplied in sleep-mode
+> 
+> As a result heavy leakage occurs from vdds (directly) and 3v3b (via i/o pins) to the 3v3a. The amount of current depends on external connections, but for example leaving a serial console cable connected in this state resulted in serious violation of am335x absolute maximum ratings, with potential for hardware damage.
+> 
+> Reported-by: Matthijs van Duin <matthijsvanduin@gmail.com>
+> Tested-by: Matthijs van Duin <matthijsvanduin@gmail.com>
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Felipe Balbi <balbi@ti.com>
+> Cc: Johan Hovold <johan@kernel.org>
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
+This should go into stable as well:
 
- arch/arm/boot/dts/tegra124-nyan-big.dts   | 22 +++++++++++-----------
- arch/arm/boot/dts/tegra124-nyan-blaze.dts | 30 +++++++++++++++---------------
- 2 files changed, 26 insertions(+), 26 deletions(-)
+Fixes: 672e2b147413 ("ARM: dts: am335x-boneblack: enable power off and
+rtc wake up")
+Cc: stable <stable@vger.kernel.org>	# 3.19
+Acked-by: Johan Hovold <johan@kernel.org>
 
-diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts b/arch/arm/boot/dts/tegra124-nyan-big.dts
-index 2d21253..0eb2b0f 100644
---- a/arch/arm/boot/dts/tegra124-nyan-big.dts
-+++ b/arch/arm/boot/dts/tegra124-nyan-big.dts
-@@ -30,7 +30,7 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinmux_default>;
- 
--		pinmux_default: common {
-+		state_default: pinmux {
- 			clk_32k_out_pa0 {
- 				nvidia,pins = "clk_32k_out_pa0";
- 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-@@ -1098,19 +1098,19 @@
- 			};
- 			cam_i2c_scl_pbb1 {
- 				nvidia,pins = "cam_i2c_scl_pbb1";
--				nvidia,function = "rsvd3";
--				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
--				nvidia,tristate = <TEGRA_PIN_ENABLE>;
--				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
--				nvidia,open-drain = <TEGRA_PIN_DISABLE>;
-+				nvidia,function = "i2c3";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
-+				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
- 			};
- 			cam_i2c_sda_pbb2 {
- 				nvidia,pins = "cam_i2c_sda_pbb2";
--				nvidia,function = "rsvd3";
--				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
--				nvidia,tristate = <TEGRA_PIN_ENABLE>;
--				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
--				nvidia,open-drain = <TEGRA_PIN_DISABLE>;
-+				nvidia,function = "i2c3";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
-+				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
- 			};
- 			pbb3 {
- 				nvidia,pins = "pbb3";
-diff --git a/arch/arm/boot/dts/tegra124-nyan-blaze.dts b/arch/arm/boot/dts/tegra124-nyan-blaze.dts
-index 0d30c51..1fc0da9 100644
---- a/arch/arm/boot/dts/tegra124-nyan-blaze.dts
-+++ b/arch/arm/boot/dts/tegra124-nyan-blaze.dts
-@@ -26,7 +26,7 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinmux_default>;
- 
--		pinmux_default: common {
-+		state_default: pinmux {
- 			clk_32k_out_pa0 {
- 				nvidia,pins = "clk_32k_out_pa0";
- 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-@@ -437,18 +437,18 @@
- 			usb_vbus_en0_pn4 {
- 				nvidia,pins = "usb_vbus_en0_pn4";
- 				nvidia,function = "usb";
--				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
--				nvidia,open-drain = <TEGRA_PIN_DISABLE>;
-+				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
- 			};
- 			usb_vbus_en1_pn5 {
- 				nvidia,pins = "usb_vbus_en1_pn5";
- 				nvidia,function = "usb";
--				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
--				nvidia,open-drain = <TEGRA_PIN_DISABLE>;
-+				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
- 			};
- 			hdmi_int_pn7 {
- 				nvidia,pins = "hdmi_int_pn7";
-@@ -1094,19 +1094,19 @@
- 			};
- 			cam_i2c_scl_pbb1 {
- 				nvidia,pins = "cam_i2c_scl_pbb1";
--				nvidia,function = "rsvd3";
--				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
--				nvidia,tristate = <TEGRA_PIN_ENABLE>;
--				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
--				nvidia,open-drain = <TEGRA_PIN_DISABLE>;
-+				nvidia,function = "i2c3";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
-+				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
- 			};
- 			cam_i2c_sda_pbb2 {
- 				nvidia,pins = "cam_i2c_sda_pbb2";
--				nvidia,function = "rsvd3";
--				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
--				nvidia,tristate = <TEGRA_PIN_ENABLE>;
--				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
--				nvidia,open-drain = <TEGRA_PIN_DISABLE>;
-+				nvidia,function = "i2c3";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
-+				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
- 			};
- 			pbb3 {
- 				nvidia,pins = "pbb3";
--- 
-2.2.0.rc0.207.ga3a616c
+Thanks,
+Johan
