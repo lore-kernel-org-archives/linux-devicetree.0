@@ -1,67 +1,73 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] of: base: upgrade initcall level of of_init from core
- to pure
-Date: Wed, 13 May 2015 11:03:50 +0100
-Message-ID: <55532186.5060803@arm.com>
-References: <1431452282-10207-1-git-send-email-sudeep.holla@arm.com> <CAL_JsqJ19OfTJjtrZ9vs_9VYRHzOyF=GZdz4ftHT=nonEVWWgw@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCHv5 5/5] ARM: dts: Enable thermal_zone for exynos5422-odroidxu3
+Date: Wed, 13 May 2015 19:05:41 +0900
+Message-ID: <CAJKOXPc859+ne2P_V9ckznwEEcXSC8WRMkVRUEQAP97zXALAGA@mail.gmail.com>
+References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
+	<1431499020-3912-6-git-send-email-linux.amoon@gmail.com>
+	<CAJKOXPeNB=BXoY6CAxE8MNZ90cchhbdbUg3Xgef3qAgBR2UWJA@mail.gmail.com>
+	<CANAwSgTaM+Fthmu=bVjsg-5-iojWRS+om32APY=NDG5nK2iPQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ19OfTJjtrZ9vs_9VYRHzOyF=GZdz4ftHT=nonEVWWgw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgTaM+Fthmu=bVjsg-5-iojWRS+om32APY=NDG5nK2iPQQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/05/15 23:55, Rob Herring wrote:
-> On Tue, May 12, 2015 at 12:38 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
->> devices with an OF node") adds the symlink `of_node` for each device
->> pointing to it's device tree node while creating/initialising it.
+2015-05-13 17:39 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+> On 13 May 2015 at 13:10, Krzysztof Kozlowski <k.kozlowski@samsung.com=
+> wrote:
+>> 2015-05-13 15:37 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>>> Include exynos5-cpu-thermal.dtsi to enable thermal_zone support.
 >>
->> However the devicetree sysfs is created and setup in of_init which is
->> executed at core_initcall level. For all the devices created at the core
->> initcall before of_init, the following error is thrown:
->>          "Error -2(-ENOENT) creating of_node link"
+>> I am a little confused because you named this file as
+>> exynos5-cpu-thermal, meaning it is common for all Exynos5 boards. Bu=
+t:
+>> 1. It references some specific phandles like &fan0 (cooling-device =3D
+>> <&fan0 2 3>).
+>> 2. You include it only here.
+>>
+>> So the question: is "exynos5-cpu-thermal.dtsi" a generic thermal DTS=
+I?
+>> What is your intention?
+>>
+>> Lukasz, you acked the patchset, is it fine?
+>>
+>> Best regards,
+>> Krzysztof
 >
-> What devices have you seen the problem with? I'd rather see if those
-> devices could now be moved later.
+> Hi Krysxtof,
 >
-
-Yes that's exactly what I attempted first after seeing the issue, but
-failed miserably due to the dependency mentioned below.
-
-It's on vexpress platforms with the following initcall sequence:
-1. core - vexpress system control registers block(sysreg)
-2. postcore - vexpress configuration controllers(config-bridge)
-3. arch - customize_machine->of_platform_populate
-
-of_platform_populate creates amba_devices which need clocks and
-depend on the vexpress-config and clocks which in turn depends on
-vexpress-sysreg
-
-I would like to know if with commit 5590f3196b29 are we mandating
-all the device creation to be done only after core_initcall or
-is it OK get the errors mentioned above and ignore them as harmless
-as the comment in the code states:
-"An error here doesn't warrant bringing down the device"
-
->> Since the core_initcall is the earliest point where devices get
->> registered, push initcall level of of_init from core to pure so that
->> the devicetree sysfs is ready before any devices are registered.
+> This file almost similar to below patch
 >
-> Read the definition of pure:
->
->   * A "pure" initcall has no dependencies on anything else, and purely
->   * initializes variables that couldn't be statically initialized.
->
+> https://patchwork.kernel.org/patch/5693321/
 
-Yes I read and was bit hesitant initially to do this change, but found
-no better way. I posted mainly to discuss other possibilities to solve
-the issue.
+It is similar but it has major difference: it references external (to
+the file) phandle: fan0.
 
-Regards,
-Sudeep
+> I had to create this new file as I was not able to register
+> #thermal-sensors to tmu_cpu0.
+>
+> +       thermal-zones {
+> +               cpu0_thermal: cpu0-thermal {
+> +                       thermal-sensors =3D <&tmu_cpu0 0>;
+> +                       polling-delay-passive =3D <0>;
+> +                       polling-delay =3D <0>;
+>
+> Earlier the DTS sensor's were not getting registers to the tmu_cpu0 s=
+ensors.
+>
+> I am not aware If this file will be common to Exynos5 series.
+> I could not include any common dts file as I would through me
+> compilation error hence .dtsi  extension,
+
+So this looks exynos5420-odroidxu3 specific.
+
+=C5=81ukasz, does this design looks good to you? You acked this but:
+1. I cannot find your ack for patch 3/5.
+2. I have doubts. :)
+
+Best regards,
+Krzysztof
