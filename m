@@ -1,162 +1,88 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 4/5] doc: ABI: bone_capemgr sysfs API
-Date: Wed, 13 May 2015 14:56:49 +0300
-Message-ID: <28C3D47C-8D31-4DD9-8751-F72A7F09DF6F@konsulko.com>
-References: <1431503985-31853-1-git-send-email-pantelis.antoniou@konsulko.com> <1431503985-31853-5-git-send-email-pantelis.antoniou@konsulko.com> <20150513115259.GA1021@kroah.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150513115259.GA1021-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt_Cousso?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v1 00/13] ASoC: qcom: add support to apq8016 audio
+Date: Wed, 13 May 2015 12:58:22 +0100
+Message-ID: <1431518302-7139-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+Hi All,
 
-> On May 13, 2015, at 14:52 , Greg Kroah-Hartman <gregkh@linuxfoundatio=
-n.org> wrote:
->=20
-> On Wed, May 13, 2015 at 10:59:44AM +0300, Pantelis Antoniou wrote:
->> Document the beaglebone's capemgr sysfs API
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> ---
->> .../testing/sysfs-devices-platform-bone_capemgr    | 63 ++++++++++++=
-++++++++++
->> 1 file changed, 63 insertions(+)
->> create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-=
-bone_capemgr
->>=20
->> diff --git a/Documentation/ABI/testing/sysfs-devices-platform-bone_c=
-apemgr b/Documentation/ABI/testing/sysfs-devices-platform-bone_capemgr
->> new file mode 100644
->> index 0000000..e2df613
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-devices-platform-bone_capemgr
->> @@ -0,0 +1,63 @@
->> +What:		/sys/devices/platform/bone_capemgr/slots
->> +Date:		May 2015
->> +KernelVersion:	4.0
->=20
-> I don't think that version is correct :)
->=20
+Thankyou for reviewing the RFC patches, here is the v1 patchset after
+incorporating review comments from RFC. This patchset adds apq8016 audio
+support into lpass driver. Existing Lpass driver can not be used as-it-is for
+apq8016 as it contains code specific to ipq806x. Also the driver only supports
+single i2s port, single dma channel and single bitclk control.
 
-Bah, ++
+APQ8016 has 4 MI2S( Primary, Secondary, Tertiary, Quaternary) which can be routed
+to internal wcd codec or external codecs. This routing is controlled by 2 mux
+registers.
 
->> +Contact:	Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> +Description:
->> +		READ:
->> +		  Describe the state of all the slots of the beaglebone capemgr.
->> +		  Each line of the output describes a slot:
->=20
-> sysfs files are "one value per file", so a sysfs file that displays
-> multiple lines like this is not allowed at all, sorry.
->=20
-> Please either make it a debugfs file (if this is only for debugging, =
-or
-> split it out into individual files, one per slot (hint, one per slot =
-is
-> probably best.)
->=20
+This patch series firstly re-organizes the lpass driver such that the SOC
+specific bits are moved away from the driver. And secondly the SOC specifics
+are now passed as lpass variant data which would include various register
+offsets, dma channel allocations and SOC specific clock handling.
 
-Well, it=E2=80=99s a status file. And it=E2=80=99s been used as is for =
-a couple of years
-so it was worth a shot for backward compatibility.
+Finally the patchset add apq8016 lpass and machine driver.
 
+All these patches are tested for HDMI audio via adv7533 bridge and Analog audio
+on APQ8016-SBC and msm8916-mtp boards. I dont have access to ipq806x boards to
+test these patches.
 
->> +		  The slot format is as following:
->> +		  <slot-id>: [P-][F-][O-][l-][L-][D-] \
->> +			  <overlay-id> <board-name>,<version>,
->> +			  <manufacturer>,<part-number>
->> +
->> +		Where the flags are:
->> +		P: Slot has been probed
->> +		F: Slot has failed probing (i.e. no EEPROM detected)
->> +		O: Slot has been overridden by the user
->> +		l: Slot is current loading
->> +		L: Slot has completed loading and is ready
->> +		D: Slot has been disabled
->> +
->> +		Example:
->> +		0: P---L-  -1 BeagleBone RS232 CAPE,00A1,Beagleboardtoys,BB-BONE-=
-SERL-03
->> +		1: PF----  -1
->> +		2: PF----  -1
->> +		3: PF----  -1
->> +
->> +		WRITE:
->> +		  Writing a string of the form <part-number>[:version] issues a r=
-equest to
->> +		  load a firmware blob containing an overlay. The name of the fir=
-mware blob
->> +		  is <part-number>-[version|00A0].dtbo. This act is defined as a =
-slot override.
->> +
->> +		  Writing a negative slot id removes the slot if it was an overri=
-dden one, or
->> +		  unloads a slot that was probed.
->> +
->> +What:		/sys/devices/platform/bone_capemgr/baseboard/<eeprom-field>
->> +Date:		May 2015
->> +KernelVersion:	4.0
->> +Contact:	Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> +Description:	Contains the probed base board EEPROM field; one of:
->> +		board-name		- board-name as stored in cape EEPROM
->> +		dc-supplied		- whether the cape draws or supplies DC
->> +		eeprom-format-revision	- EEPROM format rev, only 00A0 supported
->> +		header			- header; should be 'aa 55 33 ee'
->=20
-> If it's always this value, why have the file?
->=20
+Thanks Kenneth for testing the RFC patches on Storm board.
 
-These are the contents of the EEPROM. If the format of the EEPROM chang=
-es then the
-header information will change.
+--srini
 
->> +		manufacturer		- manufacturer string
->> +		part-number		- part-number of the cape
->> +		serial-number		- serial number of the cape
->> +		version			- version of the cape, i.e. 00A0
->> +		number-of-pins		- displayed but ignored
->> +		pin-usage		- displayed but ignored
->> +		sys-5v			- displayed but ignored
->> +		vdd-3v3exp		- displayed but ignored
->> +		vdd-5v			- displayed but ignored
->=20
-> Are these all individual different files?
->=20
+Changes since RFC(https://lwn.net/Articles/642661/)
+ - droped cleanup patches, as they are already applied by Mark.
+ - prefixed shared functions with asoc_qcom_* as suggested by Kenneth
+ - made LPASS driver depended on OF.
+ - removed ipq806x specific bits from ipaif_reg.h
+ - removed no_osr clk flag as suggested by Mark and Kenneth
+ - fixed irq return values spotted by Kenneth
+ - renamed the machine file to apq8016-sbc.c as suggested by Kenneth.
+ - use dai->driver->id instead of dai->id as it breaks on Storm board.
 
-Yes
+Srinivas Kandagatla (13):
+  ASoC: qcom: make lpass driver depend on OF
+  ASoC: qcom: move ipq806x specific bits out of lpass driver.
+  ASoC: qcom: remove hardcoded i2s port number
+  ASoC: qcom: remove hardcoded dma channel
+  ASoC: qcom: support bitclk and osrclk per i2s port
+  ASoC: qcom: make osr clock optional
+  ASoC: qcom: add dma channel control offset to variant data
+  ASoC: qcom: Add ability to handle interrupts per dma channel
+  ASoC: qcom: add bit map to track static dma channel allocations
+  ASoC: qcom: Add apq8016 lpass driver support
+  ASoC: qcom: add apq8016 sound card support
+  ASoC: qcom: Document apq8016 bindings.
+  ASoC: qcom: document apq8016 sbc machine driver bindings
 
->> +What:		/sys/devices/platform/bone_capemgr/slot-<n>/<eeprom-field>
->=20
-> No blank line?
->=20
+ .../devicetree/bindings/sound/qcom,apq8016-sbc.txt |  61 ++++++
+ .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  13 +-
+ include/dt-bindings/sound/apq8016-lpass.h          |   9 +
+ sound/soc/qcom/Kconfig                             |  28 ++-
+ sound/soc/qcom/Makefile                            |   6 +
+ sound/soc/qcom/apq8016_sbc.c                       | 215 ++++++++++++++++++
+ sound/soc/qcom/lpass-apq8016.c                     | 242 +++++++++++++++++++++
+ sound/soc/qcom/lpass-cpu.c                         | 228 ++++++++++---------
+ sound/soc/qcom/lpass-ipq806x.c                     | 109 ++++++++++
+ sound/soc/qcom/lpass-lpaif-ipq806x.h               | 172 ---------------
+ sound/soc/qcom/lpass-lpaif-reg.h                   | 126 +++++++++++
+ sound/soc/qcom/lpass-platform.c                    | 196 +++++++++++------
+ sound/soc/qcom/lpass.h                             |  51 ++++-
+ 13 files changed, 1109 insertions(+), 347 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+ create mode 100644 include/dt-bindings/sound/apq8016-lpass.h
+ create mode 100644 sound/soc/qcom/apq8016_sbc.c
+ create mode 100644 sound/soc/qcom/lpass-apq8016.c
+ create mode 100644 sound/soc/qcom/lpass-ipq806x.c
+ delete mode 100644 sound/soc/qcom/lpass-lpaif-ipq806x.h
+ create mode 100644 sound/soc/qcom/lpass-lpaif-reg.h
 
-OK
-
->> +Date:		May 2015
->> +KernelVersion:	4.0
->> +Contact:	Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> +Description:	Contains the probed cape's EEPROM field; the field is =
-one of:
->> +		board-name		- baseboard name i.e. A335BNLT
->> +		header			- header; should be 'aa 55 33 ee'
->> +		revision		- baseboard revision
->> +		serial-number		- baseboard serial number
->> +		config-option		- displayed but ignored
->=20
-> Same here, are these all individual files?
->=20
-
-Yes.
-
-> thanks,
->=20
-> greg k-h
-
-Regards
-
-=E2=80=94 Pantelis
+-- 
+1.9.1
