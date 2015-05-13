@@ -1,120 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
-Date: Wed, 13 May 2015 15:27:31 +0200
-Message-ID: <3125409.QXbEmPolyh@wuerfel>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com> <CALszF6CS8Q9DWX+ERtu=k=Bzr1-25N3oZQyWyxDZBF3an4nFKQ@mail.gmail.com> <55534A5D.6050904@linaro.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [rtc-linux] [PATCH V1 3/6] rtc: da9062: DA9062 RTC driver
+Date: Wed, 13 May 2015 15:37:41 +0200
+Message-ID: <20150513133741.GY3338@piout.net>
+References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
+ <860a3b6dc7f8dac95c0e36967f24551af8805f7b.1429280614.git.stwiss.opensource@diasemi.com>
+ <20150510095838.GF3338@piout.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B22A3F3@SW-EX-MBX02.diasemi.com>
+ <20150513125858.GX3338@piout.net>
+ <55534BEF.7020409@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <55534A5D.6050904@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55534BEF.7020409@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>, Alessandro Zummo <a.zummo@towertech.it>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 May 2015 13:58:05 Daniel Thompson wrote:
-> On 13/05/15 12:45, Maxime Coquelin wrote:
-> > 2015-05-12 23:21 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
-> >> On Saturday 09 May 2015 09:53:56 Maxime Coquelin wrote:
-> >>> +#include  <dt-bindings/mfd/stm32f4-rcc.h>
-> >>> +
-> >>>
-> >>
-> >> Can you find a way to avoid this dependency?
-> >>
-> >> Maybe you can change the bindings so that the numbers you pass as
-> >> arguments to the reset and clock specifiers reflect the numbers that
-> >> the hardware use?
-> >
-> > If I understand correctly, you prefer the way I did in v7 [0]?
-
-Yes, that looks better. I would probably not list all the possible
-values in the binding though, when the intention is to use the
-hardware specific values, and being able to reuse the binding
-and driver for variations of the same chip.
-
-> > Note that doing that won't break the DT binary compatibility, as the
-> > raw reset values, or the ones from defines are the same.
-> >
-> > Daniel, could you share an example of the bindings you would use for the clocks?
+On 13/05/2015 at 06:04:47 -0700, Guenter Roeck wrote :
+> Don't know how this is handled for rtc drivers, but in other subsystems
+> we just live with the original name. I don't see a need to rename a driver
+> just because it starts supporting more hardware, and xxx is weird anyway
+> since it suggests everything from 000 to 999, which is much worse than
+> just sticking with 9063.
 > 
-> For the most cases, where there is a clock gate just before the 
-> peripheral it looks pretty much like the reset driver and I use the bit 
-> offset of the clock gating bit as the index.
 
-Is this bit always the same index as the one for the reset driver?
+Yes, in particular if at some point in time a new IP matching those xxx
+is completely different from the previous one. I'm not fond of renaming
+the driver either but if diasemi thinks that what they want, I'm open to
+let it happen. But clearly, I don't want to end up in a situation like
+the tlv320aic where you don't know which driver correspond to which
+chip:
 
-> However there are a couple of clocks without gating just before the 
-> clock reaches the peripheral:
-> 
-> 1. A hard coded /8. I think this will have to be given a synthetic
->     number.
+sound/soc/codecs/tlv320aic31xx.c
+sound/soc/codecs/tlv320aic31xx.h
+sound/soc/codecs/tlv320aic32x4.c
+sound/soc/codecs/tlv320aic32x4.h
+sound/soc/codecs/tlv320aic3x.c
+sound/soc/codecs/tlv320aic3x.h
+sound/soc/codecs/tlv320dac33.c
+sound/soc/codecs/tlv320dac33.h
 
-If this is just a divider, why not use a separate DT node for that,
-like this:
+Go figure that the tlv320aic3104 can be supported by both tlv320aic3x.c
+and tlv320aic32x4.c but not tlv320aic31xx.c...
 
-        clock {
-                compatible = "fixed-factor-clock";
-                clocks = <&parentclk>;
-                #clock-cells = <0>;
-                clock-div = <8>;
-                clock-mult = <1>;
-        };
-
-No need to assign a number for this.
-
-> 2. Ungated dividers. For these I am using the bit offset of the LSB of
->     the mux field.
-
-Do these ones also come with resets?
-
-> So I think there is only one value that is completely unrelated to the 
-> hardware and will use a magic constant instead.
-> 
-> I had planned to macros similar to the STM32F4_AxB_RESET() family of 
-> macros in both clk driver and DT in order to reuse the bit layouts from 
-> dt-bindings/mfd/stm32f4-rcc.h .
-> 
-> Normal case would have looked like this:
-> 
->                 timer3: timer@40000000 {
->                         compatible = "st,stm32-timer";
->                         reg = <0x40000000 0x400>;
->                         interrupts = <28>;
->                         resets = <&rcc STM32F4_APB1_RESET(TIM3)>;
->                         clocks = <&rcc STM32F4_APB1_CLK(TIM3)>;
->                         status = "disabled";
->                 };
-> 
-> Without the macros it looks like this:
-> 
->                 timer3: timer@40000000 {
->                         compatible = "st,stm32-timer";
->                         reg = <0x40000000 0x400>;
->                         interrupts = <28>;
->                         resets = <&rcc 257>;
->                         clocks = <&rcc 513>;
->                         status = "disabled";
->                 };
-> 
-> However we could perhaps be more literate even if we don't use the macros?
-> 
->                 timer3: timer@40000000 {
->                         compatible = "st,stm32-timer";
->                         reg = <0x40000000 0x400>;
->                         interrupts = <28>;
->                         resets = <&rcc ((0x20*8) + 1)>;
->                         clocks = <&rcc ((0x40*8) + 1)>;
->                         status = "disabled";
->                 };
-
-How about #address-cells = <2>, so you can do
-
-		resets = <&rcc 8 1>;
-		clocks = <&rcc 8 1>;
-
-with the first cell being an index for the block and the second cell the
-bit number within that block.
-
-	Arnd
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
