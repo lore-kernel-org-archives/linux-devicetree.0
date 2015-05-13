@@ -1,81 +1,89 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv5 2/5] ARM: dts: Odroid-XU3 Enable TMU at Exynos5422 base
-Date: Wed, 13 May 2015 14:15:15 +0530
-Message-ID: <CANAwSgQj4Hswi2B-7+oFCxSWoau5ffHJp6h1pZ+qikdvTrLDgQ@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
- <1431499020-3912-3-git-send-email-linux.amoon@gmail.com> <CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
- <CANAwSgQ=30j4A_nCd26kzxi=rdsh32+Srwuc5EaJigLhJ2r4jA@mail.gmail.com> <CAJKOXPfC9nGEsYJ3qJ6m_iMsB=D8_6sOEpLQzEvmLry5zS5j3g@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] gpio: Add GPIO support for Broadcom STB SoCs
+Date: Wed, 13 May 2015 10:52:17 +0200
+Message-ID: <CACRpkdbz=3xkU0ZELHs=11+OO=KARvS8MMe7_abGei1Egq+Ptw@mail.gmail.com>
+References: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
+	<1430901477-10678-3-git-send-email-gregory.0xf0@gmail.com>
+	<CACRpkdbzjdmtiou0gURKBRV2QEQqnbrdTA1523Q5ZkYxA-vpYw@mail.gmail.com>
+	<CADtm3G58RqWdbigVy52C6rzoiEAS41WnAJHHeGui+V-ypMec5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPfC9nGEsYJ3qJ6m_iMsB=D8_6sOEpLQzEvmLry5zS5j3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADtm3G58RqWdbigVy52C6rzoiEAS41WnAJHHeGui+V-ypMec5w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory Fong <gregory.0xf0@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 13 May 2015 at 14:02, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> 2015-05-13 17:21 GMT+09:00 Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> On 13 May 2015 at 12:51, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->>>> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
->>>> device.
->>>>
->>>> Tested-by: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
->>>> Acked-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 25 +++++++++++++++++++++++++
->>>>  1 file changed, 25 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>>> index 9446e28..cd78816 100644
->>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>>> @@ -319,6 +319,31 @@
->>>>                 #cooling-cells = <2>;
->>>>                 cooling-levels = <0 130 170 230>;
->>>>         };
->>>> +
->>>> +       tmu@10060000 {
->>>
->>> Here and for other overrides please use label notation, like:
->>>
->>> &tmu_cpu0 {
->>>               ...
->>> };
->>>
->>>> +               vtmu-supply = <&ldo10_reg>;
->>>
->>> I am curious, how did you find that LDO10 supplies TMU unit?
->>>
->>> Best regards,
->>> Krzysztof
->>
->> Hi Krzysztof,
->>
->> I have re-base my work on earlier Lukasz Majewski patches.
->>
->> https://patchwork.kernel.org/patch/5693201/
+On Tue, May 12, 2015 at 8:46 PM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
+> On Tue, May 12, 2015 at 3:55 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+
+>> Usually we don't like it when you hardcode gpio_base, and this
+>> field should anyway be present inside the bgpio_chip.gc.base
+>> isn't it?
 >
-> NAK.
-> I am sorry, but this is not sufficient explanation. Actually such
-> explanation could mean that you did just blindly copied everything
-> instead of developing it.
+> This was needed to deal with having a single irq_chip shared across
+> all of the gpio_chips in a GIO block.  You mentioned that this might
+> not be the Right Way to do this in your reply on the cover page so
+> I'll try to explain the reasoning better there.
 >
-> You cannot use some regulator here just because some Exynos4 boards
-> use it. You have to be sure that this regulator supplies this part of
-> SoC or device.
+> FWIW: yes, this is inside the first bank's bgpio_chip, and it would be
+> possible to extract that info.  However, since it is used in
+> - brcmstb_gpio_to_irq
+> - brcmstb_gpio_hwirq_to_offset
+> - brcmstb_gpio_irq_bank_handler
+> - brcmstb_gpio_of_xlate
+>
+> It seemed like it would be easier to follow if this were just stored
+> this in the priv struct, even if it is duplication of information.
 
-Hi Krzysztof,
+OK I see. Even if you go for the approach I suggest in the cover
+letter it is indeed necessary to keep track of the base I
+can see, since we span multiple gpio_chips So it's fine with a
+local variable for this.
 
-Ok as if now I don't clearly know how I works. But I will study the
-regulators and update it.
+>>> +               gc->base = gpio_base;
+>>
+>> I strongly suggest that you try using -1 as base here instead
+>> for dynamic assignment of GPIO numbers.
+>
+> That is what I did originally.  However, this results in a very
+> unpleasant numbering scheme, at least as currently implemented.
+>
+> When -1 is base, as you know, numbering goes descending from 255
+> (IIRC).  Right now I'm using the of_property_for_each_u32 loop over
+> bank widths to go through the banks.  To keep the example
+> straightforward, let's pretend our GIO block only has two banks.
+> Here's how they're arranged:
+>
+> bank 0: starts at 0xf040a700, contains GPIOs 0-31
+> bank 1: starts at 0xf040a720, contains GPIOs 32-63
+>
+> Right now, with -1 as base, calling gpiochip_add() inside of that loop
+> will results in them getting this numbering:
+>
+> bank 0: linux GPIOs 224-255
+> bank 1: linux GPIOs 192-223
 
-Lukasz Majewski could you help me out on how it suppose to be,
+Yeah I kind of think it's a feature because we don't want people
+to rely on the static GPIO numbering ;)
 
--Anand Moon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Buy OK yeah I see the point. Let's keep the base static for
+now.
+
+> Looking at this now, I think I could just add another loop afterward
+> to do the gpiochip_add()'s in reverse order, resulting in the
+> numbering ascending with banks as expected.  Does this seem sensible?
+
+No, that relies on the internal semantic structure of the
+gpiolib. It's better to use .base as a hint then.
+
+>> And this mask also mask the unused pins as GIO_MASK()
+>> does not respect bank_width.
+>
+> I'll be getting rid of imask anyway as you suggested.
+
+Awesome.
+
+Yours,
+Linus Walleij
