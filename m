@@ -1,58 +1,37 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv2] ARM: socfpga: dts: Add a clock node for sdmmc CIU
-Date: Wed, 13 May 2015 11:09:36 -0700
-Message-ID: <20150513180936.GG15988@codeaurora.org>
-References: <1429027519-22209-1-git-send-email-dinguyen@opensource.altera.com>
- <20150513075438.GE15988@codeaurora.org>
- <5553671E.3070301@opensource.altera.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 00/11] mtd: nand: add Broadcom NAND controller support
+Date: Wed, 13 May 2015 11:14:47 -0700
+Message-ID: <20150513181447.GD11598@ld-irv-0074>
+References: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
+ <5553903B.9030605@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5553671E.3070301-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <5553903B.9030605-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, setka-3PjVBYxTQDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13, Dinh Nguyen wrote:
-> 
-> 
-> On 5/13/15 2:54 AM, Stephen Boyd wrote:
-> > On 04/14, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> >> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> >>
-> >> The CIU(Card Interface Unit) get its clock from the sdmmc_clk_divided clock
-> >> which is used to clock the card. The sdmmc_clk_divided clock is the sdmmc_clk
-> >> passed through a fixed divider of 4. This patch adds the sdmmc_clk_divided
-> >> node and makes the sdmmc_clk it's parent.
-> >>
-> >> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> >> ---
+On Wed, May 13, 2015 at 10:56:11AM -0700, Florian Fainelli wrote:
+> On 12/05/15 17:53, Brian Norris wrote:
+> > Hi,
 > > 
-> > Is this a fix of some sort? I'm confused why this was sent to the
-> > clk maintainers when it seems to be more appropriate to go
-> > through the arm-soc tree.
+> > This is the fourth (and final?) version of support for the Broadcom BCM7xxx
+> > Set-Top Box NAND controller. This controller has been used in a variety of
+> > Broadcom SoCs.
 > > 
+> > Tested to work on Cygnus, BCM7445, and BCM63138.
 > 
-> Ok, sorry about that. I thought since it was clock nodes, it would
-> appropriate to CC clk maintainers.
+> Applied patches 4, 9 and 10 to devicetree/next, the others should go via
+> your tree, right?
 
-Sure, Cc is fine, but I believe the mail was sent "To" us so that
-led to my confusion.
+Yes. Not sure if I'll be reworking the others any more based on Arnd's
+comments, but at least the device tree stuff has stabilized, I expect.
 
-> 
-> BTW, can I take patches from drivers/clk/socfpga/* through the arm-soc
-> tree or would that go through you guys?
-> 
-
-Unless there's some sort of complicated dependency between the
-clk tree and the arm-soc tree I'd prefer any patches against
-drivers/clk/* go through the clk tree.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks,
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
