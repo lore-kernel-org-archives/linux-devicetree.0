@@ -1,116 +1,55 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH v4 07/11] mtd: brcmnand: add support for Broadcom's IPROC
- family
-Date: Tue, 12 May 2015 17:53:40 -0700
-Message-ID: <1431478424-29230-8-git-send-email-computersforpeace@gmail.com>
-References: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
+From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
+ for cygnus
+Date: Tue, 12 May 2015 18:03:40 -0700
+Message-ID: <5552A2EC.2060804@broadcom.com>
+References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com> <5543CD73.2030902@broadcom.com> <20150501203004.3add2c95@lxorguk.ukuu.org.uk> <9193036.7UYD2OGJHk@wuerfel> <554D1649.2030106@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Kevin Cernekee <cernekee@gmail.com>, Corneliu Doban <cdoban@broadcom.com>, Ray Jui <rjui@broadcom.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, linux-kernel@vger.kernel.org, Dan Ehrenberg <dehrenberg@chromium.org>, Jonathan Richardson <jonathar@broadcom.com>, Anatol Pomazao <anatol@google.com>, Gregory Fong <gregory.0xf0@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dtor@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <554D1649.2030106-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Darren Edamura <dedamura-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogQnJpYW4gTm9ycmlzIDxjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20+
-Ci0tLQp2NDogc3BsaXQgaW50byBpdHMgb3duIHByb3BlciBwbGF0Zm9ybSBkcml2ZXIKCiBkcml2
-ZXJzL210ZC9uYW5kL2JyY21uYW5kL01ha2VmaWxlICAgICB8ICAgMyArCiBkcml2ZXJzL210ZC9u
-YW5kL2JyY21uYW5kL2lwcm9jX25hbmQuYyB8IDE1MCArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMTUzIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBkcml2ZXJzL210ZC9uYW5kL2JyY21uYW5kL2lwcm9jX25hbmQuYwoKZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvbXRkL25hbmQvYnJjbW5hbmQvTWFrZWZpbGUgYi9kcml2ZXJzL210ZC9uYW5k
-L2JyY21uYW5kL01ha2VmaWxlCmluZGV4IGI3YjI0ZjgyNzdjYy4uZTc4YzNiOTMyZmQxIDEwMDY0
-NAotLS0gYS9kcml2ZXJzL210ZC9uYW5kL2JyY21uYW5kL01ha2VmaWxlCisrKyBiL2RyaXZlcnMv
-bXRkL25hbmQvYnJjbW5hbmQvTWFrZWZpbGUKQEAgLTEsMiArMSw1IEBACisjIGxpbmsgb3JkZXIg
-bWF0dGVyczsgZG9uJ3QgbGluayB0aGUgbW9yZSBnZW5lcmljIGJyY21zdGJfbmFuZC5vIGJlZm9y
-ZSB0aGUKKyMgbW9yZSBzcGVjaWZpYyBpcHJvY19uYW5kLm8sIGZvciBpbnN0YW5jZQorb2JqLSQo
-Q09ORklHX01URF9OQU5EX0JSQ01TVEIpCQkrPSBpcHJvY19uYW5kLm8KIG9iai0kKENPTkZJR19N
-VERfTkFORF9CUkNNU1RCKQkJKz0gYnJjbXN0Yl9uYW5kLm8KIG9iai0kKENPTkZJR19NVERfTkFO
-RF9CUkNNU1RCKQkJKz0gYnJjbW5hbmQubwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvbmFuZC9i
-cmNtbmFuZC9pcHJvY19uYW5kLmMgYi9kcml2ZXJzL210ZC9uYW5kL2JyY21uYW5kL2lwcm9jX25h
-bmQuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjY4MzQ5NWM3NDYy
-MAotLS0gL2Rldi9udWxsCisrKyBiL2RyaXZlcnMvbXRkL25hbmQvYnJjbW5hbmQvaXByb2NfbmFu
-ZC5jCkBAIC0wLDAgKzEsMTUwIEBACisvKgorICogQ29weXJpZ2h0IMKpIDIwMTUgQnJvYWRjb20g
-Q29ycG9yYXRpb24KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNh
-biByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQorICogaXQgdW5kZXIgdGhlIHRlcm1zIG9m
-IHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMKKyAqIHB1Ymxpc2hl
-ZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLgorICoKKyAqIFRoaXMgcHJvZ3JhbSBp
-cyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLAorICogYnV0
-IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkg
-b2YKKyAqIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9T
-RS4gU2VlIHRoZQorICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWls
-cy4KKyAqLworCisjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+CisjaW5jbHVkZSA8bGludXgvaW8u
-aD4KKyNpbmNsdWRlIDxsaW51eC9pb3BvcnQuaD4KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4K
-KyNpbmNsdWRlIDxsaW51eC9vZi5oPgorI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KKyNp
-bmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+
-CisKKyNpbmNsdWRlICJicmNtbmFuZC5oIgorCitzdHJ1Y3QgaXByb2NfbmFuZF9zb2NfcHJpdiB7
-CisJdm9pZCBfX2lvbWVtICppZG1fYmFzZTsKKwl2b2lkIF9faW9tZW0gKmV4dF9iYXNlOworCXNw
-aW5sb2NrX3QgaWRtX2xvY2s7Cit9OworCisjZGVmaW5lIElQUk9DX05BTkRfQ1RMUl9SRUFEWV9P
-RkZTRVQgICAgICAgMHgxMAorI2RlZmluZSBJUFJPQ19OQU5EX0NUTFJfUkVBRFkgICAgICAgICAg
-ICAgIEJJVCgwKQorCisjZGVmaW5lIElQUk9DX05BTkRfSU9fQ1RSTF9PRkZTRVQgICAgICAgICAg
-MHgwMAorI2RlZmluZSBJUFJPQ19OQU5EX0FQQl9MRV9NT0RFICAgICAgICAgICAgIEJJVCgyNCkK
-KyNkZWZpbmUgSVBST0NfTkFORF9JTlRfQ1RSTF9SRUFEX0VOQUJMRSAgICBCSVQoNikKKworc3Rh
-dGljIGJvb2wgaXByb2NfbmFuZF9pbnRjX2FjayhzdHJ1Y3QgYnJjbW5hbmRfc29jICpzb2MpCit7
-CisJc3RydWN0IGlwcm9jX25hbmRfc29jX3ByaXYgKnByaXYgPSBzb2MtPnByaXY7CisJdm9pZCBf
-X2lvbWVtICptbWlvID0gcHJpdi0+ZXh0X2Jhc2UgKyBJUFJPQ19OQU5EX0NUTFJfUkVBRFlfT0ZG
-U0VUOworCXUzMiB2YWwgPSBicmNtbmFuZF9yZWFkbChtbWlvKTsKKworCWlmICh2YWwgJiBJUFJP
-Q19OQU5EX0NUTFJfUkVBRFkpIHsKKwkJYnJjbW5hbmRfd3JpdGVsKElQUk9DX05BTkRfQ1RMUl9S
-RUFEWSwgbW1pbyk7CisJCXJldHVybiB0cnVlOworCX0KKworCXJldHVybiBmYWxzZTsKK30KKwor
-c3RhdGljIHZvaWQgaXByb2NfbmFuZF9pbnRjX3NldChzdHJ1Y3QgYnJjbW5hbmRfc29jICpzb2Ms
-IGJvb2wgZW4pCit7CisJc3RydWN0IGlwcm9jX25hbmRfc29jX3ByaXYgKnByaXYgPSBzb2MtPnBy
-aXY7CisJdm9pZCBfX2lvbWVtICptbWlvID0gcHJpdi0+aWRtX2Jhc2UgKyBJUFJPQ19OQU5EX0lP
-X0NUUkxfT0ZGU0VUOworCXUzMiB2YWw7CisJdW5zaWduZWQgbG9uZyBmbGFnczsKKworCXNwaW5f
-bG9ja19pcnFzYXZlKCZwcml2LT5pZG1fbG9jaywgZmxhZ3MpOworCisJdmFsID0gYnJjbW5hbmRf
-cmVhZGwobW1pbyk7CisKKwlpZiAoZW4pCisJCXZhbCB8PSBJUFJPQ19OQU5EX0lOVF9DVFJMX1JF
-QURfRU5BQkxFOworCWVsc2UKKwkJdmFsICY9IH5JUFJPQ19OQU5EX0lOVF9DVFJMX1JFQURfRU5B
-QkxFOworCisJYnJjbW5hbmRfd3JpdGVsKHZhbCwgbW1pbyk7CisKKwlzcGluX3VubG9ja19pcnFy
-ZXN0b3JlKCZwcml2LT5pZG1fbG9jaywgZmxhZ3MpOworfQorCitzdGF0aWMgdm9pZCBpcHJvY19u
-YW5kX2FwYl9hY2Nlc3Moc3RydWN0IGJyY21uYW5kX3NvYyAqc29jLCBib29sIHByZXBhcmUpCit7
-CisJc3RydWN0IGlwcm9jX25hbmRfc29jX3ByaXYgKnByaXYgPSBzb2MtPnByaXY7CisJdm9pZCBf
-X2lvbWVtICptbWlvID0gcHJpdi0+aWRtX2Jhc2UgKyBJUFJPQ19OQU5EX0lPX0NUUkxfT0ZGU0VU
-OworCXUzMiB2YWw7CisJdW5zaWduZWQgbG9uZyBmbGFnczsKKworCXNwaW5fbG9ja19pcnFzYXZl
-KCZwcml2LT5pZG1fbG9jaywgZmxhZ3MpOworCisJdmFsID0gYnJjbW5hbmRfcmVhZGwobW1pbyk7
-CisKKwlpZiAocHJlcGFyZSkKKwkJdmFsIHw9IElQUk9DX05BTkRfQVBCX0xFX01PREU7CisJZWxz
-ZQorCQl2YWwgJj0gfklQUk9DX05BTkRfQVBCX0xFX01PREU7CisKKwlicmNtbmFuZF93cml0ZWwo
-dmFsLCBtbWlvKTsKKworCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnByaXYtPmlkbV9sb2NrLCBm
-bGFncyk7Cit9CisKK3N0YXRpYyBpbnQgaXByb2NfbmFuZF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQoreworCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7CisJc3Ry
-dWN0IGlwcm9jX25hbmRfc29jX3ByaXYgKnByaXY7CisJc3RydWN0IGJyY21uYW5kX3NvYyAqc29j
-OworCXN0cnVjdCByZXNvdXJjZSAqcmVzOworCisJc29jID0gZGV2bV9remFsbG9jKGRldiwgc2l6
-ZW9mKCpzb2MpLCBHRlBfS0VSTkVMKTsKKwlpZiAoIXNvYykKKwkJcmV0dXJuIC1FTk9NRU07CisK
-Kwlwcml2ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpwcml2KSwgR0ZQX0tFUk5FTCk7CisJ
-aWYgKCFwcml2KQorCQlyZXR1cm4gLUVOT01FTTsKKworCXNwaW5fbG9ja19pbml0KCZwcml2LT5p
-ZG1fbG9jayk7CisKKwlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsIElP
-UkVTT1VSQ0VfTUVNLCAiaXByb2MtaWRtIik7CisJcHJpdi0+aWRtX2Jhc2UgPSBkZXZtX2lvcmVt
-YXBfcmVzb3VyY2UoZGV2LCByZXMpOworCWlmIChJU19FUlIocHJpdi0+aWRtX2Jhc2UpKQorCQly
-ZXR1cm4gUFRSX0VSUihwcml2LT5pZG1fYmFzZSk7CisKKwlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVz
-b3VyY2VfYnluYW1lKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAiaXByb2MtZXh0Iik7CisJcHJpdi0+
-ZXh0X2Jhc2UgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOworCWlmIChJU19FUlIo
-cHJpdi0+ZXh0X2Jhc2UpKQorCQlyZXR1cm4gUFRSX0VSUihwcml2LT5leHRfYmFzZSk7CisKKwlz
-b2MtPnBkZXYgPSBwZGV2OworCXNvYy0+cHJpdiA9IHByaXY7CisJc29jLT5jdGxyZHlfYWNrID0g
-aXByb2NfbmFuZF9pbnRjX2FjazsKKwlzb2MtPmN0bHJkeV9zZXRfZW5hYmxlZCA9IGlwcm9jX25h
-bmRfaW50Y19zZXQ7CisJc29jLT5wcmVwYXJlX2RhdGFfYnVzID0gaXByb2NfbmFuZF9hcGJfYWNj
-ZXNzOworCisJcmV0dXJuIGJyY21uYW5kX3Byb2JlKHBkZXYsIHNvYyk7Cit9CisKK3N0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGlwcm9jX25hbmRfb2ZfbWF0Y2hbXSA9IHsKKwl7IC5j
-b21wYXRpYmxlID0gImJyY20sbmFuZC1pcHJvYyIgfSwKKwl7fSwKK307CitNT0RVTEVfREVWSUNF
-X1RBQkxFKG9mLCBpcHJvY19uYW5kX29mX21hdGNoKTsKKworc3RhdGljIHN0cnVjdCBwbGF0Zm9y
-bV9kcml2ZXIgaXByb2NfbmFuZF9kcml2ZXIgPSB7CisJLnByb2JlCQkJPSBpcHJvY19uYW5kX3By
-b2JlLAorCS5yZW1vdmUJCQk9IGJyY21uYW5kX3JlbW92ZSwKKwkuZHJpdmVyID0geworCQkubmFt
-ZQkJPSAiaXByb2NfbmFuZCIsCisJCS5wbQkJPSAmYnJjbW5hbmRfcG1fb3BzLAorCQkub2ZfbWF0
-Y2hfdGFibGUJPSBpcHJvY19uYW5kX29mX21hdGNoLAorCX0KK307Cittb2R1bGVfcGxhdGZvcm1f
-ZHJpdmVyKGlwcm9jX25hbmRfZHJpdmVyKTsKKworTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwor
-TU9EVUxFX0FVVEhPUigiQnJpYW4gTm9ycmlzIik7CitNT0RVTEVfQVVUSE9SKCJSYXkgSnVpIik7
-CitNT0RVTEVfREVTQ1JJUFRJT04oIk5BTkQgZHJpdmVyIGZvciBCcm9hZGNvbSBJUFJPQy1iYXNl
-ZCBTb0NzIik7Ci0tIAoxLjkuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+A bit more info is required here.
+
+> Get timestamp: This is a bit more complicated. Currently the PTP driver
+> does list management for timestamps from external timestamp channels.
+> Timestamps from all channels go into the same list. In our driver we
+> have a s/w FIFO for each client and it closely matches the h/w FIFO and
+> handles any overflow. We would like to keep it this way because it also
+> allows multiple user space processes to only fetch timestamps for the
+> client it's handling. We could add a new ioctl to get a timestamp from
+> the driver instead of doing it through ptp_read() but it would be nice
+> if we could let ptp_read() allow the driver to do timestamp management
+> instead of PTP. Maybe provide an option to obtain the timestamps from a
+> container in the driver instead of the one managed by PTP. I like being
+> able to use read/poll to obtain data instead of polling the kernel with
+> ioctls as we are currently doing. Also, avoiding the kmalloc in ptp_read
+> would be nice because this of the frequency it would be called at. Do
+> you have any preference on how to handle this?
+> 
+> I've tried to minimize the changes to PTP.
+
+Using read() we can't specify a channel to get the timestamp for. It
+would imply that one user space process would have to read timestamps
+for all channels/clients and then leave it up to user space IPC to get
+them to other processes, which isn't great. That means either we
+introduce an ioctl such as the DTE_GET_TIMESTAMP we had before which
+allows us to specify a channel, or we need to look at creating one dev
+node per external timestamping channel.
+
+The ioctl limitation is that it pounds the kernel polling for timestamps
+and the multiple dev nodes per channel is a big change to PTP. I will
+have to look further into this to really have a good idea of what the
+implications would be. Advice/ideas?
+
+Thanks.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
