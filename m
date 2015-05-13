@@ -1,58 +1,44 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv5 2/5] ARM: dts: Odroid-XU3 Enable TMU at Exynos5422 base
-Date: Wed, 13 May 2015 13:51:30 +0530
-Message-ID: <CANAwSgQ=30j4A_nCd26kzxi=rdsh32+Srwuc5EaJigLhJ2r4jA@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
- <1431499020-3912-3-git-send-email-linux.amoon@gmail.com> <CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v7 0/4] ARM: SoC: add a new platform, UniPhier
+ (arch/arm/mach-uniphier)
+Date: Wed, 13 May 2015 11:32:34 +0300
+Message-ID: <20150513083234.GP2558@tarshish>
+References: <1431058034-5508-1-git-send-email-yamada.masahiro@socionext.com>
+ <2101307.fSn8Z2ZyBq@wuerfel>
+ <CAK7LNASyJmyUcKNecdhWjXbd615=9XcMxeLxC7y_z+psO03BbQ@mail.gmail.com>
+ <2230140.n6kW8LSSaP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2230140.n6kW8LSSaP@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 May 2015 at 12:51, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
->> device.
->>
->> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
->> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
->> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->> ---
->>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 25 +++++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->> index 9446e28..cd78816 100644
->> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->> @@ -319,6 +319,31 @@
->>                 #cooling-cells = <2>;
->>                 cooling-levels = <0 130 170 230>;
->>         };
->> +
->> +       tmu@10060000 {
->
-> Here and for other overrides please use label notation, like:
->
-> &tmu_cpu0 {
->               ...
-> };
->
->> +               vtmu-supply = <&ldo10_reg>;
->
-> I am curious, how did you find that LDO10 supplies TMU unit?
->
-> Best regards,
-> Krzysztof
+Hi Arnd,
 
-Hi Krzysztof,
+On Wed, May 13, 2015 at 09:48:33AM +0200, Arnd Bergmann wrote:
+> For sending pull requests, it would be good to have a gpg key that
+> is signed by other well-known kernel developers. If you have such
+> a key, you can also request a kernel.org account to host a git tree
+> there, or you can host a git tree somewhere on your company's domain.
+> A public hosting service like github is not as good for us, but we
+> can deal with it when you are still ramping up your infrastructure.
+> Let me know if you need help finding kernel developers to sign your key.
 
-I have re-base my work on earlier Lukasz Majewski patches.
+Is a pull request from a kernel.org repo trusted more than the key itself? In 
+other words, if I sign my pull request with a trusted key, why would the git 
+repo location make any difference?
 
-https://patchwork.kernel.org/patch/5693201/
+baruch
 
--Anand Moon
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
