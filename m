@@ -1,37 +1,39 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCHv5 1/5] ARM: dts: exynos5422-odroidxu3 Add pwm-fan node
- tothe Odroid-XU3 board
-Date: Wed, 13 May 2015 17:17:42 +0900
-Message-ID: <555308A6.308@kernel.org>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com> <1431499020-3912-2-git-send-email-linux.amoon@gmail.com> <CAJKOXPefJwqvfZPDovQ6EjEOBfuJkidgeYDF_=KC9O+=2=_KoQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 00/12] ARM: shmobile: dts: Add overlays for various
+ serial ports
+Date: Wed, 13 May 2015 10:19:58 +0200
+Message-ID: <CAMuHMdXhLUJqpdAZc7X==s6cyeBdf7TVdJi7JtA1jC_V=hEXsQ@mail.gmail.com>
+References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be>
+	<D9B202C5-6460-4217-9F58-67078C3DB9B1@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPefJwqvfZPDovQ6EjEOBfuJkidgeYDF_=KC9O+=2=_KoQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Anand Moon <linux.amoon@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Markus Reichl <m.reichl@fivetechno.de>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <D9B202C5-6460-4217-9F58-67078C3DB9B1@konsulko.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/15 16:11, Krzysztof Kozlowski wrote:
-> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->> Add pwm-fan node to the Odroid-XU3 board.
->>
->> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
->> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
->> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> 
-> Please fix the title of commit (missing colon, duplicated name of board) to:
-> "ARM: dts: exynos5422-odroidxu3: Add pwm-fan node"
-> 
-Well, I'd preferred to use the following format:
-"ARM: dts: add pwm-fan node for exynos5422-odroidxu3"
+Hi Pantelis,
 
-But I can change it when I apply it ;-)
+On Wed, May 13, 2015 at 10:16 AM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
+>>  - The overlay sources use full paths to refer to the device nodes for
+>>    creating aliases, as path references (unlike phandle references) are
+>>    not yet supported by overlays.
+>
+> Hmm, phandle references are completely supported. You just have to remember
+> to build your base tree with the -@ option to generate the fixups :)
 
-> Rest looks good:
-> Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
-Thanks,
-Kukjin
+The aliases need _path_ references.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
