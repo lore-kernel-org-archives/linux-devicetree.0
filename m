@@ -1,73 +1,55 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH/RFC v6 4/7] PM / Domains: Add DT bindings for PM QoS
- device latencies
-Date: Wed, 13 May 2015 10:36:21 +0200
-Message-ID: <CAPDyKFp=FK1ietZdx4fkRF0j_i1me8f+w5YasFHHyBCARwAr+Q@mail.gmail.com>
-References: <1430138622-14029-1-git-send-email-geert+renesas@glider.be>
-	<1430138622-14029-5-git-send-email-geert+renesas@glider.be>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv5 5/5] ARM: dts: Enable thermal_zone for exynos5422-odroidxu3
+Date: Wed, 13 May 2015 14:09:43 +0530
+Message-ID: <CANAwSgTaM+Fthmu=bVjsg-5-iojWRS+om32APY=NDG5nK2iPQQ@mail.gmail.com>
+References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
+ <1431499020-3912-6-git-send-email-linux.amoon@gmail.com> <CAJKOXPeNB=BXoY6CAxE8MNZ90cchhbdbUg3Xgef3qAgBR2UWJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1430138622-14029-5-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Axel Haslam <ahaslam@baylibre.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPeNB=BXoY6CAxE8MNZ90cchhbdbUg3Xgef3qAgBR2UWJA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 April 2015 at 14:43, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> PM QoS device start/stop are properties of the hardware.
-> In legacy code, they're specified from platform code.
-> On DT platforms, their values should come from DT.
+On 13 May 2015 at 13:10, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+> 2015-05-13 15:37 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>> Include exynos5-cpu-thermal.dtsi to enable thermal_zone support.
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v6:
->   - Rebased on top of v4.1-rc1 for new RFC,
+> I am a little confused because you named this file as
+> exynos5-cpu-thermal, meaning it is common for all Exynos5 boards. But:
+> 1. It references some specific phandles like &fan0 (cooling-device =
+> <&fan0 2 3>).
+> 2. You include it only here.
 >
-> v4:
->   - Drop save/restore state latencies, as they're Linux driver-specific,
->   - Change state to RFC, as this is put on hold,
+> So the question: is "exynos5-cpu-thermal.dtsi" a generic thermal DTSI?
+> What is your intention?
 >
-> v3:
->   - No changes,
+> Lukasz, you acked the patchset, is it fine?
 >
-> v2:
->   - New.
-> ---
->  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> index d659e5cb39be6057..32d1d3a399fe2a48 100644
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -73,12 +73,18 @@ Required properties:
->   - power-domains : A phandle and PM domain specifier as defined by bindings of
->                     the power controller specified by phandle.
->
-> +Optional properties:
-> + - stop-latency: Stop latency of the device, in ns,
-> + - start-latency: Start latency of the device, in ns,
-> +
+> Best regards,
+> Krzysztof
 
-What do you think of renaming these to "suspend-latency" and
-"resume-latency" instead? I think that better reflects their purpose.
-I have no strong opinion though.
+Hi Krysxtof,
 
->  Example:
->
->         leaky-device@12350000 {
->                 compatible = "foo,i-leak-current";
->                 reg = <0x12350000 0x1000>;
->                 power-domains = <&power 0>;
-> +               stop-latency = <250000>;
-> +               start-latency = <250000>;
->         };
->
->  The node above defines a typical PM domain consumer device, which is located
-> --
-> 1.9.1
->
+This file almost similar to below patch
 
-Kind regards
-Uffe
+https://patchwork.kernel.org/patch/5693321/
+
+I had to create this new file as I was not able to register
+#thermal-sensors to tmu_cpu0.
+
++       thermal-zones {
++               cpu0_thermal: cpu0-thermal {
++                       thermal-sensors = <&tmu_cpu0 0>;
++                       polling-delay-passive = <0>;
++                       polling-delay = <0>;
+
+Earlier the DTS sensor's were not getting registers to the tmu_cpu0 sensors.
+
+I am not aware If this file will be common to Exynos5 series.
+I could not include any common dts file as I would through me
+compilation error hence .dtsi  extension,
+
+-Anand Moon
