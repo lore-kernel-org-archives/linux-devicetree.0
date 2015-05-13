@@ -1,124 +1,58 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
-Date: Wed, 13 May 2015 13:58:05 +0100
-Message-ID: <55534A5D.6050904@linaro.org>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<1431158038-3813-15-git-send-email-mcoquelin.stm32@gmail.com>	<2789447.8FUTAOJOHR@wuerfel> <CALszF6CS8Q9DWX+ERtu=k=Bzr1-25N3oZQyWyxDZBF3an4nFKQ@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH V1 3/6] rtc: da9062: DA9062 RTC driver
+Date: Wed, 13 May 2015 14:58:58 +0200
+Message-ID: <20150513125858.GX3338@piout.net>
+References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
+ <860a3b6dc7f8dac95c0e36967f24551af8805f7b.1429280614.git.stwiss.opensource@diasemi.com>
+ <20150510095838.GF3338@piout.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B22A3F3@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALszF6CS8Q9DWX+ERtu=k=Bzr1-25N3oZQyWyxDZBF3an4nFKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <gal>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B22A3F3-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/05/15 12:45, Maxime Coquelin wrote:
-> 2015-05-12 23:21 GMT+02:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
->> On Saturday 09 May 2015 09:53:56 Maxime Coquelin wrote:
->>> +#include  <dt-bindings/mfd/stm32f4-rcc.h>
->>> +
->>>
->>
->> Can you find a way to avoid this dependency?
->>
->> Maybe you can change the bindings so that the numbers you pass as
->> arguments to the reset and clock specifiers reflect the numbers that
->> the hardware use?
->
-> If I understand correctly, you prefer the way I did in v7 [0]?
->
-> I don't have a strong opinion on this. Either way is fine to me.
->
-> I changed the bindings in the v8 after discussions with Daniel
-> Thompson, who is implementing the clock driver part of the RCC IP.
->
-> He proposed we used common defines, because each peripheral has a
-> reset line and a clock gate.
-> Both reset and clock are represented as a single bit, with only the
-> base offset differing between clock and reset.
-> You can have a look at chapter 6 of the reference manual [1] if you
-> find some time.
->
-> Having common defines between clocks and reset make sense to me, but I
-> also understand your point of avoiding dependencies.
->
-> Maybe I can revert back to v7 bindings for now, and then we can
-> reconsider using common defines when Daniel will send the clock
-> patches.
-> Note that doing that won't break the DT binary compatibility, as the
-> raw reset values, or the ones from defines are the same.
->
-> Daniel, could you share an example of the bindings you would use for the clocks?
+Hi,
 
-For the most cases, where there is a clock gate just before the 
-peripheral it looks pretty much like the reset driver and I use the bit 
-offset of the clock gating bit as the index.
+On 13/05/2015 at 12:31:36 +0000, Opensource [Steve Twiss] wrote :
+> Something similar is being discussed for the OnKey component of the DA9062.
+> https://lkml.org/lkml/2015/4/24/304
+> 
+> It is only the OnKey and RTC components that are similar to the DA9063 chip
+> and I was hoping to keep the 62 RTC separate in this case ... however it should
+> definitely be possible to re-use the DA9063 RTC driver if this is your requirement.
+> If this will block my submission of the DA9062 then I will drop the RTC from my
+> next patch set and try to re-work the existing 63 RTC driver accordingly.
+> 
+> I think this sort of thing has been done before:
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/rtc/rtc-pm8xxx.c
+>  ... at first glance -- it seems to support that sort of thing.
+> 
 
-However there are a couple of clocks without gating just before the 
-clock reaches the peripheral:
+Isn't that exactly the point of using the MFD infrastructure? It allows
+to reuse existing drivers even when the IP is part of a different chip.
+The RTC inside the da9062 and the da9063 are obviously the same so there
+is no point in duplicating the driver.
 
-1. A hard coded /8. I think this will have to be given a synthetic
-    number.
+I'm guessing using da9063-rtc instead of da9062-rtc is just working
+fine.
 
-2. Ungated dividers. For these I am using the bit offset of the LSB of
-    the mux field.
+> I guess it would be possible to rename the da9063-rtc to something more sensible like
+> da9xxx-rtc.c if this goes ahead?
+> 
 
-So I think there is only one value that is completely unrelated to the 
-hardware and will use a magic constant instead.
+Sure, that can be done but this means that the module name will change.
+if you feel that your current users can cope with that, I'm fine with it.
 
-I had planned to macros similar to the STM32F4_AxB_RESET() family of 
-macros in both clk driver and DT in order to reuse the bit layouts from 
-dt-bindings/mfd/stm32f4-rcc.h .
-
-Normal case would have looked like this:
-
-		timer3: timer@40000000 {
-			compatible = "st,stm32-timer";
-			reg = <0x40000000 0x400>;
-			interrupts = <28>;
-			resets = <&rcc STM32F4_APB1_RESET(TIM3)>;
-			clocks = <&rcc STM32F4_APB1_CLK(TIM3)>;
-			status = "disabled";
-		};
-
-Without the macros it looks like this:
-
-		timer3: timer@40000000 {
-			compatible = "st,stm32-timer";
-			reg = <0x40000000 0x400>;
-			interrupts = <28>;
-			resets = <&rcc 257>;
-			clocks = <&rcc 513>;
-			status = "disabled";
-		};
-
-However we could perhaps be more literate even if we don't use the macros?
-
-		timer3: timer@40000000 {
-			compatible = "st,stm32-timer";
-			reg = <0x40000000 0x400>;
-			interrupts = <28>;
-			resets = <&rcc ((0x20*8) + 1)>;
-			clocks = <&rcc ((0x40*8) + 1)>;
-			status = "disabled";
-		};
-
-
-Daniel.
-
-
-> Kind regards,
-> Maxime
->
->>
->>          Arnd
->
-> [0]: http://lkml.iu.edu/hypermail/linux/kernel/1504.3/04523.html
-> [1]: http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf
->
-
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
