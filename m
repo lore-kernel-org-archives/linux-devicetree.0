@@ -1,39 +1,68 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Thu, 14 May 2015 09:35:24 +1000
-Message-ID: <1431560124.20218.91.camel@kernel.crashing.org>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
-	 <1430493730.7979.58.camel@kernel.crashing.org>
-	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
-	 <1430521038.7979.70.camel@kernel.crashing.org>
-	 <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
-	 <1430774063.7979.139.camel@kernel.crashing.org>
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Subject: [PATCH] ARM: l2c: add options to overwrite prefetching behavior
+Date: Thu, 14 May 2015 01:42:00 +0200
+Message-ID: <1431560520-12544-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1430774063.7979.139.camel@kernel.crashing.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux@arm.linux.org.uk, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, linux-arm-kernel@lists.infradead.org, geert+renesas@glider.be, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-05 at 07:14 +1000, Benjamin Herrenschmidt wrote:
-> So the "trivial" way to do it (and the way we have implemented the FW
-> side so far) is to have the FW simply "flatten" the subtree below the
-> slot and pass it to Linux, with the intent of expanding it back below
-> the slot node.
-> 
-> This is what Gavin proposed patches do.
-> 
-> The overlay mechanism adds all sorts of features that we don't seen to
-> need and would make the above more complex.
+These options make it possible to overwrites the data and instruction
+prefetching behavior of the arm pl310 cache controller.
 
-Guys, I never got a final answer from you on this. Are we ok with adding
-the way to just expand a subtree or are you insistent we need to use the
-overlap mechanism ?
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
+ arch/arm/mm/cache-l2x0.c                       | 10 ++++++++++
+ 2 files changed, 14 insertions(+)
 
-Cheers,
-Ben.
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index 0dbabe9..528821a 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -67,6 +67,10 @@ Optional properties:
+   disable if zero.
+ - arm,prefetch-offset : Override prefetch offset value. Valid values are
+   0-7, 15, 23, and 31.
++- arm,prefetch-data : Enable data prefetch. Enabling prefetching
++  can improve performance.
++- arm,prefetch-instr : Enable instruction prefetch. Enabling prefetching
++  can improve performance.
+ 
+ Example:
+ 
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index e309c8f..f919548 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1149,6 +1149,16 @@ static void __init l2c310_of_parse(const struct device_node *np,
+ 		}
+ 	}
+ 
++	if (of_property_read_bool(np, "arm,prefetch-data")) {
++		*aux_val |= L310_AUX_CTRL_DATA_PREFETCH;
++		*aux_mask &= ~L310_AUX_CTRL_DATA_PREFETCH;
++	}
++
++	if (of_property_read_bool(np, "arm,prefetch-instr")) {
++		*aux_val |= L310_AUX_CTRL_INSTR_PREFETCH;
++		*aux_mask &= ~L310_AUX_CTRL_INSTR_PREFETCH;
++	}
++
+ 	prefetch = l2x0_saved_regs.prefetch_ctrl;
+ 
+ 	ret = of_property_read_u32(np, "arm,double-linefill", &val);
+-- 
+2.1.4
