@@ -1,73 +1,60 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/4] mailbox: add support for System Control and Power
- Interface(SCPI) protocol
-Date: Wed, 13 May 2015 18:09:20 +0100
-Message-ID: <55538540.1010505@arm.com>
-References: <1430134846-24320-1-git-send-email-sudeep.holla@arm.com>	<1430134846-24320-2-git-send-email-sudeep.holla@arm.com> <CABb+yY1KcrDNrhCHae=B7D+9jv2MEOqwF0VhDRKnZu7ATGfv2A@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm64: tegra: Add Tegra210 support
+Date: Wed, 13 May 2015 18:11:15 +0100
+Message-ID: <20150513171114.GA18655@e104818-lin.cambridge.arm.com>
+References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com>
+ <1431529065-20128-3-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY1KcrDNrhCHae=B7D+9jv2MEOqwF0VhDRKnZu7ATGfv2A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1431529065-20128-3-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 13, 2015 at 04:57:42PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> NVIDIA Tegra210 (also known as Tegra X1) has four Cortex-A57 and four
+> Cortex-A53 CPUs. Compared to Tegra124 and Tegra132 it comes with a 256-
+> core Maxwell GPU. It supports processing videos of up to 4K resolutions
+> at 60 fps (H.265, VP9, H.264).
+> 
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig                       |   9 +
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 998 +++++++++++++++++++++++++++++++
+>  2 files changed, 1007 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 7796af4b1d6f..bfdf064ada66 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -225,6 +225,15 @@ config ARCH_TEGRA_132_SOC
+>  	  but contains an NVIDIA Denver CPU complex in place of
+>  	  Tegra124's "4+1" Cortex-A15 CPU complex.
+>  
+> +config ARCH_TEGRA_210_SOC
+> +	bool "NVIDIA Tegra210 SoC"
+> +	depends on ARCH_TEGRA
+> +	select PINCTRL_TEGRA210
+> +	select USB_ULPI if USB_PHY
+> +	select USB_ULPI_VIEWPORT if USB_PHY
+> +	help
+> +	  Enable support for the NVIDIA Tegra210 SoC.
+> +
 
+The previous ARCH_TEGRA_132_SOC escaped me. Do we need all these
+ARCH_TEGRA_*_SOC entries? Can we not have per-driver Kconfig options?
+For example, ARCH_TEGRA_132_SOC seems to be only used in
+drivers/clk/tegra, a specific Kconfig entry in there would suffice.
 
-On 13/05/15 17:52, Jassi Brar wrote:
-> On Mon, Apr 27, 2015 at 5:10 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> This patch adds support for System Control and Power Interface (SCPI)
->> Message Protocol used between the Application Cores(AP) and the System
->> Control Processor(SCP). The MHU peripheral provides a mechanism for
->> inter-processor communication between SCP's M3 processor and AP.
->>
->> SCP offers control and management of the core/cluster power states,
->> various power domain DVFS including the core/cluster, certain system
->> clocks configuration, thermal sensors and many others.
->>
->> This protocol driver provides interface for all the client drivers using
->> SCPI to make use of the features offered by the SCP.
->>
-> Is the SCPI specification available somewhere to look into?
->
-
-Yes sorry posted the link separately(as reply to Tixy in the cover
-letter) since it was not available when I posted the patches.
-You can grab the protocol @[1] or [2]
-
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> CC: Jassi Brar <jassisinghbrar@gmail.com>
->> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
->> Cc: devicetree@vger.kernel.org
->> ---
->>   .../devicetree/bindings/mailbox/arm,scpi.txt       | 121 ++++
->>   drivers/mailbox/Kconfig                            |  19 +
->>   drivers/mailbox/Makefile                           |   2 +
->>   drivers/mailbox/scpi_protocol.c                    | 694 +++++++++++++++++++++
->>
-> Why in drivers/mailbox/ ? This is a 'consumer' driver and seems
-> Juno(ARM) specific.
->
-
-Not just JUNO alone though it's first one to use, it will used in next
-few platforms(foreseeable future) from ARM Ltd.
-
-I have put that in drivers/mailbox for 2 reasons:
-1. It's mailbox protocol :)
-2. ARM64 doesn't have platform code like ARM32 and moreover it's
-    strictly not specific to JUNO or any single platform. It may
-    get reused on other platforms.
-
-Regards,
-Sudeep
-
-[1] 
-http://community.arm.com/servlet/JiveServlet/download/8401-40-18262/DUI0922A_scp_message_interface.pdf
-[2] 
-https://wiki.linaro.org/ARM/Juno?action=AttachFile&do=get&target=DUI0922A_scp_message_interface.pdf
+-- 
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
