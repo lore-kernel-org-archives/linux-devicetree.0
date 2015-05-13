@@ -1,7 +1,7 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 1/3 v2] dt/bindings: Add binding for the Raspberry Pi firmware driver
-Date: Wed, 13 May 2015 12:00:07 -0700
-Message-ID: <1431543609-19646-2-git-send-email-eric@anholt.net>
+Subject: [PATCH 3/3 v2] ARM: bcm2835: Add the firmware driver information to the RPi DT
+Date: Wed, 13 May 2015 12:00:09 -0700
+Message-ID: <1431543609-19646-4-git-send-email-eric@anholt.net>
 References: <1431543609-19646-1-git-send-email-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1431543609-19646-1-git-send-email-eric@anholt.net>
@@ -10,39 +10,33 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-This driver will provide support for calls into the firmware that will
-be used by other drivers like cpufreq and vc4.
-
 Signed-off-by: Eric Anholt <eric@anholt.net>
+Acked-by: Lee Jones <lee@kernel.org> (previous version with pm-domains)
 ---
 
-v2: Improve commit message, point to mailbox.txt for how mboxes work.
+v2: Drop pm-domains stuff since I've dropped it from the firmware
+    driver for now, until we get drivers/base fixed.
 
- .../devicetree/bindings/arm/bcm/raspberrypi,firmware.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt
-new file mode 100644
-index 0000000..33b0043
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt
-@@ -0,0 +1,16 @@
-+Raspberry Pi VideoCore firmware driver
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 46780bb..ace33f6 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -14,6 +14,13 @@
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 	};
 +
-+Required properties:
-+
-+- compatible:		Should be "rasbperrypi,firmware"
-+- mboxes:		Single-entry list which specifies which mailbox
-+			  controller and channel is used.  See
-+			  Documentation/devicetree/bindings/mailbox/mailbox.txt
-+			  for the semantics of this property
-+
-+Example:
-+
-+firmware {
-+	compatible = "rasbperrypi,firmware";
-+	mboxes = <&mailbox>;
-+};
++	soc {
++		firmware: firmware {
++			compatible = "raspberrypi,firmware";
++			mboxes = <&mailbox>;
++		};
++	};
+ };
+ 
+ &gpio {
 -- 
 2.1.4
