@@ -1,73 +1,88 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 1/2] pinctrl: Add driver for Alphascale asm9260 pinctrl
-Date: Wed, 13 May 2015 13:00:07 +0200
-Message-ID: <CACRpkdZn+bkDKzAD6gpnysezGZ6fzizD2o4zdBfEamFgUbzcvg@mail.gmail.com>
-References: <1428306169.634.51.camel@x220>
-	<1428311043-12012-1-git-send-email-linux@rempel-privat.de>
-	<1428311043-12012-2-git-send-email-linux@rempel-privat.de>
-	<CACRpkdakXbHL6ydeZrs4XZ9Z1odHL5bWRxiHtT_Jbg-ygTudgw@mail.gmail.com>
-	<55522993.6090104@rempel-privat.de>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv5 4/5] ARM: dts: exynos5420 update the cooling cells for
+ core cpu0
+Date: Wed, 13 May 2015 16:31:44 +0530
+Message-ID: <CANAwSgT6gAqGhz6kU1qh_OxyTR6TyYQiV=NR-zwfnoZQDswHng@mail.gmail.com>
+References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
+ <1431499020-3912-5-git-send-email-linux.amoon@gmail.com> <CAJKOXPdKtMO3f8YzHXtuZ042jkFRL4wa978=TggSQk8FahubRg@mail.gmail.com>
+ <CANAwSgTdQk6BGD4xxB6k=p=YOV+CHv_+Q_bSyrxiPsdXVps92g@mail.gmail.com> <CAJKOXPcoc08Z5pspiY2twB++cvvEmawd3q27xsgDqohvgGjtRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55522993.6090104@rempel-privat.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPcoc08Z5pspiY2twB++cvvEmawd3q27xsgDqohvgGjtRw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 12, 2015 at 6:25 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
-> Am 05.05.2015 um 17:12 schrieb Linus Walleij:
+Hi Krzysztof,
 
->> Just reference the statically defined array by a pointer instead,
->> this just takes up a lot o memory for no reason.
->
-> This two arrays have different types this is why i convert it.
-> priv->pin_desc[i].name - here i copy pointer any ways, and
-> priv->pin_desc[i].number can be smaller then pointer.
+Yep these values are wrong.
 
-I probably do not understand what you're trying to do, sorry :(
+These cooling-max-level and cooling-min-level values come with cpufreq
+operating-points
+Which is not present in the dts right now.
 
-Why is it necessary for the driver to copy one description of
-the pin into another?
+So I will update for now with this value.
+cooling-min-level = <0>;
+cooling-max-level = <7>;
 
->> Mory copying. I don't see why this is necessary at all.
->
-> I hadn't seen the point to define groups statically, especially because
-> they are used only  to make curious user happy. So, memory will be used
-> only if you request the list over sysfs. Or miss some thing?
+-Anand Moon
 
-pinctrl does not even use sysfs.
-
-The group names are usually there for matching with a function,
-it is part of the core functionality. The group name + function name
-matching is even more obvious in the dt case.
-
-They also make things easier to read in debugfs yes, but
-the core of the crux is to make it easy to config function+groups
-states with e.g. DT or board files.
-
->>> +static struct pinmux_ops asm9260_pinmux_ops = {
->>> +       .get_functions_count    = asm9260_pinctrl_get_funcs_count,
->>> +       .get_function_name      = asm9260_pinctrl_get_func_name,
->>> +       .get_function_groups    = asm9260_pinctrl_get_func_groups,
->>> +       .set_mux                = asm9260_pinctrl_set_mux,
->>> +       /* TODO: should we care about gpios here? gpio_request_enable? */
+On 13 May 2015 at 15:42, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+> 2015-05-13 19:07 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>> On 13 May 2015 at 13:01, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+>>> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>>>> update the cooling level for cpu0 to avoid following message.
+>>>
+>>> Capitalize sentence.
+>>> In commit subject add missing colon after "exynos5420".
+>>>
+>>>>
+>>>> root@odroidxu3:~# dmesg | grep ther
+>>>
+>>> This command not needed, we all know how to use dmesg and grep.
+>>>
+>>>> [    0.241511] /thermal-zones/cpu-thermal/cooling-maps/map0:
+>>>>                          could not get #cooling-cells for /cpus/cpu@0
+>>>>
+>>>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+>>>> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
+>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/exynos5420.dtsi | 4 ++++
+>>>>  1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>>>> index 4531753..c75ed16 100644
+>>>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>>>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>>>> @@ -61,6 +61,10 @@
+>>>>                         reg = <0x0>;
+>>>>                         clock-frequency = <1800000000>;
+>>>>                         cci-control-port = <&cci_control1>;
+>>>> +
+>>>> +                       cooling-min-level = <10>;
+>>>> +                       cooling-max-level = <7>;
+>>>> +                       #cooling-cells = <2>; /* min followed by max */
+>>>
+>>> I might be missing something but I do not understand which cooling
+>>> levels are referenced here. In my exynos5420.dtsi file there are no
+>>> frequencies for cpu0 node. Could you help me understand this?
+>>>
+>>> Best regards,
+>>> Krzysztof
 >>
->> I think you should, if you also have a matching GPIO driver.
+>> Hi Krzysztof,
+>>
+>> http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/cpufreq/cpufreq-dt.txt
+>> http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/thermal/thermal.txt#L201
+>>
+>> These two documents provide the description on cooling-min-level and
+>> cooling-max-level.
+>>
+>> I will correctly update the value in the next updated patch.
 >
-> I fear it would cause unpredictable bugs. GPIO mode is just one of mux
-> modes. If some one will request gpio some busy or dangerous line it
-> would do more harm then use. So, i assume limiting this only to device
-> tree would be better.
-
-Device tree or not doesn't matter, .gpio_request_enable() is used
-as a shortcut to mux in GPIO pins.
-
-If the simultaneous use of a pin for a device and GPIO bothers
-you there is nowadays (linux-next or my devel branch) a .strict
-option in pinmux_ops that you can set to disallow simultaneous
-use by devices and GPIO of the same pin.
-
-Yours,
-Linus Walleij
+> I know these files and AFAIU your does not follow the documentation.
+> So this is why I am asking: you are referencing cooling level 7 and
+> 10, please show where are these cooling levels defined.
