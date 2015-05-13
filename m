@@ -1,59 +1,84 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Wed, 13 May 2015 12:03:57 +0100
-Message-ID: <20150513110357.GD3066@sirena.org.uk>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <20150512214224.16410.15922@quantum>
- <20150513085528.GA6994@linux>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Wed, 13 May 2015 12:10:51 +0100
+Message-ID: <20150513111051.GH3066@sirena.org.uk>
+References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
+ <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
+ <20150508175306.GG2761@sirena.org.uk>
+ <1431434356.2128.9.camel@mhfsdcap03>
+ <20150512160540.GB3066@sirena.org.uk>
+ <1431509166.25254.12.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="52aklQ8BZHJhx2Z3"
-Return-path: <linux-pm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="LNKrWK8T5LDJo+fl"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150513085528.GA6994@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Michael Turquette <mike.turquette@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+In-Reply-To: <1431509166.25254.12.camel@mtksdaap41>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: leilk liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---52aklQ8BZHJhx2Z3
+--LNKrWK8T5LDJo+fl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 13, 2015 at 02:25:28PM +0530, Viresh Kumar wrote:
-> On 12-05-15, 14:42, Michael Turquette wrote:
-> > Quoting Viresh Kumar (2015-04-30 05:07:59)
->=20
-> > Why should this new binding exist?
+On Wed, May 13, 2015 at 05:26:06PM +0800, Yingjoe Chen wrote:
+> On Tue, 2015-05-12 at 17:05 +0100, Mark Brown wrote:
 
-> The answer to this particular query is perhaps simple, i.e. we have
-> unsolved problems that we wanted to solve in a generic way.
+> > > > There were three compatible strings listed in the DT binding but only
+> > > > two here.
 
-> But probably the bigger question is "Should we really put the OPPs
-> (new or old bindings) in DT".
+> > > And I test it's ok on MT8135 platform. So I add struct of_device_id
+> > > mtk_spi_of_match like this in spi driver code.
 
-And also is trying to do this in a completely generic manner the right
-way of going about things - do we really understand the problem area
-well enough to create a completely generic solution for all cases,
-bearing in mind that once things go into a DT binding they become an ABI?
+> > You should list all the compatibles documented in the binding here, if
+> > some of them are the same just have them map to a single constant.
 
---52aklQ8BZHJhx2Z3
+> Just for clarification. If we want to add spi support for a new soc, say
+> mt8127, which we think is compatible to mt6589. Since it may turn out we
+> need special handling for this soc latter, it is suggested to write
+> compatible like this in mt8127.dtsi:
+
+>    compatible = "mediatek,mt8127-spi",
+>  	        "mediatek,mt6589-spi";
+
+> Device tree binding should list all possible compatible string in .dts,
+> so we'll have to add that to binding as well.
+
+>      - mediatek,mt6589-spi: for mt6589 platforms
+> +    - mediatek,mt8127-spi: for mt8127 platforms
+
+> Then we'll also need to add this to source code to reflect this.
+
+> 	{ .compatible = "mediatek,mt6589-spi", .data = (void *)COMPAT_MT6589},
+> +	{ .compatible = "mediatek,mt8127-spi", .data = (void *)COMPAT_MT6589},
+
+> This seems to introduce lots of trivial patches just to add a compatible
+> device to me...
+
+Yes, but that's how DT works and as you say these patches are all
+trivial so it's not like they take any appreciable effort.
+
+--LNKrWK8T5LDJo+fl
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVUy+aAAoJECTWi3JdVIfQH8QH/A0s+0zmXE1+H98e/OZRP4ga
-D7Gj/TDfBadRsr/ALoJy6sxPtf81ZXR1hMmQNw9MTH7ZcyMeV+Bk4mLZpyF3UyPT
-3aPxArOx7k8S8izu47Qkk/X0te8SB5bVg3qCvdUxTJhLlmg6qkTZVV+wg+hK/Ll9
-BU00eGSo+HpKvJvV5rrxfs0HBAHUcDrLUtz9KXKgT+ZA/WXSDtcTKnkHWxfd6nCW
-RB/YaNVWcs3VCLdOiyApYyZpeo4wE+Ju6q/GXpsD4BkL8JX0+O1153kPCWELXmS3
-rsFJ4t9NF28PQI73lWSkhEqrmbuwkSq0Gb/sadHxYFpHX1Mqny9bl1wFQ0NLwKg=
-=hp71
+iQEcBAEBCAAGBQJVUzE7AAoJECTWi3JdVIfQMAYH/19Vg5CJGxrJXpIZAxTxWN7x
+YirZDjnjp7jzn+l0q7/JeyLTiYj9c1GhBidFvZ1XNfXiUtEvkcBNriqbvb04dkh1
+5p8av1zOEA7z/WZYKiZ5qW99A21fiapozLljrJZzMUUxXWMKfi868OzG3okpQxq6
+sWA4ZnSQ1koJ7i3RHnzIpXfbaIKkF/KzgR4+dlx6PUVKEeuBPgTfcfYSIj4X+ft1
+Ul3vIE5e99OJsymxXsL1XRZr9+BZaEGknk3GM+maaoJ1x1Ov2bApShd7WJBcefNH
++exK3v5SaLuyUVFvR79cyuB8Qwtklza6pW1uExMdRTmviEbCbDYSI70MDwOGsZs=
+=TDyi
 -----END PGP SIGNATURE-----
 
---52aklQ8BZHJhx2Z3--
+--LNKrWK8T5LDJo+fl--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
