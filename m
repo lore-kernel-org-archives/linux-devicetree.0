@@ -1,53 +1,58 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH/RFC 00/12] ARM: shmobile: dts: Add overlays for various serial ports
-Date: Wed, 13 May 2015 11:20:53 +0300
-Message-ID: <E6970DEC-BA7C-4D97-AEA7-1874983414D4@konsulko.com>
-References: <1431452235-11692-1-git-send-email-geert+renesas@glider.be> <D9B202C5-6460-4217-9F58-67078C3DB9B1@konsulko.com> <CAMuHMdXhLUJqpdAZc7X==s6cyeBdf7TVdJi7JtA1jC_V=hEXsQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXhLUJqpdAZc7X==s6cyeBdf7TVdJi7JtA1jC_V=hEXsQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv5 2/5] ARM: dts: Odroid-XU3 Enable TMU at Exynos5422 base
+Date: Wed, 13 May 2015 13:51:30 +0530
+Message-ID: <CANAwSgQ=30j4A_nCd26kzxi=rdsh32+Srwuc5EaJigLhJ2r4jA@mail.gmail.com>
+References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
+ <1431499020-3912-3-git-send-email-linux.amoon@gmail.com> <CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On 13 May 2015 at 12:51, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
+>> device.
+>>
+>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+>> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
+>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>> ---
+>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 25 +++++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> index 9446e28..cd78816 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> @@ -319,6 +319,31 @@
+>>                 #cooling-cells = <2>;
+>>                 cooling-levels = <0 130 170 230>;
+>>         };
+>> +
+>> +       tmu@10060000 {
+>
+> Here and for other overrides please use label notation, like:
+>
+> &tmu_cpu0 {
+>               ...
+> };
+>
+>> +               vtmu-supply = <&ldo10_reg>;
+>
+> I am curious, how did you find that LDO10 supplies TMU unit?
+>
+> Best regards,
+> Krzysztof
 
-> On May 13, 2015, at 11:19 , Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
->=20
-> Hi Pantelis,
->=20
-> On Wed, May 13, 2015 at 10:16 AM, Pantelis Antoniou
-> <pantelis.antoniou@konsulko.com> wrote:
->>> - The overlay sources use full paths to refer to the device nodes f=
-or
->>>   creating aliases, as path references (unlike phandle references) =
-are
->>>   not yet supported by overlays.
->>=20
->> Hmm, phandle references are completely supported. You just have to r=
-emember
->> to build your base tree with the -@ option to generate the fixups :)
+Hi Krzysztof,
 
-> The aliases need _path_ references.
->=20
+I have re-base my work on earlier Lukasz Majewski patches.
 
-Ugh, yeah, that=E2=80=99s a problem :)
+https://patchwork.kernel.org/patch/5693201/
 
-> Gr{oetje,eeting}s,
->=20
->                        Geert
->=20
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu=
-x-m68k.org
->=20
-> In personal conversations with technical people, I call myself a hack=
-er. But
-> when I'm talking to journalists I just say "programmer" or something =
-like that.
->                                -- Linus Torvalds
-
+-Anand Moon
