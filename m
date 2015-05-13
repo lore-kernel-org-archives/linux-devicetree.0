@@ -1,59 +1,104 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Wed, 13 May 2015 17:21:27 +0100
-Message-ID: <20150513162127.GA2761@sirena.org.uk>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <554FFFA3.1060801@ti.com>
- <20150512051633.GB32300@linux>
- <555224A2.7000308@ti.com>
- <20150513050559.GE28858@linux>
- <55536719.5050208@ti.com>
- <20150513151652.GX2761@sirena.org.uk>
- <5553784F.7040905@ti.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
+Date: Wed, 13 May 2015 09:26:34 -0700
+Message-ID: <CAL1qeaF-7aAx0gqPe-_D4ZaZET0Kejr801KrbvuQ_2w6c8mcnA@mail.gmail.com>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+	<1430761002-9327-5-git-send-email-abrestic@chromium.org>
+	<20150513143954.GA3394@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+HwY7O+GdaLKMYOv"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5553784F.7040905@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150513143954.GA3394@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Lee,
 
---+HwY7O+GdaLKMYOv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, May 13, 2015 at 7:39 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, 04 May 2015, Andrew Bresticker wrote:
+>
+>> Add a binding document for the XUSB host complex on NVIDIA Tegra124
+>> and later SoCs.  The XUSB host complex includes a mailbox for
+>> communication with the XUSB micro-controller and an xHCI host-controller.
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> Changes from v7:
+>>  - Move non-shared resources into child nodes.
+>> New for v7.
+>> ---
+>>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 37 ++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> new file mode 100644
+>> index 0000000..bc50110
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
+>> @@ -0,0 +1,37 @@
+>> +NVIDIA Tegra XUSB host copmlex
+>> +==============================
+>> +
+>> +The XUSB host complex on Tegra124 and later SoCs contains an xHCI host
+>> +controller and a mailbox for communication with the XUSB micro-controller.
+>> +
+>> +Required properties:
+>> +--------------------
+>> + - compatible: For Tegra124, must contain "nvidia,tegra124-xusb".
+>> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,tegra124-xusb"'
+>> +   where <chip> is tegra132.
+>> + - reg: Must contain the base and length of the XUSB FPCI registers.
+>> + - ranges: Bus address mapping for the XUSB block.  Can be empty since the
+>> +   mapping is 1:1.
+>> + - #address-cells: Must be 2.
+>> + - #size-cells: Must be 2.
+>> +
+>> +Example:
+>> +--------
+>> +     usb@0,70098000 {
+>> +             compatible = "nvidia,tegra124-xusb";
+>> +             reg = <0x0 0x70098000 0x0 0x1000>;
+>> +             ranges;
+>> +
+>> +             #address-cells = <2>;
+>> +             #size-cells = <2>;
+>> +
+>> +             usb-host@0,70090000 {
+>> +                     compatible = "nvidia,tegra124-xhci";
+>> +                     ...
+>> +             };
+>> +
+>> +             mailbox {
+>> +                     compatible = "nvidia,tegra124-xusb-mbox";
+>> +                     ...
+>> +             };
+>
+> This doesn't appear to be a proper MFD.  I would have the USB and
+> Mailbox devices probe seperately and use a phandle to point the USB
+> device to its Mailbox.
+>
+> usb@xyz {
+>         mboxes = <&xusb-mailbox, [chan]>;
+> };
 
-On Wed, May 13, 2015 at 11:14:07AM -0500, Nishanth Menon wrote:
+Then what will set up the shared regmap?  The point of using an MFD
+here was to share a register set with both the mailbox and xHCI
+drivers and avoid having to map the same register set twice in two
+separate drivers.
 
-> To illustrate: What does it mean for a driver using regulator API?
-> Attempt X <-> (X+Y), if that fails (example PMIC SMPS max < X), try
-> (X-Y)<->(X)? If yes, then we do expect (X-Y)<->(X+Y) should be stable
-> for all operating conditions for the device, correct? If this is is
-> not stable at (X-Y), then we have a wrong specification for the device
-> for claiming X +/- Y is a valid range for the device.
-
-We have an explicit regulator API call for setting by tolerance which
-tries to get as close as possible to the target voltage (currently the
-implementation is very cheap and nasty but ideally it'll get improved).
-
---+HwY7O+GdaLKMYOv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVU3oGAAoJECTWi3JdVIfQylYH/j77uIhdjTiWG7XH3bQhVqVm
-MPkVPd30XdbWM4BBcqKEAV+CUzt4DU/j8VWIwOFwLIkmK+QLfHtUf1vIhc6/uTq1
-PX4TKtfYuM/Jox1OfGspfmp7Z+gA2RHEdFzTlfSJ7CLCY7gK3s1F3PqRSp1cDoXb
-yLrba+x7G4LuE9BwuGvwO4P30lWKxSkQk4sNCcXJ0CtzfeeN3a33u+W41JpPhGO0
-BTMNU25LA9+MkHqvn3bXHSl35kweJf4iHfJugEOiVptUh3fxdAu4ULE+0upZvkc8
-a0xfnbEoE3blpNImPWFSGZdVrxiTzo5SS8eTO2hGpCFTksd5R2DLBCaO9B8B6LI=
-=W9G9
------END PGP SIGNATURE-----
-
---+HwY7O+GdaLKMYOv--
+Thanks,
+Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
