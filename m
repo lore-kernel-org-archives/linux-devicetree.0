@@ -1,84 +1,114 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
-Date: Wed, 13 May 2015 12:10:51 +0100
-Message-ID: <20150513111051.GH3066@sirena.org.uk>
-References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
- <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
- <20150508175306.GG2761@sirena.org.uk>
- <1431434356.2128.9.camel@mhfsdcap03>
- <20150512160540.GB3066@sirena.org.uk>
- <1431509166.25254.12.camel@mtksdaap41>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver for cygnus
+Date: Wed, 13 May 2015 14:19:53 +0200
+Message-ID: <2067273.o6GGiUQkQC@wuerfel>
+References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com> <9193036.7UYD2OGJHk@wuerfel> <554D1649.2030106@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LNKrWK8T5LDJo+fl"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1431509166.25254.12.camel@mtksdaap41>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: leilk liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <554D1649.2030106@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Jonathan Richardson <jonathar@broadcom.com>, Darren Edamura <dedamura@broadcom.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Richard Cochran <richardcochran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Friday 08 May 2015 13:02:17 Jonathan Richardson wrote:
+> On 15-05-01 12:40 PM, Arnd Bergmann wrote:
+> > On Friday 01 May 2015 20:30:04 One Thousand Gnomes wrote:
+> >>
+> >>> channel control, unless I'm missing something. If people are flexible
+> >>> with extending that I could propose something. Let me know which way you
+> >>> prefer to go. Thanks.
+> >>
+> >> I would strongly favour fixing PTP to do this right. Otherwise we will
+> >> have 2 or 3 adhoc drivers, then end up moving them to PTP and then end up
+> >> dealing with the compat mess.
+> > 
+> > Agreed. I was hoping that there was already a subsystem in the kernel that
+> > could be extended to work with this driver. If all that is needed is to
+> > pass more fields of the existing timex to ptp drivers, that should be
+> > fairly easy to do.
+> > 
+> > We also have some padding bytes available in struct timex in case some
+> > extra data needs to be passed, or we could add another clock_* system call
+> > if it's absolutely required to have another entry into the driver, and
+> > connect that through struct k_clock and posix_clock_operations(). I would
+> > hope we don't even need that.
+> > 
+> > 	Arnd
+> > 
+> 
+> Thanks Arnd/Alan for the feedback. I looked into PTP further to see what
+> exactly would need changing.
+> 
+> For the clock functions I think we can use the existing framework
+> unchanged with one exception: ptp_clock_adjtime() doesn't allow negative
+> time adjustments and we would like to allow this.
 
---LNKrWK8T5LDJo+fl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ah, very good. Extending this one function should be fairly straightforward,
+just discuss with the PTP maintainer how to best do it.
 
-On Wed, May 13, 2015 at 05:26:06PM +0800, Yingjoe Chen wrote:
-> On Tue, 2015-05-12 at 17:05 +0100, Mark Brown wrote:
+> The other client events (set IRQ interval, enable client, set client
+> divider, get client timestamp) could be handled as follows:
+> 
+> IRQ interval: I mentioned before that we may be able to calculate the
+> isochronous interrupt rate automatically but this isn't possible because
+> the DTE doesn't know the frequency of the clients. One solution is to
+> use the 'PTP_PEROUT_REQUEST' ioctl to set a periodic timer frequency.
+> Not really a timer but good enough for our purposes.
+>
+> Enable Client: The external timestamping channel handling in PTP allows
+> channels to be enabled so we can re-use this (PTP_EXTTS_REQUEST ioctl).
 
-> > > > There were three compatible strings listed in the DT binding but only
-> > > > two here.
+In each case, it might be better to add a new ioctl command instead, if
+the existing command does not fit perfectly. This again would be up to
+Richard.
+ 
+> Set divider: There is no ability to set a frequency or do anything to a
+> channel. We could re-use the PTP_EXTTS_REQUEST ioctl but extend 'struct
+> ptp_extts_request' by using the reserved field rsv to allow setting an
+> integer value representing either a frequency or divider value in our
+> case - some value to configure a channel. A new flag would have to be
+> added to the existing PTP_ENABLE_FEATURE, RISING and FALLING EDGE.
 
-> > > And I test it's ok on MT8135 platform. So I add struct of_device_id
-> > > mtk_spi_of_match like this in spi driver code.
+Seems reasonable, or again you could add a new command with 
+a different structure if Richard prefers that.
 
-> > You should list all the compatibles documented in the binding here, if
-> > some of them are the same just have them map to a single constant.
+> Get timestamp: This is a bit more complicated. Currently the PTP driver
+> does list management for timestamps from external timestamp channels.
+> Timestamps from all channels go into the same list. In our driver we
+> have a s/w FIFO for each client and it closely matches the h/w FIFO and
+> handles any overflow. We would like to keep it this way because it also
+> allows multiple user space processes to only fetch timestamps for the
+> client it's handling. We could add a new ioctl to get a timestamp from
+> the driver instead of doing it through ptp_read() but it would be nice
+> if we could let ptp_read() allow the driver to do timestamp management
+> instead of PTP. Maybe provide an option to obtain the timestamps from a
+> container in the driver instead of the one managed by PTP. I like being
+> able to use read/poll to obtain data instead of polling the kernel with
+> ioctls as we are currently doing. Also, avoiding the kmalloc in ptp_read
+> would be nice because this of the frequency it would be called at. Do
+> you have any preference on how to handle this?
+> 
+> I've tried to minimize the changes to PTP.
 
-> Just for clarification. If we want to add spi support for a new soc, say
-> mt8127, which we think is compatible to mt6589. Since it may turn out we
-> need special handling for this soc latter, it is suggested to write
-> compatible like this in mt8127.dtsi:
+On Tuesday 12 May 2015 18:03:40 Jonathan Richardson wrote:
+> Using read() we can't specify a channel to get the timestamp for. It
+> would imply that one user space process would have to read timestamps
+> for all channels/clients and then leave it up to user space IPC to get
+> them to other processes, which isn't great. That means either we
+> introduce an ioctl such as the DTE_GET_TIMESTAMP we had before which
+> allows us to specify a channel, or we need to look at creating one dev
+> node per external timestamping channel.
+> 
+> The ioctl limitation is that it pounds the kernel polling for timestamps
+> and the multiple dev nodes per channel is a big change to PTP. I will
+> have to look further into this to really have a good idea of what the
+> implications would be. Advice/ideas?
 
->    compatible = "mediatek,mt8127-spi",
->  	        "mediatek,mt6589-spi";
+Would it help if you register each channel as a separate ptp clock? That
+way you could open them separately from user space in order to just
+read from one of them.
 
-> Device tree binding should list all possible compatible string in .dts,
-> so we'll have to add that to binding as well.
-
->      - mediatek,mt6589-spi: for mt6589 platforms
-> +    - mediatek,mt8127-spi: for mt8127 platforms
-
-> Then we'll also need to add this to source code to reflect this.
-
-> 	{ .compatible = "mediatek,mt6589-spi", .data = (void *)COMPAT_MT6589},
-> +	{ .compatible = "mediatek,mt8127-spi", .data = (void *)COMPAT_MT6589},
-
-> This seems to introduce lots of trivial patches just to add a compatible
-> device to me...
-
-Yes, but that's how DT works and as you say these patches are all
-trivial so it's not like they take any appreciable effort.
-
---LNKrWK8T5LDJo+fl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVUzE7AAoJECTWi3JdVIfQMAYH/19Vg5CJGxrJXpIZAxTxWN7x
-YirZDjnjp7jzn+l0q7/JeyLTiYj9c1GhBidFvZ1XNfXiUtEvkcBNriqbvb04dkh1
-5p8av1zOEA7z/WZYKiZ5qW99A21fiapozLljrJZzMUUxXWMKfi868OzG3okpQxq6
-sWA4ZnSQ1koJ7i3RHnzIpXfbaIKkF/KzgR4+dlx6PUVKEeuBPgTfcfYSIj4X+ft1
-Ul3vIE5e99OJsymxXsL1XRZr9+BZaEGknk3GM+maaoJ1x1Ov2bApShd7WJBcefNH
-+exK3v5SaLuyUVFvR79cyuB8Qwtklza6pW1uExMdRTmviEbCbDYSI70MDwOGsZs=
-=TDyi
------END PGP SIGNATURE-----
-
---LNKrWK8T5LDJo+fl--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
