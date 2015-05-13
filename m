@@ -1,47 +1,56 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v2] devicetree: Add hardware rng entry to qcom-apq8064.dtsi
-Date: Wed, 13 May 2015 15:41:47 -0700
-Message-ID: <1431556907-12941-1-git-send-email-john.stultz@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: John Stultz <john.stultz@linaro.org>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/5] dt-bindings: Add Marvell PXA1928 USB and HSIC PHY bindings
+Date: Wed, 13 May 2015 17:48:56 -0500
+Message-ID: <1431557340-5421-2-git-send-email-robh@kernel.org>
+References: <1431557340-5421-1-git-send-email-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431557340-5421-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree data to add support for hw_rng support
-to the apq8064 dts.
+Add PHY binding for Marvell PXA1928 SOC's USB and HSIC PHYs.
 
-Tested on the Nexus7 (2013).
-
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
-v2: Adjusted hex value to lower-case per Stephen's suggestion.
+ .../devicetree/bindings/phy/pxa1928-usb-phy.txt        | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
 
- arch/arm/boot/dts/qcom-apq8064.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index b3154c0..241811d 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -226,6 +226,13 @@
- 			};
- 		};
- 
-+		rng@1a500000 {
-+			compatible = "qcom,prng";
-+			reg = <0x1a500000 0x200>;
-+			clocks = <&gcc PRNG_CLK>;
-+			clock-names = "core";
-+		};
+diff --git a/Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt b/Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
+new file mode 100644
+index 0000000..660a13c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
+@@ -0,0 +1,18 @@
++* Marvell PXA1928 USB and HSIC PHYs
 +
- 		qcom,ssbi@500000 {
- 			compatible = "qcom,ssbi";
- 			reg = <0x00500000 0x1000>;
++Required properties:
++- compatible: "marvell,pxa1928-usb-phy" or "marvell,pxa1928-hsic-phy"
++- reg: base address and length of the registers
++- clocks - A single clock. From common clock binding.
++- #phys-cells: should be 0. From commmon phy binding.
++- resets: reference to the reset controller
++
++Example:
++
++	usbphy: phy@7000 {
++		compatible = "marvell,pxa1928-usb-phy";
++		reg = <0x7000 0xe0>;
++		clocks = <&apmu_clocks PXA1928_CLK_USB>;
++		#phy-cells = <0>;
++	};
++
 -- 
-1.9.1
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
