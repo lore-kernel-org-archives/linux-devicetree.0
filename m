@@ -1,90 +1,48 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
- for cygnus
-Date: Wed, 13 May 2015 22:27:16 +0200
-Message-ID: <20150513202716.GA15878@localhost.localdomain>
-References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com>
- <5543CD73.2030902@broadcom.com>
- <20150501203004.3add2c95@lxorguk.ukuu.org.uk>
- <9193036.7UYD2OGJHk@wuerfel>
- <554D1649.2030106@broadcom.com>
- <20150513153544.GC2065@localhost.localdomain>
- <5553AAEA.30503@broadcom.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 08/11] mtd: brcmnand: add BCM63138 support
+Date: Wed, 13 May 2015 22:48:19 +0200
+Message-ID: <2173063.OarFjbCqhk@wuerfel>
+References: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com> <5685584.0QXUdSHDpG@wuerfel> <20150513202415.GI11598@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5553AAEA.30503@broadcom.com>
+In-Reply-To: <20150513202415.GI11598@ld-irv-0074>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Richardson <jonathar@broadcom.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Darren Edamura <dedamura@broadcom.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-mtd@lists.infradead.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 12:50:02PM -0700, Jonathan Richardson wrote:
-> ptp_clock_adjtime() casts it to an unsigned and returns an error:
-> 
->    if ((unsigned long) ts.tv_nsec >= NSEC_PER_SEC)
->        return -EINVAL;
-
-The value of a timeval is the sum of its fields, but the field tv_usec
-must always be non-negative.  The tv_sec field can be negative.  So,
-your application simply needs to do this:
-
-	if (tx.time.tv_usec < 0) {
-		tx.time.tv_sec  -= 1;
-		tx.time.tv_usec += 1000000000;
-	}
-
-> >> IRQ interval: I mentioned before that we may be able to calculate the
-> >> isochronous interrupt rate automatically but this isn't possible because
-> >> the DTE doesn't know the frequency of the clients. One solution is to
-> >> use the 'PTP_PEROUT_REQUEST' ioctl to set a periodic timer frequency.
-> >> Not really a timer but good enough for our purposes.
+On Wednesday 13 May 2015 13:24:15 Brian Norris wrote:
+> > > 
+> > > static int bcm63138_nand_probe(...)
+> > > {
+> > >     struct bcm63138_nand_soc *priv;
+> > > 
+> > >     priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > >     ...
+> > >     return brcmnand_probe(pdev, &priv->soc);
+> > > }
 > > 
-> > As I said in my other reply, I don't understand what the problem is.
+> > That would make struct brcmnand_soc an empty structure, right?
 > 
-> See reply to previous email. We can use this ioctl or add a new one as
-> Arnd suggested. It doesn't matter to me.
-
-Still makes no sense.  Why should the interrupt rate depend on the
-clock frequency?
-
-If the ISR is delivering batches of time stamps, then the interrupt
-rate aught to be the highest rate that the system can support.
-
-> >> Set divider: There is no ability to set a frequency or do anything to a
-> >> channel. We could re-use the PTP_EXTTS_REQUEST ioctl but extend 'struct
-> >> ptp_extts_request' by using the reserved field rsv to allow setting an
-> >> integer value representing either a frequency or divider value in our
-> >> case - some value to configure a channel. A new flag would have to be
-> >> added to the existing PTP_ENABLE_FEATURE, RISING and FALLING EDGE.
-> > 
-> > I don't get this, either.
+> No, it still contains the function pointers for our callbacks, which is
+> the entire point. I guess it's more of a 'nand_soc_ops' structure than a
+> 'nand_soc' pointer now though.
 > 
-> See reply to previous email.
 
-Didn't help me too much :(
+Ah, I see.
 
-> > The PTP interface supports poll/read just fine already.
-> 
-> Yes that's why I wanted to re-use it. As it currently is, it's not going
-> to work for reasons I explained in previous follow up yesterday:
-> 
-> http://marc.info/?l=linux-kernel&m=143147907431947&w=2
+This is fine for a small number of function pointers, but if you ever
+get a structure like this with a lot of pointers, it's better to
+keep them separate, so you can define the structure of function pointers
+as 'static const' in the client driver, as we do for a number of
+other operations.
 
-You said:
+The main advantage of that is that you don't have to assign the members
+manually at run-time, but also putting them into the read-only segment
+makes it harder for an attacker to overwrite a known function pointer
+with a pointer to an exploit (assuming they have limited control over
+writing to kernel memory).
 
-   one user space process would have to read timestamps for all
-   channels/clients and then leave it up to user space IPC to get them
-   to other processes, which isn't great.
-
-I disagree.  I think having tons of fifos isn't great.
-
-Ideally, there will be kernel consumers for most of the channels, and
-they will forward the time stamps in a way appropriate to their
-subsystem.  For example, network devices will use so_timestamping. 
-Any "leftover" channels can go through the generic PTP interface.
-
-
-Thanks,
-Richard
+	Arnd
