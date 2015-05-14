@@ -1,132 +1,99 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: Add SPMI regulator driver
-Date: Thu, 14 May 2015 20:20:18 +0100
-Message-ID: <20150514192018.GU2761@sirena.org.uk>
-References: <1431466787-32247-1-git-send-email-sboyd@codeaurora.org>
- <20150513114118.GJ3066@sirena.org.uk>
- <5553F434.4020102@codeaurora.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Thu, 14 May 2015 20:38:08 +0100
+Message-ID: <5554F9A0.1050105@linaro.org>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>	<5553A608.9080402@linaro.org>	<2672178.pv4FEQMD9D@wuerfel> <CALszF6AhwtYMfhpZjGJeHznteG0mG0_2qo1TcWw-z7anH3Lj4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yT5CehYOm/p2z10t"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5553F434.4020102@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALszF6AhwtYMfhpZjGJeHznteG0mG0_2qo1TcWw-z7anH3Lj4A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 14/05/15 17:34, Maxime Coquelin wrote:
+> 2015-05-13 21:37 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Wednesday 13 May 2015 20:29:12 Daniel Thompson wrote:
+>>> On 13/05/15 17:54, Maxime Coquelin wrote:
+>>>> 2015-05-13 18:37 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>>>>>
+>>>>> We should definitely try to use the same compatible string for all of
+>>>>> them, and make a binding that is easy to use.
+>>>>>
+>>>>> I haven't fully understood the requirements for the various parts that
+>>>>> are involved here. My understanding so far was that the driver could
+>>>>> use the index from the first cell and compute
+>>>>>
+>>>>>           void __iomem *reset_reg = rcc_base + 0x10 + 4 * index;
+>>>>>           void __iomem *clock_reg = rcc_base + 0x30 + 4 * index;
+>>>>
+>>>> This calculation is true, but we have to take into account there is a
+>>>> hole in the middle, between AHB3, and APB1 register:
+>>>
+>>> ... and equally importantly, only allows us to use hardware mappings for
+>>> the gated clocks.
+>>>
+>>>> AHB1RSTR : offset = 0x10, index = 0
+>>>> AHB2RSTR : offset = 0x14, index = 1
+>>>> AHB3RSTR : offset = 0x18, index = 2
+>>>> <HOLE >     : offset = 0x1c, index = 3
+>>>> APB1RSTR : offset = 0x20, index = 4
+>>>> APB2RSTR : offset = 0x24, index = 5
+>>>>
+>>>> So we have to carefully document this hole in the bindings, maybe by
+>>>> listing indexes in the documentation?
+>>>
+>>> The register set has PLL, mux and dividers in the registers at 0x00,
+>>> 0x04 and 0x08.
+>>>
+>>> Many of these clocks can be kept out of DT entirely because they are
+>>> only there to feed other parts of the clock tree. However some of the
+>>> dividers flow directly into cells that appear in device tree (such as
+>>> the systick) and so we need to be able to reference them.
+>>>
+>>> In other words the proposed mapping cannot allow us to express the
+>>> dividers properly (because the index would have to be negative):
+>>>     void __iomem *clock_reg = rcc_base + 0x30 + 4 * index;
+>>>
+>>> Thus I'd favour using different indexes for reset and clock bindings,
+>>> both using the naive mapping function:
+>>>     void __iomem *reg =  rcc_base + 4 * index
+>>>
+>>> I think that its so much easier to check against the datasheet like
+>>> that. Admittedly is we follow the block-of-4-bytes idiom we have to
+>>> divide a hex number by four but thats not so hard and we end up with:
+>>>
+>>>                resets = <&rcc  8 0>;
+>>>                clocks = <&rcc 16 0>;
+>>>
+>>> At the end of the day if we say we want to follow the datasheet, lets be
+>>> do it in the most direct way properly.
+>
+> Daniel, I'm fine with your proposal.
+> Doing that, we can have a single compatible string for stm32 family,
+> even if the reset start offset change between two chips.
+>
+>>> PS
+>>> I've written a custom lookup function to to get from the DT index to an
+>>> offset into the struct clk *array I'm using. That means I don't care
+>>> much about any big holes in the register space.
+>>
+>> How about using the first cell to indicate the type (pll, mux, div, gate)
+>> and the second cell for the number (between 0 and 256)? That way, the
+>> gates numbers would match the reset numbers, and your internal mapping
+>> function would look a bit nicer.
+>
+> That's another option.
+> In this case, for reset, we will only need one cell, right?
 
---yT5CehYOm/p2z10t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think so. For the reset, this is essentially no change versus v7 
+except for applying an offset of 0x10 when calculating the base address.
 
-On Wed, May 13, 2015 at 06:02:44PM -0700, Stephen Boyd wrote:
+I won't get time to polish up the clk driver this weekend but I will try 
+to write a documentation file proposing some clock bindings for you to 
+look at.
 
-> This is about configuring the regulator to switch mode between HPM and
-> LPM automatically based on current. You're right that it's not about
-> pulse skipping, but it isn't about letting other processors control
-> things either. I think you're thinking about pin control?
 
-Possibly, this stuff is all system jargon heavy and I've not context
-switched that in recently.  The above sounds like it pretty much *is*
-the equivalent of pulse skipping in which case it's much more like the
-normal modes (that we were going to abandon...).
-
-> The register field is called AUTO_MODE, so I'm finding it hard to come
-> up with a better name. Perhaps qcom,auto-efficient-mode-enable?
-> qcom,auto-current-mode-enable?
-
-This definitely sounds like traditional regulator modes.
-
-> >> +- qcom,bypass-mode-enable:
-> >> +	Usage: optional
-> >> +	Value type: <u32>
-> >> +	Description: 1 = Enable bypass mode for an LDO type regulator so that
-> >> +		     it acts like a switch and simply outputs its input
-> >> +		     voltage. 0 = Do not enable bypass mode.
-
-> > We have generic regulator API support for this, we should have a generic
-> > DT binding for it.
-
-> Given that regulator_allow_bypass() is a consumer facing API should I
-> just change this to regulator-allow-bypass and then add a set_bypass() op?
-
-Yes.
-
-> >> +- qcom,soft-start-enable:
-> >> +	Usage: optional
-> >> +	Value type: <u32>
-> >> +	Description: 1 = Enable soft start for LDO and voltage switch type
-> >> +		     regulators so that output voltage slowly ramps up when the
-> >> +		     regulator is enabled. 0 = Disable soft start
-
-> > These also seem like generic properties (we don't currently have generic
-> > APIs for them but these are by no means the only regulators I've seen
-> > with these features).
-
-> So for these sorts of generic properties how do I get them all the way
-> into the driver? Are you suggesting adding new ops for setting pull-down
-> and soft-start-enable and then parsing DT properties, setting those in
-> the regulation_constraints structure, and then calling the ops when we
-> apply constraints in set_machine_constraints()?
-
-Yeah, if it's becoming something that does need setting from DT (which
-it seems to) then we probably need to go through all that.  With helpers
-and so on.
-
-> >> +- qcom,boost-current-limit:
-> >> +	Usage: optional
-> >> +	Value type: <u32>
-> >> +	Description: This property sets the current limit of boost type
-> >> +		     regulators; supported values are:
-> >> +					0 =  300 mA
-
-> > Again seems generic - there seems like overlap with your own OCP
-> > properties further above.
-
-> Yes it's generic. This property only applies to boost regulators on this
-> PMIC whereas OCP is only used for voltage switch type regulators. I
-> wonder if this should be done via regulator-min-microamp and
-> regulator-max-microamp being set to the same value and then implementing
-> a .set_current_limit() function?
-
-Yes, that was what I was thinking.  Perhaps a current-limit or something
-property rather than the min and max thing for clarity (to avoid
-confusion with actual current regulators).
-
-> >> +#define VOLTAGE_RANGE(_range_sel, _min_uV, _set_point_min_uV, \
-> >> +			_set_point_max_uV, _max_uV, _step_uV) \
-> >> +	{ \
-
-> > A lot of these macros have very generic names.  Also I have to say I'm a
-> > bit confused about what a set point is and how it's used, "allowed
-> > voltage" doesn't mean a huge amount in comparison with "programmable
-> > voltage".
-
-> These regulators have two registers. The first register says what range
-> (or row in the *_ranges arrays) we should use. The second register is a
-> selector that's used in the linear range calculation min_uV + sel *
-> step. The complication is here because we want to try and keep using the
-
-Hardware engineers are truly innovative and creative people sometimes.
-That all makes sense, but the thing about the generic names still
-applies - at least namespace them please.
-
---yT5CehYOm/p2z10t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVVPVyAAoJECTWi3JdVIfQJywH/1vB4RrzDs1cafJnXAn91t1Y
-6CQVTppC4SYO+jnkjUYArz2/Zdn09VgXlM42+RpskDHjh4LKsPz95S5EA1LztOIz
-wf8wV+8IYd4rmmdhJG+qbPpw+kmdo854NvaxZyDB73RCcXQnX3naDdYmKmJ5vulO
-9WLClsHF5KHaVbOlJk1eot/dOXbhX2NjK7UsN5FTb/6BbdDBkHYOAB8Jqc6XbOyM
-szBW66QwYKRWvKf2zTnQJq1s+U1SqHOMaYi+AIzBSKyB8+LzBg8edKm4ndXddeR1
-FXUKHPitiq9+gCyXA2eKT/4KKAExAeeSBbnvt/y+BScnFFdIgCCf84cdf1wltpU=
-=A5Fo
------END PGP SIGNATURE-----
-
---yT5CehYOm/p2z10t--
+Daniel.
