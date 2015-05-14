@@ -1,137 +1,150 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Thu, 14 May 2015 10:34:26 +0300
-Message-ID: <D7FC0542-DD1A-428F-8E75-81620C6D83DC@antoniou-consulting.com>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com> <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com> <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com> <1430493730.7979.58.camel@kernel.crashing.org> <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com> <1430521038.7979.70.camel@kernel.crashing.org> <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com> <1430774063.7979.139.camel@kernel.crashing.org> <1431560124.20218.91.camel@kernel.crashing.org> <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com> <1431564871.4160.8.camel@kernel.crashing.org> <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com> <1431585994.4160.32.camel@kernel.crashing.org> <3988EABE-3DE9-4E1C-9778-22E35138E359@antoniou-
- consulting.com> <1431587657.4160.37.camel@kernel.crashing.org> <75F026CA-5AC1-4106-B2F0-AB0D006DEF5A@antoniou-consulting.com> <1431588358.4160.42.camel@kernel.crashing.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
+Date: Thu, 14 May 2015 08:40:58 +0100
+Message-ID: <20150514074058.GA22418@x1>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+ <1430761002-9327-5-git-send-email-abrestic@chromium.org>
+ <20150513143954.GA3394@x1>
+ <55544CC5.9050001@nvidia.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431588358.4160.42.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55544CC5.9050001-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+On Thu, 14 May 2015, Jon Hunter wrote:
 
-> On May 14, 2015, at 10:25 , Benjamin Herrenschmidt <benh-XVmvHMARGARBNKmDvNhNkA@public.gmane.org=
-ing.org> wrote:
+> Hi Lee,
 >=20
-> On Thu, 2015-05-14 at 10:19 +0300, Pantelis Antoniou wrote:
+> On 13/05/15 15:39, Lee Jones wrote:
+> > On Mon, 04 May 2015, Andrew Bresticker wrote:
+> >=20
+> >> Add a binding document for the XUSB host complex on NVIDIA Tegra12=
+4
+> >> and later SoCs.  The XUSB host complex includes a mailbox for
+> >> communication with the XUSB micro-controller and an xHCI host-cont=
+roller.
+> >>
+> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >> Changes from v7:
+> >>  - Move non-shared resources into child nodes.
+> >> New for v7.
+> >> ---
+> >>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 37 +++++++++=
++++++++++++++
+> >>  1 file changed, 37 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,t=
+egra124-xusb.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegra124=
+-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.=
+txt
+> >> new file mode 100644
+> >> index 0000000..bc50110
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.t=
+xt
+> >> @@ -0,0 +1,37 @@
+> >> +NVIDIA Tegra XUSB host copmlex
+> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+> >> +
+> >> +The XUSB host complex on Tegra124 and later SoCs contains an xHCI=
+ host
+> >> +controller and a mailbox for communication with the XUSB micro-co=
+ntroller.
+> >> +
+> >> +Required properties:
+> >> +--------------------
+> >> + - compatible: For Tegra124, must contain "nvidia,tegra124-xusb".
+> >> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,tegra12=
+4-xusb"'
+> >> +   where <chip> is tegra132.
+> >> + - reg: Must contain the base and length of the XUSB FPCI registe=
+rs.
+> >> + - ranges: Bus address mapping for the XUSB block.  Can be empty =
+since the
+> >> +   mapping is 1:1.
+> >> + - #address-cells: Must be 2.
+> >> + - #size-cells: Must be 2.
+> >> +
+> >> +Example:
+> >> +--------
+> >> +	usb@0,70098000 {
+> >> +		compatible =3D "nvidia,tegra124-xusb";
+> >> +		reg =3D <0x0 0x70098000 0x0 0x1000>;
+> >> +		ranges;
+> >> +
+> >> +		#address-cells =3D <2>;
+> >> +		#size-cells =3D <2>;
+> >> +
+> >> +		usb-host@0,70090000 {
+> >> +			compatible =3D "nvidia,tegra124-xhci";
+> >> +			...
+> >> +		};
+> >> +
+> >> +		mailbox {
+> >> +			compatible =3D "nvidia,tegra124-xusb-mbox";
+> >> +			...
+> >> +		};
+> >=20
+> > This doesn't appear to be a proper MFD.  I would have the USB and
+> > Mailbox devices probe seperately and use a phandle to point the USB
+> > device to its Mailbox.
+> >=20
+> > usb@xyz {
+> > 	mboxes =3D <&xusb-mailbox, [chan]>;
+> > };
+> >=20
 >=20
->>=20
->> You don=E2=80=99t want to know how sausages are made, but they are d=
-elicious :)
->=20
-> ... most of the time :)
->=20
->>> But yeah generating the overlay doesn't necessarily scare me, I can
->>> generate a temp tree that is the overlay in which I "copy" the subt=
-ree
->>> (or in my internal ptr-based representation I could have a concept =
-of
->>> alias which I follow while flattening).
->>>=20
->>> That leaves me with these problems:
->>>=20
->>> - No support for removing of nodes, so that needs to be added back =
-to
->>> the format and to Linux unless I continue removing by hand in the P=
-CI
->>> hotplug code itself
->>>=20
->>=20
->> What kind of nodes/properties you need to remove at _application_ ti=
-me?
->=20
-> Well, if we stick to removing by hand in Linux for the unplug case, t=
-hen
-> none.
->=20
+> I am assuming that Andrew had laid it out like this to reflect the hw
+> structure. The mailbox and xhci controller are part of the xusb
+> sub-system and hence appear as child nodes. My understanding is that =
+for
+> device-tree we want the device-tree structure to reflect the actual h=
+w.
+> Is this not the case?
 
-OK
+Yes, the DT files should reflect h/w.  I have requested to see what
+the memory map looks like, so I might provide a more appropriate
+solution to accepting a pretty pointless MFD.
 
->> What you describe is inserting a bunch of properties and nodes under
->> a slot=E2=80=99s device node. Reverting the overlay removes them all=
- just fine.
->=20
-> Except that still doesn't work for boot time :-)
->=20
-> So I would have to do a special case on unplug:
->=20
-> 	if (slot->dt_is_overlay) /* set to false at boot */
-> 		remove_subtree_myself();
-> 	else
-> 		undo_overlay(slot->overlay);
->=20
+Two solutions spring to mind.  You can either call
+of_platform_populate() from the USB driver, as some already do:
 
-OK, in that case you do require removal. But in any case it=E2=80=99s t=
-he =E2=80=98negative=E2=80=99
-of an already applied one, either at boot time or not.
+  drivers/usb/dwc3/dwc3-exynos.c:
+    ret =3D of_platform_populate(node, NULL, NULL, dev);
+  drivers/usb/dwc3/dwc3-keystone.c:
+    error =3D of_platform_populate(node, NULL, NULL, dev);
+  drivers/usb/dwc3/dwc3-omap.c:
+    ret =3D of_platform_populate(node, NULL, NULL, dev);
+  drivers/usb/dwc3/dwc3-qcom.c:
+    ret =3D of_platform_populate(node, NULL, NULL, qdwc->dev);
+  drivers/usb/dwc3/dwc3-st.c:
+    ret =3D of_platform_populate(node, NULL, NULL, dev);
+  drivers/usb/musb/musb_am335x.c:
+    ret =3D of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->=
+dev);
 
-Modifying the overlay code to apply a =E2=80=98negative=E2=80=99 proper=
-ty should do the trick.
+Or use the "simple-mfd", which is currently in -next:
 
-Is that correct?
+  git show next/master:Documentation/devicetree/bindings/mfd/mfd.txt
 
->>> - No support for "committing" the overlay which needs to be added a=
-s
->>> well.
->>>=20
->>=20
->> That=E2=80=99s the easiest part.
->=20
-> Yeah, I will need to get my head around the code a bit more but it
-> doesn't seem too scary.
->=20
->> I see. Well, how about this?
->>=20
->> Who said you have to do the whole blob dance in the firmware?
->>=20
->> You can just as easily pass the blob as it is to the linux kernel an=
-d
->> the kernel there can convert it to an overlay and apply it.
->=20
-> That's not that pretty but we can do that too which solve the problem=
- of
-> fixing the FW interface.
->=20
-> There is however an argument to be made in having the FW be able to
-> generate arbitrary overlays. If we ever want to pass more "property"
-> updates or node updates to Linux at runtime.
->=20
-> A few cases have crept up on the radar, like updating the pstate tabl=
-es
-> or VPD informations ...
->=20
-> If we go down that path, then I would implement a concept of generati=
-on
-> count in the firmware, so I can generate an overlay that include all =
-the
-> changes since the last "generation" given to Linux.
->=20
-
-I will probably need that generation count myself for my PCI use case.
-
-> However that requires supporting removal of nodes/properties. So I'm
-> tempted to keep that feature on the back burner and go with an ad-hoc
-> interface for PCI for now.
->=20
-
-I see. Bonne chance :)
-
-> Ben.
->=20
->=20
-
-Regards
-
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
