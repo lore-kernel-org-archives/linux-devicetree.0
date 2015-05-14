@@ -1,47 +1,58 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v2] ARM: dts: Add syscon property to the MIPI phy in exynos5420
-Date: Thu, 14 May 2015 14:40:40 +0200
-Message-ID: <1431607240-14549-1-git-send-email-tomeu.vizoso@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, =?UTF-8?q?Krzysztof=20Koz=C5=82owski?= <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: [PATCH 0/4] arc: add AXS101 board support
+Date: Thu, 14 May 2015 15:48:40 +0300
+Message-ID: <1431607724-9142-1-git-send-email-abrodkin@synopsys.com>
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, arc-linux-dev@synopsys.com, devicetree@vger.kernel.org, Vineet.Gupta1@synopsys.com, Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Since e4b3d38088df6f3acd40 ("phy: exynos-video-mipi: Fix regression by
-adding support for PMU regmap") the syscon property is required in
-samsung,s5pv210-mipi-video-phy nodes, but this DTS hadn't been updated
-yet.
+AXS101 is a new generation of devlopment boards from Synopsys that houses
+ASIC with ARC700 and lots of DesignWare peripherals:
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Krzysztof Koz=C5=82owski <k.kozlowski@samsung.com>
+ * DW APB UART
+ * DW Mobile Storage (MMC/SD)
+ * DW I2C
+ * DW GMAC
 
---
+More info about DesignWare ARC Software Development Platforms (SDP) is here:
+http://www.synopsys.com/dw/ipdir.php?ds=arc-software-development-platform
 
-v2:	* Remove reg property as suggested by Javier
-	* Added his Reviewed-by
----
- arch/arm/boot/dts/exynos5420.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+More info about AXS101 in particular is here (it's required to enter contact
+details to obtain the document):
+http://www.synopsys.com/dw/doc.php/ds/cc/arc_axs101_sdp.pdf
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exyn=
-os5420.dtsi
-index 4531753..78bcbc0 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -541,7 +541,7 @@
-=20
- 	mipi_phy: video-phy@10040714 {
- 		compatible =3D "samsung,s5pv210-mipi-video-phy";
--		reg =3D <0x10040714 12>;
-+		syscon =3D <&pmu_system_controller>;
- 		#phy-cells =3D <1>;
- 	};
-=20
---=20
-2.4.0
+Alexey Brodkin (2):
+  ARC: [axs101] Add support for AXS101 SDP (software development
+    platform)
+  ARC: [axs101] STAR 9000799830: Fix SD cards support
+
+Vineet Gupta (2):
+  ARC: [axs101] support early 8250 uart
+  ARC: [axs101] Tweak DDR port aperture mappings for performance
+
+ Documentation/devicetree/bindings/arc/axs10x.txt |   7 +
+ MAINTAINERS                                      |   7 +
+ arch/arc/Kconfig                                 |   1 +
+ arch/arc/Makefile                                |   1 +
+ arch/arc/boot/dts/axc001.dtsi                    |  79 ++++++
+ arch/arc/boot/dts/axs101.dts                     |  21 ++
+ arch/arc/boot/dts/axs10x_mb.dtsi                 | 241 ++++++++++++++++++
+ arch/arc/configs/axs101_defconfig                | 112 +++++++++
+ arch/arc/kernel/devtree.c                        |   2 +
+ arch/arc/plat-axs10x/Kconfig                     |  35 +++
+ arch/arc/plat-axs10x/Makefile                    |   9 +
+ arch/arc/plat-axs10x/axs10x.c                    | 298 +++++++++++++++++++++++
+ 12 files changed, 813 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arc/axs10x.txt
+ create mode 100644 arch/arc/boot/dts/axc001.dtsi
+ create mode 100644 arch/arc/boot/dts/axs101.dts
+ create mode 100644 arch/arc/boot/dts/axs10x_mb.dtsi
+ create mode 100644 arch/arc/configs/axs101_defconfig
+ create mode 100644 arch/arc/plat-axs10x/Kconfig
+ create mode 100644 arch/arc/plat-axs10x/Makefile
+ create mode 100644 arch/arc/plat-axs10x/axs10x.c
+
+-- 
+2.1.0
