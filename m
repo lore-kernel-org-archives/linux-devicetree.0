@@ -1,87 +1,45 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: bcm-mspi: Add support for Broadcom MSPI driver.
-Date: Wed, 13 May 2015 17:19:06 -0700
-Message-ID: <5553E9FA.4070708@broadcom.com>
-References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com> <1431452293-16697-3-git-send-email-jonathar@broadcom.com> <20150512191718.GW3066@sirena.org.uk> <5553E31A.8060309@broadcom.com>
+From: Michael Turquette <mike.turquette@linaro.org>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Wed, 13 May 2015 17:32:01 -0700
+Message-ID: <20150514003201.20636.83883@quantum>
+References: <cover.1430394884.git.viresh.kumar@linaro.org>
+ <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+ <20150512214224.16410.15922@quantum> <20150513085528.GA6994@linux>
+ <20150513110357.GD3066@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5553E31A.8060309-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150513110357.GD3066@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+Quoting Mark Brown (2015-05-13 04:03:57)
+> On Wed, May 13, 2015 at 02:25:28PM +0530, Viresh Kumar wrote:
+> > On 12-05-15, 14:42, Michael Turquette wrote:
+> > > Quoting Viresh Kumar (2015-04-30 05:07:59)
+> > 
+> > > Why should this new binding exist?
+> 
+> > The answer to this particular query is perhaps simple, i.e. we have
+> > unsolved problems that we wanted to solve in a generic way.
+> 
+> > But probably the bigger question is "Should we really put the OPPs
+> > (new or old bindings) in DT".
+> 
+> And also is trying to do this in a completely generic manner the right
+> way of going about things - do we really understand the problem area
+> well enough to create a completely generic solution for all cases,
+> bearing in mind that once things go into a DT binding they become an ABI?
 
-comment below for full-duplex operation.
+No, we don't understand the problem space well enough to form an ABI.
+And even if we did understand it perfectly today, the constraints and
+expressions will change tomorrow.
 
-On 15-05-13 04:49 PM, Jonathan Richardson wrote:
-> On 15-05-12 12:17 PM, Mark Brown wrote:
->> On Tue, May 12, 2015 at 10:38:13AM -0700, Jonathan Richardson wrote:
->>
->>
->>> +	/* The rx data will go into RXRAM0/1 + last tx length. */
->>> +	if (slot + 1 >= NUM_SLOTS)
->>> +		mspi->rx_slot = 0;
->>> +	else
->>> +		mspi->rx_slot = slot + 1;
->>
->> How is this going to work for full duplex transfers if we had to fill
->> the FIFO more than once?
->
-> See below, it's not.
->
->>
->>> +static int bcm_mspi_transfer_one(struct spi_master *master,
->>> +	struct spi_device *spidev, struct spi_transfer *transfer)
->>> +{
->>> +	int err;
->>> +
->>> +	/* 8 bit transfers only are currently supported. */
->>> +	if (transfer->bits_per_word > 8)
->>> +		return -ENOTSUPP;
->>
->> Tell the core what the device supports and it will check for you.
->>
->>> +
->>> +	err = bcm_mspi_tx_data(master, spidev, transfer);
->>> +	if (err)
->>> +		return err;
->>> +
->>> +	err = bcm_mspi_rx_data(master, spidev, transfer);
->>> +	if (err)
->>> +		return err;
->>> +
->>> +	return 0;
->>> +}
->>
->> I would expect the recieve and transmit operations to be running in
->> parallel, not executed one after another, given the need to keep
->> manually filling and draining the FIFOs.
->
-> The driver was only written with NOR flash in mind as the slave. Since
-> this is really just half duplex, it works, though it won't with a real
-> full duplex slave. m25p80 never calls transfer_one with both tx and rx
-> buffers. The rx bytes that we don't care about from a tx request are
-> dropped.
->
-> We don't have any full duplex slaves so it's a hard to test. I could
-> possibly re-write this so that tx/rx is interleaved and that should be
-> good for full duplex or close enough that it won't have to be completely
-> overhauled should we ever connect a full duplex slave to it. Maybe I
-> should do that. This came from a pre-existing driver that had the same
-> limitation.
->
->>
+Putting this stuff in C without any philosophical constraints on whether
+or not we can change it later is the way to go.
 
-The purpose of this mspi interface is to connect to NOR flash.  There 
-are other SPI interfaces on the devices used to connect to other SPI 
-devies.  We don't have any need to support full duplex slaves on this 
-port (NOR have any hardware wired this way - pun realized after typing 
-this).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Mike
