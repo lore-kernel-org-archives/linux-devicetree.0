@@ -1,155 +1,92 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
-Date: Thu, 14 May 2015 08:45:04 +0100
-Message-ID: <20150514074504.GB22418@x1>
-References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
- <1430761002-9327-5-git-send-email-abrestic@chromium.org>
- <20150513143954.GA3394@x1>
- <CAL1qeaF-7aAx0gqPe-_D4ZaZET0Kejr801KrbvuQ_2w6c8mcnA@mail.gmail.com>
- <20150513165014.GC19543@x1>
- <CAL1qeaE7XHmreQ_b52iop6fOY1osAhjij81c4vVr7_8wO_cYxQ@mail.gmail.com>
- <20150514072954.GD20358@x1>
- <55544F91.4060402@nvidia.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Thu, 14 May 2015 17:47:32 +1000
+Message-ID: <1431589652.4160.49.camel@kernel.crashing.org>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+	 <1430493730.7979.58.camel@kernel.crashing.org>
+	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+	 <1430521038.7979.70.camel@kernel.crashing.org>
+	 <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
+	 <1430774063.7979.139.camel@kernel.crashing.org>
+	 <1431560124.20218.91.camel@kernel.crashing.org>
+	 <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
+	 <1431564871.4160.8.camel@kernel.crashing.org>
+	 <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com>
+	 <1431585994.4160.32.camel@kernel.crashing.org>
+	 <3988EABE-3DE9-4E1C-9778-22E35138E359@antoniou-consulting.com>
+	 <1431587657.4160.37.camel@kernel.crashing.org>
+	 <75F026CA-5AC1-4106-B2F0-AB0D006DEF5A@antoniou-consulting.com>
+	 <1431588358.4160.42.camel@kernel.crashing.org>
+	 <D7FC0542-DD1A-428F-8E75-81620C6D83DC@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55544F91.4060402-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <D7FC0542-DD1A-428F-8E75-81620C6D83DC-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 May 2015, Jon Hunter wrote:
+On Thu, 2015-05-14 at 10:34 +0300, Pantelis Antoniou wrote:
 
->=20
-> On 14/05/15 08:29, Lee Jones wrote:
-> > On Wed, 13 May 2015, Andrew Bresticker wrote:
+> >> What you describe is inserting a bunch of properties and nodes und=
+er
+> >> a slot=E2=80=99s device node. Reverting the overlay removes them a=
+ll just fine.
 > >=20
-> >> On Wed, May 13, 2015 at 9:50 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
-wrote:
-> >>> On Wed, 13 May 2015, Andrew Bresticker wrote:
-> >>>
-> >>>> Lee,
-> >>>>
-> >>>> On Wed, May 13, 2015 at 7:39 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org=
-> wrote:
-> >>>>> On Mon, 04 May 2015, Andrew Bresticker wrote:
-> >>>>>
-> >>>>>> Add a binding document for the XUSB host complex on NVIDIA Teg=
-ra124
-> >>>>>> and later SoCs.  The XUSB host complex includes a mailbox for
-> >>>>>> communication with the XUSB micro-controller and an xHCI host-=
-controller.
-> >>>>>>
-> >>>>>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >>>>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>>>>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> >>>>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> >>>>>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> >>>>>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >>>>>> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> >>>>>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>>>>> ---
-> >>>>>> Changes from v7:
-> >>>>>>  - Move non-shared resources into child nodes.
-> >>>>>> New for v7.
-> >>>>>> ---
-> >>>>>>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 37 +++++=
-+++++++++++++++++
-> >>>>>>  1 file changed, 37 insertions(+)
-> >>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/nvid=
-ia,tegra124-xusb.txt
-> >>>>>>
-> >>>>>> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegr=
-a124-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-x=
-usb.txt
-> >>>>>> new file mode 100644
-> >>>>>> index 0000000..bc50110
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xu=
-sb.txt
-> >>>>>> @@ -0,0 +1,37 @@
-> >>>>>> +NVIDIA Tegra XUSB host copmlex
-> >>>>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>>>> +
-> >>>>>> +The XUSB host complex on Tegra124 and later SoCs contains an =
-xHCI host
-> >>>>>> +controller and a mailbox for communication with the XUSB micr=
-o-controller.
-> >>>>>> +
-> >>>>>> +Required properties:
-> >>>>>> +--------------------
-> >>>>>> + - compatible: For Tegra124, must contain "nvidia,tegra124-xu=
-sb".
-> >>>>>> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,teg=
-ra124-xusb"'
-> >>>>>> +   where <chip> is tegra132.
-> >>>>>> + - reg: Must contain the base and length of the XUSB FPCI reg=
-isters.
-> >>>>>> + - ranges: Bus address mapping for the XUSB block.  Can be em=
-pty since the
-> >>>>>> +   mapping is 1:1.
-> >>>>>> + - #address-cells: Must be 2.
-> >>>>>> + - #size-cells: Must be 2.
-> >>>>>> +
-> >>>>>> +Example:
-> >>>>>> +--------
-> >>>>>> +     usb@0,70098000 {
-> >>>>>> +             compatible =3D "nvidia,tegra124-xusb";
-> >>>>>> +             reg =3D <0x0 0x70098000 0x0 0x1000>;
-> >>>>>> +             ranges;
-> >>>>>> +
-> >>>>>> +             #address-cells =3D <2>;
-> >>>>>> +             #size-cells =3D <2>;
-> >>>>>> +
-> >>>>>> +             usb-host@0,70090000 {
-> >>>>>> +                     compatible =3D "nvidia,tegra124-xhci";
-> >>>>>> +                     ...
-> >>>>>> +             };
-> >>>>>> +
-> >>>>>> +             mailbox {
-> >>>>>> +                     compatible =3D "nvidia,tegra124-xusb-mbo=
-x";
-> >>>>>> +                     ...
-> >>>>>> +             };
-> >>>>>
-> >>>>> This doesn't appear to be a proper MFD.  I would have the USB a=
-nd
-> >>>>> Mailbox devices probe seperately and use a phandle to point the=
- USB
-> >>>>> device to its Mailbox.
-> >>>>>
-> >>>>> usb@xyz {
-> >>>>>         mboxes =3D <&xusb-mailbox, [chan]>;
-> >>>>> };
-> >>>>
-> >>>> Then what will set up the shared regmap?  The point of using an =
-MFD
-> >>>> here was to share a register set with both the mailbox and xHCI
-> >>>> drivers and avoid having to map the same register set twice in t=
-wo
-> >>>> separate drivers.
-> >>>
-> >>> Can you share the mapping please?
-> >>
-> >> What do you mean?  That's what the MFD is doing now by setting up =
-an
-> >> MMIO regmap to be shared between the two devices.
+> > Except that still doesn't work for boot time :-)
 > >=20
-> > I mean, can you share the documentation with me. :)
+> > So I would have to do a special case on unplug:
+> >=20
+> > 	if (slot->dt_is_overlay) /* set to false at boot */
+> > 		remove_subtree_myself();
+> > 	else
+> > 		undo_overlay(slot->overlay);
+> >=20
 >=20
-> You can download the documentation from here [1]. See chapter 19 USB
-> complex. However, I will warn you that unfortunately, you need to sig=
+> OK, in that case you do require removal. But in any case it=E2=80=99s=
+ the =E2=80=98negative=E2=80=99
+> of an already applied one, either at boot time or not.
+
+Sort-of, unless we have a way in the overlay to simply specify node
+removal statements so we don't have to explicitly remove all properties
+(or even all children).
+
+> Modifying the overlay code to apply a =E2=80=98negative=E2=80=99 prop=
+erty should do the trick.
+>=20
+> Is that correct?
+
+I would do negatives node and let Linux imply the properties (or even
+children).
+
+But yes, that would probably do.
+
+ .../...
+
+> I will probably need that generation count myself for my PCI use case=
+=2E
+>=20
+> > However that requires supporting removal of nodes/properties. So I'=
+m
+> > tempted to keep that feature on the back burner and go with an ad-h=
+oc
+> > interface for PCI for now.
+> >=20
+>=20
+> I see. Bonne chance :)
+
+Merci :)
+
+Cheers,
+Ben.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
-> up for an account :-(
-
-I'll give that a miss for the time being.  See my other mail for now.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
