@@ -1,58 +1,49 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Thu, 14 May 2015 14:02:26 +0300
-Message-ID: <A748C569-24CF-41B9-BA91-822A67132DA9@antoniou-consulting.com>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com> <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com> <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com> <1430493730.7979.58.camel@kernel.crashing.org> <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com> <1430521038.7979.70.camel@kernel.crashing.org> <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com> <1430774063.7979.139.camel@kernel.crashing.org> <1431560124.20218.91.camel@kernel.crashing.org> <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com> <1431564871.4160.8.camel@kernel.crashing.org> <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com> <1431585994.4160.32.camel@kernel.crashing.org> <3988EABE-3DE9-4E1C-9778-22E35138E359@antoniou-
- consulting.com> <1431587657.4160.37.camel@kernel.crashing.org> <75F026CA-5AC1-4106-B2F0-AB0D006DEF5A@antoniou-consulting.com> <1431588358.4160.42.camel@kernel.crashing.org> <D7FC0542-DD1A-42
- 8F-8E75-81620C6D83DC@antoniou-consulting.com> <1431589652.4160.49.camel@kernel.crashing.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1431589652.4160.49.camel@kernel.crashing.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [PATCH 2/5] arm64: Juno: Split juno.dts into juno-base.dtsi and
+ juno.dts.
+Date: Thu, 14 May 2015 12:04:31 +0100
+Message-ID: <1431601471.2881.36.camel@linaro.org>
+References: <1431537092-19597-1-git-send-email-Liviu.Dudau@arm.com>
+	 <1431537092-19597-3-git-send-email-Liviu.Dudau@arm.com>
+	 <1431596142.2881.13.camel@linaro.org>
+	 <20150514103040.GN2345@e106497-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150514103040.GN2345@e106497-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, devicetree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+On Thu, 2015-05-14 at 11:30 +0100, Liviu Dudau wrote:
+> On Thu, May 14, 2015 at 10:35:42AM +0100, Jon Medhurst (Tixy) wrote:
+[...]
+> > 
+> > What criteria were used to select the contents of juno-base.dtsi?
+> > From what I can see, the stuff left out of base is still the same for r0
+> > and r1 (cpu, pmu, memory, psci!).
+[...]
+> 
+> There are potential differences. Cortex-A53 cluster in r1 has limited
+> CPUfreq functionality due to a chip errata and there were talks internally
+> to actually disable it, hence the reason for keeping CPUs outside the
+> juno-base.dtsi. r2 will have a different set of big CPUs as well, so this
+> is preparing for the future as well.
+> 
+> PMU are linked to the CPUs, hence the reason they stayed. As for the
+> memory and psci nodes the thinking behind it was mostly to allow for
+> ACPI to make changes there, but it does look now like retrofitting an
+> explanation to something that I did not give too much thought at that
+> moment.
 
-> On May 14, 2015, at 10:47 , Benjamin Herrenschmidt <benh@kernel.crash=
-ing.org> wrote:
->=20
+I guess my concern was motivated by the selfish aspect of having to
+maintain a bunch of out-of-tree Juno patches (like cpuidle and cpufreq
+related DT updates) and having to duplicate those in more than one DT,
+and also having backport DT reorgs like this patch. Of course, none of
+that should be a consideration in deciding what goes into mainline, I
+just wanted to make sure there was a reason for the patch.
 
-[snip]
-
-So I spend some time thinking about your use case and I think it boils =
-down
-to this:
-
-I have a live tree in the firmware, I have made changes and I need to r=
-eflect
-those changes to the live tree in the kernel.
-
-Sounds like =E2=80=98how do I generate a patch for getting those two in=
- sync'. No?
-
-I can see where this might be useful for others as all.
-
-I think we really need to create a liblivedt like we have libfdt since
-we have a number of projects going about using/manipulating DT at runti=
-me.
-
-1. The linux kernel, with it=E2=80=99s own live tree implementation.
-2. The device tree compiler (it has a live tree) custom implemented.
-3. Your weird and wonderful (or wacky) firmware.
-4. u-boot does use DT now, but it does with libfdt. I believe this is s=
-uboptimal.
-5. barebox does DT as well.
-
-Most of what we want to do with DT can be abstracted in a library I thi=
-nk that
-all of those projects can use.
-
-What are your thoughts?
-
-Regards
-
-=E2=80=94 Pantelis
+-- 
+Tixy
