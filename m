@@ -1,141 +1,53 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH 3/4] edac, altera: Addition of Arria10 EDAC
-Date: Thu, 14 May 2015 15:38:58 -0500
-Message-ID: <555507E2.2020606@opensource.altera.com>
-References: <1431553787-27741-1-git-send-email-tthayer@opensource.altera.com>
- <1431553787-27741-4-git-send-email-tthayer@opensource.altera.com>
- <555503A4.2070802@opensource.altera.com>
-Reply-To: <tthayer@opensource.altera.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 00/10] omap3 crypto fixes
+Date: Thu, 14 May 2015 23:17:41 +0200
+Message-ID: <201505142317.41151@pali>
+References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com> <20150306183631.GA13520@atomide.com> <20150306222306.GB587@fuloong-minipc.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: multipart/signed;
+  boundary="nextPart9184786.ENNQUbzcBd";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <555503A4.2070802@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@opensource.altera.com>, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150306222306.GB587@fuloong-minipc.musicnaut.iki.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+--nextPart9184786.ENNQUbzcBd
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Friday 06 March 2015 23:23:06 Aaro Koskinen wrote:
+> Hi,
+>=20
+> On Fri, Mar 06, 2015 at 10:36:32AM -0800, Tony Lindgren wrote:
+> > Are there any fixes in this series that should go into
+> > v4.0-rc series, or can it all wait for v4.1?
+>=20
+> I think these all should wait for v4.1.
+>=20
+> A.
 
-On 05/14/2015 03:20 PM, Dinh Nguyen wrote:
-> On 05/13/2015 04:49 PM, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> The Arria10 SDRAM and ECC system differs significantly from the
->> Cyclone5 and Arria5 SoCs. This patch adds support for the Arria10
->> SoC.
->> 1) IRQ handler needs to support SHARED IRQ
->> 2) Support sberr and dberr address reporting.
->>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->>   drivers/edac/altera_edac.c |  132 ++++++++++++++++++++++++++++++++++++++------
->>   drivers/edac/altera_edac.h |   85 ++++++++++++++++++++++++++++
->>   2 files changed, 201 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
->> index 204ad2d..735a180 100644
->> --- a/drivers/edac/altera_edac.c
->> +++ b/drivers/edac/altera_edac.c
->> @@ -42,6 +42,7 @@ const struct altr_sdram_prv_data c5_data = {
->>   	.ecc_stat_ce_mask   = CV_DRAMSTS_SBEERR,
->>   	.ecc_stat_ue_mask   = CV_DRAMSTS_DBEERR,
->>   	.ecc_saddr_offset   = CV_ERRADDR_OFST,
->> +	.ecc_daddr_offset   = CV_ERRADDR_OFST,
->>   	.ecc_cecnt_offset   = CV_SBECOUNT_OFST,
->>   	.ecc_uecnt_offset   = CV_DBECOUNT_OFST,
->>   	.ecc_irq_en_offset  = CV_DRAMINTR_OFST,
->> @@ -57,37 +58,62 @@ const struct altr_sdram_prv_data c5_data = {
->>   #endif
->>   };
->>
->> +const struct altr_sdram_prv_data a10_data = {\
->
-> This should be static.
->
->> +	.ecc_ctrl_offset    = A10_ECCCTRL1_OFST,
->> +	.ecc_ctl_en_mask    = A10_ECCCTRL1_ECC_EN,
->> +	.ecc_stat_offset    = A10_INTSTAT_OFST,
->> +	.ecc_stat_ce_mask   = A10_INTSTAT_SBEERR,
->> +	.ecc_stat_ue_mask   = A10_INTSTAT_DBEERR,
->> +	.ecc_saddr_offset   = A10_SERRADDR_OFST,
->> +	.ecc_daddr_offset   = A10_DERRADDR_OFST,
->> +	.ecc_irq_en_offset  = A10_ERRINTEN_OFST,
->> +	.ecc_irq_en_mask    = A10_ECC_IRQ_EN_MASK,
->> +	.ecc_irq_clr_offset = A10_INTSTAT_OFST,
->> +	.ecc_irq_clr_mask   = (A10_INTSTAT_SBEERR | A10_INTSTAT_DBEERR),
->> +	.ecc_cnt_rst_offset = A10_ECCCTRL1_OFST,
->> +	.ecc_cnt_rst_mask   = A10_ECC_CNT_RESET_MASK,
->> +#ifdef CONFIG_EDAC_DEBUG
->> +	.ce_ue_trgr_offset  = A10_DIAGINTTEST_OFST,
->> +	.ce_set_mask        = A10_DIAGINT_TSERRA_MASK,
->> +	.ue_set_mask        = A10_DIAGINT_TDERRA_MASK,
->> +#endif
->> +};
->> +
->>
-> <snip>
->
->> +
->>   static int altr_sdram_probe(struct platform_device *pdev)
->>   {
->>   	const struct of_device_id *id;
->> @@ -221,8 +295,8 @@ static int altr_sdram_probe(struct platform_device *pdev)
->>   	struct regmap *mc_vbase;
->>   	struct dimm_info *dimm;
->>   	u32 read_reg;
->> -	int irq, res = 0;
->> -	unsigned long mem_size;
->> +	int irq, irq2, res = 0;
->> +	unsigned long mem_size, irqflags;
->>
->>   	id = of_match_device(altr_sdram_ctrl_of_match, &pdev->dev);
->>   	if (!id)
->> @@ -288,6 +362,9 @@ static int altr_sdram_probe(struct platform_device *pdev)
->>   		return -ENODEV;
->>   	}
->>
->> +	/* Arria10 has a 2nd IRQ */
->> +	irq2 = platform_get_irq(pdev, 1);
->> +
->>   	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
->>   	layers[0].size = 1;
->>   	layers[0].is_virt_csrow = true;
->> @@ -332,8 +409,31 @@ static int altr_sdram_probe(struct platform_device *pdev)
->>   	if (res < 0)
->>   		goto err;
->>
->> +	/* Only the Arria10 has separate IRQs */
->> +	if (irq2 > 0) {
->> +		/* Arria10 specific initialization */
->> +		res = a10_init(mc_vbase);
->> +		if (res < 0)
->> +			goto err2;
->> +
->> +		res = a10_unmask_irq(pdev, A10_DDR0_IRQ_MASK);
->> +		if (res < 0)
->> +			goto err2;
->> +
->> +		res = devm_request_irq(&pdev->dev, irq2,
->> +				       altr_sdram_mc_err_handler,
->> +				       IRQF_SHARED, dev_name(&pdev->dev), mci);
->> +		if (res < 0) {
->> +			edac_mc_printk(mci, KERN_ERR,
->> +				       "Unable to request irq %d\n", irq2);
->> +			res = -ENODEV;
->> +			goto err2;
->> +		}
->> +		irqflags = IRQF_SHARED;
->> +	}
->> +
->>   	res = devm_request_irq(&pdev->dev, irq, altr_sdram_mc_err_handler,
->> -			       0, dev_name(&pdev->dev), mci);
->> +			       irqflags, dev_name(&pdev->dev), mci);
->
-> irqflags was never set for the case of !(irq2 > 0).
->
-> Dinh
->
+4.1-rc3 was released and this patch series is still not included...
 
-Correct. So irqflags will be 0 for the CycloneV case.
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart9184786.ENNQUbzcBd
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlVVEPUACgkQi/DJPQPkQ1KCsACgju85ytDt5nVt5AuRtP+t2KxT
+tBUAniq04+D8WLf17D/WesWn+RfViP0d
+=KViO
+-----END PGP SIGNATURE-----
+
+--nextPart9184786.ENNQUbzcBd--
