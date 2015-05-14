@@ -1,77 +1,75 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] drivers: of/base: move of_init to driver_init
-Date: Thu, 14 May 2015 14:54:11 +0100
-Message-ID: <5554A903.8040605@arm.com>
-References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [PATCH 5/5] arm64: Add DT support for Juno r1 board.
+Date: Thu, 14 May 2015 15:07:31 +0100
+Message-ID: <1431612451.2881.54.camel@linaro.org>
+References: <1431537092-19597-1-git-send-email-Liviu.Dudau@arm.com>
+	 <1431537092-19597-6-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431595695-17103-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431537092-19597-6-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 14/05/15 10:28, Sudeep Holla wrote:
-> Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> devices with an OF node") adds the symlink `of_node` for each device
-> pointing to it's device tree node while creating/initialising it.
->
-> However the devicetree sysfs is created and setup in of_init which is
-> executed at core_initcall level. For all the devices created before
-> of_init, the following error is thrown:
-> 	"Error -2(-ENOENT) creating of_node link"
->
-> Like many other components in driver model, initialize the sysfs support
-> for OF/devicetree from driver_init so that it's ready before any devices
-> are created.
->
-> Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> 	devices with an OF node")
-> Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+On Wed, 2015-05-13 at 18:11 +0100, Liviu Dudau wrote:
+> This board is based on Juno r0 with updated Cortex A5x revisions
+> and board errata fixes. It also contains coherent ThinLinks ports
+> on the expansion slot that allow for an AXI master on the daughter
+> card to participate in a coherency domain.
+> 
+> Support for SoC PCIe host bridge will be added as a separate series.
+> 
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 > ---
->   drivers/base/init.c | 2 ++
->   drivers/of/base.c   | 8 +++-----
->   include/linux/of.h  | 6 ++++++
->   3 files changed, 11 insertions(+), 5 deletions(-)
->
+>  arch/arm64/boot/dts/arm/Makefile    |   2 +-
+>  arch/arm64/boot/dts/arm/juno-r1.dts | 123 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 124 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/arm/juno-r1.dts
+> 
+> diff --git a/arch/arm64/boot/dts/arm/Makefile b/arch/arm64/boot/dts/arm/Makefile
+> index 301a0da..c5c98b9 100644
+> --- a/arch/arm64/boot/dts/arm/Makefile
+> +++ b/arch/arm64/boot/dts/arm/Makefile
+> @@ -1,5 +1,5 @@
+>  dtb-$(CONFIG_ARCH_VEXPRESS) += foundation-v8.dtb
+> -dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb
+> +dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb juno-r1.dtb
+>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb
+>  
+>  always		:= $(dtb-y)
+> diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+> new file mode 100644
+> index 0000000..f6bc073
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+> @@ -0,0 +1,123 @@
+> +/*
+> + * ARM Ltd. Juno Platform
+> + *
+> + * Copyright (c) 2015 ARM Ltd.
+> + *
+> + * This file is licensed under a dual GPLv2 or BSD license.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	model = "ARM Juno development board (r1)";
+> +	compatible = "arm,juno", "arm,vexpress";
 
-Looks like we still have conflict even though the one I pointed was in
-bootwrapper. Kbuilder reported the following build error:
+Is there scope for adding "arm,juno-r1" to the front of that list?
+Reason I ask, is that I can't help but think [1] that userside code
+(like Android) which wants to select device-specific configuration,
+should use something like the devices compatible string rather than what
+they currently propose [2].
+ 
+[1] https://lists.linaro.org/pipermail/linaro-android/2015-April/002743.html
+[2] https://lists.linaro.org/pipermail/linaro-android/2015-April/002742.html
 
-drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c:45:1: error: 
-conflicting types for 'of_init'
-  of_init(struct nvkm_bios *bios, const char *name)
-  ^
-In file included from arch/powerpc/include/asm/prom.h:23:0,
-       from arch/powerpc/include/asm/pci.h:20,
-       from include/linux/pci.h:1460,
-       from drivers/gpu/drm/nouveau/include/nvif/os.h:7,
-       from drivers/gpu/drm/nouveau/include/nvkm/core/os.h:3,
-       from drivers/gpu/drm/nouveau/include/nvkm/core/object.h:3,
-       from drivers/gpu/drm/nouveau/include/nvkm/core/subdev.h:3,
-       from drivers/gpu/drm/nouveau/include/nvkm/subdev/bios.h:3,
-       from drivers/gpu/drm/nouveau/nvkm/subdev/bios/priv.h:3,
-       from drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c:23:
-include/linux/of.h:124:6: note: previous declaration of 'of_init' was here
-  void of_init(void);
-       ^
-Sorry I couldn't catch this with any ppc defconfigs. Please ignore this
-version, will repost updated one soon renaming to of_core_init
-as initially discussed.
-
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Tixy
