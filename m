@@ -1,56 +1,66 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: l2c: add options to overwrite prefetching behavior
-Date: Thu, 14 May 2015 18:49:29 +0200
-Message-ID: <5554D219.5020807@hauke-m.de>
-References: <1431620035-7183-1-git-send-email-hauke@hauke-m.de> <20150514161526.GB2067@n2100.arm.linux.org.uk> <20150514163027.GC2067@n2100.arm.linux.org.uk>
+From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH V2 0/4]  da9062: DA9062 driver submission
+Date: Thu, 14 May 2015 17:43:53 +0100
+Message-ID: <cover.1431621833.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150514163027.GC2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2015 06:30 PM, Russell King - ARM Linux wrote:
-> On Thu, May 14, 2015 at 05:15:26PM +0100, Russell King - ARM Linux wrote:
->> On Thu, May 14, 2015 at 06:13:55PM +0200, Hauke Mehrtens wrote:
->>> These options make it possible to overwrites the data and instruction
->>> prefetching behavior of the arm pl310 cache controller.
->>>
->>> We have to set these values in the aux and the prefetch register,
->>> because these two bits in the aux registers are mapped to the prefetch
->>> register. If only the prefetch register is changed there is an
->>> inconsistence in the state in this driver.
->>
->> No there isn't.  Just set the bits in the prefetch register.
->>
->> Writing to the prefetch register changes the state of the bits in the
->> auxiliary control register at the same time.
-> 
-> I see what you're getting at now.  I think we ought to fix that in the
-> driver, so that the auxiliary control register is always written first,
-> before the prefetch control register.  This also makes l2c_configure()
-> reflect the structure of the rest of the driver.
-> 
->  arch/arm/mm/cache-l2x0.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
+From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
-Tested-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+This patch set adds support for the Dialog DA9062 Power Management IC.
 
-Yes this fixes my problem. I did not meant that the state of the
-hardware registers would be inconsistent, but the state of the driver.
-I saw the problem you fixed, but was not closely following the control
-flow in the driver to see the problem before.
+In this patch set the following is provided:
+ - [PATCH V2 1/4]: MFD core support  
+ - [PATCH V2 2/4]: BUCK and LDO regulator driver
+ - [PATCH V2 3/4]: Watchdog driver
+ - [PATCH V2 4/4]: Add bindings for all DA9062 components
 
-Is it save enough to relay on the aux register not being written after
-the prefetch register is written?
-To make it more secure you could call l2x0_data->save(base) directly
-after l2x0_data->configure(base)
+Changes in V2:
+ - Alter subject title in 'cover letter'
+ - Reordered the patch numbering: now 4/4 patches instead of 6/6
+   - Dropped PATCH V1 3/6 RTC driver
+   - Dropped PATCH V1 4/6 OnKey driver
 
-Hauke
+This patch applies against linux-next and v4.1-rc3 
+
+Thank you,
+Steve Twiss, Dialog Semiconductor Ltd.
+
+S Twiss (4):
+  mfd: da9062: DA9062 MFD core driver
+  regulator: da9062: DA9062 regulator driver
+  watchdog: da9062: DA9062 watchdog driver
+  devicetree: da9062: Add bindings for DA9062 driver
+
+ Documentation/devicetree/bindings/mfd/da9062.txt |   79 ++
+ drivers/mfd/Kconfig                              |   12 +
+ drivers/mfd/Makefile                             |    3 +-
+ drivers/mfd/da9062-core.c                        |  647 +++++++++++++
+ drivers/regulator/Kconfig                        |   10 +
+ drivers/regulator/Makefile                       |    1 +
+ drivers/regulator/da9062-regulator.c             |  843 ++++++++++++++++
+ drivers/watchdog/Kconfig                         |    9 +
+ drivers/watchdog/Makefile                        |    1 +
+ drivers/watchdog/da9062_wdt.c                    |  288 ++++++
+ include/linux/mfd/da9062/core.h                  |   62 ++
+ include/linux/mfd/da9062/registers.h             | 1108 ++++++++++++++++++++++
+ 12 files changed, 3062 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/da9062.txt
+ create mode 100644 drivers/mfd/da9062-core.c
+ create mode 100644 drivers/regulator/da9062-regulator.c
+ create mode 100644 drivers/watchdog/da9062_wdt.c
+ create mode 100644 include/linux/mfd/da9062/core.h
+ create mode 100644 include/linux/mfd/da9062/registers.h
+
+-- 
+end-of-patch for PATCH V2
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
