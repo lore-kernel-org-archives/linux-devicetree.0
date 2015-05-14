@@ -1,100 +1,109 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
-Date: Thu, 14 May 2015 18:34:15 +0200
-Message-ID: <CALszF6AhwtYMfhpZjGJeHznteG0mG0_2qo1TcWw-z7anH3Lj4A@mail.gmail.com>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>
-	<5553A608.9080402@linaro.org>
-	<2672178.pv4FEQMD9D@wuerfel>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] usb: add pxa1928 ehci support
+Date: Thu, 14 May 2015 11:36:35 -0500
+Message-ID: <CAL_JsqLq0x47O4gSs_vnfNkaUsE9bp9M9W5SV0c7vJ6X6b5cdA@mail.gmail.com>
+References: <1431557340-5421-6-git-send-email-robh@kernel.org> <Pine.LNX.4.44L0.1505141025280.1582-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2672178.pv4FEQMD9D@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1505141025280.1582-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-13 21:37 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
-> On Wednesday 13 May 2015 20:29:12 Daniel Thompson wrote:
->> On 13/05/15 17:54, Maxime Coquelin wrote:
->> > 2015-05-13 18:37 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
->> >>
->> >> We should definitely try to use the same compatible string for all of
->> >> them, and make a binding that is easy to use.
->> >>
->> >> I haven't fully understood the requirements for the various parts that
->> >> are involved here. My understanding so far was that the driver could
->> >> use the index from the first cell and compute
->> >>
->> >>          void __iomem *reset_reg = rcc_base + 0x10 + 4 * index;
->> >>          void __iomem *clock_reg = rcc_base + 0x30 + 4 * index;
->> >
->> > This calculation is true, but we have to take into account there is a
->> > hole in the middle, between AHB3, and APB1 register:
->>
->> ... and equally importantly, only allows us to use hardware mappings for
->> the gated clocks.
->>
->> > AHB1RSTR : offset = 0x10, index = 0
->> > AHB2RSTR : offset = 0x14, index = 1
->> > AHB3RSTR : offset = 0x18, index = 2
->> > <HOLE >     : offset = 0x1c, index = 3
->> > APB1RSTR : offset = 0x20, index = 4
->> > APB2RSTR : offset = 0x24, index = 5
->> >
->> > So we have to carefully document this hole in the bindings, maybe by
->> > listing indexes in the documentation?
->>
->> The register set has PLL, mux and dividers in the registers at 0x00,
->> 0x04 and 0x08.
->>
->> Many of these clocks can be kept out of DT entirely because they are
->> only there to feed other parts of the clock tree. However some of the
->> dividers flow directly into cells that appear in device tree (such as
->> the systick) and so we need to be able to reference them.
->>
->> In other words the proposed mapping cannot allow us to express the
->> dividers properly (because the index would have to be negative):
->>    void __iomem *clock_reg = rcc_base + 0x30 + 4 * index;
->>
->> Thus I'd favour using different indexes for reset and clock bindings,
->> both using the naive mapping function:
->>    void __iomem *reg =  rcc_base + 4 * index
->>
->> I think that its so much easier to check against the datasheet like
->> that. Admittedly is we follow the block-of-4-bytes idiom we have to
->> divide a hex number by four but thats not so hard and we end up with:
->>
->>               resets = <&rcc  8 0>;
->>               clocks = <&rcc 16 0>;
->>
->> At the end of the day if we say we want to follow the datasheet, lets be
->> do it in the most direct way properly.
-
-Daniel, I'm fine with your proposal.
-Doing that, we can have a single compatible string for stm32 family,
-even if the reset start offset change between two chips.
-
->>
->>
->> PS
->> I've written a custom lookup function to to get from the DT index to an
->> offset into the struct clk *array I'm using. That means I don't care
->> much about any big holes in the register space.
+On Thu, May 14, 2015 at 9:56 AM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> On Wed, 13 May 2015, Rob Herring wrote:
 >
-> How about using the first cell to indicate the type (pll, mux, div, gate)
-> and the second cell for the number (between 0 and 256)? That way, the
-> gates numbers would match the reset numbers, and your internal mapping
-> function would look a bit nicer.
-
-That's another option.
-In this case, for reset, we will only need one cell, right?
-
-Regards,
-Maxime
-
-
-
+>> Add platform driver for Marvell PXA1928 SOC. This is different from the
+>> mv-ehci driver in that it uses the generic phy framework, uses DT, does
+>> not use platform_data, is host only, and has a specific HSIC PHY and
+>> controller initialization handshake.
 >
->         Arnd
+> Are those differences sufficient to make a separate source file
+> necessary?  There are plenty of other drivers that work for both DT and
+> non-DT, for example.
+
+IMO, yes. If it were only DT support, then no it would not make sense.
+I don't disagree there are too many ehci drivers mostly varying in phy
+control.
+
+Actually, ehci-platform is a closer match to this driver. I could use
+it perhaps and either add my custom power_on function and a match
+table entry to it or export ehci-platform functions (probe,
+power_{on,off}, and use them here. Opinion on which direction you
+prefer?
+
+There's also a resume issue I have to figure out how support too. This
+is what the vendor driver does:
+
+@@ -469,6 +470,40 @@ static int ehci_bus_resume (struct usb_hcd *hcd)
+                        set_bit(i, &resume_needed);
+                }
+                ehci_writel(ehci, temp, &ehci->regs->port_status [i]);
++
++               /* for HSIC phy, we have already disable SE0 state when
++                * resume back. we need do following step to pull USB
++                * controller back. */
++#ifdef CONFIG_USB_EHCI_MV_U2H_HSIC
++#define PHY_TEST_GRP_0 0x10
++
++#define S2H_TEST_UTMI_SEL (0x1 << 7)
++#define S2H_TEST_SUSPENDM (0x1 << 14)
++#define S2H_TEST_TX_BITSTUFF_EN (0x1 << 29)
++
++               if (hcd->usb_phy->is_hsic) {
++                       void __iomem *phy_base = hcd->usb_phy->io_priv;
++                       unsigned int count;
++                       mdelay(10);
++
++                       temp = readl(phy_base + PHY_TEST_GRP_0);
++                       writel(temp | (S2H_TEST_UTMI_SEL
++                                       | S2H_TEST_SUSPENDM
++                                       | S2H_TEST_TX_BITSTUFF_EN),
++                                       phy_base + PHY_TEST_GRP_0);
++
++                       count = 1000;
++                       while (--count && (ehci_readl(ehci,
++                               &ehci->regs->port_status[i]) & PORT_RESUME))
++                               udelay(50);
++                       if (count <= 0)
++                               ehci_dbg(ehci, "resume time out\n");
++                       writel(readl(phy_base + PHY_TEST_GRP_0)
++                               & ~S2H_TEST_UTMI_SEL,
++                               phy_base + PHY_TEST_GRP_0);
++               }
++#endif
++
+        }
+
+        /*
+
+
+>> +config USB_EHCI_MV_OF
+>> +     bool "EHCI OF support for Marvell PXA/MMP USB controller"
+>> +     depends on (ARCH_PXA || ARCH_MMP)
+>> +     select USB_EHCI_ROOT_HUB_TT
+>> +     ---help---
+>> +       Enables support for Marvell (including PXA and MMP series) on-chip
+>> +       USB SPH and OTG controller. SPH is a single port host, and it can
+>> +       only be EHCI host. OTG is controller that can switch to host mode.
+>> +       Note that this driver will not work on Marvell's other EHCI
+>> +       controller used by the EBU-type SoCs including Orion, Kirkwood,
+>> +       Dova, Armada 370 and Armada XP. See "Support for Marvell EBU
+>> +       on-chip EHCI USB controller" for those.
+>
+> This is identical to the help text for USB_EHCI_MV.  How is a user
+> supposed to know which option to enable?
+
+The OTG part needs to go. Perhaps I need to make it PXA1928 specific.
+All I know about Marvell IP is it is scattered all over the place, so
+determining which SOCs are the same IP is difficult. The PHYs for sure
+seem to be different on every chip as I did not find any existing
+Marvell phy drivers that match.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
