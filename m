@@ -1,74 +1,119 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 05/10] pinctrl: mediatek: Add Pinctrl/GPIO driver for
- mt6397.
-Date: Thu, 14 May 2015 08:22:28 +0100
-Message-ID: <20150514072228.GB20358@x1>
-References: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
- <1431567346-33780-6-git-send-email-hongzhou.yang@mediatek.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Thu, 14 May 2015 17:25:58 +1000
+Message-ID: <1431588358.4160.42.camel@kernel.crashing.org>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+	 <1430493730.7979.58.camel@kernel.crashing.org>
+	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+	 <1430521038.7979.70.camel@kernel.crashing.org>
+	 <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
+	 <1430774063.7979.139.camel@kernel.crashing.org>
+	 <1431560124.20218.91.camel@kernel.crashing.org>
+	 <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
+	 <1431564871.4160.8.camel@kernel.crashing.org>
+	 <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com>
+	 <1431585994.4160.32.camel@kernel.crashing.org>
+	 <3988EABE-3DE9-4E1C-9778-22E35138E359@antoniou-consulting.com>
+	 <1431587657.4160.37.camel@kernel.crashing.org>
+	 <75F026CA-5AC1-4106-B2F0-AB0D006DEF5A@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431567346-33780-6-git-send-email-hongzhou.yang@mediatek.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Hongzhou Yang <hongzhou.yang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orgl
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <75F026CA-5AC1-4106-B2F0-AB0D006DEF5A-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 May 2015, Hongzhou Yang wrote:
+On Thu, 2015-05-14 at 10:19 +0300, Pantelis Antoniou wrote:
 
-> Add mt6397 support using mediatek common pinctrl driver.
 >=20
-> mt6397 is a PMIC, and pinctrl/GPIO is part of 6397 chip.
-> Pinctrl/GPIO driver should obtain regmap from PMIC,
-> so adding this support to common code.
->=20
-> Also, mt6397 is no need to support interrupt controller,
-> so changing common code to skip it.
->=20
-> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> ---
->  drivers/mfd/mt6397-core.c                     |    3 +
+> You don=E2=80=99t want to know how sausages are made, but they are de=
+licious :)
 
-Please break this out into a separate patch that I can take through my
-tree.  There is no need for you to bind up changes in multiple
-subsystems here.
+ ... most of the time :)
 
->  drivers/pinctrl/mediatek/Kconfig              |    6 +
->  drivers/pinctrl/mediatek/Makefile             |    1 +
->  drivers/pinctrl/mediatek/pinctrl-mt6397.c     |   78 +++++
->  drivers/pinctrl/mediatek/pinctrl-mt8135.c     |    2 +-
->  drivers/pinctrl/mediatek/pinctrl-mt8173.c     |    2 +-
->  drivers/pinctrl/mediatek/pinctrl-mtk-common.c |   13 +-
->  drivers/pinctrl/mediatek/pinctrl-mtk-common.h |    3 +-
->  drivers/pinctrl/mediatek/pinctrl-mtk-mt6397.h |  424 +++++++++++++++=
-++++++++++
->  9 files changed, 527 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6397.c
->  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6397.h
+> > But yeah generating the overlay doesn't necessarily scare me, I can
+> > generate a temp tree that is the overlay in which I "copy" the subt=
+ree
+> > (or in my internal ptr-based representation I could have a concept =
+of
+> > alias which I follow while flattening).
+> >=20
+> > That leaves me with these problems:
+> >=20
+> > - No support for removing of nodes, so that needs to be added back =
+to
+> > the format and to Linux unless I continue removing by hand in the P=
+CI
+> > hotplug code itself
+> >=20
 >=20
-> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> index 09bc780..012c620 100644
-> --- a/drivers/mfd/mt6397-core.c
-> +++ b/drivers/mfd/mt6397-core.c
-> @@ -34,6 +34,9 @@ static const struct mfd_cell mt6397_devs[] =3D {
->  	}, {
->  		.name =3D "mt6397-clk",
->  		.of_compatible =3D "mediatek,mt6397-clk",
-> +	}, {
-> +		.name =3D "mediatek-mt6397-pinctrl",
-> +		.of_compatible =3D "mediatek,mt6397-pinctrl",
->  	},
->  };
+> What kind of nodes/properties you need to remove at _application_ tim=
+e?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+Well, if we stick to removing by hand in Linux for the unplug case, the=
 n
-the body of a message to majordomo@vger.kernel.org
+none.
+
+> What you describe is inserting a bunch of properties and nodes under
+> a slot=E2=80=99s device node. Reverting the overlay removes them all =
+just fine.
+
+Except that still doesn't work for boot time :-)
+
+So I would have to do a special case on unplug:
+
+	if (slot->dt_is_overlay) /* set to false at boot */
+		remove_subtree_myself();
+	else
+		undo_overlay(slot->overlay);
+
+> > - No support for "committing" the overlay which needs to be added a=
+s
+> > well.
+> >=20
+>=20
+> That=E2=80=99s the easiest part.
+
+Yeah, I will need to get my head around the code a bit more but it
+doesn't seem too scary.
+
+> I see. Well, how about this?
+>=20
+> Who said you have to do the whole blob dance in the firmware?
+>=20
+> You can just as easily pass the blob as it is to the linux kernel and
+> the kernel there can convert it to an overlay and apply it.
+
+That's not that pretty but we can do that too which solve the problem o=
+f
+fixing the FW interface.
+
+There is however an argument to be made in having the FW be able to
+generate arbitrary overlays. If we ever want to pass more "property"
+updates or node updates to Linux at runtime.
+
+A few cases have crept up on the radar, like updating the pstate tables
+or VPD informations ...
+
+If we go down that path, then I would implement a concept of generation
+count in the firmware, so I can generate an overlay that include all th=
+e
+changes since the last "generation" given to Linux.
+
+However that requires supporting removal of nodes/properties. So I'm
+tempted to keep that feature on the back burner and go with an ad-hoc
+interface for PCI for now.
+
+Ben.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
