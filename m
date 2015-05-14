@@ -1,90 +1,56 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH 2/5] arm64: Juno: Split juno.dts into juno-base.dtsi and
- juno.dts.
-Date: Thu, 14 May 2015 11:30:40 +0100
-Message-ID: <20150514103040.GN2345@e106497-lin.cambridge.arm.com>
-References: <1431537092-19597-1-git-send-email-Liviu.Dudau@arm.com>
- <1431537092-19597-3-git-send-email-Liviu.Dudau@arm.com>
- <1431596142.2881.13.camel@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] spi: bcm-mspi: Add support for Broadcom MSPI driver.
+Date: Thu, 14 May 2015 11:31:44 +0100
+Message-ID: <20150514103144.GO2761@sirena.org.uk>
+References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com>
+ <1431452293-16697-3-git-send-email-jonathar@broadcom.com>
+ <20150512191718.GW3066@sirena.org.uk>
+ <5553E31A.8060309@broadcom.com>
+ <5553E9FA.4070708@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="VjpKO6h983+pAmpQ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431596142.2881.13.camel@linaro.org>
 Content-Disposition: inline
+In-Reply-To: <5553E9FA.4070708@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, devicetree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+To: Scott Branden <sbranden@broadcom.com>
+Cc: Jonathan Richardson <jonathar@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 14, 2015 at 10:35:42AM +0100, Jon Medhurst (Tixy) wrote:
-> On Wed, 2015-05-13 at 18:11 +0100, Liviu Dudau wrote:
-> > Prepare the device tree for adding more boards based on Juno r0.
-> >=20
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > ---
-> >  arch/arm64/boot/dts/arm/juno-base.dtsi | 125 +++++++++++++++++++++=
-++++++++++++
-> >  arch/arm64/boot/dts/arm/juno.dts       | 122 +--------------------=
------------
->=20
->=20
-> What criteria were used to select the contents of juno-base.dtsi?
-> From what I can see, the stuff left out of base is still the same for=
- r0
-> and r1 (cpu, pmu, memory, psci!). And so juno-r1.dts could just be
->=20
-> ---------------------------------------------------------------------=
-----
-> #include "juno.dts"
->=20
-> / {
-> 	model =3D "ARM Juno development board (r1)";
->=20
-> };
->=20
-> &memtimer {
-> 	status =3D "okay";
-> };
-> ---------------------------------------------------------------------=
-----
->=20
-> Yes, it's a bit hacky, but avoids duplication of source code.
->=20
-> I can only assume there are come non-public differences between r0 an=
-d
-> r1?
 
-Hi Tixy,
+--VjpKO6h983+pAmpQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-There are potential differences. Cortex-A53 cluster in r1 has limited
-CPUfreq functionality due to a chip errata and there were talks interna=
-lly
-to actually disable it, hence the reason for keeping CPUs outside the
-juno-base.dtsi. r2 will have a different set of big CPUs as well, so th=
-is
-is preparing for the future as well.
+On Wed, May 13, 2015 at 05:19:06PM -0700, Scott Branden wrote:
 
-PMU are linked to the CPUs, hence the reason they stayed. As for the
-memory and psci nodes the thinking behind it was mostly to allow for
-ACPI to make changes there, but it does look now like retrofitting an
-explanation to something that I did not give too much thought at that
-moment.
+> The purpose of this mspi interface is to connect to NOR flash.  There are
+> other SPI interfaces on the devices used to connect to other SPI devies.  We
+> don't have any need to support full duplex slaves on this port (NOR have any
+> hardware wired this way - pun realized after typing this).
 
-Best regards,
-Liviu
+Chip vendors often say this sort of thing and then get surprised by what
+their users choose to do, and even if it only ever gets used with flash
+all it would take is some new flash command which can use full duplex
+for something.  Please write the code so it at least tries to handle
+full duplex operation, if you can't test it fully that's not the end of
+the world.  It doesn't look like it should be particularly difficult.
 
->=20
-> --=20
-> Tixy
->=20
+--VjpKO6h983+pAmpQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVVHmKAAoJECTWi3JdVIfQXecH/jQw7X3dDC47kUIwKGYUSwGN
+cDlDZ/td42IGqPfFFc6DCAp3LVPqSzYdWBgBIQWc92UEsAGRi4FJhNFB9usk/jzT
+KsXCn8d/99l/lct6zGWG0G4Incr+FVu7s2miZup0xlv8Qiu7hF0uF3zdlJ/MYSAK
+l5KpHWY6rolxT1BvYkhVxLYyJm5BXxpegzyS8DA7b1Aw9cSf8cu6EFfduScTLDH3
+wj6MZIMOUz6RID6nxiGCd7jmi3I4i+RHHwq9Me1ZT9hEe6sH7TtW3jGgTUhEhYMN
+/5+0purX147gYWHpaJ3LDlF/iej6Q7N9TKBOgffvfvNYMlsobbdHduZsomjJ4Jg=
+=+ui+
+-----END PGP SIGNATURE-----
+
+--VjpKO6h983+pAmpQ--
