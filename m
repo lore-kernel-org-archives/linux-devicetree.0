@@ -1,42 +1,140 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Thu, 14 May 2015 17:29:04 +1000
-Message-ID: <1431588544.4160.43.camel@kernel.crashing.org>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
-	 <1430493730.7979.58.camel@kernel.crashing.org>
-	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
-	 <1430521038.7979.70.camel@kernel.crashing.org>
-	 <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
-	 <1430774063.7979.139.camel@kernel.crashing.org>
-	 <1431560124.20218.91.camel@kernel.crashing.org>
-	 <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
-	 <1431564871.4160.8.camel@kernel.crashing.org>
-	 <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com>
-	 <1431585994.4160.32.camel@kernel.crashing.org>
-	 <3988EABE-3DE9-4E1C-9778-22E35138E359@antoniou-consulting.com>
-	 <1431587657.4160.37.camel@kernel.crashing.org>
-	 <75F026CA-5AC1-4106-B2F0-AB0D006DEF5A@antoniou-consulting.com>
-	 <1431588358.4160.42.camel@kernel.crashing.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
+Date: Thu, 14 May 2015 08:29:54 +0100
+Message-ID: <20150514072954.GD20358@x1>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+ <1430761002-9327-5-git-send-email-abrestic@chromium.org>
+ <20150513143954.GA3394@x1>
+ <CAL1qeaF-7aAx0gqPe-_D4ZaZET0Kejr801KrbvuQ_2w6c8mcnA@mail.gmail.com>
+ <20150513165014.GC19543@x1>
+ <CAL1qeaE7XHmreQ_b52iop6fOY1osAhjij81c4vVr7_8wO_cYxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1431588358.4160.42.camel@kernel.crashing.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL1qeaE7XHmreQ_b52iop6fOY1osAhjij81c4vVr7_8wO_cYxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 13 May 2015, Andrew Bresticker wrote:
 
-> So I would have to do a special case on unplug:
-> 
-> 	if (slot->dt_is_overlay) /* set to false at boot */
-> 		remove_subtree_myself();
-> 	else
-> 		undo_overlay(slot->overlay);
+> On Wed, May 13, 2015 at 9:50 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
+te:
+> > On Wed, 13 May 2015, Andrew Bresticker wrote:
+> >
+> >> Lee,
+> >>
+> >> On Wed, May 13, 2015 at 7:39 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
+wrote:
+> >> > On Mon, 04 May 2015, Andrew Bresticker wrote:
+> >> >
+> >> >> Add a binding document for the XUSB host complex on NVIDIA Tegr=
+a124
+> >> >> and later SoCs.  The XUSB host complex includes a mailbox for
+> >> >> communication with the XUSB micro-controller and an xHCI host-c=
+ontroller.
+> >> >>
+> >> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> >> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >> >> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >> >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> >> ---
+> >> >> Changes from v7:
+> >> >>  - Move non-shared resources into child nodes.
+> >> >> New for v7.
+> >> >> ---
+> >> >>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 37 ++++++=
+++++++++++++++++
+> >> >>  1 file changed, 37 insertions(+)
+> >> >>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidi=
+a,tegra124-xusb.txt
+> >> >>
+> >> >> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegra=
+124-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xu=
+sb.txt
+> >> >> new file mode 100644
+> >> >> index 0000000..bc50110
+> >> >> --- /dev/null
+> >> >> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xus=
+b.txt
+> >> >> @@ -0,0 +1,37 @@
+> >> >> +NVIDIA Tegra XUSB host copmlex
+> >> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> >> +
+> >> >> +The XUSB host complex on Tegra124 and later SoCs contains an x=
+HCI host
+> >> >> +controller and a mailbox for communication with the XUSB micro=
+-controller.
+> >> >> +
+> >> >> +Required properties:
+> >> >> +--------------------
+> >> >> + - compatible: For Tegra124, must contain "nvidia,tegra124-xus=
+b".
+> >> >> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,tegr=
+a124-xusb"'
+> >> >> +   where <chip> is tegra132.
+> >> >> + - reg: Must contain the base and length of the XUSB FPCI regi=
+sters.
+> >> >> + - ranges: Bus address mapping for the XUSB block.  Can be emp=
+ty since the
+> >> >> +   mapping is 1:1.
+> >> >> + - #address-cells: Must be 2.
+> >> >> + - #size-cells: Must be 2.
+> >> >> +
+> >> >> +Example:
+> >> >> +--------
+> >> >> +     usb@0,70098000 {
+> >> >> +             compatible =3D "nvidia,tegra124-xusb";
+> >> >> +             reg =3D <0x0 0x70098000 0x0 0x1000>;
+> >> >> +             ranges;
+> >> >> +
+> >> >> +             #address-cells =3D <2>;
+> >> >> +             #size-cells =3D <2>;
+> >> >> +
+> >> >> +             usb-host@0,70090000 {
+> >> >> +                     compatible =3D "nvidia,tegra124-xhci";
+> >> >> +                     ...
+> >> >> +             };
+> >> >> +
+> >> >> +             mailbox {
+> >> >> +                     compatible =3D "nvidia,tegra124-xusb-mbox=
+";
+> >> >> +                     ...
+> >> >> +             };
+> >> >
+> >> > This doesn't appear to be a proper MFD.  I would have the USB an=
+d
+> >> > Mailbox devices probe seperately and use a phandle to point the =
+USB
+> >> > device to its Mailbox.
+> >> >
+> >> > usb@xyz {
+> >> >         mboxes =3D <&xusb-mailbox, [chan]>;
+> >> > };
+> >>
+> >> Then what will set up the shared regmap?  The point of using an MF=
+D
+> >> here was to share a register set with both the mailbox and xHCI
+> >> drivers and avoid having to map the same register set twice in two
+> >> separate drivers.
+> >
+> > Can you share the mapping please?
+>=20
+> What do you mean?  That's what the MFD is doing now by setting up an
+> MMIO regmap to be shared between the two devices.
 
-Of course I just inverted the polarity of the if () in the example :-)
+I mean, can you share the documentation with me. :)
 
-But you get the idea...
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
