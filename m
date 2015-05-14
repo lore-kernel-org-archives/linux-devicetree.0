@@ -1,52 +1,86 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Wed, 13 May 2015 19:18:37 -0500
-Message-ID: <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
- <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
- <1430493730.7979.58.camel@kernel.crashing.org> <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
- <1430521038.7979.70.camel@kernel.crashing.org> <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
- <1430774063.7979.139.camel@kernel.crashing.org> <1431560124.20218.91.camel@kernel.crashing.org>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: bcm-mspi: Add support for Broadcom MSPI driver.
+Date: Wed, 13 May 2015 17:19:06 -0700
+Message-ID: <5553E9FA.4070708@broadcom.com>
+References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com> <1431452293-16697-3-git-send-email-jonathar@broadcom.com> <20150512191718.GW3066@sirena.org.uk> <5553E31A.8060309@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431560124.20218.91.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <5553E31A.8060309-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 6:35 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> On Tue, 2015-05-05 at 07:14 +1000, Benjamin Herrenschmidt wrote:
->> So the "trivial" way to do it (and the way we have implemented the FW
->> side so far) is to have the FW simply "flatten" the subtree below the
->> slot and pass it to Linux, with the intent of expanding it back below
->> the slot node.
+Hi Jon,
+
+comment below for full-duplex operation.
+
+On 15-05-13 04:49 PM, Jonathan Richardson wrote:
+> On 15-05-12 12:17 PM, Mark Brown wrote:
+>> On Tue, May 12, 2015 at 10:38:13AM -0700, Jonathan Richardson wrote:
 >>
->> This is what Gavin proposed patches do.
 >>
->> The overlay mechanism adds all sorts of features that we don't seen to
->> need and would make the above more complex.
+>>> +	/* The rx data will go into RXRAM0/1 + last tx length. */
+>>> +	if (slot + 1 >= NUM_SLOTS)
+>>> +		mspi->rx_slot = 0;
+>>> +	else
+>>> +		mspi->rx_slot = slot + 1;
+>>
+>> How is this going to work for full duplex transfers if we had to fill
+>> the FIFO more than once?
 >
-> Guys, I never got a final answer from you on this. Are we ok with adding
-> the way to just expand a subtree or are you insistent we need to use the
-> overlap mechanism ?
+> See below, it's not.
+>
+>>
+>>> +static int bcm_mspi_transfer_one(struct spi_master *master,
+>>> +	struct spi_device *spidev, struct spi_transfer *transfer)
+>>> +{
+>>> +	int err;
+>>> +
+>>> +	/* 8 bit transfers only are currently supported. */
+>>> +	if (transfer->bits_per_word > 8)
+>>> +		return -ENOTSUPP;
+>>
+>> Tell the core what the device supports and it will check for you.
+>>
+>>> +
+>>> +	err = bcm_mspi_tx_data(master, spidev, transfer);
+>>> +	if (err)
+>>> +		return err;
+>>> +
+>>> +	err = bcm_mspi_rx_data(master, spidev, transfer);
+>>> +	if (err)
+>>> +		return err;
+>>> +
+>>> +	return 0;
+>>> +}
+>>
+>> I would expect the recieve and transmit operations to be running in
+>> parallel, not executed one after another, given the need to keep
+>> manually filling and draining the FIFOs.
+>
+> The driver was only written with NOR flash in mind as the slave. Since
+> this is really just half duplex, it works, though it won't with a real
+> full duplex slave. m25p80 never calls transfer_one with both tx and rx
+> buffers. The rx bytes that we don't care about from a tx request are
+> dropped.
+>
+> We don't have any full duplex slaves so it's a hard to test. I could
+> possibly re-write this so that tx/rx is interleaved and that should be
+> good for full duplex or close enough that it won't have to be completely
+> overhauled should we ever connect a full duplex slave to it. Maybe I
+> should do that. This came from a pre-existing driver that had the same
+> limitation.
+>
+>>
 
-I haven't decided really.
-
-The main thing with the current patch is I don't really like the added
-complexity to unflatten_dt_node. It is already a fairly complex
-function. Perhaps removing of "hybrid" as discussed will help?
-
-If there are things we can do to make overlays easier to use in your
-use case, I'd like to hear ideas. I don't really buy that being more
-complex than needed is an obstacle. That is very often the case to
-have common, scale-able solutions. I want to see a simple case be
-simple to support.
-
-Rob
+The purpose of this mspi interface is to connect to NOR flash.  There 
+are other SPI interfaces on the devices used to connect to other SPI 
+devies.  We don't have any need to support full duplex slaves on this 
+port (NOR have any hardware wired this way - pun realized after typing 
+this).
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
