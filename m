@@ -1,234 +1,98 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH 1/2] rtc: add rtc-lpc24xx driver
-Date: Fri, 15 May 2015 00:56:34 +0200
-Message-ID: <CAGhQ9Vy31h5pesO8ZRfpXnPF2t2PpKM8Jz5gqpp9RuvGb8PMSA@mail.gmail.com>
-References: <1431624875-20990-1-git-send-email-manabian@gmail.com>
-	<1431624875-20990-2-git-send-email-manabian@gmail.com>
-	<20150514221531.GG3338@piout.net>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Fri, 15 May 2015 09:25:53 +1000
+Message-ID: <1431645953.4160.82.camel@kernel.crashing.org>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+	 <1430493730.7979.58.camel@kernel.crashing.org>
+	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+	 <1430521038.7979.70.camel@kernel.crashing.org>
+	 <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
+	 <1430774063.7979.139.camel@kernel.crashing.org>
+	 <1431560124.20218.91.camel@kernel.crashing.org>
+	 <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
+	 <1431564871.4160.8.camel@kernel.crashing.org>
+	 <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com>
+	 <1431585994.4160.32.camel@kernel.crashing.org>
+	 <3988EABE-3DE9-4E1C-9778-22E35138E359@antoniou-consulting.com>
+	 <1431587657.4160.37.camel@kernel.crashing.org>
+	 <75F026CA-5AC1-4106-B2F0-AB0D006DEF5A@antoniou-consulting.com>
+	 <1431588358.4160.42.camel@kernel.crashing.org>
+	 <D7FC0542-DD1A-42 8F-8E75-81620C6D83DC@antoniou-consulting.com>
+	 <1431589652.4160.49.camel@kernel.crashing.org>
+	 <A748C569-24CF-41B9-BA91-822A67132DA9@antoniou-consulting.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150514221531.GG3338-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, wellsk40-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <A748C569-24CF-41B9-BA91-822A67132DA9@antoniou-consulting.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15 May 2015 at 00:15, Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On 14/05/2015 at 19:34:34 +0200, Joachim Eastwood wrote :
->> Add driver for the RTC found on NXP LPC24xx/178x/18xx/43xx devices.
->> The RTC provides calendar and clock functionality together with
->> periodic tick and alarm interrupt support.
->>
->> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/rtc/Kconfig       |  11 ++
->>  drivers/rtc/Makefile      |   1 +
->>  drivers/rtc/rtc-lpc24xx.c | 379 ++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 391 insertions(+)
->>  create mode 100644 drivers/rtc/rtc-lpc24xx.c
->>
->> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
->> index 6149ae01e11f..42b890716b1c 100644
->> --- a/drivers/rtc/Kconfig
->> +++ b/drivers/rtc/Kconfig
->> @@ -1427,6 +1427,17 @@ config RTC_DRV_JZ4740
->>         This driver can also be buillt as a module. If so, the module
->>         will be called rtc-jz4740.
->>
->> +config RTC_DRV_LPC24XX
->> +     depends on OF && (ARCH_LPC18XX || TEST_COMPILE)
->
-> You probably meant COMPILE_TEST
+On Thu, 2015-05-14 at 14:02 +0300, Pantelis Antoniou wrote:
+> Hi Ben,
+>=20
+> > On May 14, 2015, at 10:47 , Benjamin Herrenschmidt <benh@kernel.cra=
+shing.org> wrote:
+> >=20
+>=20
+> [snip]
+>=20
+> So I spend some time thinking about your use case and I think it boil=
+s down
+> to this:
+>=20
+> I have a live tree in the firmware, I have made changes and I need to=
+ reflect
+> those changes to the live tree in the kernel.
+>=20
+> Sounds like =E2=80=98how do I generate a patch for getting those two =
+in sync'. No?
 
-ops, yes :)
+More or less.
 
->and it probably needs to depend on HAS_IOMEM
+> I can see where this might be useful for others as all.
+>=20
+> I think we really need to create a liblivedt like we have libfdt sinc=
+e
+> we have a number of projects going about using/manipulating DT at run=
+time.
+>=20
+> 1. The linux kernel, with it=E2=80=99s own live tree implementation.
+> 2. The device tree compiler (it has a live tree) custom implemented.
+> 3. Your weird and wonderful (or wacky) firmware.
+> 4. u-boot does use DT now, but it does with libfdt. I believe this is=
+ suboptimal.
+> 5. barebox does DT as well.
+>=20
+> Most of what we want to do with DT can be abstracted in a library I t=
+hink that
+> all of those projects can use.
+>=20
+> What are your thoughts?
 
-Indeed.
+Well, we have at least two implementations, the kernel one and the one
+in our OPAL firmware:
 
->> +     tristate "NXP LPC2K RTC"
->
-> I'm not sure about LPC2K, you use LPC24XX for the config symbol and the
-> filename also, just below the string is LPC32XX. But maybe that is fine
-> if this is the most commonly used denomination.
+https://github.com/open-power/skiboot/blob/master/include/device.h
+https://github.com/open-power/skiboot/blob/master/core/device.c
 
-I left the name used in the original driver. But I agree, using
-LPC24XX everywhere would be more consistent. I'll change it in the
-next version.
+The latter uses some nice Rusty tricks (tm) for multiple argument
+functions.
 
->> +     help
->> +       This enables support for the NXP RTC found which can be found on
->> +       LPC24xx/178x/18xx/43xx devices.
->> +
->> +       If you have one of the devices above enable this driver to use
->> +       the hardware RTC. This driver can also be buillt as a module. If
->> +       so, the module will be called rtc-lpc24xx.
->> +
->>  config RTC_DRV_LPC32XX
->>       depends on ARCH_LPC32XX
->>       tristate "NXP LPC32XX RTC"
+It would make sense to do a library somewhere yes. However, I need to
+cut my firmware API pretty much today so I think for now I'll stick
+to something Ad-Hoc for the PCI hotplug code that just passes the
+bit of FDT with the new devices and leave the "grand project" of live
+sync of the tree for later.
 
-<snip>
+There are other implementations of live DT in various Open Firmware
+variants out there, most are in Forth which I suggest you don't bother
+with unless you enjoy pain, but I think at least one of these is
+actually in C.
 
->> +static int lpc24xx_rtc_probe(struct platform_device *pdev)
->> +{
->> +     const struct of_device_id *match;
->> +     struct lpc24xx_rtc *rtc;
->> +     struct resource *res;
->> +     u32 rtc_ccr = 0;
->> +     int irq, ret;
->> +
->> +     match = of_match_device(lpc24xx_rtc_match, &pdev->dev);
->> +     if (!match) {
->
-> Because you are only using DT, this will never happen. Else the
-> lpc24xx_rtc_probe would not be called
-
-This will go away in the next version since I'll be removing support
-for the older versions of this ip block and thus no need for the match
-data.
-
->> +             dev_err(&pdev->dev, "no device match found\n");
->> +             return -ENODEV;
->> +     }
->> +
->> +     rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
->> +     if (!rtc)
->> +             return -ENOMEM;
->> +
->> +     rtc->features = (u32)match->data;
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     rtc->rtc_base = devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(rtc->rtc_base))
->> +             return PTR_ERR(rtc->rtc_base);
->> +
->> +     irq = platform_get_irq(pdev, 0);
->> +     if (irq < 0) {
->> +             dev_warn(&pdev->dev, "can't get interrupt resource\n");
->> +             return irq;
->> +     }
->> +
->> +     rtc->clk_rtc = devm_clk_get(&pdev->dev, "rtc");
->> +     if (IS_ERR(rtc->clk_rtc)) {
->> +             dev_err(&pdev->dev, "error getting rtc clock\n");
->> +             return PTR_ERR(rtc->clk_rtc);
->> +     }
->> +
->> +     rtc->clk_reg = devm_clk_get(&pdev->dev, "reg");
->> +     if (IS_ERR(rtc->clk_reg)) {
->> +             dev_err(&pdev->dev, "error getting reg clock\n");
->> +             return PTR_ERR(rtc->clk_reg);
->> +     }
->> +
->> +     ret = clk_prepare_enable(rtc->clk_rtc);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "unable to enable rtc clock\n");
->> +             return ret;
->> +     }
->> +
->> +     ret = clk_prepare_enable(rtc->clk_reg);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "unable to enable reg clock\n");
->> +             goto disable_rtc_clk;
->> +     }
->> +
->> +     platform_set_drvdata(pdev, rtc);
->> +
->> +     /* Clear the counter increment state */
->> +     rtc_writel(rtc, LPC24XX_ILR, LPC24XX_RTCCIF);
->> +
->> +     if (rtc->features & HAVE_PRESCALER) {
->> +             /* Clock source is 32k oscillator */
->> +             rtc_ccr = LPC24XX_CLKSRC;
->> +             rtc_writel(rtc, LPC24XX_CCR, rtc_ccr);
->> +
->> +             /* Set prescaler to divide by 1 */
->> +             rtc_writel(rtc, LPC24XX_PREINT, 0);
->> +             rtc_writel(rtc, LPC24XX_PREFRAC, 0);
->> +     }
->> +
->> +     if (rtc->features & HAVE_SUBSECOND) {
->> +             /* Disable sub-second interrupt */
->> +             rtc_writel(rtc, LPC24XX_CISS, 0);
->> +     }
->> +
->> +     /* Only 1-second interrupt will generate interrupt */
->> +     rtc_writel(rtc, LPC24XX_CIIR, LPC24XX_IMSEC);
->> +
->> +     /* Enable RTC count */
->> +     rtc_writel(rtc, LPC24XX_CCR, rtc_ccr | LPC24XX_CLKEN);
->> +
->> +     ret = devm_request_irq(&pdev->dev, irq, lpc24xx_rtc_interrupt, 0,
->> +                            pdev->name, rtc);
->> +     if (ret < 0) {
->> +             dev_warn(&pdev->dev, "can't request interrupt\n");
->> +             goto disable_clks;
->> +     }
->> +
->> +     rtc->rtc = devm_rtc_device_register(&pdev->dev, "lpc2k-rtc",
->
-> Same comment regarding the lpc2k name, also applies below.
-
-Yeah, I'll change it.
-
->> +                                         &lpc24xx_rtc_ops, THIS_MODULE);
->> +     if (IS_ERR(rtc->rtc)) {
->> +             dev_err(&pdev->dev, "can't register rtc device\n");
->> +             ret = PTR_ERR(rtc->rtc);
->> +             goto disable_clks;
->> +     }
->> +
->> +     return 0;
->> +
->> +disable_clks:
->> +     clk_disable_unprepare(rtc->clk_reg);
->> +disable_rtc_clk:
->> +     clk_disable_unprepare(rtc->clk_rtc);
->> +     return ret;
->> +}
->> +
->> +static int lpc24xx_rtc_remove(struct platform_device *pdev)
->> +{
->> +     struct lpc24xx_rtc *rtc = platform_get_drvdata(pdev);
->> +
->> +     /*
->> +      * Disable alarm, but leave RTC enabled so it
->> +      * remains valid across reset cycles.
->> +      */
->> +     rtc_writel(rtc, LPC24XX_AMR, LPC24XX_ALARM_DISABLE);
->> +     rtc_writel(rtc, LPC24XX_CCR, 0);
->> +
->> +     clk_disable_unprepare(rtc->clk_rtc);
->> +     clk_disable_unprepare(rtc->clk_reg);
->> +
->> +     return 0;
->> +}
->> +
->> +static struct platform_driver lpc24xx_rtc_driver = {
->> +     .probe  = lpc24xx_rtc_probe,
->> +     .remove = lpc24xx_rtc_remove,
->> +     .driver = {
->> +             .name = "lpc2k-rtc",
->> +             .of_match_table = lpc24xx_rtc_match,
->> +     },
->> +};
->> +module_platform_driver(lpc24xx_rtc_driver);
->> +
->> +MODULE_AUTHOR("Kevin Wells <wellsk40-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org");
->> +MODULE_DESCRIPTION("RTC driver for the LPC24xx SoC");
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("platform:lpc2k-rtc");
-
-Thanks for looking and commenting.
-
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Ben.
