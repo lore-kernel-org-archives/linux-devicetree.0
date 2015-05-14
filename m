@@ -1,67 +1,116 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [RFC][PATCH 2/2] drm/mediatek: Add DRM Driver for Mediatek SoC
- MT8173.
-Date: Thu, 14 May 2015 11:16:54 +0200
-Message-ID: <1431595014.2650.50.camel@x220>
-References: <1431530626-31493-1-git-send-email-ck.hu@mediatek.com>
-	 <1431530626-31493-3-git-send-email-ck.hu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431530626-31493-3-git-send-email-ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH] drivers: of/base: move of_init to driver_init
+Date: Thu, 14 May 2015 10:28:14 +0100
+Message-ID: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-A naive question and a nit follow. That's probably not what you'd like
-to see for an RFC, but the patch got tangled up in my mail filter
-anyhow.
+Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+devices with an OF node") adds the symlink `of_node` for each device
+pointing to it's device tree node while creating/initialising it.
 
-On Wed, 2015-05-13 at 23:23 +0800, CK Hu wrote:
-> --- /dev/null
-> +++ b/drivers/gpu/drm/mediatek/Kconfig
+However the devicetree sysfs is created and setup in of_init which is
+executed at core_initcall level. For all the devices created before
+of_init, the following error is thrown:
+	"Error -2(-ENOENT) creating of_node link"
 
-> +config DRM_MEDIATEK_FBDEV
-> +	bool "Enable legacy fbdev support for Mediatek DRM"
-> +	depends on DRM_MEDIATEK
-> +	select FB_SYS_FILLRECT
-> +	select FB_SYS_COPYAREA
-> +	select FB_SYS_IMAGEBLIT
-> +	select DRM_KMS_FB_HELPER
-> +	help
-> +	  Choose this option if you have a need for the legacy
-> +	  fbdev support.  Note that this support also provides
-> +	  the Linux console on top of the Mediatek DRM mode
-> +	  setting driver.
+Like many other components in driver model, initialize the sysfs support
+for OF/devicetree from driver_init so that it's ready before any devices
+are created.
 
-Naive question, as I know next to nothing about drivers/gpu/drm.
-DRM_MEDIATEK_FBDEV isn't used anywhere, as far as I can see. So all that
-setting this Kconfig symbol does is selecting four other Kconfig
-symbols. Is selecting those four symbols enough to get fbdev support?
-Taking the Cargo Cult approach of looking at similar symbols
-(DRM_I915_FBDEV, DRM_MSM_FBDEV, DRM_STI_FBDEV, and DRM_TEGRA_FBDEV) I
-noticed that they all do a bit more than just selecting other symbols.
+Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+	devices with an OF node")
+Suggested-by: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/base/init.c | 2 ++
+ drivers/of/base.c   | 8 +++-----
+ include/linux/of.h  | 6 ++++++
+ 3 files changed, 11 insertions(+), 5 deletions(-)
 
-> --- /dev/null
-> +++ b/drivers/gpu/drm/mediatek/mediatek_drm_drv.c
+diff --git a/drivers/base/init.c b/drivers/base/init.c
+index da033d3bab3c..fa149c7678d2 100644
+--- a/drivers/base/init.c
++++ b/drivers/base/init.c
+@@ -8,6 +8,7 @@
+ #include <linux/device.h>
+ #include <linux/init.h>
+ #include <linux/memory.h>
++#include <linux/of.h>
 
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+ #include "base.h"
 
-This states the license of this driver is GPL v2. (Identical comments
-seem to be part of all files added in this patch.)
+@@ -34,4 +35,5 @@ void __init driver_init(void)
+ 	cpu_dev_init();
+ 	memory_dev_init();
+ 	container_dev_init();
++	of_init();
+ }
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 99764db0875a..d4d3dbbfed72 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -189,7 +189,7 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 	return 0;
+ }
 
-> +MODULE_LICENSE("GPL");
+-static int __init of_init(void)
++void __init of_init(void)
+ {
+ 	struct device_node *np;
 
-And, according to include/linux/module.h, this states the license is GPL
-v2 or later. So I think that either the comment at the top of these
-files or the ident used in the MODULE_LICENSE() macro needs to be
-changed.
+@@ -198,7 +198,8 @@ static int __init of_init(void)
+ 	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
+ 	if (!of_kset) {
+ 		mutex_unlock(&of_mutex);
+-		return -ENOMEM;
++		pr_err("devicetree: failed to register existing nodes\n");
++		return;
+ 	}
+ 	for_each_of_allnodes(np)
+ 		__of_attach_node_sysfs(np);
+@@ -207,10 +208,7 @@ static int __init of_init(void)
+ 	/* Symlink in /proc as required by userspace ABI */
+ 	if (of_root)
+ 		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
+-
+-	return 0;
+ }
+-core_initcall(of_init);
 
-Thanks,
+ static struct property *__of_find_property(const struct device_node *np,
+ 					   const char *name, int *lenp)
+diff --git a/include/linux/of.h b/include/linux/of.h
+index ddeaae6d2083..1eb9d030b19b 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -121,6 +121,8 @@ extern struct device_node *of_stdout;
+ extern raw_spinlock_t devtree_lock;
 
+ #ifdef CONFIG_OF
++void of_init(void);
++
+ static inline bool is_of_node(struct fwnode_handle *fwnode)
+ {
+ 	return fwnode && fwnode->type == FWNODE_OF;
+@@ -376,6 +378,10 @@ bool of_console_check(struct device_node *dn, char *name, int index);
 
-Paul Bolle
+ #else /* CONFIG_OF */
+
++static inline void of_init(void)
++{
++}
++
+ static inline bool is_of_node(struct fwnode_handle *fwnode)
+ {
+ 	return false;
+--
+1.9.1
