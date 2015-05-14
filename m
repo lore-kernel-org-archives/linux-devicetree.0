@@ -1,61 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] spi: bcm-mspi: Add support for Broadcom MSPI driver.
-Date: Thu, 14 May 2015 21:12:21 +0100
-Message-ID: <20150514201221.GX2761@sirena.org.uk>
-References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com>
- <1431452293-16697-3-git-send-email-jonathar@broadcom.com>
- <20150512191718.GW3066@sirena.org.uk>
- <5553E31A.8060309@broadcom.com>
- <5553E9FA.4070708@broadcom.com>
- <20150514103144.GO2761@sirena.org.uk>
- <5554E715.7070203@broadcom.com>
- <20150514190823.GR2761@sirena.org.uk>
- <5554FDB4.50809@broadcom.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH 2/4] edac, altera: Refactor EDAC for Altera CycloneV SoC.
+Date: Thu, 14 May 2015 15:13:28 -0500
+Message-ID: <555501E8.105@opensource.altera.com>
+References: <1431553787-27741-1-git-send-email-tthayer@opensource.altera.com>
+ <1431553787-27741-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tvtG/WQWmfqkB9kQ"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5554FDB4.50809@broadcom.com>
+In-Reply-To: <1431553787-27741-3-git-send-email-tthayer@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Richardson <jonathar@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org
+To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On 05/13/2015 04:49 PM, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> The Arria10 SOC uses a completely different SDRAM controller from the
+> earlier CycloneV and ArriaV SoCs. This patch abstracts the SDRAM bits
+> for the CycloneV/ArriaV SoCs in preparation for the Arria10 support.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  drivers/edac/altera_edac.c |  194 ++++++++++++++++++++------------------------
+>  drivers/edac/altera_edac.h |  116 ++++++++++++++++++++++++++
+>  2 files changed, 206 insertions(+), 104 deletions(-)
+>  create mode 100644 drivers/edac/altera_edac.h
+> 
+> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> index e18a205..204ad2d 100644
+> --- a/drivers/edac/altera_edac.c
+> +++ b/drivers/edac/altera_edac.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - *  Copyright Altera Corporation (C) 2014. All rights reserved.
+> + *  Copyright Altera Corporation (C) 2014-2015. All rights reserved.
+>   *  Copyright 2011-2012 Calxeda, Inc.
+>   *
+>   * This program is free software; you can redistribute it and/or modify it
+> @@ -28,111 +28,64 @@
+>  #include <linux/types.h>
+>  #include <linux/uaccess.h>
+>  
+[...]
+> -
+> -/* Altera SDRAM Memory Controller data */
+> -struct altr_sdram_mc_data {
+> -	struct regmap *mc_vbase;
+> +const struct altr_sdram_prv_data c5_data = {
 
---tvtG/WQWmfqkB9kQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This should be static.
 
-On Thu, May 14, 2015 at 12:55:32PM -0700, Jonathan Richardson wrote:
-> On 15-05-14 12:08 PM, Mark Brown wrote:
-
-> > All it takes is one hardware engineer who sees a SPI controller and a
-> > GPIO they can use for chip select; I wouldn't be so sure that nobody
-> > ever fixed this up locally (or happened to use a device that only needed
-> > single duplex).
-
-> Hi Mark. Would it help if we just set the flags to half duplex using
-> SPI_MASTER_HALF_DUPLEX when we register the master?
-
-That would deal with the data corruption issues, yes.  Though it seems
-like there are some people who want full duplex support here - I don't
-know if any of them can point you at suitable hardware to test?
-
---tvtG/WQWmfqkB9kQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVVQGkAAoJECTWi3JdVIfQa74H/0w3k4rEjSKo2cIArSVb45X+
-pqZzxht4+cfRjdBkrEZHKVSz15m04xNL23Lch/9Z6Z3G8uIWlw2yaoD3R38E63s5
-jLz14PmvxOYeIaUcgdLhv3o2cK+pCDlRiobmOTBvDaPyHyD89mWeEhpZg7KrVDG6
-6G+6TYMEfJEfBNuIbl6JWyIa6Q+CcSTlSWg3cNSLjK7q9/gJYEi0LbFSaEu4mkS7
-kVYaGILDUpUIb1/fKvSM3axvV2V3Snv9+uWRp3KjRXx/WQhHwahAiwxVxtqJLI4n
-xcxteAPB39xf4nb2XuJnZtXTuISBHOKQ7ReRTuWnGlxJBhfoVU0kJlOHy5PuA44=
-=wgzK
------END PGP SIGNATURE-----
-
---tvtG/WQWmfqkB9kQ--
+Dinh
