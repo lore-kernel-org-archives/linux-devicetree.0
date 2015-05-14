@@ -1,75 +1,132 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: bcm-mspi: Add support for Broadcom MSPI driver.
-Date: Thu, 14 May 2015 20:08:23 +0100
-Message-ID: <20150514190823.GR2761@sirena.org.uk>
-References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com>
- <1431452293-16697-3-git-send-email-jonathar@broadcom.com>
- <20150512191718.GW3066@sirena.org.uk>
- <5553E31A.8060309@broadcom.com>
- <5553E9FA.4070708@broadcom.com>
- <20150514103144.GO2761@sirena.org.uk>
- <5554E715.7070203@broadcom.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: Add SPMI regulator driver
+Date: Thu, 14 May 2015 20:20:18 +0100
+Message-ID: <20150514192018.GU2761@sirena.org.uk>
+References: <1431466787-32247-1-git-send-email-sboyd@codeaurora.org>
+ <20150513114118.GJ3066@sirena.org.uk>
+ <5553F434.4020102@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vtBqmokgY1evbO3C"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="yT5CehYOm/p2z10t"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5554E715.7070203-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <5553F434.4020102@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---vtBqmokgY1evbO3C
+--yT5CehYOm/p2z10t
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 14, 2015 at 11:19:01AM -0700, Scott Branden wrote:
-> On 15-05-14 03:31 AM, Mark Brown wrote:
+On Wed, May 13, 2015 at 06:02:44PM -0700, Stephen Boyd wrote:
 
-> >Chip vendors often say this sort of thing and then get surprised by what
-> >their users choose to do, and even if it only ever gets used with flash
-> >all it would take is some new flash command which can use full duplex
-> >for something.  Please write the code so it at least tries to handle
-> >full duplex operation, if you can't test it fully that's not the end of
-> >the world.  It doesn't look like it should be particularly difficult.
+> This is about configuring the regulator to switch mode between HPM and
+> LPM automatically based on current. You're right that it's not about
+> pulse skipping, but it isn't about letting other processors control
+> things either. I think you're thinking about pin control?
 
-> Yes, there is always room for improvements in code.  In this case - it
-> really is not worth our time to add code we can't test.  We try to deliver
-> code that we can test and actually works.  Yes, if anyone needs to use the
+Possibly, this stuff is all system jargon heavy and I've not context
+switched that in recently.  The above sounds like it pretty much *is*
+the equivalent of pulse skipping in which case it's much more like the
+normal modes (that we were going to abandon...).
 
-While I try to not apply code that has obvious problems with silent data
-corruption in it which is what we have just now.
+> The register field is called AUTO_MODE, so I'm finding it hard to come
+> up with a better name. Perhaps qcom,auto-efficient-mode-enable?
+> qcom,auto-current-mode-enable?
 
-> mspi for full duplex operation code can be added in the future - it is
-> software.  This block has gone through many generations of our SoCs and has
-> only been used for this purpose - the bootROM boots from this SPI only.  It
-> is dedicated for this purpose.
+This definitely sounds like traditional regulator modes.
 
-All it takes is one hardware engineer who sees a SPI controller and a
-GPIO they can use for chip select; I wouldn't be so sure that nobody
-ever fixed this up locally (or happened to use a device that only needed
-single duplex).
+> >> +- qcom,bypass-mode-enable:
+> >> +	Usage: optional
+> >> +	Value type: <u32>
+> >> +	Description: 1 = Enable bypass mode for an LDO type regulator so that
+> >> +		     it acts like a switch and simply outputs its input
+> >> +		     voltage. 0 = Do not enable bypass mode.
 
---vtBqmokgY1evbO3C
+> > We have generic regulator API support for this, we should have a generic
+> > DT binding for it.
+
+> Given that regulator_allow_bypass() is a consumer facing API should I
+> just change this to regulator-allow-bypass and then add a set_bypass() op?
+
+Yes.
+
+> >> +- qcom,soft-start-enable:
+> >> +	Usage: optional
+> >> +	Value type: <u32>
+> >> +	Description: 1 = Enable soft start for LDO and voltage switch type
+> >> +		     regulators so that output voltage slowly ramps up when the
+> >> +		     regulator is enabled. 0 = Disable soft start
+
+> > These also seem like generic properties (we don't currently have generic
+> > APIs for them but these are by no means the only regulators I've seen
+> > with these features).
+
+> So for these sorts of generic properties how do I get them all the way
+> into the driver? Are you suggesting adding new ops for setting pull-down
+> and soft-start-enable and then parsing DT properties, setting those in
+> the regulation_constraints structure, and then calling the ops when we
+> apply constraints in set_machine_constraints()?
+
+Yeah, if it's becoming something that does need setting from DT (which
+it seems to) then we probably need to go through all that.  With helpers
+and so on.
+
+> >> +- qcom,boost-current-limit:
+> >> +	Usage: optional
+> >> +	Value type: <u32>
+> >> +	Description: This property sets the current limit of boost type
+> >> +		     regulators; supported values are:
+> >> +					0 =  300 mA
+
+> > Again seems generic - there seems like overlap with your own OCP
+> > properties further above.
+
+> Yes it's generic. This property only applies to boost regulators on this
+> PMIC whereas OCP is only used for voltage switch type regulators. I
+> wonder if this should be done via regulator-min-microamp and
+> regulator-max-microamp being set to the same value and then implementing
+> a .set_current_limit() function?
+
+Yes, that was what I was thinking.  Perhaps a current-limit or something
+property rather than the min and max thing for clarity (to avoid
+confusion with actual current regulators).
+
+> >> +#define VOLTAGE_RANGE(_range_sel, _min_uV, _set_point_min_uV, \
+> >> +			_set_point_max_uV, _max_uV, _step_uV) \
+> >> +	{ \
+
+> > A lot of these macros have very generic names.  Also I have to say I'm a
+> > bit confused about what a set point is and how it's used, "allowed
+> > voltage" doesn't mean a huge amount in comparison with "programmable
+> > voltage".
+
+> These regulators have two registers. The first register says what range
+> (or row in the *_ranges arrays) we should use. The second register is a
+> selector that's used in the linear range calculation min_uV + sel *
+> step. The complication is here because we want to try and keep using the
+
+Hardware engineers are truly innovative and creative people sometimes.
+That all makes sense, but the thing about the generic names still
+applies - at least namespace them please.
+
+--yT5CehYOm/p2z10t
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVVPKmAAoJECTWi3JdVIfQcZIH/3Qt4z6w2+tZTbnG0h6yKDYW
-W4P4pKqRyLPVVm1mLEDIJ1inJQYem9uEeBLEBQASHYe+l1nHvGCKH552IIeYmFrW
-XymK9odV7t8FW3fjS3NSX0wrvv9aGdtkBZif1Kivz+9DY5aw9jifGnclwLfSzCy6
-q5JCVPNB1CyKKNyKztraMtzvxDnNJWhqWUO9frssWfRvIBM7Z8v7FIg8IfZoHlWe
-dsD4AnWSg2JrfDdgWPZrLDMtTWmebtCiR3YHO0uBufIxvvYw9WhcI0sYcc5590g/
-yqyZeOScc1roitgm5UtQQBd0owTrlM1ohi8s8mqybftpOGmZsaW/nc5VDRjWnj4=
-=2uLb
+iQEcBAEBCAAGBQJVVPVyAAoJECTWi3JdVIfQJywH/1vB4RrzDs1cafJnXAn91t1Y
+6CQVTppC4SYO+jnkjUYArz2/Zdn09VgXlM42+RpskDHjh4LKsPz95S5EA1LztOIz
+wf8wV+8IYd4rmmdhJG+qbPpw+kmdo854NvaxZyDB73RCcXQnX3naDdYmKmJ5vulO
+9WLClsHF5KHaVbOlJk1eot/dOXbhX2NjK7UsN5FTb/6BbdDBkHYOAB8Jqc6XbOyM
+szBW66QwYKRWvKf2zTnQJq1s+U1SqHOMaYi+AIzBSKyB8+LzBg8edKm4ndXddeR1
+FXUKHPitiq9+gCyXA2eKT/4KKAExAeeSBbnvt/y+BScnFFdIgCCf84cdf1wltpU=
+=A5Fo
 -----END PGP SIGNATURE-----
 
---vtBqmokgY1evbO3C--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--yT5CehYOm/p2z10t--
