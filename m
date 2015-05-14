@@ -1,82 +1,165 @@
-From: YH Huang <yh.huang@mediatek.com>
-Subject: Re: [PATCH 2/2] pwm: add Mediatek display PWM driver support
-Date: Thu, 14 May 2015 23:39:57 +0800
-Message-ID: <1431617997.15140.57.camel@mtksdaap41>
-References: <1431336382-13167-1-git-send-email-yh.huang@mediatek.com>
-	 <1431336382-13167-3-git-send-email-yh.huang@mediatek.com>
-	 <20150512133202.GA24684@ulmo.nvidia.com>
-	 <CABuKBe+e2pjFmQ9Ne7XAeVwJzS8KOXa09CUUZPbYG=oVmP3ikA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBe+e2pjFmQ9Ne7XAeVwJzS8KOXa09CUUZPbYG=oVmP3ikA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yh.huang@mediatek.com
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v2 1/5] Documentation: add DT binding for ARM System Control and Power Interface(SCPI) protocol
+Date: Thu, 14 May 2015 16:42:31 +0100
+Message-ID: <1431618155-3132-2-git-send-email-sudeep.holla@arm.com>
+References: <1431618155-3132-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1431618155-3132-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-12 at 16:34 +0200, Matthias Brugger wrote:
-> 2015-05-12 15:32 GMT+02:00 Thierry Reding <thierry.reding@gmail.com>:
-> > On Mon, May 11, 2015 at 05:26:22PM +0800, YH Huang wrote:
-> >> Add display PWM driver support to modify backlight for MT8173/MT6595.
-> >>
-> >> Signed-off-by: YH Huang <yh.huang@mediatek.com>
-> >> ---
-> >>  drivers/pwm/Kconfig             |   9 ++
-> >>  drivers/pwm/Makefile            |   1 +
-> >>  drivers/pwm/pwm-disp-mediatek.c | 225 ++++++++++++++++++++++++++++++++++++++++
-> >>  3 files changed, 235 insertions(+)
-> >>  create mode 100644 drivers/pwm/pwm-disp-mediatek.c
-> >>
-> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> >> index b1541f4..9edbb5a 100644
-> >> --- a/drivers/pwm/Kconfig
-> >> +++ b/drivers/pwm/Kconfig
-> >> @@ -111,6 +111,15 @@ config PWM_CLPS711X
-> >>         To compile this driver as a module, choose M here: the module
-> >>         will be called pwm-clps711x.
-> >>
-> >> +config PWM_DISP_MEDIATEK
-> >
-> > Please make this "PWM_MEDIATEK_DISP" so we can keep everything sorted by
-> > vendor.
-> >
-> >> +     tristate "MEDIATEK display PWM driver"
-> >
-> > "MediaTek"?
-> >
-> >> +     depends on OF
-> >
-> > Technically I think you need depends on HAS_IOMEM here to avoid breakage
-> > on randconfig builds.
-> >
-> >> +     help
-> >> +       Generic PWM framework driver for mediatek disp-pwm device.
-> >
-> > "MediaTek"? Also perhaps this should describe what this PWM is instead
-> > of just the "disp-pwm" which leaves everyone guessing what it is. From
-> > the name I'd expect it to be the PWM that is used to control the
-> > backlight brightness for display, but I think this description should
-> > say that explicitly.
-> >
-> >> +
-> >> +       To compile this driver as a module, choose M here: the module
-> >> +       will be called pwm-disp-mediatek.
-> >
-> > pwm-mediatek-disp
-> 
-> I would prefert pwm-mtk-disp which is in line with the other drivers.
-> Also I have to admit that unfortunately the naming is not uniformly
-> throughout the kernel.
-> 
+This patch adds devicetree binding for System Control and Power
+Interface (SCPI) Message Protocol used between the Application Cores(AP)
+and the System Control Processor(SCP). The MHU peripheral provides a
+mechanism for inter-processor communication between SCP's M3 processor
+and AP.
 
-OK. I will take it.
+SCP offers control and management of the core/cluster power states,
+various power domain DVFS including the core/cluster, certain system
+clocks configuration, thermal sensors and many others.
 
-> Thanks,
-> Matthias
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+CC: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/arm/arm,scpi.txt | 121 +++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
 
-Thank for your suggestion.
+diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+new file mode 100644
+index 000000000000..5db235f69e54
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+@@ -0,0 +1,121 @@
++System Control and Power Interface (SCPI) Message Protocol
++----------------------------------------------------------
++
++Required properties:
++
++- compatible : should be "arm,scpi"
++- mboxes: List of phandle and mailbox channel specifiers
++- shmem : List of phandle pointing to the shared memory(SHM) area between the
++	  processors using these mailboxes for IPC, one for each mailbox
++
++See Documentation/devicetree/bindings/mailbox/mailbox.txt
++for more details about the generic mailbox controller and
++client driver bindings.
++
++Clock bindings for the clocks based on SCPI Message Protocol
++------------------------------------------------------------
++
++This binding uses the common clock binding[1].
++
++Required properties:
++- compatible : shall be one of the following:
++	"arm,scpi-clocks" - for the container node with all the clocks
++		based on the SCPI protocol
++	"arm,scpi-dvfs" - all the clocks that are variable and index based.
++		These clocks don't provide the full range between the limits
++		but only discrete points within the range. The firmware
++		provides the mapping for each such operating frequency and the
++		index associated with it. The firmware also manages the
++		voltage scaling appropriately with the clock scaling.
++	"arm,scpi-clk" - all the clocks that are variable and provide full
++		range within the specified range. The firmware provides the
++		supported range for each clock.
++
++Required properties for all clocks(all from common clock binding):
++- #clock-cells : should be set to 1 as each of the SCPI clocks have multiple
++	outputs. The clock specifier will be the index to an entry in the list
++	of output clocks.
++- clock-output-names : shall be the corresponding names of the outputs.
++- clock-indices: The identifyng number for the clocks(clock_id) in the node as
++	expected by the firmware. It can be non linear and hence provide the
++	mapping	of identifiers into the clock-output-names array.
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Example:
++
++sram: sram@50000000 {
++	compatible = "arm,juno-sram-ns", "mmio-sram";
++	reg = <0x0 0x50000000 0x0 0x10000>;
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges = <0 0x0 0x50000000 0x10000>;
++
++	cpu_scp_lpri: scp-shmem@0 {
++		compatible = "arm,juno-scp-shmem";
++		reg = <0x0 0x200>;
++	};
++
++	cpu_scp_hpri: scp-shmem@200 {
++		compatible = "arm,juno-scp-shmem";
++		reg = <0x200 0x200>;
++	};
++};
++
++mailbox: mailbox0@40000000 {
++	....
++	#mbox-cells = <1>;
++};
++
++scpi_protocol: scpi@2e000000 {
++	compatible = "arm,scpi";
++	mboxes = <&mailbox 0 &mailbox 1>;
++	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
++
++	clocks {
++		compatible = "arm,scpi-clocks";
++
++		scpi_dvfs: scpi_clocks@0 {
++			compatible = "arm,scpi-dvfs";
++			#clock-cells = <1>;
++			clock-indices = <0>, <1>, <2>;
++			clock-output-names = "vbig", "vlittle", "vgpu";
++		};
++		scpi_clk: scpi_clocks@3 {
++			compatible = "arm,scpi-clk";
++			#clock-cells = <1>;
++			clock-indices = <3>, <4>;
++			clock-output-names = "pxlclk0", "pxlclk1";
++		};
++	};
++};
++
++cpu@0 {
++	...
++	reg = <0 0>;
++	clocks = <&scpi_dvfs 0>;
++	clock-names = "big";
++};
++
++hdlcd@7ff60000 {
++	...
++	reg = <0 0x7ff60000 0 0x1000>;
++	clocks = <&scpi_clk 1>;
++	clock-names = "pxlclk";
++};
++
++In the above example, the #clock-cells is set to 1 as required.
++scpi_dvfs has 3 output clocks namely: vbig, vlittle and vgpu with 0, 1
++and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0 and
++pxlclk1 with 3 and 4 as clock-indices.
++
++The first consumer in the example is cpu@0 and it has vbig as input clock.
++The index '0' in the clock specifier here points to the first entry in the
++output clocks of scpi_dvfs for which clock_id asrequired by the firmware
++is 0.
++
++Similarly the second example is hdlcd@7ff60000 and it has pxlclk0 as input
++clock. The index '1' in the clock specifier here points to the second entry
++in the output clocks of scpi_clocks for which clock_id as required by the
++firmware is 4.
+-- 
+1.9.1
 
-Regards,
-YH Huang
