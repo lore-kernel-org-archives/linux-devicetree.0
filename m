@@ -1,63 +1,192 @@
-From: Liu Ying <liu.y.victor@gmail.com>
-Subject: Re: [PATCH RFC v9.5 09/20] drm/dsi: Add a helper to get bits per
- pixel of MIPI DSI pixel format
-Date: Thu, 14 May 2015 10:10:54 +0800
-Message-ID: <CA+8Hj82h1wFdEex3JLdiWC0pfUT6j5wui34ca+CRXeHeycYUNA@mail.gmail.com>
-References: <1423805119-32008-1-git-send-email-Ying.Liu@freescale.com>
- <20150512133620.GA24939@ulmo.nvidia.com>
+From: Evgeniy Dushistov <dushistov@mail.ru>
+Subject: [PATCH 3/3] max7359_keypad: implement DT bindings
+Date: Thu, 14 May 2015 05:38:03 +0300
+Message-ID: <20150514023802.GC28560@fifteen>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150512133620.GA24939@ulmo.nvidia.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: stefan.wahren@i2se.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, andyshrk@gmail.com, daniel.vetter@ffwll.ch, sboyd@codeaurora.org, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-MjAxNS0wNS0xMiAyMTozNiBHTVQrMDg6MDAgVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5n
-QGdtYWlsLmNvbT46Cj4gT24gRnJpLCBGZWIgMTMsIDIwMTUgYXQgMDE6MjU6MTlQTSArMDgwMCwg
-TGl1IFlpbmcgd3JvdGU6Cj4+IFNpZ25lZC1vZmYtYnk6IExpdSBZaW5nIDxZaW5nLkxpdUBmcmVl
-c2NhbGUuY29tPgo+Cj4gVGhpcyBjb3VsZCB1c2UgYSBjb21taXQgbWVzc2FnZS4gRGVzY3JpYmUg
-Zm9yIGV4YW1wbGUgd2h5IHRoaXMgaXMgdXNlZnVsCj4gb3Igd2hlbiB0byB1c2UgaXQuCgpPaywg
-SSdsbCBhZGQgaXQgaW4gdGhlIG5leHQgdmVyc2lvbi4KCj4KPj4gLS0tCj4+IHY5LT52OS41Ogo+
-PiAgKiBBZGQga2VybmVsLWRvYyBmb3IgdGhlIG5ldyBoZWxwZXIgZnVuY3Rpb24gdG8gYWRkcmVz
-cyBEYW5pZWwgVmV0dGVyJ3MKPj4gICAgY29tbWVudC4KPj4KPj4gdjgtPnY5Ogo+PiAgKiBSZWJh
-c2Ugb250byB0aGUgaW14LWRybS9uZXh0IGJyYW5jaCBvZiBQaGlsaXBwIFphYmVsJ3Mgb3BlbiBn
-aXQgcmVwb3NpdG9yeS4KPj4KPj4gdjctPnY4Ogo+PiAgKiBOb25lLgo+Pgo+PiB2Ni0+djc6Cj4+
-ICAqIE5vbmUuCj4+Cj4+IHY1LT52NjoKPj4gICogQWRkcmVzcyB0aGUgb3ZlciA4MCBjaGFyYWN0
-ZXJzIGluIG9uZSBsaW5lIHdhcm5pbmcgcmVwb3J0ZWQgYnkgdGhlCj4+ICAgIGNoZWNrcGF0Y2gu
-cGwgc2NyaXB0Lgo+Pgo+PiB2NC0+djU6Cj4+ICAqIE5vbmUuCj4+Cj4+IHYzLT52NDoKPj4gICog
-Tm9uZS4KPj4KPj4gdjItPnYzOgo+PiAgKiBOb25lLgo+Pgo+PiB2MS0+djI6Cj4+ICAqIFRoaWVy
-cnkgUmVkaW5nIHN1Z2dlc3RlZCB0aGF0IHRoZSBtaXBpX2RzaV9waXhlbF9mb3JtYXRfdG9fYnBw
-KCkgZnVuY3Rpb24KPj4gICAgY291bGQgYmUgcGxhY2VkIGF0IHRoZSBjb21tb24gRFJNIE1JUEkg
-RFNJIGRyaXZlci4KPj4gICAgVGhpcyBwYXRjaCBpcyBuZXdseSBhZGRlZC4KPj4KPj4gIGluY2x1
-ZGUvZHJtL2RybV9taXBpX2RzaS5oIHwgMjIgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgMSBm
-aWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
-ZHJtL2RybV9taXBpX2RzaS5oIGIvaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmgKPj4gaW5kZXgg
-ZjFkOGQwZC4uY2FiYzkxMCAxMDA2NDQKPj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNp
-LmgKPj4gKysrIGIvaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmgKPj4gQEAgLTE2Myw2ICsxNjMs
-MjggQEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICp0b19taXBpX2RzaV9k
-ZXZpY2Uoc3RydWN0IGRldmljZSAqZGV2KQo+PiAgICAgICByZXR1cm4gY29udGFpbmVyX29mKGRl
-diwgc3RydWN0IG1pcGlfZHNpX2RldmljZSwgZGV2KTsKPj4gIH0KPj4KPj4gKy8qKgo+PiArICog
-bWlwaV9kc2lfcGl4ZWxfZm9ybWF0X3RvX2JwcCgpIC0gZ2V0IGJpdHMgcGVyIHBpeGVsIGZvciBh
-IG1pcGkgZHNpCj4+ICsgKiAgICBwaXhlbCBmb3JtYXQKPj4gKyAqIEBmbXQ6IG1pcGkgZHNpIHBp
-eGVsIGZvcm1hdAo+PiArICoKPj4gKyAqIFJldHVybjogVGhlIGJpdHMgcGVyIHBpeGVsIHZhbHVl
-IGZvciB0aGUgbWlwaSBkc2kgcGl4ZWwgZm9ybWF0IG9uIHN1Y2Nlc3Mgb3IKPj4gKyAqICAgIGEg
-bmVnYXRpdmUgZXJyb3IgY29kZSBvbiBmYWlsdXJlLgo+PiArICovCj4KPiBzL21pcGkgZHNpL01J
-UEkgRFNJLywgcGxlYXNlLgoKT2suCgpUaGFua3MsCkxpdSBZaW5nCgo+Cj4gVGhpZXJyeQo+Cj4g
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHA6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKPgoKCgot
-LSAKQmVzdCBSZWdhcmRzLApMaXUgWWluZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+max7359_keypad: implement DT bindings
+
+Signed-off-by: Evgeniy A. Dushistov <dushistov@mail.ru>
+---
+ .../devicetree/bindings/input/max7359-keypad.txt   | 33 ++++++++++++
+ drivers/input/keyboard/max7359_keypad.c            | 60 ++++++++++++++++++++--
+ 2 files changed, 90 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/max7359-keypad.txt
+
+diff --git a/Documentation/devicetree/bindings/input/max7359-keypad.txt b/Documentation/devicetree/bindings/input/max7359-keypad.txt
+new file mode 100644
+index 0000000..0a3c381
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/max7359-keypad.txt
+@@ -0,0 +1,33 @@
++* MAX7359 keypda device tree bindings
++
++Required Properties:
++- compatible:		Should be "maxim,max7359"
++- linux,keymap:		The definition can be found at
++			bindings/input/matrix-keymap.txt
++
++Optional Properties:
++- maxim,debounce_reg: u8, in short allow control debounce,
++see max7359 datasheet for details
++- maxim,ports_reg: u8, in short allow control what pin used,
++and what pins should be configured as GPIO
++
++Example:
++	max7359_keypad@38 {
++		compatible = "maxim,max7359";
++		reg = <0x38>;
++		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;/*gpio_156*/
++		interrupt-parent = <&gpio5>;
++		maxim,debounce_reg = /bits/ 8 <0x5F>;
++		maxim,ports_reg = /bits/ 8 <0xFF>;
++		linux,keymap = <
++		MATRIX_KEY(0, 0, KEY_RESERVED) /*row 0 not used*/
++		MATRIX_KEY(0, 1, KEY_RESERVED)
++		MATRIX_KEY(0, 2, KEY_RESERVED)
++		MATRIX_KEY(0, 3, KEY_RESERVED)
++		MATRIX_KEY(0, 4, KEY_RESERVED)
++		MATRIX_KEY(0, 5, KEY_RESERVED)
++		MATRIX_KEY(0, 6, KEY_RESERVED)
++		MATRIX_KEY(0, 7, KEY_RESERVED)
++		...
++		>;
++	};
+diff --git a/drivers/input/keyboard/max7359_keypad.c b/drivers/input/keyboard/max7359_keypad.c
+index 5091133..0164f2e 100644
+--- a/drivers/input/keyboard/max7359_keypad.c
++++ b/drivers/input/keyboard/max7359_keypad.c
+@@ -20,6 +20,7 @@
+ #include <linux/pm.h>
+ #include <linux/input.h>
+ #include <linux/input/matrix_keypad.h>
++#include <linux/of.h>
+ 
+ #define MAX7359_MAX_KEY_ROWS	8
+ #define MAX7359_MAX_KEY_COLS	8
+@@ -64,6 +65,11 @@ struct max7359_keypad {
+ 	struct i2c_client *client;
+ };
+ 
++struct max7359_initial_state {
++	u8 debounce_val;
++	u8 ports_val;
++};
++
+ static int max7359_write_reg(struct i2c_client *client, u8 reg, u8 val)
+ {
+ 	int ret = i2c_smbus_write_byte_data(client, reg, val);
+@@ -143,24 +149,54 @@ static void max7359_close(struct input_dev *dev)
+ 	max7359_fall_deepsleep(keypad->client);
+ }
+ 
+-static void max7359_initialize(struct i2c_client *client)
++static void max7359_initialize(struct i2c_client *client,
++			       const struct max7359_initial_state *init_state)
+ {
+ 	max7359_write_reg(client, MAX7359_REG_CONFIG,
+ 		MAX7359_CFG_KEY_RELEASE | /* Key release enable */
+ 		MAX7359_CFG_WAKEUP); /* Key press wakeup enable */
+ 
+ 	/* Full key-scan functionality */
+-	max7359_write_reg(client, MAX7359_REG_DEBOUNCE, 0x1F);
++	max7359_write_reg(client, MAX7359_REG_DEBOUNCE,
++			  init_state->debounce_val);
+ 
+ 	/* nINT asserts every debounce cycles */
+ 	max7359_write_reg(client, MAX7359_REG_INTERRUPT, 0x01);
++	max7359_write_reg(client, MAX7359_REG_PORTS, init_state->ports_val);
+ 
+ 	max7359_fall_deepsleep(client);
+ }
+ 
++#ifdef CONFIG_OF
++static int max7359_parse_dt(struct device *dev,
++			    struct max7359_initial_state *init_state)
++{
++	struct device_node *np = dev->of_node;
++	u8 prop;
++
++	if (!of_property_read_u8(np, "maxim,debounce_reg", &prop))
++		init_state->debounce_val = prop;
++
++	if (!of_property_read_u8(np, "maxim,ports_reg", &prop))
++		init_state->ports_val = prop;
++
++	return 0;
++}
++#else
++static inline int max7359_parse_dt(struct device *dev,
++				   struct max7359_initial_state *init_state)
++{
++	return -EINVAL;
++}
++#endif
++
+ static int max7359_probe(struct i2c_client *client,
+ 					const struct i2c_device_id *id)
+ {
++	struct max7359_initial_state init_state = {
++		.debounce_val = 0x1F,
++		.ports_val = 0xFE,
++	};
+ 	const struct matrix_keymap_data *keymap_data =
+ 			dev_get_platdata(&client->dev);
+ 	struct max7359_keypad *keypad;
+@@ -181,6 +217,15 @@ static int max7359_probe(struct i2c_client *client,
+ 	}
+ 
+ 	dev_dbg(&client->dev, "keys FIFO is 0x%02x\n", ret);
++	if (!keymap_data) {
++		error = max7359_parse_dt(&client->dev, &init_state);
++		if (error) {
++			dev_err(&client->dev, "platform data null, and no DT data\n");
++			return error;
++		}
++		dev_dbg(&client->dev, "Init vals: debounce %X, ports %X\n",
++			init_state.debounce_val, init_state.ports_val);
++	}
+ 
+ 	keypad = devm_kzalloc(&client->dev, sizeof(struct max7359_keypad),
+ 			      GFP_KERNEL);
+@@ -239,7 +284,7 @@ static int max7359_probe(struct i2c_client *client,
+ 	}
+ 
+ 	/* Initialize MAX7359 */
+-	max7359_initialize(client);
++	max7359_initialize(client, &init_state);
+ 
+ 	i2c_set_clientdata(client, keypad);
+ 	device_init_wakeup(&client->dev, 1);
+@@ -282,10 +327,19 @@ static const struct i2c_device_id max7359_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, max7359_ids);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id max7359_dt_match[] = {
++	{ .compatible = "maxim,max7359" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, max7359_dt_match);
++#endif
++
+ static struct i2c_driver max7359_i2c_driver = {
+ 	.driver = {
+ 		.name = "max7359",
+ 		.pm   = &max7359_pm,
++		.of_match_table = of_match_ptr(max7359_dt_match),
+ 	},
+ 	.probe		= max7359_probe,
+ 	.id_table	= max7359_ids,
+-- 
+2.3.6
+
+-- 
+/Evgeniy
