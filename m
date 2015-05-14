@@ -1,145 +1,100 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: l2c: add options to overwrite prefetching
- behavior
-Date: Thu, 14 May 2015 17:30:27 +0100
-Message-ID: <20150514163027.GC2067@n2100.arm.linux.org.uk>
-References: <1431620035-7183-1-git-send-email-hauke@hauke-m.de>
- <20150514161526.GB2067@n2100.arm.linux.org.uk>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Thu, 14 May 2015 18:34:15 +0200
+Message-ID: <CALszF6AhwtYMfhpZjGJeHznteG0mG0_2qo1TcWw-z7anH3Lj4A@mail.gmail.com>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>
+	<5553A608.9080402@linaro.org>
+	<2672178.pv4FEQMD9D@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150514161526.GB2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2672178.pv4FEQMD9D@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 14, 2015 at 05:15:26PM +0100, Russell King - ARM Linux wrote:
-> On Thu, May 14, 2015 at 06:13:55PM +0200, Hauke Mehrtens wrote:
-> > These options make it possible to overwrites the data and instruction
-> > prefetching behavior of the arm pl310 cache controller.
-> > 
-> > We have to set these values in the aux and the prefetch register,
-> > because these two bits in the aux registers are mapped to the prefetch
-> > register. If only the prefetch register is changed there is an
-> > inconsistence in the state in this driver.
-> 
-> No there isn't.  Just set the bits in the prefetch register.
-> 
-> Writing to the prefetch register changes the state of the bits in the
-> auxiliary control register at the same time.
+2015-05-13 21:37 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+> On Wednesday 13 May 2015 20:29:12 Daniel Thompson wrote:
+>> On 13/05/15 17:54, Maxime Coquelin wrote:
+>> > 2015-05-13 18:37 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>> >>
+>> >> We should definitely try to use the same compatible string for all of
+>> >> them, and make a binding that is easy to use.
+>> >>
+>> >> I haven't fully understood the requirements for the various parts that
+>> >> are involved here. My understanding so far was that the driver could
+>> >> use the index from the first cell and compute
+>> >>
+>> >>          void __iomem *reset_reg = rcc_base + 0x10 + 4 * index;
+>> >>          void __iomem *clock_reg = rcc_base + 0x30 + 4 * index;
+>> >
+>> > This calculation is true, but we have to take into account there is a
+>> > hole in the middle, between AHB3, and APB1 register:
+>>
+>> ... and equally importantly, only allows us to use hardware mappings for
+>> the gated clocks.
+>>
+>> > AHB1RSTR : offset = 0x10, index = 0
+>> > AHB2RSTR : offset = 0x14, index = 1
+>> > AHB3RSTR : offset = 0x18, index = 2
+>> > <HOLE >     : offset = 0x1c, index = 3
+>> > APB1RSTR : offset = 0x20, index = 4
+>> > APB2RSTR : offset = 0x24, index = 5
+>> >
+>> > So we have to carefully document this hole in the bindings, maybe by
+>> > listing indexes in the documentation?
+>>
+>> The register set has PLL, mux and dividers in the registers at 0x00,
+>> 0x04 and 0x08.
+>>
+>> Many of these clocks can be kept out of DT entirely because they are
+>> only there to feed other parts of the clock tree. However some of the
+>> dividers flow directly into cells that appear in device tree (such as
+>> the systick) and so we need to be able to reference them.
+>>
+>> In other words the proposed mapping cannot allow us to express the
+>> dividers properly (because the index would have to be negative):
+>>    void __iomem *clock_reg = rcc_base + 0x30 + 4 * index;
+>>
+>> Thus I'd favour using different indexes for reset and clock bindings,
+>> both using the naive mapping function:
+>>    void __iomem *reg =  rcc_base + 4 * index
+>>
+>> I think that its so much easier to check against the datasheet like
+>> that. Admittedly is we follow the block-of-4-bytes idiom we have to
+>> divide a hex number by four but thats not so hard and we end up with:
+>>
+>>               resets = <&rcc  8 0>;
+>>               clocks = <&rcc 16 0>;
+>>
+>> At the end of the day if we say we want to follow the datasheet, lets be
+>> do it in the most direct way properly.
 
-I see what you're getting at now.  I think we ought to fix that in the
-driver, so that the auxiliary control register is always written first,
-before the prefetch control register.  This also makes l2c_configure()
-reflect the structure of the rest of the driver.
+Daniel, I'm fine with your proposal.
+Doing that, we can have a single compatible string for stm32 family,
+even if the reset start offset change between two chips.
 
- arch/arm/mm/cache-l2x0.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+>>
+>>
+>> PS
+>> I've written a custom lookup function to to get from the DT index to an
+>> offset into the struct clk *array I'm using. That means I don't care
+>> much about any big holes in the register space.
+>
+> How about using the first cell to indicate the type (pll, mux, div, gate)
+> and the second cell for the number (between 0 and 256)? That way, the
+> gates numbers would match the reset numbers, and your internal mapping
+> function would look a bit nicer.
 
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index e309c8f35af5..46427d1a5946 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -110,14 +110,6 @@ static inline void l2c_unlock(void __iomem *base, unsigned num)
- 
- static void l2c_configure(void __iomem *base)
- {
--	if (outer_cache.configure) {
--		outer_cache.configure(&l2x0_saved_regs);
--		return;
--	}
--
--	if (l2x0_data->configure)
--		l2x0_data->configure(base);
--
- 	l2c_write_sec(l2x0_saved_regs.aux_ctrl, base, L2X0_AUX_CTRL);
- }
- 
-@@ -134,7 +126,11 @@ static void l2c_enable(void __iomem *base, u32 aux, unsigned num_lock)
- 		return;
- 
- 	l2x0_saved_regs.aux_ctrl = aux;
--	l2c_configure(base);
-+
-+	if (outer_cache.configure)
-+		outer_cache.configure(&l2x0_saved_regs);
-+	else
-+		l2x0_data->configure(base);
- 
- 	l2c_unlock(base, num_lock);
- 
-@@ -252,6 +248,7 @@ static const struct l2c_init_data l2c210_data __initconst = {
- 	.num_lock = 1,
- 	.enable = l2c_enable,
- 	.save = l2c_save,
-+	.configure = l2c_configure,
- 	.outer_cache = {
- 		.inv_range = l2c210_inv_range,
- 		.clean_range = l2c210_clean_range,
-@@ -409,6 +406,7 @@ static const struct l2c_init_data l2c220_data = {
- 	.num_lock = 1,
- 	.enable = l2c220_enable,
- 	.save = l2c_save,
-+	.configure = l2c_configure,
- 	.outer_cache = {
- 		.inv_range = l2c220_inv_range,
- 		.clean_range = l2c220_clean_range,
-@@ -569,6 +567,8 @@ static void l2c310_configure(void __iomem *base)
- {
- 	unsigned revision;
- 
-+	l2c_configure(base);
-+
- 	/* restore pl310 setup */
- 	l2c_write_sec(l2x0_saved_regs.tag_latency, base,
- 		      L310_TAG_LATENCY_CTRL);
-@@ -1066,6 +1066,7 @@ static const struct l2c_init_data of_l2c210_data __initconst = {
- 	.of_parse = l2x0_of_parse,
- 	.enable = l2c_enable,
- 	.save = l2c_save,
-+	.configure = l2c_configure,
- 	.outer_cache = {
- 		.inv_range   = l2c210_inv_range,
- 		.clean_range = l2c210_clean_range,
-@@ -1084,6 +1085,7 @@ static const struct l2c_init_data of_l2c220_data __initconst = {
- 	.of_parse = l2x0_of_parse,
- 	.enable = l2c220_enable,
- 	.save = l2c_save,
-+	.configure = l2c_configure,
- 	.outer_cache = {
- 		.inv_range   = l2c220_inv_range,
- 		.clean_range = l2c220_clean_range,
-@@ -1416,6 +1418,7 @@ static const struct l2c_init_data of_aurora_with_outer_data __initconst = {
- 	.enable = l2c_enable,
- 	.fixup = aurora_fixup,
- 	.save  = aurora_save,
-+	.configure = l2c_configure,
- 	.outer_cache = {
- 		.inv_range   = aurora_inv_range,
- 		.clean_range = aurora_clean_range,
-@@ -1435,6 +1438,7 @@ static const struct l2c_init_data of_aurora_no_outer_data __initconst = {
- 	.enable = aurora_enable_no_outer,
- 	.fixup = aurora_fixup,
- 	.save  = aurora_save,
-+	.configure = l2c_configure,
- 	.outer_cache = {
- 		.resume      = l2c_resume,
- 	},
-@@ -1608,6 +1612,7 @@ static void __init tauros3_save(void __iomem *base)
- 
- static void tauros3_configure(void __iomem *base)
- {
-+	l2c_configure(base);
- 	writel_relaxed(l2x0_saved_regs.aux2_ctrl,
- 		       base + TAUROS3_AUX2_CTRL);
- 	writel_relaxed(l2x0_saved_regs.prefetch_ctrl,
+That's another option.
+In this case, for reset, we will only need one cell, right?
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Maxime
+
+
+
+>
+>         Arnd
