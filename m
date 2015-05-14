@@ -1,46 +1,52 @@
+Return-Path: <mtk10466@mediatek.inc>
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Subject: [PATCH 04/10] dt-bindings: mediatek: Modify pinctrl bindings for mt6397.
+Date: Wed, 13 May 2015 18:35:40 -0700
+Message-ID: <1431567346-33780-5-git-send-email-hongzhou.yang@mediatek.com>
+In-Reply-To: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
+References: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbFKs8mALw7q2d0EEDkhxKNLgeiFB5TyZ6ZPpfcW-c+oQ@mail.gmail.com>
-References: <20150413110515.9681.58848.stgit@localhost>
-	<20150504084925.GB4047@localhost>
-	<CACRpkdbFKs8mALw7q2d0EEDkhxKNLgeiFB5TyZ6ZPpfcW-c+oQ@mail.gmail.com>
-Date: Wed, 6 May 2015 08:19:15 -0500
-Message-ID: <CAL_JsqLXry+6FF2rkg5FVviPWa_YqChMfAcbgdKVJ9ydtJfE3g@mail.gmail.com>
-Subject: Re: [PATCH 0/2] gpio: Allow userspace export from DT
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Johan Hovold <johan@kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, May 6, 2015 at 2:22 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, May 4, 2015 at 10:49 AM, Johan Hovold <johan@kernel.org> wrote:
->> On Mon, Apr 13, 2015 at 01:05:15PM +0200, Martin Fuzzey wrote:
->
->>> The above means that, in order to export the GPIO to userspace via
->>> /sys/class/gpio/export the userspace code must know the exact hardware and
->>> kernel version information.
->>
->> Not quite. You can still determine the gpio number in the above cases by
->> walking the sysfs tree to find the chip and it's base. This is the only
->> way to do this for dynamic buses such as USB.
->
-> Maybe we should start providing something like an
-> "lsgpio" utility in tools/gpio to do this, just as a hint
-> to userspace people on how things should be done.
->
->>> This patch series solves both problems by performing the external
->>> signal => GPIO mapping in the device tree.
->>
->> As Rob already mentioned, what we want is some way to declare pin
->> functions. These could then be requested from userspace (or used in DT,
->> something which should allow for further refactoring there as well)
->> unless a driver has already claimed them.
->
-> We have the ability to name the GPIO lines (I usually refer to
-> lines rather than pins, as pins are physical and not all GPIOs
-> are, actually) using the array "names" in struct gpio_chip,
-> however this has no DT binding, so maybe people should
-> work on that. These names appear as named line files
-> in sysfs IIRC. Or maybe you're thinking of something else?
+Since 6397 is no need to support interrupt controller,
+moving interrupt controller relate property to optional list.
+Also adding mt8173 and mt8127 to bindings.
 
-This problem is in many ways the similar to LEDs. 
+Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+---
+ .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+index 5868a0f..0480bc3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+@@ -3,9 +3,11 @@
+ The Mediatek's Pin controller is used to control SoC pins.
+ 
+ Required properties:
+-- compatible: value should be either of the following.
++- compatible: value should be one of the following.
+     (a) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
+-- mediatek,pctl-regmap: Should be a phandle of the syscfg node.
++    (b) "mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
++    (c) "mediatek,mt6397-pinctrl", compatible with mt6397 pinctrl.
++    (d) "mediatek,mt8127-pinctrl", compatible with mt8127 pinctrl.
+ - pins-are-numbered: Specify the subnodes are using numbered pinmux to
+   specify pins.
+ - gpio-controller : Marks the device node as a gpio controller.
+@@ -24,6 +26,9 @@ Required properties:
+             Only the following flags are supported:
+             0 - GPIO_ACTIVE_HIGH
+             1 - GPIO_ACTIVE_LOW
++
++Optional properties:
++- mediatek,pctl-regmap: Should be a phandle of the syscfg node.
+ - reg: physicall address base for EINT registers
+ - interrupt-controller: Marks the device node as an interrupt controller
+ - #interrupt-cells: Should be two.
+-- 
+1.7.9.5
