@@ -1,92 +1,122 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm64: Add DT support for Juno r1 board.
-Date: Thu, 14 May 2015 15:18:17 +0100
-Message-ID: <20150514141817.GF494@leverpostej>
-References: <1431537092-19597-1-git-send-email-Liviu.Dudau@arm.com>
- <1431537092-19597-6-git-send-email-Liviu.Dudau@arm.com>
- <1431612451.2881.54.camel@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1431612451.2881.54.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v2] drivers: of/base: move of_init to driver_init
+Date: Thu, 14 May 2015 15:28:24 +0100
+Message-ID: <1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
+References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 14, 2015 at 03:07:31PM +0100, Jon Medhurst (Tixy) wrote:
-> On Wed, 2015-05-13 at 18:11 +0100, Liviu Dudau wrote:
-> > This board is based on Juno r0 with updated Cortex A5x revisions
-> > and board errata fixes. It also contains coherent ThinLinks ports
-> > on the expansion slot that allow for an AXI master on the daughter
-> > card to participate in a coherency domain.
-> > 
-> > Support for SoC PCIe host bridge will be added as a separate series.
-> > 
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/arm/Makefile    |   2 +-
-> >  arch/arm64/boot/dts/arm/juno-r1.dts | 123 ++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 124 insertions(+), 1 deletion(-)
-> >  create mode 100644 arch/arm64/boot/dts/arm/juno-r1.dts
-> > 
-> > diff --git a/arch/arm64/boot/dts/arm/Makefile b/arch/arm64/boot/dts/arm/Makefile
-> > index 301a0da..c5c98b9 100644
-> > --- a/arch/arm64/boot/dts/arm/Makefile
-> > +++ b/arch/arm64/boot/dts/arm/Makefile
-> > @@ -1,5 +1,5 @@
-> >  dtb-$(CONFIG_ARCH_VEXPRESS) += foundation-v8.dtb
-> > -dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb
-> > +dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb juno-r1.dtb
-> >  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb
-> >  
-> >  always		:= $(dtb-y)
-> > diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
-> > new file mode 100644
-> > index 0000000..f6bc073
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-> > @@ -0,0 +1,123 @@
-> > +/*
-> > + * ARM Ltd. Juno Platform
-> > + *
-> > + * Copyright (c) 2015 ARM Ltd.
-> > + *
-> > + * This file is licensed under a dual GPLv2 or BSD license.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +/ {
-> > +	model = "ARM Juno development board (r1)";
-> > +	compatible = "arm,juno", "arm,vexpress";
-> 
-> Is there scope for adding "arm,juno-r1" to the front of that list?
-> Reason I ask, is that I can't help but think [1] that userside code
-> (like Android) which wants to select device-specific configuration,
-> should use something like the devices compatible string rather than what
-> they currently propose [2].
+Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+devices with an OF node") adds the symlink `of_node` for each device
+pointing to it's device tree node while creating/initialising it.
 
-> [1] https://lists.linaro.org/pipermail/linaro-android/2015-April/002743.html
-> [2] https://lists.linaro.org/pipermail/linaro-android/2015-April/002742.html
+However the devicetree sysfs is created and setup in of_init which is
+executed at core_initcall level. For all the devices created before
+of_init, the following error is thrown:
+	"Error -2(-ENOENT) creating of_node link"
 
-Ideally, userspace shouldn't need to know what specific device they're
-running on (though obviously there will always be cases...). To that
-end, it would be interesting to know what this data would be used for.
-If it's just a string for some "About device" menu, the model string
-should be ok.
+Like many other components in driver model, initialize the sysfs support
+for OF/devicetree from driver_init so that it's ready before any devices
+are created.
 
-I'm a bit lost with the suggestion in [2]. It doesn't seem to have
-anything to do with firmware, though perhaps I'm missing something? What
-information are they trying to get at?
+Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+	devices with an OF node")
+Suggested-by: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/base/init.c | 2 ++
+ drivers/of/base.c   | 8 +++-----
+ include/linux/of.h  | 6 ++++++
+ 3 files changed, 11 insertions(+), 5 deletions(-)
 
-Thanks,
-Mark.
+Changes v1->v2:
+	- renamed of_init to of_core_init to avoid collision with
+	  PPC nouveau drm driver
 
+diff --git a/drivers/base/init.c b/drivers/base/init.c
+index da033d3bab3c..48c0e220acc0 100644
+--- a/drivers/base/init.c
++++ b/drivers/base/init.c
+@@ -8,6 +8,7 @@
+ #include <linux/device.h>
+ #include <linux/init.h>
+ #include <linux/memory.h>
++#include <linux/of.h>
+
+ #include "base.h"
+
+@@ -34,4 +35,5 @@ void __init driver_init(void)
+ 	cpu_dev_init();
+ 	memory_dev_init();
+ 	container_dev_init();
++	of_core_init();
+ }
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 99764db0875a..f0650265febf 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -189,7 +189,7 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 	return 0;
+ }
+
+-static int __init of_init(void)
++void __init of_core_init(void)
+ {
+ 	struct device_node *np;
+
+@@ -198,7 +198,8 @@ static int __init of_init(void)
+ 	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
+ 	if (!of_kset) {
+ 		mutex_unlock(&of_mutex);
+-		return -ENOMEM;
++		pr_err("devicetree: failed to register existing nodes\n");
++		return;
+ 	}
+ 	for_each_of_allnodes(np)
+ 		__of_attach_node_sysfs(np);
+@@ -207,10 +208,7 @@ static int __init of_init(void)
+ 	/* Symlink in /proc as required by userspace ABI */
+ 	if (of_root)
+ 		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
+-
+-	return 0;
+ }
+-core_initcall(of_init);
+
+ static struct property *__of_find_property(const struct device_node *np,
+ 					   const char *name, int *lenp)
+diff --git a/include/linux/of.h b/include/linux/of.h
+index ddeaae6d2083..b871ff9d81d7 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -121,6 +121,8 @@ extern struct device_node *of_stdout;
+ extern raw_spinlock_t devtree_lock;
+
+ #ifdef CONFIG_OF
++void of_core_init(void);
++
+ static inline bool is_of_node(struct fwnode_handle *fwnode)
+ {
+ 	return fwnode && fwnode->type == FWNODE_OF;
+@@ -376,6 +378,10 @@ bool of_console_check(struct device_node *dn, char *name, int index);
+
+ #else /* CONFIG_OF */
+
++static inline void of_core_init(void)
++{
++}
++
+ static inline bool is_of_node(struct fwnode_handle *fwnode)
+ {
+ 	return false;
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
