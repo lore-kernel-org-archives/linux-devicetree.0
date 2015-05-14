@@ -1,69 +1,53 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: mtd: replace "nor-jedec" binding with
- "jedec,spi-nor"
-Date: Thu, 14 May 2015 11:46:06 -0600
-Message-ID: <5554DF5E.4020802@wwwdotorg.org>
-References: <1431624773-4165-1-git-send-email-computersforpeace@gmail.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: bcm-mspi: Add support for Broadcom MSPI driver.
+Date: Thu, 14 May 2015 11:19:01 -0700
+Message-ID: <5554E715.7070203@broadcom.com>
+References: <1431452293-16697-1-git-send-email-jonathar@broadcom.com> <1431452293-16697-3-git-send-email-jonathar@broadcom.com> <20150512191718.GW3066@sirena.org.uk> <5553E31A.8060309@broadcom.com> <5553E9FA.4070708@broadcom.com> <20150514103144.GO2761@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431624773-4165-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150514103144.GO2761-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2015 11:32 AM, Brian Norris wrote:
-> In commit 8ff16cf77ce3 ("Documentation: devicetree: m25p80: add "nor-jedec"
-> binding"), we added a generic "nor-jedec" binding to catch all
-> mostly-compatible SPI NOR flash which can be detected via the READ ID
-> opcode (0x9F). This was discussed and reviewed at the time, however
-> objections have come up since then as part of this discussion:
->
->    http://lkml.kernel.org/g/20150511224646.GJ32500@ld-irv-0074
->
-> It seems the parties involved agree that "jedec,spi-nor" does a better
-> job of capturing the fact that this is SPI-specific, not just any NOR
-> flash.
->
-> This binding was only merged for v4.1-rc1, so it's still OK to change
-> the naming.
->
-> At the same time, let's move the documentation to a better name.
->
-> Next up: prune the m25p_ids[] table to the minimal necessary listing, so
-> we can stop referring to code (drivers/mtd/devices/m25p80.c) from the
-> documentation.
+Hi Mark,
 
-There's no need to change the code to update the documentation. Simply 
-paste the list of valid device IDs into the documentation. The binding 
-documentation needs to be completely standalone anyway. Binding 
-documentation should never refer to Linux driver code as part of their 
-definition.
+On 15-05-14 03:31 AM, Mark Brown wrote:
+> On Wed, May 13, 2015 at 05:19:06PM -0700, Scott Branden wrote:
+>
+>> The purpose of this mspi interface is to connect to NOR flash.  There are
+>> other SPI interfaces on the devices used to connect to other SPI devies.  We
+>> don't have any need to support full duplex slaves on this port (NOR have any
+>> hardware wired this way - pun realized after typing this).
+>
+> Chip vendors often say this sort of thing and then get surprised by what
+> their users choose to do, and even if it only ever gets used with flash
+> all it would take is some new flash command which can use full duplex
+> for something.  Please write the code so it at least tries to handle
+> full duplex operation, if you can't test it fully that's not the end of
+> the world.  It doesn't look like it should be particularly difficult.
+>
+Yes, there is always room for improvements in code.  In this case - it 
+really is not worth our time to add code we can't test.  We try to 
+deliver code that we can test and actually works.  Yes, if anyone needs 
+to use the mspi for full duplex operation code can be added in the 
+future - it is software.  This block has gone through many generations 
+of our SoCs and has only been used for this purpose - the bootROM boots 
+from this SPI only.  It is dedicated for this purpose.
 
-You can never remove the currently-supported device-specific IDs from 
-the driver, since existing DTs need to continue working forever, even 
-with future drivers/kernels.
+Also, there are other SPI blocks on the SoC that are used for connect 
+other SPI devices.  These SPI blocks are properly designed for 
+full-duplex operation.  This mspi block is designed for connecting to 
+NOR flash.
 
-The binding document should also always include a complete list of 
-supported flash devices. Standard practice is that the DT compatible 
-property contains a list of compatible values, starting with the 
-device-specific value, and followed by any generic values. All of those 
-values should be standardized and specified in the DT documentation, 
-even if the DT binding is written in such a way that a compliant driver 
-need only actively match on the generic value. The device-specific 
-values may not be used today, but are present in case some 
-device-specific workaround needs to be retro-actively 
-implemented/enabled, since that needs to happen for existing DTs too.
+Regards,
+Scott
 
-> I'd *really* like to get an 'ack' from a DT maintainer for this, those those
-> are apparently very hard to come by. And I'd really not like to have to revisit
-> this again in a few weeks. We have patches getting queued up for 4.2 that are
-> using the "nor-jedec" binding, and I'd like to nip those in the bud ASAP.
 
-I am not a DT maintainer, but the DT documentation part of this change:
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
