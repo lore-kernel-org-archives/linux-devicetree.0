@@ -1,133 +1,96 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH 3/4] edac, altera: Addition of Arria10 EDAC
-Date: Thu, 14 May 2015 15:20:52 -0500
-Message-ID: <555503A4.2070802@opensource.altera.com>
-References: <1431553787-27741-1-git-send-email-tthayer@opensource.altera.com>
- <1431553787-27741-4-git-send-email-tthayer@opensource.altera.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] Documentation: dt: mtd: replace "nor-jedec" binding with "jedec,spi-nor"
+Date: Thu, 14 May 2015 22:26:41 +0200
+Message-ID: <CAMuHMdW6bDjEx+EkqLQmGCZTap-77w2wWiHpra+2pLPexwAWPw@mail.gmail.com>
+References: <1431624773-4165-1-git-send-email-computersforpeace@gmail.com>
+	<5554DF5E.4020802@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431553787-27741-4-git-send-email-tthayer@opensource.altera.com>
+In-Reply-To: <5554DF5E.4020802@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, MTD Maling List <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marex@denx.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2015 04:49 PM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> The Arria10 SDRAM and ECC system differs significantly from the
-> Cyclone5 and Arria5 SoCs. This patch adds support for the Arria10
-> SoC.
-> 1) IRQ handler needs to support SHARED IRQ
-> 2) Support sberr and dberr address reporting.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
->  drivers/edac/altera_edac.c |  132 ++++++++++++++++++++++++++++++++++++++------
->  drivers/edac/altera_edac.h |   85 ++++++++++++++++++++++++++++
->  2 files changed, 201 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-> index 204ad2d..735a180 100644
-> --- a/drivers/edac/altera_edac.c
-> +++ b/drivers/edac/altera_edac.c
-> @@ -42,6 +42,7 @@ const struct altr_sdram_prv_data c5_data = {
->  	.ecc_stat_ce_mask   = CV_DRAMSTS_SBEERR,
->  	.ecc_stat_ue_mask   = CV_DRAMSTS_DBEERR,
->  	.ecc_saddr_offset   = CV_ERRADDR_OFST,
-> +	.ecc_daddr_offset   = CV_ERRADDR_OFST,
->  	.ecc_cecnt_offset   = CV_SBECOUNT_OFST,
->  	.ecc_uecnt_offset   = CV_DBECOUNT_OFST,
->  	.ecc_irq_en_offset  = CV_DRAMINTR_OFST,
-> @@ -57,37 +58,62 @@ const struct altr_sdram_prv_data c5_data = {
->  #endif
->  };
->  
-> +const struct altr_sdram_prv_data a10_data = {\
-
-This should be static.
-
-> +	.ecc_ctrl_offset    = A10_ECCCTRL1_OFST,
-> +	.ecc_ctl_en_mask    = A10_ECCCTRL1_ECC_EN,
-> +	.ecc_stat_offset    = A10_INTSTAT_OFST,
-> +	.ecc_stat_ce_mask   = A10_INTSTAT_SBEERR,
-> +	.ecc_stat_ue_mask   = A10_INTSTAT_DBEERR,
-> +	.ecc_saddr_offset   = A10_SERRADDR_OFST,
-> +	.ecc_daddr_offset   = A10_DERRADDR_OFST,
-> +	.ecc_irq_en_offset  = A10_ERRINTEN_OFST,
-> +	.ecc_irq_en_mask    = A10_ECC_IRQ_EN_MASK,
-> +	.ecc_irq_clr_offset = A10_INTSTAT_OFST,
-> +	.ecc_irq_clr_mask   = (A10_INTSTAT_SBEERR | A10_INTSTAT_DBEERR),
-> +	.ecc_cnt_rst_offset = A10_ECCCTRL1_OFST,
-> +	.ecc_cnt_rst_mask   = A10_ECC_CNT_RESET_MASK,
-> +#ifdef CONFIG_EDAC_DEBUG
-> +	.ce_ue_trgr_offset  = A10_DIAGINTTEST_OFST,
-> +	.ce_set_mask        = A10_DIAGINT_TSERRA_MASK,
-> +	.ue_set_mask        = A10_DIAGINT_TDERRA_MASK,
-> +#endif
-> +};
-> +
+On Thu, May 14, 2015 at 7:46 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 05/14/2015 11:32 AM, Brian Norris wrote:
+>> In commit 8ff16cf77ce3 ("Documentation: devicetree: m25p80: add
+>> "nor-jedec"
+>> binding"), we added a generic "nor-jedec" binding to catch all
+>> mostly-compatible SPI NOR flash which can be detected via the READ ID
+>> opcode (0x9F). This was discussed and reviewed at the time, however
+>> objections have come up since then as part of this discussion:
+>>
+>>    http://lkml.kernel.org/g/20150511224646.GJ32500@ld-irv-0074
+>>
+>> It seems the parties involved agree that "jedec,spi-nor" does a better
+>> job of capturing the fact that this is SPI-specific, not just any NOR
+>> flash.
+>>
+>> This binding was only merged for v4.1-rc1, so it's still OK to change
+>> the naming.
+>>
+>> At the same time, let's move the documentation to a better name.
+>>
+>> Next up: prune the m25p_ids[] table to the minimal necessary listing, so
+>> we can stop referring to code (drivers/mtd/devices/m25p80.c) from the
+>> documentation.
 >
-<snip>
+> There's no need to change the code to update the documentation. Simply paste
+> the list of valid device IDs into the documentation. The binding
+> documentation needs to be completely standalone anyway. Binding
+> documentation should never refer to Linux driver code as part of their
+> definition.
+>
+> You can never remove the currently-supported device-specific IDs from the
+> driver, since existing DTs need to continue working forever, even with
+> future drivers/kernels.
+>
+> The binding document should also always include a complete list of supported
+> flash devices. Standard practice is that the DT compatible property contains
+> a list of compatible values, starting with the device-specific value, and
+> followed by any generic values. All of those values should be standardized
+> and specified in the DT documentation, even if the DT binding is written in
+> such a way that a compliant driver need only actively match on the generic
+> value. The device-specific values may not be used today, but are present in
+> case some device-specific workaround needs to be retro-actively
+> implemented/enabled, since that needs to happen for existing DTs too.
 
-> +
->  static int altr_sdram_probe(struct platform_device *pdev)
->  {
->  	const struct of_device_id *id;
-> @@ -221,8 +295,8 @@ static int altr_sdram_probe(struct platform_device *pdev)
->  	struct regmap *mc_vbase;
->  	struct dimm_info *dimm;
->  	u32 read_reg;
-> -	int irq, res = 0;
-> -	unsigned long mem_size;
-> +	int irq, irq2, res = 0;
-> +	unsigned long mem_size, irqflags;
->  
->  	id = of_match_device(altr_sdram_ctrl_of_match, &pdev->dev);
->  	if (!id)
-> @@ -288,6 +362,9 @@ static int altr_sdram_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> +	/* Arria10 has a 2nd IRQ */
-> +	irq2 = platform_get_irq(pdev, 1);
-> +
->  	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
->  	layers[0].size = 1;
->  	layers[0].is_virt_csrow = true;
-> @@ -332,8 +409,31 @@ static int altr_sdram_probe(struct platform_device *pdev)
->  	if (res < 0)
->  		goto err;
->  
-> +	/* Only the Arria10 has separate IRQs */
-> +	if (irq2 > 0) {
-> +		/* Arria10 specific initialization */
-> +		res = a10_init(mc_vbase);
-> +		if (res < 0)
-> +			goto err2;
-> +
-> +		res = a10_unmask_irq(pdev, A10_DDR0_IRQ_MASK);
-> +		if (res < 0)
-> +			goto err2;
-> +
-> +		res = devm_request_irq(&pdev->dev, irq2,
-> +				       altr_sdram_mc_err_handler,
-> +				       IRQF_SHARED, dev_name(&pdev->dev), mci);
-> +		if (res < 0) {
-> +			edac_mc_printk(mci, KERN_ERR,
-> +				       "Unable to request irq %d\n", irq2);
-> +			res = -ENODEV;
-> +			goto err2;
-> +		}
-> +		irqflags = IRQF_SHARED;
-> +	}
-> +
->  	res = devm_request_irq(&pdev->dev, irq, altr_sdram_mc_err_handler,
-> -			       0, dev_name(&pdev->dev), mci);
-> +			       irqflags, dev_name(&pdev->dev), mci);
+Indeed, all supported flash devices should be listed in the DT binding
+documentation, so checkpatch can validate dts changes:
 
-irqflags was never set for the case of !(irq2 > 0).
+$ scripts/checkpatch.pl -f arch/arm/boot/dts/r8a7791-koelsch.dts
 
-Dinh
+[...]
+
+WARNING: DT compatible string "spansion,s25fl512s" appears
+un-documented -- check ./Documentation/devicetree/bindings/
+#493: FILE: arch/arm/boot/dts/r8a7791-koelsch.dts:493:
++ compatible = "spansion,s25fl512s", "nor-jedec";
+
+>> I'd *really* like to get an 'ack' from a DT maintainer for this, those
+>> those
+>> are apparently very hard to come by. And I'd really not like to have to
+>> revisit
+>> this again in a few weeks. We have patches getting queued up for 4.2 that
+>> are
+>> using the "nor-jedec" binding, and I'd like to nip those in the bud ASAP.
+>
+>
+> I am not a DT maintainer, but the DT documentation part of this change:
+> Acked-by: Stephen Warren <swarren@nvidia.com>
+
+Likewise,
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
