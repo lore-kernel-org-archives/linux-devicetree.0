@@ -1,157 +1,74 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Thu, 14 May 2015 16:46:34 +1000
-Message-ID: <1431585994.4160.32.camel@kernel.crashing.org>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
-	 <1430493730.7979.58.camel@kernel.crashing.org>
-	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
-	 <1430521038.7979.70.camel@kernel.crashing.org>
-	 <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
-	 <1430774063.7979.139.camel@kernel.crashing.org>
-	 <1431560124.20218.91.camel@kernel.crashing.org>
-	 <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
-	 <1431564871.4160.8.camel@kernel.crashing.org>
-	 <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] mailbox: add support for System Control and Power
+ Interface(SCPI) protocol
+Date: Thu, 14 May 2015 12:32:55 +0530
+Message-ID: <CABb+yY1083thUrtKfMKg1ZP2=d3Jr4hqRczqejpAkba+40UnkA@mail.gmail.com>
+References: <1430134846-24320-1-git-send-email-sudeep.holla@arm.com>
+	<1430134846-24320-2-git-send-email-sudeep.holla@arm.com>
+	<CABb+yY1KcrDNrhCHae=B7D+9jv2MEOqwF0VhDRKnZu7ATGfv2A@mail.gmail.com>
+	<55538540.1010505@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55538540.1010505-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-05-14 at 09:23 +0300, Pantelis Antoniou wrote:
+On Wed, May 13, 2015 at 10:39 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 13/05/15 17:52, Jassi Brar wrote:
+>>
+>>> This patch adds support for System Control and Power Interface (SCPI)
+>>> Message Protocol used between the Application Cores(AP) and the System
+>>> Control Processor(SCP). The MHU peripheral provides a mechanism for
+>>> inter-processor communication between SCP's M3 processor and AP.
+>>>
+>>> SCP offers control and management of the core/cluster power states,
+>>> various power domain DVFS including the core/cluster, certain system
+>>> clocks configuration, thermal sensors and many others.
+>>>
+>>> This protocol driver provides interface for all the client drivers using
+>>> SCPI to make use of the features offered by the SCP.
+>>>
+>> Is the SCPI specification available somewhere to look into?
+>>
+>
+> Yes sorry posted the link separately(as reply to Tixy in the cover
+> letter) since it was not available when I posted the patches.
+> You can grab the protocol @[1] or [2]
+>
+Thanks for the link. I wish I had access to the spec earlier.
 
-> > A few things that I don't find in the overlay code (but maybe I hav=
-en't
-> > looked at it hard enough):
-> >=20
-> > - Can it remove nodes/properties ?
-> >=20
->=20
-> Yes.
+>>>   .../devicetree/bindings/mailbox/arm,scpi.txt       | 121 ++++
+>>>   drivers/mailbox/Kconfig                            |  19 +
+>>>   drivers/mailbox/Makefile                           |   2 +
+>>>   drivers/mailbox/scpi_protocol.c                    | 694
+>>> +++++++++++++++++++++
+>>>
+>> Why in drivers/mailbox/ ? This is a 'consumer' driver and seems
+>> Juno(ARM) specific.
+>>
+>
+> Not just JUNO alone though it's first one to use, it will used in next
+> few platforms(foreseeable future) from ARM Ltd.
+>
+> I have put that in drivers/mailbox for 2 reasons:
+> 1. It's mailbox protocol :)
+>
+client/protocol drivers don't usually reside with controller drivers.
+drivers/firmware/ seems more appropriate.
 
-Ok, I've missed that when looking at the overlay code then, I'll have t=
-o
-give it a closer look.
+> 2. ARM64 doesn't have platform code like ARM32 and moreover it's
+>    strictly not specific to JUNO or any single platform. It may
+>    get reused on other platforms.
+>
+drivers/firmware/ should do too.
 
-> > - Can it "commit" a changeset so it's permanently part of the main =
-DT ?
-> > We will never have a concept of "revertable" changesets, if we need=
- a
-> > subsequent update, we will get a new overlay from FW that will remo=
-ve
-> > what needs to be removed and add what needs to be added.
-> >=20
->=20
-> The overlay when applied is a part of the kernel DT tree.
-> It is trivial to add a mechanism that simply commits everything and
-> tosses away the revert information.
->=20
-> Note that in that case you have to make provisions for the unflatten
-> blob to not be freed or for the device tree nodes/properties to be
-> dynamically allocated.
-
-I think it makes sense to do the dynamic thing anyway...
-
-> > IE, our current mechanism without overlay is fairly simple:
-> >=20
-> >  - On PCI unplug, we remove all nodes below the slot (from linux),
-> > the FW does the equivalent internally.
-> >=20
->=20
-> If you use an overlay, you just revert it and everything would
-> be as it was before, without anything hanging below the slot node.
-
-Except that doesn't work for the boot time content which we get
-from the firmware as part of the initial FDT (and we can't change that
-without breaking backward compatibility).
-
-> Note that the =E2=80=98remove all nodes below the slot=E2=80=99 does =
-not work for my case.
->=20
-> That is because there are devices being instantiated under the slot
-> (i2c busses, i2c devices, FPGAs etc) that need to be removed from the
-> system.
-
-Right while in my case, there isn't, it's just the standard OF PCI
-representation generated by FW, the main thing is that it might have
-some enriched properties for some known cable cards of external drawers
-that are good to have.
-
-> >  - On PCI re-plug, the FW internally builds new nodes and sends a
-> > new subtree as an FDT that we can expand/attach.
-> >=20
->=20
-> You can easily send a DT blob containing an overlay from firmware.
-
-Sending one is easy. Building it is not :-)
-
-> It can be even easy, since you might not have to recreate the full bl=
-ob
-> each time, but instead using flat device tree methods to populate the
-> few properties that change each time.
-
-No, we basically have our internal tree in the firmware in a format
-similar to Linux, ie, a pointer based tree. We can "flatten" it of
-course, but generating an overlay is trickier. We can, it's just more
-work and we are running out of time (I basically have to cut that FW in
-the next few days, then we'll be stuck with whatever interfaces we
-created, I have a big of time to fix bugs after that but that's about
-it).
-
-> > Now we could consider that subtree as a changeset that can be undon=
-e,
-> > but that wouldn't work for boot time. And subsequent updates wouldn=
-'t
-> > have that concept of "undoing" anyway.
-> >=20
->=20
-> I have posted another patch that does boot-time DT quirk which are
-> non-revertable.
->=20
-> https://lkml.org/lkml/2015/2/18/258
-
-Not sure how that applies in my case ... I can't change the
-representation of the PCI subtree, this is standard OFW representation,
-I can't change the FW to make it an overlay-like thing at boot time,
-that would break existing kernels.
-
-> > IE. conceptually, what overlays do today is quite rooted around the=
- idea
-> > of having a fixed "base" DT and some pre-compiled DTB overlays that
-> > get added/removed. The design completely ignore the idea of a FW th=
-at
-> > maintains a "live" tree which we want to keep in sync, which is wha=
-t we
-> > want to do here, or what we could do with a "live" open firmware
-> > implementation.
-> >=20
-> > Now we might be able to reconcile them, but it feels to me that the
-> > overlay/changeset stuff is too rooted in the first concept=E2=80=A6
-> >=20
->=20
-> The first DT overlays use case (beaglebone capes) is what got the con=
-cept
-> started.
->=20
-> Right now is a generic mechanism to apply modifications to the kernel
-> live tree, with the possibility to revert them.
-
-Yes but as I said it's not really thought in term of keeping the kernel
-tree in sync with an external dynamically generated tree. Maybe we can
-fix it, but it's more complex...
-
-Ben.
-
-> > Ben.
-> >=20
-> >=20
->=20
-> Regards
->=20
-> =E2=80=94 Pantelis
+BTW is scpi_protocol.c meant/tested to work over arm_mhu.c? The spec
+says so but I don't see how because you pass 'struct scpi_xfer*' as
+the message whereas arm_mhu.c expects u32*
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
