@@ -1,86 +1,52 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 1/3 v2] dt/bindings: Add binding for the Raspberry Pi firmware driver
-Date: Thu, 14 May 2015 02:57:43 -0700
-Message-ID: <878ucrbhwo.fsf@eliezer.anholt.net>
-References: <1431543609-19646-1-git-send-email-eric@anholt.net> <1431543609-19646-2-git-send-email-eric@anholt.net> <20150514084039.GC22418@x1>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: l2c: add options to overwrite prefetching behavior
+Date: Thu, 14 May 2015 10:58:56 +0100
+Message-ID: <20150514095856.GU2067@n2100.arm.linux.org.uk>
+References: <1431560520-12544-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150514084039.GC22418@x1>
+Content-Disposition: inline
+In-Reply-To: <1431560520-12544-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 14, 2015 at 01:42:00AM +0200, Hauke Mehrtens wrote:
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index e309c8f..f919548 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -1149,6 +1149,16 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>  		}
+>  	}
+>  
+> +	if (of_property_read_bool(np, "arm,prefetch-data")) {
+> +		*aux_val |= L310_AUX_CTRL_DATA_PREFETCH;
+> +		*aux_mask &= ~L310_AUX_CTRL_DATA_PREFETCH;
+> +	}
+> +
+> +	if (of_property_read_bool(np, "arm,prefetch-instr")) {
+> +		*aux_val |= L310_AUX_CTRL_INSTR_PREFETCH;
+> +		*aux_mask &= ~L310_AUX_CTRL_INSTR_PREFETCH;
+> +	}
+> +
+>  	prefetch = l2x0_saved_regs.prefetch_ctrl;
+>  
+>  	ret = of_property_read_u32(np, "arm,double-linefill", &val);
 
-Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+Please move these down along-side the "arm,prefetch-offset" property
+parsing, and please update the prefetch value using
+L310_PREFETCH_CTRL_DATA_PREFETCH and L310_PREFETCH_CTRL_INSTR_PREFETCH
+instead.
 
-> On Wed, 13 May 2015, Eric Anholt wrote:
->
->> This driver will provide support for calls into the firmware that will
->> be used by other drivers like cpufreq and vc4.
->>=20
->> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->> ---
->>=20
->> v2: Improve commit message, point to mailbox.txt for how mboxes work.
->>=20
->>  .../devicetree/bindings/arm/bcm/raspberrypi,firmware.txt | 16 +++++++++=
-+++++++
->>  1 file changed, 16 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberryp=
-i,firmware.txt
->>=20
->> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmw=
-are.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt
->> new file mode 100644
->> index 0000000..33b0043
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt
->> @@ -0,0 +1,16 @@
->> +Raspberry Pi VideoCore firmware driver
->> +
->> +Required properties:
->> +
->> +- compatible:		Should be "rasbperrypi,firmware"
->> +- mboxes:		Single-entry list which specifies which mailbox
->> +			  controller and channel is used.  See
->> +			  Documentation/devicetree/bindings/mailbox/mailbox.txt
->> +			  for the semantics of this property
->
-> That's not what it looks like to me.  There is no mention of channels
-> in a 0 cell property.  Keep it simple.  How about:
->
-> Phandle to the firmware device's Mailbox.
-> (See: ../mailbox/mailbox.txt for more information)
+These are in fact the same bit, but let's try to keep the prefetch
+configuration all in one place and via the same method.
 
-Sounds good to me.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVVHGXAAoJELXWKTbR/J7okr0QAKu5sAJ2xzoskiTeMZGWNflc
-UoLrJB4e+3hkgloIBU7+PqePuniHmr3bepB3FFnDrIG2DEh5mIcnOwJPMPTiG27z
-mFojrI9YNh35X8D1AyKBuB6uUnJQ9qJOo3X21t60lzhJ8M9RgUp8TYBGhqNCnfxz
-azTKYr2qOVXYoJ3uqmeYpSJZBN6rmNExAtoM+mkDAXE+XqpvtU7aVK8j+ddVy8jS
-taYz2HJj1nOy/b8ivNfEqoMiPLCvwg0KBbixYb2ejodMoNdyB5oD5B0XaAlPqzMW
-LZ7+9y02Sn2zdFw24vFyXeQamO7D/fcjT2q+FDbd0XfIJ7/UO5QHrettnIQKuG1Y
-0n/vRYe3ow193JlxehALZnQJgitudrPXUuLHFariFuCrtJK7BzWN6oDUbBqqQXSd
-SPuKarX2bvEqlORrHEX8MHTtX5XghWdH49TZCoIL1U58I2k0euP4xQCdbHa4srcA
-6YUaGgEYFxqUqMDG9cZMTuT9583tnQDJ5741yLKXr553etEIthVSCyoZn3+m1KxZ
-ptBZXy1izJVo2AyKVKoAS/xKjjJEnVfREwXdSiVyZArxd3gCUyy1rkEpqW5aQ+E6
-lrWidQ2VcAPD8f1eZhipvB+fJQ71jsCG8Mli/7k5GsYYQqvRorYozqtS534+1lSF
-zfxq5/vm2lOgBUAoD+1R
-=tMF3
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
