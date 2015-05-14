@@ -1,90 +1,82 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: Enable beaglebone cape-manager
-Date: Thu, 14 May 2015 08:39:58 -0700
-Message-ID: <20150514153957.GK15563@atomide.com>
-References: <1431504292-32132-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: YH Huang <yh.huang@mediatek.com>
+Subject: Re: [PATCH 2/2] pwm: add Mediatek display PWM driver support
+Date: Thu, 14 May 2015 23:39:57 +0800
+Message-ID: <1431617997.15140.57.camel@mtksdaap41>
+References: <1431336382-13167-1-git-send-email-yh.huang@mediatek.com>
+	 <1431336382-13167-3-git-send-email-yh.huang@mediatek.com>
+	 <20150512133202.GA24684@ulmo.nvidia.com>
+	 <CABuKBe+e2pjFmQ9Ne7XAeVwJzS8KOXa09CUUZPbYG=oVmP3ikA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1431504292-32132-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABuKBe+e2pjFmQ9Ne7XAeVwJzS8KOXa09CUUZPbYG=oVmP3ikA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yh.huang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-* Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> [150513 01:06]:
-> Enable the cape manager on the beaglebone family of boards.
+On Tue, 2015-05-12 at 16:34 +0200, Matthias Brugger wrote:
+> 2015-05-12 15:32 GMT+02:00 Thierry Reding <thierry.reding@gmail.com>:
+> > On Mon, May 11, 2015 at 05:26:22PM +0800, YH Huang wrote:
+> >> Add display PWM driver support to modify backlight for MT8173/MT6595.
+> >>
+> >> Signed-off-by: YH Huang <yh.huang@mediatek.com>
+> >> ---
+> >>  drivers/pwm/Kconfig             |   9 ++
+> >>  drivers/pwm/Makefile            |   1 +
+> >>  drivers/pwm/pwm-disp-mediatek.c | 225 ++++++++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 235 insertions(+)
+> >>  create mode 100644 drivers/pwm/pwm-disp-mediatek.c
+> >>
+> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> >> index b1541f4..9edbb5a 100644
+> >> --- a/drivers/pwm/Kconfig
+> >> +++ b/drivers/pwm/Kconfig
+> >> @@ -111,6 +111,15 @@ config PWM_CLPS711X
+> >>         To compile this driver as a module, choose M here: the module
+> >>         will be called pwm-clps711x.
+> >>
+> >> +config PWM_DISP_MEDIATEK
+> >
+> > Please make this "PWM_MEDIATEK_DISP" so we can keep everything sorted by
+> > vendor.
+> >
+> >> +     tristate "MEDIATEK display PWM driver"
+> >
+> > "MediaTek"?
+> >
+> >> +     depends on OF
+> >
+> > Technically I think you need depends on HAS_IOMEM here to avoid breakage
+> > on randconfig builds.
+> >
+> >> +     help
+> >> +       Generic PWM framework driver for mediatek disp-pwm device.
+> >
+> > "MediaTek"? Also perhaps this should describe what this PWM is instead
+> > of just the "disp-pwm" which leaves everyone guessing what it is. From
+> > the name I'd expect it to be the PWM that is used to control the
+> > backlight brightness for display, but I think this description should
+> > say that explicitly.
+> >
+> >> +
+> >> +       To compile this driver as a module, choose M here: the module
+> >> +       will be called pwm-disp-mediatek.
+> >
+> > pwm-mediatek-disp
+> 
+> I would prefert pwm-mtk-disp which is in line with the other drivers.
+> Also I have to admit that unfortunately the naming is not uniformly
+> throughout the kernel.
+> 
 
-I don't think we have the "ti,bone-capemgr" binding in use yet
-in Linux next?
+OK. I will take it.
 
-An ack from the DT people would be good to have here for the
-binding.
+> Thanks,
+> Matthias
+
+Thank for your suggestion.
 
 Regards,
-
-Tony
- 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/am335x-bone-common.dtsi | 42 +++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index 236b7db..28d9764 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -375,3 +375,45 @@
->  &sham {
->  	status = "okay";
->  };
-> +
-> +/* the cape manager */
-> +/ {
-> +	bone_capemgr {
-> +		compatible = "ti,bone-capemgr";
-> +		status = "okay";
-> +
-> +		eeprom = <&baseboard_data>;
-> +
-> +		/* map board revisions to compatible definitions */
-> +		baseboardmaps {
-> +			baseboard_beaglebone: board@0 {
-> +				board-name = "A335BONE";
-> +				compatible-name = "ti,beaglebone";
-> +			};
-> +
-> +			baseboard_beaglebone_black: board@1 {
-> +				board-name = "A335BNLT";
-> +				compatible-name = "ti,beaglebone-black";
-> +			};
-> +		};
-> +
-> +		/* only 4 slots defined */
-> +		slots {
-> +			slot@0 {
-> +				eeprom = <&cape0_data>;
-> +			};
-> +
-> +			slot@1 {
-> +				eeprom = <&cape1_data>;
-> +			};
-> +
-> +			slot@2 {
-> +				eeprom = <&cape2_data>;
-> +			};
-> +
-> +			slot@3 {
-> +				eeprom = <&cape3_data>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 1.7.12
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+YH Huang
