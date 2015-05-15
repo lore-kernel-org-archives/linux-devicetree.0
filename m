@@ -1,67 +1,69 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v3 0/6] Add dwc3 usb3 DT node and various phy cleanup
-Date: Fri, 15 May 2015 11:50:37 +0200
-Message-ID: <5555C16D.9020906@st.com>
-References: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/5] Marvell PXA1928 USB support
+Date: Fri, 15 May 2015 11:55:49 +0200
+Message-ID: <5555C2A5.8010509@gmail.com>
+References: <1431557340-5421-1-git-send-email-robh@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430400652-3366-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, balbi@ti.com, srinivas.kandagatla@gmail.com
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431557340-5421-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On 14.05.2015 00:48, Rob Herring wrote:
+> This series adds USB PHYs and EHCI host drivers for the Marvell PXA1928
+> SOC.
+>
+> The OTG block is based on ChipIdea and works with "chipidea,usb2"
+> compatible driver as is just by adding the PHY driver. Yay!
+>
+> Rob
+>
+> Rob Herring (5):
+>    dt-bindings: Add Marvell PXA1928 USB and HSIC PHY bindings
+>    dt-bindings: Add Marvell PXA1928 USB EHCI controller binding
+>    phy: Add Marvell USB 2.0 OTG 28nm PHY
+>    phy: add Marvell HSIC 28nm PHY
+>    usb: add pxa1928 ehci support
+>
+>   .../devicetree/bindings/phy/pxa1928-usb-phy.txt    |  18 ++
+>   .../devicetree/bindings/usb/ehci-pxa1928.txt       |  19 ++
+>   drivers/phy/Kconfig                                |  20 ++
+>   drivers/phy/Makefile                               |   2 +
+>   drivers/phy/phy-mv-hsic.c                          | 208 +++++++++++++
+>   drivers/phy/phy-mv-usb2.c                          | 329 +++++++++++++++++++++
 
-On 04/30/2015 03:30 PM, Peter Griffin wrote:
-> Hi Maxime,
->
-> This series primarily adds the dwc3 DT node which activates the usb3 controller on
-> the stih407-b2120, stih410-b2120 and stih418-b2199 platforms.
->
-> As part of getting this working I noticed an error with the picophyreset which
-> stops the controller working which I've also fixed.
->
-> regards,
->
-> Peter.
->
-> Changes in v3:
-> - Add miphys8lp options properties for stih418 (Pete)
-> - Add support for stih418-b2199 (Max)
-> - Only enable usb3 controller in the board file (Max)
-> - Fix superflous '\n' (Lee)
-> - Rebase series on v4.1-rc1 (Pete)
->
-> NB: Since v2 some patches were taken into the phy and ahci trees which I've now
-> removed from the series.
->
-> Changes in v2:
-> - Update commit to explicitly say no ABI breakage (Rob)
-> - Rebase series on v4.0-rc6 (Pete)
-> - Collect up Acks (Pete)
->
-> Peter Griffin (6):
->    ARM: DT: STi: STiH407: Update picophyreset for the usb3 controllers
->      usb2 phy
->    ARM: DT: STi: STiH407: Add dwc3 usb3 DT node.
->    usb: dwc3: dwc3-st: Update the incorrect DT dwc3 example.
->    ARM: DT: STi: stihxxx-b2120: Enable USB3 port on stih407-b2120 and
->      stih410-b2120
->    ARM: DT: STi: STiH418: Add miphy28lp optional oscillator clock
->      properties
->    ARM: DT: STi: STiH418: Enable USB3 port on stih418-b2199.
->
->   Documentation/devicetree/bindings/usb/dwc3-st.txt |  7 +++---
->   arch/arm/boot/dts/stih407-family.dtsi             | 30 ++++++++++++++++++++++-
->   arch/arm/boot/dts/stih418-b2199.dts               | 15 ++++++++++++
->   arch/arm/boot/dts/stihxxx-b2120.dtsi              |  5 ++++
->   4 files changed, 52 insertions(+), 5 deletions(-)
+[Adding some MVEBU guys]
+
+Rob,
+
+I had a look at the USB PHYs of some of the other Marvell SoCs a while
+ago for the barebox bootloader [1]. Marvell seems to distinguish the
+USB PHY type by technology node, e.g. 28nm like the one above. For the
+most used Marvell SoCs, i.e. Kirkwood, Dove, and Armada 370/XP, they all
+use a different technology node and we could either use the SoC name
+or the technology node as compatible.
+
+Anyway, if you are introducing new PHY drivers with _that_ generic
+names, it will either clash with every other Marvell USB PHYs -
+or we'll have to add the PHY code into the drivers above.
+
+[1] http://lists.infradead.org/pipermail/barebox/2014-June/019600.html
+
+>   drivers/usb/host/Kconfig                           |  15 +-
+>   drivers/usb/host/Makefile                          |   1 +
+>   drivers/usb/host/ehci-mv-of.c                      | 243 +++++++++++++++
+>   9 files changed, 854 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
+>   create mode 100644 Documentation/devicetree/bindings/usb/ehci-pxa1928.txt
+>   create mode 100644 drivers/phy/phy-mv-hsic.c
+>   create mode 100644 drivers/phy/phy-mv-usb2.c
+>   create mode 100644 drivers/usb/host/ehci-mv-of.c
 >
 
-All DT patches of the series applied to STi DT branch for v4.2.
-
-Thanks!
-Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
