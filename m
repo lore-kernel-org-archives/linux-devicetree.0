@@ -1,30 +1,58 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v6 04/12] irqchip: vf610-mscm: support NVIC parent
-Date: Fri, 15 May 2015 12:39:22 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1505151237531.4225@nanos>
-References: <1431203982-13217-1-git-send-email-stefan@agner.ch> <1431203982-13217-5-git-send-email-stefan@agner.ch>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v9 3/5] Documentation: Add documentation for the APM X-Gene SoC EDAC DTS binding
+Date: Fri, 15 May 2015 12:44:44 +0200
+Message-ID: <2623886.1GmlYtlSK2@wuerfel>
+References: <1431623147-4950-1-git-send-email-lho@apm.com> <1431623147-4950-3-git-send-email-lho@apm.com> <1431623147-4950-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431203982-13217-5-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+In-Reply-To: <1431623147-4950-4-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 9 May 2015, Stefan Agner wrote:
-> -	irq_chip_unmask_parent(data);
-> +	if (parent->chip->irq_enable)
-> +		parent->chip->irq_enable(parent);
-> +	else
-> +		parent->chip->irq_unmask(parent);
+On Thursday 14 May 2015 11:05:45 Loc Ho wrote:
+> +       edac: edac@78800000 {
+> +               compatible = "apm,xgene-edac";
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               reg = <0x0 0x78800000 0x0 0x100>;
 
-Why are you not creating irq_chip_enable_parent() which would have
-been the proper function anyway?
+This seens a 'ranges' property to make the address resolution
+work. An empty property should be fine.
 
-Thanks,
+> +               interrupts = <0x0 0x20 0x4>,
+> +                            <0x0 0x21 0x4>,
+> +                            <0x0 0x27 0x4>;
+> +
+> +               edacmc0: edacmc0@7e800000 {
+> +                       compatible = "apm,xgene-edac-mc";
+> +                       regmap-csw = <&csw>;
+> +                       regmap-mcba = <&mcba>;
+> +                       regmap-mcbb = <&mcbb>;
+> +                       reg = <0x0 0x7e800000 0x0 0x1000>;
+> +               };
+> +
+> +               edacpmd0: edacpmd0@7c000000 {
+> +                       compatible = "apm,xgene-edac-pmd";
+> +                       regmap-efuse = <&efuse>;
+> +                       reg = <0x0 0x7c000000 0x0 0x200000>;
+> +               };
 
-	tglx
+Why do you have labels for each one? If nothing references
+these nodes, just remove the labels.
+
+Regarding the names, remove the numbers for the nodes that are
+uniquely identified by the register location, e.g. replace
+edacmc0@7e800000 with edacmc@7e800000.
+
+If you have multiple edac-mc devices, would they point to the
+same syscon nodes, or different ones for each? If they are the
+same, just move the references to the main node.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
