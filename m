@@ -1,28 +1,62 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 2/5] arm64: hi6220: Document devicetree bindings for
- Hisilicon hi6220 SoC
-Date: Thu, 14 May 2015 17:27:39 -0700
-Message-ID: <20150515002739.GF31753@codeaurora.org>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
- <1430827599-11560-3-git-send-email-bintian.wang@huawei.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 1/2] pwm: Add device tree binding document for R-Car PWM
+ Timer
+Date: Fri, 15 May 2015 00:41:31 +0000
+Message-ID: <SG2PR06MB0919A398AD921D514BA454F3D8C70@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1431509238-7648-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1431509238-7648-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWzQYbn3f5zL2bhx1+RP4buLH8XGweyjWimydgwLyLNYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430827599-11560-3-git-send-email-bintian.wang@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bintian Wang <bintian.wang@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, khilman@kernel.org, pebolle@tiscali.nl, arnd@arndb.de, marc.zyngier@arm.com, xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.chen@hisilicon.com, dan.zhao@hisilicon.com, huxinw
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWzQYbn3f5zL2bhx1+RP4buLH8XGweyjWimydgwLyLNYw@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05, Bintian Wang wrote:
-> This patch adds documentation for the devicetree bindings used by the
-> DT files of Hisilicon hi6220 SoC mobile platform.
-> 
-> Signed-off-by: Bintian Wang <bintian.wang@huawei.com>
-
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXchDQoNCj4gU2VudDogRnJp
+ZGF5LCBNYXkgMTUsIDIwMTUgMTI6NDggQU0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4g
+T24gV2VkLCBNYXkgMTMsIDIwMTUgYXQgMTE6MjcgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5
+b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIGJpbmRpbmcg
+ZG9jdW1lbnQgZm9yIFJlbmVzYXMgUFdNIFRpbWVyIG9uIFItQ2FyIFNvQ3MuDQo+IA0KPiBUaGFu
+a3MgZm9yIHlvdXIgcGF0Y2ghDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGlt
+b2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4u
+L2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3JlbmVzYXMscHdtLXJjYXIudHh0ICAgIHwgMjEgKysr
+KysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCsp
+DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcHdtL3JlbmVzYXMscHdtLXJjYXIudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9yZW5lc2FzLHB3bS1yY2FyLnR4dA0KPiBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcmVuZXNhcyxwd20tcmNhci50
+eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjM4MTIzZjkN
+Cj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3B3bS9yZW5lc2FzLHB3bS1yY2FyLnR4dA0KPiA+IEBAIC0wLDAgKzEsMjEgQEANCj4g
+PiArKiBSZW5lc2FzIFItQ2FyIFBXTSBUaW1lciBDb250cm9sbGVyDQo+ID4gKw0KPiA+ICtSZXF1
+aXJlZCBQcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGU6IG11c3QgY29udGFpbiAicmVuZXNh
+cyxwd20tcmNhciINCj4gDQo+IENhbiB5b3UgcGxlYXNlIGFkZCBTb0Mtc3BlY2lmaWMgY29tcGF0
+aWJsZSB2YWx1ZXMsIHRvbz8gVGhhdCB3YXkgd2UgY2FuIGhhbmRsZQ0KPiAgU29DLXNwZWNpZmlj
+IGRpZmZlcmVuY2VzIGlmIHdlIGV2ZXIgZW5jb3VudGVyIHRoZW0uDQo+IElmIEknbSBub3QgbWlz
+dGFrZW4sIHRoaXMgUFdNIElQIGNvcmUgaXMgcHJlc2VudCBvbiBib3RoIFItQ2FyIEdlbjEgYW5k
+IEdlbjINCj4gU29Dcz8NCg0KQWNjb3JkaW5nIHRvIHRoZSBtYW51YWxzIG9mIGJvdGggUi1DYXIg
+R2VuMSAoSDEsIE0xLCBFMSkgYW5kIEdlbjIsDQp0aGlzIFBXTSBJUCBjb3JlIGlzIHByZXNlbnQg
+b24gdGhlbS4gQWxzbyB0aGlzIElQIGlzIHByZXNlbnQgb24gUi1DYXIgbmV4dCBnZW5lcmF0aW9u
+Lg0KDQpPZiBjb3Vyc2UsIEkgY2FuIGFkZCBTb0Mtc3BlY2lmaWMgY29tcGF0aWJsZSB2YWx1ZXMs
+IGxpa2UgInJlbmVzYXMscHdtLXI3YTc3OTAiIG9yDQpzb21ldGhpbmcuIFNvLCBJIHdpbGwgY2hh
+bmdlIHRoZSBjb21wYXRpYmxlIHZhbHVlcyBpbiB2MiBwYXRjaC4NCg0KPiA+ICstIHJlZzogYmFz
+ZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVycyBibG9jayBmb3IgdGhlIFBXTQ0K
+PiA+ICstICNwd20tY2VsbHM6IHNob3VsZCBiZSA3LiBTZWUgcHdtLnR4dCBpbiB0aGlzIGRpcmVj
+dG9yeSBmb3IgYSBkZXNjcmlwdGlvbiBvZg0KPiA+ICsgIHRoZSBjZWxscyBmb3JtYXQuDQo+IA0K
+PiBXaHkgNz8gVGhpcyBpcyBub3QgdGhlIG51bWJlciBvZiBjaGFubmVscywgY2ZyLiBwd20udHh0
+IHlvdSByZWZlcmVuY2UgYWJvdmU6DQo+IA0KPiAgICAgInB3bS1zcGVjaWZpZXIgdHlwaWNhbGx5
+IGVuY29kZXMgdGhlIGNoaXAtcmVsYXRpdmUgUFdNIG51bWJlciBhbmQgdGhlIFBXTQ0KPiAgICAg
+IHBlcmlvZCBpbiBuYW5vc2Vjb25kcy4NCj4gDQo+ICAgICAgT3B0aW9uYWxseSwgdGhlIHB3bS1z
+cGVjaWZpZXIgY2FuIGVuY29kZSBhIG51bWJlciBvZiBmbGFncyAoZGVmaW5lZCBpbg0KPiAgICAg
+IDxkdC1iaW5kaW5ncy9wd20vcHdtLmg+KSBpbiBhIHRoaXJkIGNlbGw6DQo+ICAgICAgLSBQV01f
+UE9MQVJJVFlfSU5WRVJURUQ6IGludmVydCB0aGUgUFdNIHNpZ25hbCBwb2xhcml0eSINCj4gDQo+
+IFNvIDIgb3IgMyBtYWtlcyBtb3JlIHNlbnNlIHRvIG1lLg0KDQpUaGFuayB5b3UgdmVyeSBtdWNo
+IGZvciB0aGUgcG9pbnQuIEkgY29tcGxldGVseSBtaXN1bmRlcnN0b29kIHRoaXMgc3BlY2lmaWNh
+dGlvbi4NClNpbmNlIHRoaXMgUFdNIElQIGNhbm5vdCBjb250cm9sIHBvbGFyaXR5LCB0aGlzIHZh
+bHVlIHNob3VsZCBiZSAyLg0KU28sIEkgd2lsbCBmaXggdGhpcyBpbiB2MiBwYXRjaC4NCg0KQmVz
+dCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
