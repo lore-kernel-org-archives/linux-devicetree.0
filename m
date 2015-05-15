@@ -1,75 +1,32 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2] ARM: l2c: Add support for the "arm, shared-override"
- property
-Date: Fri, 15 May 2015 14:55:13 +0100
-Message-ID: <20150515135513.GH19345@e104818-lin.cambridge.arm.com>
-References: <1430990831-23825-1-git-send-email-geert+renesas@glider.be>
- <20150507160257.GA11067@e104818-lin.cambridge.arm.com>
- <20150515101028.GH2067@n2100.arm.linux.org.uk>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
+Date: Fri, 15 May 2015 08:55:25 -0500
+Message-ID: <5555FACD.6000408@codeaurora.org>
+References: <=fu.wei@linaro.org>	<1431689090-3125-1-git-send-email-fu.wei@linaro.org>	<5555F5C5.8050806@roeck-us.net> <CADyBb7sC5a6vC6CqQsfCqOaxz1P8gKNkZi5qEHtXL7efv42-=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150515101028.GH2067@n2100.arm.linux.org.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADyBb7sC5a6vC6CqQsfCqOaxz1P8gKNkZi5qEHtXL7efv42-=Q@mail.gmail.com>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 15, 2015 at 11:10:28AM +0100, Russell King - ARM Linux wrote:
-> On Thu, May 07, 2015 at 05:02:57PM +0100, Catalin Marinas wrote:
-> > On Thu, May 07, 2015 at 11:27:11AM +0200, Geert Uytterhoeven wrote:
-> > > diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> > > index 0dbabe9a6b0abb91..2484aed78c86546d 100644
-> > > --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> > > @@ -67,6 +67,12 @@ Optional properties:
-> > >    disable if zero.
-> > >  - arm,prefetch-offset : Override prefetch offset value. Valid values are
-> > >    0-7, 15, 23, and 31.
-> > > +- arm,shared-override : The default behavior of the pl310 cache controller with
-> > > +  respect to the shareable attribute is to transform "normal memory
-> > > +  non-cacheable transactions" into "cacheable no allocate" (for reads) or
-> > > +  "write through no write allocate" (for writes).
-> > > +  On systems where this may cause DMA buffer corruption, this property must be
-> > > +  specified to indicate that such transforms are precluded.
-> > >  
-> > >  Example:
-> > >  
-> > > diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> > > index e309c8f35af5af61..86d0e7461e5b0b18 100644
-> > > --- a/arch/arm/mm/cache-l2x0.c
-> > > +++ b/arch/arm/mm/cache-l2x0.c
-> > > @@ -1149,6 +1149,11 @@ static void __init l2c310_of_parse(const struct device_node *np,
-> > >  		}
-> > >  	}
-> > >  
-> > > +	if (of_property_read_bool(np, "arm,shared-override")) {
-> > > +		*aux_val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
-> > > +		*aux_mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
-> > > +	}
-> > > +
-> > >  	prefetch = l2x0_saved_regs.prefetch_ctrl;
-> > >  
-> > >  	ret = of_property_read_u32(np, "arm,double-linefill", &val);
-> > 
-> > It looks fine to me.
-> > 
-> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> > 
-> > (even better if a subsequent patch adds this property to all the dts
-> > files containing "arm,pl310" ;))
-> 
-> Even better would be for the boot loader/firmware to set the bit.
+Fu Wei wrote:
+>> >The new API function also needs to be documented in
+>> >Documentation/watchdog/watchdog-kernel-api.txt.
+> good point, thanks will do
 
-In an ideal world, I agree. But, arguably, we already set other bits in
-the PL310 AUXCTRL register (and related cache controllers, just look at
-the l2cc.txt bindings).
-
-If you want to rely on firmware, can we at least check this bit and
-print a warning? Or go a step further and refuse to enable PL310 when
-this bit is clear? Otherwise coherent (non-cacheable) DMA operations are
-not safe.
+Yes, please, since my driver does not use or need any pre-timeout 
+support, so I don't understand why this patch exists.  What is 
+pre-timeout anyway?
 
 -- 
-Catalin
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
