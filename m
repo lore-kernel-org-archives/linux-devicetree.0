@@ -1,69 +1,93 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/5] Marvell PXA1928 USB support
-Date: Fri, 15 May 2015 11:55:49 +0200
-Message-ID: <5555C2A5.8010509@gmail.com>
-References: <1431557340-5421-1-git-send-email-robh@kernel.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: mediatek: Add smi dts binding
+Date: Fri, 15 May 2015 18:02:17 +0800
+Message-ID: <1431684137.4799.4.camel@mhfsdcap03>
+References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
+	 <1431683009-18158-3-git-send-email-yong.wu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431557340-5421-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431683009-18158-3-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14.05.2015 00:48, Rob Herring wrote:
-> This series adds USB PHYs and EHCI host drivers for the Marvell PXA1928
-> SOC.
->
-> The OTG block is based on ChipIdea and works with "chipidea,usb2"
-> compatible driver as is just by adding the PHY driver. Yay!
->
-> Rob
->
-> Rob Herring (5):
->    dt-bindings: Add Marvell PXA1928 USB and HSIC PHY bindings
->    dt-bindings: Add Marvell PXA1928 USB EHCI controller binding
->    phy: Add Marvell USB 2.0 OTG 28nm PHY
->    phy: add Marvell HSIC 28nm PHY
->    usb: add pxa1928 ehci support
->
->   .../devicetree/bindings/phy/pxa1928-usb-phy.txt    |  18 ++
->   .../devicetree/bindings/usb/ehci-pxa1928.txt       |  19 ++
->   drivers/phy/Kconfig                                |  20 ++
->   drivers/phy/Makefile                               |   2 +
->   drivers/phy/phy-mv-hsic.c                          | 208 +++++++++++++
->   drivers/phy/phy-mv-usb2.c                          | 329 +++++++++++++++++++++
+On Fri, 2015-05-15 at 17:43 +0800, Yong Wu wrote:
+> This patch add smi binding document.
+> 
+> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../bindings/soc/mediatek/mediatek,smi-larb.txt    | 24 ++++++++++++++++++++++
+>  .../bindings/soc/mediatek/mediatek,smi.txt         | 22 ++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
+> new file mode 100644
+> index 0000000..c06c5b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
+> @@ -0,0 +1,24 @@
+> +SMI(Smart Multimedia Interface) Local Arbiter
+> +
+> +The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
+> +
+> +Required properties:
+> +- compatible : must be "mediatek,mt8173-smi-larb"
+> +- reg : the register and size of each local arbiter.
+> +- smi : must be "&smi_common". Refer to bindings/soc/mediatek,smi.txt.
+> +- clocks : must contain one entry for each clock-names.
+> +	There are 2 clockes:
+> +	APB clock : Advanced Peripheral Bus clock, It's the clock for setting
+> +		the register.
+> +	SMI clock : It's the clock for transfer data and command.
+> +- clock-name: must be "apb" and "smi".
+Sorry, Here should be clock-names. I will fix the next version.
+> +
+> +Example:
+> +	larb0:larb@14021000 {
+> +		compatible = "mediatek,mt8173-smi-larb";
+> +		reg = <0 0x14021000 0 0x1000>;
+> +		smi = <&smi_common>;
+> +		clocks = <&mmsys MM_SMI_LARB0>,
+> +			 <&mmsys MM_SMI_LARB0>;
+> +		clock-names = "apb", "smi";
+> +	};
+> diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> new file mode 100644
+> index 0000000..c2389b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> @@ -0,0 +1,22 @@
+> +SMI(Smart Multimedia Interface)
+> +
+> +The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
+> +
+> +Required properties:
+> +- compatible : must be "mediatek,mt8173-smi"
+> +- reg : the register and size of the smi.
+> +- clocks : must contain one entry for each clock-names.
+> +	There are 2 clockes:
+> +	APB clock : Advanced Peripheral Bus clock, It's the clock for setting
+> +		the register.
+> +	SMI clock : It's the clock for transfer data and command.
+> +- clock-name: must be "apb" and "smi".
+the same. should be clock-names.
+> +
+> +Example:
+> +	smi_common:smi@14022000 {
+> +		compatible = "mediatek,mt8173-smi";
+> +		reg = <0 0x14022000 0 0x1000>;
+> +		clocks = <&mmsys MM_SMI_COMMON>,
+> +			 <&mmsys MM_SMI_COMMON>;
+> +		clock-names = "apb", "smi";
+> +	};
 
-[Adding some MVEBU guys]
-
-Rob,
-
-I had a look at the USB PHYs of some of the other Marvell SoCs a while
-ago for the barebox bootloader [1]. Marvell seems to distinguish the
-USB PHY type by technology node, e.g. 28nm like the one above. For the
-most used Marvell SoCs, i.e. Kirkwood, Dove, and Armada 370/XP, they all
-use a different technology node and we could either use the SoC name
-or the technology node as compatible.
-
-Anyway, if you are introducing new PHY drivers with _that_ generic
-names, it will either clash with every other Marvell USB PHYs -
-or we'll have to add the PHY code into the drivers above.
-
-[1] http://lists.infradead.org/pipermail/barebox/2014-June/019600.html
-
->   drivers/usb/host/Kconfig                           |  15 +-
->   drivers/usb/host/Makefile                          |   1 +
->   drivers/usb/host/ehci-mv-of.c                      | 243 +++++++++++++++
->   9 files changed, 854 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
->   create mode 100644 Documentation/devicetree/bindings/usb/ehci-pxa1928.txt
->   create mode 100644 drivers/phy/phy-mv-hsic.c
->   create mode 100644 drivers/phy/phy-mv-usb2.c
->   create mode 100644 drivers/usb/host/ehci-mv-of.c
->
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
