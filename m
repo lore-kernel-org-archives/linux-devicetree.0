@@ -1,160 +1,99 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: mtd: replace "nor-jedec" binding with
- "jedec,spi-nor"
-Date: Fri, 15 May 2015 11:17:07 +0100
-Message-ID: <20150515101707.GA19705@leverpostej>
-References: <1431624773-4165-1-git-send-email-computersforpeace@gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm64: tegra: Add Tegra210 support
+Date: Fri, 15 May 2015 12:19:16 +0200
+Message-ID: <20150515101913.GA20474@ulmo.nvidia.com>
+References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com>
+ <1431529065-20128-3-git-send-email-thierry.reding@gmail.com>
+ <20150513171114.GA18655@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1431624773-4165-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150513171114.GA18655-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 14, 2015 at 06:32:53PM +0100, Brian Norris wrote:
-> In commit 8ff16cf77ce3 ("Documentation: devicetree: m25p80: add "nor-=
-jedec"
-> binding"), we added a generic "nor-jedec" binding to catch all
-> mostly-compatible SPI NOR flash which can be detected via the READ ID
-> opcode (0x9F). This was discussed and reviewed at the time, however
-> objections have come up since then as part of this discussion:
->=20
->   http://lkml.kernel.org/g/20150511224646.GJ32500@ld-irv-0074
->=20
-> It seems the parties involved agree that "jedec,spi-nor" does a bette=
-r
-> job of capturing the fact that this is SPI-specific, not just any NOR
-> flash.
->=20
-> This binding was only merged for v4.1-rc1, so it's still OK to change
-> the naming.
->=20
-> At the same time, let's move the documentation to a better name.
->=20
-> Next up: prune the m25p_ids[] table to the minimal necessary listing,=
- so
-> we can stop referring to code (drivers/mtd/devices/m25p80.c) from the
-> documentation.
->=20
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> I'd *really* like to get an 'ack' from a DT maintainer for this, thos=
-e those
-> are apparently very hard to come by. And I'd really not like to have =
-to revisit
-> this again in a few weeks. We have patches getting queued up for 4.2 =
-that are
-> using the "nor-jedec" binding, and I'd like to nip those in the bud A=
-SAP.
 
-This looks sane to me, and doesn't seem controversial.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So long as you can get this through before v4.1, you can add my ack:
-
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Thanks,
-Mark.
-
+On Wed, May 13, 2015 at 06:11:15PM +0100, Catalin Marinas wrote:
+> On Wed, May 13, 2015 at 04:57:42PM +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >=20
+> > NVIDIA Tegra210 (also known as Tegra X1) has four Cortex-A57 and four
+> > Cortex-A53 CPUs. Compared to Tegra124 and Tegra132 it comes with a 256-
+> > core Maxwell GPU. It supports processing videos of up to 4K resolutions
+> > at 60 fps (H.265, VP9, H.264).
+> >=20
+> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  arch/arm64/Kconfig                       |   9 +
+> >  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 998 +++++++++++++++++++++++=
+++++++++
+> >  2 files changed, 1007 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> >=20
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index 7796af4b1d6f..bfdf064ada66 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -225,6 +225,15 @@ config ARCH_TEGRA_132_SOC
+> >  	  but contains an NVIDIA Denver CPU complex in place of
+> >  	  Tegra124's "4+1" Cortex-A15 CPU complex.
+> > =20
+> > +config ARCH_TEGRA_210_SOC
+> > +	bool "NVIDIA Tegra210 SoC"
+> > +	depends on ARCH_TEGRA
+> > +	select PINCTRL_TEGRA210
+> > +	select USB_ULPI if USB_PHY
+> > +	select USB_ULPI_VIEWPORT if USB_PHY
+> > +	help
+> > +	  Enable support for the NVIDIA Tegra210 SoC.
+> > +
 >=20
->  .../devicetree/bindings/mtd/{m25p80.txt =3D> jedec,spi-nor.txt}     =
-  | 6 +++---
->  drivers/mtd/devices/m25p80.c                                        =
-| 6 +++---
->  2 files changed, 6 insertions(+), 6 deletions(-)
->  rename Documentation/devicetree/bindings/mtd/{m25p80.txt =3D> jedec,=
-spi-nor.txt} (85%)
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Docum=
-entation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> similarity index 85%
-> rename from Documentation/devicetree/bindings/mtd/m25p80.txt
-> rename to Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> index f20b111b502a..2bee68103b01 100644
-> --- a/Documentation/devicetree/bindings/mtd/m25p80.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -8,8 +8,8 @@ Required properties:
->                 is not Linux-only, but in case of Linux, see the "m25=
-p_ids"
->                 table in drivers/mtd/devices/m25p80.c for the list of=
- supported
->                 chips.
-> -               Must also include "nor-jedec" for any SPI NOR flash t=
-hat can be
-> -               identified by the JEDEC READ ID opcode (0x9F).
-> +               Must also include "jedec,spi-nor" for any SPI NOR fla=
-sh that can
-> +               be identified by the JEDEC READ ID opcode (0x9F).
->  - reg : Chip-Select number
->  - spi-max-frequency : Maximum frequency of the SPI bus the chip can =
-operate at
-> =20
-> @@ -25,7 +25,7 @@ Example:
->  	flash: m25p80@0 {
->  		#address-cells =3D <1>;
->  		#size-cells =3D <1>;
-> -		compatible =3D "spansion,m25p80", "nor-jedec";
-> +		compatible =3D "spansion,m25p80", "jedec,spi-nor";
->  		reg =3D <0>;
->  		spi-max-frequency =3D <40000000>;
->  		m25p,fast-read;
-> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p8=
-0.c
-> index 7c8b1694a134..3d59ebc16b6e 100644
-> --- a/drivers/mtd/devices/m25p80.c
-> +++ b/drivers/mtd/devices/m25p80.c
-> @@ -223,7 +223,7 @@ static int m25p_probe(struct spi_device *spi)
->  	 */
->  	if (data && data->type)
->  		flash_name =3D data->type;
-> -	else if (!strcmp(spi->modalias, "nor-jedec"))
-> +	else if (!strcmp(spi->modalias, "jedec,spi-nor"))
->  		flash_name =3D NULL; /* auto-detect */
->  	else
->  		flash_name =3D spi->modalias;
-> @@ -255,7 +255,7 @@ static int m25p_remove(struct spi_device *spi)
->   * since most of these flash are compatible to some extent, and thei=
-r
->   * differences can often be differentiated by the JEDEC read-ID comm=
-and, we
->   * encourage new users to add support to the spi-nor library, and si=
-mply bind
-> - * against a generic string here (e.g., "nor-jedec").
-> + * against a generic string here (e.g., "jedec,spi-nor").
->   *
->   * Many flash names are kept here in this list (as well as in spi-no=
-r.c) to
->   * keep them available as module aliases for existing platforms.
-> @@ -305,7 +305,7 @@ static const struct spi_device_id m25p_ids[] =3D =
-{
->  	 * Generic support for SPI NOR that can be identified by the JEDEC =
-READ
->  	 * ID opcode (0x9F). Use this, if possible.
->  	 */
-> -	{"nor-jedec"},
-> +	{"jedec,spi-nor"},
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(spi, m25p_ids);
-> --=20
-> 1.9.1
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The previous ARCH_TEGRA_132_SOC escaped me. Do we need all these
+> ARCH_TEGRA_*_SOC entries? Can we not have per-driver Kconfig options?
+> For example, ARCH_TEGRA_132_SOC seems to be only used in
+> drivers/clk/tegra, a specific Kconfig entry in there would suffice.
+
+There are actually a couple of other places where this will be used in
+subsequent patches (e.g. memory controller driver). The idea behind
+having these is that each one of them is used to enable the essentials
+out of the box, so that people don't have to go and enable a bunch of
+driver-specific Kconfig options just to get a kernel configuration that
+can actually boot.
+
+This is also useful for integrators since they can simply omit all SoC
+generations that they're not interested in. Having a per-SoC option
+provides an easy way of doing so.
+
+Thierry
+
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJVVcgfAAoJEN0jrNd/PrOhHjsQAJp8xrR33HZozhoA3F2nyWOt
+gqXpQ215Wy1tA/NXHmrKF1ix/RYDtMwY4JCoqg/h0+h28JTWMU6kGCcqIIAQP1Cd
+X40cqmDxYxau4PNbWc1ifDlZLBEPFaERfIuZrZM2Ku43FDtN2LaJ4W1NUhvnA8Jw
+KNYJ9+cMwylXinPuEmLm0uPZ+rb7TDbsLIE7dr1itqB+56GOZxJxN4MQfHMJNbE9
+ZyzDPW4dw1eZJ455mIh0pfWxhyQEQLd2K7i4+hfncq4nYQKviMaPs6lyHN1llq0g
+9nMlR23w9U1+18//hlcSW1AqMW07ajxqFLzmS/5SfUB5aQV6k4kWiVCJ2hfMVG3w
+w0hU+X1SVcmijDX+z22hDfZ3/D8JdcxZuTXN9pNZpCUrXlok4JH92kxBSlY6u+jH
+K9CQy42BzhVJ2gV5u7Ex3IgK6mkQGZEo+R9GPs4NlAdGD+RB6aOBouuO2LDtonMm
+PY5VkzZAaY3XtHjZehYDwVzyqKemkgUi0chJvc8w+Fw5DmEyPLYs5RZ8IcOv6i9k
+bzjkMmWE1iwMPOC/Zp8Av7a9rMWz+WFgXXnCBvQgIuxlXTldOAZuE1MAx7tkw6Lr
+4UGuOimGnpjLDc2B8hrT3Cq/waEb6uGSl84E/0w3w01VOdke/jDzbi/K0NJtetks
+5hkNeUngdwxBAzczeqV1
+=PpHI
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
