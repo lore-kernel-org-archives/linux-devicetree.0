@@ -1,101 +1,58 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V2 3/4] watchdog: da9062: DA9062 watchdog driver
-Date: Fri, 15 May 2015 15:35:50 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22B6E2@SW-EX-MBX02.diasemi.com>
-References: <cover.1431621833.git.stwiss.opensource@diasemi.com>
- <6a51f163b99edfad9165ad29609abb072dbaa2b7.1431621833.git.stwiss.opensource@diasemi.com>
- <55555639.8090505@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B22B63A@SW-EX-MBX02.diasemi.com>
- <5555ED4F.5070003@roeck-us.net>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Fri, 15 May 2015 10:43:35 -0500
+Message-ID: <55561427.4030207@ti.com>
+References: <cover.1430394884.git.viresh.kumar@linaro.org> <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org> <20150512214224.16410.15922@quantum> <20150513085528.GA6994@linux> <20150513110357.GD3066@sirena.org.uk> <20150514003201.20636.83883@quantum> <CAKohpokeKtcJdrBcPZBBPR2zfJgpvuM_=wRaX5q1Uto2qx1oHQ@mail.gmail.com> <20150515141525.GK6348@linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5555ED4F.5070003-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150515141525.GK6348@linux>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mike.turquette@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-
-> > +
-> > +/* E_WDG_WARN interrupt handler */
-> > +static irqreturn_t da9062_wdt_wdg_warn_irq_handler(int irq, void *data)
-> > +{
-> > +	struct da9062_watchdog *wdt = data;
-> > +
-> > +	dev_notice(wdt->hw->dev, "Watchdog timeout warning trigger.\n");
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-
-On 15 May 2015 13:58 Guenter Roeck wrote:
-
- [...]
- 
-> >>> +
-> >>> +	irq = platform_get_irq_byname(pdev, "WDG_WARN");
-> >>> +	if (irq < 0) {
-> >>> +		dev_err(wdt->hw->dev, "Failed to get IRQ.\n");
-> >>> +		ret = irq;
-> >>> +		goto error;
-
-[...]
-
-> >
-> >> Also, is the interrupt mandatory ? All it does is to display a message.
-> >> Looks very optional to me.
-> >
-> > It is a place holder for something more application specific.
-> > I could remove it, but I figured it would just get re-added when somebody takes the
-> > driver and modifies it for their needs.
-> >
-> > If this is a problem however, it can go.
-> > Please advise ..
-> >
+On 05/15/2015 09:15 AM, Viresh Kumar wrote:
+> On 14-05-15, 03:25, Michael Turquette wrote:
+>> No, we don't understand the problem space well enough to form an ABI.
 > 
-> Then this someone should add the code. For the time being, it just increases
-> kernel size and may cause the driver to fail for no good reason. Plus, given
-> the driver apparently works without interrupt, even then it should be
-> optional, and the driver does not have to fail loading if it is not supported on a
-> given platform.
+> And why do you think so? We have been facing many problems since a
+> long time which we are trying to solve here.
+
+I would state "problem space is better defined now based on data made
+public by developers on various SoCs", this new binding seems to
+address majority of the concerns (esp with vendor specific
+extensions). OPP behavior is very SoC vendor specific -> it can only
+evolve with an extensible framework - which is what this new binding
+provides. This is something that was badly missing in the older
+binding and framework (I should blame myself for it), even though the
+previous definitions were simple, in effect it was inflexible to the
+detriment of many SoCs.
+
+Do we know 100% if the new binding solves every SoC's issues - we wont
+be able to do that unless folks speak up - but then, providing ability
+for vendor specific extension allows to consolidate and make common as
+necessary.
+
+Point blank rejection might be a bit of an overkill, IMHO.
+
 > 
+> I agree that it might not be right to try too many things which may
+> not be required later, but most of the things we have now in new
+> bindings are actually required.
+> 
+>> Putting this stuff in C without any philosophical constraints on whether
+>> or not we can change it later is the way to go.
+> 
+> I don't agree to that :)
+> 
+I second Viresh on this. Benefit of forcing data separation into
+device tree has provided the flexibility now to be able to loadup OPPs
+from bootloader OR over DTC overlay as desired - that is the right
+choice rather than embedding it within C code, providing kludgy
+extension options to provide dynamic data updates.
 
-Hi Guenter,
-
-I'm not sure if I got my previous point across there ...
-
-Leaving this in wouldn't really do any real harm I think. If this feature is not supported
-in somebody's platform then there wouldn't be a problem, the IRQ would fire (as a
-warning that the watchdog was about to time-out), the handler function would be
-executed, it would handle the IRQ -- and that would be it. Nothing would happen apart
-from a debug print.
-
-There are already examples of this in the kernel, I've not looked very hard ...
-http://lxr.free-electrons.com/source/drivers/mfd/qcom_rpm.c#L412
-http://lxr.free-electrons.com/source/drivers/mfd/arizona-irq.c#L72
-
-The problem with removing it is, I am depreciating the functionality of the chip.
-Unless there is a really good reason -- I would like to leave this part in please.
-If I was to take this part out then there could be an argument to remove WDG_WARN
-from the resource of the MFD -- but that would then hide this watchdog warning
-functionality completely.
-
-The function da9062_wdt_wdg_warn_irq_handler() is blank -- and it just does nothing
-apart from handle the IRQ. But it is an important feature of the chip .. say for a developer
-to add in their product code to send a uevent into userspace to trigger a watchdog kick
-(for instance).. but that part is very specific and usually only part of a final system
-integration. I've just left the function as a stub for that reason.
-
-There is the possibility that the function platform_get_irq_byname() could fail
-but that would mean an different type of critical failure.
-
+-- 
 Regards,
-Steve
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Nishanth Menon
