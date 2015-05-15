@@ -1,83 +1,64 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v9 1/4] ARM: sun7i: dt: Add Security System to A20 SoC DTS
-Date: Fri, 15 May 2015 09:31:14 +0200
-Message-ID: <20150515073114.GO4004@lukather>
-References: <1431608341-10936-1-git-send-email-clabbe.montjoie@gmail.com>
- <1431608341-10936-2-git-send-email-clabbe.montjoie@gmail.com>
+From: leilk liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Fri, 15 May 2015 15:38:42 +0800
+Message-ID: <1431675522.2128.13.camel@mhfsdcap03>
+References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
+	 <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
+	 <20150508175306.GG2761@sirena.org.uk> <1431434356.2128.9.camel@mhfsdcap03>
+	 <20150512160540.GB3066@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9DptZICXTlJ7FQ09"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431608341-10936-2-git-send-email-clabbe.montjoie@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: LABBE Corentin <clabbe.montjoie@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, joe@perches.com, tj@kernel.org, arnd@arndb.de, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150512160540.GB3066-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Dear Mark,
 
---9DptZICXTlJ7FQ09
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your reply.
 
-On Thu, May 14, 2015 at 02:58:58PM +0200, LABBE Corentin wrote:
-> The Security System is a hardware cryptographic accelerator that support
-> AES/MD5/SHA1/DES/3DES/PRNG algorithms.
-> It could be found on many Allwinner SoC.
->=20
-> This patch enable the Security System on the Allwinner A20 SoC Device-tre=
-e.
->=20
-> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
-> ---
->  arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a=
-20.dtsi
-> index fdd1817..9a823ce 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -679,6 +679,14 @@
->  			status =3D "disabled";
->  		};
-> =20
-> +		crypto: crypto-engine@01c15000 {
-> +			compatible =3D "allwinner,sun4i-a20-crypto";
+On Tue, 2015-05-12 at 17:05 +0100, Mark Brown wrote:
+> On Tue, May 12, 2015 at 08:39:16PM +0800, leilk liu wrote:
+> > On Fri, 2015-05-08 at 18:53 +0100, Mark Brown wrote:
+> > > On Fri, May 08, 2015 at 04:55:42PM +0800, leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> 
+> > Could you tell me more details about "You should also be using the core
+> > helpers for DMA mapping"?
+> 
+> Implement can_dma() - look for drivers providing that for examples.
+> 
 
-This looks wrong. It's either sun4i-a10 or sun7i-a20.
+MTK spi hardware uses the dmaengine in spi controller. According to
+datasheet, spi driver just need to enable dma register bit and write a
+physical address to relevant dma address register, so I think it may be
+complex while the driver supports can_dma.
 
-It looks good otherwise.
+> > > > +static const struct of_device_id mtk_spi_of_match[] = {
+> > > > +	{ .compatible = "mediatek,mt6589-spi", .data = (void *)COMPAT_MT6589},
+> > > > +	{ .compatible = "mediatek,mt8173-spi", .data = (void *)COMPAT_MT8173},
+> > > > +	{}
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
+> 
+> > > There were three compatible strings listed in the DT binding but only
+> > > two here.
+> 
+> > MT6589 and MT8135 is compatible; 
+> > For MT8135 IC, it can use the follow way in dts to probe:
+> >   compatible = "mediatek,mt8135-spi", 
+> > 	       "mediatek,mt6589-spi";
+> 
+> > And I test it's ok on MT8135 platform. So I add struct of_device_id
+> > mtk_spi_of_match like this in spi driver code.
+> 
+> You should list all the compatibles documented in the binding here, if
+> some of them are the same just have them map to a single constant.
 
-Thanks!
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---9DptZICXTlJ7FQ09
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVVaDCAAoJEBx+YmzsjxAg2ysP/0hqR6HFLACLSj2ikvh/qa9h
-CkAfYvcTOCe4OuzdKPygpQoZDsVkBRiAHouIg25gaIW34FGDRNWC6p0MIqiPKK7R
-kD6ZWr6esunCp37hLpYjyhOTdV182Jd3LIPMmZ5iHppf+FVdV/SHKIJd7Oa3MWK1
-MehIZ93WiTJnX1/VzbJkIz5CfbSImEkrn5HO3PF+BC50KljDlot05L12ommqGNdQ
-ADWj0Kbx3KPrLM3ugE2c58c5jDK36qU6OXbIj3Eks/J3JozeHOy6pD2kxPd42vw1
-3EBVl6GnpIqfJ7AX8m8UkkZtn2nTT4nj3EsoOQzh3DjHOEPc5Yh+RFRKY91YZ3ea
-ygZlpxzkgaxQtRlcQIMsh3dTOszKZemIt74F2A88DAkyTmEEDV5sYYb6ZL0TAfaQ
-GbvjPe18CXLkQF7WpOcCw9EXs6CQPNBt8CPnAv1BV/KWD/CF4hagqUyFEWSf3+Dl
-MbKSA3CAj8b0AGrk2VRCWSfVDl03eB2nxA0YVgq3j/7IqdXvb8zltmZ/8XIFtcsb
-ttH+mW2fZA9M5xqfn5D59BqVewYFOJG2g6p9Riho4REtsnjH4Ep2GXVBZ3sbTjEG
-UQo8B9wv6XvbWOYESz3GWVvA+H7/eMJarDzZxxt2Xqh5kn23uOFnD8rU1or8Onah
-al4Q2ntc/aoqt75ysBKH
-=sLMj
------END PGP SIGNATURE-----
-
---9DptZICXTlJ7FQ09--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
