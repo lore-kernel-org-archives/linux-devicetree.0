@@ -1,31 +1,54 @@
-From: Guenter Roeck <linux@roeck-us.net>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
-Date: Fri, 15 May 2015 10:59:00 -0700
-Message-ID: <20150515175900.GA19230@roeck-us.net>
+Date: Fri, 15 May 2015 11:01:05 -0700
+Message-ID: <20150515180105.GB19230@roeck-us.net>
 References: <=fu.wei@linaro.org>
  <1431689090-3125-1-git-send-email-fu.wei@linaro.org>
  <5555F5C5.8050806@roeck-us.net>
  <CADyBb7sC5a6vC6CqQsfCqOaxz1P8gKNkZi5qEHtXL7efv42-=Q@mail.gmail.com>
- <5555FACD.6000408@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5555FACD.6000408@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Fu Wei <fu.wei@linaro.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>
+In-Reply-To: <CADyBb7sC5a6vC6CqQsfCqOaxz1P8gKNkZi5qEHtXL7efv42-=Q@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 15, 2015 at 08:55:25AM -0500, Timur Tabi wrote:
-> Fu Wei wrote:
-> >>>The new API function also needs to be documented in
-> >>>Documentation/watchdog/watchdog-kernel-api.txt.
-> >good point, thanks will do
+On Fri, May 15, 2015 at 09:49:07PM +0800, Fu Wei wrote:
+> Hi Guenter,
 > 
-> Yes, please, since my driver does not use or need any pre-timeout support,
-> so I don't understand why this patch exists.  What is pre-timeout anyway?
+> Great thanks for your review,
+> feedback inline below :-)
+> 
+> On 15 May 2015 at 21:33, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
 
-Documentation/watchdog/watchdog-api.txt; look for "Pretimeouts:".
+[ ... ]
+
+> >> +       if (wdd->max_pretimeout && wdd->max_timeout < wdd->max_pretimeout)
+> >> {
+> >> +               pr_info("Invalid max timeout, resetting to max
+> >> pretimeout!\n");
+> >> +               wdd->max_timeout = wdd->max_pretimeout;
+> >> +       }
+> >
+> >
+> > I am a bit concerned about the context dependency introduced here. If
+> > someone calls
+> > _init_pretimeout after calling init_timeout, this may result in still
+> > invalid timeout
+> > values.
+> 
+> yes, that logic is not very clean, so my thought is :
+> maybe we can integrate watchdog_init_timeout and watchdog_init_pretimeout,
+> if maintainer agree to add pretimeout into framework.
+> 
+I think we should just assume that Wim will accept it, and try to find
+the best possible solution (or at least a good one).
 
 Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
