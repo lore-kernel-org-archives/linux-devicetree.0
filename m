@@ -1,89 +1,143 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V2 3/4] watchdog: da9062: DA9062 watchdog driver
-Date: Fri, 15 May 2015 13:20:05 -0700
-Message-ID: <20150515202005.GA23133@roeck-us.net>
-References: <cover.1431621833.git.stwiss.opensource@diasemi.com>
- <6a51f163b99edfad9165ad29609abb072dbaa2b7.1431621833.git.stwiss.opensource@diasemi.com>
- <55555639.8090505@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B22B63A@SW-EX-MBX02.diasemi.com>
- <5555ED4F.5070003@roeck-us.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B22B6E2@SW-EX-MBX02.diasemi.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v4 00/11] mtd: nand: add Broadcom NAND controller support
+Date: Fri, 15 May 2015 13:23:24 -0700
+Message-ID: <20150515202324.GN11598@ld-irv-0074>
+References: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B22B6E2@SW-EX-MBX02.diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
+In-Reply-To: <1431478424-29230-1-git-send-email-computersforpeace@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 15, 2015 at 03:35:50PM +0000, Opensource [Steve Twiss] wrote:
+On Tue, May 12, 2015 at 05:53:33PM -0700, Brian Norris wrote:
+> Hi,
 > 
-> > > +
-> > > +/* E_WDG_WARN interrupt handler */
-> > > +static irqreturn_t da9062_wdt_wdg_warn_irq_handler(int irq, void *data)
-> > > +{
-> > > +	struct da9062_watchdog *wdt = data;
-> > > +
-> > > +	dev_notice(wdt->hw->dev, "Watchdog timeout warning trigger.\n");
-> > > +	return IRQ_HANDLED;
-> > > +}
-> > > +
+> This is the fourth (and final?) version of support for the Broadcom BCM7xxx
+> Set-Top Box NAND controller. This controller has been used in a variety of
+> Broadcom SoCs.
 > 
-> On 15 May 2015 13:58 Guenter Roeck wrote:
-> 
->  [...]
->  
-> > >>> +
-> > >>> +	irq = platform_get_irq_byname(pdev, "WDG_WARN");
-> > >>> +	if (irq < 0) {
-> > >>> +		dev_err(wdt->hw->dev, "Failed to get IRQ.\n");
-> > >>> +		ret = irq;
-> > >>> +		goto error;
-> 
-> [...]
-> 
-> > >
-> > >> Also, is the interrupt mandatory ? All it does is to display a message.
-> > >> Looks very optional to me.
-> > >
-> > > It is a place holder for something more application specific.
-> > > I could remove it, but I figured it would just get re-added when somebody takes the
-> > > driver and modifies it for their needs.
-> > >
-> > > If this is a problem however, it can go.
-> > > Please advise ..
-> > >
-> > 
-> > Then this someone should add the code. For the time being, it just increases
-> > kernel size and may cause the driver to fail for no good reason. Plus, given
-> > the driver apparently works without interrupt, even then it should be
-> > optional, and the driver does not have to fail loading if it is not supported on a
-> > given platform.
-> > 
-> 
-> Hi Guenter,
-> 
-> I'm not sure if I got my previous point across there ...
-> 
-> Leaving this in wouldn't really do any real harm I think. If this feature is not supported
-> in somebody's platform then there wouldn't be a problem, the IRQ would fire (as a
-> warning that the watchdog was about to time-out), the handler function would be
-> executed, it would handle the IRQ -- and that would be it. Nothing would happen apart
-> from a debug print.
+> Tested to work on Cygnus, BCM7445, and BCM63138.
 
-I didn't get my point across either. Problem is that your driver fails to load
-if the interrupt is not there. With the interrupt really being optional, I don't
-see the point in making it mandatory just to display a message if it fires.
+Pushed everything but the ARM/dts patches to l2-mtd.git, with a small
+fixup on the Kconfig symbols (s/MTD_NAND_BRCMSTB/MTD_NAND_BRCMNAND/).
+Diff appended to this email. I have a few insubstantial fixups that I'll
+send out later, but there seems to be no more comments on the core
+stuff.
 
+> Summary changelog:
 > 
-> There are already examples of this in the kernel, I've not looked very hard ...
-> http://lxr.free-electrons.com/source/drivers/mfd/qcom_rpm.c#L412
-> http://lxr.free-electrons.com/source/drivers/mfd/arizona-irq.c#L72
+> v1 -> v2:
+>  * add NAND to DTS for BCM7445 / BCM97445SVMB
+>  * rename DT binding file to have 'brcm,' prefix
+>  * catch DMA mapping errors
+>  * fixup timeout / error messages (hex, remove misleading info)
+>  * MODULE_LICENSE("GPL v2")
+>  * fix incorrect comments
+>  * print why we fail, when checking for supported controller revisions
+>  * disable prefetch when using Flash DMA (see FIXME); will re-enable once we
+>    get a good erased-page verification scheme merged
+> 
+> v2 -> v3:
+>  * rebase to v4.1-rc1
+>  * add SoC-specific infrastructure, to help support other SoCs:
+>    - add BCM63138 support
+>    - add iProc/Cygnus support
+>  * disable prefetch on v6.1
+> 
+> v3 -> v4:
+>  * move to brcmnand/ subdirectory
+>  * add MAINTAINERS entry
+>  * fixup endianness issues (only use __raw_xxx on MIPS BE)
+>  * split core NAND support into library, with tiny platform drivers for STB
+>    (BCM7xxx), iProc, and BCM63138
+>  * restructure DT binding, so all SoC extras become part of main controller
+>    node
+> 
+> Brian Norris (10):
+>   Documentation: devicetree: add binding doc for Broadcom NAND
+>     controller
+>   mtd: nand: add NAND driver "library" for Broadcom STB NAND controller
+>   mtd: brcmnand: add support for STB chips
+>   ARM: bcm7445: add NAND to DTS
+>   Documentation: devicetree: brcmstb_nand: add BCM63138 and Cygnus/iProc
+>   mtd: brcmnand: add extra SoC support to library
+>   mtd: brcmnand: add support for Broadcom's IPROC family
+>   mtd: brcmnand: add BCM63138 support
+>   ARM: bcm63138: add NAND DT support
+>   MAINTAINERS: add entry for new brcmnand/ directory
+> 
+> Ray Jui (1):
+>   ARM: dts: cygnus: Enable NAND support for Cygnus
+> 
+>  .../devicetree/bindings/mtd/brcm,brcmnand.txt      |  150 ++
+>  MAINTAINERS                                        |    6 +
+>  arch/arm/boot/dts/bcm-cygnus.dtsi                  |   12 +
+>  arch/arm/boot/dts/bcm63138.dtsi                    |   11 +
+>  arch/arm/boot/dts/bcm7445-bcm97445svmb.dts         |   23 +
+>  arch/arm/boot/dts/bcm7445.dtsi                     |   22 +
+>  arch/arm/boot/dts/bcm958300k.dts                   |   16 +
+>  arch/arm/boot/dts/bcm963138dvt.dts                 |   12 +
+>  drivers/mtd/nand/Kconfig                           |    8 +
+>  drivers/mtd/nand/Makefile                          |    1 +
+>  drivers/mtd/nand/brcmnand/Makefile                 |    6 +
+>  drivers/mtd/nand/brcmnand/bcm63138_nand.c          |  111 +
+>  drivers/mtd/nand/brcmnand/brcmnand.c               | 2246 ++++++++++++++++++++
+>  drivers/mtd/nand/brcmnand/brcmnand.h               |   73 +
+>  drivers/mtd/nand/brcmnand/brcmstb_nand.c           |   44 +
+>  drivers/mtd/nand/brcmnand/iproc_nand.c             |  150 ++
+>  16 files changed, 2891 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+>  create mode 100644 drivers/mtd/nand/brcmnand/Makefile
+>  create mode 100644 drivers/mtd/nand/brcmnand/bcm63138_nand.c
+>  create mode 100644 drivers/mtd/nand/brcmnand/brcmnand.c
+>  create mode 100644 drivers/mtd/nand/brcmnand/brcmnand.h
+>  create mode 100644 drivers/mtd/nand/brcmnand/brcmstb_nand.c
+>  create mode 100644 drivers/mtd/nand/brcmnand/iproc_nand.c
 > 
 
-Never a good argument to make with me. 100 people doing something wrong
-doesn't mean you should continue to do so.
+The following was squashed into the appropriate patches.
 
-Guenter
+diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+index 3587017b209a..376b538a5d1f 100644
+--- a/drivers/mtd/nand/Kconfig
++++ b/drivers/mtd/nand/Kconfig
+@@ -394,7 +394,7 @@ config MTD_NAND_GPMI_NAND
+ 	 block, such as SD card. So pay attention to it when you enable
+ 	 the GPMI.
+ 
+-config MTD_NAND_BRCMSTB
++config MTD_NAND_BRCMNAND
+ 	tristate "Broadcom STB NAND controller"
+ 	depends on ARM || MIPS
+ 	help
+diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+index 7fd5f1e7ad5e..1f897ec3c242 100644
+--- a/drivers/mtd/nand/Makefile
++++ b/drivers/mtd/nand/Makefile
+@@ -52,6 +52,6 @@ obj-$(CONFIG_MTD_NAND_XWAY)		+= xway_nand.o
+ obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)	+= bcm47xxnflash/
+ obj-$(CONFIG_MTD_NAND_SUNXI)		+= sunxi_nand.o
+ obj-$(CONFIG_MTD_NAND_HISI504)	        += hisi504_nand.o
+-obj-$(CONFIG_MTD_NAND_BRCMSTB)		+= brcmnand/
++obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= brcmnand/
+ 
+ nand-objs := nand_base.o nand_bbt.o nand_timings.o
+diff --git a/drivers/mtd/nand/brcmnand/Makefile b/drivers/mtd/nand/brcmnand/Makefile
+index 45a091e0550f..3b1fbfd27d4f 100644
+--- a/drivers/mtd/nand/brcmnand/Makefile
++++ b/drivers/mtd/nand/brcmnand/Makefile
+@@ -1,6 +1,6 @@
+ # link order matters; don't link the more generic brcmstb_nand.o before the
+ # more specific iproc_nand.o, for instance
+-obj-$(CONFIG_MTD_NAND_BRCMSTB)		+= iproc_nand.o
+-obj-$(CONFIG_MTD_NAND_BRCMSTB)		+= bcm63138_nand.o
+-obj-$(CONFIG_MTD_NAND_BRCMSTB)		+= brcmstb_nand.o
+-obj-$(CONFIG_MTD_NAND_BRCMSTB)		+= brcmnand.o
++obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= iproc_nand.o
++obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= bcm63138_nand.o
++obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= brcmstb_nand.o
++obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= brcmnand.o
