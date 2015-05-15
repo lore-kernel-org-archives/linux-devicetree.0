@@ -1,130 +1,73 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH RESEND] w1: masters: omap_hdq: Add support for 1-wire
- mode
-Date: Fri, 15 May 2015 17:35:02 +0530
-Message-ID: <5555E0EE.1010204@ti.com>
-References: <1430728735-22747-1-git-send-email-vigneshr@ti.com> <20150513134958.e21e538c3c8fe00d3fcd8854@linux-foundation.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5] Marvell PXA1928 USB support
+Date: Fri, 15 May 2015 07:48:24 -0500
+Message-ID: <CAL_Jsq+1JXJGVAA42iw7haSMkWEpV0KOo0h3AVhO5-DQ-GfRcg@mail.gmail.com>
+References: <1431557340-5421-1-git-send-email-robh@kernel.org> <5555C2A5.8010509@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150513134958.e21e538c3c8fe00d3fcd8854@linux-foundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Evgeniy Polyakov <zbr@ioremap.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, NeilBrown <neilb@suse.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Fabian Frederick <fabf@skynet.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5555C2A5.8010509-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Thursday 14 May 2015 02:19 AM, Andrew Morton wrote:
-> On Mon, 4 May 2015 14:08:55 +0530 Vignesh R <vigneshr@ti.com> wrote:
-> 
->> This patches makes following changes to omap_hdq driver
->>  - Enable 1-wire mode.
->>  - Implement w1_triplet callback to facilitate search rom
->>    procedure and auto detection of 1-wire slaves.
->>  - Proper enabling and disabling of interrupt.
->>  - Cleanups (formatting and return value checks).
+On Fri, May 15, 2015 at 4:55 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 14.05.2015 00:48, Rob Herring wrote:
 >>
->> HDQ mode remains unchanged.
+>> This series adds USB PHYs and EHCI host drivers for the Marvell PXA1928
+>> SOC.
 >>
->> ...
+>> The OTG block is based on ChipIdea and works with "chipidea,usb2"
+>> compatible driver as is just by adding the PHY driver. Yay!
 >>
->> +/*
->> + * W1 triplet callback function - used for searching ROM addresses.
->> + * Registered only when controller is in 1-wire mode.
->> + */
->> +static u8 omap_w1_triplet(void *_hdq, u8 bdir)
->> +{
->> +	u8 ret, id_bit, comp_bit;
->> +	struct hdq_data *hdq_data = _hdq;
->> +	u8 ctrl = OMAP_HDQ_CTRL_STATUS_SINGLE | OMAP_HDQ_CTRL_STATUS_GO |
->> +		  OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK;
->> +	u8 mask = ctrl | OMAP_HDQ_CTRL_STATUS_DIR;
->> +
->> +	omap_hdq_get(_hdq);
->> +
->> +	ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
->> +	if (ret < 0) {
->> +		ret = -EINTR;
->> +		goto rtn;
-> 
-> Has this code path been tested?  What happens when it is taken?  Driver
-> initialization fails?  If so, why is this desirable behaviour?
-
-The w1 core code that calls omap_w1_triplet (w1_triplet from w1_io.c)
-doesn't care about error codes returned by omap_w1_triplet. Hence, I
-will add a debug print and return 0x3 indicating to the w1 core to start
-the search again.
-
-> 
->> +	}
->> +
->> +	hdq_data->hdq_irqstatus = 0;
->> +	/* read id_bit */
->> +	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
->> +		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
->> +	wait_event_timeout(hdq_wait_queue,
->> +			   (hdq_data->hdq_irqstatus
->> +			   & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
->> +			   OMAP_HDQ_TIMEOUT);
-> 
-> It seems bad to ignore a timeout.  Shouldn't the code clean up and
-> report error when this occurs?
-> 
-> 
->> +	id_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
->> +
->> +	hdq_data->hdq_irqstatus = 0;
->> +	/* read comp_bit */
->> +	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
->> +		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
->> +	wait_event_timeout(hdq_wait_queue,
->> +			   (hdq_data->hdq_irqstatus
->> +			   & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
->> +			   OMAP_HDQ_TIMEOUT);
-> 
-> Here too.
-> 
->> +	comp_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
->> +
->> +	if (id_bit && comp_bit) {
->> +		ret = 0x03;  /* error */
->> +		goto rtn;
->> +	}
->> +	if (!id_bit && !comp_bit) {
->> +		/* Both bits are valid, take the direction given */
->> +		ret = bdir ? 0x04 : 0;
->> +	} else {
->> +		/* Only one bit is valid, take that direction */
->> +		bdir = id_bit;
->> +		ret = id_bit ? 0x05 : 0x02;
->> +	}
->> +
->> +	/* write bdir bit */
->> +	hdq_reg_out(_hdq, OMAP_HDQ_TX_DATA, bdir);
->> +	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS, ctrl, mask);
->> +	wait_event_timeout(hdq_wait_queue,
->> +			   (hdq_data->hdq_irqstatus
->> +			   & OMAP_HDQ_INT_STATUS_TXCOMPLETE),
->> +			   OMAP_HDQ_TIMEOUT);
-> 
-> And here.
-
-I will add a dev_dbg() and return 0x3 indicating no devices responded in
-all the above cases.
-
-> 
->> +	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS, 0,
->> +		      OMAP_HDQ_CTRL_STATUS_SINGLE);
->> +
->> +rtn:
->> +	mutex_unlock(&hdq_data->hdq_mutex);
->> +	omap_hdq_put(_hdq);
->> +	return ret;
->> +}
+>> Rob
 >>
->> ...
+>> Rob Herring (5):
+>>    dt-bindings: Add Marvell PXA1928 USB and HSIC PHY bindings
+>>    dt-bindings: Add Marvell PXA1928 USB EHCI controller binding
+>>    phy: Add Marvell USB 2.0 OTG 28nm PHY
+>>    phy: add Marvell HSIC 28nm PHY
+>>    usb: add pxa1928 ehci support
 >>
+>>   .../devicetree/bindings/phy/pxa1928-usb-phy.txt    |  18 ++
+>>   .../devicetree/bindings/usb/ehci-pxa1928.txt       |  19 ++
+>>   drivers/phy/Kconfig                                |  20 ++
+>>   drivers/phy/Makefile                               |   2 +
+>>   drivers/phy/phy-mv-hsic.c                          | 208 +++++++++++++
+>>   drivers/phy/phy-mv-usb2.c                          | 329
+>> +++++++++++++++++++++
+>
+>
+> [Adding some MVEBU guys]
+>
+> Rob,
+>
+> I had a look at the USB PHYs of some of the other Marvell SoCs a while
+> ago for the barebox bootloader [1]. Marvell seems to distinguish the
+> USB PHY type by technology node, e.g. 28nm like the one above. For the
+> most used Marvell SoCs, i.e. Kirkwood, Dove, and Armada 370/XP, they all
+> use a different technology node and we could either use the SoC name
+> or the technology node as compatible.
 
-Thanks & Regards
-Vignesh
+It also seems to be by business unit. The registers in the 40nm
+version I have look nothing like what are in Armada. It could be the
+same IP, but PHY IP tends to just be signals and they leave the
+register interface up the to licensee's imagination. Any idea if there
+are 28nm Armada parts which have the same phy?
+
+It's a good idea to always include the SOC name in the compatible.
+Every new chip is an opportunity for changes or bugs.
+
+> Anyway, if you are introducing new PHY drivers with _that_ generic
+> names, it will either clash with every other Marvell USB PHYs -
+> or we'll have to add the PHY code into the drivers above.
+
+How about phy-pxa-28nm-{usb2,hsic}?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
