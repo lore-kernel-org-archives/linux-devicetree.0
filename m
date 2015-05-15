@@ -1,50 +1,140 @@
-From: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 05/10] pinctrl: mediatek: Add Pinctrl/GPIO driver for
- mt6397.
-Date: Thu, 14 May 2015 20:12:51 -0700
-Message-ID: <1431659571.35701.2.camel@mussux00.eus.mediatek.inc>
-References: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
- <1431567346-33780-6-git-send-email-hongzhou.yang@mediatek.com>
- <20150514072228.GB20358@x1>
+From: Kenneth Westfield <kwestfie@codeaurora.org>
+Subject: Re: [PATCH v1 05/13] ASoC: qcom: support bitclk and osrclk per i2s
+ port
+Date: Thu, 14 May 2015 22:23:30 -0700
+Message-ID: <20150515052329.GA31687@kwestfie-linux.qualcomm.com>
+References: <1431518302-7139-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1431518452-7434-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20150514072228.GB20358@x1>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maoguang Meng <maoguang.meng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.orgli
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1431518452-7434-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-05-14 at 08:22 +0100, Lee Jones wrote:
-> On Wed, 13 May 2015, Hongzhou Yang wrote:
+On Wed, May 13, 2015 at 05:00:52AM -0700, Srinivas Kandagatla wrote:
+> This patch adds support to allow bitclk and osrclk per i2s dai port.
+> on APQ8016 there are 4 i2s ports each one has its own bit clks.
 > 
-> > Add mt6397 support using mediatek common pinctrl driver.
-> > 
-> > mt6397 is a PMIC, and pinctrl/GPIO is part of 6397 chip.
-> > Pinctrl/GPIO driver should obtain regmap from PMIC,
-> > so adding this support to common code.
-> > 
-> > Also, mt6397 is no need to support interrupt controller,
-> > so changing common code to skip it.
-> > 
-> > Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/mfd/mt6397-core.c                     |    3 +
-> 
-> Please break this out into a separate patch that I can take through my
-> tree.  There is no need for you to bind up changes in multiple
-> subsystems here.
+> Without this patch its not possible to support multiple i2s ports in the
+> lpass driver.
 
-Ok, I will separate it, thank you.
+> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
+> index 5965667..0d28ea7 100644
+> --- a/sound/soc/qcom/lpass-cpu.c
+> +++ b/sound/soc/qcom/lpass-cpu.c
+> @@ -33,7 +33,7 @@ static int lpass_cpu_daiops_set_sysclk(struct
+> snd_soc_dai *dai, int clk_id,
+>  	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
+>  	int ret;
+>  
+> -	ret = clk_set_rate(drvdata->mi2s_osr_clk, freq);
+> +	ret = clk_set_rate(drvdata->mi2s_osr_clk[dai->driver->id], freq);
+>  	if (ret)
+>  		dev_err(dai->dev, "%s() error setting mi2s osrclk to %u:
+> %d\n",
+>  				__func__, freq, ret);
 
-Yours,
-Hongzhou
+Audio was broken on the Storm board with this patch series.  The issue
+has to do with the mismatch of the clock position in the array (which
+was 0) and the dai->driver->id (which was 4).  Basically, the position of
+the bit/osr clocks in their respective arrays need to match the MI2S
+port number, even if the port number doesn't start at the 0 position.
+
+I realize there are multiple ways to address this.  The quick solution I
+came up with (to get audio functioning again) was to change the DT clock
+entries for the ipq806x (see changes below for your reference).  The
+downside to the way I did this is, that now, there is no error-checking
+for clocks that should be in the DT but aren't there.
+
+Suggestions are welcome on how to best address this issue.
+
+-----------------------><---------------------------------------------
+diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+index 21c6483..2684a4f 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+@@ -8,8 +8,8 @@ Required properties:
+ - clocks		: Must contain an entry for each entry in clock-names.
+ - clock-names		: A list which must include the following entries:
+ 				* "ahbix-clk"
+-				* "mi2s-osr-clk"
+-				* "mi2s-bit-clk"
++				* "mi2s-osr-clk4"
++				* "mi2s-bit-clk4"
+ 			: required clocks for "qcom,lpass-cpu-apq8016"
+ 				* "ahbix-clk"
+ 				* "mi2s-bit-clk0"
+@@ -42,7 +42,7 @@ Example:
+ lpass@28100000 {
+ 	compatible = "qcom,lpass-cpu";
+ 	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
+-	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
++	clock-names = "ahbix-clk", "mi2s-osr-clk4", "mi2s-bit-clk4";
+ 	interrupts = <0 85 1>;
+ 	interrupt-names = "lpass-irq-lpaif";
+ 	pinctrl-names = "default", "idle";
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index 5a13366..090984f 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -189,8 +189,8 @@
+ 					<&lcc MI2S_OSR_CLK>,
+ 					<&lcc MI2S_BIT_CLK>;
+ 			clock-names = "ahbix-clk",
+-					"mi2s-osr-clk",
+-					"mi2s-bit-clk";
++					"mi2s-osr-clk4",
++					"mi2s-bit-clk4";
+ 			interrupts = <0 85 1>;
+ 			interrupt-names = "lpass-irq-lpaif";
+ 			reg = <0x28100000 0x10000>;
+diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
+index 5053629..7b66e52 100644
+--- a/sound/soc/qcom/lpass-cpu.c
++++ b/sound/soc/qcom/lpass-cpu.c
+@@ -411,11 +411,8 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+ 	if (variant->init)
+ 		variant->init(pdev);
+ 
+-	for (i = 0; i < variant->num_dai; i++) {
+-		if (variant->num_dai > 1)
+-			sprintf(clk_name, "mi2s-osr-clk%d", i);
+-		else
+-			sprintf(clk_name, "mi2s-osr-clk");
++	for (i = 0; i < LPASS_MAX_MI2S_PORTS; i++) {
++		sprintf(clk_name, "mi2s-osr-clk%d", i);
+ 
+ 		drvdata->mi2s_osr_clk[i] = devm_clk_get(&pdev->dev,
+ 								clk_name);
+@@ -427,19 +424,14 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	for (i = 0; i < variant->num_dai; i++) {
+-
+-		if (variant->num_dai > 1)
+-			sprintf(clk_name, "mi2s-bit-clk%d", i);
+-		else
+-			sprintf(clk_name, "mi2s-bit-clk");
++	for (i = 0; i < LPASS_MAX_MI2S_PORTS; i++) {
++		sprintf(clk_name, "mi2s-bit-clk%d", i);
+ 
+ 		drvdata->mi2s_bit_clk[i] = devm_clk_get(&pdev->dev, clk_name);
+ 		if (IS_ERR(drvdata->mi2s_bit_clk[i])) {
+ 			dev_err(&pdev->dev,
+ 				"%s() error getting mi2s-bit-clk: %ld\n",
+ 				__func__, PTR_ERR(drvdata->mi2s_bit_clk[i]));
+-			return PTR_ERR(drvdata->mi2s_bit_clk[i]);
+ 		}
+ 	}
+-----------------------><---------------------------------------------
+
+-- 
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
+a Linux Foundation Collaborative Project
