@@ -1,124 +1,119 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] rtc: add rtc-lpc24xx driver
-Date: Fri, 15 May 2015 18:31:53 +0200
-Message-ID: <CAGhQ9VxpN-dSgWS0tJMeik7o_DsRdRo=Mf=Ap1L3j988abcHfQ@mail.gmail.com>
-References: <1431696306-19093-1-git-send-email-manabian@gmail.com>
-	<1431696306-19093-2-git-send-email-manabian@gmail.com>
-	<20150515152312.GG23600@jcartwri.amer.corp.natinst.com>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 00/10] ARM: sunxi: Introduce Allwinner H3 support
+Date: Fri, 15 May 2015 18:38:50 +0200
+Message-ID: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
+Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150515152312.GG23600-ew3lsbMjNqt5wtABiV/Xjqyly8cj88Ttqxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
-Cc: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Kevin Wells <wellsk40-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBLGC3CVAKGQEMIEJAJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 May 2015 at 17:23, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org> wrote:
-> Hello again,
->
-> On Fri, May 15, 2015 at 03:25:05PM +0200, Joachim Eastwood wrote:
->> Add driver for the RTC found on NXP LPC24xx/178x/18xx/43xx devices.
->> The RTC provides calendar and clock functionality together with
->> periodic tick and alarm interrupt support.
->>
->> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
-> [..]
->> +++ b/drivers/rtc/Kconfig
->> @@ -1427,6 +1427,19 @@ config RTC_DRV_JZ4740
->>         This driver can also be buillt as a module. If so, the module
->>         will be called rtc-jz4740.
->>
->> +config RTC_DRV_LPC24XX
->> +     depends on ARCH_LPC18XX || COMPILE_TEST
->> +     depends on HAS_IOMEM
->> +     depends on OF
->> +     tristate "NXP LPC24xx RTC"
->> +     help
->> +       This enables support for the NXP RTC found which can be found on
->> +       LPC24xx/178x/18xx/43xx devices.
->
-> Is this still true?
+Hi everyone,
 
-I guess I should have updated the Kconfig text when I removed the LPC24xx bits.
+This is v2 of my patch series introducing basic kernel support for Allwinner's
+H3 SoC. It mainly adds basic clocks and pinctrl. It also adds interrupts,
+timers, watchdog, RTC, dmaengine, MMC and UARTs, which are mostly compatible
+to those in earlier SoCs like A23 and A31, and can simply be reused.
 
-I'll put something this in the next version:
-tristate "NXP LPC178x/18xx/43xx RTC"
-...
-help
-  This enables support for the NXP RTC found which can be found on
-  LPC178x/18xx/43xx devices.
+These patches are based on Maxime's sunxi/for-next branch from
+git://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git
 
 
->> +
->> +       If you have one of the devices above enable this driver to use
->> +       the hardware RTC. This driver can also be buillt as a module. If
->> +       so, the module will be called rtc-lpc24xx.
->> +
->>  config RTC_DRV_LPC32XX
->>       depends on ARCH_LPC32XX
->>       tristate "NXP LPC32XX RTC"
->> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
->> index c31731c29762..8687a2e13247 100644
->> --- a/drivers/rtc/Makefile
-> [..]
->> +static int lpc24xx_rtc_read_time(struct device *dev, struct rtc_time *tm)
->> +{
->> +     struct lpc24xx_rtc *rtc = dev_get_drvdata(dev);
->> +     u32 ct0, ct1, ct2;
->> +
->> +     ct0 = rtc_readl(rtc, LPC24XX_CTIME0);
->> +     ct1 = rtc_readl(rtc, LPC24XX_CTIME1);
->> +     ct2 = rtc_readl(rtc, LPC24XX_CTIME2);
->> +
->> +     tm->tm_sec  = CT0_SECS(ct0);
->> +     tm->tm_min  = CT0_MINS(ct0);
->> +     tm->tm_hour = CT0_HOURS(ct0);
->> +     tm->tm_wday = CT0_DOW(ct0);
->> +     tm->tm_mon  = CT1_MONTH(ct1);
->> +     tm->tm_mday = CT1_DOM(ct1);
->> +     tm->tm_year = CT1_YEAR(ct1);
->> +     tm->tm_yday = CT2_DOY(ct2);
->> +
->> +     if (rtc_valid_tm(tm) < 0) {
->> +             dev_warn(dev, "retrieved date and time is invalid\n");
->> +             rtc_time64_to_tm(0, tm);
->> +             lpc24xx_rtc_set_time(dev, tm);
->> +     }
->> +
->> +     return 0;
->
-> Forcing the read time to be the epoch on failure seems like a pretty
-> poor way to handle errors, in my opinion.
+The first four patches are documentation updates and generic changes to the
+sunxi clock and pinctrl drivers, preparing them for the H3 addition.
 
-When the device doesn't have battery the CTIME registers contains an
-invalid value. So if you don't set them to something valid you will
-get a warning each time you try to read the RTC. To "fix" that problem
-I set the time at epoch which make the CTIME registers to contain a
-valid value. Since the value is already useless I think setting it to
-epoch is an improvement in this case.
+Patch 1 updates the sunxi README with new SoCs, including the H3
 
-I guess it deserves a comment in the driver.
+Patch 2 adds support for multiple parents to the sunxi gates clock, needed
+for the new bus gates in H3
 
-> Why not trickle an error up to the rtc class driver?
+Patch 3 improves the sunxi divs clock to read the name of the base factor clock
+from devicetree instead of hardcoding it, which allows us to reuse sun6i-pll6
+for our pll8.
 
-Because the rtc class will never correct the CTIME register values and
-will complain each time lpc24xx_rtc_read_time() is called. Of course
-if a user set the time from user space the register value is also
-corrected.
+Patch 4 prepares the sunxi pinctrl driver for building the SoC specific parts
+as modules. This is later used for the H3 pinctrl driver. I believe the other
+sunxi SoCs could or should be changed to tristate too, but that's independend
+from this series and I wouldn't be able to test them anyway.
 
-> Actually, the class driver is already doing a rtc_valid_tm() check, so
-> that shouldn't even be necessary.  Just read your time here, and let the
-> upper layer take care of handling an invalid time (and properly
-> propagating an error up the stack).
+The remaining patches add H3 support.
+
+Patch 5 adds machine support for the H3.
+
+Patch 6 adds support for the basic clocks.
+
+Patch 7 adds the pin sets for the H3 main PIO.
+
+Patch 8 adds a new compatible for the H3 reset controller
+
+Patch 9 adds the DTSI for the H3.
+
+Patch 10 adds a DTS for the Orange Pi Plus SBC, which these patches
+were developed and tested with.
 
 
-Thanks for taking the time to look at the patch again.
+Changes since v1:
+- Update sunxi README in Documentation
+- Add the multiple parents gates and use them for bus-gates instead of
+  ahb1, ahb2, apb1 and apb2 gates
+- Merge the pll8 clock with sun6i pll6
+- Merge the ahb12, apb1 and apb2 resets to bus-resets with own compatible
+- Add sun6i_timer_init to sun8i machine
+- Remove the single SoC names from machine definition, its sun8i family
+- Make the pinctrl driver tristate and put its Kconfig entry in the right order
+- Rename pinctrl "scr" to "sim" and clock "sim" to "scr" to match user manual
+- Remove the address paragraph from GPL in dts and dtsi
+- Some style cleanup and line wrapping in dtsi
+- Add ARM architected timers
+- dmaengine isn't included anymore, it is merged already
 
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Jens
+
+
+Jens Kuske (10):
+  Documentation: sunxi: Update Allwinner SoC documentation
+  clk: sunxi: Add support for multiple parents to gates
+  clk: sunxi: Let divs clocks read the base factor clock name from
+    devicetree
+  pinctrl: sunxi: Prepare for building SoC specific drivers as modules
+  ARM: sunxi: Introduce Allwinner H3 support
+  clk: sunxi: Add H3 clocks support
+  pinctrl: sunxi: Add H3 PIO controller support
+  reset: sunxi: Add compatible for Allwinner H3 bus resets
+  ARM: dts: sunxi: Add Allwinner H3 DTSI
+  ARM: dts: sun8i: Add Orange Pi Plus support
+
+ Documentation/arm/sunxi/README                     |  18 +-
+ Documentation/devicetree/bindings/arm/sunxi.txt    |   1 +
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   6 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt |   1 +
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  77 +++
+ arch/arm/boot/dts/sun8i-h3.dtsi                    | 446 ++++++++++++++++++
+ arch/arm/mach-sunxi/Kconfig                        |   2 +-
+ arch/arm/mach-sunxi/sunxi.c                        |   4 +-
+ drivers/clk/sunxi/clk-sunxi.c                      |  84 +++-
+ drivers/pinctrl/sunxi/Kconfig                      |   8 +
+ drivers/pinctrl/sunxi/Makefile                     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c           | 522 +++++++++++++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c              |  25 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h              |   2 +
+ drivers/reset/reset-sunxi.c                        |   1 +
+ 17 files changed, 1180 insertions(+), 22 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-h3.dtsi
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
+
+-- 
+2.4.0
