@@ -1,157 +1,108 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] clk: mediatek: Export CPU mux clocks for CPU
- frequency control
-Date: Fri, 15 May 2015 12:00:58 -0700
-Message-ID: <20150515190058.GN31753@codeaurora.org>
-References: <1429521950-16431-1-git-send-email-pi-cheng.chen@linaro.org>
+Subject: Re: [PATCH v4 4/5] clk: hi6220: Clock driver support for Hisilicon
+ hi6220 SoC
+Date: Fri, 15 May 2015 12:30:41 -0700
+Message-ID: <20150515193041.GO31753@codeaurora.org>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
+ <1430827599-11560-5-git-send-email-bintian.wang@huawei.com>
+ <20150515002527.GD31753@codeaurora.org>
+ <5555A37B.1090105@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1429521950-16431-1-git-send-email-pi-cheng.chen@linaro.org>
+In-Reply-To: <5555A37B.1090105@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, fan.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
+To: Bintian <bintian.wang@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, khilman@kernel.org, pebolle@tiscali.nl, arnd@arndb.de, marc.zyngier@arm.com, xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.chen@hisilicon.com, dan.zhao@hisilicon.com, huxinw
 List-Id: devicetree@vger.kernel.org
 
-On 04/20, pi-cheng.chen wrote:
-> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
-> diff --git a/drivers/clk/mediatek/clk-cpumux.c b/drivers/clk/mediatek/clk-cpumux.c
-> new file mode 100644
-> index 0000000..dc14074
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-cpumux.c
-> @@ -0,0 +1,122 @@
-> +/*
-> + * Copyright (c) 2015 Linaro Ltd.
-> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
+On 05/15, Bintian wrote:
+> On 2015/5/15 8:25, Stephen Boyd wrote:
+> >On 05/05, Bintian Wang wrote:
+> >>diff --git a/drivers/clk/hisilicon/clkdivider-hi6220.c b/drivers/clk/hisilicon/clkdivider-hi6220.c
+> >>+
+> >>+/**
+> >>+ * struct hi6220_clk_divider - divider clock for hi6220
+> >>+ *
+> >>+ * @hw:		handle between common and hardware-specific interfaces
+> >>+ * @reg:	register containing divider
+> >>+ * @shift:	shift to the divider bit field
+> >>+ * @width:	width of the divider bit field
+> >>+ * @mask:	mask for setting divider rate
+> >>+ * @table:	the div table that the divider supports
+> >>+ * @lock:	register lock
+> >>+ */
+> >>+struct hi6220_clk_divider {
+> >>+	struct clk_hw	hw;
+> >>+	void __iomem	*reg;
+> >>+	u8		shift;
+> >>+	u8		width;
+> >>+	u32		mask;
+> >>+	const struct clk_div_table *table;
+> >>+	spinlock_t	*lock;
+> >>+};
+> >
+> >The clk-divider.c code has been made "reusable". Can you please
+> >try to use the functions that it now exposes instead of
+> >copy/pasting it and modifying it to suit your needs? A lot of
+> >this code looks the same.
+> In fact, I discussed this problem with Rob Herring and Mike Turquette
+> in the 96boards internal mail list before.
+> 
+> The divider in hi6220 has a mask bit to guarantee writing the correct
+> bits in register when setting rate, but the index of this mask bit has
+> no rules to get (e.g. by left shift some fixed bits), so I add this
+> divider clock to handle it, we can regard hi6220_clk_divider as a
+> special case of generic divider clock.
+> 
+> If I don't add this divider clock for hi6220 chip, then I should change
+> the core APIs "clk_register_divider" and "clk_register_divider_table",
+> and then many other drivers will be updated.
+> So I think just add this divider clock is a good solution now.
 
-Do you need this include for some reason?
+I think you missed my point. I didn't suggest using
+clk_register_divider or clk_register_divider_table(). I'm
+suggesting to use 
 
-> +#include <linux/clk-provider.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/slab.h>
-> +
-> +#include "clk-mtk.h"
-> +#include "clk-cpumux.h"
-> +
-[...]
-> +
-> +static struct clk_ops clk_cpumux_ops = {
+unsigned long divider_recalc_rate(struct clk_hw *hw, unsigned long parent_rate,
+                unsigned int val, const struct clk_div_table *table,
+                unsigned long flags);
+long divider_round_rate(struct clk_hw *hw, unsigned long rate,
+                unsigned long *prate, const struct clk_div_table *table,
+                u8 width, unsigned long flags);
+int divider_get_val(unsigned long rate, unsigned long parent_rate,
+                const struct clk_div_table *table, u8 width,
+                unsigned long flags);
 
-const?
+> >>+		return ERR_PTR(-ENOMEM);
+> >>+	}
+> >>+
+> >>+	for (i = 0; i < max_div; i++) {
+> >>+		table[i].div = min_div + i;
+> >>+		table[i].val = table[i].div - 1;
+> >>+	}
+> >>+
+> >>+	init.name = name;
+> >>+	init.ops = &hi6220_clkdiv_ops;
+> >>+	init.flags = flags | CLK_IS_BASIC;
+> >
+> >It's basic?
+> I rechecked this flag, it's really useless to us, so I can remove it.
+> But can you tell me which case I should use it?
 
-> +	.get_parent = clk_cpumux_get_parent,
-> +	.set_parent = clk_cpumux_set_parent,
-> +};
-> +
-> +static struct clk *mtk_clk_register_cpumux(const struct mtk_composite *mux,
-> +					   struct regmap *regmap)
-> +{
-> +	struct mtk_clk_cpumux *cpumux;
-> +	struct clk *clk;
-> +	struct clk_init_data init;
-> +
-> +	cpumux = kzalloc(sizeof(*cpumux), GFP_KERNEL);
-> +	if (!cpumux)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	init.name = mux->name;
-> +	init.ops = &clk_cpumux_ops;
-> +	init.parent_names = mux->parent_names;
-> +	init.num_parents = mux->num_parents;
-> +
-> +	cpumux->reg = mux->mux_reg;
-> +	cpumux->shift = mux->mux_shift;
-> +	cpumux->mask = (BIT(mux->mux_width) - 1);
+I think the basic flag is there for drivers that want to know what type
+of clock they're dealing with when all they have is the struct clk_hw
+pointer. I like to discourage use of this flag in hopes of deleting
+it someday.
 
-Unnecessary parenthesis.
+> 
+> How about just send this patch for review not the whole patch set in
+> next version?
+> 
 
-> +	cpumux->regmap = regmap;
-> +	cpumux->hw.init = &init;
-> +
-> +	clk = clk_register(NULL, &cpumux->hw);
-> +	if (IS_ERR(clk))
-> +		kfree(cpumux);
-> +
-> +	return clk;
-> +}
-> +
-> +int mtk_clk_register_cpumuxes(struct device_node *node,
-> +			      const struct mtk_composite *clks, int num,
-> +			      struct clk_onecell_data *clk_data)
-> +{
-> +	int i;
-> +	struct clk *clk;
-> +	struct regmap *regmap;
-> +
-> +	if (!clk_data)
-> +		return -ENOMEM;
-
-Why would we call the function with NULL clk_data? Please remove
-this check.
-
-> +
-> +	regmap = syscon_node_to_regmap(node);
-> +	if (IS_ERR(regmap)) {
-> +		pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
-> +		       PTR_ERR(regmap));
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> diff --git a/drivers/clk/mediatek/clk-cpumux.h b/drivers/clk/mediatek/clk-cpumux.h
-> new file mode 100644
-> index 0000000..b82ad20
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-cpumux.h
-> @@ -0,0 +1,31 @@
-> +/*
-> + * Copyright (c) 2015 Linaro Ltd.
-> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef __DRV_CLK_CPUMUX_H
-> +#define __DRV_CLK_CPUMUX_H
-> +
-> +#include <linux/regmap.h>
-
-Looks unnecessary. Just forward declare the type you need, struct
-regmap.
-
-> +
-> +struct mtk_clk_cpumux {
-> +	struct clk_hw	hw;
-> +	struct regmap	*regmap;
-> +	u32		reg;
-> +	u32		mask;
-> +	u8		shift;
-> +};
-> +
-> +int mtk_clk_register_cpumuxes(struct device_node *node,
-> +			      const struct mtk_composite *clks, int num,
-> +			      struct clk_onecell_data *clk_data);
-> +#endif /* __DRV_CLK_CPUMUX_H */
+Yes a single patch is fine. I take it you want the patch to go
+through arm-soc with some Ack from us?
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
