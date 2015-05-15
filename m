@@ -1,49 +1,371 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 2/2] ARM: imx_v6_v7_defconfig: updates for Armadeus Systems
- APF6 boards
-Date: Fri, 15 May 2015 15:44:28 +0200
-Message-ID: <1431697468-19363-2-git-send-email-sebastien.szymanski@armadeus.com>
-References: <1431697468-19363-1-git-send-email-sebastien.szymanski@armadeus.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
+Date: Fri, 15 May 2015 21:49:07 +0800
+Message-ID: <CADyBb7sC5a6vC6CqQsfCqOaxz1P8gKNkZi5qEHtXL7efv42-=Q@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1431689090-3125-1-git-send-email-fu.wei@linaro.org>
+	<5555F5C5.8050806@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1431697468-19363-1-git-send-email-sebastien.szymanski@armadeus.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5555F5C5.8050806@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>
 List-Id: devicetree@vger.kernel.org
 
-QVBGNiBEdWFsIGFuZCBRdWFkIFNvTSBoYXZlIGFuIHdsMTI3MSB3aWZpL2J0IGNoaXAuIFRoaXMg
-Y2hpcCBuZWVkcwpDT05GSUdfQlRfSENJVUFSVF9MTC4KQVBGNkRldiBjYXJyaWVyIGJvYXJkIGhh
-cyBhIFNYODY1NCBJMkMgdG91Y2hzY3JlZW4gY29udHJvbGxlci4KClNpZ25lZC1vZmYtYnk6IFPD
-qWJhc3RpZW4gU3p5bWFuc2tpIDxzZWJhc3RpZW4uc3p5bWFuc2tpQGFybWFkZXVzLmNvbT4KLS0t
-CiBhcmNoL2FybS9jb25maWdzL2lteF92Nl92N19kZWZjb25maWcgfCA2ICsrKysrKwogMSBmaWxl
-IGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2NvbmZpZ3Mv
-aW14X3Y2X3Y3X2RlZmNvbmZpZyBiL2FyY2gvYXJtL2NvbmZpZ3MvaW14X3Y2X3Y3X2RlZmNvbmZp
-ZwppbmRleCBmZGViMWM4Li4zYWQ1M2NlIDEwMDY0NAotLS0gYS9hcmNoL2FybS9jb25maWdzL2lt
-eF92Nl92N19kZWZjb25maWcKKysrIGIvYXJjaC9hcm0vY29uZmlncy9pbXhfdjZfdjdfZGVmY29u
-ZmlnCkBAIC03Myw2ICs3Myw3IEBAIENPTkZJR19DQU49eQogQ09ORklHX0NBTl9GTEVYQ0FOPXkK
-IENPTkZJR19CVD15CiBDT05GSUdfQlRfSENJVUFSVD15CitDT05GSUdfQlRfSENJVUFSVF9MTD15
-CiBDT05GSUdfQlRfSENJVUFSVF8zV0lSRT15CiBDT05GSUdfQ0ZHODAyMTE9eQogQ09ORklHX01B
-QzgwMjExPXkKQEAgLTEzOSw2ICsxNDAsMTAgQEAgQ09ORklHX1VTQl9SVEw4MTUyPW0KIENPTkZJ
-R19VU0JfVVNCTkVUPW0KIENPTkZJR19VU0JfTkVUX0NEQ19FRU09bQogQ09ORklHX0JSQ01GTUFD
-PW0KK0NPTkZJR19XTF9UST15CitDT05GSUdfV0wxMlhYPW0KK0NPTkZJR19XTENPUkVfU0RJTz1t
-CisjIENPTkZJR19XSUxJTktfUExBVEZPUk1fREFUQSBpcyBub3Qgc2V0CiAjIENPTkZJR19JTlBV
-VF9NT1VTRURFVl9QU0FVWCBpcyBub3Qgc2V0CiBDT05GSUdfSU5QVVRfRVZERVY9eQogQ09ORklH
-X0lOUFVUX0VWQlVHPW0KQEAgLTE1MSw2ICsxNTYsNyBAQCBDT05GSUdfVE9VQ0hTQ1JFRU5fRUdB
-TEFYPXkKIENPTkZJR19UT1VDSFNDUkVFTl9NQzEzNzgzPXkKIENPTkZJR19UT1VDSFNDUkVFTl9U
-U0MyMDA3PXkKIENPTkZJR19UT1VDSFNDUkVFTl9TVE1QRT15CitDT05GSUdfVE9VQ0hTQ1JFRU5f
-U1g4NjU0PXkKIENPTkZJR19JTlBVVF9NSVNDPXkKIENPTkZJR19JTlBVVF9NTUE4NDUwPXkKIENP
-TkZJR19TRVJJT19TRVJQT1JUPW0KLS0gCjIuMC41CgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Guenter,
+
+Great thanks for your review,
+feedback inline below :-)
+
+On 15 May 2015 at 21:33, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 05/15/2015 04:24 AM, fu.wei@linaro.org wrote:
+>>
+>> From: Fu Wei <fu.wei@linaro.org>
+>>
+>> Reasons:
+>> (1)kernel already has two watchdog drivers are using "pretimeout":
+>>         drivers/char/ipmi/ipmi_watchdog.c
+>>         drivers/watchdog/kempld_wdt.c(but the definition is different)
+>> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
+>>
+>> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+>> ---
+>>   drivers/watchdog/watchdog_core.c | 66
+>> ++++++++++++++++++++++++++++++++++++++++
+>>   drivers/watchdog/watchdog_dev.c  | 48 +++++++++++++++++++++++++++++
+>>   include/linux/watchdog.h         | 19 ++++++++++++
+>>   3 files changed, 133 insertions(+)
+>>
+>> diff --git a/drivers/watchdog/watchdog_core.c
+>> b/drivers/watchdog/watchdog_core.c
+>> index cec9b55..6ca9578 100644
+>> --- a/drivers/watchdog/watchdog_core.c
+>> +++ b/drivers/watchdog/watchdog_core.c
+>> @@ -54,6 +54,14 @@ static void watchdog_check_min_max_timeout(struct
+>> watchdog_device *wdd)
+>>                 wdd->min_timeout = 0;
+>>                 wdd->max_timeout = 0;
+>>         }
+>> +       if (wdd->min_pretimeout && wdd->min_timeout < wdd->min_pretimeout)
+>> {
+>> +               pr_info("Invalid min timeout, resetting to min
+>> pretimeout!\n");
+>> +               wdd->min_timeout = wdd->min_pretimeout;
+>> +       }
+>> +       if (wdd->max_pretimeout && wdd->max_timeout < wdd->max_pretimeout)
+>> {
+>> +               pr_info("Invalid max timeout, resetting to max
+>> pretimeout!\n");
+>> +               wdd->max_timeout = wdd->max_pretimeout;
+>> +       }
+>
+>
+> I am a bit concerned about the context dependency introduced here. If
+> someone calls
+> _init_pretimeout after calling init_timeout, this may result in still
+> invalid timeout
+> values.
+
+yes, that logic is not very clean, so my thought is :
+maybe we can integrate watchdog_init_timeout and watchdog_init_pretimeout,
+if maintainer agree to add pretimeout into framework.
+
+>
+>
+>>   }
+>>
+>>   /**
+>> @@ -98,6 +106,63 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+>>   }
+>>   EXPORT_SYMBOL_GPL(watchdog_init_timeout);
+>>
+>> +static void watchdog_check_min_max_pretimeout(struct watchdog_device
+>> *wdd)
+>> +{
+>> +       /*
+>> +        * Check that we have valid min and max pretimeout values, if
+>> +        * not reset them both to 0 (=not used or unknown)
+>> +        */
+>> +       if (wdd->min_pretimeout > wdd->max_pretimeout) {
+>> +               pr_info("Invalid min and max pretimeout, resetting to
+>> 0!\n");
+>> +               wdd->min_pretimeout = 0;
+>> +               wdd->max_pretimeout = 0;
+>> +       }
+>> +}
+>> +
+>> +/**
+>> + * watchdog_init_pretimeout() - initialize the pretimeout field
+>> + * @pretimeout_parm: pretimeout module parameter
+>> + * @dev: Device that stores the timeout-sec property
+>> + *
+>> + * Initialize the pretimeout field of the watchdog_device struct with
+>> either
+>> + * the pretimeout module parameter (if it is valid value) or the
+>> timeout-sec
+>> + * property (only if it is a valid value and the timeout_parm is out of
+>> bounds).
+>> + * If none of them are valid then we keep the old value (which should
+>> normally
+>> + * be the default pretimeout value.
+>> + *
+>> + * A zero is returned on success and -EINVAL for failure.
+>> + */
+>
+>
+> The new API function also needs to be documented in
+> Documentation/watchdog/watchdog-kernel-api.txt.
+
+good point, thanks will do
+
+>
+>> +int watchdog_init_pretimeout(struct watchdog_device *wdd,
+>> +                            unsigned int pretimeout_parm, struct device
+>> *dev)
+>> +{
+>> +       int ret = 0;
+>> +       u32 timeouts[2];
+>> +
+>> +       watchdog_check_min_max_pretimeout(wdd);
+>> +
+>> +       /* try to get the timeout module parameter first */
+>> +       if (!watchdog_pretimeout_invalid(wdd, pretimeout_parm) &&
+>> +           pretimeout_parm) {
+>> +               wdd->pretimeout = pretimeout_parm;
+>> +               return ret;
+>> +       }
+>> +       if (pretimeout_parm)
+>> +               ret = -EINVAL;
+>> +
+>> +       /* try to get the timeout_sec property */
+>> +       if (!dev || !dev->of_node)
+>> +               return ret;
+>> +       ret = of_property_read_u32_array(dev->of_node,
+>> +                                        "timeout-sec", timeouts, 2);
+>> +       if (!watchdog_pretimeout_invalid(wdd, timeouts[1]) && timeouts[1])
+>
+>
+> Guess we are still waiting for feedback from the devicetree maintainers on
+> this.
+
+yes!
+
+>
+> Both the above synchronization concern and this makes me wonder if we should
+> introduce
+> watchdog_init_timeouts() instead, which would take pretimeout as additional
+> parameter.
+> What do you think about that ?
+
+yes, that is what I am thinking about
+
+>
+>
+>> +               wdd->pretimeout = timeouts[1];
+>> +       else
+>> +               ret = -EINVAL;
+>> +
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(watchdog_init_pretimeout);
+>> +
+>>   /**
+>>    * watchdog_register_device() - register a watchdog device
+>>    * @wdd: watchdog device
+>> @@ -119,6 +184,7 @@ int watchdog_register_device(struct watchdog_device
+>> *wdd)
+>>         if (wdd->ops->start == NULL || wdd->ops->stop == NULL)
+>>                 return -EINVAL;
+>>
+>> +       watchdog_check_min_max_pretimeout(wdd);
+>>         watchdog_check_min_max_timeout(wdd);
+>>
+>>         /*
+>> diff --git a/drivers/watchdog/watchdog_dev.c
+>> b/drivers/watchdog/watchdog_dev.c
+>> index 6aaefba..b519257 100644
+>> --- a/drivers/watchdog/watchdog_dev.c
+>> +++ b/drivers/watchdog/watchdog_dev.c
+>> @@ -218,6 +218,38 @@ out_timeout:
+>>   }
+>>
+>>   /*
+>> + *     watchdog_set_pretimeout: set the watchdog timer pretimeout
+>> + *     @wddev: the watchdog device to set the timeout for
+>> + *     @pretimeout: pretimeout to set in seconds
+>> + */
+>> +
+>> +static int watchdog_set_pretimeout(struct watchdog_device *wddev,
+>> +                                  unsigned int pretimeout)
+>> +{
+>> +       int err;
+>> +
+>> +       if (!wddev->ops->set_pretimeout ||
+>> +           !(wddev->info->options & WDIOF_PRETIMEOUT))
+>> +               return -EOPNOTSUPP;
+>> +
+>> +       if (watchdog_pretimeout_invalid(wddev, pretimeout))
+>> +               return -EINVAL;
+>> +
+>> +       mutex_lock(&wddev->lock);
+>> +
+>> +       if (test_bit(WDOG_UNREGISTERED, &wddev->status)) {
+>> +               err = -ENODEV;
+>> +               goto out_pretimeout;
+>> +       }
+>> +
+>> +       err = wddev->ops->set_pretimeout(wddev, pretimeout);
+>> +
+>> +out_pretimeout:
+>> +       mutex_unlock(&wddev->lock);
+>> +       return err;
+>> +}
+>> +
+>> +/*
+>>    *    watchdog_get_timeleft: wrapper to get the time left before a
+>> reboot
+>>    *    @wddev: the watchdog device to get the remaining time from
+>>    *    @timeleft: the time that's left
+>> @@ -388,6 +420,22 @@ static long watchdog_ioctl(struct file *file,
+>> unsigned int cmd,
+>>                 if (wdd->timeout == 0)
+>>                         return -EOPNOTSUPP;
+>>                 return put_user(wdd->timeout, p);
+>> +       case WDIOC_SETPRETIMEOUT:
+>> +               if (get_user(val, p))
+>> +                       return -EFAULT;
+>> +               err = watchdog_set_pretimeout(wdd, val);
+>> +               if (err < 0)
+>> +                       return err;
+>> +               /* If the watchdog is active then we send a keepalive ping
+>> +                * to make sure that the watchdog keep's running (and if
+>
+>
+> s/keep's/keeps/
+
+Great thanks, typo
+
+>
+>> +                * possible that it takes the new timeout) */
+>
+>
+> Please use the common multi-line comment style (that it isn't used above is
+> not
+> an argument).
+
+yes, my bad, will fixed .
+
+>
+>
+>> +               watchdog_ping(wdd);
+>> +               /* Fall */
+>> +       case WDIOC_GETPRETIMEOUT:
+>> +               /* timeout == 0 means that we don't use the pretimeout */
+>> +               if (wdd->pretimeout == 0)
+>> +                       return -EOPNOTSUPP;
+>> +               return put_user(wdd->pretimeout, p);
+>>         case WDIOC_GETTIMELEFT:
+>>                 err = watchdog_get_timeleft(wdd, &val);
+>>                 if (err)
+>> diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+>> index a746bf5..f0a3c5b 100644
+>> --- a/include/linux/watchdog.h
+>> +++ b/include/linux/watchdog.h
+>> @@ -25,6 +25,7 @@ struct watchdog_device;
+>>    * @ping:     The routine that sends a keepalive ping to the watchdog
+>> device.
+>>    * @status:   The routine that shows the status of the watchdog device.
+>>    * @set_timeout:The routine for setting the watchdog devices timeout
+>> value.
+>> + * @set_pretimeout:The routine for setting the watchdog devices
+>> pretimeout value
+>>    * @get_timeleft:The routine that get's the time that's left before a
+>> reset.
+>>    * @ref:      The ref operation for dyn. allocated watchdog_device
+>> structs
+>>    * @unref:    The unref operation for dyn. allocated watchdog_device
+>> structs
+>> @@ -44,6 +45,7 @@ struct watchdog_ops {
+>>         int (*ping)(struct watchdog_device *);
+>>         unsigned int (*status)(struct watchdog_device *);
+>>         int (*set_timeout)(struct watchdog_device *, unsigned int);
+>> +       int (*set_pretimeout)(struct watchdog_device *, unsigned int);
+>>         unsigned int (*get_timeleft)(struct watchdog_device *);
+>>         void (*ref)(struct watchdog_device *);
+>>         void (*unref)(struct watchdog_device *);
+>> @@ -62,6 +64,9 @@ struct watchdog_ops {
+>>    * @timeout:  The watchdog devices timeout value.
+>>    * @min_timeout:The watchdog devices minimum timeout value.
+>>    * @max_timeout:The watchdog devices maximum timeout value.
+>> + * @pretimeout:        The watchdog devices pretimeout value.
+>> + * @min_pretimeout:The watchdog devices minimum pretimeout value.
+>> + * @max_pretimeout:The watchdog devices maximum pretimeout value.
+>>    * @driver-data:Pointer to the drivers private data.
+>>    * @lock:     Lock for watchdog core internal use only.
+>>    * @status:   Field that contains the devices internal status bits.
+>> @@ -86,6 +91,9 @@ struct watchdog_device {
+>>         unsigned int timeout;
+>>         unsigned int min_timeout;
+>>         unsigned int max_timeout;
+>> +       unsigned int pretimeout;
+>> +       unsigned int min_pretimeout;
+>> +       unsigned int max_pretimeout;
+>>         void *driver_data;
+>>         struct mutex lock;
+>>         unsigned long status;
+>> @@ -120,6 +128,14 @@ static inline bool watchdog_timeout_invalid(struct
+>> watchdog_device *wdd, unsigne
+>>                 (t < wdd->min_timeout || t > wdd->max_timeout));
+>>   }
+>>
+>> +/* Use the following function to check if a pretimeout value is invalid
+>> */
+>> +static inline bool watchdog_pretimeout_invalid(struct watchdog_device
+>> *wdd,
+>> +                                              unsigned int t)
+>> +{
+>> +       return ((wdd->max_pretimeout != 0) &&
+>> +               (t < wdd->min_pretimeout || t > wdd->max_pretimeout));
+>> +}
+>> +
+>>   /* Use the following functions to manipulate watchdog driver specific
+>> data */
+>>   static inline void watchdog_set_drvdata(struct watchdog_device *wdd,
+>> void *data)
+>>   {
+>> @@ -134,6 +150,9 @@ static inline void *watchdog_get_drvdata(struct
+>> watchdog_device *wdd)
+>>   /* drivers/watchdog/watchdog_core.c */
+>>   extern int watchdog_init_timeout(struct watchdog_device *wdd,
+>>                                   unsigned int timeout_parm, struct device
+>> *dev);
+>> +extern int watchdog_init_pretimeout(struct watchdog_device *wdd,
+>> +                                   unsigned int pretimeout_parm,
+>> +                                   struct device *dev);
+>
+>
+> Please drop the 'extern'. Guess it may be time to clean up the watchdog core
+> code ;-).
+
+yes, you are right, but in different patchset ??
+
+>
+> Thanks,
+> Guenter
+>
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
