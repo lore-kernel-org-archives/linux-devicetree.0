@@ -1,17 +1,20 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v9 4/4] crypto: Add Allwinner Security
- System crypto accelerator
-Date: Sun, 17 May 2015 12:48:11 +0200
-Message-ID: <20150517124811.797fab32@bbrezillon>
-References: <1431608341-10936-1-git-send-email-clabbe.montjoie@gmail.com>
-	<1431608341-10936-5-git-send-email-clabbe.montjoie@gmail.com>
-	<20150517104508.468b032f@bbrezillon>
-	<20150517103440.GA7800@gondor.apana.org.au>
-Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/6] clk: sunxi: Add H3 clocks support
+Date: Fri, 15 May 2015 14:49:34 +0200
+Message-ID: <20150515124934.GV4004@lukather>
+References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com>
+ <1430904693-1404-3-git-send-email-jenskuske@gmail.com>
+ <20150509112718.GT11057@lukather>
+ <554F38FA.2030005@gmail.com>
+ <20150512144428.GL10961@lukather>
+ <CAGb2v663+LrYo0Ke7kDwUnKpyfyxCR6+F2ws2gRaV1D6KFnAyA@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB3PD4GVAKGQE5NZOA6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150517103440.GA7800-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xMJbWctQEcNQiBqK"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB24A4KVAKGQEDJ4UG7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v663+LrYo0Ke7kDwUnKpyfyxCR6+F2ws2gRaV1D6KFnAyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -19,35 +22,166 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Herbert,
+--xMJbWctQEcNQiBqK
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Sun, 17 May 2015 18:34:40 +0800
-Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> wrote:
-
-> On Sun, May 17, 2015 at 10:45:08AM +0200, Boris Brezillon wrote:
+On Thu, May 14, 2015 at 01:14:25PM +0800, Chen-Yu Tsai wrote:
+> On Tue, May 12, 2015 at 10:44 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
 > >
-> > From my POV this is not asynchronous at all (see my comments inline),
-> > but maybe Herbert can confirm that.
+> > On Sun, May 10, 2015 at 12:54:50PM +0200, Jens Kuske wrote:
+> >> On 09/05/15 13:27, Maxime Ripard wrote:
+> >> > On Wed, May 06, 2015 at 11:31:29AM +0200, Jens Kuske wrote:
+> >> >> The H3 clock control unit is similar to the those of other sun8i family
+> >> >> members like the A23.
+> >> >>
+> >> >> The AHB1 gates got split up into AHB1 and AHB2, with AHB2 clock source
+> >> >> being muxable between AHB1 and PLL6/2, but still sharing gate registers.
+> >> >> The documentation isn't totally clear about which devices belong to
+> >> >> AHB2 now, especially USB EHIC/OHIC, so it is mostly based on Allwinner
+> >> >> kernel source code.
+> >> >>
+> >> >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> >> ---
+> >> >>  Documentation/devicetree/bindings/clock/sunxi.txt |  7 ++++
+> >> >>  drivers/clk/sunxi/clk-sunxi.c                     | 46 ++++++++++++++++++++++-
+> >> >>  2 files changed, 52 insertions(+), 1 deletion(-)
+> >> >>
+> >> >> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> >> >> index 4fa11af..4eeb893 100644
+> >> >> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> >> >> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> >> >> @@ -14,6 +14,8 @@ Required properties:
+> >> >>    "allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
+> >> >>    "allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
+> >> >>    "allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
+> >> >> +  "allwinner,sun8i-h3-pll6-clk" - for the PLL6 clock on H3
+> >> >> +  "allwinner,sun8i-h3-pll8-clk" - for the PLL8 clock on H3
+> >> >>    "allwinner,sun9i-a80-gt-clk" - for the GT bus clock on A80
+> >> >>    "allwinner,sun4i-a10-cpu-clk" - for the CPU multiplexer clock
+> >> >>    "allwinner,sun4i-a10-axi-clk" - for the AXI clock
+> >> >> @@ -28,8 +30,11 @@ Required properties:
+> >> >>    "allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
+> >> >>    "allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
+> >> >>    "allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
+> >> >> +  "allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
+> >> >>    "allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
+> >> >>    "allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
+> >> >> +  "allwinner,sun8i-h3-ahb1-gates-clk" - for the AHB1 gates on H3
+> >> >> +  "allwinner,sun8i-h3-ahb2-gates-clk" - for the AHB2 gates on H3
+> >> >>    "allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
+> >> >>    "allwinner,sun9i-a80-ahb1-gates-clk" - for the AHB1 gates on A80
+> >> >>    "allwinner,sun9i-a80-ahb2-gates-clk" - for the AHB2 gates on A80
+> >> >> @@ -52,8 +57,10 @@ Required properties:
+> >> >>    "allwinner,sun6i-a31-apb1-gates-clk" - for the APB1 gates on A31
+> >> >>    "allwinner,sun7i-a20-apb1-gates-clk" - for the APB1 gates on A20
+> >> >>    "allwinner,sun8i-a23-apb1-gates-clk" - for the APB1 gates on A23
+> >> >> +  "allwinner,sun8i-h3-apb1-gates-clk" - for the APB1 gates on H3
+> >> >>    "allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
+> >> >>    "allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+> >> >> +  "allwinner,sun8i-h3-apb2-gates-clk" - for the APB2 gates on H3
+> >> >>    "allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
+> >> >>    "allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+> >> >>    "allwinner,sun4i-a10-mmc-clk" - for the MMC clock
+> >> >> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> >> >> index 7e1e2bd..152a1f7 100644
+> >> >> --- a/drivers/clk/sunxi/clk-sunxi.c
+> >> >> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> >> >> @@ -727,6 +727,12 @@ static const struct factors_data sun5i_a13_ahb_data __initconst = {
+> >> >>    .getter = sun5i_a13_get_ahb_factors,
+> >> >>  };
+> >> >>
+> >> >> +static const struct factors_data sun8i_h3_pll8_data __initconst = {
+> >> >> +  .enable = 31,
+> >> >> +  .table = &sun6i_a31_pll6_config,
+> >> >> +  .getter = sun6i_a31_get_pll6_factors,
+> >> >> +};
+> >> >
+> >> > This looks like it's just another instance of the A31 pll6.
+> >> >
+> >> > In such a case, we don't need to declare a new driver, just reuse the
+> >> > same compatible.
+> >>
+> >> If I reuse pll6 for pll8 I get errors because of the .name = "pll6x2"
+> >> field, already existing clock or something like that.
+> >
+> > Damn. You're obviously right...
 > 
-> Well we don't actually require drivers to be asynchronous.  It is
-> obviously the preferred method but some hardware may not be capable
-> of that.
+> I think I have a solution for this.
+> 
+> The current divs clock setup just passes the factors_data directly to
+> sunxi_factors_register(). What if it did a copy, read the _correct_
+> name from the DT (since it knows the index) and put it in the copy.
+> 
+> How does that sound?
 
-Yep, but then they shouldn't be declared with CRYPTO_ALG_ASYNC and as an
-ablkcipher algorithm (*Asynchronous* Block Cipher), right ?
+That sounds great, but what name would you take from the DT? The first
+of clock-output-names? the last one? a random one?
 
-Regarding the capabilities of this crypto engine, from what I've seen,
-it is definitely capable of doing asynchronous requests ;-).
+> 
+> > Could you add a TODO comment on top then? just so that we know that we
+> > need to merge this clock with pll6?
+> >
+> >> (And pll8 doesn't even have a x2 version)
+> >
+> > Judging by the H3 datasheet, it does.
+> >
+> >> >>  static const struct factors_data sun4i_apb1_data __initconst = {
+> >> >>    .mux = 24,
+> >> >>    .muxmask = BIT(1) | BIT(0),
+> >> >> @@ -777,6 +783,10 @@ static const struct mux_data sun6i_a31_ahb1_mux_data __initconst = {
+> >> >>    .shift = 12,
+> >> >>  };
+> >> >>
+> >> >> +static const struct mux_data sun8i_h3_ahb2_mux_data __initconst = {
+> >> >> +  .shift = 0,
+> >> >> +};
+> >> >> +
+> >> >>  static void __init sunxi_mux_clk_setup(struct device_node *node,
+> >> >>                                   struct mux_data *data)
+> >> >>  {
+> >> >> @@ -892,7 +902,7 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
+> >> >>   * sunxi_gates_clk_setup() - Setup function for leaf gates on clocks
+> >> >>   */
+> >> >>
+> >> >> -#define SUNXI_GATES_MAX_SIZE      64
+> >> >> +#define SUNXI_GATES_MAX_SIZE      160
+> >> >>
+> >> >>  struct gates_data {
+> >> >>    DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
+> >> >> @@ -926,6 +936,10 @@ static const struct gates_data sun8i_a23_ahb1_gates_data __initconst = {
+> >> >>    .mask = {0x25386742, 0x2505111},
+> >> >>  };
+> >> >>
+> >> >> +static const struct gates_data sun8i_h3_ahb1_gates_data __initconst = {
+> >> >> +  .mask = {0x1fbc6760, 0x00701b39, 0x00000000, 0x00000000, 0x00000081},
+> >> >> +};
+> >> >> +
+> >> >
+> >> > Judging from the user manual, there's a few gates in those 0
+> >> > registers, is this normal that you don't support them?
+> >>
+> >> They are holes for apb1 and apb2. Which is actually pretty ugly.
+> >
+> > Ah, right.
+> >
+> > So I guess it's completely related to the discussion below.
+> 
+> If the holes are really big, I guess you could split ahb and apb?
 
-Best Regards,
+It's actually already split. The holes in the ahb1 registers are for
+the apb clocks.
 
-Boris
+Maxime
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
+--xMJbWctQEcNQiBqK--
