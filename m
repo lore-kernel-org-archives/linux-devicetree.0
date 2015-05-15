@@ -1,42 +1,31 @@
 From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v9 4/4] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Fri, 15 May 2015 14:52:22 +0800
-Message-ID: <20150515065222.GA16808@gondor.apana.org.au>
-References: <1431608341-10936-1-git-send-email-clabbe.montjoie@gmail.com>
- <1431608341-10936-5-git-send-email-clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v2] crypto: omap-sham: Check for return value from
+ pm_runtime_get_sync
+Date: Fri, 15 May 2015 15:02:29 +0800
+Message-ID: <20150515070229.GA16939@gondor.apana.org.au>
+References: <1424958600-18881-5-git-send-email-pali.rohar@gmail.com>
+ <1425808861-17004-1-git-send-email-pali.rohar@gmail.com>
+ <201505142340.37649@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1431608341-10936-5-git-send-email-clabbe.montjoie@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: LABBE Corentin <clabbe.montjoie@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, joe@perches.com, tj@kernel.org, arnd@arndb.de, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
+In-Reply-To: <201505142340.37649@pali>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 14, 2015 at 02:59:01PM +0200, LABBE Corentin wrote:
->
-> +int sun4i_hash_export(struct ahash_request *areq, void *out)
-> +{
-> +	struct sun4i_req_ctx *op = ahash_request_ctx(areq);
-> +
-> +	memcpy(out, op, sizeof(struct sun4i_req_ctx));
-> +	return 0;
-> +}
-> +
-> +int sun4i_hash_import(struct ahash_request *areq, const void *in)
-> +{
-> +	struct sun4i_req_ctx *op = ahash_request_ctx(areq);
-> +
-> +	memcpy(op, in, sizeof(struct sun4i_req_ctx));
+On Thu, May 14, 2015 at 11:40:37PM +0200, Pali Roh=E1r wrote:
+> On Sunday 08 March 2015 11:01:01 Pali Roh=E1r wrote:
+> > Function pm_runtime_get_sync could fail and we need to check return
+> > value to prevent kernel crash.
+> >=20
+> > Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
 
-This is very wrong.  You're importing an arbitrary ss pointer.  The
-whole point of having an import function instead of just a simple
-memcpy is to deal with such problems.
-
-Cheers,
--- 
+Applied.
+--=20
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
 PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
