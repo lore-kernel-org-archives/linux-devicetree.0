@@ -1,187 +1,159 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/6] clk: sunxi: Add H3 clocks support
-Date: Fri, 15 May 2015 14:49:34 +0200
-Message-ID: <20150515124934.GV4004@lukather>
-References: <1430904693-1404-1-git-send-email-jenskuske@gmail.com>
- <1430904693-1404-3-git-send-email-jenskuske@gmail.com>
- <20150509112718.GT11057@lukather>
- <554F38FA.2030005@gmail.com>
- <20150512144428.GL10961@lukather>
- <CAGb2v663+LrYo0Ke7kDwUnKpyfyxCR6+F2ws2gRaV1D6KFnAyA@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock
+ support
+Date: Fri, 15 May 2015 16:12:16 +0200
+Message-ID: <20150515141216.GW4004@lukather>
+References: <20150408155705.GF26727@lukather>
+ <20150408172344.GH5162@x1>
+ <20150422093446.GA28007@lukather>
+ <20150429141751.GR9169@x1>
+ <20150429202332.GG6062@lukather>
+ <20150430095722.GB1815@x1>
+ <20150501053406.GI4946@pengutronix.de>
+ <20150501064405.GB4047@x1>
+ <20150507212052.GM11057@lukather>
+ <20150508072246.GH16220@x1>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xMJbWctQEcNQiBqK"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB24A4KVAKGQEDJ4UG7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="CpBQqYjq/d0HQTAP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v663+LrYo0Ke7kDwUnKpyfyxCR6+F2ws2gRaV1D6KFnAyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150508072246.GH16220@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---xMJbWctQEcNQiBqK
-Content-Type: text/plain; charset=UTF-8
+
+--CpBQqYjq/d0HQTAP
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 14, 2015 at 01:14:25PM +0800, Chen-Yu Tsai wrote:
-> On Tue, May 12, 2015 at 10:44 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Sun, May 10, 2015 at 12:54:50PM +0200, Jens Kuske wrote:
-> >> On 09/05/15 13:27, Maxime Ripard wrote:
-> >> > On Wed, May 06, 2015 at 11:31:29AM +0200, Jens Kuske wrote:
-> >> >> The H3 clock control unit is similar to the those of other sun8i family
-> >> >> members like the A23.
-> >> >>
-> >> >> The AHB1 gates got split up into AHB1 and AHB2, with AHB2 clock source
-> >> >> being muxable between AHB1 and PLL6/2, but still sharing gate registers.
-> >> >> The documentation isn't totally clear about which devices belong to
-> >> >> AHB2 now, especially USB EHIC/OHIC, so it is mostly based on Allwinner
-> >> >> kernel source code.
-> >> >>
-> >> >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/clock/sunxi.txt |  7 ++++
-> >> >>  drivers/clk/sunxi/clk-sunxi.c                     | 46 ++++++++++++++++++++++-
-> >> >>  2 files changed, 52 insertions(+), 1 deletion(-)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-> >> >> index 4fa11af..4eeb893 100644
-> >> >> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> >> >> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> >> >> @@ -14,6 +14,8 @@ Required properties:
-> >> >>    "allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
-> >> >>    "allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
-> >> >>    "allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
-> >> >> +  "allwinner,sun8i-h3-pll6-clk" - for the PLL6 clock on H3
-> >> >> +  "allwinner,sun8i-h3-pll8-clk" - for the PLL8 clock on H3
-> >> >>    "allwinner,sun9i-a80-gt-clk" - for the GT bus clock on A80
-> >> >>    "allwinner,sun4i-a10-cpu-clk" - for the CPU multiplexer clock
-> >> >>    "allwinner,sun4i-a10-axi-clk" - for the AXI clock
-> >> >> @@ -28,8 +30,11 @@ Required properties:
-> >> >>    "allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
-> >> >>    "allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
-> >> >>    "allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
-> >> >> +  "allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
-> >> >>    "allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
-> >> >>    "allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
-> >> >> +  "allwinner,sun8i-h3-ahb1-gates-clk" - for the AHB1 gates on H3
-> >> >> +  "allwinner,sun8i-h3-ahb2-gates-clk" - for the AHB2 gates on H3
-> >> >>    "allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
-> >> >>    "allwinner,sun9i-a80-ahb1-gates-clk" - for the AHB1 gates on A80
-> >> >>    "allwinner,sun9i-a80-ahb2-gates-clk" - for the AHB2 gates on A80
-> >> >> @@ -52,8 +57,10 @@ Required properties:
-> >> >>    "allwinner,sun6i-a31-apb1-gates-clk" - for the APB1 gates on A31
-> >> >>    "allwinner,sun7i-a20-apb1-gates-clk" - for the APB1 gates on A20
-> >> >>    "allwinner,sun8i-a23-apb1-gates-clk" - for the APB1 gates on A23
-> >> >> +  "allwinner,sun8i-h3-apb1-gates-clk" - for the APB1 gates on H3
-> >> >>    "allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
-> >> >>    "allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
-> >> >> +  "allwinner,sun8i-h3-apb2-gates-clk" - for the APB2 gates on H3
-> >> >>    "allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
-> >> >>    "allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
-> >> >>    "allwinner,sun4i-a10-mmc-clk" - for the MMC clock
-> >> >> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> >> >> index 7e1e2bd..152a1f7 100644
-> >> >> --- a/drivers/clk/sunxi/clk-sunxi.c
-> >> >> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> >> >> @@ -727,6 +727,12 @@ static const struct factors_data sun5i_a13_ahb_data __initconst = {
-> >> >>    .getter = sun5i_a13_get_ahb_factors,
-> >> >>  };
-> >> >>
-> >> >> +static const struct factors_data sun8i_h3_pll8_data __initconst = {
-> >> >> +  .enable = 31,
-> >> >> +  .table = &sun6i_a31_pll6_config,
-> >> >> +  .getter = sun6i_a31_get_pll6_factors,
-> >> >> +};
-> >> >
-> >> > This looks like it's just another instance of the A31 pll6.
-> >> >
-> >> > In such a case, we don't need to declare a new driver, just reuse the
-> >> > same compatible.
-> >>
-> >> If I reuse pll6 for pll8 I get errors because of the .name = "pll6x2"
-> >> field, already existing clock or something like that.
-> >
-> > Damn. You're obviously right...
-> 
-> I think I have a solution for this.
-> 
-> The current divs clock setup just passes the factors_data directly to
-> sunxi_factors_register(). What if it did a copy, read the _correct_
-> name from the DT (since it knows the index) and put it in the copy.
-> 
-> How does that sound?
+On Fri, May 08, 2015 at 08:22:46AM +0100, Lee Jones wrote:
+> On Thu, 07 May 2015, Maxime Ripard wrote:
+>=20
+> > On Fri, May 01, 2015 at 07:44:05AM +0100, Lee Jones wrote:
+> > > > > Does Sascha's antidote patch change your opinion?  We can use DT =
+to
+> > > > > declare critical clocks, and in the rare case of the introduction=
+ of a
+> > > > > new DDRFreq-like feature, which doesn't adapt the DT will still be
+> > > > > able to unlock the criticalness of the clock and use it as expect=
+ed?
+> > > >=20
+> > > > Honestly I'm not very fond of declaring these in the device tree, b=
+ut
+> > >=20
+> > > I know why you guys are saying that, but I'd like you to understand
+> > > the reasons for me pushing for this.  Rather than be being deliberate=
+ly
+> > > obtuse, I'm thinking of the mess that not having this stuff in DT will
+> > > cause for clock implementations like ours, which describe more of a
+> > > framework than a description.
+> >=20
+> > The DT should dictate our implementation, not the other way around. I
+> > know that we are pretty bad at doing this, and that there's some clear
+> > abstraction violations already widely used, but really, using this
+> > kind of argument is pretty bad.
+>=20
+> I guess then you haven't correctly understood my argument, as that's
+> exactly what's happened.  We have a DT implementation which accurately
+> describes the clock architecture on each of our platforms. The
+> associated C code in drivers/clk/ is written to extract the
+> information from it, the hardware description and register the clocks
+> properly.
+>=20
+> What makes you think differently?
+>=20
+> > The DT can (and is) shared between several OS and bootloaders, what if
+> > the *BSDs or barebox, or whatever, guys come up with the exact same
+> > argument to make a completely different binding?
+> >=20
+> > We'd end up either in a deadlock, or forcing our solution down the
+> > throat to some other system. I'm not sure any of these outcomes is
+> > something we want.
+>=20
+> Not sure I understand why this is different from any other binding?
 
-That sounds great, but what name would you take from the DT? The first
-of clock-output-names? the last one? a random one?
+The other bindings don't dictate the OS behaviour, this one does.
 
-> 
-> > Could you add a TODO comment on top then? just so that we know that we
-> > need to merge this clock with pll6?
-> >
-> >> (And pll8 doesn't even have a x2 version)
-> >
-> > Judging by the H3 datasheet, it does.
-> >
-> >> >>  static const struct factors_data sun4i_apb1_data __initconst = {
-> >> >>    .mux = 24,
-> >> >>    .muxmask = BIT(1) | BIT(0),
-> >> >> @@ -777,6 +783,10 @@ static const struct mux_data sun6i_a31_ahb1_mux_data __initconst = {
-> >> >>    .shift = 12,
-> >> >>  };
-> >> >>
-> >> >> +static const struct mux_data sun8i_h3_ahb2_mux_data __initconst = {
-> >> >> +  .shift = 0,
-> >> >> +};
-> >> >> +
-> >> >>  static void __init sunxi_mux_clk_setup(struct device_node *node,
-> >> >>                                   struct mux_data *data)
-> >> >>  {
-> >> >> @@ -892,7 +902,7 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
-> >> >>   * sunxi_gates_clk_setup() - Setup function for leaf gates on clocks
-> >> >>   */
-> >> >>
-> >> >> -#define SUNXI_GATES_MAX_SIZE      64
-> >> >> +#define SUNXI_GATES_MAX_SIZE      160
-> >> >>
-> >> >>  struct gates_data {
-> >> >>    DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
-> >> >> @@ -926,6 +936,10 @@ static const struct gates_data sun8i_a23_ahb1_gates_data __initconst = {
-> >> >>    .mask = {0x25386742, 0x2505111},
-> >> >>  };
-> >> >>
-> >> >> +static const struct gates_data sun8i_h3_ahb1_gates_data __initconst = {
-> >> >> +  .mask = {0x1fbc6760, 0x00701b39, 0x00000000, 0x00000000, 0x00000081},
-> >> >> +};
-> >> >> +
-> >> >
-> >> > Judging from the user manual, there's a few gates in those 0
-> >> > registers, is this normal that you don't support them?
-> >>
-> >> They are holes for apb1 and apb2. Which is actually pretty ugly.
-> >
-> > Ah, right.
-> >
-> > So I guess it's completely related to the discussion below.
-> 
-> If the holes are really big, I guess you could split ahb and apb?
+> > > The providers in drivers/clock/st are blissfully ignorant of platform
+> > > specifics.  Per-platform configuration is described in DT.
+> >=20
+> > Maybe they just need a small amount of education then.
+>=20
+> Easy to say (and implement), but that means duplicating the hardware
+> description in DT, which is not a design win.
 
-It's actually already split. The holes in the ahb1 registers are for
-the apb clocks.
+Except that clock-always-on isn't an hardware information, it's what
+you expect the OS to do with this clock. The fact that it's a critical
+clock, would be way better, as it gives the OS the information that
+this clock should be treated with care, and *possibly* never disable
+it, but still leaves the option open to do whatever it needs to do
+with it if it knows what it's doing.
+
+> > > So we'd have 2 options to use a C-only based API; 1) duplicate
+> > > platform information in drivers/clk/st, or 2) supply a vendor
+> > > specific st,critical-clocks binding, pull out those references then
+> > > run them though the aforementioned framework.  It is my opinion that
+> > > neither of those methods are desirable.
+> >=20
+> > 3) have a generic solution for this in the clock framework, like Mike
+> > suggested.
+>=20
+> Did you actually read and understand the points here?  If not, just
+> say so and I'll figure out a way to explain the issues better.  3) is
+> not an alternative to 1) and 2).  Instead 1) and 2) imply 3).
+
+Ok, I misunderstood what you meant then, my bad.
+
+> I *want* to have a generic solution, and have made several passes at
+> writing one.  The question here is; what does that look like?  Some
+> people don't like the idea of having it in DT due to possible abuse of
+> the property.  But we can't have anything only in C because our clock
+> implementation (rightly) doesn't know or (shouldn't have to) care
+> about platform specifics.
+
+This is exactly the point I was using in my previous argument. You're
+using the state of your code and implementation ("our clock
+implementation doesn't know about platform specifics") to push for a
+DT binding ("I want to use clock-always-on or st,critical-clocks").
+
+And you *can* have such a description in your code. You just don't
+want to.
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---xMJbWctQEcNQiBqK--
+
+--CpBQqYjq/d0HQTAP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVVf7AAAoJEBx+YmzsjxAgxkUP/A6nL3BvHeyRpGaVjMy4AduC
+vHnq1mQNGKldvLB1NxCrXlZFU3bKIKIMxPyXNOYjHyRCaxSfrKuOUeBIIFMkIe+M
+ZrkOmlvyiA7lidv31htWhsbR+nubVgS8F+1IOzA4sCFU7YJ1RVCZZiQbPLgsxWaK
+Ryc4KPnlTH6r708i4AInPICo2/sjccF6+AfC0gWO6LW7sEFlyoNv4MU+lqJttNdn
+IRA82Fb/pFEEmmMPHkGNOVJQJIBcacg/4FM5VvIjXsX2zInwZMPqBj+9VDQrepX3
+5+iZP+knIYDGw6vJLDBtuZVE00YEVeXoG7EPF5r3nN99JdfgyllvCibWxylMPi2w
+m5PhEsAzbGOcZADDmTM//tWS0sBaWD9D7Vrds9jnSSx7qnexcDqol4CVh3ZBEt9q
+xenF8GwznGX8U6YaFf8YxpWFCHqy+p5rladqwX4UV+M5G8+3Xvad+8EiDhi3f7bx
+EzLc//hsCazwJEXW0qeNoVA0xyOQw3W0QOsqOrgIEr8CWRTDUjC85cMCX9ZQ1XhW
+mGlCKFQR9pI4KCSzyUVFF7wLaRJ3t2fbKacl6npK0fCuuI5h8KwFva/6b27Lmdhp
+6jN+elaoM2BHaCyhLKYCqwzVSEAzGVfDavnP4kAsLZaAWUD9pEPWuLQLz9D4SpII
+Kav2iguGBeCBXdTtuOGq
+=6QDu
+-----END PGP SIGNATURE-----
+
+--CpBQqYjq/d0HQTAP--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
