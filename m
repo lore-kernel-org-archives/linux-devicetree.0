@@ -1,36 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/4] edac, altera: Generalize driver to use DT Memory size
-Date: Fri, 15 May 2015 13:00:42 +0200
-Message-ID: <2878194.MyPRW1b9ti@wuerfel>
-References: <1431553787-27741-1-git-send-email-tthayer@opensource.altera.com> <1431553787-27741-2-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: fu.wei@linaro.org
+Subject: [PATCH 0/6] Watchdog: introdouce ARM SBSA watchdog driver
+Date: Fri, 15 May 2015 19:08:04 +0800
+Message-ID: <1431688090-2145-1-git-send-email-fu.wei@linaro.org>
+References: <=fu.wei@linaro.org>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1431553787-27741-2-git-send-email-tthayer@opensource.altera.com>
+In-Reply-To: <=fu.wei@linaro.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-edac@vger.kernel.org
+To: Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, Fu Wei <fu.wei@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 May 2015 16:49:44 tthayer@opensource.altera.com wrote:
-> -static u32 altr_sdram_get_total_mem_size(struct regmap *mc_vbase)
-> +/* Get total memory size from Open Firmware DTB */
-> +static unsigned long get_total_mem(void)
->  {
-> -       u32 size, read_reg, row, bank, col, cs, width;
-> +       struct device_node *np = NULL;
-> +       const unsigned int *reg, *reg_end;
-> +       int len, sw, aw;
-> +       unsigned long start, size, total_mem;
->  
-> -       if (regmap_read(mc_vbase, DRAMADDRW_OFST, &read_reg) < 0)
-> +       np = of_find_node_by_type(NULL, "memory");
-> +       if (!np)
->                 return 0;
+From: Fu Wei <fu.wei@linaro.org>
 
-There can be multiple memory nodes, I think you need to have a loop
-using for_each_node_by_type.
+This patchset:
 
+    (1)Introdouces Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+    for FDT info of SBSA Generic Watchdog, and give two examples of
+    adding SBSA Generic Watchdog device node into the dts files:
+    foundation-v8.dts and amd-seattle-soc.dtsi
 
-	Arnd
+    (2)Introdouce "pretimeout" into the watchdog framework
+
+    (3)Introdouces ARM SBSA watchdog driver
+        a.Use linux kernel watchdog framework
+        b.Work with FDT on ARM64
+        c.Use "pretimeout" in watchdog framework
+        d.In first timeout(WS0), do panic to save system context
+        e.Support geting timeout and pretimeout from
+          parameter and FDT at the driver init stage
+
+    (4)Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
+       and create a platform device with that information
+       This platform device can be used by This Watchdog driver
+
+This patchset has been tested with watchdog daemon
+(ACPI/FDT, module/build-in) on the following platforms:
+    (1)ARM Foundation v8 model
+    (2)AMD Seattle B0
+
+Fu Wei (6):
+  Documentation: add sbsa-gwdt.txt documentation
+  ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
+  ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
+  Watchdog: introdouce "pretimeout" into framework
+  Watchdog: introdouce ARM SBSA watchdog driver
+  ACPI: import watchdog info of GTDT into platform device
+
+ .../devicetree/bindings/watchdog/sbsa-gwdt.txt     |  36 ++
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi       |  11 +
+ arch/arm64/boot/dts/arm/foundation-v8.dts          |  10 +
+ arch/arm64/kernel/acpi.c                           | 136 +++++
+ drivers/watchdog/Kconfig                           |  10 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/sbsa_gwdt.c                       | 553 +++++++++++++++++++++
+ drivers/watchdog/watchdog_core.c                   |  66 +++
+ drivers/watchdog/watchdog_dev.c                    |  48 ++
+ include/linux/watchdog.h                           |  19 +
+ 10 files changed, 890 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+ create mode 100644 drivers/watchdog/sbsa_gwdt.c
+
+-- 
+1.9.1
+
