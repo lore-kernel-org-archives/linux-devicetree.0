@@ -1,414 +1,278 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] rtc: add rtc-lpc24xx driver
-Date: Fri, 15 May 2015 15:25:05 +0200
-Message-ID: <1431696306-19093-2-git-send-email-manabian@gmail.com>
-References: <1431696306-19093-1-git-send-email-manabian@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431696306-19093-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, wellsk40-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
+Date: Fri, 15 May 2015 06:33:57 -0700
+Message-ID: <5555F5C5.8050806@roeck-us.net>
+References: <=fu.wei@linaro.org> <1431689090-3125-1-git-send-email-fu.wei@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431689090-3125-1-git-send-email-fu.wei@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net
 List-Id: devicetree@vger.kernel.org
 
-Add driver for the RTC found on NXP LPC24xx/178x/18xx/43xx devices.
-The RTC provides calendar and clock functionality together with
-periodic tick and alarm interrupt support.
+On 05/15/2015 04:24 AM, fu.wei@linaro.org wrote:
+> From: Fu Wei <fu.wei@linaro.org>
+>
+> Reasons:
+> (1)kernel already has two watchdog drivers are using "pretimeout":
+> 	drivers/char/ipmi/ipmi_watchdog.c
+> 	drivers/watchdog/kempld_wdt.c(but the definition is different)
+> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
+>
+> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+> ---
+>   drivers/watchdog/watchdog_core.c | 66 ++++++++++++++++++++++++++++++++++++++++
+>   drivers/watchdog/watchdog_dev.c  | 48 +++++++++++++++++++++++++++++
+>   include/linux/watchdog.h         | 19 ++++++++++++
+>   3 files changed, 133 insertions(+)
+>
+> diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
+> index cec9b55..6ca9578 100644
+> --- a/drivers/watchdog/watchdog_core.c
+> +++ b/drivers/watchdog/watchdog_core.c
+> @@ -54,6 +54,14 @@ static void watchdog_check_min_max_timeout(struct watchdog_device *wdd)
+>   		wdd->min_timeout = 0;
+>   		wdd->max_timeout = 0;
+>   	}
+> +	if (wdd->min_pretimeout && wdd->min_timeout < wdd->min_pretimeout) {
+> +		pr_info("Invalid min timeout, resetting to min pretimeout!\n");
+> +		wdd->min_timeout = wdd->min_pretimeout;
+> +	}
+> +	if (wdd->max_pretimeout && wdd->max_timeout < wdd->max_pretimeout) {
+> +		pr_info("Invalid max timeout, resetting to max pretimeout!\n");
+> +		wdd->max_timeout = wdd->max_pretimeout;
+> +	}
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/rtc/Kconfig       |  13 ++
- drivers/rtc/Makefile      |   1 +
- drivers/rtc/rtc-lpc24xx.c | 341 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 355 insertions(+)
- create mode 100644 drivers/rtc/rtc-lpc24xx.c
+I am a bit concerned about the context dependency introduced here. If someone calls
+_init_pretimeout after calling init_timeout, this may result in still invalid timeout
+values.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 6149ae01e11f..279342e8168b 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1427,6 +1427,19 @@ config RTC_DRV_JZ4740
- 	  This driver can also be buillt as a module. If so, the module
- 	  will be called rtc-jz4740.
- 
-+config RTC_DRV_LPC24XX
-+	depends on ARCH_LPC18XX || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	depends on OF
-+	tristate "NXP LPC24xx RTC"
-+	help
-+	  This enables support for the NXP RTC found which can be found on
-+	  LPC24xx/178x/18xx/43xx devices.
-+
-+	  If you have one of the devices above enable this driver to use
-+	  the hardware RTC. This driver can also be buillt as a module. If
-+	  so, the module will be called rtc-lpc24xx.
-+
- config RTC_DRV_LPC32XX
- 	depends on ARCH_LPC32XX
- 	tristate "NXP LPC32XX RTC"
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index c31731c29762..8687a2e13247 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -73,6 +73,7 @@ obj-$(CONFIG_RTC_DRV_ISL12022)	+= rtc-isl12022.o
- obj-$(CONFIG_RTC_DRV_ISL12057)	+= rtc-isl12057.o
- obj-$(CONFIG_RTC_DRV_JZ4740)	+= rtc-jz4740.o
- obj-$(CONFIG_RTC_DRV_LP8788)	+= rtc-lp8788.o
-+obj-$(CONFIG_RTC_DRV_LPC24XX)	+= rtc-lpc24xx.o
- obj-$(CONFIG_RTC_DRV_LPC32XX)	+= rtc-lpc32xx.o
- obj-$(CONFIG_RTC_DRV_LOONGSON1)	+= rtc-ls1x.o
- obj-$(CONFIG_RTC_DRV_M41T80)	+= rtc-m41t80.o
-diff --git a/drivers/rtc/rtc-lpc24xx.c b/drivers/rtc/rtc-lpc24xx.c
-new file mode 100644
-index 000000000000..33caa00fd44f
---- /dev/null
-+++ b/drivers/rtc/rtc-lpc24xx.c
-@@ -0,0 +1,341 @@
-+/*
-+ * Driver for NXP LPC24xx/178x/18xx/43xx Real-Time Clock (RTC)
-+ *
-+ * Copyright (C) 2011 NXP Semiconductors
-+ * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
-+
-+/* LPC24xx RTC register offsets */
-+#define LPC24XX_ILR		0x00
-+#define LPC24XX_CTC		0x04
-+#define LPC24XX_CCR		0x08
-+#define LPC24XX_CIIR		0x0c
-+#define LPC24XX_AMR		0x10
-+#define LPC24XX_CTIME0		0x14
-+#define LPC24XX_CTIME1		0x18
-+#define LPC24XX_CTIME2		0x1c
-+#define LPC24XX_SEC		0x20
-+#define LPC24XX_MIN		0x24
-+#define LPC24XX_HOUR		0x28
-+#define LPC24XX_DOM		0x2c
-+#define LPC24XX_DOW		0x30
-+#define LPC24XX_DOY		0x34
-+#define LPC24XX_MONTH		0x38
-+#define LPC24XX_YEAR		0x3c
-+#define LPC24XX_ALSEC		0x60
-+#define LPC24XX_ALMIN		0x64
-+#define LPC24XX_ALHOUR		0x68
-+#define LPC24XX_ALDOM		0x6c
-+#define LPC24XX_ALDOW		0x70
-+#define LPC24XX_ALDOY		0x74
-+#define LPC24XX_ALMON		0x78
-+#define LPC24XX_ALYEAR		0x7c
-+
-+#define LPC24XX_RTCCIF		BIT(0)
-+#define LPC24XX_RTCALF		BIT(1)
-+
-+#define LPC24XX_CLKEN		BIT(0)
-+#define LPC24XX_CTCRST		BIT(1)
-+
-+#define LPC24XX_IMSEC		BIT(0)
-+#define LPC24XX_IMMIN		BIT(1)
-+#define LPC24XX_IMHOUR		BIT(2)
-+#define LPC24XX_IMDOM		BIT(3)
-+#define LPC24XX_IMDOW		BIT(4)
-+#define LPC24XX_IMDOY		BIT(5)
-+#define LPC24XX_IMMON		BIT(6)
-+#define LPC24XX_IMYEAR		BIT(7)
-+
-+#define LPC24XX_ALARM_DISABLE	0xff
-+
-+#define CT0_SECS(x)		(((x) >> 0)  & 0x3f)
-+#define CT0_MINS(x)		(((x) >> 8)  & 0x3f)
-+#define CT0_HOURS(x)		(((x) >> 16) & 0x1f)
-+#define CT0_DOW(x)		(((x) >> 24) & 0x07)
-+#define CT1_DOM(x)		(((x) >> 0)  & 0x1f)
-+#define CT1_MONTH(x)		(((x) >> 8)  & 0x0f)
-+#define CT1_YEAR(x)		(((x) >> 16) & 0xfff)
-+#define CT2_DOY(x)		(((x) >> 0)  & 0xfff)
-+
-+#define rtc_readl(dev, reg)		readl((dev)->rtc_base + (reg))
-+#define rtc_writel(dev, reg, val)	writel((val), (dev)->rtc_base + (reg))
-+
-+struct lpc24xx_rtc {
-+	void __iomem *rtc_base;
-+	struct rtc_device *rtc;
-+	struct clk *clk_rtc;
-+	struct clk *clk_reg;
-+};
-+
-+static int lpc24xx_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct lpc24xx_rtc *rtc = dev_get_drvdata(dev);
-+	u32 rtc_ctrl;
-+
-+	/* Disable RTC during update */
-+	rtc_ctrl = rtc_readl(rtc, LPC24XX_CCR);
-+	rtc_writel(rtc, LPC24XX_CCR, rtc_ctrl & ~LPC24XX_CLKEN);
-+
-+	rtc_writel(rtc, LPC24XX_SEC,	tm->tm_sec);
-+	rtc_writel(rtc, LPC24XX_MIN,	tm->tm_min);
-+	rtc_writel(rtc, LPC24XX_HOUR,	tm->tm_hour);
-+	rtc_writel(rtc, LPC24XX_DOW,	tm->tm_wday);
-+	rtc_writel(rtc, LPC24XX_DOM,	tm->tm_mday);
-+	rtc_writel(rtc, LPC24XX_DOY,	tm->tm_yday);
-+	rtc_writel(rtc, LPC24XX_MONTH,	tm->tm_mon);
-+	rtc_writel(rtc, LPC24XX_YEAR,	tm->tm_year);
-+
-+	rtc_writel(rtc, LPC24XX_CCR, rtc_ctrl | LPC24XX_CLKEN);
-+
-+	return 0;
-+}
-+
-+static int lpc24xx_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct lpc24xx_rtc *rtc = dev_get_drvdata(dev);
-+	u32 ct0, ct1, ct2;
-+
-+	ct0 = rtc_readl(rtc, LPC24XX_CTIME0);
-+	ct1 = rtc_readl(rtc, LPC24XX_CTIME1);
-+	ct2 = rtc_readl(rtc, LPC24XX_CTIME2);
-+
-+	tm->tm_sec  = CT0_SECS(ct0);
-+	tm->tm_min  = CT0_MINS(ct0);
-+	tm->tm_hour = CT0_HOURS(ct0);
-+	tm->tm_wday = CT0_DOW(ct0);
-+	tm->tm_mon  = CT1_MONTH(ct1);
-+	tm->tm_mday = CT1_DOM(ct1);
-+	tm->tm_year = CT1_YEAR(ct1);
-+	tm->tm_yday = CT2_DOY(ct2);
-+
-+	if (rtc_valid_tm(tm) < 0) {
-+		dev_warn(dev, "retrieved date and time is invalid\n");
-+		rtc_time64_to_tm(0, tm);
-+		lpc24xx_rtc_set_time(dev, tm);
-+	}
-+
-+	return 0;
-+}
-+
-+static int lpc24xx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *wkalrm)
-+{
-+	struct lpc24xx_rtc *rtc = dev_get_drvdata(dev);
-+	struct rtc_time *tm = &wkalrm->time;
-+
-+	tm->tm_sec  = rtc_readl(rtc, LPC24XX_ALSEC);
-+	tm->tm_min  = rtc_readl(rtc, LPC24XX_ALMIN);
-+	tm->tm_hour = rtc_readl(rtc, LPC24XX_ALHOUR);
-+	tm->tm_mday = rtc_readl(rtc, LPC24XX_ALDOM);
-+	tm->tm_wday = rtc_readl(rtc, LPC24XX_ALDOW);
-+	tm->tm_yday = rtc_readl(rtc, LPC24XX_ALDOY);
-+	tm->tm_mon  = rtc_readl(rtc, LPC24XX_ALMON);
-+	tm->tm_year = rtc_readl(rtc, LPC24XX_ALYEAR);
-+
-+	wkalrm->enabled = rtc_readl(rtc, LPC24XX_AMR) == 0;
-+	wkalrm->pending = !!(rtc_readl(rtc, LPC24XX_ILR) & LPC24XX_RTCCIF);
-+
-+	return rtc_valid_tm(&wkalrm->time);
-+}
-+
-+static int lpc24xx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *wkalrm)
-+{
-+	struct lpc24xx_rtc *rtc = dev_get_drvdata(dev);
-+	struct rtc_time *tm = &wkalrm->time;
-+
-+	/* Disable alarm IRQs during update */
-+	rtc_writel(rtc, LPC24XX_AMR, LPC24XX_ALARM_DISABLE);
-+
-+	rtc_writel(rtc, LPC24XX_ALSEC,  tm->tm_sec);
-+	rtc_writel(rtc, LPC24XX_ALMIN,  tm->tm_min);
-+	rtc_writel(rtc, LPC24XX_ALHOUR, tm->tm_hour);
-+	rtc_writel(rtc, LPC24XX_ALDOM,  tm->tm_mday);
-+	rtc_writel(rtc, LPC24XX_ALDOW,  tm->tm_wday);
-+	rtc_writel(rtc, LPC24XX_ALDOY,  tm->tm_yday);
-+	rtc_writel(rtc, LPC24XX_ALMON,  tm->tm_mon);
-+	rtc_writel(rtc, LPC24XX_ALYEAR, tm->tm_year);
-+
-+	if (wkalrm->enabled)
-+		rtc_writel(rtc, LPC24XX_AMR, 0);
-+
-+	return 0;
-+}
-+
-+static int lpc24xx_rtc_alarm_irq_enable(struct device *dev,
-+					unsigned int enabled)
-+{
-+	struct lpc24xx_rtc *rtc = dev_get_drvdata(dev);
-+
-+	if (enabled)
-+		rtc_writel(rtc, LPC24XX_AMR, 0);
-+	else
-+		rtc_writel(rtc, LPC24XX_AMR, LPC24XX_ALARM_DISABLE);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t lpc24xx_rtc_interrupt(int irq, void *dev)
-+{
-+	unsigned long events = RTC_IRQF;
-+	struct lpc24xx_rtc *rtc = dev;
-+	u32 rtc_iir;
-+
-+	/* Check interrupt cause */
-+	rtc_iir = rtc_readl(rtc, LPC24XX_ILR);
-+
-+	/* 1s tick */
-+	if (rtc_iir & LPC24XX_RTCCIF)
-+		events |= RTC_UF;
-+
-+	/* Alarm */
-+	if (rtc_iir & LPC24XX_RTCALF) {
-+		events |= RTC_AF;
-+		rtc_writel(rtc, LPC24XX_AMR, LPC24XX_ALARM_DISABLE);
-+	}
-+
-+	/* Clear interrupt status and report event */
-+	rtc_writel(rtc, LPC24XX_ILR, rtc_iir);
-+	rtc_update_irq(rtc->rtc, 1, events);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct rtc_class_ops lpc24xx_rtc_ops = {
-+	.read_time		= lpc24xx_rtc_read_time,
-+	.set_time		= lpc24xx_rtc_set_time,
-+	.read_alarm		= lpc24xx_rtc_read_alarm,
-+	.set_alarm		= lpc24xx_rtc_set_alarm,
-+	.alarm_irq_enable	= lpc24xx_rtc_alarm_irq_enable,
-+};
-+
-+static const struct of_device_id lpc24xx_rtc_match[] = {
-+	{ .compatible = "nxp,lpc1788-rtc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpc24xx_rtc_match);
-+
-+static int lpc24xx_rtc_probe(struct platform_device *pdev)
-+{
-+	struct lpc24xx_rtc *rtc;
-+	struct resource *res;
-+	int irq, ret;
-+
-+	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-+	if (!rtc)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rtc->rtc_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(rtc->rtc_base))
-+		return PTR_ERR(rtc->rtc_base);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_warn(&pdev->dev, "can't get interrupt resource\n");
-+		return irq;
-+	}
-+
-+	rtc->clk_rtc = devm_clk_get(&pdev->dev, "rtc");
-+	if (IS_ERR(rtc->clk_rtc)) {
-+		dev_err(&pdev->dev, "error getting rtc clock\n");
-+		return PTR_ERR(rtc->clk_rtc);
-+	}
-+
-+	rtc->clk_reg = devm_clk_get(&pdev->dev, "reg");
-+	if (IS_ERR(rtc->clk_reg)) {
-+		dev_err(&pdev->dev, "error getting reg clock\n");
-+		return PTR_ERR(rtc->clk_reg);
-+	}
-+
-+	ret = clk_prepare_enable(rtc->clk_rtc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "unable to enable rtc clock\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(rtc->clk_reg);
-+	if (ret) {
-+		dev_err(&pdev->dev, "unable to enable reg clock\n");
-+		goto disable_rtc_clk;
-+	}
-+
-+	platform_set_drvdata(pdev, rtc);
-+
-+	/* Clear the counter increment state */
-+	rtc_writel(rtc, LPC24XX_ILR, LPC24XX_RTCCIF);
-+
-+	/* Only 1-second interrupt will generate interrupt */
-+	rtc_writel(rtc, LPC24XX_CIIR, LPC24XX_IMSEC);
-+
-+	/* Enable RTC count */
-+	rtc_writel(rtc, LPC24XX_CCR, LPC24XX_CLKEN);
-+
-+	ret = devm_request_irq(&pdev->dev, irq, lpc24xx_rtc_interrupt, 0,
-+			       pdev->name, rtc);
-+	if (ret < 0) {
-+		dev_warn(&pdev->dev, "can't request interrupt\n");
-+		goto disable_clks;
-+	}
-+
-+	rtc->rtc = devm_rtc_device_register(&pdev->dev, "lpc24xx-rtc",
-+					    &lpc24xx_rtc_ops, THIS_MODULE);
-+	if (IS_ERR(rtc->rtc)) {
-+		dev_err(&pdev->dev, "can't register rtc device\n");
-+		ret = PTR_ERR(rtc->rtc);
-+		goto disable_clks;
-+	}
-+
-+	return 0;
-+
-+disable_clks:
-+	clk_disable_unprepare(rtc->clk_reg);
-+disable_rtc_clk:
-+	clk_disable_unprepare(rtc->clk_rtc);
-+	return ret;
-+}
-+
-+static int lpc24xx_rtc_remove(struct platform_device *pdev)
-+{
-+	struct lpc24xx_rtc *rtc = platform_get_drvdata(pdev);
-+
-+	/*
-+	 * Disable alarm, but leave RTC enabled so it
-+	 * remains valid across reset cycles.
-+	 */
-+	rtc_writel(rtc, LPC24XX_AMR, LPC24XX_ALARM_DISABLE);
-+	rtc_writel(rtc, LPC24XX_CCR, 0);
-+
-+	clk_disable_unprepare(rtc->clk_rtc);
-+	clk_disable_unprepare(rtc->clk_reg);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver lpc24xx_rtc_driver = {
-+	.probe	= lpc24xx_rtc_probe,
-+	.remove	= lpc24xx_rtc_remove,
-+	.driver	= {
-+		.name = "lpc24xx-rtc",
-+		.of_match_table	= lpc24xx_rtc_match,
-+	},
-+};
-+module_platform_driver(lpc24xx_rtc_driver);
-+
-+MODULE_AUTHOR("Kevin Wells <wellsk40-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org");
-+MODULE_DESCRIPTION("RTC driver for the LPC24xx SoC");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:lpc24xx-rtc");
--- 
-1.8.0
+>   }
+>
+>   /**
+> @@ -98,6 +106,63 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+>   }
+>   EXPORT_SYMBOL_GPL(watchdog_init_timeout);
+>
+> +static void watchdog_check_min_max_pretimeout(struct watchdog_device *wdd)
+> +{
+> +	/*
+> +	 * Check that we have valid min and max pretimeout values, if
+> +	 * not reset them both to 0 (=not used or unknown)
+> +	 */
+> +	if (wdd->min_pretimeout > wdd->max_pretimeout) {
+> +		pr_info("Invalid min and max pretimeout, resetting to 0!\n");
+> +		wdd->min_pretimeout = 0;
+> +		wdd->max_pretimeout = 0;
+> +	}
+> +}
+> +
+> +/**
+> + * watchdog_init_pretimeout() - initialize the pretimeout field
+> + * @pretimeout_parm: pretimeout module parameter
+> + * @dev: Device that stores the timeout-sec property
+> + *
+> + * Initialize the pretimeout field of the watchdog_device struct with either
+> + * the pretimeout module parameter (if it is valid value) or the timeout-sec
+> + * property (only if it is a valid value and the timeout_parm is out of bounds).
+> + * If none of them are valid then we keep the old value (which should normally
+> + * be the default pretimeout value.
+> + *
+> + * A zero is returned on success and -EINVAL for failure.
+> + */
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The new API function also needs to be documented in
+Documentation/watchdog/watchdog-kernel-api.txt.
+
+> +int watchdog_init_pretimeout(struct watchdog_device *wdd,
+> +			     unsigned int pretimeout_parm, struct device *dev)
+> +{
+> +	int ret = 0;
+> +	u32 timeouts[2];
+> +
+> +	watchdog_check_min_max_pretimeout(wdd);
+> +
+> +	/* try to get the timeout module parameter first */
+> +	if (!watchdog_pretimeout_invalid(wdd, pretimeout_parm) &&
+> +	    pretimeout_parm) {
+> +		wdd->pretimeout = pretimeout_parm;
+> +		return ret;
+> +	}
+> +	if (pretimeout_parm)
+> +		ret = -EINVAL;
+> +
+> +	/* try to get the timeout_sec property */
+> +	if (!dev || !dev->of_node)
+> +		return ret;
+> +	ret = of_property_read_u32_array(dev->of_node,
+> +					 "timeout-sec", timeouts, 2);
+> +	if (!watchdog_pretimeout_invalid(wdd, timeouts[1]) && timeouts[1])
+
+Guess we are still waiting for feedback from the devicetree maintainers on this.
+
+Both the above synchronization concern and this makes me wonder if we should introduce
+watchdog_init_timeouts() instead, which would take pretimeout as additional parameter.
+What do you think about that ?
+
+> +		wdd->pretimeout = timeouts[1];
+> +	else
+> +		ret = -EINVAL;
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(watchdog_init_pretimeout);
+> +
+>   /**
+>    * watchdog_register_device() - register a watchdog device
+>    * @wdd: watchdog device
+> @@ -119,6 +184,7 @@ int watchdog_register_device(struct watchdog_device *wdd)
+>   	if (wdd->ops->start == NULL || wdd->ops->stop == NULL)
+>   		return -EINVAL;
+>
+> +	watchdog_check_min_max_pretimeout(wdd);
+>   	watchdog_check_min_max_timeout(wdd);
+>
+>   	/*
+> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+> index 6aaefba..b519257 100644
+> --- a/drivers/watchdog/watchdog_dev.c
+> +++ b/drivers/watchdog/watchdog_dev.c
+> @@ -218,6 +218,38 @@ out_timeout:
+>   }
+>
+>   /*
+> + *	watchdog_set_pretimeout: set the watchdog timer pretimeout
+> + *	@wddev: the watchdog device to set the timeout for
+> + *	@pretimeout: pretimeout to set in seconds
+> + */
+> +
+> +static int watchdog_set_pretimeout(struct watchdog_device *wddev,
+> +				   unsigned int pretimeout)
+> +{
+> +	int err;
+> +
+> +	if (!wddev->ops->set_pretimeout ||
+> +	    !(wddev->info->options & WDIOF_PRETIMEOUT))
+> +		return -EOPNOTSUPP;
+> +
+> +	if (watchdog_pretimeout_invalid(wddev, pretimeout))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&wddev->lock);
+> +
+> +	if (test_bit(WDOG_UNREGISTERED, &wddev->status)) {
+> +		err = -ENODEV;
+> +		goto out_pretimeout;
+> +	}
+> +
+> +	err = wddev->ops->set_pretimeout(wddev, pretimeout);
+> +
+> +out_pretimeout:
+> +	mutex_unlock(&wddev->lock);
+> +	return err;
+> +}
+> +
+> +/*
+>    *	watchdog_get_timeleft: wrapper to get the time left before a reboot
+>    *	@wddev: the watchdog device to get the remaining time from
+>    *	@timeleft: the time that's left
+> @@ -388,6 +420,22 @@ static long watchdog_ioctl(struct file *file, unsigned int cmd,
+>   		if (wdd->timeout == 0)
+>   			return -EOPNOTSUPP;
+>   		return put_user(wdd->timeout, p);
+> +	case WDIOC_SETPRETIMEOUT:
+> +		if (get_user(val, p))
+> +			return -EFAULT;
+> +		err = watchdog_set_pretimeout(wdd, val);
+> +		if (err < 0)
+> +			return err;
+> +		/* If the watchdog is active then we send a keepalive ping
+> +		 * to make sure that the watchdog keep's running (and if
+
+s/keep's/keeps/
+
+> +		 * possible that it takes the new timeout) */
+
+Please use the common multi-line comment style (that it isn't used above is not
+an argument).
+
+> +		watchdog_ping(wdd);
+> +		/* Fall */
+> +	case WDIOC_GETPRETIMEOUT:
+> +		/* timeout == 0 means that we don't use the pretimeout */
+> +		if (wdd->pretimeout == 0)
+> +			return -EOPNOTSUPP;
+> +		return put_user(wdd->pretimeout, p);
+>   	case WDIOC_GETTIMELEFT:
+>   		err = watchdog_get_timeleft(wdd, &val);
+>   		if (err)
+> diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+> index a746bf5..f0a3c5b 100644
+> --- a/include/linux/watchdog.h
+> +++ b/include/linux/watchdog.h
+> @@ -25,6 +25,7 @@ struct watchdog_device;
+>    * @ping:	The routine that sends a keepalive ping to the watchdog device.
+>    * @status:	The routine that shows the status of the watchdog device.
+>    * @set_timeout:The routine for setting the watchdog devices timeout value.
+> + * @set_pretimeout:The routine for setting the watchdog devices pretimeout value
+>    * @get_timeleft:The routine that get's the time that's left before a reset.
+>    * @ref:	The ref operation for dyn. allocated watchdog_device structs
+>    * @unref:	The unref operation for dyn. allocated watchdog_device structs
+> @@ -44,6 +45,7 @@ struct watchdog_ops {
+>   	int (*ping)(struct watchdog_device *);
+>   	unsigned int (*status)(struct watchdog_device *);
+>   	int (*set_timeout)(struct watchdog_device *, unsigned int);
+> +	int (*set_pretimeout)(struct watchdog_device *, unsigned int);
+>   	unsigned int (*get_timeleft)(struct watchdog_device *);
+>   	void (*ref)(struct watchdog_device *);
+>   	void (*unref)(struct watchdog_device *);
+> @@ -62,6 +64,9 @@ struct watchdog_ops {
+>    * @timeout:	The watchdog devices timeout value.
+>    * @min_timeout:The watchdog devices minimum timeout value.
+>    * @max_timeout:The watchdog devices maximum timeout value.
+> + * @pretimeout:	The watchdog devices pretimeout value.
+> + * @min_pretimeout:The watchdog devices minimum pretimeout value.
+> + * @max_pretimeout:The watchdog devices maximum pretimeout value.
+>    * @driver-data:Pointer to the drivers private data.
+>    * @lock:	Lock for watchdog core internal use only.
+>    * @status:	Field that contains the devices internal status bits.
+> @@ -86,6 +91,9 @@ struct watchdog_device {
+>   	unsigned int timeout;
+>   	unsigned int min_timeout;
+>   	unsigned int max_timeout;
+> +	unsigned int pretimeout;
+> +	unsigned int min_pretimeout;
+> +	unsigned int max_pretimeout;
+>   	void *driver_data;
+>   	struct mutex lock;
+>   	unsigned long status;
+> @@ -120,6 +128,14 @@ static inline bool watchdog_timeout_invalid(struct watchdog_device *wdd, unsigne
+>   		(t < wdd->min_timeout || t > wdd->max_timeout));
+>   }
+>
+> +/* Use the following function to check if a pretimeout value is invalid */
+> +static inline bool watchdog_pretimeout_invalid(struct watchdog_device *wdd,
+> +					       unsigned int t)
+> +{
+> +	return ((wdd->max_pretimeout != 0) &&
+> +		(t < wdd->min_pretimeout || t > wdd->max_pretimeout));
+> +}
+> +
+>   /* Use the following functions to manipulate watchdog driver specific data */
+>   static inline void watchdog_set_drvdata(struct watchdog_device *wdd, void *data)
+>   {
+> @@ -134,6 +150,9 @@ static inline void *watchdog_get_drvdata(struct watchdog_device *wdd)
+>   /* drivers/watchdog/watchdog_core.c */
+>   extern int watchdog_init_timeout(struct watchdog_device *wdd,
+>   				  unsigned int timeout_parm, struct device *dev);
+> +extern int watchdog_init_pretimeout(struct watchdog_device *wdd,
+> +				    unsigned int pretimeout_parm,
+> +				    struct device *dev);
+
+Please drop the 'extern'. Guess it may be time to clean up the watchdog core code ;-).
+
+Thanks,
+Guenter
