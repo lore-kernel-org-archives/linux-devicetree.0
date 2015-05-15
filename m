@@ -1,484 +1,63 @@
-From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 09/10] ARM: dts: sunxi: Add Allwinner H3 DTSI
-Date: Fri, 15 May 2015 18:38:59 +0200
-Message-ID: <1431707940-19372-10-git-send-email-jenskuske@gmail.com>
-References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
-Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Fri, 15 May 2015 12:27:13 -0500
+Message-ID: <CAL_JsqL2CpRu51=t_kacMxb1AfpJnep8vnkzF2YQuCXSCvJFFg@mail.gmail.com>
+References: <cover.1430394884.git.viresh.kumar@linaro.org> <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
+ <20150512214224.16410.15922@quantum> <20150513085528.GA6994@linux>
+ <20150513110357.GD3066@sirena.org.uk> <20150514003201.20636.83883@quantum>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBOWC3CVAKGQEVUG4QCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1431707940-19372-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150514003201.20636.83883@quantum>
+Sender: linux-pm-owner@vger.kernel.org
+To: Michael Turquette <mike.turquette@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Rafael Wysocki <rjw@rjwysocki.net>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner H3 is a home entertainment system oriented SoC with
-four Cortex-A7 cores and a Mali-400MP2 GPU.
+On Wed, May 13, 2015 at 7:32 PM, Michael Turquette
+<mike.turquette@linaro.org> wrote:
+> Quoting Mark Brown (2015-05-13 04:03:57)
+>> On Wed, May 13, 2015 at 02:25:28PM +0530, Viresh Kumar wrote:
+>> > On 12-05-15, 14:42, Michael Turquette wrote:
+>> > > Quoting Viresh Kumar (2015-04-30 05:07:59)
+>> >
+>> > > Why should this new binding exist?
+>>
+>> > The answer to this particular query is perhaps simple, i.e. we have
+>> > unsolved problems that we wanted to solve in a generic way.
+>>
+>> > But probably the bigger question is "Should we really put the OPPs
+>> > (new or old bindings) in DT".
+>>
+>> And also is trying to do this in a completely generic manner the right
+>> way of going about things - do we really understand the problem area
+>> well enough to create a completely generic solution for all cases,
+>> bearing in mind that once things go into a DT binding they become an ABI?
+>
+> No, we don't understand the problem space well enough to form an ABI.
+> And even if we did understand it perfectly today, the constraints and
+> expressions will change tomorrow.
+>
+> Putting this stuff in C without any philosophical constraints on whether
+> or not we can change it later is the way to go.
 
-Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 446 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 446 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-h3.dtsi
+Having a binding does not preclude you from doing your own thing in C.
+You can choose to ignore it (or parts of it). It also doesn't mean you
+have to use a generic driver with a generic binding.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-new file mode 100644
-index 0000000..d541145
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -0,0 +1,446 @@
-+/*
-+ * Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "skeleton.dtsi"
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
-+
-+		cpu@2 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <2>;
-+		};
-+
-+		cpu@3 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <3>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+		clock-frequency = <24000000>;
-+		arm,cpu-registers-not-fw-configured;
-+	};
-+
-+	memory {
-+		reg = <0x40000000 0x80000000>;
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		osc24M: osc24M_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+			clock-output-names = "osc24M";
-+		};
-+
-+		osc32k: osc32k_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+			clock-output-names = "osc32k";
-+		};
-+
-+		pll1: clk@01c20000 {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun8i-a23-pll1-clk";
-+			reg = <0x01c20000 0x4>;
-+			clocks = <&osc24M>;
-+			clock-output-names = "pll1";
-+		};
-+
-+		pll6: clk@01c20028 {
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun8i-h3-pll6-clk";
-+			reg = <0x01c20028 0x4>;
-+			clocks = <&osc24M>;
-+			clock-output-names = "pll6", "pll6x2", "pll6d2";
-+		};
-+
-+		pll8: clk@01c20044 {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun6i-a31-pll6-clk";
-+			reg = <0x01c20044 0x4>;
-+			clocks = <&osc24M>;
-+			clock-output-names = "pll8", "pll8x2";
-+		};
-+
-+		cpu: cpu_clk@01c20050 {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun4i-a10-cpu-clk";
-+			reg = <0x01c20050 0x4>;
-+			clocks = <&osc32k>, <&osc24M>, <&pll1>, <&pll1>;
-+			clock-output-names = "cpu";
-+		};
-+
-+		axi: axi_clk@01c20050 {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun4i-a10-axi-clk";
-+			reg = <0x01c20050 0x4>;
-+			clocks = <&cpu>;
-+			clock-output-names = "axi";
-+		};
-+
-+		ahb1: ahb1_clk@01c20054 {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun6i-a31-ahb1-clk";
-+			reg = <0x01c20054 0x4>;
-+			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
-+			clock-output-names = "ahb1";
-+		};
-+
-+		ahb2: ahb2_clk@01c2005c {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun8i-h3-ahb2-clk";
-+			reg = <0x01c2005c 0x4>;
-+			clocks = <&ahb1>, <&pll6 2>;
-+			clock-output-names = "ahb2";
-+		};
-+
-+		apb1: apb1_clk@01c20054 {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun4i-a10-apb0-clk";
-+			reg = <0x01c20054 0x4>;
-+			clocks = <&ahb1>;
-+			clock-output-names = "apb1";
-+		};
-+
-+		apb2: apb2_clk@01c20058 {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun4i-a10-apb1-clk";
-+			reg = <0x01c20058 0x4>;
-+			clocks = <&osc32k>, <&osc24M>, <&pll6 0>, <&pll6 0>;
-+			clock-output-names = "apb2";
-+		};
-+
-+		bus_gates: clk@01c20060 {
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun8i-h3-bus-gates-clk";
-+			reg = <0x01c20060 0x14>;
-+			clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
-+			clock-output-names = "ahb1_ce", "ahb1_dma", "ahb1_mmc0",
-+					     "ahb1_mmc1", "ahb1_mmc2",
-+					     "ahb1_nand", "ahb1_sdram",
-+					     "ahb2_gmac", "ahb1_ts",
-+					     "ahb1_hstimer", "ahb1_spi0",
-+					     "ahb1_spi1", "ahb1_otg",
-+					     "ahb1_otg_ehci0", "ahb1_ehic1",
-+					     "ahb1_ehic2", "ahb1_ehic3",
-+					     "ahb1_otg_ohci0", "ahb2_ohic1",
-+					     "ahb2_ohic2", "ahb2_ohic3",
-+					     "ahb1_ve", "ahb1_lcd0",
-+					     "ahb1_lcd1", "ahb1_deint",
-+					     "ahb1_csi", "ahb1_tve",
-+					     "ahb1_hdmi", "ahb1_de",
-+					     "ahb1_gpu", "ahb1_msgbox",
-+					     "ahb1_spinlock", "apb1_codec",
-+					     "apb1_spdif", "apb1_pio",
-+					     "apb1_ths", "apb1_i2s0",
-+					     "apb1_i2s1", "apb1_i2s2",
-+					     "apb2_i2c0", "apb2_i2c1",
-+					     "apb2_i2c2", "apb2_uart0",
-+					     "apb2_uart1", "apb2_uart2",
-+					     "apb2_uart3", "apb2_scr",
-+					     "ahb1_ephy", "ahb1_dbg";
-+		};
-+
-+		mmc0_clk: clk@01c20088 {
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun4i-a10-mmc-clk";
-+			reg = <0x01c20088 0x4>;
-+			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
-+			clock-output-names = "mmc0",
-+					     "mmc0_output",
-+					     "mmc0_sample";
-+		};
-+
-+		mmc1_clk: clk@01c2008c {
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun4i-a10-mmc-clk";
-+			reg = <0x01c2008c 0x4>;
-+			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
-+			clock-output-names = "mmc1",
-+					     "mmc1_output",
-+					     "mmc1_sample";
-+		};
-+
-+		mmc2_clk: clk@01c20090 {
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun4i-a10-mmc-clk";
-+			reg = <0x01c20090 0x4>;
-+			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
-+			clock-output-names = "mmc2",
-+					     "mmc2_output",
-+					     "mmc2_sample";
-+		};
-+	};
-+
-+	soc@01c00000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		dma: dma-controller@01c02000 {
-+			compatible = "allwinner,sun8i-h3-dma";
-+			reg = <0x01c02000 0x1000>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 6>;
-+			resets = <&bus_rst 6>;
-+			#dma-cells = <1>;
-+		};
-+
-+		mmc0: mmc@01c0f000 {
-+			compatible = "allwinner,sun5i-a13-mmc";
-+			reg = <0x01c0f000 0x1000>;
-+			clocks = <&bus_gates 8>,
-+				 <&mmc0_clk 0>,
-+				 <&mmc0_clk 1>,
-+				 <&mmc0_clk 2>;
-+			clock-names = "ahb",
-+				      "mmc",
-+				      "output",
-+				      "sample";
-+			resets = <&bus_rst 8>;
-+			reset-names = "ahb";
-+			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		mmc1: mmc@01c10000 {
-+			compatible = "allwinner,sun5i-a13-mmc";
-+			reg = <0x01c10000 0x1000>;
-+			clocks = <&bus_gates 9>,
-+				 <&mmc1_clk 0>,
-+				 <&mmc1_clk 1>,
-+				 <&mmc1_clk 2>;
-+			clock-names = "ahb",
-+				      "mmc",
-+				      "output",
-+				      "sample";
-+			resets = <&bus_rst 9>;
-+			reset-names = "ahb";
-+			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		mmc2: mmc@01c11000 {
-+			compatible = "allwinner,sun5i-a13-mmc";
-+			reg = <0x01c11000 0x1000>;
-+			clocks = <&bus_gates 10>,
-+				 <&mmc2_clk 0>,
-+				 <&mmc2_clk 1>,
-+				 <&mmc2_clk 2>;
-+			clock-names = "ahb",
-+				      "mmc",
-+				      "output",
-+				      "sample";
-+			resets = <&bus_rst 10>;
-+			reset-names = "ahb";
-+			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		pio: pinctrl@01c20800 {
-+			compatible = "allwinner,sun8i-h3-pinctrl";
-+			reg = <0x01c20800 0x400>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 69>;
-+			gpio-controller;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			#size-cells = <0>;
-+			#gpio-cells = <3>;
-+
-+			uart0_pins_a: uart0@0 {
-+				allwinner,pins = "PA4", "PA5";
-+				allwinner,function = "uart0";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			mmc0_pins_a: mmc0@0 {
-+				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
-+						 "PF4", "PF5";
-+				allwinner,function = "mmc0";
-+				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			mmc0_cd_pin: mmc0_cd_pin@0 {
-+				allwinner,pins = "PF6";
-+				allwinner,function = "gpio_in";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+			};
-+
-+			mmc1_pins_a: mmc1@0 {
-+				allwinner,pins = "PG0", "PG1", "PG2", "PG3",
-+						 "PG4", "PG5";
-+				allwinner,function = "mmc1";
-+				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+		};
-+
-+		bus_rst: reset@01c202c0 {
-+			#reset-cells = <1>;
-+			compatible = "allwinner,sun8i-h3-bus-reset";
-+			reg = <0x01c202c0 0x1c>;
-+		};
-+
-+		timer@01c20c00 {
-+			compatible = "allwinner,sun4i-a10-timer";
-+			reg = <0x01c20c00 0xa0>;
-+			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
-+		};
-+
-+		wdt0: watchdog@01c20ca0 {
-+			compatible = "allwinner,sun6i-a31-wdt";
-+			reg = <0x01c20ca0 0x20>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		uart0: serial@01c28000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28000 0x400>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&bus_gates 112>;
-+			resets = <&bus_rst 208>;
-+			dmas = <&dma 6>, <&dma 6>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@01c28400 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28400 0x400>;
-+			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&bus_gates 113>;
-+			resets = <&bus_rst 209>;
-+			dmas = <&dma 7>, <&dma 7>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@01c28800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28800 0x400>;
-+			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&bus_gates 114>;
-+			resets = <&bus_rst 210>;
-+			dmas = <&dma 8>, <&dma 8>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@01c28c00 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28c00 0x400>;
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&bus_gates 115>;
-+			resets = <&bus_rst 211>;
-+			dmas = <&dma 9>, <&dma 9>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@01c81000 {
-+			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
-+			reg = <0x01c81000 0x1000>,
-+			      <0x01c82000 0x1000>,
-+			      <0x01c84000 0x2000>,
-+			      <0x01c86000 0x2000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+		};
-+
-+		rtc: rtc@01f00000 {
-+			compatible = "allwinner,sun6i-a31-rtc";
-+			reg = <0x01f00000 0x54>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+};
--- 
-2.4.0
+While yes, we could do the same thing in C, the reality is that we
+often don't force common data into common structures. This leads to
+obfuscating what are the real h/w differences because everyone does
+things their own way. Conveniently, struct dev_pm_opp is a perfect
+example here. We already know that just freq and volt alone are not
+enough, yet that is all the kernel structure has.
+
+The way you avoid the ABI issue is you create a new one which is what
+we've done here. I'm not saying we want 10 different OPP bindings. If
+we are back here in a year with v3, then yes you are probably right.
+But I believe v2 is a framework that can last. Most of the review
+issues have resulted in simply dropping properties (until needed)
+without otherwise changing the binding. I think that demonstrates this
+bindiing is flexible and extendable.
+
+Rob
