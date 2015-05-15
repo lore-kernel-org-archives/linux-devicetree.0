@@ -1,178 +1,130 @@
-From: fu.wei@linaro.org
-Subject: [PATCH 6/6] ACPI: import watchdog info of GTDT into platform device
-Date: Fri, 15 May 2015 19:24:50 +0800
-Message-ID: <1431689090-3125-3-git-send-email-fu.wei@linaro.org>
-References: <=fu.wei@linaro.org>
- <1431689090-3125-1-git-send-email-fu.wei@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1431689090-3125-1-git-send-email-fu.wei@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, Fu Wei <fu.wei@linaro.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH RESEND] w1: masters: omap_hdq: Add support for 1-wire
+ mode
+Date: Fri, 15 May 2015 17:35:02 +0530
+Message-ID: <5555E0EE.1010204@ti.com>
+References: <1430728735-22747-1-git-send-email-vigneshr@ti.com> <20150513134958.e21e538c3c8fe00d3fcd8854@linux-foundation.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150513134958.e21e538c3c8fe00d3fcd8854@linux-foundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Evgeniy Polyakov <zbr@ioremap.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, NeilBrown <neilb@suse.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Fabian Frederick <fabf@skynet.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fu Wei <fu.wei@linaro.org>
 
-Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
-and create a platform device with that information
-This platform device can be used by the ARM SBSA Generic Watchdog driver
+On Thursday 14 May 2015 02:19 AM, Andrew Morton wrote:
+> On Mon, 4 May 2015 14:08:55 +0530 Vignesh R <vigneshr@ti.com> wrote:
+> 
+>> This patches makes following changes to omap_hdq driver
+>>  - Enable 1-wire mode.
+>>  - Implement w1_triplet callback to facilitate search rom
+>>    procedure and auto detection of 1-wire slaves.
+>>  - Proper enabling and disabling of interrupt.
+>>  - Cleanups (formatting and return value checks).
+>>
+>> HDQ mode remains unchanged.
+>>
+>> ...
+>>
+>> +/*
+>> + * W1 triplet callback function - used for searching ROM addresses.
+>> + * Registered only when controller is in 1-wire mode.
+>> + */
+>> +static u8 omap_w1_triplet(void *_hdq, u8 bdir)
+>> +{
+>> +	u8 ret, id_bit, comp_bit;
+>> +	struct hdq_data *hdq_data = _hdq;
+>> +	u8 ctrl = OMAP_HDQ_CTRL_STATUS_SINGLE | OMAP_HDQ_CTRL_STATUS_GO |
+>> +		  OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK;
+>> +	u8 mask = ctrl | OMAP_HDQ_CTRL_STATUS_DIR;
+>> +
+>> +	omap_hdq_get(_hdq);
+>> +
+>> +	ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
+>> +	if (ret < 0) {
+>> +		ret = -EINTR;
+>> +		goto rtn;
+> 
+> Has this code path been tested?  What happens when it is taken?  Driver
+> initialization fails?  If so, why is this desirable behaviour?
 
-Signed-off-by: Fu Wei <fu.wei@linaro.org>
----
- arch/arm64/kernel/acpi.c | 136 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 136 insertions(+)
+The w1 core code that calls omap_w1_triplet (w1_triplet from w1_io.c)
+doesn't care about error codes returned by omap_w1_triplet. Hence, I
+will add a debug print and return 0x3 indicating to the w1 core to start
+the search again.
 
-diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-index 8b83955..1ed11fd 100644
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -23,6 +23,7 @@
- #include <linux/irqdomain.h>
- #include <linux/memblock.h>
- #include <linux/of_fdt.h>
-+#include <linux/platform_device.h>
- #include <linux/smp.h>
- 
- #include <asm/cputype.h>
-@@ -343,3 +344,138 @@ void __init acpi_gic_init(void)
- 
- 	early_acpi_os_unmap_memory((char *)table, tbl_size);
- }
-+
-+static int __init acpi_gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *wd,
-+					     int index)
-+{
-+	struct platform_device *pdev;
-+	struct resource *res;
-+	u32 gsi, flags;
-+	int irq, trigger, polarity;
-+	resource_size_t rf_base_phy, cf_base_phy;
-+	int err = -ENOMEM;
-+
-+	/*
-+	 * Get SBSA Generic Watchdog info
-+	 * from a Watchdog GT type structure in GTDT
-+	 */
-+	rf_base_phy = (resource_size_t)wd->refresh_frame_address;
-+	cf_base_phy = (resource_size_t)wd->control_frame_address;
-+	gsi = wd->timer_interrupt;
-+	flags = wd->timer_flags;
-+
-+	pr_info("GTDT: a Watchdog GT structure(0x%llx/0x%llx gsi:%u flags:0x%x)\n",
-+		rf_base_phy, cf_base_phy, gsi, flags);
-+
-+	if (!(rf_base_phy && cf_base_phy && gsi)) {
-+		pr_err("GTDT: failed geting the device info.\n");
-+		return -EINVAL;
-+	}
-+
-+	trigger = (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SENSITIVE
-+			: ACPI_LEVEL_SENSITIVE;
-+	polarity = (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_ACTIVE_LOW
-+			: ACPI_ACTIVE_HIGH;
-+	irq = acpi_register_gsi(NULL, gsi, trigger, polarity);
-+	if (irq < 0) {
-+		pr_err("GTDT: failed to register GSI of the Watchdog GT.\n");
-+		return -EINVAL;
-+	}
-+
-+	pdev = platform_device_alloc("sbsa-gwdt", index);
-+	if (!pdev)
-+		goto err_unregister_gsi;
-+
-+	res = kcalloc(3, sizeof(*res), GFP_KERNEL);
-+	if (!res)
-+		goto err_device_put;
-+
-+	res[0].start = rf_base_phy;
-+	res[0].end = rf_base_phy + SZ_4K - 1;
-+	res[0].name = "refresh";
-+	res[0].flags = IORESOURCE_MEM;
-+
-+	res[1].start = cf_base_phy;
-+	res[1].end = cf_base_phy + SZ_4K - 1;
-+	res[1].name = "control";
-+	res[1].flags = IORESOURCE_MEM;
-+
-+	res[2].start = irq;
-+	res[2].end = res[2].start;
-+	res[2].name = "ws0";
-+	res[2].flags = IORESOURCE_IRQ;
-+
-+	err = platform_device_add_resources(pdev, res, 3);
-+	if (err)
-+		goto err_free_res;
-+
-+	err = platform_device_add(pdev);
-+	if (err)
-+		goto err_free_res;
-+
-+	return 0;
-+
-+err_free_res:
-+	kfree(res);
-+err_device_put:
-+	platform_device_put(pdev);
-+err_unregister_gsi:
-+	acpi_unregister_gsi(gsi);
-+
-+	return err;
-+}
-+
-+/* Initialize SBSA generic Watchdog platform device info from GTDT */
-+static int __init acpi_gtdt_sbsa_gwdt_init(struct acpi_table_header *table)
-+{
-+	struct acpi_table_gtdt *gtdt;
-+	struct acpi_gtdt_header *header;
-+	void *gtdt_subtable;
-+	int i, gwdt_index;
-+	int ret = 0;
-+
-+	if (table->revision < 2) {
-+		pr_info("GTDT: Revision:%d doesn't support Platform Timers.\n",
-+			table->revision);
-+		return 0;
-+	}
-+
-+	gtdt = container_of(table, struct acpi_table_gtdt, header);
-+	if (!gtdt->platform_timer_count) {
-+		pr_info("GTDT: No Platform Timer structures.\n");
-+		return 0;
-+	}
-+
-+	gtdt_subtable = (void *)gtdt + gtdt->platform_timer_offset;
-+
-+	for (i = 0, gwdt_index = 0; i < gtdt->platform_timer_count; i++) {
-+		if (gtdt_subtable > (void *)table + table->length) {
-+			pr_err("GTDT: subtable pointer overflows, bad table\n");
-+			return -EINVAL;
-+		}
-+		header = (struct acpi_gtdt_header *)gtdt_subtable;
-+		if (header->type == ACPI_GTDT_TYPE_WATCHDOG) {
-+			ret = acpi_gtdt_import_sbsa_gwdt(gtdt_subtable,
-+							 gwdt_index);
-+			if (ret)
-+				pr_err("GTDT: failed to import subtable %d\n",
-+				       i);
-+			else
-+				gwdt_index++;
-+		}
-+		gtdt_subtable += header->length;
-+	}
-+
-+	return ret;
-+}
-+
-+/* Initialize the SBSA Generic Watchdog presented in GTDT */
-+static int __init acpi_gtdt_init(void)
-+{
-+	if (acpi_disabled)
-+		return 0;
-+
-+	return acpi_table_parse(ACPI_SIG_GTDT, acpi_gtdt_sbsa_gwdt_init);
-+}
-+
-+arch_initcall(acpi_gtdt_init);
--- 
-1.9.1
+> 
+>> +	}
+>> +
+>> +	hdq_data->hdq_irqstatus = 0;
+>> +	/* read id_bit */
+>> +	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
+>> +		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
+>> +	wait_event_timeout(hdq_wait_queue,
+>> +			   (hdq_data->hdq_irqstatus
+>> +			   & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
+>> +			   OMAP_HDQ_TIMEOUT);
+> 
+> It seems bad to ignore a timeout.  Shouldn't the code clean up and
+> report error when this occurs?
+> 
+> 
+>> +	id_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
+>> +
+>> +	hdq_data->hdq_irqstatus = 0;
+>> +	/* read comp_bit */
+>> +	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
+>> +		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
+>> +	wait_event_timeout(hdq_wait_queue,
+>> +			   (hdq_data->hdq_irqstatus
+>> +			   & OMAP_HDQ_INT_STATUS_RXCOMPLETE),
+>> +			   OMAP_HDQ_TIMEOUT);
+> 
+> Here too.
+> 
+>> +	comp_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
+>> +
+>> +	if (id_bit && comp_bit) {
+>> +		ret = 0x03;  /* error */
+>> +		goto rtn;
+>> +	}
+>> +	if (!id_bit && !comp_bit) {
+>> +		/* Both bits are valid, take the direction given */
+>> +		ret = bdir ? 0x04 : 0;
+>> +	} else {
+>> +		/* Only one bit is valid, take that direction */
+>> +		bdir = id_bit;
+>> +		ret = id_bit ? 0x05 : 0x02;
+>> +	}
+>> +
+>> +	/* write bdir bit */
+>> +	hdq_reg_out(_hdq, OMAP_HDQ_TX_DATA, bdir);
+>> +	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS, ctrl, mask);
+>> +	wait_event_timeout(hdq_wait_queue,
+>> +			   (hdq_data->hdq_irqstatus
+>> +			   & OMAP_HDQ_INT_STATUS_TXCOMPLETE),
+>> +			   OMAP_HDQ_TIMEOUT);
+> 
+> And here.
 
+I will add a dev_dbg() and return 0x3 indicating no devices responded in
+all the above cases.
+
+> 
+>> +	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS, 0,
+>> +		      OMAP_HDQ_CTRL_STATUS_SINGLE);
+>> +
+>> +rtn:
+>> +	mutex_unlock(&hdq_data->hdq_mutex);
+>> +	omap_hdq_put(_hdq);
+>> +	return ret;
+>> +}
+>>
+>> ...
+>>
+
+Thanks & Regards
+Vignesh
