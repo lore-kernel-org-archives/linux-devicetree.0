@@ -1,85 +1,39 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
-Date: Fri, 15 May 2015 16:04:41 +0200
-Message-ID: <2464980.1PKdnqcc3c@wuerfel>
-References: <=fu.wei@linaro.org> <1431689090-3125-1-git-send-email-fu.wei@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/6] Documentation: add sbsa-gwdt.txt documentation
+Date: Fri, 15 May 2015 16:06:29 +0200
+Message-ID: <8715806.mTJfA5WAcP@wuerfel>
+References: <=fu.wei@linaro.org> <1431688090-2145-1-git-send-email-fu.wei@linaro.org> <1431688090-2145-2-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1431689090-3125-1-git-send-email-fu.wei@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: fu.wei@linaro.org
-Cc: Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431688090-2145-2-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 May 2015 19:24:48 fu.wei@linaro.org wrote:
-> +static void watchdog_check_min_max_pretimeout(struct watchdog_device *wdd)
-> +{
-> +       /*
-> +        * Check that we have valid min and max pretimeout values, if
-> +        * not reset them both to 0 (=not used or unknown)
-> +        */
-> +       if (wdd->min_pretimeout > wdd->max_pretimeout) {
-> +               pr_info("Invalid min and max pretimeout, resetting to 0!\n");
-> +               wdd->min_pretimeout = 0;
-> +               wdd->max_pretimeout = 0;
-> +       }
-> +}
+On Friday 15 May 2015 19:08:05 fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> The sbsa-gwdt.txt documentation in devicetree/bindings/watchdog is for
+> introducing SBSA(Server Base System Architecture) Generic Watchdog
+> device node info into FDT
+> 
+> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I would probably just fold this function into the existing
-watchdog_check_min_max_timeout() and check both normal and pre-timeout
-there.
+Looks good, just one minor comment:
 
-> +/**
-> + * watchdog_init_pretimeout() - initialize the pretimeout field
-> + * @pretimeout_parm: pretimeout module parameter
-> + * @dev: Device that stores the timeout-sec property
-> + *
-> + * Initialize the pretimeout field of the watchdog_device struct with either
-> + * the pretimeout module parameter (if it is valid value) or the timeout-sec
-> + * property (only if it is a valid value and the timeout_parm is out of bounds).
-> + * If none of them are valid then we keep the old value (which should normally
-> + * be the default pretimeout value.
-> + *
-> + * A zero is returned on success and -EINVAL for failure.
-> + */
-> +int watchdog_init_pretimeout(struct watchdog_device *wdd,
-> +                            unsigned int pretimeout_parm, struct device *dev)
-> +{
-> +       int ret = 0;
-> +       u32 timeouts[2];
-> +
-> +       watchdog_check_min_max_pretimeout(wdd);
-> +
-> +       /* try to get the timeout module parameter first */
-> +       if (!watchdog_pretimeout_invalid(wdd, pretimeout_parm) &&
-> +           pretimeout_parm) {
-> +               wdd->pretimeout = pretimeout_parm;
-> +               return ret;
-> +       }
-> +       if (pretimeout_parm)
-> +               ret = -EINVAL;
-> +
-> +       /* try to get the timeout_sec property */
-> +       if (!dev || !dev->of_node)
-> +               return ret;
-> +       ret = of_property_read_u32_array(dev->of_node,
-> +                                        "timeout-sec", timeouts, 2);
-> +       if (!watchdog_pretimeout_invalid(wdd, timeouts[1]) && timeouts[1])
-> +               wdd->pretimeout = timeouts[1];
-> +       else
-> +               ret = -EINVAL;
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(watchdog_init_pretimeout);
+> +Optional properties
+> +- timeout-sec : Watchdog pre-timeout and timeout values (in seconds).
+> +	The first is timeout values, then pre-timeout.
 
-Same here: the function is very similar to the watchdog_init_timeout
-function, and it reads the same property, so just do both here.
-
-The easiest way for that is probably to use of_find_property()
-and of_prop_next_u32() to read the two numbers.
+Please update Documentation/watchdog/watchdog-kernel-api.txt as well, to
+mention the second number in the timeout-sec property.
 
 	Arnd
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
