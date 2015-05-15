@@ -1,100 +1,52 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v1 02/13] ASoC: qcom: move ipq806x specific bits out of
- lpass driver.
-Date: Fri, 15 May 2015 09:48:18 +0100
-Message-ID: <5555B2D2.9000603@linaro.org>
-References: <1431518302-7139-1-git-send-email-srinivas.kandagatla@linaro.org> <1431518426-7307-1-git-send-email-srinivas.kandagatla@linaro.org> <20150515052356.GD31687@kwestfie-linux.qualcomm.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 03/10] crypto: omap-sham: Add support for omap3 devices
+Date: Fri, 15 May 2015 11:19:33 +0200
+Message-ID: <20150515091933.GA12078@pali>
+References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com>
+ <1424958600-18881-4-git-send-email-pali.rohar@gmail.com>
+ <20150228162502.GC4978@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150515052356.GD31687@kwestfie-linux.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150228162502.GC4978@amd>
+Sender: linux-omap-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
+On Saturday 28 February 2015 17:25:02 Pavel Machek wrote:
+> On Thu 2015-02-26 14:49:53, Pali Roh=C3=A1r wrote:
+> > omap3 support is same as omap2, just with different IO address (spe=
+cified in DT)
+> >=20
+> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+>=20
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> > @@ -1792,6 +1792,10 @@ static const struct of_device_id omap_sham_o=
+f_match[] =3D {
+> >  		.data		=3D &omap_sham_pdata_omap2,
+> >  	},
+> >  	{
+> > +		.compatible	=3D "ti,omap3-sham",
+> > +		.data		=3D &omap_sham_pdata_omap2,
+> > +	},
+> > +	{
+> >  		.compatible	=3D "ti,omap4-sham",
+> >  		.data		=3D &omap_sham_pdata_omap4,
+> >  	},
+>=20
 
+Herbert, this is second crypto patch in this series, can you apply it t=
+oo?
 
-On 15/05/15 06:23, Kenneth Westfield wrote:
-> On Wed, May 13, 2015 at 05:00:26AM -0700, Srinivas Kandagatla wrote:
->> This patch tries to make the lpass driver more generic by moving the
->> ipq806x specific bits out of the cpu and platform driver, also allows the
->> SOC specific drivers to add the correct register offsets.
->>
->> This patch also renames the register definition header file into more
->> generic header file.
->
->> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
->> index 05b9840..865205e 100644
->> --- a/sound/soc/qcom/Kconfig
->> +++ b/sound/soc/qcom/Kconfig
->
->> @@ -14,11 +14,16 @@ config SND_SOC_LPASS_PLATFORM
->>   	depends on SND_SOC_QCOM && OF
->>   	select REGMAP_MMIO
->>
->> +config SND_SOC_LPASS_IPQ806X
->> +	tristate
->> +	depends on SND_SOC_QCOM
->> +	select SND_SOC_LPASS_CPU
->> +	select SND_SOC_LPASS_PLATFORM
->
-> Based on moving the of_device_id table from lpass-cpu.c to
-> lpass-ipq806x.c, shouldn't the OF dependency follow to the
-> SND_SOC_LPASS_IPQ806X config (and not SND_SOC_LPASS_CPU)?
->
->> +
->>   config SND_SOC_STORM
->>   	tristate "ASoC I2S support for Storm boards"
->>   	depends on (ARCH_QCOM && SND_SOC_QCOM) || COMPILE_TEST
->> -	select SND_SOC_LPASS_CPU
->> -	select SND_SOC_LPASS_PLATFORM
->> +	select SND_SOC_LPASS_IPQ806X
->>   	select SND_SOC_MAX98357A
->>   	help
->>             Say Y or M if you want add support for SoC audio on the
->
->> diff --git a/sound/soc/qcom/lpass-ipq806x.c
->> b/sound/soc/qcom/lpass-ipq806x.c
->> new file mode 100644
->> index 0000000..d1f698c
->> --- /dev/null
->> +++ b/sound/soc/qcom/lpass-ipq806x.c
->
->> +static struct platform_driver ipq806x_lpass_cpu_platform_driver = {
->> +	.driver	= {
->> +		.name		= "lpass-cpu",
->> +		.of_match_table	=
->> of_match_ptr(ipq806x_lpass_cpu_device_id),
->> +	},
->> +	.probe	= asoc_qcom_lpass_cpu_platform_probe,
->> +	.remove	= asoc_qcom_lpass_cpu_platform_remove,
->> +};
->> +module_platform_driver(ipq801x_lpass_cpu_platform_driver);
->
-> Patch below fixes the above typo (which breaks compilation):
->
-
-Oops, will fix it.
-
-> -----------------------><---------------------------------------------
-> diff --git a/sound/soc/qcom/lpass-ipq806x.c
-> b/sound/soc/qcom/lpass-ipq806x.c
-> index ad1d67a..2eab828 100644
-> --- a/sound/soc/qcom/lpass-ipq806x.c
-> +++ b/sound/soc/qcom/lpass-ipq806x.c
-> @@ -103,7 +103,7 @@ static struct platform_driver ipq806x_lpass_cpu_platform_driver = {
->          .probe  = asoc_qcom_lpass_cpu_platform_probe,
->          .remove = asoc_qcom_lpass_cpu_platform_remove,
->   };
-> -module_platform_driver(ipq801x_lpass_cpu_platform_driver);
-> +module_platform_driver(ipq806x_lpass_cpu_platform_driver);
->
->   MODULE_DESCRIPTION("QTi LPASS CPU Driver");
->   MODULE_LICENSE("GPL v2");
-> -----------------------><---------------------------------------------
->
->> +
->> +MODULE_DESCRIPTION("QTi LPASS CPU Driver");
->> +MODULE_LICENSE("GPL v2");
->
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
