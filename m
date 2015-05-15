@@ -1,54 +1,158 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] doc: dt: add documentation for nxp,lpc1850-uart
-Date: Fri, 15 May 2015 20:29:15 +0200
-Message-ID: <1431714555-7063-3-git-send-email-manabian@gmail.com>
-References: <1431714555-7063-1-git-send-email-manabian@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431714555-7063-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2] clk: mediatek: Export CPU mux clocks for CPU
+ frequency control
+Date: Fri, 15 May 2015 12:00:58 -0700
+Message-ID: <20150515190058.GN31753@codeaurora.org>
+References: <1429521950-16431-1-git-send-email-pi-cheng.chen@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1429521950-16431-1-git-send-email-pi-cheng.chen@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, fan.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for nxp,lpc1850-uart.
+On 04/20, pi-cheng.chen wrote:
+> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
+> diff --git a/drivers/clk/mediatek/clk-cpumux.c b/drivers/clk/mediatek/clk-cpumux.c
+> new file mode 100644
+> index 0000000..dc14074
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/clk-cpumux.c
+> @@ -0,0 +1,122 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/serial/nxp,lpc1850-uart.txt | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/nxp,lpc1850-uart.txt
+Do you need this include for some reason?
 
-diff --git a/Documentation/devicetree/bindings/serial/nxp,lpc1850-uart.txt b/Documentation/devicetree/bindings/serial/nxp,lpc1850-uart.txt
-new file mode 100644
-index 000000000000..68d1f3292585
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/nxp,lpc1850-uart.txt
-@@ -0,0 +1,21 @@
-+* NXP LPC1850 UART
-+
-+Required properties:
-+- compatible	: "nxp,lpc1850-uart", "ns16550a".
-+- reg		: offset and length of the register set for the device.
-+- interrupts	: should contain uart interrupt.
-+- clocks	: phandle to the input clocks.
-+- clock-names	: required elements: "uartclk", "reg".
-+
-+Since it's also possible to also use the of_serial.c driver all
-+parameters from 8250.txt also apply but are optional.
-+
-+Example:
-+uart0: serial@40081000 {
-+	compatible = "nxp,lpc1850-uart", "ns16550a";
-+	reg = <0x40081000 0x1000>;
-+	reg-shift = <2>;
-+	interrupts = <24>;
-+	clocks = <&ccu2 CLK_APB0_UART0>, <&ccu1 CLK_CPU_UART0>;
-+	clock-names = "uartclk", "reg";
-+};
+> +#include <linux/clk-provider.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/slab.h>
+> +
+> +#include "clk-mtk.h"
+> +#include "clk-cpumux.h"
+> +
+[...]
+> +
+> +static struct clk_ops clk_cpumux_ops = {
+
+const?
+
+> +	.get_parent = clk_cpumux_get_parent,
+> +	.set_parent = clk_cpumux_set_parent,
+> +};
+> +
+> +static struct clk *mtk_clk_register_cpumux(const struct mtk_composite *mux,
+> +					   struct regmap *regmap)
+> +{
+> +	struct mtk_clk_cpumux *cpumux;
+> +	struct clk *clk;
+> +	struct clk_init_data init;
+> +
+> +	cpumux = kzalloc(sizeof(*cpumux), GFP_KERNEL);
+> +	if (!cpumux)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	init.name = mux->name;
+> +	init.ops = &clk_cpumux_ops;
+> +	init.parent_names = mux->parent_names;
+> +	init.num_parents = mux->num_parents;
+> +
+> +	cpumux->reg = mux->mux_reg;
+> +	cpumux->shift = mux->mux_shift;
+> +	cpumux->mask = (BIT(mux->mux_width) - 1);
+
+Unnecessary parenthesis.
+
+> +	cpumux->regmap = regmap;
+> +	cpumux->hw.init = &init;
+> +
+> +	clk = clk_register(NULL, &cpumux->hw);
+> +	if (IS_ERR(clk))
+> +		kfree(cpumux);
+> +
+> +	return clk;
+> +}
+> +
+> +int mtk_clk_register_cpumuxes(struct device_node *node,
+> +			      const struct mtk_composite *clks, int num,
+> +			      struct clk_onecell_data *clk_data)
+> +{
+> +	int i;
+> +	struct clk *clk;
+> +	struct regmap *regmap;
+> +
+> +	if (!clk_data)
+> +		return -ENOMEM;
+
+Why would we call the function with NULL clk_data? Please remove
+this check.
+
+> +
+> +	regmap = syscon_node_to_regmap(node);
+> +	if (IS_ERR(regmap)) {
+> +		pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
+> +		       PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> diff --git a/drivers/clk/mediatek/clk-cpumux.h b/drivers/clk/mediatek/clk-cpumux.h
+> new file mode 100644
+> index 0000000..b82ad20
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/clk-cpumux.h
+> @@ -0,0 +1,31 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef __DRV_CLK_CPUMUX_H
+> +#define __DRV_CLK_CPUMUX_H
+> +
+> +#include <linux/regmap.h>
+
+Looks unnecessary. Just forward declare the type you need, struct
+regmap.
+
+> +
+> +struct mtk_clk_cpumux {
+> +	struct clk_hw	hw;
+> +	struct regmap	*regmap;
+> +	u32		reg;
+> +	u32		mask;
+> +	u8		shift;
+> +};
+> +
+> +int mtk_clk_register_cpumuxes(struct device_node *node,
+> +			      const struct mtk_composite *clks, int num,
+> +			      struct clk_onecell_data *clk_data);
+> +#endif /* __DRV_CLK_CPUMUX_H */
+
 -- 
-1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
