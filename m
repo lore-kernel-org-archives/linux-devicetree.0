@@ -1,98 +1,107 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Fri, 15 May 2015 09:25:53 +1000
-Message-ID: <1431645953.4160.82.camel@kernel.crashing.org>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
-	 <1430493730.7979.58.camel@kernel.crashing.org>
-	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
-	 <1430521038.7979.70.camel@kernel.crashing.org>
-	 <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
-	 <1430774063.7979.139.camel@kernel.crashing.org>
-	 <1431560124.20218.91.camel@kernel.crashing.org>
-	 <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
-	 <1431564871.4160.8.camel@kernel.crashing.org>
-	 <53EAE361-0015-4702-97C6-9F67B87963C2@antoniou-consulting.com>
-	 <1431585994.4160.32.camel@kernel.crashing.org>
-	 <3988EABE-3DE9-4E1C-9778-22E35138E359@antoniou-consulting.com>
-	 <1431587657.4160.37.camel@kernel.crashing.org>
-	 <75F026CA-5AC1-4106-B2F0-AB0D006DEF5A@antoniou-consulting.com>
-	 <1431588358.4160.42.camel@kernel.crashing.org>
-	 <D7FC0542-DD1A-42 8F-8E75-81620C6D83DC@antoniou-consulting.com>
-	 <1431589652.4160.49.camel@kernel.crashing.org>
-	 <A748C569-24CF-41B9-BA91-822A67132DA9@antoniou-consulting.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCHv5 2/5] ARM: dts: Odroid-XU3 Enable TMU at Exynos5422 base
+Date: Fri, 15 May 2015 09:12:11 +0900
+Message-ID: <CAJKOXPd_1rTZZCz66nQKidUOOEBmgUD+05fHUBvXN-VuD5mTCw@mail.gmail.com>
+References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
+	<1431499020-3912-3-git-send-email-linux.amoon@gmail.com>
+	<CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
+	<CANAwSgQ=30j4A_nCd26kzxi=rdsh32+Srwuc5EaJigLhJ2r4jA@mail.gmail.com>
+	<CAJKOXPfC9nGEsYJ3qJ6m_iMsB=D8_6sOEpLQzEvmLry5zS5j3g@mail.gmail.com>
+	<CANAwSgTOaz+mMhFZTeXYoXF+xPR2qon2Tkfsw5aqO42AK1m1-Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <A748C569-24CF-41B9-BA91-822A67132DA9@antoniou-consulting.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgTOaz+mMhFZTeXYoXF+xPR2qon2Tkfsw5aqO42AK1m1-Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-05-14 at 14:02 +0300, Pantelis Antoniou wrote:
-> Hi Ben,
->=20
-> > On May 14, 2015, at 10:47 , Benjamin Herrenschmidt <benh@kernel.cra=
-shing.org> wrote:
-> >=20
->=20
-> [snip]
->=20
-> So I spend some time thinking about your use case and I think it boil=
-s down
-> to this:
->=20
-> I have a live tree in the firmware, I have made changes and I need to=
- reflect
-> those changes to the live tree in the kernel.
->=20
-> Sounds like =E2=80=98how do I generate a patch for getting those two =
-in sync'. No?
+2015-05-15 1:16 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+> On 13 May 2015 at 14:02, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+>> 2015-05-13 17:21 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>>> On 13 May 2015 at 12:51, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+>>>> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>>>>> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
+>>>>> device.
+>>>>>
+>>>>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+>>>>> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
+>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>>> ---
+>>>>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 25 +++++++++++++++++++++++++
+>>>>>  1 file changed, 25 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>>>>> index 9446e28..cd78816 100644
+>>>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>>>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>>>>> @@ -319,6 +319,31 @@
+>>>>>                 #cooling-cells = <2>;
+>>>>>                 cooling-levels = <0 130 170 230>;
+>>>>>         };
+>>>>> +
+>>>>> +       tmu@10060000 {
+>>>>
+>>>> Here and for other overrides please use label notation, like:
+>>>>
+>>>> &tmu_cpu0 {
+>>>>               ...
+>>>> };
+>>>>
+>>>>> +               vtmu-supply = <&ldo10_reg>;
+>>>>
+>>>> I am curious, how did you find that LDO10 supplies TMU unit?
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>
+>>> Hi Krzysztof,
+>>>
+>>> I have re-base my work on earlier Lukasz Majewski patches.
+>>>
+>>> https://patchwork.kernel.org/patch/5693201/
+>>
+>> NAK.
+>> I am sorry, but this is not sufficient explanation. Actually such
+>> explanation could mean that you did just blindly copied everything
+>> instead of developing it.
+>>
+>> You cannot use some regulator here just because some Exynos4 boards
+>> use it. You have to be sure that this regulator supplies this part of
+>> SoC or device.
+>
+> Hi Krzysztof,
+>
+> After going through the schematics, I came to understanding that their is
+> missing regulator related to TEMP SE in the exynos5422-odroidxu3.dts.
+>
+> Below is the schematic of the board.
+>
+> http://dn.odroid.com/5422/ODROID-XU3/Schematics/XU3_MAIN_REV0.2.PDF
+>
+>   ldo18_reg: LDO18 {
+>                                          regulator-name = "vdd_ldo18";
+>                                          regulator-min-microvolt = <1800000>;
+>                                          regulator-max-microvolt = <1800000>;
+>                                          regulator-always-on;
+>                                };
 
-More or less.
+The output of LDO18 goes to VDD_EMMC_1V8. This is not regulator for TMU.
 
-> I can see where this might be useful for others as all.
->=20
-> I think we really need to create a liblivedt like we have libfdt sinc=
-e
-> we have a number of projects going about using/manipulating DT at run=
-time.
->=20
-> 1. The linux kernel, with it=E2=80=99s own live tree implementation.
-> 2. The device tree compiler (it has a live tree) custom implemented.
-> 3. Your weird and wonderful (or wacky) firmware.
-> 4. u-boot does use DT now, but it does with libfdt. I believe this is=
- suboptimal.
-> 5. barebox does DT as well.
->=20
-> Most of what we want to do with DT can be abstracted in a library I t=
-hink that
-> all of those projects can use.
->=20
-> What are your thoughts?
+I think the schematics are missing some of details but it can be deducted that:
+1. TEMP SE is supplied by VDD18_TS power domain. It consists of 5
+pairs of pins (XTSTEST_OUT[0-4], XTSEXT_RES[0-4]).
+2. The VDD18_TS01, VDD18_TS23 and VDD18_TS4 are wired to the LDO7 of
+S2MPS11 PMIC.
+3. I confirmed with the Exynos5422 datasheet that these
+VDD18_TS{01,23,4} supply the XTSTEST pins (OUT and RES).
 
-Well, we have at least two implementations, the kernel one and the one
-in our OPAL firmware:
+So the LDO7 it is... but before using it there is a caveat. The LDO7
+is also connected to VDD of MIPI, HDMI and few more. So when you use
+this regulator in TMU it may be turned off by TMU driver (e.g. during
+unbind). In such case these other blocks also should be tested and
+checked whether they take this regulator and enable it.
 
-https://github.com/open-power/skiboot/blob/master/include/device.h
-https://github.com/open-power/skiboot/blob/master/core/device.c
-
-The latter uses some nice Rusty tricks (tm) for multiple argument
-functions.
-
-It would make sense to do a library somewhere yes. However, I need to
-cut my firmware API pretty much today so I think for now I'll stick
-to something Ad-Hoc for the PCI hotplug code that just passes the
-bit of FDT with the new devices and leave the "grand project" of live
-sync of the tree for later.
-
-There are other implementations of live DT in various Open Firmware
-variants out there, most are in Forth which I suggest you don't bother
-with unless you enjoy pain, but I think at least one of these is
-actually in C.
-
-Cheers,
-Ben.
+Best regards,
+Krzysztof
