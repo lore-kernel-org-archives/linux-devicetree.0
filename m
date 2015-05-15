@@ -1,93 +1,65 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: mediatek: Add smi dts binding
-Date: Fri, 15 May 2015 18:02:17 +0800
-Message-ID: <1431684137.4799.4.camel@mhfsdcap03>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
-	 <1431683009-18158-3-git-send-email-yong.wu@mediatek.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2] ARM: l2c: Add support for the "arm, shared-override"
+ property
+Date: Fri, 15 May 2015 11:10:28 +0100
+Message-ID: <20150515101028.GH2067@n2100.arm.linux.org.uk>
+References: <1430990831-23825-1-git-send-email-geert+renesas@glider.be>
+ <20150507160257.GA11067@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431683009-18158-3-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150507160257.GA11067@e104818-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-05-15 at 17:43 +0800, Yong Wu wrote:
-> This patch add smi binding document.
+On Thu, May 07, 2015 at 05:02:57PM +0100, Catalin Marinas wrote:
+> On Thu, May 07, 2015 at 11:27:11AM +0200, Geert Uytterhoeven wrote:
+> > diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> > index 0dbabe9a6b0abb91..2484aed78c86546d 100644
+> > --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> > +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> > @@ -67,6 +67,12 @@ Optional properties:
+> >    disable if zero.
+> >  - arm,prefetch-offset : Override prefetch offset value. Valid values are
+> >    0-7, 15, 23, and 31.
+> > +- arm,shared-override : The default behavior of the pl310 cache controller with
+> > +  respect to the shareable attribute is to transform "normal memory
+> > +  non-cacheable transactions" into "cacheable no allocate" (for reads) or
+> > +  "write through no write allocate" (for writes).
+> > +  On systems where this may cause DMA buffer corruption, this property must be
+> > +  specified to indicate that such transforms are precluded.
+> >  
+> >  Example:
+> >  
+> > diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> > index e309c8f35af5af61..86d0e7461e5b0b18 100644
+> > --- a/arch/arm/mm/cache-l2x0.c
+> > +++ b/arch/arm/mm/cache-l2x0.c
+> > @@ -1149,6 +1149,11 @@ static void __init l2c310_of_parse(const struct device_node *np,
+> >  		}
+> >  	}
+> >  
+> > +	if (of_property_read_bool(np, "arm,shared-override")) {
+> > +		*aux_val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
+> > +		*aux_mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
+> > +	}
+> > +
+> >  	prefetch = l2x0_saved_regs.prefetch_ctrl;
+> >  
+> >  	ret = of_property_read_u32(np, "arm,double-linefill", &val);
 > 
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/soc/mediatek/mediatek,smi-larb.txt    | 24 ++++++++++++++++++++++
->  .../bindings/soc/mediatek/mediatek,smi.txt         | 22 ++++++++++++++++++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> It looks fine to me.
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
-> new file mode 100644
-> index 0000000..c06c5b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
-> @@ -0,0 +1,24 @@
-> +SMI(Smart Multimedia Interface) Local Arbiter
-> +
-> +The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
-> +
-> +Required properties:
-> +- compatible : must be "mediatek,mt8173-smi-larb"
-> +- reg : the register and size of each local arbiter.
-> +- smi : must be "&smi_common". Refer to bindings/soc/mediatek,smi.txt.
-> +- clocks : must contain one entry for each clock-names.
-> +	There are 2 clockes:
-> +	APB clock : Advanced Peripheral Bus clock, It's the clock for setting
-> +		the register.
-> +	SMI clock : It's the clock for transfer data and command.
-> +- clock-name: must be "apb" and "smi".
-Sorry, Here should be clock-names. I will fix the next version.
-> +
-> +Example:
-> +	larb0:larb@14021000 {
-> +		compatible = "mediatek,mt8173-smi-larb";
-> +		reg = <0 0x14021000 0 0x1000>;
-> +		smi = <&smi_common>;
-> +		clocks = <&mmsys MM_SMI_LARB0>,
-> +			 <&mmsys MM_SMI_LARB0>;
-> +		clock-names = "apb", "smi";
-> +	};
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
-> new file mode 100644
-> index 0000000..c2389b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
-> @@ -0,0 +1,22 @@
-> +SMI(Smart Multimedia Interface)
-> +
-> +The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
-> +
-> +Required properties:
-> +- compatible : must be "mediatek,mt8173-smi"
-> +- reg : the register and size of the smi.
-> +- clocks : must contain one entry for each clock-names.
-> +	There are 2 clockes:
-> +	APB clock : Advanced Peripheral Bus clock, It's the clock for setting
-> +		the register.
-> +	SMI clock : It's the clock for transfer data and command.
-> +- clock-name: must be "apb" and "smi".
-the same. should be clock-names.
-> +
-> +Example:
-> +	smi_common:smi@14022000 {
-> +		compatible = "mediatek,mt8173-smi";
-> +		reg = <0 0x14022000 0 0x1000>;
-> +		clocks = <&mmsys MM_SMI_COMMON>,
-> +			 <&mmsys MM_SMI_COMMON>;
-> +		clock-names = "apb", "smi";
-> +	};
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> 
+> (even better if a subsequent patch adds this property to all the dts
+> files containing "arm,pl310" ;))
 
+Even better would be for the boot loader/firmware to set the bit.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
