@@ -1,42 +1,45 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v6 04/12] irqchip: vf610-mscm: support NVIC parent
-Date: Fri, 15 May 2015 18:01:19 +0200
-Message-ID: <6af49d55159182668c21480e0fbaa85c@agner.ch>
-References: <1431203982-13217-1-git-send-email-stefan@agner.ch>
- <1431203982-13217-5-git-send-email-stefan@agner.ch>
- <alpine.DEB.2.11.1505151237531.4225@nanos>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5] Marvell PXA1928 USB support
+Date: Fri, 15 May 2015 11:04:23 -0500
+Message-ID: <CAL_Jsq+Yu1cTUDyCt41Apf-VOgxme7D78L2FdPeCzqSTp+Dcig@mail.gmail.com>
+References: <1431557340-5421-1-git-send-email-robh@kernel.org>
+ <5555C2A5.8010509@gmail.com> <CAL_Jsq+1JXJGVAA42iw7haSMkWEpV0KOo0h3AVhO5-DQ-GfRcg@mail.gmail.com>
+ <2878212.YRcsYyF5mD@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.11.1505151237531.4225@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2878212.YRcsYyF5mD@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-05-15 12:39, Thomas Gleixner wrote:
-> On Sat, 9 May 2015, Stefan Agner wrote:
->> -	irq_chip_unmask_parent(data);
->> +	if (parent->chip->irq_enable)
->> +		parent->chip->irq_enable(parent);
->> +	else
->> +		parent->chip->irq_unmask(parent);
-> 
-> Why are you not creating irq_chip_enable_parent() which would have
-> been the proper function anyway?
-> 
+On Fri, May 15, 2015 at 9:11 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 15 May 2015 07:48:24 Rob Herring wrote:
+>>
+>> > Anyway, if you are introducing new PHY drivers with _that_ generic
+>> > names, it will either clash with every other Marvell USB PHYs -
+>> > or we'll have to add the PHY code into the drivers above.
+>>
+>> How about phy-pxa-28nm-{usb2,hsic}?
+>>
+>
+> Seems ok to me, but please verify that these are actually usb2 and hsic
+> specific devices. There are a lot of PHY implementations that share the
+> basic layout between devices for different purposes, e.g. USB3 and PCIe
+> and they should have a name that is not too specific for one connection
+> when the same driver gets reused by another part.
 
-Will add that...
+Yes, I'm aware of that as Calxeda "comboPHYs" did 10G XAUI, PCIe and
+SATA. Those are cases are supporting similar electrical specs. USB3 is
+similar to those. I've not seen USB 2.0 PHYs shared with anything
+else, and HSIC is also very unique.
 
-Btw, have you had a chance to look at 1/12? I added a helper there too
-to allow make use of generic chip with IRQ domain hierarchy. In case you
-are fine with that general appraoch I will send an updated version of
-the patchset with the irq_chip_enable_parent helper soon. 
+Rob
 
+>
+>         Arnd
 --
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
