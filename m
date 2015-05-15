@@ -1,57 +1,75 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] mmc: omap_hsmmc: Add support for slot-name property in DT
-Date: Fri, 15 May 2015 23:25:05 +0200
-Message-ID: <3099867.Z5GbY7oWl2@wuerfel>
-References: <1431724489-32359-1-git-send-email-pali.rohar@gmail.com> <2523437.y90mKuWhc3@wuerfel> <201505152322.37739@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201505152322.37739@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH v3] ARM: l2c: add options to overwrite prefetching behavior
+Date: Fri, 15 May 2015 23:52:31 +0200
+Message-ID: <1431726751-9169-1-git-send-email-hauke@hauke-m.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 May 2015 23:22:37 Pali Roh=E1r wrote:
-> On Friday 15 May 2015 23:19:44 Arnd Bergmann wrote:
-> > On Friday 15 May 2015 23:14:48 Pali Roh=E1r wrote:
-> > > diff --git a/drivers/mmc/host/omap_hsmmc.c
-> > > b/drivers/mmc/host/omap_hsmmc.c index 9df2b68..f6073dd 100644
-> > > --- a/drivers/mmc/host/omap_hsmmc.c
-> > > +++ b/drivers/mmc/host/omap_hsmmc.c
-> > > @@ -1901,6 +1901,8 @@ static struct omap_hsmmc_platform_data
-> > > *of_get_hsmmc_pdata(struct device *dev)
-> > >=20
-> > >         if (of_find_property(np, "ti,needs-special-hs-handling",
-> > >         NULL))
-> > >        =20
-> > >                 pdata->features |=3D HSMMC_HAS_HSPE_SUPPORT;
-> > >=20
-> > > +       of_property_read_string(np, "slot-name", &pdata->name);
-> > > +
-> > >=20
-> > >         return pdata;
-> > > =20
-> > >  }
-> >=20
-> > This property needs to be documented in
-> > Documentation/devicetree/bindings/mmc/mmc.txt and preferably the
-> > implementation moved into mmc_of_parse.
-> >=20
-> > We should not have an interface like this specific to one driver.
-> >=20
-> >       Arnd
->=20
-> Interface is already present for platform data code (which do not use=
-=20
-> DT). So "pdata->name" is not DT specific...
->=20
+These options make it possible to overwrites the data and instruction
+prefetching behavior of the arm pl310 cache controller.
 
-The driver can of course keep providing the name from platform_data whe=
-re
-that is used. All I was saying is that when you introduce a DT property=
-,
-it should not be specific to that driver.
+Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+---
+v2: only set prefetch
+v1: set prefetch and aux
 
-	Arnd
+ Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
+ arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index 0dbabe9..528821a 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -67,6 +67,10 @@ Optional properties:
+   disable if zero.
+ - arm,prefetch-offset : Override prefetch offset value. Valid values are
+   0-7, 15, 23, and 31.
++- arm,prefetch-data : Enable data prefetch. Enabling prefetching
++  can improve performance.
++- arm,prefetch-instr : Enable instruction prefetch. Enabling prefetching
++  can improve performance.
+ 
+ Example:
+ 
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index e309c8f..1aa970a 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1199,6 +1199,26 @@ static void __init l2c310_of_parse(const struct device_node *np,
+ 		pr_err("L2C-310 OF arm,prefetch-offset property value is missing\n");
+ 	}
+ 
++	ret = of_property_read_u32(np, "arm,prefetch-data", &val);
++	if (ret == 0) {
++		if (val)
++			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
++		else
++			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
++	} else if (ret != -EINVAL) {
++		pr_err("L2C-310 OF arm,prefetch-data property value is missing\n");
++	}
++
++	ret = of_property_read_u32(np, "arm,prefetch-instr", &val);
++	if (ret == 0) {
++		if (val)
++			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
++		else
++			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
++	} else if (ret != -EINVAL) {
++		pr_err("L2C-310 OF arm,prefetch-instr property value is missing\n");
++	}
++
+ 	l2x0_saved_regs.prefetch_ctrl = prefetch;
+ }
+ 
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
