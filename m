@@ -1,310 +1,278 @@
-From: <Frank.Li@freescale.com>
-Subject: [PATCH 5/7] input: keyboard: imx: add snvs power key driver
-Date: Fri, 15 May 2015 21:36:28 +0800
-Message-ID: <1431696990-23078-6-git-send-email-Frank.Li@freescale.com>
-References: <1431696990-23078-1-git-send-email-Frank.Li@freescale.com>
+From: Halifax Financial Loan Pty <halifaxfinancialloanpty-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Halifax Loan Offer
+Date: Fri, 15 May 2015 14:57:03 +0000 (UTC)
+Message-ID: <1249986285.372360.1431701823407.JavaMail.yahoo__30984.7352131785$1431702393$gmane$org@mail.yahoo.com>
+Reply-To: Halifax Financial Loan Pty <mr.jacobjacohalifax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1431696990-23078-1-git-send-email-Frank.Li@freescale.com>
-Sender: linux-input-owner@vger.kernel.org
-To: lznuaa@gmail.com, shawn.guo@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, sachin.kamat@linaro.org, p.zabel@pengutronix.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Robin Gong <b38343@freescale.com>, Frank Li <Frank.Li@freescale.com>
+Content-Type: multipart/mixed;
+	boundary="----=_Part_372359_722835188.1431701823407"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Robin Gong <b38343@freescale.com>
+------=_Part_372359_722835188.1431701823407
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-add snvs power key driver.
-It work in imx chips after i.mx6sx
 
-ON/OFF key used power on/off whole system.
-This driver make it wakeup from suspend state when short press
-ON/OFF key.
+Attn. Pls kindly open the attached Halifax bank loan offer and send your response to us. 
+------=_Part_372359_722835188.1431701823407
+Content-Type: application/pdf
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Halifax  Bank Loan.pdf"
+Content-ID: <7772d618-99a5-f1ee-41e3-3d075eba6f2e-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
 
-Long time press will trig SNVS power off chip without software
-intervention.
+JVBERi0xLjMKJcfsj6IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIvRmlsdGVyIC9GbGF0ZURlY29k
+ZT4+CnN0cmVhbQp4nNVbW08bVxCWDQ5gIzCQOJRLsklKY4Ix9q7Xl5KGXEpzfWnlt9CnVI1UiUhJ
+/79U7x6bmT3nmzNeYyI1vIxWs3Nm5nzznTmzzteg1WyHQSv5mwifLssnf/SCz/+W08fBt8/lr+V+
+M0r+pQ+4/OkyeDkc6feDQXPQDYZ/l9vp83YQ9uOg1w6bYTC8LNcLxYXFUvHW4fCf8nEYtYNjo/5X
++WN96TBZetAJO/VlEldIvPhCcoXEVabxDWuvYZX1RIxa7XhQr6ZPe4M44otv4Pc2SVzCGlvYj9tm
+wf4grhfo6R31PV2DOV2zAuQmup1+xBW4z3dJLMBEO9ZScdvSjcKoG9d/wG5uQxM1uBx7WoWvVQ7/
+HL4rR63uCGcpgtbxouswTXgl/t6OtXHujuNFmPIuVt6CHq1AE4WMiW4rbMbRIAn8OImc1U8FpnkV
+pq4K87AHPdyBztaodrZg7QhlKWRkX01wgWonNyaNKGByHyozTNyj0tFhVYOhYgUHbKZ2mOFqRplt
+fnu07yNG/VAePvmYD3sr0JU70IR348zm36PNxxV9X0vIBvazYLvh7D0zF8D4KmpQDKQM8awO1mjv
+MWOvY8MCwFahczXa+6onAd4DANeEwIjLNnM+UNMzH/pC7s5IVg9dLhwXRRLQvpq821JqkGPbU+bH
+1MR9qgnPhk9bbZswmRUqiTlwYP5zOS0J6VzW8DfdiWwqAtflIxJ/xGvgOEQesAoiH2jwLgtrzaM1
+uR5KObWxXEVxpz1F6dagG/7epIq9wYAXziLmgs6SVapGdkIJkF+FEQnnElM+IPEnKsc966lPVHXv
+8qwmZz1b/jH0ZAMmEp8Jd2DgDuZMHpchq/HUXNTl3ExIe5rcmDyqutLSal4WSVywxZTXmMLFIclP
+8NqswxHAbZOCYTa9R8CVUIEKYl9pMRs+sXHbKhz6ejOFMYa7Qv9BzljqCDvWILGo7tUxNMdQ0CTA
+j99LEX+CEdHCq7Qh1kLoxqTEEsgXsbkIOv0EurEIFYTUMcjzqPQ0hjgdXKVjrW4wf4RtsPf0TMf4
+xUy4FujZsl0Se14Q0um1q0ebDx94Z2wnXRQK+GhCGzEMVOCzIoFwAS/CXxR2oA8DZ4v7wJmisId9
+diDreKRDtk0g1GsSb6GA2B7UiD0Y1MPE8XSx8kBjAkaRP6vrNaEY4+ycQhNmk9J+8un/rbAE+GD+
+UZk5pLqaC4oF4u1CGydUWE+xuRo2J/TasSelnsISrOGjGEO1Z7fBv2Dzs96nmMYOFFcJN6wPfgAt
+CJdevVd7RiLrg7kGbmJxJxDC/Ap8c8ZFk+t+kmtTqx98OWetHJ69zToDmYz9kqTvUtKFprQCsyRd
+vHfhi0s467dzxMI8yncdP6NiPZsS7c8tvDiiMBr5HmifYSRiEg+QOFvVr2HlnHOhq0SMH6eZuMGJ
+kKFhk4oSVsGzLylvmS8FmZXwPGkFBnE9kjUZrFACN7Slha2ZbgQ2rmB1zq9vGL6x+q60zmeiWedM
+FY/L5rTdhubwpAfXBTPMpszOzEkoOzxsntuHAgc0M34oEA5bZ1RjULMFLe/ayj6UMhMvoHPOWCcF
+DXv6Ul1O2jkU3gFBJvcobkrd7GkpT5yEDfhuk0wj70NlffLNTkgvuaQXH+yGfnBi5GaHcp4rFeYm
+4fsePseE9skDdvdCleeMYF48nBv16Burf8fDPwpSTylMTt5vuIZ72BGD84d/qoArgv2MAjPEeGSe
+cs91pvWqrjvt1qf1bHrom9bbCqPuySIffWaPb7XsGi1cZfehCXwFLkIFwbedTDxXcgu+6I6EUvbZ
+gm7g6SBOJVsjyqzhIZ997Llv8O2EnH+CaYq1SMUqTDBf4cdVbJohkI3B2JyUJegEW17HlvGURxpG
+JywouGjPmRzzDagg/BoIkFKS1xLldYoRcAd7imuMv7gIE1tSzXVg4KFl2Ju7sRspETIbffyiPg/2
+DfcMFwqFz7VLUMTFIQ6OLS4UxsdtaF//noXZWJiM89iY9qm69szfg0rEhpjWcB02YKzOcHsKNtSn
+531olSWig0NbhBodKtojKtquFg8+HxbgDjjM1MCBzYGZ8BckzkynFCSOjJvrwijVI3qBaEmYnPa1
+9PG8sELatFNZg77Yn1EnL1+JrFtnKGPt2K/yBoz79kNKZB8H6bHhBslfPCeR/YAXVxNLewmudwuv
+sQ1NOIWe8vvshX4l+051L73rpziDWAv6kcGr3Okytd98DMUuLQJ29W9Fm1j7NX78mGD3hlDHNd6Q
++AjbeEviARTBggnq3sJFhPde4MfbfAM0YLJfSgoZe2056njHzb0j8ZmtYYDHYsHfBoREH8BFDjh0
++IcgfpXF/RfuEvA99Bwas7nMYOY9YUbnIcZl7/Pw1/E8iYrtwwcSI08C7V+gLViZ8PouNAxO8+ze
+yT25nyGHmdxbRDXlDvj4OM8OsMKacgc8EN5TfWfWJtzbhb9sW8Lv48ZWaD70YQK71R1RHcVUR6fQ
+WsN6bRK99GHpOl2IFz2+LsTE0qBYRjaspqoAl73ZpsOZR9x002HfmnP9dhBfKXWPGkRWc+lmkIUQ
+U9Wc25bMIWxxlXAU30ST4ryXOaB5F9cLg+MwHDS7/cTJ+k4xOrr48jz5P7Xnw/Lvo7//ABqaepJl
+bmRzdHJlYW0KZW5kb2JqCjYgMCBvYmoKMTk4MwplbmRvYmoKNCAwIG9iago8PC9UeXBlL1BhZ2Uv
+TWVkaWFCb3ggWzAgMCA2MTIgNzkyXQovUm90YXRlIDAvUGFyZW50IDMgMCBSCi9SZXNvdXJjZXM8
+PC9Qcm9jU2V0Wy9QREYgL1RleHRdCi9FeHRHU3RhdGUgMTAgMCBSCi9Gb250IDExIDAgUgo+Pgov
+Q29udGVudHMgNSAwIFIKPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFsK
+NCAwIFIKXSAvQ291bnQgMQo+PgplbmRvYmoKMSAwIG9iago8PC9UeXBlIC9DYXRhbG9nIC9QYWdl
+cyAzIDAgUgo+PgplbmRvYmoKNyAwIG9iago8PC9UeXBlL0V4dEdTdGF0ZQovT1BNIDE+PmVuZG9i
+agoxMCAwIG9iago8PC9SNwo3IDAgUj4+CmVuZG9iagoxMSAwIG9iago8PC9SOAo4IDAgUj4+CmVu
+ZG9iagoxMyAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDYwMT4+c3RyZWFtCnic
+XZTBbhsxDETv/or9A0ukVpsAgS7pJYcWRdsfWK+1gQ9ZLxzn0L/vzLDpoYcxMJbE5SMJHp9fvrxs
+l/tw/H67Lj/7fVgv2/nW368ft6UPp/562Q7ZhvNluf91+l3e5v1wfP46779+733Ahb6G/za/9eOP
+7Ponx5vleu7v+7z027y99sNTSu1pXduhb+f/jqYSL07r59XcQqk8NFhroVQzrbdQqgttaaFUH2nH
+Fkq10tYWSpNCTS2URl1+aKFUVtrHFkrjSDu3ULJEe2qhVJTG0kJpNNpzC6Wit72F0jjRri2UCnPO
+qAUF67RgzcF7pgVrFq/PtGDNAhx1GXBZgIUIGXBZgKXTAi4L0BQKcDkAWY0MuByArEYGXBbgSMAM
+uByAhRZwWYCmnAGXA5C8GXBZgOVEC7gcgORFwSREZq0McCbAkWkY4EyAxpwNgKaGOgENrCZeYyXx
+I+FUFqwmXmfOBlYTrzMrA6uJd1YosJp4K/trYDXxVn0XrCbeqshgNfFWvQWribeyVshUwiDpu2A1
+8U7sAnKRYBnKwerinVgNpCbBsrCglBBZp2D1GGC2DJQSLpPIwerirXoLVhfvxCQdrC7eqstgdfFO
+LDvGR8Ipe+RgdfFO7IKD1cXrLI6D1cVrnDoHq4vXdRmsLl5j5ALWIl6XBWsRrzEUBkRCuxkKMy7h
+lKEwXBJGRadgLQI01hnjI8EyZywACR9irTDyEizLjgASrN4CrkRDFRlwRYBIlXvnc8FwBXGXfa6u
+Yfm43fp218LTQuMiu2z9307crztfDdDhD0mrQCYKZW5kc3RyZWFtCmVuZG9iago4IDAgb2JqCjw8
+L0Jhc2VGb250L1hZT0dCVytMdWNpZGFDb25zb2xlL0ZvbnREZXNjcmlwdG9yIDkgMCBSL1RvVW5p
+Y29kZSAxMyAwIFIvVHlwZS9Gb250Ci9GaXJzdENoYXIgMS9MYXN0Q2hhciA3Ni9XaWR0aHNbIDYw
+MyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAz
+CjYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMg
+NjAzIDYwMwo2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2
+MDMgNjAzIDYwMyA2MDMKNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYw
+MyA2MDMgNjAzIDYwMyA2MDMgNjAzCjYwMyA2MDMgNjAzIDYwMyA2MDMgNjAzIDYwMyA2MDMgNjAz
+IDYwMyA2MDMgNjAzIDYwM10KL1N1YnR5cGUvVHJ1ZVR5cGU+PgplbmRvYmoKOSAwIG9iago8PC9U
+eXBlL0ZvbnREZXNjcmlwdG9yL0ZvbnROYW1lL1hZT0dCVytMdWNpZGFDb25zb2xlL0ZvbnRCQm94
+WzAgLTIwNSA2MDIgNzgzXS9GbGFncyA2Ci9Bc2NlbnQgNzgzCi9DYXBIZWlnaHQgNjQxCi9EZXNj
+ZW50IC0yMDUKL0l0YWxpY0FuZ2xlIDAKL1N0ZW1WIDE0NAovTWlzc2luZ1dpZHRoIDYwMgovWEhl
+aWdodCA1NDEKL0ZvbnRGaWxlMiAxMiAwIFI+PgplbmRvYmoKJUJlZ2luUmVzb3VyY2U6IGZpbGUg
+KFBERiBGb250RmlsZSBvYmpfMTIpCjEyIDAgb2JqCjw8L0ZpbHRlci9GbGF0ZURlY29kZQovTGVu
+Z3RoMSAxNDY0OC9MZW5ndGggOTU3MT4+c3RyZWFtCnic7Xt5eBRV2u9Zau3qpao63Z3O1p2EZguY
+kJVAIK0kQcIWWaIBW8UYJCACQiIEL0QwCEEBtXGbcURRVGRRcZBlriAkqBBHh22YMSIqjiOaUZxP
+cSBd3PdUd0Lwm7nf99zn++c+z3R1VXefdNd5z+99z/v+fqcqCCOEbKgRUVQxfmJmNjIfBQvhUFk9
+e9rc6Oe8BxDCR6vrF/hHHB/bDA3tsP/H9Ll3zr7mhsMU/vYRfE6+865F06Pfp7kIDYyfUTPtjt/f
+/+pFhApZY/4MaFBu4VfA97+Hz71mzF6wMNYf/B7b75pTPS36OWsMQvzg2dMWzuWG4gsIkTho9N89
+bXZN7Ps3sc9z58xfEP08+Iz5+Z6aue4T5XfC96F/ZCB0+TPYv4L9Y57yadxwrpJ/j+8QMoQSo864
+GbWioyiMdgsVaPvl2IN/D50WSvB1l/+bD7QKPRd7dxhd4HPRVrQF7UUvoz1cAHnxRnQaZaMLxIce
+x3PRYlRNNpGzxim0EvfF10Lri2gI2oS2klr0JsqA395s7Eb3oTFoDlqCdqMH0Vn0KlpKnhZK0AXc
+l9tA7kfl5M+UwpmvxX3RBbQSvUwEowJG8AGqRevRwtd9jgHp/ubm0oqbUlMTS0uqBg4YPeGm0pLE
+1NSqgQwq8LdQYVQgxB0DXN7lFdZy1QOzFvIrtBCloFLEI4JU5EaPw1+OwSgpwsGyBMsdvilj0n3F
+UrrPYU/32azpPsWS6bMINh/PBXyUZPpkqciHUaZPFDJ91bdPcYSmnnHcsvCMY+HUSY6x+gbHMH0X
+9geHOor07x1Dh5xxTNSdvhtUr69E3eC4x3XUcbt6m+NW9YzjJnithNdJsA+HfYj6pqMAXrNz2O8d
+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
+pYq2tjZU3BntP3qzYE5e/jCcnpdzJZG5IAunswXUVNeld7duPfT2rfeuqNx96NB1M8i4rWO+Phf+
+4x8/TX550HHj4/CaVc/M2sruHXfFtrLYdgRPgW0dPkxySQ15kDxD9pCTNJmOoVs4O2wTuDe5c/wy
+/oxg695CwsditviY+EfJJ02Wlkl/khU5KN8rt8nfWIZZlluOKW6lQfm79W7rZuvntgG2DfYk+232
+DT03h+C40fGE4zM1X21UP4MqN0ZbqX2pU326vkn/wRl0rnQeihsYd0/cm3GXXfNcP7rL/se3h/69
+/Xv79/bv7b/e2H+UxP4LJw70FfsXnATY2WWXjJLxY0ZNLcoeTHvl9R2S2TsrOb9gwCC139CcPo7A
+Nf1zCzW3FO90NU244fqy0RNvvmnKjeUVk0dWlk4aV5Vm83Jx+jB5oGK1JyQljk1H/x8+OHbVEY4c
+w+f7MZcvwxGzI3zm4JiBStB4NAaNQlNREcpGgwG/XigP9UVDUKb5XyDJKB8VoAFoEPDYfmgoykF9
+oJYH0DWoP8pFhUhDbiSBwnNC1WpCE9AN6HqoW6PRRHQzuglNQTeichDok9FIVIlK0SQ0DlWhNGQD
+3cWBt3Q0DCT7QGBJVtCJCVCDE9FYFIUaw18JbAjYqx2hMXXVtXdM84+Yc/f8OXfVsPHgdYiHvv97
+j19873v0/eWrGmL/xcUdxdF/4EK4I7rB23gUj6tQGL2AKvEJdBT20WgO2o1eRufQOWxHz6P30Qa0
+Hp/o2uCb5TCi3Wg6WoZOoQswpjDailrRZnQa3QLvh6OzsO+C73nRUzA6FRDwo+qrtpXwi41oKXoY
+vr8Y7YRPYXQCjiF4X4t2oDmgGvfC+V+DM1mhdfL/+AbMKDqf/i8PBhWP0Ouvbd9zq6PoR6REgX5F
+a0hmr+9c99cihIwKXhEq4KO1C+f/A3hK3BkKZW5kc3RyZWFtCmVuZG9iagoyIDAgb2JqCjw8L1By
+b2R1Y2VyKEdQTCBHaG9zdHNjcmlwdCA5LjA2KQovQ3JlYXRpb25EYXRlKEQ6MjAxNTA1MTMxNTI5
+MTkrMDInMDAnKQovTW9kRGF0ZShEOjIwMTUwNTEzMTUyOTE5KzAyJzAwJykKL1RpdGxlKEhhbGlm
+YXggLSBOb3RlcGFkKQovQ3JlYXRvcihQU2NyaXB0NS5kbGwgVmVyc2lvbiA1LjIpCi9BdXRob3Io
+dXNlcik+PmVuZG9iagp4cmVmCjAgMTQKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAyMzA3IDAw
+MDAwIG4gCjAwMDAwMTM0OTYgMDAwMDAgbiAKMDAwMDAwMjI0OCAwMDAwMCBuIAowMDAwMDAyMDg4
+IDAwMDAwIG4gCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMjA2OCAwMDAwMCBuIAowMDAwMDAy
+MzU1IDAwMDAwIG4gCjAwMDAwMDMxMjUgMDAwMDAgbiAKMDAwMDAwMzU3OSAwMDAwMCBuIAowMDAw
+MDAyMzk2IDAwMDAwIG4gCjAwMDAwMDI0MjYgMDAwMDAgbiAKMDAwMDAwMzg0MSAwMDAwMCBuIAow
+MDAwMDAyNDU2IDAwMDAwIG4gCnRyYWlsZXIKPDwgL1NpemUgMTQgL1Jvb3QgMSAwIFIgL0luZm8g
+MiAwIFIKL0lEIFs8MUQ3QUYzODhERDlEREY0MDNENDkwQ0MzMjkyQ0Q1NUI+PDFEN0FGMzg4REQ5
+RERGNDAzRDQ5MENDMzI5MkNENTVCPl0KPj4Kc3RhcnR4cmVmCjEzNjk0CiUlRU9GCg==
 
-Signed-off-by: Robin Gong <b38343@freescale.com>
-Signed-off-by: Frank Li <Frank.Li@freescale.com>
----
- drivers/input/keyboard/Kconfig       |  11 ++
- drivers/input/keyboard/Makefile      |   1 +
- drivers/input/keyboard/snvs_pwrkey.c | 232 +++++++++++++++++++++++++++++++++++
- 3 files changed, 244 insertions(+)
- create mode 100644 drivers/input/keyboard/snvs_pwrkey.c
-
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 106fbac..61b3fab 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -400,6 +400,17 @@ config KEYBOARD_MPR121
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called mpr121_touchkey.
- 
-+config KEYBOARD_SNVS_PWRKEY
-+	tristate "IMX SNVS Power Key Driver"
-+	depends on SOC_IMX6SX
-+	depends on OF
-+	help
-+	  This is the snvs powerkey driver for the Freescale i.MX application
-+	  processors that are newer than i.MX6 SX.
-+
-+	  To compile this driver as a module, choose M here; the
-+	  module will be called snvs_pwrkey.
-+
- config KEYBOARD_IMX
- 	tristate "IMX keypad support"
- 	depends on ARCH_MXC
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index df28d55..1d416dd 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -51,6 +51,7 @@ obj-$(CONFIG_KEYBOARD_QT1070)           += qt1070.o
- obj-$(CONFIG_KEYBOARD_QT2160)		+= qt2160.o
- obj-$(CONFIG_KEYBOARD_SAMSUNG)		+= samsung-keypad.o
- obj-$(CONFIG_KEYBOARD_SH_KEYSC)		+= sh_keysc.o
-+obj-$(CONFIG_KEYBOARD_SNVS_PWRKEY)	+= snvs_pwrkey.o
- obj-$(CONFIG_KEYBOARD_SPEAR)		+= spear-keyboard.o
- obj-$(CONFIG_KEYBOARD_STMPE)		+= stmpe-keypad.o
- obj-$(CONFIG_KEYBOARD_STOWAWAY)		+= stowaway.o
-diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-new file mode 100644
-index 0000000..98c340e
---- /dev/null
-+++ b/drivers/input/keyboard/snvs_pwrkey.c
-@@ -0,0 +1,232 @@
-+/*
-+ * Driver for the IMX SNVS ON/OFF Power Key
-+ * Copyright (C) 2015 Freescale Semiconductor, Inc. All Rights Reserved.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+
-+#define SNVS_LPSR_REG	0x4C	/* LP Status Register */
-+#define SNVS_LPCR_REG	0x38	/* LP Control Register */
-+#define SNVS_HPSR_REG	0x14
-+#define SNVS_HPSR_BTN	BIT(6)
-+#define SNVS_LPSR_SPO	BIT(18)
-+#define SNVS_LPCR_DEP_EN BIT(5)
-+
-+#define DEBOUNCE_TIME 30
-+#define REPEAT_INTERVAL 60
-+
-+struct pwrkey_drv_data {
-+	struct regmap *snvs;
-+	int irq;
-+	int keycode;
-+	int keystate;  /* 1:pressed */
-+	int wakeup;
-+	struct timer_list check_timer;
-+	struct input_dev *input;
-+};
-+
-+static void imx_imx_snvs_check_for_events(unsigned long data)
-+{
-+	struct pwrkey_drv_data *pdata = (struct pwrkey_drv_data *) data;
-+	struct input_dev *input = pdata->input;
-+	u32 state;
-+
-+	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
-+	state = state & SNVS_HPSR_BTN ? 1 : 0;
-+
-+	/* only report new event if status changed */
-+	if (state ^ pdata->keystate) {
-+		pdata->keystate = state;
-+		input_event(input, EV_KEY, pdata->keycode, state);
-+		input_sync(input);
-+		pm_relax(pdata->input->dev.parent);
-+	}
-+
-+	/* repeat check if pressed long */
-+	if (state) {
-+		mod_timer(&pdata->check_timer,
-+			  jiffies + msecs_to_jiffies(REPEAT_INTERVAL));
-+	}
-+}
-+
-+static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
-+{
-+	struct platform_device *pdev = dev_id;
-+	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-+	u32 lp_status;
-+
-+	pm_wakeup_event(pdata->input->dev.parent, 0);
-+
-+	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-+	if (lp_status & SNVS_LPSR_SPO)
-+		mod_timer(&pdata->check_timer, jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
-+
-+	/* clear SPO status */
-+	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void imx_snvs_pwrkey_act(void *pdata)
-+{
-+	struct pwrkey_drv_data *pd = pdata;
-+
-+	del_timer_sync(&pd->check_timer);
-+}
-+
-+static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
-+{
-+	struct pwrkey_drv_data *pdata = NULL;
-+	struct input_dev *input = NULL;
-+	struct device_node *np, *snvs_np;
-+	int error;
-+
-+	/* Get SNVS register Page */
-+	np = pdev->dev.of_node;
-+	if (!np)
-+		return -ENODEV;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	snvs_np = of_get_parent(pdev->dev.of_node);
-+	if (!snvs_np)
-+		return -ENODEV;
-+
-+	pdata->snvs = syscon_node_to_regmap(snvs_np);
-+	of_node_put(snvs_np);
-+
-+	if (!pdata->snvs) {
-+		pr_err("Can't get snvs syscon\n");
-+		return -ENODEV;
-+	}
-+
-+	if (of_property_read_u32(np, "linux,keycode", &pdata->keycode)) {
-+		pdata->keycode = KEY_POWER;
-+		dev_warn(&pdev->dev, "KEY_POWER without setting in dts\n");
-+	}
-+
-+	pdata->wakeup = of_property_read_bool(np, "wakeup");
-+
-+	pdata->irq = platform_get_irq(pdev, 0);
-+	if (pdata->irq < 0) {
-+		dev_err(&pdev->dev, "no irq defined in platform data\n");
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(pdata->snvs, SNVS_LPCR_REG, SNVS_LPCR_DEP_EN, SNVS_LPCR_DEP_EN);
-+
-+	/* clear the unexpected interrupt before driver ready */
-+	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-+
-+	setup_timer(&pdata->check_timer,
-+		    imx_imx_snvs_check_for_events, (unsigned long) pdata);
-+
-+	input = devm_input_allocate_device(&pdev->dev);
-+	if (!input) {
-+		dev_err(&pdev->dev, "failed to allocate the input device\n");
-+		return -ENOMEM;
-+	}
-+
-+	input->name = pdev->name;
-+	input->phys = "snvs-pwrkey/input0";
-+	input->id.bustype = BUS_HOST;
-+
-+	input_set_capability(input, EV_KEY, pdata->keycode);
-+
-+	/* input customer action to cancel release timer */
-+	error = devm_add_action(&pdev->dev, imx_snvs_pwrkey_act, pdata);
-+	if (error) {
-+		dev_err(&pdev->dev, "failed to register remove action\n");
-+		return error;
-+	}
-+
-+	error = devm_request_irq(&pdev->dev, pdata->irq,
-+			       imx_snvs_pwrkey_interrupt,
-+			       0, pdev->name, pdev);
-+
-+	if (error) {
-+		dev_err(&pdev->dev, "interrupt not available.\n");
-+		return error;
-+	}
-+
-+	error = input_register_device(input);
-+	if (error < 0) {
-+		dev_err(&pdev->dev, "failed to register input device\n");
-+		input_free_device(input);
-+		return error;
-+	}
-+
-+	pdata->input = input;
-+	platform_set_drvdata(pdev, pdata);
-+
-+	device_init_wakeup(&pdev->dev, pdata->wakeup);
-+
-+	return 0;
-+}
-+
-+static int imx_snvs_pwrkey_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-+
-+	if (device_may_wakeup(&pdev->dev))
-+		enable_irq_wake(pdata->irq);
-+
-+	return 0;
-+}
-+
-+static int imx_snvs_pwrkey_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-+
-+	if (device_may_wakeup(&pdev->dev))
-+		disable_irq_wake(pdata->irq);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx_snvs_pwrkey_ids[] = {
-+	{ .compatible = "fsl,sec-v4.0-pwrkey" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
-+
-+static SIMPLE_DEV_PM_OPS(imx_snvs_pwrkey_pm_ops, imx_snvs_pwrkey_suspend,
-+				imx_snvs_pwrkey_resume);
-+
-+static struct platform_driver imx_snvs_pwrkey_driver = {
-+	.driver = {
-+		.name = "snvs_pwrkey",
-+		.pm     = &imx_snvs_pwrkey_pm_ops,
-+		.of_match_table = imx_snvs_pwrkey_ids,
-+	},
-+	.probe = imx_snvs_pwrkey_probe,
-+};
-+module_platform_driver(imx_snvs_pwrkey_driver);
-+
-+MODULE_AUTHOR("Freescale Semiconductor");
-+MODULE_DESCRIPTION("i.MX snvs power key Driver");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
-
+------=_Part_372359_722835188.1431701823407--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
