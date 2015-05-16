@@ -1,77 +1,48 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Linaro-acpi] [PATCH 0/6] Watchdog: introdouce ARM SBSA watchdog
- driver
-Date: Sat, 16 May 2015 18:33:52 +0800
-Message-ID: <55571D10.7090208@linaro.org>
-References: <=fu.wei@linaro.org> <1431688090-2145-1-git-send-email-fu.wei@linaro.org> <179589472.1OI8rAN8jV@wuerfel>
-Reply-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: Add SPMI regulator driver
+Date: Sat, 16 May 2015 11:54:21 +0100
+Message-ID: <20150516105421.GA1964@sirena.org.uk>
+References: <1431466787-32247-1-git-send-email-sboyd@codeaurora.org>
+ <5556A276.700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <179589472.1OI8rAN8jV@wuerfel>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Cc: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5556A276.700@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-OK, Thanks, Will reply those comments soon. 
 
-On 05/15/2015 10:07 PM, Arnd Bergmann wrote:
-> On Friday 15 May 2015 19:08:04 fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> This patchset:
->>
->>     (1)Introdouces Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
->>     for FDT info of SBSA Generic Watchdog, and give two examples of
->>     adding SBSA Generic Watchdog device node into the dts files:
->>     foundation-v8.dts and amd-seattle-soc.dtsi
->>
->>     (2)Introdouce "pretimeout" into the watchdog framework
->>
->>     (3)Introdouces ARM SBSA watchdog driver
->>         a.Use linux kernel watchdog framework
->>         b.Work with FDT on ARM64
->>         c.Use "pretimeout" in watchdog framework
->>         d.In first timeout(WS0), do panic to save system context
->>         e.Support geting timeout and pretimeout from
->>           parameter and FDT at the driver init stage
->>
->>     (4)Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
->>        and create a platform device with that information
->>        This platform device can be used by This Watchdog driver
->>
->> This patchset has been tested with watchdog daemon
->> (ACPI/FDT, module/build-in) on the following platforms:
->>     (1)ARM Foundation v8 model
->>     (2)AMD Seattle B0
->>
->>
-> 
-> I've had a few very minor comments to the individual patches, otherwise
-> looks good. I have not reviewed the ACPI part of the series, as I have
-> no knowledge of that.
-> 
-> 	Arnd
-> 
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Fri, May 15, 2015 at 06:50:46PM -0700, Frank Rowand wrote:
+> On 5/12/2015 2:39 PM, Stephen Boyd wrote:
+> > Add an SPMI regulator driver for Qualcomm's PM8941 and PM8916
+> > PMICs. This driver is based largely on code from
+> > codeaurora.org[1].
 
--- 
-Best regards,
+Please delete unneeded context from your replies, it makes it a lot
+easier to find any new content you are adding.
 
-Fu Wei
-Software Engineer From Red Hat
-LEG Team
-Linaro.org | Open source software for ARM SoCs
-Ph: +86 186 2020 4684 (mobile)
-IRC: fuwei
-Skype: tekkamanninja
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVVyHZAAoJECTWi3JdVIfQi4IH/j1NofNdIjdy9SlDTkwkczVD
+VCmwOyvQNrrQd1EIB0Y0hRHNP1ZibwecCXzEnBR6C3/H/YTtHPm1xxkGr/qzRuSl
+T4xE9EEItcTWtL+UlYJG3XIIrhxZfxIfgqro94l6ZP/7tk3aIsGO2iXCjAanPuOp
+JfmJl/w/IdWgDrvGztK15IReaAL3pJx1/KfuCngdM+9I4TMUUD8ibQg1Zp96Jkq8
+ZZm77qETTU2ZP0Y6XJD/GXYyexURwu9Q8mNbv9nmwH43UaJ1td7x7dkigIDWfJGt
+BTlp7Hvtwhu+L1NmU/Y43a62APkKRrKlHwcR7FPagoZRTGZDVNyorgjKJ1ueLuc=
+=z7ni
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
