@@ -1,48 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: Add SPMI regulator driver
-Date: Sat, 16 May 2015 11:54:21 +0100
-Message-ID: <20150516105421.GA1964@sirena.org.uk>
-References: <1431466787-32247-1-git-send-email-sboyd@codeaurora.org>
- <5556A276.700@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: Add TI BQ25890 bindings
+Date: Sat, 16 May 2015 20:53:42 +0900
+Message-ID: <CAJKOXPeprMYOgd1uHpdV3TjVdP9g+-SmV8q7A-127LQ7V_hAkQ@mail.gmail.com>
+References: <1431698778-29462-1-git-send-email-laurentiu.palcu@intel.com>
+	<1431698778-29462-2-git-send-email-laurentiu.palcu@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5556A276.700@gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, David Collins <collinsd@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1431698778-29462-2-git-send-email-laurentiu.palcu@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+2015-05-15 23:06 GMT+09:00 Laurentiu Palcu <laurentiu.palcu@intel.com>:
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+> ---
+>  .../devicetree/bindings/power/bq25890.txt          | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/bq25890.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/bq25890.txt b/Documentation/devicetree/bindings/power/bq25890.txt
+> new file mode 100644
+> index 0000000..44f50a7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/bq25890.txt
+> @@ -0,0 +1,45 @@
+> +Binding for TI bq25890 Li-Ion Charger
+> +
+> +Required properties:
+> +- compatible: Should contain one of the following:
+> +    * "ti,bq25890"
+> +- reg: integer, i2c address of the device.
+> +- ti,battery-regulation-voltage: integer, maximum charging voltage (in uV);
+> +- ti,charge-current: integer, maximum charging current (in uA);
+> +- ti,termination-current: integer, charge will be terminated when current in
+> +    constant-voltage phase drops below this value (in uA);
+> +- ti,precharge-current: integer, maximum charge current during precharge
+> +    phase (in uA);
+> +- ti,minimum-sys-voltage: integer, when battery is charging and it is below
+> +    minimum system voltage, the system will be regulated above
+> +    minimum-sys-voltage setting (in uV);
+> +- ti,boost-voltage: integer, VBUS voltage level in boost mode (in uV);
+> +- ti,boost-max-current: integer, maximum allowed current draw in boost mode
+> +    (in uA).
+> +
+> +Optional properties:
+> +- ti,boost-low-freq: boolean, if present boost mode frequency will be 500kHz,
+> +    otherwise 1.5MHz;
+> +- ti,use-ilim-pin: boolean, if present the ILIM resistor will be used and the
+> +    input current will be the lower between the resistor setting and the IINLIM
+> +    register setting;
+> +- ti,thermal-regulation-threshold: integer, temperature above which the charge
+> +    current is lowered, to avoid overheating (in degrees Celsius);
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+What if property is absent? The temperature will be ignored? If so,
+maybe consider adding such short statement about the default state?
 
-On Fri, May 15, 2015 at 06:50:46PM -0700, Frank Rowand wrote:
-> On 5/12/2015 2:39 PM, Stephen Boyd wrote:
-> > Add an SPMI regulator driver for Qualcomm's PM8941 and PM8916
-> > PMICs. This driver is based largely on code from
-> > codeaurora.org[1].
+Rest looks good, but I am still digging through the driver and I want
+to give reviewed-tag after that. This will take me some time :) .
 
-Please delete unneeded context from your replies, it makes it a lot
-easier to find any new content you are adding.
-
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVVyHZAAoJECTWi3JdVIfQi4IH/j1NofNdIjdy9SlDTkwkczVD
-VCmwOyvQNrrQd1EIB0Y0hRHNP1ZibwecCXzEnBR6C3/H/YTtHPm1xxkGr/qzRuSl
-T4xE9EEItcTWtL+UlYJG3XIIrhxZfxIfgqro94l6ZP/7tk3aIsGO2iXCjAanPuOp
-JfmJl/w/IdWgDrvGztK15IReaAL3pJx1/KfuCngdM+9I4TMUUD8ibQg1Zp96Jkq8
-ZZm77qETTU2ZP0Y6XJD/GXYyexURwu9Q8mNbv9nmwH43UaJ1td7x7dkigIDWfJGt
-BTlp7Hvtwhu+L1NmU/Y43a62APkKRrKlHwcR7FPagoZRTGZDVNyorgjKJ1ueLuc=
-=z7ni
------END PGP SIGNATURE-----
-
---7AUc2qLy4jB3hD7Z--
+Best regards,
+Krzysztof
