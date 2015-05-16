@@ -1,199 +1,104 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v7 12/13] ARM: dts: add support for Vybrid running on Cortex-M4
-Date: Sat, 16 May 2015 11:44:24 +0200
-Message-ID: <1431769465-26867-13-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v7 10/13] ARM: efm32: use ARM_SINGLE_ARMV7M
+Date: Sat, 16 May 2015 11:44:22 +0200
+Message-ID: <1431769465-26867-11-git-send-email-stefan@agner.ch>
 References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431769465-26867-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net
-Cc: marc.zyngier@arm.com, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431769465-26867-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org
+Cc: marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds an initial device tree to run Linux on the Cortex-M4 on
-the Vybrid based Colibri VF61 module.
+Use the new config symbol ARM_SINGLE_ARMV7M which groups config
+symbols used by modern ARMv7-M platforms. It also support multiple
+ARMv7-M platforms in one kernel image. However, this only works if
+the combined platforms share the same (main) memory layout.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Also use generic debug/uncompress.h for all ARMv7-M platforms.
+
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile            |  1 +
- arch/arm/boot/dts/vf610m4-colibri.dts | 99 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/vf610m4.dtsi        | 50 ++++++++++++++++++
- 3 files changed, 150 insertions(+)
- create mode 100644 arch/arm/boot/dts/vf610m4-colibri.dts
- create mode 100644 arch/arm/boot/dts/vf610m4.dtsi
+ arch/arm/Kconfig                 | 28 ++++++++++------------------
+ arch/arm/Kconfig.debug           |  2 +-
+ arch/arm/configs/efm32_defconfig |  1 +
+ 3 files changed, 12 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 86217db..32806fd 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -319,6 +319,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
- dtb-$(CONFIG_SOC_VF610) += \
- 	vf500-colibri-eval-v3.dtb \
- 	vf610-colibri-eval-v3.dtb \
-+	vf610m4-colibri.dtb \
- 	vf610-cosmic.dtb \
- 	vf610-twr.dtb
- dtb-$(CONFIG_ARCH_MXS) += \
-diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
-new file mode 100644
-index 0000000..2931a80
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4-colibri.dts
-@@ -0,0 +1,99 @@
-+/*
-+ * Device tree for Colibri VF61 Cortex-M4 support
-+ *
-+ * Copyright (C) 2015 Stefan Agner
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 2361efc..d1c035d 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -411,24 +411,6 @@ config ARCH_EBSA110
+ 	  Ethernet interface, two PCMCIA sockets, two serial ports and a
+ 	  parallel port.
+ 
+-config ARCH_EFM32
+-	bool "Energy Micro efm32"
+-	depends on !MMU
+-	select ARCH_REQUIRE_GPIOLIB
+-	select ARM_NVIC
+-	select AUTO_ZRELADDR
+-	select CLKSRC_OF
+-	select COMMON_CLK
+-	select CPU_V7M
+-	select GENERIC_CLOCKEVENTS
+-	select NO_DMA
+-	select NO_IOPORT_MAP
+-	select SPARSE_IRQ
+-	select USE_OF
+-	help
+-	  Support for Energy Micro's (now Silicon Labs) efm32 Giant Gecko
+-	  processors.
+-
+ config ARCH_EP93XX
+ 	bool "EP93xx-based"
+ 	select ARCH_HAS_HOLES_MEMORYMODEL
+@@ -963,6 +945,16 @@ source "arch/arm/mach-w90x900/Kconfig"
+ 
+ source "arch/arm/mach-zynq/Kconfig"
+ 
++# ARMv7-M architecture
++config ARCH_EFM32
++	bool "Energy Micro efm32"
++	depends on ARM_SINGLE_ARMV7M
++	select ARCH_REQUIRE_GPIOLIB
++	select AUTO_ZRELADDR
++	help
++	  Support for Energy Micro's (now Silicon Labs) efm32 Giant Gecko
++	  processors.
 +
-+/dts-v1/;
-+#include "vf610m4.dtsi"
-+
-+/ {
-+	model = "VF610 Cortex-M4";
-+	compatible = "fsl,vf610m4";
-+
-+	chosen {
-+		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
-+		linux,stdout-path = "&uart2";
-+	};
-+
-+	memory {
-+		reg = <0x8c000000 0x3000000>;
-+	};
-+};
-+
-+&gpio0 {
-+	status = "disabled";
-+};
-+
-+&gpio1 {
-+	status = "disabled";
-+};
-+
-+&gpio2 {
-+	status = "disabled";
-+};
-+
-+&gpio3 {
-+	status = "disabled";
-+};
-+
-+&gpio4 {
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	vf610-colibri {
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				VF610_PAD_PTD0__UART2_TX		0x21a2
-+				VF610_PAD_PTD1__UART2_RX		0x21a1
-+				VF610_PAD_PTD2__UART2_RTS		0x21a2
-+				VF610_PAD_PTD3__UART2_CTS		0x21a1
-+			>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/vf610m4.dtsi b/arch/arm/boot/dts/vf610m4.dtsi
-new file mode 100644
-index 0000000..9ffe2eb
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4.dtsi
-@@ -0,0 +1,50 @@
-+/*
-+ * Device tree for VF6xx Cortex-M4 support
-+ *
-+ * Copyright (C) 2015 Stefan Agner
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "armv7-m.dtsi"
-+#include "vfxxx.dtsi"
-+
-+&mscm_ir {
-+	interrupt-parent = <&nvic>;
-+};
+ # Definitions to make life easier
+ config ARCH_ACORN
+ 	bool
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index e4441de..5d63c56 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -1561,7 +1561,7 @@ config DEBUG_UNCOMPRESS
+ config UNCOMPRESS_INCLUDE
+ 	string
+ 	default "debug/uncompress.h" if ARCH_MULTIPLATFORM || ARCH_MSM || \
+-					PLAT_SAMSUNG || ARCH_EFM32 || \
++					PLAT_SAMSUNG || ARM_SINGLE_ARMV7M || \
+ 					ARCH_SHMOBILE_LEGACY
+ 	default "mach/uncompress.h"
+ 
+diff --git a/arch/arm/configs/efm32_defconfig b/arch/arm/configs/efm32_defconfig
+index c4c17e3..e969f78 100644
+--- a/arch/arm/configs/efm32_defconfig
++++ b/arch/arm/configs/efm32_defconfig
+@@ -16,6 +16,7 @@ CONFIG_EMBEDDED=y
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+ # CONFIG_MMU is not set
++CONFIG_ARM_SINGLE_ARMV7M=y
+ CONFIG_ARCH_EFM32=y
+ CONFIG_SET_MEM_PARAM=y
+ CONFIG_DRAM_BASE=0x88000000
 -- 
 2.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
