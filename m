@@ -1,7 +1,7 @@
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v2 3/9] clocksource: mediatek: do not enable GPT_CLK_EVT when setup
-Date: Sat, 16 May 2015 15:58:24 +0800
-Message-ID: <1431763110-443-4-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH v2 4/9] clocksource: mediatek: Use GPT as sched clock source
+Date: Sat, 16 May 2015 15:58:25 +0800
+Message-ID: <1431763110-443-5-git-send-email-yingjoe.chen@mediatek.com>
 References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,61 +12,48 @@ To: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.co
 Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Spurious mtk timer interrupt is noticed at boot and cause kernel
-crash. It seems if GPT is enabled, it will latch irq status even
-when its IRQ is disabled. When irq is enabled afterward, we see
-spurious interrupt.
-Change init flow to only enable GPT_CLK_SRC at mtk_timer_init.
+When cpu is in deep idle, arch timer will stop counting. Setup GPT as
+sched clock source so it can keep counting in idle.
 
 Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 ---
- drivers/clocksource/mtk_timer.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/clocksource/mtk_timer.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
-index 68ab423..91206f9 100644
+index 91206f9..fe7cf72 100644
 --- a/drivers/clocksource/mtk_timer.c
 +++ b/drivers/clocksource/mtk_timer.c
-@@ -157,8 +157,11 @@ static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
- }
+@@ -24,6 +24,7 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/sched_clock.h>
+ #include <linux/slab.h>
  
- static void
--mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
-+mtk_timer_setup(struct mtk_clock_event_device *evt,
-+		u8 timer, u8 option, u8 enable)
- {
-+	u32 val;
+ #define GPT_IRQ_EN_REG		0x00
+@@ -59,6 +60,13 @@ struct mtk_clock_event_device {
+ 	struct clock_event_device dev;
+ };
+ 
++static void __iomem *gpt_base __read_mostly;
 +
- 	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
- 		evt->gpt_base + TIMER_CTRL_REG(timer));
- 
-@@ -167,8 +170,10 @@ mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
- 
- 	writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
- 
--	writel(TIMER_CTRL_OP(option) | TIMER_CTRL_ENABLE,
--			evt->gpt_base + TIMER_CTRL_REG(timer));
-+	val = TIMER_CTRL_OP(option);
-+	if (enable)
-+		val |= TIMER_CTRL_ENABLE;
-+	writel(val, evt->gpt_base + TIMER_CTRL_REG(timer));
- }
- 
- static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
-@@ -235,12 +240,12 @@ static void __init mtk_timer_init(struct device_node *node)
- 	evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
- 
- 	/* Configure clock source */
--	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
-+	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
++static u64 notrace mtk_read_sched_clock(void)
++{
++	return readl_relaxed(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC));
++}
++
+ static inline struct mtk_clock_event_device *to_mtk_clk(
+ 				struct clock_event_device *c)
+ {
+@@ -243,6 +251,8 @@ static void __init mtk_timer_init(struct device_node *node)
+ 	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
  	clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
  			node->name, rate, 300, 32, clocksource_mmio_readl_up);
++	gpt_base = evt->gpt_base;
++	sched_clock_register(mtk_read_sched_clock, 32, rate);
  
  	/* Configure clock event */
--	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
-+	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT, 0);
- 	clockevents_config_and_register(&evt->dev, rate, 0x3,
- 					0xffffffff);
- 
+ 	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT, 0);
 -- 
 1.8.1.1.dirty
