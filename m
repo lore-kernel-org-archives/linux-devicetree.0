@@ -1,58 +1,45 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] USB: ehci-platform: support EHCIs with transaction translator
-Date: Sat, 16 May 2015 17:17:40 +0200
-Message-ID: <1431789460-26831-1-git-send-email-manabian@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH v2 07/10] pinctrl: sunxi: Add H3 PIO
+ controller support
+Date: Sat, 16 May 2015 17:32:25 +0200
+Message-ID: <1431790345.2341.37.camel@x220>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
+	 <1431707940-19372-8-git-send-email-jenskuske@gmail.com>
+Reply-To: pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJLF25T6MIBBD6G3WVAKGQEWSYF24Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1431707940-19372-8-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some EHCI controllers have a Transaction Translator built into
-the root hub. Support this feature in device tree when using
-the ehci-platform driver by adding a feature flag for it.
+Just a nit: a license mismatch.
 
-This is needed to get USB working on NXP LPC18xx/43xx platforms.
+(I didn't bring this up in v1. Perhaps I should have.)
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+On Fri, 2015-05-15 at 18:38 +0200, Jens Kuske wrote:
+> --- /dev/null
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
 
- Documentation/devicetree/bindings/usb/usb-ehci.txt | 2 ++
- drivers/usb/host/ehci-platform.c                   | 4 ++++
- 2 files changed, 6 insertions(+)
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-index 0b04fdff9d5a..a12d6012a40f 100644
---- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-@@ -13,6 +13,8 @@ Optional properties:
-  - big-endian-desc : boolean, set this for hcds with big-endian descriptors
-  - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
-  - needs-reset-on-resume : boolean, set this to force EHCI reset after resume
-+ - has-transaction-translator : boolean, set this if EHCI have a Transaction
-+				Translator built into the root hub.
-  - clocks : a list of phandle + clock specifier pairs
-  - phys : phandle + phy specifier pair
-  - phy-names : "usb"
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index d8a75a51d6d4..ba07f16b13e0 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -202,6 +202,10 @@ static int ehci_platform_probe(struct platform_device *dev)
- 					  "needs-reset-on-resume"))
- 			pdata->reset_on_resume = 1;
- 
-+		if (of_property_read_bool(dev->dev.of_node,
-+					  "has-transaction-translator"))
-+			pdata->has_tt = 1;
-+
- 		priv->num_phys = of_count_phandle_with_args(dev->dev.of_node,
- 				"phys", "#phy-cells");
- 		priv->num_phys = priv->num_phys > 0 ? priv->num_phys : 1;
--- 
-1.8.0
+This states the license is GPL v2.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +MODULE_LICENSE("GPL");
+
+According to include/linux/module.h this states the license is GPL v2 or
+later. So I think that either the comment at the top of this file or the
+ident used in the MODULE_LICENSE() macro needs to change.
+
+
+Paul Bolle
