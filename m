@@ -1,7 +1,7 @@
 From: Finance Department <felic-4mS+zOIV46RWqNpe3PqILLyscVyMRj84@public.gmane.org>
 Subject: Payment
-Date: Sat, 16 May 2015 19:43:40 +0700 (WIT)
-Message-ID: <373072875.1062110.1431780220251.JavaMail.root@pgn-solution.co.id>
+Date: Sat, 16 May 2015 20:20:28 +0700 (WIT)
+Message-ID: <280891219.1069003.1431782428951.JavaMail.root@pgn-solution.co.id>
 Reply-To: Finance Department <fd12001-9uewiaClKEY@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
