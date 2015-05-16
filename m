@@ -1,86 +1,66 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v7 05/13] irqchip: vf610-mscm: support NVIC parent
-Date: Sat, 16 May 2015 11:44:17 +0200
-Message-ID: <1431769465-26867-6-git-send-email-stefan@agner.ch>
-References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431769465-26867-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net
-Cc: marc.zyngier@arm.com, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] Documentation: add sbsa-gwdt.txt documentation
+Date: Sat, 16 May 2015 18:29:36 +0800
+Message-ID: <55571C10.7020105@linaro.org>
+References: <=fu.wei@linaro.org> <1431688090-2145-1-git-send-email-fu.wei@linaro.org> <1431688090-2145-2-git-send-email-fu.wei@linaro.org> <8715806.mTJfA5WAcP@wuerfel>
+Reply-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8715806.mTJfA5WAcP@wuerfel>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Support the NVIC interrupt controller as node parent of the MSCM
-interrupt router. On the dual-core variants of Vybird (VF6xx), the
-NVIC interrupt controller is used by the Cortex-M4. To support
-running Linux on this core too, MSCM needs NVIC parent support too.
+Hi Arnd,
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- drivers/irqchip/irq-vf610-mscm-ir.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+Great thanks for reminding, I should do it earlier.
+You will see it in next patchset.
 
-diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
-index 9521057..b932ecb 100644
---- a/drivers/irqchip/irq-vf610-mscm-ir.c
-+++ b/drivers/irqchip/irq-vf610-mscm-ir.c
-@@ -47,6 +47,7 @@ struct vf610_mscm_ir_chip_data {
- 	void __iomem *mscm_ir_base;
- 	u16 cpu_mask;
- 	u16 saved_irsprc[MSCM_IRSPRC_NUM];
-+	bool is_nvic;
- };
- 
- static struct vf610_mscm_ir_chip_data *mscm_ir_data;
-@@ -101,7 +102,7 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
- 	writew_relaxed(chip_data->cpu_mask,
- 		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
- 
--	irq_chip_unmask_parent(data);
-+	irq_chip_enable_parent(data);
- }
- 
- static void vf610_mscm_ir_disable(struct irq_data *data)
-@@ -111,7 +112,7 @@ static void vf610_mscm_ir_disable(struct irq_data *data)
- 
- 	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
- 
--	irq_chip_mask_parent(data);
-+	irq_chip_disable_parent(data);
- }
- 
- static struct irq_chip vf610_mscm_ir_irq_chip = {
-@@ -143,10 +144,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
- 					      domain->host_data);
- 
- 	gic_data.np = domain->parent->of_node;
--	gic_data.args_count = 3;
--	gic_data.args[0] = GIC_SPI;
--	gic_data.args[1] = irq_data->args[0];
--	gic_data.args[2] = irq_data->args[1];
-+
-+	if (mscm_ir_data->is_nvic) {
-+		gic_data.args_count = 1;
-+		gic_data.args[0] = irq_data->args[0];
-+	} else {
-+		gic_data.args_count = 3;
-+		gic_data.args[0] = GIC_SPI;
-+		gic_data.args[1] = irq_data->args[0];
-+		gic_data.args[2] = irq_data->args[1];
-+	}
-+
- 	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
- }
- 
-@@ -199,6 +207,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
- 		goto out_unmap;
- 	}
- 
-+	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
-+		mscm_ir_data->is_nvic = true;
-+
- 	cpu_pm_register_notifier(&mscm_ir_notifier_block);
- 
- 	return 0;
+On 05/15/2015 10:06 PM, Arnd Bergmann wrote:
+> On Friday 15 May 2015 19:08:05 fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> The sbsa-gwdt.txt documentation in devicetree/bindings/watchdog is for
+>> introducing SBSA(Server Base System Architecture) Generic Watchdog
+>> device node info into FDT
+>>
+>> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Looks good, just one minor comment:
+> 
+>> +Optional properties
+>> +- timeout-sec : Watchdog pre-timeout and timeout values (in seconds).
+>> +	The first is timeout values, then pre-timeout.
+> 
+> Please update Documentation/watchdog/watchdog-kernel-api.txt as well, to
+> mention the second number in the timeout-sec property.
+> 
+> 	Arnd
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+
 -- 
-2.4.1
+Best regards,
+
+Fu Wei
+Software Engineer From Red Hat
+LEG Team
+Linaro.org | Open source software for ARM SoCs
+Ph: +86 186 2020 4684 (mobile)
+IRC: fuwei
+Skype: tekkamanninja
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
