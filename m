@@ -1,37 +1,54 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 1/7] arm: imx: power-off: change to syscon to access
- register
-Date: Sat, 16 May 2015 15:54:17 +0200
-Message-ID: <20150516135417.GK3338@piout.net>
-References: <1431696990-23078-1-git-send-email-Frank.Li@freescale.com>
- <1431696990-23078-2-git-send-email-Frank.Li@freescale.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH] gpio: add ETRAXFS GPIO driver
+Date: Sat, 16 May 2015 15:59:27 +0200
+Message-ID: <1431784767.2341.28.camel@x220>
+References: <1431728843-21583-1-git-send-email-rabin@rab.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431696990-23078-2-git-send-email-Frank.Li@freescale.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Frank.Li@freescale.com
-Cc: lznuaa@gmail.com, shawn.guo@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, a.zummo@towertech.it, sachin.kamat@linaro.org, p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431728843-21583-1-git-send-email-rabin@rab.in>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rabin Vincent <rabin@rab.in>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sat, 2015-05-16 at 00:27 +0200, Rabin Vincent wrote:
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+ 
+> +config GPIO_ETRAXFS
+> +	bool "Axis ETRAX FS General I/O"
+> +	depends on CRIS || COMPILE_TEST
+> +	depends on OF
+> +	select GPIO_GENERIC
+> +	help
+> +	  Say yes here to support the GPIO controller on Axis ETRAX FS SoCs.
 
-On 15/05/2015 at 21:36:24 +0800, Frank.Li@freescale.com wrote :
->  static int imx_poweroff_probe(struct platform_device *pdev)
->  {
-> -	snvs_base = of_iomap(pdev->dev.of_node, 0);
-> -	if (!snvs_base) {
-> +	struct device_node *nd;
-> +
-> +	nd = of_get_parent(pdev->dev.of_node);
-> +	if (!nd)
-> +		return -ENODEV;
-> +	snvs = syscon_node_to_regmap (nd);
-You should remove that space ---^
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+
+> +obj-$(CONFIG_GPIO_ETRAXFS)	+= gpio-etraxfs.o
+
+GPIO_ETRAXFS is a bool symbol, so gpio-etraxfs.o can only be built-in,
+right?
+
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-etraxfs.c
+
+> +MODULE_DEVICE_TABLE(of, etraxfs_gpio_of_table);
+
+> +module_platform_driver(etraxfs_gpio_driver);
+
+(A patch was submitted that would allow built-in only code to use
+builtin_platform_driver(), see https://lkml.org/lkml/2015/5/10/125 .) 
+
+> +MODULE_DESCRIPTION("ETRAX FS GPIO driver");
+> +MODULE_LICENSE("GPL");
+
+But the code this patch adds contains a bit of module specific
+boilerplate. Was it perhaps your intention to make GPIO_ETRAXFS
+tristate?
 
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Paul Bolle
