@@ -1,68 +1,40 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v9 3/5] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Fri, 15 May 2015 17:17:55 -0700
-Message-ID: <CAPw-ZT=rRd12wbswsH4s=oMnForCAb3e1A-yhG0AG3XL6z84qA@mail.gmail.com>
-References: <1431623147-4950-1-git-send-email-lho@apm.com>
-	<1431623147-4950-3-git-send-email-lho@apm.com>
-	<1431623147-4950-4-git-send-email-lho@apm.com>
-	<2623886.1GmlYtlSK2@wuerfel>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH V2 0/4]  da9062: DA9062 driver submission
+Date: Sat, 16 May 2015 02:46:34 +0200
+Message-ID: <20150516004634.GH3338@piout.net>
+References: <cover.1431621833.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2623886.1GmlYtlSK2@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1431621833.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
->> +       edac: edac@78800000 {
->> +               compatible = "apm,xgene-edac";
->> +               #address-cells = <2>;
->> +               #size-cells = <2>;
->> +               reg = <0x0 0x78800000 0x0 0x100>;
->
-> This seens a 'ranges' property to make the address resolution
-> work. An empty property should be fine.
->
->> +               interrupts = <0x0 0x20 0x4>,
->> +                            <0x0 0x21 0x4>,
->> +                            <0x0 0x27 0x4>;
->> +
->> +               edacmc0: edacmc0@7e800000 {
->> +                       compatible = "apm,xgene-edac-mc";
->> +                       regmap-csw = <&csw>;
->> +                       regmap-mcba = <&mcba>;
->> +                       regmap-mcbb = <&mcbb>;
->> +                       reg = <0x0 0x7e800000 0x0 0x1000>;
->> +               };
->> +
->> +               edacpmd0: edacpmd0@7c000000 {
->> +                       compatible = "apm,xgene-edac-pmd";
->> +                       regmap-efuse = <&efuse>;
->> +                       reg = <0x0 0x7c000000 0x0 0x200000>;
->> +               };
->
-> Why do you have labels for each one? If nothing references
-> these nodes, just remove the labels.
->
-> Regarding the names, remove the numbers for the nodes that are
-> uniquely identified by the register location, e.g. replace
-> edacmc0@7e800000 with edacmc@7e800000.
+On 14/05/2015 at 17:43:53 +0100, S Twiss wrote :
+> From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> 
+> This patch set adds support for the Dialog DA9062 Power Management IC.
+> 
+> In this patch set the following is provided:
+>  - [PATCH V2 1/4]: MFD core support  
+>  - [PATCH V2 2/4]: BUCK and LDO regulator driver
+>  - [PATCH V2 3/4]: Watchdog driver
+>  - [PATCH V2 4/4]: Add bindings for all DA9062 components
 
-I will remove all label and get rip of the number before @.
+This patch should actually be the first one to go in, else checkpatch
+will complain about compatibles not being found.
 
->
-> If you have multiple edac-mc devices, would they point to the
-> same syscon nodes, or different ones for each? If they are the
-> same, just move the references to the main node.
 
-They all reference the same one. I will move it up one level.
-
--Loc
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
