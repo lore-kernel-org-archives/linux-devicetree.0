@@ -1,126 +1,45 @@
-From: Brent Wang <wangbintian@gmail.com>
-Subject: Re: [PATCH v4 4/5] clk: hi6220: Clock driver support for Hisilicon
- hi6220 SoC
-Date: Sat, 16 May 2015 10:54:58 +0800
-Message-ID: <CAAS=xmjsFoQg-HgWA5-e=cF3qF+PcVNc3i_3Z5EBPNJ2HyOZKQ@mail.gmail.com>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>
-	<1430827599-11560-5-git-send-email-bintian.wang@huawei.com>
-	<20150515002527.GD31753@codeaurora.org>
-	<5555A37B.1090105@huawei.com>
-	<20150515193041.GO31753@codeaurora.org>
+From: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: Add syscon property to the MIPI phy in exynos5420
+Date: Sat, 16 May 2015 12:27:27 +0900
+Message-ID: <5556B91F.20103@kernel.org>
+References: <1431607240-14549-1-git-send-email-tomeu.vizoso@collabora.com> <CAJKOXPd7=wnjCd6Xz9ZNuvbxWi=cSr+eRj9YdPWA0PHR+AOTeA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150515193041.GO31753@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bintian <bintian.wang@huawei.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Jaehoon Chung <jh80.chung@samsung.com>, Olof Johansson <olof@lixom.net>, Haifeng Yan <yanhaifeng@gmail.com>, "xuejiancheng@huawei.com" <xuejiancheng@huawei.com>, sledge.
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJKOXPd7=wnjCd6Xz9ZNuvbxWi=cSr+eRj9YdPWA0PHR+AOTeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello  Stephen,
-
-2015-05-16 3:30 GMT+08:00 Stephen Boyd <sboyd@codeaurora.org>:
-> On 05/15, Bintian wrote:
->> On 2015/5/15 8:25, Stephen Boyd wrote:
->> >On 05/05, Bintian Wang wrote:
->> >>diff --git a/drivers/clk/hisilicon/clkdivider-hi6220.c b/drivers/clk/hisilicon/clkdivider-hi6220.c
->> >>+
->> >>+/**
->> >>+ * struct hi6220_clk_divider - divider clock for hi6220
->> >>+ *
->> >>+ * @hw:            handle between common and hardware-specific interfaces
->> >>+ * @reg:   register containing divider
->> >>+ * @shift: shift to the divider bit field
->> >>+ * @width: width of the divider bit field
->> >>+ * @mask:  mask for setting divider rate
->> >>+ * @table: the div table that the divider supports
->> >>+ * @lock:  register lock
->> >>+ */
->> >>+struct hi6220_clk_divider {
->> >>+   struct clk_hw   hw;
->> >>+   void __iomem    *reg;
->> >>+   u8              shift;
->> >>+   u8              width;
->> >>+   u32             mask;
->> >>+   const struct clk_div_table *table;
->> >>+   spinlock_t      *lock;
->> >>+};
->> >
->> >The clk-divider.c code has been made "reusable". Can you please
->> >try to use the functions that it now exposes instead of
->> >copy/pasting it and modifying it to suit your needs? A lot of
->> >this code looks the same.
->> In fact, I discussed this problem with Rob Herring and Mike Turquette
->> in the 96boards internal mail list before.
+On 05/15/15 22:22, Krzysztof Kozlowski wrote:
+> 2015-05-14 21:40 GMT+09:00 Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>:
+>> Since e4b3d38088df6f3acd40 ("phy: exynos-video-mipi: Fix regression =
+by
+>> adding support for PMU regmap") the syscon property is required in
+>> samsung,s5pv210-mipi-video-phy nodes, but this DTS hadn't been updat=
+ed
+>> yet.
 >>
->> The divider in hi6220 has a mask bit to guarantee writing the correct
->> bits in register when setting rate, but the index of this mask bit has
->> no rules to get (e.g. by left shift some fixed bits), so I add this
->> divider clock to handle it, we can regard hi6220_clk_divider as a
->> special case of generic divider clock.
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> Reviewed-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8p/WX4DV1PbvA@public.gmane.org=
+uk>
+>> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Krzysztof Koz=C5=82owski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 >>
->> If I don't add this divider clock for hi6220 chip, then I should change
->> the core APIs "clk_register_divider" and "clk_register_divider_table",
->> and then many other drivers will be updated.
->> So I think just add this divider clock is a good solution now.
->
-> I think you missed my point. I didn't suggest using
-> clk_register_divider or clk_register_divider_table(). I'm
-> suggesting to use
->
-> unsigned long divider_recalc_rate(struct clk_hw *hw, unsigned long parent_rate,
->                 unsigned int val, const struct clk_div_table *table,
->                 unsigned long flags);
-> long divider_round_rate(struct clk_hw *hw, unsigned long rate,
->                 unsigned long *prate, const struct clk_div_table *table,
->                 u8 width, unsigned long flags);
-> int divider_get_val(unsigned long rate, unsigned long parent_rate,
->                 const struct clk_div_table *table, u8 width,
->                 unsigned long flags);
-Got it and I will prepare next version soon.
+>> --
+>=20
+> Triple-dash please, because this won't be cut by "git am".
+>=20
+> Everything else looks fine, thank you.
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>=20
+Applied, thanks for you guys' effort.
 
->
->> >>+           return ERR_PTR(-ENOMEM);
->> >>+   }
->> >>+
->> >>+   for (i = 0; i < max_div; i++) {
->> >>+           table[i].div = min_div + i;
->> >>+           table[i].val = table[i].div - 1;
->> >>+   }
->> >>+
->> >>+   init.name = name;
->> >>+   init.ops = &hi6220_clkdiv_ops;
->> >>+   init.flags = flags | CLK_IS_BASIC;
->> >
->> >It's basic?
->> I rechecked this flag, it's really useless to us, so I can remove it.
->> But can you tell me which case I should use it?
->
-> I think the basic flag is there for drivers that want to know what type
-> of clock they're dealing with when all they have is the struct clk_hw
-> pointer. I like to discourage use of this flag in hopes of deleting
-> it someday.
->
->>
->> How about just send this patch for review not the whole patch set in
->> next version?
->>
->
-> Yes a single patch is fine. I take it you want the patch to go
-> through arm-soc with some Ack from us?
-Yes, exactly.
-The dts file includes the clock head file,  this patch goes through
-arm-soc is a good choice.
-
-Thanks,
-
-Bintian
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+- Kukjin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
