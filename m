@@ -1,70 +1,59 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: dts: mt8127: correct uart instance address
-Date: Sat, 16 May 2015 15:30:11 +0800
-Message-ID: <1431761411-29516-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH v2 0/9] Add SMP bringup support for mt65xx socs
+Date: Sat, 16 May 2015 15:58:21 +0800
+Message-ID: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This series add SMP brinup support for mediatek SoCs. This is based
+on v4.1-rc1.
 
-This is based on v4.1-rc1
+There are 2 similar but different SMP bringup up methods on Mediatek
+mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
+firmware. Others, like MT6589, doesn't have trustzone, and run kernel
+directly in secure world.
 
-------------8<-------------------------------------------
-The instance address for uart nodes are incorrect. Correct them.
+Patch 1,2 are preparing patch, cleanup/fix in secondary_startup_arm
+Patch 3~5 fix issues in mtk_timer(GPT) and enable arch timer support.
+Patch 6,7 add support for cpu enable-method "mediatek,mt65xx-smp" and
+"mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
+and TZ platform.
+Patch 8,9 finally enable SMP bringup for mt8135 and mt8127.
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt8127.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Changes in v2:
+- Fix boot issue for THUMB2 kernel.
+- Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
+- Change platsmp.c according to Matthias' suggestion
 
-diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
-index aaa7862..ca3402e 100644
---- a/arch/arm/boot/dts/mt8127.dtsi
-+++ b/arch/arm/boot/dts/mt8127.dtsi
-@@ -107,7 +107,7 @@
- 			      <0 0x10216000 0 0x2000>;
- 		};
- 
--		uart0: serial@11006000 {
-+		uart0: serial@11002000 {
- 			compatible = "mediatek,mt8127-uart","mediatek,mt6577-uart";
- 			reg = <0 0x11002000 0 0x400>;
- 			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
-@@ -115,7 +115,7 @@
- 			status = "disabled";
- 		};
- 
--		uart1: serial@11007000 {
-+		uart1: serial@11003000 {
- 			compatible = "mediatek,mt8127-uart","mediatek,mt6577-uart";
- 			reg = <0 0x11003000 0 0x400>;
- 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
-@@ -123,7 +123,7 @@
- 			status = "disabled";
- 		};
- 
--		uart2: serial@11008000 {
-+		uart2: serial@11004000 {
- 			compatible = "mediatek,mt8127-uart","mediatek,mt6577-uart";
- 			reg = <0 0x11004000 0 0x400>;
- 			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
-@@ -131,7 +131,7 @@
- 			status = "disabled";
- 		};
- 
--		uart3: serial@11009000 {
-+		uart3: serial@11005000 {
- 			compatible = "mediatek,mt8127-uart","mediatek,mt6577-uart";
- 			reg = <0 0x11005000 0 0x400>;
- 			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
--- 
-1.8.1.1.dirty
+v1:
+http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Matthias Brugger (1):
+  ARM: mediatek: enable gpt6 on boot up to make arch timer working
+
+Yingjoe Chen (8):
+  ARM: correct secondary_startup_arm mode
+  ARM: add secondary_startup_arm prototype in header file
+  clocksource: mediatek: do not enable GPT_CLK_EVT when setup
+  clocksource: mediatek: Use GPT as sched clock source
+  devicetree: bindings: add new SMP enable method Mediatek SoC
+  ARM: mediatek: add smp bringup code
+  ARM: dts: mt8135: enable basic SMP bringup for mt8135
+  ARM: dts: mt8127: enable basic SMP bringup for mt8127
+
+ Documentation/devicetree/bindings/arm/cpus.txt |   2 +
+ arch/arm/boot/dts/mt8127.dtsi                  |  16 +++
+ arch/arm/boot/dts/mt8135.dtsi                  |  16 +++
+ arch/arm/include/asm/smp.h                     |   1 +
+ arch/arm/kernel/head.S                         |   2 +-
+ arch/arm/mach-mediatek/Makefile                |   3 +
+ arch/arm/mach-mediatek/mediatek.c              |  29 +++++
+ arch/arm/mach-mediatek/platsmp.c               | 144 +++++++++++++++++++++++++
+ drivers/clocksource/mtk_timer.c                |  25 ++++-
+ 9 files changed, 232 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/mach-mediatek/platsmp.c
