@@ -1,127 +1,49 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Timur Tabi <timur@codeaurora.org>
 Subject: Re: [PATCH 5/6] Watchdog: introdouce ARM SBSA watchdog driver
-Date: Sat, 16 May 2015 20:01:53 +0800
-Message-ID: <555731B1.3070805@linaro.org>
-References: <=fu.wei@linaro.org> <1431689090-3125-1-git-send-email-fu.wei@linaro.org> <1431689090-3125-2-git-send-email-fu.wei@linaro.org> <2621121.Z4lZCvqDlK@wuerfel>
-Reply-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Sat, 16 May 2015 07:26:45 -0500
+Message-ID: <55573785.5040405@codeaurora.org>
+References: <=fu.wei@linaro.org> <1431689090-3125-1-git-send-email-fu.wei@linaro.org> <1431689090-3125-2-git-send-email-fu.wei@linaro.org> <2621121.Z4lZCvqDlK@wuerfel> <555731B1.3070805@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2621121.Z4lZCvqDlK@wuerfel>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <555731B1.3070805@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, ashwin.chaugule@linaro.org, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-Great thanks for your review,
-The feedback is inline below:
+Fu Wei wrote:
 
-On 05/15/2015 09:57 PM, Arnd Bergmann wrote:
-> On Friday 15 May 2015 19:24:49 fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->>     (1)Use linux kernel watchdog framework
->>     (2)Work with FDT on ARM64
->>     (3)Use "pretimeout" in watchdog framework
->>     (4)In first timeout(WS0), do panic to save system context
->>     (5)support geting timeout and pretimeout from
->>        parameter and FDT at the driver init stage.
->>
->> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> The patch looks good overall. Please try to describe in the patch in 
-> full sentences in the changelog, as we normally do.
+> yes. you are right. According to SBSA doc, the clocksource of SBSA watchdog is System Counter.
+> And System Counter is in (arm_)arch_timer. So I think we should do
+>
+> 	depends on ARM_ARCH_TIMER
+>
+> and use the relevant interface :
+>
+> 	clk = arch_timer_get_rate();
+>
+> will improve it, thanks for your suggestion!
 
-Sure, you will see changelog in the next version.
- 
-> 
-> A few tiny details that I'd do differently, but don't have to change
-> if the watchdog maintainer is fine with your version:
-> 
->> +struct sbsa_gwdt {
->> +	struct watchdog_device	wdd;
->> +	u32			clk;
->> +	void __iomem		*refresh_base;
->> +	void __iomem		*control_base;
->> +#ifdef CONFIG_PM_SLEEP
->> +	spinlock_t		lock;
->> +	u8			pm_status_store;
->> +#endif
->> +};
-> 
-> I would drop the #ifdef here, and favor readability over saving
-> a few bytes.
-yes, that make sense :-)
+If you use arch_timer_get_rate(), then you will not be able to compile 
+the driver as a module.
 
-> 
->> +	/*
->> +	 * Try to determine the frequency from the cp15 interface
->> +	 */
->> +	clk = arch_timer_get_cntfrq();
->> +	if (!clk) {
->> +		dev_err(dev, "System Counter frequency not available\n");
->> +		return -EINVAL;
->> +	}
-> 
-> Is it guaranteed that the same clock feeds the arch timer and the
-> watchdog? Maybe it would be better to use the clk API to read
-> the frequency, so we can avoid this dependency.
+The clock API doesn't work for me, either, because no clocks are defined 
+(clk_get_sys() always fails).
 
-yes. you are right. According to SBSA doc, the clocksource of SBSA watchdog is System Counter.
-And System Counter is in (arm_)arch_timer. So I think we should do 
+That's why I use arch_timer_get_cntfrq().
 
-	depends on ARM_ARCH_TIMER
+>> I would probably drop the various pr_debug() calls here. Once the driver
+>> works fine, they are normally not that useful any more.
+>
+> yes, for this drive, if it works fine, we can drop it, but I keep these info for some reason:
+> (1)they can help engineer debug GTDT table or DTS, if the info of watchdog goes wrong.
 
-and use the relevant interface : 
-
-	clk = arch_timer_get_rate();
-
-will improve it, thanks for your suggestion!
-
-> 
->> +
->> +	pr_debug("sbsa_gwdt: ioremap %s frame 0x%llx(size: %llu)-->%p.\n",
->> +		 res->name, (unsigned long long)res->start,
->> +		(unsigned long long)(res->end - res->start + 1), rf_base);
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
->> +	cf_base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(rf_base))
->> +		return PTR_ERR(rf_base);
->> +
->> +	pr_debug("sbsa_gwdt: ioremap %s frame 0x%llx(size: %llu)-->%p.\n",
->> +		 res->name, (unsigned long long)res->start,
->> +		(unsigned long long)(res->end - res->start + 1), cf_base);
-> 
-> I would probably drop the various pr_debug() calls here. Once the driver
-> works fine, they are normally not that useful any more.
-
-yes, for this drive, if it works fine, we can drop it, but I keep these info for some reason:
-(1)they can help engineer debug GTDT table or DTS, if the info of watchdog goes wrong.
-(2)check the memory map
-(3)if DEBUG is disable, all pr_debug are no_printk, it won't increase Image size or output any through console.
- 
-> 
-> 	Arnd
-> 
-
+Any engineer will add his own printks when debugging.  You don't need to 
+do that job for someone else.  You just have too many pr_debug() statements.
 
 -- 
-Best regards,
-
-Fu Wei
-Software Engineer From Red Hat
-LEG Team
-Linaro.org | Open source software for ARM SoCs
-Ph: +86 186 2020 4684 (mobile)
-IRC: fuwei
-Skype: tekkamanninja
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
