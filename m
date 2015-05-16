@@ -1,201 +1,127 @@
-From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] dt-bindings: Add #defines for ZTE ZX296702 clocks
-Date: Sat, 16 May 2015 14:55:48 +0800
-Message-ID: <1431759348-8164-1-git-send-email-jun.nie@linaro.org>
+From: Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC v2 PATCH 0/6] MT8173 IOMMU SUPPORT
+Date: Sat, 16 May 2015 15:08:49 +0800
+Message-ID: <CAGS+omASN0GWiXYFg9kn7grWoKywqUiSwLZdW9BKc+S-Dnp+Cg@mail.gmail.com>
+References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431683009-18158-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wan.zhijun-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, zte-lt-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add clocks defines for the global clock controller
-found on ZTE ZX296702 SoCs.
+On Fri, May 15, 2015 at 5:43 PM, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>   This patch adds support for m4u(Multimedia Memory Management Unit),
+> Currently it only support the m4u with 2 levels of page table on mt8173.
+>
+>   It is based on Robin Murphy's arm64: IOMMU-backed DMA mapping[1].
 
-Signed-off-by: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- include/dt-bindings/clock/zx296702-clock.h | 170 +++++++++++++++++++++++++++++
- 1 file changed, 170 insertions(+)
- create mode 100644 include/dt-bindings/clock/zx296702-clock.h
 
-diff --git a/include/dt-bindings/clock/zx296702-clock.h b/include/dt-bindings/clock/zx296702-clock.h
-new file mode 100644
-index 0000000..e683dbb
---- /dev/null
-+++ b/include/dt-bindings/clock/zx296702-clock.h
-@@ -0,0 +1,170 @@
-+/*
-+ * Copyright 2014 Linaro Ltd.
-+ * Copyright (C) 2014 ZTE Corporation.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_ZX296702_H
-+#define __DT_BINDINGS_CLOCK_ZX296702_H
-+
-+#define ZX296702_OSC				0
-+#define ZX296702_PLL_A9				1
-+#define ZX296702_PLL_A9_350M			2
-+#define ZX296702_PLL_MAC_1000M			3
-+#define ZX296702_PLL_MAC_333M			4
-+#define ZX296702_PLL_MM0_1188M			5
-+#define ZX296702_PLL_MM0_396M			6
-+#define ZX296702_PLL_MM0_198M			7
-+#define ZX296702_PLL_MM1_108M			8
-+#define ZX296702_PLL_MM1_72M			9
-+#define ZX296702_PLL_MM1_54M			10
-+#define ZX296702_PLL_LSP_104M			11
-+#define ZX296702_PLL_LSP_26M			12
-+#define ZX296702_PLL_AUDIO_294M912		13
-+#define ZX296702_PLL_DDR_266M			14
-+#define ZX296702_CLK_148M5			15
-+#define ZX296702_MATRIX_ACLK			16
-+#define ZX296702_MAIN_HCLK			17
-+#define ZX296702_MAIN_PCLK			18
-+#define ZX296702_CLK_500			19
-+#define ZX296702_CLK_250			20
-+#define ZX296702_CLK_125			21
-+#define ZX296702_CLK_74M25			22
-+#define ZX296702_A9_WCLK			23
-+#define ZX296702_A9_AS1_ACLK_MUX		24
-+#define ZX296702_A9_TRACE_CLKIN_MUX		25
-+#define ZX296702_A9_AS1_ACLK_DIV		26
-+#define ZX296702_CLK_2				27
-+#define ZX296702_CLK_27				28
-+#define ZX296702_DECPPU_ACLK_MUX		29
-+#define ZX296702_PPU_ACLK_MUX			30
-+#define ZX296702_MALI400_ACLK_MUX		31
-+#define ZX296702_VOU_ACLK_MUX			32
-+#define ZX296702_VOU_MAIN_WCLK_MUX		33
-+#define ZX296702_VOU_AUX_WCLK_MUX		34
-+#define ZX296702_VOU_SCALER_WCLK_MUX		35
-+#define ZX296702_R2D_ACLK_MUX			36
-+#define ZX296702_R2D_WCLK_MUX			37
-+#define ZX296702_CLK_50				38
-+#define ZX296702_CLK_25				39
-+#define ZX296702_CLK_12				40
-+#define ZX296702_CLK_16M384			41
-+#define ZX296702_CLK_32K768			42
-+#define ZX296702_SEC_WCLK_DIV			43
-+#define ZX296702_DDR_WCLK_MUX			44
-+#define ZX296702_NAND_WCLK_MUX			45
-+#define ZX296702_LSP_26_WCLK_MUX		46
-+#define ZX296702_A9_AS0_ACLK			47
-+#define ZX296702_A9_AS1_ACLK			48
-+#define ZX296702_A9_TRACE_CLKIN			49
-+#define ZX296702_DECPPU_AXI_M_ACLK		50
-+#define ZX296702_DECPPU_AHB_S_HCLK		51
-+#define ZX296702_PPU_AXI_M_ACLK			52
-+#define ZX296702_PPU_AHB_S_HCLK			53
-+#define ZX296702_VOU_AXI_M_ACLK			54
-+#define ZX296702_VOU_APB_PCLK			55
-+#define ZX296702_VOU_MAIN_CHANNEL_WCLK		56
-+#define ZX296702_VOU_AUX_CHANNEL_WCLK		57
-+#define ZX296702_VOU_HDMI_OSCLK_CEC		58
-+#define ZX296702_VOU_SCALER_WCLK		59
-+#define ZX296702_MALI400_AXI_M_ACLK		60
-+#define ZX296702_MALI400_APB_PCLK		61
-+#define ZX296702_R2D_WCLK			62
-+#define ZX296702_R2D_AXI_M_ACLK			63
-+#define ZX296702_R2D_AHB_HCLK			64
-+#define ZX296702_DDR3_AXI_S0_ACLK		65
-+#define ZX296702_DDR3_APB_PCLK			66
-+#define ZX296702_DDR3_WCLK			67
-+#define ZX296702_USB20_0_AHB_HCLK		68
-+#define ZX296702_USB20_0_EXTREFCLK		69
-+#define ZX296702_USB20_1_AHB_HCLK		70
-+#define ZX296702_USB20_1_EXTREFCLK		71
-+#define ZX296702_USB20_2_AHB_HCLK		72
-+#define ZX296702_USB20_2_EXTREFCLK		73
-+#define ZX296702_GMAC_AXI_M_ACLK		74
-+#define ZX296702_GMAC_APB_PCLK			75
-+#define ZX296702_GMAC_125_CLKIN			76
-+#define ZX296702_GMAC_RMII_CLKIN		77
-+#define ZX296702_GMAC_25M_CLK			78
-+#define ZX296702_NANDFLASH_AHB_HCLK		79
-+#define ZX296702_NANDFLASH_WCLK			80
-+#define ZX296702_LSP0_APB_PCLK			81
-+#define ZX296702_LSP0_AHB_HCLK			82
-+#define ZX296702_LSP0_26M_WCLK			83
-+#define ZX296702_LSP0_104M_WCLK			84
-+#define ZX296702_LSP0_16M384_WCLK		85
-+#define ZX296702_LSP1_APB_PCLK			86
-+#define ZX296702_LSP1_26M_WCLK			87
-+#define ZX296702_LSP1_104M_WCLK			88
-+#define ZX296702_LSP1_32K_CLK			89
-+#define ZX296702_AON_HCLK			90
-+#define ZX296702_SYS_CTRL_PCLK			91
-+#define ZX296702_DMA_PCLK			92
-+#define ZX296702_DMA_ACLK			93
-+#define ZX296702_SEC_HCLK			94
-+#define ZX296702_AES_WCLK			95
-+#define ZX296702_DES_WCLK			96
-+#define ZX296702_IRAM_ACLK			97
-+#define ZX296702_IROM_ACLK			98
-+#define ZX296702_BOOT_CTRL_HCLK			99
-+#define ZX296702_EFUSE_CLK_30			100
-+#define ZX296702_VOU_MAIN_CHANNEL_DIV		101
-+#define ZX296702_VOU_AUX_CHANNEL_DIV		102
-+#define ZX296702_VOU_TV_ENC_HD_DIV		103
-+#define ZX296702_VOU_TV_ENC_SD_DIV		104
-+#define ZX296702_VL0_MUX			105
-+#define ZX296702_VL1_MUX			106
-+#define ZX296702_VL2_MUX			107
-+#define ZX296702_GL0_MUX			108
-+#define ZX296702_GL1_MUX			109
-+#define ZX296702_GL2_MUX			110
-+#define ZX296702_WB_MUX				111
-+#define ZX296702_HDMI_MUX			112
-+#define ZX296702_VOU_TV_ENC_HD_MUX		113
-+#define ZX296702_VOU_TV_ENC_SD_MUX		114
-+#define ZX296702_VL0_CLK			115
-+#define ZX296702_VL1_CLK			116
-+#define ZX296702_VL2_CLK			117
-+#define ZX296702_GL0_CLK			118
-+#define ZX296702_GL1_CLK			119
-+#define ZX296702_GL2_CLK			120
-+#define ZX296702_WB_CLK				121
-+#define ZX296702_CL_CLK				122
-+#define ZX296702_MAIN_MIX_CLK			123
-+#define ZX296702_AUX_MIX_CLK			124
-+#define ZX296702_HDMI_CLK			125
-+#define ZX296702_VOU_TV_ENC_HD_DAC_CLK		126
-+#define ZX296702_VOU_TV_ENC_SD_DAC_CLK		127
-+#define ZX296702_A9_PERIPHCLK			128
-+#define ZX296702_TOPCLK_END			129
-+
-+#define ZX296702_SDMMC1_WCLK_MUX		0
-+#define ZX296702_SDMMC1_WCLK_DIV		1
-+#define ZX296702_SDMMC1_WCLK			2
-+#define ZX296702_SDMMC1_PCLK			3
-+#define ZX296702_SPDIF0_WCLK_MUX		4
-+#define ZX296702_SPDIF0_WCLK			5
-+#define ZX296702_SPDIF0_PCLK			6
-+#define ZX296702_SPDIF0_DIV			7
-+#define ZX296702_I2S0_WCLK_MUX			8
-+#define ZX296702_I2S0_WCLK			9
-+#define ZX296702_I2S0_PCLK			10
-+#define ZX296702_I2S0_DIV			11
-+#define ZX296702_LSP0CLK_END			12
-+
-+#define ZX296702_UART0_WCLK_MUX			0
-+#define ZX296702_UART0_WCLK			1
-+#define ZX296702_UART0_PCLK			2
-+#define ZX296702_UART1_WCLK_MUX			3
-+#define ZX296702_UART1_WCLK			4
-+#define ZX296702_UART1_PCLK			5
-+#define ZX296702_SDMMC0_WCLK_MUX		6
-+#define ZX296702_SDMMC0_WCLK_DIV		7
-+#define ZX296702_SDMMC0_WCLK			8
-+#define ZX296702_SDMMC0_PCLK			9
-+#define ZX296702_LSP1CLK_END			10
-+
-+#endif /* __DT_BINDINGS_CLOCK_ZX296702_H */
+Hi Yong, Robin,
+
+The quoted "arm64 iommu-backed DMA mapping" patch set is from 2015-February.
+That was over 3 months ago.
+What is the status of this work?
+
+Is that still the most recent version of these patches?
+If so, is there a plan when an update will be posted?
+Or, is there an updated public git repo with a more recent version of
+these patches?
+
+My apologies if these questions have been asked and answered before
+and/or elsewhere.
+
+Thanks,
+-Dan
+
+>
+>   Please check the hardware block diagram of Mediatek IOMMU.
+>
+>               EMI (External Memory Interface)
+>                |
+>               m4u (Multimedia Memory Management Unit)
+>                |
+>               smi (Smart Multimedia Interface)
+>                |
+>         +---------------+-------
+>         |               |
+>         |               |
+>     vdec larb       disp larb      ... SoCs have different local arbiter(larb).
+>         |               |
+>         |               |
+>    +----+----+    +-----+-----+
+>    |    |    |    |     |     |    ...
+>    |    |    |    |     |     |    ...
+>    |    |    |    |     |     |    ...
+>   MC   PP   VLD  OVL0 RDMA0 WDMA0  ... There are different ports in each larb.
+>
+>   Normally we specify a local arbiter(larb) for each multimedia hardware like
+> display, video decode, video encode and camera. And there are different ports in
+> each larb. Take a example, there are some ports like MC, PP, UFO, VLD, AVC_MV,
+> PRED_RD, PRED_WR in video larb, all the ports are according to the video hardware.
+>
+>   From the diagram, all the multimedia module connect with m4u via smi.
+> SMI is responsible to enable/disable iommu and control the clocks for each local
+> arbiter. If we should enable the iommu of video decode, it should config the
+> video's ports. And if the video hardware work wether enable/disable iommu,
+> it should enable the clock of its larb's clock. So we add a special driver for smi.
+>
+> [1] http://lists.linuxfoundation.org/pipermail/iommu/2015-February/012236.html
+>
+> v2:
+> -add arm short descriptor support.
+> -seperate smi common from smi and change the clock-names according
+>  to smi HW.
+> -delete the hardcode of the port-names in mt8173.
+>  replace this with larb-portes-nr in dtsi.
+> -fix some coding style issues.
+>
+> v1:
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-March/000058.html
+>
+> Yong Wu (6):
+>   dt-bindings: iommu: Add binding for mediatek IOMMU
+>   dt-bindings: mediatek: Add smi dts binding
+>   iommu: add ARM short descriptor page table allocator.
+>   iommu/mediatek: Add mt8173 IOMMU driver
+>   soc: mediatek: Add SMI driver
+>   dts: mt8173: Add iommu/smi nodes for mt8173
+>
+>  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  51 ++
+>  .../bindings/soc/mediatek/mediatek,smi-larb.txt    |  24 +
+>  .../bindings/soc/mediatek/mediatek,smi.txt         |  22 +
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  79 +++
+>  drivers/iommu/Kconfig                              |  18 +
+>  drivers/iommu/Makefile                             |   2 +
+>  drivers/iommu/io-pgtable-arm-short.c               | 490 +++++++++++++++
+>  drivers/iommu/io-pgtable.c                         |   4 +
+>  drivers/iommu/io-pgtable.h                         |   6 +
+>  drivers/iommu/mtk_iommu.c                          | 657 +++++++++++++++++++++
+>  drivers/soc/mediatek/Kconfig                       |   6 +
+>  drivers/soc/mediatek/Makefile                      |   1 +
+>  drivers/soc/mediatek/mt8173-smi.c                  | 298 ++++++++++
+>  include/dt-bindings/iommu/mt8173-iommu-port.h      | 112 ++++
+>  include/linux/mtk-smi.h                            |  39 ++
+>  15 files changed, 1809 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+>  create mode 100644 drivers/iommu/io-pgtable-arm-short.c
+>  create mode 100644 drivers/iommu/mtk_iommu.c
+>  create mode 100644 drivers/soc/mediatek/mt8173-smi.c
+>  create mode 100644 include/dt-bindings/iommu/mt8173-iommu-port.h
+>  create mode 100644 include/linux/mtk-smi.h
+>
+> --
+> 1.8.1.1.dirty
+>
+
+
+
 -- 
-1.9.1
-
+Daniel Kurtz | Software Engineer | djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org | 650.204.0722
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
