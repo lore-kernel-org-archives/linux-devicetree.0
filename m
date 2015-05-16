@@ -1,96 +1,77 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 0/7] Add SMP bringup support for mt65xx socs
-Date: Sat, 16 May 2015 11:11:20 +0200
-Message-ID: <CABuKBeL-=3Q98eMJsyJ3cDwTQfz6SR2cjtXpk-H4B-jCigF3RQ@mail.gmail.com>
-References: <1430466210-22963-1-git-send-email-yingjoe.chen@mediatek.com>
-	<CABuKBeJ406DUFoVs2p3-u6sW58Dm7XDd6uxCc==Mkq3dMhhd5Q@mail.gmail.com>
-	<1430896766.15346.13.camel@mtksdaap41>
-	<1430899182.4930.2.camel@mtksdaap41>
-	<CABuKBeLT8-sjPY6ZQXacMZZ_3iKX-g82AB0gPhsi7VW=WdjTTw@mail.gmail.com>
-	<CABuKBeKLtgs56PDO3tEftWNv58-RwtDR2cyxzs4FLX1AFZSKbg@mail.gmail.com>
-	<1431763769.23098.2.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v7 02/13] genirq: Add irq_chip_(enable|disable)_parent
+Date: Sat, 16 May 2015 11:44:14 +0200
+Message-ID: <1431769465-26867-3-git-send-email-stefan@agner.ch>
+References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431763769.23098.2.camel@mtksdaap41>
+In-Reply-To: <1431769465-26867-1-git-send-email-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jason Cooper <jason@lakedaemon.net>
+To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net
+Cc: marc.zyngier@arm.com, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-16 10:09 GMT+02:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
-> On Wed, 2015-05-06 at 13:04 +0200, Matthias Brugger wrote:
->> Hi Joe,
->>
->> 2015-05-06 10:29 GMT+02:00 Matthias Brugger <matthias.bgg@gmail.com>:
->> > 2015-05-06 9:59 GMT+02:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
->> >> On Wed, 2015-05-06 at 15:19 +0800, Yingjoe Chen wrote:
->> >>> Hi Matthias,
->> >> <...>
->> >>> > I tried on the mt8135 eval board but it fails to bring up the CPU.
->> >>> >
->> >>> > When booting:
->> >>> > [    1.048588] CPU1: failed to come online
->> >>> > [    2.049914] CPU2: failed to come online
->> >>> > [    3.051245] CPU3: failed to come online
->> >>>
->> >>>
->> >>> Thanks for testing, and the config file you provided.
->> >>> It seems you are running THUMB2 kernel, unfortunately mt8135 trustzone
->> >>> firmware doesn't support jump to THUMB2 code directly.
->> >>>
->> >>> I can workaround this with the following patch. I'll include it in my
->> >>> next round.
->> >>>
->> >>> Joe.C
->> >>>
->> >>> -----8<----------------
->> >>> diff --git a/arch/arm/mach-mediatek/platsmp.c
->> >>> b/arch/arm/mach-mediatek/platsmp.c
->> >>> index e266b3d..5dea55a 100644
->> >>> --- a/arch/arm/mach-mediatek/platsmp.c
->> >>> +++ b/arch/arm/mach-mediatek/platsmp.c
->> >>> @@ -57,6 +57,18 @@ static const struct of_device_id mtk_smp_boot_infos[]
->> >>> __initconst = {
->> >>>  static void __iomem *mtk_smp_base;
->> >>>  static const struct mtk_smp_boot_info *mtk_smp_info;
->> >>>
->> >>> +#ifdef CONFIG_THUMB2_KERNEL
->> >>> +__asm__(
->> >>> +     ".arm\n"
->> >>> +     "mtk_secondary_startup_fixup:\n"
->> >>> +     "       b secondary_startup\n"
->> >>> +     ".thumb\n"
->> >>> +);
->> >>> +
->> >>> +void mtk_secondary_startup_fixup(void);
->> >>> +#define secondary_startup mtk_secondary_startup_fixup
->> >>> +#endif
->> >>
->> >>
->> >> Replying myself.
->> >>
->> >> It seems kernel already have secondary_startup_arm which support this
->> >> usage. I'll use that in my next version instead.
->> >
->> > With this I was able to get the board up and running. I will try mt6589 ASAP.
->>
->> I just realized, that your aforementioned patch for the THUMB2 kernel
->> breaks SMP on mt6589. Strangely without this patch it works fine.
->>
->
-> Hi Matthias,
->
-> Unfortunately I can't reproduce or figure out why this could happen.
-> I change to use common kernel code secondary_startup_arm in new series,
-> could you that a try?
-> Thanks.
+Add helper irq_chip_enable_parent and irq_chip_disable_parent. The
+helper implement the default behavior in case irq_enable or irq_disable
+is not implemented for the parent interrupt chip, which is calling the
+irq_mask or irq_unmask respectively.
 
-I just tried it on mt6589 and mt8135 and its works on both.
-Actually if you revert patch 1/9 SMP on mt6589 stops working.
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ include/linux/irq.h |  2 ++
+ kernel/irq/chip.c   | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-Thanks,
-Matthias
-
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 62c6901..2633061 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -458,6 +458,8 @@ extern void handle_nested_irq(unsigned int irq);
+ 
+ extern int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
++extern void irq_chip_enable_parent(struct irq_data *data);
++extern void irq_chip_disable_parent(struct irq_data *data);
+ extern void irq_chip_ack_parent(struct irq_data *data);
+ extern int irq_chip_retrigger_hierarchy(struct irq_data *data);
+ extern void irq_chip_mask_parent(struct irq_data *data);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index eb9a4ea..2456fe8 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -876,6 +876,34 @@ void irq_cpu_offline(void)
+ 
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ /**
++ * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
++ * NULL)
++ * @data:	Pointer to interrupt specific data
++ */
++void irq_chip_enable_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	if (data->chip->irq_enable)
++		data->chip->irq_enable(data);
++	else
++		data->chip->irq_unmask(data);
++}
++
++/**
++ * irq_chip_disable_parent - Disable the parent interrupt (defaults to mask if
++ * NULL)
++ * @data:	Pointer to interrupt specific data
++ */
++void irq_chip_disable_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	if (data->chip->irq_disable)
++		data->chip->irq_disable(data);
++	else
++		data->chip->irq_mask(data);
++}
++
++/**
+  * irq_chip_ack_parent - Acknowledge the parent interrupt
+  * @data:	Pointer to interrupt specific data
+  */
 -- 
-motzblog.wordpress.com
+2.4.1
