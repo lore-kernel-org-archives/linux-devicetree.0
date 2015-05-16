@@ -1,7 +1,7 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v7 08/13] ARM: unify MMU/!MMU addruart calls
-Date: Sat, 16 May 2015 11:44:20 +0200
-Message-ID: <1431769465-26867-9-git-send-email-stefan@agner.ch>
+Subject: [PATCH v7 09/13] ARM: introduce ARM_SINGLE_ARMV7M for ARMv7-M platforms
+Date: Sat, 16 May 2015 11:44:21 +0200
+Message-ID: <1431769465-26867-10-git-send-email-stefan@agner.ch>
 References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1431769465-26867-1-git-send-email-stefan@agner.ch>
@@ -10,42 +10,55 @@ To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net
 Cc: marc.zyngier@arm.com, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Remove the needless differences between MMU/!MMU addruart calls.
-This allows to use the same addruart macro on SoC level. Useful
-for SoC consisting of multiple CPUs with and without MMU such as
-Freescale Vybrid.
+This introduces a new top level config symbol ARM_SINGLE_ARMV7M
+for non-MMU, ARMv7-M platforms. It also support multiple ARMv7-M
+platforms in one kernel image since the cores share the same
+basic memory layout and interrupt controller. However, this works
+only if the combined platforms also have a similar (main) memory
+layout.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/include/debug/efm32.S | 2 +-
- arch/arm/kernel/debug.S        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/Kconfig       | 13 +++++++++++++
+ arch/arm/Kconfig.debug |  2 +-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/include/debug/efm32.S b/arch/arm/include/debug/efm32.S
-index 2265a19..660fa1e 100644
---- a/arch/arm/include/debug/efm32.S
-+++ b/arch/arm/include/debug/efm32.S
-@@ -16,7 +16,7 @@
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 45df48b..2361efc 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -329,6 +329,19 @@ config ARCH_MULTIPLATFORM
+ 	select SPARSE_IRQ
+ 	select USE_OF
  
- #define	UARTn_TXDATA		0x0034
++config ARM_SINGLE_ARMV7M
++	bool "ARMv7-M based platforms (Cortex-M0/M3/M4)"
++	depends on !MMU
++	select ARCH_WANT_OPTIONAL_GPIOLIB
++	select ARM_NVIC
++	select CLKSRC_OF
++	select COMMON_CLK
++	select CPU_V7M
++	select GENERIC_CLOCKEVENTS
++	select NO_IOPORT_MAP
++	select SPARSE_IRQ
++	select USE_OF
++
+ config ARCH_REALVIEW
+ 	bool "ARM Ltd. RealView family"
+ 	select ARCH_WANT_OPTIONAL_GPIOLIB
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 0c12ffb..e4441de 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -1544,7 +1544,7 @@ config DEBUG_UART_8250_FLOW_CONTROL
  
--		.macro	addruart, rx, tmp
-+		.macro	addruart, rx, tmp, tmp2
- 		ldr	\rx, =(CONFIG_DEBUG_UART_PHYS)
- 
- 		/*
-diff --git a/arch/arm/kernel/debug.S b/arch/arm/kernel/debug.S
-index 78c91b5..ea9646c 100644
---- a/arch/arm/kernel/debug.S
-+++ b/arch/arm/kernel/debug.S
-@@ -35,7 +35,7 @@
- 
- #else /* !CONFIG_MMU */
- 		.macro	addruart_current, rx, tmp1, tmp2
--		addruart	\rx, \tmp1
-+		addruart	\rx, \tmp1, \tmp2
- 		.endm
- 
- #endif /* CONFIG_MMU */
+ config DEBUG_UNCOMPRESS
+ 	bool
+-	depends on ARCH_MULTIPLATFORM || PLAT_SAMSUNG
++	depends on ARCH_MULTIPLATFORM || PLAT_SAMSUNG || ARM_SINGLE_ARMV7M
+ 	default y if DEBUG_LL && !DEBUG_OMAP2PLUS_UART && \
+ 		     (!DEBUG_TEGRA_UART || !ZBOOT_ROM)
+ 	help
 -- 
 2.4.1
