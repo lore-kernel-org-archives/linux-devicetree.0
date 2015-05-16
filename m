@@ -1,141 +1,86 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v7 00/13] ARM: vf610m4: Add Vybrid Cortex-M4 support
-Date: Sat, 16 May 2015 11:44:12 +0200
-Message-ID: <1431769465-26867-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v7 05/13] irqchip: vf610-mscm: support NVIC parent
+Date: Sat, 16 May 2015 11:44:17 +0200
+Message-ID: <1431769465-26867-6-git-send-email-stefan@agner.ch>
+References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431769465-26867-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
 To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, u.kleine-koenig@pengutronix.de, olof@lixom.net, galak@codeaurora.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Cc: marc.zyngier@arm.com, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Beside the additional helper irq_chip_(enable|disable)_parent
-I also cleaned up Kconfig.debug by adding ARM_SINGLE_ARMV7M as
-UNCOMPRESS_INCLUDE/DEBUG_UNCOMPRESS dependencies. This avoids
-that each ARMv7-M ARCH_/SOC_ needs to be added.
+Support the NVIC interrupt controller as node parent of the MSCM
+interrupt router. On the dual-core variants of Vybird (VF6xx), the
+NVIC interrupt controller is used by the Cortex-M4. To support
+running Linux on this core too, MSCM needs NVIC parent support too.
 
-Shawn, if ok, could you pickup that patchset as Arnd suggested?
-I guess the IRQ stuff still should go through Jason's tree
-directly (Patch 1-5)?
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ drivers/irqchip/irq-vf610-mscm-ir.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-The patchset has proven to be working on the Cortex-M4 of the
-Vybrid SoC using a Colibri VF61 module.
-
-Note: The patch "ARM: ARMv7M: define size of vector table for
-Vybrid" has a dependency on "ARM: ARMv7-M: Enlarge vector table
-up to 256 entries" (Maxime Coquelin), which is in Russels patch
-system (marked as applied, see 8340/1). However, since the
-vector table defaults to 240 with that patch, defining the size
-of the vector table for Vybrid is not absolutely required.
-Therefor patch 6 can also be applied at a later point in time...
-
-Changes since v6:
-- Add genirq irq_chip_(enable|disable)_parent helper
-- Add ARM_SINGLE_ARMV7M to UNCOMPRESS_INCLUDE/DEBUG_UNCOMPRESS
-  since all supported ARMv7-M platforms so far support early
-  debug through DEBUG_LL
-
-Changes since v5:
-- Remove unnecessary empty lines in Kconfig
-- Add non-hierarchy helper irq_domain_set_info
-- Rebased on v4.1-rc1
-
-Changes since v4:
-- Added ARM_SINGLE_ARMV7M as top-level config symbol for ARMv7-M
-  architectures
-- Cleaned up unnecessary selects within SOC_VF610
-- Added linux,stdout-path to device tree
-
-Changes since v3:
-- Added dependency IRQ_DOMAIN_HIERARCHY for ARM_NVIC
-- Fix MSCM IR disable function check
-- Remove "ARM: imx: depend MXC debug board on 3DS machines",
-  the patch has been merged
-
-Changes since v2:
-- Update MSCM patches to merged version of MSCM interrupt router
-- Use the GPLv2/X11 dual license in the new device tree files
-- Drop SD controller in device tree (initramfs works now and is
-  probably more appropriate for most cases)
-- Disable GPIO nodes since the A5 is using them
-- Drop CONFIG_ prefixes in Kconfig changes for MXC_DEBUG_BOARD
-- Drop vector table resizing in favor of Maxime Coquelin's patch
-  (https://lkml.org/lkml/2015/2/20/399)
-- Remove !MMU dependency for ARCH_EFM32 since its part of
-  ARCH_MULTI_V7M
-- Rebased on v4.0-rc1
-
-Changes since v1:
-- Remove MSCM driver
-- Support irq domain hierarchy with NVIC irq controller
-- Extend MSCM interrupt router with NVIC as parent in the irq
-  domain hierarchy 
-- Rebased on v3.19-rc1 with MSCM driver
-- NVIC: Register only the amount of IRQ's which vectors are
-  available for
-
-Changes since RFC:
-- Unified addruart calls for MMU/!MMU
-- Add MSCM support along with routable IRQ support in NVIC
-- Rebased on Shawns for-next tree which made some changes
-  obsolete (mainly the Vybrid SoC device tree files in for-next
-  are already prepared for Cortex-M4 support)
-- Removed SRC_GPR3 hack, this is now part of a mini boot-loader:
-  https://github.com/falstaff84/vf610m4bootldr
-
-Stefan Agner (13):
-  irqdomain: Add non-hierarchy helper irq_domain_set_info
-  genirq: Add irq_chip_(enable|disable)_parent
-  genirq: generic chip: support hierarchy domain
-  irqchip: nvic: support hierarchy irq domain
-  irqchip: vf610-mscm: support NVIC parent
-  ARM: ARMv7M: define size of vector table for Vybrid
-  clocksource: add dependencies for Vybrid pit clocksource
-  ARM: unify MMU/!MMU addruart calls
-  ARM: introduce ARM_SINGLE_ARMV7M for ARMv7-M platforms
-  ARM: efm32: use ARM_SINGLE_ARMV7M
-  ARM: vf610: enable Cortex-M4 configuration on Vybrid SoC
-  ARM: dts: add support for Vybrid running on Cortex-M4
-  ARM: vf610m4: add defconfig for Linux on Vybrids Cortex-M4
-
- Documentation/devicetree/bindings/arm/fsl.txt |  3 +
- arch/arm/Kconfig                              | 41 ++++++-----
- arch/arm/Kconfig.debug                        |  4 +-
- arch/arm/boot/dts/Makefile                    |  1 +
- arch/arm/boot/dts/vf610m4-colibri.dts         | 99 +++++++++++++++++++++++++++
- arch/arm/boot/dts/vf610m4.dtsi                | 50 ++++++++++++++
- arch/arm/configs/efm32_defconfig              |  1 +
- arch/arm/configs/vf610m4_defconfig            | 42 ++++++++++++
- arch/arm/include/debug/efm32.S                |  2 +-
- arch/arm/kernel/debug.S                       |  2 +-
- arch/arm/mach-imx/Kconfig                     | 38 +++++-----
- arch/arm/mach-imx/Makefile.boot               |  0
- arch/arm/mach-imx/mach-vf610.c                |  1 +
- arch/arm/mm/Kconfig                           |  1 +
- drivers/clocksource/Kconfig                   |  2 +
- drivers/irqchip/Kconfig                       |  1 +
- drivers/irqchip/irq-nvic.c                    | 28 +++++++-
- drivers/irqchip/irq-vf610-mscm-ir.c           | 23 +++++--
- include/linux/irq.h                           |  2 +
- include/linux/irqdomain.h                     |  8 +--
- kernel/irq/chip.c                             | 28 ++++++++
- kernel/irq/generic-chip.c                     |  5 +-
- kernel/irq/irqdomain.c                        | 21 ++++++
- 23 files changed, 350 insertions(+), 53 deletions(-)
- create mode 100644 arch/arm/boot/dts/vf610m4-colibri.dts
- create mode 100644 arch/arm/boot/dts/vf610m4.dtsi
- create mode 100644 arch/arm/configs/vf610m4_defconfig
- create mode 100644 arch/arm/mach-imx/Makefile.boot
-
+diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
+index 9521057..b932ecb 100644
+--- a/drivers/irqchip/irq-vf610-mscm-ir.c
++++ b/drivers/irqchip/irq-vf610-mscm-ir.c
+@@ -47,6 +47,7 @@ struct vf610_mscm_ir_chip_data {
+ 	void __iomem *mscm_ir_base;
+ 	u16 cpu_mask;
+ 	u16 saved_irsprc[MSCM_IRSPRC_NUM];
++	bool is_nvic;
+ };
+ 
+ static struct vf610_mscm_ir_chip_data *mscm_ir_data;
+@@ -101,7 +102,7 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
+ 	writew_relaxed(chip_data->cpu_mask,
+ 		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_unmask_parent(data);
++	irq_chip_enable_parent(data);
+ }
+ 
+ static void vf610_mscm_ir_disable(struct irq_data *data)
+@@ -111,7 +112,7 @@ static void vf610_mscm_ir_disable(struct irq_data *data)
+ 
+ 	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_mask_parent(data);
++	irq_chip_disable_parent(data);
+ }
+ 
+ static struct irq_chip vf610_mscm_ir_irq_chip = {
+@@ -143,10 +144,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
+ 					      domain->host_data);
+ 
+ 	gic_data.np = domain->parent->of_node;
+-	gic_data.args_count = 3;
+-	gic_data.args[0] = GIC_SPI;
+-	gic_data.args[1] = irq_data->args[0];
+-	gic_data.args[2] = irq_data->args[1];
++
++	if (mscm_ir_data->is_nvic) {
++		gic_data.args_count = 1;
++		gic_data.args[0] = irq_data->args[0];
++	} else {
++		gic_data.args_count = 3;
++		gic_data.args[0] = GIC_SPI;
++		gic_data.args[1] = irq_data->args[0];
++		gic_data.args[2] = irq_data->args[1];
++	}
++
+ 	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
+ }
+ 
+@@ -199,6 +207,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
+ 		goto out_unmap;
+ 	}
+ 
++	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
++		mscm_ir_data->is_nvic = true;
++
+ 	cpu_pm_register_notifier(&mscm_ir_notifier_block);
+ 
+ 	return 0;
 -- 
 2.4.1
