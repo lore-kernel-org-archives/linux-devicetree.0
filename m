@@ -1,64 +1,57 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v7 09/13] ARM: introduce ARM_SINGLE_ARMV7M for ARMv7-M platforms
-Date: Sat, 16 May 2015 11:44:21 +0200
-Message-ID: <1431769465-26867-10-git-send-email-stefan@agner.ch>
+Subject: [PATCH v7 03/13] genirq: generic chip: support hierarchy domain
+Date: Sat, 16 May 2015 11:44:15 +0200
+Message-ID: <1431769465-26867-4-git-send-email-stefan@agner.ch>
 References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1431769465-26867-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net
-Cc: marc.zyngier@arm.com, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, u.kleine-koenig@pengutronix.de, olof@lixom.net, galak@codeaurora.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This introduces a new top level config symbol ARM_SINGLE_ARMV7M
-for non-MMU, ARMv7-M platforms. It also support multiple ARMv7-M
-platforms in one kernel image since the cores share the same
-basic memory layout and interrupt controller. However, this works
-only if the combined platforms also have a similar (main) memory
-layout.
+Use the new helper function irq_domain_set_info to make sure the
+function irq_domain_set_hwirq_and_chip is being called, which is
+crucial to save irqdomain specific data to irq_data.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/Kconfig       | 13 +++++++++++++
- arch/arm/Kconfig.debug |  2 +-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ kernel/irq/generic-chip.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 45df48b..2361efc 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -329,6 +329,19 @@ config ARCH_MULTIPLATFORM
- 	select SPARSE_IRQ
- 	select USE_OF
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index 61024e8..15b370d 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -360,7 +360,7 @@ static struct lock_class_key irq_nested_lock_class;
+ int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 			 irq_hw_number_t hw_irq)
+ {
+-	struct irq_data *data = irq_get_irq_data(virq);
++	struct irq_data *data = irq_domain_get_irq_data(d, virq);
+ 	struct irq_domain_chip_generic *dgc = d->gc;
+ 	struct irq_chip_generic *gc;
+ 	struct irq_chip_type *ct;
+@@ -405,8 +405,7 @@ int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 	else
+ 		data->mask = 1 << idx;
  
-+config ARM_SINGLE_ARMV7M
-+	bool "ARMv7-M based platforms (Cortex-M0/M3/M4)"
-+	depends on !MMU
-+	select ARCH_WANT_OPTIONAL_GPIOLIB
-+	select ARM_NVIC
-+	select CLKSRC_OF
-+	select COMMON_CLK
-+	select CPU_V7M
-+	select GENERIC_CLOCKEVENTS
-+	select NO_IOPORT_MAP
-+	select SPARSE_IRQ
-+	select USE_OF
-+
- config ARCH_REALVIEW
- 	bool "ARM Ltd. RealView family"
- 	select ARCH_WANT_OPTIONAL_GPIOLIB
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 0c12ffb..e4441de 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1544,7 +1544,7 @@ config DEBUG_UART_8250_FLOW_CONTROL
- 
- config DEBUG_UNCOMPRESS
- 	bool
--	depends on ARCH_MULTIPLATFORM || PLAT_SAMSUNG
-+	depends on ARCH_MULTIPLATFORM || PLAT_SAMSUNG || ARM_SINGLE_ARMV7M
- 	default y if DEBUG_LL && !DEBUG_OMAP2PLUS_UART && \
- 		     (!DEBUG_TEGRA_UART || !ZBOOT_ROM)
- 	help
+-	irq_set_chip_and_handler(virq, chip, ct->handler);
+-	irq_set_chip_data(virq, gc);
++	irq_domain_set_info(d, virq, hw_irq, chip, gc, ct->handler, NULL, NULL);
+ 	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
+ 	return 0;
+ }
 -- 
 2.4.1
