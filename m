@@ -1,67 +1,91 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 6/7] mtd: brcmnand: run bcm47xxpart part parser in addition
-Date: Sun, 17 May 2015 18:14:44 +0200
-Message-ID: <5558BE74.5020307@hauke-m.de>
-References: <1431877266-28566-1-git-send-email-hauke@hauke-m.de> <1431877266-28566-7-git-send-email-hauke@hauke-m.de> <CAOiHx=kGrsxLRT_Lf7PGm=hHm8azQYu5_AQVd6q+oOh2EXawsQ@mail.gmail.com>
+From: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 05/13] ASoC: qcom: support bitclk and osrclk per i2s
+ port
+Date: Sun, 17 May 2015 09:14:44 -0700
+Message-ID: <20150517161444.GA10901@kwestfie-linux.qualcomm.com>
+References: <1431779462-1732-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1431779562-2034-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=kGrsxLRT_Lf7PGm=hHm8azQYu5_AQVd6q+oOh2EXawsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1431779562-2034-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/17/2015 06:05 PM, Jonas Gorski wrote:
-> Hi Hauke,
+On Sat, May 16, 2015 at 05:32:42AM -0700, Srinivas Kandagatla wrote:
+> This patch adds support to allow bitclk and osrclk per i2s dai port.
+> on APQ8016 there are 4 i2s ports each one has its own bit clks.
 > 
-> On Sun, May 17, 2015 at 5:41 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
->> On the bcm53xx and bcm47xx SoC the bcm47xxpart partition parser is able
->> to parse the partitions automatically by reading some special header
->> used on these SoCs flash partition and some guessing. Without this
->> patch the default list is used, with this patch this partition parser
->> is used if the others haven't found a partition.
->>
->> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->> ---
->>  drivers/mtd/nand/brcmnand/brcmnand.c | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
->> index 468a212..cc5dc1e 100644
->> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
->> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
->> @@ -1879,6 +1879,9 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
->>         return 0;
->>  }
->>
->> +static const char * const probes[] = {"cmdlinepart", "ofpart", "bcm47xxpart",
->> +                                     NULL};
->> +
-> 
-> I know this is a bit more work, but how about moving the
-> "linux,part-probe" parsing code from drivers/mtd/maps/physmap_of.c to
-> mtd_device_parse_register?
-> 
-> then mtd_device_parse_register could do something like
-> 
->  if (!probes && ppdata && ppdata->of_node)
->     probes = of_get_probes(ppdata->of_node);
-> 
-> and you could just add a linux,part-probe = "..."; property to the dts files
-> 
-> (It looks too easy/obvious so I guess I'm overlooking something fundamental ;P)
-> 
+> Without this patch its not possible to support multiple i2s ports in the
+> lpass driver.
 
-Yes I will try to get this done in a generic way through device tree. I
-was already searching for a way to provide the partition parser from
-device tree and was wondering why it was not there.
+> @@ -400,18 +402,34 @@ int asoc_qcom_lpass_cpu_platform_probe(struct
+> platform_device *pdev)
+>  	if (variant->init)
+>  		variant->init(pdev);
+>  
+> -	drvdata->mi2s_osr_clk = devm_clk_get(&pdev->dev, "mi2s-osr-clk");
+> -	if (IS_ERR(drvdata->mi2s_osr_clk)) {
+> -		dev_err(&pdev->dev, "%s() error getting mi2s-osr-clk:
+> %ld\n",
+> -				__func__, PTR_ERR(drvdata->mi2s_osr_clk));
+> -		return PTR_ERR(drvdata->mi2s_osr_clk);
+> -	}
+> -
+> -	drvdata->mi2s_bit_clk = devm_clk_get(&pdev->dev, "mi2s-bit-clk");
+> -	if (IS_ERR(drvdata->mi2s_bit_clk)) {
+> -		dev_err(&pdev->dev, "%s() error getting mi2s-bit-clk:
+> %ld\n",
+> -				__func__, PTR_ERR(drvdata->mi2s_bit_clk));
+> -		return PTR_ERR(drvdata->mi2s_bit_clk);
+> +	for (i = 0; i < variant->num_dai; i++) {
+> +		dai_id = variant->dai_driver[i].id;
+> +		if (variant->num_dai > 1)
+> +			sprintf(clk_name, "mi2s-osr-clk%d", i);
+> +		else
+> +			sprintf(clk_name, "mi2s-osr-clk");
+> +
+> +		drvdata->mi2s_osr_clk[dai_id] = devm_clk_get(&pdev->dev,
+> +								clk_name);
+> +		if (IS_ERR(drvdata->mi2s_osr_clk[dai_id])) {
+> +			dev_err(&pdev->dev,
+> +				"%s() error getting mi2s-osr-clk: %ld\n",
+> +				__func__,
+> +			return PTR_ERR(drvdata->mi2s_osr_clk[dai_id]));
 
-I will send an independent patch which adds this feature and this patch
-from this series can be dropped.
+Should the previous two lines be:
 
-Hauke
++                             __func__, PTR_ERR(drvdata->mi2s_osr_clk[dai_id]));
++                     return PTR_ERR(drvdata->mi2s_osr_clk[dai_id]);
+
+as you remove the return in patch 6?
+
+> +		}
+> +
+> +		if (variant->num_dai > 1)
+> +			sprintf(clk_name, "mi2s-bit-clk%d", i);
+> +		else
+> +			sprintf(clk_name, "mi2s-bit-clk");
+> +
+> +		drvdata->mi2s_bit_clk[dai_id] = devm_clk_get(&pdev->dev,
+> clk_name);
+> +		if (IS_ERR(drvdata->mi2s_bit_clk[dai_id])) {
+> +			dev_err(&pdev->dev,
+> +				"%s() error getting mi2s-bit-clk: %ld\n",
+> +				__func__,
+> PTR_ERR(drvdata->mi2s_bit_clk[i]));
+> +			return PTR_ERR(drvdata->mi2s_bit_clk[dai_id]);
+> +		}
+>  	}
+
+-- 
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
