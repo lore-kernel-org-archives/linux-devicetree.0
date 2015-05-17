@@ -1,286 +1,118 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v9 4/4] crypto: Add Allwinner Security
- System crypto accelerator
-Date: Sun, 17 May 2015 10:45:08 +0200
-Message-ID: <20150517104508.468b032f@bbrezillon>
-References: <1431608341-10936-1-git-send-email-clabbe.montjoie@gmail.com>
-	<1431608341-10936-5-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/7] mmc: mediatek: Add Mediatek MMC driver
+Date: Sun, 17 May 2015 17:40:54 +0800
+Message-ID: <1431855654.26820.11.camel@mhfsdcap03>
+References: <1430214525-19198-1-git-send-email-chaotian.jing@mediatek.com>
+ <1430214525-19198-3-git-send-email-chaotian.jing@mediatek.com>
+ <CAPDyKFq=R9B6ZHHgmDcSg-TNSfqQKAUKc2NjACvpwxFpmk954g@mail.gmail.com>
+ <1430895299.15154.9.camel@mhfsdcap03>
+ <CAPDyKFr+FTXAzYVn3F41dmw2zW01pSbSHPfGJHXbUFLJfvQ5CA@mail.gmail.com>
+ <1430962956.15154.48.camel@mhfsdcap03>
+ <CAPDyKFr5N_08HbLuY=4Wfv1BoVQLVR-VW+NKh_umL1hzi_KozA@mail.gmail.com>
+ <1431335885.26820.7.camel@mhfsdcap03>
+ <CAPDyKFqeAzjpbZsyfcwb_WarC=dzoCsEeLTmxAbtvOo3Y4cYyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBF5K4GVAKGQELUONYQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1431608341-10936-5-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAPDyKFqeAzjpbZsyfcwb_WarC=dzoCsEeLTmxAbtvOo3Y4cYyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bin Zhang =?UTF-8?Q?=28=E7=AB=A0=E6=96=8C=29?= <bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-Hi Corentin,
-
-I started to review this new version, and I still think there's
-something wrong with the way your processing crypto requests.
->From my POV this is not asynchronous at all (see my comments inline),
-but maybe Herbert can confirm that.
-I haven't reviewed the hash part yet, but I guess it has the same
-problem.
-
-Best Regards,
-
-Boris
-
-On Thu, 14 May 2015 14:59:01 +0200
-LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> Add support for the Security System included in Allwinner SoC A20.
-> The Security System is a hardware cryptographic accelerator that support:
-> - MD5 and SHA1 hash algorithms
-> - AES block cipher in CBC/ECB mode with 128/196/256bits keys.
-> - DES and 3DES block cipher in CBC/ECB mode
+On Mon, 2015-05-11 at 12:29 +0200, Ulf Hansson wrote:
+> On 11 May 2015 at 11:18, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > On Fri, 2015-05-08 at 14:12 +0200, Ulf Hansson wrote:
+> >> On 7 May 2015 at 03:42, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> > Dear Ulf,
+> >> >
+> >> > Thanks!
+> >> > Below is my comment:
+> >> >
+> >> > On Wed, 2015-05-06 at 18:31 +0200, Ulf Hansson wrote:
+> >> >> On 6 May 2015 at 08:54, chaotian.jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> >> > Dear Ulf,
+> >> >> >
+> >> >> > Thanks for your review.
+> >> >> > I must do a explain of our MMC host:
+> >> >> > Source clock is source clock of the MMC bus, MMC host has a divider to
+> >> >> > get different bus clock frequency. now the runtime suspend is gating
+> >> >> > this clock.
+> >> >> >
+> >> >> > Hclk is the power domain of the MMC host, if Hclk is gated, the MMC host
+> >> >> > cannot work(all registers readout is zero). and, all registers would be
+> >> >> > reset to default value if Hclk is gated/ungated.
+> >> >> > At MT8173, MSDC0 and MSDC2 has independent Hclk, MSDC1 and MSDC3's Hclk
+> >> >> > was controlled by "Infra module".
+> >> > Sorry for mistake, MSDC0 and MSDC3 has independent Hclk, MSDC1 and
+> >> > MSDC2's Hclk was controlled by "Infra module". the Infra module is a
+> >> > "power saving module", when the system go to sleep, Infra module will be
+> >> > set and MSDC1 & MSDC2's Hclk will be gated automatically.
+> >> >>
+> >> >> Thanks for clarifying!
+> >> >>
+> >> >> I don't have enough knowledge about your SoC to understand the detail,
+> >> >> but it seems like we are mixing clocks and power domains. I would
+> >> >> rather keep this separate - if the HW allows it.
+> >> >>
+> >> >> I guess the key question I have is the following:
+> >> >> 1) Is it hardware wise possible to gate the hclk, but without gating
+> >> >> the power domain?
+> >> >> 2) At what level is the reference counting done for each device in the
+> >> >> power domain? In HW or in sofftware?
+> >> >>
+> >> >
+> >> > Actually, Our MMC host do not have power domain, all the control of the
+> >> > host is the Hclk.
+> >>
+> >> Okay, but I am not sure that fully answered my question.
+> >>
+> >> You said that hclk will be gated when the power domain gets gated. And
+> >> the power domain (infra module, right?) will be gated at system PM
+> >> sleep. And when that happens the mmc controller loses register
+> >> context.
+> >>
+> >> But, again, can hclk be gated without gating the power domain?
+> >>
+> >> No matter what, it seems like a good idea to gate the power domain
+> >> when all clients of it are idle. Yes we would need to manage register
+> >> save/restore context, but on the other hand allow you to save more
+> >> power, right?
+> >>
+> > For MSDC0 & MSDC3, it has independent HCLK, do not have power domain.
+> > For MSDC1 & MSDC2, its HCLK was controlled by Infra module(This is a big
+> > power domain for many modules).
+> > So, for msdc0 & msdc3, we can control its Hclk, for msdc1 & msdc2, we
+> > cannot control it.
 > 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+> Okay, thanks for the clarification!
+> 
+> >
+> > Yes, I will do gate/ungate HCLK & source clock in PM.
+> > In addition, Since the gate/ungate HCLK is done by runtime PM, and all
+> > register operation should work at HCLK is on, so the msdc_init_hw() only
+> > can be called at set_ios(), because in probe(), the HCLK may have not
+> > been enabled.
+> 
+> I suggest you to enable HCLK in ->probe() and thus you may also call
+> msdc_init_hw() from there.
+> 
+> This should simplify for you, when adding the runtime PM support.
 
-[...]
-
-> +
-> +int sun4i_ss_aes_poll(struct ablkcipher_request *areq, u32 mode)
-> +{
-> +	u32 spaces;
-> +	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(areq);
-> +	struct sun4i_tfm_ctx *op = crypto_ablkcipher_ctx(tfm);
-> +	struct sun4i_ss_ctx *ss = op->ss;
-> +	unsigned int ivsize = crypto_ablkcipher_ivsize(tfm);
-> +	/* when activating SS, the default FIFO space is 32 */
-> +	u32 rx_cnt = 32;
-> +	u32 tx_cnt = 0;
-> +	u32 v;
-> +	int i, sgnum, err = 0;
-> +	unsigned int ileft = areq->nbytes;
-> +	unsigned int oleft = areq->nbytes;
-> +	unsigned int todo, miter_flag;
-> +	unsigned long flags;
-> +	struct sg_mapping_iter mi, mo;
-> +	unsigned int oi, oo; /* offset for in and out */
-> +
-> +	if (areq->nbytes == 0)
-> +		return 0;
-> +
-> +	if (areq->info == NULL) {
-> +		dev_err(ss->dev, "ERROR: Empty IV\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (areq->src == NULL || areq->dst == NULL) {
-> +		dev_err(ss->dev, "ERROR: Some SGs are NULL\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	spin_lock_irqsave(&ss->slock, flags);
-
-Do you really need to take this lock so early ?
-BTW, what is this lock protecting ?
-
-IMHO, taking a spinlock and disabling irqs for the whole time you're
-executing a crypto request is not a good idea (it will prevent all
-other irqs from running, and potentially introduce latencies in other
-parts of the kernel).
-
-What you can do though is declare the following fields in your crypto
-engine struct (sun4i_ss_ctx):
-- a crypto request queue (struct crypto_queue [1])
-- a crypto_async_request variable storing the request being processed
-- a lock protecting the queue and the current request variable
-
-This way you'll only have to take the lock when queuing or dequeuing a
-request.
-
-Another comment, your implementation does not seem to be asynchronous at
-all: you're blocking the caller until its crypto request is complete.
-
-
-> +
-> +	for (i = 0; i < op->keylen; i += 4)
-> +		writel(*(op->key + i / 4), ss->base + SS_KEY0 + i);
-> +
-> +	if (areq->info != NULL) {
-> +		for (i = 0; i < 4 && i < ivsize / 4; i++) {
-> +			v = *(u32 *)(areq->info + i * 4);
-> +			writel(v, ss->base + SS_IV0 + i * 4);
-> +		}
-> +	}
-> +	writel(mode, ss->base + SS_CTL);
-> +
-> +	sgnum = sg_nents(areq->src);
-> +	if (sgnum == 1)
-> +		miter_flag = SG_MITER_FROM_SG | SG_MITER_ATOMIC;
-> +	else
-> +		miter_flag = SG_MITER_FROM_SG;
-
-
-Why is the ATOMIC flag depending on the number of sg elements.
-IMO it should only depends on the context you're currently in, and in
-your specific case, you're always in atomic context since you've taken
-a spinlock (and disabled irqs) a few lines above.
-
-Note that with the approach I previously proposed, you can even get rid
-of this ATMIC flag (or always set it depending on the context you're in
-when dequeuing the crypto requests).
-
-
-> +	sg_miter_start(&mi, areq->src, sgnum, miter_flag);
-> +	sgnum = sg_nents(areq->dst);
-> +	if (sgnum == 1)
-> +		miter_flag = SG_MITER_TO_SG | SG_MITER_ATOMIC;
-> +	else
-> +		miter_flag = SG_MITER_TO_SG;
-
-Ditto
-
-> +	sg_miter_start(&mo, areq->dst, sgnum, miter_flag);
-> +	sg_miter_next(&mi);
-> +	sg_miter_next(&mo);
-> +	if (mi.addr == NULL || mo.addr == NULL) {
-> +		err = -EINVAL;
-> +		goto release_ss;
-> +	}
-> +
-> +	ileft = areq->nbytes / 4;
-> +	oleft = areq->nbytes / 4;
-> +	oi = 0;
-> +	oo = 0;
-> +	do {
-> +		todo = min3(rx_cnt, ileft, (mi.length - oi) / 4);
-> +		if (todo > 0) {
-> +			ileft -= todo;
-> +			writesl(ss->base + SS_RXFIFO, mi.addr + oi, todo);
-
-Is there anything guaranteeing that your pointer is aligned on a 4 byte
-boundary ? If that's not the case, I guess you should copy it in a
-temporary variable before using writesl.
-
-> +			oi += todo * 4;
-> +		}
-> +		if (oi == mi.length) {
-> +			sg_miter_next(&mi);
-> +			oi = 0;
-> +		}
-> +
-> +		ispaces = readl_relaxed(ss->base + SS_FCSR);
-
-Is there a good reason for using the _relaxed version of readl/writel
-(the same comment applies a few lines below) ?
-
-> +		rx_cnt = SS_RXFIFO_SPACES(spaces);
-> +		tx_cnt = SS_TXFIFO_SPACES(spaces);
-> +
-> +		todo = min3(tx_cnt, oleft, (mo.length - oo) / 4);
-> +		if (todo > 0) {
-> +			oleft -= todo;
-> +			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
-> +			oo += todo * 4;
-> +		}
-> +		if (oo == mo.length) {
-> +			sg_miter_next(&mo);
-> +			oo = 0;
-> +		}
-> +	} while (mo.length > 0);
-> +
-> +release_ss:
-> +	sg_miter_stop(&mi);
-> +	sg_miter_stop(&mo);
-> +	writel_relaxed(0, ss->base + SS_CTL);
-
-Ditto.
-
-> +	spin_unlock_irqrestore(&ss->slock, flags);
-> +	return err;
-> +}
-> +
-> +/* Pure CPU driven way of doing DES/3DES with SS */
-> +int sun4i_ss_des_poll(struct ablkcipher_request *areq, u32 mode)
-> +{
-> +	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(areq);
-> +	struct sun4i_tfm_ctx *op = crypto_ablkcipher_ctx(tfm);
-> +	struct sun4i_ss_ctx *ss = op->ss;
-> +	int i, err = 0;
-> +	int no_chunk = 1;
-> +	struct scatterlist *in_sg = areq->src;
-> +	struct scatterlist *out_sg = areq->dst;
-> +	u8 kkey[256 / 8];
-> +
-> +	if (areq->nbytes == 0)
-> +		return 0;
-> +
-> +	if (areq->info == NULL) {
-> +		dev_err(ss->dev, "ERROR: Empty IV\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (areq->src == NULL || areq->dst == NULL) {
-> +		dev_err(ss->dev, "ERROR: Some SGs are NULL\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * if we have only SGs with size multiple of 4,
-> +	 * we can use the SS AES function
-> +	 */
-> +	while (in_sg != NULL && no_chunk == 1) {
-> +		if ((in_sg->length % 4) != 0)
-> +			no_chunk = 0;
-> +		in_sg = sg_next(in_sg);
-> +	}
-> +	while (out_sg != NULL && no_chunk == 1) {
-> +		if ((out_sg->length % 4) != 0)
-> +			no_chunk = 0;
-> +		out_sg = sg_next(out_sg);
-> +	}
-> +
-> +	if (no_chunk == 1)
-> +		return sun4i_ss_aes_poll(areq, mode);
-> +
-> +	/*
-> +	 * if some SG are not multiple of 4bytes use a fallback
-> +	 * it is much easy and clean
-> +	 */
-
-Hm, is this really the best solution. I mean, you can easily pack
-values from non aligned sg buffers so that you have only a 4 byte
-aligned buffers.
-Moreover, by doing this you'll end up with a single
-sun4i_ss_ablkcipher_poll function.
-
-BTW, I wonder if there's anything preventing an AES crypto request to be
-forged the same way DES/3DES requests are (sg entries not aligned on 4
-bytes boundary).
-
-> +	ablkcipher_request_set_tfm(areq, op->fallback);
-> +	for (i = 0; i < op->keylen; i++)
-> +		*(u32 *)(kkey + i * 4) = op->key[i];
-> +
-> +	err = crypto_ablkcipher_setkey(op->fallback, kkey, op->keylen);
-> +	if (err != 0) {
-> +		dev_err(ss->dev, "Cannot set key on fallback\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if ((mode & SS_DECRYPTION) == SS_DECRYPTION)
-> +		err = crypto_ablkcipher_decrypt(areq);
-> +	else
-> +		err = crypto_ablkcipher_encrypt(areq);
-> +	ablkcipher_request_set_tfm(areq, tfm);
-> +	return err;
-> +}
-
-[1]http://lxr.free-electrons.com/source/include/crypto/algapi.h#L68
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Yes, I will enable HCLK in ->probe(), but still need call msdc_init_hw()
+in set_ios(), because SD hot plug need it when inserted.
+In addition, it seems that still need sclk_enabled and hclk_enabled to
+judge if clock already enabled, because not only the runtime PM will
+call it.
+> 
+> Kind regards
+> Uffe
