@@ -1,16 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 06/10] clk: sunxi: Add H3 clocks support
-Date: Sun, 17 May 2015 16:27:49 +0200
-Message-ID: <20150517142749.GG4004@lukather>
+Subject: Re: [PATCH v2 08/10] reset: sunxi: Add compatible for
+ Allwinner H3 bus resets
+Date: Sun, 17 May 2015 16:31:32 +0200
+Message-ID: <20150517143132.GI4004@lukather>
 References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
- <1431707940-19372-7-git-send-email-jenskuske@gmail.com>
+ <1431707940-19372-9-git-send-email-jenskuske@gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MFsiPQgyXjZUSlqD"
+	protocol="application/pgp-signature"; boundary="LmeqhziFqEm+Ep0k"
 Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPWK4OVAKGQEWGU3IQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1431707940-19372-7-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1431707940-19372-9-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -22,162 +23,20 @@ To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---MFsiPQgyXjZUSlqD
+--LmeqhziFqEm+Ep0k
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Fri, May 15, 2015 at 06:38:56PM +0200, Jens Kuske wrote:
-> The H3 clock control unit is similar to the those of other sun8i family
-> members like the A23.
-> 
-> It makes use of the new multiple parents option for the bus gates.
-> Some of the gates use the new AHB2 clock as parent, whose clock source
-> is muxable between AHB1 and PLL6/2. The documentation isn't totally clear
-> about which devices belong to AHB2 now, especially USB EHIC/OHIC, so it
-> is mostly based on Allwinner kernel source code.
+On Fri, May 15, 2015 at 06:38:58PM +0200, Jens Kuske wrote:
+> Adding a new compatible allows us to define SoC specific behaviour
+> if necessary, for example forcing a particular device out of reset
+> even if no driver is actually using it.
 > 
 > Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |  6 +++
->  drivers/clk/sunxi/clk-sunxi.c                     | 50 ++++++++++++++++++++++-
->  2 files changed, 55 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-> index 4fa11af..e367963 100644
-> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> @@ -14,6 +14,7 @@ Required properties:
->  	"allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
->  	"allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
->  	"allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
-> +	"allwinner,sun8i-h3-pll6-clk" - for the PLL6 clock on H3
->  	"allwinner,sun9i-a80-gt-clk" - for the GT bus clock on A80
->  	"allwinner,sun4i-a10-cpu-clk" - for the CPU multiplexer clock
->  	"allwinner,sun4i-a10-axi-clk" - for the AXI clock
-> @@ -28,6 +29,7 @@ Required properties:
->  	"allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
->  	"allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
->  	"allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
-> +	"allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
->  	"allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
->  	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
->  	"allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
-> @@ -55,6 +57,7 @@ Required properties:
->  	"allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
->  	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
->  	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
-> +	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
->  	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
->  	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
->  	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
-> @@ -95,6 +98,9 @@ The "allwinner,sun9i-a80-mmc-config-clk" clock also requires:
->  For "allwinner,sun7i-a20-gmac-clk", the parent clocks shall be fixed rate
->  dummy clocks at 25 MHz and 125 MHz, respectively. See example.
->  
-> +For "allwinner,sun8i-h3-bus-gates-clk", the parent clocks shall be
-> +AHB1, AHB2, APB1 and APB2, in that order.
-> +
->  Clock consumers should specify the desired clocks they use with a
->  "clocks" phandle cell. Consumers that are using a gated clock should
->  provide an additional ID in their clock property. This ID is the
-> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> index afe560c..79364be 100644
-> --- a/drivers/clk/sunxi/clk-sunxi.c
-> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> @@ -771,6 +771,10 @@ static const struct mux_data sun6i_a31_ahb1_mux_data __initconst = {
->  	.shift = 12,
->  };
->  
-> +static const struct mux_data sun8i_h3_ahb2_mux_data __initconst = {
-> +	.shift = 0,
-> +};
-> +
->  static void __init sunxi_mux_clk_setup(struct device_node *node,
->  				       struct mux_data *data)
->  {
-> @@ -886,7 +890,7 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
->   * sunxi_gates_clk_setup() - Setup function for leaf gates on clocks
->   */
->  
-> -#define SUNXI_GATES_MAX_SIZE	64
-> +#define SUNXI_GATES_MAX_SIZE	160
->  
->  struct gates_data {
->  	DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
-> @@ -990,6 +994,36 @@ static const struct gates_data sun8i_a23_apb2_gates_data __initconst = {
->  	.mask = {0x1F0007},
->  };
->  
-> +#define BUS_GATE_PARENT_AHB1	0
-> +#define BUS_GATE_PARENT_AHB2	1
-> +#define BUS_GATE_PARENT_APB1	2
-> +#define BUS_GATE_PARENT_APB2	3
-> +
-> +static const u8 sun8i_h3_bus_gates_parents[] __initconst = {
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1,
 
-> BUS_GATE_PARENT_AHB2,
-> BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
+This should have been sent to the reset framework maintainer.
 
-> +	BUS_GATE_PARENT_AHB2, BUS_GATE_PARENT_AHB2, BUS_GATE_PARENT_AHB2,
-
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1, BUS_GATE_PARENT_AHB1,
-
-> BUS_GATE_PARENT_APB1,
-> +	BUS_GATE_PARENT_APB1, BUS_GATE_PARENT_APB1, BUS_GATE_PARENT_APB1,
-> +	BUS_GATE_PARENT_APB1, BUS_GATE_PARENT_APB1, BUS_GATE_PARENT_APB1,
-
-> +	BUS_GATE_PARENT_APB2, BUS_GATE_PARENT_APB2, BUS_GATE_PARENT_APB2,
-> +	BUS_GATE_PARENT_APB2, BUS_GATE_PARENT_APB2, BUS_GATE_PARENT_APB2,
-> +	BUS_GATE_PARENT_APB2, BUS_GATE_PARENT_APB2,
-
-> BUS_GATE_PARENT_AHB1,
-> +	BUS_GATE_PARENT_AHB1
-> +}
-
-I think something like this:
-
-if (index < .. || index > ..)
-    clk_parent = "ahb1"
-if (index == .. || index < ...)
-    clk_parent = "ahb2"
-etc...
-
-Would be both easier to maintain and to read.
-
-> +
-> +static const struct gates_data sun8i_h3_bus_gates_data __initconst = {
-> +	.mask = {0xffbe6760, 0x00701b39, 0x00007123, 0x001f0007, 0x00000081},
-> +	.parents = sun8i_h3_bus_gates_parents,
-> +};
-> +
->  static void __init sunxi_gates_clk_setup(struct device_node *node,
->  					 struct gates_data *data)
->  {
-> @@ -1110,6 +1144,16 @@ static const struct divs_data sun6i_a31_pll6_divs_data __initconst = {
->  	}
->  };
->  
-> +static const struct divs_data sun8i_h3_pll6_divs_data __initconst = {
-> +	.factors = &sun6i_a31_pll6_data,
-> +	.ndivs = 3,
-> +	.div = {
-> +		{ .fixed = 2 }, /* normal output, pll6 */
-> +		{ .self = 1 }, /* base factor clock, pll6 x2 */
-> +		{ .fixed = 4 }, /* divided output, pll6 /2 */
-> +	}
-> +};
-
-This is exactly the same clock as A31's PLL6, it shouldn't be declared
-as a different one.
+Looks good otherwise.
 
 Maxime
 
@@ -185,4 +44,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---MFsiPQgyXjZUSlqD--
+--LmeqhziFqEm+Ep0k--
