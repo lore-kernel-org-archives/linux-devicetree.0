@@ -1,118 +1,80 @@
-From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/7] mmc: mediatek: Add Mediatek MMC driver
-Date: Sun, 17 May 2015 17:40:54 +0800
-Message-ID: <1431855654.26820.11.camel@mhfsdcap03>
-References: <1430214525-19198-1-git-send-email-chaotian.jing@mediatek.com>
- <1430214525-19198-3-git-send-email-chaotian.jing@mediatek.com>
- <CAPDyKFq=R9B6ZHHgmDcSg-TNSfqQKAUKc2NjACvpwxFpmk954g@mail.gmail.com>
- <1430895299.15154.9.camel@mhfsdcap03>
- <CAPDyKFr+FTXAzYVn3F41dmw2zW01pSbSHPfGJHXbUFLJfvQ5CA@mail.gmail.com>
- <1430962956.15154.48.camel@mhfsdcap03>
- <CAPDyKFr5N_08HbLuY=4Wfv1BoVQLVR-VW+NKh_umL1hzi_KozA@mail.gmail.com>
- <1431335885.26820.7.camel@mhfsdcap03>
- <CAPDyKFqeAzjpbZsyfcwb_WarC=dzoCsEeLTmxAbtvOo3Y4cYyg@mail.gmail.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] twl4030_charger: find associated phy by more
+ reliable means.
+Date: Sun, 17 May 2015 11:56:12 +0200
+Message-ID: <20150517095610.GA2612@earth>
+References: <20150322225053.22311.45510.stgit@notabene.brown>
+ <20150322225248.22311.50385.stgit@notabene.brown>
+ <20150508161205.GE16571@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAPDyKFqeAzjpbZsyfcwb_WarC=dzoCsEeLTmxAbtvOo3Y4cYyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bin Zhang =?UTF-8?Q?=28=E7=AB=A0=E6=96=8C=29?= <bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kern>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150508161205.GE16571-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-05-11 at 12:29 +0200, Ulf Hansson wrote:
-> On 11 May 2015 at 11:18, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > On Fri, 2015-05-08 at 14:12 +0200, Ulf Hansson wrote:
-> >> On 7 May 2015 at 03:42, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >> > Dear Ulf,
-> >> >
-> >> > Thanks!
-> >> > Below is my comment:
-> >> >
-> >> > On Wed, 2015-05-06 at 18:31 +0200, Ulf Hansson wrote:
-> >> >> On 6 May 2015 at 08:54, chaotian.jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >> >> > Dear Ulf,
-> >> >> >
-> >> >> > Thanks for your review.
-> >> >> > I must do a explain of our MMC host:
-> >> >> > Source clock is source clock of the MMC bus, MMC host has a divider to
-> >> >> > get different bus clock frequency. now the runtime suspend is gating
-> >> >> > this clock.
-> >> >> >
-> >> >> > Hclk is the power domain of the MMC host, if Hclk is gated, the MMC host
-> >> >> > cannot work(all registers readout is zero). and, all registers would be
-> >> >> > reset to default value if Hclk is gated/ungated.
-> >> >> > At MT8173, MSDC0 and MSDC2 has independent Hclk, MSDC1 and MSDC3's Hclk
-> >> >> > was controlled by "Infra module".
-> >> > Sorry for mistake, MSDC0 and MSDC3 has independent Hclk, MSDC1 and
-> >> > MSDC2's Hclk was controlled by "Infra module". the Infra module is a
-> >> > "power saving module", when the system go to sleep, Infra module will be
-> >> > set and MSDC1 & MSDC2's Hclk will be gated automatically.
-> >> >>
-> >> >> Thanks for clarifying!
-> >> >>
-> >> >> I don't have enough knowledge about your SoC to understand the detail,
-> >> >> but it seems like we are mixing clocks and power domains. I would
-> >> >> rather keep this separate - if the HW allows it.
-> >> >>
-> >> >> I guess the key question I have is the following:
-> >> >> 1) Is it hardware wise possible to gate the hclk, but without gating
-> >> >> the power domain?
-> >> >> 2) At what level is the reference counting done for each device in the
-> >> >> power domain? In HW or in sofftware?
-> >> >>
-> >> >
-> >> > Actually, Our MMC host do not have power domain, all the control of the
-> >> > host is the Hclk.
-> >>
-> >> Okay, but I am not sure that fully answered my question.
-> >>
-> >> You said that hclk will be gated when the power domain gets gated. And
-> >> the power domain (infra module, right?) will be gated at system PM
-> >> sleep. And when that happens the mmc controller loses register
-> >> context.
-> >>
-> >> But, again, can hclk be gated without gating the power domain?
-> >>
-> >> No matter what, it seems like a good idea to gate the power domain
-> >> when all clients of it are idle. Yes we would need to manage register
-> >> save/restore context, but on the other hand allow you to save more
-> >> power, right?
-> >>
-> > For MSDC0 & MSDC3, it has independent HCLK, do not have power domain.
-> > For MSDC1 & MSDC2, its HCLK was controlled by Infra module(This is a big
-> > power domain for many modules).
-> > So, for msdc0 & msdc3, we can control its Hclk, for msdc1 & msdc2, we
-> > cannot control it.
-> 
-> Okay, thanks for the clarification!
-> 
-> >
-> > Yes, I will do gate/ungate HCLK & source clock in PM.
-> > In addition, Since the gate/ungate HCLK is done by runtime PM, and all
-> > register operation should work at HCLK is on, so the msdc_init_hw() only
-> > can be called at set_ios(), because in probe(), the HCLK may have not
-> > been enabled.
-> 
-> I suggest you to enable HCLK in ->probe() and thus you may also call
-> msdc_init_hw() from there.
-> 
-> This should simplify for you, when adding the runtime PM support.
 
-Yes, I will enable HCLK in ->probe(), but still need call msdc_init_hw()
-in set_ios(), because SD hot plug need it when inserted.
-In addition, it seems that still need sclk_enabled and hclk_enabled to
-judge if clock already enabled, because not only the runtime PM will
-call it.
-> 
-> Kind regards
-> Uffe
+--J/dobhs11T7y2rNN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, May 08, 2015 at 11:12:05AM -0500, Felipe Balbi wrote:
+> On Mon, Mar 23, 2015 at 09:52:48AM +1100, NeilBrown wrote:
+> > From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+> >=20
+> > twl4030_charger currently finds the associated phy
+> > using usb_get_phy() which will return the first USB2 phy.
+> > If your platform has multiple such phys (as mine does),
+> > this is not reliable (and reliably fails on the GTA04).
+> >=20
+> > Change to use devm_usb_get_phy_by_node(), having found the
+> > node by looking for an appropriately named sibling in
+> > device-tree.
+> >=20
+> > This makes usb-charging dependent on correct device-tree
+> > configuration.
+> >=20
+> > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> > Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+> > ---
+>=20
+> Sebastian, can I get your Acked-by here ?
+
+Acked-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+-- Sebastian
+
+--J/dobhs11T7y2rNN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVWGW3AAoJENju1/PIO/qaztsP/jNWefxwkayLwpQTxDlRTzv9
+qVUFeUFQTWOeXX7Ci3czk8tDvII8y3eoLPHH4aYkQx5UUmj/QZt/whkgJyzntEqv
+SNEBw8sKUS8oQHm+LYrM6OTQNo0BoRhzfVlW3gIY3k3KvI1D1hIa5qFgCMA76P2N
+g7fk/r1A8AE8z1fQ1izFAi2KyZmNJ37m3Xb6JJ5VzP9YLBIGft5aR0qzwI6o7CQN
+HHEzR4gmQkaTz3AFGc6ybBxso04HDPHLR0NwJWhKlBx/5G5EA1Q04bd8F1qe2aD3
+gXI7Tebag2ASM543Cn+XdFSF5AAv813GvTyALlMMiufjbypvVTHz0fuZdqGaK3q/
+0544s8Vw2kpR7Mc4mRixN9xs/DyX0PmgOXNTQ8pxQKUgPjaYBk6Wx/eR59pet0kD
+Lf/lX6rrjMHvCXIQbiISgTE+mQBE+4WJF06bsvHrtz+86nGUSy3H/qqcI0y2jdkW
+khSoHmJCIQ1PDF0BtnhXC8gd+paC3TLcWuK1OUgUj3im+nPcup+CxYwGa6yBZq8r
+scOS7W3DHVtLx69uZz39NmtccBX9uEmOoAofmK5GRmSPcdGEPnpzPPsXBI6Qh7J+
+tvpooXJPYQKru2dpW+q2DhUoKjUwHlqVUzQAXqSIETYpN9G/XsV65USxsXAMyCFt
+d3YBrgA5mg1Dofc0Y0Hh
+=EkTw
+-----END PGP SIGNATURE-----
+
+--J/dobhs11T7y2rNN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
