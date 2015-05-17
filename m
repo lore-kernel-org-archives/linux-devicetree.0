@@ -1,80 +1,43 @@
-From: =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 2/3 v2] ARM: bcm2835: Add the Raspberry Pi firmware driver
-Date: Sun, 17 May 2015 20:26:08 +0200
-Message-ID: <5558DD40.4070701@tronnes.org>
-References: <1431543609-19646-1-git-send-email-eric@anholt.net> <1431543609-19646-3-git-send-email-eric@anholt.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 05/10] ARM: sunxi: Introduce Allwinner H3 support
+Date: Sun, 17 May 2015 16:21:34 +0200
+Message-ID: <20150517142134.GF4004@lukather>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
+ <1431707940-19372-6-git-send-email-jenskuske@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431543609-19646-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QXAv++6zoyBcX2gv"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNWK4OVAKGQEB7GTIYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1431707940-19372-6-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--QXAv++6zoyBcX2gv
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Den 13.05.2015 21:00, skrev Eric Anholt:
-> This gives us a function for making mailbox property channel requests
-> of the firmware, which is most notable in that it will let us get and
-> set clock rates.
->
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> ---
+On Fri, May 15, 2015 at 06:38:55PM +0200, Jens Kuske wrote:
+> The Allwinner H3 is a quad-core Cortex-A7-based SoC. It is very similar
+> to other sun8i family SoCs like the A23.
+> 
+> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-[...]
+Applied, thanks!
 
-> +/*
-> + * Submits a single tag to the VPU firmware through the mailbox
-> + * property interface.
-> + *
-> + * This is a convenience wrapper around
-> + * rpi_firmware_property_list() to avoid some of the
-> + * boilerplate in property calls.
-> + */
-> +int rpi_firmware_property(struct device_node *of_node,
-> +			  u32 tag, void *tag_data, size_t buf_size)
+Maxime
 
-To use the firmware property functions, I need a DT node pointer.
-Since Device Tree is dynamic now, should I fetch the firmware node
-each time, or should I do that in probe and store the node pointer?
-
-Device Tree:
-         firmware: firmware {
-             compatible = "raspberrypi,firmware";
-         };
-
-         thermal {
-             compatible = "brcm,bcm2835-thermal";
-             firmware = <&firmware>;
-         };
-
-Rewritten (not tested) function from downstream bcm2835-thermal driver:
-
-static int bcm2835_get_temp_or_max(struct thermal_zone_device *thermal_dev,
-                                    unsigned long *temp, unsigned tag_id)
-{
-     struct device *dev = <get device somehow>;
-     struct device_node *np;
-     struct {
-         u32 id;
-         u32 val;
-     } tag_buf;
-
-     np = of_parse_phandle(dev->of_node, "firmware", 0);
-     if (!np)
-         return -EINVAL;
-
-     ret = rpi_firmware_property(np, tag_id, &tag_buf, sizeof(tag_buf));
-     if (ret)
-         return ret;
-
-     *temp = val;
-
-     return 0;
-}
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--QXAv++6zoyBcX2gv--
