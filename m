@@ -1,158 +1,78 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH] mtd: part: add generic parsing of linux,part-probe
-Date: Sun, 17 May 2015 19:35:12 +0200
-Message-ID: <1431884112-28236-1-git-send-email-hauke@hauke-m.de>
+From: =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 2/3 v2] ARM: bcm2835: Add the Raspberry Pi firmware driver
+Date: Sun, 17 May 2015 20:26:08 +0200
+Message-ID: <5558DD40.4070701@tronnes.org>
+References: <1431543609-19646-1-git-send-email-eric@anholt.net> <1431543609-19646-3-git-send-email-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431543609-19646-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This moves the linux,part-probe device tree parsing code from
-physmap_of.c to mtdpart.c. Now all drivers can use this feature by just
-providing a reference to they device tree node in struct
-mtd_part_parser_data.
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
----
- drivers/mtd/maps/physmap_of.c | 40 +---------------------------------------
- drivers/mtd/mtdpart.c         | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 39 deletions(-)
+Den 13.05.2015 21:00, skrev Eric Anholt:
+> This gives us a function for making mailbox property channel requests
+> of the firmware, which is most notable in that it will let us get and
+> set clock rates.
+>
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> ---
 
-diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
-index 774b32f..fd3750f 100644
---- a/drivers/mtd/maps/physmap_of.c
-+++ b/drivers/mtd/maps/physmap_of.c
-@@ -112,45 +112,9 @@ static struct mtd_info *obsolete_probe(struct platform_device *dev,
- static const char * const part_probe_types_def[] = {
- 	"cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
- 
--static const char * const *of_get_probes(struct device_node *dp)
--{
--	const char *cp;
--	int cplen;
--	unsigned int l;
--	unsigned int count;
--	const char **res;
--
--	cp = of_get_property(dp, "linux,part-probe", &cplen);
--	if (cp == NULL)
--		return part_probe_types_def;
--
--	count = 0;
--	for (l = 0; l != cplen; l++)
--		if (cp[l] == 0)
--			count++;
--
--	res = kzalloc((count + 1)*sizeof(*res), GFP_KERNEL);
--	count = 0;
--	while (cplen > 0) {
--		res[count] = cp;
--		l = strlen(cp) + 1;
--		cp += l;
--		cplen -= l;
--		count++;
--	}
--	return res;
--}
--
--static void of_free_probes(const char * const *probes)
--{
--	if (probes != part_probe_types_def)
--		kfree(probes);
--}
--
- static const struct of_device_id of_flash_match[];
- static int of_flash_probe(struct platform_device *dev)
- {
--	const char * const *part_probe_types;
- 	const struct of_device_id *match;
- 	struct device_node *dp = dev->dev.of_node;
- 	struct resource res;
-@@ -310,10 +274,8 @@ static int of_flash_probe(struct platform_device *dev)
- 		goto err_out;
- 
- 	ppdata.of_node = dp;
--	part_probe_types = of_get_probes(dp);
--	mtd_device_parse_register(info->cmtd, part_probe_types, &ppdata,
-+	mtd_device_parse_register(info->cmtd, part_probe_types_def, &ppdata,
- 			NULL, 0);
--	of_free_probes(part_probe_types);
- 
- 	kfree(mtd_list);
- 
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index cafdb88..b3059d6 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -29,6 +29,7 @@
- #include <linux/kmod.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/partitions.h>
-+#include <linux/of.h>
- #include <linux/err.h>
- #include <linux/kconfig.h>
- 
-@@ -718,6 +719,35 @@ void deregister_mtd_parser(struct mtd_part_parser *p)
- }
- EXPORT_SYMBOL_GPL(deregister_mtd_parser);
- 
-+static const char * const *of_get_probes(struct device_node *dp)
-+{
-+	const char *cp;
-+	int cplen;
-+	unsigned int l;
-+	unsigned int count;
-+	const char **res;
-+
-+	cp = of_get_property(dp, "linux,part-probe", &cplen);
-+	if (cp == NULL)
-+		return NULL;
-+
-+	count = 0;
-+	for (l = 0; l != cplen; l++)
-+		if (cp[l] == 0)
-+			count++;
-+
-+	res = kzalloc((count + 1)*sizeof(*res), GFP_KERNEL);
-+	count = 0;
-+	while (cplen > 0) {
-+		res[count] = cp;
-+		l = strlen(cp) + 1;
-+		cp += l;
-+		cplen -= l;
-+		count++;
-+	}
-+	return res;
-+}
-+
- /*
-  * Do not forget to update 'parse_mtd_partitions()' kerneldoc comment if you
-  * are changing this array!
-@@ -754,6 +784,13 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
- {
- 	struct mtd_part_parser *parser;
- 	int ret = 0;
-+	const char *const *types_of = NULL;
-+
-+	if (data && data->of_node) {
-+		types_of = of_get_probes(data->of_node);
-+		if (types_of != NULL)
-+			types = types_of;
-+	}
- 
- 	if (!types)
- 		types = default_mtd_part_types;
-@@ -772,6 +809,7 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
- 			break;
- 		}
- 	}
-+	kfree(types_of);
- 	return ret;
- }
- 
--- 
-2.1.4
+[...]
+
+> +/*
+> + * Submits a single tag to the VPU firmware through the mailbox
+> + * property interface.
+> + *
+> + * This is a convenience wrapper around
+> + * rpi_firmware_property_list() to avoid some of the
+> + * boilerplate in property calls.
+> + */
+> +int rpi_firmware_property(struct device_node *of_node,
+> +			  u32 tag, void *tag_data, size_t buf_size)
+
+To use the firmware property functions, I need a DT node pointer.
+Since Device Tree is dynamic now, should I fetch the firmware node
+each time, or should I do that in probe and store the node pointer?
+
+Device Tree:
+         firmware: firmware {
+             compatible = "raspberrypi,firmware";
+         };
+
+         thermal {
+             compatible = "brcm,bcm2835-thermal";
+             firmware = <&firmware>;
+         };
+
+Rewritten (not tested) function from downstream bcm2835-thermal driver:
+
+static int bcm2835_get_temp_or_max(struct thermal_zone_device *thermal_dev,
+                                    unsigned long *temp, unsigned tag_id)
+{
+     struct device *dev = <get device somehow>;
+     struct device_node *np;
+     struct {
+         u32 id;
+         u32 val;
+     } tag_buf;
+
+     np = of_parse_phandle(dev->of_node, "firmware", 0);
+     if (!np)
+         return -EINVAL;
+
+     ret = rpi_firmware_property(np, tag_id, &tag_buf, sizeof(tag_buf));
+     if (ret)
+         return ret;
+
+     *temp = val;
+
+     return 0;
+}
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
