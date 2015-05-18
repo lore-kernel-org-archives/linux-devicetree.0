@@ -1,45 +1,122 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/7] mtd: brcmnand: do not make local variable static
-Date: Mon, 18 May 2015 11:13:09 -0700
-Message-ID: <20150518181309.GQ11598@ld-irv-0074>
-References: <1431877266-28566-1-git-send-email-hauke@hauke-m.de>
- <1431877266-28566-3-git-send-email-hauke@hauke-m.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am335x-bone* enable pmic-shutdown-controller
+Date: Mon, 18 May 2015 11:14:56 -0700
+Message-ID: <20150518181455.GH10274@atomide.com>
+References: <1431525001-5747-1-git-send-email-robertcnelson@gmail.com>
+ <20150513141658.GB6605@localhost>
+ <20150513144846.GC6605@localhost>
+ <CAALWOA-hkgrMi+OeNrmwaVpdEfNadFn0R-QbpXi9LU-4sbakJQ@mail.gmail.com>
+ <20150518152108.GE10274@atomide.com>
+ <CAOCHtYgwyQy+hQE2PeUd+7U9wNygVOUuAb-VSh_9K5y7zFHEWA@mail.gmail.com>
+ <20150518162936.GF10274@atomide.com>
+ <CAOCHtYjtziBwfSMGPRrQ7rfDEf_dC=7rPytQUxVXy8bSp-8NNw@mail.gmail.com>
+ <20150518170354.GG10274@atomide.com>
+ <7ECB47C4-812D-4465-82EE-56796B987011@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1431877266-28566-3-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <7ECB47C4-812D-4465-82EE-56796B987011@konsulko.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Robert Nelson <robertcnelson@gmail.com>, Matthijs van Duin <matthijsvanduin@gmail.com>, Johan Hovold <johan@kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 17, 2015 at 05:41:01PM +0200, Hauke Mehrtens wrote:
-> Remove static in front of ctrl. This variable should not be shared
-> between different instances of brcmnand_probe(), it should be local to
-> this function and stored on the stack.
-> 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> ---
->  drivers/mtd/nand/brcmnand/brcmnand.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
-> index bae30ab..a48ad49 100644
-> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-> @@ -2069,7 +2069,7 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct device_node *dn = dev->of_node, *child;
-> -	static struct brcmnand_controller *ctrl;
-> +	struct brcmnand_controller *ctrl;
->  	struct resource *res;
->  	int ret;
->  
+* Pantelis Antoniou <pantelis.antoniou@konsulko.com> [150518 11:02]:
+> Hi Tony,
+>=20
+> > On May 18, 2015, at 20:03 , Tony Lindgren <tony@atomide.com> wrote:
+> >=20
+> > * Robert Nelson <robertcnelson@gmail.com> [150518 09:51]:
+> >> On Mon, May 18, 2015 at 11:29 AM, Tony Lindgren <tony@atomide.com>=
+ wrote:
+> >>> * Robert Nelson <robertcnelson@gmail.com> [150518 09:15]:
+> >>>> On Mon, May 18, 2015 at 10:21 AM, Tony Lindgren <tony@atomide.co=
+m> wrote:
+> >>>>=20
+> >>>> All the rev information is in the board's eeprom:
+> >>>>=20
+> >>>> hexdump -e '8/1 "%c"' /sys/bus/i2c/devices/0-0050/eeprom -s 12 -=
+n 4
+> >>>>=20
+> >>>> Rev A5B
+> >>>> 0A5B
+> >>>>=20
+> >>>> Rev C
+> >>>> 000C
+> >>>>=20
+> >>>> Just another default qwerk to add to Pantelis' bone_capemgr. ;)
+> >>>=20
+> >>> It seems we should not even instantiate some devices on BBB
+> >>> until the EEPROM is parsed.. So maybe something like this:
+> >>>=20
+> >>> 1. The problem devices are initially set with status =3D "disable=
+d"
+> >>>   in the dts
+> >>>=20
+> >>> 2. We set up drivers/*/bbb-eeprom.c that parses the board
+> >>>   revision at module_init time, and then flips the selected
+> >>>   devices to have status =3D "enabled" and populates the revision
+> >>>   info based on the eeprom and SoC revision passed in pdata.
+> >>>   Then those devices get their struct device created and
+> >>>   probed, but at a much later time.
+> >>>=20
+> >>> So rather than trying to init all that early, let's just
+> >>> init them much later when we have the proper I2C driver
+> >>> running?
+> >>=20
+> >> I see that working just fine.  We (beagleboard.org) enforce the ee=
+prom
+> >> data, as all the official images require a proper baseboard eeprom=
+=2E
+> >=20
+> > OK
+> >=20
+> >> We just have to be very careful to limit the scope, otherwise we w=
+ill
+> >> end up with Pantelis' rejected capebus from the v3.2.x days...
+> >=20
+> > Naturally I was thinking #2 above would use Pantelis' code for
+> > CONFIG_OF_OVERLAY in mainline. But instead of the earlier patches,
+> > we can make things happen much later on to avoid the detect of
+> > EEPROM early on.
+>=20
+> Already been taken care of:
+>=20
+> https://lkml.org/lkml/2015/2/18/258
+>=20
+> The patchset works, but it still needs some review eyeballs.
+> There might be a rename to variants or something.
+>=20
+> You were part of that thread too :)
 
-Good catch. Applied this to l2-mtd.git. I'll come back to the others.
+Right, and what I mean with #2 above is that we can make this all
+into a regular drivers/* device driver with no need for the
+early hacks in your series in arch/arm/mach-omap2/am33xx-dt-quirks.c.
+=20
+> I think it=E2=80=99s best if we go this path instead of twiddling wit=
+h the
+> status properties manually. Conceptually the idea is similar to
+> the detection of the white/black, with the added joy of revision
+> detection.
+
+If some device drivers depend on the I2C EEPROM, we should not
+create the struct device entry for those until the I2C EEPROM
+driver has parsed the EEPROM. And there's no need to do that
+early, we want to do everything as late as possible. That way
+we have real debug console available in most cases.
+=20
+> Ain=E2=80=99t hardware designers a fun bunch or what?
+
+We need something equal to the MS DOS boot floppy to limit their
+ideas :)
+
+Regards,
+
+Tony
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
