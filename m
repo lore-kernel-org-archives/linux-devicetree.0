@@ -1,58 +1,150 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
-Date: Mon, 18 May 2015 13:14:45 -0700
-Message-ID: <20150518201445.GA21230@roeck-us.net>
-References: <=fu.wei@linaro.org>
- <CADyBb7u=HjZO5CBzZLxw1aWDx0tKdVKBuTrrhrRF9bAQr7pADQ@mail.gmail.com>
- <20150518172329.GA17202@roeck-us.net>
- <2729872.Fp4939suL0@wuerfel>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am335x-bone* enable pmic-shutdown-controller
+Date: Mon, 18 May 2015 13:37:27 -0700
+Message-ID: <20150518203727.GI10274@atomide.com>
+References: <20150513144846.GC6605@localhost>
+ <CAALWOA-hkgrMi+OeNrmwaVpdEfNadFn0R-QbpXi9LU-4sbakJQ@mail.gmail.com>
+ <20150518152108.GE10274@atomide.com>
+ <CAOCHtYgwyQy+hQE2PeUd+7U9wNygVOUuAb-VSh_9K5y7zFHEWA@mail.gmail.com>
+ <20150518162936.GF10274@atomide.com>
+ <CAOCHtYjtziBwfSMGPRrQ7rfDEf_dC=7rPytQUxVXy8bSp-8NNw@mail.gmail.com>
+ <20150518170354.GG10274@atomide.com>
+ <7ECB47C4-812D-4465-82EE-56796B987011@konsulko.com>
+ <20150518181455.GH10274@atomide.com>
+ <D3CA3985-8C25-4B0C-A3DF-A3E2AF8450BD@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2729872.Fp4939suL0@wuerfel>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
+In-Reply-To: <D3CA3985-8C25-4B0C-A3DF-A3E2AF8450BD@konsulko.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Robert Nelson <robertcnelson@gmail.com>, Matthijs van Duin <matthijsvanduin@gmail.com>, Johan Hovold <johan@kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 18, 2015 at 10:03:52PM +0200, Arnd Bergmann wrote:
-> On Monday 18 May 2015 10:23:30 Guenter Roeck wrote:
-> > > 
-> > > integrate watchdog_init_pretimeout and watchdog_init_timeout will be a
-> > > little hard,
-> > > we may need to change this API to :
-> > > 
-> > > watchdog_init_timeouts(struct watchdog_device *wdd, unsigned int timeout_parm,
-> > >                              unsigned int pretimeout_parm, struct device *dev)
-> > > 
-> > > then we need to update all the watchdog drivers which use this API,
-> > > maybe we can do this in a individual patchset, after this pretimeout
-> > > patch is merged.
-> > > 
-> > > Is that OK  ?   any thought?
-> > > 
-> > That is what I would recommend.
-> > 
-> 
-> The API change is fine, but I don't think you need to change all drivers.
-> 
-> Just add a small wrapper function in the header file doing the conversion:
-> 
-> static inline int watchdog_init_timeout(struct watchdog_device *wdd,
->                                 unsigned int timeout_parm, struct device *dev)
-> {
-> 	return watchdog_init_timeouts(wdd, timeout_parm, ~0ul, dev);
-> }
-> 
-> Then you can update the drivers that actually use the pretimeout to
-> use the new function at some point, and leave all other drivers calling
-> the wrapper function.
-> 
-Excellent idea.
+* Pantelis Antoniou <pantelis.antoniou@konsulko.com> [150518 11:19]:
+> Hi Tony,
+>=20
+> > On May 18, 2015, at 21:14 , Tony Lindgren <tony@atomide.com> wrote:
+> >=20
+> > * Pantelis Antoniou <pantelis.antoniou@konsulko.com> [150518 11:02]=
+:
+> >> Hi Tony,
+> >>=20
+> >>> On May 18, 2015, at 20:03 , Tony Lindgren <tony@atomide.com> wrot=
+e:
+> >>>=20
+> >>> * Robert Nelson <robertcnelson@gmail.com> [150518 09:51]:
+> >>>> On Mon, May 18, 2015 at 11:29 AM, Tony Lindgren <tony@atomide.co=
+m> wrote:
+> >>>>> * Robert Nelson <robertcnelson@gmail.com> [150518 09:15]:
+> >>>>>> On Mon, May 18, 2015 at 10:21 AM, Tony Lindgren <tony@atomide.=
+com> wrote:
+> >>>>>>=20
+> >>>>>> All the rev information is in the board's eeprom:
+> >>>>>>=20
+> >>>>>> hexdump -e '8/1 "%c"' /sys/bus/i2c/devices/0-0050/eeprom -s 12=
+ -n 4
+> >>>>>>=20
+> >>>>>> Rev A5B
+> >>>>>> 0A5B
+> >>>>>>=20
+> >>>>>> Rev C
+> >>>>>> 000C
+> >>>>>>=20
+> >>>>>> Just another default qwerk to add to Pantelis' bone_capemgr. ;=
+)
+> >>>>>=20
+> >>>>> It seems we should not even instantiate some devices on BBB
+> >>>>> until the EEPROM is parsed.. So maybe something like this:
+> >>>>>=20
+> >>>>> 1. The problem devices are initially set with status =3D "disab=
+led"
+> >>>>>  in the dts
+> >>>>>=20
+> >>>>> 2. We set up drivers/*/bbb-eeprom.c that parses the board
+> >>>>>  revision at module_init time, and then flips the selected
+> >>>>>  devices to have status =3D "enabled" and populates the revisio=
+n
+> >>>>>  info based on the eeprom and SoC revision passed in pdata.
+> >>>>>  Then those devices get their struct device created and
+> >>>>>  probed, but at a much later time.
+> >>>>>=20
+> >>>>> So rather than trying to init all that early, let's just
+> >>>>> init them much later when we have the proper I2C driver
+> >>>>> running?
+> >>>>=20
+> >>>> I see that working just fine.  We (beagleboard.org) enforce the =
+eeprom
+> >>>> data, as all the official images require a proper baseboard eepr=
+om.
+> >>>=20
+> >>> OK
+> >>>=20
+> >>>> We just have to be very careful to limit the scope, otherwise we=
+ will
+> >>>> end up with Pantelis' rejected capebus from the v3.2.x days...
+> >>>=20
+> >>> Naturally I was thinking #2 above would use Pantelis' code for
+> >>> CONFIG_OF_OVERLAY in mainline. But instead of the earlier patches=
+,
+> >>> we can make things happen much later on to avoid the detect of
+> >>> EEPROM early on.
+> >>=20
+> >> Already been taken care of:
+> >>=20
+> >> https://lkml.org/lkml/2015/2/18/258
+> >>=20
+> >> The patchset works, but it still needs some review eyeballs.
+> >> There might be a rename to variants or something.
+> >>=20
+> >> You were part of that thread too :)
+> >=20
+> > Right, and what I mean with #2 above is that we can make this all
+> > into a regular drivers/* device driver with no need for the
+> > early hacks in your series in arch/arm/mach-omap2/am33xx-dt-quirks.=
+c.
+> >=20
+>=20
+> It=E2=80=99s going to be tough. This is touching the pmic that needs =
+to be=20
+> initialized early since a whole bunch of drivers depend on it.
 
-Guenter
+With the $subject driver we just need to have have RTC driver not
+probe until the the EEPROM is parsed in the drivers/foo/bbb-eeprom.c
+driver and the RTC overlay is initialized. Or what's the issue
+you're talking about?
+
+But in any case, let's not merge a copy of the I2C driver into
+arch/arm/mach-omap2/am33xx-dt-quirks.c. We can do all this with
+drivers/foo/bbb-eeprom.c that's just a regular device driver.
+=20
+> >> I think it=E2=80=99s best if we go this path instead of twiddling =
+with the
+> >> status properties manually. Conceptually the idea is similar to
+> >> the detection of the white/black, with the added joy of revision
+> >> detection.
+> >=20
+> > If some device drivers depend on the I2C EEPROM, we should not
+> > create the struct device entry for those until the I2C EEPROM
+> > driver has parsed the EEPROM. And there's no need to do that
+> > early, we want to do everything as late as possible. That way
+> > we have real debug console available in most cases.
+> >=20
+>=20
+> FWIW the first patch used an early platform device, but that made thi=
+ngs
+> even more complicated.
+
+No need to do any early platform devices, we just need to delay
+the creation of struct device for the problem drivers.
+
+Regards,
+
+Tony
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
