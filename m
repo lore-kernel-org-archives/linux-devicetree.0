@@ -1,53 +1,165 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v7 2/2] mmc: host: sdhci: Add support to disable
- SDR104/SDR50/DDR50 based on capability register 0.
-Date: Mon, 18 May 2015 12:36:07 +0530
-Message-ID: <CAOHikRBU9yrGQU3BbTqs4sWZN5osqEYKzD3VjXPar180aQj67Q@mail.gmail.com>
-References: <1431517912-10322-1-git-send-email-stripathi@apm.com>
-	<1431517912-10322-3-git-send-email-stripathi@apm.com>
+From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Subject: [PATCH v5 3/3] dts: hi6220: enable thermal sensor for hisilicon SoC
+Date: Mon, 18 May 2015 15:11:49 +0800
+Message-ID: <1431933109-22764-4-git-send-email-kong.kongxinwei@hisilicon.com>
+References: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1431517912-10322-3-git-send-email-stripathi@apm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: edubezval@gmail.com, rui.zhuang@intel.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org
+Cc: dan.zhao@hisilicon.com, devicetree@vger.kernel.org, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, mark.rutland@arm.com, linuxarm@huawei.com, zhenwei.wang@hisilicon.com, leo.yan@linaro.org, mporter@konsulko.com, zhangfei.gao@linaro.org, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 5:21 PM, Suman Tripathi <stripathi@apm.com> wrote:
-> The sdhci framework disables SDR104/SDR50/DDR50 based on only quirk.
-> This patch adds the support to disable SDR104/SDR50/DDR50 based on
-> reading the capability register 0.
->
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
-> ---
->  drivers/mmc/host/sdhci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 58c1770..a3d9b8a 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3118,7 +3118,8 @@ int sdhci_add_host(struct sdhci_host *host)
->                 }
->         }
->
-> -       if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V)
-> +       if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V ||
-> +           !(caps[0] & SDHCI_CAN_VDD_180))
->                 caps[1] &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_SDR50 |
->                        SDHCI_SUPPORT_DDR50);
->
-> --
-> 1.8.2.1
->
+From: kongxinwei <kong.kongxinwei@hisilicon.com>
 
-I didn't get any comments on this patch . Can anyone review it
-(Michal , Ulf , Arnd etc ...)?
+Dts includes two part: the first part is related with thermal sensor;
+the second part is related with thermal zones, in this part it will
+define the thermal zones and which sensor device should be bound to.
+it also need specify the polling interval for every thermal zone.
 
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 127 ++++++++++++++++++++++++++++++
+ 1 file changed, 127 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
 
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+new file mode 100644
+index 0000000..82f213d
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -0,0 +1,127 @@
++
++#include <dt-bindings/thermal/thermal.h>
++
++/ {
++
++	tsensor: tsensor@0,f7030700 {
++		compatible = "hisilicon,tsensor";
++		reg = <0x0 0xf7030700 0x0 0x1000>;
++		interrupts = <0 7 0x4>;
++		clocks = <&clock_sys HI6220_TSENSOR_CLK>;
++		clock-names = "thermal_clk";
++		#thermal-sensor-cells = <1>;
++
++	thermal-zones {
++		local: local {
++			/* milliseconds */
++			polling-delay-passive = <1000>;
++			/* milliseconds */
++			polling-delay = <5000>;
++
++			/* sensor	ID */
++			thermal-sensors = <&tsensor  0>;
++
++			trips {
++				local_alert: local_alert {
++					/* millicelsius */
++					temperature = <70000>;
++					/* millicelsius */
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				local_crit: local_crit {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				/* There are currently no cooling maps
++				because there are no cooling devices */
++			};
++		};
++
++		cluster1: cluster1 {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++
++			/* sensor	ID */
++			thermal-sensors = <&tsensor  1>;
++
++			trips {
++				cluster1_alert: cluster1_alert {
++					temperature = <70000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cluster1_crit: cluster1_crit {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				/* There are currently no cooling maps
++				because there are no cooling devices */
++			};
++		};
++
++		cluster0: cluster0 {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++
++			/* sensor	ID */
++			thermal-sensors = <&tsensor  2>;
++
++			trips {
++				cluster0_alert: cluster0_alert {
++					temperature = <70000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cluster0_crit: cluster0_crit {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&cluster0_alert>;
++					cooling-device =
++					    <&cpu0 THERMAL_NO_LIMIT
++						THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		gpu: gpu {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++
++			/* sensor	ID */
++			thermal-sensors = <&tsensor  3>;
++
++			trips {
++				gpu_alert: gpu_alert {
++					temperature = <70000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				gpu_crit: gpu_crit {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				/* There are currently no cooling maps
++				because there are no cooling devices */
++			};
++		};
++	};
++}
 -- 
-Thanks,
-with regards,
-Suman Tripathi
+1.9.1
+
+
