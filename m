@@ -1,51 +1,59 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 4/7] arm: dts: imx: update snvs to use syscon access
- register
-Date: Mon, 18 May 2015 10:45:25 +0200
-Message-ID: <1431938725.3209.15.camel@pengutronix.de>
-References: <1431696990-23078-1-git-send-email-Frank.Li@freescale.com>
-	 <1431696990-23078-5-git-send-email-Frank.Li@freescale.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] ARM: add secondary_startup_arm prototype in
+ header file
+Date: Mon, 18 May 2015 16:56:45 +0800
+Message-ID: <1431939405.8312.3.camel@mtksdaap41>
+References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1431763110-443-3-git-send-email-yingjoe.chen@mediatek.com>
+	 <CABuKBe+8VHnHbMA4gMzzReUNUf3LiL6JnPhehkxWtzrYAhBBZg@mail.gmail.com>
+	 <20150516211953.GQ2067@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1431696990-23078-5-git-send-email-Frank.Li@freescale.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Frank.Li@freescale.com
-Cc: lznuaa@gmail.com, shawn.guo@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, sachin.kamat@linaro.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150516211953.GQ2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
-
-Am Freitag, den 15.05.2015, 21:36 +0800 schrieb Frank.Li@freescale.com:
-> From: Frank Li <Frank.Li@freescale.com>
+On Sat, 2015-05-16 at 22:19 +0100, Russell King - ARM Linux wrote:
+> On Sat, May 16, 2015 at 11:02:40AM +0200, Matthias Brugger wrote:
+> > 2015-05-16 9:58 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> > > Put secondary_startup_arm() prototype in arch/arm/include/asm/smp.h
+> > > so users doesn't have to add extern prototype in their code.
+> > >
+> > > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > ---
+> > >  arch/arm/include/asm/smp.h | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/arch/arm/include/asm/smp.h b/arch/arm/include/asm/smp.h
+> > > index 18f5a55..f5cffb7 100644
+> > > --- a/arch/arm/include/asm/smp.h
+> > > +++ b/arch/arm/include/asm/smp.h
+> > > @@ -69,6 +69,7 @@ struct secondary_data {
+> > >  extern struct secondary_data secondary_data;
+> > >  extern volatile int pen_release;
+> > >  extern void secondary_startup(void);
+> > > +extern void secondary_startup_arm(void);
+> > 
+> > Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> snvs is MFP device. Change dts to use syscon to allocate register resource.
+> This change should also end up in the patch system as its core ARM stuff,
+> especially if it's not scheduled for merging through arm-soc.
 > 
-> Signed-off-by: Frank Li <Frank.Li@freescale.com>
-> ---
->  arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++--------
->  arch/arm/boot/dts/imx6sl.dtsi  | 12 ++++--------
->  arch/arm/boot/dts/imx6sx.dtsi  | 12 ++++--------
->  arch/arm/boot/dts/vfxxx.dtsi   |  9 +++------
->  4 files changed, 15 insertions(+), 30 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 0482a66..6d8161d 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -687,21 +687,17 @@
->  			};
->  
->  			snvs@020cc000 {
-> -				compatible = "fsl,sec-v4.0-mon", "simple-bus";
-> -				#address-cells = <1>;
-> -				#size-cells = <1>;
-> -				ranges = <0 0x020cc000 0x4000>;
-> +				compatible = "fsl,sec-v4.0-mon", "syscon",  "simple-bus";
 
-The compatible should change from "simple-bus" to "simple-mfd", then.
+Russell,
 
-regards
-Philipp
+Thanks. I just put these 2 patches into the patch system.
+Since patch 7/9 depends on this patch, I think we should merge this
+patch(2/9) through arm-soc tree to prevent build fail.
 
+Joe.C
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
