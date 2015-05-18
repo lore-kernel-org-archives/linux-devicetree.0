@@ -1,89 +1,75 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] max7359_keypad: implement DT bindings
-Date: Mon, 18 May 2015 10:02:03 -0700
-Message-ID: <20150518170203.GD19708@dtor-ws>
-References: <ppRxn-3aD-5@gated-at.bofh.it>
- <pquS6-2DV-9@gated-at.bofh.it>
- <20150517165502.GA781@fifteen>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-bone* enable pmic-shutdown-controller
+Date: Mon, 18 May 2015 10:03:55 -0700
+Message-ID: <20150518170354.GG10274@atomide.com>
+References: <1431525001-5747-1-git-send-email-robertcnelson@gmail.com>
+ <20150513141658.GB6605@localhost>
+ <20150513144846.GC6605@localhost>
+ <CAALWOA-hkgrMi+OeNrmwaVpdEfNadFn0R-QbpXi9LU-4sbakJQ@mail.gmail.com>
+ <20150518152108.GE10274@atomide.com>
+ <CAOCHtYgwyQy+hQE2PeUd+7U9wNygVOUuAb-VSh_9K5y7zFHEWA@mail.gmail.com>
+ <20150518162936.GF10274@atomide.com>
+ <CAOCHtYjtziBwfSMGPRrQ7rfDEf_dC=7rPytQUxVXy8bSp-8NNw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150517165502.GA781@fifteen>
+In-Reply-To: <CAOCHtYjtziBwfSMGPRrQ7rfDEf_dC=7rPytQUxVXy8bSp-8NNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Evgeniy Dushistov <dushistov-JGs/UdohzUI@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 17, 2015 at 07:55:02PM +0300, Evgeniy Dushistov wrote:
-> On Fri, May 15, 2015 at 11:00:02PM +0200, Dmitry Torokhov wrote:
-> > On Thu, May 14, 2015 at 05:38:03AM +0300, Evgeniy Dushistov wrote:
-> > > +		maxim,debounce_reg = /bits/ 8 <0x5F>;
-> > > +		maxim,ports_reg = /bits/ 8 <0xFF>;
-> > 
-> > Specifying exact size for properties is quite uncommon; I think the
-> > usual recommendation is is to use the "standard" u32 and validate the
-> > range in parser function.
-> > 
+* Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150518 09:51]:
+> On Mon, May 18, 2015 at 11:29 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > * Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150518 09:15]:
+> >> On Mon, May 18, 2015 at 10:21 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> >>
+> >> All the rev information is in the board's eeprom:
+> >>
+> >> hexdump -e '8/1 "%c"' /sys/bus/i2c/devices/0-0050/eeprom -s 12 -n 4
+> >>
+> >> Rev A5B
+> >> 0A5B
+> >>
+> >> Rev C
+> >> 000C
+> >>
+> >> Just another default qwerk to add to Pantelis' bone_capemgr. ;)
+> >
+> > It seems we should not even instantiate some devices on BBB
+> > until the EEPROM is parsed.. So maybe something like this:
+> >
+> > 1. The problem devices are initially set with status = "disabled"
+> >    in the dts
+> >
+> > 2. We set up drivers/*/bbb-eeprom.c that parses the board
+> >    revision at module_init time, and then flips the selected
+> >    devices to have status = "enabled" and populates the revision
+> >    info based on the eeprom and SoC revision passed in pdata.
+> >    Then those devices get their struct device created and
+> >    probed, but at a much later time.
+> >
+> > So rather than trying to init all that early, let's just
+> > init them much later when we have the proper I2C driver
+> > running?
 > 
-> Using of u8 has advantages, it is possible on compilation stage
-> (dts->dtb) check that you enter right value, but
-> because of DT validation tools are not part of mainline,
-> I replace u8 with u32 as you suggest, see patch bellow.
+> I see that working just fine.  We (beagleboard.org) enforce the eeprom
+> data, as all the official images require a proper baseboard eeprom.
 
-If you get DT folks to OK using /bits/ - that's fine. Grant, Rob, any
-guidance here?
+OK
+ 
+> We just have to be very careful to limit the scope, otherwise we will
+> end up with Pantelis' rejected capebus from the v3.2.x days...
 
-> 
-> > > +		MATRIX_KEY(0, 7, KEY_RESERVED)
-> > > +		...
-> > 
-> > 
-> > Indent one more level? Also, maybe fill with something other than
-> > KEY_RESERVED?
-> > 
-> 
-> Fixed, see patch bellow.
-> 
-> > 
-> > 
->  
-> > >  	dev_dbg(&client->dev, "keys FIFO is 0x%02x\n", ret);
-> > > +	if (!keymap_data) {
-> > > +		error = max7359_parse_dt(&client->dev, &init_state);
-> > > +		if (error) {
-> > > +			dev_err(&client->dev, "platform data null, and no DT data\n");
-> > > +			return error;
-> > 
-> > Both debounce and ports values are optional and we'll fail building
-> > keymap if there are no platform data nor device tree data, so I would
-> > drop this check and the stub for max7359_parse_dt() as well - we have
-> > stubs for property parsing anyway.
-> > 
-> 
-> Because of u32/u8 check at now max7359_parse_dt can return not 0.
-> 
-> > -- 
-> > Dmitry
-> > 
-> 
-> Thanks, for review. 
-> 
-> Please add me to CC, because of I'm not the part
-> of any mailing list (too huge traffic for me).
+Naturally I was thinking #2 above would use Pantelis' code for
+CONFIG_OF_OVERLAY in mainline. But instead of the earlier patches,
+we can make things happen much later on to avoid the detect of
+EEPROM early on.
 
-Umm, if you want to be replied (or CCed) to, why do you make sure that
-replies do not go to you by default??? Why do you set "Mail-Followup-To"
-to exclude yourself?
+Regards,
 
-> Mail-Followup-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>,
-> 	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
-> 	linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Thanks.
-
--- 
-Dmitry
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
