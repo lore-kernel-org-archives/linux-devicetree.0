@@ -1,91 +1,52 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH] vf610: dt: Nomenclature fixup for PTC12 pin used in
- RMII mode.
-Date: Mon, 18 May 2015 14:47:27 +0200
-Message-ID: <348facdd175a944356f046708b9a1e06@agner.ch>
-References: <1431573098-23809-1-git-send-email-cory.tusar@pid1solutions.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 04/16] clocksource/drivers: Add ARM System timer driver
+Date: Mon, 18 May 2015 14:49:26 +0200
+Message-ID: <5559DFD6.3050603@linaro.org>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<1431158038-3813-5-git-send-email-mcoquelin.stm32@gmail.com> <CALszF6BiKwDKejfpVgs6ojTxC4LSRfLSEaszXTGVy7xfbHLHZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431573098-23809-1-git-send-email-cory.tusar@pid1solutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cory Tusar <cory.tusar@pid1solutions.com>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALszF6BiKwDKejfpVgs6ojTxC4LSRfLSEaszXTGVy7xfbHLHZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?VXdlIEtsZWluZS0=?= =?UTF-8?B?S8O2bmln?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?B?QW5kcmVh?= =?UTF-8?B?cyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>, Rusty Russell <rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-05-14 05:11, Cory Tusar wrote:
-> This commit includes a minor nomenclature fixup for boards based on the
-> Freescale VF610 SoC and which make use of the alternate "RMII1_RXD1"
-> functionality for pin PTC12.  This brings the macro name in-line with
-> both the datasheet and other similar macros.
+On 05/18/2015 01:55 PM, Maxime Coquelin wrote:
+> Hi Daniel,
+>
+> 2015-05-09 9:53 GMT+02:00 Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
+:
+>> This patch adds clocksource support for ARMv7-M's System timer,
+>> also known as SysTick.
+>>
+>> Tested-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   drivers/clocksource/Kconfig          |  7 ++++
+>>   drivers/clocksource/Makefile         |  1 +
+>>   drivers/clocksource/armv7m_systick.c | 79 ++++++++++++++++++++++++=
+++++++++++++
+>>   3 files changed, 87 insertions(+)
+>>   create mode 100644 drivers/clocksource/armv7m_systick.c
+>>
+>
+> Could you consider applying this patch and its dt-bindings
+> documentation (patch 3/16) on your tree for v4.2?
 
-Thanks, stumbled upon this a while ago too, never came around creating a
-patch.
+Patches applied for 4.2.
 
-Acked-by: Stefan Agner <stefan@agner.ch>
+Thanks
 
-> 
-> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
-> ---
->  arch/arm/boot/dts/vf-colibri.dtsi  | 2 +-
->  arch/arm/boot/dts/vf610-cosmic.dts | 2 +-
->  arch/arm/boot/dts/vf610-pinfunc.h  | 2 +-
->  arch/arm/boot/dts/vf610-twr.dts    | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi
-> b/arch/arm/boot/dts/vf-colibri.dtsi
-> index fbef082..68ca125 100644
-> --- a/arch/arm/boot/dts/vf-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-> @@ -140,7 +140,7 @@
->  				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
->  				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
->  				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-> -				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
-> +				VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
->  				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
->  				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
->  				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-> diff --git a/arch/arm/boot/dts/vf610-cosmic.dts
-> b/arch/arm/boot/dts/vf610-cosmic.dts
-> index fd8758b..5447f25 100644
-> --- a/arch/arm/boot/dts/vf610-cosmic.dts
-> +++ b/arch/arm/boot/dts/vf610-cosmic.dts
-> @@ -68,7 +68,7 @@
->  				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
->  				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
->  				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-> -				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
-> +				VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
->  				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
->  				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
->  				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-> diff --git a/arch/arm/boot/dts/vf610-pinfunc.h
-> b/arch/arm/boot/dts/vf610-pinfunc.h
-> index 1ee681f..fcad713 100644
-> --- a/arch/arm/boot/dts/vf610-pinfunc.h
-> +++ b/arch/arm/boot/dts/vf610-pinfunc.h
-> @@ -369,7 +369,7 @@
->  #define VF610_PAD_PTC11__MLB_DATA		0x0E0 0x358 ALT6 0x1
->  #define VF610_PAD_PTC11__DEBUG_OUT		0x0E0 0x000 ALT7 0x0
->  #define VF610_PAD_PTC12__GPIO_57		0x0E4 0x000 ALT0 0x0
-> -#define VF610_PAD_PTC12__ENET_RMII_RXD1		0x0E4 0x000 ALT1 0x0
-> +#define VF610_PAD_PTC12__ENET_RMII1_RXD1	0x0E4 0x000 ALT1 0x0
->  #define VF610_PAD_PTC12__ESAI_SDO1		0x0E4 0x318 ALT3 0x1
->  #define VF610_PAD_PTC12__SAI2_TX_BCLK		0x0E4 0x370 ALT5 0x1
->  #define VF610_PAD_PTC12__DEBUG_OUT3		0x0E4 0x000 ALT7 0x0
-> diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
-> index f64fddc..375ab23 100644
-> --- a/arch/arm/boot/dts/vf610-twr.dts
-> +++ b/arch/arm/boot/dts/vf610-twr.dts
-> @@ -221,7 +221,7 @@
->  				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
->  				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
->  				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-> -				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
-> +				VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
->  				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
->  				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
->  				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
+   -- Daniel
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
