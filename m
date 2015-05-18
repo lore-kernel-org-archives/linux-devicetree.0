@@ -1,64 +1,57 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 4/7] arm: dts: imx: update snvs to use syscon access
- register
-Date: Tue, 19 May 2015 00:17:17 +0200
-Message-ID: <20150518221717.GX3338@piout.net>
-References: <1431696990-23078-1-git-send-email-Frank.Li@freescale.com>
- <1431696990-23078-5-git-send-email-Frank.Li@freescale.com>
- <1431938725.3209.15.camel@pengutronix.de>
- <CAHrpEqSxgqUSWFkAh+R4K1oShsWfErE4nndxkYGGktMdkb3=xw@mail.gmail.com>
+From: Liviu Dudau <liviu@dudau.co.uk>
+Subject: Re: [PATCH v2 0/5]  arm64: Juno DT updates and new DT for Juno R1
+Date: Mon, 18 May 2015 23:31:32 +0100
+Message-ID: <20150518223132.GA946@bart.dudau.co.uk>
+References: <1431970109-8902-1-git-send-email-Liviu.Dudau@arm.com>
+ <4136868.8yCICAPH00@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAHrpEqSxgqUSWFkAh+R4K1oShsWfErE4nndxkYGGktMdkb3=xw@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, a.zummo@towertech.it, sachin.kamat@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <4136868.8yCICAPH00@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Olof Johansson <olof@lixom.net>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/05/2015 at 14:30:50 -0500, Zhi Li wrote :
-> On Mon, May 18, 2015 at 3:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > Hi Frank,
-> >
-> > Am Freitag, den 15.05.2015, 21:36 +0800 schrieb Frank.Li@freescale.com:
-> >> From: Frank Li <Frank.Li@freescale.com>
-> >>
-> >> snvs is MFP device. Change dts to use syscon to allocate register resource.
-> >>
-> >> Signed-off-by: Frank Li <Frank.Li@freescale.com>
-> >> ---
-> >>  arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++--------
-> >>  arch/arm/boot/dts/imx6sl.dtsi  | 12 ++++--------
-> >>  arch/arm/boot/dts/imx6sx.dtsi  | 12 ++++--------
-> >>  arch/arm/boot/dts/vfxxx.dtsi   |  9 +++------
-> >>  4 files changed, 15 insertions(+), 30 deletions(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> >> index 0482a66..6d8161d 100644
-> >> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> >> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> >> @@ -687,21 +687,17 @@
-> >>                       };
-> >>
-> >>                       snvs@020cc000 {
-> >> -                             compatible = "fsl,sec-v4.0-mon", "simple-bus";
-> >> -                             #address-cells = <1>;
-> >> -                             #size-cells = <1>;
-> >> -                             ranges = <0 0x020cc000 0x4000>;
-> >> +                             compatible = "fsl,sec-v4.0-mon", "syscon",  "simple-bus";
-> >
-> > The compatible should change from "simple-bus" to "simple-mfd", then.
+On Mon, May 18, 2015 at 10:14:23PM +0200, Arnd Bergmann wrote:
+> On Monday 18 May 2015 18:28:24 Liviu Dudau wrote:
+> > This series restructures the Juno DT files and introduces the DT
+> > for the new Juno R1. The board is an update of the Juno R0 with
+> > support for PCIe, but the current series only brings the board to
+> > parity with Juno R0. The series that enable the PCIe Generic Host
+> > Bridge to be used on Juno R1 will be posted separately.
+> > 
+> > Changes from v1:
+> >  - Moved memory node inside juno-base.dtsi as this is common between
+> >    boards and unlikely to change soon.
+> >  - Added "arm,juno-r1" as compatible string in juno-r1.dts at Jon Medhurst's
+> >    suggestion.
 > 
-> After change to simple-mfd,  driver can't been probed. Anything missed?
+> Are you planning to send a pull request to arm@kernel.org for this when
+> you're happy with the state, or should we pick up the patches from the
+> list?
 
-The pull request is there:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/342131.html
+If I don't see any more comments in the next couple(?) of days then I will
+send a pull request.
 
-It has landed in linux-next
+Many thanks,
+Liviu
 
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> 
+> 	Arnd
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
