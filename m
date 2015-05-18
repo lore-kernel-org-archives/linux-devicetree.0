@@ -1,45 +1,62 @@
-From: Igal.Liberman <igal.liberman@freescale.com>
-Subject: [PATCH] powerpc/fsl: Add FMan best effort port compatible
-Date: Mon, 18 May 2015 11:41:59 +0300
-Message-ID: <1431938519-11343-1-git-send-email-igal.liberman@freescale.com>
-Reply-To: igal.liberman@freescale.com
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v8 04/16] clocksource/drivers: Add ARM System timer driver
+Date: Mon, 18 May 2015 14:57:08 +0200
+Message-ID: <CALszF6A5Z0wDpBOFveVjL19sMPAuqfnQJ+CwSgfXygmx46s7tQ@mail.gmail.com>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1431158038-3813-5-git-send-email-mcoquelin.stm32@gmail.com>
+	<CALszF6BiKwDKejfpVgs6ojTxC4LSRfLSEaszXTGVy7xfbHLHZg@mail.gmail.com>
+	<5559DFD6.3050603@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, Igal Liberman <igal.liberman@freescale.com>, madalin.bucur@freescale.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5559DFD6.3050603@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdhbCBMaWJlcm1hbiA8aWdhbC5saWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
-YXRjaCBhZGRzIGEgY29tcGF0aWJsZSB3aGljaCByZXByZXNlbnRzIEZNYW4gVjMgYmVzdCBlZmZv
-cnQgcG9ydHMuCkZNYW4gYmVzdCBlZmZvcnQgcG9ydCBpcyBjb25maWd1cmVkIGFzIDEwRyBwb3J0
-cywgaG93ZXZlciwgaXQgdXNlcyAxRwpoYXJkd2FyZS4KClNpZ25lZC1vZmYtYnk6IElnYWwgTGli
-ZXJtYW4gPGlnYWwubGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KLS0tCiAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dCAgICAgICB8ICAgIDUgKysrKysKIDEgZmlsZSBj
-aGFuZ2VkLCA1IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQKaW5kZXggZWRkYTU1Zi4uYzJlM2Vj
-MyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMv
-ZnNsL2ZtYW4udHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
-cnBjL2ZzbC9mbWFuLnR4dApAQCAtMTY2LDYgKzE2NiwxMSBAQCBQUk9QRVJUSUVTCiAJCQktICJm
-c2wsZm1hbi12My1wb3J0LW9oIiBmb3IgRk1hblYzIE9IIHBvcnRzCiAJCQktICJmc2wsZm1hbi12
-My1wb3J0LXJ4IiBmb3IgRk1hblYzIFJYIHBvcnRzCiAJCQktICJmc2wsZm1hbi12My1wb3J0LXR4
-IiBmb3IgRk1hblYzIFRYIHBvcnRzCisJCU9wdGlvbmFsIGNvbXBhdGlibGUgd2hpY2ggY2FuIGJl
-IHVzZWQgaW4gYWRkaXRpb24gdG8gdGhlCisJCWNvbXBhdGlibGVzIGFib3ZlIGlzOgorCQkJLSAi
-ZnNsLGZtYW4tdjMtYmVzdC1lZmZvcnQtcG9ydCIKKwkJVGhpcyBjb21wYXRpYmxlIHJlcHJlc2Vu
-dHMgMTBHIGJlc3QgZWZmb3J0IHBvcnRzOgorCQkJUG9ydCBjb25maWd1cmVkIGFzIDEwRywgdXNp
-bmcgMUcgaGFyZHdhcmUuCiAKIC0gY2VsbC1pbmRleAogCQlVc2FnZTogcmVxdWlyZWQKLS0gCjEu
-Ny45LjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
-bnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0
-cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+2015-05-18 14:49 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+> On 05/18/2015 01:55 PM, Maxime Coquelin wrote:
+>>
+>> Hi Daniel,
+>>
+>> 2015-05-09 9:53 GMT+02:00 Maxime Coquelin <mcoquelin.stm32@gmail.com=
+>:
+>>>
+>>> This patch adds clocksource support for ARMv7-M's System timer,
+>>> also known as SysTick.
+>>>
+>>> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>> ---
+>>>   drivers/clocksource/Kconfig          |  7 ++++
+>>>   drivers/clocksource/Makefile         |  1 +
+>>>   drivers/clocksource/armv7m_systick.c | 79
+>>> ++++++++++++++++++++++++++++++++++++
+>>>   3 files changed, 87 insertions(+)
+>>>   create mode 100644 drivers/clocksource/armv7m_systick.c
+>>>
+>>
+>> Could you consider applying this patch and its dt-bindings
+>> documentation (patch 3/16) on your tree for v4.2?
+>
+>
+> Patches applied for 4.2.
+
+Thanks Daniel!
+
+>
+> Thanks
+>
+>   -- Daniel
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
+or ARM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
