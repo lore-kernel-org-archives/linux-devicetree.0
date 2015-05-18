@@ -1,132 +1,46 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
-Date: Tue, 19 May 2015 01:39:36 +0800
-Message-ID: <CADyBb7sMJ=i0XbJWS2dyK4Dc1=gWGGs51soysy7SSyh=7X2M1A@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1431689090-3125-1-git-send-email-fu.wei@linaro.org>
-	<2464980.1PKdnqcc3c@wuerfel>
-	<CADyBb7u=HjZO5CBzZLxw1aWDx0tKdVKBuTrrhrRF9bAQr7pADQ@mail.gmail.com>
-	<20150518172329.GA17202@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 1/3 v3] dt/bindings: Add binding for the Raspberry Pi firmware driver
+Date: Mon, 18 May 2015 10:59:34 -0700
+Message-ID: <1431971974-26798-1-git-send-email-eric@anholt.net>
+References: <1431543609-19646-2-git-send-email-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150518172329.GA17202@roeck-us.net>
+In-Reply-To: <1431543609-19646-2-git-send-email-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+This driver will provide support for calls into the firmware that will
+be used by other drivers like cpufreq and vc4.
+---
 
-np, will do so  :-)
+v2: Improve commit message, point to mailbox.txt for how mboxes work.
+v3: Use Lee's suggestion for mailbox phandle docs, fix spelling of
+    "raspberry".
 
-On 19 May 2015 at 01:23, Guenter Roeck <linux@roeck-us.net> wrote:
-> On Tue, May 19, 2015 at 01:19:22AM +0800, Fu Wei wrote:
->> Hi Arnd,
->>
->> Great thanks for your suggestion :-)
->>
->> feedback inline below
->>
->> On 15 May 2015 at 22:04, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Friday 15 May 2015 19:24:48 fu.wei@linaro.org wrote:
->> >> +static void watchdog_check_min_max_pretimeout(struct watchdog_device *wdd)
->> >> +{
->> >> +       /*
->> >> +        * Check that we have valid min and max pretimeout values, if
->> >> +        * not reset them both to 0 (=not used or unknown)
->> >> +        */
->> >> +       if (wdd->min_pretimeout > wdd->max_pretimeout) {
->> >> +               pr_info("Invalid min and max pretimeout, resetting to 0!\n");
->> >> +               wdd->min_pretimeout = 0;
->> >> +               wdd->max_pretimeout = 0;
->> >> +       }
->> >> +}
->> >
->> > I would probably just fold this function into the existing
->> > watchdog_check_min_max_timeout() and check both normal and pre-timeout
->> > there.
->>
->> yes, I can do that , and that is good idea
->>
->> >
->> >> +/**
->> >> + * watchdog_init_pretimeout() - initialize the pretimeout field
->> >> + * @pretimeout_parm: pretimeout module parameter
->> >> + * @dev: Device that stores the timeout-sec property
->> >> + *
->> >> + * Initialize the pretimeout field of the watchdog_device struct with either
->> >> + * the pretimeout module parameter (if it is valid value) or the timeout-sec
->> >> + * property (only if it is a valid value and the timeout_parm is out of bounds).
->> >> + * If none of them are valid then we keep the old value (which should normally
->> >> + * be the default pretimeout value.
->> >> + *
->> >> + * A zero is returned on success and -EINVAL for failure.
->> >> + */
->> >> +int watchdog_init_pretimeout(struct watchdog_device *wdd,
->> >> +                            unsigned int pretimeout_parm, struct device *dev)
->> >> +{
->> >> +       int ret = 0;
->> >> +       u32 timeouts[2];
->> >> +
->> >> +       watchdog_check_min_max_pretimeout(wdd);
->> >> +
->> >> +       /* try to get the timeout module parameter first */
->> >> +       if (!watchdog_pretimeout_invalid(wdd, pretimeout_parm) &&
->> >> +           pretimeout_parm) {
->> >> +               wdd->pretimeout = pretimeout_parm;
->> >> +               return ret;
->> >> +       }
->> >> +       if (pretimeout_parm)
->> >> +               ret = -EINVAL;
->> >> +
->> >> +       /* try to get the timeout_sec property */
->> >> +       if (!dev || !dev->of_node)
->> >> +               return ret;
->> >> +       ret = of_property_read_u32_array(dev->of_node,
->> >> +                                        "timeout-sec", timeouts, 2);
->> >> +       if (!watchdog_pretimeout_invalid(wdd, timeouts[1]) && timeouts[1])
->> >> +               wdd->pretimeout = timeouts[1];
->> >> +       else
->> >> +               ret = -EINVAL;
->> >> +
->> >> +       return ret;
->> >> +}
->> >> +EXPORT_SYMBOL_GPL(watchdog_init_pretimeout);
->> >
->> > Same here: the function is very similar to the watchdog_init_timeout
->> > function, and it reads the same property, so just do both here.
->> >
->> > The easiest way for that is probably to use of_find_property()
->> > and of_prop_next_u32() to read the two numbers.
->>
->> integrate watchdog_init_pretimeout and watchdog_init_timeout will be a
->> little hard,
->> we may need to change this API to :
->>
->> watchdog_init_timeouts(struct watchdog_device *wdd, unsigned int timeout_parm,
->>                              unsigned int pretimeout_parm, struct device *dev)
->>
->> then we need to update all the watchdog drivers which use this API,
->> maybe we can do this in a individual patchset, after this pretimeout
->> patch is merged.
->>
->> Is that OK  ? :-)  any thought?
->>
-> That is what I would recommend.
->
-> Guenter
+ .../devicetree/bindings/arm/bcm/raspberrypi,firmware.txt   | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt
 
-
-
+diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt
+new file mode 100644
+index 0000000..dbf60f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,firmware.txt
+@@ -0,0 +1,14 @@
++Raspberry Pi VideoCore firmware driver
++
++Required properties:
++
++- compatible:		Should be "rasbperrypi,firmware"
++- mboxes:		Phandle to the firmware device's Mailbox.
++			  (See: ../mailbox/mailbox.txt for more information)
++
++Example:
++
++firmware {
++	compatible = "raspberrypi,firmware";
++	mboxes = <&mailbox>;
++};
 -- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+2.1.4
