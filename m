@@ -1,35 +1,45 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: Re: [PATCH v2 1/2] coresight: replicator: Add Qualcomm CoreSight
- Replicator driver
-Date: Mon, 18 May 2015 15:51:11 +0300
-Message-ID: <1431953471.2380.55.camel@linaro.org>
-References: <1431012969-16338-1-git-send-email-ivan.ivanov@linaro.org>
-	 <1431012969-16338-2-git-send-email-ivan.ivanov@linaro.org>
-	 <CANLsYkx289yPQo3rJK0tCaDt+_axWjh1i2_6=rmL2p_Yw4Qr8w@mail.gmail.com>
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [PATCH] powerpc/fsl: Add FMan best effort port compatible
+Date: Mon, 18 May 2015 11:41:59 +0300
+Message-ID: <1431938519-11343-1-git-send-email-igal.liberman@freescale.com>
+Reply-To: igal.liberman@freescale.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkx289yPQo3rJK0tCaDt+_axWjh1i2_6=rmL2p_Yw4Qr8w@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, Igal Liberman <igal.liberman@freescale.com>, madalin.bucur@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-
-On Mon, 2015-05-11 at 13:07 -0600, Mathieu Poirier wrote:
-> On 7 May 2015 at 09:36, Ivan T. Ivanov ivanov@linaro.org> wrote:
-> > 
-> > +
-> > +module_amba_driver(replicator_driver);
-> > --
-> > 1.9.1
-> > 
-> 
-> Applied - thanks.
-
-
-Thank you. Which tree did you use to collect these patches?
-
-Regards,
-Ivan
+RnJvbTogSWdhbCBMaWJlcm1hbiA8aWdhbC5saWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
+YXRjaCBhZGRzIGEgY29tcGF0aWJsZSB3aGljaCByZXByZXNlbnRzIEZNYW4gVjMgYmVzdCBlZmZv
+cnQgcG9ydHMuCkZNYW4gYmVzdCBlZmZvcnQgcG9ydCBpcyBjb25maWd1cmVkIGFzIDEwRyBwb3J0
+cywgaG93ZXZlciwgaXQgdXNlcyAxRwpoYXJkd2FyZS4KClNpZ25lZC1vZmYtYnk6IElnYWwgTGli
+ZXJtYW4gPGlnYWwubGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KLS0tCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dCAgICAgICB8ICAgIDUgKysrKysKIDEgZmlsZSBj
+aGFuZ2VkLCA1IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQKaW5kZXggZWRkYTU1Zi4uYzJlM2Vj
+MyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMv
+ZnNsL2ZtYW4udHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
+cnBjL2ZzbC9mbWFuLnR4dApAQCAtMTY2LDYgKzE2NiwxMSBAQCBQUk9QRVJUSUVTCiAJCQktICJm
+c2wsZm1hbi12My1wb3J0LW9oIiBmb3IgRk1hblYzIE9IIHBvcnRzCiAJCQktICJmc2wsZm1hbi12
+My1wb3J0LXJ4IiBmb3IgRk1hblYzIFJYIHBvcnRzCiAJCQktICJmc2wsZm1hbi12My1wb3J0LXR4
+IiBmb3IgRk1hblYzIFRYIHBvcnRzCisJCU9wdGlvbmFsIGNvbXBhdGlibGUgd2hpY2ggY2FuIGJl
+IHVzZWQgaW4gYWRkaXRpb24gdG8gdGhlCisJCWNvbXBhdGlibGVzIGFib3ZlIGlzOgorCQkJLSAi
+ZnNsLGZtYW4tdjMtYmVzdC1lZmZvcnQtcG9ydCIKKwkJVGhpcyBjb21wYXRpYmxlIHJlcHJlc2Vu
+dHMgMTBHIGJlc3QgZWZmb3J0IHBvcnRzOgorCQkJUG9ydCBjb25maWd1cmVkIGFzIDEwRywgdXNp
+bmcgMUcgaGFyZHdhcmUuCiAKIC0gY2VsbC1pbmRleAogCQlVc2FnZTogcmVxdWlyZWQKLS0gCjEu
+Ny45LjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
+bnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0
+cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
