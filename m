@@ -1,40 +1,51 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v9 4/4] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Mon, 18 May 2015 16:33:08 +0800
-Message-ID: <20150518083308.GB18195@gondor.apana.org.au>
-References: <1431608341-10936-1-git-send-email-clabbe.montjoie@gmail.com>
- <1431608341-10936-5-git-send-email-clabbe.montjoie@gmail.com>
- <20150517104508.468b032f@bbrezillon>
- <20150517103440.GA7800@gondor.apana.org.au>
- <20150517124811.797fab32@bbrezillon>
- <20150518004121.GA11910@gondor.apana.org.au>
- <20150518092449.2364d21e@bbrezillon>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 4/7] arm: dts: imx: update snvs to use syscon access
+ register
+Date: Mon, 18 May 2015 10:45:25 +0200
+Message-ID: <1431938725.3209.15.camel@pengutronix.de>
+References: <1431696990-23078-1-git-send-email-Frank.Li@freescale.com>
+	 <1431696990-23078-5-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150518092449.2364d21e@bbrezillon>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: LABBE Corentin <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, joe@perches.com, tj@kernel.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1431696990-23078-5-git-send-email-Frank.Li@freescale.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Frank.Li@freescale.com
+Cc: lznuaa@gmail.com, shawn.guo@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, sachin.kamat@linaro.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 18, 2015 at 09:24:49AM +0200, Boris Brezillon wrote:
+Hi Frank,
+
+Am Freitag, den 15.05.2015, 21:36 +0800 schrieb Frank.Li@freescale.com:
+> From: Frank Li <Frank.Li@freescale.com>
 > 
-> Okay, just to be sure, what does "Asynchronous" mean in ablkcipher or
-> ahash ?
-> Is it related to the fact that crypto operations can be done in
-> multiple steps (e.g.: one set_key + several encrypt chunk operations),
-> or is this something else ?
+> snvs is MFP device. Change dts to use syscon to allocate register resource.
+> 
+> Signed-off-by: Frank Li <Frank.Li@freescale.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++--------
+>  arch/arm/boot/dts/imx6sl.dtsi  | 12 ++++--------
+>  arch/arm/boot/dts/imx6sx.dtsi  | 12 ++++--------
+>  arch/arm/boot/dts/vfxxx.dtsi   |  9 +++------
+>  4 files changed, 15 insertions(+), 30 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 0482a66..6d8161d 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -687,21 +687,17 @@
+>  			};
+>  
+>  			snvs@020cc000 {
+> -				compatible = "fsl,sec-v4.0-mon", "simple-bus";
+> -				#address-cells = <1>;
+> -				#size-cells = <1>;
+> -				ranges = <0 0x020cc000 0x4000>;
+> +				compatible = "fsl,sec-v4.0-mon", "syscon",  "simple-bus";
 
-It gives you the ability to postpone the processing.  However
-it doesn't mean that you have to postpone the processing.  For
-instance, all of our sync software algorithms are also available
-through the async interface for obvious reasons.
+The compatible should change from "simple-bus" to "simple-mfd", then.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+regards
+Philipp
+
