@@ -1,8 +1,8 @@
 From: kxw <xweikong@hotmail.com>
 Subject: Re: [PATCH RESEND v4 2/2] thermal: hisilicon: add new hisilicon thermal
  sensor driver
-Date: Mon, 18 May 2015 12:36:06 +0800
-Message-ID: <BLU436-SMTP1422D2C1FACC3B972F1E63CC1C40@phx.gbl>
+Date: Mon, 18 May 2015 12:44:25 +0800
+Message-ID: <BLU436-SMTP17726FD87EB9D6C9435C3EC1C40@phx.gbl>
 References: <1430707940-14468-1-git-send-email-kong.kongxinwei@hisilicon.com> <1430707940-14468-3-git-send-email-kong.kongxinwei@hisilicon.com> <20150512012926.GD4810@localhost.localdomain> <5559647F.1060209@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
@@ -15,15 +15,15 @@ To: Xinwei Kong <kong.kongxinwei@hisilicon.com>, Eduardo Valentin <edubezval@gma
 Cc: amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, liguozhu@hisilicon.com, mporter@konsulko.com, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, leo.yan@linaro.org, zhenwei.wang@hisilicon.com, zhangfei.gao@linaro.org, z.liuxinliang@huawei.com, xuwei5@hisilicon.com, w.f@huawei.com, yuanzhichang@hisilicon.com, mark.rutland@arm.com, bintian.wang@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-hi Eduardo,
+hi Eduardo
 
-I am sorry to understand this following log and hardware principle. bei=
-ng
-afraid of using man  is unreasonable.
+I am sorry the i don't understand this following log and hardware princ=
+iple, being afraid
+of using is unreasonale.
 
-Sorry you to bother me.
+sorry to bother you
 
-Thanks
+thanks
 Xinwei
 
 On 2015=E5=B9=B405=E6=9C=8818=E6=97=A5 12:03, Xinwei Kong wrote:
