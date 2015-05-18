@@ -1,47 +1,85 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 1/2] ARM: dts: nitrogen6x: use simple-panel instead of
- display-timings for LVDS0
-Date: Mon, 18 May 2015 07:58:44 +0200
-Message-ID: <20150518075844.7e1b5916@ipc1.ka-ro>
-References: <1431804202-11067-1-git-send-email-eric.nelson@boundarydevices.com>
- <1431804202-11067-2-git-send-email-eric.nelson@boundarydevices.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1431804202-11067-2-git-send-email-eric.nelson@boundarydevices.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eric Nelson <eric.nelson@boundarydevices.com>
-Cc: fabio.estevam@freescale.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, gary.bisson@boundarydevices.com, kernel@pengutronix.de, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1 0/2] Implement SoC bus support for Vybrid
+Date: Mon, 18 May 2015 11:50:05 +0530
+Message-ID: <cover.1431928866.git.maitysanchayan@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgo+IEFsc28gYWRkIGFsaWFzIGZvciBiYWNrbGlnaHRfbHZkcyBhbmQgY29ubmVjdCBpdCB0
-byB0aGUgZGlzcGxheS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIE5lbHNvbiA8ZXJpYy5uZWxz
-b25AYm91bmRhcnlkZXZpY2VzLmNvbT4KPiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFk
-bC1uaXRyb2dlbjZ4LmR0c2kgfCAzMCArKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0KPiAg
-MSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQo+IAo+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLW5pdHJvZ2VuNnguZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtbml0cm9nZW42eC5kdHNpCj4gaW5kZXggZmQwOTZkYy4u
-NzEyYzVlYyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLW5pdHJvZ2Vu
-NnguZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtbml0cm9nZW42eC5kdHNp
-Cj4gQEAgLTEyMiw3ICsxMjIsNyBAQAo+ICAJCXN0YXR1cyA9ICJva2F5IjsKPiAgCX07Cj4gIAo+
-IC0JYmFja2xpZ2h0X2x2ZHMgewo+ICsJYmFja2xpZ2h0X2x2ZHM6IGJhY2tsaWdodF9sdmRzIHsK
-PgpUaGUgcGF0Y2ggZG9lcyBub3QgYWRkIGFuICdhbGlhcycsIGJ1dCBhICdsYWJlbCcuCgoKTG90
-aGFyIFdhw59tYW5uCi0tIApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwoKS2EtUm8gZWxlY3Ryb25pY3MgR21iSCB8IFBhc2NhbHN0cmHD
-n2UgMjIgfCBEIC0gNTIwNzYgQWFjaGVuClBob25lOiArNDkgMjQwOCAxNDAyLTAgfCBGYXg6ICs0
-OSAyNDA4IDE0MDItMTAKR2VzY2jDpGZ0c2bDvGhyZXI6IE1hdHRoaWFzIEthdXNzZW4KSGFuZGVs
-c3JlZ2lzdGVyZWludHJhZzogQW10c2dlcmljaHQgQWFjaGVuLCBIUkIgNDk5NgoKd3d3Lmthcm8t
-ZWxlY3Ryb25pY3MuZGUgfCBpbmZvQGthcm8tZWxlY3Ryb25pY3MuZGUKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hello,
+
+This patchset implements SoC bus support for Freescale Vybrid platform, 
+implementing the following
+https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-devices-soc
+
+The RFC version can be found here
+https://lkml.org/lkml/2015/5/11/13
+
+Currently the required information is more or less read across the whole
+SoC, but I guess we cannot change that since these are the locations
+with the required information.
+
+There seem to be three options for the revision field:
+- ROM revision (see https://community.freescale.com/docs/DOC-94802)
+- ANADIG revision (ANADIG_DIGIPROC, as used for the i.MX SoC's)
+- OCOTP revision
+
+Some numbers:
+
+Colibri VF61 1.1A (2N02G)
+- 0x00000013
+- 0x00610000
+- 0x01000000
+- 0x410000c8
+
+Colibri VF61 V1.0B (1N02G)
+- 0x00000011
+- 0x00610000
+- 0x01000000
+- 0x410000c8
+
+Colibri VF61 V1.0A (which is actually a VF600 SoC, no L2 cache, since
+that was the only one we could buy back then, 1N02G printed on it)
+- 0x00000011
+- 0x00610000
+- 0x01000000
+- none...
+
+Colibri VF50 V1.0A (1N02G)
+- 0x00000011
+- 0x00610000
+- 0x01000000
+- none...
+
+Vybrid Tower Rev J (1N02G)
+- 0x00000011
+- 0x00610000
+- 0x01000000
+- 0x410000c8
+
+The ROM revision differs the most, so we would like to go with the 
+revision information from the ROM register 0x80.
+
+Changes since RFC:
+- Use a DT entry for the ROM area while specifying it as syscon.
+
+Thanks & Regards,
+Sanchayan Maity.
+
+Sanchayan Maity (2):
+  ARM: dts: vfxxx: Add OCOTP and OCROM nodes
+  ARM: vf610: Add SoC bus support for Vybrid
+
+ arch/arm/boot/dts/vfxxx.dtsi   | 10 ++++++
+ arch/arm/mach-imx/mach-vf610.c | 81 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 91 insertions(+)
+
+-- 
+2.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
