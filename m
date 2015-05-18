@@ -1,66 +1,64 @@
-From: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] rtc: mxc: add a second clock
-Date: Mon, 18 May 2015 23:57:19 +0200
-Message-ID: <555A603F.7000005@gmail.com>
-References: <1431729330-7625-1-git-send-email-tremyfr@gmail.com> <1431729330-7625-2-git-send-email-tremyfr@gmail.com> <5559CC85.5040703@melag.de>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 4/7] arm: dts: imx: update snvs to use syscon access
+ register
+Date: Tue, 19 May 2015 00:17:17 +0200
+Message-ID: <20150518221717.GX3338@piout.net>
+References: <1431696990-23078-1-git-send-email-Frank.Li@freescale.com>
+ <1431696990-23078-5-git-send-email-Frank.Li@freescale.com>
+ <1431938725.3209.15.camel@pengutronix.de>
+ <CAHrpEqSxgqUSWFkAh+R4K1oShsWfErE4nndxkYGGktMdkb3=xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5559CC85.5040703-d/C+FbuhHiA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHrpEqSxgqUSWFkAh+R4K1oShsWfErE4nndxkYGGktMdkb3=xw@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, a.zummo@towertech.it, sachin.kamat@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Enrico,
+On 18/05/2015 at 14:30:50 -0500, Zhi Li wrote :
+> On Mon, May 18, 2015 at 3:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > Hi Frank,
+> >
+> > Am Freitag, den 15.05.2015, 21:36 +0800 schrieb Frank.Li@freescale.com:
+> >> From: Frank Li <Frank.Li@freescale.com>
+> >>
+> >> snvs is MFP device. Change dts to use syscon to allocate register resource.
+> >>
+> >> Signed-off-by: Frank Li <Frank.Li@freescale.com>
+> >> ---
+> >>  arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++--------
+> >>  arch/arm/boot/dts/imx6sl.dtsi  | 12 ++++--------
+> >>  arch/arm/boot/dts/imx6sx.dtsi  | 12 ++++--------
+> >>  arch/arm/boot/dts/vfxxx.dtsi   |  9 +++------
+> >>  4 files changed, 15 insertions(+), 30 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> >> index 0482a66..6d8161d 100644
+> >> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> >> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> >> @@ -687,21 +687,17 @@
+> >>                       };
+> >>
+> >>                       snvs@020cc000 {
+> >> -                             compatible = "fsl,sec-v4.0-mon", "simple-bus";
+> >> -                             #address-cells = <1>;
+> >> -                             #size-cells = <1>;
+> >> -                             ranges = <0 0x020cc000 0x4000>;
+> >> +                             compatible = "fsl,sec-v4.0-mon", "syscon",  "simple-bus";
+> >
+> > The compatible should change from "simple-bus" to "simple-mfd", then.
+> 
+> After change to simple-mfd,  driver can't been probed. Anything missed?
 
-On 18/05/15 13:27, Enrico Weigelt, metux IT consult wrote:
-> Am 16.05.2015 um 00:35 schrieb Philippe Reynes:
->> The mxc RTC needs two clocks, one for the input
->> reference, and one for the IP. But this driver
->> was only using one clock (for the reference).
->> This patch add the second clock (for the IP).
->
->
-> Does this also apply to MX53, or just MX21 ?
+The pull request is there:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/342131.html
 
-I don't found this rtc on mx53 manual. The mx53 seems to use rtc-imxdi.=
-c.
-So, I think it's just for mx21.
+It has landed in linux-next
 
-Regards,
-Philippe
- =20
-> greetings,
-> --
-> Enrico Weigelt, metux IT consult
-> +49-151-27565287
-> MELAG Medizintechnik oHG Sitz Berlin Registergericht AG Charlottenbur=
-g HRA 21333 B
->
-> Wichtiger Hinweis: Diese Nachricht kann vertrauliche oder nur f=C3=BC=
-r einen begrenzten Personenkreis bestimmte Informationen enthalten. Sie=
- ist ausschlie=C3=9Flich f=C3=BCr denjenigen bestimmt, an den sie geric=
-htet worden ist. Wenn Sie nicht der Adressat dieser E-Mail sind, d=C3=BC=
-rfen Sie diese nicht kopieren, weiterleiten, weitergeben oder sie ganz =
-oder teilweise in irgendeiner Weise nutzen. Sollten Sie diese E-Mail ir=
-rt=C3=BCmlich erhalten haben, so benachrichtigen Sie bitte den Absender=
-, indem Sie auf diese Nachricht antworten. Bitte l=C3=B6schen Sie in di=
-esem Fall diese Nachricht und alle Anh=C3=A4nge, ohne eine Kopie zu beh=
-alten.
-> Important Notice: This message may contain confidential or privileged=
- information. It is intended only for the person it was addressed to. I=
-f you are not the intended recipient of this email you may not copy, fo=
-rward, disclose or otherwise use it or any part of it in any form whats=
-oever. If you received this email in error please notify the sender by =
-replying and delete this message and any attachments without retaining =
-a copy.
 
-  s
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
