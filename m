@@ -1,54 +1,35 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH 4/7] arm: dts: imx: update snvs to use syscon access register
-Date: Mon, 18 May 2015 14:30:50 -0500
-Message-ID: <CAHrpEqSxgqUSWFkAh+R4K1oShsWfErE4nndxkYGGktMdkb3=xw@mail.gmail.com>
-References: <1431696990-23078-1-git-send-email-Frank.Li@freescale.com>
-	<1431696990-23078-5-git-send-email-Frank.Li@freescale.com>
-	<1431938725.3209.15.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1431938725.3209.15.camel@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, sachin.kamat@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Raspberry Pi DT clocks series
+Date: Mon, 18 May 2015 12:43:32 -0700
+Message-ID: <1431978219-14226-1-git-send-email-eric@anholt.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 18, 2015 at 3:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> Hi Frank,
->
-> Am Freitag, den 15.05.2015, 21:36 +0800 schrieb Frank.Li@freescale.com:
->> From: Frank Li <Frank.Li@freescale.com>
->>
->> snvs is MFP device. Change dts to use syscon to allocate register resource.
->>
->> Signed-off-by: Frank Li <Frank.Li@freescale.com>
->> ---
->>  arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++--------
->>  arch/arm/boot/dts/imx6sl.dtsi  | 12 ++++--------
->>  arch/arm/boot/dts/imx6sx.dtsi  | 12 ++++--------
->>  arch/arm/boot/dts/vfxxx.dtsi   |  9 +++------
->>  4 files changed, 15 insertions(+), 30 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
->> index 0482a66..6d8161d 100644
->> --- a/arch/arm/boot/dts/imx6qdl.dtsi
->> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
->> @@ -687,21 +687,17 @@
->>                       };
->>
->>                       snvs@020cc000 {
->> -                             compatible = "fsl,sec-v4.0-mon", "simple-bus";
->> -                             #address-cells = <1>;
->> -                             #size-cells = <1>;
->> -                             ranges = <0 0x020cc000 0x4000>;
->> +                             compatible = "fsl,sec-v4.0-mon", "syscon",  "simple-bus";
->
-> The compatible should change from "simple-bus" to "simple-mfd", then.
+Here's a series to add a real clock provider on Raspberry Pi.
+Previously, we've been using a mix of fixed clocks from clk-bcm2835.c
+(though some of them failed to get used by their intended consumers),
+and fixed-clock nodes in the DT.
 
-After change to simple-mfd,  driver can't been probed. Anything missed?
+This driver gives us the ability to enable/disable our clocks, and
+also lets us get and set frequency values.  This will let us build a
+cpufreq driver (Andrea Merello has done some work on this front, and
+has a couple of options available), and get correct frequencies on the
+Raspberry Pi 2 without hardcoding new values.
 
->
-> regards
-> Philipp
->
+This branch can be found at:
+
+https://github.com/anholt/linux/tree/rpi-dt-clocks
+
+which also has a patch for the MMC clock which is not included yet due
+to a bug in the sdhci driver.  The series applies on top of
+rpi-mailbox, whose code is currently out for review:
+
+http://lists.infradead.org/pipermail/linux-rpi-kernel/2015-May/001762.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
