@@ -1,15 +1,14 @@
 From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 03/10] clk: sunxi: Let divs clocks read
- the base factor clock name from devicetree
-Date: Mon, 18 May 2015 11:15:42 +0200
-Message-ID: <5559ADBE.7060506@gmail.com>
-References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>	<1431707940-19372-4-git-send-email-jenskuske@gmail.com> <CAGb2v64y8+bdya3N=gK-YEie3A9nVM5nuxRZTVPXYSaN6WzPoQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] clk: sunxi: Add support for
+ multiple parents to gates
+Date: Mon, 18 May 2015 11:11:34 +0200
+Message-ID: <5559ACC6.6050202@gmail.com>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com> <1431707940-19372-3-git-send-email-jenskuske@gmail.com> <20150517125014.GB4004@lukather>
 Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBRHT42VAKGQE2UUFUGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v64y8+bdya3N=gK-YEie3A9nVM5nuxRZTVPXYSaN6WzPoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBQ7T42VAKGQELA4D54Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150517125014.GB4004@lukather>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -17,56 +16,77 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?windows-1252?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 05/16/15 04:10, Chen-Yu Tsai wrote:
-> 2015=E5=B9=B45=E6=9C=8816=E6=97=A5 =E4=B8=8A=E5=8D=8812:39=E6=96=BC "Jens=
- Kuske" <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=E5=AF=AB=E9=81=93=EF=BC=9A
-[..]
->> @@ -1141,6 +1133,7 @@ static void __init sunxi_divs_clk_setup(struct
-> device_node *node,
->>         struct clk_gate *gate =3D NULL;
->>         struct clk_fixed_factor *fix_factor;
->>         struct clk_divider *divider;
->> +       struct factors_data factors =3D *data->factors;
-
-Isn't this a copy?
-
->>         void __iomem *reg;
->>         int ndivs =3D SUNXI_DIVS_MAX_QTY, i =3D 0;
->>         int flags, clkflags;
->> @@ -1149,8 +1142,17 @@ static void __init sunxi_divs_clk_setup(struct
-> device_node *node,
->>         if (data->ndivs)
->>                 ndivs =3D data->ndivs;
+On 05/17/15 14:50, Maxime Ripard wrote:
+> Hi Jens,
+> 
+> On Fri, May 15, 2015 at 06:38:52PM +0200, Jens Kuske wrote:
+>> Some newer sunxi SoCs (A83T, H3) don't have individual registers for
+>> AHB1, APB1 and APB2 gates anymore, but one big bus gates area where each
+>> gate can have a different parent.
 >>
->> +       /* Try to find a name for base factor clock */
->> +       for (i =3D 0; i < ndivs; i++) {
->> +               if (data->div[i].self) {
->> +                       of_property_read_string_index(node,
-> "clock-output-names",
->> +                                                     i, &factors.name);
->=20
-> Please excuse the bad formatting.
-> I'm at the airport without my laptop.
->=20
-> This will not work. All the static factors_data structs are const.
-> You should make a copy of it, maybe on the stack,
-> update the .name field, and pass that to sunxi_factors_clk_setup().
->=20
+>> The current clock driver sets the same parent for all gates in a group.
+>> This commit adds a new parents field to the gates_data structure, which
+>> allows us to specify an array of parent indices for every single gate.
+>>
+>> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/clk/sunxi/clk-sunxi.c | 12 +++++++++++-
+>>  1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+>> index 9a82f17..17cba4d 100644
+>> --- a/drivers/clk/sunxi/clk-sunxi.c
+>> +++ b/drivers/clk/sunxi/clk-sunxi.c
+>> @@ -898,6 +898,8 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
+>>  
+>>  struct gates_data {
+>>  	DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
+>> +	/* If used, ARRAY_SIZE(parents) has to be >= bitmap_weight(mask) */
+>> +	const u8 *parents;
+>>  };
+>>  
+>>  static const struct gates_data sun4i_axi_gates_data __initconst = {
+>> @@ -1000,16 +1002,21 @@ static void __init sunxi_gates_clk_setup(struct device_node *node,
+>>  					 struct gates_data *data)
+>>  {
+>>  	struct clk_onecell_data *clk_data;
+>> +	const char *parents[SUNXI_MAX_PARENTS];
+>>  	const char *clk_parent;
+>>  	const char *clk_name;
+>>  	void __iomem *reg;
+>> +	int npar = 0;
+>>  	int qty;
+>>  	int i = 0;
+>>  	int j = 0;
+>>  
+>>  	reg = of_iomap(node, 0);
+>>  
+>> -	clk_parent = of_clk_get_parent_name(node, 0);
+>> +	while (npar < SUNXI_MAX_PARENTS &&
+>> +	       (parents[npar] = of_clk_get_parent_name(node, npar)) != NULL)
+>> +		npar++;
+>> +	clk_parent = parents[0];
+>>  
+>>  	/* Worst-case size approximation and memory allocation */
+>>  	qty = find_last_bit(data->mask, SUNXI_GATES_MAX_SIZE);
+>> @@ -1026,6 +1033,9 @@ static void __init sunxi_gates_clk_setup(struct device_node *node,
+>>  		of_property_read_string_index(node, "clock-output-names",
+>>  					      j, &clk_name);
+>>  
+>> +		if (data->parents && !WARN_ON(data->parents[j] >= npar))
+>> +			clk_parent = parents[data->parents[j]];
+>> +
+> 
+> I'm currently removing that code, so I was more expecting a new
+> standalone driver for that clock.
 
-If I didn't miss anything, or misunderstood what you want to copy, this
-should be working fine.
+How do you want to replace that code? To me this looks like a good way
+to set up all the different gates sunxi has.
 
 Jens
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
