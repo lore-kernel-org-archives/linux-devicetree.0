@@ -1,14 +1,14 @@
 From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 04/10] pinctrl: sunxi: Prepare for
- building SoC specific drivers as modules
-Date: Mon, 18 May 2015 11:32:31 +0200
-Message-ID: <5559B1AF.2010200@gmail.com>
-References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com> <1431707940-19372-5-git-send-email-jenskuske@gmail.com> <20150517141922.GE4004@lukather>
+Subject: Re: [PATCH v2 07/10] pinctrl: sunxi: Add H3 PIO
+ controller support
+Date: Mon, 18 May 2015 11:52:29 +0200
+Message-ID: <5559B65D.8020108@gmail.com>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com> <1431707940-19372-8-git-send-email-jenskuske@gmail.com> <20150517143014.GH4004@lukather>
 Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBSHT42VAKGQEP4EYFIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150517141922.GE4004@lukather>
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBS7T42VAKGQEQTAVUJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150517143014.GH4004@lukather>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -22,77 +22,53 @@ List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 05/17/15 16:19, Maxime Ripard wrote:
-> On Fri, May 15, 2015 at 06:38:54PM +0200, Jens Kuske wrote:
->> Add a remove function and export the init and remove function
->> to allow us to build the SoC specific drivers as modules.
+On 05/17/15 16:30, Maxime Ripard wrote:
+> On Fri, May 15, 2015 at 06:38:57PM +0200, Jens Kuske wrote:
+>> The H3 uses the same pin controller as previous SoC's from Allwinner.
+>> Add support for the pins controlled by the main PIO controller.
 >>
 >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >> ---
->>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 25 +++++++++++++++++++------
->>  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  2 ++
->>  2 files changed, 21 insertions(+), 6 deletions(-)
+>>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+>>  drivers/pinctrl/sunxi/Kconfig                      |   8 +
+>>  drivers/pinctrl/sunxi/Makefile                     |   1 +
+>>  drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c           | 522 +++++++++++++++++++++
+>>  4 files changed, 532 insertions(+)
+>>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
 >>
->> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> index f8e171b..4ef6b3d 100644
->> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> @@ -856,7 +856,6 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
->>  	struct sunxi_pinctrl *pctl;
->>  	struct resource *res;
->>  	int i, ret, last_pin;
->> -	struct clk *clk;
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+>> index fdd8046..c46af8e 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+>> @@ -16,6 +16,7 @@ Required properties:
+>>    "allwinner,sun7i-a20-pinctrl"
+>>    "allwinner,sun8i-a23-pinctrl"
+>>    "allwinner,sun8i-a23-r-pinctrl"
+>> +  "allwinner,sun8i-h3-pinctrl"
+>>  - reg: Should contain the register physical address and length for the
+>>    pin controller.
 >>  
->>  	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
->>  	if (!pctl)
->> @@ -954,13 +953,13 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
->>  			goto gpiochip_error;
->>  	}
+>> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+>> index 2eb893e..6c1cec5 100644
+>> --- a/drivers/pinctrl/sunxi/Kconfig
+>> +++ b/drivers/pinctrl/sunxi/Kconfig
+>> @@ -43,6 +43,14 @@ config PINCTRL_SUN8I_A23_R
+>>  	depends on RESET_CONTROLLER
+>>  	select PINCTRL_SUNXI_COMMON
 >>  
->> -	clk = devm_clk_get(&pdev->dev, NULL);
->> -	if (IS_ERR(clk)) {
->> -		ret = PTR_ERR(clk);
->> +	pctl->clk = devm_clk_get(&pdev->dev, NULL);
->> +	if (IS_ERR(pctl->clk)) {
->> +		ret = PTR_ERR(pctl->clk);
->>  		goto gpiochip_error;
->>  	}
->>  
->> -	ret = clk_prepare_enable(clk);
->> +	ret = clk_prepare_enable(pctl->clk);
->>  	if (ret)
->>  		goto gpiochip_error;
->>  
->> @@ -1015,10 +1014,24 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
->>  	return 0;
->>  
->>  clk_error:
->> -	clk_disable_unprepare(clk);
->> +	clk_disable_unprepare(pctl->clk);
->>  gpiochip_error:
->>  	gpiochip_remove(pctl->chip);
->>  pinctrl_error:
->>  	pinctrl_unregister(pctl->pctl_dev);
->>  	return ret;
->>  }
->> +EXPORT_SYMBOL(sunxi_pinctrl_init);
->> +
->> +int sunxi_pinctrl_remove(struct platform_device *pdev)
->> +{
->> +	struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
->> +
->> +	gpiochip_remove(pctl->chip);
->> +	pinctrl_unregister(pctl->pctl_dev);
->> +
->> +	clk_disable_unprepare(pctl->clk);
+>> +config PINCTRL_SUN8I_H3
+>> +	tristate "Allwinner H3 pinctrl driver"
+>> +	default MACH_SUN8I
+>> +	select PINCTRL_SUNXI_COMMON
 > 
-> We should also remove the domain and the interrupt mapping here.
+> PINCTRL_SUNXI_COMMON should probably be turned into a tristate as well
 
-Ouch, I missed that. Only looked at the *_error: labels.
+Probably, as well as all the other SoC specific drivers. But I think
+this should be a separate patch, its independent from this addition.
 
-Apart from that, currently the kernel panics some seconds after removing
-the pinctrl module because mmc wants to access a gpio. Can this be
-prevented somehow? I think pinctrl must not be removed once other
-devices use any pin-related things.
+But given the remove-panic problems I mentioned earlier this whole
+pinctrl-as-module topic needs some attention from more experienced devs
+I guess, this is beyond my current kernel knowledge.
 
+Regards,
 Jens
