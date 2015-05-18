@@ -1,74 +1,112 @@
-From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: Add TI BQ25890 bindings
-Date: Mon, 18 May 2015 09:54:46 +0300
-Message-ID: <20150518065446.GD14396@lpalcu-linux>
-References: <1431698778-29462-1-git-send-email-laurentiu.palcu@intel.com>
- <1431698778-29462-2-git-send-email-laurentiu.palcu@intel.com>
- <CAJKOXPeprMYOgd1uHpdV3TjVdP9g+-SmV8q7A-127LQ7V_hAkQ@mail.gmail.com>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: Re: [PATCH v7 1/2] arm64: dts: Add the arasan mmc nodes in apm-storm.dtsi
+Date: Mon, 18 May 2015 12:34:52 +0530
+Message-ID: <CAOHikRAV4i_R8LhmJgRRePSbJ+YG_eb6c94idQZWHS+fh6SAVQ@mail.gmail.com>
+References: <1431517912-10322-1-git-send-email-stripathi@apm.com>
+	<1431517912-10322-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPeprMYOgd1uHpdV3TjVdP9g+-SmV8q7A-127LQ7V_hAkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1431517912-10322-2-git-send-email-stripathi@apm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi Arnd,
 
-On Sat, May 16, 2015 at 08:53:42PM +0900, Krzysztof Kozlowski wrote:
-> 2015-05-15 23:06 GMT+09:00 Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
-> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/power/bq25890.txt          | 45 ++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/bq25890.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/power/bq25890.txt b/Documentation/devicetree/bindings/power/bq25890.txt
-> > new file mode 100644
-> > index 0000000..44f50a7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/bq25890.txt
-> > @@ -0,0 +1,45 @@
-> > +Binding for TI bq25890 Li-Ion Charger
-> > +
-> > +Required properties:
-> > +- compatible: Should contain one of the following:
-> > +    * "ti,bq25890"
-> > +- reg: integer, i2c address of the device.
-> > +- ti,battery-regulation-voltage: integer, maximum charging voltage (in uV);
-> > +- ti,charge-current: integer, maximum charging current (in uA);
-> > +- ti,termination-current: integer, charge will be terminated when current in
-> > +    constant-voltage phase drops below this value (in uA);
-> > +- ti,precharge-current: integer, maximum charge current during precharge
-> > +    phase (in uA);
-> > +- ti,minimum-sys-voltage: integer, when battery is charging and it is below
-> > +    minimum system voltage, the system will be regulated above
-> > +    minimum-sys-voltage setting (in uV);
-> > +- ti,boost-voltage: integer, VBUS voltage level in boost mode (in uV);
-> > +- ti,boost-max-current: integer, maximum allowed current draw in boost mode
-> > +    (in uA).
-> > +
-> > +Optional properties:
-> > +- ti,boost-low-freq: boolean, if present boost mode frequency will be 500kHz,
-> > +    otherwise 1.5MHz;
-> > +- ti,use-ilim-pin: boolean, if present the ILIM resistor will be used and the
-> > +    input current will be the lower between the resistor setting and the IINLIM
-> > +    register setting;
-> > +- ti,thermal-regulation-threshold: integer, temperature above which the charge
-> > +    current is lowered, to avoid overheating (in degrees Celsius);
-> 
-> What if property is absent? The temperature will be ignored? If so,
-> maybe consider adding such short statement about the default state?
-You're right, I should've mentioned it here. If it's missing, the
-default value will be used (120 degrees Celsius). I'll add a comment
-about it in v2.
+On Wed, May 13, 2015 at 5:21 PM, Suman Tripathi <stripathi@apm.com> wrote:
+> This patch adds the arasan mmc nodes to reuse the of-arasan
+> driver for APM X-Gene SoC.
+>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> ---
+> ---
+>  arch/arm64/boot/dts/apm/apm-mustang.dts |  4 +++
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi  | 43 +++++++++++++++++++++++++++++++++
+>  2 files changed, 47 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> index 83578e7..7a3ea72 100644
+> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> @@ -52,3 +52,7 @@
+>  &xgenet {
+>         status = "ok";
+>  };
+> +
+> +&mmc0 {
+> +       status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> index c8d3e0e..8e03ecd 100644
+> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> @@ -145,6 +145,40 @@
+>                                 clock-output-names = "socplldiv2";
+>                         };
+>
+> +                       ahbclk: ahbclk@1f2ac000 {
+> +                               compatible = "apm,xgene-device-clock";
+> +                               #clock-cells = <1>;
+> +                               clocks = <&socplldiv2 0>;
+> +                               reg = <0x0 0x1f2ac000 0x0 0x1000
+> +                                       0x0 0x17000000 0x0 0x2000>;
+> +                               reg-names = "csr-reg", "div-reg";
+> +                               csr-offset = <0x0>;
+> +                               csr-mask = <0x1>;
+> +                               enable-offset = <0x8>;
+> +                               enable-mask = <0x1>;
+> +                               divider-offset = <0x164>;
+> +                               divider-width = <0x5>;
+> +                               divider-shift = <0x0>;
+> +                               clock-output-names = "ahbclk";
+> +                       };
+> +
+> +                       sdioclk: sdioclk@1f2ac000 {
+> +                               compatible = "apm,xgene-device-clock";
+> +                               #clock-cells = <1>;
+> +                               clocks = <&socplldiv2 0>;
+> +                               reg = <0x0 0x1f2ac000 0x0 0x1000
+> +                                       0x0 0x17000000 0x0 0x2000>;
+> +                               reg-names = "csr-reg", "div-reg";
+> +                               csr-offset = <0x0>;
+> +                               csr-mask = <0x2>;
+> +                               enable-offset = <0x8>;
+> +                               enable-mask = <0x2>;
+> +                               divider-offset = <0x178>;
+> +                               divider-width = <0x8>;
+> +                               divider-shift = <0x0>;
+> +                               clock-output-names = "sdioclk";
+> +                       };
+> +
+>                         qmlclk: qmlclk {
+>                                 compatible = "apm,xgene-device-clock";
+>                                 #clock-cells = <1>;
+> @@ -533,6 +567,15 @@
+>                         interrupts = <0x0 0x4f 0x4>;
+>                 };
+>
+> +               mmc0: mmc@1c000000 {
+> +                       compatible = "arasan,sdhci-4.9a";
+> +                       reg = <0x0 0x1c000000 0x0 0x100>;
+> +                       interrupts = <0x0 0x49 0x4>;
+> +                       dma-coherent;
+> +                       clock-names = "clk_xin", "clk_ahb";
+> +                       clocks = <&sdioclk 0>, <&ahbclk 0>;
+> +               };
+> +
+>                 phy1: phy@1f21a000 {
+>                         compatible = "apm,xgene-phy";
+>                         reg = <0x0 0x1f21a000 0x0 0x100>;
+> --
+> 1.8.2.1
+>
 
-Thanks for reviewing,
-laurentiu
+Can you review this ?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Thanks,
+with regards,
+Suman Tripathi
