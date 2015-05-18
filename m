@@ -1,14 +1,15 @@
 From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 07/10] pinctrl: sunxi: Add H3 PIO
- controller support
-Date: Mon, 18 May 2015 11:52:29 +0200
-Message-ID: <5559B65D.8020108@gmail.com>
-References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com> <1431707940-19372-8-git-send-email-jenskuske@gmail.com> <20150517143014.GH4004@lukather>
+Subject: Re: [PATCH v2 03/10] clk: sunxi: Let divs clocks read
+ the base factor clock name from devicetree
+Date: Mon, 18 May 2015 11:15:42 +0200
+Message-ID: <5559ADBE.7060506@gmail.com>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>	<1431707940-19372-4-git-send-email-jenskuske@gmail.com> <CAGb2v64y8+bdya3N=gK-YEie3A9nVM5nuxRZTVPXYSaN6WzPoQ@mail.gmail.com>
 Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBS7T42VAKGQEQTAVUJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150517143014.GH4004@lukather>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBRHT42VAKGQE2UUFUGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v64y8+bdya3N=gK-YEie3A9nVM5nuxRZTVPXYSaN6WzPoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -16,59 +17,56 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?windows-1252?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 05/17/15 16:30, Maxime Ripard wrote:
-> On Fri, May 15, 2015 at 06:38:57PM +0200, Jens Kuske wrote:
->> The H3 uses the same pin controller as previous SoC's from Allwinner.
->> Add support for the pins controlled by the main PIO controller.
+On 05/16/15 04:10, Chen-Yu Tsai wrote:
+> 2015=E5=B9=B45=E6=9C=8816=E6=97=A5 =E4=B8=8A=E5=8D=8812:39=E6=96=BC "Jens=
+ Kuske" <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=E5=AF=AB=E9=81=93=EF=BC=9A
+[..]
+>> @@ -1141,6 +1133,7 @@ static void __init sunxi_divs_clk_setup(struct
+> device_node *node,
+>>         struct clk_gate *gate =3D NULL;
+>>         struct clk_fixed_factor *fix_factor;
+>>         struct clk_divider *divider;
+>> +       struct factors_data factors =3D *data->factors;
+
+Isn't this a copy?
+
+>>         void __iomem *reg;
+>>         int ndivs =3D SUNXI_DIVS_MAX_QTY, i =3D 0;
+>>         int flags, clkflags;
+>> @@ -1149,8 +1142,17 @@ static void __init sunxi_divs_clk_setup(struct
+> device_node *node,
+>>         if (data->ndivs)
+>>                 ndivs =3D data->ndivs;
 >>
->> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
->>  drivers/pinctrl/sunxi/Kconfig                      |   8 +
->>  drivers/pinctrl/sunxi/Makefile                     |   1 +
->>  drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c           | 522 +++++++++++++++++++++
->>  4 files changed, 532 insertions(+)
->>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
->> index fdd8046..c46af8e 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
->> @@ -16,6 +16,7 @@ Required properties:
->>    "allwinner,sun7i-a20-pinctrl"
->>    "allwinner,sun8i-a23-pinctrl"
->>    "allwinner,sun8i-a23-r-pinctrl"
->> +  "allwinner,sun8i-h3-pinctrl"
->>  - reg: Should contain the register physical address and length for the
->>    pin controller.
->>  
->> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
->> index 2eb893e..6c1cec5 100644
->> --- a/drivers/pinctrl/sunxi/Kconfig
->> +++ b/drivers/pinctrl/sunxi/Kconfig
->> @@ -43,6 +43,14 @@ config PINCTRL_SUN8I_A23_R
->>  	depends on RESET_CONTROLLER
->>  	select PINCTRL_SUNXI_COMMON
->>  
->> +config PINCTRL_SUN8I_H3
->> +	tristate "Allwinner H3 pinctrl driver"
->> +	default MACH_SUN8I
->> +	select PINCTRL_SUNXI_COMMON
-> 
-> PINCTRL_SUNXI_COMMON should probably be turned into a tristate as well
+>> +       /* Try to find a name for base factor clock */
+>> +       for (i =3D 0; i < ndivs; i++) {
+>> +               if (data->div[i].self) {
+>> +                       of_property_read_string_index(node,
+> "clock-output-names",
+>> +                                                     i, &factors.name);
+>=20
+> Please excuse the bad formatting.
+> I'm at the airport without my laptop.
+>=20
+> This will not work. All the static factors_data structs are const.
+> You should make a copy of it, maybe on the stack,
+> update the .name field, and pass that to sunxi_factors_clk_setup().
+>=20
 
-Probably, as well as all the other SoC specific drivers. But I think
-this should be a separate patch, its independent from this addition.
+If I didn't miss anything, or misunderstood what you want to copy, this
+should be working fine.
 
-But given the remove-panic problems I mentioned earlier this whole
-pinctrl-as-module topic needs some attention from more experienced devs
-I guess, this is beyond my current kernel knowledge.
-
-Regards,
 Jens
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
