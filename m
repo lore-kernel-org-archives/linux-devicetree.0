@@ -1,65 +1,55 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH] USB: ehci-platform: support EHCIs with transaction
- translator
-Date: Mon, 18 May 2015 10:27:30 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1505181011080.1579-100000@iolanthe.rowland.org>
-References: <1431789460-26831-1-git-send-email-manabian@gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v3 1/4] remoteproc: introduce rproc_get_by_phandle API
+Date: Mon, 18 May 2015 09:33:28 -0500
+Message-ID: <5559F838.4010003@ti.com>
+References: <1427917039-43206-1-git-send-email-d-gerlach@ti.com> <1427917039-43206-2-git-send-email-d-gerlach@ti.com> <CAK=WgbZCqnMPEnU2992gkOp07BaCP5NJNRO-hLCAdOtUXZGRnQ@mail.gmail.com> <5550C644.4040005@ti.com> <CAK=WgbZGYa-xWE_cxPA1aq50kK2NBdQfhQHX+sPyowky6Syekg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431789460-26831-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbZGYa-xWE_cxPA1aq50kK2NBdQfhQHX+sPyowky6Syekg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>
+Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 16 May 2015, Joachim Eastwood wrote:
+Ohad,
+On 05/16/2015 02:18 AM, Ohad Ben-Cohen wrote:
+> Hi Suman,
+> 
+> On Mon, May 11, 2015 at 6:09 PM, Suman Anna <s-anna@ti.com> wrote:
+>> On 05/09/2015 02:39 AM, Ohad Ben-Cohen wrote:
+>>> On Wed, Apr 1, 2015 at 10:37 PM, Dave Gerlach <d-gerlach@ti.com> wrote:
+>>>> This patch uses the code removed by commit 40e575b1d0b3 ("remoteproc:
+>>>> remove the get_by_name/put API") for the ref counting a rproc klist
+>>>> code but has rproc_get_by_name replaced with an rproc_get_by_phandle API.
+>>>
+>>> The general idea makes sense to me, but I'm not sure we really do need
+>>> a klist here, since the usage profile of this list is expected to be
+>>> super simple: very small number of accessors, looking for small number
+>>> of list members a small number of times, and probably never do need to
+>>> modify the list while accessing it.
+>>>
+>>> I suspect that the code would be simpler to maintain, debug and
+>>> understand if we just use a simple list with a simple locking
+>>> methodology here.
+>>
+>> The klist usage is something that we restored from previous remoteproc
+>> core code as used by the rproc_get_by_name() API. This was removed in
+>> commit 40e575b1d0b3 ("remoteproc: remove the get_by_name/put API"). We
+>> chose to use the code that had been present before rather than inventing
+>> something new all over again. If you feel that a regular list is the way
+>> to go forward, we can make the switch.
+> 
+> Yes, please. Using a regular list with a simple locking methodology
+> should make the code easier to understand and debug.
 
-> Some EHCI controllers have a Transaction Translator built into
-> the root hub. Support this feature in device tree when using
-> the ehci-platform driver by adding a feature flag for it.
-> 
-> This is needed to get USB working on NXP LPC18xx/43xx platforms.
-> 
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> 
->  Documentation/devicetree/bindings/usb/usb-ehci.txt | 2 ++
->  drivers/usb/host/ehci-platform.c                   | 4 ++++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> index 0b04fdff9d5a..a12d6012a40f 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> @@ -13,6 +13,8 @@ Optional properties:
->   - big-endian-desc : boolean, set this for hcds with big-endian descriptors
->   - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
->   - needs-reset-on-resume : boolean, set this to force EHCI reset after resume
-> + - has-transaction-translator : boolean, set this if EHCI have a Transaction
-> +				Translator built into the root hub.
->   - clocks : a list of phandle + clock specifier pairs
->   - phys : phandle + phy specifier pair
->   - phy-names : "usb"
-> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-> index d8a75a51d6d4..ba07f16b13e0 100644
-> --- a/drivers/usb/host/ehci-platform.c
-> +++ b/drivers/usb/host/ehci-platform.c
-> @@ -202,6 +202,10 @@ static int ehci_platform_probe(struct platform_device *dev)
->  					  "needs-reset-on-resume"))
->  			pdata->reset_on_resume = 1;
->  
-> +		if (of_property_read_bool(dev->dev.of_node,
-> +					  "has-transaction-translator"))
-> +			pdata->has_tt = 1;
-> +
->  		priv->num_phys = of_count_phandle_with_args(dev->dev.of_node,
->  				"phys", "#phy-cells");
->  		priv->num_phys = priv->num_phys > 0 ? priv->num_phys : 1;
+Ok, that makes sense, we can change this. Thanks for your input.
 
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Regards,
+Dave
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+> Ohad.
+> 
