@@ -1,81 +1,100 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/2] usb: renesas_usbhs: Add support for R-Car E2
-Date: Mon, 18 May 2015 10:04:25 +0000
-Message-ID: <SG2PR06MB0919CFDF6BB80063F3E6B1BCD8C40@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1431941665-3768-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1431941665-3768-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdWs3y5vP5+mGeuEWOg5HJuZ4NbB4Ra=EriNOdQDzjDqOA@mail.gmail.com>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 03/10] clk: sunxi: Let divs clocks read
+ the base factor clock name from devicetree
+Date: Mon, 18 May 2015 11:22:32 +0200
+Message-ID: <5559AF58.60508@gmail.com>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com> <1431707940-19372-4-git-send-email-jenskuske@gmail.com> <20150517130657.GD4004@lukather>
+Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWs3y5vP5+mGeuEWOg5HJuZ4NbB4Ra=EriNOdQDzjDqOA@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, USB list <linux-usb@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBRXT42VAKGQEPLQH2RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150517130657.GD4004@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?windows-1252?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IFNlbnQ6IE1vbmRheSwgTWF5IDE4LCAyMDE1IDY6NDkgUE0NCj4g
-DQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24gTW9uLCBNYXkgMTgsIDIwMTUgYXQgMTE6MzQg
-QU0sIFlvc2hpaGlybyBTaGltb2RhDQo8IHNuaXAgPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3JlbmVzYXNfdXNiaHMudHh0DQo+IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9yZW5lc2FzX3VzYmhzLnR4dA0KPiA+
-IGluZGV4IGRkYmUzMDQuLjY0YTRjYTYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9yZW5lc2FzX3VzYmhzLnR4dA0KPiA+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvcmVuZXNhc191c2Jocy50eHQNCj4gPiBA
-QCAtNCw2ICs0LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgICAtIGNvbXBhdGlibGU6
-IE11c3QgY29udGFpbiBvbmUgb2YgdGhlIGZvbGxvd2luZzoNCj4gPiAgICAgICAgIC0gInJlbmVz
-YXMsdXNiaHMtcjhhNzc5MCINCj4gPiAgICAgICAgIC0gInJlbmVzYXMsdXNiaHMtcjhhNzc5MSIN
-Cj4gPiArICAgICAgIC0gInJlbmVzYXMsdXNiaHMtcjhhNzc5NCINCj4gPiAgICAtIHJlZzogQmFz
-ZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIGZvciB0aGUgVVNCSFMNCj4gPiAg
-ICAtIGludGVycnVwdHM6IEludGVycnVwdCBzcGVjaWZpZXIgZm9yIHRoZSBVU0JIUw0KPiA+ICAg
-IC0gY2xvY2tzOiBBIGxpc3Qgb2YgcGhhbmRsZSArIGNsb2NrIHNwZWNpZmllciBwYWlycw0KPiAN
-Cj4gRm9yIHRoZSBEVCBiaW5kaW5nIHBhcnQ6DQo+IEFja2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2
-ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KDQpUaGFuayB5b3UgZm9yIHRoZSBBY2tlZC1i
-eSENCg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9yZW5lc2FzX3VzYmhzL2NvbW1vbi5j
-IGIvZHJpdmVycy91c2IvcmVuZXNhc191c2Jocy9jb21tb24uYw0KPiA+IGluZGV4IDBmN2U4NTAu
-Ljk1NDM1N2YgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy91c2IvcmVuZXNhc191c2Jocy9jb21t
-b24uYw0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL3JlbmVzYXNfdXNiaHMvY29tbW9uLmMNCj4gPiBA
-QCAtNDcyLDYgKzQ3MiwxMCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCB1c2Jo
-c19vZl9tYXRjaFtdID0gew0KPiA+ICAgICAgICAgICAgICAgICAuY29tcGF0aWJsZSA9ICJyZW5l
-c2FzLHVzYmhzLXI4YTc3OTEiLA0KPiA+ICAgICAgICAgICAgICAgICAuZGF0YSA9ICh2b2lkICop
-VVNCSFNfVFlQRV9SOEE3NzkxLA0KPiA+ICAgICAgICAgfSwNCj4gPiArICAgICAgIHsNCj4gPiAr
-ICAgICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAicmVuZXNhcyx1c2Jocy1yOGE3Nzk0IiwNCj4g
-PiArICAgICAgICAgICAgICAgLmRhdGEgPSAodm9pZCAqKVVTQkhTX1RZUEVfUjhBNzc5NCwNCj4g
-PiArICAgICAgIH0sDQo+ID4gICAgICAgICB7IH0sDQo+ID4gIH07DQo+ID4gIE1PRFVMRV9ERVZJ
-Q0VfVEFCTEUob2YsIHVzYmhzX29mX21hdGNoKTsNCj4gPiBAQCAtNTAwLDYgKzUwNCw3IEBAIHN0
-YXRpYyBzdHJ1Y3QgcmVuZXNhc191c2Joc19wbGF0Zm9ybV9pbmZvICp1c2Joc19wYXJzZV9kdChz
-dHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gICAgICAgICBzd2l0Y2ggKGRwYXJhbS0+dHlwZSkgew0K
-PiA+ICAgICAgICAgY2FzZSBVU0JIU19UWVBFX1I4QTc3OTA6DQo+ID4gICAgICAgICBjYXNlIFVT
-QkhTX1RZUEVfUjhBNzc5MToNCj4gPiArICAgICAgIGNhc2UgVVNCSFNfVFlQRV9SOEE3Nzk0Og0K
-PiA+ICAgICAgICAgICAgICAgICBkcGFyYW0tPmhhc191c2JfZG1hYyA9IDE7DQo+ID4gICAgICAg
-ICAgICAgICAgIGJyZWFrOw0KPiA+ICAgICAgICAgZGVmYXVsdDoNCj4gPiBAQCAtNTYxLDYgKzU2
-Niw3IEBAIHN0YXRpYyBpbnQgdXNiaHNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikNCj4gPiAgICAgICAgIHN3aXRjaCAocHJpdi0+ZHBhcmFtLnR5cGUpIHsNCj4gPiAgICAgICAg
-IGNhc2UgVVNCSFNfVFlQRV9SOEE3NzkwOg0KPiA+ICAgICAgICAgY2FzZSBVU0JIU19UWVBFX1I4
-QTc3OTE6DQo+ID4gKyAgICAgICBjYXNlIFVTQkhTX1RZUEVfUjhBNzc5NDoNCj4gDQo+IEdpdmVu
-IGFsbCBSLUNhciBHZW4yIHZhcmlhbnRzIGFyZSB0cmVhdGVkIHRoZSBzYW1lLi4uDQo+IA0KPiA+
-ICAgICAgICAgICAgICAgICBwcml2LT5wZnVuYyA9IHVzYmhzX3JjYXIyX29wczsNCj4gPiAgICAg
-ICAgICAgICAgICAgaWYgKCFwcml2LT5kcGFyYW0ucGlwZV90eXBlKSB7DQo+ID4gICAgICAgICAg
-ICAgICAgICAgICAgICAgcHJpdi0+ZHBhcmFtLnBpcGVfdHlwZSA9IHVzYmhzY19uZXdfcGlwZV90
-eXBlOw0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3VzYi9yZW5lc2FzX3VzYmhzLmgg
-Yi9pbmNsdWRlL2xpbnV4L3VzYi9yZW5lc2FzX3VzYmhzLmgNCj4gPiBpbmRleCBlNDM4ZTcyLi4w
-OGM2MmJhIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvdXNiL3JlbmVzYXNfdXNiaHMu
-aA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvdXNiL3JlbmVzYXNfdXNiaHMuaA0KPiA+IEBAIC0x
-NzIsNiArMTcyLDcgQEAgc3RydWN0IHJlbmVzYXNfdXNiaHNfZHJpdmVyX3BhcmFtIHsNCj4gPiAg
-ZW51bSB7DQo+ID4gICAgICAgICBVU0JIU19UWVBFX1I4QTc3OTAgPSAxLA0KPiA+ICAgICAgICAg
-VVNCSFNfVFlQRV9SOEE3NzkxLA0KPiA+ICsgICAgICAgVVNCSFNfVFlQRV9SOEE3Nzk0LA0KPiAN
-Cj4gLi4uIHBlcmhhcHMgaXQgd291bGQgYmUgYmV0dGVyIHRvIGp1c3QgaGF2ZSBhIHNpbmdsZSBV
-U0JIU19UWVBFX1JDQVJfR0VOMiwNCj4gc28geW91IGRvbid0IGhhdmUgdG8gYWRkIG1vcmUgZW51
-bXMgYW5kIGNhc2Ugc3RhdGVtZW50cz8NCg0KVGhhbmsgeW91IGZvciB0aGUgc3VnZ2VzdGlvbi4g
-SSBhZ3JlZSB3aXRoIHlvdS4NClNvLCBJIHdpbGwgZml4IHRoaXMgcGF0Y2ggc2V0IFsxLzJdIHRv
-IGp1c3QgaGF2ZSBhIFVTQkhTX1RZUEVfUkNBUl9HRU4yDQphbmQgbW9kaWZ5IHRoaXMgcGF0Y2gu
-DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0aW5n
-fXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2Vl
-cnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBn
-ZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRo
-IHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEkn
-bSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0
-aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGlu
-dXMgVG9ydmFsZHMNCg==
+On 05/17/15 15:06, Maxime Ripard wrote:
+> On Fri, May 15, 2015 at 06:38:53PM +0200, Jens Kuske wrote:
+>> Currently, the sunxi clock driver gets the name for the base factor clock
+>> of divs clocks from the name field in factors_data. This prevents reusing
+>> of the factor clock for clocks with same properties, but different name.
+>>
+>> This commit makes the divs setup function try to get a name from
+>> clock-output-names in the devicetree. It also removes the name field where
+>> possible and merges the sun4i PLL5 and PLL6 clocks.
+>>
+>> The sun4i PLL5 clock doesn't have a output for the base factor clock,
+>> so we still have to use the name field there.
+>>
+>> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/clk/sunxi/clk-sunxi.c | 22 ++++++++++++----------
+>>  1 file changed, 12 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+>> index 17cba4d..afe560c 100644
+>> --- a/drivers/clk/sunxi/clk-sunxi.c
+>> +++ b/drivers/clk/sunxi/clk-sunxi.c
+>> @@ -708,18 +708,10 @@ static const struct factors_data sun4i_pll5_data __initconst = {
+>>  	.name = "pll5",
+>>  };
+>>  
+>> -static const struct factors_data sun4i_pll6_data __initconst = {
+>> -	.enable = 31,
+>> -	.table = &sun4i_pll5_config,
+>> -	.getter = sun4i_get_pll5_factors,
+>> -	.name = "pll6",
+>> -};
+>> -
+>>  static const struct factors_data sun6i_a31_pll6_data __initconst = {
+>>  	.enable = 31,
+>>  	.table = &sun6i_a31_pll6_config,
+>>  	.getter = sun6i_a31_get_pll6_factors,
+>> -	.name = "pll6x2",
+>>  };
+>>  
+>>  static const struct factors_data sun5i_a13_ahb_data __initconst = {
+>> @@ -1099,7 +1091,7 @@ static const struct divs_data pll5_divs_data __initconst = {
+>>  };
+>>  
+>>  static const struct divs_data pll6_divs_data __initconst = {
+>> -	.factors = &sun4i_pll6_data,
+>> +	.factors = &sun4i_pll5_data,
+>>  	.ndivs = 4,
+>>  	.div = {
+>>  		{ .shift = 0, .table = pll6_sata_tbl, .gate = 14 }, /* M, SATA */
+>> @@ -1141,6 +1133,7 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
+>>  	struct clk_gate *gate = NULL;
+>>  	struct clk_fixed_factor *fix_factor;
+>>  	struct clk_divider *divider;
+>> +	struct factors_data factors = *data->factors;
+>>  	void __iomem *reg;
+>>  	int ndivs = SUNXI_DIVS_MAX_QTY, i = 0;
+>>  	int flags, clkflags;
+>> @@ -1149,8 +1142,17 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
+>>  	if (data->ndivs)
+>>  		ndivs = data->ndivs;
+>>  
+>> +	/* Try to find a name for base factor clock */
+>> +	for (i = 0; i < ndivs; i++) {
+>> +		if (data->div[i].self) {
+> 
+> I'm not sure we should expect the factor clock to have a self factor.
+
+Maybe not, but in that case it would fall back to the name provided in
+the factors_data struct, as it is the case for sun4i pll5.
+
+> what about taking the first output and taking the substring up to the
+> first "_" ?
+
+That only works for the sun[457]i pll5 & pll6, for sun[68]i the base
+clock name would have to be "pll6x2".
+
+Jens
