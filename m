@@ -1,62 +1,51 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
-Date: Mon, 18 May 2015 16:03:49 +0200
-Message-ID: <CALszF6CK7axU0qrWNf38aqrt2R2126ZACn7wx5jNY_1KE+4H+g@mail.gmail.com>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1431158038-3813-10-git-send-email-mcoquelin.stm32@gmail.com>
-	<5559E4B0.70506@linaro.org>
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: nitrogen6x: use simple-panel instead of
+ display-timings for LVDS0
+Date: Mon, 18 May 2015 07:12:29 -0700
+Message-ID: <5559F34D.5090308@boundarydevices.com>
+References: <1431804202-11067-1-git-send-email-eric.nelson@boundarydevices.com>	<1431804202-11067-2-git-send-email-eric.nelson@boundarydevices.com> <20150518075844.7e1b5916@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <5559E4B0.70506@linaro.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150518075844.7e1b5916-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-05-18 15:10 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
-> On 05/09/2015 09:53 AM, Maxime Coquelin wrote:
+On 05/17/2015 10:58 PM, Lothar Wa=C3=9Fmann wrote:
+> Hi,
+>=20
+>> Also add alias for backlight_lvds and connect it to the display.
 >>
->> STM32 MCUs feature 16 and 32 bits general purpose timers with prescalers.
->> The drivers detects whether the time is 16 or 32 bits, and applies a
->> 1024 prescaler value if it is 16 bits.
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 >> ---
->>   drivers/clocksource/Kconfig       |   8 ++
->>   drivers/clocksource/Makefile      |   1 +
->>   drivers/clocksource/timer-stm32.c | 184
->> ++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 193 insertions(+)
->>   create mode 100644 drivers/clocksource/timer-stm32.c
+>>  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 30 +++++++++++++++++---=
+----------
+>>  1 file changed, 17 insertions(+), 13 deletions(-)
 >>
->> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->> index bf9364c..2443520 100644
->> --- a/drivers/clocksource/Kconfig
->> +++ b/drivers/clocksource/Kconfig
->> @@ -106,6 +106,14 @@ config CLKSRC_EFM32
->>           Support to use the timers of EFM32 SoCs as clock source and
->> clock
->>           event device.
+>> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/bo=
+ot/dts/imx6qdl-nitrogen6x.dtsi
+>> index fd096dc..712c5ec 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+>> @@ -122,7 +122,7 @@
+>>  		status =3D "okay";
+>>  	};
+>> =20
+>> -	backlight_lvds {
+>> +	backlight_lvds: backlight_lvds {
 >>
->> +config CLKSRC_STM32
->> +       bool "Clocksource for STM32 SoCs" if !ARCH_STM32
->> +       depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
->
->
-> Are the interactive bool and the 'COMPILE_TEST' necessary ?
->
+> The patch does not add an 'alias', but a 'label'.
+>=20
 
-The interactive bool is necessary if we want to be able to
-select/deselect it in COMPILE_TEST configuration.
-And personnaly, I think COMPILE_TEST use makes sense.
+Good catch.
 
-Note that other timer drivers are doing the same thing today
-(CLKSRC_EFM32, SH_TIMER_CMT, EM_TIMER_STI...).
+Thanks for the clarification.
 
-Do you have a specific concern regarding COMPILE_TEST?
-
-Kind regards,
-Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
