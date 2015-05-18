@@ -1,81 +1,46 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/2] usb: renesas_usbhs: Add support for R-Car E2
-Date: Mon, 18 May 2015 18:34:25 +0900
-Message-ID: <1431941665-3768-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/2] usb: renesas_usbhs: Change the SoC types to enum values
+Date: Mon, 18 May 2015 18:34:24 +0900
+Message-ID: <1431941665-3768-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1431941665-3768-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1431941665-3768-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431941665-3768-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a compatible string to support for R-Car E2.
+To add other SoC types easily, this patch changes USBHS_TYPE_R8A7790
+and USBHS_TYPE_R8A7791 to enum values.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
- drivers/usb/renesas_usbhs/common.c                      | 6 ++++++
- include/linux/usb/renesas_usbhs.h                       | 1 +
- 3 files changed, 8 insertions(+)
+ include/linux/usb/renesas_usbhs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index ddbe304..64a4ca6 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -4,6 +4,7 @@ Required properties:
-   - compatible: Must contain one of the following:
- 	- "renesas,usbhs-r8a7790"
- 	- "renesas,usbhs-r8a7791"
-+	- "renesas,usbhs-r8a7794"
-   - reg: Base address and length of the register for the USBHS
-   - interrupts: Interrupt specifier for the USBHS
-   - clocks: A list of phandle + clock specifier pairs
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 0f7e850..954357f 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -472,6 +472,10 @@ static const struct of_device_id usbhs_of_match[] = {
- 		.compatible = "renesas,usbhs-r8a7791",
- 		.data = (void *)USBHS_TYPE_R8A7791,
- 	},
-+	{
-+		.compatible = "renesas,usbhs-r8a7794",
-+		.data = (void *)USBHS_TYPE_R8A7794,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usbhs_of_match);
-@@ -500,6 +504,7 @@ static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
- 	switch (dparam->type) {
- 	case USBHS_TYPE_R8A7790:
- 	case USBHS_TYPE_R8A7791:
-+	case USBHS_TYPE_R8A7794:
- 		dparam->has_usb_dmac = 1;
- 		break;
- 	default:
-@@ -561,6 +566,7 @@ static int usbhs_probe(struct platform_device *pdev)
- 	switch (priv->dparam.type) {
- 	case USBHS_TYPE_R8A7790:
- 	case USBHS_TYPE_R8A7791:
-+	case USBHS_TYPE_R8A7794:
- 		priv->pfunc = usbhs_rcar2_ops;
- 		if (!priv->dparam.pipe_type) {
- 			priv->dparam.pipe_type = usbhsc_new_pipe_type;
 diff --git a/include/linux/usb/renesas_usbhs.h b/include/linux/usb/renesas_usbhs.h
-index e438e72..08c62ba 100644
+index f06529c..e438e72 100644
 --- a/include/linux/usb/renesas_usbhs.h
 +++ b/include/linux/usb/renesas_usbhs.h
-@@ -172,6 +172,7 @@ struct renesas_usbhs_driver_param {
- enum {
- 	USBHS_TYPE_R8A7790 = 1,
- 	USBHS_TYPE_R8A7791,
-+	USBHS_TYPE_R8A7794,
+@@ -169,8 +169,10 @@ struct renesas_usbhs_driver_param {
+ #define USBHS_USB_DMAC_XFER_SIZE	32	/* hardcode the xfer size */
  };
  
+-#define USBHS_TYPE_R8A7790 1
+-#define USBHS_TYPE_R8A7791 2
++enum {
++	USBHS_TYPE_R8A7790 = 1,
++	USBHS_TYPE_R8A7791,
++};
+ 
  /*
+  * option:
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
