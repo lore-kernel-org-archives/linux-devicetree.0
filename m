@@ -1,59 +1,57 @@
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Subject: [PATCH v5 1/3] dt-bindings: Document the hi6220 thermal sensor bindings
-Date: Mon, 18 May 2015 15:11:47 +0800
-Message-ID: <1431933109-22764-2-git-send-email-kong.kongxinwei@hisilicon.com>
-References: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v9 4/4] crypto: Add Allwinner Security
+ System crypto accelerator
+Date: Mon, 18 May 2015 09:24:49 +0200
+Message-ID: <20150518092449.2364d21e@bbrezillon>
+References: <1431608341-10936-1-git-send-email-clabbe.montjoie@gmail.com>
+	<1431608341-10936-5-git-send-email-clabbe.montjoie@gmail.com>
+	<20150517104508.468b032f@bbrezillon>
+	<20150517103440.GA7800@gondor.apana.org.au>
+	<20150517124811.797fab32@bbrezillon>
+	<20150518004121.GA11910@gondor.apana.org.au>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: edubezval@gmail.com, rui.zhuang@intel.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org
-Cc: dan.zhao@hisilicon.com, devicetree@vger.kernel.org, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, mark.rutland@arm.com, linuxarm@huawei.com, zhenwei.wang@hisilicon.com, leo.yan@linaro.org, mporter@konsulko.com, zhangfei.gao@linaro.org, liguozhu@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBRVH42VAKGQEGLKUJXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150518004121.GA11910-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: kongxinwei <kong.kongxinwei@hisilicon.com>
+Hi Herbert,
 
-This adds documentation of device tree bindings for the
-thermal sensor controller of hi6220 SoC.
+On Mon, 18 May 2015 08:41:21 +0800
+Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> wrote:
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
----
- .../bindings/thermal/hisilicon-thermal.txt         | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> On Sun, May 17, 2015 at 12:48:11PM +0200, Boris Brezillon wrote:
+> > 
+> > Yep, but then they shouldn't be declared with CRYPTO_ALG_ASYNC and as an
 
-diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
-new file mode 100644
-index 0000000..b2a349f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
-@@ -0,0 +1,23 @@
-+* Temperature Sensor on hisilicon SoCs
-+
-+** Required properties :
-+
-+- compatible: "hisilicon,tsensor".
-+- reg: physical base address of thermal sensor and length of memory mapped
-+  region.
-+- interrupt: The interrupt number to the cpu. Defines the interrupt used
-+  by SOCTHERM.
-+- clock-names: Input clock name, should be 'thermal_clk'.
-+- clocks: phandles for clock specified in "clock-names" property.
-+- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
-+
-+Example :
-+
-+	tsensor: tsensor@0,f7030700 {
-+		compatible = "hisilicon,tsensor";
-+		reg = <0x0 0xf7030700 0x0 0x1000>;
-+		interrupts = <0 7 0x4>;
-+		clocks = <&clock_sys HI6220_TSENSOR_CLK>;
-+		clock-names = "thermal_clk";
-+		#thermal-sensor-cells = <1>;
-+	}
+                                                                  not ^
+
+> > ablkcipher algorithm (*Asynchronous* Block Cipher), right ?
+> 
+> Right.  They can still use ablkcipher but should clear the ASYNC
+> bit.
+
+Okay, just to be sure, what does "Asynchronous" mean in ablkcipher or
+ahash ?
+Is it related to the fact that crypto operations can be done in
+multiple steps (e.g.: one set_key + several encrypt chunk operations),
+or is this something else ?
+
+Best Regards,
+
+Boris
+
 -- 
-1.9.1
-
-
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
