@@ -1,43 +1,48 @@
-From: raghu MG <raghumag-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: ARMADA XP MV78260
-Date: Tue, 19 May 2015 01:32:23 +0530
-Message-ID: <CAG1O52X9XOMjHrBLYXcCuDnN9_3V8awUWGSBysS7JFFG8a=Nxg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
+Date: Mon, 18 May 2015 22:03:52 +0200
+Message-ID: <2729872.Fp4939suL0@wuerfel>
+References: <=fu.wei@linaro.org> <CADyBb7u=HjZO5CBzZLxw1aWDx0tKdVKBuTrrhrRF9bAQr7pADQ@mail.gmail.com> <20150518172329.GA17202@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150518172329.GA17202@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Fu Wei <fu.wei@linaro.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>
 List-Id: devicetree@vger.kernel.org
 
-.Hi,
-This mail is regarding Linux smp boot on ARMADA-XP MV2860.
+On Monday 18 May 2015 10:23:30 Guenter Roeck wrote:
+> > 
+> > integrate watchdog_init_pretimeout and watchdog_init_timeout will be a
+> > little hard,
+> > we may need to change this API to :
+> > 
+> > watchdog_init_timeouts(struct watchdog_device *wdd, unsigned int timeout_parm,
+> >                              unsigned int pretimeout_parm, struct device *dev)
+> > 
+> > then we need to update all the watchdog drivers which use this API,
+> > maybe we can do this in a individual patchset, after this pretimeout
+> > patch is merged.
+> > 
+> > Is that OK  ?   any thought?
+> > 
+> That is what I would recommend.
+> 
 
-CPU-1 doesnt boot/go through the boot sequence & it fails to come
-online & dumps this message
+The API change is fine, but I don't think you need to change all drivers.
 
-CPU1:failed to come online .
+Just add a small wrapper function in the header file doing the conversion:
 
-The CPU-1 boot register is programmed with physical address of
--->armada_xp_secondary_startup function & then cpu-0 deasserts the CPU-1.
+static inline int watchdog_init_timeout(struct watchdog_device *wdd,
+                                unsigned int timeout_parm, struct device *dev)
+{
+	return watchdog_init_timeouts(wdd, timeout_parm, ~0ul, dev);
+}
 
-I am using armada-xp-gp.dts with armada-xp-mv78260.dts included in it.
+Then you can update the drivers that actually use the pretimeout to
+use the new function at some point, and leave all other drivers calling
+the wrapper function.
 
-Any help would be appreciated.
-Regards
-
-CPU-1 doesnt boot/go through the boot sequence & it fails to come
-online & dumps this message
-
-CPU1:failed to come online .
-
-The CPU-1 boot register is programmed with physical address of
--->armada_xp_secondary_startup function & then cpu-0 deasserts the CPU-1.
-
-I am using armada-xp-gp.dts with armada-xp-mv78260.dts included in it.
-
-Any help would be appreciated.
-Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
