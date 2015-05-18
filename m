@@ -1,181 +1,274 @@
-From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Subject: Re: [PATCH v2] clk: mediatek: Export CPU mux clocks for CPU frequency control
-Date: Mon, 18 May 2015 21:07:42 +0800
-Message-ID: <CALx668UqfAjf+x94qGX+LiuSDX+o+k5OAD5qPn35ykgK3hGtVQ@mail.gmail.com>
-References: <1429521950-16431-1-git-send-email-pi-cheng.chen@linaro.org>
-	<20150515190058.GN31753@codeaurora.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
+Date: Mon, 18 May 2015 15:10:08 +0200
+Message-ID: <5559E4B0.70506@linaro.org>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com> <1431158038-3813-10-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150515190058.GN31753@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1431158038-3813-10-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, peter@hurleysoftware.com, andy.shevchenko@gmail.com, cw00.choi@samsung.com, Russell King <linux@arm.linux.org.uk>, joe@perches.com, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, lee.jones@linaro.org, Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-arch@vger.kerne
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Sat, May 16, 2015 at 3:00 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 04/20, pi-cheng.chen wrote:
->> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
->> diff --git a/drivers/clk/mediatek/clk-cpumux.c b/drivers/clk/mediatek/clk-cpumux.c
->> new file mode 100644
->> index 0000000..dc14074
->> --- /dev/null
->> +++ b/drivers/clk/mediatek/clk-cpumux.c
->> @@ -0,0 +1,122 @@
->> +/*
->> + * Copyright (c) 2015 Linaro Ltd.
->> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/clk.h>
+On 05/09/2015 09:53 AM, Maxime Coquelin wrote:
+> STM32 MCUs feature 16 and 32 bits general purpose timers with prescal=
+ers.
+> The drivers detects whether the time is 16 or 32 bits, and applies a
+> 1024 prescaler value if it is 16 bits.
 >
-> Do you need this include for some reason?
-
-No. I think I forgot to remove it after adding it for some debugging purpose.
-Will remove it.
-
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> ---
+>   drivers/clocksource/Kconfig       |   8 ++
+>   drivers/clocksource/Makefile      |   1 +
+>   drivers/clocksource/timer-stm32.c | 184 +++++++++++++++++++++++++++=
++++++++++++
+>   3 files changed, 193 insertions(+)
+>   create mode 100644 drivers/clocksource/timer-stm32.c
 >
->> +#include <linux/clk-provider.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/slab.h>
->> +
->> +#include "clk-mtk.h"
->> +#include "clk-cpumux.h"
->> +
-> [...]
->> +
->> +static struct clk_ops clk_cpumux_ops = {
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
+g
+> index bf9364c..2443520 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -106,6 +106,14 @@ config CLKSRC_EFM32
+>   	  Support to use the timers of EFM32 SoCs as clock source and cloc=
+k
+>   	  event device.
 >
-> const?
+> +config CLKSRC_STM32
+> +	bool "Clocksource for STM32 SoCs" if !ARCH_STM32
+> +	depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
 
-Yes. Will add it.
+Are the interactive bool and the 'COMPILE_TEST' necessary ?
 
+
+> +	select CLKSRC_MMIO
+> +	default ARCH_STM32
+> +	help
+> +	  Support to use the timers of STM32 SoCs as clock event device.
+> +
+>   config ARM_ARCH_TIMER
+>   	bool
+>   	select CLKSRC_OF if OF
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makef=
+ile
+> index d510c54..888a7df 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_ARCH_NSPIRE)	+=3D zevio-timer.o
+>   obj-$(CONFIG_ARCH_BCM_MOBILE)	+=3D bcm_kona_timer.o
+>   obj-$(CONFIG_CADENCE_TTC_TIMER)	+=3D cadence_ttc_timer.o
+>   obj-$(CONFIG_CLKSRC_EFM32)	+=3D time-efm32.o
+> +obj-$(CONFIG_CLKSRC_STM32)	+=3D timer-stm32.o
+>   obj-$(CONFIG_CLKSRC_EXYNOS_MCT)	+=3D exynos_mct.o
+>   obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)	+=3D samsung_pwm_timer.o
+>   obj-$(CONFIG_FSL_FTM_TIMER)	+=3D fsl_ftm_timer.o
+> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/=
+timer-stm32.c
+> new file mode 100644
+> index 0000000..fad2e2e
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-stm32.c
+> @@ -0,0 +1,184 @@
+> +/*
+> + * Copyright (C) Maxime Coquelin 2015
+> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> + * License terms:  GNU General Public License (GPL), version 2
+> + *
+> + * Inspired by time-efm32.c from Uwe Kleine-Koenig
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/clk.h>
+> +#include <linux/reset.h>
+> +
+> +#define TIM_CR1		0x00
+> +#define TIM_DIER	0x0c
+> +#define TIM_SR		0x10
+> +#define TIM_EGR		0x14
+> +#define TIM_PSC		0x28
+> +#define TIM_ARR		0x2c
+> +
+> +#define TIM_CR1_CEN	BIT(0)
+> +#define TIM_CR1_OPM	BIT(3)
+> +#define TIM_CR1_ARPE	BIT(7)
+> +
+> +#define TIM_DIER_UIE	BIT(0)
+> +
+> +#define TIM_SR_UIF	BIT(0)
+> +
+> +#define TIM_EGR_UG	BIT(0)
+> +
+> +struct stm32_clock_event_ddata {
+> +	struct clock_event_device evtdev;
+> +	unsigned periodic_top;
+> +	void __iomem *base;
+> +};
+> +
+> +static void stm32_clock_event_set_mode(enum clock_event_mode mode,
+> +				       struct clock_event_device *evtdev)
+> +{
+> +	struct stm32_clock_event_ddata *data =3D
+> +		container_of(evtdev, struct stm32_clock_event_ddata, evtdev);
+> +	void *base =3D data->base;
+> +
+> +	switch (mode) {
+> +	case CLOCK_EVT_MODE_PERIODIC:
+> +		writel_relaxed(data->periodic_top, base + TIM_ARR);
+> +		writel_relaxed(TIM_CR1_ARPE | TIM_CR1_CEN, base + TIM_CR1);
+> +		break;
+> +
+> +	case CLOCK_EVT_MODE_ONESHOT:
+> +	default:
+> +		writel_relaxed(0, base + TIM_CR1);
+> +		break;
+> +	}
+> +}
+> +
+> +static int stm32_clock_event_set_next_event(unsigned long evt,
+> +					    struct clock_event_device *evtdev)
+> +{
+> +	struct stm32_clock_event_ddata *data =3D
+> +		container_of(evtdev, struct stm32_clock_event_ddata, evtdev);
+> +
+> +	writel_relaxed(evt, data->base + TIM_ARR);
+> +	writel_relaxed(TIM_CR1_ARPE | TIM_CR1_OPM | TIM_CR1_CEN,
+> +		       data->base + TIM_CR1);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t stm32_clock_event_handler(int irq, void *dev_id)
+> +{
+> +	struct stm32_clock_event_ddata *data =3D dev_id;
+> +
+> +	writel_relaxed(0, data->base + TIM_SR);
+> +
+> +	data->evtdev.event_handler(&data->evtdev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static struct stm32_clock_event_ddata clock_event_ddata =3D {
+> +	.evtdev =3D {
+> +		.name =3D "stm32 clockevent",
+> +		.features =3D CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERIODIC,
+> +		.set_mode =3D stm32_clock_event_set_mode,
+> +		.set_next_event =3D stm32_clock_event_set_next_event,
+> +		.rating =3D 200,
+> +	},
+> +};
+> +
+> +static void __init stm32_clockevent_init(struct device_node *np)
+> +{
+> +	struct stm32_clock_event_ddata *data =3D &clock_event_ddata;
+> +	struct clk *clk;
+> +	struct reset_control *rstc;
+> +	unsigned long rate, max_delta;
+> +	int irq, ret, bits, prescaler =3D 1;
+> +
+> +	clk =3D of_clk_get(np, 0);
+> +	if (IS_ERR(clk)) {
+> +		ret =3D PTR_ERR(clk);
+> +		pr_err("failed to get clock for clockevent (%d)\n", ret);
+> +		goto err_clk_get;
+> +	}
+> +
+> +	ret =3D clk_prepare_enable(clk);
+> +	if (ret) {
+> +		pr_err("failed to enable timer clock for clockevent (%d)\n",
+> +		       ret);
+> +		goto err_clk_enable;
+> +	}
+> +
+> +	rate =3D clk_get_rate(clk);
+> +
+> +	rstc =3D of_reset_control_get(np, NULL);
+> +	if (!IS_ERR(rstc)) {
+> +		reset_control_assert(rstc);
+> +		reset_control_deassert(rstc);
+> +	}
+> +
+> +	data->base =3D of_iomap(np, 0);
+> +	if (!data->base) {
+> +		pr_err("failed to map registers for clockevent\n");
+> +		goto err_iomap;
+> +	}
+> +
+> +	irq =3D irq_of_parse_and_map(np, 0);
+> +	if (!irq) {
+> +		pr_err("%s: failed to get irq.\n", np->full_name);
+> +		goto err_get_irq;
+> +	}
+> +
+> +	/* Detect whether the timer is 16 or 32 bits */
+> +	writel_relaxed(~0UL, data->base + TIM_ARR);
+> +	max_delta =3D readl_relaxed(data->base + TIM_ARR);
+> +	if (max_delta =3D=3D ~0UL) {
+> +		prescaler =3D 1;
+> +		bits =3D 32;
+> +	} else {
+> +		prescaler =3D 1024;
+> +		bits =3D 16;
+> +	}
+> +	writel_relaxed(0, data->base + TIM_ARR);
+> +
+> +	writel_relaxed(prescaler - 1, data->base + TIM_PSC);
+> +	writel_relaxed(TIM_EGR_UG, data->base + TIM_EGR);
+> +	writel_relaxed(TIM_DIER_UIE, data->base + TIM_DIER);
+> +	writel_relaxed(0, data->base + TIM_SR);
+> +
+> +	data->periodic_top =3D DIV_ROUND_CLOSEST(rate, prescaler * HZ);
+> +
+> +	clockevents_config_and_register(&data->evtdev,
+> +					DIV_ROUND_CLOSEST(rate, prescaler),
+> +					0x1, max_delta);
+> +
+> +	ret =3D request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
+> +			"stm32 clockevent", data);
+> +	if (ret) {
+> +		pr_err("%s: failed to request irq.\n", np->full_name);
+> +		goto err_get_irq;
+> +	}
+> +
+> +	pr_info("%s: STM32 clockevent driver initialized (%d bits)\n",
+> +			np->full_name, bits);
+> +
+> +	return;
+> +
+> +err_get_irq:
+> +	iounmap(data->base);
+> +err_iomap:
+> +	clk_disable_unprepare(clk);
+> +err_clk_enable:
+> +	clk_put(clk);
+> +err_clk_get:
+> +	return;
+> +}
+> +
+> +CLOCKSOURCE_OF_DECLARE(stm32, "st,stm32-timer", stm32_clockevent_ini=
+t);
 >
->> +     .get_parent = clk_cpumux_get_parent,
->> +     .set_parent = clk_cpumux_set_parent,
->> +};
->> +
->> +static struct clk *mtk_clk_register_cpumux(const struct mtk_composite *mux,
->> +                                        struct regmap *regmap)
->> +{
->> +     struct mtk_clk_cpumux *cpumux;
->> +     struct clk *clk;
->> +     struct clk_init_data init;
->> +
->> +     cpumux = kzalloc(sizeof(*cpumux), GFP_KERNEL);
->> +     if (!cpumux)
->> +             return ERR_PTR(-ENOMEM);
->> +
->> +     init.name = mux->name;
->> +     init.ops = &clk_cpumux_ops;
->> +     init.parent_names = mux->parent_names;
->> +     init.num_parents = mux->num_parents;
->> +
->> +     cpumux->reg = mux->mux_reg;
->> +     cpumux->shift = mux->mux_shift;
->> +     cpumux->mask = (BIT(mux->mux_width) - 1);
->
-> Unnecessary parenthesis.
 
-Will fix it.
 
->
->> +     cpumux->regmap = regmap;
->> +     cpumux->hw.init = &init;
->> +
->> +     clk = clk_register(NULL, &cpumux->hw);
->> +     if (IS_ERR(clk))
->> +             kfree(cpumux);
->> +
->> +     return clk;
->> +}
->> +
->> +int mtk_clk_register_cpumuxes(struct device_node *node,
->> +                           const struct mtk_composite *clks, int num,
->> +                           struct clk_onecell_data *clk_data)
->> +{
->> +     int i;
->> +     struct clk *clk;
->> +     struct regmap *regmap;
->> +
->> +     if (!clk_data)
->> +             return -ENOMEM;
->
-> Why would we call the function with NULL clk_data? Please remove
-> this check.
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
-Will remove it.
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
->
->> +
->> +     regmap = syscon_node_to_regmap(node);
->> +     if (IS_ERR(regmap)) {
->> +             pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
->> +                    PTR_ERR(regmap));
->> +             return PTR_ERR(regmap);
->> +     }
->> +
->> diff --git a/drivers/clk/mediatek/clk-cpumux.h b/drivers/clk/mediatek/clk-cpumux.h
->> new file mode 100644
->> index 0000000..b82ad20
->> --- /dev/null
->> +++ b/drivers/clk/mediatek/clk-cpumux.h
->> @@ -0,0 +1,31 @@
->> +/*
->> + * Copyright (c) 2015 Linaro Ltd.
->> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#ifndef __DRV_CLK_CPUMUX_H
->> +#define __DRV_CLK_CPUMUX_H
->> +
->> +#include <linux/regmap.h>
->
-> Looks unnecessary. Just forward declare the type you need, struct
-> regmap.
-
-Yes. Will fix.
-
-Thanks for reviewing.
-
-Best Regards,
-Pi-Cheng
-
->
->> +
->> +struct mtk_clk_cpumux {
->> +     struct clk_hw   hw;
->> +     struct regmap   *regmap;
->> +     u32             reg;
->> +     u32             mask;
->> +     u8              shift;
->> +};
->> +
->> +int mtk_clk_register_cpumuxes(struct device_node *node,
->> +                           const struct mtk_composite *clks, int num,
->> +                           struct clk_onecell_data *clk_data);
->> +#endif /* __DRV_CLK_CPUMUX_H */
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
