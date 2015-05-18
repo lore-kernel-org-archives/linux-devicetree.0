@@ -1,62 +1,40 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH] ARM: dts: am335x-bone* enable pmic-shutdown-controller
-Date: Mon, 18 May 2015 11:49:24 -0500
-Message-ID: <CAOCHtYjtziBwfSMGPRrQ7rfDEf_dC=7rPytQUxVXy8bSp-8NNw@mail.gmail.com>
-References: <1431525001-5747-1-git-send-email-robertcnelson@gmail.com>
- <20150513141658.GB6605@localhost> <20150513144846.GC6605@localhost>
- <CAALWOA-hkgrMi+OeNrmwaVpdEfNadFn0R-QbpXi9LU-4sbakJQ@mail.gmail.com>
- <20150518152108.GE10274@atomide.com> <CAOCHtYgwyQy+hQE2PeUd+7U9wNygVOUuAb-VSh_9K5y7zFHEWA@mail.gmail.com>
- <20150518162936.GF10274@atomide.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] max7359_keypad: implement DT bindings
+Date: Mon, 18 May 2015 09:53:17 -0700
+Message-ID: <20150518165317.GC19708@dtor-ws>
+References: <ppRxn-3aD-5@gated-at.bofh.it>
+ <pquS6-2DV-9@gated-at.bofh.it>
+ <20150517165502.GA781@fifteen>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150518162936.GF10274@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Matthijs van Duin <matthijsvanduin@gmail.com>, Johan Hovold <johan@kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>, pantelis.antoniou@konsulko.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150517165502.GA781@fifteen>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 18, 2015 at 11:29 AM, Tony Lindgren <tony@atomide.com> wrote:
-> * Robert Nelson <robertcnelson@gmail.com> [150518 09:15]:
->> On Mon, May 18, 2015 at 10:21 AM, Tony Lindgren <tony@atomide.com> wrote:
->>
->> All the rev information is in the board's eeprom:
->>
->> hexdump -e '8/1 "%c"' /sys/bus/i2c/devices/0-0050/eeprom -s 12 -n 4
->>
->> Rev A5B
->> 0A5B
->>
->> Rev C
->> 000C
->>
->> Just another default qwerk to add to Pantelis' bone_capemgr. ;)
->
-> It seems we should not even instantiate some devices on BBB
-> until the EEPROM is parsed.. So maybe something like this:
->
-> 1. The problem devices are initially set with status = "disabled"
->    in the dts
->
-> 2. We set up drivers/*/bbb-eeprom.c that parses the board
->    revision at module_init time, and then flips the selected
->    devices to have status = "enabled" and populates the revision
->    info based on the eeprom and SoC revision passed in pdata.
->    Then those devices get their struct device created and
->    probed, but at a much later time.
->
-> So rather than trying to init all that early, let's just
-> init them much later when we have the proper I2C driver
-> running?
+On Sun, May 17, 2015 at 07:55:02PM +0300, Evgeniy Dushistov wrote:
+> On Fri, May 15, 2015 at 11:00:02PM +0200, Dmitry Torokhov wrote:
+> > On Thu, May 14, 2015 at 05:38:03AM +0300, Evgeniy Dushistov wrote:
+> > > +		maxim,debounce_reg = /bits/ 8 <0x5F>;
+> > > +		maxim,ports_reg = /bits/ 8 <0xFF>;
+> > 
+> > Specifying exact size for properties is quite uncommon; I think the
+> > usual recommendation is is to use the "standard" u32 and validate the
+> > range in parser function.
+> > 
+> 
+> Using of u8 has advantages, it is possible on compilation stage
+> (dts->dtb) check that you enter right value, but
+> because of DT validation tools are not part of mainline,
+> I replace u8 with u32 as you suggest, see patch bellow.
 
-I see that working just fine.  We (beagleboard.org) enforce the eeprom
-data, as all the official images require a proper baseboard eeprom.
-
-We just have to be very careful to limit the scope, otherwise we will
-end up with Pantelis' rejected capebus from the v3.2.x days...
-
-Regards,
+If you get DT folks OK on using /bits/ I'm fine with keeping it.
 
 -- 
-Robert Nelson
-https://rcn-ee.com/
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
