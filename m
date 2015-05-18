@@ -1,7 +1,7 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v2 3/5] arm64: Juno: Add memory mapped timer node
-Date: Mon, 18 May 2015 18:28:27 +0100
-Message-ID: <1431970109-8902-4-git-send-email-Liviu.Dudau@arm.com>
+Subject: [PATCH v2 4/5] arm64: Juno: Add GICv2m support in device tree.
+Date: Mon, 18 May 2015 18:28:28 +0100
+Message-ID: <1431970109-8902-5-git-send-email-Liviu.Dudau@arm.com>
 References: <1431970109-8902-1-git-send-email-Liviu.Dudau@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1431970109-8902-1-git-send-email-Liviu.Dudau@arm.com>
@@ -9,39 +9,69 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Juno based boards have a memory mapped timer @ 0x2a810000. This
-is disabled on r0 version of the board due to an SoC errata.
+Juno contains a GICv2m extension for handling PCIe MSI messages.
+Add a node declaring the first frame of the extension.
 
 Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 ---
- arch/arm64/boot/dts/arm/juno-base.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 35 ++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 5c4c035..b7e862f 100644
+index b7e862f..e3ee960 100644
 --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
 +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -2,6 +2,21 @@
- 	 *  Devices shared by all Juno boards
- 	 */
- 
-+	memtimer: timer@2a810000 {
-+		compatible = "arm,armv7-timer-mem";
-+		reg = <0x0 0x2a810000 0x0 0x10000>;
-+		clock-frequency = <50000000>;
+@@ -23,10 +23,17 @@
+ 		      <0x0 0x2c02f000 0 0x2000>,
+ 		      <0x0 0x2c04f000 0 0x2000>,
+ 		      <0x0 0x2c06f000 0 0x2000>;
+-		#address-cells = <0>;
 +		#address-cells = <2>;
+ 		#interrupt-cells = <3>;
 +		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+		frame@2a830000 {
-+			frame-number = <1>;
-+			interrupts = <0 60 4>;
-+			reg = <0x0 0x2a830000 0x0 0x10000>;
+ 		interrupt-controller;
+ 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
++		ranges = <0 0 0 0x2c1c0000 0 0x40000>;
++		v2m_0: v2m@0 {
++			compatible = "arm,gic-v2m-frame";
++			msi-controller;
++			reg = <0 0 0 0x1000>;
 +		};
-+	};
-+
- 	gic: interrupt-controller@2c010000 {
- 		compatible = "arm,gic-400", "arm,cortex-a15-gic";
- 		reg = <0x0 0x2c010000 0 0x1000>,
+ 	};
+ 
+ 	timer {
+@@ -129,19 +136,19 @@
+ 
+ 		#interrupt-cells = <1>;
+ 		interrupt-map-mask = <0 0 15>;
+-		interrupt-map = <0 0  0 &gic 0  68 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  1 &gic 0  69 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  2 &gic 0  70 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  3 &gic 0 160 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  4 &gic 0 161 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  5 &gic 0 162 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  6 &gic 0 163 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  7 &gic 0 164 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  8 &gic 0 165 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  9 &gic 0 166 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 10 &gic 0 167 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 11 &gic 0 168 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 12 &gic 0 169 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map = <0 0  0 &gic 0 0 0  68 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  1 &gic 0 0 0  69 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  2 &gic 0 0 0  70 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  3 &gic 0 0 0 160 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  4 &gic 0 0 0 161 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  5 &gic 0 0 0 162 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  6 &gic 0 0 0 163 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  7 &gic 0 0 0 164 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  8 &gic 0 0 0 165 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  9 &gic 0 0 0 166 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 10 &gic 0 0 0 167 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 11 &gic 0 0 0 168 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 12 &gic 0 0 0 169 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		/include/ "juno-motherboard.dtsi"
+ 	};
 -- 
 2.4.0
