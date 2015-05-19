@@ -1,172 +1,129 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
-Date: Tue, 19 May 2015 10:25:58 +0200
-Message-ID: <CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
-References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de> <20150518224910.GU11598@ld-irv-0074>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 03/10] clk: sunxi: Let divs clocks read
+ the base factor clock name from devicetree
+Date: Tue, 19 May 2015 10:26:35 +0200
+Message-ID: <20150519082635.GW4004@lukather>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
+ <1431707940-19372-4-git-send-email-jenskuske@gmail.com>
+ <20150517130657.GD4004@lukather>
+ <5559AF58.60508@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150518224910.GU11598@ld-irv-0074>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="64C3cv1XTIf1+2px"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBC7J5OVAKGQE5GDCATA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5559AF58.60508-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--64C3cv1XTIf1+2px
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Tue, May 19, 2015 at 12:49 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sun, May 17, 2015 at 07:35:12PM +0200, Hauke Mehrtens wrote:
->> This moves the linux,part-probe device tree parsing code from
->> physmap_of.c to mtdpart.c. Now all drivers can use this feature by just
->> providing a reference to they device tree node in struct
->
-> s/they/their/
-> or
-> s/they/the/
-> ?
->
->> mtd_part_parser_data.
->>
->> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->> ---
->>  drivers/mtd/maps/physmap_of.c | 40 +---------------------------------------
-(snip)
->>  drivers/mtd/mtdpart.c         | 38 ++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 39 insertions(+), 39 deletions(-)
->>
->> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
->> index cafdb88..b3059d6 100644
->> --- a/drivers/mtd/mtdpart.c
->> +++ b/drivers/mtd/mtdpart.c
->> @@ -29,6 +29,7 @@
->>  #include <linux/kmod.h>
->>  #include <linux/mtd/mtd.h>
->>  #include <linux/mtd/partitions.h>
->> +#include <linux/of.h>
->>  #include <linux/err.h>
->>  #include <linux/kconfig.h>
->>
->> @@ -718,6 +719,35 @@ void deregister_mtd_parser(struct mtd_part_parser *p)
->>  }
->>  EXPORT_SYMBOL_GPL(deregister_mtd_parser);
->>
->> +static const char * const *of_get_probes(struct device_node *dp)
->
-> Maybe a quick comment at the top to note that if non-NULL, its return
-> value must be kfree()'d by the caller? Could be helpful if we want to
-> move the code elsewhere. (I'm almost tempted to suggest moving this to
-> drivers/of/of_mtd.c, in fact.)
->
->> +{
->> +     const char *cp;
->> +     int cplen;
->> +     unsigned int l;
->> +     unsigned int count;
->> +     const char **res;
->> +
->> +     cp = of_get_property(dp, "linux,part-probe", &cplen);
->
-> I see this is not property is not documented in the first place. If
-> we're going to make it generically useful, we definitely need to
-> document it, including what the supported partition probe names are.
->
-> I'm also kind of ambivalent on this point, but I might as well ask: does
-> the 'linux,...' naming make sense? We're not really supposed to be
-> putting pure software information in the device tree, let alone info
-> that's specific to Linux. I see how the partition parser could be (and
-> should be, really) considered OS-agnostic, though, and might deserve a
-> spot in the DT, at least if it's not safe to run arbitrary partition
-> parsers on all MTDs.
+On Mon, May 18, 2015 at 11:22:32AM +0200, Jens Kuske wrote:
+> On 05/17/15 15:06, Maxime Ripard wrote:
+> > On Fri, May 15, 2015 at 06:38:53PM +0200, Jens Kuske wrote:
+> >> Currently, the sunxi clock driver gets the name for the base factor clock
+> >> of divs clocks from the name field in factors_data. This prevents reusing
+> >> of the factor clock for clocks with same properties, but different name.
+> >>
+> >> This commit makes the divs setup function try to get a name from
+> >> clock-output-names in the devicetree. It also removes the name field where
+> >> possible and merges the sun4i PLL5 and PLL6 clocks.
+> >>
+> >> The sun4i PLL5 clock doesn't have a output for the base factor clock,
+> >> so we still have to use the name field there.
+> >>
+> >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>  drivers/clk/sunxi/clk-sunxi.c | 22 ++++++++++++----------
+> >>  1 file changed, 12 insertions(+), 10 deletions(-)
+> >>
+> >> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> >> index 17cba4d..afe560c 100644
+> >> --- a/drivers/clk/sunxi/clk-sunxi.c
+> >> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> >> @@ -708,18 +708,10 @@ static const struct factors_data sun4i_pll5_data __initconst = {
+> >>  	.name = "pll5",
+> >>  };
+> >>  
+> >> -static const struct factors_data sun4i_pll6_data __initconst = {
+> >> -	.enable = 31,
+> >> -	.table = &sun4i_pll5_config,
+> >> -	.getter = sun4i_get_pll5_factors,
+> >> -	.name = "pll6",
+> >> -};
+> >> -
+> >>  static const struct factors_data sun6i_a31_pll6_data __initconst = {
+> >>  	.enable = 31,
+> >>  	.table = &sun6i_a31_pll6_config,
+> >>  	.getter = sun6i_a31_get_pll6_factors,
+> >> -	.name = "pll6x2",
+> >>  };
+> >>  
+> >>  static const struct factors_data sun5i_a13_ahb_data __initconst = {
+> >> @@ -1099,7 +1091,7 @@ static const struct divs_data pll5_divs_data __initconst = {
+> >>  };
+> >>  
+> >>  static const struct divs_data pll6_divs_data __initconst = {
+> >> -	.factors = &sun4i_pll6_data,
+> >> +	.factors = &sun4i_pll5_data,
+> >>  	.ndivs = 4,
+> >>  	.div = {
+> >>  		{ .shift = 0, .table = pll6_sata_tbl, .gate = 14 }, /* M, SATA */
+> >> @@ -1141,6 +1133,7 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
+> >>  	struct clk_gate *gate = NULL;
+> >>  	struct clk_fixed_factor *fix_factor;
+> >>  	struct clk_divider *divider;
+> >> +	struct factors_data factors = *data->factors;
+> >>  	void __iomem *reg;
+> >>  	int ndivs = SUNXI_DIVS_MAX_QTY, i = 0;
+> >>  	int flags, clkflags;
+> >> @@ -1149,8 +1142,17 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
+> >>  	if (data->ndivs)
+> >>  		ndivs = data->ndivs;
+> >>  
+> >> +	/* Try to find a name for base factor clock */
+> >> +	for (i = 0; i < ndivs; i++) {
+> >> +		if (data->div[i].self) {
+> > 
+> > I'm not sure we should expect the factor clock to have a self factor.
+> 
+> Maybe not, but in that case it would fall back to the name provided in
+> the factors_data struct, as it is the case for sun4i pll5.
 
-As long as we use the direct parser names, we should keep the linux prefix.
+Which doesn't really solve the underlying issue, just make it work in
+your (pll6/pll8) case.
+ 
+> > what about taking the first output and taking the substring up to the
+> > first "_" ?
+> 
+> That only works for the sun[457]i pll5 & pll6, for sun[68]i the base
+> clock name would have to be "pll6x2".
 
-Actually a common issue is that many firmware partition tags aren't
-capable of describing the full flash layout, so partition parsers have
-to "cheat" and make a lot of assumptions, e.g. the location and the
-size of the bootloader. So wo would need to have a mix of static
-partitions (bootloader, bootloader config, calibration data) and
-dynamic ones (kernel, rootfs, overlay). So ideally we would pass the
-static partitions as device tree nodes, and let the partition parsers
-then be applied to partitions instead of the full mtd device. This
-would also work as a safeguard against mis-guessing important
-partitions like calibration data which aren't recoverable in case they
-get overwritten.
+Why?
 
-So my first Idea would be having something like this:
+It's called pll6 in the datasheet, it should really be called
+pll6. The fact that there is some fixed factors or dividers on some
+children only impacts those children, and not the system as a whole.
 
-mtdevice@foo {
-        ...
-        bootloader: partition@0 {
-                reg = <0 0x10000>;
-                device_type = "flash-partition";
-                read-only;
-        };
+And the fact that the "base" clock is pll6x2 and not pll6 itself is
+very debatable. How do you know which clock is the base one? Most
+clocks are actually using pll6 as a reference.
 
-        firmware: partition@10000 {
-                reg = <0x1000 0x7e0000>;
-                device_type = "flash-partition";
-                compatible = "brcm,trx";
-        };
+Maxime
 
-        calibration: partition@7f0000 {
-                reg = < >;
-                device_type = "flash-partition";
-                read-only;
-        };
-};
-
-Then the ofpart parsing could be integrated into the core, and
-partition parsers get run according to their compatibles on the
-individual partitions.
-
-Of course this also might be total overengineering and completely the
-wrong place for devicetree as it's essentially configuration data, but
-since the now described partitions are now more or less "static", IMHO
-this would be a-okay.
-
->> @@ -754,6 +784,13 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
->>  {
->>       struct mtd_part_parser *parser;
->>       int ret = 0;
->> +     const char *const *types_of = NULL;
->> +
->> +     if (data && data->of_node) {
->> +             types_of = of_get_probes(data->of_node);
->> +             if (types_of != NULL)
->> +                     types = types_of;
->> +     }
->
-> I'm not sure I really like the semantics here. This means that the
-> device tree can override all Linux defaults. So we can't, for instance,
-> have the cmdline parser override all other selections (e.g., for
-> debugging), or make sure that 'ofpart' is available for all MTDs.
-
-Letting the device tree override cmdline parsers is actually a valid
-use case for OpenWrt, where the bootloader passes a
-different/incompatible partition layout through mtdparts than what is
-actually used by the firmware on flash.
-
-If we want to make it overrideable for debug purposes adding a
-commandline parameter like
-mtdparser="<mtdname>:<parser1[,parser2,...]>" might be a better
-option.
-
->>
->>       if (!types)
->>               types = default_mtd_part_types;
->
-> In fact, I don't really like this existing hunk either ^^^. It has the
-> same effect, of killing things like cmdlinepart, which should be
-> available on all MTDs.
-
-default_mtd_part_types contains cmdline part, so it should be
-available unless they pass their own parsers.
-
-
-Regards
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--64C3cv1XTIf1+2px--
