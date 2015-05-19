@@ -1,57 +1,82 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
-Date: Tue, 19 May 2015 15:50:07 +0100
-Message-ID: <20150519145006.GH2067@n2100.arm.linux.org.uk>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
- <555B098A.8030202@linaro.org>
- <CALszF6AJ3Zf598wYeUx=iNWHHKT24xUyfagB=+4GocwZ-Fd-0g@mail.gmail.com>
- <6177628.0ZDPLeVyah@wuerfel>
- <CALszF6BZKD-CPTZ6Hc85wv2Z3Y7JmUv-cMkBtbk2Ga6WeeWU=A@mail.gmail.com>
- <555B3F80.8070605@linaro.org>
- <CALszF6A-De6dvcRNoa9ruL+y6Wt_rc7bi-O-VxHWkFF9NSt5_g@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm64: tegra: Add Tegra210 support
+Date: Tue, 19 May 2015 15:52:11 +0100
+Message-ID: <20150519145211.GX21251@e104818-lin.cambridge.arm.com>
+References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com>
+ <1431529065-20128-3-git-send-email-thierry.reding@gmail.com>
+ <20150513171114.GA18655@e104818-lin.cambridge.arm.com>
+ <20150515101913.GA20474@ulmo.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CALszF6A-De6dvcRNoa9ruL+y6Wt_rc7bi-O-VxHWkFF9NSt5_g@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devic>
+In-Reply-To: <20150515101913.GA20474-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 04:41:58PM +0200, Maxime Coquelin wrote:
-> 2015-05-19 15:49 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
-> >
-> >
-> > It is not exactly as the initial patch.
-> >
-> > I think Arnd is proposing:
-> >
-> > config CLKSRC_STM32
-> >         bool "Clocksource for STM32 SoCs" if COMPILE_TEST
-> >         select CLKSRC_MMIO
-> >
+On Fri, May 15, 2015 at 12:19:16PM +0200, Thierry Reding wrote:
+> On Wed, May 13, 2015 at 06:11:15PM +0100, Catalin Marinas wrote:
+> > On Wed, May 13, 2015 at 04:57:42PM +0200, Thierry Reding wrote:
+> > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > 
+> > > NVIDIA Tegra210 (also known as Tegra X1) has four Cortex-A57 and four
+> > > Cortex-A53 CPUs. Compared to Tegra124 and Tegra132 it comes with a 256-
+> > > core Maxwell GPU. It supports processing videos of up to 4K resolutions
+> > > at 60 fps (H.265, VP9, H.264).
+> > > 
+> > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  arch/arm64/Kconfig                       |   9 +
+> > >  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 998 +++++++++++++++++++++++++++++++
+> > >  2 files changed, 1007 insertions(+)
+> > >  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> > > 
+> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > > index 7796af4b1d6f..bfdf064ada66 100644
+> > > --- a/arch/arm64/Kconfig
+> > > +++ b/arch/arm64/Kconfig
+> > > @@ -225,6 +225,15 @@ config ARCH_TEGRA_132_SOC
+> > >  	  but contains an NVIDIA Denver CPU complex in place of
+> > >  	  Tegra124's "4+1" Cortex-A15 CPU complex.
+> > >  
+> > > +config ARCH_TEGRA_210_SOC
+> > > +	bool "NVIDIA Tegra210 SoC"
+> > > +	depends on ARCH_TEGRA
+> > > +	select PINCTRL_TEGRA210
+> > > +	select USB_ULPI if USB_PHY
+> > > +	select USB_ULPI_VIEWPORT if USB_PHY
+> > > +	help
+> > > +	  Enable support for the NVIDIA Tegra210 SoC.
+> > > +
+> > 
+> > The previous ARCH_TEGRA_132_SOC escaped me. Do we need all these
+> > ARCH_TEGRA_*_SOC entries? Can we not have per-driver Kconfig options?
+> > For example, ARCH_TEGRA_132_SOC seems to be only used in
+> > drivers/clk/tegra, a specific Kconfig entry in there would suffice.
 > 
-> Isn't "depends on OF" missing for COMPILE_TEST case?
+> There are actually a couple of other places where this will be used in
+> subsequent patches (e.g. memory controller driver). The idea behind
+> having these is that each one of them is used to enable the essentials
+> out of the box, so that people don't have to go and enable a bunch of
+> driver-specific Kconfig options just to get a kernel configuration that
+> can actually boot.
 
-config CLKSRC_STM32
-	bool "Clocksource for STM32 SoCs" if COMPILE_TEST
-	depends on OF
-	select CLKSRC_MMIO
+We debated whether to have ARCH_* options at all on arm64 and we settled
+for the middle ground - only add them for SoC families, not individual
+SoCs. As for the kernel configuration that actually boots, we want the
+arm64 defconfig to include all the supported SoCs and drivers (though
+longer term I'd like to see more drivers built as modules by default).
 
-This permits CLKSRC_STM32 to be selected by STM32 (provided OF is enabled,
-it's always going to be for that case, right?) while allowing the option
-to be visible when both OF!=n and COMPILE_TEST!=n.
+> This is also useful for integrators since they can simply omit all SoC
+> generations that they're not interested in. Having a per-SoC option
+> provides an easy way of doing so.
 
-Remember,
-
-	bool "string" if <condition-affects-visibility-of-string>
-	depends on <condition-affects-config-symbol-availability>
-
-The former merely hides the option from the user _if_ the condition fails.
-The latter _disables_ the option completely (except if you try and select
-it, at which point you end up with a Kconfig warning about that.)
+The integrators could just select a SoC family and trim down unwanted
+options, I don't think they rely on the kernel defconfig for a final
+product. If this becomes an issue, I would rather have per-SoC
+defconfigs than lots of Kconfig entries.
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+Catalin
