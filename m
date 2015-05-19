@@ -1,75 +1,47 @@
-From: <Frank.Li@freescale.com>
-Subject: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add pwrkey
- driver
-Date: Wed, 20 May 2015 01:04:35 +0800
-Message-ID: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
+Date: Tue, 19 May 2015 10:17:32 -0700
+Message-ID: <20150519171732.GD9213@kroah.com>
+References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
+ <1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
+ <555B2C9C.1000709@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lznuaa@gmail.com, shawn.guo@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, a.zummo@towertech.it, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com
-Cc: devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <555B2C9C.1000709@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Li <Frank.Li@freescale.com>
+On Tue, May 19, 2015 at 01:29:16PM +0100, Sudeep Holla wrote:
+> Hi Rob/Greg,
+> 
+> On 14/05/15 15:28, Sudeep Holla wrote:
+> >Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+> >devices with an OF node") adds the symlink `of_node` for each device
+> >pointing to it's device tree node while creating/initialising it.
+> >
+> >However the devicetree sysfs is created and setup in of_init which is
+> >executed at core_initcall level. For all the devices created before
+> >of_init, the following error is thrown:
+> >	"Error -2(-ENOENT) creating of_node link"
+> >
+> >Like many other components in driver model, initialize the sysfs support
+> >for OF/devicetree from driver_init so that it's ready before any devices
+> >are created.
+> >
+> >Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+> >	devices with an OF node")
+> >Suggested-by: Rob Herring <robh+dt@kernel.org>
+> >Cc: Grant Likely <grant.likely@linaro.org>
+> >Cc: Rob Herring <robh+dt@kernel.org>
+> >Cc: Pawel Moll <pawel.moll@arm.com>
+> >Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> >Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> 
+> I assume one of you will pick this up if there are no further comments ?
 
-Change from v1 to v2
- - Change simple-bus to simple-mfd
- - RTC remove lock.
- - RTC remove comments "These register offsets are relative to LP (Low Power) range"
- - power off, remove extra space
-
-SNVS is MPF module.
-include rtc, power off, ON/OFF power key
-
-  arm: imx: power-off: change to syscon to access register
-  rtc: arm: imx: snvs: change use syscon to access register
-Above two patch change existed power-off and rtc use syscon
-
-  Document: dt: fsl: snvs: change support syscon
-  arm: dts: imx: update snvs to use syscon access register
-Update dt file and document
-
-  input: keyboard: imx: add snvs power key driver
-  document: devicetree: input: imx: i.mx snvs power device tree bindings
-  arm: dts: imx6sx: enable snvs power key
-Added on/off key driver
-
-Frank Li (6):
-  arm: imx: power-off: change to syscon to access register
-  rtc: arm: imx: snvs: change use syscon to access register
-  Document: dt: fsl: snvs: change support syscon
-  arm: dts: imx: update snvs to use syscon access register
-  document: devicetree: input: imx: i.mx snvs power device tree bindings
-  arm: dts: imx6sx: enable snvs power key
-
-Robin Gong (1):
-  input: keyboard: imx: add snvs power key driver
-
- .../devicetree/bindings/crypto/fsl-sec4.txt        |  93 +++++++--
- .../devicetree/bindings/input/snvs-pwrkey.txt      |   1 +
- .../bindings/power_supply/imx-snvs-poweroff.txt    |  24 +--
- arch/arm/boot/dts/imx6qdl.dtsi                     |  12 +-
- arch/arm/boot/dts/imx6sl.dtsi                      |  12 +-
- arch/arm/boot/dts/imx6sx.dtsi                      |  19 +-
- arch/arm/boot/dts/vfxxx.dtsi                       |   9 +-
- drivers/input/keyboard/Kconfig                     |  11 +
- drivers/input/keyboard/Makefile                    |   1 +
- drivers/input/keyboard/snvs_pwrkey.c               | 232 +++++++++++++++++++++
- drivers/power/reset/imx-snvs-poweroff.c            |  21 +-
- drivers/rtc/rtc-snvs.c                             | 128 +++++-------
- 12 files changed, 417 insertions(+), 146 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/snvs-pwrkey.txt
- create mode 100644 drivers/input/keyboard/snvs_pwrkey.c
-
--- 
-1.9.1
+I will once things settle down...
