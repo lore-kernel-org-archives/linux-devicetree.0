@@ -1,153 +1,116 @@
-From: S Twiss <stwiss.opensource@diasemi.com>
-Subject: [RESEND PATCH V4 3/3] mfd: da9063: MFD support for OnKey driver
-Date: Tue, 19 May 2015 11:32:45 +0100
-Message-ID: <a508f5d715e94fb18e6ef4ce755c2225a17090ea.1432031565.git.stwiss.opensource@diasemi.com>
-References: <cover.1432031565.git.stwiss.opensource@diasemi.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/5] soc: mediatek: Add infracfg misc driver support
+Date: Tue, 19 May 2015 18:39:42 +0800
+Message-ID: <CAGS+omBR6NwFbCpRN+6v7LX9h2Esmm6RQYp_Qxeqa84q-WTRzg@mail.gmail.com>
+References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
+ <1431372206-1237-2-git-send-email-s.hauer@pengutronix.de> <CAGS+omADXpnBnLvuH+xNmatL+89kLBELz6KqMFid7SOx=veiAg@mail.gmail.com>
+ <20150518081625.GO6325@pengutronix.de> <CAGS+omD-0bPeQqau9mm4pTqOhtPW=ecR5ibB8==pifRMgSKrjg@mail.gmail.com>
+ <20150519074535.GY6325@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1432031565.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150519074535.GY6325-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+On Tue, May 19, 2015 at 3:45 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Tue, May 19, 2015 at 02:54:41PM +0800, Daniel Kurtz wrote:
+>> >> > +       while (1) {
+>> >> > +               ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
+>> >> > +               if (ret)
+>> >> > +                       return ret;
+>> >> > +
+>> >> > +               if ((val & mask) == mask)
+>> >> > +                       break;
+>> >> > +
+>> >> > +               cpu_relax();
+>> >> > +               if (time_after(jiffies, expired))
+>> >> > +                       return -EIO;
+>> >>
+>> >> I think we should check for timeout first, and then cpu_relax() if
+>> >> there is still time left (here and in
+>> >> mtk_infracfg_clear_bus_protection()).  Otherwise we end up doing one
+>> >> final cpu_relax() without rechecking the register we are polling
+>> >> (again, I have the same comment for the timeout loops in mtk-scpsys).
+>> >
+>> > I think cpu_relax() delays execution in the order of microseconds (I
+>> > don't actually know, just a guess), so if the timeout is a second the
+>> > order doesn't really matter. What can happen though is an interrupt
+>> > after the (val & mask) test but before the timeout check. So to be
+>> > truly correct we have to repeat the (val & mask) test after the
+>> > time_after() check. Is that what you want?
+>>
+>> I'm not following, why would you need to repeat (val & mask) test
+>> after time_after?
+>> What does an interrupt have to do with it?
+>> Can you show a code snippet with what exactly you are proposing?
+>
+> Consider you have this timeout loop:
+>
+>         while (1) {
+>                 if (success())
+>                         break;
+>
+>                 if (time_after(jiffies, expired))
+>                         return -ETIMEDOUT;
+>         }
+>
+> Now when an interupt comes in between success() and time_after() then it
+> can happen that the delay caused by the interrupt makes the code timeout
+> even though success() might have become true in the meantime. So to be
+> correct you have to:
 
-Add MFD support for the DA9063 OnKey driver
+I agree - I was confused because you only mentioned repeating the
+"(val & mask) test", not re-reading the register, which is the
+important bit.
+For other drivers, I've seen "wait_for()" macros, like below, which do
+exactly as you suggest above:
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/iommu/rockchip-iommu.c#n110
 
-The function da9063_clear_fault_log() is added to mitigate the case of a
-hardware power-cut after a long-long OnKey press. Although there is no
-software intervention in this case (by definition) such a shutdown would
-cause persistent information within the DA9063 FAULT_LOG that would be
-available during the next device restart.
+>
+>         while (1) {
+>                 if (success())
+>                         break;
+>
+>                 if (time_after(jiffies, expired)) {
+>                         if (success())
+>                                 break;
+>                         return -ETIMEDOUT;
+>         }
+>
+> Or, if you don't want to repeat the termination condition:
+>
+>         bool timeout = false;
+>
+>         while (1) {
+>                 if (success())
+>                         break;
+>
+>                 if (timeout)
+>                         return -ETIMEDOUT;
+>
+>                 if (time_after(jiffies, expired))
+>                         timeout = true;
+>         }
+>
+> Anyway, with the timeout of one second used here this is all academic.
 
-Clearance of this persistent register must be completed after such a
-hardware power-cut operation has happened so that the FAULT_LOG does not
-continue with previous values. The clearance function has been added here
-in the kernel driver because wiping the fault-log cannot be counted on
-outside the Linux kernel.
+I totally agree that this is academic for the loops here and in
+SCPSYS, where the timeout is arbitrary and long.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+-Dan
 
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-
----
-Version History
-
-Changes in V4
- - Additional description of MFD patch changes for FAULT_LOG in relation to
-   the requirements of the OnKey driver. Please see a further explanation of
-   the OnKey's operation in this thread: https://lkml.org/lkml/2015/4/29/406
-
-Changes in V3
- - The MFD code was originally in [PATCH V2 1/2]. This is now been moved into
-   this patch [PATCH V3 3/3].
- - Whitespace cleanup
-
-This patch applies against linux-next and v4.1-rc3 
-
-
- drivers/mfd/da9063-core.c        | 54 ++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/da9063/pdata.h |  1 +
- 2 files changed, 55 insertions(+)
-
-diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
-index facd361..af841c1 100644
---- a/drivers/mfd/da9063-core.c
-+++ b/drivers/mfd/da9063-core.c
-@@ -60,6 +60,7 @@ static struct resource da9063_rtc_resources[] = {
- 
- static struct resource da9063_onkey_resources[] = {
- 	{
-+		.name	= "ONKEY",
- 		.start	= DA9063_IRQ_ONKEY,
- 		.end	= DA9063_IRQ_ONKEY,
- 		.flags	= IORESOURCE_IRQ,
-@@ -97,6 +98,7 @@ static const struct mfd_cell da9063_devs[] = {
- 		.name		= DA9063_DRVNAME_ONKEY,
- 		.num_resources	= ARRAY_SIZE(da9063_onkey_resources),
- 		.resources	= da9063_onkey_resources,
-+		.of_compatible = "dlg,da9063-onkey",
- 	},
- 	{
- 		.name		= DA9063_DRVNAME_RTC,
-@@ -109,12 +111,64 @@ static const struct mfd_cell da9063_devs[] = {
- 	},
- };
- 
-+static int da9063_clear_fault_log(struct da9063 *da9063)
-+{
-+	int ret = 0;
-+	int fault_log = 0;
-+
-+	ret = regmap_read(da9063->regmap, DA9063_REG_FAULT_LOG, &fault_log);
-+	if (ret < 0) {
-+		dev_err(da9063->dev, "Cannot read FAULT_LOG.\n");
-+		return -EIO;
-+	}
-+
-+	if (fault_log) {
-+		if (fault_log & DA9063_TWD_ERROR)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_TWD_ERROR\n");
-+		if (fault_log & DA9063_POR)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_POR\n");
-+		if (fault_log & DA9063_VDD_FAULT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_VDD_FAULT\n");
-+		if (fault_log & DA9063_VDD_START)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_VDD_START\n");
-+		if (fault_log & DA9063_TEMP_CRIT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_TEMP_CRIT\n");
-+		if (fault_log & DA9063_KEY_RESET)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_KEY_RESET\n");
-+		if (fault_log & DA9063_NSHUTDOWN)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_NSHUTDOWN\n");
-+		if (fault_log & DA9063_WAIT_SHUT)
-+			dev_dbg(da9063->dev,
-+				"Fault log entry detected: DA9063_WAIT_SHUT\n");
-+	}
-+
-+	ret = regmap_write(da9063->regmap,
-+			   DA9063_REG_FAULT_LOG,
-+			   fault_log);
-+	if (ret < 0)
-+		dev_err(da9063->dev,
-+			"Cannot reset FAULT_LOG values %d\n", ret);
-+
-+	return ret;
-+}
-+
- int da9063_device_init(struct da9063 *da9063, unsigned int irq)
- {
- 	struct da9063_pdata *pdata = da9063->dev->platform_data;
- 	int model, variant_id, variant_code;
- 	int ret;
- 
-+	ret = da9063_clear_fault_log(da9063);
-+	if (ret < 0)
-+		dev_err(da9063->dev, "Cannot clear fault log\n");
-+
- 	if (pdata) {
- 		da9063->flags = pdata->flags;
- 		da9063->irq_base = pdata->irq_base;
-diff --git a/include/linux/mfd/da9063/pdata.h b/include/linux/mfd/da9063/pdata.h
-index 95c8742..612383b 100644
---- a/include/linux/mfd/da9063/pdata.h
-+++ b/include/linux/mfd/da9063/pdata.h
-@@ -103,6 +103,7 @@ struct da9063;
- struct da9063_pdata {
- 	int				(*init)(struct da9063 *da9063);
- 	int				irq_base;
-+	bool				key_power;
- 	unsigned			flags;
- 	struct da9063_regulators_pdata	*regulators_pdata;
- 	struct led_platform_data	*leds_pdata;
--- 
-end-of-patch for RESEND PATCH V4
+>
+> Sascha
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
