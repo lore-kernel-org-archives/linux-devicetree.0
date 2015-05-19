@@ -1,30 +1,31 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH 2/7] ARM: bcm2835: Add a Raspberry Pi-specific clock
- driver.
-Date: Tue, 19 May 2015 06:05:44 +0300
-Message-ID: <20150519030544.GQ2845@tarshish>
-References: <1431978219-14226-1-git-send-email-eric@anholt.net>
- <1431978219-14226-3-git-send-email-eric@anholt.net>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] vf610: dt: Nomenclature fixup for PTC12 pin used in RMII
+ mode.
+Date: Tue, 19 May 2015 12:54:06 +0800
+Message-ID: <20150519045406.GM1071@dragon>
+References: <1431573098-23809-1-git-send-email-cory.tusar@pid1solutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1431978219-14226-3-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+In-Reply-To: <1431573098-23809-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+On Wed, May 13, 2015 at 11:11:38PM -0400, Cory Tusar wrote:
+> This commit includes a minor nomenclature fixup for boards based on the
+> Freescale VF610 SoC and which make use of the alternate "RMII1_RXD1"
+> functionality for pin PTC12.  This brings the macro name in-line with
+> both the datasheet and other similar macros.
+> 
+> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
 
-On Mon, May 18, 2015 at 12:43:34PM -0700, Eric Anholt wrote:
-> +DEFINE_MUTEX(delayed_clock_init);
+Change patch prefix to 'ARM: dts: vf610: ', and applied.
 
-Static?
-
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
