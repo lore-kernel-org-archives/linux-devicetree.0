@@ -1,99 +1,114 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 1/5] soc: mediatek: Add infracfg misc driver support
-Date: Tue, 19 May 2015 09:45:35 +0200
-Message-ID: <20150519074535.GY6325@pengutronix.de>
-References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
- <1431372206-1237-2-git-send-email-s.hauer@pengutronix.de>
- <CAGS+omADXpnBnLvuH+xNmatL+89kLBELz6KqMFid7SOx=veiAg@mail.gmail.com>
- <20150518081625.GO6325@pengutronix.de>
- <CAGS+omD-0bPeQqau9mm4pTqOhtPW=ecR5ibB8==pifRMgSKrjg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] clk: sunxi: Add support for
+ multiple parents to gates
+Date: Tue, 19 May 2015 09:53:01 +0200
+Message-ID: <20150519075301.GT4004@lukather>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
+ <1431707940-19372-3-git-send-email-jenskuske@gmail.com>
+ <20150517125014.GB4004@lukather>
+ <5559ACC6.6050202@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/cOz769PToeHwu5O"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBV6Y5OVAKGQE4HLJABQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGS+omD-0bPeQqau9mm4pTqOhtPW=ecR5ibB8==pifRMgSKrjg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <5559ACC6.6050202-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 02:54:41PM +0800, Daniel Kurtz wrote:
-> >> > +       while (1) {
-> >> > +               ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-> >> > +               if (ret)
-> >> > +                       return ret;
-> >> > +
-> >> > +               if ((val & mask) == mask)
-> >> > +                       break;
-> >> > +
-> >> > +               cpu_relax();
-> >> > +               if (time_after(jiffies, expired))
-> >> > +                       return -EIO;
-> >>
-> >> I think we should check for timeout first, and then cpu_relax() if
-> >> there is still time left (here and in
-> >> mtk_infracfg_clear_bus_protection()).  Otherwise we end up doing one
-> >> final cpu_relax() without rechecking the register we are polling
-> >> (again, I have the same comment for the timeout loops in mtk-scpsys).
-> >
-> > I think cpu_relax() delays execution in the order of microseconds (I
-> > don't actually know, just a guess), so if the timeout is a second the
-> > order doesn't really matter. What can happen though is an interrupt
-> > after the (val & mask) test but before the timeout check. So to be
-> > truly correct we have to repeat the (val & mask) test after the
-> > time_after() check. Is that what you want?
+--/cOz769PToeHwu5O
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Mon, May 18, 2015 at 11:11:34AM +0200, Jens Kuske wrote:
+> Hi,
 > 
-> I'm not following, why would you need to repeat (val & mask) test
-> after time_after?
-> What does an interrupt have to do with it?
-> Can you show a code snippet with what exactly you are proposing?
+> On 05/17/15 14:50, Maxime Ripard wrote:
+> > Hi Jens,
+> > 
+> > On Fri, May 15, 2015 at 06:38:52PM +0200, Jens Kuske wrote:
+> >> Some newer sunxi SoCs (A83T, H3) don't have individual registers for
+> >> AHB1, APB1 and APB2 gates anymore, but one big bus gates area where each
+> >> gate can have a different parent.
+> >>
+> >> The current clock driver sets the same parent for all gates in a group.
+> >> This commit adds a new parents field to the gates_data structure, which
+> >> allows us to specify an array of parent indices for every single gate.
+> >>
+> >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>  drivers/clk/sunxi/clk-sunxi.c | 12 +++++++++++-
+> >>  1 file changed, 11 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> >> index 9a82f17..17cba4d 100644
+> >> --- a/drivers/clk/sunxi/clk-sunxi.c
+> >> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> >> @@ -898,6 +898,8 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
+> >>  
+> >>  struct gates_data {
+> >>  	DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
+> >> +	/* If used, ARRAY_SIZE(parents) has to be >= bitmap_weight(mask) */
+> >> +	const u8 *parents;
+> >>  };
+> >>  
+> >>  static const struct gates_data sun4i_axi_gates_data __initconst = {
+> >> @@ -1000,16 +1002,21 @@ static void __init sunxi_gates_clk_setup(struct device_node *node,
+> >>  					 struct gates_data *data)
+> >>  {
+> >>  	struct clk_onecell_data *clk_data;
+> >> +	const char *parents[SUNXI_MAX_PARENTS];
+> >>  	const char *clk_parent;
+> >>  	const char *clk_name;
+> >>  	void __iomem *reg;
+> >> +	int npar = 0;
+> >>  	int qty;
+> >>  	int i = 0;
+> >>  	int j = 0;
+> >>  
+> >>  	reg = of_iomap(node, 0);
+> >>  
+> >> -	clk_parent = of_clk_get_parent_name(node, 0);
+> >> +	while (npar < SUNXI_MAX_PARENTS &&
+> >> +	       (parents[npar] = of_clk_get_parent_name(node, npar)) != NULL)
+> >> +		npar++;
+> >> +	clk_parent = parents[0];
+> >>  
+> >>  	/* Worst-case size approximation and memory allocation */
+> >>  	qty = find_last_bit(data->mask, SUNXI_GATES_MAX_SIZE);
+> >> @@ -1026,6 +1033,9 @@ static void __init sunxi_gates_clk_setup(struct device_node *node,
+> >>  		of_property_read_string_index(node, "clock-output-names",
+> >>  					      j, &clk_name);
+> >>  
+> >> +		if (data->parents && !WARN_ON(data->parents[j] >= npar))
+> >> +			clk_parent = parents[data->parents[j]];
+> >> +
+> > 
+> > I'm currently removing that code, so I was more expecting a new
+> > standalone driver for that clock.
+> 
+> How do you want to replace that code? To me this looks like a good way
+> to set up all the different gates sunxi has.
 
-Consider you have this timeout loop:
+By using clock-indices and moving all this gate stuff out of clk-sunxi
+and into a new driver.
 
-	while (1) {
-		if (success())
-			break;
+It's done already, I just need to make sure everything works at it
+used to on all the SoCs.
 
-		if (time_after(jiffies, expired))
-			return -ETIMEDOUT;
-	}
-
-Now when an interupt comes in between success() and time_after() then it
-can happen that the delay caused by the interrupt makes the code timeout
-even though success() might have become true in the meantime. So to be
-correct you have to:
-
-	while (1) {
-		if (success())
-			break;
-
-		if (time_after(jiffies, expired)) {
-			if (success())
-				break;
-			return -ETIMEDOUT;
-	}
-
-Or, if you don't want to repeat the termination condition:
-
-	bool timeout = false;
-
-	while (1) {
-		if (success())
-			break;
-
-		if (timeout)
-			return -ETIMEDOUT;
-
-		if (time_after(jiffies, expired))
-			timeout = true;
-	}
-
-Anyway, with the timeout of one second used here this is all academic.
-
-Sascha
+Maxime
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--/cOz769PToeHwu5O--
