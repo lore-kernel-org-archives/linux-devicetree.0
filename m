@@ -1,47 +1,290 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/5] phy: qcom: Add Qualcomm PCIe PHY
-Date: Tue, 19 May 2015 17:41:43 -0500
-Message-ID: <20150519224143.GS31666@google.com>
-References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
- <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com>
- <554783CD.50708@ti.com>
- <55478F1A.3000401@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55478F1A.3000401@mm-sol.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+Subject: [PATCH 1/1] iio: light: Added Device Tree support for CM3232 ambient light sensor driver.
+Date: Tue, 19 May 2015 15:43:39 -0700
+Message-ID: <1432075419-2692-1-git-send-email-ktsai@capellamicro.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Roberta Dobrescu <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 04, 2015 at 06:24:10PM +0300, Stanimir Varbanov wrote:
-> On 05/04/2015 05:35 PM, Kishon Vijay Abraham I wrote:
-> > Hi,
-> > 
-> > On Monday 04 May 2015 06:12 PM, Stanimir Varbanov wrote:
-> >> Add a PCIe PHY driver used by PCIe host controller driver
-> >> on Qualcomm SoCs like Snapdragon 805.
-> >>
-> >> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> >> ---
-> >>   drivers/phy/Kconfig         |    9 ++
-> >>   drivers/phy/Makefile        |    1 +
-> >>   drivers/phy/phy-qcom-pcie.c |  291
-> >> +++++++++++++++++++++++++++++++++++++++++++
-> > 
-> > Why do you need a new PHY driver for this? Why not use the existing QCOM
-> > PHY driver. I can see the registers used here in phy-qcom-ufs-qmp-14nm.h?
-> 
-> I agree that on first glance there are similarities, but I'm not sure
-> does the PHYs are the same IP blocks. Or at least they are different
-> revisions which have too many differences. So trying to combine them
-> will lead to more code than now.
-> 
-> Either way I will try to understand how many the differences are.
+Added Device Tree Support.
 
-Ping, where are we with this?  Should I wait for something else, or are you
-convinced there's enough difference to warrant a new PHY driver, Kishon?
+Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+---
+Added Device Tree support.
+Updated company name.
+Renamed register name.
 
-Bjorn
+ .../devicetree/bindings/iio/light/cm3232.txt       | 22 +++++++
+ MAINTAINERS                                        | 12 ++--
+ drivers/iio/light/Kconfig                          |  4 +-
+ drivers/iio/light/cm3232.c                         | 71 ++++++++++++++--------
+ 4 files changed, 76 insertions(+), 33 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/cm3232.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/light/cm3232.txt b/Documentation/devicetree/bindings/iio/light/cm3232.txt
+new file mode 100644
+index 0000000..00dde87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/cm3232.txt
+@@ -0,0 +1,22 @@
++* Vishay Capella CM3232 Ambient Light sensor
++
++Required properties:
++- compatible: must be "capella,cm3232"
++- reg: the I2C address of the device
++
++Optional properties:
++- capella,reg_cmd: command register initialization.
++- capella,calibscale: calibrated factor with 10^-5 notation.
++- capella,hw_id: hardware device id.
++- capella,mlux_per_bit: millilux per bit under the default IT.
++
++Example:
++
++cm3232@10 {
++	compatible = "capella,cm3232";
++	reg = <0x10>;
++	capella,reg_cmd = <0x04>;
++	capella,calibscale = <100000>;
++	capella,hw_id = <0x32>;
++	capella,mlux_per_bit = <64>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f8e0afb..ee6a8f6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2431,12 +2431,6 @@ F:	security/capability.c
+ F:	security/commoncap.c
+ F:	kernel/capability.c
+ 
+-CAPELLA MICROSYSTEMS LIGHT SENSOR DRIVER
+-M:	Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+-S:	Maintained
+-F:	drivers/iio/light/cm*
+-F:	Documentation/devicetree/bindings/i2c/trivial-devices.txt
+-
+ CC2520 IEEE-802.15.4 RADIO DRIVER
+ M:	Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ L:	linux-wpan-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+@@ -10610,6 +10604,12 @@ L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Maintained
+ F:	drivers/net/ethernet/via/via-velocity.*
+ 
++VISHAY CAPELLA LIGHT SENSOR DRIVER
++M:	Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
++S:	Maintained
++F:	drivers/iio/light/cm*
++F:	Documentation/devicetree/bindings/i2c/trivial-devices.txt
++
+ VIVID VIRTUAL VIDEO DRIVER
+ M:	Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+ L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+index a437bad..5e7e311 100644
+--- a/drivers/iio/light/Kconfig
++++ b/drivers/iio/light/Kconfig
+@@ -50,11 +50,11 @@ config CM32181
+ 
+ config CM3232
+ 	depends on I2C
+-	tristate "CM3232 ambient light sensor"
++	tristate "Vishay Capella CM3232 ambient light sensor"
+ 	help
+ 	 Say Y here if you use cm3232.
+ 	 This option enables ambient light sensor using
+-	 Capella Microsystems cm3232 device driver.
++	 Vishay Capella cm3232 device driver.
+ 
+ 	 To compile this driver as a module, choose M here:
+ 	 the module will be called cm3232.
+diff --git a/drivers/iio/light/cm3232.c b/drivers/iio/light/cm3232.c
+index 39c8d99..5354bfa 100644
+--- a/drivers/iio/light/cm3232.c
++++ b/drivers/iio/light/cm3232.c
+@@ -1,8 +1,7 @@
+ /*
+  * CM3232 Ambient Light Sensor
+  *
+- * Copyright (C) 2014-2015 Capella Microsystems Inc.
+- * Author: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
++ * Copyright (C) 2014-2015 Vishay Capella
+  *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms of the GNU General Public License version 2, as published
+@@ -54,7 +53,7 @@ static const struct {
+ };
+ 
+ struct cm3232_als_info {
+-	u8 regs_cmd_default;
++	u8 reg_cmd;
+ 	u8 hw_id;
+ 	int calibscale;
+ 	int mlux_per_bit;
+@@ -62,7 +61,7 @@ struct cm3232_als_info {
+ };
+ 
+ static struct cm3232_als_info cm3232_als_info_default = {
+-	.regs_cmd_default = CM3232_CMD_DEFAULT,
++	.reg_cmd = CM3232_CMD_DEFAULT,
+ 	.hw_id = CM3232_HW_ID,
+ 	.calibscale = CM3232_CALIBSCALE_DEFAULT,
+ 	.mlux_per_bit = CM3232_MLUX_PER_BIT_DEFAULT,
+@@ -72,10 +71,27 @@ static struct cm3232_als_info cm3232_als_info_default = {
+ struct cm3232_chip {
+ 	struct i2c_client *client;
+ 	struct cm3232_als_info *als_info;
+-	u8 regs_cmd;
+-	u16 regs_als;
++	u8 reg_cmd;
++	u16 reg_als;
+ };
+ 
++#ifdef CONFIG_OF
++void cm3232_parse_dt(struct cm3232_chip *chip)
++{
++	struct device_node *dn = chip->client->dev.of_node;
++	u32 temp_val;
++
++	if (!of_property_read_u32(dn, "capella,reg_cmd", &temp_val))
++		chip->als_info->reg_cmd = (uint8_t)temp_val;
++	if (!of_property_read_u32(dn, "capella,hw_id", &temp_val))
++		chip->als_info->hw_id = (int)temp_val;
++	if (!of_property_read_u32(dn, "capella,calibscale", &temp_val))
++		chip->als_info->calibscale = (int)temp_val;
++	if (!of_property_read_u32(dn, "capella,mlux_per_bit", &temp_val))
++		chip->als_info->mlux_per_bit = (int)temp_val;
++}
++#endif
++
+ /**
+  * cm3232_reg_init() - Initialize CM3232
+  * @chip:	pointer of struct cm3232_chip.
+@@ -90,6 +106,10 @@ static int cm3232_reg_init(struct cm3232_chip *chip)
+ 	s32 ret;
+ 
+ 	chip->als_info = &cm3232_als_info_default;
++#ifdef CONFIG_OF
++	if (client->dev.of_node)
++		cm3232_parse_dt(chip);
++#endif
+ 
+ 	/* Identify device */
+ 	ret = i2c_smbus_read_word_data(client, CM3232_REG_ADDR_ID);
+@@ -102,20 +122,20 @@ static int cm3232_reg_init(struct cm3232_chip *chip)
+ 		return -ENODEV;
+ 
+ 	/* Disable and reset device */
+-	chip->regs_cmd = CM3232_CMD_ALS_DISABLE | CM3232_CMD_ALS_RESET;
++	chip->reg_cmd = CM3232_CMD_ALS_DISABLE | CM3232_CMD_ALS_RESET;
+ 	ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
+-					chip->regs_cmd);
++					chip->reg_cmd);
+ 	if (ret < 0) {
+ 		dev_err(&chip->client->dev, "Error writing reg_cmd\n");
+ 		return ret;
+ 	}
+ 
+ 	/* Register default value */
+-	chip->regs_cmd = chip->als_info->regs_cmd_default;
++	chip->reg_cmd = chip->als_info->reg_cmd;
+ 
+ 	/* Configure register */
+ 	ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
+-					chip->regs_cmd);
++					chip->reg_cmd);
+ 	if (ret < 0)
+ 		dev_err(&chip->client->dev, "Error writing reg_cmd\n");
+ 
+@@ -123,21 +143,21 @@ static int cm3232_reg_init(struct cm3232_chip *chip)
+ }
+ 
+ /**
+- *  cm3232_read_als_it() - Get sensor integration time
+- *  @chip:	pointer of struct cm3232_chip
+- *  @val:	pointer of int to load the integration (sec).
+- *  @val2:	pointer of int to load the integration time (microsecond).
++ * cm3232_read_als_it() - Get sensor integration time
++ * @chip:	pointer of struct cm3232_chip
++ * @val:	pointer of int to load the integration (sec).
++ * @val2:	pointer of int to load the integration time (microsecond).
+  *
+- *  Report the current integration time.
++ * Report the current integration time.
+  *
+- *  Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
++ * Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
+  */
+ static int cm3232_read_als_it(struct cm3232_chip *chip, int *val, int *val2)
+ {
+ 	u16 als_it;
+ 	int i;
+ 
+-	als_it = chip->regs_cmd;
++	als_it = chip->reg_cmd;
+ 	als_it &= CM3232_CMD_ALS_IT_MASK;
+ 	als_it >>= CM3232_CMD_ALS_IT_SHIFT;
+ 	for (i = 0; i < ARRAY_SIZE(cm3232_als_it_scales); i++) {
+@@ -175,14 +195,14 @@ static int cm3232_write_als_it(struct cm3232_chip *chip, int val, int val2)
+ 			als_it = cm3232_als_it_scales[i].it;
+ 			als_it <<= CM3232_CMD_ALS_IT_SHIFT;
+ 
+-			cmd = chip->regs_cmd & ~CM3232_CMD_ALS_IT_MASK;
++			cmd = chip->reg_cmd & ~CM3232_CMD_ALS_IT_MASK;
+ 			cmd |= als_it;
+ 			ret = i2c_smbus_write_byte_data(client,
+ 							CM3232_REG_ADDR_CMD,
+ 							cmd);
+ 			if (ret < 0)
+ 				return ret;
+-			chip->regs_cmd = cmd;
++			chip->reg_cmd = cmd;
+ 			return 0;
+ 		}
+ 	}
+@@ -222,8 +242,8 @@ static int cm3232_get_lux(struct cm3232_chip *chip)
+ 		return ret;
+ 	}
+ 
+-	chip->regs_als = (u16)ret;
+-	lux *= chip->regs_als;
++	chip->reg_als = (u16)ret;
++	lux *= chip->reg_als;
+ 	lux *= als_info->calibscale;
+ 	lux = div_u64(lux, CM3232_CALIBSCALE_RESOLUTION);
+ 	lux = div_u64(lux, CM3232_MLUX_PER_LUX);
+@@ -340,6 +360,7 @@ static int cm3232_probe(struct i2c_client *client,
+ 		return -ENOMEM;
+ 
+ 	chip = iio_priv(indio_dev);
++
+ 	i2c_set_clientdata(client, indio_dev);
+ 	chip->client = client;
+ 
+@@ -386,9 +407,9 @@ static int cm3232_suspend(struct device *dev)
+ 	struct i2c_client *client = chip->client;
+ 	int ret;
+ 
+-	chip->regs_cmd |= CM3232_CMD_ALS_DISABLE;
++	chip->reg_cmd |= CM3232_CMD_ALS_DISABLE;
+ 	ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
+-					chip->regs_cmd);
++					chip->reg_cmd);
+ 
+ 	return ret;
+ }
+@@ -400,9 +421,9 @@ static int cm3232_resume(struct device *dev)
+ 	struct i2c_client *client = chip->client;
+ 	int ret;
+ 
+-	chip->regs_cmd &= ~CM3232_CMD_ALS_DISABLE;
++	chip->reg_cmd &= ~CM3232_CMD_ALS_DISABLE;
+ 	ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
+-					chip->regs_cmd | CM3232_CMD_ALS_RESET);
++					chip->reg_cmd | CM3232_CMD_ALS_RESET);
+ 
+ 	return ret;
+ }
+-- 
+1.8.3.1
