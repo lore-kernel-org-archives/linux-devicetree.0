@@ -1,49 +1,58 @@
-From: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] arm64: Juno: Add memory mapped timer node
-Date: Tue, 19 May 2015 13:58:03 +0100
-Message-ID: <1432040283.3047.54.camel@linaro.org>
-References: <1431970109-8902-1-git-send-email-Liviu.Dudau@arm.com>
-	 <1431970109-8902-4-git-send-email-Liviu.Dudau@arm.com>
-	 <1432033003.3047.43.camel@linaro.org>
-	 <20150519113116.GH2175@e106497-lin.cambridge.arm.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
+Date: Tue, 19 May 2015 14:00:28 +0100
+Message-ID: <20150519130028.GF2067@n2100.arm.linux.org.uk>
+References: <1431158038-3813-10-git-send-email-mcoquelin.stm32@gmail.com>
+ <5559E4B0.70506@linaro.org>
+ <CALszF6CK7axU0qrWNf38aqrt2R2126ZACn7wx5jNY_1KE+4H+g@mail.gmail.com>
+ <555AF143.2060807@linaro.org>
+ <CALszF6CwGuKqgbX6gVrya1-_YOgvtrgC7pVqKTNjCRif_o532A@mail.gmail.com>
+ <555AFD18.2070009@linaro.org>
+ <CALszF6Asfke0-cMQJcEQ8ya+rbPPPhUc6aXTZXQvQ8QF66cwYQ@mail.gmail.com>
+ <555B098A.8030202@linaro.org>
+ <CALszF6AJ3Zf598wYeUx=iNWHHKT24xUyfagB=+4GocwZ-Fd-0g@mail.gmail.com>
+ <alpine.DEB.2.11.1505191455540.4225@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150519113116.GH2175-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.11.1505191455540.4225@nanos>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>Mark Rutland <ma>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-19 at 12:31 +0100, Liviu Dudau wrote:
-> On Tue, May 19, 2015 at 11:56:43AM +0100, Jon Medhurst (Tixy) wrote:
-> > On Mon, 2015-05-18 at 18:28 +0100, Liviu Dudau wrote:
-> > > Juno based boards have a memory mapped timer @ 0x2a810000. This
-> > > is disabled on r0 version of the board due to an SoC errata.
+On Tue, May 19, 2015 at 02:56:43PM +0200, Thomas Gleixner wrote:
+> On Tue, 19 May 2015, Maxime Coquelin wrote:
+> > 2015-05-19 11:59 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+> > >> Is the below Kconfig entry fine for you?
+> > >>
+> > >> config CLKSRC_STM32
+> > >>      def_bool y if ARCH_STM32
+> > >>      select CLKSRC_MMIO
+> > >
+> > >
+> > > config CLKSRC_STM32
+> > >         bool
+> > >         select CLKSRC_MMIO
+> > >
+> > > and in the arch/arm/mach-stm32/Kconfig add select CLKSRC_STM32
 > > 
-> > So wouldn't it make more sense then to disable it in the dts for r0? As
-> > it is, you disable it in the common file below then have to later
-> > re-enable it in juno-r1.dts.
+> > Ok, I will send a patch for arch/arm/Kconfig, as Arnd already applied
+> > the one intruducing ARCH_STM32.
 > 
-> From what I have seen in the existing DTs the preffer approach seems to be of
-> disabling by default the node declared in the common files and enable
-> it in the DT that makes use of it.
+> Folks, can you please trim your replies. It's a PITA to scroll down
+> through several pages to find a single line of content.
 
-Yes, I does look that way, and I agree consistency usually wins out over
-any arguments over log or obviousness.
+Absolutely right.  Too many people do not do this, and it's a waste of
+readers time.  Maybe we should start ignoring emails which contain only
+quoted mail in the first 50 lines.
 
-> If there is any guidance on how to describe this sort of situations I
-> would really love to read it.
-
-I know of none, but I'd speculate the principal we've discovered is to
-fail safe and have potentially absent or broken hardware disabled by
-default.
+Also, cutting the rest of the email below the point which you've finished
+replying is good etiquette as well.  I've seen a number of posts where
+people have added their signature mid-mail and left a huge chunk of quoted
+mail below.  That's just not on either.
 
 -- 
-Tixy
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
