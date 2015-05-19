@@ -1,51 +1,53 @@
-From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sabrelite: use simple-panel instead of
- display-timings for LVDS0
-Date: Tue, 19 May 2015 11:52:40 -0700
-Message-ID: <555B8678.8090002@boundarydevices.com>
-References: <20150518075844.7e1b5916@ipc1.ka-ro>	 <1432050616-11465-1-git-send-email-eric.nelson@boundarydevices.com>	 <1432050616-11465-3-git-send-email-eric.nelson@boundarydevices.com> <1432051452.15181.48.camel@pengutronix.de> <555B6A0B.4010205@boundarydevices.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Tue, 19 May 2015 21:49:17 +0200
+Message-ID: <20150519194917.GI24769@pengutronix.de>
+References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
+ <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
+ <20150518184300.GB28888@pengutronix.de>
+ <CABuKBeJcpufi-eEWmDRK6F2kgpz3DmCz8rp4hVPCJVgkmGr-KA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <555B6A0B.4010205-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABuKBeJcpufi-eEWmDRK6F2kgpz3DmCz8rp4hVPCJVgkmGr-KA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Xudong Chen <xudong.chen@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liguo Zhang <liguo.zhang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Hello Matthias,
 
-On 05/19/2015 09:51 AM, Eric Nelson wrote:
-> On 05/19/2015 09:04 AM, Philipp Zabel wrote:
->> Hi Eric,
->>
->> Am Dienstag, den 19.05.2015, 08:50 -0700 schrieb Eric Nelson:
->>> Also add label for backlight_lvds and connect it to the LVDS display.
->>>
->>> Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
->>> ---
->> [...]
->>>  
->>>  &audmux {
->>> @@ -374,18 +385,11 @@
->>>  		fsl,data-width = <18>;
->>
->> The fsl,data-width property shouldn't be needed anymore if you
->> set .bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG for the hsd100pxn1
->> panel in panel-simple.c.
->>
+On Tue, May 19, 2015 at 04:48:23PM +0200, Matthias Brugger wrote:
+> 2015-05-18 20:43 GMT+02:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengut=
+ronix.de>:
+> > On Tue, May 19, 2015 at 12:40:08AM +0800, Eddie Huang wrote:
+> >> [...]
+> >>  drivers/i2c/busses/i2c-mt65xx.c | 675 +++++++++++++++++++++++++++=
++++++++++++++
+> >> [...]
+> >> +#define I2C_DRV_NAME         "mt-i2c"
+> > i2c-mt65xx ?
+>=20
+> As this works for all SoCs so far, I would propose: i2c-mtk
+Hmm, currently we have:
 
-Are you planning to submit a patch to panel-simple.c for this?
+  - #define I2C_DRV_NAME mt-i2c
+  - dt-compatibles: "mediatek,mt6577-i2c" + "mediatek,mt6589-i2c"
+  - function prefix: mtk_i2c_
+  - filename: i2c-mt65xx.c
+  - Kconfig symbol: I2C_MT65XX
 
-Because of the dependency, I'd like to handle this in a separate
-patch instead of V3 of this patch set.
+Getting some harmonization here would definitly be nice.
 
-Please advise,
+Best regards
+Uwe
 
-
-Eric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
