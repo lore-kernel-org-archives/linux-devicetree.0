@@ -1,159 +1,45 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH 1/5] soc: mediatek: Add infracfg misc driver support
-Date: Tue, 19 May 2015 14:54:41 +0800
-Message-ID: <CAGS+omD-0bPeQqau9mm4pTqOhtPW=ecR5ibB8==pifRMgSKrjg@mail.gmail.com>
-References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
- <1431372206-1237-2-git-send-email-s.hauer@pengutronix.de> <CAGS+omADXpnBnLvuH+xNmatL+89kLBELz6KqMFid7SOx=veiAg@mail.gmail.com>
- <20150518081625.GO6325@pengutronix.de>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: Re: [PATCH v3] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Tue, 19 May 2015 10:03:04 +0300
+Message-ID: <1432018984.29174.2.camel@linaro.org>
+References: <1431333119-13626-1-git-send-email-ivan.ivanov@linaro.org>
+	 <CANLsYkyKrtyMicsNs2CDd4=GfrQJOPJkAqSUiTB=5hRs3+d=tQ@mail.gmail.com>
+	 <7F8B0480-06A8-4381-90C8-3F2A35F14FCD@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150518081625.GO6325@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <7F8B0480-06A8-4381-90C8-3F2A35F14FCD@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Pratik Patel <pratikp@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 18, 2015 at 4:16 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> Hi Daniel,
->
-> On Fri, May 15, 2015 at 10:17:33PM +0800, Daniel Kurtz wrote:
->> Hi Sascha,
->>
->> On Tue, May 12, 2015 at 3:23 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
->> > This adds support for some miscellaneous bits of the infracfg controller.
->> > The mtk_infracfg_set/clear_bus_protection functions are necessary for
->> > the scpsys power domain driver to handle the bus protection bits which
->> > are contained in the infacfg register space.
->> >
->> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
->> > ---
->> >  drivers/soc/mediatek/Kconfig        |  9 +++++
->> >  drivers/soc/mediatek/Makefile       |  1 +
->> >  drivers/soc/mediatek/mtk-infracfg.c | 80 +++++++++++++++++++++++++++++++++++++
->> >  3 files changed, 90 insertions(+)
->> >  create mode 100644 drivers/soc/mediatek/mtk-infracfg.c
->> >
->> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
->> > index bcdb22d..6fae66f 100644
->> > --- a/drivers/soc/mediatek/Kconfig
->> > +++ b/drivers/soc/mediatek/Kconfig
->> > @@ -9,3 +9,12 @@ config MTK_PMIC_WRAP
->> >           Say yes here to add support for MediaTek PMIC Wrapper found
->> >           on different MediaTek SoCs. The PMIC wrapper is a proprietary
->> >           hardware to connect the PMIC.
->> > +
->> > +config MTK_INFRACFG
->>
->> nit: Could you alphabetize these config options - so this one before
->> MTK_PMIC_WRAP
->>
->> > +       tristate "MediaTek INFRACFG Support"
->> > +       depends on ARCH_MEDIATEK
->>
->> I've seen several drivers like this now:
->>
->>   depends on ARCH_MEDIATEK || COMPILE_TEST
->>
->>
->> > +       select REGMAP
->> > +       help
->> > +         Say yes here to add support for the MediaTek INFRACFG controller. The
->> > +         INFRACFG controller contains various infrastructure registers not
->> > +         directly associated to any device.
->> > diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
->> > index ecaf4de..ce39119 100644
->> > --- a/drivers/soc/mediatek/Makefile
->> > +++ b/drivers/soc/mediatek/Makefile
->> > @@ -1 +1,2 @@
->> >  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->> > +obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->>
->> alphabetize here, too.
->>
->> > diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
->> > new file mode 100644
->> > index 0000000..b3ebfae
->> > --- /dev/null
->> > +++ b/drivers/soc/mediatek/mtk-infracfg.c
->> > @@ -0,0 +1,80 @@
->> > +#include <linux/regmap.h>
->> > +#include <linux/export.h>
->> > +#include <linux/jiffies.h>
->> > +#include <linux/soc/mediatek/infracfg.h>
->> > +#include <asm/processor.h>
->>
->> and... alphabetize headers here.
->>
->> I'm not sure if people care, but I find it makes it much easier to
->> merge/add things later if these lists are already sorted.
->> Same "please alphabetize" comments for the mtk-scpsys patch, so I
->> won't repeat them.
->>
->> > +
->> > +#define INFRA_TOPAXI_PROTECTEN         0x0220
->> > +#define INFRA_TOPAXI_PROTECTSTA1       0x0228
->> > +
->> > +/**
->> > + * mtk_infracfg_set_bus_protection - enable bus protection
->> > + * @regmap: The infracfg regmap
->> > + * @mask: The mask containing the protection bits to be enabled.
->> > + *
->> > + * This function enables the bus protection bits for disabled power
->> > + * domains so that the system does not hanf when some unit accesses the
->> > + * bus while in power down.
->> > + */
->> > +int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask)
->> > +{
->> > +       unsigned long expired;
->> > +       u32 val;
->> > +       int ret;
->> > +
->> > +       regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, mask);
->> > +
->> > +       expired = jiffies + HZ;
->> > +
->> > +       while (1) {
->> > +               ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
->> > +               if (ret)
->> > +                       return ret;
->> > +
->> > +               if ((val & mask) == mask)
->> > +                       break;
->> > +
->> > +               cpu_relax();
->> > +               if (time_after(jiffies, expired))
->> > +                       return -EIO;
->>
->> I think we should check for timeout first, and then cpu_relax() if
->> there is still time left (here and in
->> mtk_infracfg_clear_bus_protection()).  Otherwise we end up doing one
->> final cpu_relax() without rechecking the register we are polling
->> (again, I have the same comment for the timeout loops in mtk-scpsys).
->
-> I think cpu_relax() delays execution in the order of microseconds (I
-> don't actually know, just a guess), so if the timeout is a second the
-> order doesn't really matter. What can happen though is an interrupt
-> after the (val & mask) test but before the timeout check. So to be
-> truly correct we have to repeat the (val & mask) test after the
-> time_after() check. Is that what you want?
 
-I'm not following, why would you need to repeat (val & mask) test
-after time_after?
-What does an interrupt have to do with it?
-Can you show a code snippet with what exactly you are proposing?
+On Mon, 2015-05-18 at 13:52 -0500, Kumar Gala wrote:
+> >=20
+> > On May 11, 2015, at 2:21 PM, Mathieu Poirier poirier@linaro.org> wr=
+ote:
+> >=20
+> > On 11 May 2015 at 02:31, Ivan T. Ivanov ivanov@linaro.org> wrote:
+> > > Add initial set of CoreSight components found on Qualcomm's 8x16 =
+chipset.
+> >=20
 
--Dan
+> >=20
+> > Kumar, I'm happy with this DT specification for Coresight.  Since I=
+'m
+> > taking the driver it would likely make more sense for this to go
+> > through my tree.  Could you please have a look and give me your ack=
+?
+>=20
+> It looks ok, however I don=E2=80=99t see us including this file anywh=
+ere, so that=E2=80=99s my only concern.
+>=20
 
->> Also, shouldn't we return -ETIMEOUT if we timeout?
->
-> I dunno. Probably the operation operation timed out because of an IO
-> error. I'll change it to -ETIMEDOUT.
->
-> Sascha
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+True. The reason is that 'rpmcc' driver is still in testing phase
+and it is not upstreamed. Once it is ready, I will include this file
+where is appropriate.
+
+Regards,
+Ivan
