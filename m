@@ -1,79 +1,184 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
-Date: Tue, 19 May 2015 09:12:31 +0800
-Message-ID: <CADyBb7u1YnVvhNsvGAY7pQjK_SwMthN175XSw_DSY4SmF8XbVg@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<CADyBb7u=HjZO5CBzZLxw1aWDx0tKdVKBuTrrhrRF9bAQr7pADQ@mail.gmail.com>
-	<20150518172329.GA17202@roeck-us.net>
-	<2729872.Fp4939suL0@wuerfel>
-	<20150518201445.GA21230@roeck-us.net>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH] Documentation: dt: mtd: replace "nor-jedec" binding with
+ "jedec,spi-nor"
+Date: Mon, 18 May 2015 18:34:15 -0700
+Message-ID: <20150519013415.GV11598@ld-irv-0074>
+References: <1431624773-4165-1-git-send-email-computersforpeace@gmail.com>
+ <20150515195541.GL11598@ld-irv-0074>
+ <20150518104501.GD3551@leverpostej>
+ <20150518183442.GR11598@ld-irv-0074>
+ <CAMuHMdUCj2AXk_0mAgRfAStrveHPi=Rp2g-b177zO_ode8NaCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150518201445.GA21230-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUCj2AXk_0mAgRfAStrveHPi=Rp2g-b177zO_ode8NaCw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Marek Vasut <marex@denx.de>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-spi <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd, Guenter,
+Hi Geert,
 
-yes, that is brilliant idea!!
-I will try to do so , that solve the compatibility problem , so I
-guess we can try this time :-)
+On Mon, May 18, 2015 at 08:51:46PM +0200, Geert Uytterhoeven wrote:
+> On Mon, May 18, 2015 at 8:34 PM, Brian Norris
+> <computersforpeace@gmail.com> wrote:
+> > On Mon, May 18, 2015 at 11:45:01AM +0100, Mark Rutland wrote:
+> >> On Fri, May 15, 2015 at 08:55:41PM +0100, Brian Norris wrote:
+> >> > It really helps if I test patches...
+> >> >
+> >> > On Thu, May 14, 2015 at 10:32:53AM -0700, Brian Norris wrote:
+> > [...]
+> >> > > @@ -305,7 +305,7 @@ static const struct spi_device_id m25p_ids[] = {
+> >> > >    * Generic support for SPI NOR that can be identified by the JEDEC READ
+> >> > >    * ID opcode (0x9F). Use this, if possible.
+> >> > >    */
+> >> > > - {"nor-jedec"},
+> >> > > + {"jedec,spi-nor"},
+> >> >
+> >> > So I forgot (again; we hit this before) that the SPI/OF framework strips
+> >> > everything before the first comma before binding devices. See
+> >> > of_modalias_node(). So I'll have to squash in the patch below to get a
+> >> > usable binding.
+> >>
+> >> Is it not possible to use the of_match_table on spi_driver::driver? If
+> >> not, we really should make it so.
+> >
+> > Hmm, it does look like spi.c supports multiple matching mechanisms, so I
+> > guess m25p80.c could match some with of_match_table and some with
+> > modalias/spi_driver.id_table. See:
+> >
+> > static int spi_match_device(struct device *dev, struct device_driver *drv)
+> > {
+> >         const struct spi_device *spi = to_spi_device(dev);
+> >         const struct spi_driver *sdrv = to_spi_driver(drv);
+> >
+> >         /* Attempt an OF style match */
+> >         if (of_driver_match_device(dev, drv))
+> >                 return 1;
+> >         // ^^^^ we aren't yet (but could be) using this
+> >
+> >         /* Then try ACPI */
+> >         if (acpi_driver_match_device(dev, drv))
+> >                 return 1;
+> >
+> >         if (sdrv->id_table)
+> >                 return !!spi_match_id(sdrv->id_table, spi);
+> >         // ^^^^ we're currently only using this
+> >
+> >         return strcmp(spi->modalias, drv->name) == 0;
+> > }
+> >
+> > I'll see about patching this for 4.2. We have a working solution for
+> > 4.1 at least.
+> 
+> When using DT:
+>   - spi_driver.id_table is used to match with vendor-stripped DT "compatible"
+>     entries.
+>   - spi_driver.driver.of_match_table is used to match with full DT "compatible"
+>     entries.
+> 
+> Note that stripping of vendor names from DT "compatible" entries is done
+> for the _first_ "compatible" entry in the device node only!
+> Hence
+> 
+>         compatible = "myvendor,m25p80";
+> 
+> will match against "m25p80" in m25p_ids[], while
+> 
+>         compatible = "myvendor,shinynewdevice", "st,m25p80";
+> 
+> will _not_ match against "m25p80" in m25p_ids[], and fail to probe in
+> the absence of a driver entry for the first (real) "compatible" entry.
 
-On 19 May 2015 at 04:14, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On Mon, May 18, 2015 at 10:03:52PM +0200, Arnd Bergmann wrote:
->> On Monday 18 May 2015 10:23:30 Guenter Roeck wrote:
->> > >
->> > > integrate watchdog_init_pretimeout and watchdog_init_timeout will be a
->> > > little hard,
->> > > we may need to change this API to :
->> > >
->> > > watchdog_init_timeouts(struct watchdog_device *wdd, unsigned int timeout_parm,
->> > >                              unsigned int pretimeout_parm, struct device *dev)
->> > >
->> > > then we need to update all the watchdog drivers which use this API,
->> > > maybe we can do this in a individual patchset, after this pretimeout
->> > > patch is merged.
->> > >
->> > > Is that OK  ?   any thought?
->> > >
->> > That is what I would recommend.
->> >
->>
->> The API change is fine, but I don't think you need to change all drivers.
->>
->> Just add a small wrapper function in the header file doing the conversion:
->>
->> static inline int watchdog_init_timeout(struct watchdog_device *wdd,
->>                                 unsigned int timeout_parm, struct device *dev)
->> {
->>       return watchdog_init_timeouts(wdd, timeout_parm, ~0ul, dev);
->> }
->>
->> Then you can update the drivers that actually use the pretimeout to
->> use the new function at some point, and leave all other drivers calling
->> the wrapper function.
->>
-> Excellent idea.
->
-> Guenter
+This last part is a little odd, but understandable I guess.
 
+> I2c behaves similarly.
 
+So how about the following patch? It seems like we'll need to be able to
+ignore useless 'modalias' values in cases like this:
 
+	// modalias = "shinynewdevice"
+	compatible = "myvendor,shinynewdevice", "jedec,spi-nor";
+
+and also if somebody leaves off the entire shinynewdevice string:
+
+	// modalias = "spi-nor"
+	compatible = "jedec,spi-nor";
+
+So we rework the spi-nor library to not reject "bad" names, and just
+fall back to autodetection, and we add the .of_match_table to properly
+catch all "jedec,spi-nor".
+
+Signed-off-by: Brian Norris <computerfsorpeace@gmail.com>
+---
+ drivers/mtd/devices/m25p80.c  | 18 +++++++++++-------
+ drivers/mtd/spi-nor/spi-nor.c |  8 ++++----
+ 2 files changed, 15 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index 3af137f49ac9..30d608775f5a 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -223,8 +223,6 @@ static int m25p_probe(struct spi_device *spi)
+ 	 */
+ 	if (data && data->type)
+ 		flash_name = data->type;
+-	else if (!strcmp(spi->modalias, "spi-nor"))
+-		flash_name = NULL; /* auto-detect */
+ 	else
+ 		flash_name = spi->modalias;
+ 
+@@ -301,19 +299,25 @@ static const struct spi_device_id m25p_ids[] = {
+ 	{"w25q128"},	{"w25q256"},	{"cat25c11"},
+ 	{"cat25c03"},	{"cat25c09"},	{"cat25c17"},	{"cat25128"},
+ 
+-	/*
+-	 * Generic support for SPI NOR that can be identified by the JEDEC READ
+-	 * ID opcode (0x9F). Use this, if possible.
+-	 */
+-	{"spi-nor"},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(spi, m25p_ids);
+ 
++static const struct of_device_id m25p_of_table[] = {
++	/*
++	 * Generic compatibility for SPI NOR that can be identified by the
++	 * JEDEC READ ID opcode (0x9F). Use this, if possible.
++	 */
++	{ .compatible = "jedec,spi-nor" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, m25p_of_table);
++
+ static struct spi_driver m25p80_driver = {
+ 	.driver = {
+ 		.name	= "m25p80",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = m25p_of_table,
+ 	},
+ 	.id_table	= m25p_ids,
+ 	.probe	= m25p_probe,
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 14a5d2325dac..390d6fa0a53f 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -1003,11 +1003,11 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Try to auto-detect if chip name wasn't specified */
+-	if (!name)
+-		id = spi_nor_read_id(nor);
+-	else
++	if (name)
+ 		id = spi_nor_match_id(name);
++	/* Try to auto-detect if chip name wasn't specified or not found */
++	if (!id)
++		id = spi_nor_read_id(nor);
+ 	if (IS_ERR_OR_NULL(id))
+ 		return -ENOENT;
+ 
 -- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
