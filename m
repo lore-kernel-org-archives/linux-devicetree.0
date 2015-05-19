@@ -1,129 +1,107 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 03/10] clk: sunxi: Let divs clocks read
- the base factor clock name from devicetree
-Date: Tue, 19 May 2015 10:26:35 +0200
-Message-ID: <20150519082635.GW4004@lukather>
-References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
- <1431707940-19372-4-git-send-email-jenskuske@gmail.com>
- <20150517130657.GD4004@lukather>
- <5559AF58.60508@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [rtc-linux] [PATCH V2 1/4] mfd: da9062: DA9062 MFD core driver
+Date: Tue, 19 May 2015 08:34:45 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22B961@SW-EX-MBX02.diasemi.com>
+References: <cover.1431621833.git.stwiss.opensource@diasemi.com>
+ <af5a7d289bb149e9111ebc70bb0589a994ee2407.1431621833.git.stwiss.opensource@diasemi.com>
+ <20150516085328.GI3338@piout.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="64C3cv1XTIf1+2px"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBC7J5OVAKGQE5GDCATA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5559AF58.60508-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150516085328.GI3338-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---64C3cv1XTIf1+2px
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 16 May 2015 09:53 Alexandre Belloni wrote:
 
-On Mon, May 18, 2015 at 11:22:32AM +0200, Jens Kuske wrote:
-> On 05/17/15 15:06, Maxime Ripard wrote:
-> > On Fri, May 15, 2015 at 06:38:53PM +0200, Jens Kuske wrote:
-> >> Currently, the sunxi clock driver gets the name for the base factor clock
-> >> of divs clocks from the name field in factors_data. This prevents reusing
-> >> of the factor clock for clocks with same properties, but different name.
-> >>
-> >> This commit makes the divs setup function try to get a name from
-> >> clock-output-names in the devicetree. It also removes the name field where
-> >> possible and merges the sun4i PLL5 and PLL6 clocks.
-> >>
-> >> The sun4i PLL5 clock doesn't have a output for the base factor clock,
-> >> so we still have to use the name field there.
-> >>
-> >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>  drivers/clk/sunxi/clk-sunxi.c | 22 ++++++++++++----------
-> >>  1 file changed, 12 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> >> index 17cba4d..afe560c 100644
-> >> --- a/drivers/clk/sunxi/clk-sunxi.c
-> >> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> >> @@ -708,18 +708,10 @@ static const struct factors_data sun4i_pll5_data __initconst = {
-> >>  	.name = "pll5",
-> >>  };
-> >>  
-> >> -static const struct factors_data sun4i_pll6_data __initconst = {
-> >> -	.enable = 31,
-> >> -	.table = &sun4i_pll5_config,
-> >> -	.getter = sun4i_get_pll5_factors,
-> >> -	.name = "pll6",
-> >> -};
-> >> -
-> >>  static const struct factors_data sun6i_a31_pll6_data __initconst = {
-> >>  	.enable = 31,
-> >>  	.table = &sun6i_a31_pll6_config,
-> >>  	.getter = sun6i_a31_get_pll6_factors,
-> >> -	.name = "pll6x2",
-> >>  };
-> >>  
-> >>  static const struct factors_data sun5i_a13_ahb_data __initconst = {
-> >> @@ -1099,7 +1091,7 @@ static const struct divs_data pll5_divs_data __initconst = {
-> >>  };
-> >>  
-> >>  static const struct divs_data pll6_divs_data __initconst = {
-> >> -	.factors = &sun4i_pll6_data,
-> >> +	.factors = &sun4i_pll5_data,
-> >>  	.ndivs = 4,
-> >>  	.div = {
-> >>  		{ .shift = 0, .table = pll6_sata_tbl, .gate = 14 }, /* M, SATA */
-> >> @@ -1141,6 +1133,7 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
-> >>  	struct clk_gate *gate = NULL;
-> >>  	struct clk_fixed_factor *fix_factor;
-> >>  	struct clk_divider *divider;
-> >> +	struct factors_data factors = *data->factors;
-> >>  	void __iomem *reg;
-> >>  	int ndivs = SUNXI_DIVS_MAX_QTY, i = 0;
-> >>  	int flags, clkflags;
-> >> @@ -1149,8 +1142,17 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
-> >>  	if (data->ndivs)
-> >>  		ndivs = data->ndivs;
-> >>  
-> >> +	/* Try to find a name for base factor clock */
-> >> +	for (i = 0; i < ndivs; i++) {
-> >> +		if (data->div[i].self) {
-> > 
-> > I'm not sure we should expect the factor clock to have a self factor.
+Hi Alexandre,
+
+> On 14/05/2015 at 17:43:52 +0100, S Twiss wrote :
+
+[...]
+
+> > +	{
+> > +		.name		= "da9062-watchdog",
+> > +		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
+> > +		.resources	= da9062_wdt_resources,
+> > +		.of_compatible  = "dlg,da9062-wdt",
+> > +	},
+> > +	{
+> > +		.name		= "da9062-onkey",
+> > +		.num_resources	= ARRAY_SIZE(da9062_onkey_resources),
+> > +		.resources	= da9062_onkey_resources,
+> > +		.of_compatible  = "dlg,da9062-onkey",
+> > +	},
+> > +	{
+> > +		.name		= "da9062-thermal",
+> > +		.num_resources	= ARRAY_SIZE(da9062_thermal_resources),
+> > +		.resources	= da9062_thermal_resources,
+> > +		.of_compatible  = "dlg,da9062-thermal",
+> > +	},
+> > +	{
+> > +		.name		= "da9062-rtc",
+> > +		.num_resources	= ARRAY_SIZE(da9062_rtc_resources),
+> > +		.resources	= da9062_rtc_resources,
+> > +		.of_compatible  = "dlg,da9062-rtc",
 > 
-> Maybe not, but in that case it would fall back to the name provided in
-> the factors_data struct, as it is the case for sun4i pll5.
+> Did you try to use "da9063-rtc"? The register set seems to be exactly
+> the same. Unfortunately, the datasheet are not available on the diasemi
+> website...
 
-Which doesn't really solve the underlying issue, just make it work in
-your (pll6/pll8) case.
- 
-> > what about taking the first output and taking the substring up to the
-> > first "_" ?
+I will remove the DA9062 OnKey and RTC parts with a view to putting them back
+when I do the work for the DA9063 alterations.
+
+> Also, the .of_compatibles are not necessary because you don't add any of
+> bindings to the underlying drivers. The match happens on .name.
 > 
-> That only works for the sun[457]i pll5 & pll6, for sun[68]i the base
-> clock name would have to be "pll6x2".
+> > diff --git a/include/linux/mfd/da9062/registers.h
+> b/include/linux/mfd/da9062/registers.h
+> > new file mode 100644
+> > index 0000000..d07c2bc
+> > --- /dev/null
+> > +++ b/include/linux/mfd/da9062/registers.h
+> 
+> Comparing that file with da9063/registers.h, It really seems that
+> DA062AA, DA9063AD and DA9063BB are register compatible, apart from a
+> few
+> differences in the regulator and the gpio count.
+> 
+> Also, at least the watchdog and rtc driver are duplicating their da9063
+> counterpart. I'm not trying to annoy you, I just want you to understand
+> that the less code is duplicated, the easiest it will be to maintain
+> later.
 
-Why?
+This has come up a lot lately.
 
-It's called pll6 in the datasheet, it should really be called
-pll6. The fact that there is some fixed factors or dividers on some
-children only impacts those children, and not the system as a whole.
+https://lkml.org/lkml/2015/4/24/304
+https://lkml.org/lkml/2015/5/13/383
+https://lkml.org/lkml/2015/5/6/505
+https://lkml.org/lkml/2015/5/18/511
 
-And the fact that the "base" clock is pll6x2 and not pll6 itself is
-very debatable. How do you know which clock is the base one? Most
-clocks are actually using pll6 as a reference.
+The short answer is that the DA9062 and DA9063 chips are not identical. Although
+their numbers are sequential and there are functional similarities for some of the
+components, this is not the norm for the two chips.
 
-Maxime
+In some cases re-using driver components from DA9063 is a good way forward, but
+making all components part of a monolithic driver would make both DA9062 and
+DA9063 over complicated and unmaintainable -- in my opinion.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---64C3cv1XTIf1+2px--
+However it's not just my opinion we have to consider here I think.
+
+The RTC and OnKey in this case can be done fairly easily I think -- there can be some
+re-use in those components -- although there are fairly important RTC differences between
+the DA9063 AD and DA9063 BB silicon revisions (in the form of a new register, different
+functionality in the alarm and a register shift). So even that is not a straight-forward
+"swap" to run DA9062.
+
+Regards,
+Steve
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
