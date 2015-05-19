@@ -1,208 +1,218 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v5 3/3] dts: hi6220: enable thermal sensor for hisilicon
- SoC
-Date: Tue, 19 May 2015 21:51:01 -0700
-Message-ID: <20150520045100.GB4295@localhost.localdomain>
-References: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1431933109-22764-4-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
+Date: Tue, 19 May 2015 23:59:46 +0200
+Message-ID: <555BB252.9080200@hauke-m.de>
+References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de> <20150518224910.GU11598@ld-irv-0074> <CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431933109-22764-4-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Cc: rui.zhuang@intel.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org, dan.zhao@hisilicon.com, devicetree@vger.kernel.org, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, mark.rutland@arm.com, linuxarm@huawei.com, zhenwei.wang@hisilicon.com, leo.yan@linaro.org, mporter@konsulko.com, zhangfei.gao@linaro.org, liguozhu@hisilicon.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---8GpibOaaTibBMecb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, May 18, 2015 at 03:11:49PM +0800, Xinwei Kong wrote:
-> From: kongxinwei <kong.kongxinwei@hisilicon.com>
+On 05/19/2015 10:25 AM, Jonas Gorski wrote:
+> Hi,
 >=20
-> Dts includes two part: the first part is related with thermal sensor;
-> the second part is related with thermal zones, in this part it will
-> define the thermal zones and which sensor device should be bound to.
-> it also need specify the polling interval for every thermal zone.
+> On Tue, May 19, 2015 at 12:49 AM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sun, May 17, 2015 at 07:35:12PM +0200, Hauke Mehrtens wrote:
+>>> This moves the linux,part-probe device tree parsing code from
+>>> physmap_of.c to mtdpart.c. Now all drivers can use this feature by =
+just
+>>> providing a reference to they device tree node in struct
+>>
+>> s/they/their/
+>> or
+>> s/they/the/
+>> ?
+>>
+>>> mtd_part_parser_data.
+>>>
+>>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>>> ---
+>>>  drivers/mtd/maps/physmap_of.c | 40 +------------------------------=
+---------
+> (snip)
+>>>  drivers/mtd/mtdpart.c         | 38 +++++++++++++++++++++++++++++++=
++++++++
+>>>  2 files changed, 39 insertions(+), 39 deletions(-)
+>>>
+>>> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+>>> index cafdb88..b3059d6 100644
+>>> --- a/drivers/mtd/mtdpart.c
+>>> +++ b/drivers/mtd/mtdpart.c
+>>> @@ -29,6 +29,7 @@
+>>>  #include <linux/kmod.h>
+>>>  #include <linux/mtd/mtd.h>
+>>>  #include <linux/mtd/partitions.h>
+>>> +#include <linux/of.h>
+>>>  #include <linux/err.h>
+>>>  #include <linux/kconfig.h>
+>>>
+>>> @@ -718,6 +719,35 @@ void deregister_mtd_parser(struct mtd_part_par=
+ser *p)
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(deregister_mtd_parser);
+>>>
+>>> +static const char * const *of_get_probes(struct device_node *dp)
+>>
+>> Maybe a quick comment at the top to note that if non-NULL, its retur=
+n
+>> value must be kfree()'d by the caller? Could be helpful if we want t=
+o
+>> move the code elsewhere. (I'm almost tempted to suggest moving this =
+to
+>> drivers/of/of_mtd.c, in fact.)
+>>
+>>> +{
+>>> +     const char *cp;
+>>> +     int cplen;
+>>> +     unsigned int l;
+>>> +     unsigned int count;
+>>> +     const char **res;
+>>> +
+>>> +     cp =3D of_get_property(dp, "linux,part-probe", &cplen);
+>>
+>> I see this is not property is not documented in the first place. If
+>> we're going to make it generically useful, we definitely need to
+>> document it, including what the supported partition probe names are.
+>>
+>> I'm also kind of ambivalent on this point, but I might as well ask: =
+does
+>> the 'linux,...' naming make sense? We're not really supposed to be
+>> putting pure software information in the device tree, let alone info
+>> that's specific to Linux. I see how the partition parser could be (a=
+nd
+>> should be, really) considered OS-agnostic, though, and might deserve=
+ a
+>> spot in the DT, at least if it's not safe to run arbitrary partition
+>> parsers on all MTDs.
 >=20
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 127 ++++++++++++++++++++++++=
-++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> As long as we use the direct parser names, we should keep the linux p=
+refix.
 >=20
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/=
-dts/hisilicon/hi6220.dtsi
-> new file mode 100644
-> index 0000000..82f213d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -0,0 +1,127 @@
-> +
-> +#include <dt-bindings/thermal/thermal.h>
-> +
-> +/ {
-> +
-> +	tsensor: tsensor@0,f7030700 {
-> +		compatible =3D "hisilicon,tsensor";
-> +		reg =3D <0x0 0xf7030700 0x0 0x1000>;
-> +		interrupts =3D <0 7 0x4>;
-> +		clocks =3D <&clock_sys HI6220_TSENSOR_CLK>;
-> +		clock-names =3D "thermal_clk";
-> +		#thermal-sensor-cells =3D <1>;
-> +
-> +	thermal-zones {
+> Actually a common issue is that many firmware partition tags aren't
+> capable of describing the full flash layout, so partition parsers hav=
+e
+> to "cheat" and make a lot of assumptions, e.g. the location and the
+> size of the bootloader. So wo would need to have a mix of static
+> partitions (bootloader, bootloader config, calibration data) and
+> dynamic ones (kernel, rootfs, overlay). So ideally we would pass the
+> static partitions as device tree nodes, and let the partition parsers
+> then be applied to partitions instead of the full mtd device. This
+> would also work as a safeguard against mis-guessing important
+> partitions like calibration data which aren't recoverable in case the=
+y
+> get overwritten.
+>=20
+> So my first Idea would be having something like this:
+>=20
+> mtdevice@foo {
+>         ...
+>         bootloader: partition@0 {
+>                 reg =3D <0 0x10000>;
+>                 device_type =3D "flash-partition";
+>                 read-only;
+>         };
+>=20
+>         firmware: partition@10000 {
+>                 reg =3D <0x1000 0x7e0000>;
+>                 device_type =3D "flash-partition";
+>                 compatible =3D "brcm,trx";
+>         };
+>=20
+>         calibration: partition@7f0000 {
+>                 reg =3D < >;
+>                 device_type =3D "flash-partition";
+>                 read-only;
+>         };
+> };
+>=20
+> Then the ofpart parsing could be integrated into the core, and
+> partition parsers get run according to their compatibles on the
+> individual partitions.
+>=20
+> Of course this also might be total overengineering and completely the
+> wrong place for devicetree as it's essentially configuration data, bu=
+t
+> since the now described partitions are now more or less "static", IMH=
+O
+> this would be a-okay.
 
-The thermal-zones node is typically in the root node, not inside the
-sensor node.
+This sounds like the problem Rafa=C5=82 wanted to solve in his patch "m=
+td:
+add support for typed parsers splitting partitions"
 
-> +		local: local {
-> +			/* milliseconds */
-> +			polling-delay-passive =3D <1000>;
-> +			/* milliseconds */
-> +			polling-delay =3D <5000>;
-> +
-> +			/* sensor	ID */
-> +			thermal-sensors =3D <&tsensor  0>;
-> +
-> +			trips {
-> +				local_alert: local_alert {
-> +					/* millicelsius */
-> +					temperature =3D <70000>;
-> +					/* millicelsius */
-> +					hysteresis =3D <2000>;
-> +					type =3D "passive";
-> +				};
-> +				local_crit: local_crit {
-> +					temperature =3D <90000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				/* There are currently no cooling maps
-> +				because there are no cooling devices */
+This would also solve my problem and would make the bcm47xx part parser
+a lot simpler and more secure for targets using device tree.
+I still think we should add a alternative for the people that do not
+want to rewrite their partition parser. Specifying the list of availabl=
+e
+partition parser in the flash driver is a bad idea because it is the
+wrong place.
 
-Not even cpufreq? in your driver you mention about cpufreq cooling.
+I am in favor of both concepts, because there is already one driver
+reading the partition parser list from device tree and it is implemente=
+d
+pretty easy. Jonas Approach sounds nice because it really solves two
+more problems.
+Jonas approach would work on bcm47xx and bcm53xx targets, because there
+the header is located after the boot loader and does not contain all
+partitions. This could also be used to divide the partition containing
+the kernel and the read only root fs in OpenWrt. Are there any more
+users which could use this extended approach?
 
-Do you have cpufreq-dt driver  properly setup in your board?
-
-> +			};
-> +		};
-> +
-> +		cluster1: cluster1 {
-> +			polling-delay-passive =3D <1000>;
-> +			polling-delay =3D <5000>;
-> +
-> +			/* sensor	ID */
-> +			thermal-sensors =3D <&tsensor  1>;
-> +
-> +			trips {
-> +				cluster1_alert: cluster1_alert {
-> +					temperature =3D <70000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "passive";
-> +				};
-> +				cluster1_crit: cluster1_crit {
-> +					temperature =3D <90000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				/* There are currently no cooling maps
-> +				because there are no cooling devices */
-> +			};
-> +		};
-> +
-> +		cluster0: cluster0 {
-> +			polling-delay-passive =3D <1000>;
-> +			polling-delay =3D <5000>;
-> +
-> +			/* sensor	ID */
-> +			thermal-sensors =3D <&tsensor  2>;
-> +
-> +			trips {
-> +				cluster0_alert: cluster0_alert {
-> +					temperature =3D <70000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "passive";
-> +				};
-> +				cluster0_crit: cluster0_crit {
-> +					temperature =3D <90000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip =3D <&cluster0_alert>;
-> +					cooling-device =3D
-> +					    <&cpu0 THERMAL_NO_LIMIT
-> +						THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +		};
-> +
-> +		gpu: gpu {
-> +			polling-delay-passive =3D <1000>;
-> +			polling-delay =3D <5000>;
-> +
-> +			/* sensor	ID */
-> +			thermal-sensors =3D <&tsensor  3>;
-> +
-> +			trips {
-> +				gpu_alert: gpu_alert {
-> +					temperature =3D <70000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "passive";
-> +				};
-> +				gpu_crit: gpu_crit {
-> +					temperature =3D <90000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				/* There are currently no cooling maps
-> +				because there are no cooling devices */
-> +			};
-> +		};
-> +	};
-> +}
-
-Are you sure this DT file works? I think it misses a closing \}.
-
-> --=20
-> 1.9.1
+>>> @@ -754,6 +784,13 @@ int parse_mtd_partitions(struct mtd_info *mast=
+er, const char *const *types,
+>>>  {
+>>>       struct mtd_part_parser *parser;
+>>>       int ret =3D 0;
+>>> +     const char *const *types_of =3D NULL;
+>>> +
+>>> +     if (data && data->of_node) {
+>>> +             types_of =3D of_get_probes(data->of_node);
+>>> +             if (types_of !=3D NULL)
+>>> +                     types =3D types_of;
+>>> +     }
+>>
+>> I'm not sure I really like the semantics here. This means that the
+>> device tree can override all Linux defaults. So we can't, for instan=
+ce,
+>> have the cmdline parser override all other selections (e.g., for
+>> debugging), or make sure that 'ofpart' is available for all MTDs.
+>=20
+> Letting the device tree override cmdline parsers is actually a valid
+> use case for OpenWrt, where the bootloader passes a
+> different/incompatible partition layout through mtdparts than what is
+> actually used by the firmware on flash.
+>=20
+> If we want to make it overrideable for debug purposes adding a
+> commandline parameter like
+> mtdparser=3D"<mtdname>:<parser1[,parser2,...]>" might be a better
+> option.
+>=20
+>>>
+>>>       if (!types)
+>>>               types =3D default_mtd_part_types;
+>>
+>> In fact, I don't really like this existing hunk either ^^^. It has t=
+he
+>> same effect, of killing things like cmdlinepart, which should be
+>> available on all MTDs.
+>=20
+> default_mtd_part_types contains cmdline part, so it should be
+> available unless they pass their own parsers.
 >=20
 >=20
+> Regards
+> Jonas
+>=20
 
---8GpibOaaTibBMecb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQEcBAEBAgAGBQJVXBKxAAoJEMLUO4d9pOJWIqAH/2U0uIzoL1Udlv/gDeZd06px
-OqP5Tbkha1pkK9rwVdFt9zIx3wS6xjfDksDLbGisZ3xCd5pYJHEoGgB3U+7keaY5
-6Etmi0zRmA3iwVpbpNQ8D5Noox45EVCP4WBKuTWnVNrT+bKhe+awMpWlnxTvT8fm
-ewVmoiOuAgxebWBVmVdy2Yntaoscovhk/mT8pFnL4e0OA7whA+XSxmhmqAMVY9FM
-mFVGlNCUzIhMHYxVRx/1rSTvWtEx2clThW5LIu6w9UtQEYfjIt9FCTRGY2Zqgshl
-jg97r4p3686vFa8AiwlnmKrZLwJtHlkJius7NUPwt8LEXYbpcxHqm9E/C/ZxMGU=
-=15Ss
------END PGP SIGNATURE-----
-
---8GpibOaaTibBMecb--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
