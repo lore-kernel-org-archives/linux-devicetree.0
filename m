@@ -1,94 +1,47 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
-Date: Wed, 20 May 2015 00:07:26 +0200
-Message-ID: <CACna6ryBiOsuSGTwJ9_v-=JK5y_v_mZ5xhsV2kQSXCT8PXxWNw@mail.gmail.com>
-References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de>
-	<20150518224910.GU11598@ld-irv-0074>
-	<CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
-	<555BB252.9080200@hauke-m.de>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/5] phy: qcom: Add Qualcomm PCIe PHY
+Date: Tue, 19 May 2015 17:41:43 -0500
+Message-ID: <20150519224143.GS31666@google.com>
+References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
+ <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com>
+ <554783CD.50708@ti.com>
+ <55478F1A.3000401@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <555BB252.9080200-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55478F1A.3000401@mm-sol.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19 May 2015 at 23:59, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
->> So my first Idea would be having something like this:
->>
->> mtdevice@foo {
->>         ...
->>         bootloader: partition@0 {
->>                 reg =3D <0 0x10000>;
->>                 device_type =3D "flash-partition";
->>                 read-only;
->>         };
->>
->>         firmware: partition@10000 {
->>                 reg =3D <0x1000 0x7e0000>;
->>                 device_type =3D "flash-partition";
->>                 compatible =3D "brcm,trx";
->>         };
->>
->>         calibration: partition@7f0000 {
->>                 reg =3D < >;
->>                 device_type =3D "flash-partition";
->>                 read-only;
->>         };
->> };
->>
->> Then the ofpart parsing could be integrated into the core, and
->> partition parsers get run according to their compatibles on the
->> individual partitions.
->>
->> Of course this also might be total overengineering and completely th=
-e
->> wrong place for devicetree as it's essentially configuration data, b=
-ut
->> since the now described partitions are now more or less "static", IM=
-HO
->> this would be a-okay.
->
-> This sounds like the problem Rafa=C5=82 wanted to solve in his patch =
-"mtd:
-> add support for typed parsers splitting partitions"
->
-> This would also solve my problem and would make the bcm47xx part pars=
-er
-> a lot simpler and more secure for targets using device tree.
-> I still think we should add a alternative for the people that do not
-> want to rewrite their partition parser. Specifying the list of availa=
-ble
-> partition parser in the flash driver is a bad idea because it is the
-> wrong place.
+On Mon, May 04, 2015 at 06:24:10PM +0300, Stanimir Varbanov wrote:
+> On 05/04/2015 05:35 PM, Kishon Vijay Abraham I wrote:
+> > Hi,
+> > 
+> > On Monday 04 May 2015 06:12 PM, Stanimir Varbanov wrote:
+> >> Add a PCIe PHY driver used by PCIe host controller driver
+> >> on Qualcomm SoCs like Snapdragon 805.
+> >>
+> >> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> >> ---
+> >>   drivers/phy/Kconfig         |    9 ++
+> >>   drivers/phy/Makefile        |    1 +
+> >>   drivers/phy/phy-qcom-pcie.c |  291
+> >> +++++++++++++++++++++++++++++++++++++++++++
+> > 
+> > Why do you need a new PHY driver for this? Why not use the existing QCOM
+> > PHY driver. I can see the registers used here in phy-qcom-ufs-qmp-14nm.h?
+> 
+> I agree that on first glance there are similarities, but I'm not sure
+> does the PHYs are the same IP blocks. Or at least they are different
+> revisions which have too many differences. So trying to combine them
+> will lead to more code than now.
+> 
+> Either way I will try to understand how many the differences are.
 
-This is what I hoped for all the time. To get both patches accepted
-(linux,part-probe & typed parsers). That would give us a really nice
-way to handle partitioning on every device.
+Ping, where are we with this?  Should I wait for something else, or are you
+convinced there's enough difference to warrant a new PHY driver, Kishon?
 
-
-> I am in favor of both concepts, because there is already one driver
-> reading the partition parser list from device tree and it is implemen=
-ted
-> pretty easy. Jonas Approach sounds nice because it really solves two
-> more problems.
-> Jonas approach would work on bcm47xx and bcm53xx targets, because the=
-re
-> the header is located after the boot loader and does not contain all
-> partitions. This could also be used to divide the partition containin=
-g
-> the kernel and the read only root fs in OpenWrt. Are there any more
-> users which could use this extended approach?
-
-I got a bit lost with above. The patch adding typed parsers I sent
-will allow us to write both: TRX parser (splitter) and SquashFS parser
-(splitter). This is all we need in OpenWrt and I my patch is highly
-based on OpenWrt version obviously too.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
