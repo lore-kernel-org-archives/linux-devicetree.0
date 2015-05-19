@@ -1,71 +1,54 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v7 08/13] ARM: unify MMU/!MMU addruart calls
-Date: Tue, 19 May 2015 11:16:15 +0100
-Message-ID: <20150519101615.GA2067@n2100.arm.linux.org.uk>
-References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
- <1431769465-26867-9-git-send-email-stefan@agner.ch>
- <20150516205103.GO2067@n2100.arm.linux.org.uk>
- <alpine.DEB.2.11.1505170952060.4225@nanos>
- <alpine.DEB.2.11.1505181735230.4225@nanos>
- <20150519053503.GP1071@dragon>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [rtc-linux] RE: [PATCH V2 3/4] watchdog: da9062: DA9062
+ watchdog driver
+Date: Tue, 19 May 2015 10:16:46 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22B994@SW-EX-MBX02.diasemi.com>
+References: <cover.1431621833.git.stwiss.opensource@diasemi.com>
+ <6a51f163b99edfad9165ad29609abb072dbaa2b7.1431621833.git.stwiss.opensource@diasemi.com>
+ <55555639.8090505@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B22B63A@SW-EX-MBX02.diasemi.com>
+ <5555ED4F.5070003@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B22B6E2@SW-EX-MBX02.diasemi.com>
+ <20150515202005.GA23133@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B22B8C8@SW-EX-MBX02.diasemi.com>
+ <20150518152737.GA14403@roeck-us.net>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B22B8FE@SW-EX-MBX02.diasemi.com>
+ <20150518173927.GV3338@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150519053503.GP1071@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150518173927.GV3338@piout.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 01:35:03PM +0800, Shawn Guo wrote:
-> On Mon, May 18, 2015 at 05:36:43PM +0200, Thomas Gleixner wrote:
-> > On Sun, 17 May 2015, Thomas Gleixner wrote:
-> > > On Sat, 16 May 2015, Russell King - ARM Linux wrote:
-> > > > On Sat, May 16, 2015 at 11:44:20AM +0200, Stefan Agner wrote:
-> > > > > Remove the needless differences between MMU/!MMU addruart calls.
-> > > > > This allows to use the same addruart macro on SoC level. Useful
-> > > > > for SoC consisting of multiple CPUs with and without MMU such as
-> > > > > Freescale Vybrid.
-> > > > > 
-> > > > > Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> > > > 
-> > > > Depending on the merge plan for the remainder (has tglx reviewed the IRQ
-> > > > changes yet?  I think he needs to before this can be merged)... if it's
-> > > > not going to go in for the next merge window, this should find its way
-> > > > into the patch system so it can be applied anyway.
-> > > 
-> > > I'm going to apply the irq core and chip driver modifications to a
-> > > separate branch later today, so you or ARM-SOC folks can pull that
-> > > in. Will send you a mail where it can be found.
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/for-arm
-> > 
-> > That contains the first 5 patches which touch kernel/irq/ and
-> > drivers/irqchip/
-> 
-> Russell, Arnd,
-> 
-> I guess the easiest way to merge rest of the series is to have them go
-> via i.MX tree with your nods?
+On 18 May 2015 18:39 Alexandre Belloni wrote:
 
-I don't know, I've not looked at the remainder of the patches.  Having
-looked briefly at them, it looks like they touch EFM32 as well, so I'm
-not sure having them all go through iMX is the right approach either.
+> Sure, what I understand is that the base functionality is the same and
+> even the registers are compatible. Are you sure the new features can't
+> be added to the da9063 and called conditionally? Plenty of drivers are
+> doing that.
 
-Looking at the EFM32 patch, it looks like we've adopted my suggestion
-(discussed with Arnd in the previous month) wrt noMMU, so I'll post a
-couple of patches in a moment which fix Integrator for this as well.
-Integrator is independent of this series, and it fixes real problems
-caused by the single zImage stuff for noMMU there.
+Hi Alexandre/Guenter,
 
-It makes sense for these to all go through arm-soc - but the question
-is how do we get them all into arm-soc...
+I didn't say it couldn't be added to DA9063. Of course it's all possible, but I think
+it would become unmaintainable in future without separate drivers. There is some
+extra freeze functionality and a watchdog warn interrupt: both do not exist in the
+DA9063.
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What I did say **one month ago** was the DA9062 watchdog driver does have some
+similarities with the DA9063 watchdog (https://lkml.org/lkml/2015/5/6/505).
+
+But I would prefer two drivers for watchdog in this case. When compared to the RTC and
+OnKey the watchdog is very different on the hardware side. Despite the appearance of
+some similarity, the watchdog is not a functional clone like the RTC and OnKey components.
+
+I would not like a combined watchdog driver because I think that the extra functions
+that the DA9062 contains would bloat out the DA9063 watchdog, and would make it difficult
+to test and to maintain for the future..
+
+Regards,
+Steve
