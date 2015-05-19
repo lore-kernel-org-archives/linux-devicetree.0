@@ -1,49 +1,84 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
-Date: Tue, 19 May 2015 17:34:16 +0200
-Message-ID: <CALszF6CRXst-4UwMYeDLxrN_3N4Z9q1dxAR7CzFyngeM6Qeqzw@mail.gmail.com>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<555B098A.8030202@linaro.org>
-	<CALszF6AJ3Zf598wYeUx=iNWHHKT24xUyfagB=+4GocwZ-Fd-0g@mail.gmail.com>
-	<6177628.0ZDPLeVyah@wuerfel>
-	<CALszF6BZKD-CPTZ6Hc85wv2Z3Y7JmUv-cMkBtbk2Ga6WeeWU=A@mail.gmail.com>
-	<555B3F80.8070605@linaro.org>
-	<CALszF6A-De6dvcRNoa9ruL+y6Wt_rc7bi-O-VxHWkFF9NSt5_g@mail.gmail.com>
-	<20150519145006.GH2067@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20150519145006.GH2067@n2100.arm.linux.org.uk>
-Sender: linux-arch-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicet>
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: sabrelite: use simple-panel instead of display-timings for LVDS0
+Date: Tue, 19 May 2015 08:50:16 -0700
+Message-ID: <1432050616-11465-3-git-send-email-eric.nelson@boundarydevices.com>
+References: <20150518075844.7e1b5916@ipc1.ka-ro>
+ <1432050616-11465-1-git-send-email-eric.nelson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432050616-11465-1-git-send-email-eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-19 16:50 GMT+02:00 Russell King - ARM Linux <linux@arm.linux.org.uk>:
->
-> config CLKSRC_STM32
->         bool "Clocksource for STM32 SoCs" if COMPILE_TEST
->         depends on OF
->         select CLKSRC_MMIO
->
-> This permits CLKSRC_STM32 to be selected by STM32 (provided OF is enabled,
-> it's always going to be for that case, right?) while allowing the option
-> to be visible when both OF!=n and COMPILE_TEST!=n.
+Also add label for backlight_lvds and connect it to the LVDS display.
 
-Yes OF is always enabled when STM32.
+Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
+V2 changes 'alias' in commit message to 'label'
 
-So it fits our needs, as we only want the option to be visible when
-both OF!=n and COMPILE_TEST!=n.
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
->
-> Remember,
->
->         bool "string" if <condition-affects-visibility-of-string>
->         depends on <condition-affects-config-symbol-availability>
->
-> The former merely hides the option from the user _if_ the condition fails.
-> The latter _disables_ the option completely (except if you try and select
-> it, at which point you end up with a Kconfig warning about that.)
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index 483856e2..6ed80b8 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -121,7 +121,7 @@
+ 		status = "okay";
+ 	};
+ 
+-	backlight_lvds {
++	backlight_lvds: backlight_lvds {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm4 0 5000000>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
+@@ -129,6 +129,17 @@
+ 		power-supply = <&reg_3p3v>;
+ 		status = "okay";
+ 	};
++
++	panel {
++		compatible = "hannstar,hsd100pxn1";
++		backlight = <&backlight_lvds>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
+ };
+ 
+ &audmux {
+@@ -374,18 +385,11 @@
+ 		fsl,data-width = <18>;
+ 		status = "okay";
+ 
+-		display-timings {
+-			native-mode = <&timing0>;
+-			timing0: hsd100pxn1 {
+-				clock-frequency = <65000000>;
+-				hactive = <1024>;
+-				vactive = <768>;
+-				hback-porch = <220>;
+-				hfront-porch = <40>;
+-				vback-porch = <21>;
+-				vfront-porch = <7>;
+-				hsync-len = <60>;
+-				vsync-len = <10>;
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
+ 			};
+ 		};
+ 	};
+-- 
+2.1.4
 
-Thanks for the reminder!
-Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
