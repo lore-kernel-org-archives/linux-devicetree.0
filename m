@@ -1,31 +1,30 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] vf610: dt: Nomenclature fixup for PTC12 pin used in RMII
- mode.
-Date: Tue, 19 May 2015 12:54:06 +0800
-Message-ID: <20150519045406.GM1071@dragon>
-References: <1431573098-23809-1-git-send-email-cory.tusar@pid1solutions.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Armadeus Systems APF6 family support
+ (i.MX6)
+Date: Tue, 19 May 2015 13:20:24 +0800
+Message-ID: <20150519052024.GN1071@dragon>
+References: <1431697468-19363-1-git-send-email-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1431573098-23809-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1431697468-19363-1-git-send-email-sebastien.szymanski@armadeus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 11:11:38PM -0400, Cory Tusar wrote:
-> This commit includes a minor nomenclature fixup for boards based on the
-> Freescale VF610 SoC and which make use of the alternate "RMII1_RXD1"
-> functionality for pin PTC12.  This brings the macro name in-line with
-> both the datasheet and other similar macros.
-> 
-> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+On Fri, May 15, 2015 at 03:44:27PM +0200, S=E9bastien Szymanski wrote:
+> Add support to the Armadeus Systems APF6 Solo / Dual / Quad SoM and
+> the Armadeus Systems APF6Dev carrier board.
+>=20
+> For more details see:
+> http://www.armadeus.com/english/products-processor_boards-apf6.html
+> http://www.armadeus.com/english/products-development_boards-apf6_dev.=
+html
+>=20
+> Signed-off-by: S=E9bastien Szymanski <sebastien.szymanski@armadeus.co=
+m>
 
-Change patch prefix to 'ARM: dts: vf610: ', and applied.
-
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied both, thanks.
