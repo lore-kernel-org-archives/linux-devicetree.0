@@ -1,63 +1,34 @@
-From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Subject: Re: [PATCH v2 3/5] arm64: Juno: Add memory mapped timer node
-Date: Tue, 19 May 2015 11:56:43 +0100
-Message-ID: <1432033003.3047.43.camel@linaro.org>
-References: <1431970109-8902-1-git-send-email-Liviu.Dudau@arm.com>
-	 <1431970109-8902-4-git-send-email-Liviu.Dudau@arm.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v4 3/7] mmc: mediatek: Add PM support for MMC driver
+Date: Tue, 19 May 2015 13:04:53 +0200
+Message-ID: <20150519110453.GD26575@pengutronix.de>
+References: <1432017411-2996-1-git-send-email-chaotian.jing@mediatek.com>
+ <1432017411-2996-4-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431970109-8902-4-git-send-email-Liviu.Dudau@arm.com>
+Content-Disposition: inline
+In-Reply-To: <1432017411-2996-4-git-send-email-chaotian.jing@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, bin.zhang@mediatek.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-05-18 at 18:28 +0100, Liviu Dudau wrote:
-> Juno based boards have a memory mapped timer @ 0x2a810000. This
-> is disabled on r0 version of the board due to an SoC errata.
+Hi Chaotian,
 
-So wouldn't it make more sense then to disable it in the dts for r0? As
-it is, you disable it in the common file below then have to later
-re-enable it in juno-r1.dts.
+On Tue, May 19, 2015 at 02:36:47PM +0800, Chaotian Jing wrote:
+> Add PM support for Mediatek MMC driver
+> Save/restore registers when PM
 
-Apart from that, the whole series looks good to be and I've given it a
-spin on r0 and r1. So consider that an
-Acked-by: Jon Medhurst <tixy@linaro.org>
+Has anyone asked you to add a new driver in two steps? I find it hard to
+review if a driver is introduced and changed right afterwards.
+Presumably you find it hard to maintain the patches like this also.
+Please ignore if this is indeed requested by someone.
 
+Sascha
 
-> 
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> index 5c4c035..b7e862f 100644
-> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> @@ -2,6 +2,21 @@
->  	 *  Devices shared by all Juno boards
->  	 */
->  
-> +	memtimer: timer@2a810000 {
-> +		compatible = "arm,armv7-timer-mem";
-> +		reg = <0x0 0x2a810000 0x0 0x10000>;
-> +		clock-frequency = <50000000>;
-
-
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		status = "disabled";
-> +		frame@2a830000 {
-> +			frame-number = <1>;
-> +			interrupts = <0 60 4>;
-> +			reg = <0x0 0x2a830000 0x0 0x10000>;
-> +		};
-> +	};
-> +
->  	gic: interrupt-controller@2c010000 {
->  		compatible = "arm,gic-400", "arm,cortex-a15-gic";
->  		reg = <0x0 0x2c010000 0 0x1000>,
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
