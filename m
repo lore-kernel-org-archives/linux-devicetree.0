@@ -1,78 +1,154 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] mmc: dt-bindings: add Mediatek MMC bindings
-Date: Tue, 19 May 2015 11:41:46 +0200
-Message-ID: <CAPDyKFq+YAz2pt1820YnqWaVKO6sn5eB+NxuM2dhP236FSKa9g@mail.gmail.com>
-References: <1432017411-2996-1-git-send-email-chaotian.jing@mediatek.com>
-	<1432017411-2996-2-git-send-email-chaotian.jing@mediatek.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
+Date: Tue, 19 May 2015 11:44:03 +0200
+Message-ID: <CALszF6Asfke0-cMQJcEQ8ya+rbPPPhUc6aXTZXQvQ8QF66cwYQ@mail.gmail.com>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1431158038-3813-10-git-send-email-mcoquelin.stm32@gmail.com>
+	<5559E4B0.70506@linaro.org>
+	<CALszF6CK7axU0qrWNf38aqrt2R2126ZACn7wx5jNY_1KE+4H+g@mail.gmail.com>
+	<555AF143.2060807@linaro.org>
+	<CALszF6CwGuKqgbX6gVrya1-_YOgvtrgC7pVqKTNjCRif_o532A@mail.gmail.com>
+	<555AFD18.2070009@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432017411-2996-2-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <555AFD18.2070009@linaro.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
 List-Id: devicetree@vger.kernel.org
 
-On 19 May 2015 at 08:36, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Document the device-tree binding of Mediatek MMC host
+2015-05-19 11:06 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+> On 05/19/2015 10:55 AM, Maxime Coquelin wrote:
+>>
+>> 2015-05-19 10:16 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org=
+>:
+>>>
+>>> On 05/18/2015 04:03 PM, Maxime Coquelin wrote:
+>>>>
+>>>>
+>>>> 2015-05-18 15:10 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.o=
+rg>:
+>>>>>
+>>>>>
+>>>>> On 05/09/2015 09:53 AM, Maxime Coquelin wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> STM32 MCUs feature 16 and 32 bits general purpose timers with
+>>>>>> prescalers.
+>>>>>> The drivers detects whether the time is 16 or 32 bits, and appli=
+es a
+>>>>>> 1024 prescaler value if it is 16 bits.
+>>>>>>
+>>>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>>>> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>>>>> ---
+>>>>>>     drivers/clocksource/Kconfig       |   8 ++
+>>>>>>     drivers/clocksource/Makefile      |   1 +
+>>>>>>     drivers/clocksource/timer-stm32.c | 184
+>>>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>>>     3 files changed, 193 insertions(+)
+>>>>>>     create mode 100644 drivers/clocksource/timer-stm32.c
+>>>>>>
+>>>>>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/K=
+config
+>>>>>> index bf9364c..2443520 100644
+>>>>>> --- a/drivers/clocksource/Kconfig
+>>>>>> +++ b/drivers/clocksource/Kconfig
+>>>>>> @@ -106,6 +106,14 @@ config CLKSRC_EFM32
+>>>>>>             Support to use the timers of EFM32 SoCs as clock sou=
+rce
+>>>>>> and
+>>>>>> clock
+>>>>>>             event device.
+>>>>>>
+>>>>>> +config CLKSRC_STM32
+>>>>>> +       bool "Clocksource for STM32 SoCs" if !ARCH_STM32
+>>>>>> +       depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
+>>>>>
+>>>>>
+>>>>>
+>>>>>
+>>>>> Are the interactive bool and the 'COMPILE_TEST' necessary ?
+>>>>>
+>>>>
+>>>> The interactive bool is necessary if we want to be able to
+>>>> select/deselect it in COMPILE_TEST configuration.
+>>>> And personnaly, I think COMPILE_TEST use makes sense.
+>>>>
+>>>> Note that other timer drivers are doing the same thing today
+>>>> (CLKSRC_EFM32, SH_TIMER_CMT, EM_TIMER_STI...).
+>>>>
+>>>> Do you have a specific concern regarding COMPILE_TEST?
+>>>
+>>>
+>>>
+>>> Actually, we try to keep the timer selection non-interactive and le=
+t the
+>>> platform's Kconfig to select the timer.
+>>
+>>
+>> Ok.
+>>
+>>>
+>>> I like when the code is consistent. The COMPILE_TEST was introduced=
+ and
+>>> created a precedence. I would like to get rid of the interactive ti=
+mer
+>>> selection but I did not have time to go through this yet.
+>>
+>>
+>> Indeed, consistency is important.
+>> On my side, I don't have a strong opinion regarding the COMPILE_TEST
+>> thing.
+>> IMHO, it is more a subsystem's maintainer choice.
+>>
+>> So, if as a maintainer you don't use it and prefer not supporting it=
+,
+>> I'm fine to provide you a new version without COMPILE_TEST.
+>> Doing that, the interactive selection will disappear too.
+>>
+>> I can provide you a new version this evenning.
 >
-> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 33 ++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/mtk-sd.txt
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> new file mode 100644
-> index 0000000..ba6d668
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -0,0 +1,33 @@
-> +* MTK MMC controller
-> +
-> +The MTK  MSDC can act as a MMC controller
-> +to support MMC, SD, and SDIO types of memory cards.
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the msdc driver.
-> +
-> +Required properties:
-> +- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc".
-> +- interrupts: Should contain MSDC interrupt number
-> +- clocks: MSDC source clock, HCLK, HCLK is mandatory when it is not controlled by Infra
+> Ok, great.
 
-This seems strange. Either it's mandatory since it's under the
-"Required properties" section or it should be moved to the "Optional
-properties" section.
+Is the below Kconfig entry fine for you?
 
-> +- clock-names: "source", "hclk"
-> +- pinctrl-names: should be "default", "state_uhs"
-> +- pinctrl-0: should contain default/high speed pin ctrl
-> +- pinctrl-1: should contain uhs mode pin ctrl
-> +- vmmc-supply: power to the Core
-> +
-> +Optional properties:
-> +- vqmmc-supply: power to the IO(for SD/SDIO)
-> +
-> +Examples:
-> +mmc0: mmc@11230000 {
-> +       compatible = "mediatek,mt8173-mmc", "mediatek,mt8135-mmc";
-> +       reg = <0 0x11230000 0 0x108>;
-> +       interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_LOW>;
-> +       vmmc-supply = <&mt6397_vemc_3v3_reg>;
-> +       clocks = <&pericfg CLK_PERI_MSDC30_0>, <&topckgen CLK_TOP_MSDC50_0_H_SEL>;
-> +       clock-names = "source", "hclk";
-> +       pinctrl-names = "default", "state_uhs";
-> +       pinctrl-0 = <&mmc0_pins_default>;
-> +       pinctrl-1 = <&mmc0_pins_uhs>;
-> +};
+config CLKSRC_STM32
+    def_bool y if ARCH_STM32
+    select CLKSRC_MMIO
+
+Best regards,
+Maxime
+
+
+>
+> Thanks
+>   -- Daniel
+>
+>
+>>>
+>>>
+>>>
+>>> --
+>>>   <http://www.linaro.org/> Linaro.org =E2=94=82 Open source softwar=
+e for ARM SoCs
+>>>
+>>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>>> <http://twitter.com/#!/linaroorg> Twitter |
+>>> <http://www.linaro.org/linaro-blog/> Blog
+>>>
+>
+>
 > --
-> 1.8.1.1.dirty
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
+or ARM SoCs
 >
-
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
