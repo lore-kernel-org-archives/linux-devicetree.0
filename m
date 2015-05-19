@@ -1,110 +1,56 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 04/10] pinctrl: sunxi: Prepare for
- building SoC specific drivers as modules
-Date: Tue, 19 May 2015 16:02:39 +0800
-Message-ID: <CAGb2v6608XVsxN0f2DEmqmts1zDo223t+fBv46WjGQVQbw7+CA@mail.gmail.com>
-References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
- <1431707940-19372-5-git-send-email-jenskuske@gmail.com> <20150517141922.GE4004@lukather>
- <5559B1AF.2010200@gmail.com> <20150519075537.GU4004@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v7 08/13] ARM: unify MMU/!MMU addruart calls
+Date: Tue, 19 May 2015 10:11:40 +0200 (CEST)
+Message-ID: <alpine.DEB.2.11.1505191010510.4225@nanos>
+References: <1431769465-26867-1-git-send-email-stefan@agner.ch> <1431769465-26867-9-git-send-email-stefan@agner.ch> <20150516205103.GO2067@n2100.arm.linux.org.uk> <alpine.DEB.2.11.1505170952060.4225@nanos> <alpine.DEB.2.11.1505181735230.4225@nanos>
+ <20150519053503.GP1071@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBN645OVAKGQE2JY4DVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150519075537.GU4004@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150519053503.GP1071@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, arnd@arndb.de, Stefan Agner <stefan@agner.ch>, shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, olof@lixom.net, daniel.lezcano@linaro.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 3:55 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, May 18, 2015 at 11:32:31AM +0200, Jens Kuske wrote:
->> Hi,
->>
->> On 05/17/15 16:19, Maxime Ripard wrote:
->> > On Fri, May 15, 2015 at 06:38:54PM +0200, Jens Kuske wrote:
->> >> Add a remove function and export the init and remove function
->> >> to allow us to build the SoC specific drivers as modules.
->> >>
->> >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >> ---
->> >>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 25 +++++++++++++++++++------
->> >>  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  2 ++
->> >>  2 files changed, 21 insertions(+), 6 deletions(-)
->> >>
->> >> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> >> index f8e171b..4ef6b3d 100644
->> >> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> >> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> >> @@ -856,7 +856,6 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
->> >>    struct sunxi_pinctrl *pctl;
->> >>    struct resource *res;
->> >>    int i, ret, last_pin;
->> >> -  struct clk *clk;
->> >>
->> >>    pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
->> >>    if (!pctl)
->> >> @@ -954,13 +953,13 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
->> >>                    goto gpiochip_error;
->> >>    }
->> >>
->> >> -  clk = devm_clk_get(&pdev->dev, NULL);
->> >> -  if (IS_ERR(clk)) {
->> >> -          ret = PTR_ERR(clk);
->> >> +  pctl->clk = devm_clk_get(&pdev->dev, NULL);
->> >> +  if (IS_ERR(pctl->clk)) {
->> >> +          ret = PTR_ERR(pctl->clk);
->> >>            goto gpiochip_error;
->> >>    }
->> >>
->> >> -  ret = clk_prepare_enable(clk);
->> >> +  ret = clk_prepare_enable(pctl->clk);
->> >>    if (ret)
->> >>            goto gpiochip_error;
->> >>
->> >> @@ -1015,10 +1014,24 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
->> >>    return 0;
->> >>
->> >>  clk_error:
->> >> -  clk_disable_unprepare(clk);
->> >> +  clk_disable_unprepare(pctl->clk);
->> >>  gpiochip_error:
->> >>    gpiochip_remove(pctl->chip);
->> >>  pinctrl_error:
->> >>    pinctrl_unregister(pctl->pctl_dev);
->> >>    return ret;
->> >>  }
->> >> +EXPORT_SYMBOL(sunxi_pinctrl_init);
->> >> +
->> >> +int sunxi_pinctrl_remove(struct platform_device *pdev)
->> >> +{
->> >> +  struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
->> >> +
->> >> +  gpiochip_remove(pctl->chip);
->> >> +  pinctrl_unregister(pctl->pctl_dev);
->> >> +
->> >> +  clk_disable_unprepare(pctl->clk);
->> >
->> > We should also remove the domain and the interrupt mapping here.
->>
->> Ouch, I missed that. Only looked at the *_error: labels.
->>
->> Apart from that, currently the kernel panics some seconds after removing
->> the pinctrl module because mmc wants to access a gpio. Can this be
->> prevented somehow? I think pinctrl must not be removed once other
->> devices use any pin-related things.
->
-> pinctrl_unregister doesn't look like it cares about whether or not
-> there's users left in the system.
->
-> Maybe the easiest path would be to just make this builtin like Paul
-> suggested then ... :/
+On Tue, 19 May 2015, Shawn Guo wrote:
+> On Mon, May 18, 2015 at 05:36:43PM +0200, Thomas Gleixner wrote:
+> > 
+> > 
+> > On Sun, 17 May 2015, Thomas Gleixner wrote:
+> > 
+> > > On Sat, 16 May 2015, Russell King - ARM Linux wrote:
+> > > 
+> > > > On Sat, May 16, 2015 at 11:44:20AM +0200, Stefan Agner wrote:
+> > > > > Remove the needless differences between MMU/!MMU addruart calls.
+> > > > > This allows to use the same addruart macro on SoC level. Useful
+> > > > > for SoC consisting of multiple CPUs with and without MMU such as
+> > > > > Freescale Vybrid.
+> > > > > 
+> > > > > Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > > > 
+> > > > Depending on the merge plan for the remainder (has tglx reviewed the IRQ
+> > > > changes yet?  I think he needs to before this can be merged)... if it's
+> > > > not going to go in for the next merge window, this should find its way
+> > > > into the patch system so it can be applied anyway.
+> > > 
+> > > I'm going to apply the irq core and chip driver modifications to a
+> > > separate branch later today, so you or ARM-SOC folks can pull that
+> > > in. Will send you a mail where it can be found.
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/for-arm
+> > 
+> > That contains the first 5 patches which touch kernel/irq/ and
+> > drivers/irqchip/
+> 
+> Russell, Arnd,
+> 
+> I guess the easiest way to merge rest of the series is to have them go
+> via i.MX tree with your nods?
 
-Is there a way to mark modules as not removable? At least we can keep
-the multi-platform kernel image small.
+If you pull the irq stuff. Make sure that the HEAD is b5cc5cbc11697. I
+pushed out a broken version earlier.
+
+Thanks,
+
+	tglx
