@@ -1,24 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/2] usb: renesas_usbhs: Add support for R-Car E2
-Date: Tue, 19 May 2015 10:34:49 +0900
-Message-ID: <20150519013448.GC19506@verge.net.au>
-References: <1431947055-4324-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1431947055-4324-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH 2/7] ARM: bcm2835: Add a Raspberry Pi-specific clock
+ driver.
+Date: Tue, 19 May 2015 06:05:44 +0300
+Message-ID: <20150519030544.GQ2845@tarshish>
+References: <1431978219-14226-1-git-send-email-eric@anholt.net>
+ <1431978219-14226-3-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1431947055-4324-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1431978219-14226-3-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 18, 2015 at 08:04:15PM +0900, Yoshihiro Shimoda wrote:
-> This patch adds a compatible string to support for R-Car E2.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>" in patch 2
+Hi Eric,
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+On Mon, May 18, 2015 at 12:43:34PM -0700, Eric Anholt wrote:
+> +DEFINE_MUTEX(delayed_clock_init);
 
+Static?
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
