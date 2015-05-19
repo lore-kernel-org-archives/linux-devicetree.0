@@ -1,82 +1,87 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] arm64: tegra: Add Tegra210 support
-Date: Tue, 19 May 2015 15:52:11 +0100
-Message-ID: <20150519145211.GX21251@e104818-lin.cambridge.arm.com>
-References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com>
- <1431529065-20128-3-git-send-email-thierry.reding@gmail.com>
- <20150513171114.GA18655@e104818-lin.cambridge.arm.com>
- <20150515101913.GA20474@ulmo.nvidia.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-bone* enable pmic-shutdown-controller
+Date: Tue, 19 May 2015 07:55:26 -0700
+Message-ID: <20150519145526.GO10274@atomide.com>
+References: <1431525001-5747-1-git-send-email-robertcnelson@gmail.com>
+ <20150513141658.GB6605@localhost>
+ <20150513144846.GC6605@localhost>
+ <CAALWOA-hkgrMi+OeNrmwaVpdEfNadFn0R-QbpXi9LU-4sbakJQ@mail.gmail.com>
+ <20150518152108.GE10274@atomide.com>
+ <CAALWOA-OwUuAbc7Wd_SV-14mVbOCVWvKwKgb3eOjVGEery28og@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150515101913.GA20474-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <CAALWOA-OwUuAbc7Wd_SV-14mVbOCVWvKwKgb3eOjVGEery28og-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 15, 2015 at 12:19:16PM +0200, Thierry Reding wrote:
-> On Wed, May 13, 2015 at 06:11:15PM +0100, Catalin Marinas wrote:
-> > On Wed, May 13, 2015 at 04:57:42PM +0200, Thierry Reding wrote:
-> > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > 
-> > > NVIDIA Tegra210 (also known as Tegra X1) has four Cortex-A57 and four
-> > > Cortex-A53 CPUs. Compared to Tegra124 and Tegra132 it comes with a 256-
-> > > core Maxwell GPU. It supports processing videos of up to 4K resolutions
-> > > at 60 fps (H.265, VP9, H.264).
-> > > 
-> > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > ---
-> > >  arch/arm64/Kconfig                       |   9 +
-> > >  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 998 +++++++++++++++++++++++++++++++
-> > >  2 files changed, 1007 insertions(+)
-> > >  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> > > 
-> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > index 7796af4b1d6f..bfdf064ada66 100644
-> > > --- a/arch/arm64/Kconfig
-> > > +++ b/arch/arm64/Kconfig
-> > > @@ -225,6 +225,15 @@ config ARCH_TEGRA_132_SOC
-> > >  	  but contains an NVIDIA Denver CPU complex in place of
-> > >  	  Tegra124's "4+1" Cortex-A15 CPU complex.
-> > >  
-> > > +config ARCH_TEGRA_210_SOC
-> > > +	bool "NVIDIA Tegra210 SoC"
-> > > +	depends on ARCH_TEGRA
-> > > +	select PINCTRL_TEGRA210
-> > > +	select USB_ULPI if USB_PHY
-> > > +	select USB_ULPI_VIEWPORT if USB_PHY
-> > > +	help
-> > > +	  Enable support for the NVIDIA Tegra210 SoC.
-> > > +
-> > 
-> > The previous ARCH_TEGRA_132_SOC escaped me. Do we need all these
-> > ARCH_TEGRA_*_SOC entries? Can we not have per-driver Kconfig options?
-> > For example, ARCH_TEGRA_132_SOC seems to be only used in
-> > drivers/clk/tegra, a specific Kconfig entry in there would suffice.
+* Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150519 00:27]:
+> On 18 May 2015 at 17:21, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > If some of these depend on the SoC revision and cannot be detected
+> > based on the RTC driver revision register, that information should
+> > be be passed to the RTC driver in platform data.
 > 
-> There are actually a couple of other places where this will be used in
-> subsequent patches (e.g. memory controller driver). The idea behind
-> having these is that each one of them is used to enable the essentials
-> out of the box, so that people don't have to go and enable a bunch of
-> driver-specific Kconfig options just to get a kernel configuration that
-> can actually boot.
+> The SoC revision is easy enough to check via the control module as
+> usual, but is not really the biggest issue. Even on SoC rev 1.0
+> RTC-only sleep still has some functionality (the RTC freezes if PMIC
+> enters sleep-state, but that may still be preferred compared to
+> complete loss of date and time), so I'm not even sure I'd bother with
+> this check.
 
-We debated whether to have ARCH_* options at all on arm64 and we settled
-for the middle ground - only add them for SoC families, not individual
-SoCs. As for the kernel configuration that actually boots, we want the
-arm64 defconfig to include all the supported SoCs and drivers (though
-longer term I'd like to see more drivers built as modules by default).
+OK
+ 
+> The serious problems however depend on the PCB: Entering RTC-only
+> sleep is only properly supported on some early prototype series
+> (pre-A6) of the BeagleBone Black. Since rev A6A (which includes all
+> production versions) it is not supported at all.
+> 
+> On rev A6 of the Black, as well as (afaik) all versions of the White
+> (if anyone cares, since they normally have SoC rev 1.0), the impact of
+> entering RTC-only sleep is heavily dependent on external connections
+> and hardware, most of which not really detectable. It is possible to
+> go from "hmm, annoying standby current" to a recipe for stir-fried I/O
+> pin simply by connecting a console cable while the device is in sleep.
+> This is not something the kernel can foresee or prevent.
+> 
+> I'm pretty sure the sane thing to do here is disable RTC-only sleep by
+> default. People who care about it can still enable it after they
+> verified the particular combination of pcb revision, external
+> hardware, and usage scenario is safe (or patched the hardware to make
+> it safe, or decided they're willing to take the risk.)
 
-> This is also useful for integrators since they can simply omit all SoC
-> generations that they're not interested in. Having a per-SoC option
-> provides an easy way of doing so.
+Makes sense to me. Robert, care to update your patch to summarize
+some of the "why" parts?
 
-The integrators could just select a SoC family and trim down unwanted
-options, I don't think they rely on the kernel defconfig for a final
-product. If this becomes an issue, I would rather have per-SoC
-defconfigs than lots of Kconfig entries.
+> It may be useful to leave some references for those who seek guidance:
+> 
+> 1. The issues with AM335x rev 1.0 SoCs are documented in the errata.
+> 
+> 2. Unfortunately I still have no idea why TI altered the connection
+> diagram w.r.t. "VDDS" (and as a consequence officially defeatured
+> RTC-only sleep) when the TPS65217C/D PMIC for AM335x + DDR3/3L memory
+> is used. Maybe I'll still get an answer from TI on E2E, but I'm also
+> planning to do more thorough testing this week especially w.r.t.
+> current consumption patterns during boot and shutdown.
+> 
+> 3. The BeagleBone regulator problem is particularly notorious among
+> people who (try to) use the PMIC's battery power support, since the
+> problem then also surfaces during full shutdown. It has a long
+> discussion thread here:
+> https://groups.google.com/d/topic/beagleboard/7sxPePT7wkM/discussion
+> which includes two posts by me with fairly detailed analysis along
+> with scope pics:
+> https://groups.google.com/d/msg/beagleboard/7sxPePT7wkM/3vFMPydR20IJ
+> https://groups.google.com/d/msg/beagleboard/7sxPePT7wkM/V1Ft-xxh0agJ
 
--- 
-Catalin
+OK thanks for the good summary.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
