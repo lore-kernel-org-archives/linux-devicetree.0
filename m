@@ -1,89 +1,131 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
-Date: Tue, 19 May 2015 10:16:03 +0200
-Message-ID: <555AF143.2060807@linaro.org>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<1431158038-3813-10-git-send-email-mcoquelin.stm32@gmail.com>	<5559E4B0.70506@linaro.org> <CALszF6CK7axU0qrWNf38aqrt2R2126ZACn7wx5jNY_1KE+4H+g@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 04/10] pinctrl: sunxi: Prepare for
+ building SoC specific drivers as modules
+Date: Tue, 19 May 2015 10:16:37 +0200
+Message-ID: <20150519081637.GV4004@lukather>
+References: <1431707940-19372-1-git-send-email-jenskuske@gmail.com>
+ <1431707940-19372-5-git-send-email-jenskuske@gmail.com>
+ <20150517141922.GE4004@lukather>
+ <5559B1AF.2010200@gmail.com>
+ <20150519075537.GU4004@lukather>
+ <CAGb2v6608XVsxN0f2DEmqmts1zDo223t+fBv46WjGQVQbw7+CA@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CALszF6CK7axU0qrWNf38aqrt2R2126ZACn7wx5jNY_1KE+4H+g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LznoD+qmdO0FySBL"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMXE5OVAKGQEWKJ6PGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v6608XVsxN0f2DEmqmts1zDo223t+fBv46WjGQVQbw7+CA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/18/2015 04:03 PM, Maxime Coquelin wrote:
-> 2015-05-18 15:10 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>=
-:
->> On 05/09/2015 09:53 AM, Maxime Coquelin wrote:
->>>
->>> STM32 MCUs feature 16 and 32 bits general purpose timers with presc=
-alers.
->>> The drivers detects whether the time is 16 or 32 bits, and applies =
-a
->>> 1024 prescaler value if it is 16 bits.
->>>
->>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->>> ---
->>>    drivers/clocksource/Kconfig       |   8 ++
->>>    drivers/clocksource/Makefile      |   1 +
->>>    drivers/clocksource/timer-stm32.c | 184
->>> ++++++++++++++++++++++++++++++++++++++
->>>    3 files changed, 193 insertions(+)
->>>    create mode 100644 drivers/clocksource/timer-stm32.c
->>>
->>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kcon=
-fig
->>> index bf9364c..2443520 100644
->>> --- a/drivers/clocksource/Kconfig
->>> +++ b/drivers/clocksource/Kconfig
->>> @@ -106,6 +106,14 @@ config CLKSRC_EFM32
->>>            Support to use the timers of EFM32 SoCs as clock source =
-and
->>> clock
->>>            event device.
->>>
->>> +config CLKSRC_STM32
->>> +       bool "Clocksource for STM32 SoCs" if !ARCH_STM32
->>> +       depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
->>
->>
->> Are the interactive bool and the 'COMPILE_TEST' necessary ?
->>
->
-> The interactive bool is necessary if we want to be able to
-> select/deselect it in COMPILE_TEST configuration.
-> And personnaly, I think COMPILE_TEST use makes sense.
->
-> Note that other timer drivers are doing the same thing today
-> (CLKSRC_EFM32, SH_TIMER_CMT, EM_TIMER_STI...).
->
-> Do you have a specific concern regarding COMPILE_TEST?
+--LznoD+qmdO0FySBL
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Actually, we try to keep the timer selection non-interactive and let th=
-e=20
-platform's Kconfig to select the timer.
+On Tue, May 19, 2015 at 04:02:39PM +0800, Chen-Yu Tsai wrote:
+> On Tue, May 19, 2015 at 3:55 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Mon, May 18, 2015 at 11:32:31AM +0200, Jens Kuske wrote:
+> >> Hi,
+> >>
+> >> On 05/17/15 16:19, Maxime Ripard wrote:
+> >> > On Fri, May 15, 2015 at 06:38:54PM +0200, Jens Kuske wrote:
+> >> >> Add a remove function and export the init and remove function
+> >> >> to allow us to build the SoC specific drivers as modules.
+> >> >>
+> >> >> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> >> ---
+> >> >>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 25 +++++++++++++++++++------
+> >> >>  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  2 ++
+> >> >>  2 files changed, 21 insertions(+), 6 deletions(-)
+> >> >>
+> >> >> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> >> >> index f8e171b..4ef6b3d 100644
+> >> >> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> >> >> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> >> >> @@ -856,7 +856,6 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
+> >> >>    struct sunxi_pinctrl *pctl;
+> >> >>    struct resource *res;
+> >> >>    int i, ret, last_pin;
+> >> >> -  struct clk *clk;
+> >> >>
+> >> >>    pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
+> >> >>    if (!pctl)
+> >> >> @@ -954,13 +953,13 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
+> >> >>                    goto gpiochip_error;
+> >> >>    }
+> >> >>
+> >> >> -  clk = devm_clk_get(&pdev->dev, NULL);
+> >> >> -  if (IS_ERR(clk)) {
+> >> >> -          ret = PTR_ERR(clk);
+> >> >> +  pctl->clk = devm_clk_get(&pdev->dev, NULL);
+> >> >> +  if (IS_ERR(pctl->clk)) {
+> >> >> +          ret = PTR_ERR(pctl->clk);
+> >> >>            goto gpiochip_error;
+> >> >>    }
+> >> >>
+> >> >> -  ret = clk_prepare_enable(clk);
+> >> >> +  ret = clk_prepare_enable(pctl->clk);
+> >> >>    if (ret)
+> >> >>            goto gpiochip_error;
+> >> >>
+> >> >> @@ -1015,10 +1014,24 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
+> >> >>    return 0;
+> >> >>
+> >> >>  clk_error:
+> >> >> -  clk_disable_unprepare(clk);
+> >> >> +  clk_disable_unprepare(pctl->clk);
+> >> >>  gpiochip_error:
+> >> >>    gpiochip_remove(pctl->chip);
+> >> >>  pinctrl_error:
+> >> >>    pinctrl_unregister(pctl->pctl_dev);
+> >> >>    return ret;
+> >> >>  }
+> >> >> +EXPORT_SYMBOL(sunxi_pinctrl_init);
+> >> >> +
+> >> >> +int sunxi_pinctrl_remove(struct platform_device *pdev)
+> >> >> +{
+> >> >> +  struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
+> >> >> +
+> >> >> +  gpiochip_remove(pctl->chip);
+> >> >> +  pinctrl_unregister(pctl->pctl_dev);
+> >> >> +
+> >> >> +  clk_disable_unprepare(pctl->clk);
+> >> >
+> >> > We should also remove the domain and the interrupt mapping here.
+> >>
+> >> Ouch, I missed that. Only looked at the *_error: labels.
+> >>
+> >> Apart from that, currently the kernel panics some seconds after removing
+> >> the pinctrl module because mmc wants to access a gpio. Can this be
+> >> prevented somehow? I think pinctrl must not be removed once other
+> >> devices use any pin-related things.
+> >
+> > pinctrl_unregister doesn't look like it cares about whether or not
+> > there's users left in the system.
+> >
+> > Maybe the easiest path would be to just make this builtin like Paul
+> > suggested then ... :/
+> 
+> Is there a way to mark modules as not removable? At least we can keep
+> the multi-platform kernel image small.
 
-I like when the code is consistent. The COMPILE_TEST was introduced and=
-=20
-created a precedence. I would like to get rid of the interactive timer=20
-selection but I did not have time to go through this yet.
+If there's no module_exit, the module will only be removable through a
+rmmod -f, which seems like an acceptable solution.
 
+Maxime
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--LznoD+qmdO0FySBL--
