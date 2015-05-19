@@ -1,52 +1,97 @@
-Return-Path: <mtk10466@mediatek.inc>
-From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-Subject: [PATCH 04/10] dt-bindings: mediatek: Modify pinctrl bindings for mt6397.
-Date: Wed, 13 May 2015 18:35:40 -0700
-Message-ID: <1431567346-33780-5-git-send-email-hongzhou.yang@mediatek.com>
-In-Reply-To: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
-References: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
+Return-Path: <nicolae.anda@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com
+In-Reply-To: <1431421893-18816-1-git-send-email-anda-maria.nicolae@intel.com>
+References: <1431421893-18816-1-git-send-email-anda-maria.nicolae@intel.com>
+Date: Tue, 19 May 2015 16:00:07 +0300
+Message-ID: <CAKfO3xZ13RLhtSmqjZV2SwH_K1bBSg2dzY2M_GkFf733fubtAw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] power_supply: bq2415x_charger: Fix coding style
+ issues && add ACPI support
+From: Anda Nicolae <nicolae.anda@gmail.com>
+Content-Type: multipart/alternative; boundary=089e0116197ace67aa05166ee304
+To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Cc: sre@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Since 6397 is no need to support interrupt controller,
-moving interrupt controller relate property to optional list.
-Also adding mt8173 and mt8127 to bindings.
+--089e0116197ace67aa05166ee304
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
----
- .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Hello all,
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-index 5868a0f..0480bc3 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-@@ -3,9 +3,11 @@
- The Mediatek's Pin controller is used to control SoC pins.
- 
- Required properties:
--- compatible: value should be either of the following.
-+- compatible: value should be one of the following.
-     (a) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
--- mediatek,pctl-regmap: Should be a phandle of the syscfg node.
-+    (b) "mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
-+    (c) "mediatek,mt6397-pinctrl", compatible with mt6397 pinctrl.
-+    (d) "mediatek,mt8127-pinctrl", compatible with mt8127 pinctrl.
- - pins-are-numbered: Specify the subnodes are using numbered pinmux to
-   specify pins.
- - gpio-controller : Marks the device node as a gpio controller.
-@@ -24,6 +26,9 @@ Required properties:
-             Only the following flags are supported:
-             0 - GPIO_ACTIVE_HIGH
-             1 - GPIO_ACTIVE_LOW
-+
-+Optional properties:
-+- mediatek,pctl-regmap: Should be a phandle of the syscfg node.
- - reg: physicall address base for EINT registers
- - interrupt-controller: Marks the device node as an interrupt controller
- - #interrupt-cells: Should be two.
--- 
-1.7.9.5
+Can you please take a look at this patch series?
+
+Thanks for your support,
+Anda
+
+On Tue, May 12, 2015 at 12:11 PM, Anda-Maria Nicolae <
+anda-maria.nicolae@intel.com> wrote:
+
+> Hi all,
+>
+> The following 2 patches do the following to bq2415x_charger:
+> - first patch fixes pre-existing coding style issues reported by
+> checkpatch.pl
+> - second patch adds ACPI enumeration support
+>
+> Thanks,
+> Anda
+>
+> Anda-Maria Nicolae (2):
+>   power_supply: bq2415x_charger: Fix coding style issues
+>   power_supply: bq2415x_charger: Add ACPI support
+>
+>  drivers/power/bq2415x_charger.c |   94
+> +++++++++++++++++++++++++++------------
+>  1 file changed, 66 insertions(+), 28 deletions(-)
+>
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
+--089e0116197ace67aa05166ee304
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div><div>Hello all,<br><br></div>Can you please take=
+ a look at this patch series?<br><br></div>Thanks for your support,<br></di=
+v>Anda<br></div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">O=
+n Tue, May 12, 2015 at 12:11 PM, Anda-Maria Nicolae <span dir=3D"ltr">&lt;<=
+a href=3D"mailto:anda-maria.nicolae@intel.com" target=3D"_blank">anda-maria=
+.nicolae@intel.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quot=
+e" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">=
+Hi all,<br>
+<br>
+The following 2 patches do the following to bq2415x_charger:<br>
+- first patch fixes pre-existing coding style issues reported by <a href=3D=
+"http://checkpatch.pl" target=3D"_blank">checkpatch.pl</a><br>
+- second patch adds ACPI enumeration support<br>
+<br>
+Thanks,<br>
+Anda<br>
+<br>
+Anda-Maria Nicolae (2):<br>
+=C2=A0 power_supply: bq2415x_charger: Fix coding style issues<br>
+=C2=A0 power_supply: bq2415x_charger: Add ACPI support<br>
+<br>
+=C2=A0drivers/power/bq2415x_charger.c |=C2=A0 =C2=A094 ++++++++++++++++++++=
++++++++------------<br>
+=C2=A01 file changed, 66 insertions(+), 28 deletions(-)<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+1.7.9.5<br>
+<br>
+--<br>
+To unsubscribe from this list: send the line &quot;unsubscribe linux-pm&quo=
+t; in<br>
+the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org">major=
+domo@vger.kernel.org</a><br>
+More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordomo-in=
+fo.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html</a><b=
+r>
+</font></span></blockquote></div><br></div>
+
+--089e0116197ace67aa05166ee304--
