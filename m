@@ -1,115 +1,46 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v10 5/5] arm64: Add APM X-Gene SoC EDAC DTS entries
-Date: Mon, 18 May 2015 17:24:41 -0600
-Message-ID: <1431991481-25684-6-git-send-email-lho@apm.com>
-References: <1431991481-25684-1-git-send-email-lho@apm.com>
- <1431991481-25684-2-git-send-email-lho@apm.com>
- <1431991481-25684-3-git-send-email-lho@apm.com>
- <1431991481-25684-4-git-send-email-lho@apm.com>
- <1431991481-25684-5-git-send-email-lho@apm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: How to encode being an I2C slave in DT?
+Date: Mon, 18 May 2015 19:37:59 -0500
+Message-ID: <CAL_Jsq+iyeK-bV3ggcJv8Cw3EU71fkBo1wqYZnhCoh2-b_tO-Q@mail.gmail.com>
+References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
+ <20150403194635.GC2016@katana> <1549160.njMIY2NVTi@fb07-iapwap2>
+ <20150505105513.GA1841@katana> <554922EF.3050906@wwwdotorg.org> <20150506161712.GA4003@katana>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431991481-25684-5-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <20150506161712.GA4003@katana>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC EDAC DTS entries.
+On Wed, May 6, 2015 at 11:17 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>
+>> The container node has a #address-cells property for this very reason. It's
+>> perfectly well-defined how to split up a property containing a large number
+>> of cells into separate values, by using the value of #address-cells. Plus,
+>> the canonical formatting (albeit not enforced by the DT compiler) for a
+>> property that contains an array of entries, each 2 cells in size, would be:
+>>
+>> reg = <0 0x1a>, <0 0x40>, <0 0x48>;
+>>
+>> rather than:
+>>
+>> reg = <0 0x1a 0 0x40 0 0x48>;
+>>
+>> ... so it's quite simple to make it very human-readable too.
+>
+> I give in to the flag idea. I also noticed that we'd need another flag
+> anyhow to mark 10 bit addresses. I am still thinking between using two
+> address-cells in that case (clean seperation between address and flags)
+> or to encode the flags as MSB in the current address (all busses will
+> have same address-cells and child description, less code paths and no
+> overhead in dtbs).
 
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm/apm-storm.dtsi |   75 ++++++++++++++++++++++++++++++++
- 1 files changed, 75 insertions(+), 0 deletions(-)
+Reading thru the thread, this seems good to me. I would go with adding
+flags in the MSB of the reg cell rather than adding a cell.
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index c8d3e0e..51aa174 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -374,6 +374,81 @@
- 			};
- 		};
- 
-+		csw: csw@7e200000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x7e200000 0x0 0x1000>;
-+		};
-+
-+		mcba: mcba@7e700000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x7e700000 0x0 0x1000>;
-+		};
-+
-+		mcbb: mcbb@7e720000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x7e720000 0x0 0x1000>;
-+		};
-+
-+		efuse: efuse@1054a000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x1054a000 0x0 0x20>;
-+		};
-+
-+		edac@78800000 {
-+			compatible = "apm,xgene-edac";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			regmap-csw = <&csw>;
-+			regmap-mcba = <&mcba>;
-+			regmap-mcbb = <&mcbb>;
-+			regmap-efuse = <&efuse>;
-+			reg = <0x0 0x78800000 0x0 0x100>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>,
-+				     <0x0 0x27 0x4>;
-+
-+			edacmc@7e800000 {
-+				compatible = "apm,xgene-edac-mc";
-+				reg = <0x0 0x7e800000 0x0 0x1000>;
-+			};
-+
-+			edacmc@7e840000 {
-+				compatible = "apm,xgene-edac-mc";
-+				reg = <0x0 0x7e840000 0x0 0x1000>;
-+			};
-+
-+			edacmc@7e880000 {
-+				compatible = "apm,xgene-edac-mc";
-+				reg = <0x0 0x7e880000 0x0 0x1000>;
-+			};
-+
-+			edacmc@7e8c0000 {
-+				compatible = "apm,xgene-edac-mc";
-+				reg = <0x0 0x7e8c0000 0x0 0x1000>;
-+			};
-+
-+			edacpmd@7c000000 {
-+				compatible = "apm,xgene-edac-pmd";
-+				reg = <0x0 0x7c000000 0x0 0x200000>;
-+			};
-+
-+			edacpmd@7c200000 {
-+				compatible = "apm,xgene-edac-pmd";
-+				reg = <0x0 0x7c200000 0x0 0x200000>;
-+			};
-+
-+			edacpmd@7c400000 {
-+				compatible = "apm,xgene-edac-pmd";
-+				reg = <0x0 0x7c400000 0x0 0x200000>;
-+			};
-+
-+			edacpmd@7c600000 {
-+				compatible = "apm,xgene-edac-pmd";
-+				reg = <0x0 0x7c600000 0x0 0x200000>;
-+			};
-+		};
-+
- 		pcie0: pcie@1f2b0000 {
- 			status = "disabled";
- 			device_type = "pci";
--- 
-1.7.1
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
