@@ -1,47 +1,27 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
-Date: Tue, 19 May 2015 10:17:32 -0700
-Message-ID: <20150519171732.GD9213@kroah.com>
-References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
- <1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
- <555B2C9C.1000709@arm.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: adc: xilinx-xadc: Add xlnx,extend-name as an
+ optional argument for aux channels
+Date: Tue, 19 May 2015 19:53:39 +0200
+Message-ID: <555B78A3.2030202@metafoo.de>
+References: <1431038644-41600-1-git-send-email-xander.huff@ni.com> <1431038644-41600-2-git-send-email-xander.huff@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <555B2C9C.1000709@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rob Herring <robherring2@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431038644-41600-2-git-send-email-xander.huff-acOepvfBmUk@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 01:29:16PM +0100, Sudeep Holla wrote:
-> Hi Rob/Greg,
-> 
-> On 14/05/15 15:28, Sudeep Holla wrote:
-> >Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> >devices with an OF node") adds the symlink `of_node` for each device
-> >pointing to it's device tree node while creating/initialising it.
-> >
-> >However the devicetree sysfs is created and setup in of_init which is
-> >executed at core_initcall level. For all the devices created before
-> >of_init, the following error is thrown:
-> >	"Error -2(-ENOENT) creating of_node link"
-> >
-> >Like many other components in driver model, initialize the sysfs support
-> >for OF/devicetree from driver_init so that it's ready before any devices
-> >are created.
-> >
-> >Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> >	devices with an OF node")
-> >Suggested-by: Rob Herring <robh+dt@kernel.org>
-> >Cc: Grant Likely <grant.likely@linaro.org>
-> >Cc: Rob Herring <robh+dt@kernel.org>
-> >Cc: Pawel Moll <pawel.moll@arm.com>
-> >Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> >Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> I assume one of you will pick this up if there are no further comments ?
+On 05/08/2015 12:44 AM, Xander Huff wrote:
+> To better facilitate user-mode access to optional aux channels, allow
+> device trees to specify a custom extended name for defined channels.
 
-I will once things settle down...
+Hi,
+
+'extend-name' is kind of a IIO specific term. I think a better name in the 
+devicetree context would be 'label'. That's used everywhere else when giving 
+a short description string to a node.
+
+- Lars
