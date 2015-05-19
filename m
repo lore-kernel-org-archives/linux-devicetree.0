@@ -1,218 +1,197 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
-Date: Tue, 19 May 2015 23:59:46 +0200
-Message-ID: <555BB252.9080200@hauke-m.de>
-References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de> <20150518224910.GU11598@ld-irv-0074> <CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH dt v8] ARM: dts: add support for Vybrid running on Cortex-M4
+Date: Wed, 20 May 2015 00:05:18 +0200
+Message-ID: <1432073118-26898-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de
+Cc: olof@lixom.net, shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 05/19/2015 10:25 AM, Jonas Gorski wrote:
-> Hi,
->=20
-> On Tue, May 19, 2015 at 12:49 AM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sun, May 17, 2015 at 07:35:12PM +0200, Hauke Mehrtens wrote:
->>> This moves the linux,part-probe device tree parsing code from
->>> physmap_of.c to mtdpart.c. Now all drivers can use this feature by =
-just
->>> providing a reference to they device tree node in struct
->>
->> s/they/their/
->> or
->> s/they/the/
->> ?
->>
->>> mtd_part_parser_data.
->>>
->>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->>> ---
->>>  drivers/mtd/maps/physmap_of.c | 40 +------------------------------=
----------
-> (snip)
->>>  drivers/mtd/mtdpart.c         | 38 +++++++++++++++++++++++++++++++=
-+++++++
->>>  2 files changed, 39 insertions(+), 39 deletions(-)
->>>
->>> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
->>> index cafdb88..b3059d6 100644
->>> --- a/drivers/mtd/mtdpart.c
->>> +++ b/drivers/mtd/mtdpart.c
->>> @@ -29,6 +29,7 @@
->>>  #include <linux/kmod.h>
->>>  #include <linux/mtd/mtd.h>
->>>  #include <linux/mtd/partitions.h>
->>> +#include <linux/of.h>
->>>  #include <linux/err.h>
->>>  #include <linux/kconfig.h>
->>>
->>> @@ -718,6 +719,35 @@ void deregister_mtd_parser(struct mtd_part_par=
-ser *p)
->>>  }
->>>  EXPORT_SYMBOL_GPL(deregister_mtd_parser);
->>>
->>> +static const char * const *of_get_probes(struct device_node *dp)
->>
->> Maybe a quick comment at the top to note that if non-NULL, its retur=
-n
->> value must be kfree()'d by the caller? Could be helpful if we want t=
-o
->> move the code elsewhere. (I'm almost tempted to suggest moving this =
-to
->> drivers/of/of_mtd.c, in fact.)
->>
->>> +{
->>> +     const char *cp;
->>> +     int cplen;
->>> +     unsigned int l;
->>> +     unsigned int count;
->>> +     const char **res;
->>> +
->>> +     cp =3D of_get_property(dp, "linux,part-probe", &cplen);
->>
->> I see this is not property is not documented in the first place. If
->> we're going to make it generically useful, we definitely need to
->> document it, including what the supported partition probe names are.
->>
->> I'm also kind of ambivalent on this point, but I might as well ask: =
-does
->> the 'linux,...' naming make sense? We're not really supposed to be
->> putting pure software information in the device tree, let alone info
->> that's specific to Linux. I see how the partition parser could be (a=
-nd
->> should be, really) considered OS-agnostic, though, and might deserve=
- a
->> spot in the DT, at least if it's not safe to run arbitrary partition
->> parsers on all MTDs.
->=20
-> As long as we use the direct parser names, we should keep the linux p=
-refix.
->=20
-> Actually a common issue is that many firmware partition tags aren't
-> capable of describing the full flash layout, so partition parsers hav=
-e
-> to "cheat" and make a lot of assumptions, e.g. the location and the
-> size of the bootloader. So wo would need to have a mix of static
-> partitions (bootloader, bootloader config, calibration data) and
-> dynamic ones (kernel, rootfs, overlay). So ideally we would pass the
-> static partitions as device tree nodes, and let the partition parsers
-> then be applied to partitions instead of the full mtd device. This
-> would also work as a safeguard against mis-guessing important
-> partitions like calibration data which aren't recoverable in case the=
-y
-> get overwritten.
->=20
-> So my first Idea would be having something like this:
->=20
-> mtdevice@foo {
->         ...
->         bootloader: partition@0 {
->                 reg =3D <0 0x10000>;
->                 device_type =3D "flash-partition";
->                 read-only;
->         };
->=20
->         firmware: partition@10000 {
->                 reg =3D <0x1000 0x7e0000>;
->                 device_type =3D "flash-partition";
->                 compatible =3D "brcm,trx";
->         };
->=20
->         calibration: partition@7f0000 {
->                 reg =3D < >;
->                 device_type =3D "flash-partition";
->                 read-only;
->         };
-> };
->=20
-> Then the ofpart parsing could be integrated into the core, and
-> partition parsers get run according to their compatibles on the
-> individual partitions.
->=20
-> Of course this also might be total overengineering and completely the
-> wrong place for devicetree as it's essentially configuration data, bu=
-t
-> since the now described partitions are now more or less "static", IMH=
-O
-> this would be a-okay.
+This adds an initial device tree to run Linux on the Cortex-M4 on
+the Vybrid based Colibri VF61 module.
 
-This sounds like the problem Rafa=C5=82 wanted to solve in his patch "m=
-td:
-add support for typed parsers splitting partitions"
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/Makefile            |  1 +
+ arch/arm/boot/dts/vf610m4-colibri.dts | 99 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/vf610m4.dtsi        | 50 ++++++++++++++++++
+ 3 files changed, 150 insertions(+)
+ create mode 100644 arch/arm/boot/dts/vf610m4-colibri.dts
+ create mode 100644 arch/arm/boot/dts/vf610m4.dtsi
 
-This would also solve my problem and would make the bcm47xx part parser
-a lot simpler and more secure for targets using device tree.
-I still think we should add a alternative for the people that do not
-want to rewrite their partition parser. Specifying the list of availabl=
-e
-partition parser in the flash driver is a bad idea because it is the
-wrong place.
-
-I am in favor of both concepts, because there is already one driver
-reading the partition parser list from device tree and it is implemente=
-d
-pretty easy. Jonas Approach sounds nice because it really solves two
-more problems.
-Jonas approach would work on bcm47xx and bcm53xx targets, because there
-the header is located after the boot loader and does not contain all
-partitions. This could also be used to divide the partition containing
-the kernel and the read only root fs in OpenWrt. Are there any more
-users which could use this extended approach?
-
->>> @@ -754,6 +784,13 @@ int parse_mtd_partitions(struct mtd_info *mast=
-er, const char *const *types,
->>>  {
->>>       struct mtd_part_parser *parser;
->>>       int ret =3D 0;
->>> +     const char *const *types_of =3D NULL;
->>> +
->>> +     if (data && data->of_node) {
->>> +             types_of =3D of_get_probes(data->of_node);
->>> +             if (types_of !=3D NULL)
->>> +                     types =3D types_of;
->>> +     }
->>
->> I'm not sure I really like the semantics here. This means that the
->> device tree can override all Linux defaults. So we can't, for instan=
-ce,
->> have the cmdline parser override all other selections (e.g., for
->> debugging), or make sure that 'ofpart' is available for all MTDs.
->=20
-> Letting the device tree override cmdline parsers is actually a valid
-> use case for OpenWrt, where the bootloader passes a
-> different/incompatible partition layout through mtdparts than what is
-> actually used by the firmware on flash.
->=20
-> If we want to make it overrideable for debug purposes adding a
-> commandline parameter like
-> mtdparser=3D"<mtdname>:<parser1[,parser2,...]>" might be a better
-> option.
->=20
->>>
->>>       if (!types)
->>>               types =3D default_mtd_part_types;
->>
->> In fact, I don't really like this existing hunk either ^^^. It has t=
-he
->> same effect, of killing things like cmdlinepart, which should be
->> available on all MTDs.
->=20
-> default_mtd_part_types contains cmdline part, so it should be
-> available unless they pass their own parsers.
->=20
->=20
-> Regards
-> Jonas
->=20
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 07476a0..02a7a62 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -328,6 +328,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
+ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf500-colibri-eval-v3.dtb \
+ 	vf610-colibri-eval-v3.dtb \
++	vf610m4-colibri.dtb \
+ 	vf610-cosmic.dtb \
+ 	vf610-twr.dtb
+ dtb-$(CONFIG_ARCH_MXS) += \
+diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
+new file mode 100644
+index 0000000..2931a80
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610m4-colibri.dts
+@@ -0,0 +1,99 @@
++/*
++ * Device tree for Colibri VF61 Cortex-M4 support
++ *
++ * Copyright (C) 2015 Stefan Agner
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "vf610m4.dtsi"
++
++/ {
++	model = "VF610 Cortex-M4";
++	compatible = "fsl,vf610m4";
++
++	chosen {
++		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
++		linux,stdout-path = "&uart2";
++	};
++
++	memory {
++		reg = <0x8c000000 0x3000000>;
++	};
++};
++
++&gpio0 {
++	status = "disabled";
++};
++
++&gpio1 {
++	status = "disabled";
++};
++
++&gpio2 {
++	status = "disabled";
++};
++
++&gpio3 {
++	status = "disabled";
++};
++
++&gpio4 {
++	status = "disabled";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&iomuxc {
++	vf610-colibri {
++		pinctrl_uart2: uart2grp {
++			fsl,pins = <
++				VF610_PAD_PTD0__UART2_TX		0x21a2
++				VF610_PAD_PTD1__UART2_RX		0x21a1
++				VF610_PAD_PTD2__UART2_RTS		0x21a2
++				VF610_PAD_PTD3__UART2_CTS		0x21a1
++			>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/vf610m4.dtsi b/arch/arm/boot/dts/vf610m4.dtsi
+new file mode 100644
+index 0000000..9ffe2eb
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610m4.dtsi
+@@ -0,0 +1,50 @@
++/*
++ * Device tree for VF6xx Cortex-M4 support
++ *
++ * Copyright (C) 2015 Stefan Agner
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "armv7-m.dtsi"
++#include "vfxxx.dtsi"
++
++&mscm_ir {
++	interrupt-parent = <&nvic>;
++};
+-- 
+2.4.1
