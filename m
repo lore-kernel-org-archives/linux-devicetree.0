@@ -1,38 +1,89 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
-Date: Tue, 19 May 2015 16:41:58 +0200
-Message-ID: <CALszF6A-De6dvcRNoa9ruL+y6Wt_rc7bi-O-VxHWkFF9NSt5_g@mail.gmail.com>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<555B098A.8030202@linaro.org>
-	<CALszF6AJ3Zf598wYeUx=iNWHHKT24xUyfagB=+4GocwZ-Fd-0g@mail.gmail.com>
-	<6177628.0ZDPLeVyah@wuerfel>
-	<CALszF6BZKD-CPTZ6Hc85wv2Z3Y7JmUv-cMkBtbk2Ga6WeeWU=A@mail.gmail.com>
-	<555B3F80.8070605@linaro.org>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH] mailbox: arm-mhu: update the binding document
+Date: Tue, 19 May 2015 20:12:27 +0530
+Message-ID: <CAJe_ZhdirgXRjGOzUE4vux4ay=gL5FM7=t6m53bEN5ZND+LddQ@mail.gmail.com>
+References: <1430131945-20628-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <555B3F80.8070605@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <gal>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430131945-20628-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-19 15:49 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+On 27 April 2015 at 16:22, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> The initial version of the binding document pushed along with the driver
+> is not clear/explicit about couple of the required properties namely:
+> clocks and clock-names, though the AMBA primecell binding used by the
+> arm-mhu specifies them clearly. Without these property the driver will
+> not even get probed, so it is mandatory to have them in DT.
 >
+> This patch adds the above mentioned required properties to the binding.
+> It also adds the optional interrupt-names property which is good to have
+> along with some minor updates to replace references to the driver with
+> the hardware IP.
 >
-> It is not exactly as the initial patch.
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Jassi Brar <jaswinder.singh@linaro.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 29 ++++++++++++++--------
+>  1 file changed, 19 insertions(+), 10 deletions(-)
 >
-> I think Arnd is proposing:
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> index 4971f03f0b33..68146c9a0332 100644
+> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> @@ -1,14 +1,15 @@
+> -ARM MHU Mailbox Driver
+> -======================
+> +ARM Message Handling Unit(MHU)
+> +==============================
 >
-> config CLKSRC_STM32
->         bool "Clocksource for STM32 SoCs" if COMPILE_TEST
->         select CLKSRC_MMIO
+> -The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
+> +The ARM's Message Handling Unit (MHU) is a mailbox controller that has
+>  3 independent channels/links to communicate with remote processor(s).
+> - MHU links are hardwired on a platform. A link raises interrupt for any
+> -received data. However, there is no specified way of knowing if the sent
+> -data has been read by the remote. This driver assumes the sender polls
+> -STAT register and the remote clears it after having read the data.
+> -The last channel is specified to be a 'Secure' resource, hence can't be
+> -used by Linux running NS.
+> +MHU links are hardwired on a platform. A link raises interrupt for any
+> +received data. The platform/firmware must clear the STAT register after
+> +having receiving the data and sender can poll on the same if the platform
+> +lacks interrupt mechanism for sending data to remote processor.
+> +
+> +Out of 3 channels, the last channel is 'Secure', hence must not be used
+> +by OS or any software running in non-secure state.
 >
+>  Mailbox Device Node:
+>  ====================
+> @@ -20,7 +21,15 @@ used by Linux running NS.
+>                         address and length)
+>  - #mbox-cells          Shall be 1 - the index of the channel needed.
+>  - interrupts:          Contains the interrupt information corresponding to
+> -                       each of the 3 links of MHU.
+> +                       each of the MHU links.
+> +- clocks               phandle to clock for apb pclk as specified in the
+> +                       primecell binding
+> +- clock-names          Shall be "apb_pclk"
+> +
+No other Primecell derivative specify 'apb_pclk' ... because people do
+know that before mailbox its a an AMBA Primecell class device so its
+implied that you look at Primecell bindings.  It doesn't hurt to
+mention it here again, but it's definitely not worth the alarm you
+have been raising.
 
-Isn't "depends on OF" missing for COMPILE_TEST case?
+> +Optional properties:
+> +--------------------
+> +- interrupt-names      contains names of the interrupt in the order in which
+> +                       they were specified in the interrupts property
+>
+Nopes. arm_mhu.c shouldn't need to have OF dependency.
+amba_device.irq[] is good enough just like for other amba drivers.
 
-Other than that, I'm fine with the proposal.
-Daniel, is it the case for you too?
-
-Regards,
-Maxime
+And the change in documentation above is an unnecessary trainwreck. It
+'fixes' nothing, just changes wordings to your taste.
