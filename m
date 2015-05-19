@@ -1,188 +1,47 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH v2] arm, imx6, dts: add DT for aristainetos2 board
-Date: Tue, 19 May 2015 15:44:26 +0200
-Message-ID: <555B3E3A.8000605@denx.de>
-References: <1431334974-27531-1-git-send-email-hs@denx.de>  <20150518113135.GD1071@dragon> <555AE192.8010700@denx.de> <1432025280.3182.6.camel@pengutronix.de>
-Reply-To: hs@denx.de
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
+Date: Tue, 19 May 2015 15:49:52 +0200
+Message-ID: <555B3F80.8070605@linaro.org>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<555B098A.8030202@linaro.org>	<CALszF6AJ3Zf598wYeUx=iNWHHKT24xUyfagB=+4GocwZ-Fd-0g@mail.gmail.com>	<6177628.0ZDPLeVyah@wuerfel> <CALszF6BZKD-CPTZ6Hc85wv2Z3Y7JmUv-cMkBtbk2Ga6WeeWU=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432025280.3182.6.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALszF6BZKD-CPTZ6Hc85wv2Z3Y7JmUv-cMkBtbk2Ga6WeeWU=A@mail.gmail.com>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>Kumar Gala <g>
 List-Id: devicetree@vger.kernel.org
 
-Hello Philipp,
+On 05/19/2015 03:42 PM, Maxime Coquelin wrote:
+> 2015-05-19 12:55 GMT+02:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+>> Please also make it possible to select this driver on other architec=
+tures
+>> with COMPILE_TEST, so we get coverage from all the x86 test infrastr=
+ucture.
+>
+> You proposal is to revert back to the original patch, except that
+> ARCH_STM32 should select CLKSRC_STM32, right?
+>
+> Daniel, what do you think?
 
-Am 19.05.2015 10:48, schrieb Philipp Zabel:
-> Hi Heiko, Shawn,
->
-> Am Dienstag, den 19.05.2015, 09:09 +0200 schrieb Heiko Schocher:
-> [...]
->>> What is this?  I failed to find it in Documentation/devicetree/bindings/
->>
->> Ah, this is not documentated, see commit:
->>
->> commit 628f435be4359e6ae8ecfdda9b492053be76a057
->> Author: Philipp Zabel <p.zabel@pengutronix.de>
->> Date:   Tue Feb 25 11:55:04 2014 +0100
->>
->>       imx-drm: parallel-display: Add drm_panel support
->>
->> added Philipp to cc ...
->
-> This was meant to be a temporary solution to connect a drm_panel to the
-> parallel-display when the of-graph bindings were not yet available.
-> I'd very much prefer to switch to the common of-graph bindings similarly
-> to the LDB driver instead. Could you check if this would work for you:
+It is not exactly as the initial patch.
 
-Yes, your patch works for me (with appropriate changes in the dts file)
-You can add my
-Tested-by: Heiko Schocher <hs@denx.de>
-for this patch, thanks!
+I think Arnd is proposing:
 
-@Shawn: How do I proceed now with my patch for the aristainetos2 board
-         support? Should I base my v3 of the aristainetos2 on this patch,
-         or should I wait with this change, until the patch from Philipp
-         is accepted and post a follow up?
+config CLKSRC_STM32
+	bool "Clocksource for STM32 SoCs" if COMPILE_TEST
+	select CLKSRC_MMIO
 
-bye,
-Heiko
->
-> -----8<-----
-> From: Philipp Zabel <p.zabel@pengutronix.de>
-> Subject: [PATCH] drm/imx: parallel-display: fix drm_panel support
->
-> The parallel-display driver used an undocumented, non-standard property
-> "fsl,panel" to optionally associate with a drm_panel device. This patch
-> fixes the driver to use the OF graph bindings, just as the LDB driver:
->
->      parallel-display {
->              compatible = "fsl,imx-parallel-display";
->              ...
->
->              port@1 {
->                      reg = <1>;
->
->                      parallel_out: endpoint {
->                              remote_endpoint = <&panel_in>;
->                      };
->              };
->      };
->
->      panel {
->              ...
->
->              port {
->                      panel_in: endpoint {
->                              remote-endpoint = <&parallel_out>;
->                      };
->              };
->      };
->
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->   .../devicetree/bindings/drm/imx/fsl-imx-drm.txt    | 26 ++++++++++++++++++++--
->   drivers/gpu/drm/imx/parallel-display.c             | 21 ++++++++++++-----
->   2 files changed, 39 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/drm/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/drm/imx/fsl-imx-drm.txt
-> index e75f0e5..971c3ee 100644
-> --- a/Documentation/devicetree/bindings/drm/imx/fsl-imx-drm.txt
-> +++ b/Documentation/devicetree/bindings/drm/imx/fsl-imx-drm.txt
-> @@ -65,8 +65,10 @@ Optional properties:
->   - edid: verbatim EDID data block describing attached display.
->   - ddc: phandle describing the i2c bus handling the display data
->     channel
-> -- port: A port node with endpoint definitions as defined in
-> +- port@[0-1]: Port nodes with endpoint definitions as defined in
->     Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +  Port 0 is the input port connected to the IPU display interface,
-> +  port 1 is the output port connected to a panel.
->
->   example:
->
-> @@ -75,9 +77,29 @@ display@di0 {
->   	edid = [edid-data];
->   	interface-pix-fmt = "rgb24";
->
-> -	port {
-> +	port@0 {
-> +		reg = <0>;
-> +
->   		display_in: endpoint {
->   			remote-endpoint = <&ipu_di0_disp0>;
->   		};
->   	};
-> +
-> +	port@1 {
-> +		reg = <1>;
-> +
-> +		display_out: endpoint {
-> +			remote-endpoint = <&panel_in>;
-> +		};
-> +	};
-> +};
-> +
-> +panel {
-> +	...
-> +
-> +	port {
-> +		panel_in: endpoint {
-> +			remote-endpoint = <&display_out>;
-> +		};
-> +	};
->   };
-> diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
-> index 74a9ce4..b4deb9c 100644
-> --- a/drivers/gpu/drm/imx/parallel-display.c
-> +++ b/drivers/gpu/drm/imx/parallel-display.c
-> @@ -21,6 +21,7 @@
->   #include <drm/drm_panel.h>
->   #include <linux/videodev2.h>
->   #include <video/of_display_timing.h>
-> +#include <linux/of_graph.h>
->
->   #include "imx-drm.h"
->
-> @@ -208,7 +209,7 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
->   {
->   	struct drm_device *drm = data;
->   	struct device_node *np = dev->of_node;
-> -	struct device_node *panel_node;
-> +	struct device_node *port;
->   	const u8 *edidp;
->   	struct imx_parallel_display *imxpd;
->   	int ret;
-> @@ -234,11 +235,19 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
->   			imxpd->bus_format = MEDIA_BUS_FMT_RGB666_1X24_CPADHI;
->   	}
->
-> -	panel_node = of_parse_phandle(np, "fsl,panel", 0);
-> -	if (panel_node) {
-> -		imxpd->panel = of_drm_find_panel(panel_node);
-> -		if (!imxpd->panel)
-> -			return -EPROBE_DEFER;
-> +	/* port@1 is the output port */
-> +	port = of_graph_get_port_by_id(np, 1);
-> +	if (port) {
-> +		struct device_node *endpoint, *remote;
-> +
-> +		endpoint = of_get_child_by_name(port, "endpoint");
-> +		if (endpoint) {
-> +			remote = of_graph_get_remote_port_parent(endpoint);
-> +			if (remote)
-> +				imxpd->panel = of_drm_find_panel(remote);
-> +			if (!imxpd->panel)
-> +				return -EPROBE_DEFER;
-> +		}
->   	}
->
->   	imxpd->dev = dev;
->
 
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
