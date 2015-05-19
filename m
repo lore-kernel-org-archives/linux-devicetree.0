@@ -1,175 +1,39 @@
-From: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: mvebu: fix gpio misspelling in some dts files
-Date: Tue, 19 May 2015 21:27:18 +0100
-Message-ID: <1432067238-4682-1-git-send-email-pbrobinson@gmail.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v10 1/5] arm64: Enable EDAC on ARM64
+Date: Tue, 19 May 2015 22:33:36 +0200
+Message-ID: <20150519203336.GP4641@pd.tnic>
+References: <1431991481-25684-1-git-send-email-lho@apm.com>
+ <1431991481-25684-2-git-send-email-lho@apm.com>
+ <20150519170308.GL4641@pd.tnic>
+ <CAPw-ZT=mTpt_vz+e=rM5ywK8feNKkJQrpEWg=noRCziJ0840TQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZT=mTpt_vz+e=rM5ywK8feNKkJQrpEWg=noRCziJ0840TQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A few of the Marvell armadda/dove/kirkwood dts(i) files appear to
-have some gpio options misspelled as gpo.
+On Tue, May 19, 2015 at 12:57:32PM -0700, Loc Ho wrote:
+> This was discussed here
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/326986.html.
+> Without this, it will have compiler error as this function is called
+> by.function edac_mc_scrub_block in file drivers/edac/edac_mc.c.
 
-Signed-off-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/armada-370-mirabox.dts         | 2 +-
- arch/arm/boot/dts/armada-370-netgear-rn104.dts   | 2 +-
- arch/arm/boot/dts/armada-370-synology-ds213j.dts | 2 +-
- arch/arm/boot/dts/dove.dtsi                      | 4 ++--
- arch/arm/boot/dts/kirkwood-lsxl.dtsi             | 6 +++---
- arch/arm/boot/dts/kirkwood-mplcec4.dts           | 2 +-
- arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts   | 2 +-
- arch/arm/boot/dts/kirkwood-rd88f6192.dts         | 2 +-
- arch/arm/boot/dts/kirkwood-synology.dtsi         | 4 ++--
- 9 files changed, 13 insertions(+), 13 deletions(-)
+Argh, that's just silly. We should have a __weak atomic_scrub() in the
+edac core which arches can override but not have to supply a dummy just
+because...
 
-diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
-index 0f40d5d..f1d644a 100644
---- a/arch/arm/boot/dts/armada-370-mirabox.dts
-+++ b/arch/arm/boot/dts/armada-370-mirabox.dts
-@@ -195,7 +195,7 @@
- &pinctrl {
- 	pwr_led_pin: pwr-led-pin {
- 		marvell,pins = "mpp63";
--		marvell,function = "gpo";
-+		marvell,function = "gpio";
- 	};
- 
- 	stat_led_pins: stat-led-pins {
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-index 00540f2..d36eea4 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-@@ -290,7 +290,7 @@
- 
- 	backup_led_pin: backup-led-pin {
- 		marvell,pins = "mpp63";
--		marvell,function = "gpo";
-+		marvell,function = "gpio";
- 	};
- 
- 	power_led_pin: power-led-pin {
-diff --git a/arch/arm/boot/dts/armada-370-synology-ds213j.dts b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-index b42b767..c787109 100644
---- a/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-+++ b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-@@ -338,7 +338,7 @@
- 
- 	fan_ctrl_high_pin: fan-ctrl-high-pin {
- 		marvell,pins = "mpp63";
--		marvell,function = "gpo";
-+		marvell,function = "gpio";
- 	};
- 
- 	fan_alarm_pin: fan-alarm-pin {
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 9ad8295..684daa1 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -603,9 +603,9 @@
- 					marvell,function = "nand";
- 				};
- 
--				pmx_nand_gpo: pmx-nand-gpo {
-+				pmx_nand_gpio: pmx-nand-gpio {
- 					marvell,pins = "mpp_nand";
--					marvell,function = "gpo";
-+					marvell,function = "gpio";
- 				};
- 
- 				pmx_i2c1: pmx-i2c1 {
-diff --git a/arch/arm/boot/dts/kirkwood-lsxl.dtsi b/arch/arm/boot/dts/kirkwood-lsxl.dtsi
-index 5348447..c258ed8 100644
---- a/arch/arm/boot/dts/kirkwood-lsxl.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-lsxl.dtsi
-@@ -11,7 +11,7 @@
- 		pinctrl: pin-controller@10000 {
- 			pmx_power_hdd: pmx-power-hdd {
- 				marvell,pins = "mpp10";
--				marvell,function = "gpo";
-+				marvell,function = "gpio";
- 			};
- 			pmx_usb_vbus: pmx-usb-vbus {
- 				marvell,pins = "mpp11";
-@@ -19,11 +19,11 @@
- 			};
- 			pmx_fan_high: pmx-fan-high {
- 				marvell,pins = "mpp18";
--				marvell,function = "gpo";
-+				marvell,function = "gpio";
- 			};
- 			pmx_fan_low: pmx-fan-low {
- 				marvell,pins = "mpp19";
--				marvell,function = "gpo";
-+				marvell,function = "gpio";
- 			};
- 			pmx_led_function_blue: pmx-led-function-blue {
- 				marvell,pins = "mpp36";
-diff --git a/arch/arm/boot/dts/kirkwood-mplcec4.dts b/arch/arm/boot/dts/kirkwood-mplcec4.dts
-index f3a9918..7241ff7 100644
---- a/arch/arm/boot/dts/kirkwood-mplcec4.dts
-+++ b/arch/arm/boot/dts/kirkwood-mplcec4.dts
-@@ -31,7 +31,7 @@
- 		pinctrl: pin-controller@10000 {
- 			pmx_led_health: pmx-led-health {
- 				marvell,pins = "mpp7";
--				marvell,function = "gpo";
-+				marvell,function = "gpio";
- 			};
- 
- 			pmx_sata1: pmx-sata1 {
-diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-index f82827d..3ed8f6c 100644
---- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-+++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-@@ -45,7 +45,7 @@
- 		pin-controller@10000 {
- 			pmx_usb_led: pmx-usb-led {
- 				marvell,pins = "mpp12";
--				marvell,function = "gpo";
-+				marvell,function = "gpio";
- 			};
- 
- 			pmx_leds: pmx-leds {
-diff --git a/arch/arm/boot/dts/kirkwood-rd88f6192.dts b/arch/arm/boot/dts/kirkwood-rd88f6192.dts
-index 35a29de..437d97b 100644
---- a/arch/arm/boot/dts/kirkwood-rd88f6192.dts
-+++ b/arch/arm/boot/dts/kirkwood-rd88f6192.dts
-@@ -46,7 +46,7 @@
- 
-                         pmx_usb_power: pmx-usb-power {
-                                 marvell,pins = "mpp10";
--                                marvell,function = "gpo";
-+                                marvell,function = "gio";
-                         };
- 		};
- 
-diff --git a/arch/arm/boot/dts/kirkwood-synology.dtsi b/arch/arm/boot/dts/kirkwood-synology.dtsi
-index 8be5b2e..adb5eec 100644
---- a/arch/arm/boot/dts/kirkwood-synology.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-synology.dtsi
-@@ -48,7 +48,7 @@
- 
- 			pmx_fanalarm_18: pmx-fanalarm-18 {
- 				marvell,pins = "mpp18";
--				marvell,function = "gpo";
-+				marvell,function = "gpio";
- 			};
- 
- 			pmx_hddled_20: pmx-hddled-20 {
-@@ -118,7 +118,7 @@
- 
- 			pmx_fanctrl_33: pmx-fanctrl-33 {
- 				marvell,pins = "mpp33";
--				marvell,function = "gpo";
-+				marvell,function = "gpio";
- 			};
- 
- 			pmx_fanctrl_34: pmx-fanctrl-34 {
+I'll try to hack up something later.
+
 -- 
-2.4.1
+Regards/Gruss,
+    Boris.
 
+ECO tip #101: Trim your mails when you reply.
+--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
