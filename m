@@ -1,71 +1,249 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH v7 08/13] ARM: unify MMU/!MMU addruart calls
-Date: Tue, 19 May 2015 23:37:33 +0200
-Message-ID: <CAGhQ9VwSNX0tgzyozm99zLFpKq2c1Wz=4xwjqT3dwNkzTs2bYw@mail.gmail.com>
-References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
-	<2419398.cbLWQC7K5f@wuerfel>
-	<b41ebeb9d62b9c49faec6500f73460b9@agner.ch>
-	<5548280.7uBnLuun8k@wuerfel>
-	<0103afd0e9dd50c1bf85153a38a3490f@agner.ch>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
+Date: Tue, 19 May 2015 23:43:27 +0200
+Message-ID: <555BAE7F.70203@hauke-m.de>
+References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de> <20150518224910.GU11598@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0103afd0e9dd50c1bf85153a38a3490f@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, Russell King - ARM Linux <linux@arm.linux.org.uk>, jason@lakedaemon.net, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Olof Johansson <olof@lixom.net>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, shawn.guo@linaro.org, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150518224910.GU11598@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
-
-On 19 May 2015 at 23:26, Stefan Agner <stefan@agner.ch> wrote:
-> On 2015-05-19 20:24, Arnd Bergmann wrote:
->> On Tuesday 19 May 2015 18:06:53 Stefan Agner wrote:
->>> On 2015-05-19 13:50, Arnd Bergmann wrote:
->>> > Do you have a dependency on patch 10 (the one for EFM32) in your later
->>> > patches?
->>>
->>> Unfortunately, there is a dependency on that patch: I change the default
->>> of UNCOMPRESS_INCLUDE to debug/uncompress.h for all ARM_SINGLE_ARMV7M
->>> platforms. Without that patch, it would default to mach/uncompress.h,
->>> which does not exist for MACH_MXC/SOC_VF610.
+On 05/19/2015 12:49 AM, Brian Norris wrote:
+> On Sun, May 17, 2015 at 07:35:12PM +0200, Hauke Mehrtens wrote:
+>> This moves the linux,part-probe device tree parsing code from
+>> physmap_of.c to mtdpart.c. Now all drivers can use this feature by just
+>> providing a reference to they device tree node in struct
+> 
+> s/they/their/
+> or
+> s/they/the/
+> ?
+> 
+>> mtd_part_parser_data.
 >>
->> An easy approach would be to list both ARM_SINGLE_ARMV7M and
->> EFM32 in the UNCOMPRESS_INCLUDE option initially, and then
->> follow-up with a patch that converts the three other platforms
->> (efm32, stm32 and lpc18xx) to ARM_SINGLE_ARMV7M and also
->> change the UNCOMPRESS_INCLUDE statement.
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>> ---
+>>  drivers/mtd/maps/physmap_of.c | 40 +---------------------------------------
+>>  drivers/mtd/mtdpart.c         | 38 ++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 39 insertions(+), 39 deletions(-)
 >>
->> Note that I've already added both stm32 and lpc18xx to the
->> UNCOMPRESS_INCLUDE list in the next/soc branch.
->
-> Afaiks, only ARCH_LPC18XX is in UNCOMPRESS_INCLUDE, probably STM32
-> doesn't support compressed image/earlyprintk?
+>> diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+>> index 774b32f..fd3750f 100644
+>> --- a/drivers/mtd/maps/physmap_of.c
+>> +++ b/drivers/mtd/maps/physmap_of.c
+>> @@ -112,45 +112,9 @@ static struct mtd_info *obsolete_probe(struct platform_device *dev,
+>>  static const char * const part_probe_types_def[] = {
+>>  	"cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
+>>  
+>> -static const char * const *of_get_probes(struct device_node *dp)
+>> -{
+>> -	const char *cp;
+>> -	int cplen;
+>> -	unsigned int l;
+>> -	unsigned int count;
+>> -	const char **res;
+>> -
+>> -	cp = of_get_property(dp, "linux,part-probe", &cplen);
+>> -	if (cp == NULL)
+>> -		return part_probe_types_def;
+>> -
+>> -	count = 0;
+>> -	for (l = 0; l != cplen; l++)
+>> -		if (cp[l] == 0)
+>> -			count++;
+>> -
+>> -	res = kzalloc((count + 1)*sizeof(*res), GFP_KERNEL);
+>> -	count = 0;
+>> -	while (cplen > 0) {
+>> -		res[count] = cp;
+>> -		l = strlen(cp) + 1;
+>> -		cp += l;
+>> -		cplen -= l;
+>> -		count++;
+>> -	}
+>> -	return res;
+>> -}
+>> -
+>> -static void of_free_probes(const char * const *probes)
+>> -{
+>> -	if (probes != part_probe_types_def)
+>> -		kfree(probes);
+>> -}
+> 
+> Huh. I didn't even notice this code existed. Like you, I've wondered if
+> we could have a better way to suggest the partition parser types without
+> out specifying them in each driver. That seems like the wrong level of
+> abstraction.
+> 
+> Ideally, we'd just be able to have a standard set that satisfies all
+> users, like how all loaded block device partitioners are all checked for
+> each block device (check_part[] in block/partitions/check.c). The only
+> problem I can think of would be if some parsers have subtleties such
+> that they can't safely be applied to all MTDs, even with careful
+> prioritization.
 
-See: http://marc.info/?l=linux-arm-kernel&m=143196230014437&w=2
+I do not think all the parsers are or will be completely safe when they
+are trying to parse other data. Some random block could get mixed up
+with some vendor header format and then you get wrong partition layout.
 
-Seems like Arnd hasn't pushed it to the repo yet, though.
+> But if that doesn't work, then I suppose a device-tree property like
+> this could work.
 
->>> > If not, you can send the other ones to Shawn, so I pull them as
->>> > a branch, and then I apply that on top of the merges. I have also
->>> > merged two other ARMv7M platforms for 4.2 now (both in next/soc),
->>> > so we should do the same change for those as well, and I'd rather
->>> > apply a patch for that, than merge a branch that is based on
->>> > next/soc.
->>>
->>> I guess, in that case, you need to take the others too? (08/09?)
->>
->> I'm fine with that, too. If Shawn thinks the patches are ok, you can
->> just send all patches you want me to apply in arm-soc based on
->> the appropriate branches (next/soc, next/dt and next/defconfig, I
->> presume), and I'll apply them this time. In the future, you should
->> send all patches to Shawn though.
->
-> Ok, I will rebase this patchset (06-13) then, send the clocksource patch
-> (07) as a single patch and send the EFM32 convertion patch (10) together
-> with a conversion patch of the other two platforms as a follow-up.
+Currently some flash drivers have the parser order hard coded and I do
+not think that is a good idea, if we have device tree.
 
-Thanks for fixing up LPC18xx as well.
+>> -
+>>  static const struct of_device_id of_flash_match[];
+>>  static int of_flash_probe(struct platform_device *dev)
+>>  {
+>> -	const char * const *part_probe_types;
+>>  	const struct of_device_id *match;
+>>  	struct device_node *dp = dev->dev.of_node;
+>>  	struct resource res;
+>> @@ -310,10 +274,8 @@ static int of_flash_probe(struct platform_device *dev)
+>>  		goto err_out;
+>>  
+>>  	ppdata.of_node = dp;
+>> -	part_probe_types = of_get_probes(dp);
+>> -	mtd_device_parse_register(info->cmtd, part_probe_types, &ppdata,
+>> +	mtd_device_parse_register(info->cmtd, part_probe_types_def, &ppdata,
+>>  			NULL, 0);
+>> -	of_free_probes(part_probe_types);
+>>  
+>>  	kfree(mtd_list);
+>>  
+>> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+>> index cafdb88..b3059d6 100644
+>> --- a/drivers/mtd/mtdpart.c
+>> +++ b/drivers/mtd/mtdpart.c
+>> @@ -29,6 +29,7 @@
+>>  #include <linux/kmod.h>
+>>  #include <linux/mtd/mtd.h>
+>>  #include <linux/mtd/partitions.h>
+>> +#include <linux/of.h>
+>>  #include <linux/err.h>
+>>  #include <linux/kconfig.h>
+>>  
+>> @@ -718,6 +719,35 @@ void deregister_mtd_parser(struct mtd_part_parser *p)
+>>  }
+>>  EXPORT_SYMBOL_GPL(deregister_mtd_parser);
+>>  
+>> +static const char * const *of_get_probes(struct device_node *dp)
+> 
+> Maybe a quick comment at the top to note that if non-NULL, its return
+> value must be kfree()'d by the caller? Could be helpful if we want to
+> move the code elsewhere. (I'm almost tempted to suggest moving this to
+> drivers/of/of_mtd.c, in fact.)
 
-regards,
-Joachim Eastwood
+Yes I will add a comment.
+
+>> +{
+>> +	const char *cp;
+>> +	int cplen;
+>> +	unsigned int l;
+>> +	unsigned int count;
+>> +	const char **res;
+>> +
+>> +	cp = of_get_property(dp, "linux,part-probe", &cplen);
+> 
+> I see this is not property is not documented in the first place. If
+> we're going to make it generically useful, we definitely need to
+> document it, including what the supported partition probe names are.
+
+Sorry I did not check, I just amused that it is documented because it
+was already there, I will add.
+
+> I'm also kind of ambivalent on this point, but I might as well ask: does
+> the 'linux,...' naming make sense? We're not really supposed to be
+> putting pure software information in the device tree, let alone info
+> that's specific to Linux. I see how the partition parser could be (and
+> should be, really) considered OS-agnostic, though, and might deserve a
+> spot in the DT, at least if it's not safe to run arbitrary partition
+> parsers on all MTDs.
+> 
+>> +	if (cp == NULL)
+>> +		return NULL;
+>> +
+>> +	count = 0;
+>> +	for (l = 0; l != cplen; l++)
+>> +		if (cp[l] == 0)
+>> +			count++;
+>> +
+>> +	res = kzalloc((count + 1)*sizeof(*res), GFP_KERNEL);
+> 
+> Might as well fix the spacing here while you're moving the code around.
+
+Will fix that.
+
+>> +	count = 0;
+>> +	while (cplen > 0) {
+>> +		res[count] = cp;
+>> +		l = strlen(cp) + 1;
+>> +		cp += l;
+>> +		cplen -= l;
+>> +		count++;
+>> +	}
+>> +	return res;
+>> +}
+>> +
+>>  /*
+>>   * Do not forget to update 'parse_mtd_partitions()' kerneldoc comment if you
+>>   * are changing this array!
+>> @@ -754,6 +784,13 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
+>>  {
+>>  	struct mtd_part_parser *parser;
+>>  	int ret = 0;
+>> +	const char *const *types_of = NULL;
+>> +
+>> +	if (data && data->of_node) {
+>> +		types_of = of_get_probes(data->of_node);
+>> +		if (types_of != NULL)
+>> +			types = types_of;
+>> +	}
+> 
+> I'm not sure I really like the semantics here. This means that the
+> device tree can override all Linux defaults. So we can't, for instance,
+> have the cmdline parser override all other selections (e.g., for
+> debugging), or make sure that 'ofpart' is available for all MTDs.
+
+parse_mtd_partitions() often gets called by the driver with a hard coded
+list and I wanted to make it possible to overwrite this list through
+device tree.
+
+> 
+>>  
+>>  	if (!types)
+>>  		types = default_mtd_part_types;
+> 
+> In fact, I don't really like this existing hunk either ^^^. It has the
+> same effect, of killing things like cmdlinepart, which should be
+> available on all MTDs.
+
+I do not get this.
+cmdlinepart is one of the default parsers, if you haven't specified any
+you will get it. It could be that you do not want the cmdlinepart
+parser, so I think it should be possible to deactivate it, like though
+device tree when you do not specify it in the list of parsers.
+
+> 
+>> @@ -772,6 +809,7 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
+>>  			break;
+>>  		}
+>>  	}
+>> +	kfree(types_of);
+>>  	return ret;
+>>  }
+>>  
+> 
+> Brian
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
