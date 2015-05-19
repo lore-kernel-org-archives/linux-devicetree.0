@@ -1,53 +1,70 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
- controller
-Date: Tue, 19 May 2015 21:49:17 +0200
-Message-ID: <20150519194917.GI24769@pengutronix.de>
-References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
- <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
- <20150518184300.GB28888@pengutronix.de>
- <CABuKBeJcpufi-eEWmDRK6F2kgpz3DmCz8rp4hVPCJVgkmGr-KA@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 5/9] ARM: mediatek: enable gpt6 on boot up to make
+ arch timer working
+Date: Tue, 19 May 2015 12:51:20 -0700
+Message-ID: <555B9438.9020404@codeaurora.org>
+References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com> <1431763110-443-6-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABuKBeJcpufi-eEWmDRK6F2kgpz3DmCz8rp4hVPCJVgkmGr-KA@mail.gmail.com>
+In-Reply-To: <1431763110-443-6-git-send-email-yingjoe.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Xudong Chen <xudong.chen@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liguo Zhang <liguo.zhang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Matthias,
+On 05/16/15 00:58, Yingjoe Chen wrote:
+> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+> index a954900..6b38d67 100644
+> --- a/arch/arm/mach-mediatek/mediatek.c
+> +++ b/arch/arm/mach-mediatek/mediatek.c
+> @@ -16,6 +16,34 @@
+>   */
+>  #include <linux/init.h>
+>  #include <asm/mach/arch.h>
+> +#include <linux/of.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clocksource.h>
+> +
+> +
+> +#define GPT6_CON_MT65xx 0x10008060
+> +#define GPT_ENABLE      0x31
+> +
+> +static void __init mediatek_timer_init(void)
+> +{
+> +	void __iomem *gpt_base = 0;
 
-On Tue, May 19, 2015 at 04:48:23PM +0200, Matthias Brugger wrote:
-> 2015-05-18 20:43 GMT+02:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengut=
-ronix.de>:
-> > On Tue, May 19, 2015 at 12:40:08AM +0800, Eddie Huang wrote:
-> >> [...]
-> >>  drivers/i2c/busses/i2c-mt65xx.c | 675 +++++++++++++++++++++++++++=
-+++++++++++++
-> >> [...]
-> >> +#define I2C_DRV_NAME         "mt-i2c"
-> > i2c-mt65xx ?
->=20
-> As this works for all SoCs so far, I would propose: i2c-mtk
-Hmm, currently we have:
+ = NULL ?
 
-  - #define I2C_DRV_NAME mt-i2c
-  - dt-compatibles: "mediatek,mt6577-i2c" + "mediatek,mt6589-i2c"
-  - function prefix: mtk_i2c_
-  - filename: i2c-mt65xx.c
-  - Kconfig symbol: I2C_MT65XX
+> +
+> +	if (of_machine_is_compatible("mediatek,mt6589") ||
+> +	    of_machine_is_compatible("mediatek,mt8135") ||
+> +	    of_machine_is_compatible("mediatek,mt8127")) {
+> +		/* turn on GPT6 which ungates arch timer clocks */
+> +		gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
+> +	}
+> +
+> +	/* enabel clock and set to free-run */
 
-Getting some harmonization here would definitly be nice.
+s/enabel/enable/
 
-Best regards
-Uwe
+> +	if (gpt_base) {
+> +		writel(GPT_ENABLE, gpt_base);
+> +		iounmap(gpt_base);
+> +	}
+> +
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Why not join the two conditions together?
+
+> +	of_clk_init(NULL);
+> +	clocksource_of_init();
+> +};
+>  
+>  static const char * const mediatek_board_dt_compat[] = {
+>  	"mediatek,mt6589",
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
