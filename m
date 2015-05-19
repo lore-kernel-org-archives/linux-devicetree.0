@@ -1,384 +1,79 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V4] arm64: dts: add APM Merlin Board device tree
-Date: Mon, 18 May 2015 17:56:16 -0700
-Message-ID: <1431996976-17482-1-git-send-email-fkan@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Feng Kan <fkan@apm.com>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6] Watchdog: introdouce "pretimeout" into framework
+Date: Tue, 19 May 2015 09:12:31 +0800
+Message-ID: <CADyBb7u1YnVvhNsvGAY7pQjK_SwMthN175XSw_DSY4SmF8XbVg@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<CADyBb7u=HjZO5CBzZLxw1aWDx0tKdVKBuTrrhrRF9bAQr7pADQ@mail.gmail.com>
+	<20150518172329.GA17202@roeck-us.net>
+	<2729872.Fp4939suL0@wuerfel>
+	<20150518201445.GA21230@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150518201445.GA21230-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the support for APM Merlin board. The Merlin board
-is based on the APM X-Gene Shadowcat SoC. This DTS enables PMU,
-Ethernet, SATA and Serial.
+Hi Arnd, Guenter,
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
-  V4 Change:
-	- Add ethernet
+yes, that is brilliant idea!!
+I will try to do so , that solve the compatibility problem , so I
+guess we can try this time :-)
 
-  V3 Change:
-        - Add PCIe
-        - Add merline to makefile in dts/apm directory
+On 19 May 2015 at 04:14, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On Mon, May 18, 2015 at 10:03:52PM +0200, Arnd Bergmann wrote:
+>> On Monday 18 May 2015 10:23:30 Guenter Roeck wrote:
+>> > >
+>> > > integrate watchdog_init_pretimeout and watchdog_init_timeout will be a
+>> > > little hard,
+>> > > we may need to change this API to :
+>> > >
+>> > > watchdog_init_timeouts(struct watchdog_device *wdd, unsigned int timeout_parm,
+>> > >                              unsigned int pretimeout_parm, struct device *dev)
+>> > >
+>> > > then we need to update all the watchdog drivers which use this API,
+>> > > maybe we can do this in a individual patchset, after this pretimeout
+>> > > patch is merged.
+>> > >
+>> > > Is that OK  ?   any thought?
+>> > >
+>> > That is what I would recommend.
+>> >
+>>
+>> The API change is fine, but I don't think you need to change all drivers.
+>>
+>> Just add a small wrapper function in the header file doing the conversion:
+>>
+>> static inline int watchdog_init_timeout(struct watchdog_device *wdd,
+>>                                 unsigned int timeout_parm, struct device *dev)
+>> {
+>>       return watchdog_init_timeouts(wdd, timeout_parm, ~0ul, dev);
+>> }
+>>
+>> Then you can update the drivers that actually use the pretimeout to
+>> use the new function at some point, and leave all other drivers calling
+>> the wrapper function.
+>>
+> Excellent idea.
+>
+> Guenter
 
-  V2 Change:
-        - Add dma-range definition
 
-  V1 Change:
-        - add memreserve for spintable.
-        - remove clkfreq attribute
-        - update spin location, although it is done by bootloader.
-        - remove msi reg entry
-        - add chosen for stdout path
- arch/arm64/boot/dts/apm/Makefile           |   1 +
- arch/arm64/boot/dts/apm/apm-merlin.dts     |  54 ++++++
- arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 267 +++++++++++++++++++++++++++++
- 3 files changed, 322 insertions(+)
- create mode 100644 arch/arm64/boot/dts/apm/apm-merlin.dts
- create mode 100644 arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
 
-diff --git a/arch/arm64/boot/dts/apm/Makefile b/arch/arm64/boot/dts/apm/Makefile
-index a2afabb..c75f17a 100644
---- a/arch/arm64/boot/dts/apm/Makefile
-+++ b/arch/arm64/boot/dts/apm/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
-+dtb-$(CONFIG_ARCH_XGENE) += apm-merlin.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/apm/apm-merlin.dts b/arch/arm64/boot/dts/apm/apm-merlin.dts
-new file mode 100644
-index 0000000..10dfa7a
---- /dev/null
-+++ b/arch/arm64/boot/dts/apm/apm-merlin.dts
-@@ -0,0 +1,54 @@
-+/*
-+ * dts file for AppliedMicro (APM) Merlin Board
-+ *
-+ * Copyright (C) 2015, Applied Micro Circuits Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "apm-shadowcat.dtsi"
-+
-+/ {
-+	model = "APM X-Gene Merlin board";
-+	compatible = "apm,merlin", "apm,xgene-shadowcat";
-+
-+	chosen { };
-+
-+	memory {
-+		device_type = "memory";
-+		reg = < 0x1 0x00000000 0x0 0x80000000 >;
-+	};
-+};
-+
-+&serial0 {
-+	status = "ok";
-+};
-+
-+&pcie0 {
-+	status = "ok";
-+};
-+
-+&sata1 {
-+	status = "ok";
-+};
-+
-+&sata2 {
-+	status = "ok";
-+};
-+
-+&sata3 {
-+	status = "ok";
-+};
-+
-+&sgenet0 {
-+	status = "ok";
-+};
-+
-+&xgenet1 {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-new file mode 100644
-index 0000000..77e3b0e
---- /dev/null
-+++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-@@ -0,0 +1,267 @@
-+/*
-+ * dts file for AppliedMicro (APM) X-Gene Shadowcat SOC
-+ *
-+ * Copyright (C) 2015, Applied Micro Circuits Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+/ {
-+	compatible = "apm,xgene-shadowcat";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu@000 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x000>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@001 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x001>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@100 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x100>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@101 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x101>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@200 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x200>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@201 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x201>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@300 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x300>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@301 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x301>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+	};
-+
-+	gic: interrupt-controller@78090000 {
-+		compatible = "arm,cortex-a15-gic";
-+		#interrupt-cells = <3>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		interrupt-controller;
-+		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
-+		ranges = <0 0 0 0x79000000 0x0 0x800000>; /* MSI Range */
-+		reg = <0x0 0x78090000 0x0 0x10000>,	/* GIC Dist */
-+		      <0x0 0x780A0000 0x0 0x20000>,	/* GIC CPU */
-+		      <0x0 0x780C0000 0x0 0x10000>,	/* GIC VCPU Control */
-+		      <0x0 0x780E0000 0x0 0x20000>;	/* GIC VCPU */
-+	};
-+
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <1 12 0xff04>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <1 0 0xff04>,	/* Secure Phys IRQ */
-+			     <1 13 0xff04>,	/* Non-secure Phys IRQ */
-+			     <1 14 0xff04>,	/* Virt IRQ */
-+			     <1 15 0xff04>;	/* Hyp IRQ */
-+		clock-frequency = <50000000>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		clocks {
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			refclk: refclk {
-+				compatible = "fixed-clock";
-+				#clock-cells = <1>;
-+				clock-frequency = <100000000>;
-+				clock-output-names = "refclk";
-+			};
-+
-+			socpll: socpll@17000120 {
-+				compatible = "apm,xgene-socpll-clock";
-+				#clock-cells = <1>;
-+				clocks = <&refclk 0>;
-+				reg = <0x0 0x17000120 0x0 0x1000>;
-+				clock-output-names = "socpll";
-+			};
-+
-+			socplldiv2: socplldiv2  {
-+				compatible = "fixed-factor-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socpll 0>;
-+				clock-mult = <1>;
-+				clock-div = <2>;
-+				clock-output-names = "socplldiv2";
-+			};
-+
-+			pcie0clk: pcie0clk@1f2bc000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2bc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie0clk";
-+			};
-+
-+			xge0clk: xge0clk@1f61c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f61c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				enable-mask = <0x3>;
-+				csr-mask = <0x3>;
-+				clock-output-names = "xge0clk";
-+			};
-+
-+			xge1clk: xge1clk@1f62c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f62c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				enable-mask = <0x3>;
-+				csr-mask = <0x3>;
-+				clock-output-names = "xge1clk";
-+			};
-+		};
-+
-+		serial0: serial@10600000 {
-+			device_type = "serial";
-+			compatible = "ns16550";
-+			reg = <0 0x10600000 0x0 0x1000>;
-+			reg-shift = <2>;
-+			clock-frequency = <10000000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x4c 0x4>;
-+		};
-+
-+		pcie0: pcie@1f2b0000 {
-+			device_type = "pci";
-+			compatible = "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-+				0xc0 0x10000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x00 0x00000000 0xC0 0x00000000 0x00 0x00010000   /* io */
-+				0x02000000 0x00 0x80000000 0xC0 0x80000000 0x00 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0x0 0x0 0x10 0x1
-+				0x0 0x0 0x0 0x2 &gic 0x0 0x0 0x0 0x11 0x1
-+				0x0 0x0 0x0 0x3 &gic 0x0 0x0 0x0 0x12 0x1
-+				0x0 0x0 0x0 0x4 &gic 0x0 0x0 0x0 0x13 0x1>;
-+			clocks = <&pcie0clk 0>;
-+			dma-coherent;
-+		};
-+
-+		sata1: sata@1a000000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a000000 0x0 0x1000>,
-+			      <0x0 0x1f200000 0x0 0x1000>,
-+			      <0x0 0x1f20d000 0x0 0x1000>,
-+			      <0x0 0x1f20e000 0x0 0x1000>;
-+			interrupts = <0x0 0x5a 0x4>;
-+			dma-coherent;
-+		};
-+
-+		sata2: sata@1a200000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a200000 0x0 0x1000>,
-+			      <0x0 0x1f210000 0x0 0x1000>,
-+			      <0x0 0x1f21d000 0x0 0x1000>,
-+			      <0x0 0x1f21e000 0x0 0x1000>;
-+			interrupts = <0x0 0x5b 0x4>;
-+			dma-coherent;
-+		};
-+
-+		sata3: sata@1a400000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a400000 0x0 0x1000>,
-+			      <0x0 0x1f220000 0x0 0x1000>,
-+			      <0x0 0x1f22d000 0x0 0x1000>,
-+			      <0x0 0x1f22e000 0x0 0x1000>;
-+			interrupts = <0x0 0x5c 0x4>;
-+			dma-coherent;
-+		};
-+
-+		sgenet0: ethernet@1f610000 {
-+			compatible = "apm,xgene2-sgenet";
-+			status = "disabled";
-+			reg = <0x0 0x1f610000 0x0 0x10000>,
-+			      <0x0 0x1f600000 0x0 0Xd100>,
-+			      <0x0 0x20000000 0x0 0X20000>;
-+			interrupts = <0 96 4>,
-+				     <0 97 4>;
-+			dma-coherent;
-+			clocks = <&xge0clk 0>;
-+			local-mac-address = [00 01 73 00 00 01];
-+			phy-connection-type = "sgmii";
-+		};
-+
-+		xgenet1: ethernet@1f620000 {
-+			compatible = "apm,xgene2-xgenet";
-+			status = "disabled";
-+			reg = <0x0 0x1f620000 0x0 0x10000>,
-+			      <0x0 0x1f600000 0x0 0Xd100>,
-+			      <0x0 0x20000000 0x0 0X220000>;
-+			interrupts = <0 108 4>,
-+				     <0 109 4>;
-+			port-id = <1>;
-+			dma-coherent;
-+			clocks = <&xge1clk 0>;
-+			local-mac-address = [00 01 73 00 00 02];
-+			phy-connection-type = "xgmii";
-+		};
-+	};
-+};
 -- 
-1.9.1
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
