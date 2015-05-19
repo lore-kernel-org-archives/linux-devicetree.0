@@ -1,54 +1,38 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] arm, imx6, dts: add DT for aristainetos2 board
-Date: Tue, 19 May 2015 16:33:10 +0200
-Message-ID: <1432045990.15181.36.camel@pengutronix.de>
-References: <1431334974-27531-1-git-send-email-hs@denx.de>
-	  <20150518113135.GD1071@dragon> <555AE192.8010700@denx.de>
-	 <1432025280.3182.6.camel@pengutronix.de> <555B3E3A.8000605@denx.de>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v8 09/16] clockevents/drivers: Add STM32 Timer driver
+Date: Tue, 19 May 2015 16:41:58 +0200
+Message-ID: <CALszF6A-De6dvcRNoa9ruL+y6Wt_rc7bi-O-VxHWkFF9NSt5_g@mail.gmail.com>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<555B098A.8030202@linaro.org>
+	<CALszF6AJ3Zf598wYeUx=iNWHHKT24xUyfagB=+4GocwZ-Fd-0g@mail.gmail.com>
+	<6177628.0ZDPLeVyah@wuerfel>
+	<CALszF6BZKD-CPTZ6Hc85wv2Z3Y7JmUv-cMkBtbk2Ga6WeeWU=A@mail.gmail.com>
+	<555B3F80.8070605@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <555B3E3A.8000605@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: hs@denx.de
-Cc: Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <555B3F80.8070605@linaro.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <gal>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+2015-05-19 15:49 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>
+>
+> It is not exactly as the initial patch.
+>
+> I think Arnd is proposing:
+>
+> config CLKSRC_STM32
+>         bool "Clocksource for STM32 SoCs" if COMPILE_TEST
+>         select CLKSRC_MMIO
+>
 
-Am Dienstag, den 19.05.2015, 15:44 +0200 schrieb Heiko Schocher:
-> Hello Philipp,
-> 
-> Am 19.05.2015 10:48, schrieb Philipp Zabel:
-> > Hi Heiko, Shawn,
-> >
-> > Am Dienstag, den 19.05.2015, 09:09 +0200 schrieb Heiko Schocher:
-> > [...]
-> >>> What is this?  I failed to find it in Documentation/devicetree/bindings/
-> >>
-> >> Ah, this is not documentated, see commit:
-> >>
-> >> commit 628f435be4359e6ae8ecfdda9b492053be76a057
-> >> Author: Philipp Zabel <p.zabel@pengutronix.de>
-> >> Date:   Tue Feb 25 11:55:04 2014 +0100
-> >>
-> >>       imx-drm: parallel-display: Add drm_panel support
-> >>
-> >> added Philipp to cc ...
-> >
-> > This was meant to be a temporary solution to connect a drm_panel to the
-> > parallel-display when the of-graph bindings were not yet available.
-> > I'd very much prefer to switch to the common of-graph bindings similarly
-> > to the LDB driver instead. Could you check if this would work for you:
-> 
-> Yes, your patch works for me (with appropriate changes in the dts file)
-> You can add my
-> Tested-by: Heiko Schocher <hs@denx.de>
-> for this patch, thanks!
+Isn't "depends on OF" missing for COMPILE_TEST case?
 
-Thank you, I've posted that parallel-display patch and will try to queue
-it for v4.2 when it gets accepted.
+Other than that, I'm fine with the proposal.
+Daniel, is it the case for you too?
 
-regards
-Philipp
+Regards,
+Maxime
