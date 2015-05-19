@@ -1,32 +1,79 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 09/11] ARM: dts: mt8127: add pinctrl/GPIO/EINT node for mt8127
-Date: Tue, 19 May 2015 11:21:15 +0200
-Message-ID: <CACRpkdY1tAkMTTO+z28B1rk1i+hL_FtSNQr98JHubPnawCy55g@mail.gmail.com>
-References: <1432015882-8646-1-git-send-email-hongzhou.yang@mediatek.com>
-	<1432015882-8646-10-git-send-email-hongzhou.yang@mediatek.com>
+From: Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] powerpc/fsl: Add FMan best effort port compatible
+Date: Tue, 19 May 2015 09:27:31 +0000
+Message-ID: <DM2PR03MB383ED154B2D6379219C60E8E6C30@DM2PR03MB383.namprd03.prod.outlook.com>
+References: <1431938519-11343-1-git-send-email-igal.liberman@freescale.com>
+ <1431983358.27761.11.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432015882-8646-10-git-send-email-hongzhou.yang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hongzhou Yang <hongzhou.yang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431983358.27761.11.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 8:11 AM, Hongzhou Yang
-<hongzhou.yang@mediatek.com> wrote:
-
-> From: Yingjoe Chen <yingjoe.chen@mediatek.com>
->
-> Add pinctrl,GPIO and EINT node to mt8127.dtsi.
->
-> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-for all the DTS[I] stuff, and same comment as patch 7
-of the old patch series.
-
-Yours,
-Linus Walleij
+SGkgU2NvdHQsDQpJIHVuZGVyc3RhbmQgeW91ciBwb2ludCwgbGV0IG1lIHBsZWFzZSBleHBsYWlu
+IG1vcmUgYWJvdXQgdGhlIGhhcmR3YXJlIGNvbmZpZ3VyYXRpb24gYW5kIHN1Z2dlc3QgYW5vdGhl
+ciBzb2x1dGlvbi4NCkknbSByZWZlcnJpbmcgb25seSB0byBleHRlcm5hbCBwb3J0cyAoVFgvUlgp
+LCBub3QgT1AuDQpJbiBGTWFuIFYzIHdlIGhhdmUgbWF4aW11bSBvZiA4IFBvcnQsIGl0IGRlcGVu
+ZHMgb24gdGhlIEZNYW4gcmV2aXNpb24gKGluIEI0LCBUMiwgVDQgd2UgaGF2ZSA4IHBvcnRzLCBp
+biBUMTAyNCBhbmQgVDEwNDAgd2UgaGF2ZSA0KS4NClRoZSBmb2xsb3dpbmcgY29uZmlndXJhdGlv
+biBhcmUgdmFsaWQ6DQoJLSBBbGwgOCBwb3J0cyBjYW4gd29yayBhcyAxRyBwb3J0cy4gDQoJLSBQ
+b3J0cyA3LCA4IChpZiBhdmFpbGFibGUpIGNhbiB3b3JrIGFzIDEwRyAod2l0aCBmdWxsIGhhcmR3
+YXJlIHJlc291cmNlcykuDQoJLSBQb3J0IDEsIDIgKDEgaW4gVDEwMjQ7IDEsIDIgaW4gVDIwODAp
+IGNhbiBiZSBjb25maWd1cmVkIGFzIDEwRyAod2l0aCBsaW1pdGVkIGhhcmR3YXJlIHJlc291cmNl
+cykuDQoNCkN1cnJlbnRseSB3ZSB1c2Ugb25seSAiZnNsLGZtLXYzLXBvcnQtcngvdHgiLg0KDQpX
+ZSBjYW4gZ28gMiB3YXlzOg0KMS4gSGF2aW5nIDIgY29tcGF0aWJsZXM6DQoJImZzbCxmbWFuLXYz
+LXBvcnQtcngvdHgiDQoJImZzbCxmbWFuLXYzLWJlc3QtZWZmb3J0LXBvcnQtcngvdHgiDQoNCglU
+aGUgZHJpdmVyIGNhbiBkZXRlcm1pbmUgdGhlIHBvcnQgdHlwZSBvZiAiZnNsLGZtYW4tdjMtcG9y
+dC1yeC90eCIgYnkgcmVhZGluZyB0aGUgSFcgcG9ydCBpZC4NCgkiZnNsLGZtYW4tdjMtYmVzdC1l
+ZmZvcnQtcG9ydC1yeC90eCIgd2lsbCBsZXQgdGhlIGRyaXZlciBrbm93IGFib3V0IHRoZSBiZXN0
+IGVmZm9ydCBwb3J0IGFuZCBpdCB3aWxsIGJlIHVzZWQgaW5zdGVhZCBvZiAiZnNsLGZtYW4tdjMt
+cG9ydC1yeC90eCIuDQoNCkluIHlvdXIgb3Bpbmlvbiwgc2hvdWxkIHdlIGFkZCAiZnNsLGZtYW4t
+djMtMTBnLXBvcnQtcngvdHgiIGZvciAxMEcgKHdpdGggZnVsbCBoYXJkd2FyZSByZXNvdXJjZXMp
+Pw0KSW4gc3VjaCBjaGFzZSwgImZzbCxmbWFuLXYzLXBvcnQtcngvdHgiIHdpbGwgZGVub3RlIDFH
+IGV4cGxpY2l0bHkuDQoNCkluIEZNYW4gVjIsIGR1YWwgcG9ydHMvTUFDcyBhcmUgbm90IGF2YWls
+YWJsZSwgc28gbm8gbmVlZCBjaGFuZ2UgdGhlIGNvbXBhdGlibGVzLg0KDQpJZ2FsDQoNCj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2Vu
+dDogVHVlc2RheSwgTWF5IDE5LCAyMDE1IDEyOjA5IEFNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIz
+MTk1MA0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0
+cy5vemxhYnMub3JnOyBCdWN1cg0KPiBNYWRhbGluLUNyaXN0aWFuLUIzMjcxNg0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIXSBwb3dlcnBjL2ZzbDogQWRkIEZNYW4gYmVzdCBlZmZvcnQgcG9ydCBjb21w
+YXRpYmxlDQo+IA0KPiBPbiBNb24sIDIwMTUtMDUtMTggYXQgMTE6NDEgKzAzMDAsIElnYWwuTGli
+ZXJtYW4gd3JvdGU6DQo+ID4gRnJvbTogSWdhbCBMaWJlcm1hbiA8aWdhbC5saWJlcm1hbkBmcmVl
+c2NhbGUuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBhZGRzIGEgY29tcGF0aWJsZSB3aGljaCBy
+ZXByZXNlbnRzIEZNYW4gVjMgYmVzdCBlZmZvcnQgcG9ydHMuDQo+ID4gRk1hbiBiZXN0IGVmZm9y
+dCBwb3J0IGlzIGNvbmZpZ3VyZWQgYXMgMTBHIHBvcnRzLCBob3dldmVyLCBpdCB1c2VzIDFHDQo+
+ID4gaGFyZHdhcmUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxpZ2Fs
+LmxpYmVybWFuQGZyZWVzY2FsZS5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0ICAgICAgIHwgICAgNSArKysrKw0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0DQo+ID4gYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQNCj4g
+PiBpbmRleCBlZGRhNTVmLi5jMmUzZWMzIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dA0KPiA+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dA0KPiA+IEBA
+IC0xNjYsNiArMTY2LDExIEBAIFBST1BFUlRJRVMNCj4gPiAgCQkJLSAiZnNsLGZtYW4tdjMtcG9y
+dC1vaCIgZm9yIEZNYW5WMyBPSCBwb3J0cw0KPiA+ICAJCQktICJmc2wsZm1hbi12My1wb3J0LXJ4
+IiBmb3IgRk1hblYzIFJYIHBvcnRzDQo+ID4gIAkJCS0gImZzbCxmbWFuLXYzLXBvcnQtdHgiIGZv
+ciBGTWFuVjMgVFggcG9ydHMNCj4gPiArCQlPcHRpb25hbCBjb21wYXRpYmxlIHdoaWNoIGNhbiBi
+ZSB1c2VkIGluIGFkZGl0aW9uIHRvIHRoZQ0KPiA+ICsJCWNvbXBhdGlibGVzIGFib3ZlIGlzOg0K
+PiA+ICsJCQktICJmc2wsZm1hbi12My1iZXN0LWVmZm9ydC1wb3J0Ig0KPiA+ICsJCVRoaXMgY29t
+cGF0aWJsZSByZXByZXNlbnRzIDEwRyBiZXN0IGVmZm9ydCBwb3J0czoNCj4gPiArCQkJUG9ydCBj
+b25maWd1cmVkIGFzIDEwRywgdXNpbmcgMUcgaGFyZHdhcmUuDQo+IA0KPiBXaGF0IGRvZXMgdGhp
+cyBtZWFuPyAgSWYgaXQncyB1c2luZyAxRyBoYXJkd2FyZSB0aGVuIGl0J3MgYSAxRyBwb3J0LCBy
+aWdodD8NCj4gSG93IGNhbiB5b3UgY29uZmlndXJlIGEgMUcgcG9ydCB0byBiZSAxMEc/DQo+IA0K
+PiBXaHkgaXMgdGhpcyBjb21wYXRpYmxlIGluIGFkZGl0aW9uIHRvIG90aGVycyAobm90ZSB0aGF0
+IHRoaXMgaW1wbGllcyBzdWNoIHBvcnRzDQo+IGFyZSAxMDAlIGJhY2t3YXJkcyBjb21wYXRpYmxl
+IHdpdGggaGFyZHdhcmUgdGhhdCBsYWNrcyB0aGUgbmV3DQo+IGNvbXBhdGlibGUpPyAgWW91J2Qg
+aGF2ZSB0aGUgc2FtZSBjb21wYXRpYmxlIG9uIHJ4IGFuZCB0eCBub2RlcyAoSSdtDQo+IGFzc3Vt
+aW5nIHRoaXMgaXNuJ3QgYXBwbGljYWJsZSB0byBvaCk/DQo+IA0KPiBXaGF0IGFyZSB0aGUgaW1w
+bGljYXRpb25zIG9mIHRoaXMgdGhhdCB3YXJyYW50IGFkZGluZyBhIGNvbXBhdGlibGU/DQo+IA0K
+PiAtU2NvdHQNCj4gDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
