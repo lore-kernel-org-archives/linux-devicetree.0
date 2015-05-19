@@ -1,197 +1,94 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH dt v8] ARM: dts: add support for Vybrid running on Cortex-M4
-Date: Wed, 20 May 2015 00:05:18 +0200
-Message-ID: <1432073118-26898-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de
-Cc: olof@lixom.net, shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
+Date: Wed, 20 May 2015 00:07:26 +0200
+Message-ID: <CACna6ryBiOsuSGTwJ9_v-=JK5y_v_mZ5xhsV2kQSXCT8PXxWNw@mail.gmail.com>
+References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de>
+	<20150518224910.GU11598@ld-irv-0074>
+	<CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
+	<555BB252.9080200@hauke-m.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <555BB252.9080200-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds an initial device tree to run Linux on the Cortex-M4 on
-the Vybrid based Colibri VF61 module.
+On 19 May 2015 at 23:59, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
+>> So my first Idea would be having something like this:
+>>
+>> mtdevice@foo {
+>>         ...
+>>         bootloader: partition@0 {
+>>                 reg =3D <0 0x10000>;
+>>                 device_type =3D "flash-partition";
+>>                 read-only;
+>>         };
+>>
+>>         firmware: partition@10000 {
+>>                 reg =3D <0x1000 0x7e0000>;
+>>                 device_type =3D "flash-partition";
+>>                 compatible =3D "brcm,trx";
+>>         };
+>>
+>>         calibration: partition@7f0000 {
+>>                 reg =3D < >;
+>>                 device_type =3D "flash-partition";
+>>                 read-only;
+>>         };
+>> };
+>>
+>> Then the ofpart parsing could be integrated into the core, and
+>> partition parsers get run according to their compatibles on the
+>> individual partitions.
+>>
+>> Of course this also might be total overengineering and completely th=
+e
+>> wrong place for devicetree as it's essentially configuration data, b=
+ut
+>> since the now described partitions are now more or less "static", IM=
+HO
+>> this would be a-okay.
+>
+> This sounds like the problem Rafa=C5=82 wanted to solve in his patch =
+"mtd:
+> add support for typed parsers splitting partitions"
+>
+> This would also solve my problem and would make the bcm47xx part pars=
+er
+> a lot simpler and more secure for targets using device tree.
+> I still think we should add a alternative for the people that do not
+> want to rewrite their partition parser. Specifying the list of availa=
+ble
+> partition parser in the flash driver is a bad idea because it is the
+> wrong place.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/Makefile            |  1 +
- arch/arm/boot/dts/vf610m4-colibri.dts | 99 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/vf610m4.dtsi        | 50 ++++++++++++++++++
- 3 files changed, 150 insertions(+)
- create mode 100644 arch/arm/boot/dts/vf610m4-colibri.dts
- create mode 100644 arch/arm/boot/dts/vf610m4.dtsi
+This is what I hoped for all the time. To get both patches accepted
+(linux,part-probe & typed parsers). That would give us a really nice
+way to handle partitioning on every device.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 07476a0..02a7a62 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -328,6 +328,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
- dtb-$(CONFIG_SOC_VF610) += \
- 	vf500-colibri-eval-v3.dtb \
- 	vf610-colibri-eval-v3.dtb \
-+	vf610m4-colibri.dtb \
- 	vf610-cosmic.dtb \
- 	vf610-twr.dtb
- dtb-$(CONFIG_ARCH_MXS) += \
-diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
-new file mode 100644
-index 0000000..2931a80
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4-colibri.dts
-@@ -0,0 +1,99 @@
-+/*
-+ * Device tree for Colibri VF61 Cortex-M4 support
-+ *
-+ * Copyright (C) 2015 Stefan Agner
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "vf610m4.dtsi"
-+
-+/ {
-+	model = "VF610 Cortex-M4";
-+	compatible = "fsl,vf610m4";
-+
-+	chosen {
-+		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
-+		linux,stdout-path = "&uart2";
-+	};
-+
-+	memory {
-+		reg = <0x8c000000 0x3000000>;
-+	};
-+};
-+
-+&gpio0 {
-+	status = "disabled";
-+};
-+
-+&gpio1 {
-+	status = "disabled";
-+};
-+
-+&gpio2 {
-+	status = "disabled";
-+};
-+
-+&gpio3 {
-+	status = "disabled";
-+};
-+
-+&gpio4 {
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	vf610-colibri {
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				VF610_PAD_PTD0__UART2_TX		0x21a2
-+				VF610_PAD_PTD1__UART2_RX		0x21a1
-+				VF610_PAD_PTD2__UART2_RTS		0x21a2
-+				VF610_PAD_PTD3__UART2_CTS		0x21a1
-+			>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/vf610m4.dtsi b/arch/arm/boot/dts/vf610m4.dtsi
-new file mode 100644
-index 0000000..9ffe2eb
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4.dtsi
-@@ -0,0 +1,50 @@
-+/*
-+ * Device tree for VF6xx Cortex-M4 support
-+ *
-+ * Copyright (C) 2015 Stefan Agner
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "armv7-m.dtsi"
-+#include "vfxxx.dtsi"
-+
-+&mscm_ir {
-+	interrupt-parent = <&nvic>;
-+};
--- 
-2.4.1
+
+> I am in favor of both concepts, because there is already one driver
+> reading the partition parser list from device tree and it is implemen=
+ted
+> pretty easy. Jonas Approach sounds nice because it really solves two
+> more problems.
+> Jonas approach would work on bcm47xx and bcm53xx targets, because the=
+re
+> the header is located after the boot loader and does not contain all
+> partitions. This could also be used to divide the partition containin=
+g
+> the kernel and the read only root fs in OpenWrt. Are there any more
+> users which could use this extended approach?
+
+I got a bit lost with above. The patch adding typed parsers I sent
+will allow us to write both: TRX parser (splitter) and SquashFS parser
+(splitter). This is all we need in OpenWrt and I my patch is highly
+based on OpenWrt version obviously too.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
