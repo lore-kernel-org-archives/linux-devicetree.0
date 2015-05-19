@@ -1,29 +1,32 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v7 08/13] ARM: unify MMU/!MMU addruart calls
-Date: Tue, 19 May 2015 16:56:25 +0800
-Message-ID: <20150519085625.GY1071@dragon>
-References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
- <1431769465-26867-9-git-send-email-stefan@agner.ch>
- <20150516205103.GO2067@n2100.arm.linux.org.uk>
- <alpine.DEB.2.11.1505170952060.4225@nanos>
- <alpine.DEB.2.11.1505181735230.4225@nanos>
- <20150519053503.GP1071@dragon>
- <alpine.DEB.2.11.1505191010510.4225@nanos>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/10] ARM: dts: mt8135-evbp1: Add pinctrl/GPIO node for mt6397.
+Date: Tue, 19 May 2015 10:57:55 +0200
+Message-ID: <CACRpkdaVyfWimkQwTnrVyWz5479NFwAgsO-_DAAAjZUkQ9rDQQ@mail.gmail.com>
+References: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1431567346-33780-9-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.11.1505191010510.4225@nanos>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, arnd@arndb.de, Stefan Agner <stefan@agner.ch>, shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, olof@lixom.net, daniel.lezcano@linaro.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431567346-33780-9-git-send-email-hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maoguang Meng <maoguang.meng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel@v>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 10:11:40AM +0200, Thomas Gleixner wrote:
-> If you pull the irq stuff. Make sure that the HEAD is b5cc5cbc11697. I
-> pushed out a broken version earlier.
+On Thu, May 14, 2015 at 3:35 AM, Hongzhou Yang
+<hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 
-Okay, thanks for the info, Thomas.  I will take care of it if rmk and
-Arnd agree with the approach.
+> Add pinctrl and GPIO node to mt8135-evbp1.dts.
+>
+> Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Shawn
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Same comment as on patch 7.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
