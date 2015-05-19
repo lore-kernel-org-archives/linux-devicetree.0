@@ -1,47 +1,59 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v7 08/13] ARM: unify MMU/!MMU addruart calls
-Date: Tue, 19 May 2015 18:06:53 +0200
-Message-ID: <b41ebeb9d62b9c49faec6500f73460b9@agner.ch>
-References: <1431769465-26867-1-git-send-email-stefan@agner.ch>
- <20150519101615.GA2067@n2100.arm.linux.org.uk>
- <bb773210f5f7068a8cba2c283422676c@agner.ch> <2419398.cbLWQC7K5f@wuerfel>
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: sabrelite: use simple-panel instead of
+ display-timings for LVDS0
+Date: Tue, 19 May 2015 09:51:23 -0700
+Message-ID: <555B6A0B.4010205@boundarydevices.com>
+References: <20150518075844.7e1b5916@ipc1.ka-ro>	 <1432050616-11465-1-git-send-email-eric.nelson@boundarydevices.com>	 <1432050616-11465-3-git-send-email-eric.nelson@boundarydevices.com> <1432051452.15181.48.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2419398.cbLWQC7K5f@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, shawn.guo@linaro.org, kernel@pengutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, olof@lixom.net, daniel.lezcano@linaro.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432051452.15181.48.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-05-19 13:50, Arnd Bergmann wrote:
-> On Tuesday 19 May 2015 13:23:22 Stefan Agner wrote:
->> On 2015-05-19 12:16, Russell King - ARM Linux wrote:
-<snip>
->> Not sure how we can deal with the EFM32 vs. IMX changes... Patches 08-10
->> has no dependencies on the clock changes which Thomas merged. They could
->> go through whatever EFM32 is merged normally (last time Arnd directly
->> merged from Uwe), and then Shawn could base the rest of the changes on
->> that too?
+On 05/19/2015 09:04 AM, Philipp Zabel wrote:
+> Hi Eric,
 > 
-> Do you have a dependency on patch 10 (the one for EFM32) in your later
-> patches?
-
-Unfortunately, there is a dependency on that patch: I change the default
-of UNCOMPRESS_INCLUDE to debug/uncompress.h for all ARM_SINGLE_ARMV7M
-platforms. Without that patch, it would default to mach/uncompress.h,
-which does not exist for MACH_MXC/SOC_VF610.
-
+> Am Dienstag, den 19.05.2015, 08:50 -0700 schrieb Eric Nelson:
+>> Also add label for backlight_lvds and connect it to the LVDS display.
+>>
+>> Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+>> ---
+> [...]
+>> @@ -129,6 +129,17 @@
+>>  		power-supply = <&reg_3p3v>;
+>>  		status = "okay";
+>>  	};
+>> +
+>> +	panel {
+>> +		compatible = "hannstar,hsd100pxn1";
+>> +		backlight = <&backlight_lvds>;
+>> +
+>> +		port {
+>> +			panel_in: endpoint {
+>> +				remote-endpoint = <&lvds0_out>;
+>> +			};
+>> +		};
+>> +	};
+>>  };
+>>  
+>>  &audmux {
+>> @@ -374,18 +385,11 @@
+>>  		fsl,data-width = <18>;
 > 
-> If not, you can send the other ones to Shawn, so I pull them as
-> a branch, and then I apply that on top of the merges. I have also
-> merged two other ARMv7M platforms for 4.2 now (both in next/soc),
-> so we should do the same change for those as well, and I'd rather
-> apply a patch for that, than merge a branch that is based on
-> next/soc.
+> The fsl,data-width property shouldn't be needed anymore if you
+> set .bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG for the hsd100pxn1
+> panel in panel-simple.c.
+> 
 
-I guess, in that case, you need to take the others too? (08/09?)
+Thanks again Philipp.
 
+That's a much better place to put it, since this is a panel feature,
+not a feature of the LVDS channel.
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
