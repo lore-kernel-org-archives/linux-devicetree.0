@@ -1,14 +1,14 @@
 Return-Path: <mtk10466@mediatek.inc>
 From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-Subject: [PATCH 10/10] ARM: dts: mt8127: add pinctrl/GPIO/EINT node for mt8127
-Date: Wed, 13 May 2015 18:35:46 -0700
-Message-ID: <1431567346-33780-11-git-send-email-hongzhou.yang@mediatek.com>
-In-Reply-To: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
-References: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
+Subject: [PATCH v2 09/11] ARM: dts: mt8127: add pinctrl/GPIO/EINT node for mt8127
+Date: Mon, 18 May 2015 20:01:34 -0700
+Message-ID: <1432004496-26336-10-git-send-email-hongzhou.yang@mediatek.com>
+In-Reply-To: <1432004496-26336-1-git-send-email-hongzhou.yang@mediatek.com>
+References: <1432004496-26336-1-git-send-email-hongzhou.yang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
