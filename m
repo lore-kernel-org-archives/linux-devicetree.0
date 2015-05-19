@@ -1,92 +1,78 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: add ETRAXFS GPIO driver
-Date: Tue, 19 May 2015 11:39:01 +0200
-Message-ID: <CACRpkdZcbvrcOMJavU5TacR1nD5+ot2FdC5zxBc=8XdhZN0SqQ@mail.gmail.com>
-References: <1431728843-21583-1-git-send-email-rabin@rab.in>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/7] mmc: dt-bindings: add Mediatek MMC bindings
+Date: Tue, 19 May 2015 11:41:46 +0200
+Message-ID: <CAPDyKFq+YAz2pt1820YnqWaVKO6sn5eB+NxuM2dhP236FSKa9g@mail.gmail.com>
+References: <1432017411-2996-1-git-send-email-chaotian.jing@mediatek.com>
+	<1432017411-2996-2-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1431728843-21583-1-git-send-email-rabin@rab.in>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rabin Vincent <rabin@rab.in>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432017411-2996-2-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 16, 2015 at 12:27 AM, Rabin Vincent <rabin@rab.in> wrote:
-
-> Add a GPIO driver for the General I/O block on Axis ETRAX FS SoCs.
+On 19 May 2015 at 08:36, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Document the device-tree binding of Mediatek MMC host
 >
-> Signed-off-by: Rabin Vincent <rabin@rab.in>
-
-Nice!
-
-(...)
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt
-> @@ -0,0 +1,21 @@
-> +Axis ETRAX FS General I/O controller bindings
+> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 33 ++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mtk-sd.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> new file mode 100644
+> index 0000000..ba6d668
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> @@ -0,0 +1,33 @@
+> +* MTK MMC controller
+> +
+> +The MTK  MSDC can act as a MMC controller
+> +to support MMC, SD, and SDIO types of memory cards.
+> +
+> +This file documents differences between the core properties in mmc.txt
+> +and the properties used by the msdc driver.
 > +
 > +Required properties:
+> +- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc".
+> +- interrupts: Should contain MSDC interrupt number
+> +- clocks: MSDC source clock, HCLK, HCLK is mandatory when it is not controlled by Infra
+
+This seems strange. Either it's mandatory since it's under the
+"Required properties" section or it should be moved to the "Optional
+properties" section.
+
+> +- clock-names: "source", "hclk"
+> +- pinctrl-names: should be "default", "state_uhs"
+> +- pinctrl-0: should contain default/high speed pin ctrl
+> +- pinctrl-1: should contain uhs mode pin ctrl
+> +- vmmc-supply: power to the Core
 > +
-> +- compatible:
-> +  - "axis,etraxfs-gio"
-> +- reg: Physical base address and length of the controller's registers.
-> +- #gpio-cells: Should be 3
-> +  - The first cell is the port number (hex).
-> +  - The seconds cell is the gpio offset number.
-> +  - The third cell is reserved and is currently unused.
-> +- gpio-controller: Marks the device node as a GPIO controller.
+> +Optional properties:
+> +- vqmmc-supply: power to the IO(for SD/SDIO)
 > +
-> +Example:
-> +
-> +       gio: gpio@b001a000 {
-> +               compatible = "axis,etraxfs-gio";
-> +               reg = <0xb001a000 0x1000>;
-> +               gpio-controller;
-> +               #gpio-cells = <3>;
-> +       };
-
-Three cells is rather unusual, is it the best arrangement?
-
-Usually it's just offset+flags (your flags are ununsed I see).
-And then you could divide offset by num gpios per bank
-(I guess 32) in the driver to get bank number.
-
-The other obvious question is whether you considered the
-design pattern of using one DT node per bank, so you
-have offset 0..31 (I guess) on each device, simplifying things
-with two cells.
-
-The latter design pattern is usually recommended unless
-there is a "strong" coupling between the banks, such as
-if they all share the same IRQ line so they need the
-same interrupt handler, or share other common registers.
-
-> +config GPIO_ETRAXFS
-> +       bool "Axis ETRAX FS General I/O"
-> +       depends on CRIS || COMPILE_TEST
-> +       depends on OF
-> +       select GPIO_GENERIC
-
-Very nice to have generic for this.
-
-> +struct etraxfs_gpio_port {
-> +       const char *label;
-> +       unsigned int oe;
-> +       unsigned int dout;
-> +       unsigned int din;
-
-consider using u32 for these.
-
-> +       unsigned int ngpio;
+> +Examples:
+> +mmc0: mmc@11230000 {
+> +       compatible = "mediatek,mt8173-mmc", "mediatek,mt8135-mmc";
+> +       reg = <0 0x11230000 0 0x108>;
+> +       interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_LOW>;
+> +       vmmc-supply = <&mt6397_vemc_3v3_reg>;
+> +       clocks = <&pericfg CLK_PERI_MSDC30_0>, <&topckgen CLK_TOP_MSDC50_0_H_SEL>;
+> +       clock-names = "source", "hclk";
+> +       pinctrl-names = "default", "state_uhs";
+> +       pinctrl-0 = <&mmc0_pins_default>;
+> +       pinctrl-1 = <&mmc0_pins_uhs>;
 > +};
-> +
-> +struct etraxfs_gpio_info {
-> +       int num_ports;
+> --
+> 1.8.1.1.dirty
+>
 
-unsigned?
-
-> +       const struct etraxfs_gpio_port *ports;
-> +};
-
-Yours,
-Linus Walleij
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
