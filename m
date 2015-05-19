@@ -1,51 +1,33 @@
-From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] power_supply: Add support for TI BQ25890 charger chip
-Date: Tue, 19 May 2015 12:14:42 +0300
-Message-ID: <20150519091442.GF14396@lpalcu-linux>
-References: <1431698778-29462-1-git-send-email-laurentiu.palcu@intel.com>
- <1431698778-29462-3-git-send-email-laurentiu.palcu@intel.com>
- <CAJKOXPfDcTMEd576cVspXKT2kb__49rQSk-BbxXy5ZinO8n5yA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 05/11] pinctrl: mediatek: add ies/smt control to common code.
+Date: Tue, 19 May 2015 11:15:46 +0200
+Message-ID: <CACRpkdb_+tvCETd1V=hS-FfF6ZM0B63S2uzGSmbihiy=S9QDJg@mail.gmail.com>
+References: <1432015882-8646-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1432015882-8646-6-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPfDcTMEd576cVspXKT2kb__49rQSk-BbxXy5ZinO8n5yA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432015882-8646-6-git-send-email-hongzhou.yang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Tue, May 19, 2015 at 8:11 AM, Hongzhou Yang
+<hongzhou.yang@mediatek.com> wrote:
 
-On Tue, May 19, 2015 at 05:40:25PM +0900, Krzysztof Kozlowski wrote:
-> > +
-> > +static int bq25890_chip_reset(struct bq25890_device *bq)
-> > +{
-> > +       int ret;
-> > +
-> > +       ret = bq25890_field_write(bq, F_REG_RST, 1);
-> > +       if (ret < 0)
-> > +               return ret;
-> > +
-> > +       do {
-> > +               ret = bq25890_field_read(bq, F_REG_RST);
-> > +               if (ret < 0)
-> > +                       return ret;
-> > +
-> > +               usleep_range(5, 10);
-> > +       } while (ret == 1);
-> 
-> Is it possible to loop here indefinetely?
-According to specifications, this field is "Reset to 0 after register
-reset is completed", so I'm trusting the chip will behave as advertised!
-:) We could implement a safety mechanism to avoid looping in case the
-chip misbehaves but I don't think it's worth it. What do you think?
+> Input enable and smt setting have different register,
+> modify code to fix it.
+>
+> Several mediatek soc use similar input enable/smt setting
+> procedure as mt8173, some soc use generic input enable/smt
+> setting, some soc has no input enable/smt setting. Adding
+> common code to handle all those cases, so future soc driver
+> can use it.
+>
+> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
 
-I'll address the other comments in v2.
+Applied this version instead.
 
-Thanks for reviewing,
-laurentiu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
