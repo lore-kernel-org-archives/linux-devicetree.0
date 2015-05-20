@@ -1,47 +1,44 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add
- pwrkey driver
-Date: Wed, 20 May 2015 10:03:46 -0500
-Message-ID: <CAHrpEqQ9F1qXw6RmKPgwpqsFOq=O0dsNL7YtqNQ2ZUVBYz6DSw@mail.gmail.com>
-References: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
-	<20150520142205.GA24844@dragon>
-	<CAHrpEqSpeMO=zLyii8qZUznP+9EAQqJ-D3O8hbXj99m+UNvpzA@mail.gmail.com>
-	<6111368.e0EOBSJsmZ@jclayton-pc>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <6111368.e0EOBSJsmZ@jclayton-pc>
-Sender: linux-pm-owner@vger.kernel.org
-To: Joshua Clayton <stillcompiling@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, rtc-linux@googlegroups.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, alexandre.belloni@free-electrons.com, Philipp Zabel <p.zabel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+From: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
+Subject: [PATCH v2 1/2] devicetree: xilinx-xadc: Add optional label property
+Date: Wed, 20 May 2015 10:22:31 -0500
+Message-ID: <1432135352-29848-1-git-send-email-xander.huff@ni.com>
+References: <555B78A3.2030202@metafoo.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <555B78A3.2030202-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org, Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 20, 2015 at 9:46 AM, Joshua Clayton
-<stillcompiling@gmail.com> wrote:
->>
->> +       snvs_np = of_get_parent(pdev->dev.of_node);
->> +       if (!snvs_np)
->> +               return -ENODEV;
->> +
->> +       data->snvs = syscon_node_to_regmap(snvs_np);
->> +       of_node_put(snvs_np);
->> +
->> +       if (!data->snvs) {
->> +               pr_err("Can't snvs syscon\n");
->> +               return -ENODEV;
->> +       }
->>
->> How about change error message to " Can't snvs syscon, probably use
->> old dts file"?
-> How about simply: "Cannot find snvs syscon node in devicetree."
+To better facilitate user-mode access to optional aux channels, allow
+device trees to specify a custom label for defined channels.
 
-Shawn:
-          Are you okay for that?
+Signed-off-by: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
+Reviewed-by: Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>
+Reviewed-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-best regards
-Frank Li
-
->
->
-> --
-> ~Joshua Clayton
+diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+index d71258e..19dcd96 100644
+--- a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+@@ -68,6 +68,7 @@ Optional properties:
+ 			  Note each channel number should only be used at most
+ 			  once.
+ 		Optional properties:
++			* label: Custom label for the channel.
+ 			* xlnx,bipolar: If set the channel is used in bipolar
+ 			  mode.
+ 
+@@ -107,6 +108,7 @@ Examples:
+ 			#size-cells = <0>;
+ 			channel@0 {
+ 				reg = <0>;
++				label = "vin_v";
+ 				xlnx,bipolar;
+ 			};
+ 		};
+-- 
+1.9.1
