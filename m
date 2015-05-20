@@ -1,47 +1,39 @@
-From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-Subject: Re: [PATCH v2 08/11] mfd: mediatek: Add GPIO sub module support
- into mfd.
-Date: Tue, 19 May 2015 23:05:35 -0700
-Message-ID: <1432101935.4007.1.camel@mussux00.eus.mediatek.inc>
-References: <1432015882-8646-1-git-send-email-hongzhou.yang@mediatek.com>
-	 <1432015882-8646-9-git-send-email-hongzhou.yang@mediatek.com>
-	 <20150519093426.GS22418@x1>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Implement SoC bus support for Vybrid
+Date: Wed, 20 May 2015 08:08:09 +0200
+Message-ID: <283beb50db48f2a7a43dcdd249e4d93e@agner.ch>
+References: <cover.1432099651.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150519093426.GS22418@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com, eddie.huang@mediatek.co
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1432099651.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-19 at 10:34 +0100, Lee Jones wrote:
-> On Mon, 18 May 2015, Hongzhou Yang wrote:
+On 2015-05-20 07:36, Sanchayan Maity wrote:
+> Sanchayan Maity (2):
+>   ARM: dts: vfxxx: Add OCOTP and OCROM nodes
+>   ARM: vf610: Add SoC bus support for Vybrid
 > 
-> > Register pinctrl subnode into 6397 mfd cell.
-> > 
-> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> > ---
-> >  drivers/mfd/mt6397-core.c |    3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> > index 09bc780..012c620 100644
-> > --- a/drivers/mfd/mt6397-core.c
-> > +++ b/drivers/mfd/mt6397-core.c
-> > @@ -34,6 +34,9 @@ static const struct mfd_cell mt6397_devs[] = {
-> >  	}, {
-> >  		.name = "mt6397-clk",
-> >  		.of_compatible = "mediatek,mt6397-clk",
-> > +	}, {
-> > +		.name = "mediatek-mt6397-pinctrl",
-> 
-> I think the "mediatek-" part should be removed, no?
+>  arch/arm/boot/dts/vfxxx.dtsi   | 10 +++++
+>  arch/arm/mach-imx/mach-vf610.c | 85 +++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 93 insertions(+), 2 deletions(-)
 
 
-Ok, I will send another patch to change it, thank you.
+This patchset
+Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Yours,
-Hongzhou
+Shawn, speaking of Ack, the current plan is to merge the Vybrid
+Cortex-M4 patches directly into the arm-soc tree. If you are ok with
+them, could I have your Ack on them (sent out a split version of them
+(v8) some hours ago).
 
+--
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
