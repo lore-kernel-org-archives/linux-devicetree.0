@@ -1,67 +1,49 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v1 2/2] ARM: vf610: Add SoC bus support for Vybrid
-Date: Wed, 20 May 2015 09:01:51 +0800
-Message-ID: <20150520010151.GZ1071@dragon>
-References: <cover.1431928866.git.maitysanchayan@gmail.com>
- <653ed53ef933a6834c4fd3c90ee47e5fb5c78160.1431928866.git.maitysanchayan@gmail.com>
- <20150519062413.GR1071@dragon>
- <20150519094223.GA3194@Sanchayan-Arch.toradex.int>
+From: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] clk: hi6220: Clock driver support for Hisilicon
+ hi6220 SoC
+Date: Wed, 20 May 2015 08:52:37 +0800
+Message-ID: <555BDAD5.1080301@huawei.com>
+References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>	<1430827599-11560-5-git-send-email-bintian.wang@huawei.com>	<20150515002527.GD31753@codeaurora.org>	<5555A37B.1090105@huawei.com>	<20150515193041.GO31753@codeaurora.org> <CAAS=xmjsFoQg-HgWA5-e=cF3qF+PcVNc3i_3Z5EBPNJ2HyOZKQ@mail.gmail.com> <555B9E7B.9000809@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150519094223.GA3194@Sanchayan-Arch.toradex.int>
-Sender: linux-kernel-owner@vger.kernel.org
-To: maitysanchayan@gmail.com
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <555B9E7B.9000809-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Haifeng Yan <yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <sledge.yan>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 03:12:23PM +0530, maitysanchayan@gmail.com wrote:
-> Hello Shawn,
-> 
-> On 15-05-19 14:24:13, Shawn Guo wrote:
-> > On Mon, May 18, 2015 at 11:50:07AM +0530, Sanchayan Maity wrote:
-> > > Implements SoC bus support to export SoC specific information. Read
-> > > the unique SoC ID from the Vybrid On Chip One Time Programmable
-> > > (OCOTP) controller, SoC specific information from the Miscellaneous
-> > > System Control Module (MSCM), revision from the ROM revision register
-> > > and expose it via the SoC bus infrastructure.
-> > > 
-> > > Sample Output:
-> > > 
-> > > root@vf:/sys/devices/soc0# cat soc_id
-> > > df63c12a2e2161d4
-> > > root@vf:/sys/devices/soc0# cat family
-> > > Freescale Vybrid VF500
-> > > root@vf:/sys/devices/soc0# cat revision
-> > > 00000013
-> > > root@vf:/sys/devices/soc0# cat machine
-> > > Freescale Vybrid
-> > > 
-> > > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-> > > ---
-> > >  arch/arm/mach-imx/mach-vf610.c | 81 ++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 81 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
-> > > index 2e7c75b..64c78e4 100644
-> > > --- a/arch/arm/mach-imx/mach-vf610.c
-> > > +++ b/arch/arm/mach-imx/mach-vf610.c
-> > > @@ -11,6 +11,86 @@
-> > >  #include <linux/irqchip.h>
-> > >  #include <asm/mach/arch.h>
-> > >  #include <asm/hardware/cache-l2x0.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/sys_soc.h>
-> > > +#include <linux/mfd/syscon.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/random.h>
-> > 
-> > Please group <linux/*> headers together and sort alphabetically.
-> 
-> Ok. Will fix this and send out a v2. The rest is acceptable?
+Hello Stephen,
 
-I'm fine with the rest, but would need an ACK from Stefan to apply the
-patch.
+On 2015/5/20 4:35, Stephen Boyd wrote:
+> On 05/15/15 19:54, Brent Wang wrote:
+>>
+>>>> How about just send this patch for review not the whole patch set in
+>>>> next version?
+>>>>
+>>> Yes a single patch is fine. I take it you want the patch to go
+>>> through arm-soc with some Ack from us?
+>> Yes, exactly.
+>> The dts file includes the clock head file,  this patch goes through
+>> arm-soc is a good choice.
+>
+> One way to avoid that problem is to split the clock header file into its
+> own patch and then duplicate that patch in two trees, one that goes
+> through arm-soc and one that goes through clk.
+>
+Thanks for your suggestion, I will talk about this with Hisilicon SoC
+maintainer XuWei.
 
-Shawn
+I have updated this patch based on your suggestion, could you help
+review patch "[PATCH v6 5/6] clk: hi6220: Clock driver support for 
+Hisilicon hi6220 SoC"?
+
+Thanks,
+
+Bintian
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
