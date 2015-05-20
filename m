@@ -1,248 +1,559 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
-Date: Tue, 19 May 2015 23:43:27 +0200
-Message-ID: <555BAE7F.70203@hauke-m.de>
-References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de> <20150518224910.GU11598@ld-irv-0074>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] thermal: hisilicon: add new hisilicon thermal
+ sensor driver
+Date: Tue, 19 May 2015 21:46:40 -0700
+Message-ID: <20150520044638.GA4295@localhost.localdomain>
+References: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
+ <1431933109-22764-3-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150518224910.GU11598@ld-irv-0074>
+Content-Disposition: inline
+In-Reply-To: <1431933109-22764-3-git-send-email-kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
+To: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: rui.zhuang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, Javi.Merino-5wv7dgnIgG8@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gongyu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/19/2015 12:49 AM, Brian Norris wrote:
-> On Sun, May 17, 2015 at 07:35:12PM +0200, Hauke Mehrtens wrote:
->> This moves the linux,part-probe device tree parsing code from
->> physmap_of.c to mtdpart.c. Now all drivers can use this feature by just
->> providing a reference to they device tree node in struct
-> 
-> s/they/their/
-> or
-> s/they/the/
-> ?
-> 
->> mtd_part_parser_data.
->>
->> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->> ---
->>  drivers/mtd/maps/physmap_of.c | 40 +---------------------------------------
->>  drivers/mtd/mtdpart.c         | 38 ++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 39 insertions(+), 39 deletions(-)
->>
->> diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
->> index 774b32f..fd3750f 100644
->> --- a/drivers/mtd/maps/physmap_of.c
->> +++ b/drivers/mtd/maps/physmap_of.c
->> @@ -112,45 +112,9 @@ static struct mtd_info *obsolete_probe(struct platform_device *dev,
->>  static const char * const part_probe_types_def[] = {
->>  	"cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
->>  
->> -static const char * const *of_get_probes(struct device_node *dp)
->> -{
->> -	const char *cp;
->> -	int cplen;
->> -	unsigned int l;
->> -	unsigned int count;
->> -	const char **res;
->> -
->> -	cp = of_get_property(dp, "linux,part-probe", &cplen);
->> -	if (cp == NULL)
->> -		return part_probe_types_def;
->> -
->> -	count = 0;
->> -	for (l = 0; l != cplen; l++)
->> -		if (cp[l] == 0)
->> -			count++;
->> -
->> -	res = kzalloc((count + 1)*sizeof(*res), GFP_KERNEL);
->> -	count = 0;
->> -	while (cplen > 0) {
->> -		res[count] = cp;
->> -		l = strlen(cp) + 1;
->> -		cp += l;
->> -		cplen -= l;
->> -		count++;
->> -	}
->> -	return res;
->> -}
->> -
->> -static void of_free_probes(const char * const *probes)
->> -{
->> -	if (probes != part_probe_types_def)
->> -		kfree(probes);
->> -}
-> 
-> Huh. I didn't even notice this code existed. Like you, I've wondered if
-> we could have a better way to suggest the partition parser types without
-> out specifying them in each driver. That seems like the wrong level of
-> abstraction.
-> 
-> Ideally, we'd just be able to have a standard set that satisfies all
-> users, like how all loaded block device partitioners are all checked for
-> each block device (check_part[] in block/partitions/check.c). The only
-> problem I can think of would be if some parsers have subtleties such
-> that they can't safely be applied to all MTDs, even with careful
-> prioritization.
 
-I do not think all the parsers are or will be completely safe when they
-are trying to parse other data. Some random block could get mixed up
-with some vendor header format and then you get wrong partition layout.
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> But if that doesn't work, then I suppose a device-tree property like
-> this could work.
+On Mon, May 18, 2015 at 03:11:48PM +0800, Xinwei Kong wrote:
+> From: kongxinwei <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>=20
+> This patch adds the support for hisilicon thermal sensor, within
+> hisilicon SoC. there will register sensors for thermal framework
+> and use device tree to bind cooling device.
+>=20
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: kongxinwei <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+>  drivers/thermal/Kconfig        |   8 +
+>  drivers/thermal/Makefile       |   1 +
+>  drivers/thermal/hisi_thermal.c | 418 +++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 427 insertions(+)
+>  create mode 100644 drivers/thermal/hisi_thermal.c
+>=20
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index af40db0..81aee01 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -136,6 +136,14 @@ config THERMAL_EMULATION
+>  	  because userland can easily disable the thermal policy by simply
+>  	  flooding this sysfs node with low temperature values.
+> =20
+> +config HISI_THERMAL
+> +	tristate "Hisilicon thermal driver"
+> +	depends on ARCH_HISI && CPU_THERMAL && OF
+> +	help
+> +	  Enable this to plug hisilicon's thermal sensor driver into the Linux
+> +	  thermal framework. cpufreq is used as the cooling device to throttle
+> +	  CPUs when the passive trip is crossed.
+> +
+>  config IMX_THERMAL
+>  	tristate "Temperature sensor driver for Freescale i.MX SoCs"
+>  	depends on CPU_THERMAL
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index fa0dc48..08ae7ac 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -39,3 +39,4 @@ obj-$(CONFIG_TI_SOC_THERMAL)	+=3D ti-soc-thermal/
+>  obj-$(CONFIG_INT340X_THERMAL)  +=3D int340x_thermal/
+>  obj-$(CONFIG_ST_THERMAL)	+=3D st/
+>  obj-$(CONFIG_TEGRA_SOCTHERM)	+=3D tegra_soctherm.o
+> +obj-$(CONFIG_HISI_THERMAL)     +=3D hisi_thermal.o
+> diff --git a/drivers/thermal/hisi_thermal.c b/drivers/thermal/hisi_therma=
+l.c
+> new file mode 100644
+> index 0000000..e0a466d
+> --- /dev/null
+> +++ b/drivers/thermal/hisi_thermal.c
+> @@ -0,0 +1,418 @@
+> +/*
+> + * Hisilicon thermal sensor driver
+> + *
+> + * Copyright (c) 2014-2015 Hisilicon Limited.
+> + * Copyright (c) 2014-2015 Linaro Limited.
+> + *
+> + * Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> + * Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/cpufreq.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
 
-Currently some flash drivers have the parser order hard coded and I do
-not think that is a good idea, if we have device tree.
 
->> -
->>  static const struct of_device_id of_flash_match[];
->>  static int of_flash_probe(struct platform_device *dev)
->>  {
->> -	const char * const *part_probe_types;
->>  	const struct of_device_id *match;
->>  	struct device_node *dp = dev->dev.of_node;
->>  	struct resource res;
->> @@ -310,10 +274,8 @@ static int of_flash_probe(struct platform_device *dev)
->>  		goto err_out;
->>  
->>  	ppdata.of_node = dp;
->> -	part_probe_types = of_get_probes(dp);
->> -	mtd_device_parse_register(info->cmtd, part_probe_types, &ppdata,
->> +	mtd_device_parse_register(info->cmtd, part_probe_types_def, &ppdata,
->>  			NULL, 0);
->> -	of_free_probes(part_probe_types);
->>  
->>  	kfree(mtd_list);
->>  
->> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
->> index cafdb88..b3059d6 100644
->> --- a/drivers/mtd/mtdpart.c
->> +++ b/drivers/mtd/mtdpart.c
->> @@ -29,6 +29,7 @@
->>  #include <linux/kmod.h>
->>  #include <linux/mtd/mtd.h>
->>  #include <linux/mtd/partitions.h>
->> +#include <linux/of.h>
->>  #include <linux/err.h>
->>  #include <linux/kconfig.h>
->>  
->> @@ -718,6 +719,35 @@ void deregister_mtd_parser(struct mtd_part_parser *p)
->>  }
->>  EXPORT_SYMBOL_GPL(deregister_mtd_parser);
->>  
->> +static const char * const *of_get_probes(struct device_node *dp)
-> 
-> Maybe a quick comment at the top to note that if non-NULL, its return
-> value must be kfree()'d by the caller? Could be helpful if we want to
-> move the code elsewhere. (I'm almost tempted to suggest moving this to
-> drivers/of/of_mtd.c, in fact.)
+I guess you trimmed too much :-)
 
-Yes I will add a comment.
+This code does not compile:
+drivers/thermal/hisi_thermal.c: In function
+=E2=80=98hisi_thermal_get_sensor_temp=E2=80=99:
+drivers/thermal/hisi_thermal.c:86:2: error: implicit declaration of
+function =E2=80=98writel=E2=80=99 [-Werror=3Dimplicit-function-declaration]
+  writel(0x0, data->regs + TEMP0_INT_EN);
+    ^
+drivers/thermal/hisi_thermal.c:100:2: error: implicit declaration of
+function =E2=80=98readl=E2=80=99 [-Werror=3Dimplicit-function-declaration]
+      val =3D readl(data->regs + TEMP0_VALUE);
+        ^
+cc1: some warnings being treated as errors
 
->> +{
->> +	const char *cp;
->> +	int cplen;
->> +	unsigned int l;
->> +	unsigned int count;
->> +	const char **res;
->> +
->> +	cp = of_get_property(dp, "linux,part-probe", &cplen);
-> 
-> I see this is not property is not documented in the first place. If
-> we're going to make it generically useful, we definitely need to
-> document it, including what the supported partition probe names are.
 
-Sorry I did not check, I just amused that it is documented because it
-was already there, I will add.
+Please add:
+#include <linux/io.h>
 
-> I'm also kind of ambivalent on this point, but I might as well ask: does
-> the 'linux,...' naming make sense? We're not really supposed to be
-> putting pure software information in the device tree, let alone info
-> that's specific to Linux. I see how the partition parser could be (and
-> should be, really) considered OS-agnostic, though, and might deserve a
-> spot in the DT, at least if it's not safe to run arbitrary partition
-> parsers on all MTDs.
-> 
->> +	if (cp == NULL)
->> +		return NULL;
->> +
->> +	count = 0;
->> +	for (l = 0; l != cplen; l++)
->> +		if (cp[l] == 0)
->> +			count++;
->> +
->> +	res = kzalloc((count + 1)*sizeof(*res), GFP_KERNEL);
-> 
-> Might as well fix the spacing here while you're moving the code around.
 
-Will fix that.
+> +#include "thermal_core.h"
+> +
+> +#define TEMP0_TH			(0x4)
+> +#define TEMP0_RST_TH			(0x8)
+> +#define TEMP0_CFG			(0xC)
+> +#define TEMP0_EN			(0x10)
+> +#define TEMP0_INT_EN			(0x14)
+> +#define TEMP0_INT_CLR			(0x18)
+> +#define TEMP0_RST_MSK			(0x1C)
+> +#define TEMP0_VALUE			(0x28)
+> +
+> +#define HISI_TEMP_BASE			(-60)
+> +#define HISI_TEMP_RESET			(100000)
+> +
+> +#define HISI_MAX_SENSORS		4
+> +
+> +struct hisi_thermal_sensor {
+> +	struct hisi_thermal_data *thermal;
+> +	struct thermal_zone_device *tzd;
+> +
+> +	long sensor_temp;
+> +	uint32_t id;
+> +	uint32_t thres_temp;
+> +};
+> +
+> +struct hisi_thermal_data {
+> +	struct mutex thermal_lock;    /* protects register data */
+> +	struct platform_device *pdev;
+> +	struct clk *clk;
+> +	struct hisi_thermal_sensor sensors[HISI_MAX_SENSORS];
+> +
+> +	int irq, irq_bind_sensor;
+> +	bool irq_enabled;
+> +
+> +	void __iomem *regs;
+> +};
+> +
+> +/* in millicelsius */
+> +static inline int _step_to_temp(int step)
+> +{
+> +	/*
+> +	 * Every step equals (1 * 200) / 255 celsius, and finally
+> +	 * need convert to millicelsius.
+> +	 */
+> +	return (HISI_TEMP_BASE + (step * 200 / 255)) * 1000;
+> +}
+> +
+> +static inline long _temp_to_step(long temp)
+> +{
+> +	return ((temp / 1000 - HISI_TEMP_BASE) * 255 / 200);
+> +}
+> +
+> +static long hisi_thermal_get_sensor_temp(struct hisi_thermal_data *data,
+> +					 struct hisi_thermal_sensor *sensor)
+> +{
+> +	long val;
+> +
+> +	mutex_lock(&data->thermal_lock);
+> +
+> +	/* disable interrupt */
+> +	writel(0x0, data->regs + TEMP0_INT_EN);
+> +	writel(0x1, data->regs + TEMP0_INT_CLR);
+> +
+> +	/* disable module firstly */
+> +	writel(0x0, data->regs + TEMP0_EN);
+> +
+> +	/* select sensor id */
+> +	writel((sensor->id << 12), data->regs + TEMP0_CFG);
+> +
+> +	/* enable module */
+> +	writel(0x1, data->regs + TEMP0_EN);
+> +
+> +	usleep_range(3000, 5000);
+> +
+> +	val =3D readl(data->regs + TEMP0_VALUE);
+> +	val =3D _step_to_temp(val);
+> +
+> +	mutex_unlock(&data->thermal_lock);
+> +
+> +	return val;
+> +}
+> +
+> +static void hisi_thermal_enable_bind_irq_sensor
+> +			(struct hisi_thermal_data *data)
+> +{
+> +	struct hisi_thermal_sensor *sensor;
+> +
+> +	sensor =3D &data->sensors[data->irq_bind_sensor];
 
->> +	count = 0;
->> +	while (cplen > 0) {
->> +		res[count] = cp;
->> +		l = strlen(cp) + 1;
->> +		cp += l;
->> +		cplen -= l;
->> +		count++;
->> +	}
->> +	return res;
->> +}
->> +
->>  /*
->>   * Do not forget to update 'parse_mtd_partitions()' kerneldoc comment if you
->>   * are changing this array!
->> @@ -754,6 +784,13 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
->>  {
->>  	struct mtd_part_parser *parser;
->>  	int ret = 0;
->> +	const char *const *types_of = NULL;
->> +
->> +	if (data && data->of_node) {
->> +		types_of = of_get_probes(data->of_node);
->> +		if (types_of != NULL)
->> +			types = types_of;
->> +	}
-> 
-> I'm not sure I really like the semantics here. This means that the
-> device tree can override all Linux defaults. So we can't, for instance,
-> have the cmdline parser override all other selections (e.g., for
-> debugging), or make sure that 'ofpart' is available for all MTDs.
+This reader of irq_bind_sensor needs to be locked. So, move this line
+below the mutex_lock below:
 
-parse_mtd_partitions() often gets called by the driver with a hard coded
-list and I wanted to make it possible to overwrite this list through
-device tree.
+> +
+> +	mutex_lock(&data->thermal_lock);
+> +
 
-> 
->>  
->>  	if (!types)
->>  		types = default_mtd_part_types;
-> 
-> In fact, I don't really like this existing hunk either ^^^. It has the
-> same effect, of killing things like cmdlinepart, which should be
-> available on all MTDs.
+<here>
 
-I do not get this.
-cmdlinepart is one of the default parsers, if you haven't specified any
-you will get it. It could be that you do not want the cmdlinepart
-parser, so I think it should be possible to deactivate it, like though
-device tree when you do not specify it in the list of parsers.
+> +	/* setting the hdak time */
+> +	writel(0x0, data->regs + TEMP0_CFG);
+> +
+> +	/* disable module firstly */
+> +	writel(0x0, data->regs + TEMP0_RST_MSK);
+> +	writel(0x0, data->regs + TEMP0_EN);
+> +
+> +	/* select sensor id */
+> +	writel((sensor->id << 12), data->regs + TEMP0_CFG);
+> +
+> +	/* enable for interrupt */
+> +	writel(_temp_to_step(sensor->thres_temp) | 0x0FFFFFF00,
+> +	       data->regs + TEMP0_TH);
+> +
+> +	writel(_temp_to_step(HISI_TEMP_RESET), data->regs + TEMP0_RST_TH);
+> +
+> +	/* enable module */
+> +	writel(0x1, data->regs + TEMP0_RST_MSK);
+> +	writel(0x1, data->regs + TEMP0_EN);
+> +
+> +	writel(0x0, data->regs + TEMP0_INT_CLR);
+> +	writel(0x1, data->regs + TEMP0_INT_EN);
+> +
+> +	usleep_range(3000, 5000);
+> +
+> +	mutex_unlock(&data->thermal_lock);
+> +}
+> +
+> +static void hisi_thermal_disable_sensor(struct hisi_thermal_data *data)
+> +{
+> +	mutex_lock(&data->thermal_lock);
+> +
+> +	/* disable sensor module */
+> +	writel(0x0, data->regs + TEMP0_INT_EN);
+> +	writel(0x0, data->regs + TEMP0_RST_MSK);
+> +	writel(0x0, data->regs + TEMP0_EN);
+> +
+> +	mutex_unlock(&data->thermal_lock);
+> +}
+> +
+> +static int hisi_thermal_get_temp(void *_sensor, long *temp)
+> +{
+> +	struct hisi_thermal_sensor *sensor =3D _sensor;
+> +	struct hisi_thermal_data *data =3D sensor->thermal;
+> +
+> +	int sensor_id =3D 0, i;
+> +	long max_temp =3D 0;
+> +
+> +	*temp =3D hisi_thermal_get_sensor_temp(data, sensor);
+> +
+> +	sensor->sensor_temp =3D *temp;
+> +
+> +	for (i =3D 0; i < HISI_MAX_SENSORS; i++) {
+> +		if (data->sensors[i].sensor_temp >=3D max_temp) {
+> +			max_temp =3D data->sensors[i].sensor_temp;
+> +			sensor_id =3D i;
+> +		}
+> +	}
+> +
+> +	mutex_lock(&data->thermal_lock);
+> +	data->irq_bind_sensor =3D sensor_id;
+> +	mutex_unlock(&data->thermal_lock);
+> +
+> +	dev_dbg(&data->pdev->dev, "id=3D%d, irq=3D%d, temp=3D%ld, thres=3D%d\n",
+> +		sensor->id, data->irq_enabled, *temp, sensor->thres_temp);
+> +	/*
+> +	 * Bind irq to sensor for two cases:
+> +	 *   Reenable alarm IRQ if temperature below threshold;
+> +	 *   if irq has been enabled, always set it;
+> +	 */
+> +	if (data->irq_enabled) {
+> +		hisi_thermal_enable_bind_irq_sensor(data);
+> +		return 0;
+> +	}
+> +
+> +	if (max_temp < sensor->thres_temp) {
+> +		data->irq_enabled =3D true;
+> +		hisi_thermal_enable_bind_irq_sensor(data);
+> +		enable_irq(data->irq);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct thermal_zone_of_device_ops hisi_of_thermal_ops =3D {
+> +	.get_temp =3D hisi_thermal_get_temp,
+> +};
+> +
+> +static irqreturn_t hisi_thermal_alarm_irq(int irq, void *dev)
+> +{
+> +	struct hisi_thermal_data *data =3D dev;
+> +
+> +	disable_irq_nosync(irq);
+> +	data->irq_enabled =3D false;
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static irqreturn_t hisi_thermal_alarm_irq_thread(int irq, void *dev)
+> +{
+> +	struct hisi_thermal_data *data =3D dev;
+> +	struct hisi_thermal_sensor *sensor;
+> +	int i;
+> +
+> +	sensor =3D &data->sensors[data->irq_bind_sensor];
+> +
 
-> 
->> @@ -772,6 +809,7 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
->>  			break;
->>  		}
->>  	}
->> +	kfree(types_of);
->>  	return ret;
->>  }
->>  
-> 
-> Brian
-> 
+this reader needs to be locked too.
 
+> +	dev_crit(&data->pdev->dev, "THERMAL ALARM: T > %d\n",
+> +		 sensor->thres_temp / 1000);
+> +
+> +	for (i =3D 0; i < HISI_MAX_SENSORS; i++)
+> +		thermal_zone_device_update(data->sensors[i].tzd);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int hisi_thermal_register_sensor(struct platform_device *pdev,
+> +					struct hisi_thermal_data *data,
+> +					struct hisi_thermal_sensor *sensor,
+> +					int index)
+> +{
+> +	int ret, i;
+> +	const struct thermal_trip *trip;
+> +
+> +	sensor->id =3D index;
+> +	sensor->thermal =3D data;
+> +
+> +	sensor->tzd =3D thermal_zone_of_sensor_register(&pdev->dev, sensor->id,
+> +				sensor, &hisi_of_thermal_ops);
+> +	if (IS_ERR(sensor->tzd)) {
+> +		ret =3D PTR_ERR(sensor->tzd);
+> +		dev_err(&pdev->dev, "failed to register sensor id %d: %d\n",
+> +			sensor->id, ret);
+> +		return ret;
+> +	}
+> +
+> +	trip =3D of_thermal_get_trip_points(sensor->tzd);
+> +
+> +	for (i =3D 0; i < of_thermal_get_ntrips(sensor->tzd); i++) {
+> +		if (trip[i].type =3D=3D THERMAL_TRIP_PASSIVE) {
+> +			sensor->thres_temp =3D trip[i].temperature;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_hisi_thermal_match[] =3D {
+> +	{ .compatible =3D "hisilicon,tsensor" },
+> +	{ /* end */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, of_hisi_thermal_match);
+> +
+> +static void hisi_thermal_toggle_sensor(struct hisi_thermal_sensor *senso=
+r,
+> +				       bool on)
+> +{
+> +	struct thermal_zone_device *tzd =3D sensor->tzd;
+> +
+> +	tzd->ops->set_mode(tzd,
+> +		on ? THERMAL_DEVICE_ENABLED : THERMAL_DEVICE_DISABLED);
+> +}
+> +
+> +static int hisi_thermal_probe(struct platform_device *pdev)
+> +{
+> +	struct hisi_thermal_data *data;
+> +	struct resource *res;
+> +	int i;
+> +	int ret;
+> +
+> +	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&data->thermal_lock);
+> +	data->pdev =3D pdev;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	data->regs =3D devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(data->regs)) {
+> +		dev_err(&pdev->dev, "failed to get io address\n");
+> +		return PTR_ERR(data->regs);
+> +	}
+> +
+> +	data->irq =3D platform_get_irq(pdev, 0);
+> +	if (data->irq < 0)
+> +		return data->irq;
+> +
+> +	ret =3D devm_request_threaded_irq(&pdev->dev, data->irq,
+> +					hisi_thermal_alarm_irq,
+> +					hisi_thermal_alarm_irq_thread,
+> +					0, "hisi_thermal", data);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to request alarm irq: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	data->clk =3D devm_clk_get(&pdev->dev, "thermal_clk");
+> +	if (IS_ERR(data->clk)) {
+> +		ret =3D PTR_ERR(data->clk);
+> +		if (ret !=3D -EPROBE_DEFER)
+> +			dev_err(&pdev->dev,
+> +				"failed to get thermal clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* enable clock for thermal */
+> +	ret =3D clk_prepare_enable(data->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable thermal clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	for (i =3D 0; i < HISI_MAX_SENSORS; ++i) {
+> +		ret =3D hisi_thermal_register_sensor(pdev, data,
+> +						   &data->sensors[i], i);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"failed to register thermal sensor: %d\n", ret);
+> +			goto err_get_sensor_data;
+> +		}
+> +	}
+> +
+> +	hisi_thermal_enable_bind_irq_sensor(data);
+> +	data->irq_enabled =3D true;
+> +
+> +	for (i =3D 0; i < HISI_MAX_SENSORS; i++)
+> +		hisi_thermal_toggle_sensor(&data->sensors[i], true);
+> +
+> +	return 0;
+> +
+> +err_get_sensor_data:
+> +	clk_disable_unprepare(data->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int hisi_thermal_remove(struct platform_device *pdev)
+> +{
+> +	struct hisi_thermal_data *data =3D platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	for (i =3D 0; i < HISI_MAX_SENSORS; i++) {
+> +		struct hisi_thermal_sensor *sensor =3D &data->sensors[i];
+> +
+> +		hisi_thermal_toggle_sensor(sensor, false);
+> +		thermal_zone_of_sensor_unregister(&pdev->dev, sensor->tzd);
+> +	}
+> +
+> +	hisi_thermal_disable_sensor(data);
+> +	clk_disable_unprepare(data->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int hisi_thermal_suspend(struct device *dev)
+> +{
+> +	struct hisi_thermal_data *data =3D dev_get_drvdata(dev);
+> +
+> +	hisi_thermal_disable_sensor(data);
+> +	data->irq_enabled =3D false;
+> +
+> +	clk_disable_unprepare(data->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_thermal_resume(struct device *dev)
+> +{
+> +	struct hisi_thermal_data *data =3D dev_get_drvdata(dev);
+> +
+> +	clk_prepare_enable(data->clk);
+> +
+> +	data->irq_enabled =3D true;
+> +	hisi_thermal_enable_bind_irq_sensor(data);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(hisi_thermal_pm_ops,
+> +			 hisi_thermal_suspend, hisi_thermal_resume);
+> +
+> +static struct platform_driver hisi_thermal_driver =3D {
+> +	.driver =3D {
+> +		.name		=3D "hisi_thermal",
+> +		.owner		=3D THIS_MODULE,
+> +		.pm		=3D &hisi_thermal_pm_ops,
+> +		.of_match_table =3D of_hisi_thermal_match,
+> +	},
+> +	.probe	=3D hisi_thermal_probe,
+> +	.remove	=3D hisi_thermal_remove,
+> +};
+> +
+> +module_platform_driver(hisi_thermal_driver);
+> +
+> +MODULE_AUTHOR("Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>");
+> +MODULE_AUTHOR("Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("Hisilicon thermal driver");
+> +MODULE_LICENSE("GPL v2");
+
+
+Otherwise the driver looks good to me.
+
+Please fix the above and I believe the driver is ready to be merged. I
+will queue for next merge window.
+
+> --=20
+> 1.9.1
+>=20
+>=20
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQEcBAEBAgAGBQJVXBGpAAoJEMLUO4d9pOJWyPoH/3XrxFK112ql1vZTJS5Xb+nU
+osCEzNtOMGeYglnqvqN2jpXoZTM3TJ5sc5VYhEkimMwKHMpHQLCeC2I9bWFHZNmx
+AweTUyXxy1NgDSktKJFD+nCblEBxao2EYmzKjAmVxetcxxNokG5bi/5q2hKwHkg7
+Dbc1ggg51P/AhxE/HEkSXvN5DvZQK97PqK+Ed/OxACe+MTOQ837ke8PqjxzOnCaJ
+AUgGAkY8nNR4cVW/7N1M0WHfeI0B2L2uklrJ5oV5WN/h9teYBiRYyp6Q5e9fUoFA
++Llidf45iVrkHJhWgkxtGdrnmn2LF8bWCIvSVRgv5R51pKRlY/RDQlQxgCQgPoA=
+=Yl0a
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
