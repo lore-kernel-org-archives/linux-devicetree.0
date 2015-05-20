@@ -1,80 +1,59 @@
-From: Peter Seiderer <ps.report@gmx.net>
-Subject: [PATCH v1] ARM: dts: nitrogen6x: add CAN support
-Date: Wed, 20 May 2015 23:49:29 +0200
-Message-ID: <1432158569-4415-1-git-send-email-ps.report@gmx.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add
+ pwrkey driver
+Date: Wed, 20 May 2015 22:56:15 +0100
+Message-ID: <20150520215615.GZ2067@n2100.arm.linux.org.uk>
+References: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
+ <20150520015851.GB1071@dragon>
+ <20150520182540.GQ2067@n2100.arm.linux.org.uk>
+ <20150520183050.GR2067@n2100.arm.linux.org.uk>
+ <CAHrpEqSngMgOj5Bjp0XWpw9CJCjoiU63iRuAX3Zw_aEO+-5RHg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHrpEqSngMgOj5Bjp0XWpw9CJCjoiU63iRuAX3Zw_aEO+-5RHg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, alexandre.belloni@free-electrons.com, Philipp Zabel <p.zabel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Regulator stuff copied from imx6qdl-tx6.dtsi, pin configuration
-taken from Boundary Devices linux kernel tree ([1] and [2]).
+On Wed, May 20, 2015 at 01:44:58PM -0500, Zhi Li wrote:
+> On Wed, May 20, 2015 at 1:30 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> > Looking at the RTC code, it would be pretty trivial to do.
+> >
+> > Rather than passing around struct regmap, pass around the private data
+> > structure.
+> >
+> > Rename the regmap_* function calls to be private accessors.  Implement
+> > a set of new accessors - if the private data has the regmap, use the
+> > regmap API.  Otherwise, use the old method, and print a warning that an
+> > old DT is being used.
+> 
+> This method work.  But code will become ugly and complex. I seach
+> whole dts tree.
+> Only imx6 use this driver.
+> 
+> Does it really valuable to keep compatiblity with cost of complex driver code?
 
-[1] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dts
-[2] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl.dtsi
+Let me put this a different way.
 
-Signed-off-by: Peter Seiderer <ps.report@gmx.net>
----
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 32 +++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+Would you be upset if you installed a new kernel, rebooted and found that
+the system then fscked your filesystem, stamping a date of 1 Jan 1970
+on it.  Then you use a later dtb, and you have to go through another
+fsck of your filesystem because it's apparently been more than "31 days"
+or so since it was last fscked, and all this caused by the RTC vanishing
+because we couldn't be bothered with backward compatibility?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index fd096dc..1c415e4 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -54,6 +54,17 @@
- 			gpio = <&gpio3 22 0>;
- 			enable-active-high;
- 		};
-+
-+		reg_can_xcvr: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+			regulator-name = "CAN XCVR";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_can_xcvr>;
-+			gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		};
- 	};
- 
- 	gpio-keys {
-@@ -138,6 +149,13 @@
- 	status = "okay";
- };
- 
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_can1_1>;
-+	xceiver-supply = <&reg_can_xcvr>;
-+	status = "okay";
-+};
-+
- &ecspi1 {
- 	fsl,spi-num-chipselects = <1>;
- 	cs-gpios = <&gpio3 19 0>;
-@@ -234,6 +252,20 @@
- 			>;
- 		};
- 
-+		pinctrl_can1_1: can1grp-1 {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX 0x80000000
-+				MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x80000000
-+			>;
-+		};
-+
-+		pinctrl_can_xcvr: can-xcvrgrp {
-+			fsl,pins = <
-+				/* Flexcan XCVR enable */
-+				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
-+			>;
-+		};
-+
- 		pinctrl_ecspi1: ecspi1grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
+There are real products out there which use iMX6 today.  In production,
+being sold.
+
+Do not break existing DTBs unless there really is no other choice.
+
+And I don't think it makes the code ugly, though it does make it _slightly_
+more complex.  That's a price worth paying for keeping stuff working.
+
 -- 
-2.1.4
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
