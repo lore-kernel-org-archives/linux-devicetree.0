@@ -1,100 +1,76 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
- controller
-Date: Wed, 20 May 2015 10:33:35 +0200
-Message-ID: <20150520083335.GQ24769@pengutronix.de>
-References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
- <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
- <20150518184300.GB28888@pengutronix.de>
- <1432089611.13819.9.camel@mtksdaap41>
- <20150520071152.GP24769@pengutronix.de>
- <1432108775.12796.11.camel@mtksdaap41>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 5/9] ARM: mediatek: enable gpt6 on boot up to make arch
+ timer working
+Date: Wed, 20 May 2015 10:43:36 +0200
+Message-ID: <CABuKBeKgWc8YJeacr1VeVaOQ1hzpqdTskarDJk6W2AdfWqQ9nw@mail.gmail.com>
+References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1431763110-443-6-git-send-email-yingjoe.chen@mediatek.com>
+	<555B9438.9020404@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432108775.12796.11.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Xudong Chen <xudong.chen@mediatek.com>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wolfram Sang <wsa@the-dreams.de>, Liguo Zhang <liguo.zhang@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <555B9438.9020404-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Eddie,
+2015-05-19 21:51 GMT+02:00 Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>:
+> On 05/16/15 00:58, Yingjoe Chen wrote:
+>> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+>> index a954900..6b38d67 100644
+>> --- a/arch/arm/mach-mediatek/mediatek.c
+>> +++ b/arch/arm/mach-mediatek/mediatek.c
+>> @@ -16,6 +16,34 @@
+>>   */
+>>  #include <linux/init.h>
+>>  #include <asm/mach/arch.h>
+>> +#include <linux/of.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clocksource.h>
+>> +
+>> +
+>> +#define GPT6_CON_MT65xx 0x10008060
+>> +#define GPT_ENABLE      0x31
+>> +
+>> +static void __init mediatek_timer_init(void)
+>> +{
+>> +     void __iomem *gpt_base = 0;
+>
+>  = NULL ?
+>
+>> +
+>> +     if (of_machine_is_compatible("mediatek,mt6589") ||
+>> +         of_machine_is_compatible("mediatek,mt8135") ||
+>> +         of_machine_is_compatible("mediatek,mt8127")) {
+>> +             /* turn on GPT6 which ungates arch timer clocks */
+>> +             gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
+>> +     }
+>> +
+>> +     /* enabel clock and set to free-run */
+>
+> s/enabel/enable/
+>
+>> +     if (gpt_base) {
+>> +             writel(GPT_ENABLE, gpt_base);
+>> +             iounmap(gpt_base);
+>> +     }
+>> +
+>
+> Why not join the two conditions together?
 
-On Wed, May 20, 2015 at 03:59:35PM +0800, Eddie Huang wrote:
-> On Wed, 2015-05-20 at 09:11 +0200, Uwe Kleine-K=F6nig wrote:
-> > On Wed, May 20, 2015 at 10:40:11AM +0800, Eddie Huang wrote:
-> > > On Mon, 2015-05-18 at 20:43 +0200, Uwe Kleine-K=F6nig wrote:
-> > > > On Tue, May 19, 2015 at 12:40:08AM +0800, Eddie Huang wrote:
-> > > > > +/* calculate i2c port speed */
-> > > > It would be nice to summarize the clock frequency settings here=
-=2E
-> > > > Something like:
-> > > >=20
-> > > > 	/*
-> > > > 	 * The input clock is divided by the value specified in the
-> > > > 	 * device tree as clock-div. The actual bus speed is then
-> > > > 	 * derived from this frequency by the following formula:
-> > > > 	 *  ....
-> > > >=20
-> > > > This would make it possible to verify your calculations below.
-> > >=20
-> > > The comment will be:
-> > > /*
-> > >  * khz: I2C bus clock
-> > >  * hclk: The input clock is divided by the value specified in the=
-=20
-> > >  *       device tree as clock-div
-> > and which one of the two clocks you're writing about is hclk now? I
-> > assume the divided one.
-> > >  * div =3D (sample_cnt + 1) * (step_cnt + 1)
-> > >  * khz =3D (hclk / 2) / div
-> > khz for the 2nd time.
-> >=20
-> > >  *
-> > >  * The calculation is to get div value that let result of=20
-> > >  * ((hclk / 2) / div) most approach and less than khz
-> > >  */
-> > I imagined something more hardware related. A list of register (or
-> > register bit fields) that influence the frequency and a formula
->=20
-> > 	i2c_freq =3D parent_clk / clock-div * (...)
-> >=20
-> > (It seems to be a bit more complicated here as there are two regist=
-ers
-> > involved that are set differently depending on the target frequency=
-=2E)
->=20
-> Yes, hardware is a little complicated. I rewrite the comment:
->=20
-> /*
->  * Calculate i2c port speed
->  *
->  * Hardware design:
->  * i2c_bus_freq =3D parent_clk / (clock-div * 2 * (sample_cnt) *
-> (step_cnt))
->  * clock-div: fixed in hardware, but may be various in different SoCs
-=2E.. fixed in hardware, but different on different SoCs.
+The initial patch supposed that on different SoCs GPT6_CON register
+would be mapped on different addresses, but that seems not the case.
+So yes, we can join the two conditions together.
 
->  *
->  * The calculation want to pick the highest bus frequency that is sti=
-ll=20
->  * less than or equal to i2c->speed_hz. and the calculation try to ge=
-t=20
->  * sample_cnt and step_cnt to fill in hardware register.
-"The calculation picks the highest bus frequency that is still less tha=
-n
-or equal to i2c->speed_hz." and I'd drop the last sentence.
+Yingjoe, can you add the changes in the next series or do you want me to do it?
 
-With that in mind I'll reply once more to the original patch.
+Thanks,
+Matthias
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+-- 
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
