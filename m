@@ -1,142 +1,47 @@
-From: Sanchayan Maity <maitysanchayan@gmail.com>
-Subject: [PATCH v2 2/2] ARM: vf610: Add SoC bus support for Vybrid
-Date: Wed, 20 May 2015 11:06:52 +0530
-Message-ID: <27733a88b73adb7000205e020bafdb6f7ebe1843.1432099651.git.maitysanchayan@gmail.com>
-References: <cover.1432099651.git.maitysanchayan@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1432099651.git.maitysanchayan@gmail.com>
-In-Reply-To: <cover.1432099651.git.maitysanchayan@gmail.com>
-References: <cover.1432099651.git.maitysanchayan@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org
-Cc: stefan@agner.ch, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Subject: Re: [PATCH v2 08/11] mfd: mediatek: Add GPIO sub module support
+ into mfd.
+Date: Tue, 19 May 2015 23:05:35 -0700
+Message-ID: <1432101935.4007.1.camel@mussux00.eus.mediatek.inc>
+References: <1432015882-8646-1-git-send-email-hongzhou.yang@mediatek.com>
+	 <1432015882-8646-9-git-send-email-hongzhou.yang@mediatek.com>
+	 <20150519093426.GS22418@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150519093426.GS22418@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com, eddie.huang@mediatek.co
 List-Id: devicetree@vger.kernel.org
 
-Implements SoC bus support to export SoC specific information. Read
-the unique SoC ID from the Vybrid On Chip One Time Programmable
-(OCOTP) controller, SoC specific information from the Miscellaneous
-System Control Module (MSCM), revision from the ROM revision register
-and expose it via the SoC bus infrastructure.
+On Tue, 2015-05-19 at 10:34 +0100, Lee Jones wrote:
+> On Mon, 18 May 2015, Hongzhou Yang wrote:
+> 
+> > Register pinctrl subnode into 6397 mfd cell.
+> > 
+> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> > ---
+> >  drivers/mfd/mt6397-core.c |    3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> > index 09bc780..012c620 100644
+> > --- a/drivers/mfd/mt6397-core.c
+> > +++ b/drivers/mfd/mt6397-core.c
+> > @@ -34,6 +34,9 @@ static const struct mfd_cell mt6397_devs[] = {
+> >  	}, {
+> >  		.name = "mt6397-clk",
+> >  		.of_compatible = "mediatek,mt6397-clk",
+> > +	}, {
+> > +		.name = "mediatek-mt6397-pinctrl",
+> 
+> I think the "mediatek-" part should be removed, no?
 
-Sample Output:
 
-root@vf:/sys/devices/soc0# cat soc_id
-df63c12a2e2161d4
-root@vf:/sys/devices/soc0# cat family
-Freescale Vybrid VF500
-root@vf:/sys/devices/soc0# cat revision
-00000013
-root@vf:/sys/devices/soc0# cat machine
-Freescale Vybrid
+Ok, I will send another patch to change it, thank you.
 
-Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
----
- arch/arm/mach-imx/mach-vf610.c | 85 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 83 insertions(+), 2 deletions(-)
+Yours,
+Hongzhou
 
-diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
-index 2e7c75b..b4854f1 100644
---- a/arch/arm/mach-imx/mach-vf610.c
-+++ b/arch/arm/mach-imx/mach-vf610.c
-@@ -7,10 +7,90 @@
-  * (at your option) any later version.
-  */
- 
--#include <linux/of_platform.h>
--#include <linux/irqchip.h>
- #include <asm/mach/arch.h>
- #include <asm/hardware/cache-l2x0.h>
-+#include <linux/irqchip.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+#include <linux/random.h>
-+#include <linux/slab.h>
-+#include <linux/sys_soc.h>
-+
-+#define OCOTP_CFG0_OFFSET      0x00000410
-+#define OCOTP_CFG1_OFFSET      0x00000420
-+#define MSCM_CPxCOUNT_OFFSET   0x0000002C
-+#define MSCM_CPxCFG1_OFFSET    0x00000014
-+#define ROM_REVISION_OFFSET    0x00000080
-+
-+static void __init vf610_init_machine(void)
-+{
-+	struct regmap *ocotp_regmap, *mscm_regmap, *rom_regmap;
-+	struct soc_device_attribute *soc_dev_attr;
-+	struct device *parent = NULL;
-+	struct soc_device *soc_dev;
-+	char soc_type[] = "xx0";
-+	u32 cpxcount, cpxcfg1;
-+	u32 soc_id1, soc_id2, rom_rev;
-+	u64 soc_id;
-+
-+	ocotp_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-ocotp");
-+	if (IS_ERR(ocotp_regmap)) {
-+		pr_err("regmap lookup for octop failed\n");
-+		goto out;
-+	}
-+
-+	mscm_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-mscm-cpucfg");
-+	if (IS_ERR(mscm_regmap)) {
-+		pr_err("regmap lookup for mscm failed");
-+		goto out;
-+	}
-+
-+	rom_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-ocrom");
-+	if (IS_ERR(rom_regmap)) {
-+		pr_err("regmap lookup for ocrom failed");
-+		goto out;
-+	}
-+
-+	regmap_read(ocotp_regmap, OCOTP_CFG0_OFFSET, &soc_id1);
-+	regmap_read(ocotp_regmap, OCOTP_CFG1_OFFSET, &soc_id2);
-+
-+	soc_id = (u64) soc_id1 << 32 | soc_id2;
-+	add_device_randomness(&soc_id, sizeof(soc_id));
-+
-+	regmap_read(mscm_regmap, MSCM_CPxCOUNT_OFFSET, &cpxcount);
-+	regmap_read(mscm_regmap, MSCM_CPxCFG1_OFFSET, &cpxcfg1);
-+
-+	soc_type[0] = cpxcount ? '6' : '5'; /* Dual Core => VF6x0 */
-+	soc_type[1] = cpxcfg1 ? '1' : '0'; /* L2 Cache => VFx10 */
-+
-+	regmap_read(rom_regmap, ROM_REVISION_OFFSET, &rom_rev);
-+
-+	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-+	if (!soc_dev_attr)
-+		goto out;
-+
-+	soc_dev_attr->machine = kasprintf(GFP_KERNEL, "Freescale Vybrid");
-+	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%016llx", soc_id);
-+	soc_dev_attr->family = kasprintf(GFP_KERNEL, "Freescale Vybrid VF%s",
-+								 soc_type);
-+	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%08x", rom_rev);
-+
-+	soc_dev = soc_device_register(soc_dev_attr);
-+	if (IS_ERR(soc_dev)) {
-+		kfree(soc_dev_attr->revision);
-+		kfree(soc_dev_attr->family);
-+		kfree(soc_dev_attr->soc_id);
-+		kfree(soc_dev_attr->machine);
-+		kfree(soc_dev_attr);
-+		goto out;
-+	}
-+
-+	parent = soc_device_to_device(soc_dev);
-+
-+out:
-+	of_platform_populate(NULL, of_default_bus_match_table, NULL, parent);
-+}
- 
- static const char * const vf610_dt_compat[] __initconst = {
- 	"fsl,vf500",
-@@ -23,5 +103,6 @@ static const char * const vf610_dt_compat[] __initconst = {
- DT_MACHINE_START(VYBRID_VF610, "Freescale Vybrid VF5xx/VF6xx (Device Tree)")
- 	.l2c_aux_val	= 0,
- 	.l2c_aux_mask	= ~0,
-+	.init_machine = vf610_init_machine,
- 	.dt_compat	= vf610_dt_compat,
- MACHINE_END
--- 
-2.4.1
