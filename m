@@ -1,39 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/2] ARM: vf610: Add SoC bus support for Vybrid
-Date: Wed, 20 May 2015 09:12:08 +0200
-Message-ID: <9691074.oWRy1bscbz@wuerfel>
-References: <cover.1432099651.git.maitysanchayan@gmail.com> <27733a88b73adb7000205e020bafdb6f7ebe1843.1432099651.git.maitysanchayan@gmail.com>
+From: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+Subject: [RFC PATCH 1/2] devicetree: Add devicetree bindings documentation for
+ ZynqMP GQSPI
+Date: Wed, 20 May 2015 12:57:50 +0530
+Message-ID: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <27733a88b73adb7000205e020bafdb6f7ebe1843.1432099651.git.maitysanchayan@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Sanchayan Maity <maitysanchayan@gmail.com>, shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan@agner.ch, kernel@pengutronix.de
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, broonie@kernel.org
+Cc: devicetree@vger.kernel.org, harinik@xilinx.com, Ranjit Waghmode <ranjit.waghmode@xilinx.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, punnaia@xilinx.com, ran27jit@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 20 May 2015 11:06:52 Sanchayan Maity wrote:
-> Implements SoC bus support to export SoC specific information. Read
-> the unique SoC ID from the Vybrid On Chip One Time Programmable
-> (OCOTP) controller, SoC specific information from the Miscellaneous
-> System Control Module (MSCM), revision from the ROM revision register
-> and expose it via the SoC bus infrastructure.
-> 
-> Sample Output:
-> 
-> root@vf:/sys/devices/soc0# cat soc_id
-> df63c12a2e2161d4
-> root@vf:/sys/devices/soc0# cat family
-> Freescale Vybrid VF500
-> root@vf:/sys/devices/soc0# cat revision
-> 00000013
-> root@vf:/sys/devices/soc0# cat machine
-> Freescale Vybrid
-> 
+Add bindings documentation for GQSPI controller driver used by
+Zynq Ultrascale+ MPSoC
 
-I would prefer to see this as a driver in drivers/soc that registers
-to a platform device. Is there any DT node that would be a reasonable
-device to bind to?
+Signed-off-by: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+---
+ .../devicetree/bindings/spi/spi-zynqmp-qspi.txt    | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
 
-	Arnd
+diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
+new file mode 100644
+index 0000000..cec6330
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
+@@ -0,0 +1,26 @@
++Xilinx Zynq UltraScale+ MPSoC GQSPI controller Device Tree Bindings
++-------------------------------------------------------------------
++
++Required properties:
++- compatible		: Should be "xlnx,zynqmp-qspi-1.0".
++- reg			: Physical base address and size of GQSPI registers map.
++- interrupts		: Property with a value describing the interrupt
++			  number.
++- interrupt-parent	: Must be core interrupt controller.
++- clock-names		: List of input clock names - "ref_clk", "pclk"
++			  (See clock bindings for details).
++- clocks		: Clock phandles (see clock bindings for details).
++
++Optional properties:
++- num-cs		: Number of chip selects used.
++
++Example:
++	qspi: spi@ff0f0000 {
++		compatible = "xlnx,zynqmp-qspi-1.0";
++		clock-names = "ref_clk", "pclk";
++		clocks = <&misc_clk &misc_clk>;
++		interrupts = <0 15 4>;
++		interrupt-parent = <&gic>;
++		num-cs = <1>;
++		reg = <0x0 0xff0f0000 0x1000 0x0 0xc0000000 0x8000000>;
++	};
+--
+2.1.2
