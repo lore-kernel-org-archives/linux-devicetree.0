@@ -1,307 +1,199 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [RFC PATCH v1 2/3] PCI: hisi: Add PCIe host support for Hisilicon Soc Hip05
-Date: Wed, 20 May 2015 14:21:40 +0800
-Message-ID: <1432102901-186201-3-git-send-email-wangzhou1@hisilicon.com>
-References: <1432102901-186201-1-git-send-email-wangzhou1@hisilicon.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
+Date: Wed, 20 May 2015 07:35:51 +0100
+Message-ID: <20150520063551.GD3627@x1>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+ <1430761002-9327-5-git-send-email-abrestic@chromium.org>
+ <20150513143954.GA3394@x1>
+ <55544CC5.9050001@nvidia.com>
+ <20150514074058.GA22418@x1>
+ <CAL1qeaEqNejuGkN-ke11mtWnaaRo+XieCBkQ6+NQ-Afym6uxVA@mail.gmail.com>
+ <CAL1qeaHy0h7bXhuLHh4AG2Zfu48JYeawgVo4dp_k4oX8YFw6tA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1432102901-186201-1-git-send-email-wangzhou1@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, gabriele.paoloni@huawei.com, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL1qeaHy0h7bXhuLHh4AG2Zfu48JYeawgVo4dp_k4oX8YFw6tA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds PCIe host support for Hisilicon Soc Hip05.
+On Tue, 19 May 2015, Andrew Bresticker wrote:
 
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
----
- drivers/pci/host/Kconfig     |   5 +
- drivers/pci/host/Makefile    |   1 +
- drivers/pci/host/pcie-hisi.c | 252 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 258 insertions(+)
- create mode 100644 drivers/pci/host/pcie-hisi.c
+> Lee,
+>=20
+> On Thu, May 14, 2015 at 10:38 AM, Andrew Bresticker
+> <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> > On Thu, May 14, 2015 at 12:40 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
+wrote:
+> >> On Thu, 14 May 2015, Jon Hunter wrote:
+> >>
+> >>> Hi Lee,
+> >>>
+> >>> On 13/05/15 15:39, Lee Jones wrote:
+> >>> > On Mon, 04 May 2015, Andrew Bresticker wrote:
+> >>> >
+> >>> >> Add a binding document for the XUSB host complex on NVIDIA Teg=
+ra124
+> >>> >> and later SoCs.  The XUSB host complex includes a mailbox for
+> >>> >> communication with the XUSB micro-controller and an xHCI host-=
+controller.
+> >>> >>
+> >>> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >>> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >>> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >>> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >>> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> >>> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >>> >> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >>> >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>> >> ---
+> >>> >> Changes from v7:
+> >>> >>  - Move non-shared resources into child nodes.
+> >>> >> New for v7.
+> >>> >> ---
+> >>> >>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 37 +++++=
++++++++++++++++++
+> >>> >>  1 file changed, 37 insertions(+)
+> >>> >>  create mode 100644 Documentation/devicetree/bindings/mfd/nvid=
+ia,tegra124-xusb.txt
+> >>> >>
+> >>> >> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegr=
+a124-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-x=
+usb.txt
+> >>> >> new file mode 100644
+> >>> >> index 0000000..bc50110
+> >>> >> --- /dev/null
+> >>> >> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xu=
+sb.txt
+> >>> >> @@ -0,0 +1,37 @@
+> >>> >> +NVIDIA Tegra XUSB host copmlex
+> >>> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>> >> +
+> >>> >> +The XUSB host complex on Tegra124 and later SoCs contains an =
+xHCI host
+> >>> >> +controller and a mailbox for communication with the XUSB micr=
+o-controller.
+> >>> >> +
+> >>> >> +Required properties:
+> >>> >> +--------------------
+> >>> >> + - compatible: For Tegra124, must contain "nvidia,tegra124-xu=
+sb".
+> >>> >> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,teg=
+ra124-xusb"'
+> >>> >> +   where <chip> is tegra132.
+> >>> >> + - reg: Must contain the base and length of the XUSB FPCI reg=
+isters.
+> >>> >> + - ranges: Bus address mapping for the XUSB block.  Can be em=
+pty since the
+> >>> >> +   mapping is 1:1.
+> >>> >> + - #address-cells: Must be 2.
+> >>> >> + - #size-cells: Must be 2.
+> >>> >> +
+> >>> >> +Example:
+> >>> >> +--------
+> >>> >> +  usb@0,70098000 {
+> >>> >> +          compatible =3D "nvidia,tegra124-xusb";
+> >>> >> +          reg =3D <0x0 0x70098000 0x0 0x1000>;
+> >>> >> +          ranges;
+> >>> >> +
+> >>> >> +          #address-cells =3D <2>;
+> >>> >> +          #size-cells =3D <2>;
+> >>> >> +
+> >>> >> +          usb-host@0,70090000 {
+> >>> >> +                  compatible =3D "nvidia,tegra124-xhci";
+> >>> >> +                  ...
+> >>> >> +          };
+> >>> >> +
+> >>> >> +          mailbox {
+> >>> >> +                  compatible =3D "nvidia,tegra124-xusb-mbox";
+> >>> >> +                  ...
+> >>> >> +          };
+> >>> >
+> >>> > This doesn't appear to be a proper MFD.  I would have the USB a=
+nd
+> >>> > Mailbox devices probe seperately and use a phandle to point the=
+ USB
+> >>> > device to its Mailbox.
+> >>> >
+> >>> > usb@xyz {
+> >>> >     mboxes =3D <&xusb-mailbox, [chan]>;
+> >>> > };
+> >>> >
+> >>>
+> >>> I am assuming that Andrew had laid it out like this to reflect th=
+e hw
+> >>> structure. The mailbox and xhci controller are part of the xusb
+> >>> sub-system and hence appear as child nodes. My understanding is t=
+hat for
+> >>> device-tree we want the device-tree structure to reflect the actu=
+al hw.
+> >>> Is this not the case?
+> >>
+> >> Yes, the DT files should reflect h/w.  I have requested to see wha=
+t
+> >> the memory map looks like, so I might provide a more appropriate
+> >> solution to accepting a pretty pointless MFD.
+> >
+> > FWIW, the address map for XUSB looks like this:
+> >
+> > XUSB_HOST: 0x70090000 - 0x7009a000
+> >     xHCI registers: 0x70090000 - 0x70098000
+> >     FPCI configuration registers: 0x70098000 - 0x70099000
+> >     IPFS configuration registers: 0x70099000 - 0x7009a000
+> >
+> >> Two solutions spring to mind.  You can either call
+> >> of_platform_populate() from the USB driver, as some already do:
+> >>
+> >>   drivers/usb/dwc3/dwc3-exynos.c:
+> >>     ret =3D of_platform_populate(node, NULL, NULL, dev);
+> >>   drivers/usb/dwc3/dwc3-keystone.c:
+> >>     error =3D of_platform_populate(node, NULL, NULL, dev);
+> >>   drivers/usb/dwc3/dwc3-omap.c:
+> >>     ret =3D of_platform_populate(node, NULL, NULL, dev);
+> >>   drivers/usb/dwc3/dwc3-qcom.c:
+> >>     ret =3D of_platform_populate(node, NULL, NULL, qdwc->dev);
+> >>   drivers/usb/dwc3/dwc3-st.c:
+> >>     ret =3D of_platform_populate(node, NULL, NULL, dev);
+> >>   drivers/usb/musb/musb_am335x.c:
+> >>     ret =3D of_platform_populate(pdev->dev.of_node, NULL, NULL, &p=
+dev->dev);
+> >
+> > This still requires a small, separate driver to setup the regmap an=
+d
+> > do of_platform_populate().  The only difference is it lives in
+> > drivers/usb/ instead of drivers/mfd/.
+> >
+> >> Or use the "simple-mfd", which is currently in -next:
+> >>
+> >>   git show next/master:Documentation/devicetree/bindings/mfd/mfd.t=
+xt
+> >
+> > I'm not too opposed to this, but Thierry was when I brought this up
+> > before.  The issue here is that if we ever have to do something
+> > besides setting up a regmap in the MFD, we'd have to change the
+> > binding and break DT backwards-compatibility.
+>=20
+> Any thoughts on this?  A minimal MFD seems to be the best way to
+> future-proof this binding/driver should it need to be extended in the
+> future.  If this is a firm NAK from you however, I'll need to let
+> Jassi now so that he can un-queue the mailbox patches for 4.2....
 
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index 1dfb567..486d822 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -125,4 +125,9 @@ config PCIE_IPROC_PLATFORM
- 	  Say Y here if you want to use the Broadcom iProc PCIe controller
- 	  through the generic platform bus interface
- 
-+config PCI_HISI
-+	depends on OF && ARM64
-+	bool "Hisilicon Soc HIP05 PCIe controller"
-+	select PCIE_DW
-+
- endmenu
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index f733b4e..562142e 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -15,3 +15,4 @@ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
- obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
- obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
- obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
-+obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
-diff --git a/drivers/pci/host/pcie-hisi.c b/drivers/pci/host/pcie-hisi.c
-new file mode 100644
-index 0000000..3f8cb9a
---- /dev/null
-+++ b/drivers/pci/host/pcie-hisi.c
-@@ -0,0 +1,252 @@
-+/*
-+ * PCIe host controller driver for Hisilicon Hip05 SoCs
-+ *
-+ * Copyright (C) 2014 Hisilicon Co., Ltd. http://www.hisilicon.com
-+ *
-+ * Author: Zhou Wang <wangzhou1@hisilicon.com>
-+ *         Dacai Zhu <zhudacai@hisilicon.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_pci.h>
-+#include <linux/platform_device.h>
-+
-+#include "pcie-designware.h"
-+
-+#define PCIE_SUBCTRL_MODE_REG                           (0x2800)
-+#define PCIE_SUBCTRL_SYS_STATE4_REG                     (0x6818)
-+#define PCIE_SLV_DBI_MODE                               (0x0)
-+#define PCIE_SLV_SYSCTRL_MODE                           (0x1)
-+#define PCIE_SLV_CONTENT_MODE                           (0x2)
-+#define PCIE_LTSSM_LINKUP_STATE                         (0x11)
-+#define PCIE_LTSSM_STATE_MASK                           (0x3F)
-+#define PCIE_MSI_CONTEXT_VALUE                          (0x1011000)
-+#define PCIE_MSI_TRANS_ENABLE                           (0x1ff0)
-+#define PCIE_MSI_LOW_ADDRESS                            (0x1b4)
-+#define PCIE_MSI_HIGH_ADDRESS                           (0x1c4)
-+
-+#define to_hisi_pcie(x)	container_of(x, struct hisi_pcie, pp)
-+
-+struct hisi_pcie {
-+	void __iomem *subctrl_base;
-+	void __iomem *reg_base;
-+	struct msi_controller *msi;
-+	u32 port_id;
-+	struct pcie_port pp;
-+};
-+
-+static inline void hisi_pcie_subctrl_writel(struct hisi_pcie *pcie,
-+					    u32 val, u32 reg)
-+{
-+	writel(val, pcie->subctrl_base + reg);
-+}
-+
-+static inline u32 hisi_pcie_subctrl_readl(struct hisi_pcie *pcie, u32 reg)
-+{
-+	return readl(pcie->subctrl_base + reg);
-+}
-+
-+static inline void hisi_pcie_apb_writel(struct hisi_pcie *pcie,
-+					u32 val, u32 reg)
-+{
-+	writel(val, pcie->reg_base + reg);
-+}
-+
-+static inline u32 hisi_pcie_apb_readl(struct hisi_pcie *pcie, u32 reg)
-+{
-+	return readl(pcie->reg_base + reg);
-+}
-+
-+/*
-+ * Change mode to indicate the same reg_base to base of PCIe host configure
-+ * registers, base of RC configure space or base of vmid/asid context table
-+ */
-+static void hisi_pcie_change_apb_mode(struct hisi_pcie *pcie, u32 mode)
-+{
-+	u32 val;
-+	u32 bit_mask;
-+	u32 bit_shift;
-+	u32 port_id = pcie->port_id;
-+	u32 reg = PCIE_SUBCTRL_MODE_REG + 0x100 * port_id;
-+
-+	if ((port_id == 1) || (port_id == 2)) {
-+		bit_mask = 0xc;
-+		bit_shift = 0x2;
-+	} else {
-+		bit_mask = 0x6;
-+		bit_shift = 0x1;
-+	}
-+
-+	val = hisi_pcie_subctrl_readl(pcie, reg);
-+	val = (val & (~bit_mask)) | (mode << bit_shift);
-+	hisi_pcie_subctrl_writel(pcie, val, reg);
-+}
-+
-+/* Configure vmid/asid table in PCIe host */
-+static void hisi_pcie_config_context(struct hisi_pcie *pcie)
-+{
-+	int i;
-+
-+	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_CONTENT_MODE);
-+
-+	for (i = 0; i < 0x400; i++)
-+		hisi_pcie_apb_writel(pcie, 0x0, i * 4);
-+
-+	for (i = 0x400; i < 0x800; i++)
-+		hisi_pcie_apb_writel(pcie, 0x0, i * 4);
-+
-+	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_SYSCTRL_MODE);
-+
-+	hisi_pcie_apb_writel(pcie, 0xb7010040, PCIE_MSI_LOW_ADDRESS);
-+	hisi_pcie_apb_writel(pcie, 0x0, PCIE_MSI_HIGH_ADDRESS);
-+	hisi_pcie_apb_writel(pcie, PCIE_MSI_CONTEXT_VALUE, 0x10);
-+	hisi_pcie_apb_writel(pcie, PCIE_MSI_TRANS_ENABLE, 0x1c8);
-+
-+	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_DBI_MODE);
-+}
-+
-+static int hisi_pcie_link_up(struct pcie_port *pp)
-+{
-+	u32 val;
-+
-+	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
-+
-+	val = hisi_pcie_subctrl_readl(hisi_pcie, PCIE_SUBCTRL_SYS_STATE4_REG +
-+				      0x100 * hisi_pcie->port_id);
-+
-+	return ((val & PCIE_LTSSM_STATE_MASK) == PCIE_LTSSM_LINKUP_STATE);
-+}
-+
-+static
-+int hisi_pcie_msi_host_init(struct pcie_port *pp, struct msi_controller *chip)
-+{
-+	struct device_node *msi_node;
-+	struct msi_controller *msi;
-+	struct device_node *np = pp->dev->of_node;
-+	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
-+
-+	msi_node = of_parse_phandle(np, "msi-parent", 0);
-+	if (!msi_node) {
-+		pr_err("failed to find msi-parent\n");
-+		return -ENODEV;
-+	}
-+
-+	msi = of_pci_find_msi_chip_by_node(msi_node);
-+	hisi_pcie->msi = msi;
-+
-+	pp->irq_domain = msi->domain;
-+
-+	return 0;
-+}
-+
-+static struct pcie_host_ops hisi_pcie_host_ops = {
-+	.link_up = hisi_pcie_link_up,
-+	.msi_host_init = hisi_pcie_msi_host_init,
-+};
-+
-+static int __init hisi_add_pcie_port(struct pcie_port *pp,
-+				     struct platform_device *pdev)
-+{
-+	int ret;
-+	u32 port_id;
-+	struct resource busn;
-+
-+	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
-+
-+	if (of_property_read_u32(pdev->dev.of_node, "port-id", &port_id)) {
-+		dev_err(&pdev->dev, "failed to read port-id\n");
-+		return -EINVAL;
-+	}
-+	if (port_id > 3) {
-+		dev_err(&pdev->dev, "Invalid port-id\n");
-+		return -EINVAL;
-+	}
-+
-+	hisi_pcie->port_id = port_id;
-+
-+	if (of_pci_parse_bus_range(pdev->dev.of_node, &busn)) {
-+		dev_err(&pdev->dev, "failed to parse bus-ranges\n");
-+		return -EINVAL;
-+	}
-+
-+	pp->root_bus_nr = busn.start;
-+	pp->ops = &hisi_pcie_host_ops;
-+
-+	hisi_pcie_config_context(hisi_pcie);
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to initialize host\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init hisi_pcie_probe(struct platform_device *pdev)
-+{
-+	struct hisi_pcie *hisi_pcie;
-+	struct pcie_port *pp;
-+	struct resource *reg;
-+	struct resource *subctrl;
-+	int ret;
-+
-+	hisi_pcie = devm_kzalloc(&pdev->dev, sizeof(*hisi_pcie), GFP_KERNEL);
-+	if (!hisi_pcie)
-+		return -ENOMEM;
-+
-+	pp = &hisi_pcie->pp;
-+	pp->dev = &pdev->dev;
-+
-+	subctrl = platform_get_resource_byname(pdev, IORESOURCE_MEM, "subctrl");
-+	hisi_pcie->subctrl_base = devm_ioremap_nocache(&pdev->dev,
-+					subctrl->start, resource_size(subctrl));
-+	if (IS_ERR(hisi_pcie->subctrl_base)) {
-+		dev_err(pp->dev, "cannot get subctrl base\n");
-+		return PTR_ERR(hisi_pcie->subctrl_base);
-+	}
-+
-+	reg = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbi");
-+	hisi_pcie->reg_base = devm_ioremap_resource(&pdev->dev, reg);
-+	if (IS_ERR(hisi_pcie->reg_base)) {
-+		dev_err(pp->dev, "cannot get reg base\n");
-+		return PTR_ERR(hisi_pcie->reg_base);
-+	}
-+
-+	hisi_pcie->pp.dbi_base = hisi_pcie->reg_base;
-+
-+	ret = hisi_add_pcie_port(pp, pdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, hisi_pcie);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id hisi_pcie_of_match[] = {
-+	{.compatible = "hisilicon,hip05-pcie",},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, hisi_pcie_of_match);
-+
-+static struct platform_driver hisi_pcie_driver = {
-+	.probe  = hisi_pcie_probe,
-+	.driver = {
-+		   .name = "hisi-pcie",
-+		   .owner = THIS_MODULE,
-+		   .of_match_table = hisi_pcie_of_match,
-+	},
-+};
-+
-+module_platform_driver(hisi_pcie_driver);
-+
-+MODULE_AUTHOR("Zhou Wang <wangzhou1@huawei.com>");
-+MODULE_AUTHOR("Dacai Zhu <zhudacai@huawei.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+I was waiting to hear Thierry's thoughts.  However, I am unconvinced
+that you need an MFD driver for this and refuse to take a shell (read
+"pointless") one on an "if we ever ..." clause.
+
+Will you break backwards capability though?  I'm not sure you will.
+Old DTBs will still use 'simple-mfd' and probe the devices in the
+normal way.  *If* you introduce an MFD driver at a later date then the
+old DTB will miss out the *new* functionality, which is expected and
+accepted.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
