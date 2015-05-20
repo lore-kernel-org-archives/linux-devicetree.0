@@ -1,74 +1,47 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
- controller
-Date: Wed, 20 May 2015 17:37:28 +0200
-Message-ID: <20150520153728.GT24769@pengutronix.de>
-References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
- <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
- <20150520085715.GA17078@pengutronix.de>
- <1432127020.20394.15.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432127020.20394.15.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Eddie Huang <eddie.huang@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Xudong Chen <xudong.chen@mediatek.com>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wolfram Sang <wsa@the-dreams.de>, Liguo Zhang <liguo.zhang@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Robert Nelson <robertcnelson@gmail.com>
+Subject: [PATCH] ARM: dts: am335x-boneblack: disable RTC-only sleep
+Date: Wed, 20 May 2015 10:38:42 -0500
+Message-ID: <1432136322-7609-1-git-send-email-robertcnelson@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>, Felipe Balbi <balbi@ti.com>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Fixes: http://bugs.elinux.org/issues/143
 
-On Wed, May 20, 2015 at 09:03:40PM +0800, Yingjoe Chen wrote:
-> On Wed, 2015-05-20 at 10:57 +0200, Uwe Kleine-K=F6nig wrote:
-> > On Tue, May 19, 2015 at 12:40:08AM +0800, Eddie Huang wrote:
-> > > +	if (i2c->speed_hz > MAX_HS_MODE_SPEED)
-> > > +		return -EINVAL;
-> > According to the plan to tune for the highest possible rate <=3D
-> > i2c->speed_hz, you should handle the case (i2c->speed_hz >
-> > MAX_HS_MODE_SPEED) like i2c->speed_hz =3D=3D MAX_HS_MODE_SPEED.
-> > Well, you might want to prevent an overflow in the calculation belo=
-w
-> > however.
->=20
-> The check here means we don't support speed > MAX_HS_MODE_SPEED. This=
- is
-> different then slightly slower bus speed due to rounding error.
-Well from outside there no difference between asking for 100 with
-getting 98 or asking for 405 with getting 400. IMHO the expectation is
-that you set the maximal possible rate when something too big for you i=
-s
-requested. Consider a communication with a i2c device that supports 600
-kHz. You have the choice to communicate with 400 kHz with that or not a=
-t
-all.
+Entering RTC-only sleep is only properly supported on early prototypes series
+(pre-A6) of the BeagleBone Black.  Since rev (A6A), which include all production
+versions, it is not support at due to.
 
-> > > +	best_mul =3D MAX_SAMPLE_CNT_DIV * max_step_cnt;
-> > > +
-> > > +	for (sample_cnt =3D 1; sample_cnt <=3D MAX_SAMPLE_CNT_DIV; samp=
-le_cnt++) {
-> > > +		step_cnt =3D (min_div + sample_cnt - 1) / sample_cnt;
-> > DIV_ROUND_UP
-> >=20
-> > > +		cnt_mul =3D step_cnt * sample_cnt;
-> > > +		if (step_cnt > max_step_cnt)
-> > > +			continue;
-> > I think it can happen that you have step_cnt > max_step_cnt here, b=
-ut
-> > that (sample_cnt, max_step_cnt) still is a good pair to consider. S=
-o:
->=20
-> If step_cnt > max_step_cnt, then sample_cnt * max_step_cnt < min_div.
-> This means (sample_cnt, max_step_cnt) is not a valid.
-You're right.
+(rev A6) enable of the 3v3b regulator moved from LDO2 to LDO4 (3v3a)
+side-effect: 3v3b rail remains on in sleep-mode (also in off-mode when battery-powered)
 
-Best regards
-Uwe
+(rev A6A) am335x vdds supply moved from LDO3 to LDO1
+side-effect: vdds remains supplied in sleep-mode
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Reported-by: Matthijs van Duin <matthijsvanduin@gmail.com>
+Tested-by: Matthijs van Duin <matthijsvanduin@gmail.com>
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Felipe Balbi <balbi@ti.com>
+Cc: Johan Hovold <johan@kernel.org>
+---
+ arch/arm/boot/dts/am335x-boneblack.dts | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index 5c42d25..901739f 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -80,7 +80,3 @@
+ 		status = "okay";
+ 	};
+ };
+-
+-&rtc {
+-	system-power-controller;
+-};
+-- 
+2.1.4
+
