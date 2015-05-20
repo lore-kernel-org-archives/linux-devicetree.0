@@ -1,55 +1,31 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/5] ARM: shmobile: dts: Replace "nor-jedec" by "jedec,spi-nor"
-Date: Wed, 20 May 2015 20:16:49 +0200
-Message-ID: <1432145814-12442-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] arm: dts: Beaglebone i2c definitions
+Date: Wed, 20 May 2015 11:17:08 -0700
+Message-ID: <20150520181708.GL10274@atomide.com>
+References: <1431504274-32084-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <20150514153822.GJ15563@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150514153822.GJ15563@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Robert Nelson <robertcnelson@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+* Tony Lindgren <tony@atomide.com> [150514 08:40]:
+> * Pantelis Antoniou <pantelis.antoniou@konsulko.com> [150513 01:05]:
+> > The beaglebone family of boards contain two I2C busses enabled.
+> > The first one with a baseboard identification EEPROM and a
+> > cape I2C bus.
+> 
+> This seems safe to apply as the i2c2 pins are listed in the cape
+> specification.
+> 
+> These pins could be used for other devices too.. But in that case
+> the cape would not follow the cape standard.
 
-This patch series replaces the recently introduced "nor-jedec"
-compatible value by "jedec,spi-nor" in all shmobile dts files,
-cfr. commit 8947e396a8296c52 ('Documentation: dt: mtd: replace
-"nor-jedec" binding with "jedec,spi-nor"'), which was applied in
-v4.1-rc4.
+So applying this one into omap-for-v4.2/dt thanks.
 
-As the "bad" compatible values are already in -next for v4.2, these
-updates should be applied and queued for v4.2, too.
-
-Thanks for applying!
-
-Geert Uytterhoeven (5):
-  ARM: shmobile: bockw-reference dts: Replace "nor-jedec" by
-    "jedec,spi-nor"
-  ARM: shmobile: bockw dts: Replace "nor-jedec" by "jedec,spi-nor"
-  ARM: shmobile: lager dts: Replace "nor-jedec" by "jedec,spi-nor"
-  ARM: shmobile: henninger dts: Replace "nor-jedec" by "jedec,spi-nor"
-  ARM: shmobile: koelsch dts: Replace "nor-jedec" by "jedec,spi-nor"
-
- arch/arm/boot/dts/r8a7778-bockw-reference.dts | 2 +-
- arch/arm/boot/dts/r8a7778-bockw.dts           | 2 +-
- arch/arm/boot/dts/r8a7790-lager.dts           | 2 +-
- arch/arm/boot/dts/r8a7791-henninger.dts       | 2 +-
- arch/arm/boot/dts/r8a7791-koelsch.dts         | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
--- 
-1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
