@@ -1,137 +1,237 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/1] ARM: mvebu: dts: Add dts file for DLink DNS-327L
-Date: Wed, 20 May 2015 13:00:05 +0200
-Message-ID: <555C6935.4000405@gmail.com>
-References: <1432069858-10958-1-git-send-email-andrew@ncrmnt.org> <1432069858-10958-2-git-send-email-andrew@ncrmnt.org> <555C4E48.6020707@gmail.com> <699cee8678f6e671bd1457aa06180ccf@mail.ncrmnt.org>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/9] clocksource: mediatek: Use GPT as sched clock source
+Date: Wed, 20 May 2015 13:02:21 +0200
+Message-ID: <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g@mail.gmail.com>
+References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1431763110-443-5-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <699cee8678f6e671bd1457aa06180ccf-IcawJbj+vY1vZ+LtbKW8tg@public.gmane.org>
+In-Reply-To: <1431763110-443-5-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20.05.2015 12:20, Andrew wrote:
-> Sebastian Hesselbarth =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 20.05.2015 12:05=
-:
->> On 19.05.2015 23:10, Andrew Andrianov wrote:
->>> DNS-327L is a 2-bay NAS with the following specs:
->> [...]
->>> Signed-off-by: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
->>> ---
->>>   arch/arm/boot/dts/Makefile                     |   1 +
->>>   arch/arm/boot/dts/armada-370-dlink-dns327l.dts | 356
->>> +++++++++++++++++++++++++
->>>   2 files changed, 357 insertions(+)
->>>   create mode 100644 arch/arm/boot/dts/armada-370-dlink-dns327l.dts
->> [...]
->>> diff --git a/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
->>> b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
->>> new file mode 100644
->>> index 0000000..0f4555c4
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
->>> @@ -0,0 +1,356 @@
->> [...]
->>> +    regulators {
->>> +        compatible =3D "simple-bus";
->>> +        #address-cells =3D <1>;
->>> +        #size-cells =3D <0>;
->>> +        pinctrl-0 =3D <&xhci_pwr_pin
->>> +            &sata_l_pwr_pin
->>> +            &sata_r_pwr_pin>;
->>> +
->>> +        pinctrl-names =3D "default";
->>
->> I doubt pinctrl will not work as you expected. For regulators, unlik=
-e
->> gpio-keys/leds above, this node just describes the "bus" of regulato=
-rs.
+2015-05-16 9:58 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> When cpu is in deep idle, arch timer will stop counting. Setup GPT as
+> sched clock source so it can keep counting in idle.
 >
-> Are you sure about this moment? FYI: I've taken
-> armada-370-synology-ds213j.dts
-> as the reference which happens to list regulator pinctrl (As of 4.1-r=
-c1)
-> just the same way:
+> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/clocksource/mtk_timer.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 >
->      compatible =3D "simple-bus";
->          #address-cells =3D <1>;
->          #size-cells =3D <0>;
->          pinctrl-0 =3D <&sata1_pwr_pin &sata2_pwr_pin>;
->          pinctrl-names =3D "default";
->                  ...
+> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
+> index 91206f9..fe7cf72 100644
+> --- a/drivers/clocksource/mtk_timer.c
+> +++ b/drivers/clocksource/mtk_timer.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/sched_clock.h>
+>  #include <linux/slab.h>
+>
+>  #define GPT_IRQ_EN_REG         0x00
+> @@ -59,6 +60,13 @@ struct mtk_clock_event_device {
+>         struct clock_event_device dev;
+>  };
+>
+> +static void __iomem *gpt_base __read_mostly;
+> +
+> +static u64 notrace mtk_read_sched_clock(void)
+> +{
+> +       return readl_relaxed(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC));
+> +}
+> +
+>  static inline struct mtk_clock_event_device *to_mtk_clk(
+>                                 struct clock_event_device *c)
+>  {
+> @@ -243,6 +251,8 @@ static void __init mtk_timer_init(struct device_node *node)
+>         mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
+>         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
+>                         node->name, rate, 300, 32, clocksource_mmio_readl_up);
+> +       gpt_base = evt->gpt_base;
 
-Well, even if it works the pinctrl should be claimed by the device that
-actually depends on it, i.e. the regulator itself.
+This is really hacky. We should clean up the code and provide
+mtk_clock_event_device globally.
+Please add the patch below, which does exactly this.
+---- 8< ---------------- >8 ------
+>From 631e7bf4e5d9456d0bb4a29b2dee4b84e8c052bd Mon Sep 17 00:00:00 2001
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Wed, 20 May 2015 12:43:16 +0200
+Subject: [PATCH] clocksource: mediatek: Define mtk_clock_event_device globally
 
-> If that's erroneous we should fix armada-370-synology-ds213j.dts as w=
-ell.
+Sched clock code, especially sched_clock_register does not allow to pass a
+pointer to actual_read_sched_clock. So if in the driver the register base
+address is not globally defined, we are not able to read the scheduler
+clock register. This patch sets the mtk_clock_event_device struct globally
+for the driver, to be able to read the register.
 
-Most likely nobody ever noticed if that didn't work because (a) usually
-gpio functions are setup by the bootloader or (b) gpio is default reset
-value of the pinctrl registers anyway.
+Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/clocksource/mtk_timer.c | 50 +++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 32 deletions(-)
 
-I'd say move the pinctrl properties to regulator nodes for dns-327l now
-and we move the properties for ds213j in a separate patch.
+diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
+index 68ab423..c5f5b40 100644
+--- a/drivers/clocksource/mtk_timer.c
++++ b/drivers/clocksource/mtk_timer.c
+@@ -59,13 +59,9 @@ struct mtk_clock_event_device {
+     struct clock_event_device dev;
+ };
 
-Sebastian
+-static inline struct mtk_clock_event_device *to_mtk_clk(
+-                struct clock_event_device *c)
+-{
+-    return container_of(c, struct mtk_clock_event_device, dev);
+-}
++struct mtk_clock_event_device *evt;
 
->>> +
->>> +        usb_power: regulator@1 {
->>> +            compatible =3D "regulator-fixed";
->>> +            reg =3D <1>;
->>> +            regulator-name =3D "USB3.0 Port Power";
->>> +            regulator-min-microvolt =3D <5000000>;
->>> +            regulator-max-microvolt =3D <5000000>;
->>> +            enable-active-high;
->>> +            regulator-boot-on;
->>> +            regulator-always-on;
->>> +            gpio =3D <&gpio0 13 GPIO_ACTIVE_HIGH>;
->>
->> Instead you'll have to put the corresponding pinctrl-0/names propert=
-ies
->> in each of the regulator nodes, i.e.
->>
->>         pinctrl-0 =3D <&xhci_pwr_pin>
->>         pinctrl-names =3D "default";
->>
->> here and similar for the other regulator nodes.
->>
->>> +        };
->>> +
->>> +        sata_r_power: regulator@2 {
->>> +            compatible =3D "regulator-fixed";
->>> +            reg =3D <2>;
->>> +            regulator-name =3D "SATA-R Power";
->>> +            regulator-min-microvolt =3D <5000000>;
->>> +            regulator-max-microvolt =3D <5000000>;
->>> +            startup-delay-us =3D <2000000>;
->>> +            enable-active-high;
->>> +            regulator-always-on;
->>> +            regulator-boot-on;
->>> +            gpio =3D <&gpio1 22 GPIO_ACTIVE_HIGH>;
->>> +        };
->>> +
->>> +        sata_l_power: regulator@3 {
->>> +            compatible =3D "regulator-fixed";
->>> +            reg =3D <3>;
->>> +            regulator-name =3D "SATA-L Power";
->>> +            regulator-min-microvolt =3D <5000000>;
->>> +            regulator-max-microvolt =3D <5000000>;
->>> +            startup-delay-us =3D <4000000>;
->>> +            enable-active-high;
->>> +            regulator-always-on;
->>> +            regulator-boot-on;
->>> +            gpio =3D <&gpio1 24 GPIO_ACTIVE_HIGH>;
->>> +        };
->>> +    };
->>> +};
+-static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
++static void mtk_clkevt_time_stop(u8 timer)
+ {
+     u32 val;
 
+@@ -74,14 +70,12 @@ static void mtk_clkevt_time_stop(struct
+mtk_clock_event_device *evt, u8 timer)
+             TIMER_CTRL_REG(timer));
+ }
 
+-static void mtk_clkevt_time_setup(struct mtk_clock_event_device *evt,
+-                unsigned long delay, u8 timer)
++static void mtk_clkevt_time_setup(unsigned long delay, u8 timer)
+ {
+     writel(delay, evt->gpt_base + TIMER_CMP_REG(timer));
+ }
+
+-static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
+-        bool periodic, u8 timer)
++static void mtk_clkevt_time_start(bool periodic, u8 timer)
+ {
+     u32 val;
+
+@@ -105,14 +99,12 @@ static void mtk_clkevt_time_start(struct
+mtk_clock_event_device *evt,
+ static void mtk_clkevt_mode(enum clock_event_mode mode,
+                 struct clock_event_device *clk)
+ {
+-    struct mtk_clock_event_device *evt = to_mtk_clk(clk);
+-
+-    mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
++    mtk_clkevt_time_stop(GPT_CLK_EVT);
+
+     switch (mode) {
+     case CLOCK_EVT_MODE_PERIODIC:
+-        mtk_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
+-        mtk_clkevt_time_start(evt, true, GPT_CLK_EVT);
++        mtk_clkevt_time_setup(evt->ticks_per_jiffy, GPT_CLK_EVT);
++        mtk_clkevt_time_start(true, GPT_CLK_EVT);
+         break;
+     case CLOCK_EVT_MODE_ONESHOT:
+         /* Timer is enabled in set_next_event */
+@@ -128,19 +120,15 @@ static void mtk_clkevt_mode(enum clock_event_mode mode,
+ static int mtk_clkevt_next_event(unsigned long event,
+                    struct clock_event_device *clk)
+ {
+-    struct mtk_clock_event_device *evt = to_mtk_clk(clk);
+-
+-    mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
+-    mtk_clkevt_time_setup(evt, event, GPT_CLK_EVT);
+-    mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
++    mtk_clkevt_time_stop(GPT_CLK_EVT);
++    mtk_clkevt_time_setup(event, GPT_CLK_EVT);
++    mtk_clkevt_time_start(false, GPT_CLK_EVT);
+
+     return 0;
+ }
+
+ static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
+ {
+-    struct mtk_clock_event_device *evt = dev_id;
+-
+     /* Acknowledge timer0 irq */
+     writel(GPT_IRQ_ACK(GPT_CLK_EVT), evt->gpt_base + GPT_IRQ_ACK_REG);
+     evt->dev.event_handler(&evt->dev);
+@@ -148,7 +136,7 @@ static irqreturn_t mtk_timer_interrupt(int irq,
+void *dev_id)
+     return IRQ_HANDLED;
+ }
+
+-static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
++static inline void mtk_timer_global_reset(void)
+ {
+     /* Disable all interrupts */
+     writel(0x0, evt->gpt_base + GPT_IRQ_EN_REG);
+@@ -156,8 +144,7 @@ static void mtk_timer_global_reset(struct
+mtk_clock_event_device *evt)
+     writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
+ }
+
+-static void
+-mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
++static void mtk_timer_setup(u8 timer, u8 option)
+ {
+     writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
+         evt->gpt_base + TIMER_CTRL_REG(timer));
+@@ -171,7 +158,7 @@ mtk_timer_setup(struct mtk_clock_event_device
+*evt, u8 timer, u8 option)
+             evt->gpt_base + TIMER_CTRL_REG(timer));
+ }
+
+-static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
++static void mtk_timer_enable_irq(u8 timer)
+ {
+     u32 val;
+
+@@ -182,7 +169,6 @@ static void mtk_timer_enable_irq(struct
+mtk_clock_event_device *evt, u8 timer)
+
+ static void __init mtk_timer_init(struct device_node *node)
+ {
+-    struct mtk_clock_event_device *evt;
+     struct resource res;
+     unsigned long rate = 0;
+     struct clk *clk;
+@@ -224,10 +210,10 @@ static void __init mtk_timer_init(struct
+device_node *node)
+     }
+     rate = clk_get_rate(clk);
+
+-    mtk_timer_global_reset(evt);
++    mtk_timer_global_reset();
+
+     if (request_irq(evt->dev.irq, mtk_timer_interrupt,
+-            IRQF_TIMER | IRQF_IRQPOLL, "mtk_timer", evt)) {
++            IRQF_TIMER | IRQF_IRQPOLL, "mtk_timer", NULL)) {
+         pr_warn("failed to setup irq %d\n", evt->dev.irq);
+         goto err_clk_disable;
+     }
+@@ -235,16 +221,16 @@ static void __init mtk_timer_init(struct
+device_node *node)
+     evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
+
+     /* Configure clock source */
+-    mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
++    mtk_timer_setup(GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
+     clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
+             node->name, rate, 300, 32, clocksource_mmio_readl_up);
+
+     /* Configure clock event */
+-    mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
++    mtk_timer_setup(GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
+     clockevents_config_and_register(&evt->dev, rate, 0x3,
+                     0xffffffff);
+
+-    mtk_timer_enable_irq(evt, GPT_CLK_EVT);
++    mtk_timer_enable_irq(GPT_CLK_EVT);
+
+     return;
+
+-- 
+1.9.1
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
