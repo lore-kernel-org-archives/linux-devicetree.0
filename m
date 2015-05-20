@@ -1,115 +1,91 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] clocksource: mediatek: Use GPT as sched clock
- source
-Date: Wed, 20 May 2015 11:37:03 -0700
-Message-ID: <20150520183703.GS31753@codeaurora.org>
-References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
- <1431763110-443-5-git-send-email-yingjoe.chen@mediatek.com>
- <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g@mail.gmail.com>
- <1432130725.20394.24.camel@mtksdaap41>
- <CABuKBe+OP6zMHdhkm1U5sB4NqiKvEH1kVGZbHbx5f1AypcERAw@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/7] mtd: brcmnand: add bcma driver
+Date: Wed, 20 May 2015 11:40:28 -0700
+Message-ID: <20150520184028.GF11598@ld-irv-0074>
+References: <1431877266-28566-1-git-send-email-hauke@hauke-m.de>
+ <1431877266-28566-6-git-send-email-hauke@hauke-m.de>
+ <20150520003402.GC11598@ld-irv-0074>
+ <CACna6rzBn3yzzER56aAmk+VPNiMh9ikA3B1YZmMesF=3DWdq+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CABuKBe+OP6zMHdhkm1U5sB4NqiKvEH1kVGZbHbx5f1AypcERAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CACna6rzBn3yzzER56aAmk+VPNiMh9ikA3B1YZmMesF=3DWdq+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/20, Matthias Brugger wrote:
-> 2015-05-20 16:05 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> > On Wed, 2015-05-20 at 13:02 +0200, Matthias Brugger wrote:
-> >> 2015-05-16 9:58 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> >> > When cpu is in deep idle, arch timer will stop counting. Setup GPT as
-> >> > sched clock source so it can keep counting in idle.
-> >> >
-> >> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> > ---
-> >> >  drivers/clocksource/mtk_timer.c | 10 ++++++++++
-> >> >  1 file changed, 10 insertions(+)
-> >> >
-> >> > diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
-> >> > index 91206f9..fe7cf72 100644
-> >> > --- a/drivers/clocksource/mtk_timer.c
-> >> > +++ b/drivers/clocksource/mtk_timer.c
-> >> > @@ -24,6 +24,7 @@
-> >> >  #include <linux/of.h>
-> >> >  #include <linux/of_address.h>
-> >> >  #include <linux/of_irq.h>
-> >> > +#include <linux/sched_clock.h>
-> >> >  #include <linux/slab.h>
-> >> >
-> >> >  #define GPT_IRQ_EN_REG         0x00
-> >> > @@ -59,6 +60,13 @@ struct mtk_clock_event_device {
-> >> >         struct clock_event_device dev;
-> >> >  };
-> >> >
-> >> > +static void __iomem *gpt_base __read_mostly;
-> >> > +
-> >> > +static u64 notrace mtk_read_sched_clock(void)
-> >> > +{
-> >> > +       return readl_relaxed(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC));
-> >> > +}
-> >> > +
-> >> >  static inline struct mtk_clock_event_device *to_mtk_clk(
-> >> >                                 struct clock_event_device *c)
-> >> >  {
-> >> > @@ -243,6 +251,8 @@ static void __init mtk_timer_init(struct device_node *node)
-> >> >         mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
-> >> >         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
-> >> >                         node->name, rate, 300, 32, clocksource_mmio_readl_up);
-> >> > +       gpt_base = evt->gpt_base;
-> >>
-> >> This is really hacky. We should clean up the code and provide
-> >> mtk_clock_event_device globally.
-> >> Please add the patch below, which does exactly this.
-> >> ---- 8< ---------------- >8 ------
-> >> From 631e7bf4e5d9456d0bb4a29b2dee4b84e8c052bd Mon Sep 17 00:00:00 2001
-> >> From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> Date: Wed, 20 May 2015 12:43:16 +0200
-> >> Subject: [PATCH] clocksource: mediatek: Define mtk_clock_event_device globally
-> >>
-> >> Sched clock code, especially sched_clock_register does not allow to pass a
-> >> pointer to actual_read_sched_clock. So if in the driver the register base
-> >> address is not globally defined, we are not able to read the scheduler
-> >> clock register. This patch sets the mtk_clock_event_device struct globally
-> >> for the driver, to be able to read the register.
+On Wed, May 20, 2015 at 08:39:06AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> On 20 May 2015 at 02:34, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> w=
+rote:
+> > On Sun, May 17, 2015 at 05:41:04PM +0200, Hauke Mehrtens wrote:
+> >> This driver registers at the bcma bus and drives the NAND core if =
+it
+> >> was found on this bus. The bcma bus with this NAND core is used on=
+ the
+> >> bcm53xx and bcm47xx Northstar SoC with ARM CPU cores. The memory r=
+anges
+> >> are automatically detected by bcma and the irq numbers read from d=
+evice
+> >> tree by bcma bus driver.
 > >
-> > Hi,
+> > If you're going to use device tree for part of it (IRQs) why not th=
+e
+> > whole thing?
 > >
-> > I'm not sure using a global device pointer is any better.
-> 
-> Why not?
-> 
+> >> This is based on the iproc driver.
 > >
-> > Actually, almost every user of sched_clock_register need to keep a
-> > global register base address. Does it make sense to fix this in
-> > sched_clock_register?
-> >
-> 
-> Not sure about that. Normally you have just one timer in your system,
-> so you don't get any problems to declare driver private structs
-> globally on a per driver basis.
-> Looking on other drivers I have seen a bit of everything, no struct at
-> all, a global pointer to the driver private struct, only iomem
-> pointers global and the rest of the driver private struct as is.
-> It seems that there is no uniform way so up to you. Just please don't
-> use two times the exactly same iomem pointer, one in the driver
-> private struct and one for the scheduler clock. :)
-> 
+> > This looks like you could probably get by with just using iproc_nan=
+d.c
+> > as-is. The main NAND core is apparently MMIO-accessible on your chi=
+ps,
+> > so aren't the BCMA bits you're touching also?
+>=20
+> That's right, in case of SoCs cores are MMIO-accessible, however I se=
+e
+> few reasons for writing this driver as bcma based:
+> 1) MMIO access isn't available for bcma bus /hosted/ on PCIe devices.
+> By using bcma layer we write generic drivers.
 
-Typically the point of doing the container_of design on the
-clockevent is to keep cache locality of all the data. This way,
-when the clockevent is programmed it's cheap pointer math on a
-pointer that's hot in the cache instead of a global pointer
-dereference and likely cache miss to find the data necessary.
+I strongly doubt that this NAND core is ever put on a PCIe endpoint.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> 2) bcma detects cores and their MMIO addresses automatically, if we
+> are a bit lazy, it's easier to use it rather than keep hardcoding all
+> addresses
+
+Laziness is a pretty bad excuse. You already have to do 60% of the work
+by putting the IRQs and base NAND register range into the device tree.
+=46inding those remaining two register addresses is not so hard.
+
+> 3) There are some dependencies in cores initialization, e.g.
+> ChipCommon core usually has to be initialized first
+
+Are you aware of any important dependencies? Isn't it safe to assume
+that the ChipCommon core would have to be initialized way before any
+peripherals?
+
+> 4) bcma provides some helpers like bcma_core_enable so we don't have
+> to duplicate it in driver code
+
+I don't see why we need to reset/re-enable the NAND core in the kernel
+at all, but if we do, this is touching the exact same registers as
+iproc_nand.c is already. So it makes sense to *share* that code, and do
+the same thing on both Cygnus and Northstar, etc. (And no, Cygnus can't
+convert to BCMA, so we can't do 100% sharing either way.)
+
+> That said, I'm for using bcma layer, even if there is some small DT
+> involvement already.
+
+=46or any reasons besides the above? Cause I'm still not convinced we n=
+eed
+a BCMA driver at all.
+
+Brian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
