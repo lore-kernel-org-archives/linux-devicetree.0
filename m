@@ -1,47 +1,56 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: [PATCH] ARM: dts: am335x-boneblack: disable RTC-only sleep
-Date: Wed, 20 May 2015 10:38:42 -0500
-Message-ID: <1432136322-7609-1-git-send-email-robertcnelson@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>, Felipe Balbi <balbi@ti.com>, Johan Hovold <johan@kernel.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/5] soc: Mediatek: Add SCPSYS power domain driver
+Date: Wed, 20 May 2015 18:06:45 +0200
+Message-ID: <CABuKBeLuNdVjuy81egtfhwdLKtje_Ff8vz3EGgRy6ZcrfFX8AA@mail.gmail.com>
+References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
+	<1431372206-1237-4-git-send-email-s.hauer@pengutronix.de>
+	<CAGS+omDJ-7+L_46vwMyewHMkMNj69odhp=JY5i6Xj3-Loe6UNA@mail.gmail.com>
+	<20150519103010.GA6325@pengutronix.de>
+	<CABuKBeKiw8MkG5kWaUBqfDzopwvrX8Kh8XpNfRiC_uJD67OcEg@mail.gmail.com>
+	<20150520140325.GN6325@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150520140325.GN6325@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixes: http://bugs.elinux.org/issues/143
+2015-05-20 16:03 GMT+02:00 Sascha Hauer <s.hauer@pengutronix.de>:
+> On Tue, May 19, 2015 at 01:06:10PM +0200, Matthias Brugger wrote:
+>> 2015-05-19 12:30 GMT+02:00 Sascha Hauer <s.hauer@pengutronix.de>:
+>> >
+>> > I'll check for errors next round. However, I cannot bail out in this
+>> > case since once pm_genpd_init() is called the domain cannot be
+>> > unregistered anymore.
+>>
+>> We should think of implementing this.
+>> I had a quick look on it, and from what I understand as long as you
+>> don't have any subdomains, devices and masters added, it's just
+>> deleting an element from a linked list.
+>
+> In my error path I would have subdomains added though, so I would need
+> that to be handled.
 
-Entering RTC-only sleep is only properly supported on early prototypes series
-(pre-A6) of the BeagleBone Black.  Since rev (A6A), which include all production
-versions, it is not support at due to.
+Well we could bail out, when pm_genpd_add_subdomain fails. But the
+actual implementations don't do that neither at the moment.
 
-(rev A6) enable of the 3v3b regulator moved from LDO2 to LDO4 (3v3a)
-side-effect: 3v3b rail remains on in sleep-mode (also in off-mode when battery-powered)
+>
+>> Maybe we should split this in pm_genpd_prepare and pm_genpd_add, with
+>> the last one actually adding the generic_pm_domain to gpd_list.
+>>
+>> This way we could also get rid of the two for loops.
+>
+> Well, with pm_genpd_prepare and pm_genpd_add I would still need two
+> loops, one for preparing and one for adding.
+>
+> I'm not sure how useful it really is to be able to unregister power
+> domains. For now I suggest to continue with the domains that are
+> successfully registered. I'll look into it should the pm domain
+> maintainers request it.
 
-(rev A6A) am335x vdds supply moved from LDO3 to LDO1
-side-effect: vdds remains supplied in sleep-mode
+Alright.
 
-Reported-by: Matthijs van Duin <matthijsvanduin@gmail.com>
-Tested-by: Matthijs van Duin <matthijsvanduin@gmail.com>
-Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Felipe Balbi <balbi@ti.com>
-Cc: Johan Hovold <johan@kernel.org>
----
- arch/arm/boot/dts/am335x-boneblack.dts | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index 5c42d25..901739f 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -80,7 +80,3 @@
- 		status = "okay";
- 	};
- };
--
--&rtc {
--	system-power-controller;
--};
 -- 
-2.1.4
-
+motzblog.wordpress.com
