@@ -1,192 +1,199 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [RFC PATCH 2/2] spi: Add support for Zynq Ultrascale+ MPSoC
- GQSPI controller
-Date: Wed, 20 May 2015 07:55:53 -0700
-Message-ID: <20150520145552.GV31550@xsjsorenbubuntu>
-References: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
- <1432106871-27232-2-git-send-email-ranjit.waghmode@xilinx.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv5 2/5] ARM: dts: Odroid-XU3 Enable TMU at Exynos5422 base
+Date: Wed, 20 May 2015 20:29:20 +0530
+Message-ID: <CANAwSgSyoesxQG9hBj3KfBb_5CiqUrHWbkUymU3LYcKOnLdOzA@mail.gmail.com>
+References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
+ <1431499020-3912-3-git-send-email-linux.amoon@gmail.com> <CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
+ <CANAwSgQ=30j4A_nCd26kzxi=rdsh32+Srwuc5EaJigLhJ2r4jA@mail.gmail.com>
+ <CAJKOXPfC9nGEsYJ3qJ6m_iMsB=D8_6sOEpLQzEvmLry5zS5j3g@mail.gmail.com>
+ <CANAwSgTOaz+mMhFZTeXYoXF+xPR2qon2Tkfsw5aqO42AK1m1-Q@mail.gmail.com>
+ <CAJKOXPd_1rTZZCz66nQKidUOOEBmgUD+05fHUBvXN-VuD5mTCw@mail.gmail.com>
+ <CANAwSgTbjmSxhJj4o2pnD5pR2V9JbQ3az+TSSCDwgwNnvF7P9w@mail.gmail.com>
+ <CAJKOXPcQGnc1O9-MwqeNwsQE3ax1n8nvad4Sqt47NYKnOSmJPg@mail.gmail.com> <CADoNuNfuDCn_vvACc0=xj0MjdKr4pYcj_-Xh0--Q8_qciuW5YA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432106871-27232-2-git-send-email-ranjit.waghmode@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, ran27jit@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CADoNuNfuDCn_vvACc0=xj0MjdKr4pYcj_-Xh0--Q8_qciuW5YA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Dongjin Kim <tobetter@gmail.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kukjin Kim <kgene@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ranjit,
+On 20 May 2015 at 08:57, Dongjin Kim <tobetter@gmail.com> wrote:
+> Hello Kryzsztof,
+>
+> Are you able to check if TMU is under VDDI power domain from Exynos5422
+> datasheet?
+> If it is, XU3 use BUCK3 for TMU and more internal blocks.
+>
+> Thank you,
+> Dongjin.
+>
+> On Tue, May 19, 2015 at 4:42 PM, Krzysztof Kozlowski
+> <k.kozlowski@samsung.com> wrote:
+>>
+>> 2015-05-19 16:28 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>> > On 15 May 2015 at 05:42, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> > wrote:
+>> >> 2015-05-15 1:16 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>> >>> On 13 May 2015 at 14:02, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> >>> wrote:
+>> >>>> 2015-05-13 17:21 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>> >>>>> On 13 May 2015 at 12:51, Krzysztof Kozlowski
+>> >>>>> <k.kozlowski@samsung.com> wrote:
+>> >>>>>> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>> >>>>>>> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
+>> >>>>>>> device.
+>> >>>>>>>
+>> >>>>>>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+>> >>>>>>> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
+>> >>>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>> >>>>>>> ---
+>> >>>>>>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 25
+>> >>>>>>> +++++++++++++++++++++++++
+>> >>>>>>>  1 file changed, 25 insertions(+)
+>> >>>>>>>
+>> >>>>>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> >>>>>>> b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> >>>>>>> index 9446e28..cd78816 100644
+>> >>>>>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> >>>>>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> >>>>>>> @@ -319,6 +319,31 @@
+>> >>>>>>>                 #cooling-cells = <2>;
+>> >>>>>>>                 cooling-levels = <0 130 170 230>;
+>> >>>>>>>         };
+>> >>>>>>> +
+>> >>>>>>> +       tmu@10060000 {
+>> >>>>>>
+>> >>>>>> Here and for other overrides please use label notation, like:
+>> >>>>>>
+>> >>>>>> &tmu_cpu0 {
+>> >>>>>>               ...
+>> >>>>>> };
+>> >>>>>>
+>> >>>>>>> +               vtmu-supply = <&ldo10_reg>;
+>> >>>>>>
+>> >>>>>> I am curious, how did you find that LDO10 supplies TMU unit?
+>> >>>>>>
+>> >>>>>> Best regards,
+>> >>>>>> Krzysztof
+>> >>>>>
+>> >>>>> Hi Krzysztof,
+>> >>>>>
+>> >>>>> I have re-base my work on earlier Lukasz Majewski patches.
+>> >>>>>
+>> >>>>> https://patchwork.kernel.org/patch/5693201/
+>> >>>>
+>> >>>> NAK.
+>> >>>> I am sorry, but this is not sufficient explanation. Actually such
+>> >>>> explanation could mean that you did just blindly copied everything
+>> >>>> instead of developing it.
+>> >>>>
+>> >>>> You cannot use some regulator here just because some Exynos4 boards
+>> >>>> use it. You have to be sure that this regulator supplies this part of
+>> >>>> SoC or device.
+>> >>>
+>> >>> Hi Krzysztof,
+>> >>>
+>> >>> After going through the schematics, I came to understanding that their
+>> >>> is
+>> >>> missing regulator related to TEMP SE in the exynos5422-odroidxu3.dts.
+>> >>>
+>> >>> Below is the schematic of the board.
+>> >>>
+>> >>> http://dn.odroid.com/5422/ODROID-XU3/Schematics/XU3_MAIN_REV0.2.PDF
+>> >>>
+>> >>>   ldo18_reg: LDO18 {
+>> >>>                                          regulator-name = "vdd_ldo18";
+>> >>>                                          regulator-min-microvolt =
+>> >>> <1800000>;
+>> >>>                                          regulator-max-microvolt =
+>> >>> <1800000>;
+>> >>>                                          regulator-always-on;
+>> >>>                                };
+>> >>
+>> >> The output of LDO18 goes to VDD_EMMC_1V8. This is not regulator for
+>> >> TMU.
+>> >>
+>> >> I think the schematics are missing some of details but it can be
+>> >> deducted that:
+>> >> 1. TEMP SE is supplied by VDD18_TS power domain. It consists of 5
+>> >> pairs of pins (XTSTEST_OUT[0-4], XTSEXT_RES[0-4]).
+>> >> 2. The VDD18_TS01, VDD18_TS23 and VDD18_TS4 are wired to theL DO7 of
+>> >> S2MPS11 PMIC.
+>> >> 3. I confirmed with the Exynos5422 datasheet that these
+>> >> VDD18_TS{01,23,4} supply the XTSTEST pins (OUT and RES).
+>> >>
+>> >> So the LDO7 it is... but before using it there is a caveat. The LDO7
+>> >> is also connected to VDD of MIPI, HDMI and few more. So when you use
+>> >> this regulator in TMU it may be turned off by TMU driver (e.g. during
+>> >> unbind). In such case these other blocks also should be tested and
+>> >> checked whether they take this regulator and enable it.
+>> >
+>> > hi Krzysztof,
+>> >
+>> > I tried to use the LDO7 regulator for TMU but it failed to register.
+>> >
+>> > [    3.231329] ina2xx 0-0045: power monitor ina231 (Rshunt = 10000 uOhm)
+>> > [    3.237691] thermal thermal_zone0: failed to read out thermal zone
+>> > (-22)
+>> > [    3.243033] exynos-tmu 10060000.tmu: Looking up vtmu-supply from
+>> > device tree
+>> > [    3.243936] thermal thermal_zone1: failed to read out thermal zone
+>> > (-22)
+>> > [    3.249791] exynos-tmu 10064000.tmu: Looking up vtmu-supply from
+>> > device tree
+>> > [    3.250677] thermal thermal_zone2: failed to read out thermal zone
+>> > (-22)
+>> > [    3.256410] exynos-tmu 10068000.tmu: Looking up vtmu-supply from
+>> > device tree
+>> > [    3.257345] thermal thermal_zone3: failed to read out thermal zone
+>> > (-22)
+>> > [    3.263050] exynos-tmu 1006c000.tmu: Looking up vtmu-supply from
+>> > device tree
+>> > [    3.263984] thermal thermal_zone4: failed to read out thermal zone
+>> > (-22)
+>> > [    3.269769] exynos-tmu 100a0000.tmu: Looking up vtmu-supply from
+>> > device tree
+>> > [    3.270363] usb 5-1: New USB device found, idVendor=0424,
+>> > idProduct=9514
+>> > [    3.276389] usb 5-1: New USB device strings: Mfr=0, Product=0,
+>> > SerialNumber=0
+>>
+>> Indeed.
+>>
 
-On Wed, 2015-05-20 at 12:57PM +0530, Ranjit Waghmode wrote:
-> This patch adds support for GQSPI controller driver used by
-> Zynq Ultrascale+ MPSoC
->=20
-> Signed-off-by: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
-> ---
-[...]
-> +/**
-> + * zynqmp_gqspi_read:	For GQSPI controller read operation
-> + * @xqspi:	Pointer to the zynqmp_qspi structure
-> + * @offset:	Offset from where to read
-> + */
-> +static u32 zynqmp_gqspi_read(struct zynqmp_qspi *xqspi, u32 offset)
-> +{
-> +	return readl_relaxed(xqspi->regs + offset);
-> +}
-> +
-> +/**
-> + * zynqmp_gqspi_write:	For GQSPI controller write operation
-> + * @xqspi:	Pointer to the zynqmp_qspi structure
-> + * @offset:	Offset where to write
-> + * @val:	Value to be written
-> + */
-> +static inline void zynqmp_gqspi_write(struct zynqmp_qspi *xqspi, u32=
- offset,
-> +				      u32 val)
-> +{
-> +	writel_relaxed(val, (xqspi->regs + offset));
-> +}
+Hi Krzysztof/Dongjin
 
-why are you wrapping (readl|writel)_relaxed?
+BUCK3 is option for TMU as suggested by Dongjin
 
-[...]
-> +/**
-> + * zynqmp_qspi_copy_read_data:	Copy data to RX buffer
-> + * @xqspi:	Pointer to the zynqmp_qspi structure
-> + * @data:	The 32 bit variable where data is stored
-> + * @size:	Number of bytes to be copied from data to RX buffer
-> + */
-> +static void zynqmp_qspi_copy_read_data(struct zynqmp_qspi *xqspi,
-> +				       u32 data, u8 size)
-> +{
-> +	memcpy(xqspi->rxbuf, ((u8 *) &data), size);
+Earlier I have some missing CONFIG option's hence It was not working.
+Now its registering with TMU.
 
-Is this cast really needed? IIRC, memcpy takes (void *). The outer
-parentheses for that argument are not needed.
+Bellow is the output device tree.
 
-> +	xqspi->rxbuf +=3D size;
-> +	xqspi->bytes_to_receive -=3D size;
-> +}
-> +
-> +/**
-> + * zynqmp_prepare_transfer_hardware:	Prepares hardware for transfer.
-> + * @master:	Pointer to the spi_master structure which provides
-> + *		information about the controller.
-> + *
-> + * This function enables SPI master controller.
-> + *
-> + * Return:	Always 0
-> + */
-> +static int zynqmp_prepare_transfer_hardware(struct spi_master *maste=
-r)
-> +{
-> +	struct zynqmp_qspi *xqspi =3D spi_master_get_devdata(master);
-> +
-> +	clk_enable(xqspi->refclk);
-> +	clk_enable(xqspi->pclk);
+root@odroidxu3: cd /sys/firmware/devicetree/base/
+root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@10060000/status
+okay
+root@odroidxu3:/sys/firmware/devicetree/base#
+root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@10064000/status
+okay
+root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@10068000/status
+okay
+root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@1006c000/status
+okay
+root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@100a0000/status
+okay
+root@odroidxu3:/sys/firmware/devicetree/base#
 
-Did you consider using runtime_pm? Then this would just bit
-pm_runtime_get_sync(...)
+-Anand Moon
 
-> +	zynqmp_gqspi_write(xqspi, GQSPI_EN_OFST, GQSPI_EN_MASK);
-> +	return 0;
-> +}
-> +
-> +/**
-> + * zynqmp_unprepare_transfer_hardware:	Relaxes hardware after transf=
-er
-> + * @master:	Pointer to the spi_master structure which provides
-> + *		information about the controller.
-> + *
-> + * This function disables the SPI master controller.
-> + *
-> + * Return:	Always 0
-> + */
-> +static int zynqmp_unprepare_transfer_hardware(struct spi_master *mas=
-ter)
-> +{
-> +	struct zynqmp_qspi *xqspi =3D spi_master_get_devdata(master);
-> +
-> +	zynqmp_gqspi_write(xqspi, GQSPI_EN_OFST, 0x0);
-> +	clk_disable(xqspi->refclk);
-> +	clk_disable(xqspi->pclk);
-
-and this would become pm_runtime_put()
-
-[...]
-> +/**
-> + * zynqmp_qspi_filltxfifo:	Fills the TX FIFO as long as there is roo=
-m in
-> + *				the FIFO or the bytes required to be
-> + *				transmitted.
-> + * @xqspi:	Pointer to the zynqmp_qspi structure
-> + * @size:	Number of bytes to be copied from TX buffer to TX FIFO
-> + */
-> +static void zynqmp_qspi_filltxfifo(struct zynqmp_qspi *xqspi, int si=
-ze)
-> +{
-> +	u32 count =3D 0;
-> +
-> +	while ((xqspi->bytes_to_transfer > 0) && (count < size)) {
-> +		writel(*((u32 *) xqspi->txbuf), xqspi->regs + GQSPI_TXD_OFST);
-
-Here the writel wrapper is not used. Is there a reason, then it would
-probably  deserve a comment.
-
-[...]
-> +/**
-> + * zynqmp_process_dma_irq:	Handler for DMA done interrupt of QSPI
-> + *				controller
-> + * @xqspi:	zynqmp_qspi instance pointer
-> + *
-> + * This function handles DMA interrupt only.
-> + */
-> +static void zynqmp_process_dma_irq(struct zynqmp_qspi *xqspi)
-> +{
-> +	u32 config_reg, genfifoentry;
-> +
-> +	dma_unmap_single(xqspi->dev, xqspi->dma_addr,
-> +				xqspi->dma_rx_bytes, DMA_FROM_DEVICE);
-> +	xqspi->rxbuf +=3D xqspi->dma_rx_bytes;
-> +	xqspi->bytes_to_receive -=3D xqspi->dma_rx_bytes;
-> +	xqspi->dma_rx_bytes =3D 0;
-> +
-> +	/* Disabling the DMA interrupts */
-> +	writel(GQSPI_QSPIDMA_DST_I_EN_DONE_MASK,
-> +			xqspi->regs + GQSPI_QSPIDMA_DST_I_DIS_OFST);
-> +
-> +	if (xqspi->bytes_to_receive > 0) {
-> +		/* Switch to IO mode,for remaining bytes to receive */
-> +		config_reg =3D readl(xqspi->regs + GQSPI_CONFIG_OFST);
-> +		config_reg &=3D ~GQSPI_CFG_MODE_EN_MASK;
-> +		writel(config_reg, xqspi->regs + GQSPI_CONFIG_OFST);
-> +
-> +		/* Initiate the transfer of remaining bytes */
-> +		genfifoentry =3D xqspi->genfifoentry;
-> +		genfifoentry |=3D xqspi->bytes_to_receive;
-> +		writel(genfifoentry,
-> +				xqspi->regs + GQSPI_GEN_FIFO_OFST);
-> +
-> +		/* Dummy generic FIFO entry */
-> +		writel(0x0, xqspi->regs + GQSPI_GEN_FIFO_OFST);
-
-not using wrapper?
-
-> +
-> +		/* Manual start */
-> +		zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
-> +			(readl(xqspi->regs + GQSPI_CONFIG_OFST) |
-
-not using wrapper?
-
-Overall:
-The usage of those readl/writel wrappers seems inconsistent to me. I
-usually prefer not wrapping things like that at all but at least it
-should be consistent.
-
-And I believe the handling of clocks would benefit from using of the
-runtime_pm framework.
-
-	Thanks,
-	S=C3=B6ren
+>> Best regards,
+>> Krzysztof
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
