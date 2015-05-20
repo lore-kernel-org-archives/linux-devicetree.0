@@ -1,60 +1,83 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
- controller
-Date: Wed, 20 May 2015 13:33:52 +0800
-Message-ID: <1432100032.3422.13.camel@mtksdaap41>
-References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
-	 <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
-	 <20150518184300.GB28888@pengutronix.de>
-	 <CABuKBeJcpufi-eEWmDRK6F2kgpz3DmCz8rp4hVPCJVgkmGr-KA@mail.gmail.com>
-	 <20150519194917.GI24769@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150519194917.GI24769-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: [PATCH v2 0/2] Implement SoC bus support for Vybrid
+Date: Wed, 20 May 2015 11:06:50 +0530
+Message-ID: <cover.1432099651.git.maitysanchayan@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org
+Cc: stefan@agner.ch, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+Hello,
 
-On Tue, 2015-05-19 at 21:49 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Matthias,
->=20
-> On Tue, May 19, 2015 at 04:48:23PM +0200, Matthias Brugger wrote:
-> > 2015-05-18 20:43 GMT+02:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@p=
-engutronix.de>:
-> > > On Tue, May 19, 2015 at 12:40:08AM +0800, Eddie Huang wrote:
-> > >> [...]
-> > >>  drivers/i2c/busses/i2c-mt65xx.c | 675 +++++++++++++++++++++++++=
-+++++++++++++++
-> > >> [...]
-> > >> +#define I2C_DRV_NAME         "mt-i2c"
-> > > i2c-mt65xx ?
-> >=20
-> > As this works for all SoCs so far, I would propose: i2c-mtk
-> Hmm, currently we have:
->=20
->   - #define I2C_DRV_NAME mt-i2c
-Change to i2c-mt65xx.
+This patchset implements SoC bus support for Freescale Vybrid platform,
+implementing the following
+https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-devices-soc
 
->   - dt-compatibles: "mediatek,mt6577-i2c" + "mediatek,mt6589-i2c"
+Currently the required information is more or less read across the whole
+SoC, but I guess we cannot change that since these are the locations
+with the required information.
 
-We hope all mobile chip series use the same I2C driver.
-I don't list all chips in driver to avoid too many dt-compatibles.
-Only list chips that are different from others.
+There seem to be three options for the revision field:
+- ROM revision (see https://community.freescale.com/docs/DOC-94802)
+- ANADIG revision (ANADIG_DIGIPROC, as used for the i.MX SoC's)
+- OCOTP revision
 
->   - function prefix: mtk_i2c_
-Maybe use i2c-mt65xx_ is better, but I tend to keep mtk_i2c_ after thes=
-e
-review rounds.
+Some numbers:
 
->   - filename: i2c-mt65xx.c
->   - Kconfig symbol: I2C_MT65XX
->=20
-> Getting some harmonization here would definitly be nice.
->=20
+Colibri VF61 1.1A (2N02G)
+- 0x00000013
+- 0x00610000
+- 0x01000000
+- 0x410000c8
 
-Eddie Huang
+Colibri VF61 V1.0B (1N02G)
+- 0x00000011
+- 0x00610000
+- 0x01000000
+- 0x410000c8
+
+Colibri VF61 V1.0A (which is actually a VF600 SoC, no L2 cache, since
+that was the only one we could buy back then, 1N02G printed on it)
+- 0x00000011
+- 0x00610000
+- 0x01000000
+- none...
+
+Colibri VF50 V1.0A (1N02G)
+- 0x00000011
+- 0x00610000
+- 0x01000000
+- none...
+
+Vybrid Tower Rev J (1N02G)
+- 0x00000011
+- 0x00610000
+- 0x01000000
+- 0x410000c8
+
+The ROM revision differs the most, so we would like to go with the
+revision information from the ROM register 0x80.
+
+Version 1 of the patchset can be found here
+http://www.spinics.net/lists/devicetree/msg80257.html
+
+The RFC version can be found here
+https://lkml.org/lkml/2015/5/11/13
+
+Changes since v1:
+- Sort the headers in alphabetical order
+
+Changes since RFC:
+- Use a DT entry for the ROM area while specifying it as syscon.
+
+Sanchayan Maity (2):
+  ARM: dts: vfxxx: Add OCOTP and OCROM nodes
+  ARM: vf610: Add SoC bus support for Vybrid
+
+ arch/arm/boot/dts/vfxxx.dtsi   | 10 +++++
+ arch/arm/mach-imx/mach-vf610.c | 85 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 93 insertions(+), 2 deletions(-)
+
+-- 
+2.4.1
