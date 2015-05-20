@@ -1,61 +1,39 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [RFC PATCH 1/2] devicetree: Add devicetree bindings
- documentation for ZynqMP GQSPI
-Date: Wed, 20 May 2015 07:38:54 -0700
-Message-ID: <20150520143854.GU31550@xsjsorenbubuntu>
-References: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add pwrkey driver
+Date: Wed, 20 May 2015 07:46:18 -0700
+Message-ID: <6111368.e0EOBSJsmZ@jclayton-pc>
+References: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com> <20150520142205.GA24844@dragon> <CAHrpEqSpeMO=zLyii8qZUznP+9EAQqJ-D3O8hbXj99m+UNvpzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, harinik@xilinx.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@kernel.org, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, punnaia@xilinx.com, ran27jit@gmail.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHrpEqSpeMO=zLyii8qZUznP+9EAQqJ-D3O8hbXj99m+UNvpzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, "Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE1LTA1LTIwIGF0IDEyOjU3UE0gKzA1MzAsIFJhbmppdCBXYWdobW9kZSB3cm90
-ZToKPiBBZGQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgR1FTUEkgY29udHJvbGxlciBkcml2
-ZXIgdXNlZCBieQo+IFp5bnEgVWx0cmFzY2FsZSsgTVBTb0MKPiAKPiBTaWduZWQtb2ZmLWJ5OiBS
-YW5qaXQgV2FnaG1vZGUgPHJhbmppdC53YWdobW9kZUB4aWxpbnguY29tPgo+IC0tLQo+ICAuLi4v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLXp5bnFtcC1xc3BpLnR4dCAgICB8IDI2ICsrKysr
-KysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkv
-c3BpLXp5bnFtcC1xc3BpLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS16eW5xbXAtcXNwaS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS16eW5xbXAtcXNwaS50eHQKPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmNlYzYzMzAKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1wLXFzcGkudHh0
-Cj4gQEAgLTAsMCArMSwyNiBAQAo+ICtYaWxpbnggWnlucSBVbHRyYVNjYWxlKyBNUFNvQyBHUVNQ
-SSBjb250cm9sbGVyIERldmljZSBUcmVlIEJpbmRpbmdzCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZQkJOiBTaG91bGQgYmUgInhsbngsenlu
-cW1wLXFzcGktMS4wIi4KPiArLSByZWcJCQk6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgc2l6
-ZSBvZiBHUVNQSSByZWdpc3RlcnMgbWFwLgo+ICstIGludGVycnVwdHMJCTogUHJvcGVydHkgd2l0
-aCBhIHZhbHVlIGRlc2NyaWJpbmcgdGhlIGludGVycnVwdAo+ICsJCQkgIG51bWJlci4KPiArLSBp
-bnRlcnJ1cHQtcGFyZW50CTogTXVzdCBiZSBjb3JlIGludGVycnVwdCBjb250cm9sbGVyLgo+ICst
-IGNsb2NrLW5hbWVzCQk6IExpc3Qgb2YgaW5wdXQgY2xvY2sgbmFtZXMgLSAicmVmX2NsayIsICJw
-Y2xrIgo+ICsJCQkgIChTZWUgY2xvY2sgYmluZGluZ3MgZm9yIGRldGFpbHMpLgo+ICstIGNsb2Nr
-cwkJOiBDbG9jayBwaGFuZGxlcyAoc2VlIGNsb2NrIGJpbmRpbmdzIGZvciBkZXRhaWxzKS4KPiAr
-Cj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gbnVtLWNzCQk6IE51bWJlciBvZiBjaGlwIHNl
-bGVjdHMgdXNlZC4KPiArCj4gK0V4YW1wbGU6Cj4gKwlxc3BpOiBzcGlAZmYwZjAwMDAgewo+ICsJ
-CWNvbXBhdGlibGUgPSAieGxueCx6eW5xbXAtcXNwaS0xLjAiOwo+ICsJCWNsb2NrLW5hbWVzID0g
-InJlZl9jbGsiLCAicGNsayI7Cj4gKwkJY2xvY2tzID0gPCZtaXNjX2NsayAmbWlzY19jbGs+Owo+
-ICsJCWludGVycnVwdHMgPSA8MCAxNSA0PjsKPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+
-Owo+ICsJCW51bS1jcyA9IDwxPjsKPiArCQlyZWcgPSA8MHgwIDB4ZmYwZjAwMDAgMHgxMDAwIDB4
-MCAweGMwMDAwMDAwIDB4ODAwMDAwMD47CgpJIGZpbmQgdGhpbmdzIGEgbG90IGVhc2llciB0byBy
-ZWFkIHdoZW4gdGhlcmUgaXMgc29tZXRoaW5nIHNlcGFyYXRpbmcKdGhlIGdyb3Vwcy4gQ291bGQg
-dGhpcyBiZWNvbWU6CglyZWcgPSA8MHgwIDB4ZmYwZjAwMDAgMHgxMDAwPiwgPDB4MCAweGMwMDAw
-MDAwIDB4ODAwMDAwMD47Cj8KCglUaGFua3MsCglTw7ZyZW4KCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+> 
+> +       snvs_np = of_get_parent(pdev->dev.of_node);
+> +       if (!snvs_np)
+> +               return -ENODEV;
+> +
+> +       data->snvs = syscon_node_to_regmap(snvs_np);
+> +       of_node_put(snvs_np);
+> +
+> +       if (!data->snvs) {
+> +               pr_err("Can't snvs syscon\n");
+> +               return -ENODEV;
+> +       }
+> 
+> How about change error message to " Can't snvs syscon, probably use
+> old dts file"?
+How about simply: "Cannot find snvs syscon node in devicetree."
+
+
+-- 
+~Joshua Clayton
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
