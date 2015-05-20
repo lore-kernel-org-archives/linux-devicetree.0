@@ -1,66 +1,66 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: Document the hi6220 thermal sensor
- bindings
-Date: Wed, 20 May 2015 09:06:48 +0800
-Message-ID: <20150520010648.GA18345@leoy-linaro>
-References: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1431933109-22764-2-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2 2/2] pwm: Add support for R-Car PWM Timer
+Date: Wed, 20 May 2015 01:24:32 +0000
+Message-ID: <SG2PR06MB09195F94EAFBAA73AD19F260D8C20@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1432032159-704-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1432032159-704-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <87d21w3yio.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431933109-22764-2-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Cc: edubezval@gmail.com, rui.zhuang@intel.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org, dan.zhao@hisilicon.com, devicetree@vger.kernel.org, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, mark.rutland@arm.com, linuxarm@huawei.com, zhenwei.wang@hisilicon.com, mporter@konsulko.com, zhangfei.gao@linaro.org, liguozhu@hisilicon.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <87d21w3yio.wl%kuninori.morimoto.gx@renesas.com>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 18, 2015 at 03:11:47PM +0800, Xinwei Kong wrote:
-> From: kongxinwei <kong.kongxinwei@hisilicon.com>
+Hi Morimoto-san,
+
+> Sent: Wednesday, May 20, 2015 9:06 AM
 > 
-> This adds documentation of device tree bindings for the
-> thermal sensor controller of hi6220 SoC.
+> Hi Shimoda-san
 > 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
+> I guess previous Geert's opinion about compatible is...
+> 
+> > +Required Properties:
+> > +- compatible: should be one of the following.
+> > + - "renesas,pwm-r8a7778": for R-Car M1A
+> > + - "renesas,pwm-r8a7779": for R-Car H1
+> > + - "renesas,pwm-r8a7790": for R-Car H2
+> > + - "renesas,pwm-r8a7791": for R-Car M2-W
+> > + - "renesas,pwm-r8a7794": for R-Car E2
+> (snip)
+> > +static const struct of_device_id rcar_pwm_of_table[] = {
+> > +	{ .compatible = "renesas,pwm-r8a7778", },
+> > +	{ .compatible = "renesas,pwm-r8a7779", },
+> > +	{ .compatible = "renesas,pwm-r8a7790", },
+> > +	{ .compatible = "renesas,pwm-r8a7791", },
+> > +	{ .compatible = "renesas,pwm-r8a7794", },
+> > +	{ },
+> > +};
+> 
+> - compatible: should be one of the following.
+>  - "renesas,pwm-rcar": for R-Car  <=
+>  ... /* we need gen1 / gen2 here ? */
+>  - "renesas,pwm-r8a7778": for R-Car M1A
+>  - "renesas,pwm-r8a7779": for R-Car H1
+>  - "renesas,pwm-r8a7790": for R-Car H2
+>  - "renesas,pwm-r8a7791": for R-Car M2-W
+>  - "renesas,pwm-r8a7794": for R-Car E2
+> 
+> static const struct of_device_id rcar_pwm_of_table[] = {
+> 	{ .compatible = "renesas,pwm-rcar", }, <=
+> 	{ },
+
+Thank you for your comment.
+I understood it. If such a document and code, there is similar with the sh-sci driver.
+So, I will fix this patch set.
+
+Best regards,
+Yoshihiro Shimoda
+
+> Best regards
 > ---
->  .../bindings/thermal/hisilicon-thermal.txt         | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
-> new file mode 100644
-> index 0000000..b2a349f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
-> @@ -0,0 +1,23 @@
-> +* Temperature Sensor on hisilicon SoCs
-> +
-> +** Required properties :
-> +
-> +- compatible: "hisilicon,tsensor".
-> +- reg: physical base address of thermal sensor and length of memory mapped
-> +  region.
-> +- interrupt: The interrupt number to the cpu. Defines the interrupt used
-> +  by SOCTHERM.
-
-s/SOCTHERM/tsensor/
-
-> +- clock-names: Input clock name, should be 'thermal_clk'.
-> +- clocks: phandles for clock specified in "clock-names" property.
-> +- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
-> +
-> +Example :
-> +
-> +	tsensor: tsensor@0,f7030700 {
-> +		compatible = "hisilicon,tsensor";
-> +		reg = <0x0 0xf7030700 0x0 0x1000>;
-> +		interrupts = <0 7 0x4>;
-> +		clocks = <&clock_sys HI6220_TSENSOR_CLK>;
-> +		clock-names = "thermal_clk";
-> +		#thermal-sensor-cells = <1>;
-> +	}
-> -- 
-> 1.9.1
-> 
-> 
+> Kuninori Morimoto
