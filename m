@@ -1,55 +1,55 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [RFC PATCH 1/4] spi: spidev: Add Google SPI flash compatible
- string
-Date: Wed, 20 May 2015 09:35:57 +0200
-Message-ID: <555C395D.9080409@collabora.co.uk>
-References: <1432042454-19234-1-git-send-email-javier.martinez@collabora.co.uk> <1432042454-19234-2-git-send-email-javier.martinez@collabora.co.uk> <20150519195305.GA2586@tarshish>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: vf610: Add SoC bus support for Vybrid
+Date: Wed, 20 May 2015 09:36:38 +0200
+Message-ID: <61cec15fe896133ee6e102b0242fb43d@agner.ch>
+References: <cover.1432099651.git.maitysanchayan@gmail.com>
+ <27733a88b73adb7000205e020bafdb6f7ebe1843.1432099651.git.maitysanchayan@gmail.com>
+ <9691074.oWRy1bscbz@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20150519195305.GA2586@tarshish>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Olof Johansson <olof@lixom.net>, David Hendricks <dhendrix@google.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9691074.oWRy1bscbz@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Baruch,
-
-On 05/19/2015 09:53 PM, Baruch Siach wrote:
-> Hi Javier,
+On 2015-05-20 09:12, Arnd Bergmann wrote:
+> On Wednesday 20 May 2015 11:06:52 Sanchayan Maity wrote:
+>> Implements SoC bus support to export SoC specific information. Read
+>> the unique SoC ID from the Vybrid On Chip One Time Programmable
+>> (OCOTP) controller, SoC specific information from the Miscellaneous
+>> System Control Module (MSCM), revision from the ROM revision register
+>> and expose it via the SoC bus infrastructure.
+>>
+>> Sample Output:
+>>
+>> root@vf:/sys/devices/soc0# cat soc_id
+>> df63c12a2e2161d4
+>> root@vf:/sys/devices/soc0# cat family
+>> Freescale Vybrid VF500
+>> root@vf:/sys/devices/soc0# cat revision
+>> 00000013
+>> root@vf:/sys/devices/soc0# cat machine
+>> Freescale Vybrid
+>>
 > 
-> On Tue, May 19, 2015 at 03:34:11PM +0200, Javier Martinez Canillas wrote:
->> Google Chromebooks have a SPI flash that is used to store firmware and
->> different system parameters and data (i.e: Google Binary Block flags).
->> 
->> Since there isn't a driver for it yet, the spidev interface is used to
->> access the flash from user-space (i.e: using the flashrom tool).
->> 
->> Add a "google,spi-flash" compatible string so the Device Tree sources
->> use it instead of the "spidev" compatible which does not describe the
->> real HW and is just a Linux implementation detail.
->> 
->> A generic "google,spi-flash" OF device ID is used instead of the actual
->> vendor/model because these chips are commodity parts that are sourced
->> from multiple vendors. So specifying the exact vendor and model in the
->> DTS will add a maintenance burden with no real gain (the parts are 100%
->> compatible anyways) and will likely result in it simply being wrong for
->> a sizeable fraction of the machines.
-> 
-> The compatible string and dt binding should be documented somewhere under 
-> Documentation/devicetree/bindings/. Also, please keep the dt list on Cc for dt 
-> related patches.
->
+> I would prefer to see this as a driver in drivers/soc that registers
+> to a platform device. Is there any DT node that would be a reasonable
+> device to bind to?
 
-Yes, I didn't add a binding doc because this is mostly a RFC to see if
-Mark finds the approach feasible but yes I should had included anyways,
-sorry about that.
+Hm, what is a viable device? Probably the most SoC specific device in
+the SoC? Currently, all three devices we read from do have a
+vf610-something compatible string, hence would be SoC specific (ocotp,
+ocrom and mscm-cpucfg). Probably the last is the most SoC specific...
 
-I'll add when posting as a proper patch if he agrees with the solution.
- 
-> baruch
-> 
+But somehow bind to just a random device sounds wrong to me. Couldn't we
+add a more specific compatible string to the soc node and bind to that?
 
-Best regards,
-Javier
+--
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
