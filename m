@@ -1,59 +1,71 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add
- pwrkey driver
-Date: Wed, 20 May 2015 22:56:15 +0100
-Message-ID: <20150520215615.GZ2067@n2100.arm.linux.org.uk>
-References: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
- <20150520015851.GB1071@dragon>
- <20150520182540.GQ2067@n2100.arm.linux.org.uk>
- <20150520183050.GR2067@n2100.arm.linux.org.uk>
- <CAHrpEqSngMgOj5Bjp0XWpw9CJCjoiU63iRuAX3Zw_aEO+-5RHg@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
+ samsung,flash-led property
+Date: Thu, 21 May 2015 01:00:18 +0300
+Message-ID: <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
+References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+ <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHrpEqSngMgOj5Bjp0XWpw9CJCjoiU63iRuAX3Zw_aEO+-5RHg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, alexandre.belloni@free-electrons.com, Philipp Zabel <p.zabel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 20, 2015 at 01:44:58PM -0500, Zhi Li wrote:
-> On Wed, May 20, 2015 at 1:30 PM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
-> > Looking at the RTC code, it would be pretty trivial to do.
-> >
-> > Rather than passing around struct regmap, pass around the private data
-> > structure.
-> >
-> > Rename the regmap_* function calls to be private accessors.  Implement
-> > a set of new accessors - if the private data has the regmap, use the
-> > regmap API.  Otherwise, use the old method, and print a warning that an
-> > old DT is being used.
+Hi Jacek,
+
+On Wed, May 20, 2015 at 04:10:15PM +0200, Jacek Anaszewski wrote:
+> This patch adds examples for samsung,flash-led property to the
+> samsung-fimc.txt.
 > 
-> This method work.  But code will become ugly and complex. I seach
-> whole dts tree.
-> Only imx6 use this driver.
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../devicetree/bindings/media/samsung-fimc.txt     |    4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Does it really valuable to keep compatiblity with cost of complex driver code?
+> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> index 922d6f8..57edffa 100644
+> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> @@ -126,6 +126,8 @@ Example:
+>  			clocks = <&camera 1>;
+>  			clock-names = "mclk";
+>  
+> +			samsung,flash-led = <&front_cam_flash>;
+> +
+>  			port {
+>  				s5k6aa_ep: endpoint {
+>  					remote-endpoint = <&fimc0_ep>;
+> @@ -147,6 +149,8 @@ Example:
+>  			clocks = <&camera 0>;
+>  			clock-names = "mclk";
+>  
+> +			samsung,flash-led = <&rear_cam_flash>;
+> +
+>  			port {
+>  				s5c73m3_1: endpoint {
+>  					data-lanes = <1 2 3 4>;
 
-Let me put this a different way.
+Oops. I missed this property would have ended to the sensor's DT node. I
+don't think we should have properties here that are parsed by another
+driver --- let's discuss this tomorrow.
 
-Would you be upset if you installed a new kernel, rebooted and found that
-the system then fscked your filesystem, stamping a date of 1 Jan 1970
-on it.  Then you use a later dtb, and you have to go through another
-fsck of your filesystem because it's apparently been more than "31 days"
-or so since it was last fscked, and all this caused by the RTC vanishing
-because we couldn't be bothered with backward compatibility?
+There are two main options that I can think of --- either put the property
+under the bridge (ISP) driver's device node as a temporary solution that
+works on a few ISP drivers, or think how sensor modules should be modelled,
+in which case we'd have some idea how lens device would be taken into
+account.
 
-There are real products out there which use iMX6 today.  In production,
-being sold.
-
-Do not break existing DTBs unless there really is no other choice.
-
-And I don't think it makes the code ugly, though it does make it _slightly_
-more complex.  That's a price worth paying for keeping stuff working.
+Cc Sebastian.
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
