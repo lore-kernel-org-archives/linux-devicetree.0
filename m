@@ -1,83 +1,63 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add
- pwrkey driver
-Date: Wed, 20 May 2015 09:58:51 +0800
-Message-ID: <20150520015851.GB1071@dragon>
-References: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/2] pwm: Add support for R-Car PWM Timer
+Date: Wed, 20 May 2015 11:06:56 +0900
+Message-ID: <20150520020656.GA31103@verge.net.au>
+References: <1432032159-704-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1432032159-704-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <87d21w3yio.wl%kuninori.morimoto.gx@renesas.com>
+ <SG2PR06MB09195F94EAFBAA73AD19F260D8C20@SG2PR06MB0919.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Frank.Li@freescale.com
-Cc: lznuaa@gmail.com, shawn.guo@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, a.zummo@towertech.it, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <SG2PR06MB09195F94EAFBAA73AD19F260D8C20@SG2PR06MB0919.apcprd06.prod.outlook.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 20, 2015 at 01:04:35AM +0800, Frank.Li@freescale.com wrote:
-> From: Frank Li <Frank.Li@freescale.com>
+On Wed, May 20, 2015 at 01:24:32AM +0000, Yoshihiro Shimoda wrote:
+> Hi Morimoto-san,
 > 
-> Change from v1 to v2
->  - Change simple-bus to simple-mfd
->  - RTC remove lock.
->  - RTC remove comments "These register offsets are relative to LP (Low Power) range"
->  - power off, remove extra space
+> > Sent: Wednesday, May 20, 2015 9:06 AM
+> > 
+> > Hi Shimoda-san
+> > 
+> > I guess previous Geert's opinion about compatible is...
+> > 
+> > > +Required Properties:
+> > > +- compatible: should be one of the following.
+> > > + - "renesas,pwm-r8a7778": for R-Car M1A
+> > > + - "renesas,pwm-r8a7779": for R-Car H1
+> > > + - "renesas,pwm-r8a7790": for R-Car H2
+> > > + - "renesas,pwm-r8a7791": for R-Car M2-W
+> > > + - "renesas,pwm-r8a7794": for R-Car E2
+> > (snip)
+> > > +static const struct of_device_id rcar_pwm_of_table[] = {
+> > > +	{ .compatible = "renesas,pwm-r8a7778", },
+> > > +	{ .compatible = "renesas,pwm-r8a7779", },
+> > > +	{ .compatible = "renesas,pwm-r8a7790", },
+> > > +	{ .compatible = "renesas,pwm-r8a7791", },
+> > > +	{ .compatible = "renesas,pwm-r8a7794", },
+> > > +	{ },
+> > > +};
+> > 
+> > - compatible: should be one of the following.
+> >  - "renesas,pwm-rcar": for R-Car  <=
+> >  ... /* we need gen1 / gen2 here ? */
+> >  - "renesas,pwm-r8a7778": for R-Car M1A
+> >  - "renesas,pwm-r8a7779": for R-Car H1
+> >  - "renesas,pwm-r8a7790": for R-Car H2
+> >  - "renesas,pwm-r8a7791": for R-Car M2-W
+> >  - "renesas,pwm-r8a7794": for R-Car E2
+> > 
+> > static const struct of_device_id rcar_pwm_of_table[] = {
+> > 	{ .compatible = "renesas,pwm-rcar", }, <=
+> > 	{ },
 > 
-> SNVS is MPF module.
-> include rtc, power off, ON/OFF power key
-> 
->   arm: imx: power-off: change to syscon to access register
->   rtc: arm: imx: snvs: change use syscon to access register
-> Above two patch change existed power-off and rtc use syscon
-> 
->   Document: dt: fsl: snvs: change support syscon
->   arm: dts: imx: update snvs to use syscon access register
-> Update dt file and document
-> 
->   input: keyboard: imx: add snvs power key driver
->   document: devicetree: input: imx: i.mx snvs power device tree bindings
->   arm: dts: imx6sx: enable snvs power key
-> Added on/off key driver
-> 
-> Frank Li (6):
->   arm: imx: power-off: change to syscon to access register
->   rtc: arm: imx: snvs: change use syscon to access register
->   Document: dt: fsl: snvs: change support syscon
->   arm: dts: imx: update snvs to use syscon access register
->   document: devicetree: input: imx: i.mx snvs power device tree bindings
->   arm: dts: imx6sx: enable snvs power key
+> Thank you for your comment.
+> I understood it. If such a document and code, there is similar with the sh-sci driver.
+> So, I will fix this patch set.
 
-So, the series will break existing DTBs for RTC and poweroff, right?
-If this is unavoidable, should we at least have some warning messages
-telling users about his breakage?
-
-Shawn
-
-> 
-> Robin Gong (1):
->   input: keyboard: imx: add snvs power key driver
-> 
->  .../devicetree/bindings/crypto/fsl-sec4.txt        |  93 +++++++--
->  .../devicetree/bindings/input/snvs-pwrkey.txt      |   1 +
->  .../bindings/power_supply/imx-snvs-poweroff.txt    |  24 +--
->  arch/arm/boot/dts/imx6qdl.dtsi                     |  12 +-
->  arch/arm/boot/dts/imx6sl.dtsi                      |  12 +-
->  arch/arm/boot/dts/imx6sx.dtsi                      |  19 +-
->  arch/arm/boot/dts/vfxxx.dtsi                       |   9 +-
->  drivers/input/keyboard/Kconfig                     |  11 +
->  drivers/input/keyboard/Makefile                    |   1 +
->  drivers/input/keyboard/snvs_pwrkey.c               | 232 +++++++++++++++++++++
->  drivers/power/reset/imx-snvs-poweroff.c            |  21 +-
->  drivers/rtc/rtc-snvs.c                             | 128 +++++-------
->  12 files changed, 417 insertions(+), 146 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/snvs-pwrkey.txt
->  create mode 100644 drivers/input/keyboard/snvs_pwrkey.c
-> 
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Does the documentation (e.g. datasheet) indicate that the PWM blocks are
+the same for at least all of the R-Car SoCs that we know about?
