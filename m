@@ -1,260 +1,63 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH v3] arm, imx6, dts: add DT for aristainetos2 board
-Date: Wed, 20 May 2015 13:13:54 +0200
-Message-ID: <555C6C72.2060302@denx.de>
-References: <1432099863-8642-1-git-send-email-hs@denx.de> <1432118319.4466.40.camel@pengutronix.de>
-Reply-To: hs@denx.de
+From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v6 1/3] dt-bindings: Document the hi6220 thermal sensor bindings
+Date: Wed, 20 May 2015 19:16:36 +0800
+Message-ID: <1432120598-18268-2-git-send-email-kong.kongxinwei@hisilicon.com>
+References: <1432120598-18268-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432118319.4466.40.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432120598-18268-1-git-send-email-kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhuang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, Javi.Merino-5wv7dgnIgG8@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gongyu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Philipp,
+From: kongxinwei <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-Am 20.05.2015 12:38, schrieb Philipp Zabel:
-> Hi Heiko,
->
-> Am Mittwoch, den 20.05.2015, 07:31 +0200 schrieb Heiko Schocher:
-> [...]
->> diff --git a/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts b/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts
->> new file mode 100644
->> index 0000000..780fc42
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts
->> @@ -0,0 +1,174 @@
->> +/*
->> + * support fot the imx6 based aristainetos2 board
->
-> Typo, "support for".
+This adds documentation of device tree bindings for the
+thermal sensor controller of hi6220 SoC.
 
-Oh, thanks! Fixed (for all files)
+Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: kongxinwei <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ .../bindings/thermal/hisilicon-thermal.txt         | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
 
->> + *
->> + * Copyright (C) 2015 Heiko Schocher <hs@denx.de>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of
->> + *     the License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + *     You should have received a copy of the GNU General Public
->> + *     License along with this file; if not, write to the Free
->> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
->> + *     MA 02110-1301 USA
->
-> checkpatch warns that you should not include this paragraph because the
-> mail address might change in the future and it is contained in COPYING.
-
-Hmm... Shawn mentioned to change it to the "GPL/X11 dual licence"
-as in the arch/arm/boot/dts/imx6sl-warp.dts file ... so I copied this
-from there ... is there a better option for this?
-
-> [...]
->> +/dts-v1/;
->> +#include "imx6dl.dtsi"
->> +#include "imx6qdl-aristainetos2.dtsi"
->> +
->> +/ {
->> +	model = "aristainetos2 i.MX6 Dual Lite Board 4";
->> +	compatible = "fsl,imx6dl";
->
-> Doesn't this board get its own compatible?
-
-Hmm... why?
-
-> [...]
->> +	display0: display@di0 {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		compatible = "fsl,imx-parallel-display";
->> +		interface-pix-fmt = "rgb24";
->
-> It's ok to keep this property for now, but in the future I'd like it to
-> be removed. The panel driver should provide all necessary information
-> using drm_display_info_set_bus_formats. The imx parallel-display driver
-> then needs to be made aware of the connector display_info->bus_formats.
-
-Ok.
-
-> [...]
->> diff --git a/arch/arm/boot/dts/imx6dl-aristainetos2_7.dts b/arch/arm/boot/dts/imx6dl-aristainetos2_7.dts
->> new file mode 100644
->> index 0000000..14cf4e8
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/imx6dl-aristainetos2_7.dts
->> @@ -0,0 +1,103 @@
->> +/*
->> + * support fot the imx6 based aristainetos2 board
->
-> Typo, "support for".
-
-fixed.
-
->> + * Copyright (C) 2015 Heiko Schocher <hs@denx.de>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of
->> + *     the License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + *     You should have received a copy of the GNU General Public
->> + *     License along with this file; if not, write to the Free
->> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
->> + *     MA 02110-1301 USA
->
-> Same comment as above.
->
-> [...]
->> +/ {
->> +	model = "aristainetos2 i.MX6 Dual Lite Board 7";
->> +	compatible = "fsl,imx6dl";
->
-> Same comment as above.
->
->> +&ldb {
->> +	status = "okay";
->> +
->> +	lvds-channel@0 {
->> +		fsl,data-mapping = "spwg";
->> +		fsl,data-width = <24>;
->> +		status = "okay";
->> +
->> +		display-timings {
->> +			native-mode = <&timing0>;
->> +			timing0: 800x480p60 {
->> +				clock-frequency = <33246000>;
->> +				hactive = <800>;
->> +				vactive = <480>;
->> +				hfront-porch = <88>;
->> +				hback-porch = <88>;
->> +				hsync-len = <80>;
->> +				vback-porch = <10>;
->> +				vfront-porch = <10>;
->> +				vsync-len = <25>;
->> +			};
->> +		};
->> +	};
->
-> What panel is this? I'd prefer if you used the panel-simple driver here
-> and connected it to the ldb channel using OF graph bindings same as the
-> parallel display above. That would allow to remove the fsl,data-mapping
-> and fsl,data-width properties and the display-timings node.
-
-It is an Display from LG, MODEL LB070WV8, SUFFIX SL01
-I try to add it to the panel-simple driver
-
->> +};
->> diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
->> new file mode 100644
->> index 0000000..eac7c3b
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
->> @@ -0,0 +1,634 @@
->> +/*
->> + * support fot the imx6 based aristainetos2 board
->
-> Typo, "support for". Also, maybe s/board/boards/ as this contains the
-> common parts for both the 4 and 7 variant?
-
-Yep, fixed.
-
->> + *
->> + * Copyright (C) 2015 Heiko Schocher <hs@denx.de>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of
->> + *     the License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + *     You should have received a copy of the GNU General Public
->> + *     License along with this file; if not, write to the Free
->> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
->> + *     MA 02110-1301 USA
->
-> Same comment as above.
->
-> [...]
->> +&i2c1 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_i2c1>;
->> +	status = "okay";
->> +
->> +	pmic@58 {
->> +		compatible = "dialog,da9063";
->
-> This should be "dlg,da9063" as per
-> Documentation/devicetree/bindings/mfd/da9063.txt.
-
-fixed.
-
-> [...]
->> +&i2c4 {
->> +	clocks = <&clks IMX6DL_CLK_I2C4>;
->
-i> The clocks property is already contained in imx6dl.dtsi
-
-removed.
-
-> [...]
->> +&fec
->> +&gpmi
->> +&pcie
->> +&pwm1
->> +&uart1
->> +&uart2
->> +&uart3
->> +&uart4
->> +&usbh1
->> +&usbotg
->> +&usdhc1
->> +&usdhc2
->> +&iomuxc
->
-> Do all aristainetos2 boards have all of these ports routed out? (Should
-> the status = "okay" properties be set here, or in the per-board .dts
-> files?)
-
-All aristainetos2 variants use this ports, yes.
-
-Thanks for your review!
-
-bye,
-Heiko
+diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+new file mode 100644
+index 0000000..dd0027e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+@@ -0,0 +1,23 @@
++* Temperature Sensor on hisilicon SoCs
++
++** Required properties :
++
++- compatible: "hisilicon,tsensor".
++- reg: physical base address of thermal sensor and length of memory mapped
++  region.
++- interrupt: The interrupt number to the cpu. Defines the interrupt used
++  by /SOCTHERM/tsensor.
++- clock-names: Input clock name, should be 'thermal_clk'.
++- clocks: phandles for clock specified in "clock-names" property.
++- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
++
++Example :
++
++	tsensor: tsensor@0,f7030700 {
++		compatible = "hisilicon,tsensor";
++		reg = <0x0 0xf7030700 0x0 0x1000>;
++		interrupts = <0 7 0x4>;
++		clocks = <&sys_ctrl HI6220_TSENSOR_CLK>;
++		clock-names = "thermal_clk";
++		#thermal-sensor-cells = <1>;
++	}
 -- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
