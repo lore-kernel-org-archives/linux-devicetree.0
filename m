@@ -1,109 +1,69 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] MTD: spi-nor: check for short writes in spi_nor_write.
-Date: Wed, 20 May 2015 16:38:35 -0700
-Message-ID: <20150520233835.GX11598@ld-irv-0074>
-References: <cover.1430403750.git.hramrach@gmail.com>
- <50c40ef17ab6566f35ef5a4426bf23567f896db7.1430403750.git.hramrach@gmail.com>
-Reply-To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v8 07/16] drivers: reset: Add STM32 reset driver
+Date: Thu, 21 May 2015 01:45:01 +0200
+Message-ID: <555D1C7D.1060205@suse.de>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com> <1431158038-3813-8-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBANW6SVAKGQECDDE33Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50c40ef17ab6566f35ef5a4426bf23567f896db7.1430403750.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431158038-3813-8-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Kamil Lulko <rev1>
 List-Id: devicetree@vger.kernel.org
 
-+ linux-spi, Mark
-
-On Thu, Apr 30, 2015 at 03:38:50PM +0200, Michal Suchanek wrote:
-> My SPI controller driver does not support DMA so writes are truncated to
-> FIFO size.
-
-Which SPI master driver?
-
-> Check the amount of data actually written by the driver.
-
-I'm not sure if we should just reactively use the retlen, or if we
-should be communicating such a limitation via the SPI API. Thoughts?
-
-Brian
-
-> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Am 09.05.2015 um 09:53 schrieb Maxime Coquelin:
+> The STM32 MCUs family IPs can be reset by accessing some registers
+> from the RCC block.
+>=20
+> The list of available reset lines is documented in the DT bindings.
+>=20
+> Tested-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/mtd/spi-nor/spi-nor.c | 42 +++++++++++++++++-------------------------
->  1 file changed, 17 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 14a5d23..75904b5 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -807,7 +807,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
->  	size_t *retlen, const u_char *buf)
->  {
->  	struct spi_nor *nor = mtd_to_spi_nor(mtd);
-> -	u32 page_offset, page_size, i;
-> +	u32 page_offset, page_remainder, page_size, i;
->  	int ret;
->  
->  	dev_dbg(nor->dev, "to 0x%08x, len %zd\n", (u32)to, len);
-> @@ -816,36 +816,28 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
->  	if (ret)
->  		return ret;
->  
-> -	write_enable(nor);
-> -
-> -	page_offset = to & (nor->page_size - 1);
-> -
-> -	/* do all the bytes fit onto one page? */
-> -	if (page_offset + len <= nor->page_size) {
-> -		nor->write(nor, to, len, retlen, buf);
-> -	} else {
-> -		/* the size of data remaining on the first page */
-> -		page_size = nor->page_size - page_offset;
-> -		nor->write(nor, to, page_size, retlen, buf);
-> +	/* write everything in nor->page_size chunks */
-> +	/* check the size of data actually written */
-> +	for (i = 0; i < len; i += *retlen) {
-> +		page_size = len - i;
-> +		page_offset = (to + i) & (nor->page_size - 1);
-> +		page_remainder = nor->page_size - page_offset;
-> +		if (page_size > nor->page_size)
-> +			page_size = nor->page_size;
-> +		if (page_remainder && (page_size > page_remainder))
-> +			page_size = page_remainder;
->  
-> -		/* write everything in nor->page_size chunks */
-> -		for (i = page_size; i < len; i += page_size) {
-> -			page_size = len - i;
-> -			if (page_size > nor->page_size)
-> -				page_size = nor->page_size;
-> -
-> -			ret = spi_nor_wait_till_ready(nor);
-> -			if (ret)
-> -				goto write_err;
-> +		write_enable(nor);
->  
-> -			write_enable(nor);
-> +		nor->write(nor, to + i, page_size, retlen, buf + i);
->  
-> -			nor->write(nor, to + i, page_size, retlen, buf + i);
-> -		}
-> +		ret = spi_nor_wait_till_ready(nor);
-> +		if (ret)
-> +			goto write_err;
->  	}
->  
-> -	ret = spi_nor_wait_till_ready(nor);
->  write_err:
-> +	*retlen = i;
->  	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_WRITE);
->  	return ret;
->  }
+>  drivers/reset/Makefile      |   1 +
+>  drivers/reset/reset-stm32.c | 124 ++++++++++++++++++++++++++++++++++=
+++++++++++
+>  2 files changed, 125 insertions(+)
+>  create mode 100644 drivers/reset/reset-stm32.c
+>=20
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 157d421..aed12d1 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -1,5 +1,6 @@
+>  obj-$(CONFIG_RESET_CONTROLLER) +=3D core.o
+>  obj-$(CONFIG_ARCH_SOCFPGA) +=3D reset-socfpga.o
+>  obj-$(CONFIG_ARCH_BERLIN) +=3D reset-berlin.o
+> +obj-$(CONFIG_ARCH_STM32) +=3D reset-stm32.o
+>  obj-$(CONFIG_ARCH_SUNXI) +=3D reset-sunxi.o
+>  obj-$(CONFIG_ARCH_STI) +=3D sti/
+> diff --git a/drivers/reset/reset-stm32.c b/drivers/reset/reset-stm32.=
+c
+> new file mode 100644
+> index 0000000..2c41858
+> --- /dev/null
+> +++ b/drivers/reset/reset-stm32.c
+[...]
+> +static const struct of_device_id stm32_reset_dt_ids[] =3D {
+> +	 { .compatible =3D "st,stm32-rcc", },
+> +	 { /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, sstm32_reset_dt_ids);
+
+Typo.
+
+IIUC the timer depends on the reset controller, so it must be built in
+anyway, and that's what's enforced in the Makefile above. Drop the line=
+?
+
+Regards,
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Dilip Upmanyu, Graham Norton; H=
+RB
+21284 (AG N=FCrnberg)
