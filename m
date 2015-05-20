@@ -1,115 +1,99 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] clocksource: mediatek: Use GPT as sched clock
- source
-Date: Wed, 20 May 2015 22:05:25 +0800
-Message-ID: <1432130725.20394.24.camel@mtksdaap41>
-References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1431763110-443-5-git-send-email-yingjoe.chen@mediatek.com>
-	 <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH v8 3/8] DT: aat1290: Document handling external strobe sources
+Date: Wed, 20 May 2015 16:10:10 +0200
+Message-ID: <1432131015-22397-4-git-send-email-j.anaszewski@samsung.com>
+References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
+Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-05-20 at 13:02 +0200, Matthias Brugger wrote:
-> 2015-05-16 9:58 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> > When cpu is in deep idle, arch timer will stop counting. Setup GPT as
-> > sched clock source so it can keep counting in idle.
-> >
-> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/clocksource/mtk_timer.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
-> > index 91206f9..fe7cf72 100644
-> > --- a/drivers/clocksource/mtk_timer.c
-> > +++ b/drivers/clocksource/mtk_timer.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_irq.h>
-> > +#include <linux/sched_clock.h>
-> >  #include <linux/slab.h>
-> >
-> >  #define GPT_IRQ_EN_REG         0x00
-> > @@ -59,6 +60,13 @@ struct mtk_clock_event_device {
-> >         struct clock_event_device dev;
-> >  };
-> >
-> > +static void __iomem *gpt_base __read_mostly;
-> > +
-> > +static u64 notrace mtk_read_sched_clock(void)
-> > +{
-> > +       return readl_relaxed(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC));
-> > +}
-> > +
-> >  static inline struct mtk_clock_event_device *to_mtk_clk(
-> >                                 struct clock_event_device *c)
-> >  {
-> > @@ -243,6 +251,8 @@ static void __init mtk_timer_init(struct device_node *node)
-> >         mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
-> >         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
-> >                         node->name, rate, 300, 32, clocksource_mmio_readl_up);
-> > +       gpt_base = evt->gpt_base;
-> 
-> This is really hacky. We should clean up the code and provide
-> mtk_clock_event_device globally.
-> Please add the patch below, which does exactly this.
-> ---- 8< ---------------- >8 ------
-> From 631e7bf4e5d9456d0bb4a29b2dee4b84e8c052bd Mon Sep 17 00:00:00 2001
-> From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Date: Wed, 20 May 2015 12:43:16 +0200
-> Subject: [PATCH] clocksource: mediatek: Define mtk_clock_event_device globally
-> 
-> Sched clock code, especially sched_clock_register does not allow to pass a
-> pointer to actual_read_sched_clock. So if in the driver the register base
-> address is not globally defined, we are not able to read the scheduler
-> clock register. This patch sets the mtk_clock_event_device struct globally
-> for the driver, to be able to read the register.
+This patch adds documentation for a pinctrl-names property.
+The property, when present, is used for switching the source
+of the strobe signal for the device.
 
-Hi,
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/leds/leds-aat1290.txt      |   36 ++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
-I'm not sure using a global device pointer is any better.
-
-Actually, almost every user of sched_clock_register need to keep a
-global register base address. Does it make sense to fix this in
-sched_clock_register?
-
-
-> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/clocksource/mtk_timer.c | 50 +++++++++++++++--------------------------
->  1 file changed, 18 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
-> index 68ab423..c5f5b40 100644
-> --- a/drivers/clocksource/mtk_timer.c
-> +++ b/drivers/clocksource/mtk_timer.c
-> @@ -59,13 +59,9 @@ struct mtk_clock_event_device {
->      struct clock_event_device dev;
->  };
-> 
-> -static inline struct mtk_clock_event_device *to_mtk_clk(
-> -                struct clock_event_device *c)
-> -{
-> -    return container_of(c, struct mtk_clock_event_device, dev);
-> -}
-> +struct mtk_clock_event_device *evt;
-
-The name is too short even if we make it static:
-
-static struct mtk_clock_event_device *evt __read_mostly;
-
-Joe.C
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/leds/leds-aat1290.txt b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
+index ef88b9c..c05ed91 100644
+--- a/Documentation/devicetree/bindings/leds/leds-aat1290.txt
++++ b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
+@@ -2,7 +2,9 @@
+ 
+ The device is controlled through two pins: FL_EN and EN_SET. The pins when,
+ asserted high, enable flash strobe and movie mode (max 1/2 of flash current)
+-respectively.
++respectively. In order to add a capability of selecting the strobe signal source
++(e.g. CPU or camera sensor) there is an additional switch required, independent
++of the flash chip. The switch is controlled with pin control.
+ 
+ Required properties:
+ 
+@@ -10,6 +12,13 @@ Required properties:
+ - flen-gpios : Must be device tree identifier of the flash device FL_EN pin.
+ - enset-gpios : Must be device tree identifier of the flash device EN_SET pin.
+ 
++Optional properties:
++- pinctrl-names : Must contain entries: "default", "host", "isp". Entries
++		"default" and "host" must refer to the same pin configuration
++		node, which sets the host as a strobe signal provider. Entry
++		"isp" must refer to the pin configuration node, which sets the
++		ISP as a strobe signal provider.
++
+ A discrete LED element connected to the device must be represented by a child
+ node - see Documentation/devicetree/bindings/leds/common.txt.
+ 
+@@ -25,13 +34,22 @@ Required properties of the LED child node:
+ Optional properties of the LED child node:
+ - label : see Documentation/devicetree/bindings/leds/common.txt
+ 
+-Example (by Ct = 220nF, Rset = 160kohm):
++Example (by Ct = 220nF, Rset = 160kohm and exynos4412-trats2 board with
++a switch that allows for routing strobe signal either from the host or from
++the camera sensor):
++
++#include "exynos4412.dtsi"
+ 
+ aat1290 {
+ 	compatible = "skyworks,aat1290";
+ 	flen-gpios = <&gpj1 1 GPIO_ACTIVE_HIGH>;
+ 	enset-gpios = <&gpj1 2 GPIO_ACTIVE_HIGH>;
+ 
++	pinctrl-names = "default", "host", "isp";
++	pinctrl-0 = <&camera_flash_host>;
++	pinctrl-1 = <&camera_flash_host>;
++	pinctrl-2 = <&camera_flash_isp>;
++
+ 	camera_flash: flash-led {
+ 		label = "aat1290-flash";
+ 		led-max-microamp = <520833>;
+@@ -39,3 +57,17 @@ aat1290 {
+ 		flash-timeout-us = <1940000>;
+ 	};
+ };
++
++&pinctrl_0 {
++	camera_flash_host: camera-flash-host {
++		samsung,pins = "gpj1-0";
++		samsung,pin-function = <1>;
++		samsung,pin-val = <0>;
++	};
++
++	camera_flash_isp: camera-flash-isp {
++		samsung,pins = "gpj1-0";
++		samsung,pin-function = <1>;
++		samsung,pin-val = <1>;
++	};
++};
+-- 
+1.7.9.5
