@@ -1,56 +1,50 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: am335x-boneblack: disable RTC-only sleep
-Date: Wed, 20 May 2015 09:47:26 -0700
-Message-ID: <20150520164725.GU10274@atomide.com>
-References: <1432136322-7609-1-git-send-email-robertcnelson@gmail.com>
+Subject: Re: [PATCH] ARM: dts: Fix WLAN interrupt line for AM335x EVM-SK
+Date: Wed, 20 May 2015 09:52:23 -0700
+Message-ID: <20150520165223.GW10274@atomide.com>
+References: <1431502655-23255-1-git-send-email-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1432136322-7609-1-git-send-email-robertcnelson@gmail.com>
+In-Reply-To: <1431502655-23255-1-git-send-email-romain.izard.pro@gmail.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Robert Nelson <robertcnelson@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Felipe Balbi <balbi@ti.com>, linux-arm-kernel@lists.infradead.org, Johan Hovold <johan@kernel.org>
+To: Romain Izard <romain.izard.pro@gmail.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Robert Nelson <robertcnelson@gmail.com> [150520 08:53]:
-> Fixes: http://bugs.elinux.org/issues/143
+* Romain Izard <romain.izard.pro@gmail.com> [150513 00:39]:
+> While Sitara AM335x SoCs are very close to OMAP SoCs, the 32-line GPIO
+> controllers are numbered from 0 on AM335x and from 1 on OMAP. But when
+> the configuration for the TI WLAN controllers was converted from
+> platform data to device tree, this detail was overlooked, as 10 boards
+> were using OMAP with the WL12xx and WL18xx controllers, and only one
+> was based on AM335x.
 > 
-> Entering RTC-only sleep is only properly supported on early prototypes series
-> (pre-A6) of the BeagleBone Black.  Since rev (A6A), which include all production
-> versions, it is not support at due to.
+> This invalid configuration prevents the WL1271 module on the AM335x
+> EVM-SK from notifying interrupts to the SoC, and breaks the wlan driver.
 > 
-> (rev A6) enable of the 3v3b regulator moved from LDO2 to LDO4 (3v3a)
-> side-effect: 3v3b rail remains on in sleep-mode (also in off-mode when battery-powered)
+> The DTS must be corrected to use the correct GPIO controller.
 > 
-> (rev A6A) am335x vdds supply moved from LDO3 to LDO1
-> side-effect: vdds remains supplied in sleep-mode
-> 
-> Reported-by: Matthijs van Duin <matthijsvanduin@gmail.com>
-> Tested-by: Matthijs van Duin <matthijsvanduin@gmail.com>
-> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
 > ---
->  arch/arm/boot/dts/am335x-boneblack.dts | 4 ----
->  1 file changed, 4 deletions(-)
+>  arch/arm/boot/dts/am335x-evmsk.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-> index 5c42d25..901739f 100644
-> --- a/arch/arm/boot/dts/am335x-boneblack.dts
-> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
-> @@ -80,7 +80,3 @@
->  		status = "okay";
+> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+> index 87fc7a35e802..156d05efcb70 100644
+> --- a/arch/arm/boot/dts/am335x-evmsk.dts
+> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
+> @@ -654,7 +654,7 @@
+>  	wlcore: wlcore@2 {
+>  		compatible = "ti,wl1271";
+>  		reg = <2>;
+> -		interrupt-parent = <&gpio1>;
+> +		interrupt-parent = <&gpio0>;
+>  		interrupts = <31 IRQ_TYPE_LEVEL_HIGH>; /* gpio 31 */
+>  		ref-clock-frequency = <38400000>;
 >  	};
->  };
-> -
-> -&rtc {
-> -	system-power-controller;
-> -};
 
 Applying into omap-for-v4.1/fixes thanks.
-
-Regards,
 
 Tony
