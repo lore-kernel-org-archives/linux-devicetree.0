@@ -1,120 +1,56 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf610: Extend I2C support to all available
- busses.
-Date: Wed, 20 May 2015 09:31:41 -0400
-Message-ID: <555C8CBD.7000007@pid1solutions.com>
-References: <1432089939-1086-1-git-send-email-cory.tusar@pid1solutions.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 3/3] arm64: dts: mt8173: Add PMIC wrapper device node
+Date: Wed, 20 May 2015 15:32:46 +0200
+Message-ID: <1432128766-4445-4-git-send-email-s.hauer@pengutronix.de>
+References: <1432128766-4445-1-git-send-email-s.hauer@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432089939-1086-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1432128766-4445-1-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mirza.krak-3xdUHytR7SMQwY+2splSUA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+This adds the device node for the PMIC wrapper.
 
-On 05/19/2015 10:45 PM, Cory Tusar wrote:
-> This commit extends the existing Vybrid I2C support to cover busses
-> I2C1, I2C2, and I2C3.
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-And...I'm going to NAK my version of this patch - the i2c2 and i2c3
-mappings should be under aips1 rather than aips0.
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 02088a6..a97b2aa 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -14,6 +14,7 @@
+ #include <dt-bindings/clock/mt8173-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset-controller/mt8173-resets.h>
+ #include "mt8173-pinfunc.h"
+ 
+ / {
+@@ -158,6 +159,17 @@
+ 			reg = <0 0x10005000 0 0x1000>;
+ 		};
+ 
++		pwrap: pwrap@1000d000 {
++			compatible = "mediatek,mt8173-pwrap";
++			reg = <0 0x1000d000 0 0x1000>;
++			reg-names = "pwrap";
++			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
++			resets = <&infracfg MT8173_INFRA_PMIC_WRAP_RST>;
++			reset-names = "pwrap";
++			clocks = <&infracfg CLK_INFRA_PMICSPI>, <&infracfg CLK_INFRA_PMICWRAP>;
++			clock-names = "spi", "wrap";
++		};
++
+ 		sysirq: intpol-controller@10200620 {
+ 			compatible = "mediatek,mt8173-sysirq",
+ 					"mediatek,mt6577-sysirq";
+-- 
+2.1.4
 
-Also, I see that Stefan has a similar change up in the linux-toradex
-tree:
-
-http://git.toradex.com/cgit/linux-toradex.git/commit/arch/arm/boot/dts/vfxxx.dtsi?h=toradex_vf_4.0&id=7863765e0f3d2a20a0a69e49c44c1e2f96608c8f
-
-I'll follow-up with him directly about resolving differences in our two
-implementations.
-
-- -Cory
-
-
-> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vfxxx.dtsi | 42 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index 4aa3351..ec98b6c 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -347,6 +347,48 @@
->  				status = "disabled";
->  			};
->  
-> +			i2c1: i2c@40067000 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				compatible = "fsl,vf610-i2c";
-> +				reg = <0x40067000 0x1000>;
-> +				interrupts = <72 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks VF610_CLK_I2C1>;
-> +				clock-names = "ipg";
-> +				dmas = <&edma0 0 52>,
-> +					<&edma0 0 53>;
-> +				dma-names = "rx","tx";
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c2: i2c@400e6000 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				compatible = "fsl,vf610-i2c";
-> +				reg = <0x400e6000 0x1000>;
-> +				interrupts = <73 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks VF610_CLK_I2C2>;
-> +				clock-names = "ipg";
-> +				dmas = <&edma0 1 36>,
-> +					<&edma0 1 37>;
-> +				dma-names = "rx","tx";
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c3: i2c@400e7000 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				compatible = "fsl,vf610-i2c";
-> +				reg = <0x400e7000 0x1000>;
-> +				interrupts = <74 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks VF610_CLK_I2C3>;
-> +				clock-names = "ipg";
-> +				dmas = <&edma0 1 38>,
-> +					<&edma0 1 39>;
-> +				dma-names = "rx","tx";
-> +				status = "disabled";
-> +			};
-> +
->  			clks: ccm@4006b000 {
->  				compatible = "fsl,vf610-ccm";
->  				reg = <0x4006b000 0x1000>;
-> 
-
-
-- -- 
-Cory T. Tusar
-Principal
-PID 1 Solutions, Inc.
-(814) 553-8619
-
-
-"There are two ways of constructing a software design.  One way is to
- make it so simple that there are obviously no deficiencies, and the
- other way is to make it so complicated that there are no obvious
- deficiencies."  --Sir Charles Anthony Richard Hoare
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlVcjL0ACgkQHT1tsfGwHJ9szACfVfARbngdf0C1ZjNSvzzIMwlW
-eAkAn2ne/PAOKBZVH/L4FP0Qmi+GWJLu
-=FpuI
------END PGP SIGNATURE-----
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
