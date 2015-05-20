@@ -1,50 +1,58 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/4] serial: sh-sci: Add DMA support to the DT binding
-Date: Wed, 20 May 2015 19:46:23 +0200
-Message-ID: <1432143987-10308-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: omap3-gta04: Add hdqw1 support
+Date: Wed, 20 May 2015 10:52:22 -0700
+Message-ID: <20150520175222.GD10274@atomide.com>
+References: <1430254467-29177-1-git-send-email-marek@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1430254467-29177-1-git-send-email-marek@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-	Hi Greg, Simon, Magnus,
+* Marek Belisko <marek@goldelico.com> [150428 13:55]:
+> Enable omap-hdq for battery fuel gauge access.
+> 
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-This patch series adds DMA support to the DT binding documentation for
-the various Renesas (H)SCI(F{,A,B}) serial ports, and adds the
-corresponding properties to the Renesas R-Car Gen2 DT source files.
+Applying into omap-for-v4.2/dt thanks.
 
-  - Patch 1 updates the DT binding documentation.
-  - Patches 2-4 update the dtsi files.
+Tony
 
-Although the sh-sci driver itself doesn't support DT DMA properties
-yet, it's safe to apply patches 2-4, as DT describes the hardware, not
-the (current) features of the Linux driver implementation.
-
-Thanks!
-
-Geert Uytterhoeven (4):
-  serial: sh-sci: Add DMA support to the DT binding documentation
-  ARM: shmobile: r8a7790 dtsi: Describe DMA for the serial ports
-  ARM: shmobile: r8a7791 dtsi: Describe DMA for the serial ports
-  ARM: shmobile: r8a7794 dtsi: Describe DMA for the serial ports
-
- .../bindings/serial/renesas,sci-serial.txt         |  7 +++++
- arch/arm/boot/dts/r8a7790.dtsi                     | 20 ++++++++++++
- arch/arm/boot/dts/r8a7791.dtsi                     | 36 ++++++++++++++++++++++
- arch/arm/boot/dts/r8a7794.dtsi                     | 36 ++++++++++++++++++++++
- 4 files changed, 99 insertions(+)
-
--- 
-1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+> ---
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index b9f6881..6ea1257 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -200,6 +200,12 @@
+>  			OMAP3_CORE1_IOPAD(0x210a, PIN_OUTPUT | MUX_MODE0)   /* dss_data23.dss_data23 */
+>  		>;
+>         };
+> +
+> +	hdq_pins: hdq_pins {
+> +		pinctrl-single,pins = <
+> +			OMAP3_CORE1_IOPAD(0x21c6, PIN_INPUT_PULLUP | MUX_MODE0) /* i2c3_sda.hdq */
+> +		>;
+> +	};
+>  };
+>  
+>  &omap3_pmx_core2 {
+> @@ -517,3 +523,8 @@
+>  &mcbsp2 {
+>  	status = "okay";
+>  };
+> +
+> +&hdqw1w {
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&hdq_pins>;
+> +};
+> -- 
+> 1.9.1
+> 
