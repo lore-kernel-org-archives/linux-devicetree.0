@@ -1,71 +1,75 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM64: dts: mt8173: Add PMIC wrapper device node
-Date: Wed, 20 May 2015 16:44:09 +0800
-Message-ID: <CAGS+omD2cE9HyyXsV-2+m5Ugj0EC-dmBo1QRsROM3URu+7mhsA@mail.gmail.com>
-References: <1432032824-7955-1-git-send-email-s.hauer@pengutronix.de> <1432032824-7955-4-git-send-email-s.hauer@pengutronix.de>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v2 5/9] ARM: mediatek: enable gpt6 on boot up to make
+ arch timer working
+Date: Wed, 20 May 2015 16:46:34 +0800
+Message-ID: <1432111594.20394.8.camel@mtksdaap41>
+References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1431763110-443-6-git-send-email-yingjoe.chen@mediatek.com>
+	 <555B9438.9020404@codeaurora.org>
+	 <CABuKBeKgWc8YJeacr1VeVaOQ1hzpqdTskarDJk6W2AdfWqQ9nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432032824-7955-4-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABuKBeKgWc8YJeacr1VeVaOQ1hzpqdTskarDJk6W2AdfWqQ9nw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 6:53 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> This adds the device node for the PMIC wrapper.
->
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index cfdca03..16ec639 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -14,6 +14,7 @@
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include "mt8173-pinfunc.h"
-> +#include <dt-bindings/reset-controller/mt8173-resets.h>
->  #include <dt-bindings/clock/mt8173-clk.h>
->
->  / {
-> @@ -154,6 +155,17 @@
->                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->                 };
->
-> +               pwrap: pwrap@1000D000 {
-> +                       compatible = "mediatek,mt8173-pwrap";
-> +                       reg = <0 0x1000D000 0 0x1000>;
+On Wed, 2015-05-20 at 10:43 +0200, Matthias Brugger wrote:
+> 2015-05-19 21:51 GMT+02:00 Stephen Boyd <sboyd@codeaurora.org>:
+> > On 05/16/15 00:58, Yingjoe Chen wrote:
+> >> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+> >> index a954900..6b38d67 100644
+> >> --- a/arch/arm/mach-mediatek/mediatek.c
+> >> +++ b/arch/arm/mach-mediatek/mediatek.c
+> >> @@ -16,6 +16,34 @@
+> >>   */
+> >>  #include <linux/init.h>
+> >>  #include <asm/mach/arch.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/clk-provider.h>
+> >> +#include <linux/clocksource.h>
+> >> +
+> >> +
+> >> +#define GPT6_CON_MT65xx 0x10008060
+> >> +#define GPT_ENABLE      0x31
+> >> +
+> >> +static void __init mediatek_timer_init(void)
+> >> +{
+> >> +     void __iomem *gpt_base = 0;
+> >
+> >  = NULL ?
+> >
+> >> +
+> >> +     if (of_machine_is_compatible("mediatek,mt6589") ||
+> >> +         of_machine_is_compatible("mediatek,mt8135") ||
+> >> +         of_machine_is_compatible("mediatek,mt8127")) {
+> >> +             /* turn on GPT6 which ungates arch timer clocks */
+> >> +             gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
+> >> +     }
+> >> +
+> >> +     /* enabel clock and set to free-run */
+> >
+> > s/enabel/enable/
+> >
+> >> +     if (gpt_base) {
+> >> +             writel(GPT_ENABLE, gpt_base);
+> >> +             iounmap(gpt_base);
+> >> +     }
+> >> +
+> >
+> > Why not join the two conditions together?
+> 
+> The initial patch supposed that on different SoCs GPT6_CON register
+> would be mapped on different addresses, but that seems not the case.
+> So yes, we can join the two conditions together.
+> 
+> Yingjoe, can you add the changes in the next series or do you want me to do it?
 
-nit: Use lowercase for the hex value 'd' in reg and pwrap@<>.
+Hi,
 
-With that fixed, this one is:
-Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+I'll change these in next series. Thanks.
 
-
-> +                       reg-names = "pwrap";
-> +                       interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> +                       resets = <&infracfg MT8173_INFRA_PMIC_WRAP_RST>;
-> +                       reset-names = "pwrap";
-> +                       clocks = <&infracfg CLK_INFRA_PMICSPI>, <&infracfg CLK_INFRA_PMICWRAP>;
-> +                       clock-names = "spi", "wrap";
-> +               };
-> +
->                 sysirq: intpol-controller@10200620 {
->                         compatible = "mediatek,mt8173-sysirq",
->                                         "mediatek,mt6577-sysirq";
-> --
-> 2.1.4
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joe.C
