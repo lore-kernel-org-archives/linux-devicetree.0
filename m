@@ -1,39 +1,36 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: add DT nodes for ov2659 sensor
-Date: Wed, 20 May 2015 11:14:06 -0700
-Message-ID: <20150520181406.GK10274@atomide.com>
-References: <1426203501-32115-1-git-send-email-prabhakar.csengg@gmail.com>
- <20150316221740.GQ12397@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150316221740.GQ12397-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 2/5] ARM: shmobile: bockw dts: Replace "nor-jedec" by "jedec,spi-nor"
+Date: Wed, 20 May 2015 20:16:51 +0200
+Message-ID: <1432145814-12442-3-git-send-email-geert+renesas@glider.be>
+References: <1432145814-12442-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1432145814-12442-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [150316 15:22]:
-> * Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150312 16:38]:
-> > From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > this patch does the following:
-> > 1: adds DT node for fixed oscillator.
-> > 2: adds DT node entries for ov2659 sensor
-> > 3: adds remote-endpoint entry for VPFE.
-> > 
-> > Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Applying into omap-for-v4.1/dt thanks.
+Cfr. commit 8947e396a8296c52 ('Documentation: dt: mtd: replace
+"nor-jedec" binding with "jedec, spi-nor"')
 
-Hmm looks like I somehow dropped this one, sorry. Applying into
-omap-for-v4.2/dt now thanks.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm/boot/dts/r8a7778-bockw.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
+diff --git a/arch/arm/boot/dts/r8a7778-bockw.dts b/arch/arm/boot/dts/r8a7778-bockw.dts
+index dfbb12e4fef4ee52..90543b12d7e26bcb 100644
+--- a/arch/arm/boot/dts/r8a7778-bockw.dts
++++ b/arch/arm/boot/dts/r8a7778-bockw.dts
+@@ -186,7 +186,7 @@
+ 	flash: flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		compatible = "spansion,s25fl008k", "nor-jedec";
++		compatible = "spansion,s25fl008k", "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-max-frequency = <104000000>;
+ 		m25p,fast-read;
+-- 
+1.9.1
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
