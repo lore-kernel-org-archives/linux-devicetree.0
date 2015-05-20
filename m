@@ -1,129 +1,71 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
-Date: Wed, 20 May 2015 08:15:12 -0500
-Message-ID: <CAL_Jsq+wEtRYD_hcH59UN_Mj+1XgyLfRgJAOdrAe1GqxjBSQKw@mail.gmail.com>
-References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com> <1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/5] phy: qcom: Add Qualcomm PCIe PHY
+Date: Wed, 20 May 2015 08:23:32 -0500
+Message-ID: <CAErSpo42N8YHWjrqUCj0ubqZLt4w-3g=ykPdR8ZMmWaW1GjWDw@mail.gmail.com>
+References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
+ <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com> <554783CD.50708@ti.com>
+ <55478F1A.3000401@mm-sol.com> <20150519224143.GS31666@google.com> <555C8743.6020708@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
+In-Reply-To: <555C8743.6020708@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 14, 2015 at 9:28 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> devices with an OF node") adds the symlink `of_node` for each device
-> pointing to it's device tree node while creating/initialising it.
+On Wed, May 20, 2015 at 8:08 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi Bjorn,
 >
-> However the devicetree sysfs is created and setup in of_init which is
-> executed at core_initcall level. For all the devices created before
-> of_init, the following error is thrown:
->         "Error -2(-ENOENT) creating of_node link"
 >
-> Like many other components in driver model, initialize the sysfs support
-> for OF/devicetree from driver_init so that it's ready before any devices
-> are created.
+> On Wednesday 20 May 2015 04:11 AM, Bjorn Helgaas wrote:
+>>
+>> On Mon, May 04, 2015 at 06:24:10PM +0300, Stanimir Varbanov wrote:
+>>>
+>>> On 05/04/2015 05:35 PM, Kishon Vijay Abraham I wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On Monday 04 May 2015 06:12 PM, Stanimir Varbanov wrote:
+>>>>>
+>>>>> Add a PCIe PHY driver used by PCIe host controller driver
+>>>>> on Qualcomm SoCs like Snapdragon 805.
+>>>>>
+>>>>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>>>> ---
+>>>>>    drivers/phy/Kconfig         |    9 ++
+>>>>>    drivers/phy/Makefile        |    1 +
+>>>>>    drivers/phy/phy-qcom-pcie.c |  291
+>>>>> +++++++++++++++++++++++++++++++++++++++++++
+>>>>
+>>>>
+>>>> Why do you need a new PHY driver for this? Why not use the existing QCOM
+>>>> PHY driver. I can see the registers used here in
+>>>> phy-qcom-ufs-qmp-14nm.h?
+>>>
+>>>
+>>> I agree that on first glance there are similarities, but I'm not sure
+>>> does the PHYs are the same IP blocks. Or at least they are different
+>>> revisions which have too many differences. So trying to combine them
+>>> will lead to more code than now.
+>>>
+>>> Either way I will try to understand how many the differences are.
+>>
+>>
+>> Ping, where are we with this?  Should I wait for something else, or are
+>> you
+>> convinced there's enough difference to warrant a new PHY driver, Kishon?
 >
-> Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
->         devices with an OF node")
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> I'd like to wait to see if Stanimir can use existing driver instead of
+> creating a new driver.
 
-Acked-by: Rob Herring <robh@kernel.org>
+OK, I'm waiting for a v3 with either tweaks to the QCOM PHY driver, or
+stronger justification as to why that's impossible.  It's hard to
+quantify statements like "there are similarities, but there are too
+many differences," so you might have to actually attempt a patch for
+the QCOM code and we can see how ugly that would turn out to be.
 
-> ---
->  drivers/base/init.c | 2 ++
->  drivers/of/base.c   | 8 +++-----
->  include/linux/of.h  | 6 ++++++
->  3 files changed, 11 insertions(+), 5 deletions(-)
->
-> Changes v1->v2:
->         - renamed of_init to of_core_init to avoid collision with
->           PPC nouveau drm driver
->
-> diff --git a/drivers/base/init.c b/drivers/base/init.c
-> index da033d3bab3c..48c0e220acc0 100644
-> --- a/drivers/base/init.c
-> +++ b/drivers/base/init.c
-> @@ -8,6 +8,7 @@
->  #include <linux/device.h>
->  #include <linux/init.h>
->  #include <linux/memory.h>
-> +#include <linux/of.h>
->
->  #include "base.h"
->
-> @@ -34,4 +35,5 @@ void __init driver_init(void)
->         cpu_dev_init();
->         memory_dev_init();
->         container_dev_init();
-> +       of_core_init();
->  }
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 99764db0875a..f0650265febf 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -189,7 +189,7 @@ int __of_attach_node_sysfs(struct device_node *np)
->         return 0;
->  }
->
-> -static int __init of_init(void)
-> +void __init of_core_init(void)
->  {
->         struct device_node *np;
->
-> @@ -198,7 +198,8 @@ static int __init of_init(void)
->         of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
->         if (!of_kset) {
->                 mutex_unlock(&of_mutex);
-> -               return -ENOMEM;
-> +               pr_err("devicetree: failed to register existing nodes\n");
-> +               return;
->         }
->         for_each_of_allnodes(np)
->                 __of_attach_node_sysfs(np);
-> @@ -207,10 +208,7 @@ static int __init of_init(void)
->         /* Symlink in /proc as required by userspace ABI */
->         if (of_root)
->                 proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
-> -
-> -       return 0;
->  }
-> -core_initcall(of_init);
->
->  static struct property *__of_find_property(const struct device_node *np,
->                                            const char *name, int *lenp)
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index ddeaae6d2083..b871ff9d81d7 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -121,6 +121,8 @@ extern struct device_node *of_stdout;
->  extern raw_spinlock_t devtree_lock;
->
->  #ifdef CONFIG_OF
-> +void of_core_init(void);
-> +
->  static inline bool is_of_node(struct fwnode_handle *fwnode)
->  {
->         return fwnode && fwnode->type == FWNODE_OF;
-> @@ -376,6 +378,10 @@ bool of_console_check(struct device_node *dn, char *name, int index);
->
->  #else /* CONFIG_OF */
->
-> +static inline void of_core_init(void)
-> +{
-> +}
-> +
->  static inline bool is_of_node(struct fwnode_handle *fwnode)
->  {
->         return false;
-> --
-> 1.9.1
->
+Thanks, Kishon.
+
+Bjorn
