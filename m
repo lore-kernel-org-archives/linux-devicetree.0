@@ -1,54 +1,63 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
-Date: Wed, 20 May 2015 10:22:49 +0100
-Message-ID: <CAPKp9uYiKXxQzvPX5os5aSizK6gbLQwt8pK7L4D=3efsUaFHGw@mail.gmail.com>
-References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
-	<1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
-	<555B2C9C.1000709@arm.com>
-	<20150519171732.GD9213@kroah.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: sabrelite: use simple-panel instead of
+ display-timings for LVDS0
+Date: Wed, 20 May 2015 11:35:59 +0200
+Message-ID: <1432114559.4466.1.camel@pengutronix.de>
+References: <20150518075844.7e1b5916@ipc1.ka-ro>
+		 <1432050616-11465-1-git-send-email-eric.nelson@boundarydevices.com>
+		 <1432050616-11465-3-git-send-email-eric.nelson@boundarydevices.com>
+	 <1432051452.15181.48.camel@pengutronix.de>
+	 <555B6A0B.4010205@boundarydevices.com>
+	 <555B8678.8090002@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150519171732.GD9213@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robherring2@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <555B8678.8090002-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 6:17 PM, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Tue, May 19, 2015 at 01:29:16PM +0100, Sudeep Holla wrote:
->> Hi Rob/Greg,
->>
->> On 14/05/15 15:28, Sudeep Holla wrote:
->> >Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
->> >devices with an OF node") adds the symlink `of_node` for each device
->> >pointing to it's device tree node while creating/initialising it.
->> >
->> >However the devicetree sysfs is created and setup in of_init which is
->> >executed at core_initcall level. For all the devices created before
->> >of_init, the following error is thrown:
->> >     "Error -2(-ENOENT) creating of_node link"
->> >
->> >Like many other components in driver model, initialize the sysfs support
->> >for OF/devicetree from driver_init so that it's ready before any devices
->> >are created.
->> >
->> >Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
->> >     devices with an OF node")
->> >Suggested-by: Rob Herring <robh+dt@kernel.org>
->> >Cc: Grant Likely <grant.likely@linaro.org>
->> >Cc: Rob Herring <robh+dt@kernel.org>
->> >Cc: Pawel Moll <pawel.moll@arm.com>
->> >Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> >Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> >Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->>
->> I assume one of you will pick this up if there are no further comments ?
->
-> I will once things settle down...
+Hi Eric,
 
-Thanks.
+Am Dienstag, den 19.05.2015, 11:52 -0700 schrieb Eric Nelson:
+> Hi Philipp,
+> 
+> On 05/19/2015 09:51 AM, Eric Nelson wrote:
+> > On 05/19/2015 09:04 AM, Philipp Zabel wrote:
+> >> Hi Eric,
+> >>
+> >> Am Dienstag, den 19.05.2015, 08:50 -0700 schrieb Eric Nelson:
+> >>> Also add label for backlight_lvds and connect it to the LVDS display.
+> >>>
+> >>> Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> >>> ---
+> >> [...]
+> >>>  
+> >>>  &audmux {
+> >>> @@ -374,18 +385,11 @@
+> >>>  		fsl,data-width = <18>;
+> >>
+> >> The fsl,data-width property shouldn't be needed anymore if you
+> >> set .bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG for the hsd100pxn1
+> >> panel in panel-simple.c.
+> >>
+> 
+> Are you planning to submit a patch to panel-simple.c for this?
 
-Regards,
-Sudeep
+Done.
+
+> Because of the dependency, I'd like to handle this in a separate
+> patch instead of V3 of this patch set.
+
+I agree, it's better to remove this in a separate step after the panel
+driver is merged.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
