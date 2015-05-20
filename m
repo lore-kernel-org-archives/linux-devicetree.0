@@ -1,48 +1,68 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH v8 8/8] DT: samsung-fimc: Add examples for samsung,flash-led
- property
-Date: Wed, 20 May 2015 16:10:15 +0200
-Message-ID: <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
-References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
-Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3] Mediatek SCPSYS power domain support
+Date: Wed, 20 May 2015 16:18:55 +0200
+Message-ID: <1432131540-2523-1-git-send-email-s.hauer@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds examples for samsung,flash-led property to the
-samsung-fimc.txt.
+This series adds support for the MediaTek SCPSYS unit.
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/media/samsung-fimc.txt     |    4 ++++
- 1 file changed, 4 insertions(+)
+The SCPSYS unit handles several power management related tasks such
+as thermal measurement, DVFS, interrupt filter and low level sleep
+control.
 
-diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-index 922d6f8..57edffa 100644
---- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-+++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-@@ -126,6 +126,8 @@ Example:
- 			clocks = <&camera 1>;
- 			clock-names = "mclk";
- 
-+			samsung,flash-led = <&front_cam_flash>;
-+
- 			port {
- 				s5k6aa_ep: endpoint {
- 					remote-endpoint = <&fimc0_ep>;
-@@ -147,6 +149,8 @@ Example:
- 			clocks = <&camera 0>;
- 			clock-names = "mclk";
- 
-+			samsung,flash-led = <&rear_cam_flash>;
-+
- 			port {
- 				s5c73m3_1: endpoint {
- 					data-lanes = <1 2 3 4>;
--- 
-1.7.9.5
+The initial support only contains the generic power domain handling.
+This is needed to turn on power to the different power domains.
+
+The driver is quite straight forward now. Due to the lack of a better
+place I have put it to drivers/soc/mediatek. As the SCPSYS unit has
+several other tasks that also do not fit into some specific subsystem
+this probably is a good place for this driver.
+
+Please review, any input welcome.
+
+Sascha
+
+changes since v2:
+- Add missing include/linux/soc/mediatek/infracfg.h file
+- rename VDE -> VDEC, VEN -> VENC, DIS -> DISP and VEN2 -> VENC_LT
+  to make the abbreviatons more clear
+- make of_device_id const
+- remove double loop
+- fix hunk in wrong patch
+- Fix order of domains. Some domains depend on other domains. Reorder
+  the domains so that all domains can be turned on in order when
+  CONFIG_PM is disabled. Also fixes earlier mixups in the domain array
+- Do not allow compilation as modules. pm_domains cannot be removed, so
+  compilation as module is not that useful
+- reorder Kconfig items alphabetically
+- reorder #includes alphabetically
+- select MTK_INFRACFG instead of depending on it
+- Use only two clocks as dependencies for the domains. The previously
+  used 5 clocks are not necessary as confirmed by the hardware designers
+- use 'genpd' as variable name for struct generic_pm_domain like done in
+  other pm code
+
+changes since v1:
+- make MFG_ASYNC a subdomain of MFG_2D and MFG_2D a subdomain of MFG
+- Add (now hopefully properly) infracfg register handling again
+- Add clock handling
+- Fix on/off mixup in error message
+- Make readonly data const
+- Fix MODULE_LICENSE to GPL v2
+
+changes since RFC:
+
+- add a commit log to driver patch
+- drop manipulating infracfg registers for now, can be added (properly)
+  later
+- Add warning messages when errors occur
+- add NULL pointer check for kmalloc
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
