@@ -1,39 +1,106 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] MTD: m25p80: Add option to limit SPI
- transfer size.
-Date: Wed, 20 May 2015 16:27:59 -0700
-Message-ID: <20150520232759.GW11598@ld-irv-0074>
-References: <cover.1430403750.git.hramrach@gmail.com>
- <3b0c112672f364452e80c333048161eaffb655db.1430403750.git.hramrach@gmail.com>
- <CAGRGNgXKrpJ8rc4h4BykgHsn3kfT5fuAssMK1bQJtxhVL=s2BA@mail.gmail.com>
-Reply-To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
+ for cygnus
+Date: Wed, 20 May 2015 16:38:02 -0700
+Message-ID: <555D1ADA.8070308@broadcom.com>
+References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com> <5543CD73.2030902@broadcom.com> <20150501203004.3add2c95@lxorguk.ukuu.org.uk> <9193036.7UYD2OGJHk@wuerfel> <554D1649.2030106@broadcom.com> <20150513153544.GC2065@localhost.localdomain> <5553AAEA.30503@broadcom.com> <20150513202716.GA15878@localhost.localdomain> <5553DD7D.8090905@broadcom.com> <20150514113054.GB1580@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBB5R6SVAKGQEU7BYO2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGRGNgXKrpJ8rc4h4BykgHsn3kfT5fuAssMK1bQJtxhVL=s2BA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150514113054.GB1580@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Darren Edamura <dedamura@broadcom.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 01, 2015 at 12:58:52AM +1000, Julian Calaby wrote:
-> On Thu, Apr 30, 2015 at 11:46 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > My SPI driver does not support DMA so sizes larger than 64 bytes return
-> > an error. Add an option to limit transfer size so m25p80 can be used
-> > with reduced speed with such controller.
+On 15-05-14 04:30 AM, Richard Cochran wrote:
+> On Wed, May 13, 2015 at 04:25:49PM -0700, Jonathan Richardson wrote:
+>> On 15-05-13 01:27 PM, Richard Cochran wrote:
+>>> If the ISR is delivering batches of time stamps, then the interrupt
+>>> rate aught to be the highest rate that the system can support.
+>>
+>> It to nanosecond precision so it can be ridiculously quick.
 > 
-> I suspect that this will be rejected as the maximum transfer size is a
-> property of the SPI controller, not the device and should be exported
-> to the device driver from the controller, not specified in the
-> device's binding.
+> Your interrupt rate directly controls the worst case delay between the
+> time the event occurs and the time the application (or stack) obtains
+> the time stamp.  You want this delay to be as short as possible, but
+> you cannot afford to bog down the entire operating system.  I would
+> suggest a fixed value of 1000 Hz (with perhaps a debugfs knob).
+> 
+> What a poor hardware design.  Oh well.
+> 
+>> Having separate FIFO's allows process A to only retrieve channel 1
+>> timestamps.
+> 
+> Having lots of different processes reading time stamps directly, and
+> trying to match them up with various HW events after the fact, is not
+> way to go.  Instead, kernel time stamp consumers should pair the time
+> stamps with the associated events and then provide the time
+> information conveniently over the existing APIs. (See also my last
+> comment.)
+> 
+>> Our original non PTP driver ioctl (DTE_GET_TIMESTAMP) solved that
+>> problem because we could specify a channel. We're now trying to adapt it
+>> to PTP so we don't have to write a new "DTE" user and kernel side API.
+> 
+> For mainline, we want the best interface possible.  Sometimes that
+> means that programs based on out-of-tree interfaces will need to be
+> changed.
+> 
+>>> Ideally, there will be kernel consumers for most of the channels, and
+>>> they will forward the time stamps in a way appropriate to their
+>>> subsystem.  For example, network devices will use so_timestamping. 
+>>> Any "leftover" channels can go through the generic PTP interface.
+>>
+>> I'll look more into so_timestamping to see how that's used but we wanted
+>> one generic interface to get timestamps from channels because anything
+>> can be hooked up to a channel.
+> 
+> I definitely do *not* want one generic interface.  The task of
+> matching time stamps with hardware events belongs to the kernel.  For
+> random GPIOs, the existing PTP ioctl is plenty good enough, but for
+> other devices (network, audio) more work is needed.
 
-Absolutely correct. This does not belong in the device tree.
+Richard, this design isn't going to work. We need to have both kernel
+and user space consumers. We don't want all GPIO's in a common timestamp
+buffer either, as it presents problems I mentioned previously. Currently
+the network input is a gpio. After some discussion here I think we'll
+have to keep this driver out of the kernel for now.
 
-Brian
+Thanks.
+
+> 
+> One huge lacuna in your patch series is the code that associates the
+> time stamps with events.  How is this supposed to work?
+> 
+> So far you have:
+> 
+> +enum dte_client {
+> +       DTE_CLIENT_MIN = 0,
+> +       DTE_CLIENT_I2S0_BITCLOCK = 0,
+> +       DTE_CLIENT_I2S1_BITCLOCK,
+> +       DTE_CLIENT_I2S2_BITCLOCK,
+> +       DTE_CLIENT_I2S0_WORDCLOCK,
+> +       DTE_CLIENT_I2S1_WORDCLOCK,
+> +       DTE_CLIENT_I2S2_WORDCLOCK,
+> +       DTE_CLIENT_LCD_CLFP,
+> +       DTE_CLIENT_LCD_CLLP,
+> +       DTE_CLIENT_GPIO14,
+> +       DTE_CLIENT_GPIO15,
+> +       DTE_CLIENT_GPIO22,
+> +       DTE_CLIENT_GPIO23,
+> +       DTE_CLIENT_MAX,
+> +};
+> 
+> Network devices are not present at all.  No idea why LCD signals are
+> included.  For the i2s, this appears to stamp the audio clock.  But
+> which audio sample has been stamped?  Or do you only care about
+> frequency and not phase?
+> 
+> For the next round, please include John Stulz, Thomas Gleixner,
+> netdev, and the appropriate audio list on CC.
+> 
+> Thanks,
+> Richard
+> 
