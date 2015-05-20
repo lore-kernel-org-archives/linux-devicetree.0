@@ -1,101 +1,47 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 4/9] clocksource: mediatek: Use GPT as sched clock source
-Date: Wed, 20 May 2015 17:00:19 +0200
-Message-ID: <CABuKBe+OP6zMHdhkm1U5sB4NqiKvEH1kVGZbHbx5f1AypcERAw@mail.gmail.com>
-References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1431763110-443-5-git-send-email-yingjoe.chen@mediatek.com>
-	<CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g@mail.gmail.com>
-	<1432130725.20394.24.camel@mtksdaap41>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add
+ pwrkey driver
+Date: Wed, 20 May 2015 10:03:46 -0500
+Message-ID: <CAHrpEqQ9F1qXw6RmKPgwpqsFOq=O0dsNL7YtqNQ2ZUVBYz6DSw@mail.gmail.com>
+References: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
+	<20150520142205.GA24844@dragon>
+	<CAHrpEqSpeMO=zLyii8qZUznP+9EAQqJ-D3O8hbXj99m+UNvpzA@mail.gmail.com>
+	<6111368.e0EOBSJsmZ@jclayton-pc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432130725.20394.24.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <6111368.e0EOBSJsmZ@jclayton-pc>
+Sender: linux-pm-owner@vger.kernel.org
+To: Joshua Clayton <stillcompiling@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, rtc-linux@googlegroups.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, alexandre.belloni@free-electrons.com, Philipp Zabel <p.zabel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-20 16:05 GMT+02:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
-> On Wed, 2015-05-20 at 13:02 +0200, Matthias Brugger wrote:
->> 2015-05-16 9:58 GMT+02:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
->> > When cpu is in deep idle, arch timer will stop counting. Setup GPT as
->> > sched clock source so it can keep counting in idle.
->> >
->> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
->> > ---
->> >  drivers/clocksource/mtk_timer.c | 10 ++++++++++
->> >  1 file changed, 10 insertions(+)
->> >
->> > diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
->> > index 91206f9..fe7cf72 100644
->> > --- a/drivers/clocksource/mtk_timer.c
->> > +++ b/drivers/clocksource/mtk_timer.c
->> > @@ -24,6 +24,7 @@
->> >  #include <linux/of.h>
->> >  #include <linux/of_address.h>
->> >  #include <linux/of_irq.h>
->> > +#include <linux/sched_clock.h>
->> >  #include <linux/slab.h>
->> >
->> >  #define GPT_IRQ_EN_REG         0x00
->> > @@ -59,6 +60,13 @@ struct mtk_clock_event_device {
->> >         struct clock_event_device dev;
->> >  };
->> >
->> > +static void __iomem *gpt_base __read_mostly;
->> > +
->> > +static u64 notrace mtk_read_sched_clock(void)
->> > +{
->> > +       return readl_relaxed(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC));
->> > +}
->> > +
->> >  static inline struct mtk_clock_event_device *to_mtk_clk(
->> >                                 struct clock_event_device *c)
->> >  {
->> > @@ -243,6 +251,8 @@ static void __init mtk_timer_init(struct device_node *node)
->> >         mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
->> >         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
->> >                         node->name, rate, 300, 32, clocksource_mmio_readl_up);
->> > +       gpt_base = evt->gpt_base;
+On Wed, May 20, 2015 at 9:46 AM, Joshua Clayton
+<stillcompiling@gmail.com> wrote:
 >>
->> This is really hacky. We should clean up the code and provide
->> mtk_clock_event_device globally.
->> Please add the patch below, which does exactly this.
->> ---- 8< ---------------- >8 ------
->> From 631e7bf4e5d9456d0bb4a29b2dee4b84e8c052bd Mon Sep 17 00:00:00 2001
->> From: Matthias Brugger <matthias.bgg@gmail.com>
->> Date: Wed, 20 May 2015 12:43:16 +0200
->> Subject: [PATCH] clocksource: mediatek: Define mtk_clock_event_device globally
+>> +       snvs_np = of_get_parent(pdev->dev.of_node);
+>> +       if (!snvs_np)
+>> +               return -ENODEV;
+>> +
+>> +       data->snvs = syscon_node_to_regmap(snvs_np);
+>> +       of_node_put(snvs_np);
+>> +
+>> +       if (!data->snvs) {
+>> +               pr_err("Can't snvs syscon\n");
+>> +               return -ENODEV;
+>> +       }
 >>
->> Sched clock code, especially sched_clock_register does not allow to pass a
->> pointer to actual_read_sched_clock. So if in the driver the register base
->> address is not globally defined, we are not able to read the scheduler
->> clock register. This patch sets the mtk_clock_event_device struct globally
->> for the driver, to be able to read the register.
->
-> Hi,
->
-> I'm not sure using a global device pointer is any better.
+>> How about change error message to " Can't snvs syscon, probably use
+>> old dts file"?
+> How about simply: "Cannot find snvs syscon node in devicetree."
 
-Why not?
+Shawn:
+          Are you okay for that?
+
+best regards
+Frank Li
 
 >
-> Actually, almost every user of sched_clock_register need to keep a
-> global register base address. Does it make sense to fix this in
-> sched_clock_register?
 >
-
-Not sure about that. Normally you have just one timer in your system,
-so you don't get any problems to declare driver private structs
-globally on a per driver basis.
-Looking on other drivers I have seen a bit of everything, no struct at
-all, a global pointer to the driver private struct, only iomem
-pointers global and the rest of the driver private struct as is.
-It seems that there is no uniform way so up to you. Just please don't
-use two times the exactly same iomem pointer, one in the driver
-private struct and one for the scheduler clock. :)
-
-Thanks,
-Matthias
--- 
-motzblog.wordpress.com
+> --
+> ~Joshua Clayton
