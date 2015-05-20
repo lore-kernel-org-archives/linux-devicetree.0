@@ -1,55 +1,104 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: vf610: Add SoC bus support for Vybrid
-Date: Wed, 20 May 2015 09:36:38 +0200
-Message-ID: <61cec15fe896133ee6e102b0242fb43d@agner.ch>
-References: <cover.1432099651.git.maitysanchayan@gmail.com>
- <27733a88b73adb7000205e020bafdb6f7ebe1843.1432099651.git.maitysanchayan@gmail.com>
- <9691074.oWRy1bscbz@wuerfel>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Wed, 20 May 2015 15:59:35 +0800
+Message-ID: <1432108775.12796.11.camel@mtksdaap41>
+References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
+	 <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
+	 <20150518184300.GB28888@pengutronix.de>
+	 <1432089611.13819.9.camel@mtksdaap41>
+	 <20150520071152.GP24769@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9691074.oWRy1bscbz@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150520071152.GP24769-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-05-20 09:12, Arnd Bergmann wrote:
-> On Wednesday 20 May 2015 11:06:52 Sanchayan Maity wrote:
->> Implements SoC bus support to export SoC specific information. Read
->> the unique SoC ID from the Vybrid On Chip One Time Programmable
->> (OCOTP) controller, SoC specific information from the Miscellaneous
->> System Control Module (MSCM), revision from the ROM revision register
->> and expose it via the SoC bus infrastructure.
->>
->> Sample Output:
->>
->> root@vf:/sys/devices/soc0# cat soc_id
->> df63c12a2e2161d4
->> root@vf:/sys/devices/soc0# cat family
->> Freescale Vybrid VF500
->> root@vf:/sys/devices/soc0# cat revision
->> 00000013
->> root@vf:/sys/devices/soc0# cat machine
->> Freescale Vybrid
->>
-> 
-> I would prefer to see this as a driver in drivers/soc that registers
-> to a platform device. Is there any DT node that would be a reasonable
-> device to bind to?
+Hi Uwe,
 
-Hm, what is a viable device? Probably the most SoC specific device in
-the SoC? Currently, all three devices we read from do have a
-vf610-something compatible string, hence would be SoC specific (ocotp,
-ocrom and mscm-cpucfg). Probably the last is the most SoC specific...
+On Wed, 2015-05-20 at 09:11 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Eddie,
+>=20
+> On Wed, May 20, 2015 at 10:40:11AM +0800, Eddie Huang wrote:
+> > On Mon, 2015-05-18 at 20:43 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Tue, May 19, 2015 at 12:40:08AM +0800, Eddie Huang wrote:
+> > > > +/* calculate i2c port speed */
+> > > It would be nice to summarize the clock frequency settings here.
+> > > Something like:
+> > >=20
+> > > 	/*
+> > > 	 * The input clock is divided by the value specified in the
+> > > 	 * device tree as clock-div. The actual bus speed is then
+> > > 	 * derived from this frequency by the following formula:
+> > > 	 *  ....
+> > >=20
+> > > This would make it possible to verify your calculations below.
+> >=20
+> > The comment will be:
+> > /*
+> >  * khz: I2C bus clock
+> >  * hclk: The input clock is divided by the value specified in the=20
+> >  *       device tree as clock-div
+> and which one of the two clocks you're writing about is hclk now? I
+> assume the divided one.
+> >  * div =3D (sample_cnt + 1) * (step_cnt + 1)
+> >  * khz =3D (hclk / 2) / div
+> khz for the 2nd time.
+>=20
+> >  *
+> >  * The calculation is to get div value that let result of=20
+> >  * ((hclk / 2) / div) most approach and less than khz
+> >  */
+> I imagined something more hardware related. A list of register (or
+> register bit fields) that influence the frequency and a formula
 
-But somehow bind to just a random device sounds wrong to me. Couldn't we
-add a more specific compatible string to the soc node and bind to that?
+> 	i2c_freq =3D parent_clk / clock-div * (...)
+>=20
+> (It seems to be a bit more complicated here as there are two register=
+s
+> involved that are set differently depending on the target frequency.)
 
---
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, hardware is a little complicated. I rewrite the comment:
+
+/*
+ * Calculate i2c port speed
+ *
+ * Hardware design:
+ * i2c_bus_freq =3D parent_clk / (clock-div * 2 * (sample_cnt) *
+(step_cnt))
+ * clock-div: fixed in hardware, but may be various in different SoCs
+ *
+ * The calculation want to pick the highest bus frequency that is still=
+=20
+ * less than or equal to i2c->speed_hz. and the calculation try to get=20
+ * sample_cnt and step_cnt to fill in hardware register.
+ */
+
+>=20
+> > > > +static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int=
+ clk_src_in_hz)
+> clk_src_in_hz is the module's input rate already divided by clock-div=
+=2E
+> This clock-div value is fixed in hardware and unchangeable, right?
+Yes
+
+> Maybe give that divided clock a nice name?
+I don't know, after new comment, maybe this name is ok.
+
+> The target frequency is i2c->speed_hz, so among the possible frequenc=
+ies
+> we want to pick the highest one that is still less than or equal
+> i2c->speed_hz, right?
+Right.
+
+>=20
+> > > > +		/* Set the hign speed mode register */
+> I just notice s/hign/high/ here.
+>=20
+Thanks, will fix it.
+
+Eddie
