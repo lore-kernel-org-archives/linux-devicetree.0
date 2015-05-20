@@ -1,49 +1,66 @@
-From: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] clk: hi6220: Clock driver support for Hisilicon
- hi6220 SoC
-Date: Wed, 20 May 2015 08:52:37 +0800
-Message-ID: <555BDAD5.1080301@huawei.com>
-References: <1430827599-11560-1-git-send-email-bintian.wang@huawei.com>	<1430827599-11560-5-git-send-email-bintian.wang@huawei.com>	<20150515002527.GD31753@codeaurora.org>	<5555A37B.1090105@huawei.com>	<20150515193041.GO31753@codeaurora.org> <CAAS=xmjsFoQg-HgWA5-e=cF3qF+PcVNc3i_3Z5EBPNJ2HyOZKQ@mail.gmail.com> <555B9E7B.9000809@codeaurora.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v5 1/3] dt-bindings: Document the hi6220 thermal sensor
+ bindings
+Date: Wed, 20 May 2015 09:06:48 +0800
+Message-ID: <20150520010648.GA18345@leoy-linaro>
+References: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
+ <1431933109-22764-2-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <555B9E7B.9000809-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Haifeng Yan <yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <sledge.yan>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1431933109-22764-2-git-send-email-kong.kongxinwei@hisilicon.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Cc: edubezval@gmail.com, rui.zhuang@intel.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org, dan.zhao@hisilicon.com, devicetree@vger.kernel.org, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, mark.rutland@arm.com, linuxarm@huawei.com, zhenwei.wang@hisilicon.com, mporter@konsulko.com, zhangfei.gao@linaro.org, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen,
+On Mon, May 18, 2015 at 03:11:47PM +0800, Xinwei Kong wrote:
+> From: kongxinwei <kong.kongxinwei@hisilicon.com>
+> 
+> This adds documentation of device tree bindings for the
+> thermal sensor controller of hi6220 SoC.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
+> ---
+>  .../bindings/thermal/hisilicon-thermal.txt         | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> new file mode 100644
+> index 0000000..b2a349f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> @@ -0,0 +1,23 @@
+> +* Temperature Sensor on hisilicon SoCs
+> +
+> +** Required properties :
+> +
+> +- compatible: "hisilicon,tsensor".
+> +- reg: physical base address of thermal sensor and length of memory mapped
+> +  region.
+> +- interrupt: The interrupt number to the cpu. Defines the interrupt used
+> +  by SOCTHERM.
 
-On 2015/5/20 4:35, Stephen Boyd wrote:
-> On 05/15/15 19:54, Brent Wang wrote:
->>
->>>> How about just send this patch for review not the whole patch set in
->>>> next version?
->>>>
->>> Yes a single patch is fine. I take it you want the patch to go
->>> through arm-soc with some Ack from us?
->> Yes, exactly.
->> The dts file includes the clock head file,  this patch goes through
->> arm-soc is a good choice.
->
-> One way to avoid that problem is to split the clock header file into its
-> own patch and then duplicate that patch in two trees, one that goes
-> through arm-soc and one that goes through clk.
->
-Thanks for your suggestion, I will talk about this with Hisilicon SoC
-maintainer XuWei.
+s/SOCTHERM/tsensor/
 
-I have updated this patch based on your suggestion, could you help
-review patch "[PATCH v6 5/6] clk: hi6220: Clock driver support for 
-Hisilicon hi6220 SoC"?
-
-Thanks,
-
-Bintian
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- clock-names: Input clock name, should be 'thermal_clk'.
+> +- clocks: phandles for clock specified in "clock-names" property.
+> +- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
+> +
+> +Example :
+> +
+> +	tsensor: tsensor@0,f7030700 {
+> +		compatible = "hisilicon,tsensor";
+> +		reg = <0x0 0xf7030700 0x0 0x1000>;
+> +		interrupts = <0 7 0x4>;
+> +		clocks = <&clock_sys HI6220_TSENSOR_CLK>;
+> +		clock-names = "thermal_clk";
+> +		#thermal-sensor-cells = <1>;
+> +	}
+> -- 
+> 1.9.1
+> 
+> 
