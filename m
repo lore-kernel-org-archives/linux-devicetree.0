@@ -1,101 +1,43 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v5 3/3] dts: hi6220: enable thermal sensor for hisilicon
- SoC
-Date: Wed, 20 May 2015 11:02:54 +0800
-Message-ID: <20150520030254.GA27887@leoy-linaro>
-References: <1431933109-22764-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1431933109-22764-4-git-send-email-kong.kongxinwei@hisilicon.com>
- <20150520045100.GB4295@localhost.localdomain>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Wed, 20 May 2015 11:07:39 +0800
+Message-ID: <1432091259.20394.7.camel@mtksdaap41>
+References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
+	 <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
+	 <20150518184300.GB28888@pengutronix.de>
+	 <CABuKBeJcpufi-eEWmDRK6F2kgpz3DmCz8rp4hVPCJVgkmGr-KA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150520045100.GB4295@localhost.localdomain>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>, rui.zhuang@intel.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org, dan.zhao@hisilicon.com, devicetree@vger.kernel.org, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, mark.rutland@arm.com, linuxarm@huawei.com, zhenwei.wang@hisilicon.com, mporter@konsulko.com, zhangfei.gao@linaro.org, liguozhu@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABuKBeJcpufi-eEWmDRK6F2kgpz3DmCz8rp4hVPCJVgkmGr-KA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Xudong Chen <xudong.chen@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liguo Zhang <liguo.zhang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 09:51:01PM -0700, Eduardo Valentin wrote:
-> On Mon, May 18, 2015 at 03:11:49PM +0800, Xinwei Kong wrote:
-> > From: kongxinwei <kong.kongxinwei@hisilicon.com>
-> > 
-> > Dts includes two part: the first part is related with thermal sensor;
-> > the second part is related with thermal zones, in this part it will
-> > define the thermal zones and which sensor device should be bound to.
-> > it also need specify the polling interval for every thermal zone.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
-> > ---
-> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 127 ++++++++++++++++++++++++++++++
-> >  1 file changed, 127 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > new file mode 100644
-> > index 0000000..82f213d
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > @@ -0,0 +1,127 @@
-> > +
-> > +#include <dt-bindings/thermal/thermal.h>
-> > +
-> > +/ {
-> > +
-> > +	tsensor: tsensor@0,f7030700 {
-> > +		compatible = "hisilicon,tsensor";
-> > +		reg = <0x0 0xf7030700 0x0 0x1000>;
-> > +		interrupts = <0 7 0x4>;
-> > +		clocks = <&clock_sys HI6220_TSENSOR_CLK>;
-> > +		clock-names = "thermal_clk";
-> > +		#thermal-sensor-cells = <1>;
-> > +
-> > +	thermal-zones {
-> 
-> The thermal-zones node is typically in the root node, not inside the
-> sensor node.
-> 
-> > +		local: local {
-> > +			/* milliseconds */
-> > +			polling-delay-passive = <1000>;
-> > +			/* milliseconds */
-> > +			polling-delay = <5000>;
-> > +
-> > +			/* sensor	ID */
-> > +			thermal-sensors = <&tsensor  0>;
-> > +
-> > +			trips {
-> > +				local_alert: local_alert {
-> > +					/* millicelsius */
-> > +					temperature = <70000>;
-> > +					/* millicelsius */
-> > +					hysteresis = <2000>;
-> > +					type = "passive";
-> > +				};
-> > +				local_crit: local_crit {
-> > +					temperature = <90000>;
-> > +					hysteresis = <2000>;
-> > +					type = "critical";
-> > +				};
-> > +			};
-> > +
-> > +			cooling-maps {
-> > +				/* There are currently no cooling maps
-> > +				because there are no cooling devices */
-> 
-> Not even cpufreq? in your driver you mention about cpufreq cooling.
-> 
-> Do you have cpufreq-dt driver  properly setup in your board?
+On Tue, 2015-05-19 at 16:48 +0200, Matthias Brugger wrote:
+> 2015-05-18 20:43 GMT+02:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pen=
+gutronix.de>:
+<...>
+> >> --- /dev/null
+> >> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> >> @@ -0,0 +1,675 @@
+> >> +/*
+> >> + * Copyright (c) 2014 MediaTek Inc.
+> >> + * Author: Xudong.chen <xudong.chen@mediatek.com>
+> > s/Xudong.chen/Xudong Chen/
+> >
+> >> +#define I2C_DRV_NAME         "mt-i2c"
+> > i2c-mt65xx ?
+>=20
+> As this works for all SoCs so far, I would propose: i2c-mtk
 
-Yes, cpufreq-dt will be used on hi6220 to enable cpufreq cooling
-device. [1]
+Hi,
 
-Xinwei will resend this patch, and should verify it based on
-hi6220's minimal system patch series. [2]
+I'm pretty sure this driver won't work for MTK TV socs(mt53xx) and BDP
+mt8580, they are using different I2C IP. They are not working on
+upstream now, but I think using i2c-mt65xx make more sense here.
 
-[1] http://archive.arm.linux.org.uk/lurker/message/20150330.052637.16e0f3f4.en.html
-[2] http://archive.arm.linux.org.uk/lurker/message/20150507.140019.bde047ed.en.html
-
-Thanks,
-Leo Yan
+Joe.C
