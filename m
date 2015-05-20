@@ -1,83 +1,129 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RESEND PATCH 2/2] ARM: dts: tegra: Use labels for overriding
- nodes in Tegra114 boards
-Date: Wed, 20 May 2015 14:40:09 +0200
-Message-ID: <20150520124008.GB24016@ulmo.nvidia.com>
-References: <1432036279-6318-1-git-send-email-k.kozlowski.k@gmail.com>
- <1432036279-6318-2-git-send-email-k.kozlowski.k@gmail.com>
- <CAAVeFu+-EYwZ9veNK8T6ZTc9tV0ZgGGm4M6vsiXe70TGTvfOzA@mail.gmail.com>
- <CAJKOXPeDSOwRU4Btt97Tf6Qd1zj5ctVnL_3-_RWGSy004SAACA@mail.gmail.com>
- <CAAVeFu+2aqCJ-nUomXy+PxKvDEm-yFPd+xq1rvgYiSUp5NohtA@mail.gmail.com>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [RFC PATCH v1 2/3] PCI: hisi: Add PCIe host support for Hisilicon Soc Hip05
+Date: Wed, 20 May 2015 21:50:33 +0900
+Message-ID: <000101d092fb$94dde100$be99a300$@com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="O3RTKUHj+75w1tg5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFu+2aqCJ-nUomXy+PxKvDEm-yFPd+xq1rvgYiSUp5NohtA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Krzysztof =?utf-8?Q?Koz=C5=82owski?= <k.kozlowski.k@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Zhou Wang' <wangzhou1@hisilicon.com>
+Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, 'Pratyush Anand' <pratyush.anand@gmail.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Liviu Dudau' <liviu.dudau@arm.com>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 'Gabriele Paoloni' <gabriele.paoloni@huawei.com>, 'Zhichang Yuan' <yuanzhichang@hisilicon.com>, zhudacai@hisilicon.com, 'Zhang Jukuo' <zhangjukuo@huawei.com>, qiuzhenfa@hisilicon.com, 'Liguozhu' <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 20 May 2015 14:21:40 +0800, Zhou Wang wrote:
+>
+> This patch adds PCIe host support for Hisilicon Soc Hip05.
+>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
 
---O3RTKUHj+75w1tg5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Zhou Wang,
 
-On Wed, May 20, 2015 at 02:05:38PM +0900, Alexandre Courbot wrote:
-> On Wed, May 20, 2015 at 2:03 PM, Krzysztof Koz=C5=82owski
-> <k.kozlowski.k@gmail.com> wrote:
-> > 2015-05-20 13:05 GMT+09:00 Alexandre Courbot <gnurou@gmail.com>:
-> >> On Tue, May 19, 2015 at 8:51 PM, Krzysztof Kozlowski
-> >> <k.kozlowski.k@gmail.com> wrote:
-> >>> Usage of labels instead of full paths reduces possible mistakes when
-> >>> overriding nodes.
-> >>>
-> >>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-> >>
-> >> Indentation seems to be off by one tab in the added code (hence the
-> >> huge size of this patch ; most lines should not change), can you
-> >> check?
-> >
-> > It is correct. This change in indentation is an effect of moving nodes
-> > out of first bracket ("\ {"). That is the convention.
-> >
-> > It us up to you guys if this is worth the effort. For exynos we use
-> > label-convention and now I am converting old DTS to it. I think the
-> > label-convention is less error-prone when extending or overriding
-> > nodes. Also it removes duplicated addresses.
->=20
-> I don't really have a strong opinion on this - Stephen and Thierry
-> have worked with DT much more, let's see what they think...
+I added some minor comments.
 
-I agree with Stephen that this is unnecessary churn. I understand the
-reason why people prefer to use labels, but I don't think it's enough of
-an issue to warrent rewriting all of the DTS files. I personally don't
-like the convention very much because it makes the otherwise very neatly
-structured DTS files hard to read.
+> ---
+>  drivers/pci/host/Kconfig     |   5 +
+>  drivers/pci/host/Makefile    |   1 +
+>  drivers/pci/host/pcie-hisi.c | 252 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 258 insertions(+)
+>  create mode 100644 drivers/pci/host/pcie-hisi.c
+>
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> index 1dfb567..486d822 100644
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -125,4 +125,9 @@ config PCIE_IPROC_PLATFORM
+>  	  Say Y here if you want to use the Broadcom iProc PCIe controller
+>  	  through the generic platform bus interface
+>  
+> +config PCI_HISI
+> +	depends on OF && ARM64
+> +	bool "Hisilicon Soc HIP05 PCIe controller"
+> +	select PCIE_DW
+> +
+>  endmenu
+> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+> index f733b4e..562142e 100644
+> --- a/drivers/pci/host/Makefile
+> +++ b/drivers/pci/host/Makefile
+> @@ -15,3 +15,4 @@ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+>  obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
+>  obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
+>  obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
+> +obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
+> diff --git a/drivers/pci/host/pcie-hisi.c b/drivers/pci/host/pcie-hisi.c
+> new file mode 100644
+> index 0000000..3f8cb9a
+> --- /dev/null
+> +++ b/drivers/pci/host/pcie-hisi.c
+> @@ -0,0 +1,252 @@
+> +/*
+> + * PCIe host controller driver for Hisilicon Hip05 SoCs
+> + *
+> + * Copyright (C) 2014 Hisilicon Co., Ltd. http://www.hisilicon.com
 
-Thierry
+s/2014/2015
 
---O3RTKUHj+75w1tg5
-Content-Type: application/pgp-signature
+> + *
+> + * Author: Zhou Wang <wangzhou1@hisilicon.com>
+> + *         Dacai Zhu <zhudacai@hisilicon.com>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+[.....]
 
-iQIcBAABCAAGBQJVXICnAAoJEN0jrNd/PrOhIeYP/3UMvKeGd3+ny+UUBW8BpMz+
-5Kciba9sb0E+q6f62mbB6h6ITWPFKdrGfvkRqmCFGJy7uMyeluZGET44rLMuNdt5
-PSYRlxZq7mLO7/MZ9t1dHI6du8jP5ghGjrxGXqTvQ4l7AwY/4nFZdG95XdZeSSL2
-AIoTzwHajsi5i3fFQV3YUfDIIqUvodAUEm6JtW6uHEvmOxY0Ll41DcpAwCi+xho7
-2iwGonOwjyJr67s26SIccrOOIBqx1fpZneWa0hx4KVsxbtbc83MYXqXHDvYyFEW8
-xEQjy3VDzRAf0Uww9O4iocmUyslDBIVDD18zoFgiUhbcRdwCr90wiGc/DgMyK2gM
-MgJWuc34vU1cWb1BNy+ZPwGTexcrP3Ku6EQ0jbNXWo1ZJQQ/urQFO5fIpsyp4GeB
-VK3pYM1A8actaZfP9976cdH8PcMYPfVTRLSD76GgmTbdV1kS7QNoTxmr5IbuusJT
-4WntVd46619KEaAQm/aM8pQIs1pKw28LPEiqidT2Wa1dQPhSBtOazcJNi9rBaJo3
-qNkjbpSvdb85yejXzyBisIxTkOeq3m4zWElY5dFgK0AdOAPpHubBUYfBdG71Y2GF
-tNTHg/Nz57y948VBIAS3hpTERBTiQTh0EkwwmWDkFKr6D6zYJCCCgH+XVLXMcXBm
-jKmvfobFKq9ibNqD5F+1
-=krdU
------END PGP SIGNATURE-----
+> +#define PCIE_SUBCTRL_MODE_REG                           (0x2800)
+> +#define PCIE_SUBCTRL_SYS_STATE4_REG                     (0x6818)
+> +#define PCIE_SLV_DBI_MODE                               (0x0)
+> +#define PCIE_SLV_SYSCTRL_MODE                           (0x1)
+> +#define PCIE_SLV_CONTENT_MODE                           (0x2)
+> +#define PCIE_LTSSM_LINKUP_STATE                         (0x11)
+> +#define PCIE_LTSSM_STATE_MASK                           (0x3F)
+> +#define PCIE_MSI_CONTEXT_VALUE                          (0x1011000)
+> +#define PCIE_MSI_TRANS_ENABLE                           (0x1ff0)
+> +#define PCIE_MSI_LOW_ADDRESS                            (0x1b4)
+> +#define PCIE_MSI_HIGH_ADDRESS                           (0x1c4)
 
---O3RTKUHj+75w1tg5--
+Please remove unnecessary braces as below.
+
++#define PCIE_SUBCTRL_MODE_REG                           0x2800
++#define PCIE_SUBCTRL_SYS_STATE4_REG                     0x6818
+.....
+
+[.....]
+
+> +/* Configure vmid/asid table in PCIe host */
+> +static void hisi_pcie_config_context(struct hisi_pcie *pcie)
+> +{
+> +	int i;
+> +
+> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_CONTENT_MODE);
+> +
+> +	for (i = 0; i < 0x400; i++)
+> +		hisi_pcie_apb_writel(pcie, 0x0, i * 4);
+> +
+> +	for (i = 0x400; i < 0x800; i++)
+> +		hisi_pcie_apb_writel(pcie, 0x0, i * 4);
+
+How about the following?
+
++	for (i = 0; i < 0x800; i++)
++		hisi_pcie_apb_writel(pcie, 0x0, i * 4);
+
+> +
+> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_SYSCTRL_MODE);
+> +
+> +	hisi_pcie_apb_writel(pcie, 0xb7010040, PCIE_MSI_LOW_ADDRESS);
+> +	hisi_pcie_apb_writel(pcie, 0x0, PCIE_MSI_HIGH_ADDRESS);
+> +	hisi_pcie_apb_writel(pcie, PCIE_MSI_CONTEXT_VALUE, 0x10);
+> +	hisi_pcie_apb_writel(pcie, PCIE_MSI_TRANS_ENABLE, 0x1c8);
+
+Please don't use hardcoded numbers as possible.
+
+> +
+> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_DBI_MODE);
+> +}
+[.....]
+
+Best regards,
+Jingoo Han
