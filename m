@@ -1,163 +1,213 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
- controller
-Date: Wed, 20 May 2015 10:57:16 +0200
-Message-ID: <20150520085715.GA17078@pengutronix.de>
-References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
- <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1431967209-5261-3-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/1] ARM: mvebu: dts: Add dts file for DLink DNS-327L
+Date: Wed, 20 May 2015 11:05:12 +0200
+Message-ID: <555C4E48.6020707@gmail.com>
+References: <1432069858-10958-1-git-send-email-andrew@ncrmnt.org> <1432069858-10958-2-git-send-email-andrew@ncrmnt.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432069858-10958-2-git-send-email-andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-now that I understood the formula some more comments to the calculation=
-=2E
-
-On Tue, May 19, 2015 at 12:40:08AM +0800, Eddie Huang wrote:
-> +#define I2C_DEFAUT_SPEED		100000	/* hz */
-DEFAULT?
-
-> +#define MAX_FS_MODE_SPEED		400000
-> +#define MAX_HS_MODE_SPEED		3400000
-> +#define MAX_SAMPLE_CNT_DIV		8
-> +#define MAX_STEP_CNT_DIV		64
-> +#define MAX_HS_STEP_CNT_DIV		8
-> [...]
-> +/* calculate i2c port speed */
-> +static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int clk_s=
-rc_in_hz)
-> +{
-add a comment here, that clk_src_in_hz is the parent clock already
-divided by clock-div.
-
-> +	unsigned int khz;
-> +	unsigned int step_cnt;
-> +	unsigned int sample_cnt;
-> +	unsigned int sclk;
-> +	unsigned int hclk;
-> +	unsigned int max_step_cnt;
-> +	unsigned int sample_div =3D MAX_SAMPLE_CNT_DIV;
-> +	unsigned int step_div;
-> +	unsigned int min_div;
-> +	unsigned int best_mul;
-> +	unsigned int cnt_mul;
+On 19.05.2015 23:10, Andrew Andrianov wrote:
+> DNS-327L is a 2-bay NAS with the following specs:
+[...]
+> Signed-off-by: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/Makefile                     |   1 +
+>   arch/arm/boot/dts/armada-370-dlink-dns327l.dts | 356 +++++++++++++++++++++++++
+>   2 files changed, 357 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/armada-370-dlink-dns327l.dts
+[...]
+> diff --git a/arch/arm/boot/dts/armada-370-dlink-dns327l.dts b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
+> new file mode 100644
+> index 0000000..0f4555c4
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
+> @@ -0,0 +1,356 @@
+[...]
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-0 = <&xhci_pwr_pin
+> +			&sata_l_pwr_pin
+> +			&sata_r_pwr_pin>;
 > +
-> +	if (i2c->speed_hz > MAX_HS_MODE_SPEED)
-> +		return -EINVAL;
-According to the plan to tune for the highest possible rate <=3D
-i2c->speed_hz, you should handle the case (i2c->speed_hz >
-MAX_HS_MODE_SPEED) like i2c->speed_hz =3D=3D MAX_HS_MODE_SPEED.
-Well, you might want to prevent an overflow in the calculation below
-however.
+> +		pinctrl-names = "default";
 
-> +	else if (i2c->speed_hz > MAX_FS_MODE_SPEED)
-> +		max_step_cnt =3D MAX_HS_STEP_CNT_DIV;
-> +	else
-> +		max_step_cnt =3D MAX_STEP_CNT_DIV;
-So I assume this is the hardware limit on the step_cnt value. For
-=46S_MODE and below you have 6 bits and writing X corresponds to
-step_cnt =3D X + 1. For HS_MODE there are only 3 bits. right?
+Andrew,
 
-> +	step_div =3D max_step_cnt;
-> +	/* Find the best combination */
-> +	khz =3D i2c->speed_hz / 1000;
-> +	hclk =3D clk_src_in_hz / 1000;
-Why are you dividing here? There shouldn't be an overflow problem and
-you're loosing precision.
-
-> +	min_div =3D ((hclk >> 1) + khz - 1) / khz;
-The shift accounts for the fixed divider 2 in
-
-	i2c_bus_freq =3D parent_clk / (clock-div * 2 * sample_cnt * step_cnt
-
-? Maybe better call this opt_div instead of min_div? So now we're
-searching for the best pair (sample_cnt, step_cnt) with:
-
-	* 0 < sample_cnt < MAX_SAMPLE_CNT_DIV
-	* 0 < step_cnt < max_step_cnt
-	* sample_cnt * step_cnt >=3D min_div
-	* optimizing for sample_cnt * step_cnt being minimal
-
-Right?
-
-> +	best_mul =3D MAX_SAMPLE_CNT_DIV * max_step_cnt;
-> +
-> +	for (sample_cnt =3D 1; sample_cnt <=3D MAX_SAMPLE_CNT_DIV; sample_c=
-nt++) {
-> +		step_cnt =3D (min_div + sample_cnt - 1) / sample_cnt;
-DIV_ROUND_UP
-
-> +		cnt_mul =3D step_cnt * sample_cnt;
-> +		if (step_cnt > max_step_cnt)
-> +			continue;
-I think it can happen that you have step_cnt > max_step_cnt here, but
-that (sample_cnt, max_step_cnt) still is a good pair to consider. So:
-
-	step_cnt =3D DIV_ROUND_UP(min_div, sample_cnt);
-	if (step_cnt > max_step_cnt)
-		step_cnt =3D max_step_cnt;
-
-	cnt_mul =3D step_cnt * sample_cnt;
+I doubt pinctrl will not work as you expected. For regulators, unlike
+gpio-keys/leds above, this node just describes the "bus" of regulators.
 
 > +
-> +		if (cnt_mul < best_mul) {
-> +			best_mul =3D cnt_mul;
-> +			sample_div =3D sample_cnt;
-> +			step_div =3D step_cnt;
-I'd call these best_sample_cnt and best_step_cnt instead of sample_div
-and step_div.
+> +		usb_power: regulator@1 {
+> +			compatible = "regulator-fixed";
+> +			reg = <1>;
+> +			regulator-name = "USB3.0 Port Power";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			enable-active-high;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +			gpio = <&gpio0 13 GPIO_ACTIVE_HIGH>;
 
-> +			if (best_mul =3D=3D min_div)
-> +				break;
-> +		}
-> +	}
+Instead you'll have to put the corresponding pinctrl-0/names properties
+in each of the regulator nodes, i.e.
+
+			pinctrl-0 = <&xhci_pwr_pin>
+			pinctrl-names = "default";
+
+here and similar for the other regulator nodes.
+
+> +		};
 > +
-> +	sample_cnt =3D sample_div;
-> +	step_cnt =3D step_div;
-> +	sclk =3D hclk / (2 * sample_cnt * step_cnt);
-> +	if (sclk > khz) {
-Can this happen? A better name for "sclk" would be "bus_freq"?
-
-> +		dev_dbg(i2c->dev, "%s mode: unsupported speed (%ldkhz)\n",
-> +			(i2c->speed_hz > MAX_HS_MODE_SPEED) ? "HS" : "ST/FT",
-What is ST/FR? I would have expected FS here.
-
-> +			(long int)khz);
-> +		return -EINVAL;
-> +	}
+> +		sata_r_power: regulator@2 {
+> +			compatible = "regulator-fixed";
+> +			reg = <2>;
+> +			regulator-name = "SATA-R Power";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			startup-delay-us = <2000000>;
+> +			enable-active-high;
+> +			regulator-always-on;
+> +			regulator-boot-on;
+> +			gpio = <&gpio1 22 GPIO_ACTIVE_HIGH>;
+> +		};
 > +
-> +	step_cnt--;
-> +	sample_cnt--;
+> +		sata_l_power: regulator@3 {
+> +			compatible = "regulator-fixed";
+> +			reg = <3>;
+> +			regulator-name = "SATA-L Power";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			startup-delay-us = <4000000>;
+> +			enable-active-high;
+> +			regulator-always-on;
+> +			regulator-boot-on;
+> +			gpio = <&gpio1 24 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +};
 > +
-> +	if (i2c->speed_hz > MAX_FS_MODE_SPEED) {
-> +		/* Set the hign speed mode register */
-> +		i2c->timing_reg =3D I2C_FS_TIME_INIT_VALUE;
-> +		i2c->high_speed_reg =3D I2C_TIME_DEFAULT_VALUE |
-> +			(sample_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 12 |
-> +			(step_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 8;
-> +	} else {
-> +		i2c->timing_reg =3D
-> +			(sample_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 8 |
-> +			(step_cnt & I2C_TIMING_STEP_DIV_MASK) << 0;
-> +		/* Disable the high speed transaction */
-> +		i2c->high_speed_reg =3D I2C_TIME_CLR_VALUE;
-> +	}
-Would it be sensible to write these values directly into hardware here?
+> +&pinctrl {
+> +	sata_l_white_pin: sata-l-white-pin {
+> +		marvell,pins = "mpp57";
+> +		marvell,function = "sata0";
+> +	};
+> +
+> +	sata_r_white_pin: sata-r-white-pin {
+> +		marvell,pins = "mpp55";
+> +		marvell,function = "sata1";
+> +	};
+> +
+> +	sata_r_amber_pin: sata-r-amber-pin {
+> +		marvell,pins = "mpp52";
+> +		marvell,function = "gpio";
+> +	};
+> +
 
-Best regards
-Uwe
+Remove extra empty line.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+> +
+> +	sata_l_amber_pin: sata-l-amber-pin {
+> +		marvell,pins = "mpp53";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	backup_led_pin: backup-led-pin {
+> +		marvell,pins = "mpp61";
+> +		marvell,function = "gpo";
+> +	};
+> +
+> +	xhci_pwr_pin: xhci-pwr-pin {
+> +		marvell,pins = "mpp13";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	sata_r_pwr_pin: sata-r-pwr-pin {
+> +		marvell,pins = "mpp54";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	sata_l_pwr_pin: sata-l-pwr-pin {
+> +		marvell,pins = "mpp56";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	uart1_pins: uart1-pins {
+> +		marvell,pins = "mpp60", "mpp61";
+> +		marvell,function = "uart1";
+> +	};
+> +
+> +	power_button_pin: power-button-pin {
+> +		marvell,pins = "mpp65";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	backup_button_pin: backup-button-pin {
+> +		marvell,pins = "mpp63";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	reset_button_pin: reset-button-pin {
+> +		marvell,pins = "mpp64";
+> +		marvell,function = "gpio";
+> +	};
+> +};
+> +
+> +/* Serial console */
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +/* Connected to Weltrend MCU */
+> +&uart1 {
+> +	pinctrl-0 = <&uart1_pins>;
+
+missing pinctrl-names = "default";
+
+> +	status = "okay";
+> +};
+> +
+> +&mdio {
+> +	phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+> +		reg = <0>;
+> +		marvell,reg-init = <0x0 0x16 0x0 0x2>,
+> +		                   <0x0 0x19 0x0 0x77>,
+> +		                   <0x0 0x18 0x0 0x5747>;
+
+nit: if you are at it, you could prepend the mdio reg data with 0, i.e.
+<0x0 0x16 0x0 0x0002>.
+
+If you address the comments and stick with this version, i.e. do not add
+any new stuff now - you can add my
+
+Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Thanks!
+
+> +	};
+> +};
+> +
+> +&eth1 {
+> +	phy = <&phy0>;
+> +	phy-mode = "rgmii-id";
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	compatible = "marvell,mv64xxx-i2c";
+> +	clock-frequency = <100000>;
+> +	status = "okay";
+> +};
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
