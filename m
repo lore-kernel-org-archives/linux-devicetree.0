@@ -1,36 +1,67 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V4 2/3] OPP: Allow multiple OPP tables to be passed via DT
-Date: Tue, 19 May 2015 17:52:07 -0700
-Message-ID: <20150520005207.GQ31753@codeaurora.org>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d734a94af2263285fe8cef9f177212f15f218944.1430394884.git.viresh.kumar@linaro.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v1 2/2] ARM: vf610: Add SoC bus support for Vybrid
+Date: Wed, 20 May 2015 09:01:51 +0800
+Message-ID: <20150520010151.GZ1071@dragon>
+References: <cover.1431928866.git.maitysanchayan@gmail.com>
+ <653ed53ef933a6834c4fd3c90ee47e5fb5c78160.1431928866.git.maitysanchayan@gmail.com>
+ <20150519062413.GR1071@dragon>
+ <20150519094223.GA3194@Sanchayan-Arch.toradex.int>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d734a94af2263285fe8cef9f177212f15f218944.1430394884.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+In-Reply-To: <20150519094223.GA3194@Sanchayan-Arch.toradex.int>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maitysanchayan@gmail.com
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/30, Viresh Kumar wrote:
-> On some platforms (Like Qualcomm's SoCs), it is not decided until
-> runtime on what OPPs to use. The OPP tables can be fixed at compile
-> time, but which table to use is found out only after reading some efuses
-> (sort of an eeprom) and knowing characteristics of the SoC.
+On Tue, May 19, 2015 at 03:12:23PM +0530, maitysanchayan@gmail.com wrote:
+> Hello Shawn,
 > 
-> To support such platform we need to pass multiple OPP tables per device
-> and hardware should be able to choose one and only one table out of
-> those.
+> On 15-05-19 14:24:13, Shawn Guo wrote:
+> > On Mon, May 18, 2015 at 11:50:07AM +0530, Sanchayan Maity wrote:
+> > > Implements SoC bus support to export SoC specific information. Read
+> > > the unique SoC ID from the Vybrid On Chip One Time Programmable
+> > > (OCOTP) controller, SoC specific information from the Miscellaneous
+> > > System Control Module (MSCM), revision from the ROM revision register
+> > > and expose it via the SoC bus infrastructure.
+> > > 
+> > > Sample Output:
+> > > 
+> > > root@vf:/sys/devices/soc0# cat soc_id
+> > > df63c12a2e2161d4
+> > > root@vf:/sys/devices/soc0# cat family
+> > > Freescale Vybrid VF500
+> > > root@vf:/sys/devices/soc0# cat revision
+> > > 00000013
+> > > root@vf:/sys/devices/soc0# cat machine
+> > > Freescale Vybrid
+> > > 
+> > > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> > > ---
+> > >  arch/arm/mach-imx/mach-vf610.c | 81 ++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 81 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
+> > > index 2e7c75b..64c78e4 100644
+> > > --- a/arch/arm/mach-imx/mach-vf610.c
+> > > +++ b/arch/arm/mach-imx/mach-vf610.c
+> > > @@ -11,6 +11,86 @@
+> > >  #include <linux/irqchip.h>
+> > >  #include <asm/mach/arch.h>
+> > >  #include <asm/hardware/cache-l2x0.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/sys_soc.h>
+> > > +#include <linux/mfd/syscon.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/random.h>
+> > 
+> > Please group <linux/*> headers together and sort alphabetically.
 > 
-> Update OPP-v2 bindings to support that.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
+> Ok. Will fix this and send out a v2. The rest is acceptable?
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+I'm fine with the rest, but would need an ACK from Stefan to apply the
+patch.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Shawn
