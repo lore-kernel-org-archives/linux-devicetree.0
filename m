@@ -1,56 +1,33 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/5] soc: Mediatek: Add SCPSYS power domain driver
-Date: Wed, 20 May 2015 18:06:45 +0200
-Message-ID: <CABuKBeLuNdVjuy81egtfhwdLKtje_Ff8vz3EGgRy6ZcrfFX8AA@mail.gmail.com>
-References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
-	<1431372206-1237-4-git-send-email-s.hauer@pengutronix.de>
-	<CAGS+omDJ-7+L_46vwMyewHMkMNj69odhp=JY5i6Xj3-Loe6UNA@mail.gmail.com>
-	<20150519103010.GA6325@pengutronix.de>
-	<CABuKBeKiw8MkG5kWaUBqfDzopwvrX8Kh8XpNfRiC_uJD67OcEg@mail.gmail.com>
-	<20150520140325.GN6325@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] of: Add vendor prefix for JEDEC Solid State Technology Association
+Date: Wed, 20 May 2015 18:07:44 +0200
+Message-ID: <1432138064-8121-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150520140325.GN6325@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Brian Norris <computersforpeace@gmail.com>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Aneesh V <aneesh@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-20 16:03 GMT+02:00 Sascha Hauer <s.hauer@pengutronix.de>:
-> On Tue, May 19, 2015 at 01:06:10PM +0200, Matthias Brugger wrote:
->> 2015-05-19 12:30 GMT+02:00 Sascha Hauer <s.hauer@pengutronix.de>:
->> >
->> > I'll check for errors next round. However, I cannot bail out in this
->> > case since once pm_genpd_init() is called the domain cannot be
->> > unregistered anymore.
->>
->> We should think of implementing this.
->> I had a quick look on it, and from what I understand as long as you
->> don't have any subdomains, devices and masters added, it's just
->> deleting an element from a linked list.
->
-> In my error path I would have subdomains added though, so I would need
-> that to be handled.
+Add the "jedec" vendor prefix for the "JEDEC Solid State Technology
+Association" (formerly known as the "Joint Electron Device Engineering
+Council"), which is already in use in several bindings.
 
-Well we could bail out, when pm_genpd_add_subdomain fails. But the
-actual implementations don't do that neither at the moment.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
->
->> Maybe we should split this in pm_genpd_prepare and pm_genpd_add, with
->> the last one actually adding the generic_pm_domain to gpd_list.
->>
->> This way we could also get rid of the two for loops.
->
-> Well, with pm_genpd_prepare and pm_genpd_add I would still need two
-> loops, one for preparing and one for adding.
->
-> I'm not sure how useful it really is to be able to unregister power
-> domains. For now I suggest to continue with the domains that are
-> successfully registered. I'll look into it should the pm domain
-> maintainers request it.
-
-Alright.
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index abcd1316b1065b6a..d624de2aa3360da4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -109,6 +109,7 @@ intel	Intel Corporation
+ intercontrol	Inter Control Group
+ isee	ISEE 2007 S.L.
+ isil	Intersil
++jedec	JEDEC Solid State Technology Association
+ karo	Ka-Ro electronics GmbH
+ keymile	Keymile GmbH
+ lacie	LaCie
 -- 
-motzblog.wordpress.com
+1.9.1
