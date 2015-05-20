@@ -1,279 +1,192 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
-Date: Wed, 20 May 2015 16:52:29 +0200
-Message-ID: <20150520145227.GA3787@ulmo.nvidia.com>
-References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
- <1430761002-9327-5-git-send-email-abrestic@chromium.org>
- <20150513143954.GA3394@x1>
- <55544CC5.9050001@nvidia.com>
- <20150514074058.GA22418@x1>
- <CAL1qeaEqNejuGkN-ke11mtWnaaRo+XieCBkQ6+NQ-Afym6uxVA@mail.gmail.com>
- <CAL1qeaHy0h7bXhuLHh4AG2Zfu48JYeawgVo4dp_k4oX8YFw6tA@mail.gmail.com>
- <20150520063551.GD3627@x1>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [RFC PATCH 2/2] spi: Add support for Zynq Ultrascale+ MPSoC
+ GQSPI controller
+Date: Wed, 20 May 2015 07:55:53 -0700
+Message-ID: <20150520145552.GV31550@xsjsorenbubuntu>
+References: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
+ <1432106871-27232-2-git-send-email-ranjit.waghmode@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150520063551.GD3627@x1>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <1432106871-27232-2-git-send-email-ranjit.waghmode@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, ran27jit@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Ranjit,
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, May 20, 2015 at 07:35:51AM +0100, Lee Jones wrote:
-> On Tue, 19 May 2015, Andrew Bresticker wrote:
+On Wed, 2015-05-20 at 12:57PM +0530, Ranjit Waghmode wrote:
+> This patch adds support for GQSPI controller driver used by
+> Zynq Ultrascale+ MPSoC
 >=20
-> > Lee,
-> >=20
-> > On Thu, May 14, 2015 at 10:38 AM, Andrew Bresticker
-> > <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> > > On Thu, May 14, 2015 at 12:40 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wr=
-ote:
-> > >> On Thu, 14 May 2015, Jon Hunter wrote:
-> > >>
-> > >>> Hi Lee,
-> > >>>
-> > >>> On 13/05/15 15:39, Lee Jones wrote:
-> > >>> > On Mon, 04 May 2015, Andrew Bresticker wrote:
-> > >>> >
-> > >>> >> Add a binding document for the XUSB host complex on NVIDIA Tegra=
-124
-> > >>> >> and later SoCs.  The XUSB host complex includes a mailbox for
-> > >>> >> communication with the XUSB micro-controller and an xHCI host-co=
-ntroller.
-> > >>> >>
-> > >>> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > >>> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >>> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > >>> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > >>> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> > >>> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > >>> >> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > >>> >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >>> >> ---
-> > >>> >> Changes from v7:
-> > >>> >>  - Move non-shared resources into child nodes.
-> > >>> >> New for v7.
-> > >>> >> ---
-> > >>> >>  .../bindings/mfd/nvidia,tegra124-xusb.txt          | 37 +++++++=
-+++++++++++++++
-> > >>> >>  1 file changed, 37 insertions(+)
-> > >>> >>  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia=
-,tegra124-xusb.txt
-> > >>> >>
-> > >>> >> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,tegra1=
-24-xusb.txt b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb.txt
-> > >>> >> new file mode 100644
-> > >>> >> index 0000000..bc50110
-> > >>> >> --- /dev/null
-> > >>> >> +++ b/Documentation/devicetree/bindings/mfd/nvidia,tegra124-xusb=
-=2Etxt
-> > >>> >> @@ -0,0 +1,37 @@
-> > >>> >> +NVIDIA Tegra XUSB host copmlex
-> > >>> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >>> >> +
-> > >>> >> +The XUSB host complex on Tegra124 and later SoCs contains an xH=
-CI host
-> > >>> >> +controller and a mailbox for communication with the XUSB micro-=
-controller.
-> > >>> >> +
-> > >>> >> +Required properties:
-> > >>> >> +--------------------
-> > >>> >> + - compatible: For Tegra124, must contain "nvidia,tegra124-xusb=
-".
-> > >>> >> +   Otherwise, must contain '"nvidia,<chip>-xusb", "nvidia,tegra=
-124-xusb"'
-> > >>> >> +   where <chip> is tegra132.
-> > >>> >> + - reg: Must contain the base and length of the XUSB FPCI regis=
-ters.
-> > >>> >> + - ranges: Bus address mapping for the XUSB block.  Can be empt=
-y since the
-> > >>> >> +   mapping is 1:1.
-> > >>> >> + - #address-cells: Must be 2.
-> > >>> >> + - #size-cells: Must be 2.
-> > >>> >> +
-> > >>> >> +Example:
-> > >>> >> +--------
-> > >>> >> +  usb@0,70098000 {
-> > >>> >> +          compatible =3D "nvidia,tegra124-xusb";
-> > >>> >> +          reg =3D <0x0 0x70098000 0x0 0x1000>;
-> > >>> >> +          ranges;
-> > >>> >> +
-> > >>> >> +          #address-cells =3D <2>;
-> > >>> >> +          #size-cells =3D <2>;
-> > >>> >> +
-> > >>> >> +          usb-host@0,70090000 {
-> > >>> >> +                  compatible =3D "nvidia,tegra124-xhci";
-> > >>> >> +                  ...
-> > >>> >> +          };
-> > >>> >> +
-> > >>> >> +          mailbox {
-> > >>> >> +                  compatible =3D "nvidia,tegra124-xusb-mbox";
-> > >>> >> +                  ...
-> > >>> >> +          };
-> > >>> >
-> > >>> > This doesn't appear to be a proper MFD.  I would have the USB and
-> > >>> > Mailbox devices probe seperately and use a phandle to point the U=
-SB
-> > >>> > device to its Mailbox.
-> > >>> >
-> > >>> > usb@xyz {
-> > >>> >     mboxes =3D <&xusb-mailbox, [chan]>;
-> > >>> > };
-> > >>> >
-> > >>>
-> > >>> I am assuming that Andrew had laid it out like this to reflect the =
-hw
-> > >>> structure. The mailbox and xhci controller are part of the xusb
-> > >>> sub-system and hence appear as child nodes. My understanding is tha=
-t for
-> > >>> device-tree we want the device-tree structure to reflect the actual=
- hw.
-> > >>> Is this not the case?
-> > >>
-> > >> Yes, the DT files should reflect h/w.  I have requested to see what
-> > >> the memory map looks like, so I might provide a more appropriate
-> > >> solution to accepting a pretty pointless MFD.
-> > >
-> > > FWIW, the address map for XUSB looks like this:
-> > >
-> > > XUSB_HOST: 0x70090000 - 0x7009a000
-> > >     xHCI registers: 0x70090000 - 0x70098000
-> > >     FPCI configuration registers: 0x70098000 - 0x70099000
-> > >     IPFS configuration registers: 0x70099000 - 0x7009a000
-> > >
-> > >> Two solutions spring to mind.  You can either call
-> > >> of_platform_populate() from the USB driver, as some already do:
-> > >>
-> > >>   drivers/usb/dwc3/dwc3-exynos.c:
-> > >>     ret =3D of_platform_populate(node, NULL, NULL, dev);
-> > >>   drivers/usb/dwc3/dwc3-keystone.c:
-> > >>     error =3D of_platform_populate(node, NULL, NULL, dev);
-> > >>   drivers/usb/dwc3/dwc3-omap.c:
-> > >>     ret =3D of_platform_populate(node, NULL, NULL, dev);
-> > >>   drivers/usb/dwc3/dwc3-qcom.c:
-> > >>     ret =3D of_platform_populate(node, NULL, NULL, qdwc->dev);
-> > >>   drivers/usb/dwc3/dwc3-st.c:
-> > >>     ret =3D of_platform_populate(node, NULL, NULL, dev);
-> > >>   drivers/usb/musb/musb_am335x.c:
-> > >>     ret =3D of_platform_populate(pdev->dev.of_node, NULL, NULL, &pde=
-v->dev);
-> > >
-> > > This still requires a small, separate driver to setup the regmap and
-> > > do of_platform_populate().  The only difference is it lives in
-> > > drivers/usb/ instead of drivers/mfd/.
-> > >
-> > >> Or use the "simple-mfd", which is currently in -next:
-> > >>
-> > >>   git show next/master:Documentation/devicetree/bindings/mfd/mfd.txt
-> > >
-> > > I'm not too opposed to this, but Thierry was when I brought this up
-> > > before.  The issue here is that if we ever have to do something
-> > > besides setting up a regmap in the MFD, we'd have to change the
-> > > binding and break DT backwards-compatibility.
-> >=20
-> > Any thoughts on this?  A minimal MFD seems to be the best way to
-> > future-proof this binding/driver should it need to be extended in the
-> > future.  If this is a firm NAK from you however, I'll need to let
-> > Jassi now so that he can un-queue the mailbox patches for 4.2....
->=20
-> I was waiting to hear Thierry's thoughts.  However, I am unconvinced
-> that you need an MFD driver for this and refuse to take a shell (read
-> "pointless") one on an "if we ever ..." clause.
->=20
-> Will you break backwards capability though?  I'm not sure you will.
-> Old DTBs will still use 'simple-mfd' and probe the devices in the
-> normal way.  *If* you introduce an MFD driver at a later date then the
-> old DTB will miss out the *new* functionality, which is expected and
-> accepted.
+> Signed-off-by: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+> ---
+[...]
+> +/**
+> + * zynqmp_gqspi_read:	For GQSPI controller read operation
+> + * @xqspi:	Pointer to the zynqmp_qspi structure
+> + * @offset:	Offset from where to read
+> + */
+> +static u32 zynqmp_gqspi_read(struct zynqmp_qspi *xqspi, u32 offset)
+> +{
+> +	return readl_relaxed(xqspi->regs + offset);
+> +}
+> +
+> +/**
+> + * zynqmp_gqspi_write:	For GQSPI controller write operation
+> + * @xqspi:	Pointer to the zynqmp_qspi structure
+> + * @offset:	Offset where to write
+> + * @val:	Value to be written
+> + */
+> +static inline void zynqmp_gqspi_write(struct zynqmp_qspi *xqspi, u32=
+ offset,
+> +				      u32 val)
+> +{
+> +	writel_relaxed(val, (xqspi->regs + offset));
+> +}
 
-I'm a little confused by the simple-mfd approach. The only code I see in
-linux-next for this is a single line that adds the "simple-mfd" string
-to the OF device ID table in drivers/of/platform.c. As far as I can tell
-this will merely cause child devices to be created. There won't be a
-shared regmap and resources won't be set up properly either. Having a
-proper MFD driver seems to be the only way to achieve what we need.
+why are you wrapping (readl|writel)_relaxed?
 
-The reason why every other simple-mfd users seems to get away with this
-is because they also match on syscon and that sets up a regmap of its
-own and the child device drivers use the syscon API to get at it. So I
-don't see how we can make use of simple-mfd to achieve what we need,
-unless we essentially copy what syscon does (but do proper resource
-management while at it).
+[...]
+> +/**
+> + * zynqmp_qspi_copy_read_data:	Copy data to RX buffer
+> + * @xqspi:	Pointer to the zynqmp_qspi structure
+> + * @data:	The 32 bit variable where data is stored
+> + * @size:	Number of bytes to be copied from data to RX buffer
+> + */
+> +static void zynqmp_qspi_copy_read_data(struct zynqmp_qspi *xqspi,
+> +				       u32 data, u8 size)
+> +{
+> +	memcpy(xqspi->rxbuf, ((u8 *) &data), size);
 
-There is also the matter of clocks, resets, power supplies, etc. which
-simple-mfd can't take into account in its current form. From a hardware
-point of view, (some of) the clocks and resets are shared by the XHCI
-and the mailbox blocks, so the device tree node would have to take that
-into account. And a driver would also have to know which clocks, resets
-and power supplies to probe and the order in which they need to be
-enabled. simple-mfd doesn't provide any of that currently, so we'd
-likely need to hack around that in all sorts of weird ways in the child
-drivers. It makes much more sense for a top-level MFD driver to set up
-the shared hardware resources and then instantiate the child devices and
-let the drivers for those only care about the child-specific resources.
+Is this cast really needed? IIRC, memcpy takes (void *). The outer
+parentheses for that argument are not needed.
 
-A catch-all driver will inevitably lead to implementing a midlayer with
-potentially all sorts of quirks to make it work with the various devices
-out there.
+> +	xqspi->rxbuf +=3D size;
+> +	xqspi->bytes_to_receive -=3D size;
+> +}
+> +
+> +/**
+> + * zynqmp_prepare_transfer_hardware:	Prepares hardware for transfer.
+> + * @master:	Pointer to the spi_master structure which provides
+> + *		information about the controller.
+> + *
+> + * This function enables SPI master controller.
+> + *
+> + * Return:	Always 0
+> + */
+> +static int zynqmp_prepare_transfer_hardware(struct spi_master *maste=
+r)
+> +{
+> +	struct zynqmp_qspi *xqspi =3D spi_master_get_devdata(master);
+> +
+> +	clk_enable(xqspi->refclk);
+> +	clk_enable(xqspi->pclk);
 
-A much better implementation, in my opinion, would be to make simple-mfd
-a subclassable object and then have drivers use a helper library to call
-code that is common for simple-mfd kinds of devices. Something like this
-for example:
+Did you consider using runtime_pm? Then this would just bit
+pm_runtime_get_sync(...)
 
-	struct tegra_xusb {
-		...
-		struct mfd_simple mfd;
-		...
-	};
+> +	zynqmp_gqspi_write(xqspi, GQSPI_EN_OFST, GQSPI_EN_MASK);
+> +	return 0;
+> +}
+> +
+> +/**
+> + * zynqmp_unprepare_transfer_hardware:	Relaxes hardware after transf=
+er
+> + * @master:	Pointer to the spi_master structure which provides
+> + *		information about the controller.
+> + *
+> + * This function disables the SPI master controller.
+> + *
+> + * Return:	Always 0
+> + */
+> +static int zynqmp_unprepare_transfer_hardware(struct spi_master *mas=
+ter)
+> +{
+> +	struct zynqmp_qspi *xqspi =3D spi_master_get_devdata(master);
+> +
+> +	zynqmp_gqspi_write(xqspi, GQSPI_EN_OFST, 0x0);
+> +	clk_disable(xqspi->refclk);
+> +	clk_disable(xqspi->pclk);
 
-	static int tegra_xusb_probe(struct platform_device *pdev)
-	{
-		struct tegra_xusb *xusb;
-		...
-		err =3D mfd_simple_register(&xusb->mfd);
-		...
-	}
+and this would become pm_runtime_put()
 
-Now all these drivers reuse all the code provided by the mfd_simple
-helper, which will instantiate the children, but it is also very easy to
-tie in the platform-specific glue (clocks, resets, regulators, ...) via
-the device-specific drivers.
+[...]
+> +/**
+> + * zynqmp_qspi_filltxfifo:	Fills the TX FIFO as long as there is roo=
+m in
+> + *				the FIFO or the bytes required to be
+> + *				transmitted.
+> + * @xqspi:	Pointer to the zynqmp_qspi structure
+> + * @size:	Number of bytes to be copied from TX buffer to TX FIFO
+> + */
+> +static void zynqmp_qspi_filltxfifo(struct zynqmp_qspi *xqspi, int si=
+ze)
+> +{
+> +	u32 count =3D 0;
+> +
+> +	while ((xqspi->bytes_to_transfer > 0) && (count < size)) {
+> +		writel(*((u32 *) xqspi->txbuf), xqspi->regs + GQSPI_TXD_OFST);
 
-Thierry
+Here the writel wrapper is not used. Is there a reason, then it would
+probably  deserve a comment.
 
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature
+[...]
+> +/**
+> + * zynqmp_process_dma_irq:	Handler for DMA done interrupt of QSPI
+> + *				controller
+> + * @xqspi:	zynqmp_qspi instance pointer
+> + *
+> + * This function handles DMA interrupt only.
+> + */
+> +static void zynqmp_process_dma_irq(struct zynqmp_qspi *xqspi)
+> +{
+> +	u32 config_reg, genfifoentry;
+> +
+> +	dma_unmap_single(xqspi->dev, xqspi->dma_addr,
+> +				xqspi->dma_rx_bytes, DMA_FROM_DEVICE);
+> +	xqspi->rxbuf +=3D xqspi->dma_rx_bytes;
+> +	xqspi->bytes_to_receive -=3D xqspi->dma_rx_bytes;
+> +	xqspi->dma_rx_bytes =3D 0;
+> +
+> +	/* Disabling the DMA interrupts */
+> +	writel(GQSPI_QSPIDMA_DST_I_EN_DONE_MASK,
+> +			xqspi->regs + GQSPI_QSPIDMA_DST_I_DIS_OFST);
+> +
+> +	if (xqspi->bytes_to_receive > 0) {
+> +		/* Switch to IO mode,for remaining bytes to receive */
+> +		config_reg =3D readl(xqspi->regs + GQSPI_CONFIG_OFST);
+> +		config_reg &=3D ~GQSPI_CFG_MODE_EN_MASK;
+> +		writel(config_reg, xqspi->regs + GQSPI_CONFIG_OFST);
+> +
+> +		/* Initiate the transfer of remaining bytes */
+> +		genfifoentry =3D xqspi->genfifoentry;
+> +		genfifoentry |=3D xqspi->bytes_to_receive;
+> +		writel(genfifoentry,
+> +				xqspi->regs + GQSPI_GEN_FIFO_OFST);
+> +
+> +		/* Dummy generic FIFO entry */
+> +		writel(0x0, xqspi->regs + GQSPI_GEN_FIFO_OFST);
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+not using wrapper?
 
-iQIcBAABCAAGBQJVXJ+oAAoJEN0jrNd/PrOh/0cP/1ngOQ+VYu47UtObK6VpfsMu
-xf4F0lRiTS+otf+NJmrqKkYawDCfhngWig7pDPY05OGLJJULbsyby/Boy3kdGTLR
-Ka/EgdfiNM7zAaqPlu4dOoOMUg+e4Sx7sCVBK6xgOjVWzQwyPvKqhXHJb5dIu9eR
-QN4du42HhcXWLcptkdCPIrDSDOc4B4E106zlw+0HG2Xa6Ev6UT+XevslHHfYvcCy
-LETt/CGg23rYW7UzobWWgp7dsIMC4F30FrW1ysJPDuYpPKFMnXeNiFoCrqVLR/Mf
-duYZ+767UeelnEMUNDxpBB6kfTRKpYdZokWlwdwGhm06NbfyFuK6GtKWSdo7uju9
-u2W+q84e/tZ61UTLVqkYJiQkoufQ7dDLi7g1YkHsVx364G96xeYHy0/rHaK+qqds
-9/zgCM0GFyM1HgTtqE3IJlpoQvtSBwba206hQjr3IlbgLHs/OmrKpp5E1iCI6gMM
-MEpuWY7W5XCXJYEmgSbjCCpQoxGiOJau1PSZhvwPLUHsZJm0B/ilvctAJ9N5EAnW
-vgWkl1ToEb5Bw9Xwd/P7myoUCUf1PQJyfvJA09B/UHe212KhPODBRm5IsKDouNzf
-yacthOCrQmVl6LJYKX65bPG4WReNNI65J3jqk2HWV5FV98zEkUa5LeYX1uGWI1QC
-s6twne1pewVqTVGXfpZy
-=Mkk7
------END PGP SIGNATURE-----
+> +
+> +		/* Manual start */
+> +		zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
+> +			(readl(xqspi->regs + GQSPI_CONFIG_OFST) |
 
---3MwIy2ne0vdjdPXF--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+not using wrapper?
+
+Overall:
+The usage of those readl/writel wrappers seems inconsistent to me. I
+usually prefer not wrapping things like that at all but at least it
+should be consistent.
+
+And I believe the handling of clocks would benefit from using of the
+runtime_pm framework.
+
+	Thanks,
+	S=C3=B6ren
