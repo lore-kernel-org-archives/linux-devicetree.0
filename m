@@ -1,105 +1,54 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH V4 2/3] devicetree: Add bindings for DA9063 OnKey
-Date: Wed, 20 May 2015 08:44:03 -0500
-Message-ID: <CAL_JsqJOqs8Y8MYx9mtBZWo+VGb7cTFqSAr1iq=D6jB293kEfg@mail.gmail.com>
-References: <cover.1432031565.git.stwiss.opensource@diasemi.com> <72933a3c053b445e7998c818b7a73317fa1e2d8a.1432031565.git.stwiss.opensource@diasemi.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 3/5] soc: Mediatek: Add SCPSYS power domain driver
+Date: Wed, 20 May 2015 16:03:25 +0200
+Message-ID: <20150520140325.GN6325@pengutronix.de>
+References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
+ <1431372206-1237-4-git-send-email-s.hauer@pengutronix.de>
+ <CAGS+omDJ-7+L_46vwMyewHMkMNj69odhp=JY5i6Xj3-Loe6UNA@mail.gmail.com>
+ <20150519103010.GA6325@pengutronix.de>
+ <CABuKBeKiw8MkG5kWaUBqfDzopwvrX8Kh8XpNfRiC_uJD67OcEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <72933a3c053b445e7998c818b7a73317fa1e2d8a.1432031565.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABuKBeKiw8MkG5kWaUBqfDzopwvrX8Kh8XpNfRiC_uJD67OcEg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 5:32 AM, S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org> wrote:
-> From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->
-> Add device tree bindings for the DA9063 OnKey driver
->
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
+On Tue, May 19, 2015 at 01:06:10PM +0200, Matthias Brugger wrote:
+> 2015-05-19 12:30 GMT+02:00 Sascha Hauer <s.hauer@pengutronix.de>:
+> >
+> > I'll check for errors next round. However, I cannot bail out in this
+> > case since once pm_genpd_init() is called the domain cannot be
+> > unregistered anymore.
+> 
+> We should think of implementing this.
+> I had a quick look on it, and from what I understand as long as you
+> don't have any subdomains, devices and masters added, it's just
+> deleting an element from a linked list.
 
-nit: remove blank line here.
+In my error path I would have subdomains added though, so I would need
+that to be handled.
 
-I would think a long key press would be a h/w powerdown rather than a
-key event as how do you poweroff/reset a hung system? That doesn't
-really affect the binding though, so:
+> Maybe we should split this in pm_genpd_prepare and pm_genpd_add, with
+> the last one actually adding the generic_pm_domain to gpd_list.
+> 
+> This way we could also get rid of the two for loops.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Well, with pm_genpd_prepare and pm_genpd_add I would still need two
+loops, one for preparing and one for adding.
 
-Rob
+I'm not sure how useful it really is to be able to unregister power
+domains. For now I suggest to continue with the domains that are
+successfully registered. I'll look into it should the pm domain
+maintainers request it.
 
-> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->
-> ---
-> Version History
->
-> Changes in V4
->  - No change
->
-> Changes in V3
->  - No change
->
-> Changes in V2
->  - Remove the circular dependency comment linking patches in the main e-mail
->  - Search and replace 'keyword' with 'property' in onkey sub-node description
->  - Reformat onkey sub-node content to move the description for key-power into
->    a new optional properties sub-section so it has a more promiment position
->
-> This patch applies against linux-next and v4.1-rc3
->
->
->  Documentation/devicetree/bindings/mfd/da9063.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Documentation/devicetree/bindings/mfd/da9063.txt
-> index 42c6fa6..05b21bc 100644
-> --- a/Documentation/devicetree/bindings/mfd/da9063.txt
-> +++ b/Documentation/devicetree/bindings/mfd/da9063.txt
-> @@ -5,6 +5,7 @@ DA9093 consists of a large and varied group of sub-devices (I2C Only):
->  Device                   Supply Names    Description
->  ------                   ------------    -----------
->  da9063-regulator        :               : LDOs & BUCKs
-> +da9063-onkey            :               : On Key
->  da9063-rtc              :               : Real-Time Clock
->  da9063-watchdog         :               : Watchdog
->
-> @@ -51,6 +52,18 @@ Sub-nodes:
->    the DA9063. There are currently no entries in this binding, however
->    compatible = "dlg,da9063-rtc" should be added if a node is created.
->
-> +- onkey : This node defines the OnKey settings for controlling the key
-> +  functionality of the device. The node should contain the compatible property
-> +  with the value "dlg,da9063-onkey".
-> +
-> +  Optional onkey properties:
-> +
-> +  - dlg,disable-key-power : Disable power-down using a long key-press. If this
-> +    entry exists the OnKey driver will remove support for the KEY_POWER key
-> +    press. If this entry does not exist then by default the key-press
-> +    triggered power down is enabled and the OnKey will support both KEY_POWER
-> +    and KEY_SLEEP.
-> +
->  - watchdog : This node defines settings for the Watchdog timer associated
->    with the DA9063. There are currently no entries in this binding, however
->    compatible = "dlg,da9063-watchdog" should be added if a node is created.
-> @@ -73,6 +86,11 @@ Example:
->                         compatible = "dlg,da9063-watchdog";
->                 };
->
-> +               onkey {
-> +                       compatible = "dlg,da9063-onkey";
-> +                       dlg,disable-key-power;
-> +               };
-> +
->                 regulators {
->                         DA9063_BCORE1: bcore1 {
->                                 regulator-name = "BCORE1";
-> --
-> end-of-patch for RESEND PATCH V4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
