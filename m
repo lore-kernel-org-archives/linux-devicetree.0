@@ -1,113 +1,135 @@
-From: "Peter Seiderer" <ps.report@gmx.net>
-Subject: Aw: Re: [PATCH v1] ARM: dts: nitrogen6x: add CAN support
-Date: Thu, 21 May 2015 08:56:52 +0200
-Message-ID: <trinity-11799706-adb4-4b27-94e9-81979422dc18-1432191412447@3capp-gmx-bs69>
-References: <1432158569-4415-1-git-send-email-ps.report@gmx.net>,
- <20150521013351.GK24844@dragon>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: Re: [PATCH v8 2/3] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Thu, 21 May 2015 15:01:29 +0800
+Message-ID: <1432191689.28646.11.camel@mtksdaap41>
+References: <1431967209-5261-1-git-send-email-eddie.huang@mediatek.com>
+	 <1431967209-5261-3-git-send-email-eddie.huang@mediatek.com>
+	 <20150520085715.GA17078@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150521013351.GK24844@dragon>
+In-Reply-To: <20150520085715.GA17078@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Xudong Chen <xudong.chen@mediatek.com>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liguo Zhang <liguo.zhang@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Shawn,
+Hi,
 
-> Gesendet: Donnerstag, 21. Mai 2015 um 03:33 Uhr
-> Von: "Shawn Guo" <shawn.guo@linaro.org>
-> An: "Peter Seiderer" <ps.report@gmx.net>
-> Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Russell King" <linux@arm.linux.org.uk>, "Kumar Gala" <galak@codeaurora.org>, "Ian Campbell" <ijc+devicetree@hellion.org.uk>, "Mark Rutland" <mark.rutland@arm.com>, "Pawel Moll" <pawel.moll@arm.com>, "Rob Herring" <robh+dt@kernel.org>, "Sascha Hauer" <kernel@pengutronix.de>
-> Betreff: Re: [PATCH v1] ARM: dts: nitrogen6x: add CAN support
->
-> On Wed, May 20, 2015 at 11:49:29PM +0200, Peter Seiderer wrote:
-> > Regulator stuff copied from imx6qdl-tx6.dtsi, pin configuration
-> > taken from Boundary Devices linux kernel tree ([1] and [2]).
-> > 
-> > [1] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dts
-> > [2] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl.dtsi
-> > 
-> > Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-> > ---
-> >  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 32 +++++++++++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> > index fd096dc..1c415e4 100644
-> > --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> > @@ -54,6 +54,17 @@
-> >  			gpio = <&gpio3 22 0>;
-> >  			enable-active-high;
-> >  		};
-> > +
-> > +		reg_can_xcvr: regulator@3 {
-> > +			compatible = "regulator-fixed";
-> > +			reg = <3>;
-> > +			regulator-name = "CAN XCVR";
-> > +			regulator-min-microvolt = <3300000>;
-> > +			regulator-max-microvolt = <3300000>;
-> > +			pinctrl-names = "default";
-> > +			pinctrl-0 = <&pinctrl_can_xcvr>;
-> > +			gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-> > +		};
-> >  	};
-> >  
-> >  	gpio-keys {
-> > @@ -138,6 +149,13 @@
-> >  	status = "okay";
-> >  };
-> >  
-> > +&can1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_can1_1>;
-> > +	xceiver-supply = <&reg_can_xcvr>;
-> > +	status = "okay";
-> > +};
-> > +
-> >  &ecspi1 {
-> >  	fsl,spi-num-chipselects = <1>;
-> >  	cs-gpios = <&gpio3 19 0>;
-> > @@ -234,6 +252,20 @@
-> >  			>;
-> >  		};
-> >  
-> > +		pinctrl_can1_1: can1grp-1 {
-> 
-> The '_1' suffix is meaningless.
-> 
-> 		pinctrl_can1: can1grp {
+Please see my reply below (I skip comments that already reply in anothe=
+r
+mail).
 
-Thanks for review, will fix it...
+On Wed, 2015-05-20 at 10:57 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
+>=20
+> now that I understood the formula some more comments to the calculati=
+on.
+>=20
+> On Tue, May 19, 2015 at 12:40:08AM +0800, Eddie Huang wrote:
+> > +#define I2C_DEFAUT_SPEED		100000	/* hz */
+> DEFAULT?
+>=20
+Yes, will fix.
 
-Regards,
-Peter
+> > +#define MAX_FS_MODE_SPEED		400000
+> > +#define MAX_HS_MODE_SPEED		3400000
+> > +#define MAX_SAMPLE_CNT_DIV		8
+> > +#define MAX_STEP_CNT_DIV		64
+> > +#define MAX_HS_STEP_CNT_DIV		8
+> > [...]
+> > +/* calculate i2c port speed */
+> > +static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int clk=
+_src_in_hz)
+> > +{
+> add a comment here, that clk_src_in_hz is the parent clock already
+> divided by clock-div.
+>=20
+We move parent_clk div clock-div in mtk_i2c_set_speed function, I think
+this is more clear.
 
-> 
-> Shawn
-> 
-> > +			fsl,pins = <
-> > +				MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX 0x80000000
-> > +				MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x80000000
-> > +			>;
-> > +		};
+> > +	step_div =3D max_step_cnt;
+> > +	/* Find the best combination */
+> > +	khz =3D i2c->speed_hz / 1000;
+> > +	hclk =3D clk_src_in_hz / 1000;
+> Why are you dividing here? There shouldn't be an overflow problem and
+> you're loosing precision.
+OK, will remove div 1000.
+
+>=20
+> > +	min_div =3D ((hclk >> 1) + khz - 1) / khz;
+> The shift accounts for the fixed divider 2 in
+>=20
+> 	i2c_bus_freq =3D parent_clk / (clock-div * 2 * sample_cnt * step_cnt
+>=20
+> ? Maybe better call this opt_div instead of min_div?=20
+OK
+
+>=20
+> > +	best_mul =3D MAX_SAMPLE_CNT_DIV * max_step_cnt;
 > > +
-> > +		pinctrl_can_xcvr: can-xcvrgrp {
-> > +			fsl,pins = <
-> > +				/* Flexcan XCVR enable */
-> > +				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
-> > +			>;
-> > +		};
+> > +	for (sample_cnt =3D 1; sample_cnt <=3D MAX_SAMPLE_CNT_DIV; sample=
+_cnt++) {
+> > +		step_cnt =3D (min_div + sample_cnt - 1) / sample_cnt;
+> DIV_ROUND_UP
+OK
+
 > > +
-> >  		pinctrl_ecspi1: ecspi1grp {
-> >  			fsl,pins = <
-> >  				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
-> > -- 
-> > 2.1.4
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> > +		if (cnt_mul < best_mul) {
+> > +			best_mul =3D cnt_mul;
+> > +			sample_div =3D sample_cnt;
+> > +			step_div =3D step_cnt;
+> I'd call these best_sample_cnt and best_step_cnt instead of sample_di=
+v
+> and step_div.
+OK
+
+>=20
+> > +			if (best_mul =3D=3D min_div)
+> > +				break;
+> > +		}
+> > +	}
+> > +
+> > +	sample_cnt =3D sample_div;
+> > +	step_cnt =3D step_div;
+> > +	sclk =3D hclk / (2 * sample_cnt * step_cnt);
+> > +	if (sclk > khz) {
+> Can this happen? A better name for "sclk" would be "bus_freq"?
+Yes, if i2c->speed_hz is too small, not able to get target_speed using
+hardware div.=20
+
+>=20
+> > +		dev_dbg(i2c->dev, "%s mode: unsupported speed (%ldkhz)\n",
+> > +			(i2c->speed_hz > MAX_HS_MODE_SPEED) ? "HS" : "ST/FT",
+> What is ST/FR? I would have expected FS here.
+Please skip it.The debug message is too lousy.
+
+>=20
+> > +			(long int)khz);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	step_cnt--;
+> > +	sample_cnt--;
+> > +
+> > +	if (i2c->speed_hz > MAX_FS_MODE_SPEED) {
+> > +		/* Set the hign speed mode register */
+> > +		i2c->timing_reg =3D I2C_FS_TIME_INIT_VALUE;
+> > +		i2c->high_speed_reg =3D I2C_TIME_DEFAULT_VALUE |
+> > +			(sample_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 12 |
+> > +			(step_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 8;
+> > +	} else {
+> > +		i2c->timing_reg =3D
+> > +			(sample_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 8 |
+> > +			(step_cnt & I2C_TIMING_STEP_DIV_MASK) << 0;
+> > +		/* Disable the high speed transaction */
+> > +		i2c->high_speed_reg =3D I2C_TIME_CLR_VALUE;
+> > +	}
+> Would it be sensible to write these values directly into hardware her=
+e?
+No.In some error cases, we want to reinitialize hardware, keep these
+values to avoid calculate again.
+
+Eddie
