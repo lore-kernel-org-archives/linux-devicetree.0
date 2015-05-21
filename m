@@ -1,64 +1,32 @@
-From: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/2] dt-bindings: pwm: add MediaTek display PWM bindings
-Date: Thu, 21 May 2015 21:29:23 +0800
-Message-ID: <1432214964-40644-2-git-send-email-yh.huang@mediatek.com>
-References: <1432214964-40644-1-git-send-email-yh.huang@mediatek.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V3 2/4] regulator: da9062: DA9062 regulator driver
+Date: Thu, 21 May 2015 13:48:27 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22C8E7@SW-EX-MBX02.diasemi.com>
+References: <cover.1432041031.git.stwiss.opensource@diasemi.com>
+ <aa98437b3c3fd6fbf89f8669edf0d426ec3338e9.1432041031.git.stwiss.opensource@diasemi.com>
+ <20150521120416.GA21577@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1432214964-40644-1-git-send-email-yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150521120416.GA21577@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-Document the device-tree binding of MediatTek display PWM.
+On 21 May 2015 13:04 Mark Brown wrote:
 
-Signed-off-by: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/pwm/pwm-mtk-disp.txt       | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> Subject: Re: [PATCH V3 2/4] regulator: da9062: DA9062 regulator driver
+> 
+> On Tue, May 19, 2015 at 02:10:30PM +0100, S Twiss wrote:
+> > From: S Twiss <stwiss.opensource@diasemi.com>
+> >
+> > Add BUCK and LDO regulator driver support for DA9062
+> 
+> Applied, thanks.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-new file mode 100644
-index 0000000..f55bf92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-@@ -0,0 +1,25 @@
-+MediaTek display PWM controller
-+
-+Required properties:
-+ - compatible: should be "mediatek,<name>-disp-pwm"
-+   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC
-+   - "mediatek,mt6595-disp-pwm": found on mt6595 SoC
-+ - reg: physical base address and length of the controller's registers
-+ - #pwm-cells: must be 2. See pwm.txt in this directory
-+   for a description of the cell format
-+ - clocks: phandle and clock specifier of the PWM reference clock
-+ - clock-names: must contain the following
-+   - "main": clock used to generate PWM signals
-+   - "mm": sync signals from the modules of mmsys
-+
-+Example:
-+	pwm0: pwm@1401e000 {
-+		compatible = "mediatek,mt8173-disp-pwm",
-+			     "mediatek,mt6595-disp-pwm";
-+		reg = <0 0x1401e000 0 0x1000>;
-+		#pwm-cells = <2>;
-+		clocks = <&mmsys MM_DISP_PWM026M>,
-+			 <&mmsys MM_DISP_PWM0MM>;
-+		clock-names = "main",
-+			      "mm";
-+	};
--- 
-1.8.1.1.dirty
+Thank you
+Regards,
+Steve
