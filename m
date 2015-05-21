@@ -1,67 +1,48 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: mtd: replace "nor-jedec" binding with "jedec,spi-nor"
-Date: Thu, 21 May 2015 09:12:25 +0200
-Message-ID: <CACna6rxq5zOR=7LT2vdbioWp3nD0eBeELJ_d9pPk7VwTWhmStg@mail.gmail.com>
-References: <1431624773-4165-1-git-send-email-computersforpeace@gmail.com>
-	<20150515195541.GL11598@ld-irv-0074>
-	<20150518104501.GD3551@leverpostej>
-	<20150518183442.GR11598@ld-irv-0074>
-	<CAMuHMdUCj2AXk_0mAgRfAStrveHPi=Rp2g-b177zO_ode8NaCw@mail.gmail.com>
-	<20150519013415.GV11598@ld-irv-0074>
-	<CACna6rzpxoXEJbeRyxaR0wiPpWc_MmgvnqoW-dSw4fF-=EMM_g@mail.gmail.com>
-	<20150520213546.GN11598@ld-irv-0074>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
+Date: Thu, 21 May 2015 15:12:51 +0800
+Message-ID: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150520213546.GN11598@ld-irv-0074>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20 May 2015 at 23:35, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
-> On Tue, May 19, 2015 at 09:27:50AM +0200, Rafa=C5=82 Mi=C5=82ecki wro=
-te:
->> On 19 May 2015 at 03:34, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
->> > So how about the following patch? It seems like we'll need to be a=
-ble to
->> > ignore useless 'modalias' values in cases like this:
->> >
->> >         // modalias =3D "shinynewdevice"
->> >         compatible =3D "myvendor,shinynewdevice", "jedec,spi-nor";
->> >
->> > and also if somebody leaves off the entire shinynewdevice string:
->> >
->> >         // modalias =3D "spi-nor"
->> >         compatible =3D "jedec,spi-nor";
->> >
->> > So we rework the spi-nor library to not reject "bad" names, and ju=
-st
->> > fall back to autodetection, and we add the .of_match_table to prop=
-erly
->> > catch all "jedec,spi-nor".
->>
->> That's nice but what about platforms using platform data instead of
->> DT? I would like to use some kind of "spi-nor" (with some prefix
->> *maybe*) for them too.
->
-> For platform devices, you might as well just use the name of the driv=
-er,
-> which is 'm25p80'. Isn't that how most platform devices are matched w=
-ith
-> drivers?
+This patchset contains subsystem clocks support for Mediatek MT8173.
+It also contains some bug fixes before adds new clocks support.
 
-Yes and I think it's ugly because it keeps causing the warning about
-read flash model not matching specified one (m25p80). Are you
-seriously not going to allow platform stuff *clearly* request flash
-model detection (JEDEC RDID OP)? Just because they don't use DT?
+James Liao (4):
+  clk: mediatek: Fix apmixedsys clock registration
+  dt-bindings: ARM: Mediatek: Document devicetree bindings for clock
+    controllers
+  clk: mediatek: Add subsystem clocks of MT8173
+  clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
 
---=20
-Rafa=C5=82
+Sascha Hauer (1):
+  clk: mediatek: mt8173: Fix enabling of critical clocks
+
+ .../bindings/arm/mediatek/mediatek,imgsys.txt      |  22 +
+ .../bindings/arm/mediatek/mediatek,mmsys.txt       |  22 +
+ .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  22 +
+ .../bindings/arm/mediatek/mediatek,vencltsys.txt   |  22 +
+ .../bindings/arm/mediatek/mediatek,vencsys.txt     |  22 +
+ drivers/clk/mediatek/clk-mt8135.c                  |   2 +-
+ drivers/clk/mediatek/clk-mt8173.c                  | 454 ++++++++++++++++++++-
+ drivers/clk/mediatek/clk-pll.c                     |   7 +-
+ include/dt-bindings/clock/mt8173-clk.h             |  94 ++++-
+ 9 files changed, 652 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
