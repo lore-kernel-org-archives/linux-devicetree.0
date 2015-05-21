@@ -1,54 +1,67 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
-Date: Thu, 21 May 2015 08:32:25 -0700
-Message-ID: <20150521153225.GA17441@roeck-us.net>
-References: <=fu.wei@linaro.org>
- <1432197156-16947-1-git-send-email-fu.wei@linaro.org>
- <1432197156-16947-6-git-send-email-fu.wei@linaro.org>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM64: MediaTek MT8173: Add SCPSYS device node
+Date: Thu, 21 May 2015 17:34:06 +0200
+Message-ID: <CABuKBeKmdjhmUprdibJHsKo4JfQ4vzX2SsCnobfpKSQn_PsGHw@mail.gmail.com>
+References: <1432131540-2523-1-git-send-email-s.hauer@pengutronix.de>
+	<1432131540-2523-6-git-send-email-s.hauer@pengutronix.de>
+	<CAGS+omDHEY54TzhNTJcFOeHkGbXAQwiTh9gxc=PsbzjwmpHEDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1432197156-16947-6-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omDHEY54TzhNTJcFOeHkGbXAQwiTh9gxc=PsbzjwmpHEDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 04:32:34PM +0800, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Also update Documentation/watchdog/watchdog-kernel-api.txt to
-> introduce:
-> (1)the new elements in the watchdog_device and watchdog_ops struct;
-> (2)the new API "watchdog_init_timeouts".
-> 
-> Reasons:
-> (1)kernel already has two watchdog drivers are using "pretimeout":
-> 	drivers/char/ipmi/ipmi_watchdog.c
-> 	drivers/watchdog/kempld_wdt.c(but the definition is different)
-> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
-> 
-> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+2015-05-21 16:32 GMT+02:00 Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
+> On Wed, May 20, 2015 at 10:19 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> This adds the SCPSYS device node to the MT8173 dtsi file.
+>>
+>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> index 924fdb6..12430f0 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> @@ -125,6 +125,16 @@
+>>                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+>>                 };
+>>
+>> +               scpsys: scpsys@10006000 {
+>> +                       compatible = "mediatek,mt8173-scpsys";
+>> +                       #power-domain-cells = <1>;
+>> +                       reg = <0 0x10006000 0 0x1000>;
+>> +                       clocks = <&clk26m>,
+>
+> Why is mfg using <&clk26m> and not <&topckgen CLK_TOP_MFG_SEL>?
+> I saw another patch set on the list today from James Liao that adds more clocks.
+> Perhaps we can move the SCPSYS set on top of that one and include more clocks?
+>
+>> +                                <&topckgen CLK_TOP_MM_SEL>;
+>
+> FYI: the devicetree changes in this set depend on your other patch set
+> starting with:
+>
+> https://patchwork.kernel.org/patch/6446341/
+> "arm64: dts: mt8173: Add clock controller device nodes"
+>
+> This patch isn't based on top of the other set, though, so it may lead
+> to a small merge conflict when folding in the .dtsi device nodes (ie,
+> placing scpsys@10006000 after pwrap@1000d000).
+>
+> I'm not sure how people usually resolve this or manage the ordering of
+> co-dependent patch sets upstream.
 
-[ ... ]
+At the moment I suppose that patch-sets are based on -rc1 if not
+stated different.
 
->  
-> +/* Use the following function to check if a pretimeout value is invalid */
-> +static inline bool watchdog_pretimeout_invalid(struct watchdog_device *wdd,
-> +					       unsigned int t)
-> +{
-> +	return ((wdd->max_pretimeout != 0) &&
-> +		(t < wdd->min_pretimeout || t > wdd->max_pretimeout));
-> +}
-
-Should this function also enforce "t < wdd->timeout", and
-should watchdog_timeout_invalid() enforce "t > wdd->pretimeout" ?
-
-Thanks,
-Guenter
+-- 
+motzblog.wordpress.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
