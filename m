@@ -1,58 +1,92 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: [PATCH 7/7] mips: pistachio: Allow to enable the external timer based clocksource
-Date: Thu, 21 May 2015 18:43:38 -0300
-Message-ID: <1432244618-15548-1-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org
-Cc: Andrew Bresticker <abrestic@chromium.org>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Damien.Horsley@imgtec.com, Govindraj.Raja@imgtec.com, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 00/10] ASoC: qcom: add support to apq8016 audio
+Date: Thu, 21 May 2015 22:52:05 +0100
+Message-ID: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit introduces a new config, so the user can choose to enable
-the General Purpose Timer based clocksource. This option is required
-to have CPUFreq support.
+Hi Mark, 
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
----
- arch/mips/Kconfig           |  1 +
- arch/mips/pistachio/Kconfig | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
- create mode 100644 arch/mips/pistachio/Kconfig
+Am resending the the patches with rebased on top of topic/qcom branch.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index f501665..91f6ca0 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -934,6 +934,7 @@ source "arch/mips/jazz/Kconfig"
- source "arch/mips/jz4740/Kconfig"
- source "arch/mips/lantiq/Kconfig"
- source "arch/mips/lasat/Kconfig"
-+source "arch/mips/pistachio/Kconfig"
- source "arch/mips/pmcs-msp71xx/Kconfig"
- source "arch/mips/ralink/Kconfig"
- source "arch/mips/sgi-ip27/Kconfig"
-diff --git a/arch/mips/pistachio/Kconfig b/arch/mips/pistachio/Kconfig
-new file mode 100644
-index 0000000..97731ea
---- /dev/null
-+++ b/arch/mips/pistachio/Kconfig
-@@ -0,0 +1,13 @@
-+config PISTACHIO_GPTIMER_CLKSRC
-+	bool "Enable General Purpose Timer based clocksource"
-+	depends on MACH_PISTACHIO
-+	select CLKSRC_PISTACHIO
-+	select MIPS_EXTERNAL_TIMER
-+	help
-+	  This option enables a clocksource driver based on a Pistachio
-+	  SoC General Purpose external timer.
-+
-+	  If you want to enable the CPUFreq, you need to enable
-+	  this option.
-+
-+	  If you don't want to enable CPUFreq, you can leave this disabled.
+All these patches are tested and Acked.
+
+Thankyou for reviewing the v2 patches, here is the v3 patchset after
+incorporating review comments and testing on Storm Board.
+This patchset adds apq8016 audio support into lpass driver. Existing
+Lpass driver can not be used as-it-is for apq8016 as it contains code
+specific to ipq806x. Also the driver only supports single i2s port,
+single dma channel and single bitclk control.
+
+APQ8016 has 4 MI2S( Primary, Secondary, Tertiary, Quaternary) which can be routed
+to internal wcd codec or external codecs. This routing is controlled by 2 mux
+registers.
+
+This patch series firstly re-organizes the lpass driver such that the SOC
+specific bits are moved away from the driver. And secondly the SOC specifics
+are now passed as lpass variant data which would include various register
+offsets, dma channel allocations and SOC specific clock handling.
+
+Finally the last few patchs add apq8016 lpass and machine driver.
+
+All these patches are tested for HDMI audio via adv7533 bridge and Analog audio
+on APQ8016-SBC, msm8916-mtp boards and Kenneth tested this patchset on
+ipq806x Storm board too.
+
+Changes since v2(https://lkml.org/lkml/2015/5/16/236)
+ - dropped 3 patches which are already applied by Mark.
+ - rebased on top of topic/qcom branch.
+ - changed dev_err to dev_warn spotted by Kenneth.
+ - fixed typo spotted by kenneth.
+
+Changes since v1(https://lwn.net/Articles/644266/)
+ - Fixed Kconfig dependencies spotted by Kenneth
+ - Fixed compilation error on ipq806x spotted by Kenneth
+ - Fixed clk error messages spotted by Kenneth
+
+Changes since RFC(https://lwn.net/Articles/642661/)
+ - droped cleanup patches, as they are already applied by Mark.
+ - prefixed shared functions with asoc_qcom_* as suggested by Kenneth
+ - made LPASS driver depended on OF.
+ - removed ipq806x specific bits from ipaif_reg.h
+ - removed no_osr clk flag as suggested by Mark and Kenneth
+ - fixed irq return values spotted by Kenneth
+ - renamed the machine file to apq8016-sbc.c as suggested by Kenneth.
+ - use dai->driver->id instead of dai->id as it breaks on Storm board.
+
+
+--srini
+
+Srinivas Kandagatla (10):
+  ASoC: qcom: make lpass driver depend on OF
+  ASoC: qcom: support bitclk and osrclk per i2s port
+  ASoC: qcom: make osr clock optional
+  ASoC: qcom: add dma channel control offset to variant data
+  ASoC: qcom: Add ability to handle interrupts per dma channel
+  ASoC: qcom: add bit map to track static dma channel allocations
+  ASoC: qcom: Add apq8016 lpass driver support
+  ASoC: qcom: add apq8016 sound card support
+  ASoC: qcom: Document apq8016 bindings.
+  ASoC: qcom: document apq8016 sbc machine driver bindings
+
+ .../devicetree/bindings/sound/qcom,apq8016-sbc.txt |  61 ++++++
+ .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  13 +-
+ include/dt-bindings/sound/apq8016-lpass.h          |   9 +
+ sound/soc/qcom/Kconfig                             |  17 ++
+ sound/soc/qcom/Makefile                            |   4 +
+ sound/soc/qcom/apq8016_sbc.c                       | 215 ++++++++++++++++++
+ sound/soc/qcom/lpass-apq8016.c                     | 242 +++++++++++++++++++++
+ sound/soc/qcom/lpass-cpu.c                         |  77 +++++--
+ sound/soc/qcom/lpass-platform.c                    |  96 +++++---
+ sound/soc/qcom/lpass.h                             |  21 +-
+ 10 files changed, 692 insertions(+), 63 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+ create mode 100644 include/dt-bindings/sound/apq8016-lpass.h
+ create mode 100644 sound/soc/qcom/apq8016_sbc.c
+ create mode 100644 sound/soc/qcom/lpass-apq8016.c
+
 -- 
-2.3.3
+1.9.1
