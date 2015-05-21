@@ -1,94 +1,34 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v2 4/6] soc: mediatek: Add SMI driver
-Date: Thu, 21 May 2015 15:38:28 +0800
-Message-ID: <1432193908.5092.14.camel@mhfsdcap03>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
-	 <1431683009-18158-5-git-send-email-yong.wu@mediatek.com>
-	 <CABuKBeJvh2PGi3i6O0uu-7ggdBzKMb3tPE_XKhT1i-+tkKc5gg@mail.gmail.com>
-	 <1432188990.5092.12.camel@mhfsdcap03>
-	 <CABuKBe+FmAzr_Cu=fUDwDHYzH4mW_2p4z1SYmp7+W=Tu-MLEuA@mail.gmail.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v8 01/16] scripts: link-vmlinux: Don't pass page offset to
+ kallsyms if XIP Kernel
+Date: Thu, 21 May 2015 09:42:32 +0200
+Message-ID: <CALszF6AdNfYRhcLdc252peOcPOnzAXOKQydNcvgVdT26btAA6Q@mail.gmail.com>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1431158038-3813-2-git-send-email-mcoquelin.stm32@gmail.com>
+	<CALszF6B0=dgSDfLFwDi9YmEzrrNVuYbUnqMu5DmDhhy--emtpw@mail.gmail.com>
+	<555D12F8.4000403@suse.de>
+	<555D6FBD.3020202@suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBe+FmAzr_Cu=fUDwDHYzH4mW_2p4z1SYmp7+W=Tu-MLEuA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Tomasz Figa <tfiga@google.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream <srv_heupstream@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux-foundation.org, Paul Bolle <pebolle@tiscali.nl>, Arnd Bergmann <arnd@arndb.de>, mitchelh@codeaurora.org, k.zhang@mediatek.com, youhua.li@mediatek.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <555D6FBD.3020202@suse.cz>
+Sender: linux-arch-owner@vger.kernel.org
+To: Michal Marek <mmarek@suse.cz>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Agner <stefan@agner.ch>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Jiri Slaby <jslaby@suse.cz>, Linux-Arch <linux-arch@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-05-21 at 09:30 +0200, Matthias Brugger wrote:
-> 2015-05-21 8:16 GMT+02:00 Yong Wu <yong.wu@mediatek.com>:
-> > Hi Matthias,
-> >      Thanks very much for your suggestion.
-> >      Abort the smi clock name, Could you help check below.
-> >      The others I will improve in next time.
-> >
-> > On Tue, 2015-05-19 at 13:14 +0200, Matthias Brugger wrote:
-> >> 2015-05-15 11:43 GMT+02:00 Yong Wu <yong.wu@mediatek.com>:
-> >> >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
-> >> > responsible to enable/disable iommu and control the clocks of each local arbiter.
-> >> >
-> > [snip]
-> >> > +
-> >> > +#define SMI_LARB_MMU_EN                (0xf00)
-> >> > +#define F_SMI_MMU_EN(port)     (1 << (port))
-> >> > +
-> >> > +enum {
-> >> > +       MTK_CLK_APB,
-> >> > +       MTK_CLK_SMI,
-> >> > +       MTK_CLK_MAX,
-> >>
-> >> Maybe add something like:
-> >> MTK_CLK_FIRST = MTK_CLK_APB,
-> >> to make the for loops better readable.
-> >>
-> > Then, Is it like this? :
-> >  enum {
-> >         MTK_CLK_FIRST = MTK_CLK_APB,
-> >         MTK_CLK_SMI,
-> >         MTK_CLK_MAX,
-> >  }
-> > or the CLK_SMI also need MTK_CLK_SECOND = MTK_CLK_SMI.
-> 
-> 
-> something like:
-> enum {
->          MTK_CLK_FIRST,
->          MTK_CLK_APB = MTK_CLK_FIRST,
->          MTK_CLK_SMI,
->          MTK_CLK_LAST,
-> }
-> 
-> So you can rewrite the for loop:
-> if (i = MTK_CLK_FIRST; i < MTK_CLK_LAST; i++)
-Get it.
-Thanks very much.
-> 
-> Regards,
-> Matthias
-> 
-> >> > +};
-> >> > +
-> >> > +struct mtk_smi_common {
-> >> > +       void __iomem            *base;
-> >>
-> >> That seems to be never used. Please delete it.
-> >>
-> >> > +       struct clk              *clk[MTK_CLK_MAX];
-> >> > +};
-> >> > +
-> >> > +struct mtk_smi_larb {
-> >> > +       void __iomem            *base;
-> >> > +       spinlock_t              portlock; /* lock for config port */
-> >> > +       struct clk              *clk[MTK_CLK_MAX];
-> >> > +       struct device           *smi;
-> >> > +};
-> >> > +
-> >> Thanks,
-> >> Matthias
-> >
-> >
-> 
-> 
-> 
+2015-05-21 7:40 GMT+02:00 Michal Marek <mmarek@suse.cz>:
+> Dne 21.5.2015 v 07:04 Andreas F=C3=A4rber napsal(a):
+>> Am 18.05.2015 um 13:47 schrieb Maxime Coquelin:
+>> But this is definitely an improvement for ARMv7-M debugging,
+>>
+>> Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>>
+>>> [Hi Michal, ...] could you consider
+>>> taking it for v4.2?
+>
+> I applied it to kbuild.git#kbuild now.
+
+Thanks!
+Maxime
