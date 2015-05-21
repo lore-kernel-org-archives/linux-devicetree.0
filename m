@@ -1,36 +1,54 @@
-From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] AHCI and SATA PHY support for Broadcom STB SoCs
-Date: Thu, 21 May 2015 18:04:30 -0400
-Message-ID: <20150521220430.GI4914@htj.duckdns.org>
-References: <1431473303-18873-1-git-send-email-computersforpeace@gmail.com>
- <555DDC2B.1040608@ti.com>
- <20150521220050.GF4914@htj.duckdns.org>
- <20150521220138.GG4914@htj.duckdns.org>
- <20150521220328.GE11598@ld-irv-0074>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 6/7] clocksource: Add Pistachio clocksource-only driver
+Date: Thu, 21 May 2015 19:02:28 -0300
+Message-ID: <555E55F4.2060500@imgtec.com>
+References: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com> <1432244506-15388-1-git-send-email-ezequiel.garcia@imgtec.com> <alpine.DEB.2.11.1505212352330.5457@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150521220328.GE11598@ld-irv-0074>
+In-Reply-To: <alpine.DEB.2.11.1505212352330.5457@nanos>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 03:03:28PM -0700, Brian Norris wrote:
-> > [PATCH v3 3/5] ata: add Broadcom AHCI SATA3 driver for STB chips
-> 
-> Thanks. Also, this one?
-> 
-> [PATCH v3 1/5] Documentation: devicetree: add Broadcom SATA binding
 
-devicetree patches usually haven't gone through libata tho.  Is this
-an exception?
 
-Thanks.
+On 05/21/2015 07:00 PM, Thomas Gleixner wrote:
+> On Thu, 21 May 2015, Ezequiel Garcia wrote:
+>> +static cycle_t clocksource_read_cycles(struct clocksource *cs)
+>> +{
+>> +	u32 counter, overflw;
+>> +	unsigned long flags;
+>> +
+>> +	raw_spin_lock_irqsave(&lock, flags);
+> 
+> Hmm. Is that lock really necessary to read that counter? The
+> clocksource is global. And if its actually used for timekeeping, the
+> lock can get heavy contended.
+> 
+
+Yup, it is really (and sadly) necessary. The kernel hangs up completely
+without it when the counter is accesed by more than one CPU.
+
+Apparently, those two timer registers overflow and counter must be read
+atomically.
+
+>> +	overflw = gpt_readl(TIMER_CURRENT_OVERFLOW_VALUE, 0);
+>> +	counter = gpt_readl(TIMER_CURRENT_VALUE, 0);
+>> +	raw_spin_unlock_irqrestore(&lock, flags);
+>> +
+>> +	return ~(cycle_t)counter;
+>> +}
+> 
+> Thanks,
+> 
+> 	tglx
+> 
 
 -- 
-tejun
+Ezequiel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
