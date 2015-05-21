@@ -1,283 +1,303 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 08/10] ASoC: qcom: add apq8016 sound card support
-Date: Thu, 21 May 2015 22:53:37 +0100
-Message-ID: <1432245217-9322-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432245125-8939-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 2/2] drivers: ata: add support for Ceva sata host
+ controller
+Date: Thu, 21 May 2015 17:57:44 -0400
+Message-ID: <20150521215744.GE4914@htj.duckdns.org>
+References: <1432180625-25159-1-git-send-email-suneel.garapati@xilinx.com>
+ <1432180625-25159-3-git-send-email-suneel.garapati@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432180625-25159-3-git-send-email-suneel.garapati@xilinx.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suneel Garapati <suneel.garapati@xilinx.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, michals@xilinx.com, sorenb@xilinx.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds apq8016 machine driver support. This patch was tested on
-two apq8016-sbc and msm8916-mtp board for both hdmi and analog audio
-features.
+(cc'ing Hans and quoting whole body for him)
 
-Tested-by: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Acked-by: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- sound/soc/qcom/Kconfig       |   9 ++
- sound/soc/qcom/Makefile      |   2 +
- sound/soc/qcom/apq8016_sbc.c | 215 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 226 insertions(+)
- create mode 100644 sound/soc/qcom/apq8016_sbc.c
+On Thu, May 21, 2015 at 09:27:05AM +0530, Suneel Garapati wrote:
+> Adds support for Ceva sata host controller on Xilinx
+> Zynq UltraScale+ MPSoC.
+> 
+> Signed-off-by: Suneel Garapati <suneel.garapati@xilinx.com>
+> ---
+>  drivers/ata/Kconfig     |   9 ++
+>  drivers/ata/Makefile    |   1 +
+>  drivers/ata/ahci_ceva.c | 225 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 235 insertions(+)
+>  create mode 100644 drivers/ata/ahci_ceva.c
+> 
+> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+> index 9dca4b9..ef3cfde 100644
+> --- a/drivers/ata/Kconfig
+> +++ b/drivers/ata/Kconfig
+> @@ -124,6 +124,15 @@ config AHCI_IMX
+> 
+> 	  If unsure, say N.
+> 
+> +config AHCI_CEVA
+> +	tristate "CEVA AHCI SATA support"
+> +	depends on OF
+> +	help
+> +	  This option enables support for the CEVA AHCI SATA.
+> +	  It can be found on the Xilinx Zynq UltraScale+ MPSoC.
+> +
+> +	  If unsure, say N.
+> +
+>  config AHCI_MVEBU
+> 	tristate "Marvell EBU AHCI SATA support"
+> 	depends on ARCH_MVEBU
+> diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
+> index 40f7865..dc3a320 100644
+> --- a/drivers/ata/Makefile
+> +++ b/drivers/ata/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_SATA_INIC162X)	+= sata_inic162x.o
+>  obj-$(CONFIG_SATA_SIL24)	+= sata_sil24.o
+>  obj-$(CONFIG_SATA_DWC)		+= sata_dwc_460ex.o
+>  obj-$(CONFIG_SATA_HIGHBANK)	+= sata_highbank.o libahci.o
+> +obj-$(CONFIG_AHCI_CEVA)		+= ahci_ceva.o libahci.o libahci_platform.o
+>  obj-$(CONFIG_AHCI_DA850)	+= ahci_da850.o libahci.o libahci_platform.o
+>  obj-$(CONFIG_AHCI_IMX)		+= ahci_imx.o libahci.o libahci_platform.o
+>  obj-$(CONFIG_AHCI_MVEBU)	+= ahci_mvebu.o libahci.o libahci_platform.o
+> diff --git a/drivers/ata/ahci_ceva.c b/drivers/ata/ahci_ceva.c
+> new file mode 100644
+> index 0000000..dfcd2f4
+> --- /dev/null
+> +++ b/drivers/ata/ahci_ceva.c
+> @@ -0,0 +1,225 @@
+> +/*
+> + * Copyright (C) 2015 Xilinx, Inc.
+> + * CEVA AHCI SATA platform driver
+> + *
+> + * based on the AHCI SATA platform driver by Jeff Garzik and Anton Vorontsov
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/ahci_platform.h>
+> +#include <linux/kernel.h>
+> +#include <linux/libata.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include "ahci.h"
+> +
+> +/* Vendor Specific Register Offsets */
+> +#define AHCI_VEND_PCFG  0xA4
+> +#define AHCI_VEND_PPCFG 0xA8
+> +#define AHCI_VEND_PP2C  0xAC
+> +#define AHCI_VEND_PP3C  0xB0
+> +#define AHCI_VEND_PP4C  0xB4
+> +#define AHCI_VEND_PP5C  0xB8
+> +#define AHCI_VEND_PAXIC 0xC0
+> +#define AHCI_VEND_PTC   0xC8
+> +
+> +/* Vendor Specific Register bit definitions */
+> +#define PAXIC_ADBW_BW64 0x1
+> +#define PAXIC_MAWIDD	(1 << 8)
+> +#define PAXIC_MARIDD	(1 << 16)
+> +#define PAXIC_OTL	(0x4 << 20)
+> +
+> +#define PCFG_TPSS_VAL	(0x32 << 16)
+> +#define PCFG_TPRS_VAL	(0x2 << 12)
+> +#define PCFG_PAD_VAL	0x2
+> +
+> +#define PPCFG_TTA	0x1FFFE
+> +#define PPCFG_PSSO_EN	(1 << 28)
+> +#define PPCFG_PSS_EN	(1 << 29)
+> +#define PPCFG_ESDF_EN	(1 << 31)
+> +
+> +#define PP2C_CIBGMN	0x0F
+> +#define PP2C_CIBGMX	(0x25 << 8)
+> +#define PP2C_CIBGN	(0x18 << 16)
+> +#define PP2C_CINMP	(0x29 << 24)
+> +
+> +#define PP3C_CWBGMN	0x04
+> +#define PP3C_CWBGMX	(0x0B << 8)
+> +#define PP3C_CWBGN	(0x08 << 16)
+> +#define PP3C_CWNMP	(0x0F << 24)
+> +
+> +#define PP4C_BMX	0x0a
+> +#define PP4C_BNM	(0x08 << 8)
+> +#define PP4C_SFD	(0x4a << 16)
+> +#define PP4C_PTST	(0x06 << 24)
+> +
+> +#define PP5C_RIT	0x60216
+> +#define PP5C_RCT	(0x7f0 << 20)
+> +
+> +#define PTC_RX_WM_VAL	0x40
+> +#define PTC_RSVD	(1 << 27)
+> +
+> +#define PORT0_BASE	0x100
+> +#define PORT1_BASE	0x180
+> +
+> +/* Port Control Register Bit Definitions */
+> +#define PORT_SCTL_SPD_GEN2	(0x2 << 4)
+> +#define PORT_SCTL_SPD_GEN1	(0x1 << 4)
+> +#define PORT_SCTL_IPM		(0x3 << 8)
+> +
+> +#define PORT_BASE	0x100
+> +#define PORT_OFFSET	0x80
+> +#define NR_PORTS	2
+> +#define DRV_NAME	"ahci-ceva"
+> +#define CEVA_FLAG_BROKEN_GEN2	1
+> +
+> +struct ceva_ahci_priv {
+> +	struct platform_device *ahci_pdev;
+> +	int flags;
+> +};
+> +
+> +static struct ata_port_operations ahci_ceva_ops = {
+> +	.inherits = &ahci_platform_ops,
+> +};
+> +
+> +static const struct ata_port_info ahci_ceva_port_info = {
+> +	.flags          = AHCI_FLAG_COMMON,
+> +	.pio_mask       = ATA_PIO4,
+> +	.udma_mask      = ATA_UDMA6,
+> +	.port_ops	= &ahci_ceva_ops,
+> +};
+> +
+> +static void ahci_ceva_setup(struct ahci_host_priv *hpriv)
+> +{
+> +	void __iomem *mmio = hpriv->mmio;
+> +	struct ceva_ahci_priv *cevapriv = hpriv->plat_data;
+> +	u32 tmp;
+> +	int i;
+> +
+> +	/*
+> +	 * AXI Data bus width to 64
+> +	 * Set Mem Addr Read, Write ID for data transfers
+> +	 * Transfer limit to 72 DWord
+> +	 */
+> +	tmp = PAXIC_ADBW_BW64 | PAXIC_MAWIDD | PAXIC_MARIDD | PAXIC_OTL;
+> +	writel(tmp, mmio + AHCI_VEND_PAXIC);
+> +
+> +	/* Set AHCI Enable */
+> +	tmp = readl(mmio + HOST_CTL);
+> +	tmp |= HOST_AHCI_EN;
+> +	writel(tmp, mmio + HOST_CTL);
+> +
+> +	for (i = 0; i < NR_PORTS; i++) {
+> +		/* TPSS TPRS scalars, CISE and Port Addr */
+> +		tmp = PCFG_TPSS_VAL | PCFG_TPRS_VAL | (PCFG_PAD_VAL + i);
+> +		writel(tmp, mmio + AHCI_VEND_PCFG);
+> +
+> +		/* Port Phy Cfg register enables */
+> +		tmp = PPCFG_TTA | PPCFG_PSS_EN | PPCFG_ESDF_EN;
+> +		writel(tmp, mmio + AHCI_VEND_PPCFG);
+> +
+> +		/* Phy Control OOB timing parameters COMINIT */
+> +		tmp = PP2C_CIBGMN | PP2C_CIBGMX | PP2C_CIBGN | PP2C_CINMP;
+> +		writel(tmp, mmio + AHCI_VEND_PP2C);
+> +
+> +		/* Phy Control OOB timing parameters COMWAKE */
+> +		tmp = PP3C_CWBGMN | PP3C_CWBGMX | PP3C_CWBGN | PP3C_CWNMP;
+> +		writel(tmp, mmio + AHCI_VEND_PP3C);
+> +
+> +		/* Phy Control Burst timing setting */
+> +		tmp = PP4C_BMX | PP4C_BNM | PP4C_SFD | PP4C_PTST;
+> +		writel(tmp, mmio + AHCI_VEND_PP4C);
+> +
+> +		/* Rate Change Timer and Retry Interval Timer setting */
+> +		tmp = PP5C_RIT | PP5C_RCT;
+> +		writel(tmp, mmio + AHCI_VEND_PP5C);
+> +
+> +		/* Rx Watermark setting  */
+> +		tmp = PTC_RX_WM_VAL | PTC_RSVD;
+> +		writel(tmp, mmio + AHCI_VEND_PTC);
+> +
+> +		/* Default to Gen 2 Speed and Gen 1 if Gen2 is broken */
+> +		tmp = PORT_SCTL_SPD_GEN2 | PORT_SCTL_IPM;
+> +		if (cevapriv->flags & CEVA_FLAG_BROKEN_GEN2)
+> +			tmp = PORT_SCTL_SPD_GEN1 | PORT_SCTL_IPM;
+> +		writel(tmp, mmio + PORT_SCR_CTL + PORT_BASE + PORT_OFFSET * i);
+> +	}
+> +}
+> +
+> +static struct scsi_host_template ahci_platform_sht = {
+> +	AHCI_SHT(DRV_NAME),
+> +};
+> +
+> +static int ceva_ahci_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+> +	struct ahci_host_priv *hpriv;
+> +	struct ceva_ahci_priv *cevapriv;
+> +
+> +	cevapriv = devm_kzalloc(dev, sizeof(*cevapriv), GFP_KERNEL);
+> +	if (!cevapriv)
+> +		return -ENOMEM;
+> +
+> +	cevapriv->ahci_pdev = pdev;
+> +
+> +	hpriv = ahci_platform_get_resources(pdev);
+> +	if (IS_ERR(hpriv))
+> +		return PTR_ERR(hpriv);
+> +
+> +	if (of_property_read_bool(np, "ceva,broken-gen2"))
+> +		cevapriv->flags = CEVA_FLAG_BROKEN_GEN2;
+> +
+> +	hpriv->plat_data = cevapriv;
+> +
+> +	/* CEVA specific initialization */
+> +	ahci_ceva_setup(hpriv);
+> +
+> +	return ahci_platform_init_host(pdev, hpriv, &ahci_ceva_port_info,
+> +					&ahci_platform_sht);
+> +}
+> +
+> +static int __maybe_unused ceva_ahci_suspend(struct device *dev)
+> +{
+> +	return ahci_platform_suspend_host(dev);
+> +}
+> +
+> +static int __maybe_unused ceva_ahci_resume(struct device *dev)
+> +{
+> +	return ahci_platform_resume_host(dev);
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(ahci_ceva_pm_ops, ceva_ahci_suspend, ceva_ahci_resume);
+> +
+> +static const struct of_device_id ceva_ahci_of_match[] = {
+> +	{ .compatible = "ceva,ahci-1v84" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ceva_ahci_of_match);
+> +
+> +static struct platform_driver ceva_ahci_driver = {
+> +	.probe = ceva_ahci_probe,
+> +	.remove = ata_platform_remove_one,
+> +	.driver = {
+> +		.name = DRV_NAME,
+> +		.of_match_table = ceva_ahci_of_match,
+> +		.pm = &ahci_ceva_pm_ops,
+> +	},
+> +};
+> +module_platform_driver(ceva_ahci_driver);
+> +
+> +MODULE_DESCRIPTION("CEVA AHCI SATA platform driver");
+> +MODULE_AUTHOR("Xilinx Inc.");
+> +MODULE_LICENSE("GPLv2");
+> --
+> 2.1.2
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-ide" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index eb2447b..43b1f8c 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -34,3 +34,12 @@ config SND_SOC_STORM
- 	help
-           Say Y or M if you want add support for SoC audio on the
-           Qualcomm Technologies IPQ806X-based Storm board.
-+
-+config SND_SOC_APQ8016_SBC
-+	tristate "SoC Audio support for APQ8016 SBC platforms"
-+	depends on (ARCH_QCOM && SND_SOC_QCOM) || COMPILE_TEST
-+	select SND_SOC_LPASS_APQ8016
-+	help
-+          Support for Qualcomm Technologies LPASS audio block in
-+          APQ8016 SOC-based systems.
-+          Say Y if you want to use audio devices on MI2S
-diff --git a/sound/soc/qcom/Makefile b/sound/soc/qcom/Makefile
-index ac76308..79e5c50 100644
---- a/sound/soc/qcom/Makefile
-+++ b/sound/soc/qcom/Makefile
-@@ -11,5 +11,7 @@ obj-$(CONFIG_SND_SOC_LPASS_APQ8016) += snd-soc-lpass-apq8016.o
- 
- # Machine
- snd-soc-storm-objs := storm.o
-+snd-soc-apq8016-sbc-objs := apq8016_sbc.o
- 
- obj-$(CONFIG_SND_SOC_STORM) += snd-soc-storm.o
-+obj-$(CONFIG_SND_SOC_APQ8016_SBC) += snd-soc-apq8016-sbc.o
-diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
-new file mode 100644
-index 0000000..8958633
---- /dev/null
-+++ b/sound/soc/qcom/apq8016_sbc.c
-@@ -0,0 +1,215 @@
-+/*
-+ * Copyright (c) 2015 The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/clk.h>
-+#include <linux/platform_device.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <dt-bindings/sound/apq8016-lpass.h>
-+
-+struct apq8016_sbc_data {
-+	void __iomem *mic_iomux;
-+	void __iomem *spkr_iomux;
-+	struct snd_soc_dai_link dai_link[];	/* dynamically allocated */
-+};
-+
-+#define MIC_CTRL_QUA_WS_SLAVE_SEL_10	BIT(17)
-+#define MIC_CTRL_TLMM_SCLK_EN		BIT(1)
-+#define	SPKR_CTL_PRI_WS_SLAVE_SEL_11	(BIT(17) | BIT(16))
-+
-+static int apq8016_sbc_startup(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct snd_soc_card *card = rtd->card;
-+	struct apq8016_sbc_data *pdata = snd_soc_card_get_drvdata(card);
-+
-+	if (cpu_dai->id == MI2S_QUATERNARY) {
-+		/* Configure the Quat MI2S to TLMM */
-+		writel(readl(pdata->mic_iomux) |
-+			MIC_CTRL_QUA_WS_SLAVE_SEL_10 |
-+			MIC_CTRL_TLMM_SCLK_EN,
-+			pdata->mic_iomux);
-+
-+		return 0;
-+	} else if (cpu_dai->id == MI2S_PRIMARY) {
-+		writel(readl(pdata->spkr_iomux) |
-+			SPKR_CTL_PRI_WS_SLAVE_SEL_11,
-+			pdata->spkr_iomux);
-+
-+		return 0;
-+	}
-+
-+	dev_err(card->dev, "unsupported cpu dai configuration\n");
-+
-+	return -EINVAL;
-+}
-+
-+static struct snd_soc_ops apq8016_sbc_soc_ops = {
-+	.startup	= apq8016_sbc_startup,
-+};
-+
-+static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
-+{
-+	int num_links;
-+	struct device *dev = card->dev;
-+	struct snd_soc_dai_link *dai_link;
-+	struct device_node *np, *codec, *cpu, *node  = dev->of_node;
-+	struct apq8016_sbc_data *data;
-+	char *name;
-+	int ret;
-+
-+	/* Populate links */
-+	num_links = of_get_child_count(node);
-+
-+	/* Allocate the private data and the DAI link array */
-+	data = devm_kzalloc(dev, sizeof(*data) + sizeof(*dai_link) * num_links,
-+			    GFP_KERNEL);
-+	if (!data)
-+		return ERR_PTR(-ENOMEM);
-+
-+	card->dai_link	= &data->dai_link[0];
-+	card->num_links	= num_links;
-+
-+	dai_link = data->dai_link;
-+
-+	for_each_child_of_node(node, np) {
-+		cpu = of_get_child_by_name(np, "cpu");
-+		codec = of_get_child_by_name(np, "codec");
-+
-+		if (!cpu || !codec) {
-+			dev_err(dev, "Can't find cpu/codec DT node\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		dai_link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
-+		if (!dai_link->cpu_of_node) {
-+			dev_err(card->dev, "error getting cpu phandle\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		dai_link->codec_of_node = of_parse_phandle(codec,
-+							   "sound-dai",
-+							   0);
-+		if (!dai_link->codec_of_node) {
-+			dev_err(card->dev, "error getting codec phandle\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		ret = snd_soc_of_get_dai_name(cpu, &dai_link->cpu_dai_name);
-+		if (ret) {
-+			dev_err(card->dev, "error getting cpu dai name\n");
-+			return ERR_PTR(ret);
-+		}
-+
-+		ret = snd_soc_of_get_dai_name(codec, &dai_link->codec_dai_name);
-+		if (ret) {
-+			dev_err(card->dev, "error getting codec dai name\n");
-+			return ERR_PTR(ret);
-+		}
-+
-+		dai_link->platform_of_node = dai_link->cpu_of_node;
-+		/* For now we only support playback */
-+		dai_link->playback_only = true;
-+
-+		if (of_property_read_bool(np, "external"))
-+			name = "HDMI";
-+
-+		else
-+			name = "Headset";
-+
-+		dai_link->ops = &apq8016_sbc_soc_ops;
-+		dai_link->name = dai_link->stream_name = name;
-+
-+		dai_link++;
-+	}
-+
-+	return data;
-+}
-+
-+static int apq8016_sbc_platform_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct snd_soc_card *card;
-+	struct apq8016_sbc_data *data;
-+	struct resource *res;
-+	int ret;
-+
-+	card = devm_kzalloc(dev, sizeof(*card), GFP_KERNEL);
-+	if (!card)
-+		return -ENOMEM;
-+
-+	card->dev = dev;
-+	data = apq8016_sbc_parse_of(card);
-+	if (IS_ERR(data)) {
-+		dev_err(&pdev->dev, "Error resolving dai links: %ld\n",
-+			PTR_ERR(data));
-+		return PTR_ERR(data);
-+	}
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mic-iomux");
-+	data->mic_iomux = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(data->mic_iomux))
-+		return PTR_ERR(data->mic_iomux);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "spkr-iomux");
-+	data->spkr_iomux = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(data->spkr_iomux))
-+		return PTR_ERR(data->spkr_iomux);
-+
-+	platform_set_drvdata(pdev, data);
-+	snd_soc_card_set_drvdata(card, data);
-+
-+	ret = snd_soc_of_parse_card_name(card, "qcom,model");
-+	if (ret) {
-+		dev_err(&pdev->dev, "Error parsing card name: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_snd_soc_register_card(&pdev->dev, card);
-+	if (ret == -EPROBE_DEFER) {
-+		card->dev = NULL;
-+		return ret;
-+	} else if (ret) {
-+		dev_err(&pdev->dev, "Error registering soundcard: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id apq8016_sbc_device_id[]  = {
-+	{ .compatible = "qcom,apq8016-sbc-sndcard" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, apq8016_sbc_device_id);
-+
-+static struct platform_driver apq8016_sbc_platform_driver = {
-+	.driver = {
-+		.name = "qcom-apq8016-sbc",
-+		.of_match_table = of_match_ptr(apq8016_sbc_device_id),
-+	},
-+	.probe = apq8016_sbc_platform_probe,
-+};
-+module_platform_driver(apq8016_sbc_platform_driver);
-+
-+MODULE_AUTHOR("Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org");
-+MODULE_DESCRIPTION("APQ8016 ASoC Machine Driver");
-+MODULE_LICENSE("GPL v2");
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+tejun
