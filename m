@@ -1,46 +1,40 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 00/13] ASoC: qcom: add support to apq8016 audio
-Date: Thu, 21 May 2015 18:05:51 +0100
-Message-ID: <20150521170550.GC21577@sirena.org.uk>
-References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1431779462-1732-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
+	<noltari@gmail.com>
+Subject: [PATCH v2 0/2] BCM6358 LED driver
+Date: Thu, 21 May 2015 19:11:08 +0200
+Message-ID: <1432228270-21891-1-git-send-email-noltari@gmail.com>
+References: <1432055578-14089-1-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KtWcatouGV9Nk9BU"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431779462-1732-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1432055578-14089-1-git-send-email-noltari@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, cooloney@gmail.com, jogo@openwrt.org, f.fainelli@gmail.com, cernekee@gmail.com, j.anaszewski@samsung.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+These patches add support and documentation for the BCM6358 LED driver,=
+ which is present on BCM6358 and BCM6368.
+In these SoCs there are Serial LEDs (LEDs connected to a 74hc controlle=
+r), which can either be controlled by software (exporting the 74hc as s=
+pi-gpio) or hardware using this driver.
 
---KtWcatouGV9Nk9BU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+v1->v2: Introduce changes suggested by Jacek.
 
-On Sat, May 16, 2015 at 01:31:02PM +0100, Srinivas Kandagatla wrote:
-> Thankyou for reviewing the v1 patches, here is the v2 patchset after
-> incorporating review comments and testing on Storm Board.
+=C3=81lvaro Fern=C3=A1ndez Rojas (2):
+  leds: add DT binding for BCM6358 LED controller
+  leds: add BCM6358 LED driver
 
-Please don't send new serieses in reply to old ones, it makes them
-harder to notice.
+ .../devicetree/bindings/leds/leds-bcm6358.txt      | 145 ++++++++++++
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-bcm6358.c                        | 243 +++++++++++++=
+++++++++
+ 4 files changed, 397 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-bcm6358=
+=2Etxt
+ create mode 100644 drivers/leds/leds-bcm6358.c
 
---KtWcatouGV9Nk9BU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVXhBuAAoJECTWi3JdVIfQ6nwIAITbLGZvTBeB4ol1CNk6LYy5
-nkQznUY1QrYGQqJel+WAhIOzkDZ1uNU6N0JDR/sHAtNJsS5J/zu49qHY1sJAxtOL
-bNX4SbNhwOV0pdMwAshPXJv4PrhRSbOvLjRX7af0KK45bTsnBNL37SaYTivY5sXT
-x2kE0IBHEONEpXGVMlNZx7t13djvVVyfTyoPHxjBZxy2NIao6P+TGgVCk+kR9PKa
-CS8qHOoDDsUCRuMxKZyVQ7pX1suZ3nvHz4n2aqGTk0E41maO107/tjnKiBnBXUqq
-cv02Fs6h+dqderNVIag8Hfeacv8SZNu/xi9GRuT+8m0Aw8vi6YsNtPKa4lALc8I=
-=uVdR
------END PGP SIGNATURE-----
-
---KtWcatouGV9Nk9BU--
+--=20
+1.9.1
