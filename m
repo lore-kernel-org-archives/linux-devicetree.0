@@ -1,34 +1,40 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 08/10] ARM: dts: mt8135-evbp1: Add pinctrl/GPIO node for mt6397.
-Date: Thu, 21 May 2015 09:53:28 +0200
-Message-ID: <CABuKBe+=f=yM6JK8J4pDgn_t8U-rmqqNCf11hx6DqZ8_WFQiow@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 10/10] ARM: dts: mt8127: add pinctrl/GPIO/EINT node for mt8127
+Date: Thu, 21 May 2015 09:54:11 +0200
+Message-ID: <CABuKBe+5zbGyb7hF3Q2VXtmm6C3QdmUV9jGJ1hdTAPY-Hbb2aw@mail.gmail.com>
 References: <1431567346-33780-1-git-send-email-hongzhou.yang@mediatek.com>
-	<1431567346-33780-9-git-send-email-hongzhou.yang@mediatek.com>
-	<CACRpkdaVyfWimkQwTnrVyWz5479NFwAgsO-_DAAAjZUkQ9rDQQ@mail.gmail.com>
+	<1431567346-33780-11-git-send-email-hongzhou.yang@mediatek.com>
+	<CACRpkdZJ0oVQxLjOv_YVm_RN8_8ActMAx0hfNJDoJBdV7Rc=Qw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaVyfWimkQwTnrVyWz5479NFwAgsO-_DAAAjZUkQ9rDQQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Hongzhou Yang <hongzhou.yang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Fabian Frederick <fabf@skynet.be>, Maoguang Meng <maoguang.meng@mediatek.com>, Axel Lin <axel.lin@ingics.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZJ0oVQxLjOv_YVm_RN8_8ActMAx0hfNJDoJBdV7Rc=Qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maoguang Meng <maoguang.meng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel@>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-19 10:57 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+2015-05-19 11:02 GMT+02:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
 > On Thu, May 14, 2015 at 3:35 AM, Hongzhou Yang
-> <hongzhou.yang@mediatek.com> wrote:
+> <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 >
->> Add pinctrl and GPIO node to mt8135-evbp1.dts.
+>> From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 >>
->> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+>> Add pinctrl,GPIO and EINT node to mt8127.dtsi.
+>>
+>> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 >
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+Acked-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 Linus, please take it through your tree.
 Thanks.
 
 -- 
 motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
