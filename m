@@ -1,105 +1,54 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 4/7] clocksource: mips-gic: Update clockevent frequency
- on clock rate changes
-Date: Thu, 21 May 2015 19:30:12 -0300
-Message-ID: <555E5C74.3000800@imgtec.com>
-References: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com>	<1432244260-14908-5-git-send-email-ezequiel.garcia@imgtec.com> <CAL1qeaEzKh6H8HBCULJWM4yMnSQGexWmV0rrnYMViMpuzKWyLg@mail.gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 0/5] AHCI and SATA PHY support for Broadcom STB SoCs
+Date: Thu, 21 May 2015 15:38:25 -0700
+Message-ID: <20150521223825.GA27753@ld-irv-0074>
+References: <1431473303-18873-1-git-send-email-computersforpeace@gmail.com>
+ <555DDC2B.1040608@ti.com>
+ <20150521220050.GF4914@htj.duckdns.org>
+ <20150521220138.GG4914@htj.duckdns.org>
+ <20150521220328.GE11598@ld-irv-0074>
+ <20150521220430.GI4914@htj.duckdns.org>
+ <20150521221306.GF11598@ld-irv-0074>
+ <20150521222350.GN4914@htj.duckdns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaEzKh6H8HBCULJWM4yMnSQGexWmV0rrnYMViMpuzKWyLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150521222350.GN4914@htj.duckdns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+I can explain part of this, but I'm curious if anyone else has different
+info.
 
+On Thu, May 21, 2015 at 06:23:50PM -0400, Tejun Heo wrote:
+> But the rules have never been clear to me.  If the subsystem
+> maintainer is okay with it, I'm happy to take the patches.  I'm just
+> kinda curious why this doesn't go through devicetree tree while some
+> other devicetree patches go through there.
 
-On 05/21/2015 07:32 PM, Andrew Bresticker wrote:
-> On Thu, May 21, 2015 at 2:37 PM, Ezequiel Garcia
-> <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> This commit introduces the clockevent frequency update, using
->> a clock notifier. It will be used to support CPUFreq on platforms
->> using MIPS GIC based clockevents.
->>
->> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/clocksource/mips-gic-timer.c | 31 ++++++++++++++++++++++++++++++-
->>  1 file changed, 30 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
->> index 22a4daf..71bbd42 100644
->> --- a/drivers/clocksource/mips-gic-timer.c
->> +++ b/drivers/clocksource/mips-gic-timer.c
->> @@ -79,6 +79,13 @@ static void gic_clockevent_cpu_exit(struct clock_event_device *cd)
->>         disable_percpu_irq(gic_timer_irq);
->>  }
->>
->> +static void gic_update_frequency(void *data)
->> +{
->> +       unsigned long rate = (unsigned long)data;
->> +
->> +       clockevents_update_freq(this_cpu_ptr(&gic_clockevent_device), rate);
->> +}
->> +
->>  static int gic_cpu_notifier(struct notifier_block *nb, unsigned long action,
->>                                 void *data)
->>  {
->> @@ -94,10 +101,26 @@ static int gic_cpu_notifier(struct notifier_block *nb, unsigned long action,
->>         return NOTIFY_OK;
->>  }
->>
->> +static int gic_clk_notifier(struct notifier_block *nb, unsigned long action,
->> +                           void *data)
->> +{
->> +       struct clk_notifier_data *cnd = data;
->> +
->> +       if (action == POST_RATE_CHANGE)
->> +               on_each_cpu(gic_update_frequency, (void *)cnd->new_rate, 1);
->> +
->> +       return NOTIFY_OK;
->> +}
->> +
->> +
->>  static struct notifier_block gic_cpu_nb = {
->>         .notifier_call = gic_cpu_notifier,
->>  };
->>
->> +static struct notifier_block gic_clk_nb = {
->> +       .notifier_call = gic_clk_notifier,
->> +};
->> +
->>  static int gic_clockevent_init(void)
->>  {
->>         int ret;
->> @@ -160,6 +183,7 @@ void __init gic_clocksource_init(unsigned int frequency)
->>  static void __init gic_clocksource_of_init(struct device_node *node)
->>  {
->>         struct clk *clk;
->> +       int ret;
->>
->>         if (WARN_ON(!gic_present || !node->parent ||
->>                     !of_device_is_compatible(node->parent, "mti,gic")))
->> @@ -186,7 +210,12 @@ static void __init gic_clocksource_of_init(struct device_node *node)
->>         }
->>
->>         __gic_clocksource_init();
->> -       gic_clockevent_init();
->> +
->> +       ret = gic_clockevent_init();
->> +       if (ret < 0 && !IS_ERR(clk)) {
-> 
-> I think you mean ret == 0 here?
-> 
->> +               if (clk_notifier_register(clk, &gic_clk_nb) < 0)
->> +                       pr_warn("GIC: Unable to register clock notifier\n");
->> +       }
+AFAIK, there is no official tree for device tree bindings. There's just
+a mailing list and several reviewers, who usually try to help on the big
+picture binding review. Note that there's no tree listed in MAINTAINERS
+under:
 
-Ouch, certainly.
--- 
-Ezequiel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+
+But you will see several MAINTAINERS entries for different subdirs of
+Documentation/devicetree/bindings/. Maybe you should add one for .../ata
+if you're going to continue taking patches?
+
+It's possible you're confusing binding documentation with .dts source
+files? The DTS files (arch/*/boot/dts/) go through arch trees. For
+instance, the arm-soc maintainers have a structured process by which
+sub-architecture maintainers track .dts(i) file updates for their
+boards/chips and filter them up to Arnd, Olof, etc., via their separate
+'dts' branches. That's why Florian took patch 5 to his tree.
+
+> Can somebody explain the
+> overall policy to me?  I'm not looking for some absolute rules and
+> exceptions are fine but I do wanna have a general direction.
+
+Brian
