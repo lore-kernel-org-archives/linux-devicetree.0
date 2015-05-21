@@ -1,37 +1,73 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 4/5] phy: add Broadcom SATA3 PHY driver for Broadcom
- STB SoCs
-Date: Thu, 21 May 2015 18:53:40 +0530
-Message-ID: <555DDC5C.1010003@ti.com>
-References: <1431473303-18873-1-git-send-email-computersforpeace@gmail.com> <1431473303-18873-5-git-send-email-computersforpeace@gmail.com> <55533059.6050705@ti.com> <20150513184921.GE11598@ld-irv-0074> <55543837.5030100@ti.com> <20150514173902.GK11598@ld-irv-0074> <5554DE86.8020005@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
+Date: Thu, 21 May 2015 06:28:03 -0700
+Message-ID: <555DDD63.9070705@roeck-us.net>
+References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>	<555D9FA8.9060106@roeck-us.net>	<CADyBb7vKgnij6d+akVo1cQmrO4s67BBCr1HPr3n+Z4G0W-KqgA@mail.gmail.com>	<555DB0B8.9000503@roeck-us.net> <CADyBb7sOEBQ-+ApZUPCrxPb0Eoa3FiZHPtNcYZk24VUxM-nieg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5554DE86.8020005@gmail.com>
+In-Reply-To: <CADyBb7sOEBQ-+ApZUPCrxPb0Eoa3FiZHPtNcYZk24VUxM-nieg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>
+To: Fu Wei <fu.wei@linaro.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, "mark.rutland" <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thursday 14 May 2015 11:12 PM, Florian Fainelli wrote:
-> On 14/05/15 10:39, Brian Norris wrote:
->> On Thu, May 14, 2015 at 11:22:55AM +0530, Kishon Vijay Abraham I wrote:
->>> While sending the next version please also add a
->>> MAINTAINERs entry for this driver.
->>
->> I think this has it covered, right?
->>
->> https://lkml.org/lkml/2015/3/18/932
+On 05/21/2015 03:50 AM, Fu Wei wrote:
+> Hi Guenter,
 >
-> Kishon, this patch is on its way to arm-soc via a pull request:
-> http://www.spinics.net/lists/arm-kernel/msg418276.html
+> Great thanks, I have got your review feedback, I will fix the problems :-)
+> For update_limits, I also don't want to have that in the watchdog
+> driver, and you can't find it in my last version.
+> And this version, I integrate the watchdog_init_timeout and
+> watchdog_init_pretimeout. so I can not add a  driver specific
+> "update_limits" between them.
+> I think maybe we can not make this "update_limits" after calling
+> init_timeouts, because we need to test and verify the timeout setting
+> right after init_pretimeout by max_timeout and min_timeout. that is
+
+Don't you have to do that in set_pretimeout as well, and even adjust
+timeout if necessary ?
+
+> why I call update_limits right after init_pretimeout and before
+> init_timeout.
 >
-> this should address your concern. Thanks!
+> any suggestion ?  Great thanks !  :-)
+>
 
-Indeed!
+Any sequence of
+	set_timeout()
+	set_pretimeout()
+can result in an invalid timeout, since the practical timeout limits
+changed. Therefore, you'll have to validate (and possibly update)
+the timeout after or during each call to set_pretimeout().
+Changing min_timeout and max_timeout won't help there, that
+validation still has to happen.
 
-Thanks
-Kishon
+Given this, some other driver developer may choose to not change the
+timeout limits at all, validate (and if necessary silently adjust)
+the timeout value in the set_timeout function, and call the set_timeout
+function from set_pretimeout to ensure that the timeout is still
+valid after the call to set_pretimeout. At least I would most likely
+implement it that way.
+
+This means your choice of continuously updating the timeout limits
+is really a driver developer choice, not something that is needed
+in the driver core. It might even be problematic, since driver
+developers might forget to re-validate the current timeout after
+changing the pretimeout in a similar situation.
+
+Having said that, and looking through the SBSA driver code, it seems
+to me that it does not re-validate the current timeout after setting
+a new pretimeout. Unless I am missing something,
+	set_timeout(10);
+	set_pretimeout(20);
+might therefore result in an invalid / unexpected timeout value.
+Setting
+	set_timeout(10);
+	set_pretimeout(10);
+might have even more interesting results. Can you try what happens
+with your driver if you set those values ?
+
+Thanks,
+Guenter
