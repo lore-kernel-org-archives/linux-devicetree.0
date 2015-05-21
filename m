@@ -1,82 +1,176 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 2/2] input: adxl34x: Add OF match support
-Date: Thu, 21 May 2015 13:42:26 +0200
-Message-ID: <1432208546-18615-3-git-send-email-geert+renesas@glider.be>
-References: <1432208546-18615-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432208546-18615-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 01/10] ARM: OMAP2+: Return correct error values from
+ device and hwmod
+Date: Thu, 21 May 2015 13:44:48 +0200
+Message-ID: <20150521114448.GB8329@pali>
+References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com>
+ <1424958600-18881-2-git-send-email-pali.rohar@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1424958600-18881-2-git-send-email-pali.rohar@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-
-The I2C subsystem can match devices without explicit OF support based on
-the part of their compatible property after the comma. However, this
-mechanism uses the first compatible value only. For adxl34x OF device
-nodes the compatible property will contain the more specific
-"adi,adxl345" or "adi,adxl346" value first. This prevents the device
-node from being matched with the adxl34x driver.
-
-Fix this by adding an OF match table with an "adi,adxl345" compatible
-entry. There's no need to add the "adi,adxl346" entry as the ADXL346 is
-backward-compatible with the ADXL345 with differences handled by runtime
-detection of the device model.
-
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Reviewed-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+On Thursday 26 February 2015 14:49:51 Pali Roh=C3=A1r wrote:
+> Without this patch function pm_runtime_get_sync() returns 0 even when=
+ some
+> omap subfunction fails. This patch properly propagate error codes fro=
+m omap
+> functions back to caller.
+>=20
+> This patch fix problem, when loading omap-aes driver in qemu cause ke=
+rnel oops.
+>=20
+> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> ---
+>  arch/arm/mach-omap2/omap_device.c |   30 +++++++++++++++++----------=
 ---
-v2:
-  - Add Reviewed-by.
+>  arch/arm/mach-omap2/omap_hwmod.c  |   10 ++++++----
+>  2 files changed, 23 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/arch/arm/mach-omap2/omap_device.c b/arch/arm/mach-omap2/=
+omap_device.c
+> index be9541e..9fd47a9 100644
+> --- a/arch/arm/mach-omap2/omap_device.c
+> +++ b/arch/arm/mach-omap2/omap_device.c
+> @@ -224,13 +224,13 @@ static int _omap_device_notifier_call(struct no=
+tifier_block *nb,
+>   */
+>  static int _omap_device_enable_hwmods(struct omap_device *od)
+>  {
+> +	int ret =3D 0;
+>  	int i;
+> =20
+>  	for (i =3D 0; i < od->hwmods_cnt; i++)
+> -		omap_hwmod_enable(od->hwmods[i]);
+> +		ret |=3D omap_hwmod_enable(od->hwmods[i]);
+> =20
+> -	/* XXX pass along return value here? */
+> -	return 0;
+> +	return ret;
+>  }
+> =20
+>  /**
+> @@ -241,13 +241,13 @@ static int _omap_device_enable_hwmods(struct om=
+ap_device *od)
+>   */
+>  static int _omap_device_idle_hwmods(struct omap_device *od)
+>  {
+> +	int ret =3D 0;
+>  	int i;
+> =20
+>  	for (i =3D 0; i < od->hwmods_cnt; i++)
+> -		omap_hwmod_idle(od->hwmods[i]);
+> +		ret |=3D omap_hwmod_idle(od->hwmods[i]);
+> =20
+> -	/* XXX pass along return value here? */
+> -	return 0;
+> +	return ret;
+>  }
+> =20
+>  /* Public functions for use by core code */
+> @@ -595,18 +595,20 @@ static int _od_runtime_suspend(struct device *d=
+ev)
+>  	int ret;
+> =20
+>  	ret =3D pm_generic_runtime_suspend(dev);
+> +	if (ret)
+> +		return ret;
+> =20
+> -	if (!ret)
+> -		omap_device_idle(pdev);
+> -
+> -	return ret;
+> +	return omap_device_idle(pdev);
+>  }
+> =20
+>  static int _od_runtime_resume(struct device *dev)
+>  {
+>  	struct platform_device *pdev =3D to_platform_device(dev);
+> +	int ret;
+> =20
+> -	omap_device_enable(pdev);
+> +	ret =3D omap_device_enable(pdev);
+> +	if (ret)
+> +		return ret;
+> =20
+>  	return pm_generic_runtime_resume(dev);
+>  }
+> @@ -740,7 +742,8 @@ int omap_device_enable(struct platform_device *pd=
+ev)
+> =20
+>  	ret =3D _omap_device_enable_hwmods(od);
+> =20
+> -	od->_state =3D OMAP_DEVICE_STATE_ENABLED;
+> +	if (ret =3D=3D 0)
+> +		od->_state =3D OMAP_DEVICE_STATE_ENABLED;
+> =20
+>  	return ret;
+>  }
+> @@ -770,7 +773,8 @@ int omap_device_idle(struct platform_device *pdev=
+)
+> =20
+>  	ret =3D _omap_device_idle_hwmods(od);
+> =20
+> -	od->_state =3D OMAP_DEVICE_STATE_IDLE;
+> +	if (ret =3D=3D 0)
+> +		od->_state =3D OMAP_DEVICE_STATE_IDLE;
+> =20
+>  	return ret;
+>  }
+> diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/o=
+map_hwmod.c
+> index 92afb72..870e984 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod.c
+> @@ -3350,16 +3350,17 @@ int omap_hwmod_enable(struct omap_hwmod *oh)
+>   */
+>  int omap_hwmod_idle(struct omap_hwmod *oh)
+>  {
+> +	int r;
+>  	unsigned long flags;
+> =20
+>  	if (!oh)
+>  		return -EINVAL;
+> =20
+>  	spin_lock_irqsave(&oh->_lock, flags);
+> -	_idle(oh);
+> +	r =3D _idle(oh);
+>  	spin_unlock_irqrestore(&oh->_lock, flags);
+> =20
+> -	return 0;
+> +	return r;
+>  }
+> =20
+>  /**
+> @@ -3372,16 +3373,17 @@ int omap_hwmod_idle(struct omap_hwmod *oh)
+>   */
+>  int omap_hwmod_shutdown(struct omap_hwmod *oh)
+>  {
+> +	int r;
+>  	unsigned long flags;
+> =20
+>  	if (!oh)
+>  		return -EINVAL;
+> =20
+>  	spin_lock_irqsave(&oh->_lock, flags);
+> -	_shutdown(oh);
+> +	r =3D _shutdown(oh);
+>  	spin_unlock_irqrestore(&oh->_lock, flags);
+> =20
+> -	return 0;
+> +	return r;
+>  }
+> =20
+>  /*
 
- drivers/input/misc/adxl34x-i2c.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Hello Paul, can you apply this patch?
 
-diff --git a/drivers/input/misc/adxl34x-i2c.c b/drivers/input/misc/adxl34x-i2c.c
-index 470bfd6f08304c67..bdb5d03b296ec6db 100644
---- a/drivers/input/misc/adxl34x-i2c.c
-+++ b/drivers/input/misc/adxl34x-i2c.c
-@@ -10,6 +10,7 @@
- #include <linux/input.h>	/* BUS_I2C */
- #include <linux/i2c.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/types.h>
- #include <linux/pm.h>
- #include "adxl34x.h"
-@@ -135,11 +136,31 @@ static const struct i2c_device_id adxl34x_id[] = {
- 
- MODULE_DEVICE_TABLE(i2c, adxl34x_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id adxl34x_of_id[] = {
-+	/*
-+	 * The ADXL346 is backward-compatible with the ADXL345. Differences are
-+	 * handled by runtime detection of the device model, there's thus no
-+	 * need for listing the "adi,adxl346" compatible value explicitly.
-+	 */
-+	{ .compatible = "adi,adxl345", },
-+	/*
-+	 * Deprecated, DT nodes should use one or more of the device-specific
-+	 * compatible values "adi,adxl345" and "adi,adxl346".
-+	 */
-+	{ .compatible = "adi,adxl34x", },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, adxl34x_of_id);
-+#endif
-+
- static struct i2c_driver adxl34x_driver = {
- 	.driver = {
- 		.name = "adxl34x",
- 		.owner = THIS_MODULE,
- 		.pm = &adxl34x_i2c_pm,
-+		.of_match_table = of_match_ptr(adxl34x_of_id),
- 	},
- 	.probe    = adxl34x_i2c_probe,
- 	.remove   = adxl34x_i2c_remove,
--- 
-1.9.1
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
