@@ -1,61 +1,50 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [RFC PATCH v1 2/3] PCI: hisi: Add PCIe host support for Hisilicon
- Soc Hip05
-Date: Thu, 21 May 2015 20:29:24 +0800
-Message-ID: <555DCFA4.7090104@hisilicon.com>
-References: <000101d092fb$94dde100$be99a300$@com> <555D37B0.2080909@hisilicon.com> <CAErSpo7TEgY=oJvLU3jyh=FcZqgsSxLi1Cw1mo6w+5WSRkfPMQ@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: sun7i: Add uart4_pins_b definition
+Date: Thu, 21 May 2015 14:32:33 +0200
+Message-ID: <1432211555-25078-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo7TEgY=oJvLU3jyh=FcZqgsSxLi1Cw1mo6w+5WSRkfPMQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Zhichang Yuan <yuanzhichang@hisilicon.com>, zhudacai@hisilicon.com, Zhang Jukuo <zhangjukuo@huawei.com>, qiuzhenfa@hisilicon.com, Liguozhu <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB2VA66VAKGQEMMMJ6KY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/5/21 20:09, Bjorn Helgaas wrote:
-> On Wed, May 20, 2015 at 8:41 PM, Zhou Wang <wangzhou1@hisilicon.com> wrote:
->> On 2015/5/20 20:50, Jingoo Han wrote:
->>> On Wed, 20 May 2015 14:21:40 +0800, Zhou Wang wrote:
-> 
->>>> +/* Configure vmid/asid table in PCIe host */
->>>> +static void hisi_pcie_config_context(struct hisi_pcie *pcie)
->>>> +{
->>>> +    int i;
->>>> +
->>>> +    hisi_pcie_change_apb_mode(pcie, PCIE_SLV_CONTENT_MODE);
->>>> +
->>>> +    for (i = 0; i < 0x400; i++)
->>>> +            hisi_pcie_apb_writel(pcie, 0x0, i * 4);
->>>> +
->>>> +    for (i = 0x400; i < 0x800; i++)
->>>> +            hisi_pcie_apb_writel(pcie, 0x0, i * 4);
->>>
->>> How about the following?
->>>
->>> +     for (i = 0; i < 0x800; i++)
->>> +             hisi_pcie_apb_writel(pcie, 0x0, i * 4);
->>>
->>
->> This is to configure init value of vmid and asid of each pcie device.
-> 
-> But the combined loop looks functionally equivalent, i.e., I don't
-> think the device can tell the difference.  Personally I wouldn't mind
-> if you kept the two loops separate, but if you do, each one needs a
-> comment immediately before it so the reader has a clue that they are
-> doing semantically different things.  Otherwise it just looks like a
-> mistake and the reader wonders why they are split.
-> 
-> Bjorn
+From: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>
 
-Got it. There is a vmid table and a asid table in host controll
-registers. They are just adjoining as above. I will combine above loops
-with more comments together.
+Some boards (e.g. the BananaPro) use alternative pins for uart4, add a pinmux
+entry for these.
 
-Thanks and Regards,
-Zhou
+Signed-off-by: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> 
-> .
-> 
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index e04cdf9..99d48b4 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -844,6 +844,13 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
++			uart4_pins_b: uart4@1 {
++				allwinner,pins = "PH4", "PH5";
++				allwinner,function = "uart4";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
+ 			uart5_pins_a: uart5@0 {
+ 				allwinner,pins = "PI10", "PI11";
+ 				allwinner,function = "uart5";
+-- 
+2.4.1
