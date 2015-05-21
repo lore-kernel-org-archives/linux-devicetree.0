@@ -1,67 +1,77 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM64: MediaTek MT8173: Add SCPSYS device node
-Date: Thu, 21 May 2015 17:34:06 +0200
-Message-ID: <CABuKBeKmdjhmUprdibJHsKo4JfQ4vzX2SsCnobfpKSQn_PsGHw@mail.gmail.com>
-References: <1432131540-2523-1-git-send-email-s.hauer@pengutronix.de>
-	<1432131540-2523-6-git-send-email-s.hauer@pengutronix.de>
-	<CAGS+omDHEY54TzhNTJcFOeHkGbXAQwiTh9gxc=PsbzjwmpHEDA@mail.gmail.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 21 May 2015 10:42:12 -0500
+Message-ID: <555DFCD4.3040701@codeaurora.org>
+References: <=fu.wei@linaro.org> <1432197156-16947-1-git-send-email-fu.wei@linaro.org> <1432197156-16947-7-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omDHEY54TzhNTJcFOeHkGbXAQwiTh9gxc=PsbzjwmpHEDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432197156-16947-7-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-05-21 16:32 GMT+02:00 Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
-> On Wed, May 20, 2015 at 10:19 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> This adds the SCPSYS device node to the MT8173 dtsi file.
->>
->> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index 924fdb6..12430f0 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -125,6 +125,16 @@
->>                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->>                 };
->>
->> +               scpsys: scpsys@10006000 {
->> +                       compatible = "mediatek,mt8173-scpsys";
->> +                       #power-domain-cells = <1>;
->> +                       reg = <0 0x10006000 0 0x1000>;
->> +                       clocks = <&clk26m>,
->
-> Why is mfg using <&clk26m> and not <&topckgen CLK_TOP_MFG_SEL>?
-> I saw another patch set on the list today from James Liao that adds more clocks.
-> Perhaps we can move the SCPSYS set on top of that one and include more clocks?
->
->> +                                <&topckgen CLK_TOP_MM_SEL>;
->
-> FYI: the devicetree changes in this set depend on your other patch set
-> starting with:
->
-> https://patchwork.kernel.org/patch/6446341/
-> "arm64: dts: mt8173: Add clock controller device nodes"
->
-> This patch isn't based on top of the other set, though, so it may lead
-> to a small merge conflict when folding in the .dtsi device nodes (ie,
-> placing scpsys@10006000 after pwrap@1000d000).
->
-> I'm not sure how people usually resolve this or manage the ordering of
-> co-dependent patch sets upstream.
+On 05/21/2015 03:32 AM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
 
-At the moment I suppose that patch-sets are based on -rc1 if not
-stated different.
+> +static void reload_timeout_to_wcv(struct watchdog_device *wdd)
+> +{
+> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> +	u64 wcv;
+> +
+> +	wcv = arch_counter_get_cntvct() +
+> +		(u64)(wdd->timeout - wdd->pretimeout) * gwdt->clk;
+> +
+> +	sbsa_gwdt_set_wcv(wdd, wcv);
+> +}
+
+...
+
+> +static int sbsa_gwdt_set_timeout(struct watchdog_device *wdd,
+> +				 unsigned int timeout)
+> +{
+> +	wdd->timeout = timeout;
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
+> +{
+> +	struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
+> +	struct watchdog_device *wdd = &gwdt->wdd;
+> +	u32 status;
+> +
+> +	status = sbsa_gwdt_cf_read(SBSA_GWDT_WCS, wdd);
+> +
+> +	if (status & SBSA_GWDT_WCS_WS0)
+> +		panic("SBSA Watchdog pre-timeout");
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+There's one thing I don't understand about your driver.  The 'timeout' 
+value from the kernel is supposed to to be the number of seconds until 
+the system reboots.  You are programming the WCV with that value, which 
+means that the WS0 interrupt will fire when the timeout expires the 
+first time.  However, you don't reboot the system during this interrupt. 
+  The "panic" will cause the system to halt, but not reboot.  Instead, 
+it will just sit there.  You're waiting for the WS1 timeout for the 
+system to reboot, but this is not a clean reboot, and it occurs at 
+2*timeout seconds.
+
+That's why I like my driver better.  It doesn't have any of this 
+pretimeout stuff, and when the timeout expires during the WS0 interrupt, 
+it calls emergency_restart() which reboots the system properly.  The WS1 
+hard reset is used as a "backup" reset in case emergency_restart() fails.
 
 -- 
-motzblog.wordpress.com
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
