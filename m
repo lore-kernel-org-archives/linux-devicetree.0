@@ -1,73 +1,72 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
-Date: Thu, 21 May 2015 06:28:03 -0700
-Message-ID: <555DDD63.9070705@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>	<555D9FA8.9060106@roeck-us.net>	<CADyBb7vKgnij6d+akVo1cQmrO4s67BBCr1HPr3n+Z4G0W-KqgA@mail.gmail.com>	<555DB0B8.9000503@roeck-us.net> <CADyBb7sOEBQ-+ApZUPCrxPb0Eoa3FiZHPtNcYZk24VUxM-nieg@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
+ samsung,flash-led property
+Date: Thu, 21 May 2015 15:28:40 +0200
+Message-ID: <555DDD88.8080601@samsung.com>
+References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+ <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
+ <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
+ <555DA119.9030904@samsung.com>
+ <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADyBb7sOEBQ-+ApZUPCrxPb0Eoa3FiZHPtNcYZk24VUxM-nieg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, "mark.rutland" <mark.rutland@arm.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/2015 03:50 AM, Fu Wei wrote:
-> Hi Guenter,
+On 21/05/15 13:32, Sakari Ailus wrote:
+>>>> @@ -147,6 +149,8 @@ Example:
+>>>> > >>  			clocks = <&camera 0>;
+>>>> > >>  			clock-names = "mclk";
+>>>> > >>
+>>>> > >>+			samsung,flash-led = <&rear_cam_flash>;
+>>>> > >>+
+>>>> > >>  			port {
+>>>> > >>  				s5c73m3_1: endpoint {
+>>>> > >>  					data-lanes = <1 2 3 4>;
+>>> > >
+>>> > >Oops. I missed this property would have ended to the sensor's DT node. I
+>>> > >don't think we should have properties here that are parsed by another
+>>> > >driver --- let's discuss this tomorrow.
+>> > 
+>> > exynos4-is driver already parses sensor nodes (at least their 'port'
+>> > sub-nodes).
 >
-> Great thanks, I have got your review feedback, I will fix the problems :-)
-> For update_limits, I also don't want to have that in the watchdog
-> driver, and you can't find it in my last version.
-> And this version, I integrate the watchdog_init_timeout and
-> watchdog_init_pretimeout. so I can not add a  driver specific
-> "update_limits" between them.
-> I think maybe we can not make this "update_limits" after calling
-> init_timeouts, because we need to test and verify the timeout setting
-> right after init_pretimeout by max_timeout and min_timeout. that is
+> If you read the code and the comment, it looks like something that should be
+> done better but hasn't been done yet. :-) That's something we should avoid.
+> Also, flash devices are by far more common than external ISPs I presume.
 
-Don't you have to do that in set_pretimeout as well, and even adjust
-timeout if necessary ?
+Yes, especially let's not require any samsung specific properties in
+other vendors' sensor bindings.
 
-> why I call update_limits right after init_pretimeout and before
-> init_timeout.
->
-> any suggestion ?  Great thanks !  :-)
->
+One way of modelling [flash led]/[image sensor] association I imagine
+would be to put, e.g. 'flash-leds' property in the SoC camera host
+interface/ISP DT node. This property would then contain pairs of phandles,
+first to the led node and the second to the sensor node, e.g.
 
-Any sequence of
-	set_timeout()
-	set_pretimeout()
-can result in an invalid timeout, since the practical timeout limits
-changed. Therefore, you'll have to validate (and possibly update)
-the timeout after or during each call to set_pretimeout().
-Changing min_timeout and max_timeout won't help there, that
-validation still has to happen.
+i2c_controller {
+	...
+	flash_xx@NN {
+		...
+		led_a {
+			...		
+		}
+	};
 
-Given this, some other driver developer may choose to not change the
-timeout limits at all, validate (and if necessary silently adjust)
-the timeout value in the set_timeout function, and call the set_timeout
-function from set_pretimeout to ensure that the timeout is still
-valid after the call to set_pretimeout. At least I would most likely
-implement it that way.
+	image_sensor_x@NN {
+		...
+	};
+};
 
-This means your choice of continuously updating the timeout limits
-is really a driver developer choice, not something that is needed
-in the driver core. It might even be problematic, since driver
-developers might forget to re-validate the current timeout after
-changing the pretimeout in a similar situation.
+flash-leds = <&flash_xx &image_sensor_x>, <...>;
 
-Having said that, and looking through the SBSA driver code, it seems
-to me that it does not re-validate the current timeout after setting
-a new pretimeout. Unless I am missing something,
-	set_timeout(10);
-	set_pretimeout(20);
-might therefore result in an invalid / unexpected timeout value.
-Setting
-	set_timeout(10);
-	set_pretimeout(10);
-might have even more interesting results. Can you try what happens
-with your driver if you set those values ?
+For the purpose of this patch set presumably just samsung specific
+property name could be used (i.e. samsung,flash-leds).
 
+--
 Thanks,
-Guenter
+Sylwester
