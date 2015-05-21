@@ -1,82 +1,64 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
- samsung,flash-led property
-Date: Thu, 21 May 2015 14:32:13 +0300
-Message-ID: <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
-References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
- <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
- <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
- <555DA119.9030904@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <555DA119.9030904-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 0/2] Fix OF match for adxl34x driver
+Date: Thu, 21 May 2015 13:42:24 +0200
+Message-ID: <1432208546-18615-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+	Hi Dmitry,
 
-On Thu, May 21, 2015 at 11:10:49AM +0200, Jacek Anaszewski wrote:
-> Hi Sakari,
-> 
-> On 05/21/2015 12:00 AM, Sakari Ailus wrote:
-> >Hi Jacek,
-> >
-> >On Wed, May 20, 2015 at 04:10:15PM +0200, Jacek Anaszewski wrote:
-> >>This patch adds examples for samsung,flash-led property to the
-> >>samsung-fimc.txt.
-> >>
-> >>Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >>Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >>Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >>Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >>---
-> >>  .../devicetree/bindings/media/samsung-fimc.txt     |    4 ++++
-> >>  1 file changed, 4 insertions(+)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> >>index 922d6f8..57edffa 100644
-> >>--- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> >>+++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> >>@@ -126,6 +126,8 @@ Example:
-> >>  			clocks = <&camera 1>;
-> >>  			clock-names = "mclk";
-> >>
-> >>+			samsung,flash-led = <&front_cam_flash>;
-> >>+
-> >>  			port {
-> >>  				s5k6aa_ep: endpoint {
-> >>  					remote-endpoint = <&fimc0_ep>;
-> >>@@ -147,6 +149,8 @@ Example:
-> >>  			clocks = <&camera 0>;
-> >>  			clock-names = "mclk";
-> >>
-> >>+			samsung,flash-led = <&rear_cam_flash>;
-> >>+
-> >>  			port {
-> >>  				s5c73m3_1: endpoint {
-> >>  					data-lanes = <1 2 3 4>;
-> >
-> >Oops. I missed this property would have ended to the sensor's DT node. I
-> >don't think we should have properties here that are parsed by another
-> >driver --- let's discuss this tomorrow.
-> 
-> exynos4-is driver already parses sensor nodes (at least their 'port'
-> sub-nodes).
+This is a resent of a series by Laurent Pinchart to fix OF matching for
+the adxl34x driver.
 
-If you read the code and the comment, it looks like something that should be
-done better but hasn't been done yet. :-) That's something we should avoid.
-Also, flash devices are by far more common than external ISPs I presume.
+According to the discussion in response to that series, we were under
+the impression this was going in through the input tree
+(http://www.spinics.net/lists/linux-i2c/msg18293.html).
+
+In input patchwork, the series is still marked "Awaiting Upstream"
+(https://patchwork.ozlabs.org/project/linux-i2c/list/?state=*&q=adxl),
+but actually we are waiting for you, as we can't update the affected DTS
+before the driver fix has gone in ;-)
+
+>From Laurent's submission:
+
+    This patch set fixes OF matching for the adxl34x driver when the DT
+    node lists a device-specific "adi,adxl345" or "adi,adxl346"
+    compatible value first.
+
+    The first version (see
+    http://www.spinics.net/lists/linux-i2c/msg18107.html) added an OF
+    match entry for the "adi,adxl34x" compatible string. The discussion
+    that followed concluded that that compatible string should be
+    deprecated and that the driver should match the device-specific
+    strings instead.
+
+    The first patch thus deprecates the "adi,adxl34x" compatible string
+    by removing it the DT trivial devices list, and the second patch
+    then adds an OF match table to the adxl34x driver.
+
+Thanks for applying!
+
+Laurent Pinchart (2):
+  DT: i2c: Deprecate adi,adxl34x compatible string
+  input: adxl34x: Add OF match support
+
+ .../devicetree/bindings/i2c/trivial-devices.txt     |  3 +--
+ drivers/input/misc/adxl34x-i2c.c                    | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
 -- 
-Regards,
+1.9.1
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+Gr{oetje,eeting}s,
+
+						Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
