@@ -1,73 +1,45 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 5/5] ARM64: MediaTek MT8173: Add SCPSYS device node
-Date: Thu, 21 May 2015 19:49:16 +0200
-Message-ID: <20150521174916.GQ6325@pengutronix.de>
-References: <1432131540-2523-1-git-send-email-s.hauer@pengutronix.de>
- <1432131540-2523-6-git-send-email-s.hauer@pengutronix.de>
- <CAGS+omDHEY54TzhNTJcFOeHkGbXAQwiTh9gxc=PsbzjwmpHEDA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun7i: Add uart4_pins_b definition
+Date: Thu, 21 May 2015 19:45:33 +0200
+Message-ID: <20150521174533.GB8557@lukather>
+References: <1432211555-25078-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="a+b56+3nqLzpiR9O"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSVV7CVAKGQEFHHMBGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGS+omDHEY54TzhNTJcFOeHkGbXAQwiTh9gxc=PsbzjwmpHEDA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <1432211555-25078-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 10:32:40PM +0800, Daniel Kurtz wrote:
-> On Wed, May 20, 2015 at 10:19 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> > This adds the SCPSYS device node to the MT8173 dtsi file.
-> >
-> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index 924fdb6..12430f0 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -125,6 +125,16 @@
-> >                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> >                 };
-> >
-> > +               scpsys: scpsys@10006000 {
-> > +                       compatible = "mediatek,mt8173-scpsys";
-> > +                       #power-domain-cells = <1>;
-> > +                       reg = <0 0x10006000 0 0x1000>;
-> > +                       clocks = <&clk26m>,
-> 
-> Why is mfg using <&clk26m> and not <&topckgen CLK_TOP_MFG_SEL>?
+--a+b56+3nqLzpiR9O
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Because James Liao said to me that it is derived from clk26m and not
-from mfg_sel.
+On Thu, May 21, 2015 at 02:32:33PM +0200, Hans de Goede wrote:
+> From: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>
+> 
+> Some boards (e.g. the BananaPro) use alternative pins for uart4, add a pinmux
+> entry for these.
+> 
+> Signed-off-by: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-> I saw another patch set on the list today from James Liao that adds more clocks.
-> Perhaps we can move the SCPSYS set on top of that one and include more clocks?
-> 
-> > +                                <&topckgen CLK_TOP_MM_SEL>;
-> 
-> FYI: the devicetree changes in this set depend on your other patch set
-> starting with:
-> 
-> https://patchwork.kernel.org/patch/6446341/
-> "arm64: dts: mt8173: Add clock controller device nodes"
-> 
-> This patch isn't based on top of the other set, though, so it may lead
-> to a small merge conflict when folding in the .dtsi device nodes (ie,
-> placing scpsys@10006000 after pwrap@1000d000).
-> 
-> I'm not sure how people usually resolve this or manage the ordering of
-> co-dependent patch sets upstream.
+Applied, thanks!
 
-This merge conflict should be easy to solve. However, I can rebase this
-on Matthias' dts branch if desired.
-
-Sascha
+Maxime
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--a+b56+3nqLzpiR9O--
