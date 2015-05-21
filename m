@@ -1,60 +1,47 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v8 07/16] drivers: reset: Add STM32 reset driver
-Date: Thu, 21 May 2015 19:58:28 +0200
-Message-ID: <555E1CC4.9090605@suse.de>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com> <1431158038-3813-8-git-send-email-mcoquelin.stm32@gmail.com> <555D1C7D.1060205@suse.de> <CALszF6CrouFF3oS_Qz6+qQRqa4a5PurdYNdvHnZRDb4zwOJ6mQ@mail.gmail.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v10 1/5] arm64: Enable EDAC on ARM64
+Date: Thu, 21 May 2015 20:07:19 +0200
+Message-ID: <20150521180719.GE3689@pd.tnic>
+References: <1431991481-25684-1-git-send-email-lho@apm.com>
+ <1431991481-25684-2-git-send-email-lho@apm.com>
+ <20150519170308.GL4641@pd.tnic>
+ <CAPw-ZT=mTpt_vz+e=rM5ywK8feNKkJQrpEWg=noRCziJ0840TQ@mail.gmail.com>
+ <20150519203336.GP4641@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CALszF6CrouFF3oS_Qz6+qQRqa4a5PurdYNdvHnZRDb4zwOJ6mQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, Lee Jones <lee.jones@linaro.org>, Linux-Arch <linux-arch@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150519203336.GP4641-fF5Pk5pvG8Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Chris Metcalf <cmetcalf-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "Steven J. Hill" <Steven.Hill-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, ". Maciej W. Rozycki" <macro-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 21.05.2015 um 09:46 schrieb Maxime Coquelin:
-> 2015-05-21 1:45 GMT+02:00 Andreas F=E4rber <afaerber@suse.de>:
->> Am 09.05.2015 um 09:53 schrieb Maxime Coquelin:
->>> +static const struct of_device_id stm32_reset_dt_ids[] =3D {
->>> +      { .compatible =3D "st,stm32-rcc", },
->>> +      { /* sentinel */ },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, sstm32_reset_dt_ids);
->>
->> Typo.
->=20
-> Indeed, thanks for pointing this out.
->=20
->>
->> IIUC the timer depends on the reset controller, so it must be built =
-in
->> anyway, and that's what's enforced in the Makefile above. Drop the l=
-ine?
->>
->=20
-> Agree it must be built-in.
-> I will fix that in next version.
+Adding more arch people.
 
-Actually, I've updated a timer implementation of mine to invoke a reset
-controller similar to how you do in the STM32 clocksource patch, but no
-reset controller is getting returned.
+On Tue, May 19, 2015 at 10:33:36PM +0200, Borislav Petkov wrote:
+> On Tue, May 19, 2015 at 12:57:32PM -0700, Loc Ho wrote:
+> > This was discussed here
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/326986.html.
+> > Without this, it will have compiler error as this function is called
+> > by.function edac_mc_scrub_block in file drivers/edac/edac_mc.c.
+> 
+> Argh, that's just silly. We should have a __weak atomic_scrub() in the
+> edac core which arches can override but not have to supply a dummy just
+> because...
+> 
+> I'll try to hack up something later.
 
-It seems to me, you are working around that by simply ignoring the erro=
-r
-in the timer code and not doing a reset then, so the STM32 timer does i=
-n
-fact _not_ depend on the reset controller? What happened to your effort=
-s
-of making the reset controller usable for the timer? In my case, my
-timer is originally in reset state and needs to be deasserted, so I
-can't just ignore it.
+Phew, so this wasn't easy but I think I have it. And it is nicer now.
+Patch as a reply to this message.
 
-Regards,
-Andreas
+-- 
+Regards/Gruss,
+    Boris.
 
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Dilip Upmanyu, Graham Norton; H=
-RB
-21284 (AG N=FCrnberg)
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
