@@ -1,60 +1,215 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Thu, 21 May 2015 08:59:50 -0700
-Message-ID: <20150521155950.GA18300@roeck-us.net>
-References: <=fu.wei@linaro.org>
- <1432197156-16947-1-git-send-email-fu.wei@linaro.org>
- <1432197156-16947-7-git-send-email-fu.wei@linaro.org>
- <555DB4C4.5090606@roeck-us.net>
- <CADyBb7vbcHG69cpnx6sUwaT7abS7w3Er62+50D6PUrGHVnG9vQ@mail.gmail.com>
- <20150521151847.GA16668@roeck-us.net>
- <CADyBb7tPjZrty-B=Lis_zdObxM1_MRcKCinOx3K73=6juxsikw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CADyBb7tPjZrty-B=Lis_zdObxM1_MRcKCinOx3K73=6juxsikw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/2] phy: add lpc18xx usb otg phy driver
+Date: Thu, 21 May 2015 17:59:20 +0200
+Message-ID: <1432223961-26101-2-git-send-email-manabian@gmail.com>
+References: <1432223961-26101-1-git-send-email-manabian@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432223961-26101-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 11:46:53PM +0800, Fu Wei wrote:
-> Hi Guenter,
-> 
-[ ... ]
+Add PHY driver for the internal USB OTG PHY found on NXP
+LPC18xx and LPC43xx devices. This driver takes care of
+enabling the PHY in CREG (syscon) and setting the required
+clock frequency.
 
-> >> >> +
-> >> >> +       /*
-> >> >> +        * Try to determine the frequency from the arch_timer interface
-> >> >> +        */
-> >> >> +       clk = arch_timer_get_rate();
-> >> >
-> >> >
-> >> > arch_timer_get_rate() does not seem to be exported. Did you try to build
-> >> > the driver as module ?
-> >>
-> >> yes, I have built it as a ko module, that is why I made a patch to
-> >> export this interface in the first patch of this patchset
-> >>
-> >>  but I will confirm it again :-)
-> >>
-> > Guess I'll give it a try myself. I don't really understand how this
-> > can work unless arch_timer_get_rate() is exported in your tree.
-> 
-> yes, I have exported it , I think it make sense to export it.
-> Because other driver maybe need to get system counter info
-> 
-> Do you agree ? :-)
-> 
-I don't think it is for me to agree or not. The arm maintainers
-will need to be involved. You can not just export such a function
-without maintainer Ack.
+Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/phy/Kconfig               |  11 +++
+ drivers/phy/Makefile              |   1 +
+ drivers/phy/phy-lpc18xx-usb-otg.c | 143 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 155 insertions(+)
+ create mode 100644 drivers/phy/phy-lpc18xx-usb-otg.c
 
-Having said that, my personal preference would be for the counter
-and rate to be exported through the clock subsystem (ie with
-clk_get_rate). But that would still not provide the current counter
-value, so maybe that isn't even possible.
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index a53bd5b52df9..e11fb9e3c760 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -52,6 +52,17 @@ config PHY_EXYNOS_MIPI_VIDEO
+ 	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
+ 	  and EXYNOS SoCs.
+ 
++config PHY_LPC18XX_USB_OTG
++	tristate "NXP LPC18xx/43xx SoC USB OTG PHY driver"
++	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
++	select GENERIC_PHY
++	select MFD_SYSCON
++	help
++	  Enable this to support NXP LPC18xx/43xx internal USB OTG PHY.
++
++	  This driver is need for USB0 support on LPC18xx/43xx and takes
++	  care of enabling and clock setup.
++
+ config PHY_MVEBU_SATA
+ 	def_bool y
+ 	depends on ARCH_DOVE || MACH_DOVE || MACH_KIRKWOOD
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index f12625178780..b7251f3b9ef7 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+ obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
++obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
+ obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
+ obj-$(CONFIG_PHY_MIPHY28LP) 		+= phy-miphy28lp.o
+ obj-$(CONFIG_PHY_MIPHY365X)		+= phy-miphy365x.o
+diff --git a/drivers/phy/phy-lpc18xx-usb-otg.c b/drivers/phy/phy-lpc18xx-usb-otg.c
+new file mode 100644
+index 000000000000..da77d54ccbea
+--- /dev/null
++++ b/drivers/phy/phy-lpc18xx-usb-otg.c
+@@ -0,0 +1,143 @@
++/*
++ * PHY driver for NXP LPC18xx/43xx internal USB OTG PHY
++ *
++ * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++/* USB OTG PHY register offset and bit in CREG */
++#define LPC18XX_CREG_CREG0		0x004
++#define LPC18XX_CREG_CREG0_USB0PHY	BIT(5)
++
++struct lpc18xx_usb_otg_phy {
++	struct phy *phy;
++	struct clk *clk;
++	struct regmap *reg;
++};
++
++static int lpc18xx_usb_otg_phy_init(struct phy *phy)
++{
++	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
++	int ret;
++
++	ret = clk_prepare(lpc->clk);
++	if (ret)
++		return ret;
++
++	/* The PHY must be clocked at 480 MHz */
++	return clk_set_rate(lpc->clk, 480000000);
++}
++
++static int lpc18xx_usb_otg_phy_exit(struct phy *phy)
++{
++	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
++
++	clk_unprepare(lpc->clk);
++
++	return 0;
++}
++
++static int lpc18xx_usb_otg_phy_power_on(struct phy *phy)
++{
++	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
++	int ret;
++
++	ret = clk_enable(lpc->clk);
++	if (ret)
++		return ret;
++
++	/* The bit in CREG is cleared to enable the PHY */
++	return regmap_update_bits(lpc->reg, LPC18XX_CREG_CREG0,
++				  LPC18XX_CREG_CREG0_USB0PHY, 0);
++}
++
++static int lpc18xx_usb_otg_phy_power_off(struct phy *phy)
++{
++	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
++	int ret;
++
++	ret = regmap_update_bits(lpc->reg, LPC18XX_CREG_CREG0,
++				 LPC18XX_CREG_CREG0_USB0PHY,
++				 LPC18XX_CREG_CREG0_USB0PHY);
++	if (ret)
++		return ret;
++
++	clk_disable(lpc->clk);
++
++	return 0;
++}
++
++static const struct phy_ops lpc18xx_usb_otg_phy_ops = {
++	.init		= lpc18xx_usb_otg_phy_init,
++	.exit		= lpc18xx_usb_otg_phy_exit,
++	.power_on	= lpc18xx_usb_otg_phy_power_on,
++	.power_off	= lpc18xx_usb_otg_phy_power_off,
++	.owner		= THIS_MODULE,
++};
++
++static int lpc18xx_usb_otg_phy_probe(struct platform_device *pdev)
++{
++	struct phy_provider *phy_provider;
++	struct lpc18xx_usb_otg_phy *lpc;
++
++	lpc = devm_kzalloc(&pdev->dev, sizeof(*lpc), GFP_KERNEL);
++	if (!lpc)
++		return -ENOMEM;
++
++	lpc->reg = syscon_regmap_lookup_by_compatible("nxp,lpc1850-creg");
++	if (IS_ERR(lpc->reg)) {
++		dev_err(&pdev->dev, "failed to get syscon\n");
++		return PTR_ERR(lpc->reg);
++	}
++
++	lpc->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(lpc->clk)) {
++		dev_err(&pdev->dev, "failed to get clock\n");
++		return PTR_ERR(lpc->clk);
++	}
++
++	lpc->phy = devm_phy_create(&pdev->dev, NULL, &lpc18xx_usb_otg_phy_ops);
++	if (IS_ERR(lpc->phy)) {
++		dev_err(&pdev->dev, "failed to create PHY\n");
++		return PTR_ERR(lpc->phy);
++	}
++
++	phy_set_drvdata(lpc->phy, lpc);
++
++	phy_provider = devm_of_phy_provider_register(&pdev->dev,
++						     of_phy_simple_xlate);
++
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static const struct of_device_id lpc18xx_usb_otg_phy_match[] = {
++	{ .compatible = "nxp,lpc1850-usb-otg-phy" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lpc18xx_usb_otg_phy_match);
++
++static struct platform_driver lpc18xx_usb_otg_phy_driver = {
++	.probe		= lpc18xx_usb_otg_phy_probe,
++	.driver		= {
++		.name	= "lpc18xx-usb-otg-phy",
++		.of_match_table = lpc18xx_usb_otg_phy_match,
++	},
++};
++module_platform_driver(lpc18xx_usb_otg_phy_driver);
++
++MODULE_AUTHOR("Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
++MODULE_DESCRIPTION("NXP LPC18xx/43xx USB OTG PHY driver");
++MODULE_LICENSE("GPL v2");
+-- 
+1.8.0
 
-Thanks,
-Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
