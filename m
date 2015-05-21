@@ -1,61 +1,60 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 11/11] ARM: dts: mt8135-evbp1: Add pinctrl/GPIO node
- for mt6397.
-Date: Thu, 21 May 2015 10:03:45 +0200
-Message-ID: <CABuKBeLgqhP=QHSKtV1ozanZLWwY8Byo3-1Su3v3FteMJcEEbw@mail.gmail.com>
-References: <1432015882-8646-1-git-send-email-hongzhou.yang@mediatek.com>
-	<1432015882-8646-12-git-send-email-hongzhou.yang@mediatek.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] soc: mediatek: Add infracfg misc driver support
+Date: Thu, 21 May 2015 10:09:42 +0200
+Message-ID: <1432195782.21715.123.camel@x220>
+References: <1432131540-2523-1-git-send-email-s.hauer@pengutronix.de>
+	 <1432131540-2523-2-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432015882-8646-12-git-send-email-hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1432131540-2523-2-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maoguang Meng <maoguang.meng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream <srv_heupstream@media>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-19 8:11 GMT+02:00 Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> Add pinctrl and GPIO node to mt8135-evbp1.dts.
->
-> Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/mt8135-evbp1.dts |    8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/mt8135-evbp1.dts b/arch/arm/boot/dts/mt8135-evbp1.dts
-> index 357a91f..332233b 100644
-> --- a/arch/arm/boot/dts/mt8135-evbp1.dts
-> +++ b/arch/arm/boot/dts/mt8135-evbp1.dts
-> @@ -14,6 +14,7 @@
->
->  /dts-v1/;
->  #include "mt8135.dtsi"
-> +#include <dt-bindings/pinctrl/mt6397-pinfunc.h>
->
->  / {
->         model = "MediaTek MT8135 evaluation board";
-> @@ -28,6 +29,13 @@
->         pmic: mt6397 {
->                 compatible = "mediatek,mt6397";
->
-> +               pio6397: pinctrl@c000 {
-> +                       compatible = "mediatek,mt6397-pinctrl";
-> +                       pins-are-numbered;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +               };
+Just a nit: an unneeded macro.
+
+On Wed, 2015-05-20 at 16:18 +0200, Sascha Hauer wrote:
+
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
+
+> +config MTK_INFRACFG
+> +	bool "MediaTek INFRACFG Support"
+> +	depends on ARCH_MEDIATEK
+> +	select REGMAP
+> +	help
+> +	  Say yes here to add support for the MediaTek INFRACFG controller. The
+> +	  INFRACFG controller contains various infrastructure registers not
+> +	  directly associated to any device.
 > +
->                 mt6397regulator: mt6397regulator {
->                         compatible = "mediatek,mt6397-regulator";
->
 
-Acked-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> --- a/drivers/soc/mediatek/Makefile
+> +++ b/drivers/soc/mediatek/Makefile
 
-Linus, please take it through your tree.
-Thanks.
+> +obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
 
--- 
-motzblog.wordpress.com
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mtk-infracfg.c
+
+> +#include <linux/module.h>
+
+> +MODULE_LICENSE("GPL v2");
+
+MTK_INFRACFG was changed from tristate to bool in this version.
+
+Note that for built-in code MODULE_LICENSE() will be effectively
+preprocessed away. So you can drop that macro, and the include of
+linux/module.h too. (I did a quick compile to see if nothing else
+requires module.h, and it compiled cleanly without that include.)
+
+Thanks,
+
+
+Paul Bolle
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
