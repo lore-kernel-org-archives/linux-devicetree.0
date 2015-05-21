@@ -1,47 +1,42 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH 3/7] clocksource: mips-gic: Split clocksource and
- clockevent initialization
-Date: Thu, 21 May 2015 15:24:41 -0700
-Message-ID: <CAL1qeaFkzpH+nGqRPOuY-L62jP8NgZWP0WxKTYKXZDpe1sSojg@mail.gmail.com>
-References: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com>
-	<1432244260-14908-4-git-send-email-ezequiel.garcia@imgtec.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 3/5] ata: add Broadcom AHCI SATA3 driver for STB chips
+Date: Thu, 21 May 2015 15:26:10 -0700
+Message-ID: <CAN8TOE-eQF1QGSYTm12ryWy868jfJ+B1XUbSgpm9v275rCaFTQ@mail.gmail.com>
+References: <1431473303-18873-1-git-send-email-computersforpeace@gmail.com>
+	<1431473303-18873-4-git-send-email-computersforpeace@gmail.com>
+	<CAOMZO5DtNa2-bgdGmiiJM4JZ7MHz2THSsNMwT=9oWO1ThNu2KA@mail.gmail.com>
+	<20150521222059.GM4914@htj.duckdns.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432244260-14908-4-git-send-email-ezequiel.garcia@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <Govindraj.Raja@imgtec.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150521222059.GM4914@htj.duckdns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kevin Cernekee <cernekee@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 2:37 PM, Ezequiel Garcia
-<ezequiel.garcia@imgtec.com> wrote:
-> This is preparation work for the introduction of clockevent frequency
-> update with a clock notifier. This is only possible when the device
-> is passed a clk struct, so let's split the legacy and devicetree
-> initialization.
+On Thu, May 21, 2015 at 3:20 PM, Tejun Heo <tj@kernel.org> wrote:
+> On Thu, May 21, 2015 at 07:16:07PM -0300, Fabio Estevam wrote:
+>> On Tue, May 12, 2015 at 8:28 PM, Brian Norris
+>> <computersforpeace@gmail.com> wrote:
+>>
+>> > +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ahci");
+>> > +       ahci = devm_ioremap_resource(&pdev->dev, res);
+>> > +       if (IS_ERR(ahci))
+>> > +               return 0;
+>>
+>> You should propagate 'return PTR_ERR(ahci)' instead.
 >
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-> ---
->  drivers/clocksource/mips-gic-timer.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
-> index c4352f0..22a4daf 100644
-> --- a/drivers/clocksource/mips-gic-timer.c
-> +++ b/drivers/clocksource/mips-gic-timer.c
-> @@ -142,11 +142,6 @@ static void __init __gic_clocksource_init(void)
->         ret = clocksource_register_hz(&gic_clocksource, gic_frequency);
->         if (ret < 0)
->                 pr_warn("GIC: Unable to register clocksource\n");
-> -
-> -       gic_clockevent_init();
-> -
-> -       /* And finally start the counter */
-> -       gic_start_count();
->  }
+> Brian, can you please update the patch?
 
-Instead of duplicating this bit in both the OF and non-OF paths, maybe
-it would be better to do the notifier registration in
-gic_clockevent_init(), either by passing around the struct clk or
-making it a global?
+Note how the function brcm_ahci_get_portmask() is used. In brcm_ahci_probe():
+
+        priv->port_mask = brcm_ahci_get_portmask(pdev, priv);
+        if (!priv->port_mask)
+                return -ENODEV;
+
+I could try to change the return semantics if really needed. Or I
+could add some comments on brcm_ahci_get_portmask() to note its return
+semantics. Or I could just leave the driver as-is. Your call.
+
+Brian
