@@ -1,121 +1,110 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] soc: mediatek: Add SMI driver
-Date: Thu, 21 May 2015 22:49:38 +0800
-Message-ID: <1432219778.5092.44.camel@mhfsdcap03>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
-	<1431683009-18158-5-git-send-email-yong.wu@mediatek.com>
-	<CABuKBeJvh2PGi3i6O0uu-7ggdBzKMb3tPE_XKhT1i-+tkKc5gg@mail.gmail.com>
-	<1432188990.5092.12.camel@mhfsdcap03>
-	<CABuKBe+FmAzr_Cu=fUDwDHYzH4mW_2p4z1SYmp7+W=Tu-MLEuA@mail.gmail.com>
-	<CAGS+omARc60i+8vO6V1ccnSnXkjAGNjMjRB1+5kg_EHrrS1NOw@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 21 May 2015 08:18:47 -0700
+Message-ID: <20150521151847.GA16668@roeck-us.net>
+References: <=fu.wei@linaro.org>
+ <1432197156-16947-1-git-send-email-fu.wei@linaro.org>
+ <1432197156-16947-7-git-send-email-fu.wei@linaro.org>
+ <555DB4C4.5090606@roeck-us.net>
+ <CADyBb7vbcHG69cpnx6sUwaT7abS7w3Er62+50D6PUrGHVnG9vQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAGS+omARc60i+8vO6V1ccnSnXkjAGNjMjRB1+5kg_EHrrS1NOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CADyBb7vbcHG69cpnx6sUwaT7abS7w3Er62+50D6PUrGHVnG9vQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-05-21 at 22:33 +0800, Daniel Kurtz wrote:
-> On Thu, May 21, 2015 at 3:30 PM, Matthias Brugger
-> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > 2015-05-21 8:16 GMT+02:00 Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> >> Hi Matthias,
-> >>      Thanks very much for your suggestion.
-> >>      Abort the smi clock name, Could you help check below.
-> >>      The others I will improve in next time.
+On Thu, May 21, 2015 at 07:08:34PM +0800, Fu Wei wrote:
+> Hi Guenter,
+> 
+> Thanks for review :-)
+> 
+> On 21 May 2015 at 18:34, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> > On 05/21/2015 01:32 AM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
 > >>
-> >> On Tue, 2015-05-19 at 13:14 +0200, Matthias Brugger wrote:
-> >>> 2015-05-15 11:43 GMT+02:00 Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> >>> >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
-> >>> > responsible to enable/disable iommu and control the clocks of each local arbiter.
-> >>> >
-> >> [snip]
-> >>> > +
-> >>> > +#define SMI_LARB_MMU_EN                (0xf00)
-> >>> > +#define F_SMI_MMU_EN(port)     (1 << (port))
-> >>> > +
-> >>> > +enum {
-> >>> > +       MTK_CLK_APB,
-> >>> > +       MTK_CLK_SMI,
-> >>> > +       MTK_CLK_MAX,
-> >>>
-> >>> Maybe add something like:
-> >>> MTK_CLK_FIRST = MTK_CLK_APB,
-> >>> to make the for loops better readable.
-> >>>
-> >> Then, Is it like this? :
-> >>  enum {
-> >>         MTK_CLK_FIRST = MTK_CLK_APB,
-> >>         MTK_CLK_SMI,
-> >>         MTK_CLK_MAX,
-> >>  }
-> >> or the CLK_SMI also need MTK_CLK_SECOND = MTK_CLK_SMI.
-> >
-> >
-> > something like:
-> > enum {
-> >          MTK_CLK_FIRST,
-> >          MTK_CLK_APB = MTK_CLK_FIRST,
-> >          MTK_CLK_SMI,
-> >          MTK_CLK_LAST,
-> > }
-> >
-> > So you can rewrite the for loop:
-> > if (i = MTK_CLK_FIRST; i < MTK_CLK_LAST; i++)
-> 
-> Actually, do we ever plan to add more clks per smi node?
-No.
-> If not, perhaps the whole driver would be simpler if you just
-> explicitly handle the apb & smi clocks:
-> 
-> struct mtk_smi_larb {
->        void __iomem            *base;
->        spinlock_t              portlock; /* lock for config port */
->        struct device           *smi;
->        struct clk              *clk_apb;
->        struct clk              *clk_smi;
-> };
-> 
-> And then all of the loops become just a pair of clock operations.
-Thanks. I will try this and compare whether it will add many lines.
-> 
-> Best Regards,
-> -Dan
-> 
-> >
-> > Regards,
-> > Matthias
-> >
-> >>> > +};
-> >>> > +
-> >>> > +struct mtk_smi_common {
-> >>> > +       void __iomem            *base;
-> >>>
-> >>> That seems to be never used. Please delete it.
-> >>>
-> >>> > +       struct clk              *clk[MTK_CLK_MAX];
-> >>> > +};
-> >>> > +
-> >>> > +struct mtk_smi_larb {
-> >>> > +       void __iomem            *base;
-> >>> > +       spinlock_t              portlock; /* lock for config port */
-> >>> > +       struct clk              *clk[MTK_CLK_MAX];
-> >>> > +       struct device           *smi;
-> >>> > +};
-> >>> > +
-> >>> Thanks,
-> >>> Matthias
+> >> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > >>
-> > --
-> > motzblog.wordpress.com
+> >> This driver bases on linux kernel watchdog framework, and
+> >> use "pretimeout" in the framework. It supports getting timeout and
+> >> pretimeout from parameter and FDT at the driver init stage.
+> >> In first timeout(WS0), the interrupt routine run panic to save
+> >> system context.
+> >>
+> >> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>   drivers/watchdog/Kconfig     |  12 ++
+> >>   drivers/watchdog/Makefile    |   1 +
+> >>   drivers/watchdog/sbsa_gwdt.c | 476
+> >> +++++++++++++++++++++++++++++++++++++++++++
+> >>   3 files changed, 489 insertions(+)
+> >>   create mode 100644 drivers/watchdog/sbsa_gwdt.c
+> >>
+> >> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> >> index e5e7c55..25a0df1 100644
+> >> --- a/drivers/watchdog/Kconfig
+> >> +++ b/drivers/watchdog/Kconfig
+> >> @@ -152,6 +152,18 @@ config ARM_SP805_WATCHDOG
+> >>           ARM Primecell SP805 Watchdog timer. This will reboot your system
+> >> when
+> >>           the timeout is reached.
+> >>
+> >> +config ARM_SBSA_WATCHDOG
+> >> +       tristate "ARM SBSA Generic Watchdog"
+> >> +       depends on ARM || ARM64 || COMPILE_TEST
+> >> +       depends on ARM_ARCH_TIMER
+> >> +       select WATCHDOG_CORE
+> >> +       help
+> >> +         ARM SBSA Generic Watchdog timer. This has two Watchdog Signals
+> >> +         (WS0/WS1), will trigger a warning interrupt(do panic) at the
+> >> first
+> >> +         timeout(WS0); will reboot your system when the second
+> >> timeout(WS1)
+> >> +         is reached.
+> >
+> >
+> > I think it would be better to keep the WS0/WS1 out of the help text.
+> > It is an implementation detail, and no user will be able to make sense of
+> > it.
+> 
+> I don't mind to delete it , but those are in SBSA spec, is that an
+> implementation detail ?
+> 
+I think so.
+
+Ask yourself - assuming you are not involved in the development of this driver,
+and you read this help text. Is the help text going to help you to know about
+WS0 and WS1 ? Why not just something like the following, if you want to be
+verbose ?
+
+	ARM SBSA Generic Watchdog. This watchdog has two Watchdog timeouts.
+	The first timeout will trigger a panic; the second timeout will trigger
+	a system reset.
+
+Anyway, not worth arguing about.
+
+> >> +
+> >> +       /*
+> >> +        * Try to determine the frequency from the arch_timer interface
+> >> +        */
+> >> +       clk = arch_timer_get_rate();
+> >
+> >
+> > arch_timer_get_rate() does not seem to be exported. Did you try to build
+> > the driver as module ?
+> 
+> yes, I have built it as a ko module, that is why I made a patch to
+> export this interface in the first patch of this patchset
+> 
+>  but I will confirm it again :-)
+> 
+Guess I'll give it a try myself. I don't really understand how this
+can work unless arch_timer_get_rate() is exported in your tree.
+
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
