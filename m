@@ -1,78 +1,51 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
- samsung,flash-led property
-Date: Thu, 21 May 2015 11:10:49 +0200
-Message-ID: <555DA119.9030904@samsung.com>
-References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
- <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
- <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v3 2/2] pwm: Add support for R-Car PWM Timer
+Date: Thu, 21 May 2015 09:25:44 +0000
+Message-ID: <SG2PR06MB09191A5315EF4FE8E6F4CFECD8C10@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1432176653-4452-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1432176653-4452-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXeNaHWbJ1hsVymUAa3gWW3-UkTwqQCpUBSG28UCy9vbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, devicetree@vger.kernel.org, sre@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXeNaHWbJ1hsVymUAa3gWW3-UkTwqQCpUBSG28UCy9vbw@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-pwm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On 05/21/2015 12:00 AM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Wed, May 20, 2015 at 04:10:15PM +0200, Jacek Anaszewski wrote:
->> This patch adds examples for samsung,flash-led property to the
->> samsung-fimc.txt.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> Cc: devicetree@vger.kernel.org
->> ---
->>   .../devicetree/bindings/media/samsung-fimc.txt     |    4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> index 922d6f8..57edffa 100644
->> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> @@ -126,6 +126,8 @@ Example:
->>   			clocks = <&camera 1>;
->>   			clock-names = "mclk";
->>
->> +			samsung,flash-led = <&front_cam_flash>;
->> +
->>   			port {
->>   				s5k6aa_ep: endpoint {
->>   					remote-endpoint = <&fimc0_ep>;
->> @@ -147,6 +149,8 @@ Example:
->>   			clocks = <&camera 0>;
->>   			clock-names = "mclk";
->>
->> +			samsung,flash-led = <&rear_cam_flash>;
->> +
->>   			port {
->>   				s5c73m3_1: endpoint {
->>   					data-lanes = <1 2 3 4>;
->
-> Oops. I missed this property would have ended to the sensor's DT node. I
-> don't think we should have properties here that are parsed by another
-> driver --- let's discuss this tomorrow.
-
-exynos4-is driver already parses sensor nodes (at least their 'port'
-sub-nodes).
-
-> There are two main options that I can think of --- either put the property
-> under the bridge (ISP) driver's device node as a temporary solution that
-> works on a few ISP drivers, or think how sensor modules should be modelled,
-> in which case we'd have some idea how lens device would be taken into
-> account.
->
-> Cc Sebastian.
->
-
-
--- 
-Best Regards,
-Jacek Anaszewski
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXchDQoNCj4gU2VudDogVGh1
+cnNkYXksIE1heSAyMSwgMjAxNSA1OjMwIFBNDQo8IHNuaXAgPg0KPiA+IC0tLSAvZGV2L251bGwN
+Cj4gPiArKysgYi9kcml2ZXJzL3B3bS9wd20tcmNhci5jDQo+IA0KPiA+ICsjZGVmaW5lIFJDQVJf
+UFdNX0NIX09GRlNFVCAgICAgMHgxMDAwDQo+IA0KPiBUaGlzIGlzIG5vIGxvbmdlciB1c2VkLCBu
+b3cgZWFjaCBwd20gaW5zdGFuY2UgaGFzIGl0cyBvd24gZGV2aWNlIG5vZGUuDQoNCk9vcHMuIEkg
+d2lsbCByZW1vdmUgaXQuDQoNCj4gPiArc3RhdGljIHZvaWQgcmNhcl9wd21fc2V0X2NvdW50ZXIo
+c3RydWN0IHJjYXJfcHdtX2NoaXAgKnJwLCBpbnQgZGl2LA0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGludCBkdXR5X25zLCBpbnQgcGVyaW9kX25zKQ0KPiA+ICt7DQo+ID4g
+KyAgICAgICB1bnNpZ25lZCBsb25nIGxvbmcgb25lX2N5Y2xlLCB0bXA7ICAgICAgLyogMC4wMSBu
+YW5vc2Vjb25kcyAqLw0KPiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyBjbGtfcmF0ZSA9IGNsa19n
+ZXRfcmF0ZShycC0+Y2xrKTsNCj4gPiArICAgICAgIHUzMiBjeWMsIHBoOw0KPiA+ICsNCj4gPiAr
+ICAgICAgIG9uZV9jeWNsZSA9ICh1bnNpZ25lZCBsb25nIGxvbmcpTlNFQ19QRVJfU0VDICogMTAw
+ICogKDEgPDwgZGl2KTsNCj4gPiArICAgICAgIGRvX2RpdihvbmVfY3ljbGUsIGNsa19yYXRlKTsN
+Cj4gPiArDQo+ID4gKyAgICAgICB0bXAgPSBwZXJpb2RfbnMgKiAxMDA7DQo+IA0KPiBwZXJpb2Rf
+bnMgYW5kIHRoZSBjb25zdGFudCAxMDAgYXJlIGJvdGggaW50LCBoZW5jZSB0aGUgbXVsdGlwbGlj
+YXRpb24gbWF5DQo+IHN0aWxsIG92ZXJmbG93Lg0KPiBQbGVhc2UgdXNlIGUuZy4gInRtcCA9IHBl
+cmlvZF9ucyAqIDEwMFVMTCIgaW5zdGVhZC4NCg0KVGhhbmsgeW91IGZvciB0aGUgcG9pbnQuIEkg
+d2lsbCB1c2UgaXQuDQoNCj4gPiArICAgICAgIGRvX2Rpdih0bXAsIG9uZV9jeWNsZSk7DQo+ID4g
+KyAgICAgICBjeWMgPSAoKHUzMil0bXAgPDwgUkNBUl9QV01DTlRfQ1lDMF9TSElGVCkgJiBSQ0FS
+X1BXTUNOVF9DWUMwX01BU0s7DQo+IA0KPiBJIHRoaW5rIHRoZSBjYXN0IGlzIG5vdCBuZWVkZWQu
+DQoNClRoYW5rIHlvdSBmb3IgdGhlIHBvaW50LiBJIHdpbGwgcmVtb3ZlIGl0Lg0KDQo+ID4gKw0K
+PiA+ICsgICAgICAgdG1wID0gZHV0eV9ucyAqIDEwMDsNCj4gDQo+IFNhbWUgaGVyZTogInRtcCA9
+IGR1dHlfbnMgKiAxMDBVTEw7Ii4NCg0KVGhhbmsgeW91IGFnYWluLg0KDQo+ID4gKyAgICAgICBk
+b19kaXYodG1wLCBvbmVfY3ljbGUpOw0KPiA+ICsgICAgICAgcGggPSAodTMyKXRtcCAmIFJDQVJf
+UFdNQ05UX1BIMF9NQVNLOw0KPiANCj4gSSB0aGluayB0aGUgY2FzdCBpcyBub3QgbmVlZGVkLg0K
+DQpUaGFuayB5b3UgYWdhaW4uDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoN
+Cj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVy
+dA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51
+eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwg
+Y29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNr
+ZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInBy
+b2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
