@@ -1,49 +1,34 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH trivial] of/overlay: Grammar s/an negative/a negative/
-Date: Thu, 21 May 2015 14:10:26 +0200
-Message-ID: <1432210226-22446-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH trivial] OF: Spelling/grammar s/rationalle of/rationale for/
+Date: Thu, 21 May 2015 14:16:00 +0200
+Message-ID: <1432210560-23444-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Fixes: 3685943b0970e33c ("OF: DT-Overlay configfs interface (v4)")
 ---
- drivers/of/overlay.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Against Pantelis' linux-beagle-track-mainline.git/bbb-overlays.
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 9af4d8de91792cb3..8fb906d4cdecfa4f 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -442,7 +442,7 @@ static struct kset *ov_kset;
-  * of the overlay in a list. This list can be used to prevent
-  * illegal overlay removals.
-  *
-- * Returns the id of the created overlay, or an negative error number
-+ * Returns the id of the created overlay, or a negative error number
-  */
- int of_overlay_create(struct device_node *tree)
- {
-@@ -607,7 +607,7 @@ static int overlay_removal_is_ok(struct of_overlay *ov)
-  *
-  * Removes an overlay if it is permissible.
-  *
-- * Returns 0 on success, or an negative error number
-+ * Returns 0 on success, or a negative error number
-  */
- int of_overlay_destroy(int id)
- {
-@@ -656,7 +656,7 @@ EXPORT_SYMBOL_GPL(of_overlay_destroy);
-  *
-  * Removes all overlays from the system in the correct order.
-  *
-- * Returns 0 on success, or an negative error number
-+ * Returns 0 on success, or a negative error number
-  */
- int of_overlay_destroy_all(void)
- {
+ Documentation/devicetree/configfs-overlays.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/configfs-overlays.txt b/Documentation/devicetree/configfs-overlays.txt
+index 5fa43e0643072c79..185d85ef52e49074 100644
+--- a/Documentation/devicetree/configfs-overlays.txt
++++ b/Documentation/devicetree/configfs-overlays.txt
+@@ -25,7 +25,7 @@ To remove it simply rmdir the directory.
+ 
+ 	# rmdir /config/device-tree/overlays/foo
+ 
+-The rationalle of the dual interface (firmware & direct copy) is that each is
++The rationale for the dual interface (firmware & direct copy) is that each is
+ better suited to different use patterns. The firmware interface is what's
+ intended to be used by hardware managers in the kernel, while the copy interface
+ make sense for developers (since it avoids problems with namespaces).
 -- 
 1.9.1
 
