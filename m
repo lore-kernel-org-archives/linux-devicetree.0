@@ -1,412 +1,95 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v5 10/11] nvmem: sunxi: Move the SID driver to the nvmem framework
-Date: Thu, 21 May 2015 17:45:33 +0100
-Message-ID: <1432226733-9243-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, pantelis.antoniou@konsulko.com, mporter@konsulko.com
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
+ samsung,flash-led property
+Date: Thu, 21 May 2015 18:58:59 +0200
+Message-ID: <555E0ED3.5080101@samsung.com>
+References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+ <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
+ <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
+ <555DA119.9030904@samsung.com>
+ <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
+ <555DDD88.8080601@samsung.com>
+ <20150521142018.GK8601@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150521142018.GK8601@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Hi Sakari,
 
-Now that we have the nvmem framework, we can consolidate the common driver
-code. Move the driver to the framework, and hopefully, it will fix the sysfs
-file creation race.
+On 21/05/15 16:20, Sakari Ailus wrote:
+> On Thu, May 21, 2015 at 03:28:40PM +0200, Sylwester Nawrocki wrote:
+>> > On 21/05/15 13:32, Sakari Ailus wrote:
+>>>>>> > >>>> @@ -147,6 +149,8 @@ Example:
+>>>>>>>>> > >>>> > >>  			clocks = <&camera 0>;
+>>>>>>>>> > >>>> > >>  			clock-names = "mclk";
+>>>>>>>>> > >>>> > >>
+>>>>>>>>> > >>>> > >>+			samsung,flash-led = <&rear_cam_flash>;
+>>>>>>>>> > >>>> > >>+
+>>>>>>>>> > >>>> > >>  			port {
+>>>>>>>>> > >>>> > >>  				s5c73m3_1: endpoint {
+>>>>>>>>> > >>>> > >>  					data-lanes = <1 2 3 4>;
+>>>>>>> > >>> > >
+>>>>>>> > >>> > >Oops. I missed this property would have ended to the sensor's DT node. I
+>>>>>>> > >>> > >don't think we should have properties here that are parsed by another
+>>>>>>> > >>> > >driver --- let's discuss this tomorrow.
+>>>>> > >> > 
+>>>>> > >> > exynos4-is driver already parses sensor nodes (at least their 'port'
+>>>>> > >> > sub-nodes).
+>>> > >
+>>> > > If you read the code and the comment, it looks like something that should be
+>>> > > done better but hasn't been done yet. :-) That's something we should avoid.
+>>> > > Also, flash devices are by far more common than external ISPs I presume.
+>> > 
+>> > Yes, especially let's not require any samsung specific properties in
+>> > other vendors' sensor bindings.
+>> > 
+>> > One way of modelling [flash led]/[image sensor] association I imagine
+>> > would be to put, e.g. 'flash-leds' property in the SoC camera host
+>> > interface/ISP DT node. This property would then contain pairs of phandles,
+>> > first to the led node and the second to the sensor node, e.g.
+>> > 
+>> > i2c_controller {
+>> > 	...
+>> > 	flash_xx@NN {
+>> > 		...
+>> > 		led_a {
+>> > 			...		
+>> > 		}
+>> > 	};
+>> > 
+>> > 	image_sensor_x@NN {
+>> > 		...
+>> > 	};
+>> > };
+>> > 
+>> > flash-leds = <&flash_xx &image_sensor_x>, <...>;
+>
+> Maybe a stupid question, but how do you access this in a driver? I have to
+> admit I'm no DT expert.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-[srinivas.kandagatla: Moved to regmap based EEPROM framework]
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- Documentation/ABI/testing/sysfs-driver-sunxi-sid   |  22 ---
- .../bindings/misc/allwinner,sunxi-sid.txt          |  17 ---
- .../bindings/nvmem/allwinner,sunxi-sid.txt         |  21 +++
- drivers/misc/eeprom/Kconfig                        |  13 --
- drivers/misc/eeprom/Makefile                       |   1 -
- drivers/misc/eeprom/sunxi_sid.c                    | 156 ---------------------
- drivers/nvmem/Kconfig                              |  11 ++
- drivers/nvmem/Makefile                             |   2 +
- drivers/nvmem/sunxi-sid.c                          |  64 +++++++++
- 9 files changed, 98 insertions(+), 209 deletions(-)
- delete mode 100644 Documentation/ABI/testing/sysfs-driver-sunxi-sid
- delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
- create mode 100644 Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
- delete mode 100644 drivers/misc/eeprom/sunxi_sid.c
- create mode 100644 drivers/nvmem/sunxi-sid.c
+You could get of_node pointers with of_parse_phandle() call and then
+lookup related flash and sensor devices based on that.
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-sunxi-sid b/Documentation/ABI/testing/sysfs-driver-sunxi-sid
-deleted file mode 100644
-index ffb9536..0000000
---- a/Documentation/ABI/testing/sysfs-driver-sunxi-sid
-+++ /dev/null
-@@ -1,22 +0,0 @@
--What:		/sys/devices/*/<our-device>/eeprom
--Date:		August 2013
--Contact:	Oliver Schinagl <oliver@schinagl.nl>
--Description:	read-only access to the SID (Security-ID) on current
--		A-series SoC's from Allwinner. Currently supports A10, A10s, A13
--		and A20 CPU's. The earlier A1x series of SoCs exports 16 bytes,
--		whereas the newer A20 SoC exposes 512 bytes split into sections.
--		Besides the 16 bytes of SID, there's also an SJTAG area,
--		HDMI-HDCP key and some custom keys. Below a quick overview, for
--		details see the user manual:
--		0x000  128 bit root-key (sun[457]i)
--		0x010  128 bit boot-key (sun7i)
--		0x020   64 bit security-jtag-key (sun7i)
--		0x028   16 bit key configuration (sun7i)
--		0x02b   16 bit custom-vendor-key (sun7i)
--		0x02c  320 bit low general key (sun7i)
--		0x040   32 bit read-control access (sun7i)
--		0x064  224 bit low general key (sun7i)
--		0x080 2304 bit HDCP-key (sun7i)
--		0x1a0  768 bit high general key (sun7i)
--Users:		any user space application which wants to read the SID on
--		Allwinner's A-series of CPU's.
-diff --git a/Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
-deleted file mode 100644
-index fabdf64..0000000
---- a/Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--Allwinner sunxi-sid
--
--Required properties:
--- compatible: "allwinner,sun4i-a10-sid" or "allwinner,sun7i-a20-sid"
--- reg: Should contain registers location and length
--
--Example for sun4i:
--	sid@01c23800 {
--		compatible = "allwinner,sun4i-a10-sid";
--		reg = <0x01c23800 0x10>
--	};
--
--Example for sun7i:
--	sid@01c23800 {
--		compatible = "allwinner,sun7i-a20-sid";
--		reg = <0x01c23800 0x200>
--	};
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-new file mode 100644
-index 0000000..d543ed3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-@@ -0,0 +1,21 @@
-+Allwinner sunxi-sid
-+
-+Required properties:
-+- compatible: "allwinner,sun4i-a10-sid" or "allwinner,sun7i-a20-sid"
-+- reg: Should contain registers location and length
-+
-+= Data cells =
-+Are child nodes of qfprom, bindings of which as described in
-+bindings/nvmem/nvmem.txt
-+
-+Example for sun4i:
-+	sid@01c23800 {
-+		compatible = "allwinner,sun4i-a10-sid";
-+		reg = <0x01c23800 0x10>
-+	};
-+
-+Example for sun7i:
-+	sid@01c23800 {
-+		compatible = "allwinner,sun7i-a20-sid";
-+		reg = <0x01c23800 0x200>
-+	};
-diff --git a/drivers/misc/eeprom/Kconfig b/drivers/misc/eeprom/Kconfig
-index 9536852f..04f2e1f 100644
---- a/drivers/misc/eeprom/Kconfig
-+++ b/drivers/misc/eeprom/Kconfig
-@@ -96,17 +96,4 @@ config EEPROM_DIGSY_MTC_CFG
- 
- 	  If unsure, say N.
- 
--config EEPROM_SUNXI_SID
--	tristate "Allwinner sunxi security ID support"
--	depends on ARCH_SUNXI && SYSFS
--	help
--	  This is a driver for the 'security ID' available on various Allwinner
--	  devices.
--
--	  Due to the potential risks involved with changing e-fuses,
--	  this driver is read-only.
--
--	  This driver can also be built as a module. If so, the module
--	  will be called sunxi_sid.
--
- endmenu
-diff --git a/drivers/misc/eeprom/Makefile b/drivers/misc/eeprom/Makefile
-index 9507aec..fc1e81d 100644
---- a/drivers/misc/eeprom/Makefile
-+++ b/drivers/misc/eeprom/Makefile
-@@ -4,5 +4,4 @@ obj-$(CONFIG_EEPROM_LEGACY)	+= eeprom.o
- obj-$(CONFIG_EEPROM_MAX6875)	+= max6875.o
- obj-$(CONFIG_EEPROM_93CX6)	+= eeprom_93cx6.o
- obj-$(CONFIG_EEPROM_93XX46)	+= eeprom_93xx46.o
--obj-$(CONFIG_EEPROM_SUNXI_SID)	+= sunxi_sid.o
- obj-$(CONFIG_EEPROM_DIGSY_MTC_CFG) += digsy_mtc_eeprom.o
-diff --git a/drivers/misc/eeprom/sunxi_sid.c b/drivers/misc/eeprom/sunxi_sid.c
-deleted file mode 100644
-index 8385177..0000000
---- a/drivers/misc/eeprom/sunxi_sid.c
-+++ /dev/null
-@@ -1,156 +0,0 @@
--/*
-- * Copyright (c) 2013 Oliver Schinagl <oliver@schinagl.nl>
-- * http://www.linux-sunxi.org
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * This driver exposes the Allwinner security ID, efuses exported in byte-
-- * sized chunks.
-- */
--
--#include <linux/compiler.h>
--#include <linux/device.h>
--#include <linux/err.h>
--#include <linux/export.h>
--#include <linux/fs.h>
--#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/kobject.h>
--#include <linux/module.h>
--#include <linux/of_device.h>
--#include <linux/platform_device.h>
--#include <linux/random.h>
--#include <linux/slab.h>
--#include <linux/stat.h>
--#include <linux/sysfs.h>
--#include <linux/types.h>
--
--#define DRV_NAME "sunxi-sid"
--
--struct sunxi_sid_data {
--	void __iomem *reg_base;
--	unsigned int keysize;
--};
--
--/* We read the entire key, due to a 32 bit read alignment requirement. Since we
-- * want to return the requested byte, this results in somewhat slower code and
-- * uses 4 times more reads as needed but keeps code simpler. Since the SID is
-- * only very rarely probed, this is not really an issue.
-- */
--static u8 sunxi_sid_read_byte(const struct sunxi_sid_data *sid_data,
--			      const unsigned int offset)
--{
--	u32 sid_key;
--
--	if (offset >= sid_data->keysize)
--		return 0;
--
--	sid_key = ioread32be(sid_data->reg_base + round_down(offset, 4));
--	sid_key >>= (offset % 4) * 8;
--
--	return sid_key; /* Only return the last byte */
--}
--
--static ssize_t sid_read(struct file *fd, struct kobject *kobj,
--			struct bin_attribute *attr, char *buf,
--			loff_t pos, size_t size)
--{
--	struct platform_device *pdev;
--	struct sunxi_sid_data *sid_data;
--	int i;
--
--	pdev = to_platform_device(kobj_to_dev(kobj));
--	sid_data = platform_get_drvdata(pdev);
--
--	if (pos < 0 || pos >= sid_data->keysize)
--		return 0;
--	if (size > sid_data->keysize - pos)
--		size = sid_data->keysize - pos;
--
--	for (i = 0; i < size; i++)
--		buf[i] = sunxi_sid_read_byte(sid_data, pos + i);
--
--	return i;
--}
--
--static struct bin_attribute sid_bin_attr = {
--	.attr = { .name = "eeprom", .mode = S_IRUGO, },
--	.read = sid_read,
--};
--
--static int sunxi_sid_remove(struct platform_device *pdev)
--{
--	device_remove_bin_file(&pdev->dev, &sid_bin_attr);
--	dev_dbg(&pdev->dev, "driver unloaded\n");
--
--	return 0;
--}
--
--static const struct of_device_id sunxi_sid_of_match[] = {
--	{ .compatible = "allwinner,sun4i-a10-sid", .data = (void *)16},
--	{ .compatible = "allwinner,sun7i-a20-sid", .data = (void *)512},
--	{/* sentinel */},
--};
--MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
--
--static int sunxi_sid_probe(struct platform_device *pdev)
--{
--	struct sunxi_sid_data *sid_data;
--	struct resource *res;
--	const struct of_device_id *of_dev_id;
--	u8 *entropy;
--	unsigned int i;
--
--	sid_data = devm_kzalloc(&pdev->dev, sizeof(struct sunxi_sid_data),
--				GFP_KERNEL);
--	if (!sid_data)
--		return -ENOMEM;
--
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	sid_data->reg_base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(sid_data->reg_base))
--		return PTR_ERR(sid_data->reg_base);
--
--	of_dev_id = of_match_device(sunxi_sid_of_match, &pdev->dev);
--	if (!of_dev_id)
--		return -ENODEV;
--	sid_data->keysize = (int)of_dev_id->data;
--
--	platform_set_drvdata(pdev, sid_data);
--
--	sid_bin_attr.size = sid_data->keysize;
--	if (device_create_bin_file(&pdev->dev, &sid_bin_attr))
--		return -ENODEV;
--
--	entropy = kzalloc(sizeof(u8) * sid_data->keysize, GFP_KERNEL);
--	for (i = 0; i < sid_data->keysize; i++)
--		entropy[i] = sunxi_sid_read_byte(sid_data, i);
--	add_device_randomness(entropy, sid_data->keysize);
--	kfree(entropy);
--
--	dev_dbg(&pdev->dev, "loaded\n");
--
--	return 0;
--}
--
--static struct platform_driver sunxi_sid_driver = {
--	.probe = sunxi_sid_probe,
--	.remove = sunxi_sid_remove,
--	.driver = {
--		.name = DRV_NAME,
--		.of_match_table = sunxi_sid_of_match,
--	},
--};
--module_platform_driver(sunxi_sid_driver);
--
--MODULE_AUTHOR("Oliver Schinagl <oliver@schinagl.nl>");
--MODULE_DESCRIPTION("Allwinner sunxi security id driver");
--MODULE_LICENSE("GPL");
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index e665e23..17f1a57 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -22,4 +22,15 @@ config QCOM_QFPROM
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem-qfprom.
- 
-+config NVMEM_SUNXI_SID
-+	tristate "Allwinner SoCs SID support"
-+	depends on ARCH_SUNXI
-+	select REGMAP_MMIO
-+	help
-+	  This is a driver for the 'security ID' available on various Allwinner
-+	  devices.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called eeprom-sunxi-sid.
-+
- endif
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index caea611..cc46791 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -9,3 +9,5 @@ nvmem_core-y			+= nvmem-mmio.o
- # Devices
- obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
- nvmem_qfprom-y			:= qfprom.o
-+obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem-sunxi-sid.o
-+nvmem-sunxi-sid-y		:= sunxi-sid.o
-diff --git a/drivers/nvmem/sunxi-sid.c b/drivers/nvmem/sunxi-sid.c
-new file mode 100644
-index 0000000..5bfce35
---- /dev/null
-+++ b/drivers/nvmem/sunxi-sid.c
-@@ -0,0 +1,64 @@
-+/*
-+ * Allwinner sunXi SoCs Security ID support.
-+ *
-+ * Copyright (c) 2013 Oliver Schinagl <oliver@schinagl.nl>
-+ * Copyright (C) 2014 Maxime Ripard <maxime.ripard@free-electrons.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include "nvmem-mmio.h"
-+
-+static bool sunxi_sid_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	return false;
-+}
-+
-+static struct nvmem_config econfig = {
-+	.name = "sunix-sid",
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct regmap_config sunxi_sid_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.writeable_reg = sunxi_sid_writeable_reg,
-+};
-+
-+static struct nvmem_mmio_data sunxi_data = {
-+	.nvmem_config = &econfig,
-+	.regmap_config = &sunxi_sid_regmap_config,
-+};
-+
-+static const struct of_device_id sunxi_sid_of_match[] = {
-+	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sunxi_data},
-+	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sunxi_data},
-+	{/* sentinel */},
-+};
-+MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
-+
-+static struct platform_driver sunxi_sid_driver = {
-+	.probe = nvmem_mmio_probe,
-+	.remove = nvmem_mmio_remove,
-+	.driver = {
-+		.name = "eeprom-sunxi-sid",
-+		.of_match_table = sunxi_sid_of_match,
-+	},
-+};
-+module_platform_driver(sunxi_sid_driver);
-+
-+MODULE_AUTHOR("Oliver Schinagl <oliver@schinagl.nl>");
-+MODULE_DESCRIPTION("Allwinner sunxi security id driver");
-+MODULE_LICENSE("GPL");
+>> > For the purpose of this patch set presumably just samsung specific
+>> > property name could be used (i.e. samsung,flash-leds).
+>
+> I agree. I'll add similar support for the omap3isp driver in the near future
+> though. Let's see how the camera modules will get modelled, if they will,
+> and if this property still fits to the picture by that time, then we make it
+> more generic.
+> 
+> What do you think?
+
+I think we could do that, perhaps we could get some more opinions and
+use generic name already in this series? I'm not sure what are exact
+plans for this series, I guess it is targeted for 4.2?
+
 -- 
-1.9.1
+Regards,
+Sylwester
