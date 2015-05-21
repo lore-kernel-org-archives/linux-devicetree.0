@@ -1,115 +1,107 @@
-From: Daniel Kurtz <djkurtz@google.com>
-Subject: Re: [PATCH v2 4/6] soc: mediatek: Add SMI driver
-Date: Thu, 21 May 2015 22:33:13 +0800
-Message-ID: <CAGS+omARc60i+8vO6V1ccnSnXkjAGNjMjRB1+5kg_EHrrS1NOw@mail.gmail.com>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
- <1431683009-18158-5-git-send-email-yong.wu@mediatek.com> <CABuKBeJvh2PGi3i6O0uu-7ggdBzKMb3tPE_XKhT1i-+tkKc5gg@mail.gmail.com>
- <1432188990.5092.12.camel@mhfsdcap03> <CABuKBe+FmAzr_Cu=fUDwDHYzH4mW_2p4z1SYmp7+W=Tu-MLEuA@mail.gmail.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v9 0/3] ARM: mediatek: Add driver for Mediatek I2C
+Date: Thu, 21 May 2015 22:39:47 +0800
+Message-ID: <CAGS+omB7UMrEdZiJXVK78ENEqH6fL_25-Q5Fj1Z0Buzjwp60JA@mail.gmail.com>
+References: <1432198410-6576-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBe+FmAzr_Cu=fUDwDHYzH4mW_2p4z1SYmp7+W=Tu-MLEuA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Yong Wu <yong.wu@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tfiga@google.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream <srv_heupstream@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Paul Bolle <pebolle@tiscali.nl>, Arnd Bergmann <arnd@arndb.de>, mitchelh@codeaurora.org, k.zhang@mediatek.com, youhua.li@mediatek.com
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432198410-6576-1-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 3:30 PM, Matthias Brugger
-<matthias.bgg@gmail.com> wrote:
-> 2015-05-21 8:16 GMT+02:00 Yong Wu <yong.wu@mediatek.com>:
->> Hi Matthias,
->>      Thanks very much for your suggestion.
->>      Abort the smi clock name, Could you help check below.
->>      The others I will improve in next time.
->>
->> On Tue, 2015-05-19 at 13:14 +0200, Matthias Brugger wrote:
->>> 2015-05-15 11:43 GMT+02:00 Yong Wu <yong.wu@mediatek.com>:
->>> >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
->>> > responsible to enable/disable iommu and control the clocks of each local arbiter.
->>> >
->> [snip]
->>> > +
->>> > +#define SMI_LARB_MMU_EN                (0xf00)
->>> > +#define F_SMI_MMU_EN(port)     (1 << (port))
->>> > +
->>> > +enum {
->>> > +       MTK_CLK_APB,
->>> > +       MTK_CLK_SMI,
->>> > +       MTK_CLK_MAX,
->>>
->>> Maybe add something like:
->>> MTK_CLK_FIRST = MTK_CLK_APB,
->>> to make the for loops better readable.
->>>
->> Then, Is it like this? :
->>  enum {
->>         MTK_CLK_FIRST = MTK_CLK_APB,
->>         MTK_CLK_SMI,
->>         MTK_CLK_MAX,
->>  }
->> or the CLK_SMI also need MTK_CLK_SECOND = MTK_CLK_SMI.
+On Thu, May 21, 2015 at 4:53 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> This series is for Mediatek SoCs I2C controller common bus driver.
 >
+> Earlier MTK SoC (for example, MT6589, MT8135) I2C HW has some limitations.
+> New generation SoC like MT8173 fix following limitations:
 >
-> something like:
-> enum {
->          MTK_CLK_FIRST,
->          MTK_CLK_APB = MTK_CLK_FIRST,
->          MTK_CLK_SMI,
->          MTK_CLK_LAST,
-> }
+> 1. Only support one i2c_msg number. One exception is WRRD (write then read)
+> mode. WRRD can have two i2c_msg numbers.
 >
-> So you can rewrite the for loop:
-> if (i = MTK_CLK_FIRST; i < MTK_CLK_LAST; i++)
+> 2. Mediatek I2C controller support WRRD(write then read) mode, in WRRD
+> mode the Repeat Start will be issued between 2 messages.
+> In this driver if 2 messages is first write then read, the driver will
+> combine 2 messages using Write-Read mode so the RS will be issued between
+> the 2 messages.
+>
+> 3. The max transfer data length is 255 in one message. In WRRD mode, the
+> max data length of second msg is 31.
+>
+> MT8135 and MT6589 can control I2C pins on PMIC(MT6397) by setting the i2c
+> registers in MT8135 side. In this case, driver should set OFFSET_PATH_DIR
+> bit first, the operation on other registers are still the same.
+> For now MT6589/MT8135 support this, MT6577/MT6595/MT8127 do not support.
+> For example, If want to use I2C4/5/6 pins on MT8135 just need to enable
+> the pinmux, else if want to use I2C pins on PMIC(MT6397) need to add
+> "mediatek,have-pmic" property in the .dts file of each platform.
+>
+> This driver is based on 4.1-rc1.
+>
+> Change in v9:
+> Fix Uwe and Matthias review comment: optimize calculate speed function, avoid
+> write I2C_RS_TRANSFER to unsupport SoC, and do some code clean up.
+>
+> Change in v8:
+> Fix Wolfram's review comments like sort include file order, remove thin
+> wrapper functions, remove define number that only use once, and revise
+> error return value.
+>
+> Change in v7:
+> Fix mtk_i2c_of_match in wrong patch bug.
+>
+> Change in v6:
+> 1. Update binding document not use default clock-frequency as example.
+> 2. Add mtk_i2c_compatible struct and pass hardware capabilities
+>    through of_device_id
+> 3. Remove some hardware setting in mtk_i2c_do_transfer to mtk_i2c_init_hw
+>    so just init one time.
+> 4. Correct mtk_i2c_parse_dt don't set default clock bug.
+>
+> Change in v5:
+> Apply new i2c_adapter_quirks patch [2]. Change to use dam_map_single to map
+> dma buffer. Add spinlock to fix race condition. Check of_property_read_u32
+> return value. Remove I2C_FUNC_10BIT_ADDR capability due to driver not implement.
+> Add MT8173 I2C driver.
+>
+> Change in v4:
+> Modify to support i2c_adapter_quirks base on Wolfram's patch [1].
+> Remove check transfer size and WRRD combine code. Instead, fill quirk
+> property and let i2c_check_for_quirks to do the filter.
+>
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/314804.html
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-February/325744.html
+>
+> Eddie Huang (1):
+>   I2C: mediatek: Add driver for MediaTek MT8173 I2C controller
+>
+> Xudong Chen (2):
+>   dt-bindings: Add I2C bindings for mt65xx/mt81xx.
+>   I2C: mediatek: Add driver for MediaTek I2C controller
 
-Actually, do we ever plan to add more clks per smi node?
-If not, perhaps the whole driver would be simpler if you just
-explicitly handle the apb & smi clocks:
+Hi Eddie,
+Is there a reason why this series does not include a patch to add i2c
+nodes and i2c pinctrl nodes for mt8173.dtsi?
 
-struct mtk_smi_larb {
-       void __iomem            *base;
-       spinlock_t              portlock; /* lock for config port */
-       struct device           *smi;
-       struct clk              *clk_apb;
-       struct clk              *clk_smi;
-};
-
-And then all of the loops become just a pair of clock operations.
-
-Best Regards,
+Thanks,
 -Dan
 
 >
-> Regards,
-> Matthias
->
->>> > +};
->>> > +
->>> > +struct mtk_smi_common {
->>> > +       void __iomem            *base;
->>>
->>> That seems to be never used. Please delete it.
->>>
->>> > +       struct clk              *clk[MTK_CLK_MAX];
->>> > +};
->>> > +
->>> > +struct mtk_smi_larb {
->>> > +       void __iomem            *base;
->>> > +       spinlock_t              portlock; /* lock for config port */
->>> > +       struct clk              *clk[MTK_CLK_MAX];
->>> > +       struct device           *smi;
->>> > +};
->>> > +
->>> Thanks,
->>> Matthias
->>
->>
->
->
+>  .../devicetree/bindings/i2c/i2c-mt6577.txt         |  41 ++
+>  drivers/i2c/busses/Kconfig                         |   9 +
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-mt65xx.c                    | 731 +++++++++++++++++++++
+>  4 files changed, 782 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+>  create mode 100644 drivers/i2c/busses/i2c-mt65xx.c
 >
 > --
-> motzblog.wordpress.com
-
-
-
--- 
-Daniel Kurtz | Software Engineer | djkurtz@google.com | 650.204.0722
+> 1.8.1.1.dirty
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
