@@ -1,318 +1,54 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/5] phy: Add Marvell USB 2.0 OTG 28nm PHY
-Date: Thu, 21 May 2015 18:03:39 +0530
-Message-ID: <555DD0A3.7070100@ti.com>
-References: <1431557340-5421-1-git-send-email-robh@kernel.org> <1431557340-5421-4-git-send-email-robh@kernel.org>
+From: Ranjit Abhimanyu Waghmode <ranjit.waghmode@xilinx.com>
+Subject: RE: [RFC PATCH 1/2] devicetree: Add devicetree bindings
+ documentation for ZynqMP GQSPI
+Date: Thu, 21 May 2015 12:42:23 +0000
+Message-ID: <7CFCFE83B8145347A1D424EC939F1C3CA6F1BC@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
+ <20150520143854.GU31550@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431557340-5421-4-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150520143854.GU31550@xsjsorenbubuntu>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <sorenb@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Harini Katakam <harinik@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "ran27jit@gmail.com" <ran27jit@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thursday 14 May 2015 04:18 AM, Rob Herring wrote:
-> Add driver for USB PHY found in Marvell PXA1928 SOC.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->   drivers/phy/Kconfig       |  10 ++
->   drivers/phy/Makefile      |   1 +
->   drivers/phy/phy-mv-usb2.c | 329 ++++++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 340 insertions(+)
->   create mode 100644 drivers/phy/phy-mv-usb2.c
->
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index a53bd5b..ef7634f 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -52,6 +52,16 @@ config PHY_EXYNOS_MIPI_VIDEO
->   	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
->   	  and EXYNOS SoCs.
->
-> +config PHY_MV_USB2
-> +	tristate "Marvell USB 2.0 28nm PHY Driver"
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support Marvell USB 2.0 PHY driver for Marvell
-> +	  SoC. This driver will do the PHY initialization and shutdown.
-> +	  The PHY driver will be used by Marvell udc/ehci/otg driver.
-> +
-> +	  To compile this driver as a module, choose M here.
-> +
->   config PHY_MVEBU_SATA
->   	def_bool y
->   	depends on ARCH_DOVE || MACH_DOVE || MACH_KIRKWOOD
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index f126251..768e55a 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
->   obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
->   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
->   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
-> +obj-$(CONFIG_PHY_MV_USB2)		+= phy-mv-usb2.o
->   obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
->   obj-$(CONFIG_PHY_MIPHY28LP) 		+= phy-miphy28lp.o
->   obj-$(CONFIG_PHY_MIPHY365X)		+= phy-miphy365x.o
-> diff --git a/drivers/phy/phy-mv-usb2.c b/drivers/phy/phy-mv-usb2.c
-> new file mode 100644
-> index 0000000..c48d111
-> --- /dev/null
-> +++ b/drivers/phy/phy-mv-usb2.c
-> @@ -0,0 +1,329 @@
-> +/*
-> + * Copyright (C) 2015 Linaro, Ltd.
-> + * Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> + *
-> + * Based on vendor driver:
-> + * Copyright (C) 2013 Marvell Inc.
-> + * Author: Chao Xie <xiechao.mail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/io.h>
-> +#include <linux/err.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/phy/phy.h>
-> +
-> +/* USB PXA1928 PHY mapping */
-> +#define PHY_28NM_PLL_REG0			0x0
-> +#define PHY_28NM_PLL_REG1			0x4
-> +#define PHY_28NM_CAL_REG			0x8
-> +#define PHY_28NM_TX_REG0			0x0c
-> +#define PHY_28NM_TX_REG1			0x10
-> +#define PHY_28NM_RX_REG0			0x14
-> +#define PHY_28NM_RX_REG1			0x18
-> +#define PHY_28NM_DIG_REG0			0x1c
-> +#define PHY_28NM_DIG_REG1			0x20
-> +#define PHY_28NM_TEST_REG0			0x24
-> +#define PHY_28NM_TEST_REG1			0x28
-> +#define PHY_28NM_MOC_REG			0x2c
-> +#define PHY_28NM_PHY_RESERVE			0x30
-> +#define PHY_28NM_OTG_REG			0x34
-> +#define PHY_28NM_CHRG_DET			0x38
-> +#define PHY_28NM_CTRL_REG0			0xc4
-> +#define PHY_28NM_CTRL_REG1			0xc8
-> +#define PHY_28NM_CTRL_REG2			0xd4
-> +#define PHY_28NM_CTRL_REG3			0xdc
-> +
-> +/* PHY_28NM_PLL_REG0 */
-> +#define PHY_28NM_PLL_READY			BIT(31)
-> +
-> +#define PHY_28NM_PLL_SELLPFR_SHIFT		28
-> +#define PHY_28NM_PLL_SELLPFR_MASK		(0x3 << 28)
-> +
-> +#define PHY_28NM_PLL_FBDIV_SHIFT		16
-> +#define PHY_28NM_PLL_FBDIV_MASK			(0x1ff << 16)
-> +
-> +#define PHY_28NM_PLL_ICP_SHIFT			8
-> +#define PHY_28NM_PLL_ICP_MASK			(0x7 << 8)
-> +
-> +#define PHY_28NM_PLL_REFDIV_SHIFT		0
-> +#define PHY_28NM_PLL_REFDIV_MASK		0x7f
-> +
-> +/* PHY_28NM_PLL_REG1 */
-> +#define PHY_28NM_PLL_PU_BY_REG			BIT(1)
-> +
-> +#define PHY_28NM_PLL_PU_PLL			BIT(0)
-> +
-> +/* PHY_28NM_CAL_REG */
-> +#define PHY_28NM_PLL_PLLCAL_DONE		BIT(31)
-> +
-> +#define PHY_28NM_PLL_IMPCAL_DONE		BIT(23)
-> +
-> +#define PHY_28NM_PLL_KVCO_SHIFT			16
-> +#define PHY_28NM_PLL_KVCO_MASK			(0x7 << 16)
-> +
-> +#define PHY_28NM_PLL_CAL12_SHIFT		20
-> +#define PHY_28NM_PLL_CAL12_MASK			(0x3 << 20)
-> +
-> +#define PHY_28NM_IMPCAL_VTH_SHIFT		8
-> +#define PHY_28NM_IMPCAL_VTH_MASK		(0x7 << 8)
-> +
-> +#define PHY_28NM_PLLCAL_START_SHIFT		22
-> +#define PHY_28NM_IMPCAL_START_SHIFT		13
-> +
-> +/* PHY_28NM_TX_REG0 */
-> +#define PHY_28NM_TX_PU_BY_REG			BIT(25)
-> +
-> +#define PHY_28NM_TX_PU_ANA			BIT(24)
-> +
-> +#define PHY_28NM_TX_AMP_SHIFT			20
-> +#define PHY_28NM_TX_AMP_MASK			(0x7 << 20)
-> +
-> +/* PHY_28NM_RX_REG0 */
-> +#define PHY_28NM_RX_SQ_THRESH_SHIFT		0
-> +#define PHY_28NM_RX_SQ_THRESH_MASK		(0xf << 0)
-> +
-> +/* PHY_28NM_RX_REG1 */
-> +#define PHY_28NM_RX_SQCAL_DONE			BIT(31)
-> +
-> +/* PHY_28NM_DIG_REG0 */
-> +#define PHY_28NM_DIG_BITSTAFFING_ERR		BIT(31)
-> +#define PHY_28NM_DIG_SYNC_ERR			BIT(30)
-> +
-> +#define PHY_28NM_DIG_SQ_FILT_SHIFT		16
-> +#define PHY_28NM_DIG_SQ_FILT_MASK		(0x7 << 16)
-> +
-> +#define PHY_28NM_DIG_SQ_BLK_SHIFT		12
-> +#define PHY_28NM_DIG_SQ_BLK_MASK		(0x7 << 12)
-> +
-> +#define PHY_28NM_DIG_SYNC_NUM_SHIFT		0
-> +#define PHY_28NM_DIG_SYNC_NUM_MASK		(0x3 << 0)
-> +
-> +#define PHY_28NM_PLL_LOCK_BYPASS		BIT(7)
-> +
-> +/* PHY_28NM_OTG_REG */
-> +#define PHY_28NM_OTG_CONTROL_BY_PIN		BIT(5)
-> +#define PHY_28NM_OTG_PU_OTG			BIT(4)
-> +
-> +#define PHY_28NM_CHGDTC_ENABLE_SWITCH_DM_SHIFT_28 13
-> +#define PHY_28NM_CHGDTC_ENABLE_SWITCH_DP_SHIFT_28 12
-> +#define PHY_28NM_CHGDTC_VSRC_CHARGE_SHIFT_28	10
-> +#define PHY_28NM_CHGDTC_VDAT_CHARGE_SHIFT_28	8
-> +#define PHY_28NM_CHGDTC_CDP_DM_AUTO_SWITCH_SHIFT_28 7
-> +#define PHY_28NM_CHGDTC_DP_DM_SWAP_SHIFT_28	6
-> +#define PHY_28NM_CHGDTC_PU_CHRG_DTC_SHIFT_28	5
-> +#define PHY_28NM_CHGDTC_PD_EN_SHIFT_28		4
-> +#define PHY_28NM_CHGDTC_DCP_EN_SHIFT_28		3
-> +#define PHY_28NM_CHGDTC_CDP_EN_SHIFT_28		2
-> +#define PHY_28NM_CHGDTC_TESTMON_CHRGDTC_SHIFT_28 0
-> +
-> +#define PHY_28NM_CTRL1_CHRG_DTC_OUT_SHIFT_28	4
-> +#define PHY_28NM_CTRL1_VBUSDTC_OUT_SHIFT_28	2
-> +
-> +#define PHY_28NM_CTRL3_OVERWRITE		BIT(0)
-> +#define PHY_28NM_CTRL3_VBUS_VALID		BIT(4)
-> +#define PHY_28NM_CTRL3_AVALID			BIT(5)
-> +#define PHY_28NM_CTRL3_BVALID			BIT(6)
-> +
-> +struct mv_usb2_phy {
-> +	struct phy		*phy;
-> +	struct platform_device	*pdev;
-> +	void __iomem		*base;
-> +	struct clk		*clk;
-> +};
-> +
-> +static bool wait_for_reg(void __iomem *reg, u32 mask, unsigned long timeout)
-> +{
-> +	timeout += jiffies;
-> +	while (time_is_after_eq_jiffies(timeout)) {
-> +		if ((readl(reg) & mask) == mask)
-> +			return true;
-> +		msleep(1);
-> +	}
-> +	return false;
-> +}
-> +
-> +static int mv_usb2_phy_28nm_init(struct phy *phy)
-> +{
-> +	struct mv_usb2_phy *mv_phy = phy_get_drvdata(phy);
-> +	struct platform_device *pdev = mv_phy->pdev;
-> +	void __iomem *base = mv_phy->base;
-> +	u32 reg;
-> +
-> +	clk_prepare_enable(mv_phy->clk);
-> +
-> +	/* PHY_28NM_PLL_REG0 */
-> +	reg = readl(base + PHY_28NM_PLL_REG0) &
-> +		~(PHY_28NM_PLL_SELLPFR_MASK | PHY_28NM_PLL_FBDIV_MASK
-> +		| PHY_28NM_PLL_ICP_MASK	| PHY_28NM_PLL_REFDIV_MASK);
-> +	writel(reg | (0x1 << PHY_28NM_PLL_SELLPFR_SHIFT
-> +		| 0xf0 << PHY_28NM_PLL_FBDIV_SHIFT
-> +		| 0x3 << PHY_28NM_PLL_ICP_SHIFT
-> +		| 0xd << PHY_28NM_PLL_REFDIV_SHIFT),
-> +		base + PHY_28NM_PLL_REG0);
-> +
-> +	/* PHY_28NM_PLL_REG1 */
-> +	reg = readl(base + PHY_28NM_PLL_REG1);
-> +	writel(reg | PHY_28NM_PLL_PU_PLL | PHY_28NM_PLL_PU_BY_REG,
-> +		base + PHY_28NM_PLL_REG1);
-> +
-> +	/* PHY_28NM_TX_REG0 */
-> +	reg = readl(base + PHY_28NM_TX_REG0) & ~PHY_28NM_TX_AMP_MASK;
-> +	writel(reg | PHY_28NM_TX_PU_BY_REG | 0x3 << PHY_28NM_TX_AMP_SHIFT |
-> +		PHY_28NM_TX_PU_ANA,
-> +		base + PHY_28NM_TX_REG0);
-> +
-> +	/* PHY_28NM_RX_REG0 */
-> +	reg = readl(base + PHY_28NM_RX_REG0) & ~PHY_28NM_RX_SQ_THRESH_MASK;
-> +	writel(reg | 0xa << PHY_28NM_RX_SQ_THRESH_SHIFT,
-> +		base + PHY_28NM_RX_REG0);
-> +
-> +	/* PHY_28NM_DIG_REG0 */
-> +	reg = readl(base + PHY_28NM_DIG_REG0) &
-> +		~(PHY_28NM_DIG_BITSTAFFING_ERR | PHY_28NM_DIG_SYNC_ERR |
-> +		PHY_28NM_DIG_SQ_FILT_MASK | PHY_28NM_DIG_SQ_BLK_MASK |
-> +		PHY_28NM_DIG_SYNC_NUM_MASK);
-> +	writel(reg | (0x1 << PHY_28NM_DIG_SYNC_NUM_SHIFT |
-> +		PHY_28NM_PLL_LOCK_BYPASS),
-> +		base + PHY_28NM_DIG_REG0);
-> +
-> +	/* PHY_28NM_OTG_REG */
-> +	reg = readl(base + PHY_28NM_OTG_REG) | PHY_28NM_OTG_PU_OTG;
-> +	writel(reg & ~PHY_28NM_OTG_CONTROL_BY_PIN, base + PHY_28NM_OTG_REG);
-> +
-> +	/*  Calibration Timing
-> +	*		   ____________________________
-> +	*  CAL START   ___|
-> +	*			   ____________________
-> +	*  CAL_DONE    ___________|
-> +	*		  | 400us |
-> +	*/
-> +
-> +	/* Make sure PHY Calibration is ready */
-> +	if (!wait_for_reg(base + PHY_28NM_CAL_REG,
-> +	    PHY_28NM_PLL_PLLCAL_DONE | PHY_28NM_PLL_IMPCAL_DONE,
-> +	    HZ / 10)) {
-> +		dev_warn(&pdev->dev, "USB PHY PLL calibrate not done after 100mS.");
-> +		return -ETIMEDOUT;
-> +	}
-> +	if (!wait_for_reg(base + PHY_28NM_RX_REG1,
-> +	    PHY_28NM_RX_SQCAL_DONE, HZ / 10)) {
-> +		dev_warn(&pdev->dev, "USB PHY RX SQ calibrate not done after 100mS.");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	/* Make sure PHY PLL is ready */
-> +	if (!wait_for_reg(base + PHY_28NM_PLL_REG0,
-> +	    PHY_28NM_PLL_READY, HZ / 10)) {
-> +		dev_warn(&pdev->dev, "PLL_READY not set after 100mS.");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	writel(readl(base + PHY_28NM_CTRL_REG3) |
-> +		(PHY_28NM_CTRL3_OVERWRITE | PHY_28NM_CTRL3_VBUS_VALID
-> +		| PHY_28NM_CTRL3_AVALID	| PHY_28NM_CTRL3_BVALID),
-> +		base + PHY_28NM_CTRL_REG3);
-
-IMO only the PLL programming should be done in init. The VBUS_VALID etc.. 
-should be done as part of power_on callback.
-
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU29yZW4sDQoNCk9uIFdlZCwgMjAxNS0wNS0yMCBhdCAxMjo1N1BNICswNTMwLCBSYW5qaXQg
+V2FnaG1vZGUgd3JvdGU6DQo+IEFkZCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIGZvciBHUVNQSSBj
+b250cm9sbGVyIGRyaXZlciB1c2VkIGJ5IFp5bnEgDQo+IFVsdHJhc2NhbGUrIE1QU29DDQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBSYW5qaXQgV2FnaG1vZGUgPHJhbmppdC53YWdobW9kZUB4aWxpbngu
+Y29tPg0KPiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1wLXFz
+cGkudHh0ICAgIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDI2IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCANCj4gRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1wLXFzcGkudHh0DQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1w
+LXFzcGkudHh0IA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3Bp
+LXp5bnFtcC1xc3BpLnR4dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAw
+Li5jZWM2MzMwDQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1wLXFzcGkudHh0DQo+IEBAIC0wLDAgKzEsMjYgQEAN
+Cj4gK1hpbGlueCBaeW5xIFVsdHJhU2NhbGUrIE1QU29DIEdRU1BJIGNvbnRyb2xsZXIgRGV2aWNl
+IFRyZWUgQmluZGluZ3MNCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gKw0KPiArUmVxdWlyZWQgcHJvcGVydGll
+czoNCj4gKy0gY29tcGF0aWJsZQkJOiBTaG91bGQgYmUgInhsbngsenlucW1wLXFzcGktMS4wIi4N
+Cj4gKy0gcmVnCQkJOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgR1FTUEkgcmVn
+aXN0ZXJzIG1hcC4NCj4gKy0gaW50ZXJydXB0cwkJOiBQcm9wZXJ0eSB3aXRoIGEgdmFsdWUgZGVz
+Y3JpYmluZyB0aGUgaW50ZXJydXB0DQo+ICsJCQkgIG51bWJlci4NCj4gKy0gaW50ZXJydXB0LXBh
+cmVudAk6IE11c3QgYmUgY29yZSBpbnRlcnJ1cHQgY29udHJvbGxlci4NCj4gKy0gY2xvY2stbmFt
+ZXMJCTogTGlzdCBvZiBpbnB1dCBjbG9jayBuYW1lcyAtICJyZWZfY2xrIiwgInBjbGsiDQo+ICsJ
+CQkgIChTZWUgY2xvY2sgYmluZGluZ3MgZm9yIGRldGFpbHMpLg0KPiArLSBjbG9ja3MJCTogQ2xv
+Y2sgcGhhbmRsZXMgKHNlZSBjbG9jayBiaW5kaW5ncyBmb3IgZGV0YWlscykuDQo+ICsNCj4gK09w
+dGlvbmFsIHByb3BlcnRpZXM6DQo+ICstIG51bS1jcwkJOiBOdW1iZXIgb2YgY2hpcCBzZWxlY3Rz
+IHVzZWQuDQo+ICsNCj4gK0V4YW1wbGU6DQo+ICsJcXNwaTogc3BpQGZmMGYwMDAwIHsNCj4gKwkJ
+Y29tcGF0aWJsZSA9ICJ4bG54LHp5bnFtcC1xc3BpLTEuMCI7DQo+ICsJCWNsb2NrLW5hbWVzID0g
+InJlZl9jbGsiLCAicGNsayI7DQo+ICsJCWNsb2NrcyA9IDwmbWlzY19jbGsgJm1pc2NfY2xrPjsN
+Cj4gKwkJaW50ZXJydXB0cyA9IDwwIDE1IDQ+Ow0KPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZn
+aWM+Ow0KPiArCQludW0tY3MgPSA8MT47DQo+ICsJCXJlZyA9IDwweDAgMHhmZjBmMDAwMCAweDEw
+MDAgMHgwIDB4YzAwMDAwMDAgMHg4MDAwMDAwPjsNCg0KSSBmaW5kIHRoaW5ncyBhIGxvdCBlYXNp
+ZXIgdG8gcmVhZCB3aGVuIHRoZXJlIGlzIHNvbWV0aGluZyBzZXBhcmF0aW5nIHRoZSBncm91cHMu
+IENvdWxkIHRoaXMgYmVjb21lOg0KCXJlZyA9IDwweDAgMHhmZjBmMDAwMCAweDEwMDA+LCA8MHgw
+IDB4YzAwMDAwMDAgMHg4MDAwMDAwPjsgPw0KDQpbUmFuaml0XTogSSB3aWxsIHRyeSB5b3VyIHN1
+Z2dlc3Rpb24gYW5kIHNlbmQgeW91IGluIHRoZSBuZXh0IHZlcnNpb24uDQoNClJlZ2FyZHMsDQpS
+YW5qaXQNCg==
