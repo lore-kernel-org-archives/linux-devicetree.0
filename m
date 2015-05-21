@@ -1,47 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 04/13] ASoC: qcom: remove hardcoded dma channel
-Date: Thu, 21 May 2015 21:12:01 +0100
-Message-ID: <20150521201201.GH21577@sirena.org.uk>
-References: <1431779462-1732-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1431779554-1992-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Subject: Re: [PATCH v2 4/7] ARM64: add SBSA Generic Watchdog device node in
+ amd-seattle-soc.dtsi
+Date: Thu, 21 May 2015 15:33:11 -0500
+Message-ID: <555E4107.8010208@amd.com>
+References: <=fu.wei@linaro.org>
+ <1432197156-16947-1-git-send-email-fu.wei@linaro.org>
+ <1432197156-16947-5-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WVhxcSV8VTJlfoH7"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431779554-1992-1-git-send-email-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1432197156-16947-5-git-send-email-fu.wei@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+To: fu.wei@linaro.org, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
+On 5/21/15 03:32, fu.wei@linaro.org wrote:
+> From: Fu Wei <fu.wei@linaro.org>
+>
+> This can be a example of adding SBSA Generic Watchdog device node
+> into some dts files for the Soc which contains SBSA Generic Watchdog.
+>
+> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+> ---
+>   arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> index 2874d92..95994eb 100644
+> --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> @@ -84,6 +84,17 @@
+>   			clock-names = "uartclk", "apb_pclk";
+>   		};
+>
+> +		watchdog0: watchdog@e0bb0000 {
+> +			compatible = "arm,sbsa-gwdt";
+> +			reg = <0x0 0xe0bb0000 0 0x10000>,
+> +				<0x0 0xe0bc0000 0 0x10000>;
+> +			reg-names = "refresh",
+> +				"control";
+> +			interrupts = <0 337 4>;
+> +			interrupt-names = "ws0";
+> +			timeout-sec = <10 5>;
+> +		};
+> +
+>   		spi0: ssp@e1020000 {
+>   			status = "disabled";
+>   			compatible = "arm,pl022", "arm,primecell";
+>
 
---WVhxcSV8VTJlfoH7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sat, May 16, 2015 at 01:32:34PM +0100, Srinivas Kandagatla wrote:
-> This patch removes hardcoded dma channel value in lpass driver, Now the
-> dma channel allocation happens in the SOC specific layer. This will
-> allow different LPASS integrations to use the lpass driver in more
-> generic way.
-
-Applied, thanks.
-
---WVhxcSV8VTJlfoH7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVXjwRAAoJECTWi3JdVIfQrtUH/0aOd5z5G1Wro8yAqC2w7BRY
-21Nu7PYtZjOCiDSxBSKZUxYv1nE1blfxoX44npOuGBukE5340dO9BCChOcMpwsKn
-FcTQRJXdg7EPPV9na+o9pw64sLFe+nnRi3Ynv2bZdnSLud64kD7y+6pMUMfzBUj6
-xNmtTA7N1j6clsfhZOif87L7SE8Q/+QhirQUQ8Y4SdERDaM5TP93+vd8KT2FluFf
-mHS+FP1qnQeoapchAsTUnP/E7fFCWt1X+igxY6Wu8WQUBlPtZcWKgf1mMdKixQsV
-ZICsBO52PdGTEtuzXGyaAUZ9MC52JcJdhUXn41ptN4oNNWvSzGGMQAn0sAJYwcg=
-=vTiq
------END PGP SIGNATURE-----
-
---WVhxcSV8VTJlfoH7--
+Tested-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Acked-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
