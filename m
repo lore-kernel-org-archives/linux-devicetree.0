@@ -1,215 +1,303 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCHv5 2/5] ARM: dts: Odroid-XU3 Enable TMU at Exynos5422 base
-Date: Thu, 21 May 2015 09:03:45 +0900
-Message-ID: <555D20E1.3070308@samsung.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
- <1431499020-3912-3-git-send-email-linux.amoon@gmail.com>
- <CAJKOXPca-2qdYOoMQOnu0jigOYwUvMTWZwdM2kRTkBXw-ws4yw@mail.gmail.com>
- <CANAwSgQ=30j4A_nCd26kzxi=rdsh32+Srwuc5EaJigLhJ2r4jA@mail.gmail.com>
- <CAJKOXPfC9nGEsYJ3qJ6m_iMsB=D8_6sOEpLQzEvmLry5zS5j3g@mail.gmail.com>
- <CANAwSgTOaz+mMhFZTeXYoXF+xPR2qon2Tkfsw5aqO42AK1m1-Q@mail.gmail.com>
- <CAJKOXPd_1rTZZCz66nQKidUOOEBmgUD+05fHUBvXN-VuD5mTCw@mail.gmail.com>
- <CANAwSgTbjmSxhJj4o2pnD5pR2V9JbQ3az+TSSCDwgwNnvF7P9w@mail.gmail.com>
- <CAJKOXPcQGnc1O9-MwqeNwsQE3ax1n8nvad4Sqt47NYKnOSmJPg@mail.gmail.com>
- <CADoNuNfuDCn_vvACc0=xj0MjdKr4pYcj_-Xh0--Q8_qciuW5YA@mail.gmail.com>
- <CANAwSgSyoesxQG9hBj3KfBb_5CiqUrHWbkUymU3LYcKOnLdOzA@mail.gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: [PATCH v4] phy: add Broadcom SATA3 PHY driver for Broadcom STB SoCs
+Date: Wed, 20 May 2015 17:18:40 -0700
+Message-ID: <1432167520-18643-1-git-send-email-computersforpeace@gmail.com>
+References: <1431473303-18873-5-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CANAwSgSyoesxQG9hBj3KfBb_5CiqUrHWbkUymU3LYcKOnLdOzA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Dongjin Kim <tobetter@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kukjin Kim <kgene@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Markus Reichl <m.reichl@fivetechno.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1431473303-18873-5-git-send-email-computersforpeace@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20.05.2015 23:59, Anand Moon wrote:
-> On 20 May 2015 at 08:57, Dongjin Kim <tobetter@gmail.com> wrote:
->> Hello Kryzsztof,
->>
->> Are you able to check if TMU is under VDDI power domain from Exynos5422
->> datasheet?
->> If it is, XU3 use BUCK3 for TMU and more internal blocks.
->>
->> Thank you,
->> Dongjin.
->>
->> On Tue, May 19, 2015 at 4:42 PM, Krzysztof Kozlowski
->> <k.kozlowski@samsung.com> wrote:
->>>
->>> 2015-05-19 16:28 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->>>> On 15 May 2015 at 05:42, Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>>> wrote:
->>>>> 2015-05-15 1:16 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->>>>>> On 13 May 2015 at 14:02, Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>>>>> wrote:
->>>>>>> 2015-05-13 17:21 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->>>>>>>> On 13 May 2015 at 12:51, Krzysztof Kozlowski
->>>>>>>> <k.kozlowski@samsung.com> wrote:
->>>>>>>>> 2015-05-13 15:36 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->>>>>>>>>> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
->>>>>>>>>> device.
->>>>>>>>>>
->>>>>>>>>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
->>>>>>>>>> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
->>>>>>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>>>>>>>> ---
->>>>>>>>>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 25
->>>>>>>>>> +++++++++++++++++++++++++
->>>>>>>>>>  1 file changed, 25 insertions(+)
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>>>>>>>>> b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>>>>>>>>> index 9446e28..cd78816 100644
->>>>>>>>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>>>>>>>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->>>>>>>>>> @@ -319,6 +319,31 @@
->>>>>>>>>>                 #cooling-cells = <2>;
->>>>>>>>>>                 cooling-levels = <0 130 170 230>;
->>>>>>>>>>         };
->>>>>>>>>> +
->>>>>>>>>> +       tmu@10060000 {
->>>>>>>>>
->>>>>>>>> Here and for other overrides please use label notation, like:
->>>>>>>>>
->>>>>>>>> &tmu_cpu0 {
->>>>>>>>>               ...
->>>>>>>>> };
->>>>>>>>>
->>>>>>>>>> +               vtmu-supply = <&ldo10_reg>;
->>>>>>>>>
->>>>>>>>> I am curious, how did you find that LDO10 supplies TMU unit?
->>>>>>>>>
->>>>>>>>> Best regards,
->>>>>>>>> Krzysztof
->>>>>>>>
->>>>>>>> Hi Krzysztof,
->>>>>>>>
->>>>>>>> I have re-base my work on earlier Lukasz Majewski patches.
->>>>>>>>
->>>>>>>> https://patchwork.kernel.org/patch/5693201/
->>>>>>>
->>>>>>> NAK.
->>>>>>> I am sorry, but this is not sufficient explanation. Actually such
->>>>>>> explanation could mean that you did just blindly copied everything
->>>>>>> instead of developing it.
->>>>>>>
->>>>>>> You cannot use some regulator here just because some Exynos4 boards
->>>>>>> use it. You have to be sure that this regulator supplies this part of
->>>>>>> SoC or device.
->>>>>>
->>>>>> Hi Krzysztof,
->>>>>>
->>>>>> After going through the schematics, I came to understanding that their
->>>>>> is
->>>>>> missing regulator related to TEMP SE in the exynos5422-odroidxu3.dts.
->>>>>>
->>>>>> Below is the schematic of the board.
->>>>>>
->>>>>> http://dn.odroid.com/5422/ODROID-XU3/Schematics/XU3_MAIN_REV0.2.PDF
->>>>>>
->>>>>>   ldo18_reg: LDO18 {
->>>>>>                                          regulator-name = "vdd_ldo18";
->>>>>>                                          regulator-min-microvolt =
->>>>>> <1800000>;
->>>>>>                                          regulator-max-microvolt =
->>>>>> <1800000>;
->>>>>>                                          regulator-always-on;
->>>>>>                                };
->>>>>
->>>>> The output of LDO18 goes to VDD_EMMC_1V8. This is not regulator for
->>>>> TMU.
->>>>>
->>>>> I think the schematics are missing some of details but it can be
->>>>> deducted that:
->>>>> 1. TEMP SE is supplied by VDD18_TS power domain. It consists of 5
->>>>> pairs of pins (XTSTEST_OUT[0-4], XTSEXT_RES[0-4]).
->>>>> 2. The VDD18_TS01, VDD18_TS23 and VDD18_TS4 are wired to theL DO7 of
->>>>> S2MPS11 PMIC.
->>>>> 3. I confirmed with the Exynos5422 datasheet that these
->>>>> VDD18_TS{01,23,4} supply the XTSTEST pins (OUT and RES).
->>>>>
->>>>> So the LDO7 it is... but before using it there is a caveat. The LDO7
->>>>> is also connected to VDD of MIPI, HDMI and few more. So when you use
->>>>> this regulator in TMU it may be turned off by TMU driver (e.g. during
->>>>> unbind). In such case these other blocks also should be tested and
->>>>> checked whether they take this regulator and enable it.
->>>>
->>>> hi Krzysztof,
->>>>
->>>> I tried to use the LDO7 regulator for TMU but it failed to register.
->>>>
->>>> [    3.231329] ina2xx 0-0045: power monitor ina231 (Rshunt = 10000 uOhm)
->>>> [    3.237691] thermal thermal_zone0: failed to read out thermal zone
->>>> (-22)
->>>> [    3.243033] exynos-tmu 10060000.tmu: Looking up vtmu-supply from
->>>> device tree
->>>> [    3.243936] thermal thermal_zone1: failed to read out thermal zone
->>>> (-22)
->>>> [    3.249791] exynos-tmu 10064000.tmu: Looking up vtmu-supply from
->>>> device tree
->>>> [    3.250677] thermal thermal_zone2: failed to read out thermal zone
->>>> (-22)
->>>> [    3.256410] exynos-tmu 10068000.tmu: Looking up vtmu-supply from
->>>> device tree
->>>> [    3.257345] thermal thermal_zone3: failed to read out thermal zone
->>>> (-22)
->>>> [    3.263050] exynos-tmu 1006c000.tmu: Looking up vtmu-supply from
->>>> device tree
->>>> [    3.263984] thermal thermal_zone4: failed to read out thermal zone
->>>> (-22)
->>>> [    3.269769] exynos-tmu 100a0000.tmu: Looking up vtmu-supply from
->>>> device tree
->>>> [    3.270363] usb 5-1: New USB device found, idVendor=0424,
->>>> idProduct=9514
->>>> [    3.276389] usb 5-1: New USB device strings: Mfr=0, Product=0,
->>>> SerialNumber=0
->>>
->>> Indeed.
->>>
-> 
-> Hi Krzysztof/Dongjin
-> 
-> BUCK3 is option for TMU as suggested by Dongjin
+Supports up to two ports which can each be powered on/off and configure=
+d
+independently.
 
-What do you mean by that? VDD_INT is one of important regulators. It
-supplies many parts of chip and should not be disabled during exynos-tmu
-driver removal.
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+---
+Note this was part of a 5-patch series (this patch is 'In-Reply-To' ver=
+sion 3
+of the series). Because there were no comments on the other patches, an=
+d this
+driver only had a trivial modification, I'm sending just this single dr=
+iver.
+Please consider merging v3 of all the other patches.
 
-Of course it wouldn't because it is "always-on"... so what is the
-benefit of using it in exynos-tmu?
+v4:=20
+  - rename cfg_ssc_28nm() to brcm_sata_cfg_ssc_28nm()
+  - MAINTAINERS entry is queued up in arm-soc (regex for brcmstb)
 
-What about regulator supplying TMU sensors? Shouldn't it be enabled? Is
-it the same?
+v3: no change
 
-Before posting a new solution please be sure that you have sufficient
-answer for each of these questions. Anwser that "someone told me so"
-unfortunately is not sufficient :).
+v2:
+  - stop sharing SATA_TOP_CTRL registers with SATA driver
+  - kill custom xlate function
 
+ drivers/phy/Kconfig            |   9 ++
+ drivers/phy/Makefile           |   1 +
+ drivers/phy/phy-brcmstb-sata.c | 216 +++++++++++++++++++++++++++++++++=
+++++++++
+ 3 files changed, 226 insertions(+)
+ create mode 100644 drivers/phy/phy-brcmstb-sata.c
 
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index a53bd5b52df9..36788b6f0220 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -309,4 +309,13 @@ config PHY_QCOM_UFS
+ 	help
+ 	  Support for UFS PHY on QCOM chipsets.
+=20
++config PHY_BRCMSTB_SATA
++	tristate "Broadcom STB SATA PHY driver"
++	depends on ARCH_BRCMSTB
++	depends on OF
++	select GENERIC_PHY
++	help
++	  Enable this to support the SATA3 PHY on 28nm Broadcom STB SoCs.
++	  Likely useful only with CONFIG_SATA_BRCMSTB enabled.
++
+ endmenu
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index f12625178780..c61f3fdd191e 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -40,3 +40,4 @@ obj-$(CONFIG_PHY_STIH41X_USB)		+=3D phy-stih41x-usb.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+=3D phy-qcom-ufs.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+=3D phy-qcom-ufs-qmp-20nm.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+=3D phy-qcom-ufs-qmp-14nm.o
++obj-$(CONFIG_PHY_BRCMSTB_SATA)		+=3D phy-brcmstb-sata.o
+diff --git a/drivers/phy/phy-brcmstb-sata.c b/drivers/phy/phy-brcmstb-s=
+ata.c
+new file mode 100644
+index 000000000000..b7e303d28caf
+--- /dev/null
++++ b/drivers/phy/phy-brcmstb-sata.c
+@@ -0,0 +1,216 @@
++/*
++ * Broadcom SATA3 AHCI Controller PHY Driver
++ *
++ * Copyright =C2=A9 2009-2015 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License as published b=
+y
++ * the Free Software Foundation; either version 2, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++
++#define SATA_MDIO_BANK_OFFSET				0x23c
++#define SATA_MDIO_REG_OFFSET(ofs)			((ofs) * 4)
++#define SATA_MDIO_REG_SPACE_SIZE			0x1000
++#define SATA_MDIO_REG_LENGTH				0x1f00
++
++#define MAX_PORTS					2
++
++/* Register offset between PHYs in PCB space */
++#define SATA_MDIO_REG_SPACE_SIZE			0x1000
++
++struct brcm_sata_port {
++	int portnum;
++	struct phy *phy;
++	struct brcm_sata_phy *phy_priv;
++	bool ssc_en;
++};
++
++struct brcm_sata_phy {
++	struct device *dev;
++	void __iomem *phy_base;
++
++	struct brcm_sata_port phys[MAX_PORTS];
++};
++
++enum sata_mdio_phy_regs_28nm {
++	PLL_REG_BANK_0				=3D 0x50,
++	PLL_REG_BANK_0_PLLCONTROL_0		=3D 0x81,
++
++	TXPMD_REG_BANK				=3D 0x1a0,
++	TXPMD_CONTROL1				=3D 0x81,
++	TXPMD_CONTROL1_TX_SSC_EN_FRC		=3D BIT(0),
++	TXPMD_CONTROL1_TX_SSC_EN_FRC_VAL	=3D BIT(1),
++	TXPMD_TX_FREQ_CTRL_CONTROL1		=3D 0x82,
++	TXPMD_TX_FREQ_CTRL_CONTROL2		=3D 0x83,
++	TXPMD_TX_FREQ_CTRL_CONTROL2_FMIN_MASK	=3D 0x3ff,
++	TXPMD_TX_FREQ_CTRL_CONTROL3		=3D 0x84,
++	TXPMD_TX_FREQ_CTRL_CONTROL3_FMAX_MASK	=3D 0x3ff,
++};
++
++static inline void __iomem *brcm_sata_phy_base(struct brcm_sata_port *=
+port)
++{
++	struct brcm_sata_phy *priv =3D port->phy_priv;
++
++	return priv->phy_base + (port->portnum * SATA_MDIO_REG_SPACE_SIZE);
++}
++
++static void brcm_sata_mdio_wr(void __iomem *addr, u32 bank, u32 ofs,
++			      u32 msk, u32 value)
++{
++	u32 tmp;
++
++	writel(bank, addr + SATA_MDIO_BANK_OFFSET);
++	tmp =3D readl(addr + SATA_MDIO_REG_OFFSET(ofs));
++	tmp =3D (tmp & msk) | value;
++	writel(tmp, addr + SATA_MDIO_REG_OFFSET(ofs));
++}
++
++/* These defaults were characterized by H/W group */
++#define FMIN_VAL_DEFAULT	0x3df
++#define FMAX_VAL_DEFAULT	0x3df
++#define FMAX_VAL_SSC		0x83
++
++static void brcm_sata_cfg_ssc_28nm(struct brcm_sata_port *port)
++{
++	void __iomem *base =3D brcm_sata_phy_base(port);
++	struct brcm_sata_phy *priv =3D port->phy_priv;
++	u32 tmp;
++
++	/* override the TX spread spectrum setting */
++	tmp =3D TXPMD_CONTROL1_TX_SSC_EN_FRC_VAL | TXPMD_CONTROL1_TX_SSC_EN_F=
+RC;
++	brcm_sata_mdio_wr(base, TXPMD_REG_BANK, TXPMD_CONTROL1, ~tmp, tmp);
++
++	/* set fixed min freq */
++	brcm_sata_mdio_wr(base, TXPMD_REG_BANK, TXPMD_TX_FREQ_CTRL_CONTROL2,
++			  ~TXPMD_TX_FREQ_CTRL_CONTROL2_FMIN_MASK,
++			  FMIN_VAL_DEFAULT);
++
++	/* set fixed max freq depending on SSC config */
++	if (port->ssc_en) {
++		dev_info(priv->dev, "enabling SSC on port %d\n", port->portnum);
++		tmp =3D FMAX_VAL_SSC;
++	} else {
++		tmp =3D FMAX_VAL_DEFAULT;
++	}
++
++	brcm_sata_mdio_wr(base, TXPMD_REG_BANK, TXPMD_TX_FREQ_CTRL_CONTROL3,
++			  ~TXPMD_TX_FREQ_CTRL_CONTROL3_FMAX_MASK, tmp);
++}
++
++static int brcm_sata_phy_init(struct phy *phy)
++{
++	struct brcm_sata_port *port =3D phy_get_drvdata(phy);
++
++	brcm_sata_cfg_ssc_28nm(port);
++
++	return 0;
++}
++
++static struct phy_ops phy_ops_28nm =3D {
++	.init		=3D brcm_sata_phy_init,
++	.owner		=3D THIS_MODULE,
++};
++
++static const struct of_device_id brcm_sata_phy_of_match[] =3D {
++	{ .compatible	=3D "brcm,bcm7445-sata-phy" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, brcm_sata_phy_of_match);
++
++static int brcm_sata_phy_probe(struct platform_device *pdev)
++{
++	struct device *dev =3D &pdev->dev;
++	struct device_node *dn =3D dev->of_node, *child;
++	struct brcm_sata_phy *priv;
++	struct resource *res;
++	struct phy_provider *provider;
++	int count =3D 0;
++
++	if (of_get_child_count(dn) =3D=3D 0)
++		return -ENODEV;
++
++	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	dev_set_drvdata(dev, priv);
++	priv->dev =3D dev;
++
++	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
++	priv->phy_base =3D devm_ioremap_resource(dev, res);
++	if (IS_ERR(priv->phy_base))
++		return PTR_ERR(priv->phy_base);
++
++	for_each_available_child_of_node(dn, child) {
++		unsigned int id;
++		struct brcm_sata_port *port;
++
++		if (of_property_read_u32(child, "reg", &id)) {
++			dev_err(dev, "missing reg property in node %s\n",
++					child->name);
++			return -EINVAL;
++		}
++
++		if (id >=3D MAX_PORTS) {
++			dev_err(dev, "invalid reg: %u\n", id);
++			return -EINVAL;
++		}
++		if (priv->phys[id].phy) {
++			dev_err(dev, "already registered port %u\n", id);
++			return -EINVAL;
++		}
++
++		port =3D &priv->phys[id];
++		port->portnum =3D id;
++		port->phy_priv =3D priv;
++		port->phy =3D devm_phy_create(dev, child, &phy_ops_28nm);
++		port->ssc_en =3D of_property_read_bool(child, "brcm,enable-ssc");
++		if (IS_ERR(port->phy)) {
++			dev_err(dev, "failed to create PHY\n");
++			return PTR_ERR(port->phy);
++		}
++
++		phy_set_drvdata(port->phy, port);
++		count++;
++	}
++
++	provider =3D devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	if (IS_ERR(provider)) {
++		dev_err(dev, "could not register PHY provider\n");
++		return PTR_ERR(provider);
++	}
++
++	dev_info(dev, "registered %d port(s)\n", count);
++
++	return 0;
++}
++
++static struct platform_driver brcm_sata_phy_driver =3D {
++	.probe	=3D brcm_sata_phy_probe,
++	.driver	=3D {
++		.of_match_table	=3D brcm_sata_phy_of_match,
++		.name		=3D "brcmstb-sata-phy",
++	}
++};
++module_platform_driver(brcm_sata_phy_driver);
++
++MODULE_DESCRIPTION("Broadcom STB SATA PHY driver");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Marc Carino");
++MODULE_AUTHOR("Brian Norris");
++MODULE_ALIAS("platform:phy-brcmstb-sata");
+--=20
+1.9.1
 
-> Earlier I have some missing CONFIG option's hence It was not working.
-> Now its registering with TMU.
-> 
-> Bellow is the output device tree.
-> 
-> root@odroidxu3: cd /sys/firmware/devicetree/base/
-> root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@10060000/status
-> okay
-> root@odroidxu3:/sys/firmware/devicetree/base#
-> root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@10064000/status
-> okay
-> root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@10068000/status
-> okay
-> root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@1006c000/status
-> okay
-> root@odroidxu3:/sys/firmware/devicetree/base# cat tmu@100a0000/status
-> okay
-> root@odroidxu3:/sys/firmware/devicetree/base#
-
-If you looked at the driver then you would know, that above status does
-not mean anything for this discussion about regulator. You could use
-EMMC regulator (which you proposed) and the results would be the same.
-
-Best regards,
-Krzysztof
