@@ -1,52 +1,87 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc/fsl: Add FMan best effort port compatible
-Date: Wed, 20 May 2015 22:04:21 -0500
-Message-ID: <1432177461.27761.196.camel@freescale.com>
-References: <1431938519-11343-1-git-send-email-igal.liberman@freescale.com>
-	 <1431983358.27761.11.camel@freescale.com>
-	 <DM2PR03MB383ED154B2D6379219C60E8E6C30@DM2PR03MB383.namprd03.prod.outlook.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v2 6/6] usb: chipidea: add work-around for Marvell HSIC
+ PHY startup
+Date: Thu, 21 May 2015 11:13:36 +0800
+Message-ID: <20150521031334.GA2897@shlinux2>
+References: <1432087805-16671-1-git-send-email-robh@kernel.org>
+ <1432087805-16671-7-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <DM2PR03MB383ED154B2D6379219C60E8E6C30-ufbTtyGzTTRJonC5hhDUuuO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Bucur Madalin-Cristian-B32716 <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432087805-16671-7-git-send-email-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Alan Stern <stern@rowland.harvard.edu>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-19 at 04:27 -0500, Liberman Igal-B31950 wrote:
-> Hi Scott,
-> I understand your point, let me please explain more about the hardware configuration and suggest another solution.
-> I'm referring only to external ports (TX/RX), not OP.
-> In FMan V3 we have maximum of 8 Port, it depends on the FMan revision (in B4, T2, T4 we have 8 ports, in T1024 and T1040 we have 4).
-> The following configuration are valid:
-> 	- All 8 ports can work as 1G ports. 
-> 	- Ports 7, 8 (if available) can work as 10G (with full hardware resources).
-> 	- Port 1, 2 (1 in T1024; 1, 2 in T2080) can be configured as 10G (with limited hardware resources).
-> Currently we use only "fsl,fm-v3-port-rx/tx".
+On Tue, May 19, 2015 at 09:10:05PM -0500, Rob Herring wrote:
+> The Marvell 28nm HSIC PHY requires the port to be forced to HS mode after
+> the port power is applied. This is done using the test mode in the PORTSC
+> register.
 > 
-> We can go 2 ways:
-> 1. Having 2 compatibles:
-> 	"fsl,fman-v3-port-rx/tx"
-> 	"fsl,fman-v3-best-effort-port-rx/tx"
+> As HSIC is always HS, this work-around should be safe to do with all HSIC
+> PHYs. If not, a flag can also be added.
+
+I think a flag is needed, not sure all vendors can work well with that.
+
 > 
-> 	The driver can determine the port type of "fsl,fman-v3-port-rx/tx" by reading the HW port id.
-> 	"fsl,fman-v3-best-effort-port-rx/tx" will let the driver know about the best effort port and it will be used instead of "fsl,fman-v3-port-rx/tx".
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Peter Chen <Peter.Chen@freescale.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-usb@vger.kernel.org
+> ---
+>  drivers/usb/chipidea/host.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> In your opinion, should we add "fsl,fman-v3-10g-port-rx/tx" for 10G (with full hardware resources)?
-> In such chase, "fsl,fman-v3-port-rx/tx" will denote 1G explicitly.
+> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+> index 21fe1a3..6cf87b8 100644
+> --- a/drivers/usb/chipidea/host.c
+> +++ b/drivers/usb/chipidea/host.c
+> @@ -37,12 +37,14 @@ static int (*orig_bus_suspend)(struct usb_hcd *hcd);
+>  
+>  struct ehci_ci_priv {
+>  	struct regulator *reg_vbus;
+> +	struct ci_hdrc *ci;
+>  };
+>  
+>  static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+>  {
+>  	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+>  	struct ehci_ci_priv *priv = (struct ehci_ci_priv *)ehci->priv;
+> +	struct ci_hdrc *ci = priv->ci;
+>  	struct device *dev = hcd->self.controller;
+>  	int ret = 0;
+>  	int port = HCS_N_PORTS(ehci->hcs_params);
+> @@ -64,6 +66,15 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+>  			return ret;
+>  		}
+>  	}
+> +
+> +	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
+> +		/*
+> +		 * Marvell 28nm HSIC PHY requires forcing the port to HS mode.
+> +		 * As HSIC is always HS, this should be safe for others.
+> +		 */
+> +		hw_port_test_set(ci, 5);
+> +		hw_port_test_set(ci, 0);
+> +	}
+>  	return 0;
+>  };
+>  
+> @@ -112,6 +123,7 @@ static int host_start(struct ci_hdrc *ci)
+>  
+>  	priv = (struct ehci_ci_priv *)ehci->priv;
+>  	priv->reg_vbus = NULL;
+> +	priv->ci = ci;
+>  
+>  	if (ci->platdata->reg_vbus && !ci_otg_is_fsm_mode(ci)) {
+>  		if (ci->platdata->flags & CI_HDRC_TURN_VBUS_EARLY_ON) {
+> -- 
+> 2.1.0
 > 
-> In FMan V2, dual ports/MACs are not available, so no need change the compatibles.
 
-The compatible string should describe what programming interface is
-present.  Other information should be in other properties.  Having the
-same compatible for tx and rx definitely seems wrong.
+-- 
 
--Scott
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
