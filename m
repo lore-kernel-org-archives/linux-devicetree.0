@@ -1,62 +1,56 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add
- pwrkey driver
-Date: Wed, 20 May 2015 20:16:11 -0500
-Message-ID: <CAHrpEqT0cjujJzr9KD7qhS7F2fZaAhuct4Q8YHYFe0uvaR9_qw@mail.gmail.com>
-References: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
-	<20150520015851.GB1071@dragon>
-	<20150520182540.GQ2067@n2100.arm.linux.org.uk>
-	<20150520183050.GR2067@n2100.arm.linux.org.uk>
-	<20150521002043.GI23809@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150521002043.GI23809@dtor-ws>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, alexandre.belloni@free-electrons.com, Philipp Zabel <p.zabel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: [PATCH 00/04] ARM: shmobile: APMU DT support via SMP Enable method
+Date: Thu, 21 May 2015 10:21:38 +0900
+Message-ID: <20150521012138.25972.91336.sendpatchset@little-apple>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, keita.kobayashi.ym@renesas.com, horms@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 20, 2015 at 7:20 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Wed, May 20, 2015 at 07:30:50PM +0100, Russell King - ARM Linux wrote:
->> On Wed, May 20, 2015 at 07:25:41PM +0100, Russell King - ARM Linux wrote:
->> > On Wed, May 20, 2015 at 09:58:51AM +0800, Shawn Guo wrote:
->> > > On Wed, May 20, 2015 at 01:04:35AM +0800, Frank.Li@freescale.com wrote:
->> > > > Frank Li (6):
->> > > >   arm: imx: power-off: change to syscon to access register
->> > > >   rtc: arm: imx: snvs: change use syscon to access register
->> > > >   Document: dt: fsl: snvs: change support syscon
->> > > >   arm: dts: imx: update snvs to use syscon access register
->> > > >   document: devicetree: input: imx: i.mx snvs power device tree bindings
->> > > >   arm: dts: imx6sx: enable snvs power key
->> > >
->> > > So, the series will break existing DTBs for RTC and poweroff, right?
->> > > If this is unavoidable, should we at least have some warning messages
->> > > telling users about his breakage?
->> >
->> > What's the justification for breaking existing DTBs?  Really, this is
->> > something we should strive to avoid, _and_ actually avoid by providing
->> > backwards compatibility.
->>
->> Looking at the RTC code, it would be pretty trivial to do.
->>
->> Rather than passing around struct regmap, pass around the private data
->> structure.
->>
->> Rename the regmap_* function calls to be private accessors.  Implement
->> a set of new accessors - if the private data has the regmap, use the
->> regmap API.  Otherwise, use the old method, and print a warning that an
->> old DT is being used.
->
-> Or maybe have drivers create regmap themselves if they see old DTS and
-> not bother with the 2 sets of accessors?
+ARM: shmobile: APMU DT support via SMP Enable method
 
-Does any dt node convert to regmap regardless if there are "syscon"
-compatible string?
+[PATCH 01/04] devicetree: bindings: Renesas APMU and SMP Enable method
+[PATCH 02/04] ARM: shmobile: Add APMU DT support via Enable method
+[PATCH 03/04] ARM: shmobile: Add APMU nodes to r8a7791 DTSI
+[PATCH 04/04] ARM: shmobile: Remove r8a7791 non-DT APMU override
 
->
-> Thanks.
->
-> --
-> Dmitry
+These patches add DT support for the APMU hardware commonly found in
+Renesas R-Car Gen2 SoCs. Without these patches the APMU gets configured
+through data expressed in C, and with this series applied it is possible
+to describe the APMU configuration in DT and let the enable method point
+out that the APMU should be used.
+
+Patch 1 and 2 are Documenting and adding DT support to the APMU driver
+together with enabling use of the enable-method way to describe that
+the APMU hardware is needed for SMP operation.
+
+Patch 3 and 4 are related to r8a7791 support which gets a DTSI update to
+describe the APMU hardware. To avoid breaking support for older DTBs out
+in the wild these patches keep the older existing C code APMU configuration
+for r8a7791 as-is. During run-time, if the APMU is installed via the
+enable-method then it will not be overriden by older non-DT configuration.
+
+I suggest making APMU DT configuration mandatory for SMP operation on
+newer SoCs and that we keep the old APMU support code in place for a
+good number of kernel releases or until we can identify a couple of major
+reasons good enough to force a DTB update on the end users.
+
+The series have been tested on r8a7791 Koelsch in 4 cases:
+A) Default case when series is applied - 2 cores - OK (DT APMU)
+B) Like A) but r8a7791 smp_init() commented out - 2 cores - OK (DT APMU)
+C) Like B) but with patch 3 reverted - 1 core - OK (No SMP available)
+D) Like C) but reverted commented out code from B) - 2 cores - OK (C APMU)
+
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+---
+ Written against renesas-devel-20150519-v4.1-rc4
+
+ Documentation/devicetree/bindings/arm/cpus.txt           |    1 
+ Documentation/devicetree/bindings/power/renesas,apmu.txt |   31 ++++
+ arch/arm/boot/dts/r8a7791.dtsi                           |    7 +
+ arch/arm/mach-shmobile/platsmp-apmu.c                    |   89 +++++++++++++-
+ arch/arm/mach-shmobile/r8a7791.h                         |    2 
+ arch/arm/mach-shmobile/setup-r8a7791.c                   |    2 
+ arch/arm/mach-shmobile/smp-r8a7791.c                     |   11 +
+ 7 files changed, 136 insertions(+), 7 deletions(-)
