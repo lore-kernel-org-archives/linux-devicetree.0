@@ -1,51 +1,62 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3] arm, imx6, dts: add DT for aristainetos2 board
-Date: Thu, 21 May 2015 09:04:25 +0800
-Message-ID: <20150521010424.GF24844@dragon>
-References: <1432099863-8642-1-git-send-email-hs@denx.de>
- <1432118319.4466.40.camel@pengutronix.de>
- <555C6C72.2060302@denx.de>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH v2 0/7] Change snvs rtc and poweroff to use syscon add
+ pwrkey driver
+Date: Wed, 20 May 2015 20:16:11 -0500
+Message-ID: <CAHrpEqT0cjujJzr9KD7qhS7F2fZaAhuct4Q8YHYFe0uvaR9_qw@mail.gmail.com>
+References: <1432055082-28983-1-git-send-email-Frank.Li@freescale.com>
+	<20150520015851.GB1071@dragon>
+	<20150520182540.GQ2067@n2100.arm.linux.org.uk>
+	<20150520183050.GR2067@n2100.arm.linux.org.uk>
+	<20150521002043.GI23809@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <555C6C72.2060302@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150521002043.GI23809@dtor-ws>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, rtc-linux@googlegroups.com, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, alexandre.belloni@free-electrons.com, Philipp Zabel <p.zabel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 20, 2015 at 01:13:54PM +0200, Heiko Schocher wrote:
-> >>+ * Copyright (C) 2015 Heiko Schocher <hs@denx.de>
-> >>+ *
-> >>+ * This file is dual-licensed: you can use it either under the terms
-> >>+ * of the GPL or the X11 license, at your option. Note that this dual
-> >>+ * licensing only applies to this file, and not this project as a
-> >>+ * whole.
-> >>+ *
-> >>+ *  a) This file is free software; you can redistribute it and/or
-> >>+ *     modify it under the terms of the GNU General Public License as
-> >>+ *     published by the Free Software Foundation; either version 2 of
-> >>+ *     the License, or (at your option) any later version.
-> >>+ *
-> >>+ *     This file is distributed in the hope that it will be useful,
-> >>+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >>+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >>+ *     GNU General Public License for more details.
-> >>+ *
-> >>+ *     You should have received a copy of the GNU General Public
-> >>+ *     License along with this file; if not, write to the Free
-> >>+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-> >>+ *     MA 02110-1301 USA
-> >
-> >checkpatch warns that you should not include this paragraph because the
-> >mail address might change in the future and it is contained in COPYING.
-> 
-> Hmm... Shawn mentioned to change it to the "GPL/X11 dual licence"
-> as in the arch/arm/boot/dts/imx6sl-warp.dts file ... so I copied this
-> from there ... is there a better option for this?
+On Wed, May 20, 2015 at 7:20 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Wed, May 20, 2015 at 07:30:50PM +0100, Russell King - ARM Linux wrote:
+>> On Wed, May 20, 2015 at 07:25:41PM +0100, Russell King - ARM Linux wrote:
+>> > On Wed, May 20, 2015 at 09:58:51AM +0800, Shawn Guo wrote:
+>> > > On Wed, May 20, 2015 at 01:04:35AM +0800, Frank.Li@freescale.com wrote:
+>> > > > Frank Li (6):
+>> > > >   arm: imx: power-off: change to syscon to access register
+>> > > >   rtc: arm: imx: snvs: change use syscon to access register
+>> > > >   Document: dt: fsl: snvs: change support syscon
+>> > > >   arm: dts: imx: update snvs to use syscon access register
+>> > > >   document: devicetree: input: imx: i.mx snvs power device tree bindings
+>> > > >   arm: dts: imx6sx: enable snvs power key
+>> > >
+>> > > So, the series will break existing DTBs for RTC and poweroff, right?
+>> > > If this is unavoidable, should we at least have some warning messages
+>> > > telling users about his breakage?
+>> >
+>> > What's the justification for breaking existing DTBs?  Really, this is
+>> > something we should strive to avoid, _and_ actually avoid by providing
+>> > backwards compatibility.
+>>
+>> Looking at the RTC code, it would be pretty trivial to do.
+>>
+>> Rather than passing around struct regmap, pass around the private data
+>> structure.
+>>
+>> Rename the regmap_* function calls to be private accessors.  Implement
+>> a set of new accessors - if the private data has the regmap, use the
+>> regmap API.  Otherwise, use the old method, and print a warning that an
+>> old DT is being used.
+>
+> Or maybe have drivers create regmap themselves if they see old DTS and
+> not bother with the 2 sets of accessors?
 
-It seems I pointed you to a bad example.  Let me try again, see
-arch/arm/boot/dts/imx6q-hummingboard.dts for example.
+Does any dt node convert to regmap regardless if there are "syscon"
+compatible string?
 
-Shawn
+>
+> Thanks.
+>
+> --
+> Dmitry
