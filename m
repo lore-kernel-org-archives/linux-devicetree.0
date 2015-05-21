@@ -1,59 +1,46 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 02/04] ARM: shmobile: Add APMU DT support via Enable method
-Date: Thu, 21 May 2015 10:13:38 +0200
-Message-ID: <CAMuHMdXwMB17YXpqR9xr07vPg84CQL3W1Q20+gL+JvFEpOt+5Q@mail.gmail.com>
-References: <20150521012138.25972.91336.sendpatchset@little-apple>
-	<20150521012200.25972.64826.sendpatchset@little-apple>
+From: Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] powerpc/fsl: Add FMan best effort port compatible
+Date: Thu, 21 May 2015 08:16:14 +0000
+Message-ID: <BL2PR03MB545098630EC3CC22F4427F6E6C10@BL2PR03MB545.namprd03.prod.outlook.com>
+References: <1431938519-11343-1-git-send-email-igal.liberman@freescale.com>
+	 <1431983358.27761.11.camel@freescale.com>
+	 <DM2PR03MB383ED154B2D6379219C60E8E6C30@DM2PR03MB383.namprd03.prod.outlook.com>
+ <1432177461.27761.196.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150521012200.25972.64826.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lorenzo.pieralisi@arm.com, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym@renesas.com>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432177461.27761.196.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 3:22 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
-> --- 0001/arch/arm/mach-shmobile/platsmp-apmu.c
-> +++ work/arch/arm/mach-shmobile/platsmp-apmu.c  2015-05-20 22:26:43.152366518 +0900
-
-> +static void apmu_parse_dt(void (*fn)(struct resource *res, int cpu, int bit))
-> +{
-> +       struct device_node *np_apmu, *np_cpu;
-> +       struct resource res;
-> +       u32 id;
-> +       int bit, index;
-> +       bool is_allowed;
-> +
-> +       for_each_matching_node(np_apmu, apmu_ids) {
-> +               /* only enable the cluster that includes the boot CPU */
-> +               is_allowed = false;
-
-You can declare the variable here instead of at the top of the function.
-
-> +               for (bit = 0; bit < CONFIG_NR_CPUS; bit++) {
-> +                       np_cpu = of_parse_phandle(np_apmu, "cpus", bit);
-> +                       if (np_cpu) {
-> +                               if (!of_property_read_u32(np_cpu, "reg", &id)) {
-> +                                       if (id == cpu_logical_map(0))
-> +                                               is_allowed = true;
-
-You can do "of_node_put(np_cpu); break;" here, to stop scanning.
-
-> +                               }
-> +                               of_node_put(np_cpu);
-> +                       }
-> +               }
-> +               if (!is_allowed)
-> +                       continue;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0
+MjENCj4gDQo+IFRoZSBjb21wYXRpYmxlIHN0cmluZyBzaG91bGQgZGVzY3JpYmUgd2hhdCBwcm9n
+cmFtbWluZyBpbnRlcmZhY2UgaXMNCj4gcHJlc2VudC4gIE90aGVyIGluZm9ybWF0aW9uIHNob3Vs
+ZCBiZSBpbiBvdGhlciBwcm9wZXJ0aWVzLiAgSGF2aW5nIHRoZQ0KPiBzYW1lIGNvbXBhdGlibGUg
+Zm9yIHR4IGFuZCByeCBkZWZpbml0ZWx5IHNlZW1zIHdyb25nLg0KPiANCj4gLVNjb3R0DQo+IA0K
+DQpIaSBTY290dCwgd2hhdCB3ZSB0cmllZCB0byBhY2NvbXBsaXNoIGhlcmUgaXMgdG8gYXZvaWQg
+dXBkYXRpbmcgdS1ib290IGZvciB0aGlzIG5ldyBjb21wYXRpYmxlIGFuZCBoYXZlIG1pbmltYWwg
+YWRkaXRpb25zIHRvIHRoZSBiaW5kaW5nIGRvY3VtZW50Lg0KDQpXZSBjdXJyZW50bHkga25vdyB0
+aGF0Og0KDQoiZnNsLGZtYW4tdjMtcG9ydC1yeCIgIGlzIGFuIFJ4IHBvcnQgdGhhdCBjYW4gd29y
+ayBpbiAxRyBtb2RlDQoiZnNsLGZtYW4tdjMtcG9ydC10eCIgIGlzIGFuIFR4IHBvcnQgdGhhdCBj
+YW4gd29yayBpbiAxRyBtb2RlDQoNCldlIHByb3Bvc2VkIGFkZGluZyBhIG5ldyBvcHRpb25hbCBj
+b21wYXRpYmxlICJmc2wsZm1hbi12My1iZXN0LWVmZm9ydC1wb3J0IiAgc3VjaCB0aGF0Og0KDQoi
+ZnNsLGZtYW4tdjMtcG9ydC1yeCIgIGlzIGFuIFJ4IHBvcnQgdGhhdCBjYW4gd29yayBpbiAxRyBt
+b2RlDQoiZnNsLGZtYW4tdjMtcG9ydC10eCIgIGlzIGFuIFR4IHBvcnQgdGhhdCBjYW4gd29yayBp
+biAxRyBtb2RlDQoNCiJmc2wsZm1hbi12My1wb3J0LXJ4IiwgImZzbCxmbWFuLXYzLWJlc3QtZWZm
+b3J0LXBvcnQiICBpcyBhbiBSeCBwb3J0IHRoYXQgY2FuIHdvcmsgaW4gMUcgbW9kZSBhbmQgYWxz
+byBpbiBsaW1pdGVkIHJlc291cmNlZCAxMEcgbW9kZQ0KImZzbCxmbWFuLXYzLXBvcnQtdHgiLCAi
+ZnNsLGZtYW4tdjMtYmVzdC1lZmZvcnQtcG9ydCIgIGlzIGFuIFR4IHBvcnQgdGhhdCBjYW4gd29y
+ayBpbiAxRyBtb2RlIGFuZCBhbHNvIGluIGxpbWl0ZWQgcmVzb3VyY2VkIDEwRyBtb2RlDQoNClRo
+ZSBvbmx5IGNvZGUgYWRkaXRpb24gcmVxdWlyZWQgaXMgaW4gdGhlIExpbnV4IGRyaXZlciwgY29k
+ZSB0aGF0IGNoZWNrcyBmb3IgdGhlIG9wdGlvbmFsLCBzdXBwbGVtZW50YWwgcGFyYW1ldGVyICJm
+c2wsZm1hbi12My1iZXN0LWVmZm9ydC1wb3J0IiB0byBjaGFuZ2Ugc29tZSByZXNvdXJjZSBhbGxv
+Y2F0aW9ucy4NCg0KTWFkYWxpbg0K
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
