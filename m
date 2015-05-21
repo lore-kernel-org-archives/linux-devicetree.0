@@ -1,37 +1,44 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 2/2] ARM: dts: exynos4415: Add syscon property to the MIPI DPHY
-Date: Thu, 21 May 2015 11:18:33 +0900
-Message-ID: <1432174713-23368-2-git-send-email-k.kozlowski@samsung.com>
-References: <1432174713-23368-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1432174713-23368-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 0/2] pwm: Add support for R-Car PWM Timer
+Date: Thu, 21 May 2015 11:50:51 +0900
+Message-ID: <1432176653-4452-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Since e4b3d38088df ("phy: exynos-video-mipi: Fix regression by adding
-support for PMU regmap") the Exynos PMU driver provides regmap to access
-the MIPI DPHY registers. The MIPI DPHY driver accesses this regmap
-through syscon phandle.
+This patch set is based on the linux-pwm.git / for-next branch.
+(commit id = efb0de55b6a2ec15fc424e660601f22ae2fa487a)
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos4415.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes from v2:
+ - Add compatible string "renesas,pwm-rcar".
+ - Remove compatible strings "renesas,pwm-r8a77xx" in rcar_pwm_of_table.
+ - Fix build error.
 
-diff --git a/arch/arm/boot/dts/exynos4415.dtsi b/arch/arm/boot/dts/exynos4415.dtsi
-index 186cb8465683..6a83d7999d8a 100644
---- a/arch/arm/boot/dts/exynos4415.dtsi
-+++ b/arch/arm/boot/dts/exynos4415.dtsi
-@@ -124,8 +124,8 @@
- 
- 		mipi_phy: video-phy@10020710 {
- 			compatible = "samsung,s5pv210-mipi-video-phy";
--			reg = <0x10020710 8>;
- 			#phy-cells = <1>;
-+			syscon = <&pmu_system_controller>;
- 		};
- 
- 		pd_cam: cam-power-domain@10024000 {
+Changes from v1:
+ - Change compatible string to SoC-specific compatible values.
+ - Fix #pwm-call value to 2 in the device tree document.
+ - Fix "depends on" value in Kconfig.
+ - Fix help explanation in Kconfig.
+ - Remove an unnecessary member in rcar_pwm_chip.
+ - Remove hardcoded number of channels and change chip.npwm value to 1.
+ - Fix formulas for clock calculation to improve accuracy.
+
+Yoshihiro Shimoda (2):
+  pwm: Add device tree binding document for R-Car PWM Timer
+  pwm: Add support for R-Car PWM Timer
+
+ .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   |  27 +++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-rcar.c                             | 262 +++++++++++++++++++++
+ 4 files changed, 301 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+ create mode 100644 drivers/pwm/pwm-rcar.c
+
 -- 
 1.9.1
+
