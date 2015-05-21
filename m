@@ -1,28 +1,47 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] am335x-evm: add mmc3 and wlan definitions to dts
-Date: Thu, 21 May 2015 12:08:43 -0700
-Message-ID: <20150521190842.GV10274@atomide.com>
-References: <1430655569-27849-1-git-send-email-eyalr@ti.com>
+From: Rabin Vincent <rabin@rab.in>
+Subject: Re: [PATCH] gpio: add ETRAXFS GPIO driver
+Date: Thu, 21 May 2015 21:09:33 +0200
+Message-ID: <20150521190933.GB6159@debian>
+References: <1431728843-21583-1-git-send-email-rabin@rab.in>
+ <1431784767.2341.28.camel@x220>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1430655569-27849-1-git-send-email-eyalr@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Eyal Reizer <eyalreizer@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Eyal Reizer <eyalr@ti.com>, Arik Nemtsov <arik@wizery.com>, Eliad Peller <eliad@wizery.com>
+In-Reply-To: <1431784767.2341.28.camel@x220>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Eyal Reizer <eyalreizer@gmail.com> [150503 05:20]:
-> This includes the wlan regulator, pinmux, DMA
-> and wlcore bindings.
+On Sat, May 16, 2015 at 03:59:27PM +0200, Paul Bolle wrote:
+> On Sat, 2015-05-16 at 00:27 +0200, Rabin Vincent wrote:
+> > +obj-$(CONFIG_GPIO_ETRAXFS)	+= gpio-etraxfs.o
 > 
-> Signed-off-by: Arik Nemtsov <arik@wizery.com>
-> Signed-off-by: Eliad Peller <eliad@wizery.com>
-> Signed-off-by: Eyal Reizer <eyalr@ti.com>
+> GPIO_ETRAXFS is a bool symbol, so gpio-etraxfs.o can only be built-in,
+> right?
 
-Applying only 1/2 of this series into omap-for-v4.2/dt thanks.
+Right.
 
-Regards,
+> > --- /dev/null
+> > +++ b/drivers/gpio/gpio-etraxfs.c
+> 
+> > +MODULE_DEVICE_TABLE(of, etraxfs_gpio_of_table);
+> 
+> > +module_platform_driver(etraxfs_gpio_driver);
+> 
+> (A patch was submitted that would allow built-in only code to use
+> builtin_platform_driver(), see https://lkml.org/lkml/2015/5/10/125 .) 
 
-Tony
+Thanks, good to know.
+
+> 
+> > +MODULE_DESCRIPTION("ETRAX FS GPIO driver");
+> > +MODULE_LICENSE("GPL");
+> 
+> But the code this patch adds contains a bit of module specific
+> boilerplate. Was it perhaps your intention to make GPIO_ETRAXFS
+> tristate?
+
+No, the intention is to have it boolean as it is now.  I'll remove the
+unnecessary lines.
