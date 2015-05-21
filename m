@@ -1,29 +1,97 @@
-From: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
-Subject: Re: [PATCH v8 01/16] scripts: link-vmlinux: Don't pass page offset
- to kallsyms if XIP Kernel
-Date: Thu, 21 May 2015 13:40:13 +0800
-Message-ID: <555D6FBD.3020202@suse.cz>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com> <1431158038-3813-2-git-send-email-mcoquelin.stm32@gmail.com> <CALszF6B0=dgSDfLFwDi9YmEzrrNVuYbUnqMu5DmDhhy--emtpw@mail.gmail.com> <555D12F8.4000403@suse.de>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V5 1/3] OPP: Redefine bindings to overcome shortcomings
+Date: Thu, 21 May 2015 11:16:02 +0530
+Message-ID: <20150521054602.GE22904@linux>
+References: <cover.1432091956.git.viresh.kumar@linaro.org>
+ <51a2603050f7993643fea9e5dcd2dba7a5a3fe23.1432091956.git.viresh.kumar@linaro.org>
+ <555D6CC8.9050201@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <555D12F8.4000403-l3A5Bk7waGM@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Linux-Arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <555D6CC8.9050201@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-Dne 21.5.2015 v 07:04 Andreas F=E4rber napsal(a):
-> Am 18.05.2015 um 13:47 schrieb Maxime Coquelin:
-> But this is definitely an improvement for ARMv7-M debugging,
->=20
-> Tested-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
->=20
->> [Hi Michal, ...] could you consider
->> taking it for v4.2?
+On 21-05-15, 00:27, Nishanth Menon wrote:
+> > +This describes the OPPs belonging to a device. This node can have following
+> > +properties:
+> > +
+> > +Required properties:
+> > +- compatible: Allow OPPs to express their compatibility. It should be:
+> > +  "operating-points-v2".
+> > +
+> > +- OPP nodes: One or more OPP nodes describing voltage-current-frequency
+> > +  combinations. Their name isn't significant but their phandle can be used to
+> > +  reference an OPP.
+> 
+> What if this was generated data (say using an overlay)?
 
-I applied it to kbuild.git#kbuild now.
+Sorry I am not aware of this, can you explain a bit how this is done ?
+Are you talking about something like fdtput here ?
 
-Thanks,
-Michal
+> does it have to
+> be "required" or just "optional" :)
+
+This has to be required (by the parser, kernel in our case).
+
+> > +Required properties:
+> > +- opp-hz: Frequency in Hz
+> 
+> I am just being nit picky -> should we keep Heinrich Hertz respected[2]
+> and name it opp-Hz ? No strong opinions either way.
+
+Documentation/devicetree/booting-without-of.txt:
+
+4) Note about node and property names and character set
+-------------------------------------------------------
+
+While Open Firmware provides more flexible usage of 8859-1, this
+specification enforces more strict rules. Nodes and properties should
+be comprised only of ASCII characters 'a' to 'z', '0' to
+'9', ',', '.', '_', '+', '#', '?', and '-'. Node names additionally
+allow uppercase characters 'A' to 'Z' (property names should be
+lowercase. The fact that vendors like Apple don't respect this rule is
+irrelevant here). Additionally, node and property names should always
+begin with a character in the range 'a' to 'z' (or 'A' to 'Z' for node
+names).
+
+> 
+> different angle: How about just target-freq-Hz? just drop the "opp"
+> prefix for properties of an OPP node? No strong feelings here. (some
+> folks did have variations of a few Hz based on clock tree - example with
+> a crystal frequency of 19.2MHz you'd probably get 1001MHz exact, with a
+> 26MHz crystal, you'd get 1000MHz -> ofcourse round-rate is supposed to
+> help with that... but anyways.. why not say we are trying to indicate
+> target frequency? I do recollect during initial days of OPP
+> (pre-dt-adoption days) folks did complain about this - we kinda worked
+> around this with round-rated handling - but we might as well anticipate it.
+
+Rob suggested opp- prefix and it looks good to me, lets see what
+others have to say :)
+
+> Thanks for adding the examples - My customer support team especially
+> will appreciate having such examples ;).
+
+I can understand that :)
+
+> I agree with Mike[1] here -> why not move clocks and supply to cpu0_opp?
+> "
+> It seems wrong to me that the clock and supply data is owned by the cpu
+> node, and not the opp descriptor. Everything about the opp transition
+> should belong to a provider node. Then the cpu simply needs to consume
+> that via a phandle.
+> "
+> 
+> I am not sure if we discussed that point further OR if we kinda got
+> hooked on to the "should it be in kernel" point of debate in V4.
+
+I did send a reply to that, but no one replied after that. Probably
+you want to reply on that ?
+
+Thanks for your detailed review.
+
+-- 
+viresh
