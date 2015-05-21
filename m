@@ -1,328 +1,329 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 2/2] pwm: Add support for R-Car PWM Timer
-Date: Thu, 21 May 2015 19:57:26 +0900
-Message-ID: <1432205846-4312-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1432205846-4312-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH 2/2] leds: add BCM6358 LED driver
+Date: Thu, 21 May 2015 12:58:39 +0200
+Message-ID: <555DBA5F.9040906@samsung.com>
+References: <1432055578-14089-1-git-send-email-noltari@gmail.com>
+ <1432055578-14089-3-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1432205846-4312-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1432055578-14089-3-git-send-email-noltari@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, cooloney@gmail.com, jogo@openwrt.org, f.fainelli@gmail.com, cernekee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for R-Car SoCs PWM Timer.
+Hi Alvaro,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/pwm/Kconfig    |  11 +++
- drivers/pwm/Makefile   |   1 +
- drivers/pwm/pwm-rcar.c | 261 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 273 insertions(+)
- create mode 100644 drivers/pwm/pwm-rcar.c
+Please fix the issues reported by checkpatch --strict.
+Besides I have one comment below.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index b1541f4..3e58a68 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -249,6 +249,17 @@ config PWM_PXA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-pxa.
- 
-+config PWM_RCAR
-+	tristate "Renesas R-Car PWM support"
-+	depends on ARCH_RCAR_GEN1 || ARCH_RCAR_GEN2 || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  This driver exposes the PWM Timer controller found in Renesas
-+	  R-Car chips through the PWM API.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-rcar.
-+
- config PWM_RENESAS_TPU
- 	tristate "Renesas TPU PWM support"
- 	depends on ARCH_SHMOBILE || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index ec50eb5..79d3dc3 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
- obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
- obj-$(CONFIG_PWM_PUV3)		+= pwm-puv3.o
- obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
-+obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-new file mode 100644
-index 0000000..b359cd1
---- /dev/null
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -0,0 +1,261 @@
-+/*
-+ * R-Car PWM Timer driver
-+ *
-+ * Copyright (C) 2015 Renesas Electronics Corporation
-+ *
-+ * This is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+
-+#define RCAR_PWM_MAX_DIVISION	24
-+#define RCAR_PWM_MAX_CYCLE	1023
-+
-+#define RCAR_PWMCR		0x00
-+#define RCAR_PWMCNT		0x04
-+
-+#define RCAR_PWMCR_CC0_MASK	0x000f0000
-+#define RCAR_PWMCR_CC0_SHIFT	16
-+#define RCAR_PWMCR_CCMD		BIT(15)
-+#define RCAR_PWMCR_SYNC		BIT(11)
-+#define RCAR_PWMCR_SS0		BIT(4)
-+#define RCAR_PWMCR_EN0		BIT(0)
-+
-+#define RCAR_PWMCNT_CYC0_MASK	0x03ff0000
-+#define RCAR_PWMCNT_CYC0_SHIFT	16
-+#define RCAR_PWMCNT_PH0_MASK	0x000003ff
-+#define RCAR_PWMCNT_PH0_SHIFT	0
-+
-+struct rcar_pwm_chip {
-+	struct pwm_chip chip;
-+	void __iomem *base;
-+	struct clk *clk;
-+};
-+
-+#define to_rcar_pwm_chip(chip)	container_of(chip, struct rcar_pwm_chip, chip)
-+
-+static void rcar_pwm_write(struct rcar_pwm_chip *rp, u32 data, u32 reg)
-+{
-+	iowrite32(data, rp->base + reg);
-+}
-+
-+static u32 rcar_pwm_read(struct rcar_pwm_chip *rp, u32 reg)
-+{
-+	return ioread32(rp->base + reg);
-+}
-+
-+static void rcar_pwm_bit_modify(struct rcar_pwm_chip *rp,
-+				u32 mask, u32 data, u32 reg)
-+{
-+	u32 val = rcar_pwm_read(rp, reg);
-+
-+	val &= ~mask;
-+	val |= data & mask;
-+	rcar_pwm_write(rp, val, reg);
-+}
-+
-+static int rcar_pwn_get_clock_division(struct rcar_pwm_chip *rp,
-+				       int period_ns)
-+{
-+	int div;
-+	unsigned long clk_rate = clk_get_rate(rp->clk);
-+	unsigned long long max;	/* max cycle / nanoseconds */
-+
-+	for (div = 0; div <= RCAR_PWM_MAX_DIVISION; div++) {
-+		max = (unsigned long long)NSEC_PER_SEC * RCAR_PWM_MAX_CYCLE *
-+			(1 << div);
-+		do_div(max, clk_rate);
-+		if (period_ns < max)
-+			break;
-+	}
-+
-+	return div;
-+}
-+
-+static void rcar_pwm_set_clock_control(struct rcar_pwm_chip *rp, int div)
-+{
-+	u32 val = rcar_pwm_read(rp, RCAR_PWMCR);
-+
-+	if (div > RCAR_PWM_MAX_DIVISION)
-+		return;
-+
-+	val &= ~(RCAR_PWMCR_CCMD | RCAR_PWMCR_CC0_MASK);
-+	if (div & 1)
-+		val |= RCAR_PWMCR_CCMD;
-+	div >>= 1;
-+	val |= div << RCAR_PWMCR_CC0_SHIFT;
-+	rcar_pwm_write(rp, val, RCAR_PWMCR);
-+}
-+
-+static void rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div,
-+				 int duty_ns, int period_ns)
-+{
-+	unsigned long long one_cycle, tmp;	/* 0.01 nanoseconds */
-+	unsigned long clk_rate = clk_get_rate(rp->clk);
-+	u32 cyc, ph;
-+
-+	one_cycle = (unsigned long long)NSEC_PER_SEC * 100ULL * (1 << div);
-+	do_div(one_cycle, clk_rate);
-+
-+	tmp = period_ns * 100ULL;
-+	do_div(tmp, one_cycle);
-+	cyc = (tmp << RCAR_PWMCNT_CYC0_SHIFT) & RCAR_PWMCNT_CYC0_MASK;
-+
-+	tmp = duty_ns * 100ULL;
-+	do_div(tmp, one_cycle);
-+	ph = tmp & RCAR_PWMCNT_PH0_MASK;
-+
-+	/* Avoid prohibited setting */
-+	if (cyc && ph)
-+		rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
-+}
-+
-+static int rcar_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+
-+	return clk_prepare_enable(rp->clk);
-+}
-+
-+static void rcar_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+
-+	clk_disable_unprepare(rp->clk);
-+}
-+
-+static int rcar_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			   int duty_ns, int period_ns)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+	int div;
-+
-+	div = rcar_pwn_get_clock_division(rp, period_ns);
-+
-+	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, RCAR_PWMCR_SYNC, RCAR_PWMCR);
-+	rcar_pwm_set_counter(rp, div, duty_ns, period_ns);
-+	rcar_pwm_set_clock_control(rp, div);
-+	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR);
-+
-+	return 0;
-+}
-+
-+static int rcar_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+	u32 pwmcnt;
-+
-+	/* Don't enable the PWM device if CYC0 or PH0 is 0 */
-+	pwmcnt = rcar_pwm_read(rp, RCAR_PWMCNT);
-+	if (!(pwmcnt & RCAR_PWMCNT_CYC0_MASK) ||
-+	    !(pwmcnt & RCAR_PWMCNT_PH0_MASK))
-+		return -EINVAL;
-+
-+	rcar_pwm_bit_modify(rp, RCAR_PWMCR_EN0, RCAR_PWMCR_EN0, RCAR_PWMCR);
-+
-+	return 0;
-+}
-+
-+static void rcar_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+
-+	rcar_pwm_bit_modify(rp, RCAR_PWMCR_EN0, 0, RCAR_PWMCR);
-+}
-+
-+static const struct pwm_ops rcar_pwm_ops = {
-+	.request	= rcar_pwm_request,
-+	.free		= rcar_pwm_free,
-+	.config		= rcar_pwm_config,
-+	.enable		= rcar_pwm_enable,
-+	.disable	= rcar_pwm_disable,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int rcar_pwm_probe(struct platform_device *pdev)
-+{
-+	struct rcar_pwm_chip *rcar_pwm;
-+	struct resource *res;
-+	int ret;
-+
-+	rcar_pwm = devm_kzalloc(&pdev->dev, sizeof(*rcar_pwm), GFP_KERNEL);
-+	if (rcar_pwm == NULL)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rcar_pwm->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(rcar_pwm->base))
-+		return PTR_ERR(rcar_pwm->base);
-+
-+	rcar_pwm->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(rcar_pwm->clk)) {
-+		dev_err(&pdev->dev, "cannot get clock\n");
-+		return PTR_ERR(rcar_pwm->clk);
-+	}
-+
-+	platform_set_drvdata(pdev, rcar_pwm);
-+
-+	rcar_pwm->chip.dev = &pdev->dev;
-+	rcar_pwm->chip.ops = &rcar_pwm_ops;
-+	rcar_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
-+	rcar_pwm->chip.base = -1;
-+	rcar_pwm->chip.npwm = 1;
-+
-+	ret = pwmchip_add(&rcar_pwm->chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to register PWM chip\n");
-+		return ret;
-+	}
-+
-+	dev_info(&pdev->dev, "R-Car PWM Timer registered\n");
-+
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static int rcar_pwm_remove(struct platform_device *pdev)
-+{
-+	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rcar_pwm->chip);
-+	if (ret)
-+		return ret;
-+
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rcar_pwm_of_table[] = {
-+	{ .compatible = "renesas,pwm-rcar", },
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, rcar_pwm_of_table);
-+
-+static struct platform_driver rcar_pwm_driver = {
-+	.probe		= rcar_pwm_probe,
-+	.remove		= rcar_pwm_remove,
-+	.driver		= {
-+		.name	= "pwm-rcar",
-+		.of_match_table = of_match_ptr(rcar_pwm_of_table),
-+	}
-+};
-+module_platform_driver(rcar_pwm_driver);
-+
-+MODULE_AUTHOR("Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>");
-+MODULE_DESCRIPTION("Renesas PWM Timer Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:pwm-rcar");
--- 
-1.9.1
+On 05/19/2015 07:12 PM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> This adds support for the LED controller on Broadcom's BCM6358.
+>
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> ---
+>   drivers/leds/Kconfig        |   8 ++
+>   drivers/leds/Makefile       |   1 +
+>   drivers/leds/leds-bcm6358.c | 241 +++++++++++++++++++++++++++++++++=
++++++++++++
+>   3 files changed, 250 insertions(+)
+>   create mode 100644 drivers/leds/leds-bcm6358.c
+>
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index ec26dd1..86de046 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -58,6 +58,14 @@ config LEDS_BCM6328
+>   	  This option enables support for LEDs connected to the BCM6328
+>   	  LED HW controller accessed via MMIO registers.
+>
+> +config LEDS_BCM6358
+> +	tristate "LED Support for Broadcom BCM6358"
+> +	depends on LEDS_CLASS
+> +	depends on OF
+> +	help
+> +	  This option enables support for LEDs connected to the BCM6358
+> +	  LED HW controller accessed via MMIO registers.
+> +
+>   config LEDS_LM3530
+>   	tristate "LCD Backlight driver for LM3530"
+>   	depends on LEDS_CLASS
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index edb3abf..8d6a24a 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_LEDS_TRIGGERS)		+=3D led-triggers.o
+>   obj-$(CONFIG_LEDS_88PM860X)		+=3D leds-88pm860x.o
+>   obj-$(CONFIG_LEDS_AAT1290)		+=3D leds-aat1290.o
+>   obj-$(CONFIG_LEDS_BCM6328)		+=3D leds-bcm6328.o
+> +obj-$(CONFIG_LEDS_BCM6358)		+=3D leds-bcm6358.o
+>   obj-$(CONFIG_LEDS_BD2802)		+=3D leds-bd2802.o
+>   obj-$(CONFIG_LEDS_LOCOMO)		+=3D leds-locomo.o
+>   obj-$(CONFIG_LEDS_LM3530)		+=3D leds-lm3530.o
+> diff --git a/drivers/leds/leds-bcm6358.c b/drivers/leds/leds-bcm6358.=
+c
+> new file mode 100644
+> index 0000000..4a3a6c3
+> --- /dev/null
+> +++ b/drivers/leds/leds-bcm6358.c
+> @@ -0,0 +1,241 @@
+> +/*
+> + * Driver for BCM6358 memory-mapped LEDs, based on leds-syscon.c
+> + *
+> + * Copyright 2015 =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.co=
+m>
+> + *
+> + * This program is free software; you can redistribute  it and/or mo=
+dify it
+> + * under  the terms of  the GNU General  Public License as published=
+ by the
+> + * Free Software Foundation;  either version 2 of the  License, or (=
+at your
+> + * option) any later version.
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define BCM6358_REG_MODE		0x0
+> +#define BCM6358_REG_CTRL		0x4
+> +
+> +#define BCM6358_SLED_CLKDIV_MASK	3
+> +#define BCM6358_SLED_CLKDIV_1		0
+> +#define BCM6358_SLED_CLKDIV_2		1
+> +#define BCM6358_SLED_CLKDIV_4		2
+> +#define BCM6358_SLED_CLKDIV_8		3
+> +
+> +#define BCM6358_SLED_POLARITY		BIT(2)
+> +#define BCM6358_SLED_BUSY		BIT(3)
+> +
+> +#define BCM6358_SLED_MAX_COUNT		32
+> +#define BCM6358_SLED_WAIT		100
+> +
+> +/**
+> + * struct bcm6358_led - state container for bcm6358 based LEDs
+> + * @cdev: LED class device for this LED
+> + * @mem: memory resource
+> + * @lock: memory lock
+> + * @pin: LED pin number
+> + * @active_low: LED is active low
+> + */
+> +struct bcm6358_led {
+> +	struct led_classdev cdev;
+> +	void __iomem *mem;
+> +	spinlock_t *lock;
+> +	unsigned long pin;
+> +	bool active_low;
+> +};
+> +
+> +static void bcm6358_led_write(void __iomem *reg, unsigned long data)
+> +{
+> +	iowrite32be(data, reg);
+> +}
+> +
+> +static unsigned long bcm6358_led_read(void __iomem *reg)
+> +{
+> +	return ioread32be(reg);
+> +}
+> +
+> +static unsigned long bcm6358_led_busy(void __iomem *mem)
+> +{
+> +	unsigned long val;
+> +
+> +	while ((val =3D bcm6358_led_read(mem + BCM6358_REG_CTRL)) &
+> +		BCM6358_SLED_BUSY)
+> +		udelay(BCM6358_SLED_WAIT);
+> +
+> +	return val;
+> +}
+> +
+> +static void bcm6358_led_mode(struct bcm6358_led *led, unsigned long =
+value)
+> +{
+> +	unsigned long val;
+> +
+> +	bcm6358_led_busy(led->mem);
+> +
+> +	val =3D bcm6358_led_read(led->mem + BCM6358_REG_MODE);
+> +	if ((led->active_low && value =3D=3D LED_OFF) ||
+> +	    (!led->active_low && value !=3D LED_OFF))
+> +		val |=3D BIT(led->pin);
+> +	else
+> +		val &=3D ~(BIT(led->pin));
+> +	bcm6358_led_write(led->mem + BCM6358_REG_MODE, val);
+> +}
+> +
+> +static void bcm6358_led_set(struct led_classdev *led_cdev,
+> +			    enum led_brightness value)
+> +{
+> +	struct bcm6358_led *led =3D
+> +		container_of(led_cdev, struct bcm6358_led, cdev);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(led->lock, flags);
+> +	bcm6358_led_mode(led, value);
+> +	spin_unlock_irqrestore(led->lock, flags);
+> +}
+> +
+> +static int bcm6358_led(struct device *dev, struct device_node *nc, u=
+32 reg,
+> +		       void __iomem *mem, spinlock_t *lock)
+> +{
+> +	struct bcm6358_led *led;
+> +	unsigned long flags;
+> +	const char *state;
+> +	int rc;
+> +
+> +	led =3D devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
+> +	if (!led)
+> +		return -ENOMEM;
+> +
+> +	led->pin =3D reg;
+> +	led->mem =3D mem;
+> +	led->lock =3D lock;
+> +
+> +	if (of_property_read_bool(nc, "active-low"))
+> +		led->active_low =3D true;
+> +
+> +	led->cdev.name =3D of_get_property(nc, "label", NULL) ? : nc->name;
+> +	led->cdev.default_trigger =3D of_get_property(nc,
+> +						    "linux,default-trigger",
+> +						    NULL);
+> +
+> +	spin_lock_irqsave(lock, flags);
+> +	if (!of_property_read_string(nc, "default-state", &state))
+> +		if (!strcmp(state, "on"))
+> +			led->cdev.brightness =3D LED_FULL;
+> +		else if (!strcmp(state, "keep")) {
+> +			unsigned long val;
+> +
+> +			bcm6358_led_busy(led->mem);
+> +
+> +			val =3D bcm6358_led_read(led->mem + BCM6358_REG_MODE);
+> +			val &=3D BIT(led->pin);
+> +			if ((led->active_low && !val) ||
+> +				(!led->active_low && val))
+> +				led->cdev.brightness =3D LED_FULL;
+> +			else
+> +				led->cdev.brightness =3D LED_OFF;
+> +		} else
+> +			led->cdev.brightness =3D LED_OFF;
+> +	else
+> +		led->cdev.brightness =3D LED_OFF;
+> +	bcm6358_led_mode(led, led->cdev.brightness);
+> +	spin_unlock_irqrestore(lock, flags);
+> +
+> +	led->cdev.brightness_set =3D bcm6358_led_set;
+> +
+> +	rc =3D led_classdev_register(dev, &led->cdev);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	dev_dbg(dev, "registered LED %s\n", led->cdev.name);
+> +
+> +	return 0;
+> +}
+> +
+> +static int bcm6358_leds_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct device_node *np =3D pdev->dev.of_node;
+> +	struct device_node *child;
+> +	struct resource *mem_r;
+> +	void __iomem *mem;
+> +	spinlock_t *lock;
+> +	unsigned long val;
+> +	u32 clk_div;
+> +
+> +	mem_r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!mem_r)
+> +		return -EINVAL;
+> +
+> +	mem =3D devm_ioremap_resource(dev, mem_r);
+> +	if (IS_ERR(mem))
+> +		return PTR_ERR(mem);
+> +
+> +	lock =3D devm_kzalloc(dev, sizeof(*lock), GFP_KERNEL);
+> +	if (!lock)
+> +		return -ENOMEM;
+> +
+> +	spin_lock_init(lock);
+> +
+> +	val =3D bcm6358_led_busy(mem);
+> +	val &=3D ~(BCM6358_SLED_POLARITY | BCM6358_SLED_CLKDIV_MASK);
+> +	if (of_property_read_bool(np, "brcm,clk-dat-low"))
+> +		val |=3D BCM6358_SLED_POLARITY;
+> +	of_property_read_u32(child, "brcm,clk-div", &clk_div);
 
+child is uninitialized here
+
+> +	switch (clk_div) {
+> +	case 8:
+> +		val |=3D BCM6358_SLED_CLKDIV_8;
+> +		break;
+> +	case 4:
+> +		val |=3D BCM6358_SLED_CLKDIV_4;
+> +		break;
+> +	case 2:
+> +		val |=3D BCM6358_SLED_CLKDIV_2;
+> +		break;
+> +	default:
+> +		val |=3D BCM6358_SLED_CLKDIV_1;
+> +		break;
+> +	}
+> +	bcm6358_led_write(mem + BCM6358_REG_CTRL, val);
+> +
+> +	for_each_available_child_of_node(np, child) {
+> +		int rc;
+> +		u32 reg;
+> +
+> +		if (of_property_read_u32(child, "reg", &reg))
+> +			continue;
+> +
+> +		if (reg >=3D BCM6358_SLED_MAX_COUNT) {
+> +			dev_err(dev, "invalid LED (%u >=3D %d)\n", reg,
+> +				BCM6358_SLED_MAX_COUNT);
+> +			continue;
+> +		}
+> +
+> +		rc =3D bcm6358_led(dev, child, reg, mem, lock);
+> +		if (rc < 0)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id bcm6358_leds_of_match[] =3D {
+> +	{ .compatible =3D "brcm,bcm6358-leds", },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver bcm6358_leds_driver =3D {
+> +	.probe =3D bcm6358_leds_probe,
+> +	.driver =3D {
+> +		.name =3D "leds-bcm6358",
+> +		.of_match_table =3D bcm6358_leds_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(bcm6358_leds_driver);
+> +
+> +MODULE_AUTHOR("=C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>"=
+);
+> +MODULE_DESCRIPTION("LED driver for BCM6358 controllers");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:leds-bcm6358");
+>
+
+
+--=20
+Best Regards,
+Jacek Anaszewski
