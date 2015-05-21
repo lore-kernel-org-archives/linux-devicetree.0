@@ -1,40 +1,67 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V3 3/4] watchdog: da9062: DA9062 watchdog driver
-Date: Thu, 21 May 2015 07:15:24 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22C859@SW-EX-MBX02.diasemi.com>
-References: <cover.1432041031.git.stwiss.opensource@diasemi.com>
- <ded171f203fe1d0c72f0d7ea4c3d54257f4e970e.1432041031.git.stwiss.opensource@diasemi.com>
- <20150520203016.GA5710@roeck-us.net>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 4/9] mfd: Add binding document for NVIDIA Tegra XUSB
+Date: Thu, 21 May 2015 09:19:00 +0200
+Message-ID: <CACRpkdbK4BBhs==yFWW91M_4x5f3RGDiXBV+yBYYQ78JG0mMLg@mail.gmail.com>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+	<1430761002-9327-5-git-send-email-abrestic@chromium.org>
+	<20150513143954.GA3394@x1>
+	<55544CC5.9050001@nvidia.com>
+	<20150514074058.GA22418@x1>
+	<CAL1qeaEqNejuGkN-ke11mtWnaaRo+XieCBkQ6+NQ-Afym6uxVA@mail.gmail.com>
+	<CAL1qeaHy0h7bXhuLHh4AG2Zfu48JYeawgVo4dp_k4oX8YFw6tA@mail.gmail.com>
+	<20150520063551.GD3627@x1>
+	<20150520145227.GA3787@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150520203016.GA5710-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150520145227.GA3787-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 May 2015 21:30 Guenter Roeck wrote:
+On Wed, May 20, 2015 at 4:52 PM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Subject: Re: [PATCH V3 3/4] watchdog: da9062: DA9062 watchdog driver
-> 
-> On Tue, May 19, 2015 at 02:10:30PM +0100, S Twiss wrote:
-> > From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> >
-> > Add watchdog driver support for DA9062
-> >
-> >
-> > Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> >
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> I'm a little confused by the simple-mfd approach. The only code I see in
+> linux-next for this is a single line that adds the "simple-mfd" string
+> to the OF device ID table in drivers/of/platform.c. As far as I can tell
+> this will merely cause child devices to be created. There won't be a
+> shared regmap and resources won't be set up properly either.
 
-Thank you Guenter
+That is correct. The simple-mfd is a two-component approach.
 
-Regards,
-Steve
+Ideally, in the simplest case, you combine simple-mfd with syscon.
+
+foo@0 {
+    compatible = "foo", "syscon", "simple-mfd";
+    reg = <0x10000000 0x1000>;
+
+    bar@1 {
+        compatible = "bar";
+    };
+
+    baz@2 {
+        compatible = "baz";
+    };
+};
+
+This will instantiate bar and baz.
+
+These subdrivers then probe and:
+
+probe() {
+   struct regmap *map;
+
+   map = syscon_node_to_regmap(parent->of_node);
+   (...)
+}
+
+Simple, syscon is the MFD hub.
+
+Yours,
+Linus Walleij
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
