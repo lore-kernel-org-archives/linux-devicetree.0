@@ -1,65 +1,65 @@
 From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/7] Clocksource changes for Pistachio CPUFreq
-Date: Thu, 21 May 2015 18:37:33 -0300
-Message-ID: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com>
+Subject: [PATCH 3/7] clocksource: mips-gic: Split clocksource and clockevent initialization
+Date: Thu, 21 May 2015 18:37:36 -0300
+Message-ID: <1432244260-14908-4-git-send-email-ezequiel.garcia@imgtec.com>
+References: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432244260-14908-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The purpose of this patchset is to support CPUFreq on Pistachio SoC.
-However, given Pistachio uses the MIPS GIC clocksource and clockevent
-drivers (clocked from the CPU), adding CPUFreq support needs some work.
+This is preparation work for the introduction of clockevent frequency
+update with a clock notifier. This is only possible when the device
+is passed a clk struct, so let's split the legacy and devicetree
+initialization.
 
-This patchset changes the MIPS GIC clockevent driver to update
-the frequency of the per-cpu clockevents using a clock notifier.
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/clocksource/mips-gic-timer.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Then, we add a clocksource driver for IMG Pistachio SoC, based on the
-general purpose timers. The SoC only provides four timers, so we can't
-use them to implement the four clockevents and the clocksource.
-
-However, we can use one of these timers to provide a clocksource and
-a sched clock. Given the general purpose timers are clocked from the
-peripheral system clock tree, they are not affected by CPU rate changes.
-
-Patches 1 to 3 are just style cleaning and preparation work. Patch 4
-adds the clockevent frequency update.
-
-Patches 5 and 6 add the new clocksource driver.
-
-Patch 7 introduces an option to enable the timer based clocksource
-on Pistachio.
-
-For CPUFreq to really work, clk driver changes are needed to support
-MIPS PLL clock rate change. Patches for this will be posted soon.
-
-This series apply on v4.1-rc4. As always, comments and feedback are welcome!
-
-Ezequiel Garcia (7):
-  clocksource: mips-gic: Enable the clock before using it
-  clocksource: mips-gic: Add missing error returns checks
-  clocksource: mips-gic: Split clocksource and clockevent initialization
-  clocksource: mips-gic: Update clockevent frequency on clock rate
-    changes
-  clocksource: Add Pistachio SoC general purpose timer binding document
-  clocksource: Add Pistachio clocksource-only driver
-  mips: pistachio: Allow to enable the external timer based clocksource
-
- .../bindings/timer/img,pistachio-gptimer.txt       |  29 +++
- arch/mips/Kconfig                                  |   1 +
- arch/mips/pistachio/Kconfig                        |  13 ++
- drivers/clocksource/Kconfig                        |   4 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/mips-gic-timer.c               |  65 ++++++-
- drivers/clocksource/time-pistachio.c               | 202 +++++++++++++++++++++
- 7 files changed, 306 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
- create mode 100644 arch/mips/pistachio/Kconfig
- create mode 100644 drivers/clocksource/time-pistachio.c
-
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+index c4352f0..22a4daf 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -142,11 +142,6 @@ static void __init __gic_clocksource_init(void)
+ 	ret = clocksource_register_hz(&gic_clocksource, gic_frequency);
+ 	if (ret < 0)
+ 		pr_warn("GIC: Unable to register clocksource\n");
+-
+-	gic_clockevent_init();
+-
+-	/* And finally start the counter */
+-	gic_start_count();
+ }
+ 
+ void __init gic_clocksource_init(unsigned int frequency)
+@@ -156,6 +151,10 @@ void __init gic_clocksource_init(unsigned int frequency)
+ 		GIC_LOCAL_TO_HWIRQ(GIC_LOCAL_INT_COMPARE);
+ 
+ 	__gic_clocksource_init();
++	gic_clockevent_init();
++
++	/* And finally start the counter */
++	gic_start_count();
+ }
+ 
+ static void __init gic_clocksource_of_init(struct device_node *node)
+@@ -187,6 +186,10 @@ static void __init gic_clocksource_of_init(struct device_node *node)
+ 	}
+ 
+ 	__gic_clocksource_init();
++	gic_clockevent_init();
++
++	/* And finally start the counter */
++	gic_start_count();
+ }
+ CLOCKSOURCE_OF_DECLARE(mips_gic_timer, "mti,gic-timer",
+ 		       gic_clocksource_of_init);
 -- 
 2.3.3
 
