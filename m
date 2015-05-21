@@ -1,56 +1,60 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [Linaro-acpi] [PATCH v2 0/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Thu, 21 May 2015 10:46:59 +0200
-Message-ID: <4405999.8GGyzVsbM7@wuerfel>
-References: <=fu.wei@linaro.org> <1432197156-16947-1-git-send-email-fu.wei@linaro.org>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/7] ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
+Date: Thu, 21 May 2015 16:49:35 +0800
+Message-ID: <CADyBb7v4XHV3Wig1J-WVXPpDcwV61-YReBUe5xXxQ=DQ7gbARQ@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
+	<1432197156-16947-4-git-send-email-fu.wei@linaro.org>
+	<10436688.ghBfa0dkUg@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432197156-16947-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <10436688.ghBfa0dkUg@wuerfel>
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Cc: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 May 2015 16:32:29 fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> 
-> This patchset:
-> 
->     (1)Export "arch_timer_get_rate" in arm_arch_timer.c for the
->     other drivers, like SBSA watchdog driver
-> 
->     (2)Introduce Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
->     for FDT info of SBSA Generic Watchdog, and give two examples of
->     adding SBSA Generic Watchdog device node into the dts files:
->     foundation-v8.dts and amd-seattle-soc.dtsi.
-> 
->     (3)Introduce "pretimeout" into the watchdog framework, and update
->     Documentation/watchdog/watchdog-kernel-api.txt to introduce:
->         (1)the new elements in the watchdog_device and watchdog_ops struct;
->         (2)the new API "watchdog_init_timeouts".
-> 
->     (4)Introduce ARM SBSA watchdog driver:
->         a.Use linux kernel watchdog framework;
->         b.Work with FDT on ARM64;
->         c.Use "pretimeout" in watchdog framework;
->         d.In first timeout(WS0), do panic to save system context;
->         e.Support geting timeout and pretimeout from parameter and FDT
->           at the driver init stage.
+Hi Arnd,
 
-Looks all good to me, please add
+yes, you are right , will delete it :-)
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+On 21 May 2015 at 16:45, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 21 May 2015 16:32:32 fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> +       watchdog0: watchdog@2a450000 {
+>> +               compatible = "arm,sbsa-gwdt";
+>> +               reg = <0x0 0x2a450000 0 0x10000>,
+>> +                       <0x0 0x2a440000 0 0x10000>;
+>> +               reg-names = "refresh",
+>> +                       "control";
+>> +               interrupts = <0 27 4>;
+>> +               interrupt-names = "ws0";
+>> +               timeout-sec = <10 5>;
+>> +       };
+>>  };
+>>
+>
+> just one tiny comment: you can drop the 'watchdog0:' label here, there
+> is normally no reason to assign a label to a watchdog device, especially
+> if it's in a .dts file rather than a .dtsi.
+>
+> The same is true for the example in the binding documentation.
+>
+>         Arnd
 
-for patches 1-6.
 
->     (5)Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
->     and create a platform device with that information.
->     This platform device can be used by This Watchdog driver.
 
-This needs to be reviewed by someone who understands ACPI.
+-- 
+Best regards,
 
-	Arnd
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
 --
 To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
