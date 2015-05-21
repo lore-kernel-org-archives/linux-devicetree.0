@@ -1,237 +1,207 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 4/5] phy: add Marvell HSIC 28nm PHY
-Date: Thu, 21 May 2015 18:21:14 +0530
-Message-ID: <555DD4C2.80406@ti.com>
-References: <1431557340-5421-1-git-send-email-robh@kernel.org> <1431557340-5421-5-git-send-email-robh@kernel.org> <555DD384.2090506@ti.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] phy: add lpc18xx usb otg phy driver
+Date: Thu, 21 May 2015 18:25:39 +0530
+Message-ID: <555DD5CB.4040805@ti.com>
+References: <1431797277-4906-1-git-send-email-manabian@gmail.com> <1431797277-4906-2-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <555DD384.2090506@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431797277-4906-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Saturday 16 May 2015 10:57 PM, Joachim Eastwood wrote:
+> Add PHY driver for the internal USB OTG PHY found on NXP
+> LPC18xx and LPC43xx devices. This driver takes care of
+> enabling the PHY in CREG (syscon) and setting the required
+> clock frequency.
+>
+> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   drivers/phy/Kconfig               |  11 +++
+>   drivers/phy/Makefile              |   1 +
+>   drivers/phy/phy-lpc18xx-usb-otg.c | 145 ++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 157 insertions(+)
+>   create mode 100644 drivers/phy/phy-lpc18xx-usb-otg.c
+>
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index a53bd5b52df9..e11fb9e3c760 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -52,6 +52,17 @@ config PHY_EXYNOS_MIPI_VIDEO
+>   	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
+>   	  and EXYNOS SoCs.
+>
+> +config PHY_LPC18XX_USB_OTG
+> +	tristate "NXP LPC18xx/43xx SoC USB OTG PHY driver"
+> +	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	select MFD_SYSCON
+> +	help
+> +	  Enable this to support NXP LPC18xx/43xx internal USB OTG PHY.
+> +
+> +	  This driver is need for USB0 support on LPC18xx/43xx and takes
+> +	  care of enabling and clock setup.
+> +
+>   config PHY_MVEBU_SATA
+>   	def_bool y
+>   	depends on ARCH_DOVE || MACH_DOVE || MACH_KIRKWOOD
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index f12625178780..b7251f3b9ef7 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+>   obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+> +obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
+>   obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
+>   obj-$(CONFIG_PHY_MIPHY28LP) 		+= phy-miphy28lp.o
+>   obj-$(CONFIG_PHY_MIPHY365X)		+= phy-miphy365x.o
+> diff --git a/drivers/phy/phy-lpc18xx-usb-otg.c b/drivers/phy/phy-lpc18xx-usb-otg.c
+> new file mode 100644
+> index 000000000000..3a86e8f75e7e
+> --- /dev/null
+> +++ b/drivers/phy/phy-lpc18xx-usb-otg.c
+> @@ -0,0 +1,145 @@
+> +/*
+> + * PHY driver for NXP LPC18xx/43xx internal USB OTG PHY
+> + *
+> + * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +/* USB OTG PHY register offset and bit in CREG */
+> +#define LPC18XX_CREG_CREG0		0x004
+> +# define LPC18XX_CREG_CREG0_USB0PHY	BIT(5)
 
-On Thursday 21 May 2015 06:15 PM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Thursday 14 May 2015 04:18 AM, Rob Herring wrote:
->> Add PHY driver for the Marvell HSIC 28nm PHY. This PHY is found in PXA1928
->> SOC.
->>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>    drivers/phy/Kconfig       |  10 +++
->>    drivers/phy/Makefile      |   1 +
->>    drivers/phy/phy-mv-hsic.c | 208 ++++++++++++++++++++++++++++++++++++++++++++++
->>    3 files changed, 219 insertions(+)
->>    create mode 100644 drivers/phy/phy-mv-hsic.c
->>
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index ef7634f..cfcae72 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -52,6 +52,16 @@ config PHY_EXYNOS_MIPI_VIDEO
->>    	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
->>    	  and EXYNOS SoCs.
->>
->> +config PHY_MV_HSIC
->> +	tristate "Marvell USB HSIC 28nm PHY Driver"
->> +	select GENERIC_PHY
->> +	help
->> +	  Enable this to support Marvell USB HSIC PHY driver for Marvell
->> +	  SoC. This driver will do the PHY initialization and shutdown.
->> +	  The PHY driver will be used by Marvell ehci driver.
->> +
->> +	  To compile this driver as a module, choose M here.
->> +
->>    config PHY_MV_USB2
->>    	tristate "Marvell USB 2.0 28nm PHY Driver"
->>    	select GENERIC_PHY
->> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->> index 768e55a..472bf0a 100644
->> --- a/drivers/phy/Makefile
->> +++ b/drivers/phy/Makefile
->> @@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
->>    obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
->>    obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
->>    obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
->> +obj-$(CONFIG_PHY_MV_HSIC)		+= phy-mv-hsic.o
->>    obj-$(CONFIG_PHY_MV_USB2)		+= phy-mv-usb2.o
->>    obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
->>    obj-$(CONFIG_PHY_MIPHY28LP) 		+= phy-miphy28lp.o
->> diff --git a/drivers/phy/phy-mv-hsic.c b/drivers/phy/phy-mv-hsic.c
->> new file mode 100644
->> index 0000000..aa6cccd
->> --- /dev/null
->> +++ b/drivers/phy/phy-mv-hsic.c
->> @@ -0,0 +1,208 @@
->> +/*
->> + * Copyright (C) 2015 Linaro, Ltd.
->> + * Rob Herring <robh@kernel.org>
->> + *
->> + * Based on vendor driver:
->> + * Copyright (C) 2013 Marvell Inc.
->> + * Author: Chao Xie <xiechao.mail@gmail.com>
->> + *
->> + * This software is licensed under the terms of the GNU General Public
->> + * License version 2, as published by the Free Software Foundation, and
->> + * may be copied, distributed, and modified under those terms.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/slab.h>
->> +#include <linux/of.h>
->> +#include <linux/io.h>
->> +#include <linux/err.h>
->> +#include <linux/clk.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/phy/phy.h>
->> +
->> +#define PHY_28NM_HSIC_CTRL			0x08
->> +#define PHY_28NM_HSIC_IMPCAL_CAL		0x18
->> +#define PHY_28NM_HSIC_PLL_CTRL01		0x1c
->> +#define PHY_28NM_HSIC_PLL_CTRL2			0x20
->> +#define PHY_28NM_HSIC_INT			0x28
->> +
->> +#define PHY_28NM_HSIC_PLL_SELLPFR_SHIFT		26
->> +#define PHY_28NM_HSIC_PLL_FBDIV_SHIFT		0
->> +#define PHY_28NM_HSIC_PLL_REFDIV_SHIFT		9
->> +
->> +#define PHY_28NM_HSIC_S2H_PU_PLL		BIT(10)
->> +#define PHY_28NM_HSIC_H2S_PLL_LOCK		BIT(15)
->> +#define PHY_28NM_HSIC_S2H_HSIC_EN		BIT(7)
->> +#define S2H_DRV_SE0_4RESUME			BIT(14)
->> +#define PHY_28NM_HSIC_H2S_IMPCAL_DONE		BIT(27)
->> +
->> +#define PHY_28NM_HSIC_CONNECT_INT		BIT(1)
->> +#define PHY_28NM_HSIC_HS_READY_INT		BIT(2)
->> +
->> +struct mv_hsic_phy {
->> +	struct phy		*phy;
->> +	struct platform_device	*pdev;
->> +	void __iomem		*base;
->> +	struct clk		*clk;
->> +};
->> +
->> +static bool wait_for_reg(void __iomem *reg, u32 mask, unsigned long timeout)
->> +{
->> +	timeout += jiffies;
->> +	while (time_is_after_eq_jiffies(timeout)) {
->> +		if ((readl(reg) & mask) == mask)
->> +			return true;
->> +		msleep(1);
->> +	}
->> +	return false;
->> +}
->> +
->> +static int mv_hsic_phy_init(struct phy *phy)
->> +{
->> +	struct mv_hsic_phy *mv_phy = phy_get_drvdata(phy);
->> +	struct platform_device *pdev = mv_phy->pdev;
->> +	void __iomem *base = mv_phy->base;
->> +
->> +	clk_prepare_enable(mv_phy->clk);
->> +
->> +	/* Set reference clock */
->> +	writel(0x1 << PHY_28NM_HSIC_PLL_SELLPFR_SHIFT |
->> +		0xf0 << PHY_28NM_HSIC_PLL_FBDIV_SHIFT |
->> +		0xd << PHY_28NM_HSIC_PLL_REFDIV_SHIFT,
->> +		base + PHY_28NM_HSIC_PLL_CTRL01);
->> +
->> +	/* Turn on PLL */
->> +	writel(readl(base + PHY_28NM_HSIC_PLL_CTRL2) |
->> +		PHY_28NM_HSIC_S2H_PU_PLL,
->> +		base + PHY_28NM_HSIC_PLL_CTRL2);
->> +
->> +	/* Make sure PHY PLL is locked */
->> +	if (!wait_for_reg(base + PHY_28NM_HSIC_PLL_CTRL2,
->> +	    PHY_28NM_HSIC_H2S_PLL_LOCK, HZ / 10)) {
->> +		dev_err(&pdev->dev, "HSIC PHY PLL not locked after 100mS.");
->> +		return -ETIMEDOUT;
->> +	}
->> +
->> +	/* Avoid SE0 state when resume for some device will take it as reset */
->> +	writel(readl(base + PHY_28NM_HSIC_CTRL) & ~S2H_DRV_SE0_4RESUME,
->> +		base + PHY_28NM_HSIC_CTRL);
->> +
->> +	/* Enable HSIC PHY */
->> +	writel(readl(base + PHY_28NM_HSIC_CTRL) | PHY_28NM_HSIC_S2H_HSIC_EN,
->> +		base + PHY_28NM_HSIC_CTRL);
->> +
->> +	/*  Calibration Timing
->> +	*		   ____________________________
->> +	*  CAL START   ___|
->> +	*			   ____________________
->> +	*  CAL_DONE    ___________|
->> +	*		  | 400us |
->> +	*/
->
-> Please use the comment style used here
-> http://lxr.free-electrons.com/source/Documentation/CodingStyle#L464
->
->> +
->> +	/* Make sure PHY Calibration is ready */
->> +	if (!wait_for_reg(base + PHY_28NM_HSIC_IMPCAL_CAL,
->> +	    PHY_28NM_HSIC_H2S_IMPCAL_DONE, HZ / 10)) {
->> +		dev_warn(&pdev->dev, "HSIC PHY READY not set after 100mS.");
->> +		return -ETIMEDOUT;
->> +	}
->> +
->> +	/* Waiting for HSIC connect int*/
->> +	if (!wait_for_reg(base + PHY_28NM_HSIC_INT,
->> +	    PHY_28NM_HSIC_CONNECT_INT, HZ / 5)) {
->> +		dev_warn(&pdev->dev, "HSIC wait for connect interrupt timeout.");
->> +		return -ETIMEDOUT;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int mv_hsic_phy_power_on(struct phy *phy)
->> +{
->> +	struct mv_hsic_phy *mv_phy = phy_get_drvdata(phy);
->> +	struct platform_device *pdev = mv_phy->pdev;
->> +
->> +	/* check HS ready */
->> +	if (!wait_for_reg(mv_phy->base + PHY_28NM_HSIC_INT,
->> +	    PHY_28NM_HSIC_HS_READY_INT, HZ / 10)) {
->> +		dev_err(&pdev->dev, "HSIC HS_READY not set\n");
->> +		return -ETIMEDOUT;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static int mv_hsic_phy_power_off(struct phy *phy)
->> +{
->> +	struct mv_hsic_phy *mv_phy = phy_get_drvdata(phy);
->> +	void __iomem *base = mv_phy->base;
->> +
->> +	writel(readl(base + PHY_28NM_HSIC_CTRL) & ~PHY_28NM_HSIC_S2H_HSIC_EN,
->> +		base + PHY_28NM_HSIC_CTRL);
->> +
->> +	clk_disable_unprepare(mv_phy->clk);
->> +	return 0;
->> +}
->> +
->> +static const struct phy_ops hsic_ops = {
->> +	.init		= mv_hsic_phy_init,
->> +	.power_on	= mv_hsic_phy_power_on,
->> +	.power_off	= mv_hsic_phy_power_off,
->
-> exit callback is missing? Shouldn't we turn off the PLLs in exit callback?
-Also add the .owner member since this driver can be used as module.
+don't prefer a space between # and define. Not a strong feeling though.
+> +
+> +struct lpc18xx_usb_otg_phy {
+> +	struct phy *phy;
+> +	struct clk *clk;
+> +	struct regmap *reg;
+> +};
+> +
+> +static int lpc18xx_usb_otg_phy_init(struct phy *phy)
+> +{
+> +	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = clk_prepare(lpc->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* The PHY must be clocked at 480 MHz */
+> +	return clk_set_rate(lpc->clk, 480000000);
+> +}
+> +
+> +static int lpc18xx_usb_otg_phy_exit(struct phy *phy)
+> +{
+> +	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
+> +
+> +	clk_unprepare(lpc->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int lpc18xx_usb_otg_phy_power_on(struct phy *phy)
+> +{
+> +	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = clk_enable(lpc->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* The bit in CREG is cleared to enable the PHY */
+> +	return regmap_update_bits(lpc->reg, LPC18XX_CREG_CREG0,
+> +				  LPC18XX_CREG_CREG0_USB0PHY, 0);
+> +}
+> +
+> +static int lpc18xx_usb_otg_phy_power_off(struct phy *phy)
+> +{
+> +	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(lpc->reg, LPC18XX_CREG_CREG0,
+> +				 LPC18XX_CREG_CREG0_USB0PHY,
+> +				 LPC18XX_CREG_CREG0_USB0PHY);
+> +	if (ret)
+> +		return ret;
+> +
+> +	clk_disable(lpc->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops lpc18xx_usb_otg_phy_ops = {
+> +	.init		= lpc18xx_usb_otg_phy_init,
+> +	.exit		= lpc18xx_usb_otg_phy_exit,
+> +	.power_on	= lpc18xx_usb_otg_phy_power_on,
+> +	.power_off	= lpc18xx_usb_otg_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int lpc18xx_usb_otg_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *phy_provider;
+> +	struct lpc18xx_usb_otg_phy *lpc;
+> +
+> +	lpc = devm_kzalloc(&pdev->dev, sizeof(*lpc), GFP_KERNEL);
+> +	if (!lpc)
+> +		return -ENOMEM;
+> +
+> +	lpc->reg = syscon_regmap_lookup_by_compatible("nxp,lpc1850-creg");
+> +	if (IS_ERR(lpc->reg)) {
+> +		dev_err(&pdev->dev, "failed to get syscon\n");
+> +		return PTR_ERR(lpc->reg);
+> +	}
+> +
+> +	lpc->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(lpc->clk)) {
+> +		dev_err(&pdev->dev, "failed to get clock\n");
+> +		return PTR_ERR(lpc->clk);
+> +	}
+> +
+> +	lpc->phy = devm_phy_create(&pdev->dev, NULL, &lpc18xx_usb_otg_phy_ops);
+> +	if (IS_ERR(lpc->phy)) {
+> +		dev_err(&pdev->dev, "failed to create PHY\n");
+> +		return PTR_ERR(lpc->phy);
+> +	}
+> +
+> +	phy_set_drvdata(lpc->phy, lpc);
+> +
+> +	phy_provider = devm_of_phy_provider_register(&pdev->dev,
+> +						     of_phy_simple_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	return 0;
+
+replace it with return PTR_ERR_OR_ZERO(phy_provider);
 
 Thanks
 Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
