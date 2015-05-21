@@ -1,319 +1,103 @@
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
-	<noltari@gmail.com>
-Subject: [PATCH v2 2/2] leds: add BCM6358 LED driver
-Date: Thu, 21 May 2015 19:11:10 +0200
-Message-ID: <1432228270-21891-3-git-send-email-noltari@gmail.com>
-References: <1432055578-14089-1-git-send-email-noltari@gmail.com>
- <1432228270-21891-1-git-send-email-noltari@gmail.com>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH v4 1/2] dma: Add Xilinx Central DMA DT Binding Documentation
+Date: Thu, 21 May 2015 22:39:54 +0530
+Message-ID: <1432228194-6760-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1432228270-21891-1-git-send-email-noltari@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, cooloney@gmail.com, jogo@openwrt.org, f.fainelli@gmail.com, cernekee@gmail.com, j.anaszewski@samsung.com
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, galak@codeaurora.org, appand@xilinx.com, soren.brinkmann@xilinx.com
+Cc: devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Srikanth Thokala <sthokal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the LED controller on Broadcom's BCM6358.
+Device-tree binding documentation of Xilinx Central DMA Engine.
 
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
 ---
- v2: introduce changes suggested by Jacek
- - Use correct device_node when getting brcm,clk-div property.
- - Code style fixes suggested by "checkpatch --strict".
+This patch is rebased on the commit
+Merge tag 'nfs-for-4.1-2' of git://git.linux-nfs.org/projects/trondmy/linux-nfs
 
- drivers/leds/Kconfig        |   8 ++
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-bcm6358.c | 243 ++++++++++++++++++++++++++++++++++++=
-++++++++
- 3 files changed, 252 insertions(+)
- create mode 100644 drivers/leds/leds-bcm6358.c
+Changes in v4:
+- None.
+Changes in v3:
+- Used proper alignment for all the properties.
+Changes in v2:
+- Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
+  to match the implementation.
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index ec26dd1..86de046 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -58,6 +58,14 @@ config LEDS_BCM6328
- 	  This option enables support for LEDs connected to the BCM6328
- 	  LED HW controller accessed via MMIO registers.
-=20
-+config LEDS_BCM6358
-+	tristate "LED Support for Broadcom BCM6358"
-+	depends on LEDS_CLASS
-+	depends on OF
-+	help
-+	  This option enables support for LEDs connected to the BCM6358
-+	  LED HW controller accessed via MMIO registers.
-+
- config LEDS_LM3530
- 	tristate "LCD Backlight driver for LM3530"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index edb3abf..8d6a24a 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_LEDS_TRIGGERS)		+=3D led-triggers.o
- obj-$(CONFIG_LEDS_88PM860X)		+=3D leds-88pm860x.o
- obj-$(CONFIG_LEDS_AAT1290)		+=3D leds-aat1290.o
- obj-$(CONFIG_LEDS_BCM6328)		+=3D leds-bcm6328.o
-+obj-$(CONFIG_LEDS_BCM6358)		+=3D leds-bcm6358.o
- obj-$(CONFIG_LEDS_BD2802)		+=3D leds-bd2802.o
- obj-$(CONFIG_LEDS_LOCOMO)		+=3D leds-locomo.o
- obj-$(CONFIG_LEDS_LM3530)		+=3D leds-lm3530.o
-diff --git a/drivers/leds/leds-bcm6358.c b/drivers/leds/leds-bcm6358.c
+ .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
 new file mode 100644
-index 0000000..21f9693
+index 0000000..d1637de
 --- /dev/null
-+++ b/drivers/leds/leds-bcm6358.c
-@@ -0,0 +1,243 @@
-+/*
-+ * Driver for BCM6358 memory-mapped LEDs, based on leds-syscon.c
-+ *
-+ * Copyright 2015 =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-+ *
-+ * This program is free software; you can redistribute  it and/or modi=
-fy it
-+ * under  the terms of  the GNU General  Public License as published b=
-y the
-+ * Free Software Foundation;  either version 2 of the  License, or (at=
- your
-+ * option) any later version.
-+ */
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+@@ -0,0 +1,54 @@
++Xilinx AXI CDMA engine, it does transfers between memory-mapped source
++address and a memory-mapped destination address.
 +
-+#define BCM6358_REG_MODE		0x0
-+#define BCM6358_REG_CTRL		0x4
++Required properties:
++- compatible		: Should be "xlnx,axi-cdma-1.00.a"
++- #dma-cells		: Should be <1>, see "dmas" property below
++- reg			: Should contain cdma registers location and length.
++- dma-channel child node: Should have only one channel
 +
-+#define BCM6358_SLED_CLKDIV_MASK	3
-+#define BCM6358_SLED_CLKDIV_1		0
-+#define BCM6358_SLED_CLKDIV_2		1
-+#define BCM6358_SLED_CLKDIV_4		2
-+#define BCM6358_SLED_CLKDIV_8		3
++Optional properties:
++- xlnx,include-sg	: Tells whether configured for Scatter-mode in
++			  the hardware.
 +
-+#define BCM6358_SLED_POLARITY		BIT(2)
-+#define BCM6358_SLED_BUSY		BIT(3)
++Required child node properties:
++- compatible		: It should be "xlnx,axi-cdma-channel".
++- interrupts		: Should contain per channel CDMA interrupts.
++- xlnx,datawidth	: Should contain the stream data width, take values
++			  {32,64...1024}.
 +
-+#define BCM6358_SLED_MAX_COUNT		32
-+#define BCM6358_SLED_WAIT		100
++Option child node properties:
++- xlnx,include-dre	: Tells whether hardware is configured for Data
++			  Realignment Engine.
 +
-+/**
-+ * struct bcm6358_led - state container for bcm6358 based LEDs
-+ * @cdev: LED class device for this LED
-+ * @mem: memory resource
-+ * @lock: memory lock
-+ * @pin: LED pin number
-+ * @active_low: LED is active low
-+ */
-+struct bcm6358_led {
-+	struct led_classdev cdev;
-+	void __iomem *mem;
-+	spinlock_t *lock;
-+	unsigned long pin;
-+	bool active_low;
-+};
++Example:
++++++++++
 +
-+static void bcm6358_led_write(void __iomem *reg, unsigned long data)
-+{
-+	iowrite32be(data, reg);
-+}
++axi_cdma_0: axicdma@7e200000 {
++       compatible = "xlnx,axi-cdma-1.00.a";
++       #dma_cells = <1>;
++       reg = < 0x7e200000 0x10000 >;
++       dma-channel@7e200000 {
++               compatible = "xlnx,axi-cdma-channel";
++               interrupts = < 0 55 4 >;
++               xlnx,datawidth = <0x40>;
++       } ;
++} ;
 +
-+static unsigned long bcm6358_led_read(void __iomem *reg)
-+{
-+	return ioread32be(reg);
-+}
 +
-+static unsigned long bcm6358_led_busy(void __iomem *mem)
-+{
-+	unsigned long val;
++* DMA client
 +
-+	while ((val =3D bcm6358_led_read(mem + BCM6358_REG_CTRL)) &
-+		BCM6358_SLED_BUSY)
-+		udelay(BCM6358_SLED_WAIT);
++Required properties:
++- dmas		: a list of <[Central DMA device phandle] [Channel ID]> pairs,
++		  where Channel ID is '0' for write/tx and '1' for read/rx
++                  channel.
++- dma-names	: a list of DMA channel names, one per "dmas" entry
 +
-+	return val;
-+}
++Example:
++++++++++
 +
-+static void bcm6358_led_mode(struct bcm6358_led *led, unsigned long va=
-lue)
-+{
-+	unsigned long val;
-+
-+	bcm6358_led_busy(led->mem);
-+
-+	val =3D bcm6358_led_read(led->mem + BCM6358_REG_MODE);
-+	if ((led->active_low && value =3D=3D LED_OFF) ||
-+	    (!led->active_low && value !=3D LED_OFF))
-+		val |=3D BIT(led->pin);
-+	else
-+		val &=3D ~(BIT(led->pin));
-+	bcm6358_led_write(led->mem + BCM6358_REG_MODE, val);
-+}
-+
-+static void bcm6358_led_set(struct led_classdev *led_cdev,
-+			    enum led_brightness value)
-+{
-+	struct bcm6358_led *led =3D
-+		container_of(led_cdev, struct bcm6358_led, cdev);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(led->lock, flags);
-+	bcm6358_led_mode(led, value);
-+	spin_unlock_irqrestore(led->lock, flags);
-+}
-+
-+static int bcm6358_led(struct device *dev, struct device_node *nc, u32=
- reg,
-+		       void __iomem *mem, spinlock_t *lock)
-+{
-+	struct bcm6358_led *led;
-+	unsigned long flags;
-+	const char *state;
-+	int rc;
-+
-+	led =3D devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
-+	if (!led)
-+		return -ENOMEM;
-+
-+	led->pin =3D reg;
-+	led->mem =3D mem;
-+	led->lock =3D lock;
-+
-+	if (of_property_read_bool(nc, "active-low"))
-+		led->active_low =3D true;
-+
-+	led->cdev.name =3D of_get_property(nc, "label", NULL) ? : nc->name;
-+	led->cdev.default_trigger =3D of_get_property(nc,
-+						    "linux,default-trigger",
-+						    NULL);
-+
-+	spin_lock_irqsave(lock, flags);
-+	if (!of_property_read_string(nc, "default-state", &state)) {
-+		if (!strcmp(state, "on")) {
-+			led->cdev.brightness =3D LED_FULL;
-+		} else if (!strcmp(state, "keep")) {
-+			unsigned long val;
-+
-+			bcm6358_led_busy(led->mem);
-+
-+			val =3D bcm6358_led_read(led->mem + BCM6358_REG_MODE);
-+			val &=3D BIT(led->pin);
-+			if ((led->active_low && !val) ||
-+			    (!led->active_low && val))
-+				led->cdev.brightness =3D LED_FULL;
-+			else
-+				led->cdev.brightness =3D LED_OFF;
-+		} else {
-+			led->cdev.brightness =3D LED_OFF;
-+		}
-+	} else {
-+		led->cdev.brightness =3D LED_OFF;
-+	}
-+	bcm6358_led_mode(led, led->cdev.brightness);
-+	spin_unlock_irqrestore(lock, flags);
-+
-+	led->cdev.brightness_set =3D bcm6358_led_set;
-+
-+	rc =3D led_classdev_register(dev, &led->cdev);
-+	if (rc < 0)
-+		return rc;
-+
-+	dev_dbg(dev, "registered LED %s\n", led->cdev.name);
-+
-+	return 0;
-+}
-+
-+static int bcm6358_leds_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct device_node *np =3D pdev->dev.of_node;
-+	struct device_node *child;
-+	struct resource *mem_r;
-+	void __iomem *mem;
-+	spinlock_t *lock; /* memory lock */
-+	unsigned long val;
-+	u32 clk_div;
-+
-+	mem_r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!mem_r)
-+		return -EINVAL;
-+
-+	mem =3D devm_ioremap_resource(dev, mem_r);
-+	if (IS_ERR(mem))
-+		return PTR_ERR(mem);
-+
-+	lock =3D devm_kzalloc(dev, sizeof(*lock), GFP_KERNEL);
-+	if (!lock)
-+		return -ENOMEM;
-+
-+	spin_lock_init(lock);
-+
-+	val =3D bcm6358_led_busy(mem);
-+	val &=3D ~(BCM6358_SLED_POLARITY | BCM6358_SLED_CLKDIV_MASK);
-+	if (of_property_read_bool(np, "brcm,clk-dat-low"))
-+		val |=3D BCM6358_SLED_POLARITY;
-+	of_property_read_u32(np, "brcm,clk-div", &clk_div);
-+	switch (clk_div) {
-+	case 8:
-+		val |=3D BCM6358_SLED_CLKDIV_8;
-+		break;
-+	case 4:
-+		val |=3D BCM6358_SLED_CLKDIV_4;
-+		break;
-+	case 2:
-+		val |=3D BCM6358_SLED_CLKDIV_2;
-+		break;
-+	default:
-+		val |=3D BCM6358_SLED_CLKDIV_1;
-+		break;
-+	}
-+	bcm6358_led_write(mem + BCM6358_REG_CTRL, val);
-+
-+	for_each_available_child_of_node(np, child) {
-+		int rc;
-+		u32 reg;
-+
-+		if (of_property_read_u32(child, "reg", &reg))
-+			continue;
-+
-+		if (reg >=3D BCM6358_SLED_MAX_COUNT) {
-+			dev_err(dev, "invalid LED (%u >=3D %d)\n", reg,
-+				BCM6358_SLED_MAX_COUNT);
-+			continue;
-+		}
-+
-+		rc =3D bcm6358_led(dev, child, reg, mem, lock);
-+		if (rc < 0)
-+			return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm6358_leds_of_match[] =3D {
-+	{ .compatible =3D "brcm,bcm6358-leds", },
-+	{ },
-+};
-+
-+static struct platform_driver bcm6358_leds_driver =3D {
-+	.probe =3D bcm6358_leds_probe,
-+	.driver =3D {
-+		.name =3D "leds-bcm6358",
-+		.of_match_table =3D bcm6358_leds_of_match,
-+	},
-+};
-+
-+module_platform_driver(bcm6358_leds_driver);
-+
-+MODULE_AUTHOR("=C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>");
-+MODULE_DESCRIPTION("LED driver for BCM6358 controllers");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:leds-bcm6358");
---=20
-1.9.1
++cdmatest_0: cdmatest@0 {
++       compatible ="xlnx,axi-cdma-test-1.00.a";
++       dmas = <&axi_cdma_0 0>;
++       dma-names = "cdma";
++} ;
+-- 
+2.1.2
