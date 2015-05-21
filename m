@@ -1,47 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V3 2/4] regulator: da9062: DA9062 regulator driver
-Date: Thu, 21 May 2015 13:04:16 +0100
-Message-ID: <20150521120416.GA21577@sirena.org.uk>
-References: <cover.1432041031.git.stwiss.opensource@diasemi.com>
- <aa98437b3c3fd6fbf89f8669edf0d426ec3338e9.1432041031.git.stwiss.opensource@diasemi.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [RFC PATCH v1 2/3] PCI: hisi: Add PCIe host support for Hisilicon
+ Soc Hip05
+Date: Thu, 21 May 2015 07:09:46 -0500
+Message-ID: <CAErSpo7TEgY=oJvLU3jyh=FcZqgsSxLi1Cw1mo6w+5WSRkfPMQ@mail.gmail.com>
+References: <000101d092fb$94dde100$be99a300$@com> <555D37B0.2080909@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="W/IQTGW+1SjCkQmn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <aa98437b3c3fd6fbf89f8669edf0d426ec3338e9.1432041031.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <555D37B0.2080909@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Zhichang Yuan <yuanzhichang@hisilicon.com>, zhudacai@hisilicon.com, Zhang Jukuo <zhangjukuo@huawei.com>, qiuzhenfa@hisilicon.com, Liguozhu <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 20, 2015 at 8:41 PM, Zhou Wang <wangzhou1@hisilicon.com> wrote:
+> On 2015/5/20 20:50, Jingoo Han wrote:
+>> On Wed, 20 May 2015 14:21:40 +0800, Zhou Wang wrote:
 
---W/IQTGW+1SjCkQmn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>> +/* Configure vmid/asid table in PCIe host */
+>>> +static void hisi_pcie_config_context(struct hisi_pcie *pcie)
+>>> +{
+>>> +    int i;
+>>> +
+>>> +    hisi_pcie_change_apb_mode(pcie, PCIE_SLV_CONTENT_MODE);
+>>> +
+>>> +    for (i = 0; i < 0x400; i++)
+>>> +            hisi_pcie_apb_writel(pcie, 0x0, i * 4);
+>>> +
+>>> +    for (i = 0x400; i < 0x800; i++)
+>>> +            hisi_pcie_apb_writel(pcie, 0x0, i * 4);
+>>
+>> How about the following?
+>>
+>> +     for (i = 0; i < 0x800; i++)
+>> +             hisi_pcie_apb_writel(pcie, 0x0, i * 4);
+>>
+>
+> This is to configure init value of vmid and asid of each pcie device.
 
-On Tue, May 19, 2015 at 02:10:30PM +0100, S Twiss wrote:
-> From: S Twiss <stwiss.opensource@diasemi.com>
->=20
-> Add BUCK and LDO regulator driver support for DA9062
+But the combined loop looks functionally equivalent, i.e., I don't
+think the device can tell the difference.  Personally I wouldn't mind
+if you kept the two loops separate, but if you do, each one needs a
+comment immediately before it so the reader has a clue that they are
+doing semantically different things.  Otherwise it just looks like a
+mistake and the reader wonders why they are split.
 
-Applied, thanks.
-
---W/IQTGW+1SjCkQmn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVXcnAAAoJECTWi3JdVIfQbmkIAIIh3K5bMmDdKNqEl3tqi8y5
-uGziAK2MebtJg6jxptidpFVWiYFx/o9H55rN308TeztT9+q4Z8rHo56SGSXldK9f
-uV2crtW1f7Ooa1qmHrlAjXHy7TIiOUcKsqPpE1Wn+GpX43dL3ZOvVzFhaSzXYg/m
-LMAvsfMR/w+2/z0zNgd02ukN+ltbm7ToVWo+BydOK1JAY5mUe3POf638AssaSUwg
-yR/GaHi/crHJpB+oXCN+jJ6UCD+BY1XHww4uvnwze1iTA9MonOG4jLTBEwP+3wHU
-nrGNPqKmFgXawdFjRl2+KylW9lrNbhtVEgxqxsaWkwNyHYxaF+vpw1adwMnS5kg=
-=AB6u
------END PGP SIGNATURE-----
-
---W/IQTGW+1SjCkQmn--
+Bjorn
