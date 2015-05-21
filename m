@@ -1,61 +1,48 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Thu, 21 May 2015 10:03:10 +0530
-Message-ID: <20150521043310.GD22904@linux>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <555BDA7C.7020506@codeaurora.org>
- <20150520020715.GA6465@linux>
- <555CE2E6.80304@codeaurora.org>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos4412-trats2: set display clock correctly
+Date: Thu, 21 May 2015 14:20:33 +0900
+Message-ID: <555D6B21.9000406@kernel.org>
+References: <1423306148-22212-1-git-send-email-inki.dae@samsung.com> <CAJKOXPd_ON3sYuWCHOWJJEL7E9gzu9eQHf3yqc0cXAX3QoES7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <555CE2E6.80304@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPd_ON3sYuWCHOWJJEL7E9gzu9eQHf3yqc0cXAX3QoES7A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 20-05-15, 12:39, Stephen Boyd wrote:
-> On 05/19/15 19:07, Viresh Kumar wrote:
-> > On 19-05-15, 17:51, Stephen Boyd wrote:
-> >
-> >> Also I wonder if all properties should be optional? I don't have this
-> >> scenario today, but perhaps the frequencies could be encoded in fuses,
-> >> but the voltages wouldn't be and so we might want to read out the
-> >> frequencies for a fixed set of voltages. Of course, if there's nothing
-> >> in the OPP node at all, it's not very useful, so perhaps some statement
-> >> that at least one of the frequency/voltage/amperage properties should be
-> >> present.
-> > I am not sure. What we are trying to do (fill partially in DT and
-> > partially in platform), is a trick and not the right use of bindings.
-> >
-> > Ideally whatever is passed in DT should be complete by itself and
-> > doesn't require platform to tweak it (which it can't). For example,
-> > the cpufreq-dt driver will try to initialize OPPs from the DT directly
-> > and wouldn't know about the platform tweaks. That can work eventually
-> > as platform will add OPPs for the same bindings before cpufreq driver
-> > will try to do, but that's a trick.
-> >
-> > And then its all about frequency in the first place, and so marking
-> > that optional looks wrong. Probably not the right use of these
-> > bindings.
+On 05/20/15 09:12, Krzysztof Kozlowski wrote:
+> 2015-02-07 19:49 GMT+09:00 Inki Dae <inki.dae@samsung.com>:
+>> This patch sets display clock correctly.
+>>
+>> If Display clock isn't set correctly then you would find below messages
+>> and Display controller doesn't work correctly since a patch[1]
+>>
+>>    exynos-drm: No connectors reported connected with modes
+>>    [drm] Cannot find any crtc or sizes - going 1024x768
+>>
+>> [1] commit abc0b1447d49 ("drm: Perform basic sanity checks on probed modes")
 > 
-> Ok then I won't be using these bindings on any of the new platforms I
-> have where half the data is in one place, and half in another. But for
-> some of Krait based platforms I have they should be useable.
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> Tested on Trats2 board.
+> 
+> Dear Kukjin,
+> 
+> Could you pull it to current fixes branch (this RC cycle)? The patch
+> fixes display on Trats2 board. Without it (since abc0b1447d49) it
+> won't be properly set up and device boots with blank screen and
+> mentioned error message in logs.
+> 
+> I think this actually is a candidate for stable backporting (4.0+)
+> because it fixes important functionality of device:
+> 
+> Fixes: abc0b1447d49 ("drm: Perform basic sanity checks on probed modes")
+> Cc: <stable@vger.kernel.org>
+> 
+Thanks, applied, and will be sent out in a day for v4.1-rc.
 
-You are not the only one, I have seen other requests (even for the
-existing bindings) to fill stuff partially in DT as they want freq to
-come from bootloader.
-
-@Rob: What do you suggest for such platforms? Let them keep (ab)using
-old or new OPP DT bindings or create another binding to just pass on
-freq table?
-
-@Stephen: Can you please provide your feedback on the updated version
-please. Thanks.
-
--- 
-viresh
+- Kukjin
