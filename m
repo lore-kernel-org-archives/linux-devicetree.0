@@ -1,95 +1,46 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
- samsung,flash-led property
-Date: Thu, 21 May 2015 18:58:59 +0200
-Message-ID: <555E0ED3.5080101@samsung.com>
-References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
- <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
- <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
- <555DA119.9030904@samsung.com>
- <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
- <555DDD88.8080601@samsung.com>
- <20150521142018.GK8601@valkosipuli.retiisi.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 00/13] ASoC: qcom: add support to apq8016 audio
+Date: Thu, 21 May 2015 18:05:51 +0100
+Message-ID: <20150521170550.GC21577@sirena.org.uk>
+References: <1430414148-10869-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1431779462-1732-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150521142018.GK8601@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, sre@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KtWcatouGV9Nk9BU"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1431779462-1732-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Patrick Lai <plai@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
 
-On 21/05/15 16:20, Sakari Ailus wrote:
-> On Thu, May 21, 2015 at 03:28:40PM +0200, Sylwester Nawrocki wrote:
->> > On 21/05/15 13:32, Sakari Ailus wrote:
->>>>>> > >>>> @@ -147,6 +149,8 @@ Example:
->>>>>>>>> > >>>> > >>  			clocks = <&camera 0>;
->>>>>>>>> > >>>> > >>  			clock-names = "mclk";
->>>>>>>>> > >>>> > >>
->>>>>>>>> > >>>> > >>+			samsung,flash-led = <&rear_cam_flash>;
->>>>>>>>> > >>>> > >>+
->>>>>>>>> > >>>> > >>  			port {
->>>>>>>>> > >>>> > >>  				s5c73m3_1: endpoint {
->>>>>>>>> > >>>> > >>  					data-lanes = <1 2 3 4>;
->>>>>>> > >>> > >
->>>>>>> > >>> > >Oops. I missed this property would have ended to the sensor's DT node. I
->>>>>>> > >>> > >don't think we should have properties here that are parsed by another
->>>>>>> > >>> > >driver --- let's discuss this tomorrow.
->>>>> > >> > 
->>>>> > >> > exynos4-is driver already parses sensor nodes (at least their 'port'
->>>>> > >> > sub-nodes).
->>> > >
->>> > > If you read the code and the comment, it looks like something that should be
->>> > > done better but hasn't been done yet. :-) That's something we should avoid.
->>> > > Also, flash devices are by far more common than external ISPs I presume.
->> > 
->> > Yes, especially let's not require any samsung specific properties in
->> > other vendors' sensor bindings.
->> > 
->> > One way of modelling [flash led]/[image sensor] association I imagine
->> > would be to put, e.g. 'flash-leds' property in the SoC camera host
->> > interface/ISP DT node. This property would then contain pairs of phandles,
->> > first to the led node and the second to the sensor node, e.g.
->> > 
->> > i2c_controller {
->> > 	...
->> > 	flash_xx@NN {
->> > 		...
->> > 		led_a {
->> > 			...		
->> > 		}
->> > 	};
->> > 
->> > 	image_sensor_x@NN {
->> > 		...
->> > 	};
->> > };
->> > 
->> > flash-leds = <&flash_xx &image_sensor_x>, <...>;
->
-> Maybe a stupid question, but how do you access this in a driver? I have to
-> admit I'm no DT expert.
+--KtWcatouGV9Nk9BU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-You could get of_node pointers with of_parse_phandle() call and then
-lookup related flash and sensor devices based on that.
+On Sat, May 16, 2015 at 01:31:02PM +0100, Srinivas Kandagatla wrote:
+> Thankyou for reviewing the v1 patches, here is the v2 patchset after
+> incorporating review comments and testing on Storm Board.
 
->> > For the purpose of this patch set presumably just samsung specific
->> > property name could be used (i.e. samsung,flash-leds).
->
-> I agree. I'll add similar support for the omap3isp driver in the near future
-> though. Let's see how the camera modules will get modelled, if they will,
-> and if this property still fits to the picture by that time, then we make it
-> more generic.
-> 
-> What do you think?
+Please don't send new serieses in reply to old ones, it makes them
+harder to notice.
 
-I think we could do that, perhaps we could get some more opinions and
-use generic name already in this series? I'm not sure what are exact
-plans for this series, I guess it is targeted for 4.2?
+--KtWcatouGV9Nk9BU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Regards,
-Sylwester
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVXhBuAAoJECTWi3JdVIfQ6nwIAITbLGZvTBeB4ol1CNk6LYy5
+nkQznUY1QrYGQqJel+WAhIOzkDZ1uNU6N0JDR/sHAtNJsS5J/zu49qHY1sJAxtOL
+bNX4SbNhwOV0pdMwAshPXJv4PrhRSbOvLjRX7af0KK45bTsnBNL37SaYTivY5sXT
+x2kE0IBHEONEpXGVMlNZx7t13djvVVyfTyoPHxjBZxy2NIao6P+TGgVCk+kR9PKa
+CS8qHOoDDsUCRuMxKZyVQ7pX1suZ3nvHz4n2aqGTk0E41maO107/tjnKiBnBXUqq
+cv02Fs6h+dqderNVIag8Hfeacv8SZNu/xi9GRuT+8m0Aw8vi6YsNtPKa4lALc8I=
+=uVdR
+-----END PGP SIGNATURE-----
+
+--KtWcatouGV9Nk9BU--
