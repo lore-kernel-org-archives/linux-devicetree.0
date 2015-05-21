@@ -1,46 +1,47 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] doc: dt: add documentation for nxp,lpc1850-usb-otg-phy
-Date: Thu, 21 May 2015 18:29:52 +0530
-Message-ID: <555DD6C8.7040804@ti.com>
-References: <1431797277-4906-1-git-send-email-manabian@gmail.com> <1431797277-4906-3-git-send-email-manabian@gmail.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 21 May 2015 08:09:02 -0500
+Message-ID: <555DD8EE.1060607@codeaurora.org>
+References: <=fu.wei@linaro.org> <1432197156-16947-1-git-send-email-fu.wei@linaro.org> <1432197156-16947-7-git-send-email-fu.wei@linaro.org> <555DB4C4.5090606@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431797277-4906-3-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <555DB4C4.5090606@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, ashwin.chaugule@linaro.org, arnd@arndb.de, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Saturday 16 May 2015 10:57 PM, Joachim Eastwood wrote:
-> Add binding documentation for nxp,lpc1850-usb-otg-phy. This PHY
-
-%s/nxp,lpc1850-usb-otg-phy/NXP LPC18xx/43xx USB OTG PHY
-> can found on NXP LPC18xx and LPC43xx devices.
-
-Fix $subject to something like 'dt_bindings: Add NXP LPC18xx/43xx USB OTG PHY 
-bindings'
+Guenter Roeck wrote:
+>>
+>> +static unsigned int sbsa_gwdt_get_timeleft(struct watchdog_device *wdd)
+>> +{
+>> +    struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +    u64 timeleft = sbsa_gwdt_get_wcv(wdd) - arch_counter_get_cntvct();
+>> +
 >
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   .../bindings/phy/nxp,lpc1850-usb-otg-phy.txt          | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/nxp,lpc1850-usb-otg-phy.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/nxp,lpc1850-usb-otg-phy.txt b/Documentation/devicetree/bindings/phy/nxp,lpc1850-usb-otg-phy.txt
-> new file mode 100644
-> index 000000000000..3da60ca04a42
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/nxp,lpc1850-usb-otg-phy.txt
+> Still not happy about the use of arch_counter_get_cntvct
+> instead of using the clock subsystem. I am quite sure this could be done,
+> possibly through arch_sys_counter, though at this point I am getting wary
+> of bringing it up, so I guess I'll just let it go.
 
-phy-lpc18xx-usb-otg.txt?
+You made the same comment with my driver, and I keep asking for 
+clarification.  The clk_get_sys() API does not work on my system, 
+because there are not clocks defined.  That must be an ACPI limitation 
+that I can't fix.
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The alternative to arch_counter_get_cntvct() is 
+arch_timer_read_counter(), which is not exported.  So we have two choices,
+
+1) Continue to use arch_counter_get_cntvct(), which works on all ARM64 
+platforms that this driver supports anyway
+
+2) Export arch_timer_read_counter()
+
+I prefer option #1.
+
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
