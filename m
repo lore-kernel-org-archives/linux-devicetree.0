@@ -1,54 +1,44 @@
-From: Ranjit Abhimanyu Waghmode <ranjit.waghmode@xilinx.com>
-Subject: RE: [RFC PATCH 1/2] devicetree: Add devicetree bindings
- documentation for ZynqMP GQSPI
-Date: Thu, 21 May 2015 12:42:23 +0000
-Message-ID: <7CFCFE83B8145347A1D424EC939F1C3CA6F1BC@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
- <20150520143854.GU31550@xsjsorenbubuntu>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 02/11] ARM: shmobile: add r8a7793 SoC device tree
+Date: Thu, 21 May 2015 14:44:12 +0200
+Message-ID: <CAMuHMdU7zudRkDAqOyG_M-4TcwRoT_nxUkvZ2ZML1xVtLx7WYA@mail.gmail.com>
+References: <1432205293-9488-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<1432205293-9488-3-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150520143854.GU31550@xsjsorenbubuntu>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Soren Brinkmann <sorenb@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Harini Katakam <harinik@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "ran27jit@gmail.com" <ran27jit@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1432205293-9488-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>, Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>, Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>, Ryo Kataoka <ryo.kataoka.wt@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU29yZW4sDQoNCk9uIFdlZCwgMjAxNS0wNS0yMCBhdCAxMjo1N1BNICswNTMwLCBSYW5qaXQg
-V2FnaG1vZGUgd3JvdGU6DQo+IEFkZCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIGZvciBHUVNQSSBj
-b250cm9sbGVyIGRyaXZlciB1c2VkIGJ5IFp5bnEgDQo+IFVsdHJhc2NhbGUrIE1QU29DDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBSYW5qaXQgV2FnaG1vZGUgPHJhbmppdC53YWdobW9kZUB4aWxpbngu
-Y29tPg0KPiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1wLXFz
-cGkudHh0ICAgIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDI2IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCANCj4gRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1wLXFzcGkudHh0DQo+IA0KPiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1w
-LXFzcGkudHh0IA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3Bp
-LXp5bnFtcC1xc3BpLnR4dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAw
-Li5jZWM2MzMwDQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3NwaS9zcGktenlucW1wLXFzcGkudHh0DQo+IEBAIC0wLDAgKzEsMjYgQEAN
-Cj4gK1hpbGlueCBaeW5xIFVsdHJhU2NhbGUrIE1QU29DIEdRU1BJIGNvbnRyb2xsZXIgRGV2aWNl
-IFRyZWUgQmluZGluZ3MNCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gKw0KPiArUmVxdWlyZWQgcHJvcGVydGll
-czoNCj4gKy0gY29tcGF0aWJsZQkJOiBTaG91bGQgYmUgInhsbngsenlucW1wLXFzcGktMS4wIi4N
-Cj4gKy0gcmVnCQkJOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgR1FTUEkgcmVn
-aXN0ZXJzIG1hcC4NCj4gKy0gaW50ZXJydXB0cwkJOiBQcm9wZXJ0eSB3aXRoIGEgdmFsdWUgZGVz
-Y3JpYmluZyB0aGUgaW50ZXJydXB0DQo+ICsJCQkgIG51bWJlci4NCj4gKy0gaW50ZXJydXB0LXBh
-cmVudAk6IE11c3QgYmUgY29yZSBpbnRlcnJ1cHQgY29udHJvbGxlci4NCj4gKy0gY2xvY2stbmFt
-ZXMJCTogTGlzdCBvZiBpbnB1dCBjbG9jayBuYW1lcyAtICJyZWZfY2xrIiwgInBjbGsiDQo+ICsJ
-CQkgIChTZWUgY2xvY2sgYmluZGluZ3MgZm9yIGRldGFpbHMpLg0KPiArLSBjbG9ja3MJCTogQ2xv
-Y2sgcGhhbmRsZXMgKHNlZSBjbG9jayBiaW5kaW5ncyBmb3IgZGV0YWlscykuDQo+ICsNCj4gK09w
-dGlvbmFsIHByb3BlcnRpZXM6DQo+ICstIG51bS1jcwkJOiBOdW1iZXIgb2YgY2hpcCBzZWxlY3Rz
-IHVzZWQuDQo+ICsNCj4gK0V4YW1wbGU6DQo+ICsJcXNwaTogc3BpQGZmMGYwMDAwIHsNCj4gKwkJ
-Y29tcGF0aWJsZSA9ICJ4bG54LHp5bnFtcC1xc3BpLTEuMCI7DQo+ICsJCWNsb2NrLW5hbWVzID0g
-InJlZl9jbGsiLCAicGNsayI7DQo+ICsJCWNsb2NrcyA9IDwmbWlzY19jbGsgJm1pc2NfY2xrPjsN
-Cj4gKwkJaW50ZXJydXB0cyA9IDwwIDE1IDQ+Ow0KPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZn
-aWM+Ow0KPiArCQludW0tY3MgPSA8MT47DQo+ICsJCXJlZyA9IDwweDAgMHhmZjBmMDAwMCAweDEw
-MDAgMHgwIDB4YzAwMDAwMDAgMHg4MDAwMDAwPjsNCg0KSSBmaW5kIHRoaW5ncyBhIGxvdCBlYXNp
-ZXIgdG8gcmVhZCB3aGVuIHRoZXJlIGlzIHNvbWV0aGluZyBzZXBhcmF0aW5nIHRoZSBncm91cHMu
-IENvdWxkIHRoaXMgYmVjb21lOg0KCXJlZyA9IDwweDAgMHhmZjBmMDAwMCAweDEwMDA+LCA8MHgw
-IDB4YzAwMDAwMDAgMHg4MDAwMDAwPjsgPw0KDQpbUmFuaml0XTogSSB3aWxsIHRyeSB5b3VyIHN1
-Z2dlc3Rpb24gYW5kIHNlbmQgeW91IGluIHRoZSBuZXh0IHZlcnNpb24uDQoNClJlZ2FyZHMsDQpS
-YW5qaXQNCg==
+Hi Ulrich,
+
+On Thu, May 21, 2015 at 12:48 PM, Ulrich Hecht
+<ulrich.hecht+renesas@gmail.com> wrote:
+> r8a7793 device tree including clock descriptions.
+>
+> Signed-off-by: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
+> Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+> Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+> Signed-off-by: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> [uli: collapsed BSP revisions into a single commit, edited for style]
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> Cc: devicetree@vger.kernel.org
+
+There are still some differences between the r8a7791 and r8a7793 files.
+Why not just cp && s/7791/7793/g?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
