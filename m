@@ -1,96 +1,63 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] soc: mediatek: Add SMI driver
-Date: Thu, 21 May 2015 17:20:55 +0200
-Message-ID: <CABuKBeJgmwtH4KjfxwPXgvO9Nwaz3o3ha7h99-VdtSNmQ80N5A@mail.gmail.com>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
-	<1431683009-18158-5-git-send-email-yong.wu@mediatek.com>
-	<CABuKBeJvh2PGi3i6O0uu-7ggdBzKMb3tPE_XKhT1i-+tkKc5gg@mail.gmail.com>
-	<1432188990.5092.12.camel@mhfsdcap03>
-	<CABuKBe+FmAzr_Cu=fUDwDHYzH4mW_2p4z1SYmp7+W=Tu-MLEuA@mail.gmail.com>
-	<CAGS+omARc60i+8vO6V1ccnSnXkjAGNjMjRB1+5kg_EHrrS1NOw@mail.gmail.com>
-	<1432219778.5092.44.camel@mhfsdcap03>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 21 May 2015 08:28:38 -0700
+Message-ID: <20150521152838.GB16668@roeck-us.net>
+References: <=fu.wei@linaro.org>
+ <1432197156-16947-1-git-send-email-fu.wei@linaro.org>
+ <1432197156-16947-7-git-send-email-fu.wei@linaro.org>
+ <555DB4C4.5090606@roeck-us.net>
+ <555DD8EE.1060607@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432219778.5092.44.camel@mhfsdcap03>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <555DD8EE.1060607-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-05-21 16:49 GMT+02:00 Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> On Thu, 2015-05-21 at 22:33 +0800, Daniel Kurtz wrote:
->> On Thu, May 21, 2015 at 3:30 PM, Matthias Brugger
->> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > 2015-05-21 8:16 GMT+02:00 Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
->> >> Hi Matthias,
->> >>      Thanks very much for your suggestion.
->> >>      Abort the smi clock name, Could you help check below.
->> >>      The others I will improve in next time.
->> >>
->> >> On Tue, 2015-05-19 at 13:14 +0200, Matthias Brugger wrote:
->> >>> 2015-05-15 11:43 GMT+02:00 Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
->> >>> >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
->> >>> > responsible to enable/disable iommu and control the clocks of each local arbiter.
->> >>> >
->> >> [snip]
->> >>> > +
->> >>> > +#define SMI_LARB_MMU_EN                (0xf00)
->> >>> > +#define F_SMI_MMU_EN(port)     (1 << (port))
->> >>> > +
->> >>> > +enum {
->> >>> > +       MTK_CLK_APB,
->> >>> > +       MTK_CLK_SMI,
->> >>> > +       MTK_CLK_MAX,
->> >>>
->> >>> Maybe add something like:
->> >>> MTK_CLK_FIRST = MTK_CLK_APB,
->> >>> to make the for loops better readable.
->> >>>
->> >> Then, Is it like this? :
->> >>  enum {
->> >>         MTK_CLK_FIRST = MTK_CLK_APB,
->> >>         MTK_CLK_SMI,
->> >>         MTK_CLK_MAX,
->> >>  }
->> >> or the CLK_SMI also need MTK_CLK_SECOND = MTK_CLK_SMI.
->> >
->> >
->> > something like:
->> > enum {
->> >          MTK_CLK_FIRST,
->> >          MTK_CLK_APB = MTK_CLK_FIRST,
->> >          MTK_CLK_SMI,
->> >          MTK_CLK_LAST,
->> > }
->> >
->> > So you can rewrite the for loop:
->> > if (i = MTK_CLK_FIRST; i < MTK_CLK_LAST; i++)
->>
->> Actually, do we ever plan to add more clks per smi node?
-> No.
->> If not, perhaps the whole driver would be simpler if you just
->> explicitly handle the apb & smi clocks:
->>
->> struct mtk_smi_larb {
->>        void __iomem            *base;
->>        spinlock_t              portlock; /* lock for config port */
->>        struct device           *smi;
->>        struct clk              *clk_apb;
->>        struct clk              *clk_smi;
->> };
->>
->> And then all of the loops become just a pair of clock operations.
-> Thanks. I will try this and compare whether it will add many lines.
+On Thu, May 21, 2015 at 08:09:02AM -0500, Timur Tabi wrote:
+> Guenter Roeck wrote:
+> >>
+> >>+static unsigned int sbsa_gwdt_get_timeleft(struct watchdog_device *wdd)
+> >>+{
+> >>+    struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> >>+    u64 timeleft = sbsa_gwdt_get_wcv(wdd) - arch_counter_get_cntvct();
+> >>+
+> >
+> >Still not happy about the use of arch_counter_get_cntvct
+> >instead of using the clock subsystem. I am quite sure this could be done,
+> >possibly through arch_sys_counter, though at this point I am getting wary
+> >of bringing it up, so I guess I'll just let it go.
+> 
+> You made the same comment with my driver, and I keep asking for
+> clarification.  The clk_get_sys() API does not work on my system, because
+> there are not clocks defined.  That must be an ACPI limitation that I can't
+> fix.
+> 
+Would it be possible to define such clocks ?
 
-If you don't plan to add more clocks in the future, then I think the
-suggestion Dan made is the best one.
+> The alternative to arch_counter_get_cntvct() is arch_timer_read_counter(),
+> which is not exported.  So we have two choices,
+> 
+> 1) Continue to use arch_counter_get_cntvct(), which works on all ARM64
+> platforms that this driver supports anyway
+> 
+> 2) Export arch_timer_read_counter()
+> 
+> I prefer option #1.
+> 
+Do we have any feedback from the arm maintainers ?
 
-Regards,
-Matthias
--- 
-motzblog.wordpress.com
+My problem is that I don't want to be the first one to permit using
+those functions outside architecture and clock code. If we do this,
+we should get an Ack from an arm maintainer specifically for the use
+of arch_counter_get_cntvct() and arch_timer_get_rate().
+
+Thanks,
+Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
