@@ -1,99 +1,101 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] arm, imx6, dts: add DT for aristainetos2 board
-Date: Thu, 21 May 2015 09:31:45 +0800
-Message-ID: <20150521013144.GA29060@dragon>
-References: <1432099863-8642-1-git-send-email-hs@denx.de>
- <1432118319.4466.40.camel@pengutronix.de>
- <555C6C72.2060302@denx.de>
- <20150521010424.GF24844@dragon>
+Subject: Re: [PATCH v1] ARM: dts: nitrogen6x: add CAN support
+Date: Thu, 21 May 2015 09:33:52 +0800
+Message-ID: <20150521013351.GK24844@dragon>
+References: <1432158569-4415-1-git-send-email-ps.report@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150521010424.GF24844@dragon>
+In-Reply-To: <1432158569-4415-1-git-send-email-ps.report-hi6Y0CQ0nG0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Seiderer <ps.report-hi6Y0CQ0nG0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 09:04:25AM +0800, Shawn Guo wrote:
-> On Wed, May 20, 2015 at 01:13:54PM +0200, Heiko Schocher wrote:
-> > >>+ * Copyright (C) 2015 Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> > >>+ *
-> > >>+ * This file is dual-licensed: you can use it either under the terms
-> > >>+ * of the GPL or the X11 license, at your option. Note that this dual
-> > >>+ * licensing only applies to this file, and not this project as a
-> > >>+ * whole.
-> > >>+ *
-> > >>+ *  a) This file is free software; you can redistribute it and/or
-> > >>+ *     modify it under the terms of the GNU General Public License as
-> > >>+ *     published by the Free Software Foundation; either version 2 of
-> > >>+ *     the License, or (at your option) any later version.
-> > >>+ *
-> > >>+ *     This file is distributed in the hope that it will be useful,
-> > >>+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > >>+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > >>+ *     GNU General Public License for more details.
-> > >>+ *
-> > >>+ *     You should have received a copy of the GNU General Public
-> > >>+ *     License along with this file; if not, write to the Free
-> > >>+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-> > >>+ *     MA 02110-1301 USA
-> > >
-> > >checkpatch warns that you should not include this paragraph because the
-> > >mail address might change in the future and it is contained in COPYING.
-> > 
-> > Hmm... Shawn mentioned to change it to the "GPL/X11 dual licence"
-> > as in the arch/arm/boot/dts/imx6sl-warp.dts file ... so I copied this
-> > from there ... is there a better option for this?
+On Wed, May 20, 2015 at 11:49:29PM +0200, Peter Seiderer wrote:
+> Regulator stuff copied from imx6qdl-tx6.dtsi, pin configuration
+> taken from Boundary Devices linux kernel tree ([1] and [2]).
 > 
-> It seems I pointed you to a bad example.  Let me try again, see
-> arch/arm/boot/dts/imx6q-hummingboard.dts for example.
+> [1] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dts
+> [2] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl.dtsi
+> 
+> Signed-off-by: Peter Seiderer <ps.report-hi6Y0CQ0nG0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 32 +++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> index fd096dc..1c415e4 100644
+> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> @@ -54,6 +54,17 @@
+>  			gpio = <&gpio3 22 0>;
+>  			enable-active-high;
+>  		};
+> +
+> +		reg_can_xcvr: regulator@3 {
+> +			compatible = "regulator-fixed";
+> +			reg = <3>;
+> +			regulator-name = "CAN XCVR";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_can_xcvr>;
+> +			gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+> +		};
+>  	};
+>  
+>  	gpio-keys {
+> @@ -138,6 +149,13 @@
+>  	status = "okay";
+>  };
+>  
+> +&can1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_can1_1>;
+> +	xceiver-supply = <&reg_can_xcvr>;
+> +	status = "okay";
+> +};
+> +
+>  &ecspi1 {
+>  	fsl,spi-num-chipselects = <1>;
+>  	cs-gpios = <&gpio3 19 0>;
+> @@ -234,6 +252,20 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_can1_1: can1grp-1 {
 
-Just saw a patch from Fabio fixing license text a bit for the file, the
-following is the one with the fix-up.
+The '_1' suffix is meaningless.
 
-/*
- * Copyright (C) 2014 Rabeeh Khoury (rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org)
- * Based on dt work by Russell King
- *
- * This file is dual-licensed: you can use it either under the terms
- * of the GPL or the X11 license, at your option. Note that this dual
- * licensing only applies to this file, and not this project as a
- * whole.
- *
- *  a) This file is free software; you can redistribute it and/or
- *     modify it under the terms of the GNU General Public License
- *     version 2 as published by the Free Software Foundation.
- *
- *     This file is distributed in the hope that it will be useful
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- * Or, alternatively
- *
- *  b) Permission is hereby granted, free of charge, to any person
- *     obtaining a copy of this software and associated documentation
- *     files (the "Software"), to deal in the Software without
- *     restriction, including without limitation the rights to use
- *     copy, modify, merge, publish, distribute, sublicense, and/or
- *     sell copies of the Software, and to permit persons to whom the
- *     Software is furnished to do so, subject to the following
- *     conditions:
- *
- *     The above copyright notice and this permission notice shall be
- *     included in all copies or substantial portions of the Software.
- *
- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- *     OTHER DEALINGS IN THE SOFTWARE.
- */
+		pinctrl_can1: can1grp {
+
+Shawn
+
+> +			fsl,pins = <
+> +				MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX 0x80000000
+> +				MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x80000000
+> +			>;
+> +		};
+> +
+> +		pinctrl_can_xcvr: can-xcvrgrp {
+> +			fsl,pins = <
+> +				/* Flexcan XCVR enable */
+> +				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
+> +			>;
+> +		};
+> +
+>  		pinctrl_ecspi1: ecspi1grp {
+>  			fsl,pins = <
+>  				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
