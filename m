@@ -1,26 +1,75 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V5 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Thu, 21 May 2015 11:36:00 +0530
-Message-ID: <20150521060600.GC17553@linux>
-References: <cover.1432091956.git.viresh.kumar@linaro.org>
- <51a2603050f7993643fea9e5dcd2dba7a5a3fe23.1432091956.git.viresh.kumar@linaro.org>
- <555D6CC8.9050201@ti.com>
- <20150521054602.GE22904@linux>
- <555D740B.6000001@ti.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] soc: mediatek: Add SMI driver
+Date: Thu, 21 May 2015 14:16:30 +0800
+Message-ID: <1432188990.5092.12.camel@mhfsdcap03>
+References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
+	<1431683009-18158-5-git-send-email-yong.wu@mediatek.com>
+	<CABuKBeJvh2PGi3i6O0uu-7ggdBzKMb3tPE_XKhT1i-+tkKc5gg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <555D740B.6000001@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, arnd.bergmann@linaro.org, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CABuKBeJvh2PGi3i6O0uu-7ggdBzKMb3tPE_XKhT1i-+tkKc5gg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21-05-15, 00:58, Nishanth Menon wrote:
-> I assume you meant [1] which in turn pointed to [2]. Thanks, will do so.
+Hi Matthias,
+     Thanks very much for your suggestion.
+     Abort the smi clock name, Could you help check below.
+     The others I will improve in next time.
 
-Right.
-
--- 
-viresh
+On Tue, 2015-05-19 at 13:14 +0200, Matthias Brugger wrote:
+> 2015-05-15 11:43 GMT+02:00 Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
+> > responsible to enable/disable iommu and control the clocks of each local arbiter.
+> >
+[snip]
+> > +
+> > +#define SMI_LARB_MMU_EN                (0xf00)
+> > +#define F_SMI_MMU_EN(port)     (1 << (port))
+> > +
+> > +enum {
+> > +       MTK_CLK_APB,
+> > +       MTK_CLK_SMI,
+> > +       MTK_CLK_MAX,
+> 
+> Maybe add something like:
+> MTK_CLK_FIRST = MTK_CLK_APB,
+> to make the for loops better readable.
+> 
+Then, Is it like this? : 
+ enum {
+        MTK_CLK_FIRST = MTK_CLK_APB,
+        MTK_CLK_SMI,
+        MTK_CLK_MAX,
+ }
+or the CLK_SMI also need MTK_CLK_SECOND = MTK_CLK_SMI.
+> > +};
+> > +
+> > +struct mtk_smi_common {
+> > +       void __iomem            *base;
+> 
+> That seems to be never used. Please delete it.
+> 
+> > +       struct clk              *clk[MTK_CLK_MAX];
+> > +};
+> > +
+> > +struct mtk_smi_larb {
+> > +       void __iomem            *base;
+> > +       spinlock_t              portlock; /* lock for config port */
+> > +       struct clk              *clk[MTK_CLK_MAX];
+> > +       struct device           *smi;
+> > +};
+> > +
+> Thanks,
+> Matthias
