@@ -1,89 +1,72 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
- samsung,flash-led property
-Date: Thu, 21 May 2015 17:20:19 +0300
-Message-ID: <20150521142018.GK8601@valkosipuli.retiisi.org.uk>
-References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
- <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
- <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
- <555DA119.9030904@samsung.com>
- <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
- <555DDD88.8080601@samsung.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH 5/5] ARM64: MediaTek MT8173: Add SCPSYS device node
+Date: Thu, 21 May 2015 22:32:40 +0800
+Message-ID: <CAGS+omDHEY54TzhNTJcFOeHkGbXAQwiTh9gxc=PsbzjwmpHEDA@mail.gmail.com>
+References: <1432131540-2523-1-git-send-email-s.hauer@pengutronix.de> <1432131540-2523-6-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <555DDD88.8080601@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, sre@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432131540-2523-6-git-send-email-s.hauer@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Wed, May 20, 2015 at 10:19 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> This adds the SCPSYS device node to the MT8173 dtsi file.
+>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 924fdb6..12430f0 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -125,6 +125,16 @@
+>                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+>                 };
+>
+> +               scpsys: scpsys@10006000 {
+> +                       compatible = "mediatek,mt8173-scpsys";
+> +                       #power-domain-cells = <1>;
+> +                       reg = <0 0x10006000 0 0x1000>;
+> +                       clocks = <&clk26m>,
 
-On Thu, May 21, 2015 at 03:28:40PM +0200, Sylwester Nawrocki wrote:
-> On 21/05/15 13:32, Sakari Ailus wrote:
-> >>>> @@ -147,6 +149,8 @@ Example:
-> >>>> > >>  			clocks = <&camera 0>;
-> >>>> > >>  			clock-names = "mclk";
-> >>>> > >>
-> >>>> > >>+			samsung,flash-led = <&rear_cam_flash>;
-> >>>> > >>+
-> >>>> > >>  			port {
-> >>>> > >>  				s5c73m3_1: endpoint {
-> >>>> > >>  					data-lanes = <1 2 3 4>;
-> >>> > >
-> >>> > >Oops. I missed this property would have ended to the sensor's DT node. I
-> >>> > >don't think we should have properties here that are parsed by another
-> >>> > >driver --- let's discuss this tomorrow.
-> >> > 
-> >> > exynos4-is driver already parses sensor nodes (at least their 'port'
-> >> > sub-nodes).
-> >
-> > If you read the code and the comment, it looks like something that should be
-> > done better but hasn't been done yet. :-) That's something we should avoid.
-> > Also, flash devices are by far more common than external ISPs I presume.
-> 
-> Yes, especially let's not require any samsung specific properties in
-> other vendors' sensor bindings.
-> 
-> One way of modelling [flash led]/[image sensor] association I imagine
-> would be to put, e.g. 'flash-leds' property in the SoC camera host
-> interface/ISP DT node. This property would then contain pairs of phandles,
-> first to the led node and the second to the sensor node, e.g.
-> 
-> i2c_controller {
-> 	...
-> 	flash_xx@NN {
-> 		...
-> 		led_a {
-> 			...		
-> 		}
-> 	};
-> 
-> 	image_sensor_x@NN {
-> 		...
-> 	};
-> };
-> 
-> flash-leds = <&flash_xx &image_sensor_x>, <...>;
+Why is mfg using <&clk26m> and not <&topckgen CLK_TOP_MFG_SEL>?
+I saw another patch set on the list today from James Liao that adds more clocks.
+Perhaps we can move the SCPSYS set on top of that one and include more clocks?
 
-Maybe a stupid question, but how do you access this in a driver? I have to
-admit I'm no DT expert.
+> +                                <&topckgen CLK_TOP_MM_SEL>;
 
-> 
-> For the purpose of this patch set presumably just samsung specific
-> property name could be used (i.e. samsung,flash-leds).
+FYI: the devicetree changes in this set depend on your other patch set
+starting with:
 
-I agree. I'll add similar support for the omap3isp driver in the near future
-though. Let's see how the camera modules will get modelled, if they will,
-and if this property still fits to the picture by that time, then we make it
-more generic.
+https://patchwork.kernel.org/patch/6446341/
+"arm64: dts: mt8173: Add clock controller device nodes"
 
-What do you think?
+This patch isn't based on top of the other set, though, so it may lead
+to a small merge conflict when folding in the .dtsi device nodes (ie,
+placing scpsys@10006000 after pwrap@1000d000).
 
--- 
-Kind regards,
+I'm not sure how people usually resolve this or manage the ordering of
+co-dependent patch sets upstream.
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+-Dan
+
+> +                       clock-names = "mfg", "mm";
+> +                       infracfg = <&infracfg>;
+> +               };
+> +
+>                 sysirq: intpol-controller@10200620 {
+>                         compatible = "mediatek,mt8173-sysirq",
+>                                         "mediatek,mt6577-sysirq";
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
