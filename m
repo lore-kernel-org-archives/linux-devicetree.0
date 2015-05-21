@@ -1,129 +1,58 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
-Date: Thu, 21 May 2015 03:17:28 -0700
-Message-ID: <555DB0B8.9000503@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>	<555D9FA8.9060106@roeck-us.net> <CADyBb7vKgnij6d+akVo1cQmrO4s67BBCr1HPr3n+Z4G0W-KqgA@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] MTD: spi-nor: check for short writes in spi_nor_write.
+Date: Thu, 21 May 2015 11:28:02 +0100
+Message-ID: <20150521102802.GS21577@sirena.org.uk>
+References: <cover.1430403750.git.hramrach@gmail.com>
+ <50c40ef17ab6566f35ef5a4426bf23567f896db7.1430403750.git.hramrach@gmail.com>
+ <20150520233835.GX11598@ld-irv-0074>
+ <CAOMqctTYqDWL51twOuGi+oXONXQ4B2-2BkdJNSpzZAXshZUN6g@mail.gmail.com>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADyBb7vKgnij6d+akVo1cQmrO4s67BBCr1HPr3n+Z4G0W-KqgA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, "mark.rutland" <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oJFDFiWc3BlD0xT/"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBRPG62VAKGQEUO35UFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMqctTYqDWL51twOuGi+oXONXQ4B2-2BkdJNSpzZAXshZUN6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/2015 03:05 AM, Fu Wei wrote:
-> Hi Guenter,
->
-> Thanks for review. :-)
-> feedback inline below
->
-> On 21 May 2015 at 17:04, Guenter Roeck <linux@roeck-us.net> wrote:
->> On 05/21/2015 01:32 AM, fu.wei@linaro.org wrote:
->>>
->>> From: Fu Wei <fu.wei@linaro.org>
->>>
->>> Also update Documentation/watchdog/watchdog-kernel-api.txt to
->>> introduce:
->>> (1)the new elements in the watchdog_device and watchdog_ops struct;
->>> (2)the new API "watchdog_init_timeouts".
->>>
->>> Reasons:
->>> (1)kernel already has two watchdog drivers are using "pretimeout":
->>>          drivers/char/ipmi/ipmi_watchdog.c
->>>          drivers/watchdog/kempld_wdt.c(but the definition is different)
->>> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
->>>
->>> Signed-off-by: Fu Wei <fu.wei@linaro.org>
->>> ---
->>
->>
->> [ ... ]
->>
->>> +extern int watchdog_init_timeouts(struct watchdog_device *wdd,
->>> +                                  unsigned int pretimeout_parm,
->>> +                                  unsigned int timeout_parm,
->>> +                                  void (*update_limits)(struct
->>> watchdog_device *),
->>> +                                  struct device *dev);
->>>
->>> -The watchdog_init_timeout function allows you to initialize the timeout
->>> field
->>> -using the module timeout parameter or by retrieving the timeout-sec
->>> property from
->>> -the device tree (if the module timeout parameter is invalid). Best
->>> practice is
->>> -to set the default timeout value as timeout value in the watchdog_device
->>> and
->>> -then use this function to set the user "preferred" timeout value.
->>> +The watchdog_init_timeouts function allows you to initialize the
->>> pretimeout and
->>> +timeout fields using the module pretimeout and timeout parameter or by
->>> +retrieving the elements in the timeout-sec property(the first element is
->>> for
->>> +timeout, the second one is for pretimeout) from the device tree(if the
->>> module
->>> +pretimeout and timeout parameter are invalid).
->>> +Normally, the pretimeout value will affect the limitation of timeout, and
->>> it
->>> +is also hardware related. So you can write a function in your driver to
->>> update
->>> +the limitation of timeout, according to the pretimeout value. Then pass
->>> the
->>> +function pointer by the update_limits parameter. If you driver doesn't
->>> +need this adjustment, just pass NULL to the update_limits parameter.
->>
->>
->> You've lost me a bit with the update_limits function.
->> watchdog_init_timeouts()
->> is called from the driver.
->
-> yes, that is the help function which will be called from watchdog
-> driver, like SBSA watchdog driver
->
->> Why should the function have to call back into
->> the
->> driver to update the parameters which are passed from the driver ?
->
-> Let me explain this, please correct me if I misunderstand something.
-> According to the concept of "pretimeout" in kernel, the timeout
-> contains the pretimeout, like
->
->   * Kernel/API:                         P---------| pretimeout
->   *                      |-------------------------------T timeout
->
-> If you set up the value of pretimeout, that means pretimeout
-> <min_timeout < timeout < max_timeout < (pretimeout +
-> max_timeout_for_1th_stage)
-> For  min_timeout > pretimeout.  if some one setup a timeout like :
-> pretimeout >  timeout > min_timeout, I think that could be a problem
-> For  max_timeout < (pretimeout + max_timeout_for_1th_stage),  if some
-> one setup a timeout like (pretimeout + max_timeout_for_1th_stage) <
-> timeout >  max_timeout .
->
-> I have explained a little in doc, but the adjustment may have
-> something to do with hardware, like  max_timeout_for_1th_stage(in SBSA
-> watchdog , limited by WCV)
->
-> maybe this problem wouldn't happen ,if you set up  max_timeout to a
-> small number. so you can pass NULL to the pointer.
->   but I think maybe for other device , that may happen.
->
->> Seems to me the driver can do that calculation first, then call
->> watchdog_init_timeouts() with the result. Am I missing something ?
->
-> maybe I am overthinking it :-)
-> please correct me
->
+--oJFDFiWc3BlD0xT/
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I just sent a more complete review. In general I think this problem
-(where the driver needs to update timeout limits based on the value of
-pretimeout) is very driver specific, and should be kept in the driver.
-I would prefer to keep it out of the API if possible.
+On Thu, May 21, 2015 at 10:39:13AM +0200, Michal Suchanek wrote:
+> On 21 May 2015 at 01:38, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Unless I am missing something, it should be possible to call the
-update_limits function in the driver after calling init_timeouts.
+Why is this thread about SPI error handling CCed to quite so many
+people?
 
-Thanks,
-Guenter
+> >> Check the amount of data actually written by the driver.
+
+> > I'm not sure if we should just reactively use the retlen, or if we
+> > should be communicating such a limitation via the SPI API. Thoughts?
+
+> Is there any driver that would break if the SPI master truncated
+> writes when the message is too long rather than returning an error an
+> refusing the transfer?
+
+Any such driver is buggy, the actual length transferred has always been
+a part of the SPI API.  We should probably expose limitations so clients
+can query in advance (we don't at the minute) but it'd be a while before
+clients could rely on that information being useful and it's still
+possible things can be truncated by error.
+
+With modern drivers using transfer_one() where we have control of the
+chip select we do also have the ability to add support to the core for
+chopping large transfers up into smaller ones that the hardware can
+handle transparently.  That won't for everything though since it depends
+on us being able to manually control the chip select which not all
+hardware can do.
+--oJFDFiWc3BlD0xT/--
