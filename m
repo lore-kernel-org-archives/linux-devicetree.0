@@ -1,64 +1,78 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
-Date: Thu, 21 May 2015 02:04:40 -0700
-Message-ID: <555D9FA8.9060106@roeck-us.net>
-References: <=fu.wei@linaro.org> <1432197156-16947-1-git-send-email-fu.wei@linaro.org> <1432197156-16947-6-git-send-email-fu.wei@linaro.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
+ samsung,flash-led property
+Date: Thu, 21 May 2015 11:10:49 +0200
+Message-ID: <555DA119.9030904@samsung.com>
+References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+ <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
+ <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432197156-16947-6-git-send-email-fu.wei@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/2015 01:32 AM, fu.wei@linaro.org wrote:
-> From: Fu Wei <fu.wei@linaro.org>
->
-> Also update Documentation/watchdog/watchdog-kernel-api.txt to
-> introduce:
-> (1)the new elements in the watchdog_device and watchdog_ops struct;
-> (2)the new API "watchdog_init_timeouts".
->
-> Reasons:
-> (1)kernel already has two watchdog drivers are using "pretimeout":
-> 	drivers/char/ipmi/ipmi_watchdog.c
-> 	drivers/watchdog/kempld_wdt.c(but the definition is different)
-> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
->
-> Signed-off-by: Fu Wei <fu.wei@linaro.org>
-> ---
+Hi Sakari,
 
-[ ... ]
-
-> +extern int watchdog_init_timeouts(struct watchdog_device *wdd,
-> +                                  unsigned int pretimeout_parm,
-> +                                  unsigned int timeout_parm,
-> +                                  void (*update_limits)(struct watchdog_device *),
-> +                                  struct device *dev);
+On 05/21/2015 12:00 AM, Sakari Ailus wrote:
+> Hi Jacek,
 >
-> -The watchdog_init_timeout function allows you to initialize the timeout field
-> -using the module timeout parameter or by retrieving the timeout-sec property from
-> -the device tree (if the module timeout parameter is invalid). Best practice is
-> -to set the default timeout value as timeout value in the watchdog_device and
-> -then use this function to set the user "preferred" timeout value.
-> +The watchdog_init_timeouts function allows you to initialize the pretimeout and
-> +timeout fields using the module pretimeout and timeout parameter or by
-> +retrieving the elements in the timeout-sec property(the first element is for
-> +timeout, the second one is for pretimeout) from the device tree(if the module
-> +pretimeout and timeout parameter are invalid).
-> +Normally, the pretimeout value will affect the limitation of timeout, and it
-> +is also hardware related. So you can write a function in your driver to update
-> +the limitation of timeout, according to the pretimeout value. Then pass the
-> +function pointer by the update_limits parameter. If you driver doesn't
-> +need this adjustment, just pass NULL to the update_limits parameter.
+> On Wed, May 20, 2015 at 04:10:15PM +0200, Jacek Anaszewski wrote:
+>> This patch adds examples for samsung,flash-led property to the
+>> samsung-fimc.txt.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>   .../devicetree/bindings/media/samsung-fimc.txt     |    4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> index 922d6f8..57edffa 100644
+>> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> @@ -126,6 +126,8 @@ Example:
+>>   			clocks = <&camera 1>;
+>>   			clock-names = "mclk";
+>>
+>> +			samsung,flash-led = <&front_cam_flash>;
+>> +
+>>   			port {
+>>   				s5k6aa_ep: endpoint {
+>>   					remote-endpoint = <&fimc0_ep>;
+>> @@ -147,6 +149,8 @@ Example:
+>>   			clocks = <&camera 0>;
+>>   			clock-names = "mclk";
+>>
+>> +			samsung,flash-led = <&rear_cam_flash>;
+>> +
+>>   			port {
+>>   				s5c73m3_1: endpoint {
+>>   					data-lanes = <1 2 3 4>;
+>
+> Oops. I missed this property would have ended to the sensor's DT node. I
+> don't think we should have properties here that are parsed by another
+> driver --- let's discuss this tomorrow.
 
-You've lost me a bit with the update_limits function. watchdog_init_timeouts()
-is called from the driver. Why should the function have to call back into the
-driver to update the parameters which are passed from the driver ?
-Seems to me the driver can do that calculation first, then call
-watchdog_init_timeouts() with the result. Am I missing something ?
+exynos4-is driver already parses sensor nodes (at least their 'port'
+sub-nodes).
 
-Thanks,
-Guenter
+> There are two main options that I can think of --- either put the property
+> under the bridge (ISP) driver's device node as a temporary solution that
+> works on a few ISP drivers, or think how sensor modules should be modelled,
+> in which case we'd have some idea how lens device would be taken into
+> account.
+>
+> Cc Sebastian.
+>
+
+
+-- 
+Best Regards,
+Jacek Anaszewski
