@@ -1,50 +1,39 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v3 1/2] pwm: Add device tree binding document for R-Car
- PWM Timer
-Date: Thu, 21 May 2015 09:27:17 +0000
-Message-ID: <SG2PR06MB0919E1212DDC8B5E1875EF9CD8C10@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1432176653-4452-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1432176653-4452-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXgB9MTUfZxUXuES8JF42G9Ld2VTeOe2J9MjuZCeONOeg@mail.gmail.com>
+From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v2 6/6] usb: chipidea: add work-around for Marvell HSIC
+ PHY startup
+Date: Thu, 21 May 2015 09:54:20 +0000
+Message-ID: <BN3PR0301MB0849D35E915D701DE931EA9081C10@BN3PR0301MB0849.namprd03.prod.outlook.com>
+References: <1432087805-16671-1-git-send-email-robh@kernel.org>
+ <1432087805-16671-7-git-send-email-robh@kernel.org>
+ <20150521031334.GA2897@shlinux2>
+ <CAL_Jsq+0zaKZJwgAPea25a=TrChOJs0LdCRV-R824=qij3pnTw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXgB9MTUfZxUXuES8JF42G9Ld2VTeOe2J9MjuZCeONOeg@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-pwm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+0zaKZJwgAPea25a=TrChOJs0LdCRV-R824=qij3pnTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXchDQoNCj4gU2VudDogVGh1
-cnNkYXksIE1heSAyMSwgMjAxNSA1OjMyIFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+
-IE9uIFRodSwgTWF5IDIxLCAyMDE1IGF0IDQ6NTAgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5
-b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIGJpbmRpbmcg
-ZG9jdW1lbnQgZm9yIFJlbmVzYXMgUFdNIFRpbWVyIG9uIFItQ2FyIFNvQ3MuDQo+IA0KPiBUaGFu
-a3MgZm9yIHlvdXIgcGF0Y2ghDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGlt
-b2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gDQo+IEFja2VkLWJ5OiBH
-ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPiB3aXRoIG9uZSBt
-aW5vciBuaXQgYmVsb3cuDQoNClRoYW5rIHlvdSBmb3IgdGhlIEFja2VkLWJ5Lg0KDQo+ID4gLS0t
-IC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-d20vcmVuZXNhcyxwd20tcmNhci50eHQNCj4gDQo+ID4gK0V4YW1wbGU6IFI4QTc3OTAgKFItQ2Fy
-IEgyKSBQV00gVGltZXIgbm9kZQ0KPiA+ICsNCj4gPiArICAgICAgIHB3bTA6IHB3bUBlNmUzMDAw
-MCB7DQo+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxwd20tcjhhNzc5
-MCIsICJyZW5lc2FzLHB3bS1yY2FyIjsNCj4gPiArICAgICAgICAgICAgICAgcmVnID0gPDAgMHhl
-NmUzMDAwMCAwIDB4MTA+Ow0KPiANCj4gTGVuZ3RoIDggaXMgc3VmZmljaWVudCwgYXMgdGhlcmUg
-YXJlIG9ubHkgMiAzMi1iaXQgcmVnaXN0ZXJzLg0KDQpUaGFuayB5b3UgZm9yIHRoZSBwb2ludC4g
-SSB3aWxsIGZpeCBpdC4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiA+
-ICsgICAgICAgICAgICAgICAjcHdtLWNlbGxzID0gPDI+Ow0KPiA+ICsgICAgICAgICAgICAgICBj
-bG9ja3MgPSA8Jm1zdHA1X2Nsa3MgUjhBNzc5MF9DTEtfUFdNPjsNCj4gPiArICAgICAgICAgICAg
-ICAgcGluY3RybC0wID0gPCZwd20wX3BpbnM+Ow0KPiA+ICsgICAgICAgICAgICAgICBwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsgICAgICAgfTsNCj4gDQo+IEdye29ldGplLGVldGlu
-Z31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdl
-ZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0g
-Z2VlcnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0
-aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJ
-J20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21l
-dGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExp
-bnVzIFRvcnZhbGRzDQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5k
-IHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbg0KPiB0aGUgYm9keSBvZiBhIG1l
-c3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZw0KPiBNb3JlIG1ham9yZG9tbyBpbmZv
-IGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg==
+IA0KPiANCj4gT24gV2VkLCBNYXkgMjAsIDIwMTUgYXQgMTA6MTMgUE0sIFBldGVyIENoZW4gPHBl
+dGVyLmNoZW5AZnJlZXNjYWxlLmNvbT4NCj4gd3JvdGU6DQo+ID4gT24gVHVlLCBNYXkgMTksIDIw
+MTUgYXQgMDk6MTA6MDVQTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4+IFRoZSBNYXJ2
+ZWxsIDI4bm0gSFNJQyBQSFkgcmVxdWlyZXMgdGhlIHBvcnQgdG8gYmUgZm9yY2VkIHRvIEhTIG1v
+ZGUNCj4gPj4gYWZ0ZXIgdGhlIHBvcnQgcG93ZXIgaXMgYXBwbGllZC4gVGhpcyBpcyBkb25lIHVz
+aW5nIHRoZSB0ZXN0IG1vZGUgaW4NCj4gPj4gdGhlIFBPUlRTQyByZWdpc3Rlci4NCj4gPj4NCj4g
+Pj4gQXMgSFNJQyBpcyBhbHdheXMgSFMsIHRoaXMgd29yay1hcm91bmQgc2hvdWxkIGJlIHNhZmUg
+dG8gZG8gd2l0aCBhbGwNCj4gPj4gSFNJQyBQSFlzLiBJZiBub3QsIGEgZmxhZyBjYW4gYWxzbyBi
+ZSBhZGRlZC4NCj4gPg0KPiA+IEkgdGhpbmsgYSBmbGFnIGlzIG5lZWRlZCwgbm90IHN1cmUgYWxs
+IHZlbmRvcnMgY2FuIHdvcmsgd2VsbCB3aXRoIHRoYXQuDQo+IA0KPiBPbmx5IGkuTVg2U3ggdXNl
+cyBIU0lDIGluIG1haW5saW5lLiBJcyB0aGF0IHNvbWV0aGluZyB5b3UgY2FuIHRlc3Q/IEl0IHdv
+dWxkIGJlDQo+IGJldHRlciB0byBub3QgYWRkIGZsYWdzIHVubGVzcyB0aGV5IGFyZSByZWFsbHkg
+bmVlZGVkLg0KPiBPdGhlcndpc2UgeW91IGVuZCB1cCB3aXRoIGRvemVucyBvZiBmbGFncyBsaWtl
+IFNESENJIGRyaXZlcnMgaGF2ZS4NCj4gDQoNCkkgd2lsbCBoYXZlIGEgdGVzdCBmb3IgdGhpcywg
+YW5kIHNob3cgeW91IHRoZSByZXN1bHQgbGF0ZXIuDQoNClBldGVyDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
