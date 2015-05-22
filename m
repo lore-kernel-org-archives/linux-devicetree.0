@@ -1,122 +1,56 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: imx6qdl-sabrelite: add Okaya LCD display
-Date: Fri, 22 May 2015 19:14:27 +0200
-Message-ID: <1432314867-30888-3-git-send-email-gary.bisson@boundarydevices.com>
-References: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432314867-30888-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 05/15] irqchip: mips-gic: register IRQ domain with
+ MIPS_GIC_IRQ_BASE
+Date: Fri, 22 May 2015 17:27:02 +0000
+Message-ID: <20150522172702.GC19834@io.lakedaemon.net>
+References: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com>
+ <1432309875-9712-6-git-send-email-paul.burton@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432309875-9712-6-git-send-email-paul.burton@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Burton <paul.burton@imgtec.com>
+Cc: linux-mips@linux-mips.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the 7" LCD display available for Sabrelite:
-http://boundarydevices.com/product/7-800x480-display/
+On Fri, May 22, 2015 at 04:51:04PM +0100, Paul Burton wrote:
+> On Malta, some IRQs are still referenced by hardcoded numbers relative
+> to MIPS_GIC_IRQ_BASE. When gic_init is called to register the GIC
+> without using device tree the irqbase argument allows this base to be
+> used. When the GIC is probed using device tree however the base is not
+> specified. This leads to conflicts between the GIC interrupts and other
+> interrupt controllers.
+> 
+> TODO: convert Malta (& SEAD3) to drop the hardcoded numbers instead
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 70 ++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+This will never be seen again. :-P  Why not just go ahead and do it as separate
+patch(es) in this series?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-index e00c44f..d5a25dc 100644
---- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-@@ -130,6 +130,39 @@
- 		status = "okay";
- 	};
- 
-+	lcd_display: display@di0 {
-+		compatible = "fsl,imx-parallel-display";
-+		interface-pix-fmt = "bgr666";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_j15>;
-+		status = "okay";
-+
-+		port {
-+			lcd_display_in: endpoint {
-+				remote-endpoint = <&ipu1_di0_disp0>;
-+			};
-+		};
-+
-+		display-timings {
-+			okaya_800x480 {
-+				native-mode;
-+				clock-frequency = <30000000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hback-porch = <40>;
-+				hsync-len = <48>;
-+				hfront-porch = <40>;
-+				vback-porch = <29>;
-+				vsync-len = <3>;
-+				vfront-porch = <13>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+
- 	panel {
- 		compatible = "hannstar,hsd100pxn1";
- 		backlight = <&backlight_lvds>;
-@@ -309,6 +342,39 @@
- 			>;
- 		};
- 
-+		pinctrl_j15: j15grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
-+				MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
-+				MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
-+				MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
-+				MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
-+				MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
-+				MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
-+				MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
-+				MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
-+				MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
-+				MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
-+				MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
-+				MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
-+				MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
-+				MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
-+				MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
-+				MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
-+				MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
-+				MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
-+				MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
-+				MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
-+				MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
-+				MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
-+				MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
-+				MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
-+				MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
-+				MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
-+				MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
-+			>;
-+		};
-+
- 		pinctrl_pwm1: pwm1grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_SD1_DAT3__PWM1_OUT 0x1b0b1
-@@ -377,6 +443,10 @@
- 	};
- };
- 
-+&ipu1_di0_disp0 {
-+	remote-endpoint = <&lcd_display_in>;
-+};
-+
- &ldb {
- 	status = "okay";
- 
--- 
-2.1.4
+thx,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
+
+> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+> ---
+> 
+>  drivers/irqchip/irq-mips-gic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic.c
+> index 57f09cb..697f340 100644
+> --- a/drivers/irqchip/irq-mips-gic.c
+> +++ b/drivers/irqchip/irq-mips-gic.c
+> @@ -858,7 +858,7 @@ static int __init gic_of_init(struct device_node *node,
+>  		write_gcr_gic_base(gic_base | CM_GCR_GIC_BASE_GICEN_MSK);
+>  	gic_present = true;
+>  
+> -	__gic_init(gic_base, gic_len, cpu_vec, 0, node);
+> +	__gic_init(gic_base, gic_len, cpu_vec, MIPS_GIC_IRQ_BASE, node);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.4.1
+> 
