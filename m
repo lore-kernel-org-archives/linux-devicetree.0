@@ -1,62 +1,37 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
-Date: Fri, 22 May 2015 08:05:54 -0700
-Message-ID: <20150522150554.GB2930@roeck-us.net>
-References: <=fu.wei@linaro.org>
- <1432197156-16947-1-git-send-email-fu.wei@linaro.org>
- <1432197156-16947-6-git-send-email-fu.wei@linaro.org>
- <555ECD04.6000404@offcode.fi>
- <CADyBb7sZWgNnEoTfaYm6=YcbWgEYRMcaNAdX9Y7B6W9pg+gOmg@mail.gmail.com>
- <555EEFDB.2030907@offcode.fi>
- <CADyBb7uh-6=ihfrKHBVXDzAKAE-_GqLXTPJa5_7Gw2R71pyeUg@mail.gmail.com>
- <555F2DED.2010200@roeck-us.net>
- <CADyBb7swfV9eQKC2FxiaK=RFq9JR8fmq1BcTeWOp57i_TrXaBA@mail.gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 1/2] leds: add DT binding for BCM6358 LED controller
+Date: Fri, 22 May 2015 17:08:58 +0200
+Message-ID: <555F468A.6030907@samsung.com>
+References: <1432055578-14089-1-git-send-email-noltari@gmail.com>
+ <1432228270-21891-1-git-send-email-noltari@gmail.com>
+ <1432228270-21891-2-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CADyBb7swfV9eQKC2FxiaK=RFq9JR8fmq1BcTeWOp57i_TrXaBA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Timo Kokkonen <timo.kokkonen@offcode.fi>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1432228270-21891-2-git-send-email-noltari@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, cooloney@gmail.com, jogo@openwrt.org, f.fainelli@gmail.com, cernekee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 22, 2015 at 10:38:32PM +0800, Fu Wei wrote:
-> Hi Guenter.
-> 
-> Sorry for my poor English .
-> let me explain this :
-> 
-> On 22 May 2015 at 21:23, Guenter Roeck <linux@roeck-us.net> wrote:
-> > On 05/22/2015 03:46 AM, Fu Wei wrote:
-> >>
-> >> Hi Timo,
-> >>
-> > [ ... ]
-> >
-> >> So I am still trying to improve pretimeout support :-)
-> >
-> >
-> > Is there anything still missing from it ?
-> >
-> >> If I can make pretimeout merged, may be you can try pretimeout to
-> >> implement early_timeout_sec function?
-> >
-> >
-> > Not sure how one would or even could do that.
-> >
-> > Do you mean "implement early_pretimeout_sec", by any chance ?
-> 
-> I mean: using pretimeout to implement the function you want, instead
-> of early_pretimeout_sec
-> 
-How would this work if the watchdog hardware doesn't support pretimeout ?
+On 05/21/2015 07:11 PM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> This adds device tree binding documentation for the Broadcom BCM6358 =
+LED controller.
+>
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> ---
+>   v2: resend, no changes.
+>
+>   .../devicetree/bindings/leds/leds-bcm6358.txt      | 145 ++++++++++=
++++++++++++
+>   1 file changed, 145 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-bcm6=
+358.txt
 
-Pretimeout and early timeout are two logically different functions, with
-different goals, so I don't entirely (if at all) understand why it would
-make sense to tie them together.
+Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
 
-Can you elaborate why you think this would be a good idea ?
-
-Thanks,
-Guenter
+--=20
+Best Regards,
+Jacek Anaszewski
