@@ -1,111 +1,90 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/6] arm64: tegra: Add Tegra210 support
-Date: Fri, 22 May 2015 09:37:04 -0600
-Message-ID: <555F4D20.2060408@wwwdotorg.org>
-References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com> <1431529065-20128-3-git-send-email-thierry.reding@gmail.com> <20150513171114.GA18655@e104818-lin.cambridge.arm.com> <20150515101913.GA20474@ulmo.nvidia.com> <20150519145211.GX21251@e104818-lin.cambridge.arm.com> <20150519151740.GA28161@ulmo.nvidia.com> <20150522133800.GY29424@e104818-lin.cambridge.arm.com>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 00/15] MIPS Malta DT Conversion
+Date: Fri, 22 May 2015 16:50:59 +0100
+Message-ID: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150522133800.GY29424-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leonid Yegoshin <Leonid.Yegoshin-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "Steven J. Hill" <Steven.Hill-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Hannes Reinecke <hare-l3A5Bk7waGM@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>Jason Cooper <ja>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2015 07:38 AM, Catalin Marinas wrote:
-> On Tue, May 19, 2015 at 05:17:42PM +0200, Thierry Reding wrote:
->> On Tue, May 19, 2015 at 03:52:11PM +0100, Catalin Marinas wrote:
->>> On Fri, May 15, 2015 at 12:19:16PM +0200, Thierry Reding wrote:
->>>> On Wed, May 13, 2015 at 06:11:15PM +0100, Catalin Marinas wrote:
->>>>> On Wed, May 13, 2015 at 04:57:42PM +0200, Thierry Reding wrote:
->>>>>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>>
->>>>>> NVIDIA Tegra210 (also known as Tegra X1) has four Cortex-A57 and four
->>>>>> Cortex-A53 CPUs. Compared to Tegra124 and Tegra132 it comes with a 256-
->>>>>> core Maxwell GPU. It supports processing videos of up to 4K resolutions
->>>>>> at 60 fps (H.265, VP9, H.264).
->>>>>>
->>>>>> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>> ---
->>>>>>   arch/arm64/Kconfig                       |   9 +
->>>>>>   arch/arm64/boot/dts/nvidia/tegra210.dtsi | 998 +++++++++++++++++++++++++++++++
->>>>>>   2 files changed, 1007 insertions(+)
->>>>>>   create mode 100644 arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>>>>>
->>>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->>>>>> index 7796af4b1d6f..bfdf064ada66 100644
->>>>>> --- a/arch/arm64/Kconfig
->>>>>> +++ b/arch/arm64/Kconfig
->>>>>> @@ -225,6 +225,15 @@ config ARCH_TEGRA_132_SOC
->>>>>>   	  but contains an NVIDIA Denver CPU complex in place of
->>>>>>   	  Tegra124's "4+1" Cortex-A15 CPU complex.
->>>>>>
->>>>>> +config ARCH_TEGRA_210_SOC
->>>>>> +	bool "NVIDIA Tegra210 SoC"
->>>>>> +	depends on ARCH_TEGRA
->>>>>> +	select PINCTRL_TEGRA210
->>>>>> +	select USB_ULPI if USB_PHY
->>>>>> +	select USB_ULPI_VIEWPORT if USB_PHY
->>>>>> +	help
->>>>>> +	  Enable support for the NVIDIA Tegra210 SoC.
->>>>>> +
->>>>>
->>>>> The previous ARCH_TEGRA_132_SOC escaped me. Do we need all these
->>>>> ARCH_TEGRA_*_SOC entries? Can we not have per-driver Kconfig options?
->>>>> For example, ARCH_TEGRA_132_SOC seems to be only used in
->>>>> drivers/clk/tegra, a specific Kconfig entry in there would suffice.
->>>>
->>>> There are actually a couple of other places where this will be used in
->>>> subsequent patches (e.g. memory controller driver). The idea behind
->>>> having these is that each one of them is used to enable the essentials
->>>> out of the box, so that people don't have to go and enable a bunch of
->>>> driver-specific Kconfig options just to get a kernel configuration that
->>>> can actually boot.
->>>
->>> We debated whether to have ARCH_* options at all on arm64 and we settled
->>> for the middle ground - only add them for SoC families, not individual
->>> SoCs. As for the kernel configuration that actually boots, we want the
->>> arm64 defconfig to include all the supported SoCs and drivers (though
->>> longer term I'd like to see more drivers built as modules by default).
->>>
->>>> This is also useful for integrators since they can simply omit all SoC
->>>> generations that they're not interested in. Having a per-SoC option
->>>> provides an easy way of doing so.
->>>
->>> The integrators could just select a SoC family and trim down unwanted
->>> options, I don't think they rely on the kernel defconfig for a final
->>> product. If this becomes an issue, I would rather have per-SoC
->>> defconfigs than lots of Kconfig entries.
->>
->> I understand the desire to start with a clean plate on a new
->> architecture, but Tegra has worked like this for the past 5 years and
->> it's worked out really well for us. So I'm reluctant to introduce these
->> inconsistencies merely because 64-bit ARM now lives in a different
->> directory.
->
-> That's a good time to start cleaning this up, especially since we
-> mandate single image from the beginning.
->
->> Are you concerned about arch/arm64/Kconfig growing wild? If so we could
->> easily move these configuration options outside to something like
->> drivers/soc/tegra/Kconfig. While at it, we could move existing options
->> from arch/arm/mach-tegra over to that as well.
->
-> I think the whole ARCH_TEGRA_*_SOC approach is wrong. You don't bother
-> introducing Kconfig entries for individual drivers but instead add an
-> obj-*_SOC in various Makefiles under drivers/. If we ever get to a point
-> where we can build (part of) the SoCs as modules (and I'm not talking
-> about kernels shipped with end products but those distro kernel
-> targeting development boards), we have to go back and add such Kconfig
-> entries for specific drivers.
+This series begins converting the MIPS Malta board to use device tree,
+which is done with a few goals in mind:
 
-Just as an aside, long long ago I tried to remove the ARCH_TEGRA_* usage 
-from anywhere outside arch/arm/mach-tegra, but was shot down because 
-that would not allow the driver Kconfig files to only show the drivers 
-that were relevant for the particular Tegra SoCs we had enabled. It's 
-really frustrating to have to deal with the situation of different 
-people pushing in completely the opposite directions on this kind of topic.
+  - To modernise the Malta board support, providing a cleaner example to
+    people referencing it when bringing up new boards and reducing the
+    amount of code they need to write.
+
+  - To make the code at the board level more generic with the eventual
+    aim of sharing it between multiple boards & allowing for
+    multi-platform kernel binaries. Although this series doesn't result
+    in the kernel reaching those goals, it is a step in that direction.
+
+  - To result in a more maintainable kernel through a combination of the
+    above.
+
+
+Paul Burton (15):
+  MIPS: define GCR_GIC_STATUS register fields
+  MIPS: include errno.h for ENODEV in mips-cm.h
+  MIPS: malta: basic DT plumbing
+  MIPS: i8259: DT support
+  irqchip: mips-gic: register IRQ domain with MIPS_GIC_IRQ_BASE
+  MIPS: malta: probe interrupt controllers via DT
+  MIPS: remove [SR]ocIt(2) IRQ handling code
+  of_serial: support for UARTs on I/O ports
+  MIPS: malta: probe UARTs using DT
+  MIPS: malta: probe RTC via DT
+  MIPS: malta: probe pflash via DT
+  MIPS: malta: remove fw_memblock_t abstraction
+  MIPS: malta: remove nonsense memory limit
+  MIPS: malta: setup RAM regions via DT
+  MIPS: malta: setup post-I/O hole RAM on non-EVA
+
+ arch/mips/Kconfig                               |   3 +
+ arch/mips/boot/dts/mti/Makefile                 |   1 +
+ arch/mips/boot/dts/mti/malta.dts                | 150 +++++++++++++++
+ arch/mips/configs/malta_defconfig               |   3 +-
+ arch/mips/configs/malta_kvm_defconfig           |   3 +-
+ arch/mips/configs/malta_kvm_guest_defconfig     |   3 +-
+ arch/mips/configs/malta_qemu_32r6_defconfig     |   1 +
+ arch/mips/configs/maltaaprp_defconfig           |   1 +
+ arch/mips/configs/maltasmvp_defconfig           |   1 +
+ arch/mips/configs/maltasmvp_eva_defconfig       |   1 +
+ arch/mips/configs/maltaup_defconfig             |   1 +
+ arch/mips/configs/maltaup_xpa_defconfig         |   3 +-
+ arch/mips/include/asm/fw/fw.h                   |  16 --
+ arch/mips/include/asm/i8259.h                   |   1 +
+ arch/mips/include/asm/mach-malta/malta-dtshim.h |  29 +++
+ arch/mips/include/asm/mips-cm.h                 |   5 +
+ arch/mips/include/asm/msc01_ic.h                | 147 ---------------
+ arch/mips/kernel/Makefile                       |   1 -
+ arch/mips/kernel/i8259.c                        |  43 ++++-
+ arch/mips/kernel/irq-msc01.c                    | 159 ----------------
+ arch/mips/mti-malta/Makefile                    |   6 +-
+ arch/mips/mti-malta/malta-dt.c                  |  34 ++++
+ arch/mips/mti-malta/malta-dtshim.c              | 238 ++++++++++++++++++++++++
+ arch/mips/mti-malta/malta-int.c                 | 130 +------------
+ arch/mips/mti-malta/malta-memory.c              | 131 +------------
+ arch/mips/mti-malta/malta-platform.c            | 147 ---------------
+ arch/mips/mti-malta/malta-setup.c               |   7 +
+ arch/mips/mti-malta/malta-time.c                |   1 -
+ drivers/irqchip/irq-mips-gic.c                  |   2 +-
+ drivers/tty/serial/of_serial.c                  |   7 +-
+ 30 files changed, 542 insertions(+), 733 deletions(-)
+ create mode 100644 arch/mips/boot/dts/mti/malta.dts
+ create mode 100644 arch/mips/include/asm/mach-malta/malta-dtshim.h
+ delete mode 100644 arch/mips/include/asm/msc01_ic.h
+ delete mode 100644 arch/mips/kernel/irq-msc01.c
+ create mode 100644 arch/mips/mti-malta/malta-dt.c
+ create mode 100644 arch/mips/mti-malta/malta-dtshim.c
+ delete mode 100644 arch/mips/mti-malta/malta-platform.c
+
+-- 
+2.4.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
