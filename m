@@ -1,55 +1,94 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
-Date: Fri, 22 May 2015 13:43:43 +0100
-Message-ID: <555F247F.9060100@linaro.org>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<2282066.NWoIT9ZyLc@wuerfel>	<CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>	<13641152.Yt4ZI3oT6L@wuerfel>	<CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>	<1432285588.3929.28.camel@pengutronix.de>	<20150522091822.GF8557@lukather>	<1432289231.3929.60.camel@pengutronix.de> <CALszF6CQ1_HQXJ8=vgytvVo2t4_ue5_nsE06HPyHMzSLrntqKg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 2/7] mmc: mediatek: Add Mediatek MMC driver
+Date: Fri, 22 May 2015 14:51:56 +0200
+Message-ID: <CAPDyKFpWCvJXL-W5P83ucBM2-b5cDFEtSLnN6J6WLyR_9CuvWw@mail.gmail.com>
+References: <1432017411-2996-1-git-send-email-chaotian.jing@mediatek.com>
+	<1432017411-2996-3-git-send-email-chaotian.jing@mediatek.com>
+	<CAPDyKFo5788uRqAaXUZ-OiS1XF8NPmg4tn2ipZNJdx4dci+KMQ@mail.gmail.com>
+	<1432284000.23435.38.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CALszF6CQ1_HQXJ8=vgytvVo2t4_ue5_nsE06HPyHMzSLrntqKg@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1432284000.23435.38.camel@mhfsdcap03>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek
 List-Id: devicetree@vger.kernel.org
 
-On 22/05/15 13:32, Maxime Coquelin wrote:
-> 2015-05-22 12:07 GMT+02:00 Philipp Zabel <p.zabel@pengutronix.de>:
->> And that's how I'd expect it to be described by the device tree:
->>
->>      rcc: rcc@40023800 {
->>          compatible = "st,stm32-rcc";
->>          reg = <0x40023800 0xc0>;
->>      };
->>
+[...]
+
+>> You are invoking msdc_gate_clock() and msdc_ungate_clock() in a
+>> balanced manner, thus hclk_enabled is redundant. Please remove it.
 >
-> Doing that, since this register bank contains both reset and clock
-> registers, the reset device cannot get the IO resource at probe time
-> because the clock driver has already reserved it.
-> Daniel, who has started to work on the clock driver is facing this issue.
-> This is why I proposed this binding for "reg" property.
-
-Temporarily I've kept things working for me by avoiding 
-of_io_request_and_map() in the clock driver (I am using raw of_iomap() 
-instead).
-
-I view this as a hack rather than a solution!
-
-Note that, with or without the hack, I do hope to be able to post the 
-clock driver this weekend. I am acutely aware that at the moment we are 
-discussing code I haven't posted yet.
+> on drv->probe(), already invoke the msdc_ungate_clock(), so, when the
+> runtime pm resume invoke the msdc_ungate_clock(), the hclk already
+> enabled.
 
 
-> We could think of creating a MFD driver, but the problem is that clock
-> need to be intialized before a MFD device can be probed.
->
-> Maybe there is a way to have you binding working properly, but I
-> haven't found one for now.
+That's why you invoke pm_runtime_set_active() during ->probe() when
+deploying PM support in patch3. It's not an issue then.
 
-I guess a driver doesn't *have* to reserve all the register space 
-described in DT. The driver could replace of_io_request_and_map() with 
-lower level calls.
+[...]
 
-Thus if we wanted to keep this detail out of DT then I guess the two 
-drivers could simply make an agreement not to request registers they do 
-not use.
+>> I assume it's possible to gate the clock by updating a MSDC register
+>> instead!? That would be prefereable since then you can leave clock
+>> gating/ungating via the clk API, to be dealt from runtime PM. That
+>> would also make "sclk_enabled" in the struct msdc_host redundant.
+>>
+>> Adopting to above, obviously requires MSDC to be able to ungate the
+>> clock by also updating a MSDC register. I assume that's possible as
+>> well!?
+>>
+> We can set the bit1 of MSDC_CFG, when this bit is 0, the bus clock was
+> gated to 0 if no command or data is transmitted.
+> And, from our designer, when we operate the MSDC register, we need make
+> sure both HCLK and source are enabled, if source clock was disabled,
+> write some MSDC registers will have no effect(eg. send CMD, without
+> source clock, not only cannot send CMD, but also cannot get CMD timeout
+> interrupt.)
+
+Thanks, that answered my question. As I understand it you should be
+able to adopt to my propsual.
+
+[...]
+
+>> > +{
+>> > +       unsigned long tmo = jiffies + msecs_to_jiffies(20);
+>> > +
+>> > +       while ((readl(host->base + SDC_STS) & SDC_STS_CMDBUSY)
+>> > +                       && time_before(jiffies, tmo))
+>> > +               continue;
+>> > +
+>> > +       if (readl(host->base + SDC_STS) & SDC_STS_CMDBUSY) {
+>> > +               dev_err(host->dev, "CMD bus busy detected\n");
+>> > +               host->error |= REQ_CMD_BUSY;
+>> > +               msdc_cmd_done(host, MSDC_INT_CMDTMO, mrq, cmd);
+>> > +               return false;
+>> > +       }
+>> > +
+>> > +       if (mmc_resp_type(cmd) == MMC_RSP_R1B || cmd->data) {
+>> > +               /* R1B or with data, should check SDCBUSY */
+>> > +               while (readl(host->base + SDC_STS) & SDC_STS_SDCBUSY)
+>> > +                       cpu_relax();
+>> > +       }
+>>
+>> MSDC seems to be handling card busy detection in HW, right?
+>>
+> Do not have this ability, HW only know if CMD/DAT is low, but do not
+> have any interrupt for it,
+
+I see, but doesn't the above polling mean that msdc will not propagate
+the response until the card have stopped signal busy? That's what
+MMC_CAP_WAIT_WHILE_BUSY shall be used for.
+
+Perhaps you should remove the above polling, and rely on the MMC core
+to poll with CMD13 instead?
+
+>> If so, you should enable MMC_CAP_WAIT_WHILE_BUSY and set
+>> "max_busy_timeout" to DAT_TIMEOUT to inform the mmc core about it.
+>>
+
+[...]
+
+Kind regards
+Uffe
