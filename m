@@ -1,90 +1,51 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/5] phy: qcom: Add Qualcomm PCIe PHY
-Date: Fri, 22 May 2015 13:06:37 -0500
-Message-ID: <CAErSpo6Cv+XOjA+ddds4i4YXCC4f=igR4MTcRwFO5eWLg-=LVA@mail.gmail.com>
-References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
- <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com> <554783CD.50708@ti.com>
- <55478F1A.3000401@mm-sol.com> <20150519224143.GS31666@google.com>
- <555C8743.6020708@ti.com> <CAErSpo42N8YHWjrqUCj0ubqZLt4w-3g=ykPdR8ZMmWaW1GjWDw@mail.gmail.com>
- <555F5885.70105@mm-sol.com>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCH v4 0/2] socfpga: support suspend to ram
+Date: Fri, 22 May 2015 13:02:13 -0500
+Message-ID: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <555F5885.70105@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Delicious Quinoq <delicious.quinoa@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[+cc Jingoo, Pratyush]
+Support suspend to ram on socfpga.
+  * allocate space in ocram using sram driver.
+  * Add a function in ocram to place DDR in self-refresh
+    and suspend.
+  * SDRAM ECC is mutually exclusive with using ocram for
+    suspend, so disable SDRAM ECC if socfpga suspend is
+    enabled.
+  * Add a device tree binding document for the Altera
+    SOCFPGA SDRAM controller that is used to put DDR in
+    self-refresh mode.
 
-On Fri, May 22, 2015 at 11:25 AM, Stanimir Varbanov
-<svarbanov@mm-sol.com> wrote:
-> On 05/20/2015 04:23 PM, Bjorn Helgaas wrote:
->> On Wed, May 20, 2015 at 8:08 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>> Hi Bjorn,
->>>
->>>
->>> On Wednesday 20 May 2015 04:11 AM, Bjorn Helgaas wrote:
->>>>
->>>> On Mon, May 04, 2015 at 06:24:10PM +0300, Stanimir Varbanov wrote:
->>>>>
->>>>> On 05/04/2015 05:35 PM, Kishon Vijay Abraham I wrote:
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> On Monday 04 May 2015 06:12 PM, Stanimir Varbanov wrote:
->>>>>>>
->>>>>>> Add a PCIe PHY driver used by PCIe host controller driver
->>>>>>> on Qualcomm SoCs like Snapdragon 805.
->>>>>>>
->>>>>>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->>>>>>> ---
->>>>>>>    drivers/phy/Kconfig         |    9 ++
->>>>>>>    drivers/phy/Makefile        |    1 +
->>>>>>>    drivers/phy/phy-qcom-pcie.c |  291
->>>>>>> +++++++++++++++++++++++++++++++++++++++++++
->>>>>>
->>>>>>
->>>>>> Why do you need a new PHY driver for this? Why not use the existing QCOM
->>>>>> PHY driver. I can see the registers used here in
->>>>>> phy-qcom-ufs-qmp-14nm.h?
->>>>>
->>>>>
->>>>> I agree that on first glance there are similarities, but I'm not sure
->>>>> does the PHYs are the same IP blocks. Or at least they are different
->>>>> revisions which have too many differences. So trying to combine them
->>>>> will lead to more code than now.
->>>>>
->>>>> Either way I will try to understand how many the differences are.
->>>>
->>>>
->>>> Ping, where are we with this?  Should I wait for something else, or are
->>>> you
->>>> convinced there's enough difference to warrant a new PHY driver, Kishon?
->>>
->>>
->>> I'd like to wait to see if Stanimir can use existing driver instead of
->>> creating a new driver.
->>
->> OK, I'm waiting for a v3 with either tweaks to the QCOM PHY driver, or
->> stronger justification as to why that's impossible.  It's hard to
->> quantify statements like "there are similarities, but there are too
->> many differences," so you might have to actually attempt a patch for
->> the QCOM code and we can see how ugly that would turn out to be.
->
-> Kishon,
->
-> I'm still checking the differences, sorry for the delay.
->
-> Bjorn, is the pcie driver looks good enough to be merged?
+Alan Tull (2):
+  ARM: socfpga: support suspend to ram
+  ARM: socfpga: dts: add sdram controller dt binding doc
 
-I haven't looked at that (I was waiting until I could deal with the
-whole series).  But it sounds like it would be useful to merge patches
-3-5 by themselves?  I'll take a look at those.
+ .../arm/altera/socfpga-sdram-controller.txt        |   12 ++
+ arch/arm/mach-socfpga/Kconfig                      |   10 +-
+ arch/arm/mach-socfpga/Makefile                     |    1 +
+ arch/arm/mach-socfpga/core.h                       |    6 +-
+ arch/arm/mach-socfpga/pm.c                         |  150 +++++++++++++++++++
+ arch/arm/mach-socfpga/self-refresh.S               |  157 ++++++++++++++++++++
+ arch/arm/mach-socfpga/socfpga.c                    |    6 +-
+ drivers/edac/Kconfig                               |    2 +-
+ 8 files changed, 340 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+ create mode 100644 arch/arm/mach-socfpga/pm.c
+ create mode 100644 arch/arm/mach-socfpga/self-refresh.S
 
-It would be good to get Arnd and Rob to take a look, especially at the DT parts.
-
-And Jingoo and Pratyush since you use the DesignWare core.
-
-Bjorn
+-- 
+1.7.9.5
