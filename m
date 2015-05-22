@@ -1,107 +1,52 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
-Date: Fri, 22 May 2015 11:18:22 +0200
-Message-ID: <20150522091822.GF8557@lukather>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
- <2282066.NWoIT9ZyLc@wuerfel>
- <CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>
- <13641152.Yt4ZI3oT6L@wuerfel>
- <CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>
- <1432285588.3929.28.camel@pengutronix.de>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 2/2] drivers: ata: add support for Ceva sata host
+ controller
+Date: Fri, 22 May 2015 11:34:24 +0200
+Message-ID: <1432287264.27695.72.camel@x220>
+References: <1432180625-25159-1-git-send-email-suneel.garapati@xilinx.com>
+	 <1432180625-25159-3-git-send-email-suneel.garapati@xilinx.com>
+	 <20150521215744.GE4914@htj.duckdns.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2446001520252316360=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1432285588.3929.28.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>"linux-serial@vger.kernel.org" <li>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150521215744.GE4914@htj.duckdns.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suneel Garapati <suneel.garapati@xilinx.com>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, michals@xilinx.com, sorenb@xilinx.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
+[Adding Bjorn.]
 
---===============2446001520252316360==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fd5uyaI9j6xoeUBo"
-Content-Disposition: inline
+> On Thu, May 21, 2015 at 09:27:05AM +0530, Suneel Garapati wrote:
+> > --- /dev/null
+> > +++ b/drivers/ata/ahci_ceva.c
 
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms and conditions of the GNU General Public License,
+> > + * version 2, as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope it will be useful, but WITHOUT
+> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> > + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> > + * more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License along with
+> > + * this program. If not, see <http://www.gnu.org/licenses/>.
 
---fd5uyaI9j6xoeUBo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > +MODULE_LICENSE("GPLv2");
 
-On Fri, May 22, 2015 at 11:06:28AM +0200, Philipp Zabel wrote:
-> > In the probe function, it would check the number of reg resources.
-> > If a single resource is passed, it would take it, else it would look
-> > the one named "reset".
-> > The driver and bindings would be the same for the two families, and
-> > the bindings would be backward compatible with sunxi ones.
-> >=20
-> > Philip, Arnd, what do you think?
->=20
-> I'm not a fan of describing the register layout in the device tree as
-> detailed as the sunxi bindings do. I'd prefer the reg property to
-> describe the device's register address space with one entry per
-> contiguous block of registers.
+You meant "GPL v2".
 
-That's exactly what we do.
+"GPLv2" is not one of the idents that pass license_is_gpl_compatible().
+Loading a module with that ident should trigger a warning and taint the
+kernel. See linux/module.h (or linux/license.h) for acceptable idents.
 
-> Unifying the mostly identical drivers is a good idea though, and reusing
-> preexisting bindings is better than inventing new ones. I favor the
-> socfpga binding, but I still like the sunxi bindings and this proposal
-> better than encoding the register offset in the reset index.
+This is a bit of a gotcha. A patch that would have helped here was
+posted in https://lkml.org/lkml/2015/4/7/824 . I don't know why that
+patch didn't make it into checkpatch.pl. Bjorn?
 
-I don't really get the difference between the socfpga and our bindings
-actually. Would you mind to explain a bit further what you don't like
-about it ?
-
-Maxime
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---fd5uyaI9j6xoeUBo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVXvReAAoJEBx+YmzsjxAg9IUQALOLEJidOKVjhMCaeHVNcKN8
-jBjSk07cUB2e9qfF+Yr/IpzSF9KBtH8MUmQlIk1lEwMk4zllj41FrzkGOkReaCvQ
-TKkY3rF3mliM8ORJz6GUVZ1vxFcID3EFNNPDzYD0fGvNyzBaXqTDyF76w0oQNKxT
-WRSwHn3nSqn1IiM1EPw+mJVi6z1sbafZOBYCNLxu/ZjKBaLnmfcKumfoXyb4r5TW
-2k5bfEBHg7PEyiLKhCqqjXAAFHLRlkSMqtRYQV0F/rvpbyQ22iJraimagDYJc25Y
-LmeYJM726zs+4f9cizyyJV5BFkyWcBFJ2l32bvVuTTFU2RyZulVxlTsAgJ4WRDze
-wVgCbduCfnF5Q3texbhScqqgGH8N6OTsu/w+4oluOHAxw4yw5lRcPJEGC4D2kVGn
-/baHISJkwU4s0jfj1AEJ7U2zjxQ1rxC3/gpOWtXpZx4JdDSnYSMaRfaGmpSGNLqj
-8cKmg5khuYN39/6Hv8faX739NhIh7NZIkbI0t+uyxDawolV/NGeeCJDf+RGWD9w4
-APGrwJu+A41d9dxfpJODKAdc84hbqLt5p3uoCfLR+O4Av11XdvIZU0hKJz1I73/E
-rpvnJeFGfc+Gx/hiu9ajUfHKm77qXmyhoIkovhFV1amTFbxqP1471zifdQCX2aCn
-NWGerjHGvghTEjXTpTvw
-=ZcXg
------END PGP SIGNATURE-----
-
---fd5uyaI9j6xoeUBo--
+Thanks,
 
 
---===============2446001520252316360==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2446001520252316360==--
+Paul Bolle
