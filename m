@@ -1,65 +1,86 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 01/10] ASoC: qcom: make lpass driver depend on OF
-Date: Fri, 22 May 2015 12:53:44 +0100
-Message-ID: <555F18C8.8090902@linaro.org>
-References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org> <1432245161-8990-1-git-send-email-srinivas.kandagatla@linaro.org> <2534276.hIjFJK74Zh@wuerfel>
+From: maitysanchayan@gmail.com
+Subject: Re: [PATCH v3 2/2] soc: Add driver for Freescale Vybrid Platform
+Date: Fri, 22 May 2015 17:25:29 +0530
+Message-ID: <20150522115529.GA11118@Sanchayan-Arch.toradex.int>
+References: <cover.1432290463.git.maitysanchayan@gmail.com>
+ <d27c4ba234cd298914676884a9604ea8472a17d0.1432290463.git.maitysanchayan@gmail.com>
+ <35561091.AtkcGa6qVG@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <2534276.hIjFJK74Zh@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <35561091.AtkcGa6qVG@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, stefan@agner.ch, shawn.guo@linaro.org, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for looking at this patch.
+Hello Arnd,
 
-On 22/05/15 08:24, Arnd Bergmann wrote:
-> On Thursday 21 May 2015 22:52:41 Srinivas Kandagatla wrote:
->>
->>   config SND_SOC_LPASS_CPU
->>          tristate
->> +       depends on OF
->>          select REGMAP_MMIO
->>
->>   config SND_SOC_LPASS_PLATFORM
->>          tristate
->> +       depends on OF
->>          select REGMAP_MMIO
->>
->>   config SND_SOC_LPASS_IPQ806X
->>
->
-> Could you instead make the drivers compile without OF being set?
->
-> I see that patch 7 and 8 introduces another two options doing
->
->
-> +config SND_SOC_LPASS_APQ8016
-> +       tristate
-> +       depends on SND_SOC_QCOM
-> +       select SND_SOC_LPASS_CPU
-> +       select SND_SOC_LPASS_PLATFORM
-> +
->
-> +config SND_SOC_APQ8016_SBC
-> +       tristate "SoC Audio support for APQ8016 SBC platforms"
-> +       depends on (ARCH_QCOM && SND_SOC_QCOM) || COMPILE_TEST
-> +       select SND_SOC_LPASS_APQ8016
-> +       help
->
-> so you get an obvious build failure here when SND_SOC_APQ8016_SBC
-> gets selected with COMPILE_TEST on a platform that does not support OF.
->
+On 15-05-22 13:11:46, Arnd Bergmann wrote:
+> On Friday 22 May 2015 16:21:54 Sanchayan Maity wrote:
+> > +#define OCOTP_CFG0_OFFSET      0x00000410
+> > +#define OCOTP_CFG1_OFFSET      0x00000420
+> > +#define MSCM_CPxCOUNT_OFFSET   0x0000002C
+> > +#define MSCM_CPxCFG1_OFFSET    0x00000014
+> > +#define ROM_REVISION_OFFSET    0x00000080
+> > +
+> > +static const struct of_device_id vf610_soc_bus_match[] = {
+> > +	{ .compatible = "fsl,vf610-mscm-cpucfg", },
+> > +	{ /* sentinel */ }
+> > +};
+> > +
+> > +static int __init vf610_soc_init(void)
+> > +{
+> > +	struct regmap *ocotp_regmap, *mscm_regmap, *rom_regmap;
+> > +	struct soc_device_attribute *soc_dev_attr;
+> > +	struct soc_device *soc_dev;
+> > +	struct device_node *np;
+> > +	char soc_type[] = "xx0";
+> > +	u32 cpxcount, cpxcfg1;
+> > +	u32 soc_id1, soc_id2, rom_rev;
+> > +	u64 soc_id;
+> > +	int ret;
+> > +
+> > +	np = of_find_matching_node(NULL, vf610_soc_bus_match);
+> > +	if (!np)
+> > +		return -ENODEV;
+> > +
+> 
+> Why not use module_platform_driver() and make this a probe function instead?
 
-Yes, this would fail.
-I think moving of_device_id structures in drivers under #ifdef CONFIG_OF 
-and removing the depends on OF would fix it.
+Had done that but after having a look at the existing integrator and versatile
+platform implementation, I changed it. Will switch to using that.
 
---srini
+> 
+> > +	ocotp_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-ocotp");
+> > +	if (IS_ERR(ocotp_regmap)) {
+> > +		pr_err("regmap lookup for octop failed\n");
+> > +		return PTR_ERR(ocotp_regmap);
+> > +	}
+> > +
+> > +	mscm_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-mscm-cpucfg");
+> > +	if (IS_ERR(mscm_regmap)) {
+> > +		pr_err("regmap lookup for mscm failed");
+> > +		return PTR_ERR(mscm_regmap);
+> > +	}
+> > +
+> > +	rom_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-ocrom");
+> > +	if (IS_ERR(rom_regmap)) {
+> > +		pr_err("regmap lookup for ocrom failed");
+> > +		return PTR_ERR(rom_regmap);
+> > +	}
+> 
+> Can you use syscon_regmap_lookup_by_phandle instead, and put the
+> phandles in the fsl,vf610-mscm-cpucfg node?
 
+Ok. Will do so.
 
+- Sanchayan.
+
+> 
+> Also, I'd argue that the mscm should not be a syscon device at all,
+> but instead I'd use platform_get_resource()/devm_ioremap_resource()
+> to get an __iomem pointer.
+> 
 > 	Arnd
->
->
