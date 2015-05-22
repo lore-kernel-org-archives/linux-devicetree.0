@@ -1,62 +1,44 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V5 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 22 May 2015 10:55:34 -0500
-Message-ID: <CAL_JsqKhpyLgh5_1jZ_u0OP7=Piw=pgqZdQJ0K4Rm7DQ5ve+gA@mail.gmail.com>
-References: <cover.1432091956.git.viresh.kumar@linaro.org> <51a2603050f7993643fea9e5dcd2dba7a5a3fe23.1432091956.git.viresh.kumar@linaro.org>
- <555D6CC8.9050201@ti.com> <20150521054602.GE22904@linux>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: [PATCH 08/15] of_serial: support for UARTs on I/O ports
+Date: Fri, 22 May 2015 16:51:07 +0100
+Message-ID: <1432309875-9712-9-git-send-email-paul.burton@imgtec.com>
+References: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150521054602.GE22904@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Nishanth Menon <nm@ti.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Rafael Wysocki <rjw@rjwysocki.net>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Paul Burton <paul.burton@imgtec.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 12:46 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 21-05-15, 00:27, Nishanth Menon wrote:
->> > +This describes the OPPs belonging to a device. This node can have following
->> > +properties:
+If the address provided for the UART is of an I/O port rather than
+a regular memory address, then set the port iotype appropriately and
+write the address to iobase rather than mapbase.
 
-[...]
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+---
 
->> different angle: How about just target-freq-Hz? just drop the "opp"
->> prefix for properties of an OPP node? No strong feelings here. (some
->> folks did have variations of a few Hz based on clock tree - example with
->> a crystal frequency of 19.2MHz you'd probably get 1001MHz exact, with a
->> 26MHz crystal, you'd get 1000MHz -> ofcourse round-rate is supposed to
->> help with that... but anyways.. why not say we are trying to indicate
->> target frequency? I do recollect during initial days of OPP
->> (pre-dt-adoption days) folks did complain about this - we kinda worked
->> around this with round-rated handling - but we might as well anticipate it.
->
-> Rob suggested opp- prefix and it looks good to me, lets see what
-> others have to say :)
+ drivers/tty/serial/of_serial.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-You can decide the color of the bike shed.
-
->
->> Thanks for adding the examples - My customer support team especially
->> will appreciate having such examples ;).
->
-> I can understand that :)
->
->> I agree with Mike[1] here -> why not move clocks and supply to cpu0_opp?
->> "
->> It seems wrong to me that the clock and supply data is owned by the cpu
->> node, and not the opp descriptor. Everything about the opp transition
->> should belong to a provider node. Then the cpu simply needs to consume
->> that via a phandle.
->> "
->>
->> I am not sure if we discussed that point further OR if we kinda got
->> hooked on to the "should it be in kernel" point of debate in V4.
->
-> I did send a reply to that, but no one replied after that. Probably
-> you want to reply on that ?
-
-Clock and regulator bindings describe connections in the h/w. OPPs are
-not a h/w block, but rather properties of the h/w. The connections
-here are to the cpu's.
-
-Rob
+diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+index 137381e..ccff9ba 100644
+--- a/drivers/tty/serial/of_serial.c
++++ b/drivers/tty/serial/of_serial.c
+@@ -110,7 +110,12 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+ 
+ 	port->irq = irq_of_parse_and_map(np, 0);
+ 	port->iotype = UPIO_MEM;
+-	if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
++
++	if (resource.flags & IORESOURCE_IO) {
++		port->iotype = UPIO_PORT;
++		port->iobase = port->mapbase;
++		port->mapbase = 0;
++	} else if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
+ 		switch (prop) {
+ 		case 1:
+ 			port->iotype = UPIO_MEM;
+-- 
+2.4.1
