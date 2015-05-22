@@ -1,53 +1,139 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 0/2] Fix OF match for adxl34x driver
-Date: Fri, 22 May 2015 16:32:45 -0700
-Message-ID: <20150522233245.GB20687@dtor-ws>
-References: <1432208546-18615-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432208546-18615-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-input-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v11 0/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Fri, 22 May 2015 17:32:55 -0600
+Message-ID: <1432337580-3750-1-git-send-email-lho@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 01:42:24PM +0200, Geert Uytterhoeven wrote:
-> 	Hi Dmitry,
-> 
-> This is a resent of a series by Laurent Pinchart to fix OF matching for
-> the adxl34x driver.
-> 
-> According to the discussion in response to that series, we were under
-> the impression this was going in through the input tree
-> (http://www.spinics.net/lists/linux-i2c/msg18293.html).
-> 
-> In input patchwork, the series is still marked "Awaiting Upstream"
-> (https://patchwork.ozlabs.org/project/linux-i2c/list/?state=*&q=adxl),
-> but actually we are waiting for you, as we can't update the affected DTS
-> before the driver fix has gone in ;-)
-> 
-> From Laurent's submission:
-> 
->     This patch set fixes OF matching for the adxl34x driver when the DT
->     node lists a device-specific "adi,adxl345" or "adi,adxl346"
->     compatible value first.
-> 
->     The first version (see
->     http://www.spinics.net/lists/linux-i2c/msg18107.html) added an OF
->     match entry for the "adi,adxl34x" compatible string. The discussion
->     that followed concluded that that compatible string should be
->     deprecated and that the driver should match the device-specific
->     strings instead.
-> 
->     The first patch thus deprecates the "adi,adxl34x" compatible string
->     by removing it the DT trivial devices list, and the second patch
->     then adds an OF match table to the adxl34x driver.
-> 
-> Thanks for applying!
+This patch adds support for the APM X-Gene SoC EDAC driver for DT.
 
-Applied and sorry for the delay.
+v11:
+* Update DT binding documnetation with additional memory controller and PMD
+  controller instance number
+* Move global MC variables to EDAC top level structure
+* Move EDAC support functions to top of file
+* Inlined some EDAC support functions
+* Remove define of CONFIG_EDAC_DEBUG where it is possible
+* Update driver to reflect additional memory controller and PMD controller
+  properties in DT
+* Update DT with additional memory controller and PMD instance number
+* Drop the stub scrub function for ARM64. You will need an EDAC code update
+  to compile.
 
--- 
-Dmitry
+v10:
+* Move regmap for CSW, MCBA, MCBB, and efuse to top driver node and add
+  accessor support functions
+* Change retrieval OF address proerty for subnode to use of_address_to_resource
+* Add COMPILE_TEST to Kconfig for EDAC_XGENE
+* Update DT binding documentation and DT node accordingly
+* Remove DT node naming and number from nodes
+
+v9:
+* Update maintainer section
+* Update binding documentation to reflect update DT binding
+* Restructure the EDAC driver such that its includes subnode for MC, PMD's,
+  and future L3's and SoC.
+* Update DT node to reflect update DT binding
+* NOTE: Temporary removed L3 and SoC. They will be added back later on.
+
+v8:
+* Change ASM_EDAC_H to __ASM_EDAC_H in file edac.h
+* Add WARN_ONCE in stub function atomic_scrub
+* Update DTS binding documentation (with only memory controller node)
+* Temporary remove L1/L2, L3, and SoC driver code and update memory driver
+  code accordingly
+
+v7:
+* Update binding documentation for memory controller, PMD, L3, and SoC EDAC
+* Change resource for PCP, CSW, MCBA, MCBB, and efuse to syscon type nodes
+  and updae driver accordingly
+* Fix clearing L2 RTO register properly
+* Fix the MODULE_DEVICE_TABLE for OF
+* Update DT accordingly to binding documentation
+
+v6:
+* Rebase to 4.0.0-rc3
+* Add memory scrub stub function and enable ARM64 EDAC support patch
+* Add bit definition defines for L2RTOS registers
+* Remove un-necessary clearing of all L1/L2 software generated registers
+* Remove wrong notification of LSU un-correctable error
+* Change L2 reporting of un-correcable error to correctable error
+* Change clearing of the L2C L2RTO registers
+* Add support for L2 HW version 1 and version 2 or above
+* Add support for L3 HW version 1 and version 2 or above
+
+v5:
+* Rebase to 3.17.rc1 (next)
+* Update binding documentation for additional SoC node binding resource
+* Enable MCU correctable and uncorrectable interrupts if not enabled by
+  firmware
+* Enable top level interrupt only after all MCU registered. Otherwise,
+  error interrupt will never get cleared by the corresponding MCU.
+* Remove clearing of L1 and L2 errors during initialization time. Otherwise,
+  they will not be captured between firmware booting and error configuration.
+* Add capture and clearing SoC register bus errors
+* Add register bus resource to SoC DT node
+
+v4:
+* Fix PMD l1/l2 error reading address due to wrong variable type
+* Fix clearing of software generated and HW errors for l1/l2
+
+v3:
+* Update binding documentation for PMD DT node and exampples
+* Add binding documentation for SoC DT node
+* Change MC, PMD, and L3C driver error injection to use debugfs
+* Add missing IRQ for MC correctable error (code and DT)
+* Use true/false where appropriate instead 1/0
+* Add bit definition for L1 MMUESR register and fully decode this error
+* Remove the un-necessary dev variable from xgene_edac_pmd_ctx structure
+* Add check for disabled PMD (code and DT)
+* Switch to edac_printk instead pr_err
+* Some minor comments update
+
+v2:
+* Add EDAC entry in MAINTAINERS for APM EDAC driver
+* Remove the MC scrub patch
+* Remove the word 'Caches' from Kconfig
+* Change all MASK defines to use BIT(x)
+* Update comment or remove them
+* Wrap error injection code around CONFIG_EDAC_DEBUG
+* Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
+* Change all function XXX_hw_init to XXX_hw_ctl
+* Fix typo 'activie'
+* Move calling function edac_mc_alloc after resource retrieval
+* Check for NULL on platform_get_resource return if reference directly
+* Add documentation for struct xgene_edac_pmd_ctx
+* Move L1 and L2 check out of function xgene_edac_pmd_check to its own
+  functions
+* Use for loop for configure each CPU of an PMD
+* Replace /2 by >> 1
+* Remove unnecessary comment on edac_device_add_device failure
+* Make mem_err_ip static const
+* Unwind EDAC register correctly if failed
+---
+Loc Ho (5):
+  arm64: Enable EDAC on ARM64
+  MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
+  Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
+    binding
+  edac: Add APM X-Gene SoC EDAC driver
+  arm64: Add APM X-Gene SoC EDAC DTS entries
+
+ .../devicetree/bindings/edac/apm-xgene-edac.txt    |   78 ++
+ MAINTAINERS                                        |    7 +
+ arch/arm64/Kconfig                                 |    1 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   83 ++
+ drivers/edac/Kconfig                               |    7 +
+ drivers/edac/Makefile                              |    1 +
+ drivers/edac/xgene_edac.c                          | 1254 ++++++++++++++++++++
+ 7 files changed, 1431 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+ create mode 100644 drivers/edac/xgene_edac.c
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
