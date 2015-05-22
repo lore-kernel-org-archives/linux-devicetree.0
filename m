@@ -1,111 +1,46 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v3 0/2] crypto: add a new driver for Marvell's CESA
-Date: Fri, 22 May 2015 14:02:17 +0000
-Message-ID: <20150522140217.GB19834@io.lakedaemon.net>
-References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/2] ARM: dts: sun7i: Add uart4_pins_b definition
+Date: Fri, 22 May 2015 16:33:03 +0200
+Message-ID: <1432305184-8589-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Jason Gunthorpe, he may be interested in this.
+From: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>
 
-On Fri, May 22, 2015 at 03:33:46PM +0200, Boris Brezillon wrote:
-> Hello,
-> 
-> This patch series adds a new driver supporting Marvell's CESA IP.
-> This driver addresses some limitations of the existing one.
-> From a performance and CPU load point of view the most important
-> limitation in the existing driver is the lack of DMA support, thus
-> preventing us from chaining crypto operations.
-> 
-> I know we usually try to adapt existing drivers instead of replacing them
-> by new ones, but after trying to refactor the mv_cesa driver I realized it
-> would take longer than writing an new one from scratch.
-> 
-> Here are the main features brought by this new driver:
-> - support for armada SoCs (up to 38x) while keeping support for older ones
->   (Orion and Kirkwood). Note that old DT bindings (those used on Orion and
->   Kirkwood platforms) are supported, or IOTW, old DTs are compatible with
->   this new driver.
-> - DMA mode to offload the CPU in case of intensive crypto usage
-> - new algorithms: SHA256, DES and 3DES
-> 
-> In addition to this driver comes a bunch of DT updates adding crypto device
-> nodes to several Marvell SoCs (those are only the tested ones, others might
-> be added later).
-> 
-> I'd like to thank Arnaud, who has carefully reviewed several iterations of
-> this driver, helped me improved my implementation, provided support for
-> several crypto algorithms, provided support for armada-370 and tested
-> the driver on different platforms, hence the SoB and dual MODULE_AUTHOR
-> in the driver code.
-> 
-> Best Regards,
-> 
-> Boris
-> 
-> Changes since v2:
-> - fixes in the cipher code (->dst_nents was assigned the ->src_nents
->   value and CBC state was overwritten by the IV after each chunk
->   operation)
-> - spit the code as suggested by Sebastian
-> 
-> Changes since v1:
-> - (suggested by Jason) kept the existing CESA driver and added a mechanism
->   to prevent the new driver from probing devices handled my the existing
->   one (Orion and Kirkwood platforms)
-> - (reported by Paul) addressed a few Kconfig and module definition issues
-> - (suggested by Andrew) added DT changes to the series
-> 
-> Arnaud Ebalard (6):
->   crypto: marvell/CESA: add Triple-DES support
->   crypto: marvell/CESA: add MD5 support
->   crypto: marvell/CESA: add SHA256 support
->   crypto: marvell/CESA: add support for Kirkwood SoCs
->   ARM: marvell/dt: add crypto node to armada 370 dtsi
->   ARM: marvell/dt: add crypto node to kirkwood dtsi
-> 
-> Boris Brezillon (10):
->   crypto: mv_cesa: request registers memory region
->   crypto: add a new driver for Marvell's CESA
->   crypto: marvell/CESA: add TDMA support
->   crypto: marvell/CESA: add DES support
->   crypto: marvell/CESA: add support for all armada SoCs
->   crypto: marvell/CESA: add allhwsupport module parameter
->   crypto: marvell/CESA: add support for Orion SoCs
->   crypto: marvell/CESA: update DT bindings documentation
->   ARM: marvell/dt: add crypto node to armada-xp.dtsi
->   ARM: marvell/dt: enable crypto on armada-xp-gp
-> 
->  .../devicetree/bindings/crypto/marvell-cesa.txt    |   46 +
->  arch/arm/boot/dts/armada-370.dtsi                  |   20 +
->  arch/arm/boot/dts/armada-xp-gp.dts                 |    4 +-
->  arch/arm/boot/dts/armada-xp.dtsi                   |   31 +
->  arch/arm/boot/dts/kirkwood.dtsi                    |    2 +-
->  drivers/crypto/Kconfig                             |   18 +
->  drivers/crypto/Makefile                            |    1 +
->  drivers/crypto/marvell/Makefile                    |    2 +
->  drivers/crypto/marvell/cesa.c                      |  543 ++++++++
->  drivers/crypto/marvell/cesa.h                      |  804 ++++++++++++
->  drivers/crypto/marvell/cipher.c                    |  769 +++++++++++
->  drivers/crypto/marvell/hash.c                      | 1349 ++++++++++++++++++++
->  drivers/crypto/marvell/tdma.c                      |  224 ++++
->  drivers/crypto/mv_cesa.c                           |   13 +-
->  14 files changed, 3816 insertions(+), 10 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/crypto/marvell-cesa.txt
->  create mode 100644 drivers/crypto/marvell/Makefile
->  create mode 100644 drivers/crypto/marvell/cesa.c
->  create mode 100644 drivers/crypto/marvell/cesa.h
->  create mode 100644 drivers/crypto/marvell/cipher.c
->  create mode 100644 drivers/crypto/marvell/hash.c
->  create mode 100644 drivers/crypto/marvell/tdma.c
-> 
-> -- 
-> 1.9.1
-> 
+Some boards (e.g. the BananaPro) use alternative pins for uart4, add a pinmux
+entry for these.
+
+Signed-off-by: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index e04cdf9..99d48b4 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -844,6 +844,13 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
++			uart4_pins_b: uart4@1 {
++				allwinner,pins = "PH4", "PH5";
++				allwinner,function = "uart4";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
+ 			uart5_pins_a: uart5@0 {
+ 				allwinner,pins = "PI10", "PI11";
+ 				allwinner,function = "uart5";
+-- 
+2.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
