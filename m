@@ -1,64 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 01/10] ASoC: qcom: make lpass driver depend on OF
-Date: Fri, 22 May 2015 15:21:49 +0200
-Message-ID: <2125335.kSmCnV68xe@wuerfel>
-References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org> <2534276.hIjFJK74Zh@wuerfel> <555F18C8.8090902@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
+Date: Fri, 22 May 2015 06:23:57 -0700
+Message-ID: <555F2DED.2010200@roeck-us.net>
+References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>	<555ECD04.6000404@offcode.fi>	<CADyBb7sZWgNnEoTfaYm6=YcbWgEYRMcaNAdX9Y7B6W9pg+gOmg@mail.gmail.com>	<555EEFDB.2030907@offcode.fi> <CADyBb7uh-6=ihfrKHBVXDzAKAE-_GqLXTPJa5_7Gw2R71pyeUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <555F18C8.8090902@linaro.org>
+In-Reply-To: <CADyBb7uh-6=ihfrKHBVXDzAKAE-_GqLXTPJa5_7Gw2R71pyeUg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>, Timo Kokkonen <timo.kokkonen@offcode.fi>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 May 2015 12:53:44 Srinivas Kandagatla wrote:
-> Thanks for looking at this patch.
-> 
-> On 22/05/15 08:24, Arnd Bergmann wrote:
-> > On Thursday 21 May 2015 22:52:41 Srinivas Kandagatla wrote:
-> >>
-> >>   config SND_SOC_LPASS_CPU
-> >>          tristate
-> >> +       depends on OF
-> >>          select REGMAP_MMIO
-> >>
-> >>   config SND_SOC_LPASS_PLATFORM
-> >>          tristate
-> >> +       depends on OF
-> >>          select REGMAP_MMIO
-> >>
-> >>   config SND_SOC_LPASS_IPQ806X
-> >>
-> >
-> > Could you instead make the drivers compile without OF being set?
-> >
-> > I see that patch 7 and 8 introduces another two options doing
-> >
-> >
-> > +config SND_SOC_LPASS_APQ8016
-> > +       tristate
-> > +       depends on SND_SOC_QCOM
-> > +       select SND_SOC_LPASS_CPU
-> > +       select SND_SOC_LPASS_PLATFORM
-> > +
-> >
-> > +config SND_SOC_APQ8016_SBC
-> > +       tristate "SoC Audio support for APQ8016 SBC platforms"
-> > +       depends on (ARCH_QCOM && SND_SOC_QCOM) || COMPILE_TEST
-> > +       select SND_SOC_LPASS_APQ8016
-> > +       help
-> >
-> > so you get an obvious build failure here when SND_SOC_APQ8016_SBC
-> > gets selected with COMPILE_TEST on a platform that does not support OF.
-> >
-> 
-> Yes, this would fail.
-> I think moving of_device_id structures in drivers under #ifdef CONFIG_OF 
-> and removing the depends on OF would fix it.
-> 
+On 05/22/2015 03:46 AM, Fu Wei wrote:
+> Hi Timo,
+>
+[ ... ]
 
-Why?
+> So I am still trying to improve pretimeout support :-)
 
-	Arnd
+Is there anything still missing from it ?
+
+> If I can make pretimeout merged, may be you can try pretimeout to
+> implement early_timeout_sec function?
+
+Not sure how one would or even could do that.
+
+Do you mean "implement early_pretimeout_sec", by any chance ?
+
+> It is up to the maintainers, I will try my best.
+>
+
+Please don't make the pretimeout concept more complicated than necessary.
+
+The smaller the patch, the more likely it is to get accepted.
+The more you change, the more difficult it is for the maintainer to,
+for example, back-port later bug fixes into earlier kernel releases
+when needed. This is why it is, for example, better to keep the
+existing watchdog_init_timeout() function instead of just replacing
+it with watchdog_init_timeouts().
+
+Try to put yourself into the maintainer's perspective: If you were
+the maintainer, would you rather accept a patch or patch set which
+maintains the existing API and doesn't require any changes to existing
+drivers, or would you accept one that changes, say, some function
+or variable names and will require manual back-ports later on if
+there is a bug fix ? Would you rather accept a patch that adds 50 lines
+of code, or one that changes another 100+ lines and rearranges everything
+along the line ?
+
+Thanks,
+Guenter
