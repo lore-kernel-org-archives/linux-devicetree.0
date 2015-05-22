@@ -1,35 +1,47 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 22 May 2015 19:34:57 +0530
-Message-ID: <20150522140457.GB7730@linux>
-References: <cover.1430394884.git.viresh.kumar@linaro.org>
- <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <20150512214224.16410.15922@quantum>
- <20150513085528.GA6994@linux>
- <555D750F.80304@ti.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Fri, 22 May 2015 16:06:17 +0200
+Message-ID: <555F37D9.3040808@suse.de>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<2282066.NWoIT9ZyLc@wuerfel>	<CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>	<13641152.Yt4ZI3oT6L@wuerfel>	<CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>	<1432285588.3929.28.camel@pengutronix.de>	<20150522091822.GF8557@lukather>	<1432289231.3929.60.camel@pengutronix.de>	<CALszF6CQ1_HQXJ8=vgytvVo2t4_ue5_nsE06HPyHMzSLrntqKg@mail.gmail.com>	<555F2A8A.5020205@suse.de> <CALszF6A=TZ_EROrfuBOAGiY3mbydC5fepWLSWrZLLt4nV9sr4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <555D750F.80304@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: rob.herring@linaro.org, Nishanth Menon <nm@ti.com>
-Cc: Michael Turquette <mike.turquette@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, arnd.bergmann@linaro.org, broonie@kernel.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CALszF6A=TZ_EROrfuBOAGiY3mbydC5fepWLSWrZLLt4nV9sr4w@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hell>
 List-Id: devicetree@vger.kernel.org
 
-On 21-05-15, 01:02, Nishanth Menon wrote:
-> This argues that clock is an input to the cpu, this is not in-correct,
-> but, it could also be argued that OPP tables are clock dependent.
-> 
-> For example, with multiple clock source options that a device might
-> choose to select from internally(by some means.. lets not just restrict
-> ourselves to just CPUs here for a moment), the tables might be
-> different. We can always debate that this then is the responsibility of
-> the driver handling the description for that device and we might want
-> possibility of vice versa as well - same OPP table used by different
-> clock source selections as well.
+Am 22.05.2015 um 15:57 schrieb Maxime Coquelin:
+> 2015-05-22 15:09 GMT+02:00 Andreas F=C3=A4rber <afaerber@suse.de>:
+>> As you should know, I did have an RCC clk driver, and there is no su=
+ch
+>> issue. The two drivers use different mechanisms for initialization. =
+And
+>> I'm pretty sure that I've already remarked that on the list, too.
+>=20
+> Yes, you use of_iomap in your clock driver [0].
 
-@Rob: Any inputs ?
+Which was inspired by the efm32 driver iirc.
 
--- 
-viresh
+> Daniel, would you accept to do the same?
+> That would remove one difference between stm32/sunxi/socfpga reset dr=
+ivers.
+>=20
+> Regards,
+> Maxime
+>=20
+> [0]: https://github.com/afaerber/linux/blob/stm32/drivers/clk/clk-stm=
+32f42xxx-rcc.c
+
+=46or the record, that still has some internal clocks that shouldn't be
+exposed.
+
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Dilip Upmanyu, Graham Norton=
+; HRB
+21284 (AG N=C3=BCrnberg)
