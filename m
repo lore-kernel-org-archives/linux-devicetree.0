@@ -1,52 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 01/10] ASoC: qcom: make lpass driver depend on OF
-Date: Fri, 22 May 2015 09:24:35 +0200
-Message-ID: <2534276.hIjFJK74Zh@wuerfel>
-References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org> <1432245161-8990-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v10 3/5] Documentation: Add documentation for the APM X-Gene SoC EDAC DTS binding
+Date: Fri, 22 May 2015 10:02:31 +0200
+Message-ID: <2511694.W7d3YRYFRf@wuerfel>
+References: <1431991481-25684-1-git-send-email-lho@apm.com> <1431991481-25684-3-git-send-email-lho@apm.com> <1431991481-25684-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432245161-8990-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431991481-25684-4-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 May 2015 22:52:41 Srinivas Kandagatla wrote:
+On Monday 18 May 2015 17:24:39 Loc Ho wrote:
+> This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
 > 
->  config SND_SOC_LPASS_CPU
->         tristate
-> +       depends on OF
->         select REGMAP_MMIO
->  
->  config SND_SOC_LPASS_PLATFORM
->         tristate
-> +       depends on OF
->         select REGMAP_MMIO
->  
->  config SND_SOC_LPASS_IPQ806X
-> 
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 
-Could you instead make the drivers compile without OF being set?
+This is starting to look pretty good. One final comment:
 
-I see that patch 7 and 8 introduces another two options doing
+> +Example:
+> +	csw: csw@7e200000 {
+> +		compatible = "syscon";
+> +		reg = <0x0 0x7e200000 0x0 0x1000>;
+> +	};
+> +
+> +	mcba: mcba@7e700000 {
+> +		compatible = "syscon";
+> +		reg = <0x0 0x7e700000 0x0 0x1000>;
+> +	};
+> +
+> +	mcbb: mcbb@7e720000 {
+> +		compatible = "syscon";
+> +		reg = <0x0 0x7e720000 0x0 0x1000>;
+> +	};
+> +
+> +	efuse: efuse@1054a000 {
+> +		compatible = "syscon";
+> +		reg = <0x0 0x1054a000 0x0 0x20>;
+> +	};
 
-
-+config SND_SOC_LPASS_APQ8016
-+       tristate
-+       depends on SND_SOC_QCOM
-+       select SND_SOC_LPASS_CPU
-+       select SND_SOC_LPASS_PLATFORM
-+
-
-+config SND_SOC_APQ8016_SBC
-+       tristate "SoC Audio support for APQ8016 SBC platforms"
-+       depends on (ARCH_QCOM && SND_SOC_QCOM) || COMPILE_TEST
-+       select SND_SOC_LPASS_APQ8016
-+       help
-
-so you get an obvious build failure here when SND_SOC_APQ8016_SBC
-gets selected with COMPILE_TEST on a platform that does not support OF.
+I think it would be helpful to assign a proper compatible string (in
+addition o syscon, not replacing it) for each of these, just in case
+we ever need to add a proper driver for one of them, or in case a
+future chip uses an unmodified edac block with a slightly different
+set of fuses or other registers that are referenced here.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
