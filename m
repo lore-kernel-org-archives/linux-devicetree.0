@@ -1,1010 +1,1550 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH v4 1/2] arm, imx6, dts: add DT for aristainetos2 board
-Date: Fri, 22 May 2015 10:25:56 +0200
-Message-ID: <1432283157-20315-1-git-send-email-hs@denx.de>
+From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/7] mmc: mediatek: Add Mediatek MMC driver
+Date: Fri, 22 May 2015 16:40:00 +0800
+Message-ID: <1432284000.23435.38.camel@mhfsdcap03>
+References: <1432017411-2996-1-git-send-email-chaotian.jing@mediatek.com>
+ <1432017411-2996-3-git-send-email-chaotian.jing@mediatek.com>
+ <CAPDyKFo5788uRqAaXUZ-OiS1XF8NPmg4tn2ipZNJdx4dci+KMQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAPDyKFo5788uRqAaXUZ-OiS1XF8NPmg4tn2ipZNJdx4dci+KMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bin Zhang =?UTF-8?Q?=28=E7=AB=A0=E6=96=8C=29?= <bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-This patch add support for the imx6dl based aristainetos2 board
-with following configuration:
+Dear Ulf,
+Thanks!
+please see my comment:
+On Tue, 2015-05-19 at 12:27 +0200, Ulf Hansson wrote:
+> On 19 May 2015 at 08:36, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Add Mediatek MMC driver code
+> > Support eMMC/SD/SDIO
+> >
+> > Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/mmc/host/Kconfig  |    8 +
+> >  drivers/mmc/host/Makefile |    1 +
+> >  drivers/mmc/host/mtk-sd.c | 1422 +++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 1431 insertions(+)
+> >  create mode 100644 drivers/mmc/host/mtk-sd.c
+> >
+> > diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> > index b1f837e..6c3dbb9 100644
+> > --- a/drivers/mmc/host/Kconfig
+> > +++ b/drivers/mmc/host/Kconfig
+> > @@ -775,3 +775,11 @@ config MMC_TOSHIBA_PCI
+> >         tristate "Toshiba Type A SD/MMC Card Interface Driver"
+> >         depends on PCI
+> >         help
+> > +
+> > +config MMC_MTK
+> > +       tristate "MediaTek SD/MMC Card Interface support"
+> > +       help
+> > +         This selects the MediaTek(R) Secure digital and Multimedia card Interface.
+> > +         If you have a machine with a integrated SD/MMC card reader, say Y or M here.
+> > +         This is needed if support for any SD/SDIO/MMC devices is required.
+> > +         If unsure, say N.
+> > diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> > index e3ab5b9..7473b79 100644
+> > --- a/drivers/mmc/host/Makefile
+> > +++ b/drivers/mmc/host/Makefile
+> > @@ -20,6 +20,7 @@ obj-$(CONFIG_MMC_SDHCI_F_SDH30)       += sdhci_f_sdh30.o
+> >  obj-$(CONFIG_MMC_SDHCI_SPEAR)  += sdhci-spear.o
+> >  obj-$(CONFIG_MMC_WBSD)         += wbsd.o
+> >  obj-$(CONFIG_MMC_AU1X)         += au1xmmc.o
+> > +obj-$(CONFIG_MMC_MTK)           += mtk-sd.o
+> >  obj-$(CONFIG_MMC_OMAP)         += omap.o
+> >  obj-$(CONFIG_MMC_OMAP_HS)      += omap_hsmmc.o
+> >  obj-$(CONFIG_MMC_ATMELMCI)     += atmel-mci.o
+> > diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> > new file mode 100644
+> > index 0000000..26e9590
+> > --- /dev/null
+> > +++ b/drivers/mmc/host/mtk-sd.c
+> > @@ -0,0 +1,1422 @@
+> > +/*
+> > + * Copyright (c) 2014-2015 MediaTek Inc.
+> > + * Author: Chaotian.Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/ioport.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/of_gpio.h>
+> > +#include <linux/pinctrl/consumer.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +#include <linux/mmc/card.h>
+> > +#include <linux/mmc/core.h>
+> > +#include <linux/mmc/host.h>
+> > +#include <linux/mmc/mmc.h>
+> > +#include <linux/mmc/sd.h>
+> > +#include <linux/mmc/sdio.h>
+> > +
+> > +#define MAX_BD_NUM          1024
+> > +
+> > +/*--------------------------------------------------------------------------*/
+> > +/* Common Definition                                                        */
+> > +/*--------------------------------------------------------------------------*/
+> > +#define MSDC_BUS_1BITS          0x0
+> > +#define MSDC_BUS_4BITS          0x1
+> > +#define MSDC_BUS_8BITS          0x2
+> > +
+> > +#define MSDC_BURST_64B          0x6
+> > +
+> > +/*--------------------------------------------------------------------------*/
+> > +/* Register Offset                                                          */
+> > +/*--------------------------------------------------------------------------*/
+> > +#define MSDC_CFG         0x0
+> > +#define MSDC_IOCON       0x04
+> > +#define MSDC_PS          0x08
+> > +#define MSDC_INT         0x0c
+> > +#define MSDC_INTEN       0x10
+> > +#define MSDC_FIFOCS      0x14
+> > +#define SDC_CFG          0x30
+> > +#define SDC_CMD          0x34
+> > +#define SDC_ARG          0x38
+> > +#define SDC_STS          0x3c
+> > +#define SDC_RESP0        0x40
+> > +#define SDC_RESP1        0x44
+> > +#define SDC_RESP2        0x48
+> > +#define SDC_RESP3        0x4c
+> > +#define SDC_BLK_NUM      0x50
+> > +#define SDC_ACMD_RESP    0x80
+> > +#define MSDC_DMA_SA      0x90
+> > +#define MSDC_DMA_CTRL    0x98
+> > +#define MSDC_DMA_CFG     0x9c
+> > +#define MSDC_PATCH_BIT   0xb0
+> > +#define MSDC_PATCH_BIT1  0xb4
+> > +#define MSDC_PAD_TUNE    0xec
+> > +
+> > +/*--------------------------------------------------------------------------*/
+> > +/* Register Mask                                                            */
+> > +/*--------------------------------------------------------------------------*/
+> > +
+> > +/* MSDC_CFG mask */
+> > +#define MSDC_CFG_MODE           (0x1 << 0)     /* RW */
+> > +#define MSDC_CFG_CKPDN          (0x1 << 1)     /* RW */
+> > +#define MSDC_CFG_RST            (0x1 << 2)     /* RW */
+> > +#define MSDC_CFG_PIO            (0x1 << 3)     /* RW */
+> > +#define MSDC_CFG_CKDRVEN        (0x1 << 4)     /* RW */
+> > +#define MSDC_CFG_BV18SDT        (0x1 << 5)     /* RW */
+> > +#define MSDC_CFG_BV18PSS        (0x1 << 6)     /* R  */
+> > +#define MSDC_CFG_CKSTB          (0x1 << 7)     /* R  */
+> > +#define MSDC_CFG_CKDIV          (0xff << 8)    /* RW */
+> > +#define MSDC_CFG_CKMOD          (0x3 << 16)    /* RW */
+> > +
+> > +/* MSDC_IOCON mask */
+> > +#define MSDC_IOCON_SDR104CKS    (0x1 << 0)     /* RW */
+> > +#define MSDC_IOCON_RSPL         (0x1 << 1)     /* RW */
+> > +#define MSDC_IOCON_DSPL         (0x1 << 2)     /* RW */
+> > +#define MSDC_IOCON_DDLSEL       (0x1 << 3)     /* RW */
+> > +#define MSDC_IOCON_DDR50CKD     (0x1 << 4)     /* RW */
+> > +#define MSDC_IOCON_DSPLSEL      (0x1 << 5)     /* RW */
+> > +#define MSDC_IOCON_W_DSPL       (0x1 << 8)     /* RW */
+> > +#define MSDC_IOCON_D0SPL        (0x1 << 16)    /* RW */
+> > +#define MSDC_IOCON_D1SPL        (0x1 << 17)    /* RW */
+> > +#define MSDC_IOCON_D2SPL        (0x1 << 18)    /* RW */
+> > +#define MSDC_IOCON_D3SPL        (0x1 << 19)    /* RW */
+> > +#define MSDC_IOCON_D4SPL        (0x1 << 20)    /* RW */
+> > +#define MSDC_IOCON_D5SPL        (0x1 << 21)    /* RW */
+> > +#define MSDC_IOCON_D6SPL        (0x1 << 22)    /* RW */
+> > +#define MSDC_IOCON_D7SPL        (0x1 << 23)    /* RW */
+> > +#define MSDC_IOCON_RISCSZ       (0x3 << 24)    /* RW */
+> > +
+> > +/* MSDC_PS mask */
+> > +#define MSDC_PS_CDEN            (0x1 << 0)     /* RW */
+> > +#define MSDC_PS_CDSTS           (0x1 << 1)     /* R  */
+> > +#define MSDC_PS_CDDEBOUNCE      (0xf << 12)    /* RW */
+> > +#define MSDC_PS_DAT             (0xff << 16)   /* R  */
+> > +#define MSDC_PS_CMD             (0x1 << 24)    /* R  */
+> > +#define MSDC_PS_WP              (0x1 << 31)    /* R  */
+> > +
+> > +/* MSDC_INT mask */
+> > +#define MSDC_INT_MMCIRQ         (0x1 << 0)     /* W1C */
+> > +#define MSDC_INT_CDSC           (0x1 << 1)     /* W1C */
+> > +#define MSDC_INT_ACMDRDY        (0x1 << 3)     /* W1C */
+> > +#define MSDC_INT_ACMDTMO        (0x1 << 4)     /* W1C */
+> > +#define MSDC_INT_ACMDCRCERR     (0x1 << 5)     /* W1C */
+> > +#define MSDC_INT_DMAQ_EMPTY     (0x1 << 6)     /* W1C */
+> > +#define MSDC_INT_SDIOIRQ        (0x1 << 7)     /* W1C */
+> > +#define MSDC_INT_CMDRDY         (0x1 << 8)     /* W1C */
+> > +#define MSDC_INT_CMDTMO         (0x1 << 9)     /* W1C */
+> > +#define MSDC_INT_RSPCRCERR      (0x1 << 10)    /* W1C */
+> > +#define MSDC_INT_CSTA           (0x1 << 11)    /* R */
+> > +#define MSDC_INT_XFER_COMPL     (0x1 << 12)    /* W1C */
+> > +#define MSDC_INT_DXFER_DONE     (0x1 << 13)    /* W1C */
+> > +#define MSDC_INT_DATTMO         (0x1 << 14)    /* W1C */
+> > +#define MSDC_INT_DATCRCERR      (0x1 << 15)    /* W1C */
+> > +#define MSDC_INT_ACMD19_DONE    (0x1 << 16)    /* W1C */
+> > +#define MSDC_INT_DMA_BDCSERR    (0x1 << 17)    /* W1C */
+> > +#define MSDC_INT_DMA_GPDCSERR   (0x1 << 18)    /* W1C */
+> > +#define MSDC_INT_DMA_PROTECT    (0x1 << 19)    /* W1C */
+> > +
+> > +/* MSDC_INTEN mask */
+> > +#define MSDC_INTEN_MMCIRQ       (0x1 << 0)     /* RW */
+> > +#define MSDC_INTEN_CDSC         (0x1 << 1)     /* RW */
+> > +#define MSDC_INTEN_ACMDRDY      (0x1 << 3)     /* RW */
+> > +#define MSDC_INTEN_ACMDTMO      (0x1 << 4)     /* RW */
+> > +#define MSDC_INTEN_ACMDCRCERR   (0x1 << 5)     /* RW */
+> > +#define MSDC_INTEN_DMAQ_EMPTY   (0x1 << 6)     /* RW */
+> > +#define MSDC_INTEN_SDIOIRQ      (0x1 << 7)     /* RW */
+> > +#define MSDC_INTEN_CMDRDY       (0x1 << 8)     /* RW */
+> > +#define MSDC_INTEN_CMDTMO       (0x1 << 9)     /* RW */
+> > +#define MSDC_INTEN_RSPCRCERR    (0x1 << 10)    /* RW */
+> > +#define MSDC_INTEN_CSTA         (0x1 << 11)    /* RW */
+> > +#define MSDC_INTEN_XFER_COMPL   (0x1 << 12)    /* RW */
+> > +#define MSDC_INTEN_DXFER_DONE   (0x1 << 13)    /* RW */
+> > +#define MSDC_INTEN_DATTMO       (0x1 << 14)    /* RW */
+> > +#define MSDC_INTEN_DATCRCERR    (0x1 << 15)    /* RW */
+> > +#define MSDC_INTEN_ACMD19_DONE  (0x1 << 16)    /* RW */
+> > +#define MSDC_INTEN_DMA_BDCSERR  (0x1 << 17)    /* RW */
+> > +#define MSDC_INTEN_DMA_GPDCSERR (0x1 << 18)    /* RW */
+> > +#define MSDC_INTEN_DMA_PROTECT  (0x1 << 19)    /* RW */
+> > +
+> > +/* MSDC_FIFOCS mask */
+> > +#define MSDC_FIFOCS_RXCNT       (0xff << 0)    /* R */
+> > +#define MSDC_FIFOCS_TXCNT       (0xff << 16)   /* R */
+> > +#define MSDC_FIFOCS_CLR         (0x1 << 31)    /* RW */
+> > +
+> > +/* SDC_CFG mask */
+> > +#define SDC_CFG_SDIOINTWKUP     (0x1 << 0)     /* RW */
+> > +#define SDC_CFG_INSWKUP         (0x1 << 1)     /* RW */
+> > +#define SDC_CFG_BUSWIDTH        (0x3 << 16)    /* RW */
+> > +#define SDC_CFG_SDIO            (0x1 << 19)    /* RW */
+> > +#define SDC_CFG_SDIOIDE         (0x1 << 20)    /* RW */
+> > +#define SDC_CFG_INTATGAP        (0x1 << 21)    /* RW */
+> > +#define SDC_CFG_DTOC            (0xff << 24)   /* RW */
+> > +
+> > +/* SDC_STS mask */
+> > +#define SDC_STS_SDCBUSY         (0x1 << 0)     /* RW */
+> > +#define SDC_STS_CMDBUSY         (0x1 << 1)     /* RW */
+> > +#define SDC_STS_SWR_COMPL       (0x1 << 31)    /* RW */
+> > +
+> > +/* MSDC_DMA_CTRL mask */
+> > +#define MSDC_DMA_CTRL_START     (0x1 << 0)     /* W */
+> > +#define MSDC_DMA_CTRL_STOP      (0x1 << 1)     /* W */
+> > +#define MSDC_DMA_CTRL_RESUME    (0x1 << 2)     /* W */
+> > +#define MSDC_DMA_CTRL_MODE      (0x1 << 8)     /* RW */
+> > +#define MSDC_DMA_CTRL_LASTBUF   (0x1 << 10)    /* RW */
+> > +#define MSDC_DMA_CTRL_BRUSTSZ   (0x7 << 12)    /* RW */
+> > +
+> > +/* MSDC_DMA_CFG mask */
+> > +#define MSDC_DMA_CFG_STS        (0x1 << 0)     /* R */
+> > +#define MSDC_DMA_CFG_DECSEN     (0x1 << 1)     /* RW */
+> > +#define MSDC_DMA_CFG_AHBHPROT2  (0x2 << 8)     /* RW */
+> > +#define MSDC_DMA_CFG_ACTIVEEN   (0x2 << 12)    /* RW */
+> > +#define MSDC_DMA_CFG_CS12B16B   (0x1 << 16)    /* RW */
+> > +
+> > +/* MSDC_PATCH_BIT mask */
+> > +#define MSDC_PATCH_BIT_ODDSUPP    (0x1 <<  1)  /* RW */
+> > +#define MSDC_INT_DAT_LATCH_CK_SEL (0x7 <<  7)
+> > +#define MSDC_CKGEN_MSDC_DLY_SEL   (0x1f << 10)
+> > +#define MSDC_PATCH_BIT_IODSSEL    (0x1 << 16)  /* RW */
+> > +#define MSDC_PATCH_BIT_IOINTSEL   (0x1 << 17)  /* RW */
+> > +#define MSDC_PATCH_BIT_BUSYDLY    (0xf << 18)  /* RW */
+> > +#define MSDC_PATCH_BIT_WDOD       (0xf << 22)  /* RW */
+> > +#define MSDC_PATCH_BIT_IDRTSEL    (0x1 << 26)  /* RW */
+> > +#define MSDC_PATCH_BIT_CMDFSEL    (0x1 << 27)  /* RW */
+> > +#define MSDC_PATCH_BIT_INTDLSEL   (0x1 << 28)  /* RW */
+> > +#define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)  /* RW */
+> > +#define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)  /* RW */
+> > +
+> > +#define REQ_CMD_EIO  (0x1 << 0)
+> > +#define REQ_CMD_TMO  (0x1 << 1)
+> > +#define REQ_DAT_ERR  (0x1 << 2)
+> > +#define REQ_STOP_EIO (0x1 << 3)
+> > +#define REQ_STOP_TMO (0x1 << 4)
+> > +#define REQ_CMD_BUSY (0x1 << 5)
+> > +
+> > +#define MSDC_PREPARE_FLAG (0x1 << 0)
+> > +#define MSDC_ASYNC_FLAG (0x1 << 1)
+> > +#define MSDC_MMAP_FLAG (0x1 << 2)
+> > +
+> > +#define CMD_TIMEOUT         (HZ/10 * 5)        /* 100ms x5 */
+> > +#define DAT_TIMEOUT         (HZ    * 5)        /* 1000ms x5 */
+> > +
+> > +/*--------------------------------------------------------------------------*/
+> > +/* Descriptor Structure                                                     */
+> > +/*--------------------------------------------------------------------------*/
+> > +struct mt_gpdma_desc {
+> > +       u32 first_u32;
+> > +#define GPDMA_DESC_HWO         (0x1 << 0)
+> > +#define GPDMA_DESC_BDP         (0x1 << 1)
+> > +#define GPDMA_DESC_CHECKSUM    (0xff << 8) /* bit8 ~ bit15 */
+> > +#define GPDMA_DESC_INT         (0x1 << 16)
+> > +       u32 next;
+> > +       u32 ptr;
+> > +       u32 second_u32;
+> > +#define GPDMA_DESC_BUFLEN      (0xffff) /* bit0 ~ bit15 */
+> > +#define GPDMA_DESC_EXTLEN      (0xff << 16) /* bit16 ~ bit23 */
+> > +       u32 arg;
+> > +       u32 blknum;
+> > +       u32 cmd;
+> > +};
+> > +
+> > +struct mt_bdma_desc {
+> > +       u32 first_u32;
+> > +#define BDMA_DESC_EOL          (0x1 << 0)
+> > +#define BDMA_DESC_CHECKSUM     (0xff << 8) /* bit8 ~ bit15 */
+> > +#define BDMA_DESC_BLKPAD       (0x1 << 17)
+> > +#define BDMA_DESC_DWPAD                (0x1 << 18)
+> > +       u32 next;
+> > +       u32 ptr;
+> > +       u32 second_u32;
+> > +#define BDMA_DESC_BUFLEN       (0xffff) /* bit0 ~ bit15 */
+> > +};
+> > +
+> > +struct msdc_dma {
+> > +       struct scatterlist *sg; /* I/O scatter list */
+> > +       struct mt_gpdma_desc *gpd;              /* pointer to gpd array */
+> > +       struct mt_bdma_desc *bd;                /* pointer to bd array */
+> > +       dma_addr_t gpd_addr;    /* the physical address of gpd array */
+> > +       dma_addr_t bd_addr;     /* the physical address of bd array */
+> > +};
+> > +
+> > +struct msdc_host {
+> > +       struct device *dev;
+> > +       struct mmc_host *mmc;   /* mmc structure */
+> > +       int cmd_rsp;
+> > +
+> > +       spinlock_t lock;
+> > +       struct mmc_request *mrq;
+> > +       struct mmc_command *cmd;
+> > +       struct mmc_data *data;
+> > +       int error;
+> > +
+> > +       void __iomem *base;             /* host base address */
+> > +
+> > +       struct msdc_dma dma;    /* dma channel */
+> > +
+> > +       u32 timeout_ns;         /* data timeout ns */
+> > +       u32 timeout_clks;       /* data timeout clks */
+> > +
+> > +       struct pinctrl *pinctrl;
+> > +       struct pinctrl_state *pins_default;
+> > +       struct pinctrl_state *pins_uhs;
+> > +       struct delayed_work req_timeout;
+> > +       int irq;                /* host interrupt */
+> > +
+> > +       struct clk *src_clk;    /* msdc source clock */
+> > +       struct clk *h_clk;      /* msdc h_clk */
+> > +       u32 mclk;               /* mmc subsystem clock */
+> > +       u32 hclk;               /* host clock speed */
+> > +       u32 sclk;               /* SD/MS clock speed */
+> > +       bool ddr;
+> > +       bool vqmmc_enabled;
+> > +       bool sclk_enabled;      /* source clock enabled */
+> > +       bool hclk_enabled;      /* Hclk enabled */
+> > +};
+> > +
+> > +static void sdr_set_bits(void __iomem *reg, u32 bs)
+> > +{
+> > +       u32 val = readl(reg);
+> > +
+> > +       val |= bs;
+> > +       writel(val, reg);
+> > +}
+> > +
+> > +static void sdr_clr_bits(void __iomem *reg, u32 bs)
+> > +{
+> > +       u32 val = readl(reg);
+> > +
+> > +       val &= ~(u32)bs;
+> > +       writel(val, reg);
+> > +}
+> > +
+> > +static void sdr_set_field(void __iomem *reg, u32 field, u32 val)
+> > +{
+> > +       unsigned int tv = readl(reg);
+> > +
+> > +       tv &= ~field;
+> > +       tv |= ((val) << (ffs((unsigned int)field) - 1));
+> > +       writel(tv, reg);
+> > +}
+> > +
+> > +static void sdr_get_field(void __iomem *reg, u32 field, u32 *val)
+> > +{
+> > +       unsigned int tv = readl(reg);
+> > +
+> > +       *val = ((tv & field) >> (ffs((unsigned int)field) - 1));
+> > +}
+> > +
+> > +static void msdc_reset_hw(struct msdc_host *host)
+> > +{
+> > +       u32 val;
+> > +
+> > +       sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_RST);
+> > +       while (readl(host->base + MSDC_CFG) & MSDC_CFG_RST)
+> > +               cpu_relax();
+> > +
+> > +       sdr_set_bits(host->base + MSDC_FIFOCS, MSDC_FIFOCS_CLR);
+> > +       while (readl(host->base + MSDC_FIFOCS) & MSDC_FIFOCS_CLR)
+> > +               cpu_relax();
+> > +
+> > +       val = readl(host->base + MSDC_INT);
+> > +       writel(val, host->base + MSDC_INT);
+> > +}
+> > +
+> > +static void msdc_cmd_next(struct msdc_host *host,
+> > +               struct mmc_request *mrq, struct mmc_command *cmd);
+> > +
+> > +static u32 data_ints_mask = MSDC_INTEN_XFER_COMPL | MSDC_INTEN_DATTMO |
+> > +                       MSDC_INTEN_DATCRCERR | MSDC_INTEN_DMA_BDCSERR |
+> > +                       MSDC_INTEN_DMA_GPDCSERR | MSDC_INTEN_DMA_PROTECT;
+> > +
+> > +static u8 msdc_dma_calcs(u8 *buf, u32 len)
+> > +{
+> > +       u32 i, sum = 0;
+> > +
+> > +       for (i = 0; i < len; i++)
+> > +               sum += buf[i];
+> > +       return 0xff - (u8) sum;
+> > +}
+> > +
+> > +static inline void msdc_dma_setup(struct msdc_host *host, struct msdc_dma *dma,
+> > +               struct mmc_data *data)
+> > +{
+> > +       u32 sglen, j;
+> > +       u32 dma_address, dma_len;
+> > +       struct scatterlist *sg;
+> > +       struct mt_gpdma_desc *gpd;
+> > +       struct mt_bdma_desc *bd;
+> > +
+> > +       sglen = data->sg_len;
+> > +       sg = data->sg;
+> > +
+> > +       gpd = dma->gpd;
+> > +       bd = dma->bd;
+> > +
+> > +       /* modify gpd */
+> > +       gpd->first_u32 |= GPDMA_DESC_HWO;
+> > +       gpd->first_u32 |= GPDMA_DESC_BDP;
+> > +       /* need to clear first. use these bits to calc checksum */
+> > +       gpd->first_u32 &= ~GPDMA_DESC_CHECKSUM;
+> > +       gpd->first_u32 |= msdc_dma_calcs((u8 *) gpd, 16) << 8;
+> > +
+> > +       /* modify bd */
+> > +       for (j = 0; j < sglen; j++) {
+> > +               dma_address = sg_dma_address(sg);
+> > +               dma_len = sg_dma_len(sg);
+> > +
+> > +               /* init bd */
+> > +               bd[j].first_u32 &= ~BDMA_DESC_BLKPAD;
+> > +               bd[j].first_u32 &= ~BDMA_DESC_DWPAD;
+> > +               bd[j].ptr = (u32)dma_address;
+> > +               bd[j].second_u32 &= ~BDMA_DESC_BUFLEN;
+> > +               bd[j].second_u32 |= (dma_len & BDMA_DESC_BUFLEN);
+> > +
+> > +               if (j == sglen - 1) /* the last bd */
+> > +                       bd[j].first_u32 |= BDMA_DESC_EOL;
+> > +               else
+> > +                       bd[j].first_u32 &= ~BDMA_DESC_EOL;
+> > +
+> > +               /* checksume need to clear first */
+> > +               bd[j].first_u32 &= ~BDMA_DESC_CHECKSUM;
+> > +               bd[j].first_u32 |= msdc_dma_calcs((u8 *)(&bd[j]), 16) << 8;
+> > +               sg++;
+> > +       }
+> > +
+> > +       sdr_set_field(host->base + MSDC_DMA_CFG, MSDC_DMA_CFG_DECSEN, 1);
+> > +       sdr_set_field(host->base + MSDC_DMA_CTRL, MSDC_DMA_CTRL_BRUSTSZ,
+> > +                       MSDC_BURST_64B);
+> > +       sdr_set_field(host->base + MSDC_DMA_CTRL, MSDC_DMA_CTRL_MODE, 1);
+> > +
+> > +       writel((u32)dma->gpd_addr, host->base + MSDC_DMA_SA);
+> > +}
+> > +
+> > +static void msdc_prepare_data(struct msdc_host *host, struct mmc_request *mrq)
+> > +{
+> > +       struct mmc_data *data = mrq->data;
+> > +
+> > +       if (!(data->host_cookie & MSDC_PREPARE_FLAG)) {
+> > +               bool read = (data->flags & MMC_DATA_READ) != 0;
+> > +
+> > +               data->host_cookie |= MSDC_PREPARE_FLAG;
+> > +               dma_map_sg(host->dev, data->sg, data->sg_len,
+> > +                          read ? DMA_FROM_DEVICE : DMA_TO_DEVICE);
+> > +       }
+> > +}
+> > +
+> > +static void msdc_unprepare_data(struct msdc_host *host, struct mmc_request *mrq)
+> > +{
+> > +       struct mmc_data *data = mrq->data;
+> > +
+> > +       if (data->host_cookie & MSDC_ASYNC_FLAG)
+> > +               return;
+> > +
+> > +       if ((data->host_cookie & MSDC_PREPARE_FLAG)) {
+> > +               bool read = (data->flags & MMC_DATA_READ) != 0;
+> > +
+> > +               dma_unmap_sg(host->dev, data->sg, data->sg_len,
+> > +                            read ? DMA_FROM_DEVICE : DMA_TO_DEVICE);
+> > +               data->host_cookie &= ~MSDC_PREPARE_FLAG;
+> > +       }
+> > +}
+> > +
+> > +/* clock control primitives */
+> > +static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
+> > +{
+> > +       u32 timeout, clk_ns;
+> > +       u32 mode = 0;
+> > +
+> > +       host->timeout_ns = ns;
+> > +       host->timeout_clks = clks;
+> > +       if (host->sclk == 0) {
+> > +               timeout = 0;
+> > +       } else {
+> > +               clk_ns  = 1000000000UL / host->sclk;
+> > +               timeout = (ns + clk_ns - 1) / clk_ns + clks;
+> > +               /* in 1048576 sclk cycle unit */
+> > +               timeout = (timeout + (0x1 << 20) - 1) >> 20;
+> > +               sdr_get_field(host->base + MSDC_CFG, MSDC_CFG_CKMOD, &mode);
+> > +               /*DDR mode will double the clk cycles for data timeout */
+> > +               timeout = mode >= 2 ? timeout * 2 : timeout;
+> > +               timeout = timeout > 1 ? timeout - 1 : 0;
+> > +               timeout = timeout > 255 ? 255 : timeout;
+> > +       }
+> > +       sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, timeout);
+> > +}
+> > +
+> > +static void msdc_disable_src_clk(struct msdc_host *host)
+> > +{
+> > +       if (host->sclk_enabled) {
+> > +               clk_disable_unprepare(host->src_clk);
+> > +               host->sclk_enabled = false;
+> > +       }
+> > +}
+> > +
+> > +static void msdc_enable_src_clk(struct msdc_host *host)
+> > +{
+> > +       if (!host->sclk_enabled) {
+> > +               clk_prepare_enable(host->src_clk);
+> > +               host->sclk_enabled = true;
+> > +       }
+> > +       while (!(readl(host->base + MSDC_CFG) & MSDC_CFG_CKSTB))
+> > +               cpu_relax();
+> > +}
+> > +
+> > +static void msdc_gate_clock(struct msdc_host *host)
+> > +{
+> > +       msdc_disable_src_clk(host);
+> > +       if (!IS_ERR(host->h_clk) && host->hclk_enabled) {
+> 
+> You are invoking msdc_gate_clock() and msdc_ungate_clock() in a
+> balanced manner, thus hclk_enabled is redundant. Please remove it.
 
-CPU:   Freescale i.MX6DL rev1.1 at 792 MHz
-MReset cause: POR
-MBoard: aristaitenos2
-DRAM:  1 GiB
-NAND:  1024 MiB
-MMC:   FSL_SDHC: 0, FSL_SDHC: 1
-SF: Detected N25Q128A with page size 256 Bytes, erase size 64 KiB, total 16 MiB
-Display: lb07wv8 (800x480)
-
-As this board can used with 2 different display types, the
-differences between them are extracted into 2 DTS files, and
-the common settings are collected in a common file.
-
-Signed-off-by: Heiko Schocher <hs@denx.de>
----
-
-Changes in v4:
-- add comments from Philipp Zabel:
-  - fix some typos
-  - fix license text
-  - fix pmic compatible name to "dlg,da9063"
-  - remove clocks property from i2c4 node
-  - use simple panel driver, so remove the fsl,data-mapping
-    and fsl,data-width properties and the display-timings node.
-    need patch: "drm/panel: Add support for LG LB070WV8 800x480 7" panel"
-
-Changes in v3:
-- add comments from Shawn Guo
-  - change license to GPL/X11 dual licence
-  - rename touch node name to "touch"
-  - add DTB in Makefile
-  - remove "status = "okay"" from backlight node
-  - rename "pinctrl_ipu1_1_80Ohm_clk" to "pinctrl_ipu_disp"
-  - remove "status = "okay"" from "display@di0" node
-  - remove "dma-names;" in ecspix nodes
-  - use macro for clock ID and gpio
-  - move iomuxc to the bottom of the file
-  - configure pinctrl_backlight in the device node, not from
-    the hog group
-  - provide a proper pad configuration value rather than 0x8000000.
-  - in the iomuxc node, save one level of the sub-node
-    needs patch:
-    LinusW queued patch 5fcdf6a7ed95 ("pinctrl: imx: Allow
-    parsing DT without function nodes")
-- add comments from Philipp Zabel
-  - get rid of "fsl,panel" to connect a drm_panel to the parallel-display
-    instead switch to the common of-graph bindings.
-    need patch: "drm/imx: parallel-display: fix drm_panel support"
-    from Philipp Zabel
-
-Changes in v2:
-- add comments from Sascha Hauer:
-  - remove "clock-frequency" property in i2c nodes
-  - correct indentation in some pinctrl nodes
-  - move pin settings out of "gpiogrp" where it was possible
-    led pins not moved, as they used through sysfs
-
- arch/arm/boot/dts/Makefile                   |   2 +
- arch/arm/boot/dts/imx6dl-aristainetos2_4.dts | 158 +++++++
- arch/arm/boot/dts/imx6dl-aristainetos2_7.dts |  97 ++++
- arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi | 632 +++++++++++++++++++++++++++
- 4 files changed, 889 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-aristainetos2_4.dts
- create mode 100644 arch/arm/boot/dts/imx6dl-aristainetos2_7.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 86217db..583fbeb 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -256,6 +256,8 @@ dtb-$(CONFIG_SOC_IMX53) += \
- dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-aristainetos_4.dtb \
- 	imx6dl-aristainetos_7.dtb \
-+	imx6dl-aristainetos2_4.dtb \
-+	imx6dl-aristainetos2_7.dtb \
- 	imx6dl-cubox-i.dtb \
- 	imx6dl-dfi-fs700-m60.dtb \
- 	imx6dl-gw51xx.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts b/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts
-new file mode 100644
-index 0000000..ae50c8b
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts
-@@ -0,0 +1,158 @@
-+/*
-+ * Copyright (C) 2014 Rabeeh Khoury (rabeeh@solid-run.com)
-+ * Based on dt work by Russell King
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-aristainetos2.dtsi"
-+
-+/ {
-+	model = "aristainetos2 i.MX6 Dual Lite Board 4";
-+	compatible = "fsl,imx6dl";
-+
-+	memory {
-+		reg = <0x10000000 0x40000000>;
-+	};
-+
-+	display0: display@di0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,imx-parallel-display";
-+		interface-pix-fmt = "rgb24";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ipu_disp>;
-+
-+		port@0 {
-+			reg = <0>;
-+			display0_in: endpoint {
-+				remote-endpoint = <&ipu1_di0_disp0>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			display_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&ecspi1 {
-+	lcd_panel: display@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "lg,lg4573";
-+		spi-max-frequency = <10000000>;
-+		reg = <0>;
-+		power-on-delay = <10>;
-+
-+		display-timings {
-+			480x800p57 {
-+				native-mode;
-+				clock-frequency = <27000027>;
-+				hactive = <480>;
-+				vactive = <800>;
-+				hfront-porch = <10>;
-+				hback-porch = <59>;
-+				hsync-len = <10>;
-+				vback-porch = <15>;
-+				vfront-porch = <15>;
-+				vsync-len = <15>;
-+				hsync-active = <1>;
-+				vsync-active = <1>;
-+			};
-+		};
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&display_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	touch: touch@4b {
-+		compatible = "atmel,maxtouch";
-+		reg = <0x4b>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <9 8>;
-+	};
-+};
-+
-+&ipu1_di0_disp0 {
-+	remote-endpoint = <&display0_in>;
-+};
-+
-+&iomuxc {
-+	pinctrl_ipu_disp: ipudisp1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x31
-+			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0xE1
-+			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
-+			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
-+			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0xE1
-+			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0xE1
-+			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0xE1
-+			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0xE1
-+			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0xE1
-+			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0xE1
-+			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0xE1
-+			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0xE1
-+			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0xE1
-+			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0xE1
-+			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0xE1
-+			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0xE1
-+			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0xE1
-+			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0xE1
-+			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0xe1
-+			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0xE1
-+			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0xE1
-+			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0xE1
-+			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0xE1
-+			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0xE1
-+			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0xE1
-+			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0xE1
-+			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0xE1
-+			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0xE1
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6dl-aristainetos2_7.dts b/arch/arm/boot/dts/imx6dl-aristainetos2_7.dts
-new file mode 100644
-index 0000000..7500562
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-aristainetos2_7.dts
-@@ -0,0 +1,97 @@
-+/*
-+ * Copyright (C) 2014 Rabeeh Khoury (rabeeh@solid-run.com)
-+ * Based on dt work by Russell King
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-aristainetos2.dtsi"
-+
-+/ {
-+	model = "aristainetos2 i.MX6 Dual Lite Board 7";
-+	compatible = "fsl,imx6dl";
-+
-+	memory {
-+		reg = <0x10000000 0x40000000>;
-+	};
-+
-+	panel: panel {
-+		compatible = "lg,lb070wv8";
-+		backlight = <&backlight>;
-+		enable-gpios = <&gpio6 15 GPIO_ACTIVE_HIGH>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	touch: touch@4d {
-+		compatible = "atmel,maxtouch";
-+		reg = <0x4d>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <9 8>;
-+	};
-+};
-+
-+&ldb {
-+	status = "okay";
-+
-+	lvds-channel@0 {
-+		status = "okay";
-+
-+		port@0 {
-+			reg = <0>;
-+			lvds0_in: endpoint {
-+				remote-endpoint = <&ipu1_di0_lvds0>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+			};
-+		};
-+
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-new file mode 100644
-index 0000000..a15e77d
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-@@ -0,0 +1,632 @@
-+/*
-+ * Copyright (C) 2014 Rabeeh Khoury (rabeeh@solid-run.com)
-+ * Based on dt work by Russell King
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/imx6qdl-clock.h>
-+
-+/ {
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 5000000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <7>;
-+		enable-gpios = <&gpio6 31 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+
-+		reg_2p5v: 2p5v {
-+			compatible = "regulator-fixed";
-+			regulator-name = "2P5V";
-+			regulator-min-microvolt = <2500000>;
-+			regulator-max-microvolt = <2500000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_3p3v: 3p3v {
-+			compatible = "regulator-fixed";
-+			regulator-name = "3P3V";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_usbh1_vbus: usb-h1-vbus {
-+			compatible = "regulator-fixed";
-+			enable-active-high;
-+			gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_aristainetos2_usbh1_vbus>;
-+			regulator-name = "usb_h1_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+		};
-+
-+		reg_usbotg_vbus: usb-otg-vbus {
-+			compatible = "regulator-fixed";
-+			enable-active-high;
-+			gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_aristainetos2_usbotg_vbus>;
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "okay";
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	status = "okay";
-+};
-+
-+&ecspi1 {
-+	fsl,spi-num-chipselects = <3>;
-+	cs-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH
-+		    &gpio4 10 GPIO_ACTIVE_HIGH
-+		    &gpio4 11 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	status = "okay";
-+};
-+
-+&ecspi2 {
-+	fsl,spi-num-chipselects = <2>;
-+	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH &gpio2 27 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi2>;
-+	status = "okay";
-+};
-+
-+&ecspi4 {
-+	fsl,spi-num-chipselects = <2>;
-+	cs-gpios = <&gpio3 29 GPIO_ACTIVE_HIGH &gpio5 2 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi4>;
-+	status = "okay";
-+
-+	flash: m25p80@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "micron,n25q128a11";
-+		spi-max-frequency = <20000000>;
-+		reg = <1>;
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pmic@58 {
-+		compatible = "dlg,da9063";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <04 0x8>;
-+
-+		regulators {
-+			bcore1 {
-+				regulator-name = "bcore1";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			bcore2 {
-+				regulator-name = "bcore2";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			bpro {
-+				regulator-name = "bpro";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			bperi {
-+				regulator-name = "bperi";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			bmem {
-+				regulator-name = "bmem";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo2 {
-+				regulator-name = "ldo2";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			ldo3 {
-+				regulator-name = "ldo3";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo4 {
-+				regulator-name = "ldo4";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo5 {
-+				regulator-name = "ldo5";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo6 {
-+				regulator-name = "ldo6";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo7 {
-+				regulator-name = "ldo7";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo8 {
-+				regulator-name = "ldo8";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo9 {
-+				regulator-name = "ldo9";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo10 {
-+				regulator-name = "ldo10";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo11 {
-+				regulator-name = "ldo11";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			bio {
-+				regulator-name = "bio";
-+				regulator-always-on = <1>;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+		};
-+	};
-+
-+	tmp103: tmp103@71 {
-+		compatible = "ti,tmp103";
-+		reg = <0x71>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+
-+	expander: tca6416@20 {
-+		compatible = "ti,tca6416";
-+		reg = <0x20>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,m41t00";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c4>;
-+	status = "okay";
-+
-+	eeprom@50{
-+		compatible = "atmel,24c64";
-+		reg = <0x50>;
-+	};
-+
-+	eeprom@57{
-+		compatible = "atmel,24c64";
-+		reg = <0x57>;
-+	};
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio7 18 GPIO_ACTIVE_HIGH>;
-+	txd0-skew-ps = <0>;
-+	txd1-skew-ps = <0>;
-+	txd2-skew-ps = <0>;
-+	txd3-skew-ps = <0>;
-+	status = "okay";
-+};
-+
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	status = "okay";
-+};
-+
-+&pcie {
-+	reset-gpio = <&gpio2 16 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	fsl,uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	fsl,uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_usbh1_vbus>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usbotg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	disable-over-current;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	cd-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	cd-gpios = <&gpio4 5 GPIO_ACTIVE_HIGH>;
-+	wp-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpio>;
-+
-+	pinctrl_audmux: audmux {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD  0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC  0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD  0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS 0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D17__ECSPI1_MISO 0x100b1
-+			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI 0x100b1
-+			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK 0x100b1
-+			MX6QDL_PAD_KEY_ROW1__GPIO4_IO09 0x100b1 /* SS0# */
-+			MX6QDL_PAD_KEY_COL2__GPIO4_IO10 0x100b1 /* SS1# */
-+			MX6QDL_PAD_KEY_ROW2__GPIO4_IO11 0x100b1 /* SS2# */
-+		>;
-+	};
-+
-+	pinctrl_ecspi2: ecspi2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_OE__ECSPI2_MISO  0x100b1
-+			MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK 0x100b1
-+			MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI 0x100b1
-+			MX6QDL_PAD_EIM_RW__GPIO2_IO26   0x100b1 /* SS0# */
-+			MX6QDL_PAD_EIM_LBA__GPIO2_IO27  0x100b1 /* SS1# */
-+		>;
-+	};
-+
-+	pinctrl_ecspi4: ecspi4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D21__ECSPI4_SCLK 0x100b1
-+			MX6QDL_PAD_EIM_D22__ECSPI4_MISO 0x100b1
-+			MX6QDL_PAD_EIM_D28__ECSPI4_MOSI 0x100b1
-+			MX6QDL_PAD_EIM_D29__GPIO3_IO29  0x100b1 /* SS0# */
-+			MX6QDL_PAD_EIM_A25__GPIO5_IO02  0x100b1 /* SS1# */
-+			MX6QDL_PAD_SD4_DAT7__GPIO2_IO15 0x1b0b0 /* WP pin */
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO       0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC         0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3       0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL 0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK  0x1b0b0
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3       0x1b0b0
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CLK__FLEXCAN1_RX 0x1b0b0
-+			MX6QDL_PAD_SD3_CMD__FLEXCAN1_TX 0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_DAT0__FLEXCAN2_TX 0x1b0b0
-+			MX6QDL_PAD_SD3_DAT1__FLEXCAN2_RX 0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_gpio: gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x1b0b0 /* led enable */
-+			MX6QDL_PAD_NANDF_CS2__GPIO6_IO15	0x1b0b0 /* LCD power enable */
-+			MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x1b0b0 /* led yellow */
-+			MX6QDL_PAD_EIM_EB0__GPIO2_IO28		0x1b0b0 /* led red */
-+			MX6QDL_PAD_EIM_A24__GPIO5_IO04		0x1b0b0 /* led green */
-+			MX6QDL_PAD_EIM_EB1__GPIO2_IO29		0x1b0b0 /* led blue */
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x1b0b0 /* Profibus IRQ */
-+			MX6QDL_PAD_SD3_DAT6__GPIO6_IO18		0x1b0b0 /* FPGA IRQ */
-+			MX6QDL_PAD_EIM_A23__GPIO6_IO06		0x1b0b0 /* spi bus #2 SS driver enable */
-+			MX6QDL_PAD_GPIO_18__GPIO7_IO13		0x1b0b0 /* RST_LOC# PHY reset input (has pull-down!)*/
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x1b0b0 /* USB_OTG_ID = GPIO1_24*/
-+			MX6QDL_PAD_SD4_DAT1__GPIO2_IO09		0x1b0b0 /* Touchscreen IRQ */
-+			MX6QDL_PAD_EIM_A22__GPIO2_IO16		0x1b0b0 /* PCIe reset */
-+		>;
-+	};
-+
-+	pinctrl_gpmi_nand: gpmi-nand {
-+		fsl,pins = <
-+			MX6QDL_PAD_NANDF_CLE__NAND_CLE     0xb0b1
-+			MX6QDL_PAD_NANDF_ALE__NAND_ALE     0xb0b1
-+			MX6QDL_PAD_NANDF_WP_B__NAND_WP_B   0xb0b1
-+			MX6QDL_PAD_NANDF_RB0__NAND_READY_B 0xb000
-+			MX6QDL_PAD_NANDF_CS0__NAND_CE0_B   0xb0b1
-+			MX6QDL_PAD_SD4_CMD__NAND_RE_B      0xb0b1
-+			MX6QDL_PAD_SD4_CLK__NAND_WE_B      0xb0b1
-+			MX6QDL_PAD_NANDF_D0__NAND_DATA00   0xb0b1
-+			MX6QDL_PAD_NANDF_D1__NAND_DATA01   0xb0b1
-+			MX6QDL_PAD_NANDF_D2__NAND_DATA02   0xb0b1
-+			MX6QDL_PAD_NANDF_D3__NAND_DATA03   0xb0b1
-+			MX6QDL_PAD_NANDF_D4__NAND_DATA04   0xb0b1
-+			MX6QDL_PAD_NANDF_D5__NAND_DATA05   0xb0b1
-+			MX6QDL_PAD_NANDF_D6__NAND_DATA06   0xb0b1
-+			MX6QDL_PAD_NANDF_D7__NAND_DATA07   0xb0b1
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA 0x4001b8b1
-+			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL 0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_5__I2C3_SCL 0x4001b8b1
-+			MX6QDL_PAD_GPIO_6__I2C3_SDA 0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_7__I2C4_SCL 0x4001b8b1
-+			MX6QDL_PAD_GPIO_8__I2C4_SDA 0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_pwm1: pwm1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_9__PWM1_OUT	0x1b0b0
-+			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31	0x1b0b0 /* backlight enable */
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
-+			MX6QDL_PAD_EIM_D20__UART1_RTS_B		0x1b0b1
-+			MX6QDL_PAD_EIM_D19__UART1_CTS_B		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D26__UART2_TX_DATA 0x1b0b1
-+			MX6QDL_PAD_EIM_D27__UART2_RX_DATA 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D24__UART3_TX_DATA 0x1b0b1
-+			MX6QDL_PAD_EIM_D25__UART3_RX_DATA 0x1b0b1
-+			MX6QDL_PAD_EIM_D31__UART3_RTS_B	  0x1b0b1
-+			MX6QDL_PAD_EIM_D23__UART3_CTS_B	  0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA 0x1b0b1
-+			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg: usbotggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+		>;
-+	};
-+
-+	pinctrl_aristainetos2_usbh1_vbus: aristainetos-usbh1-vbus {
-+		fsl,pins = <MX6QDL_PAD_GPIO_0__USB_H1_PWR 0x130b0>;
-+	};
-+
-+	pinctrl_aristainetos2_usbotg_vbus: aristainetos-usbotg-vbus {
-+		fsl,pins = <MX6QDL_PAD_KEY_ROW4__USB_OTG_PWR 0x130b0>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17059
-+			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10059
-+			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17059
-+			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17059
-+			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17059
-+			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
-+			MX6QDL_PAD_ENET_RXD0__GPIO1_IO27	0x1b0b0 /* SD1 card detect input */
-+			MX6QDL_PAD_DI0_PIN4__GPIO4_IO20		0x1b0b0 /* SD1 write protect input */
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD    0x71
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK    0x71
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0 0x71
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1 0x71
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2 0x71
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x71
-+			MX6QDL_PAD_SD3_RST__GPIO7_IO08		0x1b0b0 /* SD2 level shifter output enable */
-+			MX6QDL_PAD_GPIO_19__GPIO4_IO05		0x1b0b0 /* SD2 card detect input */
-+			MX6QDL_PAD_SD4_DAT2__GPIO2_IO10		0x1b0b0 /* SD2 write protect input */
-+		>;
-+	};
-+};
--- 
-2.1.0
+on drv->probe(), already invoke the msdc_ungate_clock(), so, when the
+runtime pm resume invoke the msdc_ungate_clock(), the hclk already
+enabled.
+> 
+> > +               clk_disable_unprepare(host->h_clk);
+> > +               host->hclk_enabled = false;
+> > +       }
+> > +}
+> > +
+> > +static void msdc_ungate_clock(struct msdc_host *host)
+> > +{
+> > +       if (!IS_ERR(host->h_clk) && !host->hclk_enabled) {
+> > +               clk_prepare_enable(host->h_clk);
+> > +               host->hclk_enabled = true;
+> > +       }
+> > +       msdc_enable_src_clk(host);
+> > +}
+> > +
+> > +static void msdc_set_mclk(struct msdc_host *host, int ddr, u32 hz)
+> > +{
+> > +       u32 mode;
+> > +       u32 flags;
+> > +       u32 div;
+> > +       u32 sclk;
+> > +       u32 hclk = host->hclk;
+> > +
+> > +       if (!hz) {
+> > +               dev_dbg(host->dev, "set mclk to 0\n");
+> > +               host->mclk = 0;
+> > +               msdc_disable_src_clk(host);
+> 
+> So this will trigger a clk_disable_unprepare() of the src_clk, if
+> possible would rather not do that here.
+> 
+> I assume it's possible to gate the clock by updating a MSDC register
+> instead!? That would be prefereable since then you can leave clock
+> gating/ungating via the clk API, to be dealt from runtime PM. That
+> would also make "sclk_enabled" in the struct msdc_host redundant.
+> 
+> Adopting to above, obviously requires MSDC to be able to ungate the
+> clock by also updating a MSDC register. I assume that's possible as
+> well!?
+> 
+We can set the bit1 of MSDC_CFG, when this bit is 0, the bus clock was
+gated to 0 if no command or data is transmitted.
+And, from our designer, when we operate the MSDC register, we need make
+sure both HCLK and source are enabled, if source clock was disabled,
+write some MSDC registers will have no effect(eg. send CMD, without
+source clock, not only cannot send CMD, but also cannot get CMD timeout
+interrupt.)
+> > +               return;
+> > +       }
+> > +
+> > +       flags = readl(host->base + MSDC_INTEN);
+> > +       sdr_clr_bits(host->base + MSDC_INTEN, flags);
+> > +       if (ddr) { /* may need to modify later */
+> > +               mode = 0x2; /* ddr mode and use divisor */
+> > +               if (hz >= (hclk >> 2)) {
+> > +                       div = 0; /* mean div = 1/4 */
+> > +                       sclk = hclk >> 2; /* sclk = clk / 4 */
+> > +               } else {
+> > +                       div = (hclk + ((hz << 2) - 1)) / (hz << 2);
+> > +                       sclk = (hclk >> 2) / div;
+> > +                       div = (div >> 1);
+> > +               }
+> > +       } else if (hz >= hclk) {
+> > +               mode = 0x1; /* no divisor */
+> > +               div = 0;
+> > +               sclk = hclk;
+> > +       } else {
+> > +               mode = 0x0; /* use divisor */
+> > +               if (hz >= (hclk >> 1)) {
+> > +                       div = 0; /* mean div = 1/2 */
+> > +                       sclk = hclk >> 1; /* sclk = clk / 2 */
+> > +               } else {
+> > +                       div = (hclk + ((hz << 2) - 1)) / (hz << 2);
+> > +                       sclk = (hclk >> 2) / div;
+> > +               }
+> > +       }
+> > +       sdr_set_field(host->base + MSDC_CFG, MSDC_CFG_CKMOD | MSDC_CFG_CKDIV,
+> > +                       (mode << 8) | (div % 0xff));
+> > +       msdc_enable_src_clk(host);
+> > +       host->sclk = sclk;
+> > +       host->mclk = hz;
+> > +       host->ddr = ddr;
+> > +       /* need because clk changed. */
+> > +       msdc_set_timeout(host, host->timeout_ns, host->timeout_clks);
+> > +       sdr_set_bits(host->base + MSDC_INTEN, flags);
+> > +
+> > +       dev_dbg(host->dev, "sclk: %d, ddr: %d\n", host->sclk, ddr);
+> > +}
+> > +
+> > +static inline u32 msdc_cmd_find_resp(struct msdc_host *host,
+> > +               struct mmc_request *mrq, struct mmc_command *cmd)
+> > +{
+> > +       u32 resp;
+> > +
+> > +       switch (mmc_resp_type(cmd)) {
+> > +               /* Actually, R1, R5, R6, R7 are the same */
+> > +       case MMC_RSP_R1:
+> > +               resp = 0x1;
+> > +               break;
+> > +       case MMC_RSP_R1B:
+> > +               resp = 0x7;
+> > +               break;
+> > +       case MMC_RSP_R2:
+> > +               resp = 0x2;
+> > +               break;
+> > +       case MMC_RSP_R3:
+> > +               resp = 0x3;
+> > +               break;
+> > +       case MMC_RSP_NONE:
+> > +       default:
+> > +               resp = 0x0;
+> > +               break;
+> > +       }
+> > +
+> > +       return resp;
+> > +}
+> > +
+> > +static inline u32 msdc_cmd_prepare_raw_cmd(struct msdc_host *host,
+> > +               struct mmc_request *mrq, struct mmc_command *cmd)
+> > +{
+> > +       /* rawcmd :
+> > +        * vol_swt << 30 | auto_cmd << 28 | blklen << 16 | go_irq << 15 |
+> > +        * stop << 14 | rw << 13 | dtype << 11 | rsptyp << 7 | brk << 6 | opcode
+> > +        */
+> > +       u32 opcode = cmd->opcode;
+> > +       u32 resp = msdc_cmd_find_resp(host, mrq, cmd);
+> > +       u32 rawcmd = (opcode & 0x3f) | ((resp & 0x7) << 7);
+> > +
+> > +       host->cmd_rsp = resp;
+> > +
+> > +       if ((opcode == SD_IO_RW_DIRECT && cmd->flags == (unsigned int) -1) ||
+> > +                       opcode == MMC_STOP_TRANSMISSION)
+> > +               rawcmd |= (0x1 << 14);
+> > +       else if (opcode == SD_SWITCH_VOLTAGE)
+> > +               rawcmd |= (0x1 << 30);
+> > +       else if ((opcode == SD_APP_SEND_SCR) ||
+> > +                       (opcode == SD_APP_SEND_NUM_WR_BLKS) ||
+> > +                       (opcode == SD_SWITCH &&
+> > +                       (mmc_cmd_type(cmd) == MMC_CMD_ADTC)) ||
+> > +                       (opcode == SD_APP_SD_STATUS &&
+> > +                       (mmc_cmd_type(cmd) == MMC_CMD_ADTC)) ||
+> > +                       (opcode == MMC_SEND_EXT_CSD &&
+> > +                       (mmc_cmd_type(cmd) == MMC_CMD_ADTC)))
+> > +               rawcmd |= (0x1 << 11);
+> > +
+> > +       if (cmd->data) {
+> > +               struct mmc_data *data = cmd->data;
+> > +
+> > +               if (mmc_op_multi(opcode)) {
+> > +                       if (mmc_card_mmc(host->mmc->card) && mrq->sbc &&
+> > +                                       !(mrq->sbc->arg & 0xFFFF0000))
+> > +                               rawcmd |= 0x2 << 28; /* AutoCMD23 */
+> > +               }
+> > +
+> > +               rawcmd |= ((data->blksz & 0xFFF) << 16);
+> > +               if (data->flags & MMC_DATA_WRITE)
+> > +                       rawcmd |= (0x1 << 13);
+> > +               if (data->blocks > 1)
+> > +                       rawcmd |= (0x2 << 11);
+> > +               else
+> > +                       rawcmd |= (0x1 << 11);
+> > +               /* Always use dma mode */
+> > +               sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_PIO);
+> > +
+> > +               if (((host->timeout_ns != data->timeout_ns) ||
+> > +                               (host->timeout_clks != data->timeout_clks))) {
+> > +                       msdc_set_timeout(host, data->timeout_ns,
+> > +                                       data->timeout_clks);
+> > +               }
+> > +
+> > +               writel(data->blocks, host->base + SDC_BLK_NUM);
+> > +       }
+> > +       return rawcmd;
+> > +}
+> > +
+> > +static void msdc_start_data(struct msdc_host *host, struct mmc_request *mrq,
+> > +                           struct mmc_command *cmd, struct mmc_data *data)
+> > +{
+> > +       bool read;
+> > +       unsigned long flags;
+> > +
+> > +       spin_lock_irqsave(&host->lock, flags);
+> > +       if (!host->data)
+> > +               host->data = data;
+> > +       else
+> > +               WARN_ON(host->data);
+> > +       spin_unlock_irqrestore(&host->lock, flags);
+> > +       read = data->flags & MMC_DATA_READ;
+> > +
+> > +       mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+> > +       msdc_dma_setup(host, &host->dma, data);
+> > +       sdr_set_bits(host->base + MSDC_INTEN, data_ints_mask);
+> > +       mb(); /* wait for pending IO to finish */
+> > +       sdr_set_field(host->base + MSDC_DMA_CTRL, MSDC_DMA_CTRL_START, 1);
+> > +       dev_dbg(host->dev, "DMA start\n");
+> > +       dev_dbg(host->dev, "%s: cmd=%d DMA data: %d blocks; read=%d\n",
+> > +                       __func__, cmd->opcode, data->blocks, read);
+> > +}
+> > +
+> > +static int msdc_auto_cmd_done(struct msdc_host *host, int events,
+> > +               struct mmc_command *cmd)
+> > +{
+> > +       u32 *rsp = cmd->resp;
+> > +
+> > +       rsp[0] = readl(host->base + SDC_ACMD_RESP);
+> > +
+> > +       if (events & MSDC_INT_ACMDRDY) {
+> > +               cmd->error = 0;
+> > +       } else {
+> > +               msdc_reset_hw(host);
+> > +               if (events & MSDC_INT_ACMDCRCERR) {
+> > +                       cmd->error = -EILSEQ;
+> > +                       host->error |= REQ_STOP_EIO;
+> > +               } else if (events & MSDC_INT_ACMDTMO) {
+> > +                       cmd->error = -ETIMEDOUT;
+> > +                       host->error |= REQ_STOP_TMO;
+> > +               }
+> > +               dev_err(host->dev,
+> > +                       "%s: AUTO_CMD%d arg=%08X; rsp %08X; cmd_error=%d\n",
+> > +                       __func__, cmd->opcode, cmd->arg, rsp[0], cmd->error);
+> > +       }
+> > +       return cmd->error;
+> > +}
+> > +
+> > +static void msdc_track_cmd_data(struct msdc_host *host,
+> > +                               struct mmc_command *cmd, struct mmc_data *data)
+> > +{
+> > +       if (host->error)
+> > +               dev_dbg(host->dev, "%s: cmd=%d arg=%08X; host->error=0x%08X\n",
+> > +                       __func__, cmd->opcode, cmd->arg, host->error);
+> > +}
+> > +
+> > +static void msdc_request_done(struct msdc_host *host, struct mmc_request *mrq)
+> > +{
+> > +       unsigned long flags;
+> > +       bool ret;
+> > +
+> > +       ret = cancel_delayed_work(&host->req_timeout);
+> > +       if (!ret) {
+> > +               /* delay work already running */
+> > +               return;
+> > +       }
+> > +       spin_lock_irqsave(&host->lock, flags);
+> > +       host->mrq = NULL;
+> > +       spin_unlock_irqrestore(&host->lock, flags);
+> > +
+> > +       msdc_track_cmd_data(host, mrq->cmd, mrq->data);
+> > +       if (mrq->data)
+> > +               msdc_unprepare_data(host, mrq);
+> > +       mmc_request_done(host->mmc, mrq);
+> > +}
+> > +
+> > +/* returns true if command is fully handled; returns false otherwise */
+> > +static bool msdc_cmd_done(struct msdc_host *host, int events,
+> > +                         struct mmc_request *mrq, struct mmc_command *cmd)
+> > +{
+> > +       bool done = false;
+> > +       bool sbc_error;
+> > +       unsigned long flags;
+> > +       u32 *rsp = cmd->resp;
+> > +
+> > +       if (mrq->sbc && cmd == mrq->cmd &&
+> > +                       (events & (MSDC_INT_ACMDRDY | MSDC_INT_ACMDCRCERR
+> > +                                  | MSDC_INT_ACMDTMO)))
+> > +               msdc_auto_cmd_done(host, events, mrq->sbc);
+> > +
+> > +       sbc_error = mrq->sbc && mrq->sbc->error;
+> > +
+> > +       if (!sbc_error && !(events & (MSDC_INT_CMDRDY
+> > +                                       | MSDC_INT_RSPCRCERR
+> > +                                       | MSDC_INT_CMDTMO)))
+> > +               return done;
+> > +
+> > +       spin_lock_irqsave(&host->lock, flags);
+> > +       done = !host->cmd;
+> > +       host->cmd = NULL;
+> > +       spin_unlock_irqrestore(&host->lock, flags);
+> > +
+> > +       if (done)
+> > +               return true;
+> > +
+> > +       sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INTEN_CMDRDY |
+> > +                       MSDC_INTEN_RSPCRCERR | MSDC_INTEN_CMDTMO |
+> > +                       MSDC_INTEN_ACMDRDY | MSDC_INTEN_ACMDCRCERR |
+> > +                       MSDC_INTEN_ACMDTMO);
+> > +       writel(cmd->arg, host->base + SDC_ARG);
+> > +
+> > +       switch (host->cmd_rsp) {
+> > +       case 0:
+> > +               break;
+> > +       case 2:
+> > +               rsp[0] = readl(host->base + SDC_RESP3);
+> > +               rsp[1] = readl(host->base + SDC_RESP2);
+> > +               rsp[2] = readl(host->base + SDC_RESP1);
+> > +               rsp[3] = readl(host->base + SDC_RESP0);
+> > +               break;
+> > +       default: /* Response types 1, 3, 4, 5, 6, 7(1b) */
+> > +               rsp[0] = readl(host->base + SDC_RESP0);
+> > +               break;
+> > +       }
+> > +       if (!sbc_error && !(events & MSDC_INT_CMDRDY)) {
+> > +               msdc_reset_hw(host);
+> > +               if (events & MSDC_INT_RSPCRCERR) {
+> > +                       cmd->error = -EILSEQ;
+> > +                       host->error |= REQ_CMD_EIO;
+> > +               } else if (events & MSDC_INT_CMDTMO) {
+> > +                       cmd->error = -ETIMEDOUT;
+> > +                       host->error |= REQ_CMD_TMO;
+> > +               }
+> > +       }
+> > +       if (cmd->error)
+> > +               dev_dbg(host->dev,
+> > +                               "%s: cmd=%d arg=%08X; rsp %08X; cmd_error=%d\n",
+> > +                               __func__, cmd->opcode, cmd->arg, rsp[0],
+> > +                               cmd->error);
+> > +
+> > +       msdc_cmd_next(host, mrq, cmd);
+> > +       done = true;
+> > +       return done;
+> > +}
+> > +
+> > +static inline bool msdc_cmd_is_ready(struct msdc_host *host,
+> > +               struct mmc_request *mrq, struct mmc_command *cmd)
+> > +{
+> > +       unsigned long tmo = jiffies + msecs_to_jiffies(20);
+> > +
+> > +       while ((readl(host->base + SDC_STS) & SDC_STS_CMDBUSY)
+> > +                       && time_before(jiffies, tmo))
+> > +               continue;
+> > +
+> > +       if (readl(host->base + SDC_STS) & SDC_STS_CMDBUSY) {
+> > +               dev_err(host->dev, "CMD bus busy detected\n");
+> > +               host->error |= REQ_CMD_BUSY;
+> > +               msdc_cmd_done(host, MSDC_INT_CMDTMO, mrq, cmd);
+> > +               return false;
+> > +       }
+> > +
+> > +       if (mmc_resp_type(cmd) == MMC_RSP_R1B || cmd->data) {
+> > +               /* R1B or with data, should check SDCBUSY */
+> > +               while (readl(host->base + SDC_STS) & SDC_STS_SDCBUSY)
+> > +                       cpu_relax();
+> > +       }
+> 
+> MSDC seems to be handling card busy detection in HW, right?
+> 
+Do not have this ability, HW only know if CMD/DAT is low, but do not
+have any interrupt for it,
+> If so, you should enable MMC_CAP_WAIT_WHILE_BUSY and set
+> "max_busy_timeout" to DAT_TIMEOUT to inform the mmc core about it.
+> 
+> > +       return true;
+> > +}
+> > +
+> > +static void msdc_start_command(struct msdc_host *host,
+> > +               struct mmc_request *mrq, struct mmc_command *cmd)
+> > +{
+> > +       u32 rawcmd;
+> > +       unsigned long flags;
+> > +
+> > +       spin_lock_irqsave(&host->lock, flags);
+> > +       if (host->cmd)
+> > +               WARN_ON(host->cmd);
+> > +       else
+> > +               host->cmd = cmd;
+> > +       spin_unlock_irqrestore(&host->lock, flags);
+> > +
+> > +       if (!msdc_cmd_is_ready(host, mrq, cmd))
+> > +               return;
+> > +
+> > +       if ((readl(host->base + MSDC_FIFOCS) & MSDC_FIFOCS_TXCNT) >> 16
+> > +               || (readl(host->base + MSDC_FIFOCS) & MSDC_FIFOCS_RXCNT)) {
+> > +               dev_err(host->dev, "TX/RX FIFO non-empty before start of IO. Reset\n");
+> > +               msdc_reset_hw(host);
+> > +       }
+> > +
+> > +       cmd->error = 0;
+> > +       rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
+> > +       mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+> > +
+> > +       sdr_set_bits(host->base + MSDC_INTEN, MSDC_INTEN_CMDRDY |
+> > +                       MSDC_INTEN_RSPCRCERR | MSDC_INTEN_CMDTMO |
+> > +                       MSDC_INTEN_ACMDRDY | MSDC_INTEN_ACMDCRCERR |
+> > +                       MSDC_INTEN_ACMDTMO);
+> > +       writel(cmd->arg, host->base + SDC_ARG);
+> > +       writel(rawcmd, host->base + SDC_CMD);
+> > +}
+> > +
+> > +static void msdc_cmd_next(struct msdc_host *host,
+> > +               struct mmc_request *mrq, struct mmc_command *cmd)
+> > +{
+> > +       if (cmd->error || (mrq->sbc && mrq->sbc->error))
+> > +               msdc_request_done(host, mrq);
+> > +       else if (cmd == mrq->sbc)
+> > +               msdc_start_command(host, mrq, mrq->cmd);
+> > +       else if (!cmd->data)
+> > +               msdc_request_done(host, mrq);
+> > +       else
+> > +               msdc_start_data(host, mrq, cmd, cmd->data);
+> > +}
+> > +
+> > +static void msdc_ops_request(struct mmc_host *mmc, struct mmc_request *mrq)
+> > +{
+> > +       unsigned long flags;
+> > +       struct msdc_host *host = mmc_priv(mmc);
+> > +
+> > +       host->error = 0;
+> > +
+> > +       spin_lock_irqsave(&host->lock, flags);
+> > +       if (!host->mrq)
+> > +               host->mrq = mrq;
+> > +       else
+> > +               WARN_ON(host->mrq);
+> > +       spin_unlock_irqrestore(&host->lock, flags);
+> > +
+> > +       if (mrq->data)
+> > +               msdc_prepare_data(host, mrq);
+> > +
+> > +       /* if SBC is required, we have HW option and SW option.
+> > +        * if HW option is enabled, and SBC does not have "special" flags,
+> > +        * use HW option,  otherwise use SW option
+> > +        */
+> > +       if (mrq->sbc && (!mmc_card_mmc(mmc->card) ||
+> > +           (mrq->sbc->arg & 0xFFFF0000)))
+> > +               msdc_start_command(host, mrq, mrq->sbc);
+> > +       else
+> > +               msdc_start_command(host, mrq, mrq->cmd);
+> > +}
+> > +
+> > +static void msdc_pre_req(struct mmc_host *mmc, struct mmc_request *mrq,
+> > +               bool is_first_req)
+> > +{
+> > +       struct msdc_host *host = mmc_priv(mmc);
+> > +       struct mmc_data *data = mrq->data;
+> > +
+> > +       if (!data)
+> > +               return;
+> > +
+> > +       msdc_prepare_data(host, mrq);
+> > +       data->host_cookie |= MSDC_ASYNC_FLAG;
+> > +}
+> > +
+> > +static void msdc_post_req(struct mmc_host *mmc, struct mmc_request *mrq,
+> > +               int err)
+> > +{
+> > +       struct msdc_host *host = mmc_priv(mmc);
+> > +       struct mmc_data *data;
+> > +
+> > +       data = mrq->data;
+> > +       if (!data)
+> > +               return;
+> > +       if (data->host_cookie) {
+> > +               data->host_cookie &= ~MSDC_ASYNC_FLAG;
+> > +               msdc_unprepare_data(host, mrq);
+> > +       }
+> > +}
+> > +
+> > +static void msdc_data_xfer_next(struct msdc_host *host,
+> > +                               struct mmc_request *mrq, struct mmc_data *data)
+> > +{
+> > +       if (mmc_op_multi(mrq->cmd->opcode) && mrq->stop && !mrq->stop->error &&
+> > +                       (!data->bytes_xfered || !mrq->sbc))
+> > +               msdc_start_command(host, mrq, mrq->stop);
+> > +       else
+> > +               msdc_request_done(host, mrq);
+> > +}
+> > +
+> > +static bool msdc_data_xfer_done(struct msdc_host *host, u32 events,
+> > +                               struct mmc_request *mrq, struct mmc_data *data)
+> > +{
+> > +       struct mmc_command *stop = data->stop;
+> > +       unsigned long flags;
+> > +       bool done;
+> > +
+> > +       bool check_data = (events &
+> > +           (MSDC_INT_XFER_COMPL | MSDC_INT_DATCRCERR | MSDC_INT_DATTMO
+> > +            | MSDC_INT_DMA_BDCSERR | MSDC_INT_DMA_GPDCSERR
+> > +            | MSDC_INT_DMA_PROTECT));
+> > +
+> > +       spin_lock_irqsave(&host->lock, flags);
+> > +       done = !host->data;
+> > +       if (check_data)
+> > +               host->data = NULL;
+> > +       spin_unlock_irqrestore(&host->lock, flags);
+> > +
+> > +       if (done)
+> > +               return true;
+> > +
+> > +       if (check_data || (stop && stop->error)) {
+> > +               dev_dbg(host->dev, "DMA status: 0x%8X\n",
+> > +                               readl(host->base + MSDC_DMA_CFG));
+> > +               sdr_set_field(host->base + MSDC_DMA_CTRL, MSDC_DMA_CTRL_STOP,
+> > +                               1);
+> > +               while (readl(host->base + MSDC_DMA_CFG) & MSDC_DMA_CFG_STS)
+> > +                       ;
+> > +               mb(); /* wait for pending IO to finish */
+> > +               sdr_clr_bits(host->base + MSDC_INTEN, data_ints_mask);
+> > +               dev_dbg(host->dev, "DMA stop\n");
+> > +
+> > +               if ((events & MSDC_INT_XFER_COMPL) && (!stop || !stop->error)) {
+> > +                       data->bytes_xfered = data->blocks * data->blksz;
+> > +               } else {
+> > +                       dev_err(host->dev, "interrupt events: %x\n", events);
+> > +                       msdc_reset_hw(host);
+> > +                       host->error |= REQ_DAT_ERR;
+> > +                       data->bytes_xfered = 0;
+> > +
+> > +                       if (events & MSDC_INT_DATTMO)
+> > +                               data->error = -ETIMEDOUT;
+> > +
+> > +                       dev_err(host->dev, "%s: cmd=%d; blocks=%d",
+> > +                               __func__, mrq->cmd->opcode, data->blocks);
+> > +                       dev_err(host->dev, "data_error=%d xfer_size=%d\n",
+> > +                                       (int)data->error, data->bytes_xfered);
+> > +               }
+> > +
+> > +               msdc_data_xfer_next(host, mrq, data);
+> > +               done = true;
+> > +       }
+> > +       return done;
+> > +}
+> > +
+> > +static void msdc_set_buswidth(struct msdc_host *host, u32 width)
+> > +{
+> > +       u32 val = readl(host->base + SDC_CFG);
+> > +
+> > +       val &= ~SDC_CFG_BUSWIDTH;
+> > +
+> > +       switch (width) {
+> > +       default:
+> > +       case MMC_BUS_WIDTH_1:
+> > +               val |= (MSDC_BUS_1BITS << 16);
+> > +               break;
+> > +       case MMC_BUS_WIDTH_4:
+> > +               val |= (MSDC_BUS_4BITS << 16);
+> > +               break;
+> > +       case MMC_BUS_WIDTH_8:
+> > +               val |= (MSDC_BUS_8BITS << 16);
+> > +               break;
+> > +       }
+> > +
+> > +       writel(val, host->base + SDC_CFG);
+> > +       dev_dbg(host->dev, "Bus Width = %d", width);
+> > +}
+> > +
+> > +static int msdc_ops_switch_volt(struct mmc_host *mmc, struct mmc_ios *ios)
+> > +{
+> > +       struct msdc_host *host = mmc_priv(mmc);
+> > +       int min_uv, max_uv;
+> > +       int ret = 0;
+> > +
+> > +       if (!IS_ERR(mmc->supply.vqmmc)) {
+> > +               if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
+> > +                       min_uv = 3300000;
+> > +                       max_uv = 3300000;
+> > +               } else if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
+> > +                       min_uv = 1800000;
+> > +                       max_uv = 1800000;
+> > +               } else {
+> > +                       dev_err(host->dev, "Unsupported signal voltage!\n");
+> > +                       return -EINVAL;
+> > +               }
+> > +
+> > +               ret = regulator_set_voltage(mmc->supply.vqmmc, min_uv, max_uv);
+> > +               if (ret) {
+> > +                       dev_err(host->dev,
+> > +                                       "Regulator set error %d: %d - %d\n",
+> > +                                       ret, min_uv, max_uv);
+> > +               }
+> > +       }
+> > +       return ret;
+> > +}
+> > +
+> > +static int msdc_card_busy(struct mmc_host *mmc)
+> > +{
+> > +       struct msdc_host *host = mmc_priv(mmc);
+> > +       u32 status = readl(host->base + MSDC_PS);
+> > +
+> > +       /* check if any pin between dat[0:3] is low */
+> > +       if (((status >> 16) & 0xf) != 0xf)
+> > +               return 1;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static void msdc_request_timeout(struct work_struct *work)
+> > +{
+> > +       struct msdc_host *host = container_of(work, struct msdc_host,
+> > +                       req_timeout.work);
+> > +
+> > +       /* simulate HW timeout status */
+> > +       dev_err(host->dev, "%s: aborting cmd/data/mrq\n", __func__);
+> > +       if (host->mrq) {
+> > +               dev_err(host->dev, "%s: aborting mrq=%p cmd=%d\n", __func__,
+> > +                               host->mrq, host->mrq->cmd->opcode);
+> > +               if (host->cmd) {
+> > +                       dev_err(host->dev, "%s: aborting cmd=%d\n",
+> > +                                       __func__, host->cmd->opcode);
+> > +                       msdc_cmd_done(host, MSDC_INT_CMDTMO, host->mrq,
+> > +                                       host->cmd);
+> > +               } else if (host->data) {
+> > +                       dev_err(host->dev, "%s: abort data: cmd%d; %d blocks\n",
+> > +                                       __func__, host->mrq->cmd->opcode,
+> > +                                       host->data->blocks);
+> > +                       msdc_data_xfer_done(host, MSDC_INT_DATTMO, host->mrq,
+> > +                                       host->data);
+> > +               }
+> > +       }
+> > +}
+> > +
+> > +static irqreturn_t msdc_irq(int irq, void *dev_id)
+> > +{
+> > +       struct msdc_host *host = (struct msdc_host *) dev_id;
+> > +
+> > +       while (true) {
+> > +               unsigned long flags;
+> > +               struct mmc_request *mrq;
+> > +               struct mmc_command *cmd;
+> > +               struct mmc_data *data;
+> > +               u32 events, event_mask;
+> > +
+> > +               spin_lock_irqsave(&host->lock, flags);
+> > +               events = readl(host->base + MSDC_INT);
+> > +               event_mask = readl(host->base + MSDC_INTEN);
+> > +               /* clear interrupts */
+> > +               writel(events & event_mask, host->base + MSDC_INT);
+> > +
+> > +               mrq = host->mrq;
+> > +               cmd = host->cmd;
+> > +               data = host->data;
+> > +               spin_unlock_irqrestore(&host->lock, flags);
+> > +
+> > +               if (!(events & event_mask))
+> > +                       break;
+> > +
+> > +               if (!mrq) {
+> > +                       dev_err(host->dev,
+> > +                               "%s: MRQ=NULL; events=%08X; event_mask=%08X\n",
+> > +                               __func__, events, event_mask);
+> > +                       WARN_ON(1);
+> > +                       break;
+> > +               }
+> > +
+> > +               dev_dbg(host->dev, "%s: events=%08X\n", __func__, events);
+> > +
+> > +               if (cmd)
+> > +                       msdc_cmd_done(host, events, mrq, cmd);
+> > +               else if (data)
+> > +                       msdc_data_xfer_done(host, events, mrq, data);
+> > +       }
+> > +
+> > +       return IRQ_HANDLED;
+> > +}
+> > +
+> > +static void msdc_init_hw(struct msdc_host *host)
+> > +{
+> > +       u32 val;
+> > +       /* Configure to MMC/SD mode, clock free running */
+> > +       sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE);
+> > +       sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_CKPDN);
+> > +
+> > +       /* Reset */
+> > +       msdc_reset_hw(host);
+> > +
+> > +       /* Disable card detection */
+> > +       sdr_clr_bits(host->base + MSDC_PS, MSDC_PS_CDEN);
+> > +
+> > +       /* Disable and clear all interrupts */
+> > +       writel(0, host->base + MSDC_INTEN);
+> > +       val = readl(host->base + MSDC_INT);
+> > +       writel(val, host->base + MSDC_INT);
+> > +
+> > +       writel(0, host->base + MSDC_PAD_TUNE);
+> > +       writel(0, host->base + MSDC_IOCON);
+> > +       sdr_set_field(host->base + MSDC_IOCON, MSDC_IOCON_DDLSEL, 1);
+> > +       writel(0x403c004f, host->base + MSDC_PATCH_BIT);
+> > +       sdr_set_field(host->base + MSDC_PATCH_BIT, MSDC_CKGEN_MSDC_DLY_SEL, 1);
+> > +       writel(0xffff0089, host->base + MSDC_PATCH_BIT1);
+> > +       /* Configure to enable SDIO mode.
+> > +          it's must otherwise sdio cmd5 failed */
+> > +       sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIO);
+> > +
+> > +       /* disable detect SDIO device interrupt function */
+> > +       sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+> > +
+> > +       /* Configure to default data timeout */
+> > +       sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, 3);
+> > +
+> > +       dev_dbg(host->dev, "init hardware done!");
+> > +}
+> > +
+> > +static void msdc_deinit_hw(struct msdc_host *host)
+> > +{
+> > +       u32 val;
+> > +       /* Disable and clear all interrupts */
+> > +       writel(0, host->base + MSDC_INTEN);
+> > +
+> > +       val = readl(host->base + MSDC_INT);
+> > +       writel(val, host->base + MSDC_INT);
+> > +}
+> > +
+> > +/* init gpd and bd list in msdc_drv_probe */
+> > +static void msdc_init_gpd_bd(struct msdc_host *host, struct msdc_dma *dma)
+> > +{
+> > +       struct mt_gpdma_desc *gpd = dma->gpd;
+> > +       struct mt_bdma_desc *bd = dma->bd;
+> > +       int i;
+> > +
+> > +       memset(gpd, 0, sizeof(struct mt_gpdma_desc));
+> > +       gpd->next = 0; /* only one gpd */
+> > +
+> > +       gpd->first_u32 |= GPDMA_DESC_BDP; /* hwo, cs, bd pointer */
+> > +       gpd->ptr = (u32)dma->bd_addr; /* physical address */
+> > +
+> > +       memset(bd, 0, sizeof(struct mt_bdma_desc) * MAX_BD_NUM);
+> > +
+> > +       for (i = 0; i < (MAX_BD_NUM - 1); i++)
+> > +               bd[i].next = (u32)dma->bd_addr + sizeof(*bd) * (i + 1);
+> > +}
+> > +
+> > +static int timing_is_uhs(struct mmc_ios *ios)
+> > +{
+> > +       if (ios->signal_voltage != MMC_SIGNAL_VOLTAGE_330)
+> > +               return 1;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static void msdc_ops_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+> > +{
+> > +       struct msdc_host *host = mmc_priv(mmc);
+> > +       int ret;
+> > +       u32 ddr = 0;
+> > +
+> > +       if (ios->timing == MMC_TIMING_UHS_DDR50 ||
+> > +                       ios->timing == MMC_TIMING_MMC_DDR52)
+> > +               ddr = 1;
+> > +
+> > +       msdc_set_buswidth(host, ios->bus_width);
+> > +
+> > +       /* Suspend/Resume will do power off/on */
+> > +       switch (ios->power_mode) {
+> > +       case MMC_POWER_UP:
+> > +               msdc_init_hw(host);
+> > +               if (!IS_ERR(mmc->supply.vmmc)) {
+> > +                       ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc,
+> > +                                       ios->vdd);
+> > +                       if (ret) {
+> > +                               dev_err(host->dev, "Failed to set vmmc power!\n");
+> > +                               return;
+> > +                       }
+> > +               }
+> > +               break;
+> > +       case MMC_POWER_ON:
+> > +               if (!IS_ERR(mmc->supply.vqmmc) && !host->vqmmc_enabled) {
+> > +                       ret = regulator_enable(mmc->supply.vqmmc);
+> > +                       if (ret)
+> > +                               dev_err(host->dev, "Failed to set vqmmc power!\n");
+> > +                       else
+> > +                               host->vqmmc_enabled = true;
+> > +               }
+> > +               break;
+> > +       case MMC_POWER_OFF:
+> > +               if (!IS_ERR(mmc->supply.vmmc))
+> > +                       mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
+> > +
+> > +               if (!IS_ERR(mmc->supply.vqmmc) && host->vqmmc_enabled) {
+> > +                       regulator_disable(mmc->supply.vqmmc);
+> > +                       host->vqmmc_enabled = false;
+> > +               }
+> > +               break;
+> > +       default:
+> > +               break;
+> > +       }
+> > +
+> > +       /* Apply different pinctrl settings for different timing */
+> 
+> The code to change pinctrl state should be moved into msdc_ops_switch_volt().
+> 
+> Moreover, you don't need a function like timing_is_uhs(). Instead
+> check the value of ios->signal_voltage, as what msdc_ops_switch_volt()
+> already does.
+Ok, will fix at next revision,
+> 
+> > +       if (timing_is_uhs(ios))
+> > +               pinctrl_select_state(host->pinctrl, host->pins_uhs);
+> > +       else
+> > +               pinctrl_select_state(host->pinctrl, host->pins_default);
+> > +
+> > +       if (host->mclk != ios->clock || host->ddr != ddr)
+> > +               msdc_set_mclk(host, ddr, ios->clock);
+> > +}
+> > +
+> > +static struct mmc_host_ops mt_msdc_ops = {
+> > +       .post_req = msdc_post_req,
+> > +       .pre_req = msdc_pre_req,
+> > +       .request = msdc_ops_request,
+> > +       .set_ios = msdc_ops_set_ios,
+> > +       .start_signal_voltage_switch = msdc_ops_switch_volt,
+> > +       .card_busy = msdc_card_busy,
+> > +};
+> > +
+> > +static int msdc_drv_probe(struct platform_device *pdev)
+> > +{
+> > +       struct mmc_host *mmc;
+> > +       struct msdc_host *host;
+> > +       struct resource *res;
+> > +       int ret;
+> > +
+> > +       if (!pdev->dev.of_node) {
+> > +               dev_err(&pdev->dev, "No DT found\n");
+> > +               return -EINVAL;
+> > +       }
+> > +       /* Allocate MMC host for this device */
+> > +       mmc = mmc_alloc_host(sizeof(struct msdc_host), &pdev->dev);
+> > +       if (!mmc)
+> > +               return -ENOMEM;
+> > +
+> > +       host = mmc_priv(mmc);
+> > +       ret = mmc_of_parse(mmc);
+> > +       if (ret)
+> > +               goto host_free;
+> > +
+> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       host->base = devm_ioremap_resource(&pdev->dev, res);
+> > +       if (IS_ERR(host->base)) {
+> > +               ret = PTR_ERR(host->base);
+> > +               goto host_free;
+> > +       }
+> > +
+> > +       ret = mmc_regulator_get_supply(mmc);
+> > +       if (ret == -EPROBE_DEFER)
+> > +               goto host_free;
+> > +
+> > +       host->src_clk = devm_clk_get(&pdev->dev, "source");
+> > +       if (IS_ERR(host->src_clk)) {
+> > +               ret = PTR_ERR(host->src_clk);
+> > +               goto host_free;
+> > +       }
+> > +
+> > +       host->h_clk = devm_clk_get(&pdev->dev, "hclk");
+> > +       if (IS_ERR(host->h_clk)) {
+> > +               /* host->h_clk is optional, Only for MSDC0/3 at MT8173 */
+> > +               dev_dbg(&pdev->dev,
+> > +                               "Invalied hclk from the device tree!\n");
+> > +       }
+> > +
+> > +       host->irq = platform_get_irq(pdev, 0);
+> > +       if (host->irq < 0) {
+> > +               ret = -EINVAL;
+> > +               goto host_free;
+> > +       }
+> > +
+> > +       host->pinctrl = devm_pinctrl_get(&pdev->dev);
+> > +       if (IS_ERR(host->pinctrl)) {
+> > +               ret = PTR_ERR(host->pinctrl);
+> > +               dev_err(&pdev->dev, "Cannot find pinctrl!\n");
+> > +               goto host_free;
+> > +       }
+> > +
+> > +       host->pins_default = pinctrl_lookup_state(host->pinctrl, "default");
+> > +       if (IS_ERR(host->pins_default)) {
+> > +               ret = PTR_ERR(host->pins_default);
+> > +               dev_err(&pdev->dev, "Cannot find pinctrl default!\n");
+> > +               goto host_free;
+> > +       }
+> > +
+> > +       host->pins_uhs = pinctrl_lookup_state(host->pinctrl, "state_uhs");
+> > +       if (IS_ERR(host->pins_uhs)) {
+> > +               ret = PTR_ERR(host->pins_uhs);
+> > +               dev_err(&pdev->dev, "Cannot find pinctrl uhs!\n");
+> > +               goto host_free;
+> > +       }
+> > +
+> > +       host->dev = &pdev->dev;
+> > +       host->mmc = mmc;
+> > +       host->hclk = clk_get_rate(host->src_clk);
+> > +       /* Set host parameters to mmc */
+> > +       mmc->ops = &mt_msdc_ops;
+> > +       mmc->f_min = host->hclk / (4 * 255);
+> > +
+> > +       mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
+> > +       /* MMC core transfer sizes tunable parameters */
+> > +       mmc->max_segs = MAX_BD_NUM;
+> > +       mmc->max_seg_size = (64 * 1024 - 512);
+> > +       mmc->max_blk_size = 2048;
+> > +       mmc->max_req_size = 512 * 1024;
+> > +       mmc->max_blk_count = mmc->max_req_size;
+> > +
+> > +       host->timeout_clks = 3 * 1048576;
+> > +       host->dma.gpd = dma_alloc_coherent(&pdev->dev,
+> > +                               sizeof(struct mt_gpdma_desc),
+> > +                               &host->dma.gpd_addr, GFP_KERNEL);
+> > +       host->dma.bd = dma_alloc_coherent(&pdev->dev,
+> > +                               MAX_BD_NUM * sizeof(struct mt_bdma_desc),
+> > +                               &host->dma.bd_addr, GFP_KERNEL);
+> > +       if ((!host->dma.gpd) || (!host->dma.bd)) {
+> > +               ret = -ENOMEM;
+> > +               goto release_mem;
+> > +       }
+> > +       msdc_init_gpd_bd(host, &host->dma);
+> > +       INIT_DELAYED_WORK(&host->req_timeout, msdc_request_timeout);
+> > +       spin_lock_init(&host->lock);
+> > +
+> > +       platform_set_drvdata(pdev, mmc);
+> > +       msdc_ungate_clock(host);
+> > +
+> > +       ret = devm_request_irq(&pdev->dev, (unsigned int) host->irq, msdc_irq,
+> > +               IRQF_TRIGGER_LOW | IRQF_ONESHOT, pdev->name, host);
+> > +       if (ret)
+> > +               goto release;
+> > +
+> > +       ret = mmc_add_host(mmc);
+> > +       if (ret)
+> > +               goto release;
+> > +
+> > +       return 0;
+> > +
+> > +release:
+> > +       platform_set_drvdata(pdev, NULL);
+> > +       msdc_deinit_hw(host);
+> > +       msdc_gate_clock(host);
+> > +release_mem:
+> > +       if (host->dma.gpd)
+> > +               dma_free_coherent(&pdev->dev,
+> > +                       sizeof(struct mt_gpdma_desc),
+> > +                       host->dma.gpd, host->dma.gpd_addr);
+> > +       if (host->dma.bd)
+> > +               dma_free_coherent(&pdev->dev,
+> > +                       MAX_BD_NUM * sizeof(struct mt_bdma_desc),
+> > +                       host->dma.bd, host->dma.bd_addr);
+> > +host_free:
+> > +       mmc_free_host(mmc);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static int msdc_drv_remove(struct platform_device *pdev)
+> > +{
+> > +       struct mmc_host *mmc;
+> > +       struct msdc_host *host;
+> > +
+> > +       mmc = platform_get_drvdata(pdev);
+> > +       host = mmc_priv(mmc);
+> > +
+> > +       platform_set_drvdata(pdev, NULL);
+> > +       mmc_remove_host(host->mmc);
+> > +       msdc_deinit_hw(host);
+> > +
+> 
+> You should gate the clock(s) via the clock API here as well.
+> OK, will fix at next revision,
+> > +       dma_free_coherent(&pdev->dev,
+> > +                       sizeof(struct mt_gpdma_desc),
+> > +                       host->dma.gpd, host->dma.gpd_addr);
+> > +       dma_free_coherent(&pdev->dev, MAX_BD_NUM * sizeof(struct mt_bdma_desc),
+> > +                       host->dma.bd, host->dma.bd_addr);
+> > +
+> > +       mmc_free_host(host->mmc);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static const struct of_device_id msdc_of_ids[] = {
+> > +       {   .compatible = "mediatek,mt8135-mmc", },
+> > +       {}
+> > +};
+> > +
+> > +static struct platform_driver mt_msdc_driver = {
+> > +       .probe = msdc_drv_probe,
+> > +       .remove = msdc_drv_remove,
+> > +       .driver = {
+> > +               .name = "mtk-msdc",
+> > +               .of_match_table = msdc_of_ids,
+> > +       },
+> > +};
+> > +
+> > +module_platform_driver(mt_msdc_driver);
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_DESCRIPTION("MediaTek SD/MMC Card Driver");
+> > --
+> > 1.8.1.1.dirty
+> >
+> 
+> Kind regards
+> Uffe
