@@ -1,120 +1,74 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] arm64: tegra: Add Tegra210 support
-Date: Fri, 22 May 2015 14:38:00 +0100
-Message-ID: <20150522133800.GY29424@e104818-lin.cambridge.arm.com>
-References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com>
- <1431529065-20128-3-git-send-email-thierry.reding@gmail.com>
- <20150513171114.GA18655@e104818-lin.cambridge.arm.com>
- <20150515101913.GA20474@ulmo.nvidia.com>
- <20150519145211.GX21251@e104818-lin.cambridge.arm.com>
- <20150519151740.GA28161@ulmo.nvidia.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 01/10] ASoC: qcom: make lpass driver depend on OF
+Date: Fri, 22 May 2015 14:50:50 +0100
+Message-ID: <555F343A.3040009@linaro.org>
+References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org> <2534276.hIjFJK74Zh@wuerfel> <555F18C8.8090902@linaro.org> <2125335.kSmCnV68xe@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150519151740.GA28161-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <2125335.kSmCnV68xe@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 19, 2015 at 05:17:42PM +0200, Thierry Reding wrote:
-> On Tue, May 19, 2015 at 03:52:11PM +0100, Catalin Marinas wrote:
-> > On Fri, May 15, 2015 at 12:19:16PM +0200, Thierry Reding wrote:
-> > > On Wed, May 13, 2015 at 06:11:15PM +0100, Catalin Marinas wrote:
-> > > > On Wed, May 13, 2015 at 04:57:42PM +0200, Thierry Reding wrote:
-> > > > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > > 
-> > > > > NVIDIA Tegra210 (also known as Tegra X1) has four Cortex-A57 and four
-> > > > > Cortex-A53 CPUs. Compared to Tegra124 and Tegra132 it comes with a 256-
-> > > > > core Maxwell GPU. It supports processing videos of up to 4K resolutions
-> > > > > at 60 fps (H.265, VP9, H.264).
-> > > > > 
-> > > > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > > ---
-> > > > >  arch/arm64/Kconfig                       |   9 +
-> > > > >  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 998 +++++++++++++++++++++++++++++++
-> > > > >  2 files changed, 1007 insertions(+)
-> > > > >  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> > > > > 
-> > > > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > > > index 7796af4b1d6f..bfdf064ada66 100644
-> > > > > --- a/arch/arm64/Kconfig
-> > > > > +++ b/arch/arm64/Kconfig
-> > > > > @@ -225,6 +225,15 @@ config ARCH_TEGRA_132_SOC
-> > > > >  	  but contains an NVIDIA Denver CPU complex in place of
-> > > > >  	  Tegra124's "4+1" Cortex-A15 CPU complex.
-> > > > >  
-> > > > > +config ARCH_TEGRA_210_SOC
-> > > > > +	bool "NVIDIA Tegra210 SoC"
-> > > > > +	depends on ARCH_TEGRA
-> > > > > +	select PINCTRL_TEGRA210
-> > > > > +	select USB_ULPI if USB_PHY
-> > > > > +	select USB_ULPI_VIEWPORT if USB_PHY
-> > > > > +	help
-> > > > > +	  Enable support for the NVIDIA Tegra210 SoC.
-> > > > > +
-> > > > 
-> > > > The previous ARCH_TEGRA_132_SOC escaped me. Do we need all these
-> > > > ARCH_TEGRA_*_SOC entries? Can we not have per-driver Kconfig options?
-> > > > For example, ARCH_TEGRA_132_SOC seems to be only used in
-> > > > drivers/clk/tegra, a specific Kconfig entry in there would suffice.
-> > > 
-> > > There are actually a couple of other places where this will be used in
-> > > subsequent patches (e.g. memory controller driver). The idea behind
-> > > having these is that each one of them is used to enable the essentials
-> > > out of the box, so that people don't have to go and enable a bunch of
-> > > driver-specific Kconfig options just to get a kernel configuration that
-> > > can actually boot.
-> > 
-> > We debated whether to have ARCH_* options at all on arm64 and we settled
-> > for the middle ground - only add them for SoC families, not individual
-> > SoCs. As for the kernel configuration that actually boots, we want the
-> > arm64 defconfig to include all the supported SoCs and drivers (though
-> > longer term I'd like to see more drivers built as modules by default).
-> > 
-> > > This is also useful for integrators since they can simply omit all SoC
-> > > generations that they're not interested in. Having a per-SoC option
-> > > provides an easy way of doing so.
-> > 
-> > The integrators could just select a SoC family and trim down unwanted
-> > options, I don't think they rely on the kernel defconfig for a final
-> > product. If this becomes an issue, I would rather have per-SoC
-> > defconfigs than lots of Kconfig entries.
-> 
-> I understand the desire to start with a clean plate on a new
-> architecture, but Tegra has worked like this for the past 5 years and
-> it's worked out really well for us. So I'm reluctant to introduce these
-> inconsistencies merely because 64-bit ARM now lives in a different
-> directory.
 
-That's a good time to start cleaning this up, especially since we
-mandate single image from the beginning.
 
-> Are you concerned about arch/arm64/Kconfig growing wild? If so we could
-> easily move these configuration options outside to something like
-> drivers/soc/tegra/Kconfig. While at it, we could move existing options
-> from arch/arm/mach-tegra over to that as well.
+On 22/05/15 14:21, Arnd Bergmann wrote:
+> On Friday 22 May 2015 12:53:44 Srinivas Kandagatla wrote:
+>> Thanks for looking at this patch.
+>>
+>> On 22/05/15 08:24, Arnd Bergmann wrote:
+>>> On Thursday 21 May 2015 22:52:41 Srinivas Kandagatla wrote:
+>>>>
+>>>>    config SND_SOC_LPASS_CPU
+>>>>           tristate
+>>>> +       depends on OF
+>>>>           select REGMAP_MMIO
+>>>>
+>>>>    config SND_SOC_LPASS_PLATFORM
+>>>>           tristate
+>>>> +       depends on OF
+>>>>           select REGMAP_MMIO
+>>>>
+>>>>    config SND_SOC_LPASS_IPQ806X
+>>>>
+>>>
+>>> Could you instead make the drivers compile without OF being set?
+>>>
+>>> I see that patch 7 and 8 introduces another two options doing
+>>>
+>>>
+>>> +config SND_SOC_LPASS_APQ8016
+>>> +       tristate
+>>> +       depends on SND_SOC_QCOM
+>>> +       select SND_SOC_LPASS_CPU
+>>> +       select SND_SOC_LPASS_PLATFORM
+>>> +
+>>>
+>>> +config SND_SOC_APQ8016_SBC
+>>> +       tristate "SoC Audio support for APQ8016 SBC platforms"
+>>> +       depends on (ARCH_QCOM && SND_SOC_QCOM) || COMPILE_TEST
+>>> +       select SND_SOC_LPASS_APQ8016
+>>> +       help
+>>>
+>>> so you get an obvious build failure here when SND_SOC_APQ8016_SBC
+>>> gets selected with COMPILE_TEST on a platform that does not support OF.
+>>>
+>>
+>> Yes, this would fail.
+>> I think moving of_device_id structures in drivers under #ifdef CONFIG_OF
+>> and removing the depends on OF would fix it.
+>>
+>
+> Why?
 
-I think the whole ARCH_TEGRA_*_SOC approach is wrong. You don't bother
-introducing Kconfig entries for individual drivers but instead add an
-obj-*_SOC in various Makefiles under drivers/. If we ever get to a point
-where we can build (part of) the SoCs as modules (and I'm not talking
-about kernels shipped with end products but those distro kernel
-targeting development boards), we have to go back and add such Kconfig
-entries for specific drivers.
+Yes, you are correct we don't need the ifdef's anymore. I will send a 
+fixup patch on top of what Mark has already applied.
 
-So if you do it properly from the beginning with per-driver Kconfig
-entry, I no longer see the point of an ARCH_TEGRA_*_SOC option. It may
-be more convenient for people building end products but they should know
-better what components are required, defconfig is rarely meant for them.
-
-I'm looking forward to a patch removing ARCH_TEGRA_132_SOC as well (you
-can keep the 32-bit arm options if you'd like).
-
--- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--srini
+>
+> 	Arnd
+>
+>
