@@ -1,175 +1,112 @@
-From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 7/7] ACPI: import watchdog info of GTDT into platform
- device
-Date: Fri, 22 May 2015 23:38:00 +0800
-Message-ID: <555F4D58.6040107@linaro.org>
-References: <=fu.wei@linaro.org> <1432197156-16947-1-git-send-email-fu.wei@linaro.org> <1432197156-16947-8-git-send-email-fu.wei@linaro.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm64: tegra: Add Tegra210 support
+Date: Fri, 22 May 2015 09:37:04 -0600
+Message-ID: <555F4D20.2060408@wwwdotorg.org>
+References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com> <1431529065-20128-3-git-send-email-thierry.reding@gmail.com> <20150513171114.GA18655@e104818-lin.cambridge.arm.com> <20150515101913.GA20474@ulmo.nvidia.com> <20150519145211.GX21251@e104818-lin.cambridge.arm.com> <20150519151740.GA28161@ulmo.nvidia.com> <20150522133800.GY29424@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432197156-16947-8-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150522133800.GY29424-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+CC Catalin and Will
-
-On 2015=E5=B9=B405=E6=9C=8821=E6=97=A5 16:32, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 05/22/2015 07:38 AM, Catalin Marinas wrote:
+> On Tue, May 19, 2015 at 05:17:42PM +0200, Thierry Reding wrote:
+>> On Tue, May 19, 2015 at 03:52:11PM +0100, Catalin Marinas wrote:
+>>> On Fri, May 15, 2015 at 12:19:16PM +0200, Thierry Reding wrote:
+>>>> On Wed, May 13, 2015 at 06:11:15PM +0100, Catalin Marinas wrote:
+>>>>> On Wed, May 13, 2015 at 04:57:42PM +0200, Thierry Reding wrote:
+>>>>>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>>
+>>>>>> NVIDIA Tegra210 (also known as Tegra X1) has four Cortex-A57 and four
+>>>>>> Cortex-A53 CPUs. Compared to Tegra124 and Tegra132 it comes with a 256-
+>>>>>> core Maxwell GPU. It supports processing videos of up to 4K resolutions
+>>>>>> at 60 fps (H.265, VP9, H.264).
+>>>>>>
+>>>>>> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>> ---
+>>>>>>   arch/arm64/Kconfig                       |   9 +
+>>>>>>   arch/arm64/boot/dts/nvidia/tegra210.dtsi | 998 +++++++++++++++++++++++++++++++
+>>>>>>   2 files changed, 1007 insertions(+)
+>>>>>>   create mode 100644 arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>
+>>>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>>>>> index 7796af4b1d6f..bfdf064ada66 100644
+>>>>>> --- a/arch/arm64/Kconfig
+>>>>>> +++ b/arch/arm64/Kconfig
+>>>>>> @@ -225,6 +225,15 @@ config ARCH_TEGRA_132_SOC
+>>>>>>   	  but contains an NVIDIA Denver CPU complex in place of
+>>>>>>   	  Tegra124's "4+1" Cortex-A15 CPU complex.
+>>>>>>
+>>>>>> +config ARCH_TEGRA_210_SOC
+>>>>>> +	bool "NVIDIA Tegra210 SoC"
+>>>>>> +	depends on ARCH_TEGRA
+>>>>>> +	select PINCTRL_TEGRA210
+>>>>>> +	select USB_ULPI if USB_PHY
+>>>>>> +	select USB_ULPI_VIEWPORT if USB_PHY
+>>>>>> +	help
+>>>>>> +	  Enable support for the NVIDIA Tegra210 SoC.
+>>>>>> +
+>>>>>
+>>>>> The previous ARCH_TEGRA_132_SOC escaped me. Do we need all these
+>>>>> ARCH_TEGRA_*_SOC entries? Can we not have per-driver Kconfig options?
+>>>>> For example, ARCH_TEGRA_132_SOC seems to be only used in
+>>>>> drivers/clk/tegra, a specific Kconfig entry in there would suffice.
+>>>>
+>>>> There are actually a couple of other places where this will be used in
+>>>> subsequent patches (e.g. memory controller driver). The idea behind
+>>>> having these is that each one of them is used to enable the essentials
+>>>> out of the box, so that people don't have to go and enable a bunch of
+>>>> driver-specific Kconfig options just to get a kernel configuration that
+>>>> can actually boot.
+>>>
+>>> We debated whether to have ARCH_* options at all on arm64 and we settled
+>>> for the middle ground - only add them for SoC families, not individual
+>>> SoCs. As for the kernel configuration that actually boots, we want the
+>>> arm64 defconfig to include all the supported SoCs and drivers (though
+>>> longer term I'd like to see more drivers built as modules by default).
+>>>
+>>>> This is also useful for integrators since they can simply omit all SoC
+>>>> generations that they're not interested in. Having a per-SoC option
+>>>> provides an easy way of doing so.
+>>>
+>>> The integrators could just select a SoC family and trim down unwanted
+>>> options, I don't think they rely on the kernel defconfig for a final
+>>> product. If this becomes an issue, I would rather have per-SoC
+>>> defconfigs than lots of Kconfig entries.
+>>
+>> I understand the desire to start with a clean plate on a new
+>> architecture, but Tegra has worked like this for the past 5 years and
+>> it's worked out really well for us. So I'm reluctant to introduce these
+>> inconsistencies merely because 64-bit ARM now lives in a different
+>> directory.
 >
-> Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
-> and create a platform device with that information.
-> This platform device can be used by the ARM SBSA Generic
-> Watchdog driver.
+> That's a good time to start cleaning this up, especially since we
+> mandate single image from the beginning.
 >
-> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->   arch/arm64/kernel/acpi.c | 136 ++++++++++++++++++++++++++++++++++++=
-+++++++++++
->   1 file changed, 136 insertions(+)
+>> Are you concerned about arch/arm64/Kconfig growing wild? If so we could
+>> easily move these configuration options outside to something like
+>> drivers/soc/tegra/Kconfig. While at it, we could move existing options
+>> from arch/arm/mach-tegra over to that as well.
 >
-> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-> index 8b83955..1ed11fd 100644
-> --- a/arch/arm64/kernel/acpi.c
-> +++ b/arch/arm64/kernel/acpi.c
-> @@ -23,6 +23,7 @@
->   #include <linux/irqdomain.h>
->   #include <linux/memblock.h>
->   #include <linux/of_fdt.h>
-> +#include <linux/platform_device.h>
->   #include <linux/smp.h>
->
->   #include <asm/cputype.h>
-> @@ -343,3 +344,138 @@ void __init acpi_gic_init(void)
->
->   	early_acpi_os_unmap_memory((char *)table, tbl_size);
->   }
-> +
-> +static int __init acpi_gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchd=
-og *wd,
-> +					     int index)
-> +{
-> +	struct platform_device *pdev;
-> +	struct resource *res;
-> +	u32 gsi, flags;
-> +	int irq, trigger, polarity;
-> +	resource_size_t rf_base_phy, cf_base_phy;=09
-> +	int err =3D -ENOMEM;
-> +
-> +	/*
-> +	 * Get SBSA Generic Watchdog info
-> +	 * from a Watchdog GT type structure in GTDT
-> +	 */
-> +	rf_base_phy =3D (resource_size_t)wd->refresh_frame_address;
-> +	cf_base_phy =3D (resource_size_t)wd->control_frame_address;
-> +	gsi =3D wd->timer_interrupt;
-> +	flags =3D wd->timer_flags;
-> +
-> +	pr_info("GTDT: a Watchdog GT structure(0x%llx/0x%llx gsi:%u flags:0=
-x%x)\n",
-> +		rf_base_phy, cf_base_phy, gsi, flags);
+> I think the whole ARCH_TEGRA_*_SOC approach is wrong. You don't bother
+> introducing Kconfig entries for individual drivers but instead add an
+> obj-*_SOC in various Makefiles under drivers/. If we ever get to a point
+> where we can build (part of) the SoCs as modules (and I'm not talking
+> about kernels shipped with end products but those distro kernel
+> targeting development boards), we have to go back and add such Kconfig
+> entries for specific drivers.
 
-Can we use pr_debug here? I don't think those information
-worthy a pr_info.
-
-> +
-> +	if (!(rf_base_phy && cf_base_phy && gsi)) {
-> +		pr_err("GTDT: failed geting the device info.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	trigger =3D (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SENSITIV=
-E
-> +			: ACPI_LEVEL_SENSITIVE;
-> +	polarity =3D (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_ACTIVE_L=
-OW
-> +			: ACPI_ACTIVE_HIGH;
-
-I see places to duplicate this, I will look into this to see we can for=
-m
-a function to handle it.
-
-> +	irq =3D acpi_register_gsi(NULL, gsi, trigger, polarity);
-> +	if (irq < 0) {
-> +		pr_err("GTDT: failed to register GSI of the Watchdog GT.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	pdev =3D platform_device_alloc("sbsa-gwdt", index);
-
-Please put a comment before this function to explain
-why we need a "sbsa-gwdt" name here.
-
-> +	if (!pdev)
-> +		goto err_unregister_gsi;
-> +
-> +	res =3D kcalloc(3, sizeof(*res), GFP_KERNEL);
-> +	if (!res)
-> +		goto err_device_put;
-> +
-> +	res[0].start =3D rf_base_phy;
-> +	res[0].end =3D rf_base_phy + SZ_4K - 1;
-> +	res[0].name =3D "refresh";
-> +	res[0].flags =3D IORESOURCE_MEM;
-> +
-> +	res[1].start =3D cf_base_phy;
-> +	res[1].end =3D cf_base_phy + SZ_4K - 1;
-
-So why SZ_4K? is it defined in SBSA spec? if so, please
-comment on it too.
-
-> +	res[1].name =3D "control";
-> +	res[1].flags =3D IORESOURCE_MEM;
-> +
-> +	res[2].start =3D irq;
-> +	res[2].end =3D res[2].start;
-> +	res[2].name =3D "ws0";
-> +	res[2].flags =3D IORESOURCE_IRQ;
-> +
-> +	err =3D platform_device_add_resources(pdev, res, 3);
-> +	if (err)
-> +		goto err_free_res;
-> +
-> +	err =3D platform_device_add(pdev);
-> +	if (err)
-> +		goto err_free_res;
-> +
-> +	return 0;
-> +
-> +err_free_res:
-> +	kfree(res);
-> +err_device_put:
-> +	platform_device_put(pdev);
-> +err_unregister_gsi:
-> +	acpi_unregister_gsi(gsi);
-> +
-> +	return err;
-> +}
-> +
-> +/* Initialize SBSA generic Watchdog platform device info from GTDT *=
-/
-> +static int __init acpi_gtdt_sbsa_gwdt_init(struct acpi_table_header =
-*table)
-> +{
-> +	struct acpi_table_gtdt *gtdt;
-> +	struct acpi_gtdt_header *header;
-> +	void *gtdt_subtable;
-> +	int i, gwdt_index;
-> +	int ret =3D 0;
-> +
-> +	if (table->revision < 2) {
-> +		pr_info("GTDT: Revision:%d doesn't support Platform Timers.\n",
-> +			table->revision);
-
-pr_warn() would be good.
-
-Thanks
-Hanjun
+Just as an aside, long long ago I tried to remove the ARCH_TEGRA_* usage 
+from anywhere outside arch/arm/mach-tegra, but was shot down because 
+that would not allow the driver Kconfig files to only show the drivers 
+that were relevant for the particular Tegra SoCs we had enabled. It's 
+really frustrating to have to deal with the situation of different 
+people pushing in completely the opposite directions on this kind of topic.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
-g" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
