@@ -1,63 +1,76 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] ARM: dts: nitrogen6x: add CAN support
-Date: Fri, 22 May 2015 13:05:34 +0200
-Message-ID: <1432292734.3929.64.camel@pengutronix.de>
-References: <1432230303-3414-1-git-send-email-ps.report@gmx.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] soc: Add driver for Freescale Vybrid Platform
+Date: Fri, 22 May 2015 13:11:46 +0200
+Message-ID: <35561091.AtkcGa6qVG@wuerfel>
+References: <cover.1432290463.git.maitysanchayan@gmail.com> <d27c4ba234cd298914676884a9604ea8472a17d0.1432290463.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432230303-3414-1-git-send-email-ps.report@gmx.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Seiderer <ps.report@gmx.net>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d27c4ba234cd298914676884a9604ea8472a17d0.1432290463.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
-
-Am Donnerstag, den 21.05.2015, 19:45 +0200 schrieb Peter Seiderer:
-> Regulator stuff copied from imx6qdl-tx6.dtsi, pin configuration
-> taken from Boundary Devices linux kernel tree ([1] and [2]).
-> 
-> [1] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> [2] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl.dtsi
-> 
-> Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-> ---
-> v2:
->  - fix imx6qdl-nitrogen6x.dtsi url
->  - use real PAD settings (suggested by Fabio Estevam)
->  - remove _1 suffix (suggested by Shawn Guo)
-> ---
->  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 32 +++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> index fd096dc..d40092e 100644
-> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> @@ -54,6 +54,17 @@
->  			gpio = <&gpio3 22 0>;
->  			enable-active-high;
->  		};
+On Friday 22 May 2015 16:21:54 Sanchayan Maity wrote:
+> +#define OCOTP_CFG0_OFFSET      0x00000410
+> +#define OCOTP_CFG1_OFFSET      0x00000420
+> +#define MSCM_CPxCOUNT_OFFSET   0x0000002C
+> +#define MSCM_CPxCFG1_OFFSET    0x00000014
+> +#define ROM_REVISION_OFFSET    0x00000080
 > +
-> +		reg_can_xcvr: regulator@3 {
-> +			compatible = "regulator-fixed";
-> +			reg = <3>;
-> +			regulator-name = "CAN XCVR";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_can_xcvr>;
-> +			gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+> +static const struct of_device_id vf610_soc_bus_match[] = {
+> +	{ .compatible = "fsl,vf610-mscm-cpucfg", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static int __init vf610_soc_init(void)
+> +{
+> +	struct regmap *ocotp_regmap, *mscm_regmap, *rom_regmap;
+> +	struct soc_device_attribute *soc_dev_attr;
+> +	struct soc_device *soc_dev;
+> +	struct device_node *np;
+> +	char soc_type[] = "xx0";
+> +	u32 cpxcount, cpxcfg1;
+> +	u32 soc_id1, soc_id2, rom_rev;
+> +	u64 soc_id;
+> +	int ret;
+> +
+> +	np = of_find_matching_node(NULL, vf610_soc_bus_match);
+> +	if (!np)
+> +		return -ENODEV;
+> +
 
-According to
-Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-this should have:
-			enable-active-high;
+Why not use module_platform_driver() and make this a probe function instead?
 
-instead of the gpio phandle flag (which is ignored). Otherwise an active
-low GPIO is assumed.
+> +	ocotp_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-ocotp");
+> +	if (IS_ERR(ocotp_regmap)) {
+> +		pr_err("regmap lookup for octop failed\n");
+> +		return PTR_ERR(ocotp_regmap);
+> +	}
+> +
+> +	mscm_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-mscm-cpucfg");
+> +	if (IS_ERR(mscm_regmap)) {
+> +		pr_err("regmap lookup for mscm failed");
+> +		return PTR_ERR(mscm_regmap);
+> +	}
+> +
+> +	rom_regmap = syscon_regmap_lookup_by_compatible("fsl,vf610-ocrom");
+> +	if (IS_ERR(rom_regmap)) {
+> +		pr_err("regmap lookup for ocrom failed");
+> +		return PTR_ERR(rom_regmap);
+> +	}
 
-regards
-Philipp
+Can you use syscon_regmap_lookup_by_phandle instead, and put the
+phandles in the fsl,vf610-mscm-cpucfg node?
+
+Also, I'd argue that the mscm should not be a syscon device at all,
+but instead I'd use platform_get_resource()/devm_ioremap_resource()
+to get an __iomem pointer.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
