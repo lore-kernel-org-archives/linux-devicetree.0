@@ -1,46 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 06/10] ASoC: qcom: add bit map to track static dma
- channel allocations
-Date: Fri, 22 May 2015 13:27:53 +0100
-Message-ID: <20150522122753.GQ21391@sirena.org.uk>
-References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1432245201-9234-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Fri, 22 May 2015 15:09:30 +0200
+Message-ID: <555F2A8A.5020205@suse.de>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<2282066.NWoIT9ZyLc@wuerfel>	<CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>	<13641152.Yt4ZI3oT6L@wuerfel>	<CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>	<1432285588.3929.28.camel@pengutronix.de>	<20150522091822.GF8557@lukather>	<1432289231.3929.60.camel@pengutronix.de>
+ <CALszF6CQ1_HQXJ8=vgytvVo2t4_ue5_nsE06HPyHMzSLrntqKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rKoHqF+aPLVth8b2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432245201-9234-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CALszF6CQ1_HQXJ8=vgytvVo2t4_ue5_nsE06HPyHMzSLrntqKg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nicolae Rosia <nicolae.rosia@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.>
 List-Id: devicetree@vger.kernel.org
 
-
---rKoHqF+aPLVth8b2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, May 21, 2015 at 10:53:21PM +0100, Srinivas Kandagatla wrote:
-> This patch adds dma channel bit mask to lpass data to keep track of dma
-> channel allocations. This flag would be used in apq8016 lpass driver.
-
-Applied, thanks.
-
---rKoHqF+aPLVth8b2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVXyDIAAoJECTWi3JdVIfQPwUH/3zl6xb9aN0vNsppvXW401Eq
-ge5yry4JU2xes+z2ekn73xN2lRj4jAozrrR/2hVPKCsbpHOm87bjUIw9aiu69SPX
-/8aPfcz6GJioUnj23OnVK8AFcBw4wnn3/r5jBIlpzaaqx/c5nC/enR4UuthdIYSy
-Yl3q2SU3IsG4I/bCrO9/LX0hj3Skv9aTiO2RwhBAVChlXCoch4TETlEygj0oOajP
-5VxGjkwqiy2x1XkDhVJytFmkcO7HqzygDdedO9YihYsjUDqXfz5pP6augG6hAyqN
-SAIVoGdQeP87MOqn7f0Kpy/QbVbhPZmnB57fp6OKD4UdK5N/G8nmrQrnt1KUShc=
-=4IsJ
------END PGP SIGNATURE-----
-
---rKoHqF+aPLVth8b2--
+QW0gMjIuMDUuMjAxNSB1bSAxNDozMiBzY2hyaWViIE1heGltZSBDb3F1ZWxpbjoKPiAyMDE1LTA1
+LTIyIDEyOjA3IEdNVCswMjowMCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRl
+PjoKPj4gVGhlIFNUTTMyRjQyN3h4L1NUTTMyRjQyOXh4IG1hbnVhbCwgVGFibGUgMTMuICJTVE0z
+MkY0Mjd4eCBhbmQKPj4gU1RNMzJGNDI5eHggcmVnaXN0ZXIgYm91bmRhcnkgYWRkcmVzc2VzIiBj
+b250YWlucyB0aGlzIGVudHJ5Ogo+PiAgICAgQnVzICAgIEJvdW5kYXJ5IGFkZHJlc3MgICAgICAg
+UGVyaXBoZXJhbAo+PiAgICAgQUhCMSAgIDB4NDAwMjM4MDAtMHg0MDAyMzhiZiAgUkNDCj4+Cj4+
+IEFuZCB0aGF0J3MgaG93IEknZCBleHBlY3QgaXQgdG8gYmUgZGVzY3JpYmVkIGJ5IHRoZSBkZXZp
+Y2UgdHJlZToKPj4KPj4gICAgIHJjYzogcmNjQDQwMDIzODAwIHsKPj4gICAgICAgICBjb21wYXRp
+YmxlID0gInN0LHN0bTMyLXJjYyI7Cj4+ICAgICAgICAgcmVnID0gPDB4NDAwMjM4MDAgMHhjMD47
+Cj4+ICAgICB9Owo+Pgo+IAo+IERvaW5nIHRoYXQsIHNpbmNlIHRoaXMgcmVnaXN0ZXIgYmFuayBj
+b250YWlucyBib3RoIHJlc2V0IGFuZCBjbG9jawo+IHJlZ2lzdGVycywgdGhlIHJlc2V0IGRldmlj
+ZSBjYW5ub3QgZ2V0IHRoZSBJTyByZXNvdXJjZSBhdCBwcm9iZSB0aW1lCj4gYmVjYXVzZSB0aGUg
+Y2xvY2sgZHJpdmVyIGhhcyBhbHJlYWR5IHJlc2VydmVkIGl0Lgo+IERhbmllbCwgd2hvIGhhcyBz
+dGFydGVkIHRvIHdvcmsgb24gdGhlIGNsb2NrIGRyaXZlciBpcyBmYWNpbmcgdGhpcyBpc3N1ZS4K
+PiBUaGlzIGlzIHdoeSBJIHByb3Bvc2VkIHRoaXMgYmluZGluZyBmb3IgInJlZyIgcHJvcGVydHku
+CgpBcyB5b3Ugc2hvdWxkIGtub3csIEkgZGlkIGhhdmUgYW4gUkNDIGNsayBkcml2ZXIsIGFuZCB0
+aGVyZSBpcyBubyBzdWNoCmlzc3VlLiBUaGUgdHdvIGRyaXZlcnMgdXNlIGRpZmZlcmVudCBtZWNo
+YW5pc21zIGZvciBpbml0aWFsaXphdGlvbi4gQW5kCkknbSBwcmV0dHkgc3VyZSB0aGF0IEkndmUg
+YWxyZWFkeSByZW1hcmtlZCB0aGF0IG9uIHRoZSBsaXN0LCB0b28uCgpSZWdhcmRzLApBbmRyZWFz
+CgotLSAKU1VTRSBMaW51eCBHbWJILCBNYXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xybmJlcmcsIEdl
+cm1hbnkKR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwgRGlsaXAgVXBtYW55
+dSwgR3JhaGFtIE5vcnRvbjsgSFJCCjIxMjg0IChBRyBOw7xybmJlcmcpCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
