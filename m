@@ -1,28 +1,118 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 0/2] ARM: dts: add Okaya LCD display for Nitrogen and Sabrelite
-Date: Fri, 22 May 2015 19:14:25 +0200
-Message-ID: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
+Subject: [PATCH 1/2] ARM: dts: imx6qdl-nitrogen6x: add Okaya LCD display
+Date: Fri, 22 May 2015 19:14:26 +0200
+Message-ID: <1432314867-30888-2-git-send-email-gary.bisson@boundarydevices.com>
+References: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432314867-30888-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds the Okaya 7" LCD display that is a WVGA (800x480) panel with
-a 18-bit parallel interface for both Nitrogen and Sabrelite.
+This patch adds support for the 7" LCD display available for Nitrogen6x:
+http://boundarydevices.com/product/7-800x480-display/
 
-A U-Boot script to configure the displays based on detection of the
-touch controller is available for reference here:
-https://github.com/boundarydevices/u-boot-imx6/blob/staging/board/boundary/nitrogen6x/6x_bootscript-mainline.txt
-
-Gary Bisson (2):
-  ARM: dts: imx6qdl-nitrogen6x: add Okaya LCD display
-  ARM: dts: imx6qdl-sabrelite: add Okaya LCD display
-
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 70 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi  | 70 +++++++++++++++++++++++++++++++
- 2 files changed, 140 insertions(+)
+ 1 file changed, 70 insertions(+)
 
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index 3af16df..7097593 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -131,6 +131,39 @@
+ 		status = "okay";
+ 	};
+ 
++	lcd_display: display@di0 {
++		compatible = "fsl,imx-parallel-display";
++		interface-pix-fmt = "bgr666";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_j15>;
++		status = "okay";
++
++		port {
++			lcd_display_in: endpoint {
++				remote-endpoint = <&ipu1_di0_disp0>;
++			};
++		};
++
++		display-timings {
++			okaya_800x480 {
++				native-mode;
++				clock-frequency = <30000000>;
++				hactive = <800>;
++				vactive = <480>;
++				hback-porch = <40>;
++				hsync-len = <48>;
++				hfront-porch = <40>;
++				vback-porch = <29>;
++				vsync-len = <3>;
++				vfront-porch = <13>;
++				hsync-active = <0>;
++				vsync-active = <0>;
++				de-active = <1>;
++				pixelclk-active = <0>;
++			};
++		};
++	};
++
+ 	panel {
+ 		compatible = "hannstar,hsd100pxn1";
+ 		backlight = <&backlight_lvds>;
+@@ -315,6 +348,39 @@
+ 			>;
+ 		};
+ 
++		pinctrl_j15: j15grp {
++			fsl,pins = <
++				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
++				MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
++				MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
++				MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
++				MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
++				MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
++				MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
++				MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
++				MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
++				MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
++				MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
++				MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
++				MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
++				MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
++				MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
++				MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
++				MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
++				MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
++				MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
++				MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
++				MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
++				MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
++				MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
++				MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
++				MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
++				MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
++				MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
++				MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
++			>;
++		};
++
+ 		pinctrl_pwm1: pwm1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD1_DAT3__PWM1_OUT 0x1b0b1
+@@ -382,6 +448,10 @@
+ 	};
+ };
+ 
++&ipu1_di0_disp0 {
++	remote-endpoint = <&lcd_display_in>;
++};
++
+ &ldb {
+ 	status = "okay";
+ 
 -- 
 2.1.4
 
