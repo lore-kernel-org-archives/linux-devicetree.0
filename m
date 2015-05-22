@@ -1,50 +1,307 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v3 0/6] arm64: Juno DT updates and new DT for Juno R1
-Date: Fri, 22 May 2015 12:13:04 +0100
-Message-ID: <1432293190-13012-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v3 2/6] arm64: Juno: Split juno.dts into juno-base.dtsi and juno.dts.
+Date: Fri, 22 May 2015 12:13:06 +0100
+Message-ID: <1432293190-13012-3-git-send-email-Liviu.Dudau@arm.com>
+References: <1432293190-13012-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432293190-13012-1-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series restructures the Juno DT files and introduces the DT
-for the new Juno R1. The board is an update of the Juno R0 with
-support for PCIe, but the current series only brings the board to
-parity with Juno R0. The series that enable the PCIe Generic Host
-Bridge to be used on Juno R1 will be posted separately.
+Prepare the device tree for adding more boards based on Juno r0.
 
-Changes from v2:
- - Added compatible strings documentation
- - Added the received Acks-by
-Changes from v1:
- - Moved memory node inside juno-base.dtsi as this is common between
-   boards and unlikely to change soon.
- - Added "arm,juno-r1" as compatible string in juno-r1.dts at Jon Medhurst's
-   suggestion.
-
-Liviu Dudau (6):
-  arm64: Juno: Fix the GIC node address label and the frequency of FAXI
-    clock.
-  arm64: Juno: Split juno.dts into juno-base.dtsi and juno.dts.
-  arm64: Juno: Add memory mapped timer node
-  arm64: Juno: Add GICv2m support in device tree.
-  arm64: Add DT support for Juno r1 board.
-  Documentation: bindings: Add DT bindings for ARM Juno boards.
-
- Documentation/devicetree/bindings/arm/arm-boards |  66 ++++++++++
- arch/arm64/boot/dts/arm/Makefile                 |   2 +-
- arch/arm64/boot/dts/arm/juno-base.dtsi           | 154 +++++++++++++++++++++++
- arch/arm64/boot/dts/arm/juno-clocks.dtsi         |   4 +-
- arch/arm64/boot/dts/arm/juno-r1.dts              | 116 +++++++++++++++++
- arch/arm64/boot/dts/arm/juno.dts                 | 129 +------------------
- 6 files changed, 340 insertions(+), 131 deletions(-)
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+Acked-by: Jon Medhurst <tixy@linaro.org>
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 132 +++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/arm/juno.dts       | 129 +-------------------------------
+ 2 files changed, 133 insertions(+), 128 deletions(-)
  create mode 100644 arch/arm64/boot/dts/arm/juno-base.dtsi
- create mode 100644 arch/arm64/boot/dts/arm/juno-r1.dts
 
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+new file mode 100644
+index 0000000..5c4c035
+--- /dev/null
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -0,0 +1,132 @@
++	/*
++	 *  Devices shared by all Juno boards
++	 */
++
++	gic: interrupt-controller@2c010000 {
++		compatible = "arm,gic-400", "arm,cortex-a15-gic";
++		reg = <0x0 0x2c010000 0 0x1000>,
++		      <0x0 0x2c02f000 0 0x2000>,
++		      <0x0 0x2c04f000 0 0x2000>,
++		      <0x0 0x2c06f000 0 0x2000>;
++		#address-cells = <0>;
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	/include/ "juno-clocks.dtsi"
++
++	dma@7ff00000 {
++		compatible = "arm,pl330", "arm,primecell";
++		reg = <0x0 0x7ff00000 0 0x1000>;
++		#dma-cells = <1>;
++		#dma-channels = <8>;
++		#dma-requests = <32>;
++		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&soc_faxiclk>;
++		clock-names = "apb_pclk";
++	};
++
++	soc_uart0: uart@7ff80000 {
++		compatible = "arm,pl011", "arm,primecell";
++		reg = <0x0 0x7ff80000 0x0 0x1000>;
++		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&soc_uartclk>, <&soc_refclk100mhz>;
++		clock-names = "uartclk", "apb_pclk";
++	};
++
++	i2c@7ffa0000 {
++		compatible = "snps,designware-i2c";
++		reg = <0x0 0x7ffa0000 0x0 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
++		clock-frequency = <400000>;
++		i2c-sda-hold-time-ns = <500>;
++		clocks = <&soc_smc50mhz>;
++
++		dvi0: dvi-transmitter@70 {
++			compatible = "nxp,tda998x";
++			reg = <0x70>;
++		};
++
++		dvi1: dvi-transmitter@71 {
++			compatible = "nxp,tda998x";
++			reg = <0x71>;
++		};
++	};
++
++	ohci@7ffb0000 {
++		compatible = "generic-ohci";
++		reg = <0x0 0x7ffb0000 0x0 0x10000>;
++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&soc_usb48mhz>;
++	};
++
++	ehci@7ffc0000 {
++		compatible = "generic-ehci";
++		reg = <0x0 0x7ffc0000 0x0 0x10000>;
++		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&soc_usb48mhz>;
++	};
++
++	memory-controller@7ffd0000 {
++		compatible = "arm,pl354", "arm,primecell";
++		reg = <0 0x7ffd0000 0 0x1000>;
++		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		/* last 16MB of the first memory area is reserved for secure world use by firmware */
++		reg = <0x00000000 0x80000000 0x0 0x7f000000>,
++		      <0x00000008 0x80000000 0x1 0x80000000>;
++	};
++
++	smb {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0 0 0 0x08000000 0x04000000>,
++			 <1 0 0 0x14000000 0x04000000>,
++			 <2 0 0 0x18000000 0x04000000>,
++			 <3 0 0 0x1c000000 0x04000000>,
++			 <4 0 0 0x0c000000 0x04000000>,
++			 <5 0 0 0x10000000 0x04000000>;
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 15>;
++		interrupt-map = <0 0  0 &gic 0  68 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  1 &gic 0  69 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  2 &gic 0  70 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  3 &gic 0 160 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  4 &gic 0 161 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  5 &gic 0 162 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  6 &gic 0 163 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  7 &gic 0 164 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  8 &gic 0 165 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  9 &gic 0 166 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 10 &gic 0 167 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 11 &gic 0 168 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 12 &gic 0 169 IRQ_TYPE_LEVEL_HIGH>;
++
++		/include/ "juno-motherboard.dtsi"
++	};
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index 7ab0713..d7cbdd4 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -91,33 +91,6 @@
+ 		};
+ 	};
+ 
+-	memory@80000000 {
+-		device_type = "memory";
+-		/* last 16MB of the first memory area is reserved for secure world use by firmware */
+-		reg = <0x00000000 0x80000000 0x0 0x7f000000>,
+-		      <0x00000008 0x80000000 0x1 0x80000000>;
+-	};
+-
+-	gic: interrupt-controller@2c010000 {
+-		compatible = "arm,gic-400", "arm,cortex-a15-gic";
+-		reg = <0x0 0x2c010000 0 0x1000>,
+-		      <0x0 0x2c02f000 0 0x2000>,
+-		      <0x0 0x2c04f000 0 0x2000>,
+-		      <0x0 0x2c06f000 0 0x2000>;
+-		#address-cells = <0>;
+-		#interrupt-cells = <3>;
+-		interrupt-controller;
+-		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
+-	};
+-
+-	timer {
+-		compatible = "arm,armv8-timer";
+-		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
+-	};
+-
+ 	pmu {
+ 		compatible = "arm,armv8-pmuv3";
+ 		interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
+@@ -134,105 +107,5 @@
+ 				     <&A53_3>;
+ 	};
+ 
+-	/include/ "juno-clocks.dtsi"
+-
+-	dma@7ff00000 {
+-		compatible = "arm,pl330", "arm,primecell";
+-		reg = <0x0 0x7ff00000 0 0x1000>;
+-		#dma-cells = <1>;
+-		#dma-channels = <8>;
+-		#dma-requests = <32>;
+-		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&soc_faxiclk>;
+-		clock-names = "apb_pclk";
+-	};
+-
+-	soc_uart0: uart@7ff80000 {
+-		compatible = "arm,pl011", "arm,primecell";
+-		reg = <0x0 0x7ff80000 0x0 0x1000>;
+-		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&soc_uartclk>, <&soc_refclk100mhz>;
+-		clock-names = "uartclk", "apb_pclk";
+-	};
+-
+-	i2c@7ffa0000 {
+-		compatible = "snps,designware-i2c";
+-		reg = <0x0 0x7ffa0000 0x0 0x1000>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+-		clock-frequency = <400000>;
+-		i2c-sda-hold-time-ns = <500>;
+-		clocks = <&soc_smc50mhz>;
+-
+-		dvi0: dvi-transmitter@70 {
+-			compatible = "nxp,tda998x";
+-			reg = <0x70>;
+-		};
+-
+-		dvi1: dvi-transmitter@71 {
+-			compatible = "nxp,tda998x";
+-			reg = <0x71>;
+-		};
+-	};
+-
+-	ohci@7ffb0000 {
+-		compatible = "generic-ohci";
+-		reg = <0x0 0x7ffb0000 0x0 0x10000>;
+-		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&soc_usb48mhz>;
+-	};
+-
+-	ehci@7ffc0000 {
+-		compatible = "generic-ehci";
+-		reg = <0x0 0x7ffc0000 0x0 0x10000>;
+-		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&soc_usb48mhz>;
+-	};
+-
+-	memory-controller@7ffd0000 {
+-		compatible = "arm,pl354", "arm,primecell";
+-		reg = <0 0x7ffd0000 0 0x1000>;
+-		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&soc_smc50mhz>;
+-		clock-names = "apb_pclk";
+-	};
+-
+-	smb {
+-		compatible = "simple-bus";
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges = <0 0 0 0x08000000 0x04000000>,
+-			 <1 0 0 0x14000000 0x04000000>,
+-			 <2 0 0 0x18000000 0x04000000>,
+-			 <3 0 0 0x1c000000 0x04000000>,
+-			 <4 0 0 0x0c000000 0x04000000>,
+-			 <5 0 0 0x10000000 0x04000000>;
+-
+-		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 15>;
+-		interrupt-map = <0 0  0 &gic 0  68 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  1 &gic 0  69 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  2 &gic 0  70 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  3 &gic 0 160 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  4 &gic 0 161 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  5 &gic 0 162 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  6 &gic 0 163 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  7 &gic 0 164 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  8 &gic 0 165 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  9 &gic 0 166 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 10 &gic 0 167 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 11 &gic 0 168 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 12 &gic 0 169 IRQ_TYPE_LEVEL_HIGH>;
+-
+-		/include/ "juno-motherboard.dtsi"
+-	};
++	#include "juno-base.dtsi"
+ };
 -- 
 2.4.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
