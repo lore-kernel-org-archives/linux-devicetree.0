@@ -1,58 +1,68 @@
 From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 7/7] mips: pistachio: Allow to enable the external timer
- based clocksource
-Date: Fri, 22 May 2015 09:50:16 -0700
-Message-ID: <CAL1qeaG=LeQtSS_0w_=hXMNfG2dqTomL5hgifFXV-x1Jy9P1rw@mail.gmail.com>
+Subject: Re: [PATCH 3/7] clocksource: mips-gic: Split clocksource and
+ clockevent initialization
+Date: Fri, 22 May 2015 09:53:49 -0700
+Message-ID: <CAL1qeaG4mh1_gnJA8RqF5xKuco=RUsXfLBcKC2g4OxiXfqUgKA@mail.gmail.com>
 References: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com>
-	<1432244618-15548-1-git-send-email-ezequiel.garcia@imgtec.com>
+	<1432244260-14908-4-git-send-email-ezequiel.garcia@imgtec.com>
+	<CAL1qeaFkzpH+nGqRPOuY-L62jP8NgZWP0WxKTYKXZDpe1sSojg@mail.gmail.com>
+	<555E5B5C.9050807@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432244618-15548-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <555E5B5C.9050807-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 2:43 PM, Ezequiel Garcia
+On Thu, May 21, 2015 at 3:25 PM, Ezequiel Garcia
 <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> This commit introduces a new config, so the user can choose to enable
-> the General Purpose Timer based clocksource. This option is required
-> to have CPUFreq support.
 >
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/mips/Kconfig           |  1 +
->  arch/mips/pistachio/Kconfig | 13 +++++++++++++
->  2 files changed, 14 insertions(+)
->  create mode 100644 arch/mips/pistachio/Kconfig
 >
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index f501665..91f6ca0 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -934,6 +934,7 @@ source "arch/mips/jazz/Kconfig"
->  source "arch/mips/jz4740/Kconfig"
->  source "arch/mips/lantiq/Kconfig"
->  source "arch/mips/lasat/Kconfig"
-> +source "arch/mips/pistachio/Kconfig"
->  source "arch/mips/pmcs-msp71xx/Kconfig"
->  source "arch/mips/ralink/Kconfig"
->  source "arch/mips/sgi-ip27/Kconfig"
-> diff --git a/arch/mips/pistachio/Kconfig b/arch/mips/pistachio/Kconfig
-> new file mode 100644
-> index 0000000..97731ea
-> --- /dev/null
-> +++ b/arch/mips/pistachio/Kconfig
-> @@ -0,0 +1,13 @@
-> +config PISTACHIO_GPTIMER_CLKSRC
-> +       bool "Enable General Purpose Timer based clocksource"
-> +       depends on MACH_PISTACHIO
-> +       select CLKSRC_PISTACHIO
-> +       select MIPS_EXTERNAL_TIMER
+> On 05/21/2015 07:24 PM, Andrew Bresticker wrote:
+>> On Thu, May 21, 2015 at 2:37 PM, Ezequiel Garcia
+>> <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>>> This is preparation work for the introduction of clockevent frequency
+>>> update with a clock notifier. This is only possible when the device
+>>> is passed a clk struct, so let's split the legacy and devicetree
+>>> initialization.
+>>>
+>>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  drivers/clocksource/mips-gic-timer.c | 13 ++++++++-----
+>>>  1 file changed, 8 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+>>> index c4352f0..22a4daf 100644
+>>> --- a/drivers/clocksource/mips-gic-timer.c
+>>> +++ b/drivers/clocksource/mips-gic-timer.c
+>>> @@ -142,11 +142,6 @@ static void __init __gic_clocksource_init(void)
+>>>         ret = clocksource_register_hz(&gic_clocksource, gic_frequency);
+>>>         if (ret < 0)
+>>>                 pr_warn("GIC: Unable to register clocksource\n");
+>>> -
+>>> -       gic_clockevent_init();
+>>> -
+>>> -       /* And finally start the counter */
+>>> -       gic_start_count();
+>>>  }
+>>
+>> Instead of duplicating this bit in both the OF and non-OF paths, maybe
+>> it would be better to do the notifier registration in
+>> gic_clockevent_init(), either by passing around the struct clk or
+>> making it a global?
+>>
+>
+> Yeah, I had something like that first, but somehow it looked ugly to have:
+>
+>   gic_clockevent_init(IS_ERR(clk) ? NULL : clk);
+>
+> Don't have a strong opinion though.
 
-Why not just select these in the MACH_PISTACHIO Kconfig entry?  Is
-there any harm in always having the Pistachio GPT enabled?
+Ah that is a bit ugly.  I'm fine either way though, so:
+
+Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
