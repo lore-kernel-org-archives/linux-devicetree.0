@@ -1,46 +1,48 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 02/10] ASoC: qcom: support bitclk and osrclk per i2s
- port
-Date: Fri, 22 May 2015 13:27:20 +0100
-Message-ID: <20150522122720.GM21391@sirena.org.uk>
-References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1432245169-9032-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 01/11] regmap: Introduce regmap_get_max_register.
+Date: Fri, 22 May 2015 12:18:08 +0100
+Message-ID: <20150522111808.GC21391@sirena.org.uk>
+References: <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1432226563-8689-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yklP1rR72f9kjNtc"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1432245169-9032-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1432226563-8689-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com
 List-Id: devicetree@vger.kernel.org
 
 
---yklP1rR72f9kjNtc
+--OBd5C1Lgu00Gd/Tn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 21, 2015 at 10:52:49PM +0100, Srinivas Kandagatla wrote:
-> This patch adds support to allow bitclk and osrclk per i2s dai port.
-> on APQ8016 there are 4 i2s ports each one has its own bit clks.
+On Thu, May 21, 2015 at 05:42:43PM +0100, Srinivas Kandagatla wrote:
+> This patch introduces regmap_get_max_register() function which would be
+> used by the infrastructures like nvmem framework built on top of
+> regmap.
 
-Applied, thanks.
+Applied, thanks.  If the rest of the framework is ready to get merged
+somewhere before it reaches Linus' tree let me know and we can handle it
+then.
 
---yklP1rR72f9kjNtc
+--OBd5C1Lgu00Gd/Tn
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVXyCnAAoJECTWi3JdVIfQ8XoIAIBH4i6eYV5fw+Ygwwp6OFAn
-D7NJsAEU0aRfhgsjhQ+fUqoZn68TRaaHvlY4bsWkywEJWyAHX6OVDIWoEpePAEzq
-60zE9po8usj5csnTxyQ7pgXcFIWv+9no6Rid2QfB7hwfYNTy6wb8zG7Fc4Bs5xCn
-sIcImz60sVlD3oTfCXlwkOBS94hkTNwnvXwZWSDXj6FZAIeQGpkOLr7QRlj4005M
-N6llzW6dpW1amtoUTBVgP2FIQ46ZAZYdXKNj5E65CcfLC5447QlHH6P/AD6NjkLl
-GCiaI47DSpIQ1T/mZmW7D8nG24CyjyGVebQU6FVoMPeW/DAbC+/PEa7hjZcVfUA=
-=qAT3
+iQEcBAEBCAAGBQJVXxBvAAoJECTWi3JdVIfQRn0H/2wyd8X6RayGvMml6XyfHmL0
+s64SMhFu5BPN8hE7b1tRWlLINLhYUMib2OleQy+sxwlsX7K2QftAEztEHY1w3wPm
+sYZ319CA2h8Xmj4P2FXlrEuBYTy5LxfPbNjxj5ho3Ur6Ts5f+N7JUparboGicFtH
+EuxpgJT+QcmPIxKLwokoyFt4lmi7ZohMRvDxNVW10j+K1EwBIIWZsa4t/K5NUoux
+gv1LL+AU7uthYo2pARABmKTgBlSnHVaC2xW4RaWipDPRmJg0V7FpPZ0y2Y58ZCpk
+vvJAvbQKHatzikOYn5GCFK+xA9mGaKfu/HrOXTAzjYjm308ny54+aw+tdzONjJ4=
+=XDR0
 -----END PGP SIGNATURE-----
 
---yklP1rR72f9kjNtc--
+--OBd5C1Lgu00Gd/Tn--
