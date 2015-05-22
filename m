@@ -1,46 +1,51 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
-Date: Fri, 22 May 2015 15:57:26 +0200
-Message-ID: <CALszF6A=TZ_EROrfuBOAGiY3mbydC5fepWLSWrZLLt4nV9sr4w@mail.gmail.com>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<2282066.NWoIT9ZyLc@wuerfel>
-	<CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>
-	<13641152.Yt4ZI3oT6L@wuerfel>
-	<CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>
-	<1432285588.3929.28.camel@pengutronix.de>
-	<20150522091822.GF8557@lukather>
-	<1432289231.3929.60.camel@pengutronix.de>
-	<CALszF6CQ1_HQXJ8=vgytvVo2t4_ue5_nsE06HPyHMzSLrntqKg@mail.gmail.com>
-	<555F2A8A.5020205@suse.de>
+From: Hanjun Guo <hanjun.guo@linaro.org>
+Subject: Re: [PATCH v2 1/7] clocksource: export "arch_timer_get_rate" for
+ the other drivers
+Date: Fri, 22 May 2015 22:02:46 +0800
+Message-ID: <555F3706.2070502@linaro.org>
+References: <=fu.wei@linaro.org> <1432197156-16947-1-git-send-email-fu.wei@linaro.org> <1432197156-16947-2-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <555F2A8A.5020205@suse.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@helli>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1432197156-16947-2-git-send-email-fu.wei@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-2015-05-22 15:09 GMT+02:00 Andreas F=C3=A4rber <afaerber@suse.de>:
-> As you should know, I did have an RCC clk driver, and there is no suc=
-h
-> issue. The two drivers use different mechanisms for initialization. A=
-nd
-> I'm pretty sure that I've already remarked that on the list, too.
+On 2015=E5=B9=B405=E6=9C=8821=E6=97=A5 16:32, fu.wei@linaro.org wrote:
+> From: Fu Wei <fu.wei@linaro.org>
+>
+> Some devices get clock from system counter, like SBSA watchdog
+> driver. They may need to get system counter rate.
 
-Yes, you use of_iomap in your clock driver [0].
-Daniel, would you accept to do the same?
-That would remove one difference between stm32/sunxi/socfpga reset driv=
-ers.
+and please add a comment that SBSA watchdog is a kernel module,
+then it would explicit that why EXPORT_SYMBOL_GPL is needed.
 
-Regards,
-Maxime
+>
+> Signed-off-by: Fu Wei <fu.wei@linaro.org>
 
-[0]: https://github.com/afaerber/linux/blob/stm32/drivers/clk/clk-stm32=
-f42xxx-rcc.c
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Other than that,
+
+Acked-by: Hanjun Guo <hanjun.guo@linaro.org>
+
+> ---
+>   drivers/clocksource/arm_arch_timer.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksour=
+ce/arm_arch_timer.c
+> index 0aa135d..4327bf9 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -410,6 +410,7 @@ u32 arch_timer_get_rate(void)
+>   {
+>   	return arch_timer_rate;
+>   }
+> +EXPORT_SYMBOL_GPL(arch_timer_get_rate);
+>
+>   static u64 arch_counter_get_cntvct_mem(void)
+>   {
+>
