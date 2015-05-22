@@ -1,60 +1,36 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v10 4/5] edac: Add APM X-Gene SoC EDAC driver
-Date: Fri, 22 May 2015 10:55:19 +0200
-Message-ID: <2082687.grA49DxWyE@wuerfel>
-References: <1431991481-25684-1-git-send-email-lho@apm.com> <4456746.y9FVaqRogk@wuerfel> <20150522084625.GE23022@pd.tnic>
+Date: Fri, 22 May 2015 10:59:28 +0200
+Message-ID: <2097631.G0OFDqxtEt@wuerfel>
+References: <1431991481-25684-1-git-send-email-lho@apm.com>
+ <1431991481-25684-4-git-send-email-lho@apm.com>
+ <1431991481-25684-5-git-send-email-lho@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150522084625.GE23022-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1431991481-25684-5-git-send-email-lho@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loc Ho <lho@apm.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, jcm@redhat.com, mchehab@osg.samsung.com, patches@apm.com, robh+dt@kernel.org, bp@alien8.de, dougthompson@xmission.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 May 2015 10:46:25 Borislav Petkov wrote:
-> On Fri, May 22, 2015 at 10:23:11AM +0200, Arnd Bergmann wrote:
-> > > +static int edac_mc_idx;
-> > > +static int edac_mc_active_mask;
-> > > +static int edac_mc_registered_mask;
-> > > +static DEFINE_MUTEX(xgene_edac_mc_lock);
-> > 
-> > It would also be best to avoid global variables, but it seems that at
-> > least the edac_mc_idx is needed to work with the EDAC subsystem.
-> > Maybe Boris has an idea for how to avoid it.
+On Monday 18 May 2015 17:24:40 Loc Ho wrote:
+> +       tmp_ctx.mcu_id = ((res.start >> 16) & 0xF) / 4;
 > 
-> Right, so AFAICT this is used in
-> 
->         edac_mc_alloc(edac_mc_idx++
-> 
-> and basically we're supplying the memory controller numbers in the order
-> we're calling xgene_edac_mc_add(). Perhaps we need to make the memory
-> controller numbering explicit with DT...
 
-I see now that the number is also used in xgene_edac_mc_is_active()
-as an index for the MCBADDRMR register, which seems very fragile,
-as it relies on the DT nodes getting seen in the same order by the
-driver that the hardware blocks are used in.
-
-Better add an explicit DT property for the index that is defined
-to be the same as MCBADDRMR bits, e.g. 
-
-                       edacmc@7e800000 {
-                             compatible = "apm,xgene-edac-mc";
-                             reg = <0x0 0x7e800000 0x0 0x1000>;
-			      memory-controller = <0>;
-                       };
-
-or use a reference to the normal memory controller DT node
-outside of the EDAC, and put a number in that one.
-
-Is there a strict 1:1 relation between the DIMM slot numbering
-on the board and the memory controller number within the EDAC
-registers?
+Just found this line: you are effectively hardcoding the physical
+register layout of the chip in the driver here, to get the index
+of the memory controller. This is a very bad idea as it prevents
+you from reusing this driver for another chip that puts the
+same registers in a different place, don't do that.
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
