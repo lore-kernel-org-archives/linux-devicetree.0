@@ -1,47 +1,47 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 04/10] ASoC: qcom: add dma channel control offset to
- variant data
-Date: Fri, 22 May 2015 13:27:37 +0100
-Message-ID: <20150522122737.GO21391@sirena.org.uk>
-References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1432245185-9119-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 02/11] regmap: Introduce regmap_get_reg_stride.
+Date: Fri, 22 May 2015 12:19:05 +0100
+Message-ID: <20150522111905.GD21391@sirena.org.uk>
+References: <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1432226574-8733-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S0GG+JvAI2G0KxBG"
+	protocol="application/pgp-signature"; boundary="NklN7DEeGtkPCoo3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1432245185-9119-1-git-send-email-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1432226574-8733-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com
 List-Id: devicetree@vger.kernel.org
 
 
---S0GG+JvAI2G0KxBG
+--NklN7DEeGtkPCoo3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 21, 2015 at 10:53:05PM +0100, Srinivas Kandagatla wrote:
-> This patch adds ability to pass dma channel control bits start offset,
-> which differ in differnet qcom SOCs. On apq8016 dma channel control bits
-> start after an offset of 1.
+On Thu, May 21, 2015 at 05:42:54PM +0100, Srinivas Kandagatla wrote:
+> This patch introduces regmap_get_reg_stride() function which would
+> be used by the infrastructures like nvmem framework built on top of
+> regmap. Mostly this function would be used for sanity checks on inputs
+> within such infrastructure.
 
 Applied, thanks.
 
---S0GG+JvAI2G0KxBG
+--NklN7DEeGtkPCoo3
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVXyC4AAoJECTWi3JdVIfQC6UH/jeVIyNOMobxuPEVoVE1Oqxw
-VDHRtxPUDPAIx9T70oMMHX22r1+9JURdLO5T2C/02ImLGoPxoQAn5DlysSPjhRSX
-bc4KkhbQhzr49aZLeMqVgQxjX4fIkaP8GKLGfEEYlJHeKWAnxwz5TfChvR9xDQ1J
-KqphIhPmuylmiyVaxf7OISG9Ogx/B9DAxgUSxbOGAeCSvNwPe1JTjHrOcnClRjCZ
-gTTV4Cxw1NsLTAmJVl2ZRCvta1lSmKI3SVLHFLN6c7fgkxcRQ8tslbP0qRcZvrr7
-Z7F9wfKnJVs4zrRfYKrmu1ZeBn0KkJ5ir0O+zoaAlkx44jOfSMpvzFuLC3SnHcY=
-=j/Q0
+iQEcBAEBCAAGBQJVXxCoAAoJECTWi3JdVIfQB6gH/RC8RBhaiGRnyRS3h/KIzU3u
+N/KdCCA3danrkP9eSK/CbEmW57ZA9T0wMEipa5VM601sHd46mtTpj+6EI+ZUFdXR
+5+ICUGwHs+pWEewrBqCT+V4IdgUrZ+eDx94uW/RgdcZLSCyCYEhIaNcC8Wc9SDVi
+ielsSbd0Y0CMt4wBd2+SvVlJT23imMIB7nvR/vBTc/yf9j1dNMwsAWFQ52tutjrB
+4A3re3to6zSI3JJlWIcGxOjJ35w818/4SFwy2BXb83T8QIlG5Nf1IpZqBEEgj3QS
+XZQH5IRpLDlqTsMlNDQmZoLlEjKh/MXP7y2BWBSQf0CnQ6eS96jC4xIAAIB7tdc=
+=a6Fo
 -----END PGP SIGNATURE-----
 
---S0GG+JvAI2G0KxBG--
+--NklN7DEeGtkPCoo3--
