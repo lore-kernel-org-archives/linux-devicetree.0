@@ -1,52 +1,133 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 2/2] drivers: ata: add support for Ceva sata host
- controller
-Date: Fri, 22 May 2015 11:34:24 +0200
-Message-ID: <1432287264.27695.72.camel@x220>
-References: <1432180625-25159-1-git-send-email-suneel.garapati@xilinx.com>
-	 <1432180625-25159-3-git-send-email-suneel.garapati@xilinx.com>
-	 <20150521215744.GE4914@htj.duckdns.org>
+From: Timo Kokkonen <timo.kokkonen@offcode.fi>
+Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
+Date: Fri, 22 May 2015 11:59:07 +0300
+Message-ID: <555EEFDB.2030907@offcode.fi>
+References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>	<555ECD04.6000404@offcode.fi> <CADyBb7sZWgNnEoTfaYm6=YcbWgEYRMcaNAdX9Y7B6W9pg+gOmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150521215744.GE4914@htj.duckdns.org>
+In-Reply-To: <CADyBb7sZWgNnEoTfaYm6=YcbWgEYRMcaNAdX9Y7B6W9pg+gOmg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suneel Garapati <suneel.garapati@xilinx.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, michals@xilinx.com, sorenb@xilinx.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>
+To: Fu Wei <fu.wei@linaro.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-[Adding Bjorn.]
+On 22.05.2015 11:23, Fu Wei wrote:
+> Hi Timo,
+>
+>
+> On 22 May 2015 at 14:30, Timo Kokkonen <timo.kokkonen@offcode.fi> wrote:
+>> On 21.05.2015 11:32, fu.wei@linaro.org wrote:
+>>>
+>>> From: Fu Wei <fu.wei@linaro.org>
+>>>
+>>> Also update Documentation/watchdog/watchdog-kernel-api.txt to
+>>> introduce:
+>>> (1)the new elements in the watchdog_device and watchdog_ops struct;
+>>> (2)the new API "watchdog_init_timeouts".
+>>>
+>>> Reasons:
+>>> (1)kernel already has two watchdog drivers are using "pretimeout":
+>>>          drivers/char/ipmi/ipmi_watchdog.c
+>>>          drivers/watchdog/kempld_wdt.c(but the definition is different)
+>>> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
+>>>
+>>
+>> Hi,
+>>
+>> As I was proposing some other API changes with my early-timeout-sec work, I
+>> can see my work is going to collide with your API change proposal a bit. So
+>> maybe I should ask your opinion as well..
+>
+> Thank you for reminding me of that, I saw "early-timeout-sec", but
+> because I don't get it in kernel API or watchdog_core.c, so I did not
+> pay attention to it.
+> Sorry.
+>
+>>
+>> Could this pretimeout feature be something that other drivers could benefit
+>> too?
+>
+> yes , as you may know, I am making a patch for pretimeout support in
+> watchdog framework
+>
+>> I can see that it does not do anything else except call panic() before
+>> letting the watchdog expire. This is something that could be emulated easily
+>> by the watchdog core for drivers that don't know anything about pretimeouts
+>> at all.
+>
+> For SBSA watchdog, there are two stage timeout, and according to kernel doc:
+> ----------------------
+> Pretimeouts:
+>
+> Some watchdog timers can be set to have a trigger go off before the
+> actual time they will reset the system.  This can be done with an NMI,
+> interrupt, or other mechanism.  This allows Linux to record useful
+> information (like panic information and kernel coredumps) before it
+> resets.
+> ----------------------
+>
+> I think panic() is the right way to do now.  but people may also need
+> to config :
+> PANIC_TIMEOUT [!=0]
+> KEXEC
+> KDUMP
+> for debug reason
+>
 
-> On Thu, May 21, 2015 at 09:27:05AM +0530, Suneel Garapati wrote:
-> > --- /dev/null
-> > +++ b/drivers/ata/ahci_ceva.c
+Yes, so basically if we hit pretimeout, we probably have already 
+crashed. The only difference is that we now have some seconds time to 
+dump out useful data and then either reboot or let the actual watchdog 
+reset take care of resetting the device. panic() sounds like a good 
+thing to do. Maybe you could also dump registers on other CPUs too or 
+try to get out some other useful information about the kernel in case it 
+has crashed or something. But I'm just guessing.
 
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-> > + * more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program. If not, see <http://www.gnu.org/licenses/>.
+>>
+>> The way I was planning the API change there would need to be a small change
+>> with each watchdog driver in order to let the watchdog core take over
+>> generic behaviour on behalf of the driver. My goal was to make the change so
+>> that each driver that gets converted to the new API extensions gets a
+>> support for early-timeout-sec for free, without needing to enable support
+>> for it any way. If the API was designed properly, also pretimeouts could be
+>> handled easily and maybe even so that other drivers could have that feature
+>> even though their hardware does not explicitly give any support for it.
+>
+> could you please point out your patch , then I can learn your idea :-)
+> For now , I am working on a common "Pretimeouts" following the concept
+> in kernel doc.
+>
+>>
+>> Any thoughts?
+>
+> my thoughts is in  my pretimeout patch , would you provide some suggestion ?
+>
 
-> > +MODULE_LICENSE("GPLv2");
+Here is an archive link to my patch set:
 
-You meant "GPL v2".
+http://www.spinics.net/lists/linux-watchdog/msg06473.html
 
-"GPLv2" is not one of the idents that pass license_is_gpl_compatible().
-Loading a module with that ident should trigger a warning and taint the
-kernel. See linux/module.h (or linux/license.h) for acceptable idents.
+Your patch set is adding a new call to the core for adjusting the 
+pretimoeut, which is probably a good thing in case the driver needs 
+special handling for it anyway. But if the core had capability to 
+emulate pretimeout for drivers that can't support it in hardware, it 
+would be good if there was a way for the core to support it even though 
+the driver had zero code for it. The core also has 
+watchdog_init_timeout() right now but even that is not called from that 
+many drivers. I would like to fix that too so that drivers would not 
+need to bother so much about it but let core take care of it more. This 
+is why I proposed the watchdog_init_params() call that could dig all the 
+generic parameters from device tree on behalf of the driver. This is 
+where I though timeout and early-timeout-sec parameters would be parsed 
+from device tree, but it could also parse pretimeout parameter as well. 
+Apparently Guenter did not like my approach so we might need some other 
+way to do it.
 
-This is a bit of a gotcha. A patch that would have helped here was
-posted in https://lkml.org/lkml/2015/4/7/824 . I don't know why that
-patch didn't make it into checkpatch.pl. Bjorn?
+I don't get to say how this should be done, I'm just throwing ideas 
+here. But I think the watchdog core would be a lot better place for 
+implementing the generic features than drivers. That way a lot of 
+drivers could enable support the new features for free.
 
 Thanks,
-
-
-Paul Bolle
+-Timo
