@@ -1,158 +1,50 @@
 From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH 03/15] MIPS: malta: basic DT plumbing
-Date: Fri, 22 May 2015 16:51:02 +0100
-Message-ID: <1432309875-9712-4-git-send-email-paul.burton@imgtec.com>
+Subject: [PATCH 13/15] MIPS: malta: remove nonsense memory limit
+Date: Fri, 22 May 2015 16:51:12 +0100
+Message-ID: <1432309875-9712-14-git-send-email-paul.burton@imgtec.com>
 References: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Paul Burton <paul.burton@imgtec.com>, Andrew Bresticker <abrestic@chromium.org>, linux-kernel@vger.kernel.org, Markos Chandras <markos.chandras@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Paul Burton <paul.burton@imgtec.com>, linux-kernel@vger.kernel.org, James Hogan <james.hogan@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Build a DT for the Malta platform into the kernel, load it & probe
-devices from it. The DT is essentially empty at this point, devices
-will be added in further patches.
+This cap of Malta memory size to 0x7fff0000 was added by commit
+e6ca4e5bf114 "MIPS: malta: malta-memory: Add support for the 'ememsize'
+variable" as part of support for EVA, with only the cryptic comment
+"Last 64K for HIGHMEM arithmetics". However
+
+  - EVA is used to avoid highmem, both are not enabled at once which
+    makes the comment about highmem macros nonsensical.
+
+  - I can think of no good reason for it, and nor could anyone else I
+    asked.
+
+So remove this memsize limit.
 
 Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 ---
 
- arch/mips/Kconfig                 |  2 ++
- arch/mips/boot/dts/mti/Makefile   |  1 +
- arch/mips/boot/dts/mti/malta.dts  |  7 +++++++
- arch/mips/mti-malta/Makefile      |  2 +-
- arch/mips/mti-malta/malta-dt.c    | 34 ++++++++++++++++++++++++++++++++++
- arch/mips/mti-malta/malta-setup.c |  4 ++++
- 6 files changed, 49 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/boot/dts/mti/malta.dts
- create mode 100644 arch/mips/mti-malta/malta-dt.c
+ arch/mips/mti-malta/malta-memory.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index f501665..75dd13d 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -434,6 +434,8 @@ config MIPS_MALTA
- 	select SYS_SUPPORTS_MULTITHREADING
- 	select SYS_SUPPORTS_SMARTMIPS
- 	select SYS_SUPPORTS_ZBOOT
-+	select USE_OF
-+	select BUILTIN_DTB
- 	help
- 	  This enables support for the MIPS Technologies Malta evaluation
- 	  board.
-diff --git a/arch/mips/boot/dts/mti/Makefile b/arch/mips/boot/dts/mti/Makefile
-index ef1f3db..144d776 100644
---- a/arch/mips/boot/dts/mti/Makefile
-+++ b/arch/mips/boot/dts/mti/Makefile
-@@ -1,3 +1,4 @@
-+dtb-$(CONFIG_MIPS_MALTA)	+= malta.dtb
- dtb-$(CONFIG_MIPS_SEAD3)	+= sead3.dtb
+diff --git a/arch/mips/mti-malta/malta-memory.c b/arch/mips/mti-malta/malta-memory.c
+index 5660cd6..831f583 100644
+--- a/arch/mips/mti-malta/malta-memory.c
++++ b/arch/mips/mti-malta/malta-memory.c
+@@ -94,10 +94,6 @@ void __init fw_meminit(void)
+ 	else
+ 		memsize = physical_memsize;
  
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-diff --git a/arch/mips/boot/dts/mti/malta.dts b/arch/mips/boot/dts/mti/malta.dts
-new file mode 100644
-index 0000000..c678115
---- /dev/null
-+++ b/arch/mips/boot/dts/mti/malta.dts
-@@ -0,0 +1,7 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "mti,malta";
-+};
-diff --git a/arch/mips/mti-malta/Makefile b/arch/mips/mti-malta/Makefile
-index 6510ace..ea35587 100644
---- a/arch/mips/mti-malta/Makefile
-+++ b/arch/mips/mti-malta/Makefile
-@@ -5,7 +5,7 @@
- # Copyright (C) 2008 Wind River Systems, Inc.
- #   written by Ralf Baechle <ralf@linux-mips.org>
- #
--obj-y				:= malta-display.o malta-init.o \
-+obj-y				:= malta-display.o malta-dt.o malta-init.o \
- 				   malta-int.o malta-memory.o malta-platform.o \
- 				   malta-reset.o malta-setup.o malta-time.o
+-	/* Last 64K for HIGHMEM arithmetics */
+-	if (memsize > 0x7fff0000)
+-		memsize = 0x7fff0000;
+-
+ 	add_memory_region(PHYS_OFFSET, 0x00001000, BOOT_MEM_RESERVED);
  
-diff --git a/arch/mips/mti-malta/malta-dt.c b/arch/mips/mti-malta/malta-dt.c
-new file mode 100644
-index 0000000..47a2288
---- /dev/null
-+++ b/arch/mips/mti-malta/malta-dt.c
-@@ -0,0 +1,34 @@
-+/*
-+ * Copyright (C) 2015 Imagination Technologies
-+ * Author: Paul Burton <paul.burton@imgtec.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License as published by the
-+ * Free Software Foundation; either version 2 of the License, or (at your
-+ * option) any later version.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/init.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_platform.h>
-+
-+void __init device_tree_init(void)
-+{
-+	unflatten_and_copy_device_tree();
-+}
-+
-+static const struct of_device_id bus_ids[] __initconst = {
-+	{ .compatible = "simple-bus", },
-+	{ .compatible = "isa", },
-+	{},
-+};
-+
-+static int __init publish_devices(void)
-+{
-+	if (!of_have_populated_dt())
-+		return 0;
-+
-+	return of_platform_bus_probe(NULL, bus_ids, NULL);
-+}
-+device_initcall(publish_devices);
-diff --git a/arch/mips/mti-malta/malta-setup.c b/arch/mips/mti-malta/malta-setup.c
-index db7c9e5..9d1e7f5 100644
---- a/arch/mips/mti-malta/malta-setup.c
-+++ b/arch/mips/mti-malta/malta-setup.c
-@@ -21,6 +21,7 @@
- #include <linux/sched.h>
- #include <linux/ioport.h>
- #include <linux/irq.h>
-+#include <linux/of_fdt.h>
- #include <linux/pci.h>
- #include <linux/screen_info.h>
- #include <linux/time.h>
-@@ -31,6 +32,7 @@
- #include <asm/mips-boards/malta.h>
- #include <asm/mips-boards/maltaint.h>
- #include <asm/dma.h>
-+#include <asm/prom.h>
- #include <asm/traps.h>
- #ifdef CONFIG_VT
- #include <linux/console.h>
-@@ -249,6 +251,8 @@ void __init plat_mem_setup(void)
- {
- 	unsigned int i;
- 
-+	__dt_setup_arch(__dtb_start);
-+
- 	if (config_enabled(CONFIG_EVA))
- 		/* EVA has already been configured in mach-malta/kernel-init.h */
- 		pr_info("Enhanced Virtual Addressing (EVA) activated\n");
+ 	/*
 -- 
 2.4.1
