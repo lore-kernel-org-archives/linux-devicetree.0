@@ -1,42 +1,116 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v3 1/6] rtc: arm: imx: snvs: change use syscon to access
- register
-Date: Fri, 22 May 2015 10:07:49 +0200
-Message-ID: <20150522080749.GI3244@piout.net>
-References: <1432225012-20598-1-git-send-email-Frank.Li@freescale.com>
- <1432225012-20598-2-git-send-email-Frank.Li@freescale.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
+Date: Fri, 22 May 2015 16:23:14 +0800
+Message-ID: <CADyBb7sZWgNnEoTfaYm6=YcbWgEYRMcaNAdX9Y7B6W9pg+gOmg@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
+	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>
+	<555ECD04.6000404@offcode.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432225012-20598-2-git-send-email-Frank.Li@freescale.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Frank.Li@freescale.com
-Cc: lznuaa@gmail.com, shawn.guo@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <555ECD04.6000404@offcode.fi>
+Sender: linux-doc-owner@vger.kernel.org
+To: Timo Kokkonen <timo.kokkonen@offcode.fi>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Timo,
 
-This looks good to me, a few nits below
 
-On 22/05/2015 at 00:16:47 +0800, Frank.Li@freescale.com wrote :
-> -	spin_unlock_irqrestore(&data->lock, flags);
-> +	regmap_update_bits(data->regmap, data->offset + SNVS_LPCR,
-> +			  (SNVS_LPCR_LPTA_EN | SNVS_LPCR_LPWUI_EN),
-That line is not properly aligned (missing one space)
+On 22 May 2015 at 14:30, Timo Kokkonen <timo.kokkonen@offcode.fi> wrote:
+> On 21.05.2015 11:32, fu.wei@linaro.org wrote:
+>>
+>> From: Fu Wei <fu.wei@linaro.org>
+>>
+>> Also update Documentation/watchdog/watchdog-kernel-api.txt to
+>> introduce:
+>> (1)the new elements in the watchdog_device and watchdog_ops struct;
+>> (2)the new API "watchdog_init_timeouts".
+>>
+>> Reasons:
+>> (1)kernel already has two watchdog drivers are using "pretimeout":
+>>         drivers/char/ipmi/ipmi_watchdog.c
+>>         drivers/watchdog/kempld_wdt.c(but the definition is different)
+>> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
+>>
+>
+> Hi,
+>
+> As I was proposing some other API changes with my early-timeout-sec work, I
+> can see my work is going to collide with your API change proposal a bit. So
+> maybe I should ask your opinion as well..
 
-[...]
+Thank you for reminding me of that, I saw "early-timeout-sec", but
+because I don't get it in kernel API or watchdog_core.c, so I did not
+pay attention to it.
+Sorry.
 
-> +	if (of_device_is_compatible(snvs_np, "syscon")) {
-> +		data->regmap = syscon_node_to_regmap(snvs_np);
-> +		data->offset = 0x34;
-> +	} else {
-> +		pr_warning("snvs rtc: you use old dts file, please update it\n");
+>
+> Could this pretimeout feature be something that other drivers could benefit
+> too?
 
-This should be pr_warn()
+yes , as you may know, I am making a patch for pretimeout support in
+watchdog framework
+
+> I can see that it does not do anything else except call panic() before
+> letting the watchdog expire. This is something that could be emulated easily
+> by the watchdog core for drivers that don't know anything about pretimeouts
+> at all.
+
+For SBSA watchdog, there are two stage timeout, and according to kernel doc:
+----------------------
+Pretimeouts:
+
+Some watchdog timers can be set to have a trigger go off before the
+actual time they will reset the system.  This can be done with an NMI,
+interrupt, or other mechanism.  This allows Linux to record useful
+information (like panic information and kernel coredumps) before it
+resets.
+----------------------
+
+I think panic() is the right way to do now.  but people may also need
+to config :
+PANIC_TIMEOUT [!=0]
+KEXEC
+KDUMP
+for debug reason
+
+>
+> The way I was planning the API change there would need to be a small change
+> with each watchdog driver in order to let the watchdog core take over
+> generic behaviour on behalf of the driver. My goal was to make the change so
+> that each driver that gets converted to the new API extensions gets a
+> support for early-timeout-sec for free, without needing to enable support
+> for it any way. If the API was designed properly, also pretimeouts could be
+> handled easily and maybe even so that other drivers could have that feature
+> even though their hardware does not explicitly give any support for it.
+
+could you please point out your patch , then I can learn your idea :-)
+For now , I am working on a common "Pretimeouts" following the concept
+in kernel doc.
+
+>
+> Any thoughts?
+
+my thoughts is in  my pretimeout patch , would you provide some suggestion ?
+
+Great thanks !
+
+>
+> Thanks,
+> -Timo
+
 
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
