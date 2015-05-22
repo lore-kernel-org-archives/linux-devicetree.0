@@ -1,93 +1,86 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
-Date: Fri, 22 May 2015 11:41:33 +0200
-Message-ID: <CALszF6Bz91auOX-vP+_B-aY9W_gFL_CtfJN37bGwPAKy1sTcqw@mail.gmail.com>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
- <2282066.NWoIT9ZyLc@wuerfel>
- <CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>
- <13641152.Yt4ZI3oT6L@wuerfel>
- <CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>
- <1432285588.3929.28.camel@pengutronix.de>
+From: Yann Droneaud <ydroneaud@opteya.com>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Fri, 22 May 2015 12:05:48 +0200
+Message-ID: <1432289148.5304.58.camel@opteya.com>
+References: <1430820315.19516.26.camel@opteya.com>
+	 <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1432285588.3929.28.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nicolae Rosia <nicolae.rosia@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, licensing@fsf.org
 List-Id: devicetree@vger.kernel.org
 
-2015-05-22 11:06 GMT+02:00 Philipp Zabel <p.zabel@pengutronix.de>:
-> Am Mittwoch, den 20.05.2015, 18:17 +0200 schrieb Maxime Coquelin:
->> Hi Arnd, Philipp,
->>
->> 2015-05-13 21:11 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
->> > Ideally the binding should follow closely what is documented
->> > in the data sheet.
->> >
->>
->> Daniel and myself would like your opinion about this binding:
->>
->> rcc: rcc@40023800 {
->>     #reset-cells = <1>;
->>     #clock-cells = <2>;
->>     compatible = "st,stm32-rcc";
->>     reg = <0x40023800 0x10>, <0x40023810 0x20>, <0x40023830 0x20>;
->>     reg-names = "clock-cfg", "reset", "clock-gates";
->
-> "reset" singular, "clock-gates" plural seems inconsistent to me.
-Indeed. I will change to "resets".
+Hi,
 
-About the compatible string, any idea how could I name it?
+Le mardi 05 mai 2015 =C3=A0 11:41 -0500, Rob Herring a =C3=A9crit :
+> On Tue, May 5, 2015 at 5:05 AM, Yann Droneaud <ydroneaud@opteya.com>=20
+> wrote:
+> >=20
+> > I believe Device Tree Blob (.dtb file) built from kernel's Device=20
+> > Tree
+> > Sources (.dts, which #include .dtsi, which #include .h) using=20
+> > Device
+> > Tree Compiler (dtc) are covered by GNU General Public Licence v2
+> > (GPLv2), but cannot find any reference.
+>=20
+> By default yes, but we've been steering people to dual license them=20
+> GPL/BSD.
+>=20
 
->
->> };
->>
->> It would solve a problem Daniel is facing due to conflicting mem
->> region when clock and reset drivers are enabled, as both would reserve
->> the same region.
->>
->> Also, it would make the reset driver very generic.
->> Doing that, we could even create a generic-reset.c driver that would
->> be used by STM32 and Sunxi (at least).
->
-> Adding support for providing the reset register range via of_device_id
-> data and the possibility to invert set/clear ops would allow to also
-> include the socfpga driver.
+Can you give me the rationale behind such dual licenses requirement ?
 
-Ok, it sounds like a good plan.
-Should I also add a property in the bindings for the reset polarity?
-It won't be used for now, as for socfpga we have to do it via
-of_device_id data, in order not to break DT backward compatibility.
+If a BSD .dts includes GPLv2 .h, the whole is covered by GPLv2,
+so I cannot find a case where a BSD covered .dts file could be used
+alone within BSD license rights.
 
->
->> In the probe function, it would check the number of reg resources.
->> If a single resource is passed, it would take it, else it would look
->> the one named "reset".
->> The driver and bindings would be the same for the two families, and
->> the bindings would be backward compatible with sunxi ones.
->>
->> Philip, Arnd, what do you think?
->
-> I'm not a fan of describing the register layout in the device tree as
-> detailed as the sunxi bindings do. I'd prefer the reg property to
-> describe the device's register address space with one entry per
-> contiguous block of registers.
-> Unifying the mostly identical drivers is a good idea though, and reusing
-> preexisting bindings is better than inventing new ones. I favor the
-> socfpga binding, but I still like the sunxi bindings and this proposal
-> better than encoding the register offset in the reset index.
+> > As most .dtsi in arch/arm/boot/dts/ are covered by GPLv2, and,
+> > as most .h in include/dt-bindings/ are also covered by GPLv2,
+> > the source code is likely covered by GPLv2.
+> >=20
+> > Then this source code is translated in a different language=20
+> > (flattened
+> > device tree), so the resulting translation is also likely covered=20
+> > by
+> > GPLv2.
+> >=20
+> > So, when I'm proposed to download a .dtb file from a random vendor,
+> > can I require to get the associated source code ?
+>=20
+> I believe so yes. However, you already have the "source" for the most
+> part. Just run "dtc -I dtb -O dts <dtb file>". You loose the
+> preprocessing and include structure though (not necessarily a bad
+> thing IMO).
+>=20
+> Then the question is what is the license on that generated dts!
+>=20
 
-Ok, I will propose a RFC.
+That's also a good question.
 
-Thanks,
-Maxime
+Is this a form a "reverse engineering" with all the legalese burden ?
+
+Anyway without a clear information attached to the DTB, it's difficult
+to tell which licence cover the "decompiled" version.
+
+> > Anyway, for a .dtb file generated from kernel sources, it's rather
+> > painful to look after all .dts, .dtsi, .h, to find what kind of
+> > licences are applicables, as some are covered by BSD, dual licensed
+> > (any combination of X11, MIT, BSD, GPLv2).
+>=20
+> I imagine the includes cause some licensing discrepancies if you dug=20
+> into it.
+>=20
+
+It's a pity, and it's probably something to sort out.
+
+DTB files produced as part of kernel compilation should have a well
+known license attached by default.
+
+Regards.
+
+--=20
+Yann Droneaud
+OPTEYA
