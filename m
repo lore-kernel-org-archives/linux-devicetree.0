@@ -1,42 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [Linaro-acpi] [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Fri, 22 May 2015 22:13:43 +0200
-Message-ID: <3381585.xxhO00lRy6@wuerfel>
-References: <=fu.wei@linaro.org> <10437443.BChumWu5Uk@wuerfel> <555F5728.5060209@codeaurora.org>
+From: Chris Metcalf <cmetcalf@ezchip.com>
+Subject: Re: [RFC PATCH] EDAC: Cleanup atomic_scrub mess
+Date: Fri, 22 May 2015 16:13:22 -0400
+Message-ID: <555F8DE2.4060402@ezchip.com>
+References: <1431991481-25684-1-git-send-email-lho@apm.com>
+ <1431991481-25684-2-git-send-email-lho@apm.com>
+ <20150519170308.GL4641@pd.tnic>
+ <CAPw-ZT=mTpt_vz+e=rM5ywK8feNKkJQrpEWg=noRCziJ0840TQ@mail.gmail.com>
+ <20150519203336.GP4641@pd.tnic> <20150521180719.GE3689@pd.tnic>
+ <20150521181157.GF3689@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <555F5728.5060209@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linaro-acpi@lists.linaro.org
-Cc: Timur Tabi <timur@codeaurora.org>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, corbet@lwn.net, jcm@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, wim@iguana.be, tekkamanninja@gmail.com, vgandhi@codeaurora.org, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150521181157.GF3689@pd.tnic>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>, Loc Ho <lho@apm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ".
+ Maciej W. Rozycki" <macro@codesourcery.com>, x86@kernel.org, Russell King <linux@arm.linux.org.uk>, Markos Chandras <markos.chandras@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Masters <jcm@redhat.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "patches@apm.com" <patches@apm.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Doug Thompson <dougthompson@xmission.com>, "Steven J. Hill" <Steven.Hill@imgtec.com>, Paul Mackerras <paulus@samba.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 May 2015 11:19:52 Timur Tabi wrote:
-> On 05/22/2015 10:24 AM, Arnd Bergmann wrote:
-> > That will break the ACPI case, but ACPI could use platform_data to
-> > pass the clock rate into the driver, to make it independent of
-> > low-level APIs.
-> 
-> The clock rate isn't the only problem.  You still need to current clock 
-> timestamp, and that's ARM-specific.
+On 05/21/2015 02:11 PM, Borislav Petkov wrote:
+> From: Borislav Petkov<bp@suse.de>
+>
+> So first of all, this atomic_scrub() function's naming is bad. It looks
+> like an atomic_t helper. Change it to edac_atomic_scrub().
+>
+> The bigger problem is that this function is arch-specific and every new
+> arch which doesn't necessarily need that functionality still needs to
+> define it, otherwise EDAC doesn't compile.
+>
+> So instead of doing that and including arch-specific headers, have each
+> arch define an EDAC_ATOMIC_SCRUB symbol which can be used in edac_mc.c
+> for ifdeffery. Much cleaner.
+>
+> We already are doing this with another symbol - EDAC_SUPPORT. This is
+> also much cleaner than having CONFIG_EDAC explicitly depend on all the
+> arches which need/have EDAC support and drivers.
+>
+> This way I can kill the useless edac.h header in tile too.
+>
+> Signed-off-by: Borislav Petkov<bp@suse.de>
 
-Ah, I didn't realize that. I also just noticed that the two arch_timer
-functions we call here are inline functions that just access control
-registers.
+Acked-by: Chris Metcalf <cmetcalf@ezchip.com> [for tile]
 
-If we want to enable COMPILE_TEST then, it would have to be something
-like 
-
-#ifdef CONFIG_ARM || CONFIG_ARM64
-#include <asm/arch_timer.h>
-#else
-... /* stub functions */
-#endif
-
-That might still be helpful to get coverage from things like the public
-coverity builds that always build x86 allmodconfig, but it's also a bit
-ugly.
-
-	Arnd
+-- 
+Chris Metcalf, EZChip Semiconductor
+http://www.ezchip.com
