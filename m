@@ -1,7 +1,7 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: imx6qdl-nitrogen6x: add Okaya LCD display
-Date: Fri, 22 May 2015 19:14:26 +0200
-Message-ID: <1432314867-30888-2-git-send-email-gary.bisson@boundarydevices.com>
+Subject: [PATCH 2/2] ARM: dts: imx6qdl-sabrelite: add Okaya LCD display
+Date: Fri, 22 May 2015 19:14:27 +0200
+Message-ID: <1432314867-30888-3-git-send-email-gary.bisson@boundarydevices.com>
 References: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1432314867-30888-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
@@ -10,19 +10,19 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the 7" LCD display available for Nitrogen6x:
+This patch adds support for the 7" LCD display available for Sabrelite:
 http://boundarydevices.com/product/7-800x480-display/
 
 Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 70 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 70 ++++++++++++++++++++++++++++++++
  1 file changed, 70 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index 3af16df..7097593 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -131,6 +131,39 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index e00c44f..d5a25dc 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -130,6 +130,39 @@
  		status = "okay";
  	};
  
@@ -62,7 +62,7 @@ index 3af16df..7097593 100644
  	panel {
  		compatible = "hannstar,hsd100pxn1";
  		backlight = <&backlight_lvds>;
-@@ -315,6 +348,39 @@
+@@ -309,6 +342,39 @@
  			>;
  		};
  
@@ -102,7 +102,7 @@ index 3af16df..7097593 100644
  		pinctrl_pwm1: pwm1grp {
  			fsl,pins = <
  				MX6QDL_PAD_SD1_DAT3__PWM1_OUT 0x1b0b1
-@@ -382,6 +448,10 @@
+@@ -377,6 +443,10 @@
  	};
  };
  
