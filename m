@@ -1,77 +1,106 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v2 2/5] phy: qcom: Add Qualcomm PCIe PHY
-Date: Fri, 22 May 2015 19:25:41 +0300
-Message-ID: <555F5885.70105@mm-sol.com>
-References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com> <1430743338-10441-3-git-send-email-svarbanov@mm-sol.com> <554783CD.50708@ti.com> <55478F1A.3000401@mm-sol.com> <20150519224143.GS31666@google.com> <555C8743.6020708@ti.com> <CAErSpo42N8YHWjrqUCj0ubqZLt4w-3g=ykPdR8ZMmWaW1GjWDw@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Fri, 22 May 2015 11:26:44 -0500
+Message-ID: <CAL_JsqKLmePHHe+4n4xwiFhjo+wZ+V774i3eY9Z07+61SDHyYQ@mail.gmail.com>
+References: <1430820315.19516.26.camel@opteya.com> <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
+ <1432289148.5304.58.camel@opteya.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo42N8YHWjrqUCj0ubqZLt4w-3g=ykPdR8ZMmWaW1GjWDw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432289148.5304.58.camel-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, licensing-dGWS0fDw8IM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2015 04:23 PM, Bjorn Helgaas wrote:
-> On Wed, May 20, 2015 at 8:08 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> Hi Bjorn,
+On Fri, May 22, 2015 at 5:05 AM, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org> w=
+rote:
+> Hi,
+>
+> Le mardi 05 mai 2015 =C3=A0 11:41 -0500, Rob Herring a =C3=A9crit :
+>> On Tue, May 5, 2015 at 5:05 AM, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>
+>> wrote:
+>> >
+>> > I believe Device Tree Blob (.dtb file) built from kernel's Device
+>> > Tree
+>> > Sources (.dts, which #include .dtsi, which #include .h) using
+>> > Device
+>> > Tree Compiler (dtc) are covered by GNU General Public Licence v2
+>> > (GPLv2), but cannot find any reference.
 >>
+>> By default yes, but we've been steering people to dual license them
+>> GPL/BSD.
 >>
->> On Wednesday 20 May 2015 04:11 AM, Bjorn Helgaas wrote:
->>>
->>> On Mon, May 04, 2015 at 06:24:10PM +0300, Stanimir Varbanov wrote:
->>>>
->>>> On 05/04/2015 05:35 PM, Kishon Vijay Abraham I wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>> On Monday 04 May 2015 06:12 PM, Stanimir Varbanov wrote:
->>>>>>
->>>>>> Add a PCIe PHY driver used by PCIe host controller driver
->>>>>> on Qualcomm SoCs like Snapdragon 805.
->>>>>>
->>>>>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->>>>>> ---
->>>>>>    drivers/phy/Kconfig         |    9 ++
->>>>>>    drivers/phy/Makefile        |    1 +
->>>>>>    drivers/phy/phy-qcom-pcie.c |  291
->>>>>> +++++++++++++++++++++++++++++++++++++++++++
->>>>>
->>>>>
->>>>> Why do you need a new PHY driver for this? Why not use the existing QCOM
->>>>> PHY driver. I can see the registers used here in
->>>>> phy-qcom-ufs-qmp-14nm.h?
->>>>
->>>>
->>>> I agree that on first glance there are similarities, but I'm not sure
->>>> does the PHYs are the same IP blocks. Or at least they are different
->>>> revisions which have too many differences. So trying to combine them
->>>> will lead to more code than now.
->>>>
->>>> Either way I will try to understand how many the differences are.
->>>
->>>
->>> Ping, where are we with this?  Should I wait for something else, or are
->>> you
->>> convinced there's enough difference to warrant a new PHY driver, Kishon?
+>
+> Can you give me the rationale behind such dual licenses requirement ?
+
+Ideally, dtb files are shipped with firmware separately from the OS.
+You should be able to run multiple OS's with that dtb. There is often
+desire or "requirements" to not have GPL code in firmware.
+
+> If a BSD .dts includes GPLv2 .h, the whole is covered by GPLv2,
+> so I cannot find a case where a BSD covered .dts file could be used
+> alone within BSD license rights.
+
+arch/powerpc/boot/dts
+
+>> > As most .dtsi in arch/arm/boot/dts/ are covered by GPLv2, and,
+>> > as most .h in include/dt-bindings/ are also covered by GPLv2,
+>> > the source code is likely covered by GPLv2.
+>> >
+>> > Then this source code is translated in a different language
+>> > (flattened
+>> > device tree), so the resulting translation is also likely covered
+>> > by
+>> > GPLv2.
+>> >
+>> > So, when I'm proposed to download a .dtb file from a random vendor=
+,
+>> > can I require to get the associated source code ?
 >>
+>> I believe so yes. However, you already have the "source" for the mos=
+t
+>> part. Just run "dtc -I dtb -O dts <dtb file>". You loose the
+>> preprocessing and include structure though (not necessarily a bad
+>> thing IMO).
 >>
->> I'd like to wait to see if Stanimir can use existing driver instead of
->> creating a new driver.
-> 
-> OK, I'm waiting for a v3 with either tweaks to the QCOM PHY driver, or
-> stronger justification as to why that's impossible.  It's hard to
-> quantify statements like "there are similarities, but there are too
-> many differences," so you might have to actually attempt a patch for
-> the QCOM code and we can see how ugly that would turn out to be.
+>> Then the question is what is the license on that generated dts!
+>>
+>
+> That's also a good question.
+>
+> Is this a form a "reverse engineering" with all the legalese burden ?
 
-Kishon,
+I am not a lawyer.
 
-I'm still checking the differences, sorry for the delay.
+> Anyway without a clear information attached to the DTB, it's difficul=
+t
+> to tell which licence cover the "decompiled" version.
+>
+>> > Anyway, for a .dtb file generated from kernel sources, it's rather
+>> > painful to look after all .dts, .dtsi, .h, to find what kind of
+>> > licences are applicables, as some are covered by BSD, dual license=
+d
+>> > (any combination of X11, MIT, BSD, GPLv2).
+>>
+>> I imagine the includes cause some licensing discrepancies if you dug
+>> into it.
+>>
+>
+> It's a pity, and it's probably something to sort out.
+>
+> DTB files produced as part of kernel compilation should have a well
+> known license attached by default.
 
-Bjorn, is the pcie driver looks good enough to be merged?
+It would be a lot of work to sort out. If people need non-GPL dts/dtb
+files then it is really their problem to sort out and audit their dts
+files. I mainly tell people to dual license so they (and their
+company) think about the issue.
 
--- 
-regards,
-Stan
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
