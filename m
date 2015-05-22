@@ -1,147 +1,43 @@
-From: Robert Schwebel <r.schwebel@pengutronix.de>
-Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
-Date: Fri, 22 May 2015 08:46:35 +0200
-Message-ID: <20150522064635.GS14416@pengutronix.de>
-References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
- <1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
+From: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/6] iio: light: Updated Vishay Capella cm32181 ambient
+ light sensor driver. - Renamed company name. - Removed cm32181_reg. - Removed
+ white space. - Removed unused include files. - Updated macro definitions. -
+ Renamed cm32181_chip pointer to chip.
+Date: Fri, 22 May 2015 09:57:12 +0300
+Message-ID: <CAEnQRZBxX-YxU1u8PuE_8ApBpsEOU9XenFyhbKUbmTW4RzO+=w@mail.gmail.com>
+References: <1432254645-5349-1-git-send-email-ktsai@capellamicro.com>
+	<20150522015615.GA3320@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150522015615.GA3320-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Roberta Dobrescu <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>"linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <l>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
+On Fri, May 22, 2015 at 4:56 AM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Thu, May 21, 2015 at 05:30:40PM -0700, Kevin Tsai wrote:
+>> Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+>> ---
+>
+> Your whole changelog ended up in the Subject line :(
 
-On Thu, May 14, 2015 at 03:28:24PM +0100, Sudeep Holla wrote:
-> Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> devices with an OF node") adds the symlink `of_node` for each device
-> pointing to it's device tree node while creating/initialising it.
-> 
-> However the devicetree sysfs is created and setup in of_init which is
-> executed at core_initcall level. For all the devices created before
-> of_init, the following error is thrown:
-> 	"Error -2(-ENOENT) creating of_node link"
-> 
-> Like many other components in driver model, initialize the sysfs support
-> for OF/devicetree from driver_init so that it's ready before any devices
-> are created.
-> 
-> Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> 	devices with an OF node")
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/base/init.c | 2 ++
->  drivers/of/base.c   | 8 +++-----
->  include/linux/of.h  | 6 ++++++
->  3 files changed, 11 insertions(+), 5 deletions(-)
-> 
-> Changes v1->v2:
-> 	- renamed of_init to of_core_init to avoid collision with
-> 	  PPC nouveau drm driver
-> 
-> diff --git a/drivers/base/init.c b/drivers/base/init.c
-> index da033d3bab3c..48c0e220acc0 100644
-> --- a/drivers/base/init.c
-> +++ b/drivers/base/init.c
-> @@ -8,6 +8,7 @@
->  #include <linux/device.h>
->  #include <linux/init.h>
->  #include <linux/memory.h>
-> +#include <linux/of.h>
-> 
->  #include "base.h"
-> 
-> @@ -34,4 +35,5 @@ void __init driver_init(void)
->  	cpu_dev_init();
->  	memory_dev_init();
->  	container_dev_init();
-> +	of_core_init();
->  }
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 99764db0875a..f0650265febf 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -189,7 +189,7 @@ int __of_attach_node_sysfs(struct device_node *np)
->  	return 0;
->  }
-> 
-> -static int __init of_init(void)
-> +void __init of_core_init(void)
->  {
->  	struct device_node *np;
-> 
-> @@ -198,7 +198,8 @@ static int __init of_init(void)
->  	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
->  	if (!of_kset) {
->  		mutex_unlock(&of_mutex);
-> -		return -ENOMEM;
-> +		pr_err("devicetree: failed to register existing nodes\n");
-> +		return;
->  	}
->  	for_each_of_allnodes(np)
->  		__of_attach_node_sysfs(np);
-> @@ -207,10 +208,7 @@ static int __init of_init(void)
->  	/* Symlink in /proc as required by userspace ABI */
->  	if (of_root)
->  		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
-> -
-> -	return 0;
->  }
-> -core_initcall(of_init);
-> 
->  static struct property *__of_find_property(const struct device_node *np,
->  					   const char *name, int *lenp)
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index ddeaae6d2083..b871ff9d81d7 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -121,6 +121,8 @@ extern struct device_node *of_stdout;
->  extern raw_spinlock_t devtree_lock;
-> 
->  #ifdef CONFIG_OF
-> +void of_core_init(void);
-> +
->  static inline bool is_of_node(struct fwnode_handle *fwnode)
->  {
->  	return fwnode && fwnode->type == FWNODE_OF;
-> @@ -376,6 +378,10 @@ bool of_console_check(struct device_node *dn, char *name, int index);
-> 
->  #else /* CONFIG_OF */
-> 
-> +static inline void of_core_init(void)
-> +{
-> +}
-> +
->  static inline bool is_of_node(struct fwnode_handle *fwnode)
->  {
->  	return false;
-> --
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+Hi Kevin,
 
-Works on vexpress (qemu), thanks!
+Few comments:
 
-Tested-by: Robert Schwebel <r.schwebel@pengutronix.de>
+1) Please also add a cover letter. Use --cover-letter parameter of git
+format-patch.
+2) Please create a patch for each logical change. Your current 1/6
+patch should be
+split in several small patches:
+ * 1/6 iio: light: cm32181: Update company name
+ * 2/6 iio: light: cm32181: Remove unused include files
+ * etc.
+3) Please use specific wordings for commit subject. A subject like this:
 
-rsc
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+"Updated Vishay Capella cm32181 ambient light sensor driver" doesn't say much.
+
+thanks,
+Daniel.
