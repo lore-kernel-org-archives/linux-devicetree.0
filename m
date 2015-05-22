@@ -1,204 +1,167 @@
-From: Yann Droneaud <ydroneaud@opteya.com>
-Subject: Re: Device Tree Blob (DTB) licence
-Date: Fri, 22 May 2015 21:27:12 +0200
-Message-ID: <1432322832.5304.63.camel@opteya.com>
-References: <1430820315.19516.26.camel@opteya.com>
-	 <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
-	 <1432289148.5304.58.camel@opteya.com>
+From: "Peter Seiderer" <ps.report@gmx.net>
+Subject: Aw: Re: [PATCH v2] ARM: dts: nitrogen6x: add CAN support
+Date: Fri, 22 May 2015 21:30:19 +0200
+Message-ID: <trinity-1dc833e7-79e4-4fe4-9e8b-cff88a35a0d9-1432323019162@3capp-gmx-bs48>
+References: <1432230303-3414-1-git-send-email-ps.report@gmx.net>,
+ <1432292734.3929.64.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-dGnd+suWiOn/NMg41of9"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432289148.5304.58.camel@opteya.com>
+In-Reply-To: <1432292734.3929.64.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Philipp,
 
---=-dGnd+suWiOn/NMg41of9
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-
-Hi,
-
-[removing Cc: licensing@fsf.org]
-
-Le vendredi 22 mai 2015 à 12:05 +0200, Yann Droneaud a écrit :
-> Le mardi 05 mai 2015 à 11:41 -0500, Rob Herring a écrit :
-> > On Tue, May 5, 2015 at 5:05 AM, Yann Droneaud <ydroneaud@opteya.com
-> > > 
-> > wrote:
-> > > 
-> > > I believe Device Tree Blob (.dtb file) built from kernel's Device 
-> > > 
-> > > Tree
-> > > Sources (.dts, which #include .dtsi, which #include .h) using 
-> > > Device
-> > > Tree Compiler (dtc) are covered by GNU General Public Licence v2
-> > > (GPLv2), but cannot find any reference.
+> Gesendet: Freitag, 22. Mai 2015 um 13:05 Uhr
+> Von: "Philipp Zabel" <p.zabel@pengutronix.de>
+> An: "Peter Seiderer" <ps.report@gmx.net>
+> Cc: linux-kernel@vger.kernel.org, "Mark Rutland" <mark.rutland@arm.com>, devicetree@vger.kernel.org, "Russell King" <linux@arm.linux.org.uk>, "Pawel Moll" <pawel.moll@arm.com>, "Ian Campbell" <ijc+devicetree@hellion.org.uk>, "Rob Herring" <robh+dt@kernel.org>, "Sascha Hauer" <kernel@pengutronix.de>, "Kumar Gala" <galak@codeaurora.org>, "Shawn Guo" <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+> Betreff: Re: [PATCH v2] ARM: dts: nitrogen6x: add CAN support
+>
+> Hi Peter,
+> 
+> Am Donnerstag, den 21.05.2015, 19:45 +0200 schrieb Peter Seiderer:
+> > Regulator stuff copied from imx6qdl-tx6.dtsi, pin configuration
+> > taken from Boundary Devices linux kernel tree ([1] and [2]).
 > > 
-> > By default yes, but we've been steering people to dual license them 
+> > [1] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> > [2] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl.dtsi
 > > 
-> > GPL/BSD.
+> > Signed-off-by: Peter Seiderer <ps.report@gmx.net>
+> > ---
+> > v2:
+> >  - fix imx6qdl-nitrogen6x.dtsi url
+> >  - use real PAD settings (suggested by Fabio Estevam)
+> >  - remove _1 suffix (suggested by Shawn Guo)
+> > ---
+> >  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 32 +++++++++++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
 > > 
+> > diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> > index fd096dc..d40092e 100644
+> > --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> > @@ -54,6 +54,17 @@
+> >  			gpio = <&gpio3 22 0>;
+> >  			enable-active-high;
+> >  		};
+> > +
+> > +		reg_can_xcvr: regulator@3 {
+> > +			compatible = "regulator-fixed";
+> > +			reg = <3>;
+> > +			regulator-name = "CAN XCVR";
+> > +			regulator-min-microvolt = <3300000>;
+> > +			regulator-max-microvolt = <3300000>;
+> > +			pinctrl-names = "default";
+> > +			pinctrl-0 = <&pinctrl_can_xcvr>;
+> > +			gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
 > 
-> Can you give me the rationale behind such dual licenses requirement ?
+> According to
+> Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+> this should have:
+> 			enable-active-high;
 > 
-> If a BSD .dts includes GPLv2 .h, the whole is covered by GPLv2,
-> so I cannot find a case where a BSD covered .dts file could be used
-> alone within BSD license rights.
-> 
-> > > As most .dtsi in arch/arm/boot/dts/ are covered by GPLv2, and,
-> > > as most .h in include/dt-bindings/ are also covered by GPLv2,
-> > > the source code is likely covered by GPLv2.
-> > > 
-> > > Then this source code is translated in a different language 
-> > > (flattened
-> > > device tree), so the resulting translation is also likely covered 
-> > > 
-> > > by
-> > > GPLv2.
-> > > 
-> > > So, when I'm proposed to download a .dtb file from a random 
-> > > vendor,
-> > > can I require to get the associated source code ?
-> > 
-> > I believe so yes. However, you already have the "source" for the 
-> > most
-> > part. Just run "dtc -I dtb -O dts <dtb file>". You loose the
-> > preprocessing and include structure though (not necessarily a bad
-> > thing IMO).
-> > 
-> > Then the question is what is the license on that generated dts!
-> > 
-> 
-> That's also a good question.
-> 
-> Is this a form a "reverse engineering" with all the legalese burden ?
-> 
-> Anyway without a clear information attached to the DTB, it's 
-> difficult
-> to tell which licence cover the "decompiled" version.
-> 
-> > > Anyway, for a .dtb file generated from kernel sources, it's 
-> > > rather
-> > > painful to look after all .dts, .dtsi, .h, to find what kind of
-> > > licences are applicables, as some are covered by BSD, dual 
-> > > licensed
-> > > (any combination of X11, MIT, BSD, GPLv2).
-> > 
-> > I imagine the includes cause some licensing discrepancies if you 
-> > dug 
-> > into it.
-> > 
-> 
-> It's a pity, and it's probably something to sort out.
-> 
-> DTB files produced as part of kernel compilation should have a well
-> known license attached by default.
+> instead of the gpio phandle flag (which is ignored). Otherwise an active
+> low GPIO is assumed.
 > 
 
-I've added licensing@fsf.ogrg in Cc: in my previous message to have an 
-advice on this subject, but I failed to notice licensing@fsf.org 
-is not a mailing list: I was assigned request ID [gnu.org #1017262].
+Thanks for review...
 
-Regards.
+I was a bit confused from the original:
 
--- 
-Yann Droneaud
-OPTEYA
+imx6qdl-tx6.dtsi:103:           reg_can_xcvr: regulator@3 {
+imx6qdl-tx6.dtsi-104-                   compatible = "regulator-fixed";
+imx6qdl-tx6.dtsi-105-                   reg = <3>;
+imx6qdl-tx6.dtsi-106-                   regulator-name = "CAN XCVR";
+imx6qdl-tx6.dtsi-107-                   regulator-min-microvolt = <3300000>;
+imx6qdl-tx6.dtsi-108-                   regulator-max-microvolt = <3300000>;
+imx6qdl-tx6.dtsi-109-                   pinctrl-names = "default";
+imx6qdl-tx6.dtsi:110:                   pinctrl-0 = <&pinctrl_flexcan_xcvr>;
+imx6qdl-tx6.dtsi-111-                   gpio = <&gpio4 21 GPIO_ACTIVE_HIGH>;
+imx6qdl-tx6.dtsi-112-                   enable-active-low;
+imx6qdl-tx6.dtsi-113-           };
 
---=-dGnd+suWiOn/NMg41of9
-Content-Disposition: inline
-Content-Description: Message joint - [gnu.org #1017262] AutoReply concerning
- licensing question: Re: Device Tree Blob (DTB) licence
-Content-Type: message/rfc822
+...and removed the default 'enable-active-low'...
 
-Return-Path: <www-data@gnu.org>
-Delivered-To: <ydroneaud@opteya.com>
-Received: from ou.quest-ce.net by ou.quest-ce.net (Dovecot) with LMTP id
- fBsuMl4KX1VLIAAAEWxVLQ for <ydroneaud@opteya.com>; Fri, 22 May 2015
- 12:52:14 +0200
-Received: from rt.gnu.org ([74.94.156.213]) by ou.quest-ce.net with esmtps
- (TLS1.0:RSA_AES_256_CBC_SHA1:256) (Exim 4.80) (envelope-from
- <www-data@gnu.org>) id 1YvkYo-00029F-83 for ydroneaud@opteya.com; Fri, 22
- May 2015 12:52:14 +0200
-Received: from www-data by rt.gnu.org with local (Exim 4.69) (envelope-from
- <www-data@gnu.org>) id 1YvjqK-0002Qr-Qu for ydroneaud@opteya.com; Fri, 22
- May 2015 06:06:16 -0400
-From: "FSF Licensing Questions via RT" <licensing@fsf.org>
-Reply-To: licensing@fsf.org
-In-Reply-To: <1432289148.5304.58.camel@opteya.com>
-References: <RT-Ticket-1017262@rt.gnu.org>
-	 <1430820315.19516.26.camel@opteya.com>
-	 <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
-	 <1432289148.5304.58.camel@opteya.com>
-Message-ID: <rt-3.4.5-24484-1432289176-201.1017262-48-0@rt.gnu.org>
-Precedence: bulk
-X-RT-Loop-Prevention: gnu.org
-RT-Ticket: gnu.org #1017262
-Managed-by: RT 3.4.5 (http://www.bestpractical.com/rt/)
-RT-Originator: ydroneaud@opteya.com
-To: ydroneaud@opteya.com
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-RT-Original-Encoding: utf-8
-Date: Fri, 22 May 2015 06:06:16 -0400
-Received-SPF: pass client-ip=74.94.156.213; envelope-from=www-data@gnu.org;
- helo=rt.gnu.org
-X-SA-Exim-Connect-IP: 74.94.156.213
-X-SA-Exim-Mail-From: www-data@gnu.org
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on ou.quest-ce.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
- T_RP_MATCHES_RCVD,URIBL_BLOCKED autolearn=ham version=3.3.2
-Subject: [gnu.org #1017262] AutoReply concerning licensing question: Re:
- Device Tree Blob (DTB) licence
-X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
-X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
-X-Evolution-Source: 1388004808.11925.2@test.quest-ce.net
-Content-Transfer-Encoding: quoted-printable
+Maybe GPIO_ACTIVE_LOW is the right thing?
 
-This message has been automatically generated in response to a
-licensing question you sent to the Free Software Foundation, with subject:
-	"Re: Device Tree Blob (DTB) licence".
+>From the other files:
 
-There is no need to reply to this message right now.  Your request has
-been assigned an ID of [gnu.org #1017262].
-
-Please include the string:
-         [gnu.org #1017262]
-in the subject line of all future correspondence about this issue.  To do
-so, you may reply to this message.
+imx28-tx28.dts:90:              reg_can_xcvr: regulator@4 {
+imx28-tx28.dts-91-                      compatible = "regulator-fixed";
+imx28-tx28.dts-92-                      reg = <4>;
+imx28-tx28.dts-93-                      regulator-name = "CAN XCVR";
+imx28-tx28.dts-94-                      regulator-min-microvolt = <3300000>;
+imx28-tx28.dts-95-                      regulator-max-microvolt = <3300000>;
+imx28-tx28.dts-96-                      gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+imx28-tx28.dts-97-                      pinctrl-names = "default";
+imx28-tx28.dts:98:                      pinctrl-0 = <&tx28_flexcan_xcvr_pins>;
+imx28-tx28.dts-99-              };
 
 
-Thank you so much for writing to the Free Software Foundation's
-Licensing and Compliance Lab. Questions sent to this address are
-answered largely by volunteers, with the help of FSF staff. We have the
-following licensing resources available which you might find helpful:
+imx53-tx53.dtsi:90:             reg_can_xcvr: regulator@2 {
+imx53-tx53.dtsi-91-                     compatible = "regulator-fixed";
+imx53-tx53.dtsi-92-                     reg = <2>;
+imx53-tx53.dtsi-93-                     regulator-name = "CAN XCVR";
+imx53-tx53.dtsi-94-                     regulator-min-microvolt = <3300000>;
+imx53-tx53.dtsi-95-                     regulator-max-microvolt = <3300000>;
+imx53-tx53.dtsi-96-                     pinctrl-names = "default";
+imx53-tx53.dtsi:97:                     pinctrl-0 = <&pinctrl_can_xcvr>;
+imx53-tx53.dtsi-98-                     gpio = <&gpio4 21 GPIO_ACTIVE_HIGH>;
+imx53-tx53.dtsi-99-             };
 
-Licensing FAQ page: http://www.gnu.org/licenses/gpl-faq.html
-Text of the GNU GPL: http://www.gnu.org/licenses/gpl.html
-Text of the GNU LGPL: http://www.gnu.org/licenses/lgpl.html
-Text of the GNU AGPL: http://www.gnu.org/licenses/agpl.html
-Our license list page: http://www.gnu.org/licenses/license-list.html
+But there are also imx regulator-fixed definitions with GPIO_ACTIVE_HIGH/enable-active-high:
 
-We can always use more help in answering licensing questions (check out
-our license team page on Libreplanet if you are interested in helping
-out <http://libreplanet.org/wiki/Group:Free_Software_Foundation/Licensing_V=
-olunteers>),
-so we thank you for your patience as you await a response. You can also
-help the licensing team by making a donation at <donate.fsf.org>. Your dona=
-tions are
-what enable us to offer this service to the community.
+imx28-tx28.dts-101-             reg_lcd: regulator@5 {
+imx28-tx28.dts-102-                     compatible = "regulator-fixed";
+imx28-tx28.dts-103-                     reg = <5>;
+imx28-tx28.dts-104-                     regulator-name = "LCD POWER";
+imx28-tx28.dts-105-                     regulator-min-microvolt = <3300000>;
+imx28-tx28.dts-106-                     regulator-max-microvolt = <3300000>;
+imx28-tx28.dts-107-                     gpio = <&gpio1 31 GPIO_ACTIVE_HIGH>;
+imx28-tx28.dts-108-                     enable-active-high;
+imx28-tx28.dts-109-             };
 
-We do offer consulting services for companies who are working to develop
-products that incorporate free software so that they can do so in ways
-that comply with the terms of the GPL and other free software licenses.
-If you are interested in this service, please write a separate message
-to compliance-lab@fsf.org.
 
-                        Sincerely,
-                        FSF GPL Compliance Lab Office
+imx53-tx53.dtsi-101-            reg_usbh1_vbus: regulator@3 {
+imx53-tx53.dtsi-102-                    compatible = "regulator-fixed";
+imx53-tx53.dtsi-103-                    reg = <3>;
+imx53-tx53.dtsi-104-                    regulator-name = "usbh1_vbus";
+imx53-tx53.dtsi-105-                    regulator-min-microvolt = <5000000>;
+imx53-tx53.dtsi-106-                    regulator-max-microvolt = <5000000>;
+imx53-tx53.dtsi-107-                    pinctrl-names = "default";
+imx53-tx53.dtsi-108-                    pinctrl-0 = <&pinctrl_usbh1_vbus>;
+imx53-tx53.dtsi-109-                    gpio = <&gpio3 31 GPIO_ACTIVE_HIGH>;
+imx53-tx53.dtsi-110-                    enable-active-high;
+imx53-tx53.dtsi-111-            };
 
---=-dGnd+suWiOn/NMg41of9--
+
+imx6qdl-tx6.dtsi-115-           reg_lcd0_pwr: regulator@4 {
+imx6qdl-tx6.dtsi-116-                   compatible = "regulator-fixed";
+imx6qdl-tx6.dtsi-117-                   reg = <4>;
+imx6qdl-tx6.dtsi-118-                   regulator-name = "LCD0 POWER";
+imx6qdl-tx6.dtsi-119-                   regulator-min-microvolt = <3300000>;
+imx6qdl-tx6.dtsi-120-                   regulator-max-microvolt = <3300000>;
+imx6qdl-tx6.dtsi-121-                   pinctrl-names = "default";
+imx6qdl-tx6.dtsi-122-                   pinctrl-0 = <&pinctrl_lcd0_pwr>;
+imx6qdl-tx6.dtsi-123-                   gpio = <&gpio3 29 GPIO_ACTIVE_HIGH>;
+imx6qdl-tx6.dtsi-124-                   enable-active-high;
+imx6qdl-tx6.dtsi-125-                   regulator-boot-on;
+imx6qdl-tx6.dtsi-126-                   regulator-always-on;
+imx6qdl-tx6.dtsi-127-           };
+
+Any further advice from your side which solution is the right one?
+
+ - GPIO_ACTIVE_HIGH/enable-active-high
+ - GPIO_ACTIVE_LOW
+
+Regards,
+Peter
+
+> regards
+> Philipp
+> 
+> 
