@@ -1,36 +1,71 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 1/2] arm, imx6, dts: add DT for aristainetos2 board
-Date: Fri, 22 May 2015 11:14:32 +0200
-Message-ID: <1432286072.3929.33.camel@pengutronix.de>
-References: <1432283157-20315-1-git-send-email-hs@denx.de>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 0/5] USB: atmel: rework clock handling
+Date: Fri, 22 May 2015 11:15:08 +0200
+Message-ID: <555EF39C.9030607@atmel.com>
+References: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1432283157-20315-1-git-send-email-hs@denx.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Schocher <hs@denx.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Robert Nelson <robert.nelson@digikey.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpBbSBGcmVpdGFnLCBkZW4gMjIuMDUuMjAxNSwgMTA6MjUgKzAyMDAgc2Nocmll
-YiBIZWlrbyBTY2hvY2hlcjoKWy4uLl0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NmRsLWFyaXN0YWluZXRvczJfNC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwtYXJp
-c3RhaW5ldG9zMl80LmR0cwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4u
-YWU1MGM4Ygo+IC0tLSAvZGV2L251bGwKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwt
-YXJpc3RhaW5ldG9zMl80LmR0cwo+IEBAIC0wLDAgKzEsMTU4IEBACj4gKy8qCj4gKyAqIENvcHly
-aWdodCAoQykgMjAxNCBSYWJlZWggS2hvdXJ5IChyYWJlZWhAc29saWQtcnVuLmNvbSkKPiArICog
-QmFzZWQgb24gZHQgd29yayBieSBSdXNzZWxsIEtpbmcKClRoaXMgaXMgbmV3LiBDb3B5ICYgcGFz
-dGUgZXJyb3I/CgpXaXRoIHByb3BlciBjb3B5cmlnaHQgaW5mb3JtYXRpb24gcmVzdG9yZWQsClJl
-dmlld2VkLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgoKcmVnYXJk
-cwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Le 17/03/2015 17:15, Boris Brezillon a =E9crit :
+> Hello,
+>=20
+> This series reworks clock handling in atmel USB host drivers, and whi=
+le
+> doing so fixes a regression introduced by 3440ef1 (ARM: at91/dt: fix =
+USB
+> high-speed clock to select UTMI).
+>=20
+> Best Regards,
+>=20
+> Boris
+>=20
+> Boris Brezillon (5):
+>   USB: ehci-atmel: rework clk handling
+>   USB: host: ohci-at91: remove useless uclk clock
+
+Now that these ones ^^^^ are in Linus' tree...
+
+=2E..these patches vvv
+
+>   USB: atmel: update DT bindings documentation
+>   ARM: at91/dt: remove useless uhpck clock references from ehci
+>     defintions
+>   ARM: at91/dt: remove useless usb clock
+
+^^^^^ can be queued in at91-4.2-dt. They will go through the arm-soc ro=
+ute.
+
+And BTW:
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+
+Thanks Boris, bye.
+
+>  .../devicetree/bindings/usb/atmel-usb.txt          | 25 ++++++++++++=
+++++++
+>  arch/arm/boot/dts/at91rm9200.dtsi                  |  4 +--
+>  arch/arm/boot/dts/at91sam9260.dtsi                 |  4 +--
+>  arch/arm/boot/dts/at91sam9261.dtsi                 |  4 +--
+>  arch/arm/boot/dts/at91sam9263.dtsi                 |  4 +--
+>  arch/arm/boot/dts/at91sam9g45.dtsi                 |  8 +++---
+>  arch/arm/boot/dts/at91sam9n12.dtsi                 |  5 ++--
+>  arch/arm/boot/dts/at91sam9x5.dtsi                  |  8 +++---
+>  arch/arm/boot/dts/sama5d3.dtsi                     |  9 +++----
+>  arch/arm/boot/dts/sama5d4.dtsi                     |  9 +++----
+>  drivers/usb/host/ehci-atmel.c                      | 30 +++++++-----=
+----------
+>  drivers/usb/host/ohci-at91.c                       | 18 +++---------=
+-
+>  12 files changed, 63 insertions(+), 65 deletions(-)
+>=20
+
+
+--=20
+Nicolas Ferre
