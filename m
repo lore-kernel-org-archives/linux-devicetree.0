@@ -1,116 +1,167 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
-Date: Fri, 22 May 2015 16:23:14 +0800
-Message-ID: <CADyBb7sZWgNnEoTfaYm6=YcbWgEYRMcaNAdX9Y7B6W9pg+gOmg@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
-	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>
-	<555ECD04.6000404@offcode.fi>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v10 4/5] edac: Add APM X-Gene SoC EDAC driver
+Date: Fri, 22 May 2015 10:23:11 +0200
+Message-ID: <4456746.y9FVaqRogk@wuerfel>
+References: <1431991481-25684-1-git-send-email-lho@apm.com> <1431991481-25684-4-git-send-email-lho@apm.com> <1431991481-25684-5-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <555ECD04.6000404@offcode.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: Timo Kokkonen <timo.kokkonen@offcode.fi>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431991481-25684-5-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Timo,
+On Monday 18 May 2015 17:24:40 Loc Ho wrote:
+> This patch adds support for the APM X-Gene SoC EDAC driver.
+> 
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  drivers/edac/Kconfig      |    7 +
+>  drivers/edac/Makefile     |    1 +
+>  drivers/edac/xgene_edac.c | 1313 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1321 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/edac/xgene_edac.c
+
+Looks reasonable overall, good job. Just a few details that are left:
+
+> +
+> +static int xgene_edac_pcp_rd(struct xgene_edac *edac, u32 reg, u32 *val);
+> +static int xgene_edac_pcp_clrbits(struct xgene_edac *edac, u32 reg,
+> +				  u32 bits_mask);
+> +static int xgene_edac_pcp_setbits(struct xgene_edac *edac, u32 reg,
+> +				  u32 bits_mask);
+> +static int xgene_edac_csw_rd(struct xgene_edac *edac, u32 reg, u32 *val);
+> +static int xgene_edac_mcba_rd(struct xgene_edac *edac, u32 reg, u32 *val);
+> +static int xgene_edac_mcbb_rd(struct xgene_edac *edac, u32 reg, u32 *val);
+> +static int xgene_edac_efuse_rd(struct xgene_edac *edac, u32 reg, u32 *val);
+
+It's better to avoid any forward declaration for local functions, and instead
+reorder the file to move the definition before the first use.
+
+> +static int edac_mc_idx;
+> +static int edac_mc_active_mask;
+> +static int edac_mc_registered_mask;
+> +static DEFINE_MUTEX(xgene_edac_mc_lock);
+
+It would also be best to avoid global variables, but it seems that at
+least the edac_mc_idx is needed to work with the EDAC subsystem.
+Maybe Boris has an idea for how to avoid it.
+
+> +#ifdef CONFIG_EDAC_DEBUG
+> +static ssize_t xgene_edac_mc_err_inject_write(struct file *file,
+> +					      const char __user *data,
+> +					      size_t count, loff_t *ppos)
+> +{
+> +	struct mem_ctl_info *mci = file->private_data;
+> +	struct xgene_edac_mc_ctx *ctx = mci->pvt_info;
+> +	int i;
+> +
+> +	for (i = 0; i < MCU_MAX_RANK; i++) {
+> +		writel(MCU_ESRR_MULTUCERR_MASK | MCU_ESRR_BACKUCERR_MASK |
+> +		       MCU_ESRR_DEMANDUCERR_MASK | MCU_ESRR_CERR_MASK,
+> +		       ctx->mcu_csr + MCUESRRA0 + i * MCU_RANK_STRIDE);
+> +	}
+> +	return count;
+> +}
+> +
+> +static const struct file_operations xgene_edac_mc_debug_inject_fops = {
+> +	.open = simple_open,
+> +	.write = xgene_edac_mc_err_inject_write,
+> +	.llseek = generic_file_llseek,
+> +};
+> +
+> +static void xgene_edac_mc_create_debugfs_node(struct mem_ctl_info *mci)
+> +{
+> +	if (!mci->debugfs)
+> +		return;
+> +
+> +	debugfs_create_file("inject_ctrl", S_IWUSR, mci->debugfs, mci,
+> +			    &xgene_edac_mc_debug_inject_fops);
+> +}
+> +#else
+> +static void xgene_edac_mc_create_debugfs_node(struct mem_ctl_info *mci)
+> +{
+> +}
+> +#endif
+
+Here, it would be better style to avoid the #ifdef. If you just use
+
+static void xgene_edac_mc_create_debugfs_node(struct mem_ctl_info *mci)
+{
+	if (! IS_ENABLED(CONFIG_EDAC_DEBUG) || !mci->debugfs)
+		return;
+
+the compiler will drop all the debug code when that option is not
+set, but will still check the code for correctness, and emit
+any warnings that one might want to see.
 
 
-On 22 May 2015 at 14:30, Timo Kokkonen <timo.kokkonen@offcode.fi> wrote:
-> On 21.05.2015 11:32, fu.wei@linaro.org wrote:
->>
->> From: Fu Wei <fu.wei@linaro.org>
->>
->> Also update Documentation/watchdog/watchdog-kernel-api.txt to
->> introduce:
->> (1)the new elements in the watchdog_device and watchdog_ops struct;
->> (2)the new API "watchdog_init_timeouts".
->>
->> Reasons:
->> (1)kernel already has two watchdog drivers are using "pretimeout":
->>         drivers/char/ipmi/ipmi_watchdog.c
->>         drivers/watchdog/kempld_wdt.c(but the definition is different)
->> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
->>
->
-> Hi,
->
-> As I was proposing some other API changes with my early-timeout-sec work, I
-> can see my work is going to collide with your API change proposal a bit. So
-> maybe I should ask your opinion as well..
+> +static int xgene_edac_csw_rd(struct xgene_edac *edac, u32 reg, u32 *val)
+> +{
+> +	if (edac == NULL)
+> +		return -EINVAL;
+> +
+> +	return regmap_read(edac->csw_map, reg, val);
+> +}
+> +
+> +static int xgene_edac_mcba_rd(struct xgene_edac *edac, u32 reg, u32 *val)
+> +{
+> +	if (edac == NULL)
+> +		return -EINVAL;
+> +
+> +	return regmap_read(edac->mcba_map, reg, val);
+> +}
+> +
+> +static int xgene_edac_mcbb_rd(struct xgene_edac *edac, u32 reg, u32 *val)
+> +{
+> +	if (edac == NULL)
+> +		return -EINVAL;
+> +
+> +	return regmap_read(edac->mcbb_map, reg, val);
+> +}
+> +
+> +static int xgene_edac_efuse_rd(struct xgene_edac *edac, u32 reg, u32 *val)
+> +{
+> +	if (edac == NULL)
+> +		return -EINVAL;
+> +
+> +	return regmap_read(edac->efuse_map, reg, val);
+> +}
 
-Thank you for reminding me of that, I saw "early-timeout-sec", but
-because I don't get it in kernel API or watchdog_core.c, so I did not
-pay attention to it.
-Sorry.
+I would drop the NULL check, and just refuse to probe the
+device if any of the regmaps are unavailable. You list the
+properties as 'required' in DT, so if any of the pointers
+are NULL here, that is really a bug somewhere (kernel or DT),
+not a user error, so -EINVAL is not appropriate.
 
->
-> Could this pretimeout feature be something that other drivers could benefit
-> too?
+Also, these all have very few callers, so just open-code the
+regmap_read() instead of having wrappers.
 
-yes , as you may know, I am making a patch for pretimeout support in
-watchdog framework
+> +
+> +static int xgene_edac_pcp_setbits(struct xgene_edac *edac, u32 reg,
+> +				  u32 bits_mask)
+> +{
+> +	u32 val;
+> +
+> +	if (edac == NULL)
+> +		return -EINVAL;
+> +
+> +	spin_lock(&edac->lock);
+> +	val = readl(edac->pcp_csr + reg);
+> +	val |= bits_mask;
+> +	writel(val, edac->pcp_csr + reg);
+> +	spin_unlock(&edac->lock);
+> +	return 0;
+> +}
 
-> I can see that it does not do anything else except call panic() before
-> letting the watchdog expire. This is something that could be emulated easily
-> by the watchdog core for drivers that don't know anything about pretimeouts
-> at all.
+If you cache the interrupt masks in the xgene_edac structure, you
+can avoid the read-modify-write functions for updating the
+register in place.
 
-For SBSA watchdog, there are two stage timeout, and according to kernel doc:
-----------------------
-Pretimeouts:
-
-Some watchdog timers can be set to have a trigger go off before the
-actual time they will reset the system.  This can be done with an NMI,
-interrupt, or other mechanism.  This allows Linux to record useful
-information (like panic information and kernel coredumps) before it
-resets.
-----------------------
-
-I think panic() is the right way to do now.  but people may also need
-to config :
-PANIC_TIMEOUT [!=0]
-KEXEC
-KDUMP
-for debug reason
-
->
-> The way I was planning the API change there would need to be a small change
-> with each watchdog driver in order to let the watchdog core take over
-> generic behaviour on behalf of the driver. My goal was to make the change so
-> that each driver that gets converted to the new API extensions gets a
-> support for early-timeout-sec for free, without needing to enable support
-> for it any way. If the API was designed properly, also pretimeouts could be
-> handled easily and maybe even so that other drivers could have that feature
-> even though their hardware does not explicitly give any support for it.
-
-could you please point out your patch , then I can learn your idea :-)
-For now , I am working on a common "Pretimeouts" following the concept
-in kernel doc.
-
->
-> Any thoughts?
-
-my thoughts is in  my pretimeout patch , would you provide some suggestion ?
-
-Great thanks !
-
->
-> Thanks,
-> -Timo
-
-
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
