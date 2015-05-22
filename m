@@ -1,44 +1,73 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH 05/15] irqchip: mips-gic: register IRQ domain with MIPS_GIC_IRQ_BASE
-Date: Fri, 22 May 2015 16:51:04 +0100
-Message-ID: <1432309875-9712-6-git-send-email-paul.burton@imgtec.com>
-References: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Paul Burton <paul.burton@imgtec.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v4 0/3] ASoC: qcom: add support to apq8016 audio
+Date: Fri, 22 May 2015 16:52:36 +0100
+Message-ID: <1432309956-5228-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Patrick Lai <plai@codeaurora.org>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Malta, some IRQs are still referenced by hardcoded numbers relative
-to MIPS_GIC_IRQ_BASE. When gic_init is called to register the GIC
-without using device tree the irqbase argument allows this base to be
-used. When the GIC is probed using device tree however the base is not
-specified. This leads to conflicts between the GIC interrupts and other
-interrupt controllers.
+Hi Mark, 
 
-TODO: convert Malta (& SEAD3) to drop the hardcoded numbers instead
+Thanks for applying the patches.
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
----
+Am resending the leftover patches rebased on top of topic/qcom branch.
+I have funtionally tested these patches on AP8016-SBC board and also
+ compile tested them without CONFIG_OF on x86 to make sure nothing breaks.
+All these patches are tested and Acked.
 
- drivers/irqchip/irq-mips-gic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I Also included Arnd's Patch to fix Kconfig dependency on STORM board.
 
-diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic.c
-index 57f09cb..697f340 100644
---- a/drivers/irqchip/irq-mips-gic.c
-+++ b/drivers/irqchip/irq-mips-gic.c
-@@ -858,7 +858,7 @@ static int __init gic_of_init(struct device_node *node,
- 		write_gcr_gic_base(gic_base | CM_GCR_GIC_BASE_GICEN_MSK);
- 	gic_present = true;
- 
--	__gic_init(gic_base, gic_len, cpu_vec, 0, node);
-+	__gic_init(gic_base, gic_len, cpu_vec, MIPS_GIC_IRQ_BASE, node);
- 
- 	return 0;
- }
+APQ8016 has 4 MI2S( Primary, Secondary, Tertiary, Quaternary) which can be routed
+to internal wcd codec or external codecs. This routing is controlled by 2 mux
+registers.
+
+Changes since v3
+ - dropped OF dependency patch
+ - dropped 6 patches which are already applied by Mark.
+ - fixed Kconfig as suggested by Arnd.
+
+Changes since v2(https://lkml.org/lkml/2015/5/16/236)
+ - dropped 3 patches which are already applied by Mark.
+ - rebased on top of topic/qcom branch.
+ - changed dev_err to dev_warn spotted by Kenneth.
+ - fixed typo spotted by kenneth.
+
+Changes since v1(https://lwn.net/Articles/644266/)
+ - Fixed Kconfig dependencies spotted by Kenneth
+ - Fixed compilation error on ipq806x spotted by Kenneth
+ - Fixed clk error messages spotted by Kenneth
+
+Changes since RFC(https://lwn.net/Articles/642661/)
+ - droped cleanup patches, as they are already applied by Mark.
+ - prefixed shared functions with asoc_qcom_* as suggested by Kenneth
+ - made LPASS driver depended on OF.
+ - removed ipq806x specific bits from ipaif_reg.h
+ - removed no_osr clk flag as suggested by Mark and Kenneth
+ - fixed irq return values spotted by Kenneth
+ - renamed the machine file to apq8016-sbc.c as suggested by Kenneth.
+ - use dai->driver->id instead of dai->id as it breaks on Storm board.
+
+
+--srini
+Arnd Bergmann (1):
+  ASoC: qcom: fix STORM board Kconfig
+
+Srinivas Kandagatla (2):
+  ASoC: qcom: Add apq8016 lpass driver support
+  ASoC: qcom: add apq8016 sound card support
+
+ include/dt-bindings/sound/apq8016-lpass.h |   9 ++
+ sound/soc/qcom/Kconfig                    |  17 ++-
+ sound/soc/qcom/Makefile                   |   4 +
+ sound/soc/qcom/apq8016_sbc.c              | 215 ++++++++++++++++++++++++++
+ sound/soc/qcom/lpass-apq8016.c            | 242 ++++++++++++++++++++++++++++++
+ sound/soc/qcom/lpass.h                    |   4 +
+ 6 files changed, 490 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/sound/apq8016-lpass.h
+ create mode 100644 sound/soc/qcom/apq8016_sbc.c
+ create mode 100644 sound/soc/qcom/lpass-apq8016.c
+
 -- 
-2.4.1
+1.9.1
