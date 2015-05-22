@@ -1,40 +1,56 @@
-From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: vexpress: Add unified-cache Device Tree property
-Date: Fri, 22 May 2015 08:18:53 +0200
-Message-ID: <20150522061853.GR14416@pengutronix.de>
-References: <5509437E.6060806@arm.com>
- <1426671298-2012-1-git-send-email-r.schwebel@pengutronix.de>
- <20150429191228.GO15254@pengutronix.de>
- <20150430110853.GN7440@e106497-lin.cambridge.arm.com>
- <20150430133011.GE15254@pengutronix.de>
- <55426A26.9060704@arm.com>
- <20150516201301.GT14416@pengutronix.de>
- <20150521122644.GP14416@pengutronix.de>
+From: Timo Kokkonen <timo.kokkonen@offcode.fi>
+Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
+Date: Fri, 22 May 2015 09:30:28 +0300
+Message-ID: <555ECD04.6000404@offcode.fi>
+References: <=fu.wei@linaro.org> <1432197156-16947-1-git-send-email-fu.wei@linaro.org> <1432197156-16947-6-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150521122644.GP14416-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432197156-16947-6-git-send-email-fu.wei@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 02:26:44PM +0200, Robert Schwebel wrote:
-> > Did you find out something in the meantime?
-> > I just tested 4.1-rc3 and the issues are still confirmed.
-> 
-> Gentle ping ...
+On 21.05.2015 11:32, fu.wei@linaro.org wrote:
+> From: Fu Wei <fu.wei@linaro.org>
+>
+> Also update Documentation/watchdog/watchdog-kernel-api.txt to
+> introduce:
+> (1)the new elements in the watchdog_device and watchdog_ops struct;
+> (2)the new API "watchdog_init_timeouts".
+>
+> Reasons:
+> (1)kernel already has two watchdog drivers are using "pretimeout":
+> 	drivers/char/ipmi/ipmi_watchdog.c
+> 	drivers/watchdog/kempld_wdt.c(but the definition is different)
+> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
+>
 
-Sorry, missed the other mail and found it in the mean time :)
+Hi,
 
-rsc 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As I was proposing some other API changes with my early-timeout-sec 
+work, I can see my work is going to collide with your API change 
+proposal a bit. So maybe I should ask your opinion as well..
+
+Could this pretimeout feature be something that other drivers could 
+benefit too? I can see that it does not do anything else except call 
+panic() before letting the watchdog expire. This is something that could 
+be emulated easily by the watchdog core for drivers that don't know 
+anything about pretimeouts at all.
+
+The way I was planning the API change there would need to be a small 
+change with each watchdog driver in order to let the watchdog core take 
+over generic behaviour on behalf of the driver. My goal was to make the 
+change so that each driver that gets converted to the new API extensions 
+gets a support for early-timeout-sec for free, without needing to enable 
+support for it any way. If the API was designed properly, also 
+pretimeouts could be handled easily and maybe even so that other drivers 
+could have that feature even though their hardware does not explicitly 
+give any support for it.
+
+Any thoughts?
+
+Thanks,
+-Timo
