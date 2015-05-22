@@ -1,46 +1,120 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
-Date: Fri, 22 May 2015 06:37:34 -0700
-Message-ID: <555F311E.8090404@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>	<555ECD04.6000404@offcode.fi>	<CADyBb7sZWgNnEoTfaYm6=YcbWgEYRMcaNAdX9Y7B6W9pg+gOmg@mail.gmail.com>	<555EEFDB.2030907@offcode.fi> <CADyBb7uh-6=ihfrKHBVXDzAKAE-_GqLXTPJa5_7Gw2R71pyeUg@mail.gmail.com> <555F1D91.3020506@offcode.fi>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm64: tegra: Add Tegra210 support
+Date: Fri, 22 May 2015 14:38:00 +0100
+Message-ID: <20150522133800.GY29424@e104818-lin.cambridge.arm.com>
+References: <1431529065-20128-1-git-send-email-thierry.reding@gmail.com>
+ <1431529065-20128-3-git-send-email-thierry.reding@gmail.com>
+ <20150513171114.GA18655@e104818-lin.cambridge.arm.com>
+ <20150515101913.GA20474@ulmo.nvidia.com>
+ <20150519145211.GX21251@e104818-lin.cambridge.arm.com>
+ <20150519151740.GA28161@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <555F1D91.3020506@offcode.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Timo Kokkonen <timo.kokkonen@offcode.fi>, Fu Wei <fu.wei@linaro.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150519151740.GA28161-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2015 05:14 AM, Timo Kokkonen wrote:
-[ ... ]
+On Tue, May 19, 2015 at 05:17:42PM +0200, Thierry Reding wrote:
+> On Tue, May 19, 2015 at 03:52:11PM +0100, Catalin Marinas wrote:
+> > On Fri, May 15, 2015 at 12:19:16PM +0200, Thierry Reding wrote:
+> > > On Wed, May 13, 2015 at 06:11:15PM +0100, Catalin Marinas wrote:
+> > > > On Wed, May 13, 2015 at 04:57:42PM +0200, Thierry Reding wrote:
+> > > > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > > 
+> > > > > NVIDIA Tegra210 (also known as Tegra X1) has four Cortex-A57 and four
+> > > > > Cortex-A53 CPUs. Compared to Tegra124 and Tegra132 it comes with a 256-
+> > > > > core Maxwell GPU. It supports processing videos of up to 4K resolutions
+> > > > > at 60 fps (H.265, VP9, H.264).
+> > > > > 
+> > > > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > > ---
+> > > > >  arch/arm64/Kconfig                       |   9 +
+> > > > >  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 998 +++++++++++++++++++++++++++++++
+> > > > >  2 files changed, 1007 insertions(+)
+> > > > >  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> > > > > 
+> > > > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > > > > index 7796af4b1d6f..bfdf064ada66 100644
+> > > > > --- a/arch/arm64/Kconfig
+> > > > > +++ b/arch/arm64/Kconfig
+> > > > > @@ -225,6 +225,15 @@ config ARCH_TEGRA_132_SOC
+> > > > >  	  but contains an NVIDIA Denver CPU complex in place of
+> > > > >  	  Tegra124's "4+1" Cortex-A15 CPU complex.
+> > > > >  
+> > > > > +config ARCH_TEGRA_210_SOC
+> > > > > +	bool "NVIDIA Tegra210 SoC"
+> > > > > +	depends on ARCH_TEGRA
+> > > > > +	select PINCTRL_TEGRA210
+> > > > > +	select USB_ULPI if USB_PHY
+> > > > > +	select USB_ULPI_VIEWPORT if USB_PHY
+> > > > > +	help
+> > > > > +	  Enable support for the NVIDIA Tegra210 SoC.
+> > > > > +
+> > > > 
+> > > > The previous ARCH_TEGRA_132_SOC escaped me. Do we need all these
+> > > > ARCH_TEGRA_*_SOC entries? Can we not have per-driver Kconfig options?
+> > > > For example, ARCH_TEGRA_132_SOC seems to be only used in
+> > > > drivers/clk/tegra, a specific Kconfig entry in there would suffice.
+> > > 
+> > > There are actually a couple of other places where this will be used in
+> > > subsequent patches (e.g. memory controller driver). The idea behind
+> > > having these is that each one of them is used to enable the essentials
+> > > out of the box, so that people don't have to go and enable a bunch of
+> > > driver-specific Kconfig options just to get a kernel configuration that
+> > > can actually boot.
+> > 
+> > We debated whether to have ARCH_* options at all on arm64 and we settled
+> > for the middle ground - only add them for SoC families, not individual
+> > SoCs. As for the kernel configuration that actually boots, we want the
+> > arm64 defconfig to include all the supported SoCs and drivers (though
+> > longer term I'd like to see more drivers built as modules by default).
+> > 
+> > > This is also useful for integrators since they can simply omit all SoC
+> > > generations that they're not interested in. Having a per-SoC option
+> > > provides an easy way of doing so.
+> > 
+> > The integrators could just select a SoC family and trim down unwanted
+> > options, I don't think they rely on the kernel defconfig for a final
+> > product. If this becomes an issue, I would rather have per-SoC
+> > defconfigs than lots of Kconfig entries.
+> 
+> I understand the desire to start with a clean plate on a new
+> architecture, but Tegra has worked like this for the past 5 years and
+> it's worked out really well for us. So I'm reluctant to introduce these
+> inconsistencies merely because 64-bit ARM now lives in a different
+> directory.
 
-> This is the direction we could go eventually. Of course not all features are in interest for everyone and it may not make sense to try implement everything in the core. But we have a lot of drivers that implement all sorts of timers in them and my patch set could eliminate a lot of code from them. We also have couple of drivers that have pretimeout support and there seems to be a desire make that generic as well. Obviously I think it makes sense to combine this effort in order to avoid conflicts.
->
-I would suggest to avoid trying to combine efforts. If anything, I would suggest
-to _separate_ patch sets.
+That's a good time to start cleaning this up, especially since we
+mandate single image from the beginning.
 
-> So I am too hoping more guidelines on what is the acceptable direction where to aim at. For example we could make this parameter handling more generic and future proof if we allow an API change that require small change to all drivers. I don't know exactly where the line is drawn.
->
-As I just mentioned separately, the more changes you make, the less likely
-it will be to get your changes accepted. A patch set requiring changes to
-all drivers would have to provide substantial benefits to get accepted.
-Talking about parameters (and assuming you mean module parameters), I don't
-even see how you could make that work without changing the userspace ABI,
-which would be a no-go.
+> Are you concerned about arch/arm64/Kconfig growing wild? If so we could
+> easily move these configuration options outside to something like
+> drivers/soc/tegra/Kconfig. While at it, we could move existing options
+> from arch/arm/mach-tegra over to that as well.
 
-Personally I think it would be easier if you tried to accomplish less
-than more. Concentrate on early-timeout (only), get it merged. Provide
-a clear separation between is_active (as in "watchdog running") from
-is_open (userspace has the driver open) and get it merged. Add the
-ability to "ping" a running watchdog while the driver is closed
-into the watchdog core and get it merged. Add the ability to soft-ping
-a watchdog while the driver is open into the core and get it merged.
-Those are all logically separate functions, and could be introduced
-separately.
+I think the whole ARCH_TEGRA_*_SOC approach is wrong. You don't bother
+introducing Kconfig entries for individual drivers but instead add an
+obj-*_SOC in various Makefiles under drivers/. If we ever get to a point
+where we can build (part of) the SoCs as modules (and I'm not talking
+about kernels shipped with end products but those distro kernel
+targeting development boards), we have to go back and add such Kconfig
+entries for specific drivers.
 
-Just my personal opinion, of course.
+So if you do it properly from the beginning with per-driver Kconfig
+entry, I no longer see the point of an ARCH_TEGRA_*_SOC option. It may
+be more convenient for people building end products but they should know
+better what components are required, defconfig is rarely meant for them.
 
-Thanks,
-Guenter
+I'm looking forward to a patch removing ARCH_TEGRA_132_SOC as well (you
+can keep the 32-bit arm options if you'd like).
+
+-- 
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
