@@ -1,65 +1,55 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v10 4/5] edac: Add APM X-Gene SoC EDAC driver
-Date: Fri, 22 May 2015 11:28:44 -0700
-Message-ID: <CAPw-ZTmaRQj740Z58Asrch3decmXA89EN9MdKg-WvWp8ftqB6w@mail.gmail.com>
-References: <1431991481-25684-1-git-send-email-lho@apm.com>
-	<4456746.y9FVaqRogk@wuerfel>
-	<20150522084625.GE23022@pd.tnic>
-	<2082687.grA49DxWyE@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: sun7i: Add uart4 support
+ for BananaPro, disable uart2
+Date: Fri, 22 May 2015 21:24:40 +0200
+Message-ID: <20150522192440.GH8557@lukather>
+References: <1432305184-8589-1-git-send-email-hdegoede@redhat.com>
+ <1432305184-8589-2-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2082687.grA49DxWyE@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kr14OxHsRwZHHqxS"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBEEF72VAKGQE54XUZ4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432305184-8589-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--kr14OxHsRwZHHqxS
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
->> > > +static int edac_mc_idx;
->> > > +static int edac_mc_active_mask;
->> > > +static int edac_mc_registered_mask;
->> > > +static DEFINE_MUTEX(xgene_edac_mc_lock);
->> >
->> > It would also be best to avoid global variables, but it seems that at
->> > least the edac_mc_idx is needed to work with the EDAC subsystem.
->> > Maybe Boris has an idea for how to avoid it.
->>
->> Right, so AFAICT this is used in
->>
->>         edac_mc_alloc(edac_mc_idx++
->>
->> and basically we're supplying the memory controller numbers in the order
->> we're calling xgene_edac_mc_add(). Perhaps we need to make the memory
->> controller numbering explicit with DT...
->
-> I see now that the number is also used in xgene_edac_mc_is_active()
-> as an index for the MCBADDRMR register, which seems very fragile,
-> as it relies on the DT nodes getting seen in the same order by the
-> driver that the hardware blocks are used in.
->
-> Better add an explicit DT property for the index that is defined
-> to be the same as MCBADDRMR bits, e.g.
->
->                        edacmc@7e800000 {
->                              compatible = "apm,xgene-edac-mc";
->                              reg = <0x0 0x7e800000 0x0 0x1000>;
->                               memory-controller = <0>;
->                        };
->
-> or use a reference to the normal memory controller DT node
-> outside of the EDAC, and put a number in that one.
->
-> Is there a strict 1:1 relation between the DIMM slot numbering
-> on the board and the memory controller number within the EDAC
-> registers?
+On Fri, May 22, 2015 at 04:33:04PM +0200, Hans de Goede wrote:
+> From: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>
+> 
+> The BananaPro uses uart4 for the default rx/tx pins on the 40 pins connector,
+> so enable uart4.
+> 
+> Uart2 is also available at the bananapro io-pins, but like on the bananapi
+> the primary function of the pins is to act as gpios, see:
+> http://forum.lemaker.org/forum.php?mod=viewthread&tid=10852
+> 
+> Remove the uart2 node, people who want to use uart2 can do so with a
+> devicetree-overlay.
+> 
+> Signed-off-by: Michael Ring <mail-u1jPNj63thkWnkcawLe0jA@public.gmane.org>
+> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: Remove uart2 node]
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Yes... The status active bit position is strictly tie to an
-controller. Like the suggestion with memory-controller property.
+Applied both, thanks!
 
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--kr14OxHsRwZHHqxS--
