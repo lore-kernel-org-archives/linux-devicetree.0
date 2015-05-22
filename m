@@ -1,42 +1,33 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V4 1/3] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 22 May 2015 11:04:49 -0500
-Message-ID: <CAL_JsqK-P=mMsgH27==Mjs2_Ji=uLcYDrecnT7rsDVYk62zmpA@mail.gmail.com>
-References: <cover.1430394884.git.viresh.kumar@linaro.org> <d225e73f183e01fa0b71e4b9248b6a19a3f7d697.1430394884.git.viresh.kumar@linaro.org>
- <20150512214224.16410.15922@quantum> <20150513085528.GA6994@linux>
- <555D750F.80304@ti.com> <20150522140457.GB7730@linux>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Fri, 22 May 2015 11:18:05 -0500
+Message-ID: <555F56BD.90305@codeaurora.org>
+References: <=fu.wei@linaro.org> <1432197156-16947-7-git-send-email-fu.wei@linaro.org> <555F4236.7040206@linaro.org> <4095167.UOriXdSu53@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150522140457.GB7730@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <rob.herring@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Michael Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <4095167.UOriXdSu53@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Hanjun Guo <hanjun.guo@linaro.org>
+Cc: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, ashwin.chaugule@linaro.org, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 22, 2015 at 9:04 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 21-05-15, 01:02, Nishanth Menon wrote:
->> This argues that clock is an input to the cpu, this is not in-correct,
->> but, it could also be argued that OPP tables are clock dependent.
+On 05/22/2015 09:55 AM, Arnd Bergmann wrote:
 
-What piece of h/w is the clock an input to then?
+> While SBSA requires this watchdog device, nothing prevents SoC
+> manufacturers from using the same design in something that is not
+> a server.
 
->> For example, with multiple clock source options that a device might
->> choose to select from internally(by some means.. lets not just restrict
->> ourselves to just CPUs here for a moment), the tables might be
->> different. We can always debate that this then is the responsibility of
->> the driver handling the description for that device and we might want
->> possibility of vice versa as well - same OPP table used by different
->> clock source selections as well.
->
-> @Rob: Any inputs ?
+The first "S" in SBSA stands for "Server".  I don't think it makes sense 
+to put an SBSA watchdog device in a non-server SOC.
 
-If you are going to describe this clock mux in DT, then that mux
-should be part of the h/w block that controls it. You could always add
-entries that describe what parent clock must be used for a given OPP,
-but that is a new binding and not part of the existing clock binding.
+Frankly, I don't understand why people want to make this driver work on 
+hardware that doesn't exist.  The SBSA is intended for 64-bit ARM 
+Servers that use ACPI.  Yes, there are a couple of ARM64 servers that 
+use device tree, but those are legacy platforms.
 
-If things get too complicated, then don't try to describe this in DT.
-That is always an option.
-
-Rob
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
