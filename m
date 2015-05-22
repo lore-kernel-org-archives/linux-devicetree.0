@@ -1,31 +1,26 @@
 From: Timur Tabi <timur@codeaurora.org>
 Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Fri, 22 May 2015 11:18:05 -0500
-Message-ID: <555F56BD.90305@codeaurora.org>
-References: <=fu.wei@linaro.org> <1432197156-16947-7-git-send-email-fu.wei@linaro.org> <555F4236.7040206@linaro.org> <4095167.UOriXdSu53@wuerfel>
+Date: Fri, 22 May 2015 11:19:07 -0500
+Message-ID: <555F56FB.4030906@codeaurora.org>
+References: <=fu.wei@linaro.org> <1432197156-16947-7-git-send-email-fu.wei@linaro.org> <555F4236.7040206@linaro.org> <4095167.UOriXdSu53@wuerfel> <20150522150145.GA2930@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4095167.UOriXdSu53@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Hanjun Guo <hanjun.guo@linaro.org>
-Cc: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, ashwin.chaugule@linaro.org, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150522150145.GA2930@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: Hanjun Guo <hanjun.guo@linaro.org>, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, ashwin.chaugule@linaro.org, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2015 09:55 AM, Arnd Bergmann wrote:
+On 05/22/2015 10:01 AM, Guenter Roeck wrote:
+>> >
+> Tricky, though. Since teh driver uses arm specific clock functions,
+> I don't think this can compile on a non-arm machine.
 
-> While SBSA requires this watchdog device, nothing prevents SoC
-> manufacturers from using the same design in something that is not
-> a server.
-
-The first "S" in SBSA stands for "Server".  I don't think it makes sense 
-to put an SBSA watchdog device in a non-server SOC.
-
-Frankly, I don't understand why people want to make this driver work on 
-hardware that doesn't exist.  The SBSA is intended for 64-bit ARM 
-Servers that use ACPI.  Yes, there are a couple of ARM64 servers that 
-use device tree, but those are legacy platforms.
+Any it doesn't need to.  This driver is for 64-bit ARM Server SOCs. 
+There will never be any other kind of SOC that has an SBSA watchdog 
+device in it.
 
 -- 
 Qualcomm Innovation Center, Inc.
