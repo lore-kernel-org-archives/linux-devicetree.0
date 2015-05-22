@@ -1,42 +1,102 @@
-From: "Kevin Tsai" <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-Subject: RE: [PATCH 1/6] iio: light: Updated Vishay Capella cm32181 ambient light sensor driver. - Renamed company name. - Removed cm32181_reg. - Removed white space. - Removed unused include files. - Updated macro definitions. - Renamed cm32181_chip pointer to ch
-Date: Thu, 21 May 2015 20:58:00 -0700
-Message-ID: <000c01d09443$80d6b9e0$82842da0$@capellamicro.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH 5/5] ARM64: MediaTek MT8173: Add SCPSYS device node
+Date: Fri, 22 May 2015 12:19:25 +0800
+Message-ID: <CAGS+omB4j0YyTP5e4q_jXY2TOA1MTD-dPvsKJMAmj5NooWHxeQ@mail.gmail.com>
+References: <1432131540-2523-1-git-send-email-s.hauer@pengutronix.de>
+ <1432131540-2523-6-git-send-email-s.hauer@pengutronix.de> <CAGS+omDHEY54TzhNTJcFOeHkGbXAQwiTh9gxc=PsbzjwmpHEDA@mail.gmail.com>
+ <20150521174916.GQ6325@pengutronix.de> <1432262503.14396.14.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-us
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Greg KH' <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Kumar Gala' <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, 'Jonathan Cameron' <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Hartmut Knaack' <knaack.h-Mmb7MZpHnFY@public.gmane.org>, 'Lars-Peter Clausen' <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, 'Peter Meerwald' <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, 'Andrew Morton' <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "'David S. Miller'" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, 'Mauro Carvalho Chehab' <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>, 'Joe Perches' <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, 'Jingoo Han' <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Daniel Baluta' <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, 'Roberta Dobrescu' <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Kuppuswamy Sathyanarayanan' <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TZUIDd8j+nm9g@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432262503.14396.14.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry for the mistake.  Let me resubmit with correct subject.
+On Fri, May 22, 2015 at 10:41 AM, James Liao <jamesjj.liao@mediatek.com> wrote:
+> Hi Daniel,
+>
+> On Thu, 2015-05-21 at 19:49 +0200, Sascha Hauer wrote:
+>> On Thu, May 21, 2015 at 10:32:40PM +0800, Daniel Kurtz wrote:
+>> > > +               scpsys: scpsys@10006000 {
+>> > > +                       compatible = "mediatek,mt8173-scpsys";
+>> > > +                       #power-domain-cells = <1>;
+>> > > +                       reg = <0 0x10006000 0 0x1000>;
+>> > > +                       clocks = <&clk26m>,
+>> >
+>> > Why is mfg using <&clk26m> and not <&topckgen CLK_TOP_MFG_SEL>?
+>>
+>> Because James Liao said to me that it is derived from clk26m and not
+>> from mfg_sel.
+>
+> Sascha is right. I had confirmed with our designer that MFG on MT8173
+> uses clk26m to check state. I also tested MFG domain power on/off with
+> CLK_TOP_MFG_SEL off and it worked correctly.
 
-Thanks.
+Wait - the designer said to use clk26m, but you tested with CLK_TOP_MFG_SEL.
+Now I am even more confused.
+Which is the correct clock to use for the mfg power domains?
 
-Kevin Tsai
-05/21/15
+>
+>> > I saw another patch set on the list today from James Liao that adds more clocks.
+>> > Perhaps we can move the SCPSYS set on top of that one and include more clocks?
+>> >
+>> > > +                                <&topckgen CLK_TOP_MM_SEL>;
+>
+> The clocks used by scpsys driver are subsystem bus clocks that need to
+> be on before power on these domains. On MT8173, subsystem bus clocks are
+> come from topckgen.
+>
+> My patch set yesterday add subsystem clocks, which are not needed by
+> power domain on/off. So I think these 2 patch set are independent.
 
------Original Message-----
-From: Greg KH [mailto:gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org] 
-Sent: Thursday, May 21, 2015 6:56 PM
-To: Kevin Tsai
-Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala;
-Jonathan Cameron; Hartmut Knaack; Lars-Peter Clausen; Peter Meerwald; Andrew
-Morton; David S. Miller; Mauro Carvalho Chehab; Arnd Bergmann; Joe Perches;
-Jingoo Han; Daniel Baluta; Roberta Dobrescu; Kuppuswamy Sathyanarayanan;
-devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Subject: Re: [PATCH 1/6] iio: light: Updated Vishay Capella cm32181 ambient
-light sensor driver. - Renamed company name. - Removed cm32181_reg. -
-Removed white space. - Removed unused include files. - Updated macro
-definitions. - Renamed cm32181_chip pointer to ch
+In other versions of the SCPSYS patch set, the scpsys node has
+additional "subsystem bus clocks".
+So will we need additional patches later to add back these additional
+clocks which have been removed from the current version of this pach?
+In other words, will there be a follow up patch like below, plus
+another patch to add these clocks to "enum clk_id":
 
-On Thu, May 21, 2015 at 05:30:40PM -0700, Kevin Tsai wrote:
-> Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> ---
+@@ -163,9 +163,12 @@
+  compatible = "mediatek,mt8173-scpsys";
+  #power-domain-cells = <1>;
+  reg = <0 0x10006000 0 0x1000>;
+- clocks = <&clk26m>,
+- <&topckgen CLK_TOP_MM_SEL>;
+- clock-names = "mfg", "mm";
++ clocks = <&topckgen CLK_TOP_MFG_SEL>,
++ <&topckgen CLK_TOP_MM_SEL>,
++ <&topckgen CLK_TOP_VDEC_SEL>,
++ <&topckgen CLK_TOP_VENC_SEL>,
++ <&topckgen CLK_TOP_VENC_LT_SEL>;
++ clock-names = "mfg", "mm", "vdec", "venc", "venc_lt";
+  infracfg = <&infracfg>;
+  };
 
-Your whole changelog ended up in the Subject line :(
+
+@@ -57,7 +57,10 @@ enum clk_id {
+  MT8173_CLK_NONE,
+  MT8173_CLK_MM,
+  MT8173_CLK_MFG,
+- MT8173_CLK_MAX = MT8173_CLK_MFG,
++ MT8173_CLK_VDEC,
++ MT8173_CLK_VENC,
++ MT8173_CLK_VENC_LT,
++ MT8173_CLK_MAX = MT8173_CLK_VENC_LT,
+ };
+
+
+If so, is there a reason we cannot just include these clocks in the
+current version of the SCPSYS driver?
+
+Best,
+-Dan
+
+>
+>
+> Best regards,
+>
+> James
+>
+>
