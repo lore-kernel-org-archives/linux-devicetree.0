@@ -1,48 +1,48 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 01/11] regmap: Introduce regmap_get_max_register.
-Date: Fri, 22 May 2015 12:18:08 +0100
-Message-ID: <20150522111808.GC21391@sirena.org.uk>
-References: <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1432226563-8689-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 09/10] ASoC: qcom: Document apq8016 bindings.
+Date: Fri, 22 May 2015 13:33:43 +0100
+Message-ID: <20150522123343.GR21391@sirena.org.uk>
+References: <1432245125-8939-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1432245225-9368-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="K3vkeaB0MlFjg8U+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1432226563-8689-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+In-Reply-To: <1432245225-9368-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com
+Cc: Patrick Lai <plai@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---OBd5C1Lgu00Gd/Tn
+--K3vkeaB0MlFjg8U+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 21, 2015 at 05:42:43PM +0100, Srinivas Kandagatla wrote:
-> This patch introduces regmap_get_max_register() function which would be
-> used by the infrastructures like nvmem framework built on top of
-> regmap.
+On Thu, May 21, 2015 at 10:53:45PM +0100, Srinivas Kandagatla wrote:
+> This patch updates lpass bindings with apq8016 specific bindings.
 
-Applied, thanks.  If the rest of the framework is ready to get merged
-somewhere before it reaches Linus' tree let me know and we can handle it
-then.
+Applied, thanks.
 
---OBd5C1Lgu00Gd/Tn
+> Tested-by: Kenneth Westfield <kwestfie@codeaurora.org>
+
+Are these DT binding test tools public anywhere?  :P
+
+--K3vkeaB0MlFjg8U+
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVXxBvAAoJECTWi3JdVIfQRn0H/2wyd8X6RayGvMml6XyfHmL0
-s64SMhFu5BPN8hE7b1tRWlLINLhYUMib2OleQy+sxwlsX7K2QftAEztEHY1w3wPm
-sYZ319CA2h8Xmj4P2FXlrEuBYTy5LxfPbNjxj5ho3Ur6Ts5f+N7JUparboGicFtH
-EuxpgJT+QcmPIxKLwokoyFt4lmi7ZohMRvDxNVW10j+K1EwBIIWZsa4t/K5NUoux
-gv1LL+AU7uthYo2pARABmKTgBlSnHVaC2xW4RaWipDPRmJg0V7FpPZ0y2Y58ZCpk
-vvJAvbQKHatzikOYn5GCFK+xA9mGaKfu/HrOXTAzjYjm308ny54+aw+tdzONjJ4=
-=XDR0
+iQEcBAEBCAAGBQJVXyImAAoJECTWi3JdVIfQT7UH/2yN31AW4/g2XgPRVnC9kafc
+oT3YYqIr23aEbx2TkxI/qns6zltWuoysUNFoJW1N07ckcBKwHwMw5ylOzDBkLlUu
+EGm7z+zr+OsGlnK8HgzEJJWCCgWEclRmSEXxaOtle3X1pMJhxDlMuwzXE4i1ZKk6
+fq3/MotO2A2mx9Y7yZs+4rZg17cm0LN0Ze9EC3qwG2Cx6txDjyYbnVxO98bM0Nst
+Dws669QaBa7M+hNl8HQQX5q+L8oyYPbL6y+SLN+XdQVvXGYA/mWJpVZFWHcuaKm5
+lwWh/wllDFqwiXIQO4xzK11B4y5glv3k2Lg+JVDeSYCbDkESmYhL3utMPBX4uJk=
+=hAon
 -----END PGP SIGNATURE-----
 
---OBd5C1Lgu00Gd/Tn--
+--K3vkeaB0MlFjg8U+--
