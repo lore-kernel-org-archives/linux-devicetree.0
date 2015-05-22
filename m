@@ -1,43 +1,111 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
-Date: Fri, 22 May 2015 15:14:53 +0100
-Message-ID: <555F39DD.9060209@linaro.org>
-References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>	<2282066.NWoIT9ZyLc@wuerfel>	<CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>	<13641152.Yt4ZI3oT6L@wuerfel>	<CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>	<1432285588.3929.28.camel@pengutronix.de>	<20150522091822.GF8557@lukather>	<1432289231.3929.60.camel@pengutronix.de>	<CALszF6CQ1_HQXJ8=vgytvVo2t4_ue5_nsE06HPyHMzSLrntqKg@mail.gmail.com>	<555F2A8A.5020205@suse.de> <CALszF6A=TZ_EROrfuBOAGiY3mbydC5fepWLSWrZLLt4nV9sr4w@mail.gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v3 0/2] crypto: add a new driver for Marvell's CESA
+Date: Fri, 22 May 2015 14:02:17 +0000
+Message-ID: <20150522140217.GB19834@io.lakedaemon.net>
+References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CALszF6A=TZ_EROrfuBOAGiY3mbydC5fepWLSWrZLLt4nV9sr4w@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, =?UTF-8?B?QW5kcmVhcyBGw6Q=?= =?UTF-8?B?cmJlcg==?= <afaerber@suse.de>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hell>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/05/15 14:57, Maxime Coquelin wrote:
-> 2015-05-22 15:09 GMT+02:00 Andreas F=C3=A4rber <afaerber@suse.de>:
->> As you should know, I did have an RCC clk driver, and there is no su=
-ch
->> issue. The two drivers use different mechanisms for initialization. =
-And
->> I'm pretty sure that I've already remarked that on the list, too.
->
-> Yes, you use of_iomap in your clock driver [0].
-> Daniel, would you accept to do the same?
-> That would remove one difference between stm32/sunxi/socfpga reset dr=
-ivers.
++ Jason Gunthorpe, he may be interested in this.
 
-In fact, that is exactly what I am currently doing, though I was=20
-planning for it to be temporary.
-
-It seems a bit weird to me that one driver (which requests too much=20
-register space) only works because another driver chooses not to reques=
-t=20
-any.
-
-BTW in drivers/clk there are ~110 of_iomaps and only 10=20
-of_io_request_and_maps... so I don't think anyone will yell at me for=20
-using of_iomap().
-
-
-Daniel.
+On Fri, May 22, 2015 at 03:33:46PM +0200, Boris Brezillon wrote:
+> Hello,
+> 
+> This patch series adds a new driver supporting Marvell's CESA IP.
+> This driver addresses some limitations of the existing one.
+> From a performance and CPU load point of view the most important
+> limitation in the existing driver is the lack of DMA support, thus
+> preventing us from chaining crypto operations.
+> 
+> I know we usually try to adapt existing drivers instead of replacing them
+> by new ones, but after trying to refactor the mv_cesa driver I realized it
+> would take longer than writing an new one from scratch.
+> 
+> Here are the main features brought by this new driver:
+> - support for armada SoCs (up to 38x) while keeping support for older ones
+>   (Orion and Kirkwood). Note that old DT bindings (those used on Orion and
+>   Kirkwood platforms) are supported, or IOTW, old DTs are compatible with
+>   this new driver.
+> - DMA mode to offload the CPU in case of intensive crypto usage
+> - new algorithms: SHA256, DES and 3DES
+> 
+> In addition to this driver comes a bunch of DT updates adding crypto device
+> nodes to several Marvell SoCs (those are only the tested ones, others might
+> be added later).
+> 
+> I'd like to thank Arnaud, who has carefully reviewed several iterations of
+> this driver, helped me improved my implementation, provided support for
+> several crypto algorithms, provided support for armada-370 and tested
+> the driver on different platforms, hence the SoB and dual MODULE_AUTHOR
+> in the driver code.
+> 
+> Best Regards,
+> 
+> Boris
+> 
+> Changes since v2:
+> - fixes in the cipher code (->dst_nents was assigned the ->src_nents
+>   value and CBC state was overwritten by the IV after each chunk
+>   operation)
+> - spit the code as suggested by Sebastian
+> 
+> Changes since v1:
+> - (suggested by Jason) kept the existing CESA driver and added a mechanism
+>   to prevent the new driver from probing devices handled my the existing
+>   one (Orion and Kirkwood platforms)
+> - (reported by Paul) addressed a few Kconfig and module definition issues
+> - (suggested by Andrew) added DT changes to the series
+> 
+> Arnaud Ebalard (6):
+>   crypto: marvell/CESA: add Triple-DES support
+>   crypto: marvell/CESA: add MD5 support
+>   crypto: marvell/CESA: add SHA256 support
+>   crypto: marvell/CESA: add support for Kirkwood SoCs
+>   ARM: marvell/dt: add crypto node to armada 370 dtsi
+>   ARM: marvell/dt: add crypto node to kirkwood dtsi
+> 
+> Boris Brezillon (10):
+>   crypto: mv_cesa: request registers memory region
+>   crypto: add a new driver for Marvell's CESA
+>   crypto: marvell/CESA: add TDMA support
+>   crypto: marvell/CESA: add DES support
+>   crypto: marvell/CESA: add support for all armada SoCs
+>   crypto: marvell/CESA: add allhwsupport module parameter
+>   crypto: marvell/CESA: add support for Orion SoCs
+>   crypto: marvell/CESA: update DT bindings documentation
+>   ARM: marvell/dt: add crypto node to armada-xp.dtsi
+>   ARM: marvell/dt: enable crypto on armada-xp-gp
+> 
+>  .../devicetree/bindings/crypto/marvell-cesa.txt    |   46 +
+>  arch/arm/boot/dts/armada-370.dtsi                  |   20 +
+>  arch/arm/boot/dts/armada-xp-gp.dts                 |    4 +-
+>  arch/arm/boot/dts/armada-xp.dtsi                   |   31 +
+>  arch/arm/boot/dts/kirkwood.dtsi                    |    2 +-
+>  drivers/crypto/Kconfig                             |   18 +
+>  drivers/crypto/Makefile                            |    1 +
+>  drivers/crypto/marvell/Makefile                    |    2 +
+>  drivers/crypto/marvell/cesa.c                      |  543 ++++++++
+>  drivers/crypto/marvell/cesa.h                      |  804 ++++++++++++
+>  drivers/crypto/marvell/cipher.c                    |  769 +++++++++++
+>  drivers/crypto/marvell/hash.c                      | 1349 ++++++++++++++++++++
+>  drivers/crypto/marvell/tdma.c                      |  224 ++++
+>  drivers/crypto/mv_cesa.c                           |   13 +-
+>  14 files changed, 3816 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/marvell-cesa.txt
+>  create mode 100644 drivers/crypto/marvell/Makefile
+>  create mode 100644 drivers/crypto/marvell/cesa.c
+>  create mode 100644 drivers/crypto/marvell/cesa.h
+>  create mode 100644 drivers/crypto/marvell/cipher.c
+>  create mode 100644 drivers/crypto/marvell/hash.c
+>  create mode 100644 drivers/crypto/marvell/tdma.c
+> 
+> -- 
+> 1.9.1
+> 
