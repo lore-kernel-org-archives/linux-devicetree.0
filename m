@@ -1,454 +1,82 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 1/3] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
-Date: Fri, 22 May 2015 09:08:06 +0200
-Message-ID: <555ED5D6.2080600@xilinx.com>
-References: <1432251450-26352-1-git-send-email-moritz.fischer@ettus.com>
- <1432251450-26352-2-git-send-email-moritz.fischer@ettus.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] MTD: spi-nor: check for short writes in
+ spi_nor_write.
+Date: Fri, 22 May 2015 00:17:27 -0700
+Message-ID: <20150522071727.GD23718@brian-ubuntu>
+References: <cover.1430403750.git.hramrach@gmail.com>
+ <50c40ef17ab6566f35ef5a4426bf23567f896db7.1430403750.git.hramrach@gmail.com>
+ <20150520233835.GX11598@ld-irv-0074>
+ <CAOMqctTYqDWL51twOuGi+oXONXQ4B2-2BkdJNSpzZAXshZUN6g@mail.gmail.com>
+ <20150521102802.GS21577@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432251450-26352-2-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>, jassisinghbrar@gmail.com
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, jingoohan1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150521102802.GS21577-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <grmoore-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2015 01:37 AM, Moritz Fischer wrote:
-> The Xilinx LogiCORE IP mailbox is a FPGA core that allows for
-> interprocessor communication via AXI4 memory mapped / AXI4 stream
-> interfaces.
+On Thu, May 21, 2015 at 11:28:02AM +0100, Mark Brown wrote:
+> On Thu, May 21, 2015 at 10:39:13AM +0200, Michal Suchanek wrote:
+> > On 21 May 2015 at 01:38, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
-> It is single channel per core and allows for transmit and receive.
+> Why is this thread about SPI error handling CCed to quite so many
+> people?
+
+I can't really speak for the original patch author, who created the CC
+list. I added you for comment on the SPI API (thanks BTW).
+
+This is part of a series that included an ill-conceived DT binding for
+recording a "max transfer length" property in the flash node. That's one
+step that easily blows up the CC list for the series, as there are 5 DT
+maintainers and a mailing list. Others are contributors to the m25p80 /
+spi-nor drivers. (All in all, you can probably trace this back to
+scripts/get_maintainer.pl.)
+
+> > >> Check the amount of data actually written by the driver.
 > 
-> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
-> ---
->  drivers/mailbox/Kconfig          |   8 +
->  drivers/mailbox/Makefile         |   2 +
->  drivers/mailbox/mailbox-xilinx.c | 339 ++++++++++++++++++++++++++++++++++
->  3 files changed, 349 insertions(+)
+> > > I'm not sure if we should just reactively use the retlen, or if we
+> > > should be communicating such a limitation via the SPI API. Thoughts?
 > 
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index 84b0a2d..e11e4b2 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -60,4 +60,12 @@ config ALTERA_MBOX
->  	  An implementation of the Altera Mailbox soft core. It is used
->  	  to send message between processors. Say Y here if you want to use the
->  	  Altera mailbox support.
-> +
-> +config XILINX_MBOX
-> +	tristate "Xilinx Mailbox"
-> +	help
-> +	  An implementation of the Xilinx Mailbox soft core. It is used
-> +	  to send message between processors. Say Y here if you want to use the
-> +	  Xilinx mailbox support.
-> +
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index b18201e..d28a028 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -11,3 +11,5 @@ obj-$(CONFIG_OMAP2PLUS_MBOX)	+= omap-mailbox.o
->  obj-$(CONFIG_PCC)		+= pcc.o
->  
->  obj-$(CONFIG_ALTERA_MBOX)	+= mailbox-altera.o
-> +
-> +obj-$(CONFIG_XILINX_MBOX)	+= mailbox-xilinx.o
-> diff --git a/drivers/mailbox/mailbox-xilinx.c b/drivers/mailbox/mailbox-xilinx.c
-> new file mode 100644
-> index 0000000..8d8aa17
-> --- /dev/null
-> +++ b/drivers/mailbox/mailbox-xilinx.c
-> @@ -0,0 +1,339 @@
-> +/*
-> + * Copyright (c) 2015, National Instruments Corp. All rights reserved.
-> + *
-> + * Driver for the Xilinx Logicore mailbox IP block
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRIVER_NAME "xilinx-mailbox"
-> +
-> +/* register offsets */
-> +#define MAILBOX_REG_WRDATA 0x00
+> > Is there any driver that would break if the SPI master truncated
+> > writes when the message is too long rather than returning an error an
+> > refusing the transfer?
+> 
+> Any such driver is buggy, the actual length transferred has always been
+> a part of the SPI API.
 
-I prefer to use #define<space>macro_name<tab>value
-but up to you.
+OK, so m25p80.c currently checks the retlen
+(spi_message::actual_length), but it doesn't actually handle it well if
+the SPI master can't write a full page-size chunk in one go. It looks
+like we'd leave holes in the programmed data right now.
 
-> +#define MAILBOX_REG_RDDATA 0x08
-> +#define MAILBOX_REG_STATUS 0x10
-> +#define MAILBOX_REG_ERROR 0x14
-> +#define MAILBOX_REG_SIT 0x18
-> +#define MAILBOX_REG_RIT 0x1c
-> +#define MAILBOX_REG_IS 0x20
-> +#define MAILBOX_REG_IE 0x24
-> +#define MAILBOX_REG_IP 0x28
-> +
-> +/* status register */
-> +#define STS_RTA BIT(3)
-> +#define STS_STA BIT(2)
-> +#define STS_FULL BIT(1)
-> +#define STS_EMPTY BIT(0)
-> +
-> +/* error register */
-> +#define ERR_FULL BIT(1)
-> +#define ERR_EMPTY BIT(0)
-> +
-> +/* mailbox interrupt status register */
-> +#define INT_STATUS_ERR BIT(2)
-> +#define INT_STATUS_RTI BIT(1)
-> +#define INT_STATUS_STI BIT(0)
-> +
-> +/* mailbox interrupt enable register */
-> +#define INT_ENABLE_ERR BIT(2)
-> +#define INT_ENABLE_RTI BIT(1)
-> +#define INT_ENABLE_STI BIT(0)
-> +
-> +#define MBOX_POLLING_MS		5	/* polling interval 5ms */
+So that qualifies as buggy, and that's part of what Michal is trying to
+fix, I think. Admittedly, as he's using an out-of-tree driver, I'm not
+sure I know exactly what failure modes he is hitting yet.
 
-and you are using tab here - it looks like c&p from somewhere. :-)
+> We should probably expose limitations so clients
+> can query in advance (we don't at the minute) but it'd be a while before
+> clients could rely on that information being useful and it's still
+> possible things can be truncated by error.
 
-> +
-> +struct xilinx_mbox {
-> +	bool intr_mode;
+That might help in the long run. In this case, I think we might be able
+to get by (for a properly-functioning SPI driver with a limited transfer
+size) with the current API, and handling the 'return length < message
+length' case better.
 
-look below.
+BTW, one extra note for Michal regarding your SPI controller/driver
+transfer length limitation: you would do well to try as much as possible
+to allow full NOR pages to be programmed in one SPINOR_OP_PP sequence. I
+know of some SPI NOR that, though they are byte addressable, actually
+have opaque internal ECC which is encoded on page boundaries, so you
+get better flash lifetime if you program on page boundaries, rather than
+on whatever smaller chunk size your SPI driver supports. So that might
+require a little more work on your SPI driver.
 
-> +	int irq;
-> +	void __iomem *mbox_base;
-> +	struct device *dev;
-> +	struct mbox_controller controller;
-> +
-> +	/* if the controller supports only RX polling mode */
-> +	struct timer_list rxpoll_timer;
-> +};
-> +
-> +static struct xilinx_mbox *mbox_chan_to_xilinx_mbox(struct mbox_chan *chan)
-> +{
-> +	if (!chan || !chan->con_priv)
-> +		return NULL;
-> +
-> +	return (struct xilinx_mbox *)chan->con_priv;
-> +}
-> +
-> +static inline int xilinx_mbox_full(struct xilinx_mbox *mbox)
-> +{
-> +	u32 status;
-> +
-> +	status = readl_relaxed(mbox->mbox_base + MAILBOX_REG_STATUS);
-
-empty line here please for easier reading.
-
-> +	return status & STS_FULL;
-> +}
-> +
-> +static inline int xilinx_mbox_pending(struct xilinx_mbox *mbox)
-> +{
-> +	u32 status;
-> +
-> +	status = readl_relaxed(mbox->mbox_base + MAILBOX_REG_STATUS);
-
-ditto.
-
-> +	return !(status & STS_EMPTY);
-> +}
-> +
-> +static void xilinx_mbox_rx_intmask(struct xilinx_mbox *mbox, bool enable)
-> +{
-> +	u32 mask;
-> +
-> +	mask = readl_relaxed(mbox->mbox_base + MAILBOX_REG_IE);
-> +	if (enable)
-> +		mask |= INT_ENABLE_RTI;
-> +	else
-> +		mask &= ~INT_ENABLE_RTI;
-> +	writel_relaxed(mask, mbox->mbox_base + MAILBOX_REG_IE);
-> +}
-> +
-> +static void xilinx_mbox_tx_intmask(struct xilinx_mbox *mbox, bool enable)
-> +{
-> +	u32 mask;
-> +
-> +	mask = readl_relaxed(mbox->mbox_base + MAILBOX_REG_IE);
-> +	if (enable)
-> +		mask |= INT_ENABLE_STI;
-> +	else
-> +		mask &= ~INT_ENABLE_STI;
-> +	writel_relaxed(mask, mbox->mbox_base + MAILBOX_REG_IE);
-> +}
-> +
-> +static void xilinx_mbox_rx_data(struct mbox_chan *chan)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +	u32 data;
-> +
-> +	if (xilinx_mbox_pending(mbox)) {
-> +		data = readl_relaxed(mbox->mbox_base + MAILBOX_REG_RDDATA);
-> +		mbox_chan_received_data(chan, (void *)data);
-> +	}
-> +}
-> +
-> +static void xilinx_mbox_poll_rx(unsigned long data)
-> +{
-> +	struct mbox_chan *chan = (struct mbox_chan *)data;
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	xilinx_mbox_rx_data(chan);
-> +
-> +	mod_timer(&mbox->rxpoll_timer,
-> +		  jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
-> +}
-> +
-> +static irqreturn_t xilinx_mbox_interrupt(int irq, void *p)
-> +{
-> +	u32 mask;
-> +	struct mbox_chan *chan = (struct mbox_chan *)p;
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	mask = readl_relaxed(mbox->mbox_base + MAILBOX_REG_IS);
-> +	if (mask & INT_STATUS_RTI)
-> +		xilinx_mbox_rx_data(chan);
-> +
-> +	/* mask irqs *before* notifying done, require tx_block=true */
-> +	if (mask & INT_STATUS_STI) {
-> +		xilinx_mbox_tx_intmask(mbox, false);
-> +		mbox_chan_txdone(chan, 0);
-> +	}
-> +
-> +	if (mask & INT_STATUS_ERR)
-> +		dev_err(mbox->dev, "Got error IRQ!\n");
-> +
-> +	writel_relaxed(mask, mbox->mbox_base + MAILBOX_REG_IS);
-
-one more empty line here.
-
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int xilinx_mbox_startup(struct mbox_chan *chan)
-> +{
-> +	int ret;
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	if (mbox->intr_mode) {
-
-look below
-
-> +		ret = request_irq(mbox->irq, xilinx_mbox_interrupt, 0,
-> +				  dev_name(mbox->dev), chan);
-> +		if (unlikely(ret)) {
-> +			dev_err(mbox->dev,
-> +				"failed to register mailbox interrupt:%d\n",
-> +				ret);
-> +			mbox->intr_mode = false;
-> +			goto polling; /* use polling if failed */
-> +		}
-> +
-> +		xilinx_mbox_rx_intmask(mbox, true);
-
-Are you also setting up polling timer for interrupt mode?
-Or here should be return?
-
-> +	}
-> +
-> +polling:
-> +	/* setup polling timer */
-> +	setup_timer(&mbox->rxpoll_timer, xilinx_mbox_poll_rx,
-> +		    (unsigned long)chan);
-> +	mod_timer(&mbox->rxpoll_timer,
-> +		  jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
-> +
-> +	return 0;
-> +}
-> +
-> +static int xilinx_mbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +	u32 *udata = (u32 *)data;
-> +
-> +	if (!mbox || !data)
-> +		return -EINVAL;
-> +
-> +	if (xilinx_mbox_full(mbox))
-> +		return -EBUSY;
-> +
-> +	/* enable interrupt before send */
-> +	if (mbox->intr_mode)
-> +		xilinx_mbox_tx_intmask(mbox, true);
-> +
-> +	writel_relaxed(*udata, mbox->mbox_base + MAILBOX_REG_WRDATA);
-> +
-> +	return 0;
-> +}
-> +
-> +static bool xilinx_mbox_last_tx_done(struct mbox_chan *chan)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	/* return false if mailbox is full */
-> +	return xilinx_mbox_full(mbox) ? false : true;
-> +}
-> +
-> +static bool xilinx_mbox_peek_data(struct mbox_chan *chan)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	return xilinx_mbox_pending(mbox) ? true : false;
-> +}
-> +
-> +static void xilinx_mbox_shutdown(struct mbox_chan *chan)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	if (mbox->intr_mode) {
-> +		/* unmask all interrupt masks */
-> +		writel_relaxed(~0, mbox->mbox_base + MAILBOX_REG_IE);
-> +		free_irq(mbox->irq, chan);
-> +	} else
-> +		del_timer_sync(&mbox->rxpoll_timer);
-
-Also {} around else part.
-
-> +}
-> +
-> +static struct mbox_chan_ops xilinx_mbox_ops = {
-> +	.send_data = xilinx_mbox_send_data,
-> +	.startup = xilinx_mbox_startup,
-> +	.shutdown = xilinx_mbox_shutdown,
-> +	.last_tx_done = xilinx_mbox_last_tx_done,
-> +	.peek_data = xilinx_mbox_peek_data,
-> +};
-> +
-> +static int xilinx_mbox_probe(struct platform_device *pdev)
-> +{
-> +	struct xilinx_mbox *mbox;
-> +	struct resource	*regs;
-> +	struct mbox_chan *chans;
-> +	int ret;
-> +
-> +	mbox = devm_kzalloc(&pdev->dev, sizeof(*mbox),
-> +			    GFP_KERNEL);
-
-it should fit to one line - no reason for this indentation.
-
-> +	if (!mbox)
-> +		return -ENOMEM;
-> +
-> +	/* allocated one channel */
-> +	chans = devm_kzalloc(&pdev->dev, sizeof(*chans), GFP_KERNEL);
-> +	if (!chans)
-> +		return -ENOMEM;
-> +
-> +	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
-> +	if (IS_ERR(mbox->mbox_base))
-> +		return PTR_ERR(mbox->mbox_base);
-> +
-> +	mbox->irq = platform_get_irq(pdev, 0);
-> +	/* if irq is present, we can use it, otherwise, poll */
-> +	if (mbox->irq >= 0)
-> +		mbox->intr_mode = true;
-> +	else
-> +		dev_info(&pdev->dev, "IRQ not found, fallback to polling.\n");
-
-Is mbox->intr_mode needed at all?
-You can simple detect it from mbox->irq anytime.
-
-
-> +
-> +	mbox->dev = &pdev->dev;
-> +
-> +	/* Hardware supports only one channel. */
-> +	chans[0].con_priv = mbox;
-> +	mbox->controller.dev = mbox->dev;
-> +	mbox->controller.num_chans = 1;
-> +	mbox->controller.chans = chans;
-> +	mbox->controller.ops = &xilinx_mbox_ops;
-> +
-> +	if (mbox->intr_mode) {
-> +		mbox->controller.txdone_irq = true;
-> +	} else {
-> +		mbox->controller.txdone_poll = true;
-> +		mbox->controller.txpoll_period = MBOX_POLLING_MS;
-> +	}
-
-why is this in the different block? Just put it together with above
-error message.
-
-> +
-> +	ret = mbox_controller_register(&mbox->controller);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Register mailbox failed\n");
-> +		goto err;
-
-Just return ret here
-
-> +	}
-> +
-> +	platform_set_drvdata(pdev, mbox);
-> +err:
-> +	return ret;
-
-return 0;
-
-> +}
-> +
-> +
-> +static int xilinx_mbox_remove(struct platform_device *pdev)
-> +{
-> +	struct xilinx_mbox *mbox = platform_get_drvdata(pdev);
-> +
-> +	if (!mbox)
-> +		return -EINVAL;
-> +
-> +	mbox_controller_unregister(&mbox->controller);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id xilinx_mbox_match[] = {
-> +	{ .compatible = "xlnx,mailbox-2.1" },
-> +	{ /* Sentinel */ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, xilinx_mbox_match);
-> +
-> +static struct platform_driver xilinx_mbox_driver = {
-> +	.probe	= xilinx_mbox_probe,
-> +	.remove	= xilinx_mbox_remove,
-> +	.driver	= {
-> +		.name	= DRIVER_NAME,
-> +		.of_match_table	= xilinx_mbox_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(xilinx_mbox_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Xilinx mailbox specific functions");
-> +MODULE_AUTHOR("Moritz Fischer <moritz.fischer@ettus.com>");
-> +MODULE_ALIAS("platform:xilinx-mailbox");
-
-This is fine but have you tested it as a plain platform driver?
-
-Thanks,
-Michal
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
