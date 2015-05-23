@@ -1,77 +1,27 @@
-From: Guenter Roeck <linux@roeck-us.net>
+From: Timur Tabi <timur@codeaurora.org>
 Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Sat, 23 May 2015 11:35:07 -0700
-Message-ID: <5560C85B.8040100@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>	<555F4236.7040206@linaro.org>	<4095167.UOriXdSu53@wuerfel>	<556097D5.9050103@codeaurora.org> <CADyBb7svbV6QdhzCsa9DiBLfyNpAJHkgm73VSKCieJioPwWHsw@mail.gmail.com>
+Date: Sat, 23 May 2015 13:37:07 -0500
+Message-ID: <5560C8D3.40708@codeaurora.org>
+References: <=fu.wei@linaro.org>	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>	<555F4236.7040206@linaro.org>	<4095167.UOriXdSu53@wuerfel>	<556097D5.9050103@codeaurora.org> <CADyBb7svbV6QdhzCsa9DiBLfyNpAJHkgm73VSKCieJioPwWHsw@mail.gmail.com> <5560C85B.8040100@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CADyBb7svbV6QdhzCsa9DiBLfyNpAJHkgm73VSKCieJioPwWHsw@mail.gmail.com>
+In-Reply-To: <5560C85B.8040100@roeck-us.net>
 Sender: linux-doc-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>, Timur Tabi <timur@codeaurora.org>
+To: Guenter Roeck <linux@roeck-us.net>, Fu Wei <fu.wei@linaro.org>
 Cc: Arnd Bergmann <arnd@arndb.de>, Hanjun Guo <hanjun.guo@linaro.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/2015 10:26 AM, Fu Wei wrote:
-> Hi Timur,
->
->
->
-> On 23 May 2015 at 23:08, Timur Tabi <timur@codeaurora.org> wrote:
->> Arnd Bergmann wrote:
->>>
->>> I think it's a reasonable assumption that someone will sooner or later
->>> put that hardware into an ARM32 machine,
->>
->>
->> I'm going to have to disagree.  If they haven't done it by now, I can't
->> imagine any ARM SOC vendor creating a 32-bit ARM SOC with an SBSA watchdog
->> in it.  I can imagine a vendor trying to repurpose an existing 32-bit ARM
->> SOC for the server market, but that SOC won't have an SBSA watchdog in it.
->
-> I will agree with you on this, ONLY IF a people can represent ARM and
-> all chip vendors say publicly:
-> " We never ever use SBSA watchdog IP core on ARM32!" or " SBSA
-> watchdog IP core is imcompatible with ARM32"
->
-> Although the SBSA is all about ARMv8, but in "5 APPENDIX A: GENERIC
-> WATCHDOG", it doesn't say "this is only for ARMv8".
-> and its clock source "system counter" and arm_arch_timer have been in
-> ARM32 Soc for years,
-> and all the regs in SBSA watchdog is 32bit. I can't see why we can not
-> do that, unless I miss something.
->
-> I wonder why you are so sure "that SOC won't have an SBSA watchdog in
-> it."  any documentation ?
-> Sorry, I am not a chip design engineer, I can't see why 32-bit ARM
-> won't have an SBSA watchdog in it.
->
+Guenter Roeck wrote:
+> I think it is quite unfortunate that the specification is not public.
+> We have heard many statements about what is in the spec or not.
 
-I think it is quite unfortunate that the specification is not public.
-We have heard many statements about what is in the spec or not.
-We have two possible implementations of the SBSA watchdog, but not
-even the implementers of those two implementations seem to be able
-to agree what the specification actually mandates/supports, or what
-it doesn't mandate/support.
+All you need to do is go to 
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0029b/index.html, 
+get a free ARM account, and download the spec.
 
-We have heard that the SBSA watchdog would require ACPI, and that it
-doesn't. We have heard that it would require ARM64, and that it doesn't.
-We have heard various assumptions about how WS0 and WS1 are supposed
-to be wired. We have heard that all its registers are 32 bit (which
-would suggest they have to be treated as such), but then we have a
-64 bit register access in one of the drivers, and a more complex
-implementation to read the same value as two 32-bit reads in the other.
-We have heard that WS0 and WS1 are at least to some degree independent
-of each other (and thus that it makes sense to set them separately),
-and we have heard that WS1 is always equal to WS0 * 2. We have one
-implementation limiting support to architecture revision 0, and the
-other not imposing such a restriction.
-
-Is the specification really that vague in such key areas ?
-How do you expect anyone who doesn't have access to the specification
-to be able to figure out what is actually correct and how to proceed ?
-
-Thanks,
-Guenter
-
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
