@@ -1,52 +1,37 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH v4 0/8] ARM: dts: exynos5: labels for overriding nodes
-Date: Sat, 23 May 2015 13:00:58 +0900
-Message-ID: <555FFB7A.7040300@kernel.org>
-References: <1431851175-32624-1-git-send-email-k.kozlowski.k@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 0/2] Fix OF match for adxl34x driver
+Date: Sat, 23 May 2015 09:10:50 +0200
+Message-ID: <CAMuHMdUoCsHDqFM-+FuxsPn6X0eguub+Vy_-FS-yCNYNR17iTQ@mail.gmail.com>
+References: <1432208546-18615-1-git-send-email-geert+renesas@glider.be>
+	<20150522233245.GB20687@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1431851175-32624-1-git-send-email-k.kozlowski.k@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150522233245.GB20687@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/17/15 17:26, Krzysztof Kozlowski wrote:
-> Hi,
-> 
-> 
-> Changes since v3
-> ================
-> 1. Rebased on current Kukjin's for-next branch:
->    v4.1-rc3-34-gfcfae6b049cf
-> 
-> Changes since v2
-> ================
-> 1. New patch 8/8: ARM: dts: Use labels for overriding nodes
->    in exynos5422-odroidxu3
-> 2. To avoid conflicts rebased on my "for-next" branch of
->    https://github.com/krzk/linux
->    The branch above contains some patches for Exynos5 boards
->    applied from LKML.
-> 
-> Changes since v1
-> ================
-> 1. Re-phrased the description (phandle->label). Suggested by Arnd.
-> 
-> 
-> Description
-> ===========
-> The label-based notation reduces possible mistakes when overriding
-> nodes by child DTSI and board files and reduces duplication
-> of addresses.
-> 
-> The patchset refactors Exynos5 boards to use labels for overriding nodes.
-> 
-> Tested by comparison of decompiled DTB for each commit.
-> 
-Same, will sort out.
+Hi Dmitry,
 
-Thanks,
-Kukjin
+On Sat, May 23, 2015 at 1:32 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Thu, May 21, 2015 at 01:42:24PM +0200, Geert Uytterhoeven wrote:
+>> This is a resent of a series by Laurent Pinchart to fix OF matching for
+>> the adxl34x driver.
+
+> Applied and sorry for the delay.
+
+Thanks a lot!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
