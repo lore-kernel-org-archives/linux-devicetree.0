@@ -1,51 +1,47 @@
 From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: exynos4: Remove obsolete MIPI DPHY 'reg'
- property
-Date: Sat, 23 May 2015 11:20:06 +0900
-Message-ID: <555FE3D6.7030009@kernel.org>
-References: <1432174713-23368-1-git-send-email-k.kozlowski@samsung.com> <CABxcv=mKLGVWj2swi63-AkdF_-D5eVM=-785dJ8WjUNC-D1zpg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: Update video-phy node with syscon phandle for
+ Exynos3250
+Date: Sat, 23 May 2015 12:53:16 +0900
+Message-ID: <555FF9AC.1060909@kernel.org>
+References: <1426762587-24923-1-git-send-email-b.michalska@samsung.com>	<CAJKOXPfumy5a6A275ETy7vnztzE20qSuXD_i=ebY9Br47p93Dg@mail.gmail.com>	<CAJKOXPcnYq0pS-akXNDd8TE6wqeq0pg-cx4PK0jeke9z3tHsOw@mail.gmail.com> <CABxcv=npaHemH_KcYgGf-_x8Bo=V2UMDJREfUY6LRmDT1iQYpw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=mKLGVWj2swi63-AkdF_-D5eVM=-785dJ8WjUNC-D1zpg@mail.gmail.com>
+In-Reply-To: <CABxcv=npaHemH_KcYgGf-_x8Bo=V2UMDJREfUY6LRmDT1iQYpw@mail.gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Beata Michalska <b.michalska@samsung.com>, Kukjin Kim <kgene@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/15 16:23, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On Thu, May 21, 2015 at 4:18 AM, Krzysztof Kozlowski
+On 05/21/15 16:25, Javier Martinez Canillas wrote:
+> On Thu, May 21, 2015 at 4:04 AM, Krzysztof Kozlowski
 > <k.kozlowski@samsung.com> wrote:
->> Since e4b3d38088df ("phy: exynos-video-mipi: Fix regression by adding
->> support for PMU regmap") the Exynos PMU driver provides regmap to access
->> the MIPI DPHY registers. The MIPI DPHY node uses a phandle to syscon to
->> get this regmap. The 'reg' field is obsolete.
+>> 2015-05-21 10:57 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
+>>> 2015-03-19 19:56 GMT+09:00 Beata Michalska <b.michalska@samsung.com>:
+>>>> As a follow-up to recent changes to Exynos mipi video phy
+>>>> driver, introducing support for PMU regmap in commit
+>>>> e4b3d38088df6f3acd40 ("phy: exynos-video-mipi: Fix regression
+>>>> by adding support for PMU regmap") add a syscon phandle to
+>>>> video-phy node to bring back to life both MIPI DSI displays
+>>>> and MIPI CSIS-2 camera sensors on Exynos3250.
+>>>>
+>>>> Signed-off-by: Beata Michalska <b.michalska@samsung.com>
+>>>
+>>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>> Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>>
+>>> Tested on Gear 2 (Exynos3250) board.
 >>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos4.dtsi | 1 -
->>  1 file changed, 1 deletion(-)
+>> Oh, I was too fast. It seems that "reg" property is not needed
+>> anymore. Can you remove it?
 >>
->> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
->> index 1c74c1296ab7..6e7f0b4afa84 100644
->> --- a/arch/arm/boot/dts/exynos4.dtsi
->> +++ b/arch/arm/boot/dts/exynos4.dtsi
->> @@ -78,7 +78,6 @@
->>
->>         mipi_phy: video-phy@10020710 {
->>                 compatible = "samsung,s5pv210-mipi-video-phy";
->> -               reg = <0x10020710 8>;
->>                 #phy-cells = <1>;
->>                 syscon = <&pmu_system_controller>;
->>         };
 > 
-> Indeed, is even removed from the DT binding so this is clearly a left over.
+> After removing the reg property as Krzysztof suggested.
 > 
 > Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 > 
-Thanks, applied this series.
+will apply with changing as per you guys' review comment ;-)
 
-- Kukjin
+Thanks,
+Kukjin
