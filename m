@@ -1,306 +1,161 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] iio: light: Added Device Tree support for CM3232
- ambient light sensor driver.
-Date: Sat, 23 May 2015 12:29:20 +0100
-Message-ID: <55606490.7010403@kernel.org>
-References: <1432075419-2692-1-git-send-email-ktsai@capellamicro.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: adc128s052: add support for adc122s021
+Date: Sat, 23 May 2015 12:43:05 +0100
+Message-ID: <556067C9.3070209@kernel.org>
+References: <1431955364-25059-1-git-send-email-urs.fassler@bytesatwork.ch> <1431955364-25059-2-git-send-email-urs.fassler@bytesatwork.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432075419-2692-1-git-send-email-ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Roberta Dobrescu <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1431955364-25059-2-git-send-email-urs.fassler@bytesatwork.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?VXJzIEbDpHNzbGVy?= <urs.fassler@bytesatwork.ch>, angelo.compagnucci@gmail.com
+Cc: iivanov@mm-sol.com, ezequiel.garcia@imgtec.com, jacob.jun.pan@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/05/15 23:43, Kevin Tsai wrote:
-> Added Device Tree Support.
-> 
-> Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> ---
-> Added Device Tree support.
-> Updated company name.
-> Renamed register name.
-> 
->  .../devicetree/bindings/iio/light/cm3232.txt       | 22 +++++++
->  MAINTAINERS                                        | 12 ++--
->  drivers/iio/light/Kconfig                          |  4 +-
->  drivers/iio/light/cm3232.c                         | 71 ++++++++++++++--------
->  4 files changed, 76 insertions(+), 33 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/cm3232.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/cm3232.txt b/Documentation/devicetree/bindings/iio/light/cm3232.txt
-> new file mode 100644
-> index 0000000..00dde87
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/cm3232.txt
-> @@ -0,0 +1,22 @@
-> +* Vishay Capella CM3232 Ambient Light sensor
-> +
-> +Required properties:
-> +- compatible: must be "capella,cm3232"
-> +- reg: the I2C address of the device
-> +
-> +Optional properties:
-I'd much rather we avoided the magic numbers and broke these up into the individual
-elements that are stored in the registers.
-> +- capella,reg_cmd: command register initialization.
-> +- capella,calibscale: calibrated factor with 10^-5 notation.
-> +- capella,hw_id: hardware device id.
-I don't think hw_id has any place in here. Should be covered by the compatible list
-to my mind.
+On 18/05/15 14:22, Urs F=C3=A4ssler wrote:
+> Signed-off-by: Urs F=C3=A4ssler <urs.fassler@bytesatwork.ch>
+looks good.=20
 
-> +- capella,mlux_per_bit: millilux per bit under the default IT.
-Is this not closely related to the calibscale?
-> +
-> +Example:
-> +
-> +cm3232@10 {
-> +	compatible = "capella,cm3232";
-> +	reg = <0x10>;
-> +	capella,reg_cmd = <0x04>;
-> +	capella,calibscale = <100000>;
-> +	capella,hw_id = <0x32>;
-> +	capella,mlux_per_bit = <64>;
-> +};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f8e0afb..ee6a8f6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2431,12 +2431,6 @@ F:	security/capability.c
->  F:	security/commoncap.c
->  F:	kernel/capability.c
->  
-> -CAPELLA MICROSYSTEMS LIGHT SENSOR DRIVER
-> -M:	Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> -S:	Maintained
-> -F:	drivers/iio/light/cm*
-> -F:	Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> -
->  CC2520 IEEE-802.15.4 RADIO DRIVER
->  M:	Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->  L:	linux-wpan-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> @@ -10610,6 +10604,12 @@ L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  S:	Maintained
->  F:	drivers/net/ethernet/via/via-velocity.*
->  
-> +VISHAY CAPELLA LIGHT SENSOR DRIVER
-> +M:	Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> +S:	Maintained
-> +F:	drivers/iio/light/cm*
-> +F:	Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +
->  VIVID VIRTUAL VIDEO DRIVER
->  M:	Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
->  L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-> index a437bad..5e7e311 100644
-> --- a/drivers/iio/light/Kconfig
-> +++ b/drivers/iio/light/Kconfig
-> @@ -50,11 +50,11 @@ config CM32181
->  
->  config CM3232
->  	depends on I2C
-> -	tristate "CM3232 ambient light sensor"
-> +	tristate "Vishay Capella CM3232 ambient light sensor"
+Applied to the togreg branch of iio.git with the chip->chips change.
+
+Thanks,
+
+Jonathan
+> ---
+>  .../devicetree/bindings/iio/adc/ti-adc128s052.txt  |  4 +--
+>  drivers/iio/adc/Kconfig                            |  4 +--
+>  drivers/iio/adc/ti-adc128s052.c                    | 30 ++++++++++++=
++++++-----
+>  3 files changed, 28 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.=
+txt b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
+> index 42ca7de..15ca6b4 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
+> @@ -1,7 +1,7 @@
+> -* Texas Instruments' ADC128S052 ADC chip
+> +* Texas Instruments' ADC128S052 and ADC122S021 ADC chip
+> =20
+>  Required properties:
+> - - compatible: Should be "ti,adc128s052"
+> + - compatible: Should be "ti,adc128s052" or "ti,adc122s021"
+>   - reg: spi chip select number for the device
+>   - vref-supply: The regulator supply for ADC reference voltage
+> =20
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index e36a73e..92c319c 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -285,11 +285,11 @@ config TI_ADC081C
+>  	  called ti-adc081c.
+> =20
+>  config TI_ADC128S052
+> -	tristate "Texas Instruments ADC128S052"
+> +	tristate "Texas Instruments ADC128S052/ADC122S021"
+>  	depends on SPI
 >  	help
->  	 Say Y here if you use cm3232.
->  	 This option enables ambient light sensor using
-> -	 Capella Microsystems cm3232 device driver.
-> +	 Vishay Capella cm3232 device driver.
->  
->  	 To compile this driver as a module, choose M here:
->  	 the module will be called cm3232.
-> diff --git a/drivers/iio/light/cm3232.c b/drivers/iio/light/cm3232.c
-> index 39c8d99..5354bfa 100644
-> --- a/drivers/iio/light/cm3232.c
-> +++ b/drivers/iio/light/cm3232.c
-> @@ -1,8 +1,7 @@
+>  	  If you say yes here you get support for Texas Instruments ADC128S=
+052
+> -	  chip.
+> +	  and ADC122S021 chip.
+chips ;)
+> =20
+>  	  This driver can also be built as a module. If so, the module will=
+ be
+>  	  called ti-adc128s052.
+> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc=
+128s052.c
+> index 655cb56..915be6b 100644
+> --- a/drivers/iio/adc/ti-adc128s052.c
+> +++ b/drivers/iio/adc/ti-adc128s052.c
+> @@ -1,9 +1,10 @@
 >  /*
->   * CM3232 Ambient Light Sensor
+>   * Copyright (C) 2014 Angelo Compagnucci <angelo.compagnucci@gmail.c=
+om>
 >   *
-> - * Copyright (C) 2014-2015 Capella Microsystems Inc.
-> - * Author: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> + * Copyright (C) 2014-2015 Vishay Capella
+> - * Driver for Texas Instruments' ADC128S052 ADC chip.
+> - * Datasheet can be found here:
+> + * Driver for Texas Instruments' ADC128S052 and ADC122S021 ADC chip.
+> + * Datasheets can be found here:
+>   * http://www.ti.com/lit/ds/symlink/adc128s052.pdf
+> + * http://www.ti.com/lit/ds/symlink/adc122s021.pdf
 >   *
->   * This program is free software; you can redistribute it and/or modify it
->   * under the terms of the GNU General Public License version 2, as published
-> @@ -54,7 +53,7 @@ static const struct {
->  };
->  
->  struct cm3232_als_info {
-> -	u8 regs_cmd_default;
-> +	u8 reg_cmd;
->  	u8 hw_id;
->  	int calibscale;
->  	int mlux_per_bit;
-> @@ -62,7 +61,7 @@ struct cm3232_als_info {
->  };
->  
-I had clearly missed the use of a non const info structure in here.
-Could you clean this up as well? 
-(basically make a copy and work on that allowing this default version to
-become const)
->  static struct cm3232_als_info cm3232_als_info_default = {
-> -	.regs_cmd_default = CM3232_CMD_DEFAULT,
-> +	.reg_cmd = CM3232_CMD_DEFAULT,
->  	.hw_id = CM3232_HW_ID,
->  	.calibscale = CM3232_CALIBSCALE_DEFAULT,
->  	.mlux_per_bit = CM3232_MLUX_PER_BIT_DEFAULT,
-> @@ -72,10 +71,27 @@ static struct cm3232_als_info cm3232_als_info_default = {
->  struct cm3232_chip {
->  	struct i2c_client *client;
->  	struct cm3232_als_info *als_info;
-> -	u8 regs_cmd;
-> -	u16 regs_als;
-> +	u8 reg_cmd;
-> +	u16 reg_als;
->  };
->  
-> +#ifdef CONFIG_OF
-> +void cm3232_parse_dt(struct cm3232_chip *chip)
-> +{
-> +	struct device_node *dn = chip->client->dev.of_node;
-> +	u32 temp_val;
+>   * This program is free software; you can redistribute it and/or mod=
+ify
+>   * it under the terms of the GNU General Public License version 2 as
+> @@ -16,6 +17,11 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/regulator/consumer.h>
+> =20
+> +struct adc128_configuration {
+> +	const struct iio_chan_spec	*channels;
+> +	u8				num_channels;
+> +};
 > +
-> +	if (!of_property_read_u32(dn, "capella,reg_cmd", &temp_val))
-> +		chip->als_info->reg_cmd = (uint8_t)temp_val;
-> +	if (!of_property_read_u32(dn, "capella,hw_id", &temp_val))
-> +		chip->als_info->hw_id = (int)temp_val;
-> +	if (!of_property_read_u32(dn, "capella,calibscale", &temp_val))
-> +		chip->als_info->calibscale = (int)temp_val;
-> +	if (!of_property_read_u32(dn, "capella,mlux_per_bit", &temp_val))
-> +		chip->als_info->mlux_per_bit = (int)temp_val;
-> +}
-> +#endif
-> +
->  /**
->   * cm3232_reg_init() - Initialize CM3232
->   * @chip:	pointer of struct cm3232_chip.
-> @@ -90,6 +106,10 @@ static int cm3232_reg_init(struct cm3232_chip *chip)
->  	s32 ret;
->  
->  	chip->als_info = &cm3232_als_info_default;
-> +#ifdef CONFIG_OF
-> +	if (client->dev.of_node)
-> +		cm3232_parse_dt(chip);
-> +#endif
->  
->  	/* Identify device */
->  	ret = i2c_smbus_read_word_data(client, CM3232_REG_ADDR_ID);
-> @@ -102,20 +122,20 @@ static int cm3232_reg_init(struct cm3232_chip *chip)
->  		return -ENODEV;
->  
->  	/* Disable and reset device */
-> -	chip->regs_cmd = CM3232_CMD_ALS_DISABLE | CM3232_CMD_ALS_RESET;
-> +	chip->reg_cmd = CM3232_CMD_ALS_DISABLE | CM3232_CMD_ALS_RESET;
->  	ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> -					chip->regs_cmd);
-> +					chip->reg_cmd);
->  	if (ret < 0) {
->  		dev_err(&chip->client->dev, "Error writing reg_cmd\n");
->  		return ret;
+>  struct adc128 {
+>  	struct spi_device *spi;
+> =20
+> @@ -92,7 +98,7 @@ static int adc128_read_raw(struct iio_dev *indio_de=
+v,
+>  		.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE) \
 >  	}
->  
->  	/* Register default value */
-> -	chip->regs_cmd = chip->als_info->regs_cmd_default;
-> +	chip->reg_cmd = chip->als_info->reg_cmd;
->  
->  	/* Configure register */
->  	ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> -					chip->regs_cmd);
-> +					chip->reg_cmd);
->  	if (ret < 0)
->  		dev_err(&chip->client->dev, "Error writing reg_cmd\n");
->  
-> @@ -123,21 +143,21 @@ static int cm3232_reg_init(struct cm3232_chip *chip)
->  }
->  
->  /**
-> - *  cm3232_read_als_it() - Get sensor integration time
-> - *  @chip:	pointer of struct cm3232_chip
-> - *  @val:	pointer of int to load the integration (sec).
-> - *  @val2:	pointer of int to load the integration time (microsecond).
-> + * cm3232_read_als_it() - Get sensor integration time
-> + * @chip:	pointer of struct cm3232_chip
-> + * @val:	pointer of int to load the integration (sec).
-> + * @val2:	pointer of int to load the integration time (microsecond).
->   *
-> - *  Report the current integration time.
-> + * Report the current integration time.
->   *
-> - *  Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
-> + * Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
->   */
->  static int cm3232_read_als_it(struct cm3232_chip *chip, int *val, int *val2)
+> =20
+> -static const struct iio_chan_spec adc128_channels[] =3D {
+> +static const struct iio_chan_spec adc128s052_channels[] =3D {
+>  	ADC128_VOLTAGE_CHANNEL(0),
+>  	ADC128_VOLTAGE_CHANNEL(1),
+>  	ADC128_VOLTAGE_CHANNEL(2),
+> @@ -103,6 +109,16 @@ static const struct iio_chan_spec adc128_channel=
+s[] =3D {
+>  	ADC128_VOLTAGE_CHANNEL(7),
+>  };
+> =20
+> +static const struct iio_chan_spec adc122s021_channels[] =3D {
+> +	ADC128_VOLTAGE_CHANNEL(0),
+> +	ADC128_VOLTAGE_CHANNEL(1),
+> +};
+> +
+> +static const struct adc128_configuration adc128_config[] =3D {
+> +	{ adc128s052_channels, ARRAY_SIZE(adc128s052_channels) },
+> +	{ adc122s021_channels, ARRAY_SIZE(adc122s021_channels) },
+> +};
+This is a good flexible solution as opposed to doing it via a switch
+in the probe function which would have been shorter, but not allowed
+for as easy an extension to moer parts in future.   Looks like there
+are lots of fairly similar parts!
+> +
+>  static const struct iio_info adc128_info =3D {
+>  	.read_raw =3D adc128_read_raw,
+>  	.driver_module =3D THIS_MODULE,
+> @@ -112,6 +128,7 @@ static int adc128_probe(struct spi_device *spi)
 >  {
->  	u16 als_it;
->  	int i;
->  
-> -	als_it = chip->regs_cmd;
-> +	als_it = chip->reg_cmd;
->  	als_it &= CM3232_CMD_ALS_IT_MASK;
->  	als_it >>= CM3232_CMD_ALS_IT_SHIFT;
->  	for (i = 0; i < ARRAY_SIZE(cm3232_als_it_scales); i++) {
-> @@ -175,14 +195,14 @@ static int cm3232_write_als_it(struct cm3232_chip *chip, int val, int val2)
->  			als_it = cm3232_als_it_scales[i].it;
->  			als_it <<= CM3232_CMD_ALS_IT_SHIFT;
->  
-> -			cmd = chip->regs_cmd & ~CM3232_CMD_ALS_IT_MASK;
-> +			cmd = chip->reg_cmd & ~CM3232_CMD_ALS_IT_MASK;
->  			cmd |= als_it;
->  			ret = i2c_smbus_write_byte_data(client,
->  							CM3232_REG_ADDR_CMD,
->  							cmd);
->  			if (ret < 0)
->  				return ret;
-> -			chip->regs_cmd = cmd;
-> +			chip->reg_cmd = cmd;
->  			return 0;
->  		}
->  	}
-> @@ -222,8 +242,8 @@ static int cm3232_get_lux(struct cm3232_chip *chip)
->  		return ret;
->  	}
->  
-> -	chip->regs_als = (u16)ret;
-> -	lux *= chip->regs_als;
-> +	chip->reg_als = (u16)ret;
-> +	lux *= chip->reg_als;
->  	lux *= als_info->calibscale;
->  	lux = div_u64(lux, CM3232_CALIBSCALE_RESOLUTION);
->  	lux = div_u64(lux, CM3232_MLUX_PER_LUX);
-> @@ -340,6 +360,7 @@ static int cm3232_probe(struct i2c_client *client,
->  		return -ENOMEM;
->  
->  	chip = iio_priv(indio_dev);
-> +
->  	i2c_set_clientdata(client, indio_dev);
->  	chip->client = client;
->  
-> @@ -386,9 +407,9 @@ static int cm3232_suspend(struct device *dev)
->  	struct i2c_client *client = chip->client;
+>  	struct iio_dev *indio_dev;
+>  	struct adc128 *adc;
+> +	int config =3D spi_get_device_id(spi)->driver_data;
 >  	int ret;
->  
-> -	chip->regs_cmd |= CM3232_CMD_ALS_DISABLE;
-> +	chip->reg_cmd |= CM3232_CMD_ALS_DISABLE;
->  	ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> -					chip->regs_cmd);
-> +					chip->reg_cmd);
->  
->  	return ret;
+> =20
+>  	indio_dev =3D devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> @@ -128,8 +145,8 @@ static int adc128_probe(struct spi_device *spi)
+>  	indio_dev->modes =3D INDIO_DIRECT_MODE;
+>  	indio_dev->info =3D &adc128_info;
+> =20
+> -	indio_dev->channels =3D adc128_channels;
+> -	indio_dev->num_channels =3D ARRAY_SIZE(adc128_channels);
+> +	indio_dev->channels =3D adc128_config[config].channels;
+> +	indio_dev->num_channels =3D adc128_config[config].num_channels;
+> =20
+>  	adc->reg =3D devm_regulator_get(&spi->dev, "vref");
+>  	if (IS_ERR(adc->reg))
+> @@ -158,7 +175,8 @@ static int adc128_remove(struct spi_device *spi)
 >  }
-> @@ -400,9 +421,9 @@ static int cm3232_resume(struct device *dev)
->  	struct i2c_client *client = chip->client;
->  	int ret;
->  
-> -	chip->regs_cmd &= ~CM3232_CMD_ALS_DISABLE;
-> +	chip->reg_cmd &= ~CM3232_CMD_ALS_DISABLE;
->  	ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> -					chip->regs_cmd | CM3232_CMD_ALS_RESET);
-> +					chip->reg_cmd | CM3232_CMD_ALS_RESET);
->  
->  	return ret;
->  }
-> 
+> =20
+>  static const struct spi_device_id adc128_id[] =3D {
+> -	{ "adc128s052", 0},
+> +	{ "adc128s052", 0},	/* index into adc128_config */
+> +	{ "adc122s021",	1},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(spi, adc128_id);
+>=20
