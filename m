@@ -1,135 +1,133 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Linaro-acpi] [PATCH v2 6/7] Watchdog: introduce ARM SBSA
- watchdog driver
-Date: Sat, 23 May 2015 15:25:50 +0800
-Message-ID: <CADyBb7sJUY0oUb-6oqSBNnj=xjcn7JYztQ=BRspCf0t1s7+fUw@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<20150522150145.GA2930@roeck-us.net>
-	<555F48BD.4010605@linaro.org>
-	<10437443.BChumWu5Uk@wuerfel>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Sat, 23 May 2015 10:18:47 +0200
+Message-ID: <20150523081847.GJ8557@lukather>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <2282066.NWoIT9ZyLc@wuerfel>
+ <CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>
+ <13641152.Yt4ZI3oT6L@wuerfel>
+ <CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>
+ <1432285588.3929.28.camel@pengutronix.de>
+ <20150522091822.GF8557@lukather>
+ <1432289231.3929.60.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10437443.BChumWu5Uk@wuerfel>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============4285934497855337019=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1432289231.3929.60.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>"linux-serial@vger.kernel.org" <li>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd
 
-Thanks :-)
-
-On 22 May 2015 at 23:24, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 22 May 2015 23:18:21 Hanjun Guo wrote:
->> On 2015=E5=B9=B405=E6=9C=8822=E6=97=A5 23:01, Guenter Roeck wrote:
->> > On Fri, May 22, 2015 at 04:55:04PM +0200, Arnd Bergmann wrote:
->> >> On Friday 22 May 2015 22:50:30 Hanjun Guo wrote:
->> >>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfi=
-g
->> >>>> index e5e7c55..25a0df1 100644
->> >>>> --- a/drivers/watchdog/Kconfig
->> >>>> +++ b/drivers/watchdog/Kconfig
->> >>>> @@ -152,6 +152,18 @@ config ARM_SP805_WATCHDOG
->> >>>>          ARM Primecell SP805 Watchdog timer. This will reboot y=
-our system when
->> >>>>          the timeout is reached.
->> >>>>
->> >>>> +config ARM_SBSA_WATCHDOG
->> >>>> +     tristate "ARM SBSA Generic Watchdog"
->> >>>> +     depends on ARM || ARM64 || COMPILE_TEST
->> >>>
->> >>> SBSA is for ARMv8-A based (64-bit) servers, no need to depends o=
-n ARM,
->> >>> and why we depends on COMPILE_TEST?
->> >>>
->> >>
->> >> I think it's a reasonable assumption that someone will sooner or =
-later
->> >> put that hardware into an ARM32 machine, or run a 32-bit kernel o=
-n
->> >> a chip that has it.
->> >>
->> >> While SBSA requires this watchdog device, nothing prevents SoC
->> >> manufacturers from using the same design in something that is not
->> >> a server.
->>
->>  From this point of view, I agree that SBSA watchdog design may used
->> in other ARM SoCs in the future, but how about add it back when this
->> kind of hardware showing up?
->
-> If it builds on ARM32, I'd rather leave the option in, it doesn't hur=
-t.
-
-yes, I am agree with you.
-Reason:
-(1)Although the SBSA spec is all about ARMv8, but in "5 APPENDIX A:
-GENERIC WATCHDOG", nothing says SBSA watchdog is only for ARM64.
-(2)SBSA watchdog should work with arch_timer which  has be used on
-ARMv7 and ARMv8.
-(3)there are ARM32 servers in the market(although there is not SBSA
-watchdog in them)
-(4) all the regs of SBSA watchdog are 32Bit, this IP core can be use
-in ARM32(I don't know the implementation detail of this IP core, but
-from the spec , I don't see "It can't be used on ARM32")
-(5)we don't need to change any code, any line.(yes, it doesn't hurt)
-
-So maybe we can keep this
-
-The only problem we face is : there is not a ARM32 hardware or a
-simulator of ARM32 has SBSA watchdog on it. and we don't know if ARM
-will put this IP core in any Soc in the future :-(
-Maybe because this IP core is new.
-
->
->> > Tricky, though. Since teh driver uses arm specific clock functions=
-,
->> > I don't think this can compile on a non-arm machine.
->>
->> Since it depends on ARM64/ARM, we can temporary release from that no=
-w
->
-> We have to drop the '|| COMPILE_TEST' though as a result, or fix the
-> driver to look up the clock in DT and call 'clk_get_rate'.
->
-> That will break the ACPI case, but ACPI could use platform_data to
-> pass the clock rate into the driver, to make it independent of
-> low-level APIs.
-
-for this problem , we not only need to get "rate" but also need to get
-timestamp.
-So for now , we need to use some ARM specific code in arm_arch_timer.c,
-unless those interface is integrated into clk framework(or we have
-make a patch for if)
-
-any suggestion or thought?
-
-Great thanks for your review :-)
+--===============4285934497855337019==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gmhhrsDozM2n+uz5"
+Content-Disposition: inline
 
 
->
->         Arnd
-> _______________________________________________
-> Linaro-acpi mailing list
-> Linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-> https://lists.linaro.org/mailman/listinfo/linaro-acpi
+--gmhhrsDozM2n+uz5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi Philipp,
 
+On Fri, May 22, 2015 at 12:07:11PM +0200, Philipp Zabel wrote:
+> Am Freitag, den 22.05.2015, 11:18 +0200 schrieb Maxime Ripard:
+> > On Fri, May 22, 2015 at 11:06:28AM +0200, Philipp Zabel wrote:
+> > > > In the probe function, it would check the number of reg resources.
+> > > > If a single resource is passed, it would take it, else it would look
+> > > > the one named "reset".
+> > > > The driver and bindings would be the same for the two families, and
+> > > > the bindings would be backward compatible with sunxi ones.
+> > > >=20
+> > > > Philip, Arnd, what do you think?
+> > >=20
+> > > I'm not a fan of describing the register layout in the device tree as
+> > > detailed as the sunxi bindings do. I'd prefer the reg property to
+> > > describe the device's register address space with one entry per
+> > > contiguous block of registers.
+> >=20
+> > That's exactly what we do.
+>=20
+> Sorry, what I mean is 'as detailed as reusing the sunxi bindings for
+> stm32xx here would do'. I don't know enough about the Allwinner register
+> layouts to form an opinion.
+>=20
+> The STM32F427xx/STM32F429xx manual, Table 13. "STM32F427xx and
+> STM32F429xx register boundary addresses" contains this entry:
+>     Bus    Boundary address       Peripheral
+>     AHB1   0x40023800-0x400238bf  RCC
+>=20
+> And that's how I'd expect it to be described by the device tree:
+>=20
+>     rcc: rcc@40023800 {
+>         compatible =3D "st,stm32-rcc";
+>         reg =3D <0x40023800 0xc0>;
+>     };
+
+It's pretty much what we do already. The thing is that our reset
+controllers are intertwined with our clock ones, so our reset
+controllers are usually taking only a few registers, and we can't use
+more than that since we have clocks in the registers around.
+
+> Instead of "reg =3D <0x40023810 0x20>" for the resets. Where in the
+> address range the reset, clock gate and clock configuration registers
+> reside could be derived from the compatible value.
+
+I agree on that, and if a generic solution was to be made like this,
+we could definitely use it.
+
+Maxime
 
 --=20
-Best regards,
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-=46u Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
-g" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--gmhhrsDozM2n+uz5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVYDfnAAoJEBx+YmzsjxAgNi0P/jSOTQ3vHIrcKoIWxtBtGLGd
+6mvkQpyaIFt9E8AQZbD0XDaFoHI01r2ZoVQjAZKXFjbvlNeU2q1HQjzIV4cKURbt
+8ZOdee82KVHY3ZfmBMyVmvYu2Q6p/qJi03hoLqZ3/VrnwSavNq02lQRevcWg+kva
+RKlgphWNUElei6bon9rzeAkUR46Xz53k/cku/Jjd6ufwl8c6hBrLCVnEowJh2jzG
+x2H51EXcl6ACh3yXd9GB28cMnghzSb1jwXb9AK4rLQGD1y66yrKl8gElr1OHTWUS
+0a26Ao3y+epFySC7t+kuC7xLOWpnim7DxgR60/kkwlJ8KHRInzcm/4kqmGY3d3mY
+U0O1sbMqu44tL4xNkcjEGLunGE/Ji+lS499k3UsAeG+T7nDSsiflApYALm9QIxG6
+TJ2eYva89d3KJJg2vzy5oyrBrjanfaSgwDfX0t0c9Ff6wAuZFoRw1QLT+A2fWhYa
+RDcIp3b58jQ52RL7Tl4aRRlo7bDdNA+dviqqkonpjKS5SlUv6unGuU1HkIQuj/N0
+teIZH90VM7QoVKiRqhB9VgvvoZQrztHvHii6meErIzG8VKdZ7byu6ZTZCLXiwubV
+LCc1HfWCgvAACoYhguHFZhTg7Jht8niRERwX56A8J44I6c4yRs2gERwq8cLz2hH5
+ugYDmZTVzeQ+xwPBC+TA
+=ec/B
+-----END PGP SIGNATURE-----
+
+--gmhhrsDozM2n+uz5--
+
+
+--===============4285934497855337019==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4285934497855337019==--
