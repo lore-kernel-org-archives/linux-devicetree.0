@@ -1,50 +1,76 @@
-From: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH v9 4/4] crypto: Add Allwinner Security
- System crypto accelerator
-Date: Sat, 23 May 2015 14:18:06 +0200
-Message-ID: <55606FFE.4000902@gmail.com>
-References: <1431608341-10936-1-git-send-email-clabbe.montjoie@gmail.com> <1431608341-10936-5-git-send-email-clabbe.montjoie@gmail.com> <20150515064932.GB16704@gondor.apana.org.au>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v8 14/16] ARM: dts: Introduce STM32F429 MCU
+Date: Sat, 23 May 2015 10:28:20 +0200
+Message-ID: <20150523082820.GK8557@lukather>
+References: <1431158038-3813-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <2282066.NWoIT9ZyLc@wuerfel>
+ <CALszF6CaO_yuNiSDuDV+4d2NRe_+32j=zcSE1HPhB1UH59cW9w@mail.gmail.com>
+ <13641152.Yt4ZI3oT6L@wuerfel>
+ <CALszF6CK5ezrO6D=4zr6zEPC7VanzbQjnZJwKOZekEZ5L4D-Dg@mail.gmail.com>
+ <20150521185122.GD8557@lukather>
+ <CALszF6BuvTf86k6S5UEYZs-DJSTehy=+Csb3c6jxMU90MN05zw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBAPAQGVQKGQE7DDDOPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150515064932.GB16704-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vTfKKTivj/mQoluA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALszF6BuvTf86k6S5UEYZs-DJSTehy=+Csb3c6jxMU90MN05zw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Arnd Bergmann <arnd@arndb.de>, Philipp Zabel <p.zabel@pengutronix.de>, Daniel Thompson <daniel.thompson@linaro.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Joe Perches <joe@perches.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-Le 15/05/2015 08:49, Herbert Xu a =C3=A9crit :
-> On Thu, May 14, 2015 at 02:59:01PM +0200, LABBE Corentin wrote:
->>
->> +	err =3D crypto_ablkcipher_setkey(op->fallback, kkey, op->keylen);
->> +	if (err !=3D 0) {
->> +		dev_err(ss->dev, "Cannot set key on fallback\n");
->> +		return -EINVAL;
->> +	}
->=20
-> You cannot call setkey from an atomic context.  The easiest solution
-> is to call setkey in your setkey function instead.
->=20
-> Cheers,
->=20
-Fixed
 
-What do you think about adding a BUG_ON(in_atomic()) in crypto_ablkcipher_s=
-etkey() ?
+--vTfKKTivj/mQoluA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
+Hi Maxime,
+
+On Thu, May 21, 2015 at 10:10:35PM +0200, Maxime Coquelin wrote:
+> > The only thing we did that stands out a bit is that we actually need
+> > the reset driver much earlier than the default probe, since some of
+> > our timers are maintained in reset. We have some code to do just that
+> > already, we just need have something similar to be on board.
+>=20
+> We have the same problem on stm32, as just discussed with Andreas [0].
+> I decided to patch the bootloader to deassert timers reset, after
+> discussions with Rob Herring and Arnd.
+
+That seems like the best solution, but we don't have control over the
+bootloader in most cases. We have an alternative implementation (ie
+mainline u-boot) that is required for a few things already, but I'd
+really like to still be able to at least boot the kernel on a "legacy"
+bootloader (that is the one flashed on the device).
+
+Maxime
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--vTfKKTivj/mQoluA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVYDokAAoJEBx+YmzsjxAgEGEQAJs6k5ZHhGXToxmDcmeAcETQ
+0rKh8OUJE5ZVP4ta18lDqPDIvJMDVvW8RTTH/usC/wI+plEJEwEux0K+kMeKGciA
+ZCPsXrNnfuc3rj1LeqqXTYRvWOf2q/9wXpFUzL4c7P18i+YnpJXPEJNrWi1zqvoo
+TUJtEN3lKhg6/xZsKunpRsaQHlHgPuXTJCSISaSBbMfoWcXGUuGEMphi5N1R7cck
+oWK5Vsfzk/tPmOym+U4I0Bkv8UkpCMtv5/jCDj2Z7Cz0Le50/+qpuTZlu1UUGYav
+K+C80ndIKBZXvICgxNUh3Ev9NEKiBTSf4HDKxlYX2stMxmkDFMK7uyp8i3defGFP
+pxHKjTh4imaEBM5/maa0p9b8KUmy97D2hnmZ+AjytkYEgZcNGEz1IkKq+f52Gs6t
+Y/FPuRVZc2OUjaViu7YXeHOIibklrgSwh9UgDf/OAtzDSa0FyKaCRT6DxW7IyoXe
+gJ/DY2k0RSSIfk8mjhzCTd9YczTr89JbgXABTbiXbh4cZPQMSyP7hqCyyKJOkktL
+CzjOCIZJvEiPVmyXeUwtE3yApUDvXLYFlN3DQ+nyeV8rE34gMiNyyn4NufhMasJv
+C/XoNCOgcH6+gKmEY17Gqxs8cJruf00HJSV5M5yCYYzo+vCZd7THE0JCqR0x4rWJ
+19tvvVkOVER/CxaZsPC2
+=fdOQ
+-----END PGP SIGNATURE-----
+
+--vTfKKTivj/mQoluA--
