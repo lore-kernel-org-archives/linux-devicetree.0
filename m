@@ -1,7 +1,7 @@
 From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH v5 11/37] MIPS: JZ4740: probe interrupt controller via DT
-Date: Sun, 24 May 2015 16:11:21 +0100
-Message-ID: <1432480307-23789-12-git-send-email-paul.burton@imgtec.com>
+Subject: [PATCH v5 02/37] devicetree/bindings: add Qi Hardware vendor prefix
+Date: Sun, 24 May 2015 16:11:12 +0100
+Message-ID: <1432480307-23789-3-git-send-email-paul.burton@imgtec.com>
 References: <1432480307-23789-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,132 +9,44 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1432480307-23789-1-git-send-email-paul.burton@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@linux-mips.org
-Cc: Paul Burton <paul.burton@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Kumar Gala <galak@codeaurora.org>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>
+Cc: Paul Burton <paul.burton@imgtec.com>, Lars-Peter Clausen <lars@metafoo.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Hayato Suzuki <hytszk@gmail.com>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Arnaud Ebalard <arno@natisbad.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Antony Pavlov <antonynpavlov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Declare the JZ4740 interrupt controller for probe via DT using the
-standard irqchip_init function, and make use of that function to probe
-the controller by adding the appropriate node to the JZ4740 dtsi.
+Define a vendor prefix for Qi Hardware, creators of the Ben Nanonote
+(qi_lb60) among other open devices.
 
 Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Kumar Gala <galak@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: devicetree@vger.kernel.org
-Cc: linux-mips@linux-mips.org
 ---
 
 Changes in v5: None
-Changes in v4:
-- s/intc/interrupt-controller/ in jz4740.dtsi.
-
+Changes in v4: None
 Changes in v3:
-- New patch, merging patches 8 through 10 of v2 & dropping the addition
-  of temporary code removed a couple of patches later.
+- New patch
 
 Changes in v2: None
 
- arch/mips/boot/dts/ingenic/jz4740.dtsi  | 11 +++++++++++
- arch/mips/include/asm/mach-jz4740/irq.h |  2 --
- arch/mips/jz4740/irq.c                  |  8 +++++++-
- arch/mips/jz4740/setup.c                |  2 --
- 4 files changed, 18 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 2d64765c..3142e6c 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -9,4 +9,15 @@
- 		interrupt-controller;
- 		compatible = "mti,cpu-interrupt-controller";
- 	};
-+
-+	intc: interrupt-controller@10001000 {
-+		compatible = "ingenic,jz4740-intc";
-+		reg = <0x10001000 0x14>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <2>;
-+	};
- };
-diff --git a/arch/mips/include/asm/mach-jz4740/irq.h b/arch/mips/include/asm/mach-jz4740/irq.h
-index 5ce4302..df50736 100644
---- a/arch/mips/include/asm/mach-jz4740/irq.h
-+++ b/arch/mips/include/asm/mach-jz4740/irq.h
-@@ -54,6 +54,4 @@
- 
- #define NR_IRQS (JZ4740_IRQ_ADC_BASE + 6)
- 
--extern void __init jz4740_intc_init(void);
--
- #endif
-diff --git a/arch/mips/jz4740/irq.c b/arch/mips/jz4740/irq.c
-index bac1f52..43e000a 100644
---- a/arch/mips/jz4740/irq.c
-+++ b/arch/mips/jz4740/irq.c
-@@ -18,6 +18,7 @@
- #include <linux/types.h>
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
-+#include <linux/of_irq.h>
- #include <linux/timex.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-@@ -32,6 +33,8 @@
- 
- #include "irq.h"
- 
-+#include "../../drivers/irqchip/irqchip.h"
-+
- static void __iomem *jz_intc_base;
- 
- #define JZ_REG_INTC_STATUS	0x00
-@@ -77,7 +80,8 @@ static struct irqaction jz4740_cascade_action = {
- 	.name = "JZ4740 cascade interrupt",
- };
- 
--void __init jz4740_intc_init(void)
-+static int __init jz4740_intc_of_init(struct device_node *node,
-+	struct device_node *parent)
- {
- 	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
-@@ -105,7 +109,9 @@ void __init jz4740_intc_init(void)
- 	irq_setup_generic_chip(gc, IRQ_MSK(32), 0, 0, IRQ_NOPROBE | IRQ_LEVEL);
- 
- 	setup_irq(2, &jz4740_cascade_action);
-+	return 0;
- }
-+IRQCHIP_DECLARE(jz4740_intc, "ingenic,jz4740-intc", jz4740_intc_of_init);
- 
- #ifdef CONFIG_DEBUG_FS
- 
-diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-index 4808730..8c08d7d 100644
---- a/arch/mips/jz4740/setup.c
-+++ b/arch/mips/jz4740/setup.c
-@@ -25,7 +25,6 @@
- #include <asm/prom.h>
- 
- #include <asm/mach-jz4740/base.h>
--#include <asm/mach-jz4740/irq.h>
- 
- #include "reset.h"
- 
-@@ -84,5 +83,4 @@ const char *get_system_type(void)
- void __init arch_init_irq(void)
- {
- 	irqchip_init();
--	jz4740_intc_init();
- }
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b335a99..c4ba705 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -155,6 +155,7 @@ powervr	PowerVR (deprecated, use img)
+ qca	Qualcomm Atheros, Inc.
+ qcom	Qualcomm Technologies, Inc
+ qemu	QEMU, a generic and open source machine emulator and virtualizer
++qi	Qi Hardware
+ qnap	QNAP Systems, Inc.
+ radxa	Radxa
+ raidsonic	RaidSonic Technology GmbH
 -- 
 2.4.1
