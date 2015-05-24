@@ -1,66 +1,89 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 07/37] MIPS: JZ4740: probe CPU interrupt controller
- via DT
-Date: Sun, 24 May 2015 18:17:13 +0300
-Message-ID: <5561EB79.30209@cogentembedded.com>
-References: <1432480307-23789-1-git-send-email-paul.burton@imgtec.com> <1432480307-23789-8-git-send-email-paul.burton@imgtec.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
+Date: Mon, 25 May 2015 00:17:31 +0800
+Message-ID: <CADyBb7tS8vv4daa4Nx1ALMdNGkAkLaHXQVMrvKntCGKrM9FCKA@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
+	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>
+	<555ECD04.6000404@offcode.fi>
+	<CADyBb7sZWgNnEoTfaYm6=YcbWgEYRMcaNAdX9Y7B6W9pg+gOmg@mail.gmail.com>
+	<555EEFDB.2030907@offcode.fi>
+	<CADyBb7uh-6=ihfrKHBVXDzAKAE-_GqLXTPJa5_7Gw2R71pyeUg@mail.gmail.com>
+	<555F2DED.2010200@roeck-us.net>
+	<CADyBb7swfV9eQKC2FxiaK=RFq9JR8fmq1BcTeWOp57i_TrXaBA@mail.gmail.com>
+	<20150522150554.GB2930@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432480307-23789-8-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20150522150554.GB2930@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Timo Kokkonen <timo.kokkonen@offcode.fi>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Guenter,
 
-On 05/24/2015 06:11 PM, Paul Burton wrote:
 
-> Use the generic irqchip_init function to probe irqchip drivers using DT,
-> and add the appropriate node to the JZ4740 devicetree in place of the
-> call to mips_cpu_irq_init.
+On 22 May 2015 at 23:05, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Fri, May 22, 2015 at 10:38:32PM +0800, Fu Wei wrote:
+>> Hi Guenter.
+>>
+>> Sorry for my poor English .
+>> let me explain this :
+>>
+>> On 22 May 2015 at 21:23, Guenter Roeck <linux@roeck-us.net> wrote:
+>> > On 05/22/2015 03:46 AM, Fu Wei wrote:
+>> >>
+>> >> Hi Timo,
+>> >>
+>> > [ ... ]
+>> >
+>> >> So I am still trying to improve pretimeout support :-)
+>> >
+>> >
+>> > Is there anything still missing from it ?
+>> >
+>> >> If I can make pretimeout merged, may be you can try pretimeout to
+>> >> implement early_timeout_sec function?
+>> >
+>> >
+>> > Not sure how one would or even could do that.
+>> >
+>> > Do you mean "implement early_pretimeout_sec", by any chance ?
+>>
+>> I mean: using pretimeout to implement the function you want, instead
+>> of early_pretimeout_sec
+>>
+> How would this work if the watchdog hardware doesn't support pretimeout ?
 >
-> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> ---
+> Pretimeout and early timeout are two logically different functions, with
+> different goals, so I don't entirely (if at all) understand why it would
+> make sense to tie them together.
+>
+> Can you elaborate why you think this would be a good idea ?
 
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3:
-> - Rebase.
+sorry,  my apology.  forget about this, :-)
+I think we should focus on SBSA watchdog patch here, but not a
+early_timeout_sec.
 
-> Changes in v2: None
+>
+> Thanks,
+> Guenter
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
->   arch/mips/boot/dts/ingenic/jz4740.dtsi | 7 +++++++
->   arch/mips/jz4740/irq.c                 | 4 ++--
->   2 files changed, 9 insertions(+), 2 deletions(-)
 
-> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> index c538691f..2d64765c 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> @@ -2,4 +2,11 @@
->   	#address-cells = <1>;
->   	#size-cells = <1>;
->   	compatible = "ingenic,jz4740";
-> +
-> +	cpuintc: cpuintc@0 {
 
-    The node shoiuld be called "inbterrupt-controller@0".
+-- 
+Best regards,
 
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
