@@ -1,45 +1,59 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Sun, 24 May 2015 10:32:31 -0700
-Message-ID: <55620B2F.5000708@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>	<555DFCD4.3040701@codeaurora.org>	<CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com>	<5560D7AC.50009@codeaurora.org>	<5560DCB6.3090008@roeck-us.net>	<CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>	<5561E7EA.5090702@codeaurora.org>	<CADyBb7tYL7ATRKNAoRYTXo53LKdCiFZ2YDib4g0nZ8=YxTgO+A@mail.gmail.com>	<5561F8A8.4080607@codeaurora.org>	<5561FC70.5080802@roeck-us.net>	<5561FFF0.5090108@codeaurora.org> <CADyBb7snhcR43KT_xrFipBH3PBNBfj39-hE-mSjJ3vMb7Ehp+A@mail.gmail.com> <55620808.4030605@codeaurora.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v9 0/3] ARM: mediatek: Add driver for Mediatek I2C
+Date: Sun, 24 May 2015 19:38:43 +0200
+Message-ID: <20150524173843.GA4162@schokonusskuchen.bad>
+References: <1432198410-6576-1-git-send-email-eddie.huang@mediatek.com>
+ <CAGS+omB7UMrEdZiJXVK78ENEqH6fL_25-Q5Fj1Z0Buzjwp60JA@mail.gmail.com>
+ <1432483752.8089.10.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55620808.4030605-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432483752.8089.10.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Xudong Chen <xudong.chen@mediatek.com>, Liguo Zhang <liguo.zhang@mediatek.com>, Linux I2C <linux-i2c@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 05/24/2015 10:19 AM, Timur Tabi wrote:
-> Fu Wei wrote:
->> I don't know why you want to do this tricky way.  you can always
->> register the interrupt handler,
->> if pre-timeout is 0, system will just trigger WS1 right after WS0
->
-> But that only works if the pre-timeout and timeout can be programmed to separate values.  And as Guenter says, the SBSA may not guarantee that.
->
 
-The pseudo-code in the specification suggests that if WCV is configured,
-	WS0 = WCV
-	WS1 = WCV + WOR
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Assuming that the implementation follows the pseudo-code in the specification,
-we would have separately programmable values. Since the pretimeout (per ABI)
-is the difference in seconds to the timeout, and not an absolute value,
-we would have to program the registers as follows.
 
-	WCV = timeout - pretimeout;
-	WOR = pretimeout;
+> This series already reviewed in public more than six months. In the
+> early version, 8173 CCF and Pinctrl not be accepted yet, so we don't put
+> device node with this series. Now both CCF and pinctrl have been
+> accepted, maybe it's time to add device node.I am glad that if this I2C
+> version can be accepted, If not, I will send new series with device node
+> in next round.
 
-Does this make sense ?
+I think this is good to go. Further changes should probably done as
+incremental patches. I am just waiting a little so people can add tags
+to the patches.
 
-Thanks,
-Guenter
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--wRRV7LY7NUeQGEoC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJVYgyjAAoJEBQN5MwUoCm2isoQAIrRCy8zxHQKvCHAFX+89TP+
+kjXxD0LEj8/fOxeV43d8iDLgGfARRVEujuTV5k7PzHEaWC9++W42QSFRGyJmdGWb
+CjSyPyEEoMQn3k7aHTMi/g0X+koY5/CFZlcVu5RkThBRo25kSG0mY8qxbEDq9QjB
+Am6PomlUceWWo3AeAuGg9cfsJ5cPAWYRhyfiGjqfqBrmCEspb5cjckVJdRk7iiQ+
+h3ioCMUM1J5A1+QOP7bKQ5R5sqgYi9ae5vBVq0jLKHqJSruYDZdrnXJm0cHtPoQX
+I278RpGPAS4GPb4MJPhXBZQlXpZzVaZfaRKZrOdpNTE7rzH0sevARAMcwVYF0e38
+Ca9YQrkBa5eELb4UAIUOcWfpAx7woalKGpUtx7Giu1LgekYqO5YgdI1eQiSzStP+
+0EnP03pk2VNTZJ7TsbVWJgbElAF2xIWmAhlHfv9EZw4ZJ63C1d0CqOOt2JGAUtmF
+8J8hWwioTJPLF5X8ZpYkcSMtVTX+RhyZ7pcVHVQlIF3dDwztSShwHF/a7GxY5aTL
+iHVD3BX8FclBhSp0rngYaoZCY6Z0wlhY6POUFFArjPbN80slTa+KiEiJDfJAtPkA
+8Q4K3wTaaz9DhQLN1jjuYUhh22ibbWiRAJvUXUzCrpC7QHXTxEIGK3oErD3xV+36
+UQQZUbxsCD64jL4EhHUn
+=+Yol
+-----END PGP SIGNATURE-----
+
+--wRRV7LY7NUeQGEoC--
