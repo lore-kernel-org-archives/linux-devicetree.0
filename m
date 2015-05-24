@@ -1,7 +1,7 @@
 From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 24/37] devicetree: add Ingenic CGU binding documentation
-Date: Sun, 24 May 2015 16:11:34 +0100
-Message-ID: <1432480307-23789-25-git-send-email-paul.burton@imgtec.com>
+Subject: [PATCH v5 35/37] MIPS: JZ4740: use Ingenic SoC UART driver
+Date: Sun, 24 May 2015 16:11:45 +0100
+Message-ID: <1432480307-23789-36-git-send-email-paul.burton@imgtec.com>
 References: <1432480307-23789-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,238 +9,307 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1432480307-23789-1-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Apelete Seketeli <apelete-fIDRvF7C5ezk1uMJSBkQmQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the devicetree binding for Ingenic SoC CGUs, and add headers
-defining the clock specifiers for clocks provided by the JZ4740 & JZ4780
-CGU blocks.
+Remove the serial support from arch/mips/jz4740 & make use of the new
+Ingenic SoC UART driver. This is done for both regular & early console
+output.
 
 Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 ---
 
 Changes in v5: None
-Changes in v4:
-- s/TCU/CGU/
-
+Changes in v4: None
 Changes in v3:
-- Merge binding documentation for various Ingenic SoCs which differ only
-  by compatible strings.
+- Enable the UART driver in qi_lb60_defconfig to preserve its current
+  behaviour.
 
 Changes in v2: None
 
- .../devicetree/bindings/clock/ingenic,cgu.txt      | 53 +++++++++++++
- include/dt-bindings/clock/jz4740-cgu.h             | 37 +++++++++
- include/dt-bindings/clock/jz4780-cgu.h             | 88 ++++++++++++++++++++++
- 3 files changed, 178 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ingenic,cgu.txt
- create mode 100644 include/dt-bindings/clock/jz4740-cgu.h
- create mode 100644 include/dt-bindings/clock/jz4780-cgu.h
+ arch/mips/Kconfig                            |  1 -
+ arch/mips/boot/dts/ingenic/jz4740.dtsi       | 22 ++++++++++++++
+ arch/mips/boot/dts/ingenic/qi_lb60.dts       |  4 +++
+ arch/mips/configs/qi_lb60_defconfig          |  1 +
+ arch/mips/include/asm/mach-jz4740/platform.h |  2 --
+ arch/mips/jz4740/Makefile                    |  2 +-
+ arch/mips/jz4740/board-qi_lb60.c             |  2 --
+ arch/mips/jz4740/platform.c                  | 45 ----------------------------
+ arch/mips/jz4740/prom.c                      | 13 --------
+ arch/mips/jz4740/serial.c                    | 33 --------------------
+ arch/mips/jz4740/serial.h                    | 23 --------------
+ 11 files changed, 28 insertions(+), 120 deletions(-)
+ delete mode 100644 arch/mips/jz4740/serial.c
+ delete mode 100644 arch/mips/jz4740/serial.h
 
-diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
-new file mode 100644
-index 0000000..f8d4134
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
-@@ -0,0 +1,53 @@
-+Ingenic SoC CGU binding
-+
-+The CGU in an Ingenic SoC provides all the clocks generated on-chip. It
-+typically includes a variety of PLLs, multiplexers, dividers & gates in order
-+to provide many different clock signals derived from only 2 external source
-+clocks.
-+
-+Required properties:
-+- compatible : Should be "ingenic,<soctype>-cgu".
-+  For example "ingenic,jz4740-cgu" or "ingenic,jz4780-cgu".
-+- reg : The address & length of the CGU registers.
-+- clocks : List of phandle & clock specifiers for clocks external to the CGU.
-+  Two such external clocks should be specified - first the external crystal
-+  "ext" and second the RTC clock source "rtc".
-+- clock-names : List of name strings for the external clocks.
-+- #clock-cells: Should be 1.
-+  Clock consumers specify this argument to identify a clock. The valid values
-+  may be found in <dt-bindings/clock/<soctype>-cgu.h>.
-+
-+Example SoC include file:
-+
-+/ {
-+	cgu: jz4740-cgu {
-+		compatible = "ingenic,jz4740-cgu";
-+		reg = <0x10000000 0x100>;
-+		#clock-cells = <1>;
-+	};
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index f07a213..01045fb 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -296,7 +296,6 @@ config MACH_INGENIC
+ 	select DMA_NONCOHERENT
+ 	select IRQ_CPU
+ 	select ARCH_REQUIRE_GPIOLIB
+-	select SYS_HAS_EARLY_PRINTK
+ 	select COMMON_CLK
+ 	select GENERIC_IRQ_CHIP
+ 	select BUILTIN_DTB
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index 9903ab2..c64e01f 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -43,4 +43,26 @@
+ 
+ 		#clock-cells = <1>;
+ 	};
 +
 +	uart0: serial@10030000 {
-+		clocks = <&cgu JZ4740_CLK_UART0>;
-+	};
-+};
++		compatible = "ingenic,jz4740-uart";
++		reg = <0x10030000 0x100>;
 +
-+Example board file:
++		interrupt-parent = <&intc>;
++		interrupts = <9>;
 +
-+/ {
-+	ext: clock@0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <12000000>;
++		clocks = <&ext>, <&cgu JZ4740_CLK_UART0>;
++		clock-names = "baud", "module";
 +	};
 +
-+	rtc: clock@1 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
++	uart1: serial@10031000 {
++		compatible = "ingenic,jz4740-uart";
++		reg = <0x10031000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <8>;
++
++		clocks = <&ext>, <&cgu JZ4740_CLK_UART1>;
++		clock-names = "baud", "module";
 +	};
+ };
+diff --git a/arch/mips/boot/dts/ingenic/qi_lb60.dts b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+index 106d13c..2414d63 100644
+--- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
++++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+@@ -4,6 +4,10 @@
+ 
+ / {
+ 	compatible = "qi,lb60", "ingenic,jz4740";
 +
-+	&cgu {
-+		clocks = <&ext> <&rtc>;
-+		clock-names: "ext", "rtc";
++	chosen {
++		stdout-path = &uart0;
 +	};
-+};
-diff --git a/include/dt-bindings/clock/jz4740-cgu.h b/include/dt-bindings/clock/jz4740-cgu.h
-new file mode 100644
-index 0000000..43153d3
---- /dev/null
-+++ b/include/dt-bindings/clock/jz4740-cgu.h
-@@ -0,0 +1,37 @@
-+/*
-+ * This header provides clock numbers for the ingenic,jz4740-cgu DT binding.
-+ *
-+ * They are roughly ordered as:
-+ *   - external clocks
-+ *   - PLLs
-+ *   - muxes/dividers in the order they appear in the jz4740 programmers manual
-+ *   - gates in order of their bit in the CLKGR* registers
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_JZ4740_CGU_H__
-+#define __DT_BINDINGS_CLOCK_JZ4740_CGU_H__
-+
-+#define JZ4740_CLK_EXT		0
-+#define JZ4740_CLK_RTC		1
-+#define JZ4740_CLK_PLL		2
-+#define JZ4740_CLK_PLL_HALF	3
-+#define JZ4740_CLK_CCLK		4
-+#define JZ4740_CLK_HCLK		5
-+#define JZ4740_CLK_PCLK		6
-+#define JZ4740_CLK_MCLK		7
-+#define JZ4740_CLK_LCD		8
-+#define JZ4740_CLK_LCD_PCLK	9
-+#define JZ4740_CLK_I2S		10
-+#define JZ4740_CLK_SPI		11
-+#define JZ4740_CLK_MMC		12
-+#define JZ4740_CLK_UHC		13
-+#define JZ4740_CLK_UDC		14
-+#define JZ4740_CLK_UART0	15
-+#define JZ4740_CLK_UART1	16
-+#define JZ4740_CLK_DMA		17
-+#define JZ4740_CLK_IPU		18
-+#define JZ4740_CLK_ADC		19
-+#define JZ4740_CLK_I2C		20
-+#define JZ4740_CLK_AIC		21
-+
-+#endif /* __DT_BINDINGS_CLOCK_JZ4740_CGU_H__ */
-diff --git a/include/dt-bindings/clock/jz4780-cgu.h b/include/dt-bindings/clock/jz4780-cgu.h
-new file mode 100644
-index 0000000..467165e
---- /dev/null
-+++ b/include/dt-bindings/clock/jz4780-cgu.h
-@@ -0,0 +1,88 @@
-+/*
-+ * This header provides clock numbers for the ingenic,jz4780-cgu DT binding.
-+ *
-+ * They are roughly ordered as:
-+ *   - external clocks
-+ *   - PLLs
-+ *   - muxes/dividers in the order they appear in the jz4780 programmers manual
-+ *   - gates in order of their bit in the CLKGR* registers
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_JZ4780_CGU_H__
-+#define __DT_BINDINGS_CLOCK_JZ4780_CGU_H__
-+
-+#define JZ4780_CLK_EXCLK	0
-+#define JZ4780_CLK_RTCLK	1
-+#define JZ4780_CLK_APLL		2
-+#define JZ4780_CLK_MPLL		3
-+#define JZ4780_CLK_EPLL		4
-+#define JZ4780_CLK_VPLL		5
-+#define JZ4780_CLK_OTGPHY	6
-+#define JZ4780_CLK_SCLKA	7
-+#define JZ4780_CLK_CPUMUX	8
-+#define JZ4780_CLK_CPU		9
-+#define JZ4780_CLK_L2CACHE	10
-+#define JZ4780_CLK_AHB0		11
-+#define JZ4780_CLK_AHB2PMUX	12
-+#define JZ4780_CLK_AHB2		13
-+#define JZ4780_CLK_PCLK		14
-+#define JZ4780_CLK_DDR		15
-+#define JZ4780_CLK_VPU		16
-+#define JZ4780_CLK_I2SPLL	17
-+#define JZ4780_CLK_I2S		18
-+#define JZ4780_CLK_LCD0PIXCLK	19
-+#define JZ4780_CLK_LCD1PIXCLK	20
-+#define JZ4780_CLK_MSCMUX	21
-+#define JZ4780_CLK_MSC0		22
-+#define JZ4780_CLK_MSC1		23
-+#define JZ4780_CLK_MSC2		24
-+#define JZ4780_CLK_UHC		25
-+#define JZ4780_CLK_SSIPLL	26
-+#define JZ4780_CLK_SSI		27
-+#define JZ4780_CLK_CIMMCLK	28
-+#define JZ4780_CLK_PCMPLL	29
-+#define JZ4780_CLK_PCM		30
-+#define JZ4780_CLK_GPU		31
-+#define JZ4780_CLK_HDMI		32
-+#define JZ4780_CLK_BCH		33
-+#define JZ4780_CLK_NEMC		34
-+#define JZ4780_CLK_OTG0		35
-+#define JZ4780_CLK_SSI0		36
-+#define JZ4780_CLK_SMB0		37
-+#define JZ4780_CLK_SMB1		38
-+#define JZ4780_CLK_SCC		39
-+#define JZ4780_CLK_AIC		40
-+#define JZ4780_CLK_TSSI0	41
-+#define JZ4780_CLK_OWI		42
-+#define JZ4780_CLK_KBC		43
-+#define JZ4780_CLK_SADC		44
-+#define JZ4780_CLK_UART0	45
-+#define JZ4780_CLK_UART1	46
-+#define JZ4780_CLK_UART2	47
-+#define JZ4780_CLK_UART3	48
-+#define JZ4780_CLK_SSI1		49
-+#define JZ4780_CLK_SSI2		50
-+#define JZ4780_CLK_PDMA		51
-+#define JZ4780_CLK_GPS		52
-+#define JZ4780_CLK_MAC		53
-+#define JZ4780_CLK_SMB2		54
-+#define JZ4780_CLK_CIM		55
-+#define JZ4780_CLK_LCD		56
-+#define JZ4780_CLK_TVE		57
-+#define JZ4780_CLK_IPU		58
-+#define JZ4780_CLK_DDR0		59
-+#define JZ4780_CLK_DDR1		60
-+#define JZ4780_CLK_SMB3		61
-+#define JZ4780_CLK_TSSI1	62
-+#define JZ4780_CLK_COMPRESS	63
-+#define JZ4780_CLK_AIC1		64
-+#define JZ4780_CLK_GPVLC	65
-+#define JZ4780_CLK_OTG1		66
-+#define JZ4780_CLK_UART4	67
-+#define JZ4780_CLK_AHBMON	68
-+#define JZ4780_CLK_SMB4		69
-+#define JZ4780_CLK_DES		70
-+#define JZ4780_CLK_X2D		71
-+#define JZ4780_CLK_CORE1	72
-+
-+#endif /* __DT_BINDINGS_CLOCK_JZ4780_CGU_H__ */
+ };
+ 
+ &ext {
+diff --git a/arch/mips/configs/qi_lb60_defconfig b/arch/mips/configs/qi_lb60_defconfig
+index 1139b89..d7bb8cc 100644
+--- a/arch/mips/configs/qi_lb60_defconfig
++++ b/arch/mips/configs/qi_lb60_defconfig
+@@ -66,6 +66,7 @@ CONFIG_SERIAL_8250_CONSOLE=y
+ # CONFIG_SERIAL_8250_DMA is not set
+ CONFIG_SERIAL_8250_NR_UARTS=2
+ CONFIG_SERIAL_8250_RUNTIME_UARTS=2
++CONFIG_SERIAL_8250_INGENIC=y
+ # CONFIG_HW_RANDOM is not set
+ CONFIG_SPI=y
+ CONFIG_SPI_GPIO=y
+diff --git a/arch/mips/include/asm/mach-jz4740/platform.h b/arch/mips/include/asm/mach-jz4740/platform.h
+index 069b43a..32cfbe6 100644
+--- a/arch/mips/include/asm/mach-jz4740/platform.h
++++ b/arch/mips/include/asm/mach-jz4740/platform.h
+@@ -35,6 +35,4 @@ extern struct platform_device jz4740_wdt_device;
+ extern struct platform_device jz4740_pwm_device;
+ extern struct platform_device jz4740_dma_device;
+ 
+-void jz4740_serial_device_register(void);
+-
+ #endif
+diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
+index 70a9578..89ce401 100644
+--- a/arch/mips/jz4740/Makefile
++++ b/arch/mips/jz4740/Makefile
+@@ -5,7 +5,7 @@
+ # Object file lists.
+ 
+ obj-y += prom.o time.o reset.o setup.o \
+-	gpio.o platform.o timer.o serial.o
++	gpio.o platform.o timer.o
+ 
+ CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
+ 
+diff --git a/arch/mips/jz4740/board-qi_lb60.c b/arch/mips/jz4740/board-qi_lb60.c
+index 21b034c..4e62bf8 100644
+--- a/arch/mips/jz4740/board-qi_lb60.c
++++ b/arch/mips/jz4740/board-qi_lb60.c
+@@ -482,8 +482,6 @@ static int __init qi_lb60_init_platform_devices(void)
+ 	gpiod_add_lookup_table(&qi_lb60_audio_gpio_table);
+ 	gpiod_add_lookup_table(&qi_lb60_nand_gpio_table);
+ 
+-	jz4740_serial_device_register();
+-
+ 	spi_register_board_info(qi_lb60_spi_board_info,
+ 				ARRAY_SIZE(qi_lb60_spi_board_info));
+ 
+diff --git a/arch/mips/jz4740/platform.c b/arch/mips/jz4740/platform.c
+index 2a5c7c7..e8a463b 100644
+--- a/arch/mips/jz4740/platform.c
++++ b/arch/mips/jz4740/platform.c
+@@ -30,7 +30,6 @@
+ #include <linux/serial_core.h>
+ #include <linux/serial_8250.h>
+ 
+-#include "serial.h"
+ #include "clock.h"
+ 
+ /* OHCI controller */
+@@ -280,50 +279,6 @@ struct platform_device jz4740_adc_device = {
+ 	.resource	= jz4740_adc_resources,
+ };
+ 
+-/* Serial */
+-#define JZ4740_UART_DATA(_id) \
+-	{ \
+-		.flags = UPF_SKIP_TEST | UPF_IOREMAP | UPF_FIXED_TYPE, \
+-		.iotype = UPIO_MEM, \
+-		.regshift = 2, \
+-		.serial_out = jz4740_serial_out, \
+-		.type = PORT_16550, \
+-		.mapbase = JZ4740_UART ## _id ## _BASE_ADDR, \
+-		.irq = JZ4740_IRQ_UART ## _id, \
+-	}
+-
+-static struct plat_serial8250_port jz4740_uart_data[] = {
+-	JZ4740_UART_DATA(0),
+-	JZ4740_UART_DATA(1),
+-	{},
+-};
+-
+-static struct platform_device jz4740_uart_device = {
+-	.name = "serial8250",
+-	.id = 0,
+-	.dev = {
+-		.platform_data = jz4740_uart_data,
+-	},
+-};
+-
+-void jz4740_serial_device_register(void)
+-{
+-	struct plat_serial8250_port *p;
+-	struct clk *ext_clk;
+-	unsigned long ext_rate;
+-
+-	ext_clk = clk_get(NULL, "ext");
+-	if (IS_ERR(ext_clk))
+-		panic("unable to get ext clock");
+-	ext_rate = clk_get_rate(ext_clk);
+-	clk_put(ext_clk);
+-
+-	for (p = jz4740_uart_data; p->flags != 0; ++p)
+-		p->uartclk = ext_rate;
+-
+-	platform_device_register(&jz4740_uart_device);
+-}
+-
+ /* Watchdog */
+ static struct resource jz4740_wdt_resources[] = {
+ 	{
+diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
+index 5a93f38..6984683 100644
+--- a/arch/mips/jz4740/prom.c
++++ b/arch/mips/jz4740/prom.c
+@@ -53,16 +53,3 @@ void __init prom_init(void)
+ void __init prom_free_prom_memory(void)
+ {
+ }
+-
+-#define UART_REG(_reg) ((void __iomem *)CKSEG1ADDR(JZ4740_UART0_BASE_ADDR + (_reg << 2)))
+-
+-void prom_putchar(char c)
+-{
+-	uint8_t lsr;
+-
+-	do {
+-		lsr = readb(UART_REG(UART_LSR));
+-	} while ((lsr & UART_LSR_TEMT) == 0);
+-
+-	writeb(c, UART_REG(UART_TX));
+-}
+diff --git a/arch/mips/jz4740/serial.c b/arch/mips/jz4740/serial.c
+deleted file mode 100644
+index d23de45..0000000
+--- a/arch/mips/jz4740/serial.c
++++ /dev/null
+@@ -1,33 +0,0 @@
+-/*
+- *  Copyright (C) 2010, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+- *  JZ4740 serial support
+- *
+- *  This program is free software; you can redistribute	 it and/or modify it
+- *  under  the terms of	 the GNU General  Public License as published by the
+- *  Free Software Foundation;  either version 2 of the	License, or (at your
+- *  option) any later version.
+- *
+- *  You should have received a copy of the  GNU General Public License along
+- *  with this program; if not, write  to the Free Software Foundation, Inc.,
+- *  675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- */
+-
+-#include <linux/io.h>
+-#include <linux/serial_core.h>
+-#include <linux/serial_reg.h>
+-
+-void jz4740_serial_out(struct uart_port *p, int offset, int value)
+-{
+-	switch (offset) {
+-	case UART_FCR:
+-		value |= 0x10; /* Enable uart module */
+-		break;
+-	case UART_IER:
+-		value |= (value & 0x4) << 2;
+-		break;
+-	default:
+-		break;
+-	}
+-	writeb(value, p->membase + (offset << p->regshift));
+-}
+diff --git a/arch/mips/jz4740/serial.h b/arch/mips/jz4740/serial.h
+deleted file mode 100644
+index 8eb715b..0000000
+--- a/arch/mips/jz4740/serial.h
++++ /dev/null
+@@ -1,23 +0,0 @@
+-/*
+- *  Copyright (C) 2010, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+- *  JZ4740 serial support
+- *
+- *  This program is free software; you can redistribute	 it and/or modify it
+- *  under  the terms of	 the GNU General  Public License as published by the
+- *  Free Software Foundation;  either version 2 of the	License, or (at your
+- *  option) any later version.
+- *
+- *  You should have received a copy of the  GNU General Public License along
+- *  with this program; if not, write  to the Free Software Foundation, Inc.,
+- *  675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- */
+-
+-#ifndef __MIPS_JZ4740_SERIAL_H__
+-#define __MIPS_JZ4740_SERIAL_H__
+-
+-struct uart_port;
+-
+-void jz4740_serial_out(struct uart_port *p, int offset, int value);
+-
+-#endif
 -- 
 2.4.1
 
