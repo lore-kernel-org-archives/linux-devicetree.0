@@ -1,56 +1,65 @@
 From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 0/2] power_supply: bq2415x_charger: Fix coding style
- issues && add ACPI support
-Date: Sun, 24 May 2015 21:44:00 +0200
-Message-ID: <20150524194400.GF11066@earth>
-References: <1431421893-18816-1-git-send-email-anda-maria.nicolae@intel.com>
+Subject: Re: [PATCH v2 0/2] Add support for BQ25890 charger chip
+Date: Sun, 24 May 2015 21:48:44 +0200
+Message-ID: <20150524194843.GJ11066@earth>
+References: <1432041880-7373-1-git-send-email-laurentiu.palcu@intel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4f28nU6agdXSinmL"
+	protocol="application/pgp-signature"; boundary="/0U0QBNx7JIUZLHm"
 Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1431421893-18816-1-git-send-email-anda-maria.nicolae@intel.com>
+In-Reply-To: <1432041880-7373-1-git-send-email-laurentiu.palcu@intel.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-Cc: dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---4f28nU6agdXSinmL
+--/0U0QBNx7JIUZLHm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Tue, May 12, 2015 at 12:11:31PM +0300, Anda-Maria Nicolae wrote:
-> The following 2 patches do the following to bq2415x_charger:
-> - first patch fixes pre-existing coding style issues reported by checkpatch.pl
-> - second patch adds ACPI enumeration support
+On Tue, May 19, 2015 at 04:24:38PM +0300, Laurentiu Palcu wrote:
+> Changes since v1:
+>  * add comment in DT bindings regarding default driver behavior when
+>    "ti,thermal-regulation-threshold" property is missing;
+>  * addressed all Krzysztof's comments, including addition of a reset
+>    check counter. Better to be safe than sorry :)
+>=20
+> Hi,
+>=20
+> This series adds support for BQ25890 USB charger chip. Information about
+> the chip can be found here:
+>=20
+> http://www.ti.com/product/bq25890
 
 Thanks, queued.
 
 -- Sebastian
 
---4f28nU6agdXSinmL
+--/0U0QBNx7JIUZLHm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJVYioAAAoJENju1/PIO/qaWM8P/Anl5asOI2c4tR/RylCw3UI8
-lUItWuISNNKfHpXS9mf0EBCNDw+1ZH4bIYZJLYxhAo6DGPwC1d0OUIcGkJWDtmez
-KHwohyAtpIRwXnl8N1IuxEY07z69fXQH1LAJhgoTWWARaJtYn5rNOgV1ZIlDUSRH
-Zu5sWU4NGJDaIuni5DI6rfFmBI5BZRpNqWivv2sdKeC5VWe3XCjxMtOHx9FARiM8
-3EkYaHCRxRZ/pWUINtwl/ZzBwBOKV76bV/QurFR9VQjpniWIDW/ChvKxzfAJJHu7
-yuzzBGvbK1NNfygeVBIx/hcTpfDVPIrPBFvclJm96MzTbrDhFnzXUVyaspL4OB+N
-uX2di1pjYGMb+bLmnx5zc6xdrKMGm/GqNp/HwzsXZUf53IRuyzcojvVE0UnH3T0u
-RnKFk3QSYCDinvuJyOSgGaU0DjeATeHEbz0KaFK5Zd8Y2ZRgjla5VtMDnEOVuhOe
-Bj3wN0MmWyGp8BaFRH3dghTuU5gOB2u/jge/z2U4p6R6ppot1pLvrcEMATKPAlZ0
-5pWbtXxc/+gRFTTWajvprWDyxy7KKN1STfF+XAOsiQlFRoOqhx9yAY4BcAkijtso
-Eq8znlRvK9g0jUY61McCrb8p9EpuLrG6nYWB0rRaRf0/A84a/aDiqdB6gjgl8fq8
-0LzUMryZ1CutbRxbuWu6
-=PLyO
+iQIcBAEBCgAGBQJVYisbAAoJENju1/PIO/qac68QAJY0lDgvwDJtROkN4Mx3kgsN
+GTaGgi6j6MSzc/UhRIVnkkx7n262tSzgzLteRHkyRyfTWkXWTpd3Ly+zsLG/ZVfL
+iI0b5egmDbPiEJPVET3gkSZiRJDbF4K7qprIxAOlI1uvezPWNHeGav3YJR68UULM
+y275p8JJhX4mkNt12CKK10fY7Ak8IHY2kRjgPF5qInAEATDyIdYF7SagLbJOVyko
+P6yYiS2Kc725jp0FaKmxrXSdolXvpgWsmr7vlLABG14cInNrBc2mXIuUWqkWbwzq
+EGNqdJ98QHzqDjEK2TbfjQ/uUySpLV+a9NBMVbjOLCkXZcGEMZv2VzF/vbbRNDn0
+mllj8NLYEIugDV5kg/wbwmXhWGMw6bnc4fj1NRka3+92pIIKcPuLyoTi36N1p368
+kaMsBV3Sb0PekjXHeL4oR2XSefAUCtKmNUVpt+U12vk7Sg7QzfnFZY69ZcQRLHwJ
+OJVjGr0dMy/cHe07Mz6oEIJo4gxMZXp2iUufTeY8iJzoPzJxKUAGQCmhlDguHbNe
+Jyk05sv1G+ewOjWyzcgIFzSBSbjJZwjRnH1qfFKdBWGI1wAZI7KIBfK39ErAKDuS
+sHOCCFzdNpS1zV7V3/RSLwmUSkff250kaHv2bA0a6S1HyZOF6erbGoFyItQ0HSAe
+3a/rbBPTBtVAV/AyAsnd
+=5nIs
 -----END PGP SIGNATURE-----
 
---4f28nU6agdXSinmL--
+--/0U0QBNx7JIUZLHm--
