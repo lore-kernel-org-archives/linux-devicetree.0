@@ -1,45 +1,55 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v3.1 4/4] of/platform: Use platform_device interface
-Date: Sun, 24 May 2015 12:29:15 -0700
-Message-ID: <20150524192915.GA7170@kroah.com>
-References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
- <1429719261-18024-5-git-send-email-ricardo.ribalda@gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2] power_supply: Add TI BQ24257 charger driver
+Date: Sun, 24 May 2015 21:38:25 +0200
+Message-ID: <20150524193824.GB11066@earth>
+References: <1429176676-10354-1-git-send-email-laurentiu.palcu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1429719261-18024-5-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1429176676-10354-1-git-send-email-laurentiu.palcu@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 15, 2015 at 01:52:10PM +0200, Ricardo Ribalda Delgado wrote:
-> of_platform_device_create_pdata() was using of_device_add() to create
-> the devices, but of_platform_device_destroy was using
-> platform_device_unregister() to free them.
-> 
-> of_device_add(), do not call insert_resource(), which initializes the
-> parent field of the resource structure, needed by release_resource(),
-> called by of_platform_device_destroy(). This leads to a NULL pointer
-> deference.
-> 
-> Instead of fixing the NULL pointer deference, what could hide other bugs,
-> this patch, replaces of_device_add() with platform_device_data().
-> 
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> v3.1 Fix comments by Rob Herring, thanks!
 
-3.1?
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please resend the whole series, this is a mess, I can't find where this
-goes at all...
+On Thu, Apr 16, 2015 at 12:31:16PM +0300, Laurentiu Palcu wrote:
+> Based on the datasheet found here:
+> http://www.ti.com/lit/ds/symlink/bq24257.pdf
+>=20
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, queued.
+
+-- Sebastian
+
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVYiiuAAoJENju1/PIO/qa6gUQAJ+oHXuYSH6iOF2YVMQwvbd7
+QePhU8GRtMt/cclhoOm8cXesksqxNRFHttNfGi5HakYE/rjGp52oNIc8xQQ/ebGE
++NeLpXr4QiHo8uN214ZbAxsSu0ImYBqzQDq/ABjXqeGV/YiBivzgZVSzOMmaMGip
+WrjlHShgdkUbzyNRAJhaGA6GKoZCGfQWl8TkgGg13WdFrFcPakDSNiwr+KV7d2yv
+qj2IpbqygnqN2QyMh4i2eHiWrCOgKpxw1obMVR+OKMey9dKF5FaBWa4u/GG7nOGC
+jc1puvuqxKP/5b/0R/OULXIfZ7rbmVHsoX5n4o/diQAJcTGiiSnTNtDfffkB1wes
+t3vYf+AFe93Pu8U0Gzh+eNw+u5WafofnOw3HgApXKvDdnBAnk03klvI5ugMUY0LJ
+fRwf4BVXTnpoVVkw5F5MhRDDZAw5qPWQIgHc1JQKkv2zgOtgQT9I001rJ6cEEAkE
+n95+VnX1kGTvYdhRoBf2iozE81qNbzm5drk/qcb96XInKK0WRGp6UavYWaYzPeHS
+2DFNSy5M7mOIhJ2VafsryLZ0GN/L6i5wTh5W6Ov0c4YlHfytEjssVOw/3x9shLW5
+a0t6eOB9M9CrzNU/Mfb7YrIfVx05eyYXfyC+Kw1il/UD2jeMci4nxPeaykg7ws0V
+/Z70hB8I1oQ2iK+hUH3n
+=VXWo
+-----END PGP SIGNATURE-----
+
+--uZ3hkaAS1mZxFaxD--
