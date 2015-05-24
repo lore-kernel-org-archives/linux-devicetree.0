@@ -1,40 +1,96 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 2/5] clockevents/drivers: Add STM32 Timer driver
-Date: Sun, 24 May 2015 23:07:55 +0200
-Message-ID: <55623DAB.2000402@linaro.org>
-References: <1432328616-16964-1-git-send-email-mcoquelin.stm32@gmail.com> <1432328616-16964-3-git-send-email-mcoquelin.stm32@gmail.com>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 07/37] MIPS: JZ4740: probe CPU interrupt controller via DT
+Date: Sun, 24 May 2015 23:37:42 +0100
+Message-ID: <1432507062-2853-1-git-send-email-paul.burton@imgtec.com>
+References: <5561EB79.30209@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432328616-16964-3-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5561EB79.30209-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2015 11:03 PM, Maxime Coquelin wrote:
-> STM32 MCUs feature 16 and 32 bits general purpose timers with prescal=
-ers.
-> The drivers detects whether the time is 16 or 32 bits, and applies a
-> 1024 prescaler value if it is 16 bits.
->
-> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Tested-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Use the generic irqchip_init function to probe irqchip drivers using DT,
+and add the appropriate node to the JZ4740 devicetree in place of the
+call to mips_cpu_irq_init.
 
-Applied to my tree for 4.2
+Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+---
 
-Thanks !
+Changes in v6:
+- Rename cpuintc DT node interrupt-controller@0.
 
-   -- Daniel
+Changes in v5: None
+Changes in v4: None
+Changes in v3:
+- Rebase.
 
+Changes in v2: None
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 7 +++++++
+ arch/mips/jz4740/irq.c                 | 4 ++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index c538691f..dd3642f 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -2,4 +2,11 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4740";
++
++	cpuintc: interrupt-controller@0 {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
+ };
+diff --git a/arch/mips/jz4740/irq.c b/arch/mips/jz4740/irq.c
+index 97206b3..3ec90875 100644
+--- a/arch/mips/jz4740/irq.c
++++ b/arch/mips/jz4740/irq.c
+@@ -18,6 +18,7 @@
+ #include <linux/types.h>
+ #include <linux/interrupt.h>
+ #include <linux/ioport.h>
++#include <linux/irqchip.h>
+ #include <linux/timex.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+@@ -27,7 +28,6 @@
+ 
+ #include <asm/io.h>
+ #include <asm/mipsregs.h>
+-#include <asm/irq_cpu.h>
+ 
+ #include <asm/mach-jz4740/base.h>
+ #include <asm/mach-jz4740/irq.h>
+@@ -84,7 +84,7 @@ void __init arch_init_irq(void)
+ 	struct irq_chip_generic *gc;
+ 	struct irq_chip_type *ct;
+ 
+-	mips_cpu_irq_init();
++	irqchip_init();
+ 
+ 	jz_intc_base = ioremap(JZ4740_INTC_BASE_ADDR, 0x14);
+ 
+-- 
+2.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
