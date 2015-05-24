@@ -1,88 +1,96 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Sun, 24 May 2015 07:15:39 -0700
-Message-ID: <5561DD0B.1040008@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>	<555DFCD4.3040701@codeaurora.org>	<CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com>	<5560D7AC.50009@codeaurora.org>	<5560DCB6.3090008@roeck-us.net> <CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 26/37] MIPS,clk: migrate JZ4740 to common clock
+ framework
+Date: Sun, 24 May 2015 16:01:04 +0100
+Message-ID: <20150524150104.GP13811@NP-P-BURTON>
+References: <1429881457-16016-1-git-send-email-paul.burton@imgtec.com>
+ <1429881457-16016-27-git-send-email-paul.burton@imgtec.com>
+ <20150513025204.20636.10155@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Dzs2zDY0zgkG72+7"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150513025204.20636.10155@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/24/2015 03:15 AM, Fu Wei wrote:
-> Hi Guenter,
->
-> On 24 May 2015 at 04:01, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->> On 05/23/2015 12:40 PM, Timur Tabi wrote:
->> [ ... ]
->>>
->>>
->>> I use emergency_restart(), because the watchdog-api.txt documentation says
->>> this:
->>>
->>> "If userspace fails (RAM error, kernel bug, whatever), the
->>> notifications cease to occur, and the hardware watchdog will reset the
->>> system (causing a reboot) after the timeout occurs."
->>>
->>> Maybe I'm reading this too literally, but to me this means that when the
->>> timeout expires, the system has to reset immediately.
->>>
->>> However, maybe panic() is better, since it can do the same thing and more.
->>>
->>
->> I have a specific requirement at work to have watchdog expiration
->> (not this watchdog, this is different HW) result in a panic, specifically
->> to enable crashdump support and thus post-mortem analysis.
->>
->> I had not thought about this use case myself, and I had always wondered
->> why watchdog driver implementers would choose to call panic() after an
->> interrupt or NMI. But we live and learn, so now I finally understand.
->>
->> In the pretimeout/timeout world, the pretimeout would (typically)
->> result in a panic, and the timeout would result in a reset. So one
->> would set the timer register to 10s for 10s pretimeout and 20s timeout.
->>
->> However, the pretimeout concept assumes that there are two timers
->> which can be set independently. As you had pointed out earlier,
->> and as the specification seems to confirm, that is not the case here.
->
-> Sorry, in Documentation/watchdog/watchdog-api.txt, I can not get the
-> info about " the pretimeout concept assumes that there are two timers
-> which can be set independently."
-> Could you kindly point out where is the assumption.
->
-> I thinks in kernel documentation,  that meams "one watchdog has two
-> timeout stages", maybe I miss something. Could you help me out?
->
-My apologies. Terminology problem; see below.
+--Dzs2zDY0zgkG72+7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Note that the pretimeout, as documented, is a difference to the real
-timeout, not an absolute time (which I had not realized before).
+On Tue, May 12, 2015 at 07:52:04PM -0700, Michael Turquette wrote:
+> Hi Paul,
+>=20
+> Quoting Paul Burton (2015-04-24 06:17:26)
+> > +static void __init jz4740_cgu_init(struct device_node *np)
+> > +{
+> > +       int retval;
+> > +
+> > +       cgu =3D ingenic_cgu_new(jz4740_cgu_clocks,
+> > +                             ARRAY_SIZE(jz4740_cgu_clocks), np);
+> > +       if (!cgu) {
+> > +               pr_err("%s: failed to initialise CGU\n", __func__);
+> > +               return;
+> > +       }
+> > +
+> > +       retval =3D ingenic_cgu_register_clocks(cgu);
+> > +       if (retval)
+> > +               pr_err("%s: failed to register CGU Clocks\n", __func__);
+> > +}
+> > +CLK_OF_DECLARE(jz4740_cgu, "ingenic,jz4740-cgu", jz4740_cgu_init);
+> > --=20
+> > 2.3.5
+> >=20
+>=20
+> Patch looks good to me, but I have one question. Is it possible for you
+> to have a proper platform_device for the cgu instead of relying on
+> CLK_OF_DECLARE?
+>=20
+> For an example of a clock driver that does this, check out the bottom of
+> drivers/clk/qcom/gcc-msm8660.c.
+>=20
+> Regards,
+> Mike
 
-"Note that the pretimeout is the number of seconds before the time
-  when the timeout will go off.  It is not the number of seconds until
-  the pretimeout.  So, for instance, if you set the timeout to 60 seconds
-  and the pretimeout to 10 seconds, the pretimeout will go off in 50
-  seconds.  Setting a pretimeout to zero disables it."
+Hi Mike,
 
->> As such, I don't really understand why and how the pretimeout / timeout
->> concept would add any value here and not just make things more
->> complicated than necessary. Maybe I am just missing something.
->
-> If pretimeout concept assumes that there are two timers, I
-> misunderstand the "pretimeout", then I will delete the pretimeout
-> immediately.
->
-I think I used the wrong term. I should have said something like
-"two distinct timeout values".
+Thanks for your review. I gave that a try but unfortunately it didn't
+work out because the code in plat_time_init (arch/mips/jz4740/time.c)
+needs to obtain the rate of the ext clock at a point before any
+initcalls have been run, and therefore before the platform device has
+been registered.
 
-Guenter
+Thanks,
+    Paul
 
+--Dzs2zDY0zgkG72+7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJVYeerAAoJENzvn0paErs5t10P/0s4aPrB2JGQryExBDaqHNRI
+pPpuIBfNBL8/V9Uk4FCMMi77dymvZuAxnBigych187DazTCxLvyejzXwooWz8zxo
+/IbObdbdpeNw5s8yoUPUlC3d1Yhhw2un9zhk9n1mdj+b3ZPfjvyIuwWIzorewpC5
+oHGffD15WBjQZvE6H16pc9YHinO+YkwRJJAd+qdSuzxVvZ9FPJW5JvNJ6JrwSEL7
+HCEbTYyN3j2BuOHGnO0l1ZcDzgCFC3mbh8z+De11h9XFc/9gst/W3Qn+9HnYy6a5
+jk3+baDPUa0TjAi7IftqG1nLLAQ+17JbhfWiTXjmEMkT5Pd3z68h6FHZJaH/WsK+
+0TPFPp5grq4zawHc4DgVjUr3RLnzFtxiI7CrEEpf3IfC5CzfWSB4nuAAxxy/N05n
+/O1+xBxYaspEDDn9xdFLdTJN1aHLfnW9whdzIwworoU1bzdVEo3Tiwh4us3fozCx
+dtaOoTrGtWbN5sf2/YGKbsqKbf2CDoHMPEriAS2NHBErWUZPsLN9J48RhoUqvnZ+
+X1xsAFD3OdaaCNnKlAEHcy/Bzu4D9917nCxy7l42LkasG6/HP7yLNdafkQ1kjJoN
+U5EDTZNuuZ3El31XWUu7m+fQ+/qStAIZ5eAOY6bzPK7zmu3R3On8Dzp1Mde54xL2
+dun5LozGE89ug1KsWobr
+=Kgev
+-----END PGP SIGNATURE-----
+
+--Dzs2zDY0zgkG72+7--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
