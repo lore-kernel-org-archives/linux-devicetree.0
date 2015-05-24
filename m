@@ -1,142 +1,30 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Mon, 25 May 2015 01:04:35 +0800
-Message-ID: <CADyBb7t=uBZHM-N5bCD9fDvbK5EhC8Y3FyjiCZhYne=01GQBuw@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
-	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>
-	<555DFCD4.3040701@codeaurora.org>
-	<CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com>
-	<5560D7AC.50009@codeaurora.org>
-	<5560DCB6.3090008@roeck-us.net>
-	<CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>
-	<5561DD0B.1040008@roeck-us.net>
-	<CADyBb7t6YoauM6T==E8MmHDvE0R9B4n09cEQH3AKkQvOW1RiJw@mail.gmail.com>
-	<5561FAFF.1050602@roeck-us.net>
-	<CADyBb7vAwXNFH50tFQUxoqWKx7VBLzo5xd7takBgdVYpJ_0d8g@mail.gmail.com>
-	<5562031D.3040808@roeck-us.net>
+Date: Sun, 24 May 2015 12:19:04 -0500
+Message-ID: <55620808.4030605@codeaurora.org>
+References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>	<555DFCD4.3040701@codeaurora.org>	<CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com>	<5560D7AC.50009@codeaurora.org>	<5560DCB6.3090008@roeck-us.net>	<CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>	<5561E7EA.5090702@codeaurora.org>	<CADyBb7tYL7ATRKNAoRYTXo53LKdCiFZ2YDib4g0nZ8=YxTgO+A@mail.gmail.com>	<5561F8A8.4080607@codeaurora.org>	<5561FC70.5080802@roeck-us.net>	<5561FFF0.5090108@codeaurora.org> <CADyBb7snhcR43KT_xrFipBH3PBNBfj39-hE-mSjJ3vMb7Ehp+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5562031D.3040808-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <CADyBb7snhcR43KT_xrFipBH3PBNBfj39-hE-mSjJ3vMb7Ehp+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+Fu Wei wrote:
+> I don't know why you want to do this tricky way.  you can always
+> register the interrupt handler,
+> if pre-timeout is 0, system will just trigger WS1 right after WS0
 
-
-
-On 25 May 2015 at 00:58, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On 05/24/2015 09:47 AM, Fu Wei wrote:
->>
->> Hi Guenter,
->>
->> On 25 May 2015 at 00:23, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->>>
->>> On 05/24/2015 08:50 AM, Fu Wei wrote:
->>> [ ...]
->>>
->>>> Actually, I have added my thought at the head of sbsa_gwdt.c as a
->>>> comment
->>>> :
->>>>
->>>>     *
->>>>    * Note: This SBSA Generic watchdog driver is compatible with
->>>>    *       the pretimeout concept of Linux kernel.
->>>>    *       The timeout and pretimeout are set by the different REGs.
->>>>    *       The first watch period is set by writing WCV directly,
->>>>    *       that can support more than 10s timeout at the maximum
->>>>    *       system counter frequency.
->>>>    *       The second watch period is set by WOR(32bit) which will be
->>>> loaded
->>>>    *       automatically by hardware, when WS0 is triggered.
->>>>    *       This gives a maximum watch period of around 10s at the
->>>> maximum
->>>>    *       system counter frequency.
->>>>    *       The System Counter shall run at maximum of 400MHz.
->>>>    *       More details: DEN0029B - Server Base System Architecture
->>>> (SBSA)
->>>>    *
->>>>    * Kernel/API:                         P---------| pretimeout
->>>>    *               |-------------------------------T timeout
->>>>    * SBSA GWDT:                          P--WOR---WS1 pretimeout
->>>>    *               |-------WCV----------WS0~~~~~~~~T timeout
->>>>    */
->>>>
->>>
->>> Yes, but do we actually _know_ that it works that way, ie that WCV
->>> drives WS0 and that WOR drives WS1 ? Unless I am missing something,
->>> the specification doesn't say that, and it would have been a really
->>> easy statement to make if that was the intent.
->>
->>
->> yes, Suravee has tested it on Seattle B0 Soc, that works.
->> But hope Suravee can provide more info about test, I will ping him later.
->>
->> According to SBSA,  that WCV  and WOR can both drive WS1 and WS0
->>
->> the timeout and pretimeout in my patchset have been tested on Seattle
->> B0 and  Foundation model.
->>
->>>
->>> My concern here is that the above behavior is not spelled out in
->>> the document, meaning it is up to interpretation by the hardware
->>> engineer implementing it, to the point where it appears that not
->>> even two software engineers can agree how it is supposed to work.
->>> Which is a really bad starting point :-(.
->>
->>
->> Is that a real hardware teat can prove it works?
->>
->> or actually, SBSA say that it should work:
->> -----------------
->> Note: the watchdog offset register is 32 bits wide. This gives a
->> maximum watch period of around 10s at a system
->> counter frequency of 400MHz. If a larger watch period is required then
->> the compare value can be programmed
->> directly into the compare value register.
->> -----------------
->> offset register == WOR
->> compare value register == WCV
->>
->
-> Where does it say that WCV shall be associated with WS0 and that WOR
-> shall be associated with WS1 ? Guess I am missing that part.
-
-no, it doesn't say WCV shall be associated with WS0, that is my driver doing.
-
-but WCV can control both WS1/WS0.  WOR is just a auto-reload value.
-
-I think maybe you can read SBSA 2.3 Page 23,  The  pseudocode can
-explain everything. :-)
-
-Great thanks for your time
-
->
->
-> Thanks,
-> Guenter
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+But that only works if the pre-timeout and timeout can be programmed to 
+separate values.  And as Guenter says, the SBSA may not guarantee that.
 
 -- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
 --
 To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
