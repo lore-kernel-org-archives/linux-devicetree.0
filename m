@@ -1,188 +1,131 @@
 From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Sun, 24 May 2015 23:37:00 +0800
-Message-ID: <CADyBb7sROUmDE6N=7w=CQyUo-AiG_dBcTr=xB4R7+=pPFWh85A@mail.gmail.com>
+Date: Sun, 24 May 2015 23:50:48 +0800
+Message-ID: <CADyBb7t6YoauM6T==E8MmHDvE0R9B4n09cEQH3AKkQvOW1RiJw@mail.gmail.com>
 References: <=fu.wei@linaro.org>
+	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
 	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>
-	<555F4236.7040206@linaro.org>
-	<4095167.UOriXdSu53@wuerfel>
-	<556097D5.9050103@codeaurora.org>
-	<CADyBb7svbV6QdhzCsa9DiBLfyNpAJHkgm73VSKCieJioPwWHsw@mail.gmail.com>
-	<5560C85B.8040100@roeck-us.net>
-	<5560C8D3.40708@codeaurora.org>
-	<5560DA3F.3070707@roeck-us.net>
-	<CADyBb7sW8GTJmRR2ysUAYtZ=mkSCFZBzXuor=puLck0Q983NMw@mail.gmail.com>
-	<5561DAF3.8020805@roeck-us.net>
+	<555DFCD4.3040701@codeaurora.org>
+	<CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com>
+	<5560D7AC.50009@codeaurora.org>
+	<5560DCB6.3090008@roeck-us.net>
+	<CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>
+	<5561DD0B.1040008@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5561DAF3.8020805-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <5561DD0B.1040008-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Guenter,
 
-Great thanks for your time,
-you provide your feedback in your weekend, I am so appreciate that.
+Thanks for your feedback
 
-my feedback inline below
-
-On 24 May 2015 at 22:06, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On 05/24/2015 02:58 AM, Fu Wei wrote:
+On 24 May 2015 at 22:15, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On 05/24/2015 03:15 AM, Fu Wei wrote:
 >>
 >> Hi Guenter,
 >>
->> Great thanks for your suggestion and review,
->> I have some questions below , would you please help me out?
->>
->> On 24 May 2015 at 03:51, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>> On 24 May 2015 at 04:01, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
 >>>
->>> On 05/23/2015 11:37 AM, Timur Tabi wrote:
->>>>
->>>>
->>>> Guenter Roeck wrote:
->>>>>
->>>>>
->>>>> I think it is quite unfortunate that the specification is not public.
->>>>> We have heard many statements about what is in the spec or not.
+>>> On 05/23/2015 12:40 PM, Timur Tabi wrote:
+>>> [ ... ]
 >>>>
 >>>>
 >>>>
->>>> All you need to do is go to
+>>>> I use emergency_restart(), because the watchdog-api.txt documentation
+>>>> says
+>>>> this:
 >>>>
->>>> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0029b/index.html,
->>>> get a free ARM account, and download the spec.
+>>>> "If userspace fails (RAM error, kernel bug, whatever), the
+>>>> notifications cease to occur, and the hardware watchdog will reset the
+>>>> system (causing a reboot) after the timeout occurs."
 >>>>
->>> That helps - thanks a lot!
+>>>> Maybe I'm reading this too literally, but to me this means that when the
+>>>> timeout expires, the system has to reset immediately.
+>>>>
+>>>> However, maybe panic() is better, since it can do the same thing and
+>>>> more.
+>>>>
 >>>
->>> Folks, please correct me if my understanding of the specification
->>> is wrong.
+>>> I have a specific requirement at work to have watchdog expiration
+>>> (not this watchdog, this is different HW) result in a panic, specifically
+>>> to enable crashdump support and thus post-mortem analysis.
 >>>
->>> 1) Pretimeout
+>>> I had not thought about this use case myself, and I had always wondered
+>>> why watchdog driver implementers would choose to call panic() after an
+>>> interrupt or NMI. But we live and learn, so now I finally understand.
 >>>
->>> The document suggests that
->>>          WS1 = WS0 * 2
+>>> In the pretimeout/timeout world, the pretimeout would (typically)
+>>> result in a panic, and the timeout would result in a reset. So one
+>>> would set the timer register to 10s for 10s pretimeout and 20s timeout.
+>>>
+>>> However, the pretimeout concept assumes that there are two timers
+>>> which can be set independently. As you had pointed out earlier,
+>>> and as the specification seems to confirm, that is not the case here.
 >>
 >>
->> Are you saying: the first timeout == the second timeout
+>> Sorry, in Documentation/watchdog/watchdog-api.txt, I can not get the
+>> info about " the pretimeout concept assumes that there are two timers
+>> which can be set independently."
+>> Could you kindly point out where is the assumption.
 >>
->> |-------------WS0
->>                    |-------------WS1
+>> I thinks in kernel documentation,  that meams "one watchdog has two
+>> timeout stages", maybe I miss something. Could you help me out?
 >>
->> Sorry, could you let me know where is that suggestion??
->> I have checked the SBSA again, but I can not find it.
->> Maybe I really miss this part.
->>
+> My apologies. Terminology problem; see below.
 >
-> The document states:
+> Note that the pretimeout, as documented, is a difference to the real
+> timeout, not an absolute time (which I had not realized before).
 >
-> "If both watchdog signals are deasserted and a timeout refresh occurs then
-> WS0 is asserted.
->  If WS0 is asserted and a timeout refresh occurs then WS1 is asserted."
+> "Note that the pretimeout is the number of seconds before the time
+>  when the timeout will go off.  It is not the number of seconds until
+>  the pretimeout.  So, for instance, if you set the timeout to 60 seconds
+>  and the pretimeout to 10 seconds, the pretimeout will go off in 50
+>  seconds.  Setting a pretimeout to zero disables it."
 
-yes, this just describe how the WS0/WS1 are deasserted or asserted.
-but it doesn't suggest WS1 = WS0 * 2.
-Of course,  If we only config  WOR in the driver, we get WS1 = WS0 * 2.
-
-If we delete pretimeout concept from this driver
-Then what is the timeout, |-------------WS0  or
-|-------------WS0-------------WS1 ?
-
-If we only config WOR ,  the timeout for two stage will be the same
-I think  the first stage should be called timeout, the user get a
-panic in timeout(the first stage)
-Then we can tell user, in this driver, if first timeout is triggered
-but fail, we can wait for the same time for reboot.
-
-but the second timeout is still like a pretimeout, why not just use it ?
-
-IMO,  the key point of SBSA watchdog is two signal, and the first one
-is interrupt, the second one maybe a hardware reset OR a interrupt
-if we drop "pretimeout", the watchdog just acts like a common watchdog
-(just like SP805)
-
-Now we assume that the second signal is a reset, but according to
-SBSA, that maybe a  interrupt. If that happens on a Soc(that will
-happen), how to deal with that?
-what is the timeout between WS0 and WS1?
-
-If the two signals are all connect to interrupts, I think we still
-need a pretimeout. why not use pretimeout right now. that will be more
-easy to maintain the driver.
+yes , this patchset is designed for this pretimeout concept
 
 >
-> There is no mention that programming both WOR and WCV would or even
-> could result in different timeouts for the two watchdog signals.
+>>> As such, I don't really understand why and how the pretimeout / timeout
+>>> concept would add any value here and not just make things more
+>>> complicated than necessary. Maybe I am just missing something.
+>>
+>>
+>> If pretimeout concept assumes that there are two timers, I
+>> misunderstand the "pretimeout", then I will delete the pretimeout
+>> immediately.
+>>
+> I think I used the wrong term. I should have said something like
+> "two distinct timeout values".
 
-yes, they don't mention it.
-using WCV to config the first stage and  WOR for the second stage  is
-my idea to solve the two stage timeouts.
-Because by this way, we can make the first stage longer(has not that
-10s(@400MHz) limit), and we can provide the full feature of SBSA
-watchdog.
-as I have mentioned above, If the two signals are all connect to
-interrupts, we don't need to tell user : the two stage timeout must be
-the same and 10s(@400MHz) limit,
+Actually, I have added my thought at the head of sbsa_gwdt.c as a comment :
 
->
->>> is in fact correct. In essence, there is just one counter,
->>> not two. This means that a separate pretimeout does not really
->>> make sense, since in practice the timeout would always be
->>> twice the pretimeout,
->>
->>
->> Yes, you are right, if we only use "WOR", then the first timeout ==
->> the second timeout
->>
->>> and changing just one without affecting
->>> the other is not really possible.
->>
->>
->> although there is only one counter, and it is 32 bits wide.
->> In SBSA,  we can see this:
->> -------
->> Note: the watchdog offset register is 32 bits wide. This gives a
->> maximum watch period of around 10s at a system counter frequency of
->> 400MHz.
->> If a larger watch period is required then the compare value can be
->> programmed directly into the compare value register.
->> -------
->> So for the first timeout, we can set the compare value register(WCV).
->> Then the two timeouts are different. and the first timeout has not
->> 10s(@400MHz) limit.
->> just the the second timeout must use "WOR".
->>
->
-> That is not how I read the specification. It only talks about
-> "timeout refresh". There is no indication that using both registers
-> would have the impact you describe.
->
-> Since there is no mention of different WS0 and WS1 timeout periods
-> in the specification, I am concerned that even _if_ a specific
-> implementation supports such different timeouts, it would be
-> implementation specific.
+  *
+ * Note: This SBSA Generic watchdog driver is compatible with
+ *       the pretimeout concept of Linux kernel.
+ *       The timeout and pretimeout are set by the different REGs.
+ *       The first watch period is set by writing WCV directly,
+ *       that can support more than 10s timeout at the maximum
+ *       system counter frequency.
+ *       The second watch period is set by WOR(32bit) which will be loaded
+ *       automatically by hardware, when WS0 is triggered.
+ *       This gives a maximum watch period of around 10s at the maximum
+ *       system counter frequency.
+ *       The System Counter shall run at maximum of 400MHz.
+ *       More details: DEN0029B - Server Base System Architecture (SBSA)
+ *
+ * Kernel/API:                         P---------| pretimeout
+ *               |-------------------------------T timeout
+ * SBSA GWDT:                          P--WOR---WS1 pretimeout
+ *               |-------WCV----------WS0~~~~~~~~T timeout
+ */
 
-yes, you are right, they don't mention,  but they can be different,
-that is the way I use.
-I just put limit on user , say: the two timeout must be the same. I
-hope my driver can provide the full feature of hardware.
-but they make driver a little more complicated than the one which
-simply config WOR.
-I have to say , another one make SBSA watchdog become a watchdog.
 
 >
-> Maybe you and/or Timur can test this on the real systems you
-> have access to. It should be quite straightforward to test -
-> have the interrupt handler only print a message, program some
-> values into the watchdog, and see when WS0 and WS1 occur.
-
-yes,  the first version of my driver has printed the timeleft out,  I
-can have different timeouts and pretimeout
-
->
-> Thanks,
 > Guenter
 >
 
