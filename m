@@ -1,60 +1,44 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH] ARM: BCM5301X: add IRQ numbers for PCIe controller
-Date: Sun, 24 May 2015 21:08:14 +0200
-Message-ID: <1432494494-13361-1-git-send-email-hauke@hauke-m.de>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3.1 4/4] of/platform: Use platform_device interface
+Date: Sun, 24 May 2015 12:29:15 -0700
+Message-ID: <20150524192915.GA7170@kroah.com>
+References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1429719261-18024-5-git-send-email-ricardo.ribalda@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429719261-18024-5-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The driver for the PCIe controller was just added, this adds the
-missing definition of the IRQ numbers to device tree. The driver itself
-will be automatically detected by bcma.
+On Fri, May 15, 2015 at 01:52:10PM +0200, Ricardo Ribalda Delgado wrote:
+> of_platform_device_create_pdata() was using of_device_add() to create
+> the devices, but of_platform_device_destroy was using
+> platform_device_unregister() to free them.
+> 
+> of_device_add(), do not call insert_resource(), which initializes the
+> parent field of the resource structure, needed by release_resource(),
+> called by of_platform_device_destroy(). This leads to a NULL pointer
+> deference.
+> 
+> Instead of fixing the NULL pointer deference, what could hide other bugs,
+> this patch, replaces of_device_add() with platform_device_data().
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> 
+> v3.1 Fix comments by Rob Herring, thanks!
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
----
- arch/arm/boot/dts/bcm5301x.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+3.1?
 
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 78aec62..51c6a8b 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -108,6 +108,30 @@
- 			/* ChipCommon */
- 			<0x00000000 0 &gic GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
- 
-+			/* PCIe Controller 0 */
-+			<0x00012000 0 &gic GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00012000 1 &gic GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00012000 2 &gic GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00012000 3 &gic GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00012000 4 &gic GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00012000 5 &gic GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* PCIe Controller 1 */
-+			<0x00013000 0 &gic GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00013000 1 &gic GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00013000 2 &gic GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00013000 3 &gic GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00013000 4 &gic GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00013000 5 &gic GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* PCIe Controller 2 */
-+			<0x00014000 0 &gic GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00014000 1 &gic GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00014000 2 &gic GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00014000 3 &gic GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00014000 4 &gic GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00014000 5 &gic GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
-+
- 			/* USB 2.0 Controller */
- 			<0x00021000 0 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
- 
--- 
-2.1.4
+Please resend the whole series, this is a mess, I can't find where this
+goes at all...
 
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
