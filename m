@@ -1,7 +1,7 @@
 From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 07/37] MIPS: JZ4740: probe CPU interrupt controller via DT
-Date: Sun, 24 May 2015 16:11:17 +0100
-Message-ID: <1432480307-23789-8-git-send-email-paul.burton@imgtec.com>
+Subject: [PATCH v5 10/37] devicetree: document Ingenic SoC interrupt controller binding
+Date: Sun, 24 May 2015 16:11:20 +0100
+Message-ID: <1432480307-23789-11-git-send-email-paul.burton@imgtec.com>
 References: <1432480307-23789-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,81 +9,74 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1432480307-23789-1-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use the generic irqchip_init function to probe irqchip drivers using DT,
-and add the appropriate node to the JZ4740 devicetree in place of the
-call to mips_cpu_irq_init.
+Add binding documentation for Ingenic SoC interrupt controllers.
 
 Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 ---
 
-Changes in v5: None
-Changes in v4: None
+Changes in v5:
+- List all supported compatible strings in the binding document.
+
+Changes in v4:
+  - s/intc/interrupt-controller/ in example.
+
 Changes in v3:
-- Rebase.
+- Merge documentation for various Ingenic SoCs, which only differ by
+  their compatible strings.
 
 Changes in v2: None
 
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 7 +++++++
- arch/mips/jz4740/irq.c                 | 4 ++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ .../bindings/interrupt-controller/ingenic,intc.txt | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index c538691f..2d64765c 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -2,4 +2,11 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4740";
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+new file mode 100644
+index 0000000..5f89fb6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+@@ -0,0 +1,28 @@
++Ingenic SoC Interrupt Controller
 +
-+	cpuintc: cpuintc@0 {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
- };
-diff --git a/arch/mips/jz4740/irq.c b/arch/mips/jz4740/irq.c
-index 97206b3..3ec90875 100644
---- a/arch/mips/jz4740/irq.c
-+++ b/arch/mips/jz4740/irq.c
-@@ -18,6 +18,7 @@
- #include <linux/types.h>
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
-+#include <linux/irqchip.h>
- #include <linux/timex.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-@@ -27,7 +28,6 @@
- 
- #include <asm/io.h>
- #include <asm/mipsregs.h>
--#include <asm/irq_cpu.h>
- 
- #include <asm/mach-jz4740/base.h>
- #include <asm/mach-jz4740/irq.h>
-@@ -84,7 +84,7 @@ void __init arch_init_irq(void)
- 	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
- 
--	mips_cpu_irq_init();
-+	irqchip_init();
- 
- 	jz_intc_base = ioremap(JZ4740_INTC_BASE_ADDR, 0x14);
- 
++Required properties:
++
++- compatible : should be "ingenic,<socname>-intc". Valid strings are:
++    ingenic,jz4740-intc
++    ingenic,jz4770-intc
++    ingenic,jz4775-intc
++    ingenic,jz4780-intc
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++- interrupt-parent : phandle of the CPU interrupt controller.
++- interrupts : Specifies the CPU interrupt the controller is connected to.
++
++Example:
++
++intc: interrupt-controller@10001000 {
++	compatible = "ingenic,jz4740-intc";
++	reg = <0x10001000 0x14>;
++
++	interrupt-controller;
++	#interrupt-cells = <1>;
++
++	interrupt-parent = <&cpuintc>;
++	interrupts = <2>;
++};
 -- 
 2.4.1
 
