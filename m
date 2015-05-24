@@ -1,46 +1,65 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Sun, 24 May 2015 11:13:28 -0500
-Message-ID: <5561F8A8.4080607@codeaurora.org>
-References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>	<555DFCD4.3040701@codeaurora.org>	<CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com>	<5560D7AC.50009@codeaurora.org>	<5560DCB6.3090008@roeck-us.net>	<CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>	<5561E7EA.5090702@codeaurora.org> <CADyBb7tYL7ATRKNAoRYTXo53LKdCiFZ2YDib4g0nZ8=YxTgO+A@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 07/37] MIPS: JZ4740: probe CPU interrupt controller
+ via DT
+Date: Sun, 24 May 2015 18:17:13 +0300
+Message-ID: <5561EB79.30209@cogentembedded.com>
+References: <1432480307-23789-1-git-send-email-paul.burton@imgtec.com> <1432480307-23789-8-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7tYL7ATRKNAoRYTXo53LKdCiFZ2YDib4g0nZ8=YxTgO+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1432480307-23789-8-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fu Wei wrote:
-> in the first timeout, just panic()  maybe not enough,  in [RFC]
-> version of my patchset, I offer some option as "preaction" to use, but
-> for simplifying the first version of driver, I have deleted them.
-> but at least, panic() is far more useful than a simple reset.  at
-> least, it can provide the context of the crashed system  to admin.
+Hello.
 
-My point is that there is very little difference between
+On 05/24/2015 06:11 PM, Paul Burton wrote:
 
-1) calling panic() on pre-timeout
-2) calling panic() on timeout
+> Use the generic irqchip_init function to probe irqchip drivers using DT,
+> and add the appropriate node to the JZ4740 devicetree in place of the
+> call to mips_cpu_irq_init.
+>
+> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+> ---
 
-In both cases, the system will panic.  The watchdog API says that the 
-system should reset when a timeout occurs, so you cannot call panic() 
-before the timeout expires.
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3:
+> - Rebase.
 
- > If you want to warn user space, that will make driver more
- > complicated, I don't think that is a good choose for a first version.
- > but we can find a way to improve this later
+> Changes in v2: None
 
-In my opinion, this "first version" is not useful.  I would like to see 
-a pre-timeout feature that does not panic or reset when a pre-timeout 
-occurs.
+>   arch/mips/boot/dts/ingenic/jz4740.dtsi | 7 +++++++
+>   arch/mips/jz4740/irq.c                 | 4 ++--
+>   2 files changed, 9 insertions(+), 2 deletions(-)
 
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> index c538691f..2d64765c 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> @@ -2,4 +2,11 @@
+>   	#address-cells = <1>;
+>   	#size-cells = <1>;
+>   	compatible = "ingenic,jz4740";
+> +
+> +	cpuintc: cpuintc@0 {
+
+    The node shoiuld be called "inbterrupt-controller@0".
+
+WBR, Sergei
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
