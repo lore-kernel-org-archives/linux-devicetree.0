@@ -1,55 +1,56 @@
 From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2] power_supply: Add TI BQ24257 charger driver
-Date: Sun, 24 May 2015 21:38:25 +0200
-Message-ID: <20150524193824.GB11066@earth>
-References: <1429176676-10354-1-git-send-email-laurentiu.palcu@intel.com>
+Subject: Re: [PATCH 0/2] power_supply: bq2415x_charger: Fix coding style
+ issues && add ACPI support
+Date: Sun, 24 May 2015 21:44:00 +0200
+Message-ID: <20150524194400.GF11066@earth>
+References: <1431421893-18816-1-git-send-email-anda-maria.nicolae@intel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
+	protocol="application/pgp-signature"; boundary="4f28nU6agdXSinmL"
 Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1429176676-10354-1-git-send-email-laurentiu.palcu@intel.com>
+In-Reply-To: <1431421893-18816-1-git-send-email-anda-maria.nicolae@intel.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Cc: dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---uZ3hkaAS1mZxFaxD
+--4f28nU6agdXSinmL
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 16, 2015 at 12:31:16PM +0300, Laurentiu Palcu wrote:
-> Based on the datasheet found here:
-> http://www.ti.com/lit/ds/symlink/bq24257.pdf
->=20
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Hi,
+
+On Tue, May 12, 2015 at 12:11:31PM +0300, Anda-Maria Nicolae wrote:
+> The following 2 patches do the following to bq2415x_charger:
+> - first patch fixes pre-existing coding style issues reported by checkpatch.pl
+> - second patch adds ACPI enumeration support
 
 Thanks, queued.
 
 -- Sebastian
 
---uZ3hkaAS1mZxFaxD
+--4f28nU6agdXSinmL
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJVYiiuAAoJENju1/PIO/qa6gUQAJ+oHXuYSH6iOF2YVMQwvbd7
-QePhU8GRtMt/cclhoOm8cXesksqxNRFHttNfGi5HakYE/rjGp52oNIc8xQQ/ebGE
-+NeLpXr4QiHo8uN214ZbAxsSu0ImYBqzQDq/ABjXqeGV/YiBivzgZVSzOMmaMGip
-WrjlHShgdkUbzyNRAJhaGA6GKoZCGfQWl8TkgGg13WdFrFcPakDSNiwr+KV7d2yv
-qj2IpbqygnqN2QyMh4i2eHiWrCOgKpxw1obMVR+OKMey9dKF5FaBWa4u/GG7nOGC
-jc1puvuqxKP/5b/0R/OULXIfZ7rbmVHsoX5n4o/diQAJcTGiiSnTNtDfffkB1wes
-t3vYf+AFe93Pu8U0Gzh+eNw+u5WafofnOw3HgApXKvDdnBAnk03klvI5ugMUY0LJ
-fRwf4BVXTnpoVVkw5F5MhRDDZAw5qPWQIgHc1JQKkv2zgOtgQT9I001rJ6cEEAkE
-n95+VnX1kGTvYdhRoBf2iozE81qNbzm5drk/qcb96XInKK0WRGp6UavYWaYzPeHS
-2DFNSy5M7mOIhJ2VafsryLZ0GN/L6i5wTh5W6Ov0c4YlHfytEjssVOw/3x9shLW5
-a0t6eOB9M9CrzNU/Mfb7YrIfVx05eyYXfyC+Kw1il/UD2jeMci4nxPeaykg7ws0V
-/Z70hB8I1oQ2iK+hUH3n
-=VXWo
+iQIcBAEBCgAGBQJVYioAAAoJENju1/PIO/qaWM8P/Anl5asOI2c4tR/RylCw3UI8
+lUItWuISNNKfHpXS9mf0EBCNDw+1ZH4bIYZJLYxhAo6DGPwC1d0OUIcGkJWDtmez
+KHwohyAtpIRwXnl8N1IuxEY07z69fXQH1LAJhgoTWWARaJtYn5rNOgV1ZIlDUSRH
+Zu5sWU4NGJDaIuni5DI6rfFmBI5BZRpNqWivv2sdKeC5VWe3XCjxMtOHx9FARiM8
+3EkYaHCRxRZ/pWUINtwl/ZzBwBOKV76bV/QurFR9VQjpniWIDW/ChvKxzfAJJHu7
+yuzzBGvbK1NNfygeVBIx/hcTpfDVPIrPBFvclJm96MzTbrDhFnzXUVyaspL4OB+N
+uX2di1pjYGMb+bLmnx5zc6xdrKMGm/GqNp/HwzsXZUf53IRuyzcojvVE0UnH3T0u
+RnKFk3QSYCDinvuJyOSgGaU0DjeATeHEbz0KaFK5Zd8Y2ZRgjla5VtMDnEOVuhOe
+Bj3wN0MmWyGp8BaFRH3dghTuU5gOB2u/jge/z2U4p6R6ppot1pLvrcEMATKPAlZ0
+5pWbtXxc/+gRFTTWajvprWDyxy7KKN1STfF+XAOsiQlFRoOqhx9yAY4BcAkijtso
+Eq8znlRvK9g0jUY61McCrb8p9EpuLrG6nYWB0rRaRf0/A84a/aDiqdB6gjgl8fq8
+0LzUMryZ1CutbRxbuWu6
+=PLyO
 -----END PGP SIGNATURE-----
 
---uZ3hkaAS1mZxFaxD--
+--4f28nU6agdXSinmL--
