@@ -1,299 +1,205 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH v5 36/37] MIPS: ingenic: initial JZ4780 support
-Date: Sun, 24 May 2015 16:11:46 +0100
-Message-ID: <1432480307-23789-37-git-send-email-paul.burton@imgtec.com>
-References: <1432480307-23789-1-git-send-email-paul.burton@imgtec.com>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Sun, 24 May 2015 23:37:00 +0800
+Message-ID: <CADyBb7sROUmDE6N=7w=CQyUo-AiG_dBcTr=xB4R7+=pPFWh85A@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>
+	<555F4236.7040206@linaro.org>
+	<4095167.UOriXdSu53@wuerfel>
+	<556097D5.9050103@codeaurora.org>
+	<CADyBb7svbV6QdhzCsa9DiBLfyNpAJHkgm73VSKCieJioPwWHsw@mail.gmail.com>
+	<5560C85B.8040100@roeck-us.net>
+	<5560C8D3.40708@codeaurora.org>
+	<5560DA3F.3070707@roeck-us.net>
+	<CADyBb7sW8GTJmRR2ysUAYtZ=mkSCFZBzXuor=puLck0Q983NMw@mail.gmail.com>
+	<5561DAF3.8020805@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432480307-23789-1-git-send-email-paul.burton@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Paul Burton <paul.burton@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Joshua Kinard <kumba@gentoo.org>, Leonid Yegoshin <Leonid.Yegoshin@imgtec.com>, Deng-Cheng Zhu <dengcheng.zhu@imgtec.com>, linux-kernel@vger.kernel.org, Markos Chandras <markos.chandras@imgtec.com>, Andreas Herrmann <andreas.herrmann@caviumnetworks.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5561DAF3.8020805-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Support the Ingenic JZ4780 SoC using the existing code under
-arch/mips/jz4740 now that it has been generalised sufficiently.
+Hi Guenter,
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-mips@linux-mips.org
----
+Great thanks for your time,
+you provide your feedback in your weekend, I am so appreciate that.
 
-Changes in v5:
-- Disable the UARTs by default, so that devices can enable only the ones
-  they actually expose.
+my feedback inline below
 
-Changes in v4: None
-Changes in v3:
-- Rebase, dropping serial.h & relocating behind CONFIG_MACH_INGENIC.
+On 24 May 2015 at 22:06, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On 05/24/2015 02:58 AM, Fu Wei wrote:
+>>
+>> Hi Guenter,
+>>
+>> Great thanks for your suggestion and review,
+>> I have some questions below , would you please help me out?
+>>
+>> On 24 May 2015 at 03:51, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>>>
+>>> On 05/23/2015 11:37 AM, Timur Tabi wrote:
+>>>>
+>>>>
+>>>> Guenter Roeck wrote:
+>>>>>
+>>>>>
+>>>>> I think it is quite unfortunate that the specification is not public.
+>>>>> We have heard many statements about what is in the spec or not.
+>>>>
+>>>>
+>>>>
+>>>> All you need to do is go to
+>>>>
+>>>> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0029b/index.html,
+>>>> get a free ARM account, and download the spec.
+>>>>
+>>> That helps - thanks a lot!
+>>>
+>>> Folks, please correct me if my understanding of the specification
+>>> is wrong.
+>>>
+>>> 1) Pretimeout
+>>>
+>>> The document suggests that
+>>>          WS1 = WS0 * 2
+>>
+>>
+>> Are you saying: the first timeout == the second timeout
+>>
+>> |-------------WS0
+>>                    |-------------WS1
+>>
+>> Sorry, could you let me know where is that suggestion??
+>> I have checked the SBSA again, but I can not find it.
+>> Maybe I really miss this part.
+>>
+>
+> The document states:
+>
+> "If both watchdog signals are deasserted and a timeout refresh occurs then
+> WS0 is asserted.
+>  If WS0 is asserted and a timeout refresh occurs then WS1 is asserted."
 
-Changes in v2: None
+yes, this just describe how the WS0/WS1 are deasserted or asserted.
+but it doesn't suggest WS1 = WS0 * 2.
+Of course,  If we only config  WOR in the driver, we get WS1 = WS0 * 2.
 
- arch/mips/boot/dts/ingenic/jz4780.dtsi             | 111 +++++++++++++++++++++
- arch/mips/include/asm/cpu-type.h                   |   2 +-
- .../asm/mach-jz4740/cpu-feature-overrides.h        |   3 -
- arch/mips/include/asm/mach-jz4740/irq.h            |   4 +
- arch/mips/jz4740/Kconfig                           |   6 ++
- arch/mips/jz4740/Makefile                          |   4 +-
- arch/mips/jz4740/setup.c                           |   3 +
- arch/mips/jz4740/time.c                            |   7 +-
- 8 files changed, 134 insertions(+), 6 deletions(-)
- create mode 100644 arch/mips/boot/dts/ingenic/jz4780.dtsi
+If we delete pretimeout concept from this driver
+Then what is the timeout, |-------------WS0  or
+|-------------WS0-------------WS1 ?
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-new file mode 100644
-index 0000000..65389f6
---- /dev/null
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -0,0 +1,111 @@
-+#include <dt-bindings/clock/jz4780-cgu.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ingenic,jz4780";
-+
-+	cpuintc: interrupt-controller {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
-+
-+	intc: interrupt-controller@10001000 {
-+		compatible = "ingenic,jz4780-intc";
-+		reg = <0x10001000 0x50>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <2>;
-+	};
-+
-+	ext: ext {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
-+	rtc: rtc {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+	};
-+
-+	cgu: jz4780-cgu@10000000 {
-+		compatible = "ingenic,jz4780-cgu";
-+		reg = <0x10000000 0x100>;
-+
-+		clocks = <&ext>, <&rtc>;
-+		clock-names = "ext", "rtc";
-+
-+		#clock-cells = <1>;
-+	};
-+
-+	uart0: serial@10030000 {
-+		compatible = "ingenic,jz4780-uart";
-+		reg = <0x10030000 0x100>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <51>;
-+
-+		clocks = <&ext>, <&cgu JZ4780_CLK_UART0>;
-+		clock-names = "baud", "module";
-+
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@10031000 {
-+		compatible = "ingenic,jz4780-uart";
-+		reg = <0x10031000 0x100>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <50>;
-+
-+		clocks = <&ext>, <&cgu JZ4780_CLK_UART1>;
-+		clock-names = "baud", "module";
-+
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@10032000 {
-+		compatible = "ingenic,jz4780-uart";
-+		reg = <0x10032000 0x100>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <49>;
-+
-+		clocks = <&ext>, <&cgu JZ4780_CLK_UART2>;
-+		clock-names = "baud", "module";
-+
-+		status = "disabled";
-+	};
-+
-+	uart3: serial@10033000 {
-+		compatible = "ingenic,jz4780-uart";
-+		reg = <0x10033000 0x100>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <48>;
-+
-+		clocks = <&ext>, <&cgu JZ4780_CLK_UART3>;
-+		clock-names = "baud", "module";
-+
-+		status = "disabled";
-+	};
-+
-+	uart4: serial@10034000 {
-+		compatible = "ingenic,jz4780-uart";
-+		reg = <0x10034000 0x100>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <34>;
-+
-+		clocks = <&ext>, <&cgu JZ4780_CLK_UART4>;
-+		clock-names = "baud", "module";
-+
-+		status = "disabled";
-+	};
-+};
-diff --git a/arch/mips/include/asm/cpu-type.h b/arch/mips/include/asm/cpu-type.h
-index 33f3cab..d41e8e2 100644
---- a/arch/mips/include/asm/cpu-type.h
-+++ b/arch/mips/include/asm/cpu-type.h
-@@ -32,12 +32,12 @@ static inline int __pure __get_cpu_type(const int cpu_type)
- 	case CPU_4KC:
- 	case CPU_ALCHEMY:
- 	case CPU_PR4450:
--	case CPU_JZRISC:
- #endif
- 
- #if defined(CONFIG_SYS_HAS_CPU_MIPS32_R1) || \
-     defined(CONFIG_SYS_HAS_CPU_MIPS32_R2)
- 	case CPU_4KEC:
-+	case CPU_JZRISC:
- #endif
- 
- #ifdef CONFIG_SYS_HAS_CPU_MIPS32_R2
-diff --git a/arch/mips/include/asm/mach-jz4740/cpu-feature-overrides.h b/arch/mips/include/asm/mach-jz4740/cpu-feature-overrides.h
-index a225baa..0933f94 100644
---- a/arch/mips/include/asm/mach-jz4740/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-jz4740/cpu-feature-overrides.h
-@@ -12,8 +12,6 @@
- #define cpu_has_3k_cache	0
- #define cpu_has_4k_cache	1
- #define cpu_has_tx39_cache	0
--#define cpu_has_fpu		0
--#define cpu_has_32fpr	0
- #define cpu_has_counter		0
- #define cpu_has_watch		1
- #define cpu_has_divec		1
-@@ -34,7 +32,6 @@
- #define cpu_has_ic_fills_f_dc	0
- #define cpu_has_pindexed_dcache 0
- #define cpu_has_mips32r1	1
--#define cpu_has_mips32r2	0
- #define cpu_has_mips64r1	0
- #define cpu_has_mips64r2	0
- #define cpu_has_dsp		0
-diff --git a/arch/mips/include/asm/mach-jz4740/irq.h b/arch/mips/include/asm/mach-jz4740/irq.h
-index b218f76..9b439fc 100644
---- a/arch/mips/include/asm/mach-jz4740/irq.h
-+++ b/arch/mips/include/asm/mach-jz4740/irq.h
-@@ -21,6 +21,8 @@
- 
- #ifdef CONFIG_MACH_JZ4740
- # define NR_INTC_IRQS	32
-+#else
-+# define NR_INTC_IRQS	64
- #endif
- 
- /* 1st-level interrupts */
-@@ -48,6 +50,8 @@
- #define JZ4740_IRQ_IPU		JZ4740_IRQ(29)
- #define JZ4740_IRQ_LCD		JZ4740_IRQ(30)
- 
-+#define JZ4780_IRQ_TCU2		JZ4740_IRQ(25)
-+
- /* 2nd-level interrupts */
- #define JZ4740_IRQ_DMA(x)	(JZ4740_IRQ(NR_INTC_IRQS) + (x))
- 
-diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-index dff0966..21adcea 100644
---- a/arch/mips/jz4740/Kconfig
-+++ b/arch/mips/jz4740/Kconfig
-@@ -12,3 +12,9 @@ endchoice
- config MACH_JZ4740
- 	bool
- 	select SYS_HAS_CPU_MIPS32_R1
-+
-+config MACH_JZ4780
-+	bool
-+	select MIPS_CPU_SCACHE
-+	select SYS_HAS_CPU_MIPS32_R2
-+	select SYS_SUPPORTS_HIGHMEM
-diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
-index 89ce401..39d70bd 100644
---- a/arch/mips/jz4740/Makefile
-+++ b/arch/mips/jz4740/Makefile
-@@ -5,7 +5,9 @@
- # Object file lists.
- 
- obj-y += prom.o time.o reset.o setup.o \
--	gpio.o platform.o timer.o
-+	platform.o timer.o
-+
-+obj-$(CONFIG_MACH_JZ4740) += gpio.o
- 
- CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
- 
-diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-index 1bed3cb..510fc0d 100644
---- a/arch/mips/jz4740/setup.c
-+++ b/arch/mips/jz4740/setup.c
-@@ -83,6 +83,9 @@ arch_initcall(populate_machine);
- 
- const char *get_system_type(void)
- {
-+	if (config_enabled(CONFIG_MACH_JZ4780))
-+		return "JZ4780";
-+
- 	return "JZ4740";
- }
- 
-diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
-index 9172553..7ab47fe 100644
---- a/arch/mips/jz4740/time.c
-+++ b/arch/mips/jz4740/time.c
-@@ -102,7 +102,12 @@ static struct clock_event_device jz4740_clockevent = {
- 	.set_next_event = jz4740_clockevent_set_next,
- 	.set_mode = jz4740_clockevent_set_mode,
- 	.rating = 200,
-+#ifdef CONFIG_MACH_JZ4740
- 	.irq = JZ4740_IRQ_TCU0,
-+#endif
-+#ifdef CONFIG_MACH_JZ4780
-+	.irq = JZ4780_IRQ_TCU2,
-+#endif
- };
- 
- static struct irqaction timer_irqaction = {
-@@ -144,7 +149,7 @@ void __init plat_time_init(void)
- 
- 	sched_clock_register(jz4740_read_sched_clock, 16, clk_rate);
- 
--	setup_irq(JZ4740_IRQ_TCU0, &timer_irqaction);
-+	setup_irq(jz4740_clockevent.irq, &timer_irqaction);
- 
- 	ctrl = JZ_TIMER_CTRL_PRESCALE_16 | JZ_TIMER_CTRL_SRC_EXT;
- 
+If we only config WOR ,  the timeout for two stage will be the same
+I think  the first stage should be called timeout, the user get a
+panic in timeout(the first stage)
+Then we can tell user, in this driver, if first timeout is triggered
+but fail, we can wait for the same time for reboot.
+
+but the second timeout is still like a pretimeout, why not just use it ?
+
+IMO,  the key point of SBSA watchdog is two signal, and the first one
+is interrupt, the second one maybe a hardware reset OR a interrupt
+if we drop "pretimeout", the watchdog just acts like a common watchdog
+(just like SP805)
+
+Now we assume that the second signal is a reset, but according to
+SBSA, that maybe a  interrupt. If that happens on a Soc(that will
+happen), how to deal with that?
+what is the timeout between WS0 and WS1?
+
+If the two signals are all connect to interrupts, I think we still
+need a pretimeout. why not use pretimeout right now. that will be more
+easy to maintain the driver.
+
+>
+> There is no mention that programming both WOR and WCV would or even
+> could result in different timeouts for the two watchdog signals.
+
+yes, they don't mention it.
+using WCV to config the first stage and  WOR for the second stage  is
+my idea to solve the two stage timeouts.
+Because by this way, we can make the first stage longer(has not that
+10s(@400MHz) limit), and we can provide the full feature of SBSA
+watchdog.
+as I have mentioned above, If the two signals are all connect to
+interrupts, we don't need to tell user : the two stage timeout must be
+the same and 10s(@400MHz) limit,
+
+>
+>>> is in fact correct. In essence, there is just one counter,
+>>> not two. This means that a separate pretimeout does not really
+>>> make sense, since in practice the timeout would always be
+>>> twice the pretimeout,
+>>
+>>
+>> Yes, you are right, if we only use "WOR", then the first timeout ==
+>> the second timeout
+>>
+>>> and changing just one without affecting
+>>> the other is not really possible.
+>>
+>>
+>> although there is only one counter, and it is 32 bits wide.
+>> In SBSA,  we can see this:
+>> -------
+>> Note: the watchdog offset register is 32 bits wide. This gives a
+>> maximum watch period of around 10s at a system counter frequency of
+>> 400MHz.
+>> If a larger watch period is required then the compare value can be
+>> programmed directly into the compare value register.
+>> -------
+>> So for the first timeout, we can set the compare value register(WCV).
+>> Then the two timeouts are different. and the first timeout has not
+>> 10s(@400MHz) limit.
+>> just the the second timeout must use "WOR".
+>>
+>
+> That is not how I read the specification. It only talks about
+> "timeout refresh". There is no indication that using both registers
+> would have the impact you describe.
+>
+> Since there is no mention of different WS0 and WS1 timeout periods
+> in the specification, I am concerned that even _if_ a specific
+> implementation supports such different timeouts, it would be
+> implementation specific.
+
+yes, you are right, they don't mention,  but they can be different,
+that is the way I use.
+I just put limit on user , say: the two timeout must be the same. I
+hope my driver can provide the full feature of hardware.
+but they make driver a little more complicated than the one which
+simply config WOR.
+I have to say , another one make SBSA watchdog become a watchdog.
+
+>
+> Maybe you and/or Timur can test this on the real systems you
+> have access to. It should be quite straightforward to test -
+> have the interrupt handler only print a message, program some
+> values into the watchdog, and see when WS0 and WS1 occur.
+
+yes,  the first version of my driver has printed the timeleft out,  I
+can have different timeouts and pretimeout
+
+>
+> Thanks,
+> Guenter
+>
+
+
+
 -- 
-2.4.1
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
