@@ -1,96 +1,30 @@
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 26/37] MIPS,clk: migrate JZ4740 to common clock
- framework
-Date: Sun, 24 May 2015 16:01:04 +0100
-Message-ID: <20150524150104.GP13811@NP-P-BURTON>
-References: <1429881457-16016-1-git-send-email-paul.burton@imgtec.com>
- <1429881457-16016-27-git-send-email-paul.burton@imgtec.com>
- <20150513025204.20636.10155@quantum>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Sun, 24 May 2015 10:02:02 -0500
+Message-ID: <5561E7EA.5090702@codeaurora.org>
+References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>	<555DFCD4.3040701@codeaurora.org>	<CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com>	<5560D7AC.50009@codeaurora.org>	<5560DCB6.3090008@roeck-us.net> <CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Dzs2zDY0zgkG72+7"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150513025204.20636.10155@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
---Dzs2zDY0zgkG72+7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fu Wei wrote:
+> If pretimeout concept assumes that there are two timers, I
+> misunderstand the "pretimeout", then I will delete the pretimeout
+> immediately.
 
-On Tue, May 12, 2015 at 07:52:04PM -0700, Michael Turquette wrote:
-> Hi Paul,
->=20
-> Quoting Paul Burton (2015-04-24 06:17:26)
-> > +static void __init jz4740_cgu_init(struct device_node *np)
-> > +{
-> > +       int retval;
-> > +
-> > +       cgu =3D ingenic_cgu_new(jz4740_cgu_clocks,
-> > +                             ARRAY_SIZE(jz4740_cgu_clocks), np);
-> > +       if (!cgu) {
-> > +               pr_err("%s: failed to initialise CGU\n", __func__);
-> > +               return;
-> > +       }
-> > +
-> > +       retval =3D ingenic_cgu_register_clocks(cgu);
-> > +       if (retval)
-> > +               pr_err("%s: failed to register CGU Clocks\n", __func__);
-> > +}
-> > +CLK_OF_DECLARE(jz4740_cgu, "ingenic,jz4740-cgu", jz4740_cgu_init);
-> > --=20
-> > 2.3.5
-> >=20
->=20
-> Patch looks good to me, but I have one question. Is it possible for you
-> to have a proper platform_device for the cgu instead of relying on
-> CLK_OF_DECLARE?
->=20
-> For an example of a clock driver that does this, check out the bottom of
-> drivers/clk/qcom/gcc-msm8660.c.
->=20
-> Regards,
-> Mike
+In my opinion, calling panic() on a pre-timeout is not useful, because 
+that's really just a normal timeout.  If there were a way to "warn" user 
+space that a timeout is about to occur, without a panic or reset, then 
+that might be useful.  But as far as I can see, all you're doing is 
+redefining the word "timeout".
 
-Hi Mike,
-
-Thanks for your review. I gave that a try but unfortunately it didn't
-work out because the code in plat_time_init (arch/mips/jz4740/time.c)
-needs to obtain the rate of the ext clock at a point before any
-initcalls have been run, and therefore before the platform device has
-been registered.
-
-Thanks,
-    Paul
-
---Dzs2zDY0zgkG72+7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJVYeerAAoJENzvn0paErs5t10P/0s4aPrB2JGQryExBDaqHNRI
-pPpuIBfNBL8/V9Uk4FCMMi77dymvZuAxnBigych187DazTCxLvyejzXwooWz8zxo
-/IbObdbdpeNw5s8yoUPUlC3d1Yhhw2un9zhk9n1mdj+b3ZPfjvyIuwWIzorewpC5
-oHGffD15WBjQZvE6H16pc9YHinO+YkwRJJAd+qdSuzxVvZ9FPJW5JvNJ6JrwSEL7
-HCEbTYyN3j2BuOHGnO0l1ZcDzgCFC3mbh8z+De11h9XFc/9gst/W3Qn+9HnYy6a5
-jk3+baDPUa0TjAi7IftqG1nLLAQ+17JbhfWiTXjmEMkT5Pd3z68h6FHZJaH/WsK+
-0TPFPp5grq4zawHc4DgVjUr3RLnzFtxiI7CrEEpf3IfC5CzfWSB4nuAAxxy/N05n
-/O1+xBxYaspEDDn9xdFLdTJN1aHLfnW9whdzIwworoU1bzdVEo3Tiwh4us3fozCx
-dtaOoTrGtWbN5sf2/YGKbsqKbf2CDoHMPEriAS2NHBErWUZPsLN9J48RhoUqvnZ+
-X1xsAFD3OdaaCNnKlAEHcy/Bzu4D9917nCxy7l42LkasG6/HP7yLNdafkQ1kjJoN
-U5EDTZNuuZ3El31XWUu7m+fQ+/qStAIZ5eAOY6bzPK7zmu3R3On8Dzp1Mde54xL2
-dun5LozGE89ug1KsWobr
-=Kgev
------END PGP SIGNATURE-----
-
---Dzs2zDY0zgkG72+7--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
