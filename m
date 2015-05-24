@@ -1,45 +1,30 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Sat, 23 May 2015 13:44:30 -0700
-Message-ID: <5560E6AE.1000109@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>	<555DFCD4.3040701@codeaurora.org> <CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com> <5560D7AC.50009@codeaurora.org> <5560DCB6.3090008@roeck-us.net> <5560E294.6040903@codeaurora.org>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [linux-sunxi] Re: [PATCH v9 4/4] crypto: Add Allwinner Security
+ System crypto accelerator
+Date: Sun, 24 May 2015 11:30:50 +0800
+Message-ID: <20150524033050.GA20656@gondor.apana.org.au>
+References: <1431608341-10936-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1431608341-10936-5-git-send-email-clabbe.montjoie@gmail.com>
+ <20150515064932.GB16704@gondor.apana.org.au>
+ <55606FFE.4000902@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5560E294.6040903@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <55606FFE.4000902@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, Fu Wei <fu.wei@linaro.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
+To: Corentin LABBE <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, joe@perches.com, tj@kernel.org, arnd@arndb.de, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/2015 01:27 PM, Timur Tabi wrote:
-> Guenter Roeck wrote:
->>
->> However, the pretimeout concept assumes that there are two timers
->> which can be set independently. As you had pointed out earlier,
->> and as the specification seems to confirm, that is not the case here.
->> As such, I don't really understand why and how the pretimeout / timeout
->> concept would add any value here and not just make things more
->> complicated than necessary. Maybe I am just missing something.
+On Sat, May 23, 2015 at 02:18:06PM +0200, Corentin LABBE wrote:
 >
-> It might be possible to load a new value into the WOR register after the WS0 interrupt occurs.  That is, in the interrupt handler, we can do something like this:
->
->      if (status & SBSA_GWDT_WCS_WS0)
->          // write new WOR value,
->          // then ping watchdog so that it's loaded
->
-> I'm not convinced that it's worth it, however.  It would require interrupts to still be working when WS0 times out, which somewhat defeats the purpose of a watchdog.
->
+> What do you think about adding a BUG_ON(in_atomic()) in crypto_ablkcipher_setkey() ?
 
-If I understand the specification correctly, reloading the register
-would result in another WS0, not in WS1. That isn't really what we
-would want to happen.
-
-Reloading the register would normally be done in the crashdump kernel,
-if it is loaded, to give it time to actually take the crashdump.
-But that is post-restart, not pre-restart.
+Just add a might_sleep() to it.
 
 Thanks,
-Guenter
-
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
