@@ -1,73 +1,103 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Mon, 25 May 2015 00:04:34 +0800
-Message-ID: <CADyBb7tYL7ATRKNAoRYTXo53LKdCiFZ2YDib4g0nZ8=YxTgO+A@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
-	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>
-	<555DFCD4.3040701@codeaurora.org>
-	<CADyBb7vpC6ihvkrRG-htCS8-_xRkjtny=9ZGQsCsmK7-ng5AxA@mail.gmail.com>
-	<5560D7AC.50009@codeaurora.org>
-	<5560DCB6.3090008@roeck-us.net>
-	<CADyBb7t7+aT=pF0we5umAGXJAJ0njU0zULFAZ-OHVpE0m=ueyg@mail.gmail.com>
-	<5561E7EA.5090702@codeaurora.org>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v9 0/3] ARM: mediatek: Add driver for Mediatek I2C
+Date: Mon, 25 May 2015 00:09:12 +0800
+Message-ID: <1432483752.8089.10.camel@mtksdaap41>
+References: <1432198410-6576-1-git-send-email-eddie.huang@mediatek.com>
+	 <CAGS+omB7UMrEdZiJXVK78ENEqH6fL_25-Q5Fj1Z0Buzjwp60JA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5561E7EA.5090702-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omB7UMrEdZiJXVK78ENEqH6fL_25-Q5Fj1Z0Buzjwp60JA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur,
+Hi Dan,
 
-I have said this before:
+On Thu, 2015-05-21 at 22:39 +0800, Daniel Kurtz wrote:
+> On Thu, May 21, 2015 at 4:53 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > This series is for Mediatek SoCs I2C controller common bus driver.
+> >
+> > Earlier MTK SoC (for example, MT6589, MT8135) I2C HW has some limitations.
+> > New generation SoC like MT8173 fix following limitations:
+> >
+> > 1. Only support one i2c_msg number. One exception is WRRD (write then read)
+> > mode. WRRD can have two i2c_msg numbers.
+> >
+> > 2. Mediatek I2C controller support WRRD(write then read) mode, in WRRD
+> > mode the Repeat Start will be issued between 2 messages.
+> > In this driver if 2 messages is first write then read, the driver will
+> > combine 2 messages using Write-Read mode so the RS will be issued between
+> > the 2 messages.
+> >
+> > 3. The max transfer data length is 255 in one message. In WRRD mode, the
+> > max data length of second msg is 31.
+> >
+> > MT8135 and MT6589 can control I2C pins on PMIC(MT6397) by setting the i2c
+> > registers in MT8135 side. In this case, driver should set OFFSET_PATH_DIR
+> > bit first, the operation on other registers are still the same.
+> > For now MT6589/MT8135 support this, MT6577/MT6595/MT8127 do not support.
+> > For example, If want to use I2C4/5/6 pins on MT8135 just need to enable
+> > the pinmux, else if want to use I2C pins on PMIC(MT6397) need to add
+> > "mediatek,have-pmic" property in the .dts file of each platform.
+> >
+> > This driver is based on 4.1-rc1.
+> >
+> > Change in v9:
+> > Fix Uwe and Matthias review comment: optimize calculate speed function, avoid
+> > write I2C_RS_TRANSFER to unsupport SoC, and do some code clean up.
+> >
+> > Change in v8:
+> > Fix Wolfram's review comments like sort include file order, remove thin
+> > wrapper functions, remove define number that only use once, and revise
+> > error return value.
+> >
+> > Change in v7:
+> > Fix mtk_i2c_of_match in wrong patch bug.
+> >
+> > Change in v6:
+> > 1. Update binding document not use default clock-frequency as example.
+> > 2. Add mtk_i2c_compatible struct and pass hardware capabilities
+> >    through of_device_id
+> > 3. Remove some hardware setting in mtk_i2c_do_transfer to mtk_i2c_init_hw
+> >    so just init one time.
+> > 4. Correct mtk_i2c_parse_dt don't set default clock bug.
+> >
+> > Change in v5:
+> > Apply new i2c_adapter_quirks patch [2]. Change to use dam_map_single to map
+> > dma buffer. Add spinlock to fix race condition. Check of_property_read_u32
+> > return value. Remove I2C_FUNC_10BIT_ADDR capability due to driver not implement.
+> > Add MT8173 I2C driver.
+> >
+> > Change in v4:
+> > Modify to support i2c_adapter_quirks base on Wolfram's patch [1].
+> > Remove check transfer size and WRRD combine code. Instead, fill quirk
+> > property and let i2c_check_for_quirks to do the filter.
+> >
+> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/314804.html
+> > [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-February/325744.html
+> >
+> > Eddie Huang (1):
+> >   I2C: mediatek: Add driver for MediaTek MT8173 I2C controller
+> >
+> > Xudong Chen (2):
+> >   dt-bindings: Add I2C bindings for mt65xx/mt81xx.
+> >   I2C: mediatek: Add driver for MediaTek I2C controller
+> 
+> Hi Eddie,
+> Is there a reason why this series does not include a patch to add i2c
+> nodes and i2c pinctrl nodes for mt8173.dtsi?
+> 
+> Thanks,
+> -Dan
 
-in the first timeout, just panic()  maybe not enough,  in [RFC]
-version of my patchset, I offer some option as "preaction" to use, but
-for simplifying the first version of driver, I have deleted them.
-but at least, panic() is far more useful than a simple reset.  at
-least, it can provide the context of the crashed system  to admin.
+This series already reviewed in public more than six months. In the
+early version, 8173 CCF and Pinctrl not be accepted yet, so we don't put
+device node with this series. Now both CCF and pinctrl have been
+accepted, maybe it's time to add device node.I am glad that if this I2C
+version can be accepted, If not, I will send new series with device node
+in next round.
 
-If you want to warn user space, that will make driver more
-complicated, I don't think that is a good choose for a first version.
-but we can find a way to improve this later
-
-On 24 May 2015 at 23:02, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> Fu Wei wrote:
->>
->> If pretimeout concept assumes that there are two timers, I
->> misunderstand the "pretimeout", then I will delete the pretimeout
->> immediately.
->
->
-> In my opinion, calling panic() on a pre-timeout is not useful, because
-> that's really just a normal timeout.  If there were a way to "warn" user
-> space that a timeout is about to occur, without a panic or reset, then that
-> might be useful.  But as far as I can see, all you're doing is redefining
-> the word "timeout".
->
->
-> --
-> Sent by an employee of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the
-> Code Aurora Forum, hosted by The Linux Foundation.
-
-
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Eddie
