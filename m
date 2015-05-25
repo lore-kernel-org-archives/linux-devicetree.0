@@ -1,87 +1,70 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv2] ARM: mvebu: add support for the new Aramda 385 based
- Linksys boards
-Date: Mon, 25 May 2015 16:08:40 +0200
-Message-ID: <20150525140840.GA8883@lunn.ch>
-References: <1432156456-440-1-git-send-email-kaloz@openwrt.org>
- <55631C6E.8050700@free-electrons.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
+ samsung,flash-led property
+Date: Mon, 25 May 2015 16:28:22 +0200
+Message-ID: <55633186.1000004@samsung.com>
+References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+ <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
+ <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
+ <555DA119.9030904@samsung.com>
+ <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
+ <555DDD88.8080601@samsung.com>
+ <20150523120348.GA3170@valkosipuli.retiisi.org.uk>
+ <55630EE1.90307@samsung.com> <55631AAC.6080507@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55631C6E.8050700-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <55631AAC.6080507@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 25, 2015 at 02:58:22PM +0200, Gregory CLEMENT wrote:
-> Hi Imre,
-> 
-> On 20/05/2015 23:14, Imre Kaloz wrote:
-> > This patch adds support for the Linksys WRT1200AC (Caiman) and
-> > the Linksys WRT1900AC v2 (Cobra).
-> > 
-> > Both boards have:
-> > 
-> > - 2 Marvell 88W8864 radios
-> > - 1 USB 3.0 port
-> > - 1 USB 2.0/eSATAp port
-> > - 2 Ethernet interfaces connected to a 88E6176 switch (1x WAN + 4x LAN)
-> > - 128MB NAND flash
-> > - 512MB RAM
-> > 
-> > Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> > 
-> > ---
-> > Changes since v1: added DSA support
-> > ---
-> > The only difference between the two boards is the radio configuration
-> > (2x2 vs 3x3), so everything except the leds (to be named properly)
-> > is in the dtsi file. When the wireless driver will be submitted
-> > upstream, the powertables (calibration data) will end up in the board
-> > specific files, tho.
-> 
-> it seems that you missed my comment about removing bootargs and just using
-> stdout-path = "serial0:115200n8";
-> 
-> If you agree and if there is no remark about the DSA part from Andrew, I can
-> take car of it while applying your patch on mvebu/dt.
+On 25/05/15 14:50, Jacek Anaszewski wrote:
+>> On 23/05/15 14:03, Sakari Ailus wrote:
+>>> >> On Thu, May 21, 2015 at 03:28:40PM +0200, Sylwester Nawrocki wrote:
+>>>> >>> flash-leds = <&flash_xx &image_sensor_x>, <...>;
+>>> >>
+>>> >> One more matter to consider: xenon flash devices.
+>>> >>
+>>> >> How about samsung,camera-flashes (and ti,camera-flashes)? After pondering
+>>> >> this awhile, I'm ok with removing the vendor prefix as well.
+>>> >>
+>>> >> Let me know what you think.
+>> >
+>> > I thought about it a bit more and I have some doubts about semantics
+>> > as above. I'm fine with 'camera-flashes' as far as name is concerned.
+>> >
+>> > Perhaps we should put only phandles to leds or xenon flash devices
+>> > in the 'camera-flashes' property. I think it would be more future
+>> > proof in case there is more nodes needed to describe the camera flash
+>> > (or a camera module) than the above two. And phandles to corresponding
+>> > image sensor device nodes would be put in a separate property.
+>
+> Could you give examples of the cases you are thinking of?
 
-DSA looks fine
+I don't have any examples in mind ATM, I just wanted to point out
+the above convention might not be flexible enough. Especially since
+we already know there is more sub-devices within the camera module
+than just flashes and image sensors.
 
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>> > camera-flashes = <&flash_xx>, ...
+>> > camera-flash-masters = <&image_sensor_x>, ...
+>> >
+>> > Then pairs at same index would describe a single flash, 0 would indicate
+>> > a null entry if needed.
+>
+> When it should be needed?
 
-Thanks
-	Andrew
+Not sure if there is a real use case for null entries, it was just to
+note we can skip any entry if needed - probably an irrelevant comment.
+I could imagine 2 LEDs of which one is only triggered in software, so
+it wouldn't have a 'camera-flash-masters' entry.
 
-> 
-> 
-> Thanks,
-> 
-> Gregory
-> 
-> [...]
-> 
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> 
-> [...]
-> 
-> > +	chosen {
-> > +		bootargs = "console=ttyS0,115200";
-> > +		stdout-path = &uart0;
-> Just here
-> > +	};
-> 
-> 
-> [...]
-> -- 
-> Gregory Clement, Free Electrons
-> Kernel, drivers, real-time and embedded Linux
-> development, consulting, training and support.
-> http://free-electrons.com
+>> > Similarly we could create properties for other sub-devices of a camera
+>> > module, like lenses, etc.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sylwester
