@@ -1,59 +1,54 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 16/16] ARM: marvell/dt: add crypto node to kirkwood
- dtsi
-Date: Mon, 25 May 2015 17:39:13 +0200
-Message-ID: <55634221.6050504@free-electrons.com>
-References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com> <1432301642-11470-17-git-send-email-boris.brezillon@free-electrons.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [RFC PATCH v1 1/3] PCI: designware: Add ARM64 support
+Date: Mon, 25 May 2015 17:51:55 +0200
+Message-ID: <5563451B.4050609@st.com>
+References: <000001d096a9$27bf43f0$773dcbd0$@com> <5562F0C9.4090007@hisilicon.com> <000001d096f1$93dca4e0$bb95eea0$@com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1432301642-11470-17-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Arnaud Ebalard <arno@natisbad.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <000001d096f1$93dca4e0$bb95eea0$@com>
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Zhou Wang' <wangzhou1@hisilicon.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, zhudacai@hisilicon.com, devicetree@vger.kernel.org, 'Gabriele Paoloni' <gabriele.paoloni@huawei.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Richard Zhu' <Richard.Zhu@freescale.com>, linux-pci@vger.kernel.org, 'Pratyush Anand' <pratyush.anand@gmail.com>, 'Liviu Dudau' <liviu.dudau@arm.com>, 'Zhichang Yuan' <yuanzhichang@hisilicon.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, qiuzhenfa@hisilicon.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Zhang Jukuo' <zhangjukuo@huawei.com>, 'Liguozhu' <liguozhu@hisilicon.com>, linux-arm-kernel@lists.infradead.org, 'Lucas Stach' <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris, Arnaud,
+Hi Zhou,
 
-On 22/05/2015 15:34, Boris Brezillon wrote:
-> From: Arnaud Ebalard <arno@natisbad.org>
-> 
-> Add crypto related nodes to kirkwood.dtsi.
+On 05/25/2015 03:48 PM, Jingoo Han wrote:
+>> >so how about we set 0 as default value of pp->root_bus_nr, then use
+>> >pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops, pp, &res);
+>> >to create root bus?
+> I agree with your opinion. However, I still want to wait for other
+> people's opinions. They will give good comments.
+> Thank you.
+>
+> Best regards,
+> Jingoo Han
+>
+I did a quick test with your patch in the context of another driver on 
+arm32.
+Just to confirm I added as well pp->root_bus_nr = 0;
 
-Here you use a new compatible string but with an old binding
-to let the user chose between the old and the new driver. Am I right?
+Then, I needed to add dummy pci_sys_data as suggested by Arnd in the 
+first review :
+http://www.spinics.net/lists/linux-pci/msg40445.html
 
-Thanks,
-
-Gregory
-
-
-> 
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> ---
->  arch/arm/boot/dts/kirkwood.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-> index 464f09a..1700b2b 100644
-> --- a/arch/arm/boot/dts/kirkwood.dtsi
-> +++ b/arch/arm/boot/dts/kirkwood.dtsi
-> @@ -41,7 +41,7 @@
->  		pcie-io-aperture  = <0xf2000000 0x100000>;   /*   1 MiB    I/O space */
->  
->  		cesa: crypto@0301 {
-> -			compatible = "marvell,orion-crypto";
-> +			compatible = "marvell,kirkwood-crypto";
->  			reg = <MBUS_ID(0xf0, 0x01) 0x30000 0x10000>,
->  			      <MBUS_ID(0x03, 0x01) 0 0x800>;
->  			reg-names = "regs", "sram";
-> 
+  struct pcie_port {
++#ifdef CONFIG_ARM
++	/*
++	 * this is a temporary hack to let the driver work on
++	 * both arm32 and arm64. it can be removed after the
++	 * arm32 cleanup is complete and bios32.c has stopped
++	 * referencing host->pci_sys_data.
++	 */
++	struct pci_sys_data	dummy;
++#endif
+  	struct device		*dev;
 
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+This looks like necessary as bios32 is dereferencing sysdata:
+struct pci_sys_data *sysdata = dev->bus->sysdata;
+
+Best Regards,
+Fabrice
