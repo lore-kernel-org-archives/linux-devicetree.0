@@ -1,54 +1,61 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [RFC PATCH v1 1/3] PCI: designware: Add ARM64 support
-Date: Mon, 25 May 2015 17:51:55 +0200
-Message-ID: <5563451B.4050609@st.com>
-References: <000001d096a9$27bf43f0$773dcbd0$@com> <5562F0C9.4090007@hisilicon.com> <000001d096f1$93dca4e0$bb95eea0$@com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <000001d096f1$93dca4e0$bb95eea0$@com>
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Zhou Wang' <wangzhou1@hisilicon.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, zhudacai@hisilicon.com, devicetree@vger.kernel.org, 'Gabriele Paoloni' <gabriele.paoloni@huawei.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Richard Zhu' <Richard.Zhu@freescale.com>, linux-pci@vger.kernel.org, 'Pratyush Anand' <pratyush.anand@gmail.com>, 'Liviu Dudau' <liviu.dudau@arm.com>, 'Zhichang Yuan' <yuanzhichang@hisilicon.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, qiuzhenfa@hisilicon.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Zhang Jukuo' <zhangjukuo@huawei.com>, 'Liguozhu' <liguozhu@hisilicon.com>, linux-arm-kernel@lists.infradead.org, 'Lucas Stach' <l.stach@pengutronix.de>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v5 00/11] Add simple NVMEM Framework via regmap.
+Date: Mon, 25 May 2015 19:51:45 +0300
+Message-ID: <E5772084-6CF5-41DE-B68B-073D9F75F0BC@konsulko.com>
+References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org> <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, sboyd@codeaurora.org, Matt Porter <mporter@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhou,
+Hi Srinivas,
 
-On 05/25/2015 03:48 PM, Jingoo Han wrote:
->> >so how about we set 0 as default value of pp->root_bus_nr, then use
->> >pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops, pp, &res);
->> >to create root bus?
-> I agree with your opinion. However, I still want to wait for other
-> people's opinions. They will give good comments.
-> Thank you.
->
-> Best regards,
-> Jingoo Han
->
-I did a quick test with your patch in the context of another driver on 
-arm32.
-Just to confirm I added as well pp->root_bus_nr = 0;
+> On May 21, 2015, at 19:42 , Srinivas Kandagatla <srinivas.kandagatla@=
+linaro.org> wrote:
+>=20
+> Thankyou all for providing inputs and comments on previous versions o=
+f this patchset.
+> Here is the v5 of the patchset addressing all the issues raised as
+> part of previous versions review.
+>=20
 
-Then, I needed to add dummy pci_sys_data as suggested by Arnd in the 
-first review :
-http://www.spinics.net/lists/linux-pci/msg40445.html
+>=20
 
-  struct pcie_port {
-+#ifdef CONFIG_ARM
-+	/*
-+	 * this is a temporary hack to let the driver work on
-+	 * both arm32 and arm64. it can be removed after the
-+	 * arm32 cleanup is complete and bios32.c has stopped
-+	 * referencing host->pci_sys_data.
-+	 */
-+	struct pci_sys_data	dummy;
-+#endif
-  	struct device		*dev;
+[snip]
 
+I tried to use the updated patchset with my at24 & beaglebone capemanag=
+er patches.
 
-This looks like necessary as bios32 is dereferencing sysdata:
-struct pci_sys_data *sysdata = dev->bus->sysdata;
+I have a big problem with the removal of the raw of_* access APIs.
 
-Best Regards,
-Fabrice
+Take for instance the case where you have multiple slot accessing diffe=
+rent EEPROMs.
+
+> slots {
+> 	slot@0 {
+> 		eeprom =3D <&cape0_data>;
+> 	};
+>=20
+> 	slot@1 {
+> 		eeprom =3D <&cape1_data>;
+> 	};
+> };
+
+In that case there is no per-device node mapping; it=E2=80=99s a per-su=
+b node.
+
+=46or now I=E2=80=99m exporting the of_* accessors again, please consid=
+er exposing the of_* API again.
+
+> --=20
+> 1.9.1
+>=20
+
+Regards
+
+=E2=80=94 Pantelis
