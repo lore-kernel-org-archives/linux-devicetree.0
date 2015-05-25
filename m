@@ -1,96 +1,41 @@
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 07/37] MIPS: JZ4740: probe CPU interrupt controller via DT
-Date: Sun, 24 May 2015 23:37:42 +0100
-Message-ID: <1432507062-2853-1-git-send-email-paul.burton@imgtec.com>
-References: <5561EB79.30209@cogentembedded.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v3 0/5] AHCI and SATA PHY support for Broadcom STB SoCs
+Date: Sun, 24 May 2015 20:08:33 -0400
+Message-ID: <20150525000833.GF7099@htj.duckdns.org>
+References: <1431473303-18873-1-git-send-email-computersforpeace@gmail.com>
+ <555DDC2B.1040608@ti.com>
+ <20150521220050.GF4914@htj.duckdns.org>
+ <20150521220138.GG4914@htj.duckdns.org>
+ <20150521220328.GE11598@ld-irv-0074>
+ <20150521220430.GI4914@htj.duckdns.org>
+ <20150521221306.GF11598@ld-irv-0074>
+ <20150521222350.GN4914@htj.duckdns.org>
+ <20150521223825.GA27753@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5561EB79.30209-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150521223825.GA27753@ld-irv-0074>
+Sender: linux-ide-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Use the generic irqchip_init function to probe irqchip drivers using DT,
-and add the appropriate node to the JZ4740 devicetree in place of the
-call to mips_cpu_irq_init.
+Hello, Brian.
 
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
----
+On Thu, May 21, 2015 at 03:38:25PM -0700, Brian Norris wrote:
+> It's possible you're confusing binding documentation with .dts source
+> files? The DTS files (arch/*/boot/dts/) go through arch trees. For
+> instance, the arm-soc maintainers have a structured process by which
+> sub-architecture maintainers track .dts(i) file updates for their
+> boards/chips and filter them up to Arnd, Olof, etc., via their separate
+> 'dts' branches. That's why Florian took patch 5 to his tree.
 
-Changes in v6:
-- Rename cpuintc DT node interrupt-controller@0.
+Yeah, I think that's why I'm constantly getting confused, so the
+binding documentation and actual libata changes through libata and the
+rest through arch trees.  Got it.
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
-- Rebase.
+Thanks for the explanation.
 
-Changes in v2: None
-
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 7 +++++++
- arch/mips/jz4740/irq.c                 | 4 ++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index c538691f..dd3642f 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -2,4 +2,11 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4740";
-+
-+	cpuintc: interrupt-controller@0 {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
- };
-diff --git a/arch/mips/jz4740/irq.c b/arch/mips/jz4740/irq.c
-index 97206b3..3ec90875 100644
---- a/arch/mips/jz4740/irq.c
-+++ b/arch/mips/jz4740/irq.c
-@@ -18,6 +18,7 @@
- #include <linux/types.h>
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
-+#include <linux/irqchip.h>
- #include <linux/timex.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-@@ -27,7 +28,6 @@
- 
- #include <asm/io.h>
- #include <asm/mipsregs.h>
--#include <asm/irq_cpu.h>
- 
- #include <asm/mach-jz4740/base.h>
- #include <asm/mach-jz4740/irq.h>
-@@ -84,7 +84,7 @@ void __init arch_init_irq(void)
- 	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
- 
--	mips_cpu_irq_init();
-+	irqchip_init();
- 
- 	jz_intc_base = ioremap(JZ4740_INTC_BASE_ADDR, 0x14);
- 
 -- 
-2.4.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+tejun
