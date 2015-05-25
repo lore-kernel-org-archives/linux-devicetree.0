@@ -1,47 +1,64 @@
-From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ARM: socfpga: support suspend to ram
-Date: Mon, 25 May 2015 14:41:33 +0200
-Message-ID: <20150525124133.GF9943@amd>
-References: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
- <1432317735-29413-2-git-send-email-atull@opensource.altera.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
+ samsung,flash-led property
+Date: Mon, 25 May 2015 14:50:52 +0200
+Message-ID: <55631AAC.6080507@samsung.com>
+References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+ <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
+ <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
+ <555DA119.9030904@samsung.com>
+ <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
+ <555DDD88.8080601@samsung.com>
+ <20150523120348.GA3170@valkosipuli.retiisi.org.uk> <55630EE1.90307@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1432317735-29413-2-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Delicious Quinoq <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <55630EE1.90307@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hi,
 
-> Suspend-to-RAM and EDAC support are mutually exclusive on SOCFPGA
-> platforms.  CONFIG_SOCFPGA_SUSPEND enables suspend-to-RAM and
-> prevents selecting CONFIG_EDAC_ALTERA_MC.
+On 05/25/2015 02:00 PM, Sylwester Nawrocki wrote:
+> Hi,
+>
+> On 23/05/15 14:03, Sakari Ailus wrote:
+>> On Thu, May 21, 2015 at 03:28:40PM +0200, Sylwester Nawrocki wrote:
+>>> flash-leds = <&flash_xx &image_sensor_x>, <...>;
+>>
+>> One more matter to consider: xenon flash devices.
+>>
+>> How about samsung,camera-flashes (and ti,camera-flashes)? After pondering
+>> this awhile, I'm ok with removing the vendor prefix as well.
+>>
+>> Let me know what you think.
+>
+> I thought about it a bit more and I have some doubts about semantics
+> as above. I'm fine with 'camera-flashes' as far as name is concerned.
+>
+> Perhaps we should put only phandles to leds or xenon flash devices
+> in the 'camera-flashes' property. I think it would be more future
+> proof in case there is more nodes needed to describe the camera flash
+> (or a camera module) than the above two. And phandles to corresponding
+> image sensor device nodes would be put in a separate property.
 
-Do we went to have the dependency at the .config time? We would like
-to do generic kernels booting on many machines, this kind of breaks
-that...
+Could you give examples of the cases you are thinking of?
 
-> +	/*
-> +	 * This code assumes that the bootloader has already
-> +	 * properly configured the sdram controller:
+> camera-flashes = <&flash_xx>, ...
+> camera-flash-masters = <&image_sensor_x>, ...
+>
+> Then pairs at same index would describe a single flash, 0 would indicate
+> a null entry if needed.
 
-Which bootloaders can do that? 
+When it should be needed?
 
-> +	 * sdr.ctrlcfg.lowpwreq.selfrfshmask = 3
-> +	 * sdr.ctrlcfg.lowpwrtiming.clkdisablecycles = 8
-> +	 * sdr.ctrlcfg.dramtiming4.selfrfshexit = 512
+> Similarly we could create properties for other sub-devices of a camera
+> module, like lenses, etc.
 
-Would it make sense to configure it in Linux?
 
-Thanks,
-									Pavel
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Jacek Anaszewski
