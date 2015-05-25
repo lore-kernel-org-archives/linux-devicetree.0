@@ -1,55 +1,31 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
- samsung,flash-led property
-Date: Mon, 25 May 2015 14:00:33 +0200
-Message-ID: <55630EE1.90307@samsung.com>
-References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
- <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
- <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
- <555DA119.9030904@samsung.com>
- <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
- <555DDD88.8080601@samsung.com>
- <20150523120348.GA3170@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150523120348.GA3170@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, sre@kernel.org
+From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Subject: [PATCH 1/2] of: Add vendor prefix for Hardkernel
+Date: Mon, 25 May 2015 21:26:49 +0900
+Message-ID: <1432556810-11597-1-git-send-email-k.kozlowski.k@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add Hardkernel Co., Ltd. to the list of device tree vendor prefixes.
 
-On 23/05/15 14:03, Sakari Ailus wrote:
-> On Thu, May 21, 2015 at 03:28:40PM +0200, Sylwester Nawrocki wrote:
->> flash-leds = <&flash_xx &image_sensor_x>, <...>;
-> 
-> One more matter to consider: xenon flash devices.
-> 
-> How about samsung,camera-flashes (and ti,camera-flashes)? After pondering
-> this awhile, I'm ok with removing the vendor prefix as well.
-> 
-> Let me know what you think.
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I thought about it a bit more and I have some doubts about semantics
-as above. I'm fine with 'camera-flashes' as far as name is concerned.
-
-Perhaps we should put only phandles to leds or xenon flash devices
-in the 'camera-flashes' property. I think it would be more future
-proof in case there is more nodes needed to describe the camera flash
-(or a camera module) than the above two. And phandles to corresponding
-image sensor device nodes would be put in a separate property.
-
-camera-flashes = <&flash_xx>, ...
-camera-flash-masters = <&image_sensor_x>, ...
-
-Then pairs at same index would describe a single flash, 0 would indicate
-a null entry if needed.
-Similarly we could create properties for other sub-devices of a camera
-module, like lenses, etc.
-
---
-Thanks,
-Sylwester
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 80339192c93e..e8a00b74d8fe 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -90,6 +90,7 @@ gumstix	Gumstix, Inc.
+ gw	Gateworks Corporation
+ hannstar	HannStar Display Corporation
+ haoyu	Haoyu Microelectronic Co. Ltd.
++hardkernel	Hardkernel Co., Ltd
+ himax	Himax Technologies, Inc.
+ hisilicon	Hisilicon Limited.
+ hit	Hitachi Ltd.
+-- 
+2.1.4
