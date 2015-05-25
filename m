@@ -1,7 +1,7 @@
 From: Fu Wei <fu.wei@linaro.org>
 Subject: Re: [PATCH v2 6/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Mon, 25 May 2015 10:00:24 +0800
-Message-ID: <CADyBb7vma9Ur72xyC5mVKfM=Kx3TgeM4LodgLnzjecRu4JPemQ@mail.gmail.com>
+Date: Mon, 25 May 2015 10:03:05 +0800
+Message-ID: <CADyBb7tSJBzrwu8RC4rhNe95PkrS=iQMV6KcG8=A3ao+11XsWg@mail.gmail.com>
 References: <=fu.wei@linaro.org>
 	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
 	<1432197156-16947-7-git-send-email-fu.wei@linaro.org>
@@ -18,54 +18,51 @@ References: <=fu.wei@linaro.org>
 	<CADyBb7snhcR43KT_xrFipBH3PBNBfj39-hE-mSjJ3vMb7Ehp+A@mail.gmail.com>
 	<55620808.4030605@codeaurora.org>
 	<55620B2F.5000708@roeck-us.net>
+	<55620EA1.3070605@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55620B2F.5000708@roeck-us.net>
+In-Reply-To: <55620EA1.3070605@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Timur Tabi <timur@codeaurora.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Guenter,
+Hi Guenter,
 
 
-
-On 25 May 2015 at 01:32, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 05/24/2015 10:19 AM, Timur Tabi wrote:
->>
->> Fu Wei wrote:
->>>
->>> I don't know why you want to do this tricky way.  you can always
->>> register the interrupt handler,
->>> if pre-timeout is 0, system will just trigger WS1 right after WS0
+On 25 May 2015 at 01:47, Timur Tabi <timur@codeaurora.org> wrote:
+> Guenter Roeck wrote:
 >>
 >>
->> But that only works if the pre-timeout and timeout can be programmed to
->> separate values.  And as Guenter says, the SBSA may not guarantee that.
+>> The pseudo-code in the specification suggests that if WCV is configured,
+>>      WS0 = WCV
+>>      WS1 = WCV + WOR
 >>
->
-> The pseudo-code in the specification suggests that if WCV is configured,
->         WS0 = WCV
->         WS1 = WCV + WOR
->
-> Assuming that the implementation follows the pseudo-code in the
-> specification,
-> we would have separately programmable values. Since the pretimeout (per ABI)
-> is the difference in seconds to the timeout, and not an absolute value,
-> we would have to program the registers as follows.
->
->         WCV = timeout - pretimeout;
->         WOR = pretimeout;
+>> Assuming that the implementation follows the pseudo-code in the
+>> specification,
+>> we would have separately programmable values. Since the pretimeout (per
+>> ABI)
+>> is the difference in seconds to the timeout, and not an absolute value,
+>> we would have to program the registers as follows.
+>>
+>>      WCV = timeout - pretimeout;
+>>      WOR = pretimeout;
+>>
+>> Does this make sense ?
 
-yes, this patchset is doing this way.
+And actually all the patchset  I sent to upstream are all follow this
+design, and have been test on Foundation model and Seattle B0
 
 >
-> Does this make sense ?
 >
-> Thanks,
-> Guenter
+> Yes, thank you.  I will test this on my hardware.
 >
+>
+> --
+> Sent by an employee of the Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the
+> Code Aurora Forum, hosted by The Linux Foundation.
 
 
 
