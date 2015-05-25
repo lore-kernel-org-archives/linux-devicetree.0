@@ -1,26 +1,33 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3 1/5] Documentation: devicetree: add Broadcom SATA
- binding
-Date: Sun, 24 May 2015 20:11:54 -0400
-Message-ID: <20150525001154.GG7099@htj.duckdns.org>
-References: <1431473303-18873-1-git-send-email-computersforpeace@gmail.com>
- <1431473303-18873-2-git-send-email-computersforpeace@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/4] serial: sh-sci: Add DMA support to the DT binding
+Date: Mon, 25 May 2015 10:04:39 +0900
+Message-ID: <20150525010438.GC24690@verge.net.au>
+References: <1432143987-10308-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1431473303-18873-2-git-send-email-computersforpeace@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>
+In-Reply-To: <1432143987-10308-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 12, 2015 at 04:28:19PM -0700, Brian Norris wrote:
-> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+Hi Geert,
 
-Applied to libata/for-4.2.
+On Wed, May 20, 2015 at 07:46:23PM +0200, Geert Uytterhoeven wrote:
+> 	Hi Greg, Simon, Magnus,
+> 
+> This patch series adds DMA support to the DT binding documentation for
+> the various Renesas (H)SCI(F{,A,B}) serial ports, and adds the
+> corresponding properties to the Renesas R-Car Gen2 DT source files.
+> 
+>   - Patch 1 updates the DT binding documentation.
+>   - Patches 2-4 update the dtsi files.
+> 
+> Although the sh-sci driver itself doesn't support DT DMA properties
+> yet, it's safe to apply patches 2-4, as DT describes the hardware, not
+> the (current) features of the Linux driver implementation.
 
-Thanks.
-
--- 
-tejun
+I would prefer for the new binding (documentation) to be accepted before
+updating the DT files.
