@@ -1,385 +1,96 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [RFC PATCH v1 1/3] PCI: designware: Add ARM64 support
-Date: Mon, 25 May 2015 17:52:09 +0800
-Message-ID: <5562F0C9.4090007@hisilicon.com>
-References: <000001d096a9$27bf43f0$773dcbd0$@com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <000001d096a9$27bf43f0$773dcbd0$@com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Pratyush Anand' <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>, 'Liviu Dudau' <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Gabriele Paoloni' <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, 'Zhichang Yuan' <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, 'Zhang Jukuo' <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, 'Liguozhu' <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, 'Kishon Vijay Abraham I' <kishon-l0cyMroinI0@public.gmane.org>, 'Richard Zhu' <Richard.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Lucas Stach' <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Subject: [PATCH v3 0/6] Watchdog: introduce ARM SBSA watchdog driver
+Date: Mon, 25 May 2015 18:03:07 +0800
+Message-ID: <1432548193-19569-1-git-send-email-fu.wei@linaro.org>
+References: <=fu.wei@linaro.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <=fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/5/25 13:10, Jingoo Han wrote:
-> On Wed, 20 May 2015 14:21:39 +0800, Zhou Wang wrote:
->>
->> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
->> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
->> move related operations to dw_pcie_host_init.
->>
->> I am not very clear about I/O resource management:
->>> 	if (global_io_offset < SZ_1M && pp->io_size > 0) {
->>> 		pci_ioremap_io(global_io_offset, pp->io_base);
->>> 		global_io_offset += SZ_64K;
->>> 		pci_add_resource_offset(&res, &pp->io,
->>> 					global_io_offset - pp->io_bus_addr);
->>> 	}
->> so just move steps in dw_pcie_setup to dw_pcie_host_init.
->>
->> I have compiled the driver with multi_v7_defconfig. However, I don't have
->> ARM32 PCIe related board to do test. It will be appreciated if someone could
->> help to test it.
->>
->> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> ---
->>  drivers/pci/host/pcie-designware.c | 128 +++++++++++++++----------------------
->>  1 file changed, 50 insertions(+), 78 deletions(-)
->>
->> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
->> index 2e9f84f..7bad9e5 100644
->> --- a/drivers/pci/host/pcie-designware.c
->> +++ b/drivers/pci/host/pcie-designware.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/pci_regs.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/types.h>
->> +#include <asm/hardirq.h>
-> 
-> +cc Kishon Vijay Abraham I, Richard Zhu, Lucas Stach
-> 
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thanks to involve more related guys to this discussion :)
+This patchset:
+    (1)Introduce Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+    for FDT info of SBSA Generic Watchdog, and give two examples of
+    adding SBSA Generic Watchdog device node into the dts files:
+    foundation-v8.dts and amd-seattle-soc.dtsi.
 
-> Please use <linux/hardirq.h> and insert it alphabetically.
-> 
-> +#include <linux/hardirq.h>
->  #include <linux/irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> 
+    (2)Introduce "pretimeout" into the watchdog framework, and update
+    Documentation/watchdog/watchdog-kernel-api.txt to introduce:
+        (1)the new elements in the watchdog_device and watchdog_ops struct;
+        (2)the new API "watchdog_init_timeouts".
 
-OK, will do in next version patch.
+    (3)Introduce ARM SBSA watchdog driver:
+        a.Use linux kernel watchdog framework;
+        b.Work with FDT on ARM64;
+        c.Use "pretimeout" in watchdog framework;
+        d.In first timeout, do panic to save system context;
+        e.Support getting timeout and pretimeout from parameter and FDT
+          at the driver init stage.
 
->>  
->>  #include "pcie-designware.h"
->>  
->> @@ -67,17 +68,10 @@
->>  #define PCIE_ATU_FUNC(x)		(((x) & 0x7) << 16)
->>  #define PCIE_ATU_UPPER_TARGET		0x91C
->>  
->> -static struct hw_pci dw_pci;
->> +static struct pci_ops dw_pcie_ops;
->>  
->>  static unsigned long global_io_offset;
->>  
->> -static inline struct pcie_port *sys_to_pcie(struct pci_sys_data *sys)
->> -{
->> -	BUG_ON(!sys->private_data);
->> -
->> -	return sys->private_data;
->> -}
->> -
->>  int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val)
->>  {
->>  	*val = readl(addr);
->> @@ -238,7 +232,7 @@ static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq)
->>  static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
->>  {
->>  	int irq, pos0, i;
->> -	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
->> +	struct pcie_port *pp = desc->dev->bus->sysdata;
->>  
->>  	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
->>  				       order_base_2(no_irqs));
->> @@ -281,7 +275,7 @@ static int dw_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
->>  {
->>  	int irq, pos;
->>  	struct msi_msg msg;
->> -	struct pcie_port *pp = sys_to_pcie(pdev->bus->sysdata);
->> +	struct pcie_port *pp = pdev->bus->sysdata;
->>  
->>  	if (desc->msi_attrib.is_msix)
->>  		return -EINVAL;
->> @@ -310,7 +304,7 @@ static void dw_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
->>  {
->>  	struct irq_data *data = irq_get_irq_data(irq);
->>  	struct msi_desc *msi = irq_data_get_msi(data);
->> -	struct pcie_port *pp = sys_to_pcie(msi->dev->bus->sysdata);
->> +	struct pcie_port *pp = msi->dev->bus->sysdata;
->>  
->>  	clear_irq_range(pp, irq, 1, data->hwirq);
->>  }
->> @@ -342,13 +336,15 @@ static const struct irq_domain_ops msi_domain_ops = {
->>  	.map = dw_pcie_msi_map,
->>  };
->>  
->> -int dw_pcie_host_init(struct pcie_port *pp)
->> +int __init dw_pcie_host_init(struct pcie_port *pp)
->>  {
->>  	struct device_node *np = pp->dev->of_node;
->>  	struct platform_device *pdev = to_platform_device(pp->dev);
->>  	struct of_pci_range range;
->>  	struct of_pci_range_parser parser;
->> +	struct pci_bus *bus;
->>  	struct resource *cfg_res;
->> +	LIST_HEAD(res);
->>  	u32 val, na, ns;
->>  	const __be32 *addrp;
->>  	int i, index, ret;
->> @@ -502,15 +498,49 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>  	val |= PORT_LOGIC_SPEED_CHANGE;
->>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
->>  
->> -#ifdef CONFIG_PCI_MSI
->> -	dw_pcie_msi_chip.dev = pp->dev;
->> -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
->> +#ifdef CONFIG_ARM
->> +	/*
->> +	 * FIXME: we should really be able to use
->> +	 * of_pci_get_host_bridge_resources on arm32 as well,
->> +	 * but the conversion needs some more testing
->> +	 */
->> +	if (global_io_offset < SZ_1M && pp->io_size > 0) {
->> +		pci_ioremap_io(global_io_offset, pp->io_base);
->> +		global_io_offset += SZ_64K;
->> +		pci_add_resource_offset(&res, &pp->io,
->> +					global_io_offset - pp->io_bus_addr);
->> +	}
->> +	pci_add_resource_offset(&res, &pp->mem,
->> +				pp->mem.start - pp->mem_bus_addr);
->> +	pci_add_resource(&res, &pp->busn);
->> +#else
->> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
->> +	if (ret)
->> +		return ret;
->> +#endif
->> +
->> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
->> +			      pp, &res);
->> +	if (!bus)
->> +		return -ENOMEM;
->> +
->> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
->> +	bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
->> +#else
->> +	bus->msi = &dw_pcie_msi_chip;
->>  #endif
->>  
->> -	dw_pci.nr_controllers = 1;
->> -	dw_pci.private_data = (void **)&pp;
->> +	pci_scan_child_bus(bus);
->> +	if (pp->ops->scan_bus)
->> +		pp->ops->scan_bus(pp);
->>  
->> -	pci_common_init_dev(pp->dev, &dw_pci);
->> +#ifdef CONFIG_ARM
->> +	/* support old dtbs that incorrectly describe IRQs */
->> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
->> +#endif
->> +
->> +	pci_assign_unassigned_bus_resources(bus);
->> +	pci_bus_add_devices(bus);
->>  
->>  	return 0;
->>  }
->> @@ -653,7 +683,7 @@ static int dw_pcie_valid_config(struct pcie_port *pp,
->>  static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
->>  			int size, u32 *val)
->>  {
->> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
->> +	struct pcie_port *pp = bus->sysdata;
->>  	int ret;
->>  
->>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
->> @@ -677,7 +707,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
->>  static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
->>  			int where, int size, u32 val)
->>  {
->> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
->> +	struct pcie_port *pp = bus->sysdata;
->>  	int ret;
->>  
->>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
->> @@ -701,64 +731,6 @@ static struct pci_ops dw_pcie_ops = {
->>  	.write = dw_pcie_wr_conf,
->>  };
->>  
->> -static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
->> -{
->> -	struct pcie_port *pp;
->> -
->> -	pp = sys_to_pcie(sys);
->> -
->> -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
->> -		sys->io_offset = global_io_offset - pp->io_bus_addr;
->> -		pci_ioremap_io(global_io_offset, pp->io_base);
->> -		global_io_offset += SZ_64K;
->> -		pci_add_resource_offset(&sys->resources, &pp->io,
->> -					sys->io_offset);
->> -	}
->> -
->> -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
->> -	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
->> -	pci_add_resource(&sys->resources, &pp->busn);
->> -
->> -	return 1;
->> -}
->> -
->> -static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
->> -{
->> -	struct pci_bus *bus;
->> -	struct pcie_port *pp = sys_to_pcie(sys);
->> -
->> -	pp->root_bus_nr = sys->busnr;
-> 
-> 'pp->root_bus_nr' is initialized as '-1' at some soc-specific drivers
-> However, 'sys->busnr' is set as '0, 1, 2 ...' by pcibios_init_hw()
-> in arch/arm/kernel/bios32.c. '0, 1, 2 ...' means the number of
-> each host controller.
-> 
-> So, without setting 'pp->root_bus_nr' as '0, 1, 2, ...',
-> it makes the problem.
-> 
+    (4)Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
+    and create a platform device with that information.
+    This platform device can be used by This Watchdog driver.
 
-'sys->busnr' is set as "0, busn_res.end + 1 ..." in pcibios_init_hw() I think:
+This patchset has been tested with watchdog daemon
+(ACPI/FDT, module/build-in) on the following platforms:
+    (1)ARM Foundation v8 model
+    (2)AMD Seattle B0
 
-pcibios_init_hw()
-	for (nr = busnr = 0; nr < hw->nr_controllers; nr++)
-		sys->busnr = busnr;
-		...
-		busnr = sys->bus->busn_res.end + 1;
+Changelog:
+v3: Delete "export arch_timer_get_rate" patch.
+    Driver back to use arch_timer_get_cntfrq.
+    Improve watchdog_init_timeouts function and update relevant documentation.
+    Improve watchdog_timeout_invalid and watchdog_pretimeout_invalid.
+    Improve foundation-v8.dts: delete the unnecessary tag of device node.
+    Remove "ARM64 || COMPILE_TEST" from Kconfig.
+    Add comments in arch/arm64/kernel/acpi.c
+    Fix typoes and incorrect comments.
 
-and it indicates root bus number of one pcie controller.
-so in dw_pcie_scan_bus:
-	pp->root_bus_nr = sys->busnr;
-	bus = pci_create_root_bus(..., sys->busnr, ...);
-we set root bus number as "0, busn_res.end + 1". But in pcie-designware,
-nr_controllers is set as 1, so it only comes into the loop in
-pcibios_init_hw() one time.
+v2: Improve watchdog-kernel-api.txt documentation for pretimeout support.
+    Export "arch_timer_get_rate" in arm_arch_timer.c.
+    Add watchdog_init_timeouts API for pretimeout support in framework.
+    Improve suspend and resume foundation in driver
+    Improve timeout/pretimeout values init code in driver.
+    Delete unnecessary items of the sbsa_gwdt struct and #define.
+    Delete all unnecessary debug info in driver.
+    Fix 64bit division bug.
+    Use the arch_timer interface to get watchdog clock rate.
+    Add MODULE_DEVICE_TABLE for platform device id.
+    Fix typoes.
 
-so how about we set 0 as default value of pp->root_bus_nr, then use
-pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops, pp, &res);
-to create root bus?
+v1: The first version upstream patchset to linux mailing list.
 
-> Thus, we need to come up with the way to resolve this.
-> 
-> 1. Setting 'pp->root_bus_nr' as '0, 1, 2 ..' by each soc-specific driver.
-> 
-> e.g)
-> 
-> ./drivers/pci/host/pci-exynos.c
-> @@ -534,7 +534,7 @@ static int __init exynos_add_pcie_port(struct pcie_port *pp,
->                 }
->         }
->  
-> -       pp->root_bus_nr = -1;
-> +       pp->root_bus_nr++;
->         pp->ops = &exynos_pcie_host_ops;
-> 
-> ./drivers/pci/host/pci-imx6.c
-> @@ -541,7 +541,7 @@ static int __init imx6_add_pcie_port(struct pcie_port *pp,
->                 }
->         }
->  
-> -       pp->root_bus_nr = -1;
-> +       pp->root_bus_nr++;
->         pp->ops = &imx6_pcie_host_ops;
->  
-> ./drivers/pci/host/pci-keystone.c
-> @@ -312,7 +312,7 @@ static int __init ks_add_pcie_port(struct keystone_pcie *ks_pcie,
->                         return ret;
->         }
->  
-> -       pp->root_bus_nr = -1;
-> +       pp->root_bus_nr++;
->         pp->ops = &keystone_pcie_host_ops;
-> 
-> ./drivers/pci/host/pci-layerscape.c
-> @@ -101,7 +101,7 @@ static int ls_add_pcie_port(struct ls_pcie *pcie)
->         pp = &pcie->pp;
->         pp->dev = pcie->dev;
->         pp->dbi_base = pcie->dbi;
-> -       pp->root_bus_nr = -1;
-> +       pp->root_bus_nr++;
->         pp->ops = &ls_pcie_host_ops;
->  
-> ./drivers/pci/host/pcie-spear13xx.c
-> @@ -287,7 +287,7 @@ static int spear13xx_add_pcie_port(struct pcie_port *pp,
->                 return ret;
->         }
->  
-> -       pp->root_bus_nr = -1;
-> +       pp->root_bus_nr++;
->         pp->ops = &spear13xx_pcie_host_ops;
-> 
-> 
-> 2. Setting 'pp->root_bus_nr' as '0, 1, 2 ..' by pcie-designware.c
-> 
-> I believe that someone will give better idea. :-)
-> 
->> -	bus = pci_create_root_bus(pp->dev, sys->busnr,
->> -				  &dw_pcie_ops, sys, &sys->resources);
->> -	if (!bus)
->> -		return NULL;
->> -
->> -	pci_scan_child_bus(bus);
->> -
->> -	if (bus && pp->ops->scan_bus)
->> -		pp->ops->scan_bus(pp);
->> -
->> -	return bus;
->> -}
->> -
->> -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
->> -{
->> -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
->> -	int irq;
->> -
->> -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
->> -	if (!irq)
->> -		irq = pp->irq;
->> -
->> -	return irq;
->> -}
->> -
->> -static struct hw_pci dw_pci = {
->> -	.setup		= dw_pcie_setup,
->> -	.scan		= dw_pcie_scan_bus,
->> -	.map_irq	= dw_pcie_map_irq,
->> -};
-> 
-> Right, 'struct hw_pci' should not be used in order to unify ARM32 and
-> ARM64. I have no objection to remove 'struct hw_pci' from 'pcie-designware.c'.
-> Thank you for your patch.
-> 
-> Best regards,
-> Jingoo Han
-> 
+Fu Wei (6):
+  Documentation: add sbsa-gwdt.txt documentation
+  ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
+  ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
+  Watchdog: introdouce "pretimeout" into framework
+  Watchdog: introduce ARM SBSA watchdog driver
+  ACPI: import watchdog info of GTDT into platform device
 
-Many thanks for your reviewing!
-Zhou Wang
+ .../devicetree/bindings/watchdog/sbsa-gwdt.txt     |  36 ++
+ Documentation/watchdog/watchdog-kernel-api.txt     |  47 +-
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi       |  11 +
+ arch/arm64/boot/dts/arm/foundation-v8.dts          |  10 +
+ arch/arm64/kernel/acpi.c                           | 145 +++++++
+ drivers/watchdog/Kconfig                           |  11 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/sbsa_gwdt.c                       | 474 +++++++++++++++++++++
+ drivers/watchdog/watchdog_core.c                   |  95 +++--
+ drivers/watchdog/watchdog_dev.c                    |  50 +++
+ include/linux/watchdog.h                           |  33 +-
+ 11 files changed, 880 insertions(+), 33 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+ create mode 100644 drivers/watchdog/sbsa_gwdt.c
 
->> -
->>  void dw_pcie_setup_rc(struct pcie_port *pp)
->>  {
->>  	u32 val;
->> -- 
->> 1.9.1
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
-
+-- 
+1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
