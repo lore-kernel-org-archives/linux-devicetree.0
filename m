@@ -1,56 +1,45 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 6/6] arm: dts: imx6sx: enable snvs power key
-Date: Mon, 25 May 2015 15:39:05 +0800
-Message-ID: <20150525073904.GJ3264@dragon>
-References: <1432305399-30571-1-git-send-email-Frank.Li@freescale.com>
- <1432305399-30571-7-git-send-email-Frank.Li@freescale.com>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v3 02/16] crypto: add a new driver for Marvell's CESA
+Date: Mon, 25 May 2015 15:58:12 +0800
+Message-ID: <20150525075812.GA28689@gondor.apana.org.au>
+References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1432301642-11470-3-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1432305399-30571-7-git-send-email-Frank.Li@freescale.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Frank.Li@freescale.com
-Cc: lznuaa@gmail.com, dmitry.torokhov@gmail.com, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
+In-Reply-To: <1432301642-11470-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 22, 2015 at 10:36:39PM +0800, Frank.Li@freescale.com wrote:
-> From: Frank Li <Frank.Li@freescale.com>
-> 
-> enable snvs ONOFF power key support
-> 
-> Signed-off-by: Frank Li <Frank.Li@freescale.com>
-
-Please use 'ARM: dts: imx6sx: ...' for the patch subject.
-
-> ---
->  arch/arm/boot/dts/imx6sx.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-> index 3cb3b5b..ad38aea 100644
-> --- a/arch/arm/boot/dts/imx6sx.dtsi
-> +++ b/arch/arm/boot/dts/imx6sx.dtsi
-> @@ -677,6 +677,13 @@
->  					mask = <0x60>;
->  					status = "disabled";
->  				};
+On Fri, May 22, 2015 at 03:33:48PM +0200, Boris Brezillon wrote:
+>
+> +static int mv_cesa_sha1_export(struct ahash_request *req, void *out)
+> +{
+> +	struct sha1_state *out_state = out;
+> +	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
+> +	struct mv_cesa_ahash_req *creq = ahash_request_ctx(req);
+> +	unsigned int digsize = crypto_ahash_digestsize(ahash);
 > +
-> +				snvs_pwrkey: snvs-powerkey {
-> +					compatible = "fsl,sec-v4.0-pwrkey";
-> +					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> +					linux,keycode = <116>; /* KEY_POWER */
+> +	out_state->count = creq->len;
+> +	memcpy(out_state->state, creq->state, digsize);
+> +	memset(out_state->buffer, 0, sizeof(out_state->buffer));
+> +	if (creq->cache)
+> +		memcpy(out_state->buffer, creq->cache, creq->cache_ptr);
+> +
+> +	return 0;
+> +}
 
-With include/dt-bindings/input/input.h, you can use KEY_POWER directly
-and save the comment.
+Where is the import function?
 
-Shawn
-
-> +					wakeup;
-> +				};
->  			};
->  
->  			epit1: epit@020d0000 {
-> -- 
-> 1.9.1
-> 
+Cheers,
+-- 
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
