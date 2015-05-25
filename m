@@ -1,685 +1,385 @@
-From: Tomasz Figa <tfiga@google.com>
-Subject: Re: [PATCH v2 5/6] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Mon, 25 May 2015 17:29:32 +0900
-Message-ID: <CAAFQd5BCZrfq++SDs+HK66oUNnj-8pHrwKEMQzb7JM=4UUOgBg@mail.gmail.com>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com> <1431683009-18158-6-git-send-email-yong.wu@mediatek.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [RFC PATCH v1 1/3] PCI: designware: Add ARM64 support
+Date: Mon, 25 May 2015 17:52:09 +0800
+Message-ID: <5562F0C9.4090007@hisilicon.com>
+References: <000001d096a9$27bf43f0$773dcbd0$@com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431683009-18158-6-git-send-email-yong.wu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Daniel Kurtz <djkurtz@google.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, pebolle@tiscali.nl, arnd@arndb.de, mitchelh@codeaurora.org, k.zhang@mediatek.com, youhua.li@mediatek.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <000001d096a9$27bf43f0$773dcbd0$@com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Pratyush Anand' <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>, 'Liviu Dudau' <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Gabriele Paoloni' <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, 'Zhichang Yuan' <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, 'Zhang Jukuo' <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, 'Liguozhu' <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, 'Kishon Vijay Abraham I' <kishon-l0cyMroinI0@public.gmane.org>, 'Richard Zhu' <Richard.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Lucas Stach' <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Please see my comments inline.
-
-On Fri, May 15, 2015 at 6:43 PM, Yong Wu <yong.wu@mediatek.com> wrote:
-[snip]
-> +
-> +struct mtk_iommu_info {
-> +       void __iomem            *base;
-> +       int                     irq;
-> +       struct device           *dev;
-> +       struct device           *larbdev[MTK_IOMMU_LARB_MAX_NR];
-> +       struct clk              *bclk;
-> +       dma_addr_t              protect_base; /* protect memory base */
-> +       unsigned int            larb_nr;      /* local arbiter number */
-> +       unsigned int            larb_portid_base[MTK_IOMMU_LARB_MAX_NR];
-> +                               /* the port id base for each local arbiter */
-
-It might not be a bad idea to convert this kind of comments into a
-proper kerneldoc comment for the whole struct. Similarly for other
-structs in the driver.
-
-[snip]
-
-> +static void mtk_iommu_clear_intr(void __iomem *m4u_base)
-
-nit: Instead of pasing m4u_base here, could you pass a pointer to the
-mtk_iommu_info here and use its base field? This would be more strict,
-because currently a void pointer permits passing anything to this
-function.
-
-> +{
-> +       u32 val;
-> +
-> +       val = readl(m4u_base + REG_MMU_INT_CONTROL0);
-> +       val |= F_INT_L2_CLR_BIT;
-> +       writel(val, m4u_base + REG_MMU_INT_CONTROL0);
-> +}
-> +
-> +static void mtk_iommu_tlb_flush_all(void *cookie)
-> +{
-> +       struct mtk_iommu_domain *domain = cookie;
-> +       u32 val;
-> +
-> +       val = F_INVLD_EN1 | F_INVLD_EN0;
-> +       writel(val, domain->imuinfo->base + REG_MMU_INV_SEL);
-
-nit: Do you need this val variable?
-
-> +       writel(F_ALL_INVLD, domain->imuinfo->base + REG_MMU_INVALIDATE);
-> +}
-> +
-> +static void mtk_iommu_tlb_add_flush(unsigned long iova, size_t size,
-> +                                   bool leaf, void *cookie)
-> +{
-> +       struct mtk_iommu_domain *domain = cookie;
-> +       void __iomem *m4u_base = domain->imuinfo->base;
-> +       unsigned int iova_start = iova, iova_end = iova + size - 1;
-> +       int ret;
-> +       u32 val;
-> +
-> +       val = F_INVLD_EN1 | F_INVLD_EN0;
-> +       writel(val, m4u_base + REG_MMU_INV_SEL);
-
-nit: Does this write need to go through this val variable?
-
-> +
-> +       writel(iova_start, m4u_base + REG_MMU_INVLD_START_A);
-> +       writel(iova_end, m4u_base + REG_MMU_INVLD_END_A);
-> +       writel(F_MMU_INV_RANGE, m4u_base + REG_MMU_INVALIDATE);
-> +
-> +       ret = readl_poll_timeout_atomic(m4u_base + REG_MMU_CPE_DONE, val,
-> +                                       val != 0, 10, 1000000);
-> +       if (ret) {
-> +               dev_warn(domain->imuinfo->dev, "Invalid tlb don't done\n");
-
-Maybe "Partial TLB flush timed out, falling back to full flush\n"?
-
-> +               mtk_iommu_tlb_flush_all(cookie);
-> +       }
-> +       writel(0, m4u_base + REG_MMU_CPE_DONE);
-> +}
-> +
-> +static void mtk_iommu_flush_pgtable(void *ptr, size_t size, void *cookie)
-> +{
-> +       /*
-> +        * After delete arch_setup_dma_ops,
-> +        * This will be replaced with dma_map_page
-> +        */
-> +        __dma_flush_range(ptr, ptr + size);
-> +}
-> +
-> +static struct iommu_gather_ops mtk_iommu_gather_ops = {
-> +       .tlb_flush_all = mtk_iommu_tlb_flush_all,
-> +       .tlb_add_flush = mtk_iommu_tlb_add_flush,
-> +       .tlb_sync = mtk_iommu_tlb_flush_all,
-> +       .flush_pgtable = mtk_iommu_flush_pgtable,
-> +};
-> +
-> +static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
-> +{
-> +       struct mtk_iommu_domain *mtkdomain = dev_id;
-> +       struct mtk_iommu_info *piommu = mtkdomain->imuinfo;
-> +       struct device *dev = piommu->dev;
-> +       void __iomem *m4u_base = piommu->base;
-> +       u32 int_state, regval, fault_iova, fault_pa;
-> +       unsigned int fault_larb, fault_port;
-> +       bool layer, write;
-> +
-> +       int_state = readl(m4u_base + REG_MMU_FAULT_ST1);
-> +
-> +       /* read error info from registers */
-> +       fault_iova = readl(m4u_base + REG_MMU_FAULT_VA);
-> +       layer = fault_iova & F_MMU_FAULT_VA_LAYER_BIT;
-> +       write = fault_iova & F_MMU_FAULT_VA_WRITE_BIT;
-> +       fault_iova &= F_MMU_FAULT_VA_MSK;
-> +       fault_pa = readl(m4u_base + REG_MMU_INVLD_PA);
-> +       regval = readl(m4u_base + REG_MMU_INT_ID);
-> +       fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
-> +       fault_port = F_MMU0_INT_ID_PORT_ID(regval);
-> +
-> +       report_iommu_fault(&mtkdomain->domain, dev, fault_iova,
-> +                          write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
-> +
-> +       if (int_state & F_INT_TRANSLATION_FAULT) {
-> +               dev_err_ratelimited(
-> +                       dev,
-> +                       "fault:iova=0x%x pa=0x%x larb=%d port=%d layer=%d %s\n",
-> +                       fault_iova, fault_pa, fault_larb, fault_port,
-> +                       layer, write ? "write" : "read");
-> +       }
-> +
-> +       if (int_state & F_INT_MAIN_MULTI_HIT_FAULT)
-> +               dev_err_ratelimited(dev,
-> +                                   "multi-hit!iova=0x%x larb=%d port=%d\n",
-> +                                   fault_iova, fault_larb, fault_port);
-> +
-> +       if (int_state & F_INT_INVALID_PA_FAULT) {
-> +               if (!(int_state & F_INT_TRANSLATION_FAULT))
-> +                       dev_err_ratelimited(
-> +                               dev,
-> +                               "invalid pa!iova=0x%x larb=%d port=%d\n",
-> +                               fault_iova, fault_larb, fault_port);
-> +       }
-> +       if (int_state & F_INT_ENTRY_REPLACEMENT_FAULT)
-> +               dev_err_ratelimited(dev,
-> +                                   "replace-fault!iova=0x%x larb=%d port=%d\n",
-> +                                   fault_iova, fault_larb, fault_port);
-> +
-> +       if (int_state & F_INT_TLB_MISS_FAULT)
-> +               dev_err_ratelimited(dev,
-> +                                   "tlb miss-fault!iova=0x%x larb=%d port=%d\n",
-> +                                   fault_iova, fault_larb, fault_port);
-
-Hmm, do you need so many prints here? Could you just dump the full
-state (including int_state) regardless of interrupt type here? Also I
-wonder if this shouldn't be printed only when report_iommu_fault()
-returns -ENOSYS.
-
-> +
-> +       mtk_iommu_tlb_flush_all(mtkdomain);
-> +
-> +       mtk_iommu_clear_intr(m4u_base);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int mtk_iommu_parse_dt(struct platform_device *pdev,
-> +                             struct mtk_iommu_info *piommu)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *ofnode;
-> +       struct resource *res;
-> +       unsigned int i, port_nr, lastportnr = 0;
-> +       int ret;
-> +
-> +       ofnode = dev->of_node;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       piommu->base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(piommu->base)) {
-> +               dev_err(dev, "Failed to get base (%lx)\n",
-> +                       PTR_ERR(piommu->base));
-
-devm_ioremap_resource() already prints a message on error.
-
-> +               ret = PTR_ERR(piommu->base);
-> +               goto err_parse_dt;
-
-You can just return PTR_ERR(piommu->base) here directly.
-
-> +       }
-> +
-> +       piommu->irq = platform_get_irq(pdev, 0);
-> +       if (piommu->irq < 0) {
-> +               dev_err(dev, "Failed to get IRQ (%d)\n", piommu->irq);
-> +               ret = piommu->irq;
-> +               goto err_parse_dt;
-
-Again just return.
-
-> +       }
-> +
-> +       piommu->bclk = devm_clk_get(dev, "bclk");
-> +       if (IS_ERR(piommu->bclk)) {
-> +               dev_err(dev, "Failed to get the bclk (%lx)\n",
-> +                       PTR_ERR(piommu->bclk));
-> +               ret = PTR_ERR(piommu->bclk);
-> +               goto err_parse_dt;
-
-Ditto.
-
-> +       }
-> +
-> +       ret = of_property_count_u32_elems(ofnode, "larb-portes-nr");
-
-According to my comments to the patch adding the binding, you should
-rather count the number of phandles in "larb" property by
-of_count_phandle_with_args(ofnode, "larb", NULL).
-
-> +       if (ret < 0) {
-> +               dev_err(dev, "Failed to get larb-portes-nr\n");
-> +               goto err_parse_dt;
-
-Ditto.
-
-> +       } else {
-> +               piommu->larb_nr = ret;
-
-You can take this out of "else" block.
-
-> +       }
-> +
-> +       for (i = 0; i < piommu->larb_nr; i++) {
-> +               ret = of_property_read_u32_index(ofnode, "larb-portes-nr",
-> +                                                i, &port_nr);
-
-For logical correctness, you should parse port count from larb node,
-as I mentioned in my comments to the patch adding the binding. However
-I'm not sure if you even need to know the number of ports. I will
-comment more on this below.
-
-> +               if (ret) {
-> +                       dev_err(dev, "Failed to get the port nr@larb%d\n", i);
-> +                       goto err_parse_dt;
-
-Just return here.
-
-> +               } else {
-
-> +                       piommu->larb_portid_base[i] = lastportnr;
-> +                       lastportnr += port_nr;
-
-This looks like creating an artificial 1-dimensional namespace from a
-natural 2-dimensional space indexed by (larb, port) tuple.
-
-Also you can take this out of the else block.
-
-> +               }
-> +       }
-> +       piommu->larb_portid_base[i] = lastportnr;
-> +
-> +       for (i = 0; i < piommu->larb_nr; i++) {
-> +               struct device_node *larbnode;
-> +               struct platform_device *plarbdev;
-> +
-> +               larbnode = of_parse_phandle(ofnode, "larb", i);
-> +               if (!larbnode) {
-> +                       dev_err(dev, "Failed to get the larb property\n");
-> +                       ret = -EINVAL;
-> +                       goto err_parse_dt;
-
-Just return.
-
-> +               }
-> +               plarbdev = of_find_device_by_node(larbnode);
-> +               of_node_put(larbnode);
-> +               if (!plarbdev) {
-> +                       dev_err(dev, "Failed to get the dev@larb%d\n", i);
-> +                       ret = -EINVAL;
-> +                       goto err_parse_dt;
-
-Just return.
-
-> +               } else {
-> +                       piommu->larbdev[i] = &plarbdev->dev;
-
-Again, no need to put this into else block.
-
-> +               }
-> +       }
-> +
-> +       return 0;
-> +
-> +err_parse_dt:
-> +       return ret;
-
-Now, after addressing my comments above, this label can be removed.
-
-> +}
-> +
-> +static int mtk_iommu_hw_init(const struct mtk_iommu_domain *mtkdomain)
-> +{
-> +       struct mtk_iommu_info *piommu = mtkdomain->imuinfo;
-> +       void __iomem *m4u_base = piommu->base;
-> +       u32 regval;
-> +       int ret = 0;
-> +
-> +       ret = clk_prepare_enable(piommu->bclk);
-> +       if (ret)
-> +               return -ENODEV;
-
-Why overriding the error returned in ret with -ENODEV?
-
-> +
-> +       writel(mtkdomain->cfg.arm_short_cfg.ttbr[0],
-> +              m4u_base + REG_MMU_PT_BASE_ADDR);
-> +
-> +       regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
-> +               F_MMU_TF_PROTECT_SEL(2) |
-> +               F_COHERENCE_EN;
-> +       writel(regval, m4u_base + REG_MMU_CTRL_REG);
-> +
-> +       regval = F_L2_MULIT_HIT_EN |
-> +               F_TABLE_WALK_FAULT_INT_EN |
-> +               F_PREETCH_FIFO_OVERFLOW_INT_EN |
-> +               F_MISS_FIFO_OVERFLOW_INT_EN |
-> +               F_PREFETCH_FIFO_ERR_INT_EN |
-> +               F_MISS_FIFO_ERR_INT_EN;
-> +       writel(regval, m4u_base + REG_MMU_INT_CONTROL0);
-> +
-> +       regval = F_INT_TRANSLATION_FAULT |
-> +               F_INT_MAIN_MULTI_HIT_FAULT |
-> +               F_INT_INVALID_PA_FAULT |
-> +               F_INT_ENTRY_REPLACEMENT_FAULT |
-> +               F_INT_TLB_MISS_FAULT |
-> +               F_INT_MISS_TRANSATION_FIFO_FAULT |
-> +               F_INT_PRETETCH_TRANSATION_FIFO_FAULT;
-> +       writel(regval, m4u_base + REG_MMU_INT_MAIN_CONTROL);
-> +
-> +       regval = ALIGN(piommu->protect_base, MTK_PROTECT_PA_ALIGN);
-> +       regval = (u32)F_MMU_IVRP_PA_SET(regval);
-> +       writel(regval, m4u_base + REG_MMU_IVRP_PADDR);
-> +
-> +       writel(0, m4u_base + REG_MMU_DCM_DIS);
-> +       writel(0, m4u_base + REG_MMU_STANDARD_AXI_MODE);
-> +
-> +       if (devm_request_irq(piommu->dev, piommu->irq, mtk_iommu_isr, 0,
-> +                            dev_name(piommu->dev), (void *)mtkdomain)) {
-> +               dev_err(piommu->dev, "Failed @ IRQ-%d Request\n", piommu->irq);
-> +               return -ENODEV;
-
-Hmm, this keeps the clock enabled. Should you add clean-up path
-uninitializing the hardware and stopping the clock?
-
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_iommu_config_port(struct mtk_iommu_info *piommu,
-> +                                int portid, bool iommuen)
-> +{
-> +       bool validlarb = false;
-> +       int i, larbid, larbportid;
-> +       int ret;
-> +
-> +       if (portid >= piommu->larb_portid_base[piommu->larb_nr]) {
-> +               dev_err(piommu->dev, "Invalid portid (%d)\n", portid);
-> +               return -EINVAL;
-> +       }
-> +
-> +       for (i = piommu->larb_nr - 1; i >= 0; i--) {
-> +               if (portid >= piommu->larb_portid_base[i]) {
-> +                       larbid = i;
-> +                       larbportid = portid -
-> +                                       piommu->larb_portid_base[i];
-> +                       validlarb = true;
-> +                       break;
-> +               }
-> +       }
-
-There would be no need for this magic here if two cells was used for
-port specifier in DT. By the way, this function seems to be the only
-user of port count, so if you don't strictly need the check for port
-specifier being in range, then such information could be simply
-removed from DT, simplifying the binding.
-
-> +
-> +       if (validlarb) {
-> +               ret = mtk_smi_config_port(piommu->larbdev[larbid],
-> +                                         larbportid, iommuen);
-> +               if (ret) {
-> +                       dev_err(piommu->dev,
-> +                               "Failed to config port portid-%d\n", portid);
-> +               }
-> +       } else {
-> +               ret = -EINVAL;
-> +               dev_err(piommu->dev, "Failed to find out portid-%d\n", portid);
-> +       }
-> +       return ret;
-> +}
-> +
-> +static int mtk_iommu_dev_enable_iommu(struct mtk_iommu_info *imuinfo,
-> +                                     struct device *dev, bool enable)
-> +{
-> +       struct of_phandle_args out_args = {0};
-> +       struct device *imudev = imuinfo->dev;
-> +       unsigned int i = 0;
-> +       int ret = 0;
-> +
-> +       while (!of_parse_phandle_with_args(dev->of_node, "iommus",
-> +                                          "#iommu-cells", i++, &out_args)) {
-> +               if (out_args.np != imudev->of_node)
-> +                       continue;
-> +               if (out_args.args_count != 1) {
-> +                       dev_err(imudev,
-> +                               "invalid #iommu-cells property for IOMMU\n");
-> +               }
-
-I don't believe you need to do this manually. I can see
-of_iommu_configure() in
-http://lxr.free-electrons.com/source/drivers/iommu/of_iommu.c#L136 ,
-which I believe should call .of_xlate from your iommu_ops with correct
-node and verified the args count. This callback should parse the args
-and prepare some private data.
-
-I don't see any example of such .of_xlate callback though. Could
-someone (Joerg, Will?) advise how this could be used and in particular
-how the data obtained from parsing the args should be stored for
-further use?
-
-> +
-> +               dev_dbg(imudev, "%s iommu @ port:%d\n",
-> +                       enable ? "enable" : "disable", out_args.args[0]);
-> +
-> +               ret = mtk_iommu_config_port(imuinfo, out_args.args[0], enable);
-> +               if (!ret)
-> +                       dev->archdata.dma_ops = (enable) ?
-> +                                       imudev->archdata.dma_ops : NULL;
-> +               else
-> +                       break;
-> +       }
-> +       return ret;
-> +}
-> +
-> +static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
-> +{
-> +       struct mtk_iommu_domain *priv;
-> +
-> +       /* We only support unmanaged domains for now */
-> +       if (type != IOMMU_DOMAIN_UNMANAGED)
-> +               return NULL;
-> +
-> +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return ERR_PTR(-ENOMEM);
-
-What's the proper return convention of this function? The first error
-case returns NULL, while this an error pointer. One of them is most
-likely wrong.
-
-> +
-> +       priv->cfg.quirks = IO_PGTABLE_QUIRK_ARM_NS;
-> +       priv->cfg.pgsize_bitmap = SZ_16M | SZ_1M | SZ_64K | SZ_4K,
-> +       priv->cfg.ias = 32;
-> +       priv->cfg.oas = 32;
-> +       priv->cfg.tlb = &mtk_iommu_gather_ops;
-> +
-> +       priv->iop = alloc_io_pgtable_ops(ARM_SHORT_DESC, &priv->cfg, priv);
-> +       if (!priv->iop) {
-> +               pr_err("Failed to alloc io pgtable@MTK iommu\n");
-> +               goto err_free_priv;
-> +       }
-> +
-> +       spin_lock_init(&priv->pgtlock);
-> +
-> +       priv->domain.geometry.aperture_start = 0;
-> +       priv->domain.geometry.aperture_end = ~0;
-
-Should this be UL or ULL?
-
-> +       priv->domain.geometry.force_aperture = true;
-> +
-> +       return &priv->domain;
-> +
-> +err_free_priv:
-> +       kfree(priv);
-> +       return NULL;
-> +}
-> +
-> +static void mtk_iommu_domain_free(struct iommu_domain *domain)
-> +{
-> +       struct mtk_iommu_domain *priv = to_mtk_domain(domain);
-> +
-> +       free_io_pgtable_ops(priv->iop);
-> +       kfree(priv);
-> +}
-> +
-> +static int mtk_iommu_attach_device(struct iommu_domain *domain,
-> +                                  struct device *dev)
-> +{
-> +       struct mtk_iommu_domain *priv = to_mtk_domain(domain);
-> +       int ret;
-> +
-> +       /* word around for arch_setup_dma_ops */
-
-typo: s/word around/Workaround/
-
-Anyway, could you remind me what was the issue with arch_setup_dma_ops, please?
-
-> +       if (!priv->imuinfo)
-> +               ret = 0;
-> +       else
-> +               ret = mtk_iommu_dev_enable_iommu(priv->imuinfo, dev, true);
-> +       return ret;
-
-Maybe you could rewrite the 5 lines above into the following:
-
-if (!priv->imuinfo)
-    return 0;
-return mtk_iommu_dev_enable_iommu(priv->imuinfo, dev, true);
-
-> +}
-> +
-> +static void mtk_iommu_detach_device(struct iommu_domain *domain,
-> +                                   struct device *dev)
-> +{
-> +       struct mtk_iommu_domain *priv = to_mtk_domain(domain);
-> +
-> +       mtk_iommu_dev_enable_iommu(priv->imuinfo, dev, false);
-> +}
-> +
-> +static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
-> +                        phys_addr_t paddr, size_t size, int prot)
-> +{
-> +       struct mtk_iommu_domain *priv = to_mtk_domain(domain);
-> +       unsigned long flags;
-> +       int ret;
-> +
-> +       spin_lock_irqsave(&priv->pgtlock, flags);
-> +       ret = priv->iop->map(priv->iop, iova, paddr, size, prot);
-> +       spin_unlock_irqrestore(&priv->pgtlock, flags);
-> +
-> +       return ret;
-> +}
-> +
-> +static size_t mtk_iommu_unmap(struct iommu_domain *domain,
-> +                             unsigned long iova, size_t size)
-> +{
-> +       struct mtk_iommu_domain *priv = to_mtk_domain(domain);
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&priv->pgtlock, flags);
-> +       priv->iop->unmap(priv->iop, iova, size);
-> +       spin_unlock_irqrestore(&priv->pgtlock, flags);
-> +
-> +       return size;
-> +}
-> +
-> +static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
-> +                                         dma_addr_t iova)
-> +{
-> +       struct mtk_iommu_domain *priv = to_mtk_domain(domain);
-> +       unsigned long flags;
-> +       phys_addr_t pa;
-> +
-> +       spin_lock_irqsave(&priv->pgtlock, flags);
-> +       pa = priv->iop->iova_to_phys(priv->iop, iova);
-> +       spin_unlock_irqrestore(&priv->pgtlock, flags);
-> +
-> +       return pa;
-> +}
-> +
-> +static struct iommu_ops mtk_iommu_ops = {
-> +       .domain_alloc = mtk_iommu_domain_alloc,
-> +       .domain_free = mtk_iommu_domain_free,
-> +       .attach_dev = mtk_iommu_attach_device,
-> +       .detach_dev = mtk_iommu_detach_device,
-> +       .map = mtk_iommu_map,
-> +       .unmap = mtk_iommu_unmap,
-> +       .map_sg = default_iommu_map_sg,
-> +       .iova_to_phys = mtk_iommu_iova_to_phys,
-> +       .pgsize_bitmap = SZ_4K | SZ_64K | SZ_1M | SZ_16M,
-> +};
-> +
-> +static const struct of_device_id mtk_iommu_of_ids[] = {
-> +       { .compatible = "mediatek,mt8173-m4u",
-> +       },
-
-nit: Why is this on a separate line?
-
-> +       {}
-> +};
-> +
-> +static int mtk_iommu_probe(struct platform_device *pdev)
-> +{
-> +       struct iommu_domain     *domain;
-> +       struct mtk_iommu_domain *mtk_domain;
-> +       struct mtk_iommu_info   *piommu;
-> +       void __iomem            *protect;
-> +       int                     ret;
-
-CodingStyle: Please no tabs in local variable declarations.
-
-> +
-> +       piommu = devm_kzalloc(&pdev->dev, sizeof(*piommu), GFP_KERNEL);
-> +       if (!piommu)
-> +               return -ENOMEM;
-> +
-> +       piommu->dev = &pdev->dev;
-> +
-> +       /*
-> +        * Alloc for Protect memory.
-> +        * HW will access here while translation fault.
-> +        */
-> +       protect = devm_kzalloc(piommu->dev, MTK_PROTECT_PA_ALIGN * 2,
-> +                              GFP_KERNEL);
-> +       if (!protect)
-> +               return -ENOMEM;
-> +       piommu->protect_base = dma_map_single(piommu->dev, protect,
-> +                                             MTK_PROTECT_PA_ALIGN * 2,
-> +                                             DMA_TO_DEVICE); /* clean cache */
-> +
-> +       ret = mtk_iommu_parse_dt(pdev, piommu);
-> +       if (ret)
-> +               return ret;
-
-What about the potential dma mapping created by dma_map_single()? (I'm
-not sure how important is to clean this up in practice, but for
-consistency, it should be handled in error path to prevent leaking
-memory if something changes in future in DMA API internals.)
-
-> +
-> +       /*
-> +        * arch_setup_dma_ops is not proper.
-> +        * It should be replaced it with iommu_dma_create_domain
-> +        * in next dma patch.
-> +        */
-> +       arch_setup_dma_ops(piommu->dev, 0, (1ULL << 32) - 1, &mtk_iommu_ops, 0);
-> +
-> +       domain = iommu_dma_raw_domain(get_dma_domain(piommu->dev));
-> +       if (!domain) {
-> +               dev_err(piommu->dev, "Failed to get iommu domain\n");
-> +               ret = -EINVAL;
-> +               goto err_free_domain;
-> +       }
-> +
-> +       mtk_domain = to_mtk_domain(domain);
-> +       mtk_domain->imuinfo = piommu;
-> +
-> +       dev_set_drvdata(piommu->dev, piommu);
-> +
-> +       ret = mtk_iommu_hw_init(mtk_domain);
-> +       if (ret < 0) {
-> +               dev_err(piommu->dev, "Failed @ HW init\n");
-
-nit: Maybe "Hardware initialization failed"?
-
-> +               goto err_free_domain;
-> +       }
-> +
-> +       return 0;
-> +
-> +err_free_domain:
-> +       arch_teardown_dma_ops(piommu->dev);
-
-Shouldn't the label be called err_teardown_dma_ops then?
-
-Best regards,
-Tomasz
+On 2015/5/25 13:10, Jingoo Han wrote:
+> On Wed, 20 May 2015 14:21:39 +0800, Zhou Wang wrote:
+>>
+>> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
+>> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
+>> move related operations to dw_pcie_host_init.
+>>
+>> I am not very clear about I/O resource management:
+>>> 	if (global_io_offset < SZ_1M && pp->io_size > 0) {
+>>> 		pci_ioremap_io(global_io_offset, pp->io_base);
+>>> 		global_io_offset += SZ_64K;
+>>> 		pci_add_resource_offset(&res, &pp->io,
+>>> 					global_io_offset - pp->io_bus_addr);
+>>> 	}
+>> so just move steps in dw_pcie_setup to dw_pcie_host_init.
+>>
+>> I have compiled the driver with multi_v7_defconfig. However, I don't have
+>> ARM32 PCIe related board to do test. It will be appreciated if someone could
+>> help to test it.
+>>
+>> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> ---
+>>  drivers/pci/host/pcie-designware.c | 128 +++++++++++++++----------------------
+>>  1 file changed, 50 insertions(+), 78 deletions(-)
+>>
+>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+>> index 2e9f84f..7bad9e5 100644
+>> --- a/drivers/pci/host/pcie-designware.c
+>> +++ b/drivers/pci/host/pcie-designware.c
+>> @@ -22,6 +22,7 @@
+>>  #include <linux/pci_regs.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/types.h>
+>> +#include <asm/hardirq.h>
+> 
+> +cc Kishon Vijay Abraham I, Richard Zhu, Lucas Stach
+> 
+
+Thanks to involve more related guys to this discussion :)
+
+> Please use <linux/hardirq.h> and insert it alphabetically.
+> 
+> +#include <linux/hardirq.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/kernel.h>
+> 
+
+OK, will do in next version patch.
+
+>>  
+>>  #include "pcie-designware.h"
+>>  
+>> @@ -67,17 +68,10 @@
+>>  #define PCIE_ATU_FUNC(x)		(((x) & 0x7) << 16)
+>>  #define PCIE_ATU_UPPER_TARGET		0x91C
+>>  
+>> -static struct hw_pci dw_pci;
+>> +static struct pci_ops dw_pcie_ops;
+>>  
+>>  static unsigned long global_io_offset;
+>>  
+>> -static inline struct pcie_port *sys_to_pcie(struct pci_sys_data *sys)
+>> -{
+>> -	BUG_ON(!sys->private_data);
+>> -
+>> -	return sys->private_data;
+>> -}
+>> -
+>>  int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val)
+>>  {
+>>  	*val = readl(addr);
+>> @@ -238,7 +232,7 @@ static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq)
+>>  static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
+>>  {
+>>  	int irq, pos0, i;
+>> -	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
+>> +	struct pcie_port *pp = desc->dev->bus->sysdata;
+>>  
+>>  	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
+>>  				       order_base_2(no_irqs));
+>> @@ -281,7 +275,7 @@ static int dw_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
+>>  {
+>>  	int irq, pos;
+>>  	struct msi_msg msg;
+>> -	struct pcie_port *pp = sys_to_pcie(pdev->bus->sysdata);
+>> +	struct pcie_port *pp = pdev->bus->sysdata;
+>>  
+>>  	if (desc->msi_attrib.is_msix)
+>>  		return -EINVAL;
+>> @@ -310,7 +304,7 @@ static void dw_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
+>>  {
+>>  	struct irq_data *data = irq_get_irq_data(irq);
+>>  	struct msi_desc *msi = irq_data_get_msi(data);
+>> -	struct pcie_port *pp = sys_to_pcie(msi->dev->bus->sysdata);
+>> +	struct pcie_port *pp = msi->dev->bus->sysdata;
+>>  
+>>  	clear_irq_range(pp, irq, 1, data->hwirq);
+>>  }
+>> @@ -342,13 +336,15 @@ static const struct irq_domain_ops msi_domain_ops = {
+>>  	.map = dw_pcie_msi_map,
+>>  };
+>>  
+>> -int dw_pcie_host_init(struct pcie_port *pp)
+>> +int __init dw_pcie_host_init(struct pcie_port *pp)
+>>  {
+>>  	struct device_node *np = pp->dev->of_node;
+>>  	struct platform_device *pdev = to_platform_device(pp->dev);
+>>  	struct of_pci_range range;
+>>  	struct of_pci_range_parser parser;
+>> +	struct pci_bus *bus;
+>>  	struct resource *cfg_res;
+>> +	LIST_HEAD(res);
+>>  	u32 val, na, ns;
+>>  	const __be32 *addrp;
+>>  	int i, index, ret;
+>> @@ -502,15 +498,49 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>  	val |= PORT_LOGIC_SPEED_CHANGE;
+>>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+>>  
+>> -#ifdef CONFIG_PCI_MSI
+>> -	dw_pcie_msi_chip.dev = pp->dev;
+>> -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
+>> +#ifdef CONFIG_ARM
+>> +	/*
+>> +	 * FIXME: we should really be able to use
+>> +	 * of_pci_get_host_bridge_resources on arm32 as well,
+>> +	 * but the conversion needs some more testing
+>> +	 */
+>> +	if (global_io_offset < SZ_1M && pp->io_size > 0) {
+>> +		pci_ioremap_io(global_io_offset, pp->io_base);
+>> +		global_io_offset += SZ_64K;
+>> +		pci_add_resource_offset(&res, &pp->io,
+>> +					global_io_offset - pp->io_bus_addr);
+>> +	}
+>> +	pci_add_resource_offset(&res, &pp->mem,
+>> +				pp->mem.start - pp->mem_bus_addr);
+>> +	pci_add_resource(&res, &pp->busn);
+>> +#else
+>> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
+>> +	if (ret)
+>> +		return ret;
+>> +#endif
+>> +
+>> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
+>> +			      pp, &res);
+>> +	if (!bus)
+>> +		return -ENOMEM;
+>> +
+>> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+>> +	bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
+>> +#else
+>> +	bus->msi = &dw_pcie_msi_chip;
+>>  #endif
+>>  
+>> -	dw_pci.nr_controllers = 1;
+>> -	dw_pci.private_data = (void **)&pp;
+>> +	pci_scan_child_bus(bus);
+>> +	if (pp->ops->scan_bus)
+>> +		pp->ops->scan_bus(pp);
+>>  
+>> -	pci_common_init_dev(pp->dev, &dw_pci);
+>> +#ifdef CONFIG_ARM
+>> +	/* support old dtbs that incorrectly describe IRQs */
+>> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+>> +#endif
+>> +
+>> +	pci_assign_unassigned_bus_resources(bus);
+>> +	pci_bus_add_devices(bus);
+>>  
+>>  	return 0;
+>>  }
+>> @@ -653,7 +683,7 @@ static int dw_pcie_valid_config(struct pcie_port *pp,
+>>  static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+>>  			int size, u32 *val)
+>>  {
+>> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
+>> +	struct pcie_port *pp = bus->sysdata;
+>>  	int ret;
+>>  
+>>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
+>> @@ -677,7 +707,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+>>  static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
+>>  			int where, int size, u32 val)
+>>  {
+>> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
+>> +	struct pcie_port *pp = bus->sysdata;
+>>  	int ret;
+>>  
+>>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
+>> @@ -701,64 +731,6 @@ static struct pci_ops dw_pcie_ops = {
+>>  	.write = dw_pcie_wr_conf,
+>>  };
+>>  
+>> -static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
+>> -{
+>> -	struct pcie_port *pp;
+>> -
+>> -	pp = sys_to_pcie(sys);
+>> -
+>> -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
+>> -		sys->io_offset = global_io_offset - pp->io_bus_addr;
+>> -		pci_ioremap_io(global_io_offset, pp->io_base);
+>> -		global_io_offset += SZ_64K;
+>> -		pci_add_resource_offset(&sys->resources, &pp->io,
+>> -					sys->io_offset);
+>> -	}
+>> -
+>> -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
+>> -	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
+>> -	pci_add_resource(&sys->resources, &pp->busn);
+>> -
+>> -	return 1;
+>> -}
+>> -
+>> -static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+>> -{
+>> -	struct pci_bus *bus;
+>> -	struct pcie_port *pp = sys_to_pcie(sys);
+>> -
+>> -	pp->root_bus_nr = sys->busnr;
+> 
+> 'pp->root_bus_nr' is initialized as '-1' at some soc-specific drivers
+> However, 'sys->busnr' is set as '0, 1, 2 ...' by pcibios_init_hw()
+> in arch/arm/kernel/bios32.c. '0, 1, 2 ...' means the number of
+> each host controller.
+> 
+> So, without setting 'pp->root_bus_nr' as '0, 1, 2, ...',
+> it makes the problem.
+> 
+
+'sys->busnr' is set as "0, busn_res.end + 1 ..." in pcibios_init_hw() I think:
+
+pcibios_init_hw()
+	for (nr = busnr = 0; nr < hw->nr_controllers; nr++)
+		sys->busnr = busnr;
+		...
+		busnr = sys->bus->busn_res.end + 1;
+
+and it indicates root bus number of one pcie controller.
+so in dw_pcie_scan_bus:
+	pp->root_bus_nr = sys->busnr;
+	bus = pci_create_root_bus(..., sys->busnr, ...);
+we set root bus number as "0, busn_res.end + 1". But in pcie-designware,
+nr_controllers is set as 1, so it only comes into the loop in
+pcibios_init_hw() one time.
+
+so how about we set 0 as default value of pp->root_bus_nr, then use
+pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops, pp, &res);
+to create root bus?
+
+> Thus, we need to come up with the way to resolve this.
+> 
+> 1. Setting 'pp->root_bus_nr' as '0, 1, 2 ..' by each soc-specific driver.
+> 
+> e.g)
+> 
+> ./drivers/pci/host/pci-exynos.c
+> @@ -534,7 +534,7 @@ static int __init exynos_add_pcie_port(struct pcie_port *pp,
+>                 }
+>         }
+>  
+> -       pp->root_bus_nr = -1;
+> +       pp->root_bus_nr++;
+>         pp->ops = &exynos_pcie_host_ops;
+> 
+> ./drivers/pci/host/pci-imx6.c
+> @@ -541,7 +541,7 @@ static int __init imx6_add_pcie_port(struct pcie_port *pp,
+>                 }
+>         }
+>  
+> -       pp->root_bus_nr = -1;
+> +       pp->root_bus_nr++;
+>         pp->ops = &imx6_pcie_host_ops;
+>  
+> ./drivers/pci/host/pci-keystone.c
+> @@ -312,7 +312,7 @@ static int __init ks_add_pcie_port(struct keystone_pcie *ks_pcie,
+>                         return ret;
+>         }
+>  
+> -       pp->root_bus_nr = -1;
+> +       pp->root_bus_nr++;
+>         pp->ops = &keystone_pcie_host_ops;
+> 
+> ./drivers/pci/host/pci-layerscape.c
+> @@ -101,7 +101,7 @@ static int ls_add_pcie_port(struct ls_pcie *pcie)
+>         pp = &pcie->pp;
+>         pp->dev = pcie->dev;
+>         pp->dbi_base = pcie->dbi;
+> -       pp->root_bus_nr = -1;
+> +       pp->root_bus_nr++;
+>         pp->ops = &ls_pcie_host_ops;
+>  
+> ./drivers/pci/host/pcie-spear13xx.c
+> @@ -287,7 +287,7 @@ static int spear13xx_add_pcie_port(struct pcie_port *pp,
+>                 return ret;
+>         }
+>  
+> -       pp->root_bus_nr = -1;
+> +       pp->root_bus_nr++;
+>         pp->ops = &spear13xx_pcie_host_ops;
+> 
+> 
+> 2. Setting 'pp->root_bus_nr' as '0, 1, 2 ..' by pcie-designware.c
+> 
+> I believe that someone will give better idea. :-)
+> 
+>> -	bus = pci_create_root_bus(pp->dev, sys->busnr,
+>> -				  &dw_pcie_ops, sys, &sys->resources);
+>> -	if (!bus)
+>> -		return NULL;
+>> -
+>> -	pci_scan_child_bus(bus);
+>> -
+>> -	if (bus && pp->ops->scan_bus)
+>> -		pp->ops->scan_bus(pp);
+>> -
+>> -	return bus;
+>> -}
+>> -
+>> -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+>> -{
+>> -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
+>> -	int irq;
+>> -
+>> -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
+>> -	if (!irq)
+>> -		irq = pp->irq;
+>> -
+>> -	return irq;
+>> -}
+>> -
+>> -static struct hw_pci dw_pci = {
+>> -	.setup		= dw_pcie_setup,
+>> -	.scan		= dw_pcie_scan_bus,
+>> -	.map_irq	= dw_pcie_map_irq,
+>> -};
+> 
+> Right, 'struct hw_pci' should not be used in order to unify ARM32 and
+> ARM64. I have no objection to remove 'struct hw_pci' from 'pcie-designware.c'.
+> Thank you for your patch.
+> 
+> Best regards,
+> Jingoo Han
+> 
+
+Many thanks for your reviewing!
+Zhou Wang
+
+>> -
+>>  void dw_pcie_setup_rc(struct pcie_port *pp)
+>>  {
+>>  	u32 val;
+>> -- 
+>> 1.9.1
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
