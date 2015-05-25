@@ -1,51 +1,64 @@
-From: Igal.Liberman <igal.liberman@freescale.com>
-Subject: [PATCH] powerpc/fsl: Add FMan Port 10G compatibles
-Date: Mon, 25 May 2015 16:30:46 +0300
-Message-ID: <1432560646-19424-1-git-send-email-igal.liberman@freescale.com>
-Reply-To: igal.liberman@freescale.com
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 16/16] ARM: marvell/dt: add crypto node to kirkwood
+ dtsi
+Date: Mon, 25 May 2015 20:43:02 +0200
+Message-ID: <20150525204302.7c79afbf@bbrezillon>
+References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1432301642-11470-17-git-send-email-boris.brezillon@free-electrons.com>
+	<55634221.6050504@free-electrons.com>
+	<20150525164651.GA13641@io.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, Igal Liberman <igal.liberman@freescale.com>, madalin.bucur@freescale.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20150525164651.GA13641@io.lakedaemon.net>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Arnaud Ebalard <arno@natisbad.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdhbCBMaWJlcm1hbiA8aWdhbC5saWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
-YXRjaCBhZGRzIHR3byBib29sZWFuIHByb3BlcnRpZXMgdG8gRk1hbiBQb3J0LgpGTWFuIGhhcyAz
-IHR5cGVzIG9mIHBvcnRzOgoJLSAxRyBwb3J0cwoJCUJ5IGRlZmF1bHQsIGFsbCBwb3J0cyBzdXBw
-b3J0IDFHIHJhdGUKCS0gMTBHIFBvcnRzCgkJUG9ydCB3aGljaCB1c2UgMTBHIGhhcmR3YXJlLCBh
-bmQgY29uZmlndXJlZCBhcyAxMEcKCS0gMTBHIEJlc3QgZWZmb3J0IHBvcnRzCgkJUG9ydHMgd2hp
-Y2ggdXNlIDFHIGhhcmR3YXJlLCBjb25maWd1cmVkIGFzIDEwRywgaW4gdGhpcyBjYXNlLAoJCXRo
-ZSByYXRlIGlzIG5vdCBndWFyYW50ZWVkLgpUaGUgbmV3IHByb3BlcnRpZXMgaGVscCB0byBkaXN0
-aW5ndWlzaCB0aGUgZGlmZmVyZW50IHR5cGUgb2YgcG9ydHMuCgpTaWduZWQtb2ZmLWJ5OiBJZ2Fs
-IExpYmVybWFuIDxpZ2FsLmxpYmVybWFuQGZyZWVzY2FsZS5jb20+CgotLS0KIC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0ICAgICAgIHwgICAxMyArKysrKysrKysr
-KysrCiAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAppbmRleCBl
-ZGRhNTVmLi43NmE3Y2JhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0CkBAIC0xODksNiArMTg5LDE5IEBAIFBST1BF
-UlRJRVMKIAkJRGVmaW5pdGlvbjogVGhlcmUgaXMgb25lIHJlZyByZWdpb24gZGVzY3JpYmluZyB0
-aGUgcG9ydAogCQljb25maWd1cmF0aW9uIHJlZ2lzdGVycy4KIAorLSAxMEctc3VwcG9ydAorCQlV
-c2FnZTogb3B0aW9uYWwKKwkJVmFsdWUgdHlwZTogYm9vbGVhbgorCQlEZWZpbml0aW9uOiBUaGUg
-ZGVmYXVsdCBwb3J0IHJhdGUgaXMgMUcuCisJCUlmIHRoaXMgcHJvcGVydHkgZXhpc3RzLCB0aGUg
-cG9ydCBpcyBjb25maWd1cmVkIGFzIDEwRyBwb3J0LgorCistIGJlc3QtZWZmb3J0LXBvcnQKKwkJ
-VXNhZ2U6IG9wdGlvbmFsCisJCVZhbHVlIHR5cGU6IGJvb2xlYW4KKwkJRGVmaW5pdGlvbjogQ2Fu
-IGJlIGRlZmluZWQgb25seSBpZiAxMEctc3VwcG9ydCBpcyBzZXQuCisJCVRoaXMgcHJvcGVydHkg
-bWFya3MgYSBiZXN0LWVmZm9ydCAxMEcgcG9ydCAoMUcgaGFyZHdhcmUKKwkJY29uZmlndXJlZCBh
-cyAxMEcsIDEwRyByYXRlIGlzIG5vdCBndWFyYW50ZWVkKS4KKwogRVhBTVBMRQogCiBwb3J0QGE4
-MDAwIHsKLS0gCjEuNy45LjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96
-bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Jason, Gregory,
+
+On Mon, 25 May 2015 16:46:51 +0000
+Jason Cooper <jason@lakedaemon.net> wrote:
+
+> On Mon, May 25, 2015 at 05:39:13PM +0200, Gregory CLEMENT wrote:
+> > Hi Boris, Arnaud,
+> > 
+> > On 22/05/2015 15:34, Boris Brezillon wrote:
+> > > From: Arnaud Ebalard <arno@natisbad.org>
+> > > 
+> > > Add crypto related nodes to kirkwood.dtsi.
+> > 
+> > Here you use a new compatible string but with an old binding
+> > to let the user chose between the old and the new driver. Am I right?
+
+That was not the intention, but you're right, that's exactly what's
+happening here.
+
+> 
+> I thought we had settled on the user choosing by module load/ which driver is
+> compiled in?  The DT should be describing the hardware, not which driver the
+> user chooses to use.
+
+Right, but I didn't want to add new compatible strings to the old
+driver in the first place, neither I wanted to support the new way of
+defining/referencing the crypto SRAMs.
+ITOH, if we want to benefit from the TDMA optimization on Kirkwood SoCs,
+we have to add a new compatible (unlike Orion SoCs, Kirkwood ones embed
+a TDMA engine).
+
+This leaves the following solutions:
+ - avoid changing the compatible in existing orion and kirkwood dtsi
+   files
+ - adding kirkwood compatible string support to the existing CESA
+   driver (and I think supporting the new approach to retrieve SRAM
+   memory region would make sense too)
+
+Best Regards,
+
+Boris
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
