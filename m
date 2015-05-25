@@ -1,64 +1,126 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v3 16/16] ARM: marvell/dt: add crypto node to kirkwood
- dtsi
-Date: Mon, 25 May 2015 16:46:51 +0000
-Message-ID: <20150525164651.GA13641@io.lakedaemon.net>
-References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
- <1432301642-11470-17-git-send-email-boris.brezillon@free-electrons.com>
- <55634221.6050504@free-electrons.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 0/6] Add common clock support for Broadcom iProc architecture
+Date: Mon, 25 May 2015 10:33:46 -0700
+Message-ID: <55635CFA.8010703@broadcom.com>
+References: <1430849603-15849-1-git-send-email-rjui@broadcom.com> <55511DB5.9090201@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55634221.6050504@free-electrons.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Arnaud Ebalard <arno@natisbad.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55511DB5.9090201-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 25, 2015 at 05:39:13PM +0200, Gregory CLEMENT wrote:
-> Hi Boris, Arnaud,
-> 
-> On 22/05/2015 15:34, Boris Brezillon wrote:
-> > From: Arnaud Ebalard <arno@natisbad.org>
-> > 
-> > Add crypto related nodes to kirkwood.dtsi.
-> 
-> Here you use a new compatible string but with an old binding
-> to let the user chose between the old and the new driver. Am I right?
+Hi Mike/Stephen,
 
-I thought we had settled on the user choosing by module load/ which driver is
-compiled in?  The DT should be describing the hardware, not which driver the
-user chooses to use.
+Ping. Do you think you will be able to review this patch set some time
+in the near future?
 
-thx,
+Thanks!
 
-Jason.
+Ray
 
-> > Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > ---
-> >  arch/arm/boot/dts/kirkwood.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-> > index 464f09a..1700b2b 100644
-> > --- a/arch/arm/boot/dts/kirkwood.dtsi
-> > +++ b/arch/arm/boot/dts/kirkwood.dtsi
-> > @@ -41,7 +41,7 @@
-> >  		pcie-io-aperture  = <0xf2000000 0x100000>;   /*   1 MiB    I/O space */
-> >  
-> >  		cesa: crypto@0301 {
-> > -			compatible = "marvell,orion-crypto";
-> > +			compatible = "marvell,kirkwood-crypto";
-> >  			reg = <MBUS_ID(0xf0, 0x01) 0x30000 0x10000>,
-> >  			      <MBUS_ID(0x03, 0x01) 0 0x800>;
-> >  			reg-names = "regs", "sram";
-> > 
+On 5/11/2015 2:23 PM, Ray Jui wrote:
+> Hi Mike,
 > 
+> Have you had a chance to review the iProc clock patches? If possible,
+> I'd like to get feedback from you as early as possible so I can make
+> changes if required. It would be really nice if we can get the iProc
+> clock patches going into v4.2.
 > 
-> -- 
-> Gregory Clement, Free Electrons
-> Kernel, drivers, real-time and embedded Linux
-> development, consulting, training and support.
-> http://free-electrons.com
+> A lot of our iProc drivers depend on these clock patches.
+> 
+> Thanks,
+> 
+> Ray
+> 
+> On 5/5/2015 11:13 AM, Ray Jui wrote:
+>> This patchset contains the initial common clock support for Broadcom's iProc
+>> family of SoCs. The iProc clock architecture comprises of various PLLs, e.g.,
+>> ARMPLL, GENPLL, LCPLL0, MIPIPLL, and etc. An onboard crystal serves as the
+>> basic reference clock for these PLLs. Each PLL may have several leaf clocks.
+>> One special group of clocks is the ASIU clocks, which are dervied directly
+>> from the crystal reference clock.
+>>
+>> This patchset also contains the basic clock support for the Broadcom Cygnus
+>> SoC, which implements the iProc clock architecture
+>>
+>> Changes from v6:
+>>  - Rebase to v4.1-rc2
+>>  - Consolidate iProc PLL and its leaf clocks into a single device node, based
+>>    on feedback from Mike Turquette. The PLL and its leaf clocks are now exposed
+>>    a clock consumer through indices of the same device node phandle
+>>  - Update iProc device tree binding document based on the above change
+>>  - Add SW override support to iProc PLL clocks
+>>
+>> Changes from v5:
+>>  - Rebase to v4.0-rc4
+>>  - Drop of_clk_get_parent_rate helper function from the clock framework
+>>  - Get rid of custom "clock-frequency" support in iProc PLL code. Instead, add
+>>    standard clock set_rate and round_rate support and make use of DT properties
+>>    "assigned-clocks" and "assigned-clock-rates" to initialize PLL to the
+>>    desired rate when registering to the clock framework
+>>  - Add SW workaround for ASIC bug on MIPI PLL to always read back the same
+>>    register following a write transaction, to ensure value is written to the
+>>    correct register
+>>
+>> Changes from v4:
+>>  - Add of_clk_get_parent_rate helper function into the clock framework
+>>  - Switch to use of_clk_get_parent_rate in the iProc PLL clock driver
+>>
+>> Changes from v3:
+>>  - Fix incorrect use of passing in of_clk_src_onecell_get when adding ARM PLL
+>>    and other iProc PLLs as clock provider. These PLLs have zero cells in DT and
+>>    thefore of_clk_src_simple_get should be used instead
+>>  - Rename Cygnus MIPI PLL Channel 2 clock from BCM_CYGNUS_MIPIPLL_CH2_UNUSED
+>>    to BCM_CYGNUS_MIPIPLL_CH2_V3D, since a 3D graphic rendering engine has been
+>>    integrated into Cygnus revision B0 and has its core clock running off
+>>    MIPI PLL Channel 2
+>>  - Changed default MIPI PLL VCO frequency from 1.75 GHz to 2.1 GHz. This allows
+>>    us to derive 300 MHz V3D clock from channel 2 through the post divisor
+>>
+>> Changes from v2:
+>>  - Re-arrange Cygnus clock/pll init functions so each init function is right
+>>    next to its clock table
+>>  - Removed #defines for number of clocks in Cygnus. Have the number of clocks
+>>    automatically determined based on array size of the clock table
+>>
+>> Changes from v1:
+>>  - Separate drivers/clk/Makefile change for drivers/clk/bcm out to a standalone patch
+>>
+>> Ray Jui (6):
+>>   clk: iproc: define Broadcom iProc clock binding
+>>   clk: iproc: add initial common clock support
+>>   clk: Change bcm clocks build dependency
+>>   clk: cygnus: add clock support for Broadcom Cygnus
+>>   ARM: dts: enable clock support for Broadcom Cygnus
+>>   clk: cygnus: remove Cygnus dummy clock binding
+>>
+>>  .../devicetree/bindings/clock/bcm-cygnus-clock.txt |   34 -
+>>  .../bindings/clock/brcm,iproc-clocks.txt           |  132 ++++
+>>  arch/arm/boot/dts/bcm-cygnus-clock.dtsi            |   89 ++-
+>>  drivers/clk/Makefile                               |    2 +-
+>>  drivers/clk/bcm/Kconfig                            |    9 +
+>>  drivers/clk/bcm/Makefile                           |    2 +
+>>  drivers/clk/bcm/clk-cygnus.c                       |  265 ++++++++
+>>  drivers/clk/bcm/clk-iproc-armpll.c                 |  282 ++++++++
+>>  drivers/clk/bcm/clk-iproc-asiu.c                   |  276 ++++++++
+>>  drivers/clk/bcm/clk-iproc-pll.c                    |  716 ++++++++++++++++++++
+>>  drivers/clk/bcm/clk-iproc.h                        |  178 +++++
+>>  include/dt-bindings/clock/bcm-cygnus.h             |   68 ++
+>>  12 files changed, 1990 insertions(+), 63 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>>  create mode 100644 drivers/clk/bcm/clk-cygnus.c
+>>  create mode 100644 drivers/clk/bcm/clk-iproc-armpll.c
+>>  create mode 100644 drivers/clk/bcm/clk-iproc-asiu.c
+>>  create mode 100644 drivers/clk/bcm/clk-iproc-pll.c
+>>  create mode 100644 drivers/clk/bcm/clk-iproc.h
+>>  create mode 100644 include/dt-bindings/clock/bcm-cygnus.h
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
