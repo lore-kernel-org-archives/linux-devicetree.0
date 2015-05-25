@@ -1,64 +1,74 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v3 16/16] ARM: marvell/dt: add crypto node to kirkwood
- dtsi
-Date: Mon, 25 May 2015 20:43:02 +0200
-Message-ID: <20150525204302.7c79afbf@bbrezillon>
-References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1432301642-11470-17-git-send-email-boris.brezillon@free-electrons.com>
-	<55634221.6050504@free-electrons.com>
-	<20150525164651.GA13641@io.lakedaemon.net>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 2/3] dts: Adding docs for Xilinx LogiCORE IP mailbox
+ driver.
+Date: Mon, 25 May 2015 12:04:09 -0700
+Message-ID: <20150525190409.GS18303@xsjsorenbubuntu>
+References: <1432251450-26352-1-git-send-email-moritz.fischer@ettus.com>
+ <1432251450-26352-3-git-send-email-moritz.fischer@ettus.com>
+ <555EC20C.6010703@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150525164651.GA13641@io.lakedaemon.net>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Arnaud Ebalard <arno@natisbad.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <555EC20C.6010703@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: mark.rutland@arm.com, Moritz Fischer <moritz.fischer@ettus.com>, arnd@arndb.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org, jingoohan1@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, joe@perches.com, akpm@linux-foundation.org, mchehab@osg.samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Jason, Gregory,
-
-On Mon, 25 May 2015 16:46:51 +0000
-Jason Cooper <jason@lakedaemon.net> wrote:
-
-> On Mon, May 25, 2015 at 05:39:13PM +0200, Gregory CLEMENT wrote:
-> > Hi Boris, Arnaud,
-> > 
-> > On 22/05/2015 15:34, Boris Brezillon wrote:
-> > > From: Arnaud Ebalard <arno@natisbad.org>
-> > > 
-> > > Add crypto related nodes to kirkwood.dtsi.
-> > 
-> > Here you use a new compatible string but with an old binding
-> > to let the user chose between the old and the new driver. Am I right?
-
-That was not the intention, but you're right, that's exactly what's
-happening here.
-
-> 
-> I thought we had settled on the user choosing by module load/ which driver is
-> compiled in?  The DT should be describing the hardware, not which driver the
-> user chooses to use.
-
-Right, but I didn't want to add new compatible strings to the old
-driver in the first place, neither I wanted to support the new way of
-defining/referencing the crypto SRAMs.
-ITOH, if we want to benefit from the TDMA optimization on Kirkwood SoCs,
-we have to add a new compatible (unlike Orion SoCs, Kirkwood ones embed
-a TDMA engine).
-
-This leaves the following solutions:
- - avoid changing the compatible in existing orion and kirkwood dtsi
-   files
- - adding kirkwood compatible string support to the existing CESA
-   driver (and I think supporting the new approach to retrieve SRAM
-   memory region would make sense too)
-
-Best Regards,
-
-Boris
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+T24gRnJpLCAyMDE1LTA1LTIyIGF0IDA3OjQzQU0gKzAyMDAsIE1pY2hhbCBTaW1layB3cm90ZToK
+PiBPbiAwNS8yMi8yMDE1IDAxOjM3IEFNLCBNb3JpdHogRmlzY2hlciB3cm90ZToKPiA+IFNpZ25l
+ZC1vZmYtYnk6IE1vcml0eiBGaXNjaGVyIDxtb3JpdHouZmlzY2hlckBldHR1cy5jb20+Cj4gPiAt
+LS0KPiA+ICAuLi4vYmluZGluZ3MvbWFpbGJveC94aWxpbngtbWFpbGJveC50eHQgICAgICAgICB8
+IDQwICsrKysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQwIGluc2VydGlv
+bnMoKykKPiA+IAo+IAo+IElSQyB0aGUgcnVsZSB3YXMgdG8gc2VuZCBiaW5kaW5nIGZpcnN0IGFu
+ZCB0aGVuIHRoZSBkcml2ZXIuCj4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL21haWxib3gveGlsaW54LW1haWxib3gudHh0IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gveGlsaW54LW1haWxib3gudHh0Cj4gPiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uZTU1OTc0Mwo+ID4gLS0tIC9kZXYv
+bnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gv
+eGlsaW54LW1haWxib3gudHh0Cj4gPiBAQCAtMCwwICsxLDQwIEBACj4gPiArWGlsaW54IE1haWxi
+b3ggRHJpdmVyCj4gPiArPT09PT09PT09PT09PT09PT09PT09Cj4gPiArCj4gPiArUmVxdWlyZWQg
+cHJvcGVydGllczoKPiA+ICstIGNvbXBhdGlibGUgOgkieGxueCxtYWlsYm94LTIuMSIuCj4gPiAr
+LSByZWcgOiAJcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBtYWlsYm94IGFuZCBsZW5ndGgg
+b2YKPiA+ICsJCW1lbW9yeSBtYXBwZWQgcmVnaW9uLgo+ID4gKy0gI21ib3gtY2VsbHM6CUNvbW1v
+biBtYWlsYm94IGJpbmRpbmcgcHJvcGVydHkgdG8gaWRlbnRpZnkgdGhlIG51bWJlcgo+ID4gKwkJ
+b2YgY2VsbHMgcmVxdWlyZWQgZm9yIHRoZSBtYWlsYm94IHNwZWNpZmllci4gU2hvdWxkIGJlIDEu
+Cj4gPiArCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICstIGludGVycnVwdC1wYXJlbnQg
+OglpbnRlcnJ1cHQgc291cmNlIHBoYW5kbGUuCj4gPiArLSBpbnRlcnJ1cHRzIDoJCWludGVycnVw
+dCBudW1iZXIuIFRoZSBpbnRlcnJ1cHQgc3BlY2lmaWVyIGZvcm1hdAo+IAo+IHBsZWFzZSBiZSBj
+b25zaXN0ZW50IHdpdGggc3BhY2luZyBhcm91bmQgOi4gSXQgZG9lc24ndCBsb29rIG5pY2UuCj4g
+Cj4gPiArCQkJZGVwZW5kcyBvbiB0aGUgaW50ZXJydXB0IGNvbnRyb2xsZXIgcGFyZW50Lgo+ID4g
+Kwo+ID4gK0V4YW1wbGU6Cj4gPiArCW1ib3g6IG1haWxib3hAMHg0MDQwMDAwMCB7Cj4gCj4gcmVt
+b3ZlIDB4IHByZWZpeCBoZXJlLgo+IAo+ID4gKwkJY29tcGF0aWJsZSA9ICJ4bG54LGF4aS1tYWls
+Ym94LTIuMSI7Cj4gPiArCQlyZWcgPSA8MHgxMDAgMHgzYz47Cj4gCj4gVGhpcyBpcyB3ZWlyZCAt
+IGl0IHNob3VsZCBzdGFydCB3aXRoIDQwNDAwMDAwLgo+IE9yIGlzIHlvdXIgcGh5c2ljYWwgYWRk
+cmVzcyAweDEwMD8KPiAKPiAKPiA+ICsJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+ID4g
+KwkJaW50ZXJydXB0cyA9IDw1PjsKPiA+ICsJCSNtYm94LWNlbGxzID0gPDE+Owo+ID4gKwl9Owo+
+ID4gKwo+ID4gK01haWxib3ggY2xpZW50Cj4gPiArPT09PT09PT09PT09PT09Cj4gPiArIm1ib3hl
+cyIgYW5kIHRoZSBvcHRpb25hbCAibWJveC1uYW1lcyIgKHBsZWFzZSBzZWUKPiA+ICtEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9tYWlsYm94LnR4dCBmb3IgZGV0YWls
+cykuIEVhY2ggdmFsdWUKPiA+ICtvZiB0aGUgbWJveGVzIHByb3BlcnR5IHNob3VsZCBjb250YWlu
+IGEgcGhhbmRsZSB0byB0aGUgbWFpbGJveCBjb250cm9sbGVyCj4gPiArZGV2aWNlIG5vZGUgYW5k
+IHNlY29uZCBhcmd1bWVudCBpcyB0aGUgY2hhbm5lbCBpbmRleC4gSXQgbXVzdCBiZSAwIChoYXJk
+d2FyZQo+ID4gK3N1cHBvcnQgb25seSBvbmUgY2hhbm5lbCkuVGhlIGVxdWl2YWxlbnQgIm1ib3gt
+bmFtZXMiIHByb3BlcnR5IHZhbHVlIGNhbiBiZQo+IAo+IC48c3BhY2U+VGhlCj4gCj4gPiArdXNl
+ZCB0byBnaXZlIGEgbmFtZSB0byB0aGUgY29tbXVuaWNhdGlvbiBjaGFubmVsIHRvIGJlIHVzZWQg
+YnkgdGhlIGNsaWVudCB1c2VyLgo+ID4gKwo+ID4gK0V4YW1wbGU6Cj4gPiArCW1jbGllbnQwOiBt
+Y2xpZW50MEAweDQwMCB7Cj4gCj4gZGl0dG8uCj4gCj4gPiArCQljb21wYXRpYmxlID0gImNsaWVu
+dC0xLjAiOwo+ID4gKwkJcmVnID0gPDB4NDAwIDB4MTA+Owo+ID4gKwkJbWJveC1uYW1lcyA9ICJt
+Ym94IiwgIm1ib3gtcngiOwoKVGhpcyBzZWVtcyB0byBjb25zdW1lIHR3byBtYWlsYm94ZXMgYnV0
+Li4uCgo+ID4gKwkJbWJveGVzID0gPCZtYm94IDA+OwoKLi4uIHRoaXMgc2VlbXMgdG8gZGVzY3Jp
+YmUgb25seSBvbmUsIG9yIGFtIEkgbWlzdGFrZW4/CgoJU8O2cmVuCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
