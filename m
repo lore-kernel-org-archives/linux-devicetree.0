@@ -1,28 +1,65 @@
-From: Willy Tarreau <w@1wt.eu>
-Subject: Re: Device Tree Blob (DTB) licence
-Date: Mon, 25 May 2015 22:04:10 +0200
-Message-ID: <20150525200410.GC22292@1wt.eu>
-References: <1430820315.19516.26.camel@opteya.com> <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com> <1432289148.5304.58.camel@opteya.com> <1432322832.5304.63.camel@opteya.com> <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
-Reply-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v8 8/8] DT: samsung-fimc: Add examples for
+ samsung,flash-led property
+Date: Mon, 25 May 2015 23:56:59 +0300
+Message-ID: <20150525205659.GB4081@valkosipuli.retiisi.org.uk>
+References: <1432131015-22397-1-git-send-email-j.anaszewski@samsung.com>
+ <1432131015-22397-9-git-send-email-j.anaszewski@samsung.com>
+ <20150520220018.GE8601@valkosipuli.retiisi.org.uk>
+ <555DA119.9030904@samsung.com>
+ <20150521113213.GI8601@valkosipuli.retiisi.org.uk>
+ <555DDD88.8080601@samsung.com>
+ <20150523120348.GA3170@valkosipuli.retiisi.org.uk>
+ <55630EE1.90307@samsung.com>
+ <55631AAC.6080507@samsung.com>
+ <55633186.1000004@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <55633186.1000004@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 25, 2015 at 02:14:28AM -0500, Rob Landley wrote:
-> Personally, I'm sad we're starting to get ACPI for arm
+Hi Sylwester,
 
-Maybe it was the only solution found to make this platform start to
-misbehave like a regular PC and get it even more widely adopted :-)
+On Mon, May 25, 2015 at 04:28:22PM +0200, Sylwester Nawrocki wrote:
+> On 25/05/15 14:50, Jacek Anaszewski wrote:
+> >> On 23/05/15 14:03, Sakari Ailus wrote:
+> >>> >> On Thu, May 21, 2015 at 03:28:40PM +0200, Sylwester Nawrocki wrote:
+> >>>> >>> flash-leds = <&flash_xx &image_sensor_x>, <...>;
+> >>> >>
+> >>> >> One more matter to consider: xenon flash devices.
+> >>> >>
+> >>> >> How about samsung,camera-flashes (and ti,camera-flashes)? After pondering
+> >>> >> this awhile, I'm ok with removing the vendor prefix as well.
+> >>> >>
+> >>> >> Let me know what you think.
+> >> >
+> >> > I thought about it a bit more and I have some doubts about semantics
+> >> > as above. I'm fine with 'camera-flashes' as far as name is concerned.
+> >> >
+> >> > Perhaps we should put only phandles to leds or xenon flash devices
+> >> > in the 'camera-flashes' property. I think it would be more future
+> >> > proof in case there is more nodes needed to describe the camera flash
+> >> > (or a camera module) than the above two. And phandles to corresponding
+> >> > image sensor device nodes would be put in a separate property.
+> >
+> > Could you give examples of the cases you are thinking of?
+> 
+> I don't have any examples in mind ATM, I just wanted to point out
+> the above convention might not be flexible enough. Especially since
+> we already know there is more sub-devices within the camera module
+> than just flashes and image sensors.
 
-Willy
+I have to admit I've never seen a camera module with an integrated flash.
+The lens is part of the module but typically flash is not. That doesn't say
+there aren't such devices though.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
