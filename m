@@ -1,120 +1,62 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH 06/21] of/platform: Add of_platform_device_ensure()
-Date: Mon, 25 May 2015 16:53:10 +0200
-Message-ID: <1432565608-26036-7-git-send-email-tomeu.vizoso@collabora.com>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 14/16] ARM: marvell/dt: enable crypto on armada-xp-gp
+Date: Mon, 25 May 2015 17:10:37 +0200
+Message-ID: <55633B6D.7080307@free-electrons.com>
+References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com> <1432301642-11470-15-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <stephane.marchesin@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Alexander Holler <holler@ahsoftware.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432301642-11470-15-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This function ensures that the device that encloses the passed device
-node is registered, and thus probed if the corresponding driver has been
-registered already.
+Hi Boris,
 
-This function can be used by drivers to ensure that a dependency is
-fulfilled.
+On 22/05/2015 15:34, Boris Brezillon wrote:
+> Enable the crypto IP on armada-xp-gp.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-xp-gp.dts | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+> index 565227e..8a739f4 100644
+> --- a/arch/arm/boot/dts/armada-xp-gp.dts
+> +++ b/arch/arm/boot/dts/armada-xp-gp.dts
+> @@ -94,7 +94,9 @@
+>  	soc {
+>  		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+>  			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+> -			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000>;
+> +			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
+> +			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
+> +			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
----
- drivers/of/platform.c       | 51 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_platform.h |  2 ++
- 2 files changed, 53 insertions(+)
+As the crypto engine really depend on the SoC itself and not of the board,
+what about updating the dts of the other board using an Armada XP?
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index a01f57c..cc5d808 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -499,6 +499,57 @@ void of_platform_depopulate(struct device *parent)
- }
- EXPORT_SYMBOL_GPL(of_platform_depopulate);
- 
-+/**
-+ * of_platform_device_ensure - Ensure that device has been registered
-+ * @np: pointer to node to create device for
-+ *
-+ * Ensures that a device has been registered for the given node.
-+ */
-+void of_platform_device_ensure(struct device_node *np)
-+{
-+	struct device_node *iter, *node = NULL;
-+	int rc;
-+
-+	/* Nothing to be done here */
-+	if (of_node_check_flag(np, OF_POPULATED))
-+		return;
-+
-+	/* Too early for us to do anything useful */
-+	if (!platform_bus.kobj.state_initialized)
-+		return;
-+
-+	/* Find the node of the platform device enclosing this node */
-+	for (iter = np;
-+	     iter && iter->parent;
-+	     iter = iter->parent) {
-+		if (of_get_property(iter, "compatible", NULL))
-+			node = iter;
-+
-+		/*
-+		 * If the requested and requester nodes have a common ancestor
-+		 * that is being populated at this moment, register the device
-+		 * associated with the child of this ancestor that includes
-+		 * the requested node.
-+		 */
-+		if (of_node_check_flag(iter->parent, OF_POPULATED) &&
-+		    of_match_node(of_default_bus_match_table, iter->parent))
-+			break;
-+
-+		if (of_node_is_root(iter->parent))
-+			break;
-+	}
-+
-+	if (!node)
-+		return;
-+
-+	rc = of_platform_bus_create(node, of_default_bus_match_table, NULL,
-+				    NULL, true);
-+	if (rc)
-+		pr_debug("%s: creation of platform device failed\n",
-+			 np->full_name);
-+}
-+EXPORT_SYMBOL_GPL(of_platform_device_ensure);
-+
- #ifdef CONFIG_OF_DYNAMIC
- static int of_platform_notify(struct notifier_block *nb,
- 				unsigned long action, void *arg)
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 611a691..df17890 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -73,6 +73,7 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
- extern void of_platform_depopulate(struct device *parent);
-+extern void of_platform_device_ensure(struct device_node *np);
- #else
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
-@@ -82,6 +83,7 @@ static inline int of_platform_populate(struct device_node *root,
- 	return -ENODEV;
- }
- static inline void of_platform_depopulate(struct device *parent) { }
-+static inline void of_platform_device_ensure(struct device_node *np) { }
- #endif
- 
- #if defined(CONFIG_OF_DYNAMIC) && defined(CONFIG_OF_ADDRESS)
+
+Thanks,
+
+Gregory
+
+
+>  
+>  		devbus-bootcs {
+>  			status = "okay";
+> 
+
+
 -- 
-2.4.1
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
