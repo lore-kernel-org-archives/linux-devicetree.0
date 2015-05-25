@@ -1,36 +1,91 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v2 0/2] Add MediaTek display PWM driver
-Date: Mon, 25 May 2015 10:14:51 +0800
-Message-ID: <1432520091.23308.5.camel@mtksdaap41>
-References: <1432214964-40644-1-git-send-email-yh.huang@mediatek.com>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] Watchdog: introduce "pretimeout" into framework
+Date: Mon, 25 May 2015 11:09:00 +0800
+Message-ID: <CADyBb7vp+E_29zOW9Wq9oL8LbwgBFhM9VCRMNsYwFVGGXMwOTQ@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1432197156-16947-1-git-send-email-fu.wei@linaro.org>
+	<1432197156-16947-6-git-send-email-fu.wei@linaro.org>
+	<20150521153225.GA17441@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1432214964-40644-1-git-send-email-yh.huang@mediatek.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: YH Huang <yh.huang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150521153225.GA17441-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-05-21 at 21:29 +0800, YH Huang wrote:
-> YH Huang (2):
->   dt-bindings: pwm: add MediaTek display PWM bindings
->   pwm: add MediaTek display PWM driver support
-> 
->  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |  25 +++
->  drivers/pwm/Kconfig                                |  10 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-mtk-disp.c                         | 228 +++++++++++++++++++++
->  4 files changed, 264 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
->  create mode 100644 drivers/pwm/pwm-mtk-disp.c
+Hi Guenter,
 
-Hi YH,
+Great thanks for your suggestion,
 
-It would be easier for reviewer if you have a summary here on what you
-have changed compare to last version.
-Also, please add patch series summary even for v2, it remind reviewer
-what this series is about.
+I have put this kind of validation into watchdog_pretimeout_invalid
+and watchdog_timeout_invalid.
 
-Joe.C
+So :
+
+(1)
+ set_timeout(10);   ------> if this setting is successful
+ set_pretimeout(20); ----->  return fail (-EINVAL)
+
+
+(2)
+set_timeout(10);  ------> if this setting is successful
+set_pretimeout(10); ----->  return fail (-EINVAL)
+
+this kind of situation will not result in an invalid / unexpected timeout value.
+
+you will see this change in my next patchset
+
+On 21 May 2015 at 23:32, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On Thu, May 21, 2015 at 04:32:34PM +0800, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Also update Documentation/watchdog/watchdog-kernel-api.txt to
+>> introduce:
+>> (1)the new elements in the watchdog_device and watchdog_ops struct;
+>> (2)the new API "watchdog_init_timeouts".
+>>
+>> Reasons:
+>> (1)kernel already has two watchdog drivers are using "pretimeout":
+>>       drivers/char/ipmi/ipmi_watchdog.c
+>>       drivers/watchdog/kempld_wdt.c(but the definition is different)
+>> (2)some other dirvers are going to use this: ARM SBSA Generic Watchdog
+>>
+>> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>
+> [ ... ]
+>
+>>
+>> +/* Use the following function to check if a pretimeout value is invalid */
+>> +static inline bool watchdog_pretimeout_invalid(struct watchdog_device *wdd,
+>> +                                            unsigned int t)
+>> +{
+>> +     return ((wdd->max_pretimeout != 0) &&
+>> +             (t < wdd->min_pretimeout || t > wdd->max_pretimeout));
+>> +}
+>
+> Should this function also enforce "t < wdd->timeout", and
+> should watchdog_timeout_invalid() enforce "t > wdd->pretimeout" ?
+>
+> Thanks,
+> Guenter
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
