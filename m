@@ -1,43 +1,51 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for Hardkernel
-Date: Mon, 25 May 2015 14:29:00 +0200
-Message-ID: <5563158C.2040404@collabora.co.uk>
-References: <1432556810-11597-1-git-send-email-k.kozlowski.k@gmail.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v4 2/2] ARM: socfpga: dts: add sdram controller dt
+ binding doc
+Date: Mon, 25 May 2015 14:39:02 +0200
+Message-ID: <20150525123902.GE9943@amd>
+References: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
+ <1432317735-29413-3-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1432556810-11597-1-git-send-email-k.kozlowski.k@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432317735-29413-3-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>
+Cc: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-On 05/25/2015 02:26 PM, Krzysztof Kozlowski wrote:
-> Add Hardkernel Co., Ltd. to the list of device tree vendor prefixes.
+On Fri 2015-05-22 13:02:15, Alan Tull wrote:
+> Add binding doc for Altera SOCFPGA SDRAM controller.
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> v4: Add bindings doc
+> ---
+>  .../arm/altera/socfpga-sdram-controller.txt        |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 80339192c93e..e8a00b74d8fe 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -90,6 +90,7 @@ gumstix	Gumstix, Inc.
->  gw	Gateworks Corporation
->  hannstar	HannStar Display Corporation
->  haoyu	Haoyu Microelectronic Co. Ltd.
-> +hardkernel	Hardkernel Co., Ltd
->  himax	Himax Technologies, Inc.
->  hisilicon	Hisilicon Limited.
->  hit	Hitachi Ltd.
-> 
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+> new file mode 100644
+> index 0000000..77ca635
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+> @@ -0,0 +1,12 @@
+> +Altera SOCFPGA SDRAM Controller
+> +
+> +Required properties:
+> +- compatible : Should contain "altr,sdr-ctl" and "syscon".
+> +  syscon is required by the Altera SOCFPGA SDRAM EDAC.
+> +- reg : Should contain 1 register range (address and length)
+> +
+> +Example:
+> +	sdr: sdr@ffc25000 {
+> +		compatible = "altr,sdr-ctl", "syscon";
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-
-Best regards,
-Javier
+Is the syscon binding good idea? Should the EDAC driver be fixed to
+accept altr,sdr-ctl binding, instead?
+							Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
