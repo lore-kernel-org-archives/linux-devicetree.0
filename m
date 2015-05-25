@@ -1,46 +1,45 @@
-From: "Jingoo Han" <jingoohan1@gmail.com>
-Subject: Re: [PATCHv1 0/2] Adding driver for Xilinx LogiCORE IP mailbox.
-Date: Mon, 25 May 2015 22:56:14 +0900
-Message-ID: <000101d096f2$97457cf0$c5d076d0$@com>
-References: <1432317791-26851-1-git-send-email-moritz.fischer@ettus.com> <5562BB92.60808@xilinx.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/3] ASoC: qcom: Add apq8016 lpass driver support
+Date: Mon, 25 May 2015 15:04:44 +0100
+Message-ID: <20150525140444.GW21391@sirena.org.uk>
+References: <1432309956-5228-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1432310032-5272-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5562BB92.60808@xilinx.com>
-Content-Language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Michal Simek' <michal.simek@xilinx.com>, 'Moritz Fischer' <moritz.fischer@ettus.com>, jassisinghbrar@gmail.com
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PpfQBwiAIZcuDX26"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432310032-5272-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Patrick Lai <plai@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Kenneth Westfield <kwestfie@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, May 25, 2015 3:05 PM, Michal Simek wrote:
-> On 05/22/2015 08:03 PM, Moritz Fischer wrote:
-> > This patchset adds mailbox framework integration for the Xilinx LogiCORE IP
-> > mailbox.  The Xilinx LogiCORE IP mailbox is a fpga softcore that allows
-> > interprocessor communication between AXI4 stream / memory mapped
-> > processors.
-> >
-> > Changes from v0:
-> > ---------------------
-> >
-> > - Several stylistic issues
-> > - Dropped superfluous intr_mode member
-> > - Really masking the IRQs on mailbox_shutdown
-> > - No longer using polling by accident in non-IRQ mode
-> > - Swapped doc and driver commits
-> 
-> Changes update should be in every particular patch.
-> Also v1 is used to the first version that's why this one should be v2.
 
-Right, I agree with Michal Simek's opinion.
-If there are 'Changes update' in each patch, it makes people review
-the patches more easily. In addition, normally, 'v0' is not used.
+--PpfQBwiAIZcuDX26
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Best regards,
-Jingoo Han
+On Fri, May 22, 2015 at 04:53:52PM +0100, Srinivas Kandagatla wrote:
+> This patch adds apq8016 lpass driver support. APQ8016 has 4 MI2S which
+> can be routed to one internal codec and 2 external codec interfaces.
 
-> 
-> Thanks,
-> Michal
+Applied, thanks.
+
+--PpfQBwiAIZcuDX26
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVYyv7AAoJECTWi3JdVIfQrGIH/0bU+eY1fxIjxVwkdQAaAgEQ
+oZVwSyh9Dnfa+ZGp8/QIusiStwUoaJs7ycC0s2Xgv7pIBVjWMTfMcsa7ZqRQTswK
+Wy4t+F/ikMGFX7AaIGeN5JTh30D08Wvk3d4FRqO7ckspnnENCS7jC0HInMKxckLl
+PGnIndqOGHtDD+ik9q7Sg+ebdXlWXAWpcX9WMRHS6fpXUk1hgOIY+nNMIp5W7WJI
+2JeiqaJDVb8Xo44kxGNDLvwNffV72uRf0CRe4BcekRXJ34d8QGWLNVv8UNcKBYpQ
+UtTLyPIyyjFUvlx4TbS9OBC08Q/azzeIOLv+yqTQx8DFxzcmt3KyicR3bDFHu/0=
+=OKEu
+-----END PGP SIGNATURE-----
+
+--PpfQBwiAIZcuDX26--
