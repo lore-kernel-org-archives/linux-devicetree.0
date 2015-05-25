@@ -1,125 +1,173 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: iommu: Add binding for mediatek IOMMU
-Date: Mon, 25 May 2015 15:31:48 +0900
-Message-ID: <CAAFQd5AF5UVb35PEg+GjzLAqqr0q=Wg+XONRmK4XR=HLuJv2rA@mail.gmail.com>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com> <1431683009-18158-2-git-send-email-yong.wu@mediatek.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v4 3/6] arm: dts: imx: update snvs to use syscon access
+ register
+Date: Mon, 25 May 2015 14:39:14 +0800
+Message-ID: <20150525063913.GF3264@dragon>
+References: <1432305399-30571-1-git-send-email-Frank.Li@freescale.com>
+ <1432305399-30571-4-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431683009-18158-2-git-send-email-yong.wu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, pebolle@tiscali.nl, arnd@arndb.de, mitchelh@codeaurora.org, k.zhang@mediatek.com, youhua.li@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432305399-30571-4-git-send-email-Frank.Li@freescale.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Frank.Li@freescale.com
+Cc: lznuaa@gmail.com, dmitry.torokhov@gmail.com, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Please see my comments inline.
-
-On Fri, May 15, 2015 at 6:43 PM, Yong Wu <yong.wu@mediatek.com> wrote:
-> This patch add mediatek iommu dts binding document.
->
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+On Fri, May 22, 2015 at 10:36:36PM +0800, Frank.Li@freescale.com wrote:
+> From: Frank Li <Frank.Li@freescale.com>
+> 
+> snvs is MFP device. Change dts to use syscon to allocate register resource.
+> snvs power off also switch to common syscon-poweroff
+> 
+> Signed-off-by: Frank Li <Frank.Li@freescale.com>
 > ---
->  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  51 ++++++++++
->  include/dt-bindings/iommu/mt8173-iommu-port.h      | 112 +++++++++++++++++++++
->  2 files changed, 163 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
->  create mode 100644 include/dt-bindings/iommu/mt8173-iommu-port.h
->
-> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> new file mode 100644
-> index 0000000..f2cc7c0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> @@ -0,0 +1,51 @@
-> +/******************************************************/
-> +/*    Mediatek IOMMU Hardware Block Diagram           */
-> +/******************************************************/
+>  arch/arm/boot/dts/imx6qdl.dtsi | 19 +++++++++----------
+>  arch/arm/boot/dts/imx6sl.dtsi  | 19 +++++++++----------
+>  arch/arm/boot/dts/imx6sx.dtsi  | 17 ++++++++---------
+>  arch/arm/boot/dts/vfxxx.dtsi   |  9 +++------
+>  4 files changed, 29 insertions(+), 35 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 0482a66..4f3f5f4 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -686,22 +686,21 @@
+>  				fsl,anatop = <&anatop>;
+>  			};
+>  
+> -			snvs@020cc000 {
+> -				compatible = "fsl,sec-v4.0-mon", "simple-bus";
+> -				#address-cells = <1>;
+> -				#size-cells = <1>;
+> -				ranges = <0 0x020cc000 0x4000>;
+> +			snvs:snvs@020cc000 {
 
-nit: Could you follow one of existing styles of DT binding
-documentation? You might be able to use [1] as an example.
+There should be a space between label and node.
 
-[1] http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-.
+> +				compatible = "fsl,sec-v4.0-mon", "syscon",  "simple-mfd";
 
-> +              EMI (External Memory Interface)
-> +               |
-> +              m4u (Multimedia Memory Management Unit)
-> +               |
-> +              smi (Smart Multimedia Interface)
-> +               |
-> +        +---------------+-------
-> +        |               |
-> +        |               |
-> +    vdec larb       disp larb      ... SoCs have different local arbiter(larb).
-> +        |               |
-> +        |               |
-> +   +----+----+    +-----+-----+
-> +   |    |    |    |     |     |    ...
-> +   |    |    |    |     |     |    ...
-> +   |    |    |    |     |     |    ...
-> +  MC   PP   VLD  OVL0 RDMA0 WDMA0  ... There are different ports in each larb.
-> +
+One space is enough in between.
 
-This diagram is still quite meaningless without proper description of
-all the functionality off all the blocks and interfaces between them.
+> +				reg = <0x020cc000 0x4000>;
+>  
+> -				snvs_rtc: snvs-rtc-lp@34 {
+> +				snvs_rtc: snvs-rtc-lp {
+>  					compatible = "fsl,sec-v4.0-mon-rtc-lp";
+> -					reg = <0x34 0x58>;
 
-> +Required properties:
-> +- compatible : must be "mediatek,mt8173-m4u".
-> +- reg : m4u register base and size.
-> +- interrupts : the interrupt of m4u.
-> +- clocks : must contain one entry for each clock-names.
-> +- clock-names : must be "bclk", It is the block clock of m4u.
-> +- larb-portes-nr : must contain the number of the portes for each larb(local
-> +       arbiter). The number is defined in dt-binding/iommu/mt8173-iommu-port.h.
+I think rtc node should have a similar property list like snvs-poweroff,
+i.e. regmap and offset.
 
-typo: Should it be "ports" instead of "portes"?
+Shawn
 
-Anyway, shouldn't this be a property of larb nodes? I.e. the larb0
-node would have a port-count property set to M4U_LARB0_PORT_NR.
-
-> +- larb : must contain the local arbiters of the current platform. Refer to
-> +       bindings/soc/mediatek/mediatek,smi.txt. It must sort according to the
-> +       local arbiter index, like larb0, larb1, larb2...
-> +- iommu-cells : must be 1. Specifies the client PortID as defined in
-> +       dt-binding/iommu/mt8173-iommu-port.h
-
-Looking at the driver, wouldn't a 2 cell system be more appropriate
-here? With first cell indexing the larbs and second the ports within
-that larb.
-
-[snip]
-
-> +#define M4U_LARB0_PORT_NR      8
-> +#define M4U_LARB1_PORT_NR      10
-> +#define M4U_LARB2_PORT_NR      21
-> +#define M4U_LARB3_PORT_NR      15
-> +#define M4U_LARB4_PORT_NR      6
-> +#define M4U_LARB5_PORT_NR      9
-> +
-> +#define M4U_LARB0_PORT(n)      (n)
-> +#define M4U_LARB1_PORT(n)      ((n) + M4U_LARB0_PORT_NR + M4U_LARB0_PORT(0))
-> +#define M4U_LARB2_PORT(n)      ((n) + M4U_LARB1_PORT_NR + M4U_LARB1_PORT(0))
-> +#define M4U_LARB3_PORT(n)      ((n) + M4U_LARB2_PORT_NR + M4U_LARB2_PORT(0))
-> +#define M4U_LARB4_PORT(n)      ((n) + M4U_LARB3_PORT_NR + M4U_LARB3_PORT(0))
-> +#define M4U_LARB5_PORT(n)      ((n) + M4U_LARB4_PORT_NR + M4U_LARB4_PORT(0))
-
-This looks like some artificial indexing. Does it have any
-correspondence with actual hardware configuration?
-
-> +
-> +/* larb0 */
-> +#define        M4U_PORT_DISP_OVL0              M4U_LARB0_PORT(0)
-> +#define        M4U_PORT_DISP_RDMA0             M4U_LARB0_PORT(1)
-> +#define        M4U_PORT_DISP_WDMA0             M4U_LARB0_PORT(2)
-[snip]
-> +#define        M4U_PORT_VENC_CUR_CHROMA_SET2   M4U_LARB5_PORT(6)
-> +#define        M4U_PORT_VENC_RD_COMA_SET2      M4U_LARB5_PORT(7)
-> +#define        M4U_PORT_VENC_SV_COMA_SET2      M4U_LARB5_PORT(8)
-
-This convinces me even more that this binding actually needs
-#iommu-cells to be 2 and the indexing system I described above.
-
-Best regards,
-Tomasz
+>  					interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>,
+>  						     <0 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+>  
+> -				snvs_poweroff: snvs-poweroff@38 {
+> -					compatible = "fsl,sec-v4.0-poweroff";
+> -					reg = <0x38 0x4>;
+> +				snvs_poweroff: snvs-poweroff {
+> +					compatible = "syscon-poweroff";
+> +					regmap = <&snvs>;
+> +					offset = <0x38>;
+> +					mask = <0x60>;
+>  					status = "disabled";
+>  				};
+>  			};
+> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+> index a78e715..2de6d46 100644
+> --- a/arch/arm/boot/dts/imx6sl.dtsi
+> +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> @@ -563,22 +563,21 @@
+>  				fsl,anatop = <&anatop>;
+>  			};
+>  
+> -			snvs@020cc000 {
+> -				compatible = "fsl,sec-v4.0-mon", "simple-bus";
+> -				#address-cells = <1>;
+> -				#size-cells = <1>;
+> -				ranges = <0 0x020cc000 0x4000>;
+> +			snvs:snvs@020cc000 {
+> +				compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+> +				reg = <0x020cc000 0x4000>;
+>  
+> -				snvs_rtc: snvs-rtc-lp@34 {
+> +				snvs_rtc: snvs-rtc-lp {
+>  					compatible = "fsl,sec-v4.0-mon-rtc-lp";
+> -					reg = <0x34 0x58>;
+>  					interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>,
+>  						     <0 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+>  
+> -				snvs_poweroff: snvs-poweroff@38 {
+> -					compatible = "fsl,sec-v4.0-poweroff";
+> -					reg = <0x38 0x4>;
+> +				snvs_poweroff: snvs-poweroff {
+> +					compatible = "syscon-poweroff";
+> +					regmap = <&snvs>;
+> +					offset = <0x38>;
+> +					mask = <0x60>;
+>  					status = "disabled";
+>  				};
+>  			};
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+> index 708175d..3cb3b5b 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -662,20 +662,19 @@
+>  			};
+>  
+>  			snvs: snvs@020cc000 {
+> -				compatible = "fsl,sec-v4.0-mon", "simple-bus";
+> -				#address-cells = <1>;
+> -				#size-cells = <1>;
+> -				ranges = <0 0x020cc000 0x4000>;
+> +				compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+> +				reg = <0x020cc000 0x4000>;
+>  
+> -				snvs_rtc: snvs-rtc-lp@34 {
+> +				snvs_rtc: snvs-rtc-lp {
+>  					compatible = "fsl,sec-v4.0-mon-rtc-lp";
+> -					reg = <0x34 0x58>;
+>  					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+>  
+> -				snvs_poweroff: snvs-poweroff@38 {
+> -					compatible = "fsl,sec-v4.0-poweroff";
+> -					reg = <0x38 0x4>;
+> +				snvs_poweroff: snvs-poweroff {
+> +					compatible = "syscon-poweroff";
+> +					regmap = <&snvs>;
+> +					offset = <0x38>;
+> +					mask = <0x60>;
+>  					status = "disabled";
+>  				};
+>  			};
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index 4aa3351..fccfc01 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -404,14 +404,11 @@
+>  			};
+>  
+>  			snvs0: snvs@400a7000 {
+> -			    compatible = "fsl,sec-v4.0-mon", "simple-bus";
+> -				#address-cells = <1>;
+> -				#size-cells = <1>;
+> -				ranges = <0 0x400a7000 0x2000>;
+> +			    compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+> +				reg = <0x400a7000 0x2000>;
+>  
+> -				snvsrtc: snvs-rtc-lp@34 {
+> +				snvsrtc: snvs-rtc-lp {
+>  					compatible = "fsl,sec-v4.0-mon-rtc-lp";
+> -					reg = <0x34 0x58>;
+>  					interrupts = <100 IRQ_TYPE_LEVEL_HIGH>;
+>  					clocks = <&clks VF610_CLK_SNVS>;
+>  					clock-names = "snvs-rtc";
+> -- 
+> 1.9.1
+> 
