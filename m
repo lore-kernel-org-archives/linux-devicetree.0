@@ -1,65 +1,50 @@
-From: Xander Huff <xander.huff-acOepvfBmUk@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: adc: xilinx-xadc: Add xlnx,extend-name as an
- optional argument for aux channels
-Date: Tue, 26 May 2015 14:05:59 -0500
-Message-ID: <5564C417.3010707@ni.com>
-References: <1431038644-41600-1-git-send-email-xander.huff@ni.com> <1431038644-41600-2-git-send-email-xander.huff@ni.com> <555B78A3.2030202@metafoo.de> <55606340.1090403@kernel.org> <55643F20.4080306@metafoo.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 5/7] clocksource: Add Pistachio SoC general purpose
+ timer binding document
+Date: Tue, 26 May 2015 22:15:16 +0300
+Message-ID: <5564C644.7040700@cogentembedded.com>
+References: <1432665548-16024-1-git-send-email-ezequiel.garcia@imgtec.com> <1432665671-16102-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55643F20.4080306-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben.shelton-acOepvfBmUk@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, joe.hershberger-acOepvfBmUk@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432665671-16102-1-git-send-email-ezequiel.garcia@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@imgtec.com>, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Andrew Bresticker <abrestic@chromium.org>, James Hartley <james.hartley@imgtec.com>, Govindraj.Raja@imgtec.com, Damien.Horsley@imgtec.com, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5/26/2015 4:38 AM, Lars-Peter Clausen wrote:
-> On 05/23/2015 01:23 PM, Jonathan Cameron wrote:
->> On 19/05/15 18:53, Lars-Peter Clausen wrote:
->>> On 05/08/2015 12:44 AM, Xander Huff wrote:
->>>> To better facilitate user-mode access to optional aux channels, allow
->>>> device trees to specify a custom extended name for defined channels.
->>>
->>> Hi,
->>>
->>> 'extend-name' is kind of a IIO specific term. I think a better name in the
->>> devicetree context would be 'label'. That's used everywhere else when giving
->>> a short description string to a node.
->>>
->> Hi Lars,
->>
->> What do you think of the general idea?  I'm unconvinced we want to do this in
->> channel naming.
->> Perhaps we want an additional attribute giving access to this sort of
->> 'semantic' information?
->
-> I'm not convinced about it either. My gut feeling is that this is not the right
-> approach, but I don't really have any better ideas at the moment.
->
-> Xander can you give a short description of how this information will be used by
-> an application? Would having a label property for the channel also work for you
-> (e.g. in_voltage0_label)?
->
-> - Lars
->
-We use 10 of the optional aux channels available in the XADC and have them wired 
-up to specific power supplies. For example, channel 9 is connected to the 
-current of a 6V power supply and channel 12 is connected to the voltage of that 
-same supply, channel 4 is connected to the current of a 3.3V power supply and 
-channel 5 is connected to its voltage.
+Hello.
 
-Without adding extended names to distinguish these aux channels, the handles 
-available inside /sys/bus/iio/devices/[device] are generic: in_voltage10_raw, 
-in_voltage10_scale, for example. If I added the label 'user5v_v', then these 
-handles would be in_voltage10_user5v_v_raw and in_voltage10_user5v_v_scale. This 
-makes it a lot easier to get started and let the handles describe themselves, 
-rather than having to look up which channels are connected to which things.
+On 05/26/2015 09:41 PM, Ezequiel Garcia wrote:
 
-As far as using 'label' instead of 'extend-name', that's fine with me. I've 
-already sent out a v2 using 'label' instead.
+> Add a device-tree binding document for the clocksource driver provided
+> by Pistachio SoC general purpose timers.
 
--- 
-Xander Huff
-Staff Software Engineer
-National Instruments
+> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+> ---
+>   .../bindings/timer/img,pistachio-gptimer.txt       | 28 ++++++++++++++++++++++
+>   1 file changed, 28 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+
+> diff --git a/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+> new file mode 100644
+> index 0000000..418379f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+> @@ -0,0 +1,28 @@
+> +* Pistachio general-purpose timer based clocksource
+> +
+> +Required properties:
+> + - compatible: "img,pistachio-gptimer".
+> + - reg: Address range of the timer registers.
+> + - interrupts: An interrupt for each of the four timers
+> + - clocks : Should contain a clock specifier for each entry in clock-names
+> + - clock-names : Should contain the following entries:
+
+    Could you please be consistent about the spacing before colon?
+
+[...]
+
+WBR, Sergei
