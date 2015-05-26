@@ -1,7 +1,7 @@
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v5 3/4] of/platform: Use platform_device interface
-Date: Tue, 26 May 2015 09:31:25 +0200
-Message-ID: <1432625486-15442-4-git-send-email-ricardo.ribalda@gmail.com>
+Subject: [PATCH v5 4/4] base/platform: Remove code duplication
+Date: Tue, 26 May 2015 09:31:26 +0200
+Message-ID: <1432625486-15442-5-git-send-email-ricardo.ribalda@gmail.com>
 References: <1432625486-15442-1-git-send-email-ricardo.ribalda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1432625486-15442-1-git-send-email-ricardo.ribalda@gmail.com>
@@ -10,41 +10,100 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@
 Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-of_platform_device_create_pdata() was using of_device_add() to create
-the devices, but of_platform_device_destroy was using
-platform_device_unregister() to free them.
+Failure path of platform_device_add was almost the same as
+platform_device_del. Refactor same code in a function.
 
-of_device_add(), do not call insert_resource(), which initializes the
-parent field of the resource structure, needed by release_resource(),
-called by of_platform_device_destroy(). This leads to a NULL pointer
-deference.
-
-Instead of fixing the NULL pointer deference, what could hide other bugs,
-this patch, replaces of_device_add() with platform_device_data().
-
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 ---
+ drivers/base/platform.c | 60 +++++++++++++++++++++----------------------------
+ 1 file changed, 25 insertions(+), 35 deletions(-)
 
-v5:  Fix comments by Rob Herring, thanks!
-
- drivers/of/platform.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index ddf8e42c9367..236a8dfa83e6 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -184,8 +184,9 @@ static struct platform_device *of_platform_device_create_pdata(
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
- 	of_dma_configure(&dev->dev, dev->dev.of_node);
-+	dev->name = dev_name(&dev->dev);
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 5a29387e5ff6..cba8e0e83bfc 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -298,6 +298,25 @@ int platform_device_add_data(struct platform_device *pdev, const void *data,
+ }
+ EXPORT_SYMBOL_GPL(platform_device_add_data);
  
--	if (of_device_add(dev) != 0) {
-+	if (platform_device_add(dev) != 0) {
- 		of_dma_deconfigure(&dev->dev);
- 		platform_device_put(dev);
- 		goto err_clear_flag;
++static void platform_device_cleanout(struct platform_device *pdev, int n_res)
++{
++	int i;
++
++	if (pdev->id_auto) {
++		ida_simple_remove(&platform_devid_ida, pdev->id);
++		pdev->id = PLATFORM_DEVID_AUTO;
++	}
++
++	for (i = 0; i < n_res; i++) {
++		struct resource *r = &pdev->resource[i];
++		unsigned long type = resource_type(r);
++
++		if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
++				r->parent)
++			release_resource(r);
++	}
++}
++
+ /**
+  * platform_device_add - add a platform device to device hierarchy
+  * @pdev: platform device we're adding
+@@ -371,23 +390,8 @@ int platform_device_add(struct platform_device *pdev)
+ 		 dev_name(&pdev->dev), dev_name(pdev->dev.parent));
+ 
+ 	ret = device_add(&pdev->dev);
+-	if (ret == 0)
+-		return ret;
+-
+-	/* Failure path */
+-	if (pdev->id_auto) {
+-		ida_simple_remove(&platform_devid_ida, pdev->id);
+-		pdev->id = PLATFORM_DEVID_AUTO;
+-	}
+-
+-	while (--i >= 0) {
+-		struct resource *r = &pdev->resource[i];
+-		unsigned long type = resource_type(r);
+-
+-		if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
+-				r->parent)
+-			release_resource(r);
+-	}
++	if (ret)
++		platform_device_cleanout(pdev, i);
+ 
+ 	return ret;
+ }
+@@ -403,25 +407,11 @@ EXPORT_SYMBOL_GPL(platform_device_add);
+  */
+ void platform_device_del(struct platform_device *pdev)
+ {
+-	int i;
+-
+-	if (pdev) {
+-		device_del(&pdev->dev);
+-
+-		if (pdev->id_auto) {
+-			ida_simple_remove(&platform_devid_ida, pdev->id);
+-			pdev->id = PLATFORM_DEVID_AUTO;
+-		}
+-
+-		for (i = 0; i < pdev->num_resources; i++) {
+-			struct resource *r = &pdev->resource[i];
+-			unsigned long type = resource_type(r);
++	if (!pdev)
++		return;
+ 
+-			if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
+-					r->parent)
+-				release_resource(r);
+-		}
+-	}
++	device_del(&pdev->dev);
++	platform_device_cleanout(pdev, pdev->num_resources);
+ }
+ EXPORT_SYMBOL_GPL(platform_device_del);
+ 
 -- 
 2.1.4
