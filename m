@@ -1,71 +1,122 @@
-From: Mathieu Olivari <mathieu@codeaurora.org>
-Subject: [PATCH 3/5] stmmac: add fixed-link device-tree support
-Date: Tue, 26 May 2015 12:27:15 -0700
-Message-ID: <1432668437-27763-4-git-send-email-mathieu@codeaurora.org>
-References: <1432668437-27763-1-git-send-email-mathieu@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432668437-27763-1-git-send-email-mathieu@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@linaro.org, sboyd@codeaurora.org, peppe.cavallaro@st.com, mathieu@codeaurora.org, agross@codeaurora.org, joshc@codeaurora.org, architt@codeaurora.org, georgi.djakov@linaro.org, wsa@the-dreams.de, rnayak@codeaurora.org, davem@davemloft.net, vbridger@opensource.altera.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, netdev@vger.kernel.org
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH V2] QorIQ/TMU: add TMU node to device tree for QorIQ T104x
+Date: Tue, 26 May 2015 14:37:58 -0500
+Message-ID: <1432669078.7862.13.camel@freescale.com>
+References: <1429085868-47577-1-git-send-email-hongtao.jia@freescale.com>
+ <BLUPR03MB1498C018F80A754767DF48FE1CC0@BLUPR03MB149.namprd03.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <BLUPR03MB1498C018F80A754767DF48FE1CC0@BLUPR03MB149.namprd03.prod.outlook.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Jia Hongtao-B38951 <hongtao.jia@freescale.com>
+Cc: "edubezval@gmail.com" <edubezval@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-In case DT is used, this change adds the ability to the stmmac driver to
-detect a fixed-link PHY, instanciate it, and use it during
-phy_connect().
-
-Fixed link PHYs DT usage is described in:
-Documentation/devicetree/bindings/net/fixed-link.txt
-
-Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     |  2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 12 +++++++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 31c6416..c46178c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -856,7 +856,7 @@ static int stmmac_init_phy(struct net_device *dev)
- 	 * device as well.
- 	 * Note: phydev->phy_id is the result of reading the UID PHY registers.
- 	 */
--	if (phydev->phy_id == 0) {
-+	if (!priv->plat->phy_node && phydev->phy_id == 0) {
- 		phy_disconnect(phydev);
- 		return -ENODEV;
- 	}
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 8d23155..f3918c7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -148,6 +148,14 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,
- 	/* If we find a phy-handle property, use it as the PHY */
- 	plat->phy_node = of_parse_phandle(np, "phy-handle", 0);
- 
-+	/* If phy-handle is not specified, check if we have a fixed-phy */
-+	if (!plat->phy_node && of_phy_is_fixed_link(np)) {
-+		if ((of_phy_register_fixed_link(np) < 0))
-+			return -ENODEV;
-+
-+		plat->phy_node = of_node_get(np);
-+	}
-+
- 	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
- 	 * and warn of its use. Remove this when phy node support is added.
- 	 */
-@@ -212,8 +220,10 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,
- 	if (of_find_property(np, "snps,pbl", NULL)) {
- 		dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*dma_cfg),
- 				       GFP_KERNEL);
--		if (!dma_cfg)
-+		if (!dma_cfg) {
-+			of_node_put(np);
- 			return -ENOMEM;
-+		}
- 		plat->dma_cfg = dma_cfg;
- 		of_property_read_u32(np, "snps,pbl", &dma_cfg->pbl);
- 		dma_cfg->fixed_burst =
--- 
-2.1.4
+T24gVHVlLCAyMDE1LTA1LTI2IGF0IDAxOjMzIC0wNTAwLCBKaWEgSG9uZ3Rhby1CMzg5NTEgd3Jv
+dGU6Cj4gSGkgU2NvdHQsCj4gCj4gRWR1YXJkbyBpbmRpY2F0ZWQgdGhhdCAiY2FsaWJyYXRpb24i
+IHByb3BlcnR5IHNob3VsZCBhZGQgImZzbCIgCj4gcHJlZml4Lgo+IEkgdXBkYXRlZCB0aGUgcGF0
+Y2guCj4gQW55IG90aGVyIGNvbW1lbnRzPwo+IElmIG5vdCBJIHdpbGwgc2VuZCBWMyBzb29uLgo+
+IAo+IFRoYW5rcy4KCkknZCBnbyB3aXRoICJmc2wsdG11LWNhbGlicmF0aW9uIiByYXRoZXIgdGhh
+biAiZnNsLGNhbGlicmF0aW9uIiBidXQgCm5vdCBhIGJpZyBkZWFsIGVpdGhlciB3YXkuCgo+ID4g
+ZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEtdG11LXQxMDR4c2ku
+ZHRzaQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLXRtdS10MTA0eHNpLmR0
+c2kKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi5kODVjNzdkCj4g
+PiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Fvcmlx
+LXRtdS10MTA0eHNpLmR0c2kKPiA+IEBAIC0wLDAgKzEsODIgQEAKPiA+ICsvKgo+ID4gKyAqIFFv
+cklRIFRNVSBkZXZpY2UgdHJlZSBzdHViIFsgY29udHJvbGxlciBAIG9mZnNldCAweGYwMDAwIF0K
+PiA+ICsgKgo+ID4gKyAqIENvcHlyaWdodCAyMDE1IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIElu
+Yy4KPiA+ICsgKgo+ID4gKyAqIFJlZGlzdHJpYnV0aW9uIGFuZCB1c2UgaW4gc291cmNlIGFuZCBi
+aW5hcnkgZm9ybXMsIHdpdGggb3IgCj4gPiB3aXRob3V0Cj4gPiArICogbW9kaWZpY2F0aW9uLCBh
+cmUgcGVybWl0dGVkIHByb3ZpZGVkIHRoYXQgdGhlIGZvbGxvd2luZyAKPiA+IGNvbmRpdGlvbnMK
+PiA+IGFyZSBtZXQ6Cj4gPiArICogICAgICogUmVkaXN0cmlidXRpb25zIG9mIHNvdXJjZSBjb2Rl
+IG11c3QgcmV0YWluIHRoZSBhYm92ZSAKPiA+IGNvcHlyaWdodAo+ID4gKyAqICAgICAgIG5vdGlj
+ZSwgdGhpcyBsaXN0IG9mIGNvbmRpdGlvbnMgYW5kIHRoZSBmb2xsb3dpbmcgCj4gPiBkaXNjbGFp
+bWVyLgo+ID4gKyAqICAgICAqIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJl
+cHJvZHVjZSB0aGUgYWJvdmUKPiA+IGNvcHlyaWdodAo+ID4gKyAqICAgICAgIG5vdGljZSwgdGhp
+cyBsaXN0IG9mIGNvbmRpdGlvbnMgYW5kIHRoZSBmb2xsb3dpbmcgCj4gPiBkaXNjbGFpbWVyIGlu
+Cj4gPiB0aGUKPiA+ICsgKiAgICAgICBkb2N1bWVudGF0aW9uIGFuZC9vciBvdGhlciBtYXRlcmlh
+bHMgcHJvdmlkZWQgd2l0aCB0aGUKPiA+IGRpc3RyaWJ1dGlvbi4KPiA+ICsgKiAgICAgKiBOZWl0
+aGVyIHRoZSBuYW1lIG9mIEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIG5vciB0aGUKPiA+ICsgKiAg
+ICAgICBuYW1lcyBvZiBpdHMgY29udHJpYnV0b3JzIG1heSBiZSB1c2VkIHRvIGVuZG9yc2Ugb3Ig
+Cj4gPiBwcm9tb3RlCj4gPiBwcm9kdWN0cwo+ID4gKyAqICAgICAgIGRlcml2ZWQgZnJvbSB0aGlz
+IHNvZnR3YXJlIHdpdGhvdXQgc3BlY2lmaWMgcHJpb3Igd3JpdHRlbgo+ID4gcGVybWlzc2lvbi4K
+PiA+ICsgKgo+ID4gKyAqCj4gPiArICogQUxURVJOQVRJVkVMWSwgdGhpcyBzb2Z0d2FyZSBtYXkg
+YmUgZGlzdHJpYnV0ZWQgdW5kZXIgdGhlIAo+ID4gdGVybXMgb2YKPiA+IHRoZQo+ID4gKyAqIEdO
+VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlICgiR1BMIikgYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVl
+IAo+ID4gU29mdHdhcmUKPiA+ICsgKiBGb3VuZGF0aW9uLCBlaXRoZXIgdmVyc2lvbiAyIG9mIHRo
+YXQgTGljZW5zZSBvciAoYXQgeW91ciAKPiA+IG9wdGlvbikgYW55Cj4gPiArICogbGF0ZXIgdmVy
+c2lvbi4KPiA+ICsgKgo+ID4gKyAqIFRISVMgU09GVFdBUkUgSVMgUFJPVklERUQgQlkgRnJlZXNj
+YWxlIFNlbWljb25kdWN0b3IgYGBBUyBJUycnIAo+ID4gQU5ECj4gPiBBTlkKPiA+ICsgKiBFWFBS
+RVNTIE9SIElNUExJRUQgV0FSUkFOVElFUywgSU5DTFVESU5HLCBCVVQgTk9UIExJTUlURUQgVE8s
+IAo+ID4gVEhFCj4gPiBJTVBMSUVECj4gPiArICogV0FSUkFOVElFUyBPRiBNRVJDSEFOVEFCSUxJ
+VFkgQU5EIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiAKPiA+IFBVUlBPU0UKPiA+IEFSRQo+ID4g
+KyAqIERJU0NMQUlNRUQuIElOIE5PIEVWRU5UIFNIQUxMIEZyZWVzY2FsZSBTZW1pY29uZHVjdG9y
+IEJFIAo+ID4gTElBQkxFIEZPUgo+ID4gQU5ZCj4gPiArICogRElSRUNULCBJTkRJUkVDVCwgSU5D
+SURFTlRBTCwgU1BFQ0lBTCwgRVhFTVBMQVJZLCBPUiAKPiA+IENPTlNFUVVFTlRJQUwKPiA+IERB
+TUFHRVMKPiA+ICsgKiAoSU5DTFVESU5HLCBCVVQgTk9UIExJTUlURUQgVE8sIFBST0NVUkVNRU5U
+IE9GIFNVQlNUSVRVVEUgCj4gPiBHT09EUyBPUgo+ID4gU0VSVklDRVM7Cj4gPiArICogTE9TUyBP
+RiBVU0UsIERBVEEsIE9SIFBST0ZJVFM7IE9SIEJVU0lORVNTIElOVEVSUlVQVElPTikgCj4gPiBI
+T1dFVkVSCj4gPiBDQVVTRUQgQU5ECj4gPiArICogT04gQU5ZIFRIRU9SWSBPRiBMSUFCSUxJVFks
+IFdIRVRIRVIgSU4gQ09OVFJBQ1QsIFNUUklDVCAKPiA+IExJQUJJTElUWSwgT1IKPiA+IFRPUlQK
+PiA+ICsgKiAoSU5DTFVESU5HIE5FR0xJR0VOQ0UgT1IgT1RIRVJXSVNFKSBBUklTSU5HIElOIEFO
+WSBXQVkgT1VUIE9GIAo+ID4gVEhFIFVTRQo+ID4gT0YgVEhJUwo+ID4gKyAqIFNPRlRXQVJFLCBF
+VkVOIElGIEFEVklTRUQgT0YgVEhFIFBPU1NJQklMSVRZIE9GIFNVQ0ggREFNQUdFLgo+ID4gKyAq
+Lwo+ID4gKwo+ID4gICt0bXVAZjAwMDB7Cj4gPiArICAgY29tcGF0aWJsZSA9ICJmc2wscW9yaXEt
+dG11IjsKPiA+ICsgICByZWcgPSA8MHhmMDAwMCAweDEwMDA+Owo+ID4gKyAgIGludGVycnVwdHMg
+PSA8MTggMiAwIDA+Owo+ID4gKyAgIGNhbGlicmF0aW9uID0gPDB4MDAwMDAwMDAgMHgwMDAwMDAw
+Zgo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDEgMHgwMDAwMDAxNwo+ID4gKyAgICAg
+ICAgICAgICAgICAgIDB4MDAwMDAwMDIgMHgwMDAwMDAxZQo+ID4gKyAgICAgICAgICAgICAgICAg
+IDB4MDAwMDAwMDMgMHgwMDAwMDAyNgo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDQg
+MHgwMDAwMDAyZQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDUgMHgwMDAwMDAzNQo+
+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDYgMHgwMDAwMDAzZAo+ID4gKyAgICAgICAg
+ICAgICAgICAgIDB4MDAwMDAwMDcgMHgwMDAwMDA0NAo+ID4gKyAgICAgICAgICAgICAgICAgIDB4
+MDAwMDAwMDggMHgwMDAwMDA0Ywo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDkgMHgw
+MDAwMDA1Mwo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMGEgMHgwMDAwMDA1Ygo+ID4g
+KyAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMGIgMHgwMDAwMDA2Mgo+ID4gKwo+ID4gKyAgICAg
+ICAgICAgICAgICAgIDB4MDAwMTAwMDAgMHgwMDAwMDAxMQo+ID4gKyAgICAgICAgICAgICAgICAg
+IDB4MDAwMTAwMDEgMHgwMDAwMDAxOQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDIg
+MHgwMDAwMDAyMQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDMgMHgwMDAwMDAyYQo+
+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDQgMHgwMDAwMDAzMgo+ID4gKyAgICAgICAg
+ICAgICAgICAgIDB4MDAwMTAwMDUgMHgwMDAwMDAzYQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4
+MDAwMTAwMDYgMHgwMDAwMDA0Mgo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDcgMHgw
+MDAwMDA0Ygo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDggMHgwMDAwMDA1Mwo+ID4g
+KyAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDkgMHgwMDAwMDA1Ygo+ID4gKyAgICAgICAgICAg
+ICAgICAgIDB4MDAwMTAwMGEgMHgwMDAwMDA2Mwo+ID4gKwo+ID4gKyAgICAgICAgICAgICAgICAg
+IDB4MDAwMjAwMDAgMHgwMDAwMDAxMgo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMjAwMDEg
+MHgwMDAwMDAxYgo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMjAwMDIgMHgwMDAwMDAyNAo+
+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMjAwMDMgMHgwMDAwMDAyYwo+ID4gKyAgICAgICAg
+ICAgICAgICAgIDB4MDAwMjAwMDQgMHgwMDAwMDAzNQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4
+MDAwMjAwMDUgMHgwMDAwMDAzZAo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMjAwMDYgMHgw
+MDAwMDA0Ngo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMjAwMDcgMHgwMDAwMDA0ZQo+ID4g
+KyAgICAgICAgICAgICAgICAgIDB4MDAwMjAwMDggMHgwMDAwMDA1Nwo+ID4gKwo+ID4gKyAgICAg
+ICAgICAgICAgICAgIDB4MDAwMzAwMDAgMHgwMDAwMDAwOQo+ID4gKyAgICAgICAgICAgICAgICAg
+IDB4MDAwMzAwMDEgMHgwMDAwMDAxMQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMzAwMDIg
+MHgwMDAwMDAxOQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMzAwMDMgMHgwMDAwMDAyMQo+
+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMzAwMDQgMHgwMDAwMDAyOQo+ID4gKyAgICAgICAg
+ICAgICAgICAgIDB4MDAwMzAwMDUgMHgwMDAwMDAzMQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4
+MDAwMzAwMDYgMHgwMDAwMDAzOQo+ID4gKyAgICAgICAgICAgICAgICAgIDB4MDAwMzAwMDcgMHgw
+MDAwMDA0MT47Cj4gPiArfTsKPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL3QxMDQwc2ktcG9zdC5kdHNpCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEw
+NDBzaS1wb3N0LmR0c2kKPiA+IGluZGV4IDE1YWU0NjIuLmJiOWY3OTIgMTAwNjQ0Cj4gPiAtLS0g
+YS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDQwc2ktcG9zdC5kdHNpCj4gPiArKysgYi9h
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDQwc2ktcG9zdC5kdHNpCj4gPiBAQCAtMzQ1LDYg
+KzM0NSw3IEBACj4gPiAgICAgICAgICAgICByZWcgICAgICAgID0gPDB4ZWEwMDAgMHg0MDAwPjsK
+PiA+ICAgICB9Owo+ID4gCj4gPiArL2luY2x1ZGUvICJxb3JpcS10bXUtdDEwNHhzaS5kdHNpIgo+
+ID4gIC9pbmNsdWRlLyAiZWxvMy1kbWEtMC5kdHNpIgo+ID4gIC9pbmNsdWRlLyAiZWxvMy1kbWEt
+MS5kdHNpIgo+ID4gIC9pbmNsdWRlLyAicW9yaXEtZXNwaS0wLmR0c2kiCgpXaHkgaXMgdGhpcyBj
+aGlwLXNwZWNpZmljIGVub3VnaCB0byBiZSBjYWxsZWQgInQxMDR4c2kiLCBidXQgbm90IGNoaXAt
+CnNwZWNpZmljIGVub3VnaCB0byBqdXN0IGdvIGRpcmVjdGx5IGludG8gdDEwNDBzaS1wb3N0PwoK
+LVNDb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+TGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpo
+dHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
