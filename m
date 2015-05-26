@@ -1,62 +1,47 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 7/7] mips: pistachio: Allow to enable the external timer based clocksource
-Date: Tue, 26 May 2015 15:41:56 -0300
-Message-ID: <1432665716-16202-1-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1432665548-16024-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 06/21] of/platform: Add of_platform_device_ensure()
+Date: Tue, 26 May 2015 11:56:54 -0700
+Message-ID: <20150526185654.GE10571@dtor-ws>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1432565608-26036-7-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432665548-16024-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432565608-26036-7-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?iso-8859-1?Q?St=E9phane?= Marchesin <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit introduces a new config, so the user can choose to enable
-the General Purpose Timer based clocksource. This option is required
-to have CPUFreq support.
+Hi Tomeu,
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
- arch/mips/Kconfig           |  1 +
- arch/mips/pistachio/Kconfig | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
- create mode 100644 arch/mips/pistachio/Kconfig
+On Mon, May 25, 2015 at 04:53:10PM +0200, Tomeu Vizoso wrote:
+> This function ensures that the device that encloses the passed device
+> node is registered, and thus probed if the corresponding driver has been
+> registered already.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index f501665..91f6ca0 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -934,6 +934,7 @@ source "arch/mips/jazz/Kconfig"
- source "arch/mips/jz4740/Kconfig"
- source "arch/mips/lantiq/Kconfig"
- source "arch/mips/lasat/Kconfig"
-+source "arch/mips/pistachio/Kconfig"
- source "arch/mips/pmcs-msp71xx/Kconfig"
- source "arch/mips/ralink/Kconfig"
- source "arch/mips/sgi-ip27/Kconfig"
-diff --git a/arch/mips/pistachio/Kconfig b/arch/mips/pistachio/Kconfig
-new file mode 100644
-index 0000000..97731ea
---- /dev/null
-+++ b/arch/mips/pistachio/Kconfig
-@@ -0,0 +1,13 @@
-+config PISTACHIO_GPTIMER_CLKSRC
-+	bool "Enable General Purpose Timer based clocksource"
-+	depends on MACH_PISTACHIO
-+	select CLKSRC_PISTACHIO
-+	select MIPS_EXTERNAL_TIMER
-+	help
-+	  This option enables a clocksource driver based on a Pistachio
-+	  SoC General Purpose external timer.
-+
-+	  If you want to enable the CPUFreq, you need to enable
-+	  this option.
-+
-+	  If you don't want to enable CPUFreq, you can leave this disabled.
+Even if the driver has already been registered this code will not
+guarantee that the device has been probed if driver enabled asynchronous
+probing (async probing should appear in 4.2 and the end goal is to have
+async probing enabled by default for most drivers).
+
+Also, why are we concentrating on platform drivers only? What about
+other devices, for example a gpio expander behind i2c bus?
+
+I am also concerned about adding OF-specific hooks into every subsystem
+out there. Can we make process of instantiating OF devices iterative
+instead and add them only if their parent has been already probed and
+also devices corresponding to all phandles they reference have also been
+probed? We could repeat scanning of the device tree every time we bind
+a driver and bulk-add leftovers at late_initcall time. This would
+mean that we could keep all logic in OF code (and maybe ACPI will add
+their own implementation) and keep other subsystems unaware.
+
+Thanks.
+
 -- 
-2.3.3
-
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
