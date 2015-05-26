@@ -1,34 +1,79 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: Invitation and RFC: Linux Plumbers Device Tree track proposed
-Date: Tue, 26 May 2015 11:31:01 -0500
-Message-ID: <E1YxHkr-0002ah-Pz@mylo>
-References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net> <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ@mail.gmail.com> <10482596.MaespZJCtk@wuerfel>
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <10482596.MaespZJCtk@wuerfel>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 2/3 v3] Documentation: dt: add the CSR atlas7 hwspinlock
+ bindings document
+Date: Tue, 26 May 2015 12:02:57 -0500
+Message-ID: <5564A741.7000504@ti.com>
+References: <1432017698-23725-1-git-send-email-21cnbao@gmail.com> <1432017698-23725-2-git-send-email-21cnbao@gmail.com> <555FB14A.2070505@ti.com> <CAGsJ_4wEA4AxVmz8_s5wRLy_aeS0dLZ5HVTR+7RZtVhANzGMBg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGsJ_4wEA4AxVmz8_s5wRLy_aeS0dLZ5HVTR+7RZtVhANzGMBg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Barry Song <21cnbao@gmail.com>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DL-SHA-WorkGroupLinux <workgroup.linux@csr.com>, Wei Chen <wei.chen@csr.com>, Bjorn Andersson <bjorn@kryo.se>, Barry Song <Baohua.Song@csr.com>
 List-Id: devicetree@vger.kernel.org
 
-So, like, Arnd Bergmann said:
-> On Tuesday 14 April 2015 10:36:15 Rob Herring wrote:
-> > 
-> > >    4) Identifying additional people who should attend the device tree track.
-> > 
-> > Arnd Bergmann
-> > Matt Porter
-> > Jon Loeliger
-> > Gaurav Minocha
+On 05/25/2015 12:33 AM, Barry Song wrote:
+> 2015-05-23 6:44 GMT+08:00 Suman Anna <s-anna@ti.com>:
+>> Hi Barry,
+>>
+>> On 05/19/2015 01:41 AM, Barry Song wrote:
+>>> From: Wei Chen <wei.chen@csr.com>
+>>>
+>>> The Hardware Spinlock device on atlas7 provides hardware assistance
+>>> for synchronization between the multiple processors in the system
+>>> (dual Cortex-A7, CAN bus Cortex-M3 and audio DSP).
+>>> This patch adds the DT bindings information for this hwspinlock
+>>> module.
+>>>
+>>> Cc: Suman Anna <s-anna@ti.com>
+>>> Cc: Bjorn Andersson <bjorn@kryo.se>
+>>> Signed-off-by: Wei Chen <wei.chen@csr.com>
+>>> Signed-off-by: Barry Song <Baohua.Song@csr.com>
+>>> ---
+>>>  .../devicetree/bindings/hwlock/sirf,hwspinlock.txt | 25 ++++++++++++++++++++++
+>>>  1 file changed, 25 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/hwlock/sirf,hwspinlock.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/hwlock/sirf,hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/sirf,hwspinlock.txt
+>>> new file mode 100644
+>>> index 0000000..cc6d351
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/hwlock/sirf,hwspinlock.txt
+>>> @@ -0,0 +1,25 @@
+>>> +SIRF Hardware spinlock device Binding
+>>> +-----------------------------------------------
+>>> +
+>>> +Required properties :
+>>> +- compatible : shall contain only one of the following:
+>>> +     "sirf,hwspinlock"
+>>> +
+>>> +- reg : the register address of hwspinlock
+>>
+>> Also suggest to document the value to be used for #hwlock-cells, the
+>> generic hwlock binding does not mention that.
 > 
-> Sorry, I won't be there. I should have replied earlier, but I'll be on
-> parental leave at the time.
+> do you think whether we can put one line like?
 > 
-> 	Arnd
+> #hwlock-cells : <1>, as required by generic hwspinlock binding.
 
-Arnd,
+The generic hwspinlock binding does not require a specific value, that
+is something determined by the individual platform implementation. So,
+something like "#hwlock-cells: Should be 1" is fine.
 
-OK.  Hard to believe, but it looks like I have enough
-ducks in a row to attend Plumber's this year!
+regards
+Suman
 
-Thanks,
-jdl
+>>
+>>> +
+>>> +Please look at the generic hwlock binding for usage information for consumers,
+>>> +"Documentation/devicetree/bindings/hwlock/hwlock.txt"
+>>> +
+>>
+>> regards
+>> Suman
+>>
+> 
+> -barry
+> 
