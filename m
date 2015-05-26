@@ -1,114 +1,286 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] mailbox: arm-mhu: update the binding document
-Date: Tue, 26 May 2015 15:15:03 +0100
-Message-ID: <55647FE7.2060300@arm.com>
-References: <1430131945-20628-1-git-send-email-sudeep.holla@arm.com> <CAJe_ZhdirgXRjGOzUE4vux4ay=gL5FM7=t6m53bEN5ZND+LddQ@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 6/7] clocksource: Add Pistachio clocksource-only driver
+Date: Tue, 26 May 2015 11:16:22 -0300
+Message-ID: <55648036.70106@imgtec.com>
+References: <1432244260-14908-1-git-send-email-ezequiel.garcia@imgtec.com>	<1432244506-15388-1-git-send-email-ezequiel.garcia@imgtec.com> <CAL1qeaEL7D6=WpyigbHWv8DEhp0XhC4acCYRkQ6Fm0Wr4HW11A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJe_ZhdirgXRjGOzUE4vux4ay=gL5FM7=t6m53bEN5ZND+LddQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaEL7D6=WpyigbHWv8DEhp0XhC4acCYRkQ6Fm0Wr4HW11A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 19/05/15 15:42, Jassi Brar wrote:
-> On 27 April 2015 at 16:22, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> The initial version of the binding document pushed along with the driver
->> is not clear/explicit about couple of the required properties namely:
->> clocks and clock-names, though the AMBA primecell binding used by the
->> arm-mhu specifies them clearly. Without these property the driver will
->> not even get probed, so it is mandatory to have them in DT.
+On 05/22/2015 01:48 PM, Andrew Bresticker wrote:
+> On Thu, May 21, 2015 at 2:41 PM, Ezequiel Garcia
+> <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>> The Pistachio SoC provides four general purpose timers, and allow
+>> to implement a clocksource driver.
 >>
->> This patch adds the above mentioned required properties to the binding.
->> It also adds the optional interrupt-names property which is good to have
->> along with some minor updates to replace references to the driver with
->> the hardware IP.
+>> This driver can be used as a replacement for the MIPS GIC and MIPS R4K
+>> clocksources and sched clocks, which are clocked from the CPU clock.
 >>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Jassi Brar <jaswinder.singh@linaro.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>   .../devicetree/bindings/mailbox/arm-mhu.txt        | 29 ++++++++++++++--------
->>   1 file changed, 19 insertions(+), 10 deletions(-)
+>> Given the general purpose timers are clocked from an independent clock,
+>> this new clocksource driver will be useful to introduce CPUFreq support
+>> for Pistachio machines.
 >>
->> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> index 4971f03f0b33..68146c9a0332 100644
->> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> @@ -1,14 +1,15 @@
->> -ARM MHU Mailbox Driver
->> -======================
->> +ARM Message Handling Unit(MHU)
->> +==============================
->>
->> -The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
->> +The ARM's Message Handling Unit (MHU) is a mailbox controller that has
->>   3 independent channels/links to communicate with remote processor(s).
->> - MHU links are hardwired on a platform. A link raises interrupt for any
->> -received data. However, there is no specified way of knowing if the sent
->> -data has been read by the remote. This driver assumes the sender polls
->> -STAT register and the remote clears it after having read the data.
->> -The last channel is specified to be a 'Secure' resource, hence can't be
->> -used by Linux running NS.
->> +MHU links are hardwired on a platform. A link raises interrupt for any
->> +received data. The platform/firmware must clear the STAT register after
->> +having receiving the data and sender can poll on the same if the platform
->> +lacks interrupt mechanism for sending data to remote processor.
+>> Signed-off-by: Govindraj Raja <Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> 
+>> --- /dev/null
+>> +++ b/drivers/clocksource/time-pistachio.c
+> 
+>> @@ -0,0 +1,202 @@
+>> +/*
+>> + * Pistachio clocksource based on general-purpose timers
+>> + *
+>> + * Copyright (C) 2015 Imagination Technologies
+>> + *
+>> + * This file is subject to the terms and conditions of the GNU General Public
+>> + * License. See the file "COPYING" in the main directory of this archive
+>> + * for more details.
+>> + */
 >> +
->> +Out of 3 channels, the last channel is 'Secure', hence must not be used
->> +by OS or any software running in non-secure state.
->>
->>   Mailbox Device Node:
->>   ====================
->> @@ -20,7 +21,15 @@ used by Linux running NS.
->>                          address and length)
->>   - #mbox-cells          Shall be 1 - the index of the channel needed.
->>   - interrupts:          Contains the interrupt information corresponding to
->> -                       each of the 3 links of MHU.
->> +                       each of the MHU links.
->> +- clocks               phandle to clock for apb pclk as specified in the
->> +                       primecell binding
->> +- clock-names          Shall be "apb_pclk"
+>> +#define pr_fmt(fmt) "%s: " fmt, __func__
 >> +
-> No other Primecell derivative specify 'apb_pclk' ... because people do
-> know that before mailbox its a an AMBA Primecell class device so its
-> implied that you look at Primecell bindings.  It doesn't hurt to
-> mention it here again, but it's definitely not worth the alarm you
-> have been raising.
->
+>> +#include <linux/clk.h>
+>> +#include <linux/clocksource.h>
+>> +#include <linux/clockchips.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/sched_clock.h>
+>> +#include <linux/time.h>
+>> +
+>> +/* Top level reg */
+>> +#define        CR_TIMER_CTRL_CFG               0x00
+>> +  #define TIMER_ME_GLOBAL              BIT(0)
+>> +#define        CR_TIMER_REV                    0x10
+>> +
+>> +/* Timer specific registers */
+>> +#define TIMER_CFG                      0x20
+>> +  #define TIMER_ME_LOCAL               BIT(0)
+>> +#define TIMER_RELOAD_VALUE             0x24
+>> +#define TIMER_CURRENT_VALUE            0x28
+>> +#define TIMER_CURRENT_OVERFLOW_VALUE   0x2C
+>> +#define TIMER_IRQ_STATUS               0x30
+>> +#define TIMER_IRQ_CLEAR                        0x34
+>> +#define TIMER_IRQ_MASK                 0x38
+> 
+> nit: the spacing in these two sets of #defines is inconsistent and the
+> space at the beginning of the line looks a little weird to me, maybe
+> just do something like this:
+> 
+> #define REGISTER ...
+> #define  REGISTER_FIELD ...
+> 
 
-IMO it's better to mention it here explicitly or at-least pointer to
-primecell binding document.
+Done.
 
->> +Optional properties:
->> +--------------------
->> +- interrupt-names      contains names of the interrupt in the order in which
->> +                       they were specified in the interrupts property
+>> +
+>> +#define PERIP_TIMER_CONTROL            0x90
+>> +
+>> +/* Timer specific configuration Values */
+>> +#define RELOAD_VALUE   0xffffffff
+>> +
+>> +static void __iomem *timer_base;
+>> +static DEFINE_RAW_SPINLOCK(lock);
+>> +
+>> +static inline u32 gpt_readl(u32 offset, u32 gpt_id)
+>> +{
+>> +       return __raw_readl(timer_base + 0x20 * gpt_id + offset);
+>> +}
+>> +
+>> +static inline void gpt_writel(u32 value, u32 offset, u32 gpt_id)
+>> +{
+>> +       __raw_writel(value, timer_base + 0x20 * gpt_id + offset);
+>> +}
+> 
+> Why raw iomem accessors?
+> 
+
+For no good reason, it was a blind copy-paste. I'll change that to
+standard accessors.
+
+>> +static cycle_t clocksource_read_cycles(struct clocksource *cs)
+>> +{
+>> +       u32 counter, overflw;
+>> +       unsigned long flags;
+>> +
+>> +       raw_spin_lock_irqsave(&lock, flags);
+>> +       overflw = gpt_readl(TIMER_CURRENT_OVERFLOW_VALUE, 0);
+>> +       counter = gpt_readl(TIMER_CURRENT_VALUE, 0);
+>> +       raw_spin_unlock_irqrestore(&lock, flags);
+>> +
+>> +       return ~(cycle_t)counter;
+>> +}
+>> +
+>> +static u64 notrace pistachio_read_sched_clock(void)
+>> +{
+>> +       return clocksource_read_cycles(NULL);
+>> +}
+>> +
+>> +static void pistachio_clksrc_enable(int timeridx)
+>> +{
+>> +       u32 val;
+>> +
+>> +       /* Disable GPT local before loading reload value */
+>> +       val = gpt_readl(TIMER_CFG, timeridx);
+>> +       val &= ~TIMER_ME_LOCAL;
+>> +       gpt_writel(val, TIMER_CFG, timeridx);
+>> +
+>> +       gpt_writel(RELOAD_VALUE, TIMER_RELOAD_VALUE, timeridx);
+>> +
+>> +       val = gpt_readl(TIMER_CFG, timeridx);
+>> +       val |= TIMER_ME_LOCAL;
+>> +       gpt_writel(val, TIMER_CFG, timeridx);
+>> +}
+>> +
+>> +static void pistachio_clksrc_disable(int timeridx)
+>> +{
+>> +       u32 val;
+>> +
+>> +       /* Disable GPT local */
+>> +       val = gpt_readl(TIMER_CFG, timeridx);
+>> +       val &= ~TIMER_ME_LOCAL;
+>> +       gpt_writel(val, TIMER_CFG, timeridx);
+>> +}
+>> +
+>> +static int clocksource_enable(struct clocksource *cs)
+>> +{
+>> +       pistachio_clksrc_enable(0);
+>> +       return 0;
+>> +}
+>> +
+>> +static void clocksource_disable(struct clocksource *cs)
+>> +{
+>> +       pistachio_clksrc_disable(0);
+>> +}
+>> +
+>> +/* Desirable clock source for pistachio platform */
+>> +static struct clocksource clocksource_gpt = {
+>> +       .name           = "gptimer",
+>> +       .rating         = 300,
+>> +       .enable         = clocksource_enable,
+>> +       .disable        = clocksource_disable,
+>> +       .read           = clocksource_read_cycles,
+> 
+> nit: these names are rather generic sounding, maybe add a "pistachio" prefix?
+> 
+
+Sure.
+
+>> +       .mask           = CLOCKSOURCE_MASK(32),
+>> +       .flags          = CLOCK_SOURCE_IS_CONTINUOUS |
+>> +                         CLOCK_SOURCE_SUSPEND_NONSTOP,
+>> +};
+>> +
+>> +static void __init pistachio_clksrc_of_init(struct device_node *node)
+>> +{
+>> +       struct clk *sys_clk, *fast_clk;
+>> +       struct regmap *periph_regs;
+>> +       unsigned long rate;
+>> +       int ret;
+>> +
+>> +       timer_base = of_iomap(node, 0);
+>> +       if (!timer_base) {
+>> +               pr_err("cannot iomap\n");
+>> +               return;
+>> +       }
+>> +
+>> +       /*
+>> +        * We need early syscon or late clocksource probe for this to work.
+>> +        */
+> 
+> I don't think this is true... if the syscon hasn't probed yet, then
+> syscon_regmap_lookup_by_phandle will probe it for us.
+> 
+
+Ah, that comment is a left over from early experiments.
+
+>> +       periph_regs = syscon_regmap_lookup_by_phandle(node, "img,cr-periph");
+>> +       if (IS_ERR(periph_regs)) {
+>> +               pr_err("cannot get peripheral regmap (%lu)\n",
+>> +                      PTR_ERR(periph_regs));
+>> +               return;
+>> +       }
+>> +
+>> +       /* Switch to using the fast counter clock */
+>> +       ret = regmap_update_bits(periph_regs, PERIP_TIMER_CONTROL,
+>> +                                0xf, 0x0);
+>> +       if (ret)
+>> +               return;
+>> +
+>> +       sys_clk = of_clk_get_by_name(node, "sys");
+>> +       if (IS_ERR(sys_clk)) {
+>> +               pr_err("clock get failed (%lu)\n", PTR_ERR(sys_clk));
+>> +               return;
+>> +       }
+>> +
+>> +       fast_clk = of_clk_get_by_name(node, "fast");
+>> +       if (IS_ERR(fast_clk)) {
+>> +               pr_err("clock get failed (%lu)\n", PTR_ERR(fast_clk));
+>> +               return;
+>> +       }
+>> +
+>> +       ret = clk_prepare_enable(sys_clk);
+>> +       if (ret < 0) {
+>> +               pr_err("failed to enable clock (%d)\n", ret);
+>> +               return;
+>> +       }
+>> +
+>> +       ret = clk_prepare_enable(fast_clk);
+>> +       if (ret < 0) {
+>> +               pr_err("failed to enable clock (%d)\n", ret);
+>> +               clk_disable_unprepare(sys_clk);
+>> +               return;
+>> +       }
+>> +
+>> +       rate = clk_get_rate(fast_clk);
+>> +
+>> +       /* Disable irq's for clocksource usage */
+>> +       gpt_writel(0, TIMER_IRQ_MASK, 0);
+>> +       gpt_writel(0, TIMER_IRQ_MASK, 1);
+>> +       gpt_writel(0, TIMER_IRQ_MASK, 2);
+>> +       gpt_writel(0, TIMER_IRQ_MASK, 3);
+>> +
+>> +       /* Enable timer block */
+>> +       __raw_writel(TIMER_ME_GLOBAL, timer_base);
+>> +
+>> +       sched_clock_register(pistachio_read_sched_clock, 32, rate);
+>> +       clocksource_register_hz(&clocksource_gpt, rate);
+>> +}
+>> +
+>> +static const struct of_device_id pistachio_clksrc_of_match[] __initconst = {
+>> +       { .compatible = "img,pistachio-gptimer" },
+>> +       { },
+>> +};
+> 
+> This table doesn't appear to be used anywhere.
+> 
+
+Left over from same experiments.
+
+>> +CLOCKSOURCE_OF_DECLARE(pistachio_gptimer, "img,pistachio-gptimer",
+>> +                      pistachio_clksrc_of_init);
+>> --
+>> 2.3.3
 >>
-> Nopes. arm_mhu.c shouldn't need to have OF dependency.
-> amba_device.irq[] is good enough just like for other amba drivers.
->
 
-In general, these supplemental names properties are optional but
-recommended and are useful. I don't understand what you mean by OF
-dependency in arm_mhu above. We are already using OF ?
-
-There can be a device(despite how crazy that sounds or may be a silicon
-bug) not implementing one of the Rx interrupts but implementing one of
-the Tx interrupts. I was just trying to make sure we make binding as
-good as possible reusing the existing properties. We need not worry
-about breaking any working system in future if we decide to use this.
-
-> And the change in documentation above is an unnecessary trainwreck. It
-> 'fixes' nothing, just changes wordings to your taste.
->
-
-Ok, sorry for the trouble if you think so.
-
-Regards,
-Sudeep
+Thanks for the review!
+-- 
+Ezequiel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
