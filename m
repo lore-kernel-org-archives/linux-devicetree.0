@@ -1,17 +1,17 @@
 From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] phy-sun4i-usb: Add a sunxi specific
- function for setting squelch-detect
-Date: Tue, 26 May 2015 10:38:16 -0500
-Message-ID: <20150526153816.GK26599@saruman.tx.rr.com>
-References: <1427626248-6257-1-git-send-email-hdegoede@redhat.com>
- <1427626248-6257-2-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH v2 06/13] musb: Add support for the
+ Allwinner sunxi musb controller
+Date: Tue, 26 May 2015 10:48:02 -0500
+Message-ID: <20150526154802.GL26599@saruman.tx.rr.com>
+References: <1426878682-14521-1-git-send-email-hdegoede@redhat.com>
+ <1426878682-14521-7-git-send-email-hdegoede@redhat.com>
 Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3MHXEHrrXKLGx71o"
-Return-path: <linux-sunxi+bncBC5M7T4HYEKRB3NHSKVQKGQE5FUPFJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="DN8g+DOX2TxGxleI"
+Return-path: <linux-sunxi+bncBC5M7T4HYEKRBMVMSKVQKGQE4VQS6OQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1427626248-6257-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1426878682-14521-7-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -23,22 +23,35 @@ To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---3MHXEHrrXKLGx71o
+--DN8g+DOX2TxGxleI
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Sun, Mar 29, 2015 at 12:50:46PM +0200, Hans de Goede wrote:
-> The sunxi otg phy has a bug where it wrongly detects a high speed squelch
-> when reset on the root port gets de-asserted with a lo-speed device.
+On Fri, Mar 20, 2015 at 08:11:15PM +0100, Hans de Goede wrote:
+> This is based on initial code to get the Allwinner sunxi musb controller
+> supported by Chen-Yu Tsai and Roman Byshko.
 > 
-> The workaround for this is to disable squelch detect before de-asserting
-> reset, and re-enabling it after the reset de-assert is done. Add a sunxi
-> specific phy function to allow the sunxi-musb glue to do this.
+> This adds support for the Allwinner sunxi musb controller in both host only
+> and otg mode. Peripheral only mode is not supported, as no boards use that.
+> 
+> This has been tested on a cubietruck (A20 SoC) and an UTOO P66 tablet
+> (A13 SoC) with a variety of devices in host mode and with the g_serial gadget
+> driver in peripheral mode, plugging otg / host cables in/out a lot of times
+> in all possible imaginable plug orders.
 > 
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Kishon, do you want to take this patch?
+drivers/usb/musb/sunxi.c:28:11: error: unable to open 'linux/soc/sunxi/sunxi_sram.h'
+scripts/Makefile.build:264: recipe for target 'drivers/usb/musb/sunxi.o' failed
+make[2]: *** [drivers/usb/musb/sunxi.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+scripts/Makefile.build:403: recipe for target 'drivers/usb/musb' failed
+make[1]: *** [drivers/usb/musb] Error 2
+Makefile:1548: recipe for target 'drivers/usb/' failed
+make: *** [drivers/usb/] Error 2
+
+What is the dependency ?
 
 -- 
 balbi
---3MHXEHrrXKLGx71o--
+--DN8g+DOX2TxGxleI--
