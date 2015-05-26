@@ -1,93 +1,257 @@
-From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] mmc: dt-bindings: add Mediatek MMC bindings
-Date: Tue, 26 May 2015 14:27:37 +0800
-Message-ID: <1432621657.647.9.camel@mhfsdcap03>
-References: <1432017411-2996-1-git-send-email-chaotian.jing@mediatek.com>
- <1432017411-2996-2-git-send-email-chaotian.jing@mediatek.com>
- <CAPDyKFq+YAz2pt1820YnqWaVKO6sn5eB+NxuM2dhP236FSKa9g@mail.gmail.com>
+From: Hongtao Jia <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH V2] QorIQ/TMU: add TMU node to device tree for QorIQ T104x
+Date: Tue, 26 May 2015 06:33:16 +0000
+Message-ID: <BLUPR03MB1498C018F80A754767DF48FE1CC0@BLUPR03MB149.namprd03.prod.outlook.com>
+References: <1429085868-47577-1-git-send-email-hongtao.jia@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAPDyKFq+YAz2pt1820YnqWaVKO6sn5eB+NxuM2dhP236FSKa9g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bin Zhang =?UTF-8?Q?=28=E7=AB=A0=E6=96=8C=29?= <bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kern>
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429085868-47577-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hongtao Jia <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Ulf,
+Hi Scott,
 
-Thanks for your review!
-Please see my comment:
-On Tue, 2015-05-19 at 11:41 +0200, Ulf Hansson wrote:
-> On 19 May 2015 at 08:36, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > Document the device-tree binding of Mediatek MMC host
-> >
-> > Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 33 ++++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > new file mode 100644
-> > index 0000000..ba6d668
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > @@ -0,0 +1,33 @@
-> > +* MTK MMC controller
-> > +
-> > +The MTK  MSDC can act as a MMC controller
-> > +to support MMC, SD, and SDIO types of memory cards.
-> > +
-> > +This file documents differences between the core properties in mmc.txt
-> > +and the properties used by the msdc driver.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc".
-> > +- interrupts: Should contain MSDC interrupt number
-> > +- clocks: MSDC source clock, HCLK, HCLK is mandatory when it is not controlled by Infra
+Eduardo indicated that "calibration" property should add "fsl" prefix.
+I updated the patch.
+Any other comments?
+If not I will send V3 soon.
+
+Thanks.
+
+---
+Best Regards,
+Hongtao
+
+
+> -----Original Message-----
+> From: Jia Hongtao [mailto:hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
+> Sent: Wednesday, April 15, 2015 4:18 PM
+> To: Wood Scott-B07421
+> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Jia Hongtao-B38951
+> Subject: [PATCH V2] QorIQ/TMU: add TMU node to device tree for QorIQ
+> T104x
 > 
-> This seems strange. Either it's mandatory since it's under the
-> "Required properties" section or it should be moved to the "Optional
-> properties" section.
+> This is Thermal Monitoring Unit for QorIQ platform.
 > 
-Yes, as you see, the "HCLK" is mandatory for MSDC0 & MSDC3, but MSDC1 &
-MSDC2 do not have corresponding HCLK.
-By the way, I will make the vqmmc-supply to mandatory, As the pinctrl
-select depend on it.
-> > +- clock-names: "source", "hclk"
-> > +- pinctrl-names: should be "default", "state_uhs"
-> > +- pinctrl-0: should contain default/high speed pin ctrl
-> > +- pinctrl-1: should contain uhs mode pin ctrl
-> > +- vmmc-supply: power to the Core
-> > +
-> > +Optional properties:
-> > +- vqmmc-supply: power to the IO(for SD/SDIO)
-> > +
-> > +Examples:
-> > +mmc0: mmc@11230000 {
-> > +       compatible = "mediatek,mt8173-mmc", "mediatek,mt8135-mmc";
-> > +       reg = <0 0x11230000 0 0x108>;
-> > +       interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_LOW>;
-> > +       vmmc-supply = <&mt6397_vemc_3v3_reg>;
-> > +       clocks = <&pericfg CLK_PERI_MSDC30_0>, <&topckgen CLK_TOP_MSDC50_0_H_SEL>;
-> > +       clock-names = "source", "hclk";
-> > +       pinctrl-names = "default", "state_uhs";
-> > +       pinctrl-0 = <&mmc0_pins_default>;
-> > +       pinctrl-1 = <&mmc0_pins_uhs>;
-> > +};
-> > --
-> > 1.8.1.1.dirty
-> >
+> Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Changes from V1:
+> * Provide more details on compatible and calibration properties.
 > 
-> Kind regards
-> Uffe
+>  .../devicetree/bindings/thermal/qoriq-thermal.txt  | 68
+> ++++++++++++++++++
+>  arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi   | 82
+> ++++++++++++++++++++++
+>  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi        |  1 +
+>  3 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-
+> thermal.txt
+>  create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> new file mode 100644
+> index 0000000..48e7fff
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> @@ -0,0 +1,68 @@
+> +* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
+> +
+> +Required properties:
+> +- compatible : Must include "fsl,qoriq-tmu". The version of the device
+> is
+> +	determined by the TMU IP Block Revision Register (IPBRR0) at
+> +	offset 0x0BF8.
+> +	Table of correspondences between IPBRR0 values and example  chips:
+> +		Value           Device
+> +		----------      -----
+> +		0x01900102      T1040
+> +- reg : Address range of TMU registers.
+> +- interrupts : Contains the interrupt for TMU.
+> +- calibration : Calibration table for TMU. This is required to determine
+> +	what a specific sensor reading translates to in degrees Celsius.
+> +	There are four calibration config ranges, for each range we need
+> +	a couple of calibration data formatted like <TTCFGR, TSCFGR>.
+> +	Freescale provides the data required.
+> +
+> +Example:
+> +
+> +tmu@f0000 {
+> +	compatible = "fsl,qoriq-tmu";
+> +	reg = <0xf0000 0x1000>;
+> +	interrupts = <18 2 0 0>;
+> +	calibration = <0x00000000 0x0000000f
+> +		       0x00000001 0x00000017
+> +		       0x00000002 0x0000001e
+> +		       0x00000003 0x00000026
+> +		       0x00000004 0x0000002e
+> +		       0x00000005 0x00000035
+> +		       0x00000006 0x0000003d
+> +		       0x00000007 0x00000044
+> +		       0x00000008 0x0000004c
+> +		       0x00000009 0x00000053
+> +		       0x0000000a 0x0000005b
+> +		       0x0000000b 0x00000062
+> +
+> +		       0x00010000 0x00000011
+> +		       0x00010001 0x00000019
+> +		       0x00010002 0x00000021
+> +		       0x00010003 0x0000002a
+> +		       0x00010004 0x00000032
+> +		       0x00010005 0x0000003a
+> +		       0x00010006 0x00000042
+> +		       0x00010007 0x0000004b
+> +		       0x00010008 0x00000053
+> +		       0x00010009 0x0000005b
+> +		       0x0001000a 0x00000063
+> +
+> +		       0x00020000 0x00000012
+> +		       0x00020001 0x0000001b
+> +		       0x00020002 0x00000024
+> +		       0x00020003 0x0000002c
+> +		       0x00020004 0x00000035
+> +		       0x00020005 0x0000003d
+> +		       0x00020006 0x00000046
+> +		       0x00020007 0x0000004e
+> +		       0x00020008 0x00000057
+> +
+> +		       0x00030000 0x00000009
+> +		       0x00030001 0x00000011
+> +		       0x00030002 0x00000019
+> +		       0x00030003 0x00000021
+> +		       0x00030004 0x00000029
+> +		       0x00030005 0x00000031
+> +		       0x00030006 0x00000039
+> +		       0x00030007 0x00000041>;
+> +};
+> diff --git a/arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi
+> b/arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi
+> new file mode 100644
+> index 0000000..d85c77d
+> --- /dev/null
+> +++ b/arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi
+> @@ -0,0 +1,82 @@
+> +/*
+> + * QorIQ TMU device tree stub [ controller @ offset 0xf0000 ]
+> + *
+> + * Copyright 2015 Freescale Semiconductor Inc.
+> + *
+> + * Redistribution and use in source and binary forms, with or without
+> + * modification, are permitted provided that the following conditions
+> are met:
+> + *     * Redistributions of source code must retain the above copyright
+> + *       notice, this list of conditions and the following disclaimer.
+> + *     * Redistributions in binary form must reproduce the above
+> copyright
+> + *       notice, this list of conditions and the following disclaimer in
+> the
+> + *       documentation and/or other materials provided with the
+> distribution.
+> + *     * Neither the name of Freescale Semiconductor nor the
+> + *       names of its contributors may be used to endorse or promote
+> products
+> + *       derived from this software without specific prior written
+> permission.
+> + *
+> + *
+> + * ALTERNATIVELY, this software may be distributed under the terms of
+> the
+> + * GNU General Public License ("GPL") as published by the Free Software
+> + * Foundation, either version 2 of that License or (at your option) any
+> + * later version.
+> + *
+> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND
+> ANY
+> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+> IMPLIED
+> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+> ARE
+> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR
+> ANY
+> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+> DAMAGES
+> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+> SERVICES;
+> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+> CAUSED AND
+> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+> TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> OF THIS
+> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +tmu@f0000 {
+> +	compatible = "fsl,qoriq-tmu";
+> +	reg = <0xf0000 0x1000>;
+> +	interrupts = <18 2 0 0>;
+> +	calibration = <0x00000000 0x0000000f
+> +		       0x00000001 0x00000017
+> +		       0x00000002 0x0000001e
+> +		       0x00000003 0x00000026
+> +		       0x00000004 0x0000002e
+> +		       0x00000005 0x00000035
+> +		       0x00000006 0x0000003d
+> +		       0x00000007 0x00000044
+> +		       0x00000008 0x0000004c
+> +		       0x00000009 0x00000053
+> +		       0x0000000a 0x0000005b
+> +		       0x0000000b 0x00000062
+> +
+> +		       0x00010000 0x00000011
+> +		       0x00010001 0x00000019
+> +		       0x00010002 0x00000021
+> +		       0x00010003 0x0000002a
+> +		       0x00010004 0x00000032
+> +		       0x00010005 0x0000003a
+> +		       0x00010006 0x00000042
+> +		       0x00010007 0x0000004b
+> +		       0x00010008 0x00000053
+> +		       0x00010009 0x0000005b
+> +		       0x0001000a 0x00000063
+> +
+> +		       0x00020000 0x00000012
+> +		       0x00020001 0x0000001b
+> +		       0x00020002 0x00000024
+> +		       0x00020003 0x0000002c
+> +		       0x00020004 0x00000035
+> +		       0x00020005 0x0000003d
+> +		       0x00020006 0x00000046
+> +		       0x00020007 0x0000004e
+> +		       0x00020008 0x00000057
+> +
+> +		       0x00030000 0x00000009
+> +		       0x00030001 0x00000011
+> +		       0x00030002 0x00000019
+> +		       0x00030003 0x00000021
+> +		       0x00030004 0x00000029
+> +		       0x00030005 0x00000031
+> +		       0x00030006 0x00000039
+> +		       0x00030007 0x00000041>;
+> +};
+> diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> index 15ae462..bb9f792 100644
+> --- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> @@ -345,6 +345,7 @@
+>  		reg	   = <0xea000 0x4000>;
+>  	};
+> 
+> +/include/ "qoriq-tmu-t104xsi.dtsi"
+>  /include/ "elo3-dma-0.dtsi"
+>  /include/ "elo3-dma-1.dtsi"
+>  /include/ "qoriq-espi-0.dtsi"
+> --
+> 2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
