@@ -1,87 +1,44 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v9 8/8] exynos4-is: Add support for v4l2-flash subdevs
-Date: Tue, 26 May 2015 11:04:30 +0200
-Message-ID: <5564371E.2040705@samsung.com>
-References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
- <1432566843-6391-9-git-send-email-j.anaszewski@samsung.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into platform
+ device
+Date: Tue, 26 May 2015 13:28:58 +0100
+Message-ID: <20150526122858.GJ1565@arm.com>
+References: <=fu.wei@linaro.org>
+ <1432548193-19569-1-git-send-email-fu.wei@linaro.org>
+ <1432548193-19569-7-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1432566843-6391-9-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432548193-19569-7-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, "linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/05/15 17:14, Jacek Anaszewski wrote:
-> This patch adds support for external v4l2-flash devices.
-> The support includes parsing "camera-flashes" DT property
+On Mon, May 25, 2015 at 11:03:13AM +0100, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
+> and create a platform device with that information.
+> This platform device can be used by the ARM SBSA Generic
+> Watchdog driver.
+> 
+> Tested-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+> Tested-by: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm64/kernel/acpi.c | 145 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 145 insertions(+)
 
-"samsung,camera-flashes" ?
+Why does this all need to be under arch/arm64? The GTDT really isn't
+architecture-specific, so I'd *much* rather it was parsed in the driver code
+itself, like we already do for the architected timer. The GIC is an
+exception because it's in the MADT, which we need to parse in the arch code
+to configure SMP properly.
 
-> and asynchronous sub-device registration.
-
-> +static int fimc_md_register_flash_entities(struct fimc_md *fmd)
-> +{
-> +	struct device_node *parent = fmd->pdev->dev.of_node, *np_sensor,
-> +		*np_flash;
-> +	struct v4l2_async_notifier *notifier = &fmd->subdev_notifier;
-> +	struct v4l2_async_subdev *asd;
-> +	int i, j, num_flashes = 0, num_elems;
-> +
-> +	num_elems = of_property_count_elems_of_size(parent,
-> +				"samsung,camera-flashes", sizeof(np_flash));
-
-I think this should be of_property_count_u32_elems(), phandle is always
-a 32-bit value [1], while size of a pointer depends on the architecture.
-
-
-> +	/* samsung,camera-flashes property is optional */
-> +	if (num_elems < 0)
-> +		return 0;
-> +
-> +	/* samsung,camera-flashes array must have even number of elements */
-> +	if ((num_elems & 1) || (num_elems > FIMC_MAX_SENSORS * 2))
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < num_elems; i += 2) {
-> +		np_sensor = of_parse_phandle(parent,
-> +					     "samsung,camera-flashes", i);
-> +
-> +		for (j = 0; j < fmd->num_sensors; j++)
-> +			if (fmd->async_subdevs.sensors[j].match.of.node ==
-> +			    np_sensor)
-> +				break;
-> +
-> +		of_node_put(np_sensor);
-
-Would be good to add some comment here, why is the sensor required.
-It's just a DT correctness check? Couldn't we carry on with the flash
-registration after just emitting some warning?
-
-> +		if (j == fmd->num_sensors)
-> +			continue;
-> +
-> +		np_flash = of_parse_phandle(parent, "samsung,camera-flashes",
-> +						i + 1);
-> +
-> +		asd = &fmd->async_subdevs.flashes[num_flashes++];
-> +		asd->match_type = V4L2_ASYNC_MATCH_OF;
-> +		asd->match.of.node = np_flash;
-> +		notifier->subdevs[notifier->num_subdevs++] = asd;
-> +
-> +		of_node_put(np_flash);
-> +	}
-> +
-> +	return 0;
-> +}
-
-Otherwise looks good to me.
-
--- 
-Thanks,
-Sylwester
-
-[1]
-http://lxr.free-electrons.com/source/Documentation/devicetree/booting-without-of.txt#L545
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
