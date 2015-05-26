@@ -1,108 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2.1 02/12] clocksource: sti: Provide support for the ST LPC
- Clocksource IP
-Date: Tue, 26 May 2015 13:39:43 +0100
-Message-ID: <20150526123943.GI11677@x1>
-References: <1431435500-22899-1-git-send-email-lee.jones@linaro.org>
- <1431435500-22899-3-git-send-email-lee.jones@linaro.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 15/16] ARM: marvell/dt: add crypto node to armada 370
+ dtsi
+Date: Tue, 26 May 2015 11:03:45 +0200
+Message-ID: <20150526110345.663efb51@bbrezillon>
+References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1432301642-11470-16-git-send-email-boris.brezillon@free-electrons.com>
+	<556340C4.5090208@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1431435500-22899-3-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de, wim@iguana.be, a.zummo@towertech.it, linux-watchdog@vger.kernel.org, rtc-linux@googlegroups.com, linux@roeck-us.net
-Cc: kernel@stlinux.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <556340C4.5090208@free-electrons.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Y2xvY2tzb3VyY2U6IHN0aTogUHJvdmlkZSBzdXBwb3J0IGZvciB0aGUgU1QgTFBDIENsb2Nrc291
-cmNlIElQCgpUaGlzIElQIGlzIHNoYXJlZCB3aXRoIFdhdGNoZG9nIGFuZCBSVEMgZnVuY3Rpb25h
-bGl0eS4gIEFsbCAzIG9mCnRoZXNlIGRldmljZXMgYXJlIG11dHVhbGx5IGV4Y2x1c2l2ZSBmcm9t
-IG9uZSBhbm90aGVyIGkuZS4gT25seSAxCklQIGNhbiBiZSB1c2VkIGF0IGFueSBnaXZlbiB0aW1l
-LiAgV2UgdXNlIHRoZSBkZXZpY2UtZHJpdmVyIG1vZGVsCmNvbWJpbmVkIHdpdGggYSBEVCAnbW9k
-ZScgcHJvcGVydHkgdG8gZW5mb3JjZSB0aGlzLgoKVGhlIFNUIExQQyBDbG9ja3NvdXJjZSBJUCBj
-YW4gYmUgdXNlZCBhcyB0aGUgc3lzdGVtICh0aWNrKSB0aW1lci4KClNpZ25lZC1vZmYtYnk6IExl
-ZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9j
-a3NvdXJjZS9LY29uZmlnIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmlnCmluZGV4IDY4MTYx
-ZjcuLjAxYTA3YTYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZworKysg
-Yi9kcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcKQEAgLTI1MCw0ICsyNTAsMTMgQEAgY29uZmln
-IENMS1NSQ19QWEEKIAloZWxwCiAJICBUaGlzIGVuYWJsZXMgT1NUMCBzdXBwb3J0IGF2YWlsYWJs
-ZSBvbiBQWEEgYW5kIFNBLTExeDAKIAkgIHBsYXRmb3Jtcy4KKworY29uZmlnIENMS1NSQ19TVF9M
-UEMKKwlib29sCisJZGVwZW5kcyBvbiBBUkNIX1NUSQorCXNlbGVjdCBDTEtTUkNfT0YgaWYgT0YK
-KwloZWxwCisJICBFbmFibGUgdGhpcyBvcHRpb24gdG8gdXNlIHRoZSBMb3cgUG93ZXIgY29udHJv
-bGxlciB0aW1lcgorCSAgYXMgY2xvY2tzb3VyY2UuCisKIGVuZG1lbnUKZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZpbGUgYi9kcml2ZXJzL2Nsb2Nrc291cmNlL01ha2VmaWxl
-CmluZGV4IDc1MmQ1YzcuLmUwOGRhNGQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2Uv
-TWFrZWZpbGUKKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9NYWtlZmlsZQpAQCAtNTEsMyArNTEs
-NCBAQCBvYmotJChDT05GSUdfQVJDSF9JTlRFR1JBVE9SX0FQKQkrPSB0aW1lci1pbnRlZ3JhdG9y
-LWFwLm8KIG9iai0kKENPTkZJR19DTEtTUkNfVkVSU0FUSUxFKQkJKz0gdmVyc2F0aWxlLm8KIG9i
-ai0kKENPTkZJR19DTEtTUkNfTUlQU19HSUMpCQkrPSBtaXBzLWdpYy10aW1lci5vCiBvYmotJChD
-T05GSUdfQVNNOTI2MF9USU1FUikJCSs9IGFzbTkyNjBfdGltZXIubworb2JqLSQoQ09ORklHX0NM
-S1NSQ19TVF9MUEMpCQkrPSBjbGtzcmNfc3RfbHBjLm8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xv
-Y2tzb3VyY2UvY2xrc3JjX3N0X2xwYy5jIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9jbGtzcmNfc3Rf
-bHBjLmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uZjM4Y2YzMwotLS0gL2Rl
-di9udWxsCisrKyBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvY2xrc3JjX3N0X2xwYy5jCkBAIC0wLDAg
-KzEsMTIzIEBACisvKgorICogQ2xvY2tzb3VyY2UgdXNpbmcgdGhlIExvdyBQb3dlciBUaW1lciBm
-b3VuZCBpbiB0aGUgTG93IFBvd2VyIENvbnRyb2xsZXIgKExQQykKKyAqCisgKiBDb3B5cmlnaHQg
-KEMpIDIwMTUgU1RNaWNyb2VsZWN0cm9uaWNzIOKAkyBBbGwgUmlnaHRzIFJlc2VydmVkCisgKgor
-ICogQXV0aG9yKHMpOiBGcmFuY2VzY28gVmlybGluemkgPGZyYW5jZXNjby52aXJsaW56aUBzdC5j
-b20+CisgKgkgICAgICBBaml0IFBhbCBTaW5naCA8YWppdHBhbC5zaW5naEBzdC5jb20+CisgKgor
-ICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0
-IGFuZC9vciBtb2RpZnkKKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwg
-UHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5CisgKiB0aGUgRnJlZSBTb2Z0d2FyZSBGb3Vu
-ZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBvcgorICogKGF0IHlvdXIg
-b3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4KKyAqLworCisjaW5jbHVkZSA8bGludXgvY2xrLmg+
-CisjaW5jbHVkZSA8bGludXgvY2xvY2tzb3VyY2UuaD4KKyNpbmNsdWRlIDxsaW51eC9pbml0Lmg+
-CisjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPgorI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4K
-KworI2luY2x1ZGUgPGR0LWJpbmRpbmdzL21mZC9zdC1scGMuaD4KKworLyogTG93IFBvd2VyIFRp
-bWVyICovCisjZGVmaW5lIExQQ19MUFRfTFNCX09GRgkJMHg0MDAKKyNkZWZpbmUgTFBDX0xQVF9N
-U0JfT0ZGCQkweDQwNAorI2RlZmluZSBMUENfTFBUX1NUQVJUX09GRgkweDQwOAorCitzdGF0aWMg
-c3RydWN0IHN0X2Nsa3NyY19kZGF0YSB7CisJc3RydWN0IGNsawkJKmNsazsKKwl2b2lkIF9faW9t
-ZW0JCSpiYXNlOworfSBkZGF0YTsKKworc3RhdGljIHZvaWQgX19pbml0IHN0X2Nsa3NyY19yZXNl
-dCh2b2lkKQoreworCXdyaXRlbF9yZWxheGVkKDAsIGRkYXRhLmJhc2UgKyBMUENfTFBUX1NUQVJU
-X09GRik7CisJd3JpdGVsX3JlbGF4ZWQoMCwgZGRhdGEuYmFzZSArIExQQ19MUFRfTVNCX09GRik7
-CisJd3JpdGVsX3JlbGF4ZWQoMCwgZGRhdGEuYmFzZSArIExQQ19MUFRfTFNCX09GRik7CisJd3Jp
-dGVsX3JlbGF4ZWQoMSwgZGRhdGEuYmFzZSArIExQQ19MUFRfU1RBUlRfT0ZGKTsKK30KKworc3Rh
-dGljIGludCBfX2luaXQgc3RfY2xrc3JjX2luaXQodm9pZCkKK3sKKwl1bnNpZ25lZCBsb25nIHJh
-dGU7CisJaW50IHJldDsKKworCXN0X2Nsa3NyY19yZXNldCgpOworCisJcmF0ZSA9IGNsa19nZXRf
-cmF0ZShkZGF0YS5jbGspOworCisJcmV0ID0gY2xvY2tzb3VyY2VfbW1pb19pbml0KGRkYXRhLmJh
-c2UgKyBMUENfTFBUX0xTQl9PRkYsCisJCQkJICAgICJjbGtzcmMtc3QtbHBjIiwgcmF0ZSwgMzAw
-LCAzMiwKKwkJCQkgICAgY2xvY2tzb3VyY2VfbW1pb19yZWFkbF91cCk7CisJaWYgKHJldCkgewor
-CQlwcl9lcnIoImNsa3NyYy1zdC1scGM6IEZhaWxlZCB0byByZWdpc3RlciBjbG9ja3NvdXJjZVxu
-Iik7CisJCXJldHVybiByZXQ7CisJfQorCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBpbnQgX19p
-bml0IHN0X2Nsa3NyY19zZXR1cF9jbGsoc3RydWN0IGRldmljZV9ub2RlICpucCkKK3sKKwlzdHJ1
-Y3QgY2xrICpjbGs7CisKKwljbGsgPSBvZl9jbGtfZ2V0KG5wLCAwKTsKKwlpZiAoSVNfRVJSKGNs
-aykpIHsKKwkJcHJfZXJyKCJjbGtzcmMtc3QtbHBjOiBGYWlsZWQgdG8gZ2V0IExQQyBjbG9ja1xu
-Iik7CisJCXJldHVybiBQVFJfRVJSKGNsayk7CisJfQorCisJaWYgKGNsa19wcmVwYXJlX2VuYWJs
-ZShjbGspKSB7CisJCXByX2VycigiY2xrc3JjLXN0LWxwYzogRmFpbGVkIHRvIGVuYWJsZSBMUEMg
-Y2xvY2tcbiIpOworCQlyZXR1cm4gLUVJTlZBTDsKKwl9CisKKwlpZiAoIWNsa19nZXRfcmF0ZShj
-bGspKSB7CisJCXByX2VycigiY2xrc3JjLXN0LWxwYzogRmFpbGVkIHRvIGdldCBMUEMgY2xvY2sg
-cmF0ZVxuIik7CisJCWNsa19kaXNhYmxlX3VucHJlcGFyZShjbGspOworCQlyZXR1cm4gLUVJTlZB
-TDsKKwl9CisKKwlkZGF0YS5jbGsgPSBjbGs7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIHZv
-aWQgX19pbml0IHN0X2Nsa3NyY19vZl9yZWdpc3RlcihzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQor
-eworCWludCByZXQ7CisJdWludDMyX3QgbW9kZTsKKworCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRf
-dTMyKG5wLCAic3QsbHBjLW1vZGUiLCAmbW9kZSk7CisJaWYgKHJldCkgeworCQlwcl9lcnIoImNs
-a3NyYy1zdC1scGM6IEFuIExQQyBtb2RlIG11c3QgYmUgcHJvdmlkZWRcbiIpOworCQlyZXR1cm47
-CisJfQorCisJLyogTFBDIGNhbiBlaXRoZXIgcnVuIGFzIGEgQ2xvY2tzb3VyY2Ugb3IgaW4gUlRD
-IG9yIFdEVCBtb2RlICovCisJaWYgKG1vZGUgIT0gU1RfTFBDX01PREVfQ0xLU1JDKQorCQlyZXR1
-cm47CisKKwlkZGF0YS5iYXNlID0gb2ZfaW9tYXAobnAsIDApOworCWlmICghZGRhdGEuYmFzZSkg
-eworCQlwcl9lcnIoImNsa3NyYy1zdC1scGM6IFVuYWJsZSB0byBtYXAgaW9tZW1cbiIpOworCQly
-ZXR1cm47CisJfQorCisJaWYgKHN0X2Nsa3NyY19zZXR1cF9jbGsobnApKSB7CisJCWlvdW5tYXAo
-ZGRhdGEuYmFzZSk7CisJCXJldHVybjsKKwl9CisKKwlpZiAoc3RfY2xrc3JjX2luaXQoKSkgewor
-CQljbGtfZGlzYWJsZV91bnByZXBhcmUoZGRhdGEuY2xrKTsKKwkJY2xrX3B1dChkZGF0YS5jbGsp
-OworCQlpb3VubWFwKGRkYXRhLmJhc2UpOworCQlyZXR1cm47CisJfQorCisJcHJfaW5mbygiY2xr
-c3JjLXN0LWxwYzogY2xvY2tzb3VyY2UgaW5pdGlhbGlzZWQgLSBydW5uaW5nIEAgJWx1SHpcbiIs
-CisJCWNsa19nZXRfcmF0ZShkZGF0YS5jbGspKTsKK30KK0NMT0NLU09VUkNFX09GX0RFQ0xBUkUo
-ZGRhdGEsICJzdCxzdGloNDA3LWxwYyIsIHN0X2Nsa3NyY19vZl9yZWdpc3Rlcik7CgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Gregory,
+
+On Mon, 25 May 2015 17:33:24 +0200
+Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+
+> Hi Boris, Arnaud,
+> 
+> 
+> 
+> On 22/05/2015 15:34, Boris Brezillon wrote:
+> > From: Arnaud Ebalard <arno@natisbad.org>
+> > 
+> > Add crypto related nodes in armada-370.dtsi.
+> > 
+> > Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> >  arch/arm/boot/dts/armada-370.dtsi | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+> > index 00b50db5..1255318 100644
+> > --- a/arch/arm/boot/dts/armada-370.dtsi
+> > +++ b/arch/arm/boot/dts/armada-370.dtsi
+> > @@ -307,6 +307,26 @@
+> >  					dmacap,memset;
+> >  				};
+> >  			};
+> > +
+> > +			crypto@90000 {
+> > +				compatible = "marvell,armada-370-crypto";
+> > +				reg = <0x90000 0x10000>;
+> > +				reg-names = "regs";
+> > +				interrupts = <48>;
+> 
+> There is no clocks property. After a quick look on the datasheet, indeed I didn't
+> find any clock which match the CESA. In this case you should update the binding
+> documentation by adding that the clock is optional for armada-370-crypto.
+
+Hm, actually the clock is defined in Marvell's LSP, but not described
+in the datasheet. Which one should I trust :-) ?
+
+Anyway, if this clock appears to be present on armada-370, we'll have
+to modify the clock driver to account for this before referencing the
+clock in the crypto node.
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
