@@ -1,50 +1,71 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/5] clk: mediatek: mt8173: Fix enabling of critical clocks
-Date: Tue, 26 May 2015 16:36:03 +0800
-Message-ID: <1432629363.15597.5.camel@mtksdaap41>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
- <1432192376-6712-3-git-send-email-jamesjj.liao@mediatek.com>
- <20150526074608.GE6325@pengutronix.de>
+From: Beata Michalska <b.michalska@samsung.com>
+Subject: Re: [PATCH] ARM: dts: Update video-phy node with syscon phandle for
+ Exynos3250
+Date: Tue, 26 May 2015 10:50:30 +0200
+Message-ID: <556433D6.8070307@samsung.com>
+References: <1426762587-24923-1-git-send-email-b.michalska@samsung.com>
+ <CAJKOXPfumy5a6A275ETy7vnztzE20qSuXD_i=ebY9Br47p93Dg@mail.gmail.com>
+ <CAJKOXPcnYq0pS-akXNDd8TE6wqeq0pg-cx4PK0jeke9z3tHsOw@mail.gmail.com>
+ <CABxcv=npaHemH_KcYgGf-_x8Bo=V2UMDJREfUY6LRmDT1iQYpw@mail.gmail.com>
+ <555FF9AC.1060909@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20150526074608.GE6325-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <555FF9AC.1060909@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-05-26 at 09:46 +0200, Sascha Hauer wrote:
-> > +static struct clk_onecell_data *mt8173_top_clk_data;
-> > +static struct clk_onecell_data *mt8173_pll_clk_data;
-> > +
-> > +static void mtk_clk_enable_critical(void)
-> > +{
-> > +	if (!mt8173_top_clk_data || !mt8173_pll_clk_data)
-> > +		return;
-> > +
-> > +	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_MEM_SEL]);
-> > +	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_DDRPHYCFG_SEL]);
-> > +	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_CCI400_SEL]);
-> > +	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_RTC_SEL]);
+Hi,
+
+On 05/23/2015 05:53 AM, Kukjin Kim wrote:
+> On 05/21/15 16:25, Javier Martinez Canillas wrote:
+>> On Thu, May 21, 2015 at 4:04 AM, Krzysztof Kozlowski
+>> <k.kozlowski@samsung.com> wrote:
+>>> 2015-05-21 10:57 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
+>>>> 2015-03-19 19:56 GMT+09:00 Beata Michalska <b.michalska@samsung.com>:
+>>>>> As a follow-up to recent changes to Exynos mipi video phy
+>>>>> driver, introducing support for PMU regmap in commit
+>>>>> e4b3d38088df6f3acd40 ("phy: exynos-video-mipi: Fix regression
+>>>>> by adding support for PMU regmap") add a syscon phandle to
+>>>>> video-phy node to bring back to life both MIPI DSI displays
+>>>>> and MIPI CSIS-2 camera sensors on Exynos3250.
+>>>>>
+>>>>> Signed-off-by: Beata Michalska <b.michalska@samsung.com>
+>>>>
+>>>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>>> Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>>>
+>>>> Tested on Gear 2 (Exynos3250) board.
+>>>
+>>> Oh, I was too fast. It seems that "reg" property is not needed
+>>> anymore. Can you remove it?
+>>>
+>>
+>> After removing the reg property as Krzysztof suggested.
+>>
+>> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>>
+> will apply with changing as per you guys' review comment ;-)
 > 
-> Is CLK_TOP_RTC_SEL really a critical clock?
+> Thanks,
+> Kukjin
+> 
 
-CLK_TOP_RTC_SEL is the main 32k clock used by some system hardware such
-sleep controller on MT8173. This clock should not be turned off even
-when software/CPU is sleeping. So it's a better way to set
-CLK_TOP_RTC_SEL as a critical clock (an always on clock).
+Apologies for not jumping in earlier, but  I've been away for a while,
+with basically no e-mail access. Would You like me to resend the patch 
+with the 'reg' property removed or will You handle it while applying
+the change ?
 
-
-Best regards,
-
-James
+Best Regards
+Beata
