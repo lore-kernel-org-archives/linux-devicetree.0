@@ -1,39 +1,87 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 02/10] ARM: OMAP3: Fix crypto support for HS devices
-Date: Tue, 26 May 2015 12:54:15 +0200
-Message-ID: <20150526105415.GB14541@pali>
-References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com>
- <1424958600-18881-3-git-send-email-pali.rohar@gmail.com>
- <20150228162436.GB4978@amd>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v9 8/8] exynos4-is: Add support for v4l2-flash subdevs
+Date: Tue, 26 May 2015 11:04:30 +0200
+Message-ID: <5564371E.2040705@samsung.com>
+References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
+ <1432566843-6391-9-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150228162436.GB4978@amd>
-Sender: linux-crypto-owner@vger.kernel.org
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1432566843-6391-9-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On 25/05/15 17:14, Jacek Anaszewski wrote:
+> This patch adds support for external v4l2-flash devices.
+> The support includes parsing "camera-flashes" DT property
 
-this patch is also for omap2... Can you review it too?
+"samsung,camera-flashes" ?
 
-On Saturday 28 February 2015 17:24:36 Pavel Machek wrote:
-> On Thu 2015-02-26 14:49:52, Pali Roh=C3=A1r wrote:
-> > Register crypto hwmod links only if they are not disabled in DT.
-> > If DT information is missing, enable them only for GP devices.
-> >=20
-> > Before this patch crypto hwmod links were always disabled for all H=
-S devices
-> > and it was not possible to use omap-aes and omap-sham linux drivers=
-=2E
-> >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->=20
-> Acked-by: Pavel Machek <pavel@ucw.cz>
->=20
+> and asynchronous sub-device registration.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+> +static int fimc_md_register_flash_entities(struct fimc_md *fmd)
+> +{
+> +	struct device_node *parent = fmd->pdev->dev.of_node, *np_sensor,
+> +		*np_flash;
+> +	struct v4l2_async_notifier *notifier = &fmd->subdev_notifier;
+> +	struct v4l2_async_subdev *asd;
+> +	int i, j, num_flashes = 0, num_elems;
+> +
+> +	num_elems = of_property_count_elems_of_size(parent,
+> +				"samsung,camera-flashes", sizeof(np_flash));
+
+I think this should be of_property_count_u32_elems(), phandle is always
+a 32-bit value [1], while size of a pointer depends on the architecture.
+
+
+> +	/* samsung,camera-flashes property is optional */
+> +	if (num_elems < 0)
+> +		return 0;
+> +
+> +	/* samsung,camera-flashes array must have even number of elements */
+> +	if ((num_elems & 1) || (num_elems > FIMC_MAX_SENSORS * 2))
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < num_elems; i += 2) {
+> +		np_sensor = of_parse_phandle(parent,
+> +					     "samsung,camera-flashes", i);
+> +
+> +		for (j = 0; j < fmd->num_sensors; j++)
+> +			if (fmd->async_subdevs.sensors[j].match.of.node ==
+> +			    np_sensor)
+> +				break;
+> +
+> +		of_node_put(np_sensor);
+
+Would be good to add some comment here, why is the sensor required.
+It's just a DT correctness check? Couldn't we carry on with the flash
+registration after just emitting some warning?
+
+> +		if (j == fmd->num_sensors)
+> +			continue;
+> +
+> +		np_flash = of_parse_phandle(parent, "samsung,camera-flashes",
+> +						i + 1);
+> +
+> +		asd = &fmd->async_subdevs.flashes[num_flashes++];
+> +		asd->match_type = V4L2_ASYNC_MATCH_OF;
+> +		asd->match.of.node = np_flash;
+> +		notifier->subdevs[notifier->num_subdevs++] = asd;
+> +
+> +		of_node_put(np_flash);
+> +	}
+> +
+> +	return 0;
+> +}
+
+Otherwise looks good to me.
+
+-- 
+Thanks,
+Sylwester
+
+[1]
+http://lxr.free-electrons.com/source/Documentation/devicetree/booting-without-of.txt#L545
