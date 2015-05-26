@@ -1,76 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] spi: orion: Fix extended baud rates for each Armada
- SoCs
-Date: Tue, 26 May 2015 11:38:06 +0100
-Message-ID: <20150526103806.GN21577@sirena.org.uk>
-References: <1432633484-18758-1-git-send-email-gregory.clement@free-electrons.com>
- <1432633484-18758-3-git-send-email-gregory.clement@free-electrons.com>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: Re: [PATCH RESEND v7 2/2] mmc: host: sdhci: Add support to disable
+ SDR104/SDR50/DDR50 based on capability register 0.
+Date: Tue, 26 May 2015 16:37:22 +0530
+Message-ID: <CAOHikRC7p+wzgHXbEYkK56dJucahf6rk=x0sphQedtSKV0N0xQ@mail.gmail.com>
+References: <1432197817-22110-1-git-send-email-stripathi@apm.com>
+ <1432197817-22110-3-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6843361491604114282=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1432633484-18758-3-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1432197817-22110-3-git-send-email-stripathi@apm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, Suman Tripathi <stripathi@apm.com>, Jon Masters <jcm@redhat.com>, linux-mmc <linux-mmc@vger.kernel.org>, patches <patches@apm.com>, Don Dutile <ddutile@redhat.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============6843361491604114282==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0HX8KfI760FczsQW"
-Content-Disposition: inline
-
-
---0HX8KfI760FczsQW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, May 26, 2015 at 11:44:43AM +0200, Gregory CLEMENT wrote:
-> The commit df59fa7f4bca "spi: orion: support armada extended baud
-> rates" made the assumptions that all the Armada SoCs supported the
-> same maximum frequency. However, according the hardware datasheet, the
-> maximum frequency supported by the Armada 370 SoC is tclk/4, for the
-> Armada XP, Armada 38x and Armada 39x SoCs the limitation is 50MHz and
-> for the Armada 375 it is tclk/15.
-
-Applied, thanks.
-
---0HX8KfI760FczsQW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVZE0NAAoJECTWi3JdVIfQUUIH/jrfJnqwetlAXpXqstYlyJL7
-dc4XEg9SWg6bQsvWgjxgfs9q+UJae6vYJBGA9NdxZkKfNMsMcopOIKRMN+gItSFp
-eD8bCnRcVqWPVRhy2Toib9GhrMsgBlRMeZjgne8lJ409tzCMrbILa5OfEa+0fxPm
-JHfgCd6qVgXJVdoS2y1YBoUkbM1NTk7Gt3HjuBzqsq8H7TlkILbdbmL3T3JgCRty
-maPyum35bLrTRzwjCLKw7Mw0vHOZLp5gvGUGxPuE1haodXyGBDiIv2EApTt5bLxo
-hyfyicPMJNTHKRP6b6eEiPuvA/+/E8mFmH8IzxXV9t40vA65vyoZ4J2Spuz3Qbk=
-=HrmS
------END PGP SIGNATURE-----
-
---0HX8KfI760FczsQW--
-
-
---===============6843361491604114282==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6843361491604114282==--
+T24gVGh1LCBNYXkgMjEsIDIwMTUgYXQgMjoxMyBQTSwgU3VtYW4gVHJpcGF0aGkgPHN0cmlwYXRo
+aUBhcG0uY29tPiB3cm90ZToKPiBUaGUgc2RoY2kgZnJhbWV3b3JrIGRpc2FibGVzIFNEUjEwNC9T
+RFI1MC9ERFI1MCBiYXNlZCBvbiBvbmx5IHF1aXJrLgo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc3Vw
+cG9ydCB0byBkaXNhYmxlIFNEUjEwNC9TRFI1MC9ERFI1MCBiYXNlZCBvbgo+IHJlYWRpbmcgdGhl
+IGNhcGFiaWxpdHkgcmVnaXN0ZXIgMC4KPgo+IFNpZ25lZC1vZmYtYnk6IFN1bWFuIFRyaXBhdGhp
+IDxzdHJpcGF0aGlAYXBtLmNvbT4KPiAtLS0KPiAtLS0KPiAgZHJpdmVycy9tbWMvaG9zdC9zZGhj
+aS5jIHwgMyArKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
+bigtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuYyBiL2RyaXZlcnMv
+bW1jL2hvc3Qvc2RoY2kuYwo+IGluZGV4IDU4YzE3NzAuLmEzZDliOGEgMTAwNjQ0Cj4gLS0tIGEv
+ZHJpdmVycy9tbWMvaG9zdC9zZGhjaS5jCj4gKysrIGIvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS5j
+Cj4gQEAgLTMxMTgsNyArMzExOCw4IEBAIGludCBzZGhjaV9hZGRfaG9zdChzdHJ1Y3Qgc2RoY2lf
+aG9zdCAqaG9zdCkKPiAgICAgICAgICAgICAgICAgfQo+ICAgICAgICAgfQo+Cj4gLSAgICAgICBp
+ZiAoaG9zdC0+cXVpcmtzMiAmIFNESENJX1FVSVJLMl9OT18xXzhfVikKPiArICAgICAgIGlmICho
+b3N0LT5xdWlya3MyICYgU0RIQ0lfUVVJUksyX05PXzFfOF9WIHx8Cj4gKyAgICAgICAgICAgIShj
+YXBzWzBdICYgU0RIQ0lfQ0FOX1ZERF8xODApKQo+ICAgICAgICAgICAgICAgICBjYXBzWzFdICY9
+IH4oU0RIQ0lfU1VQUE9SVF9TRFIxMDQgfCBTREhDSV9TVVBQT1JUX1NEUjUwIHwKPiAgICAgICAg
+ICAgICAgICAgICAgICAgIFNESENJX1NVUFBPUlRfRERSNTApOwo+Cj4gLS0KPiAxLjguMi4xCj4K
+CkFueSBjb21tZW50cyBvbiB0aGlzIHBhdGNoID8KCgotLSAKVGhhbmtzLAp3aXRoIHJlZ2FyZHMs
+ClN1bWFuIFRyaXBhdGhpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFi
+cy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
