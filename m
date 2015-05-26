@@ -1,118 +1,126 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH 2/3] dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
-Date: Tue, 26 May 2015 09:15:31 -0700
-Message-ID: <CAAtXAHcb2LeTH_qMBhxE+JgX=TktYJpswdteBnydDuRPsODgWg@mail.gmail.com>
-References: <1432251450-26352-1-git-send-email-moritz.fischer@ettus.com>
-	<1432251450-26352-3-git-send-email-moritz.fischer@ettus.com>
-	<555EC20C.6010703@xilinx.com>
-	<20150525190409.GS18303@xsjsorenbubuntu>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCH] ARM: socfpga: dts: enable ethernet for Arria10 devkit
+Date: Tue, 26 May 2015 11:06:15 -0500
+Message-ID: <1432656375-26950-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150525190409.GS18303@xsjsorenbubuntu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, akpm@linux-foundation.org, Greg KH <gregkh@linuxfoundation.org>, mchehab@osg.samsung.com, Arnd Bergmann <arnd@arndb.de>, joe@perches.com, Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
+Cc: devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, dinh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 25, 2015 at 12:04 PM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
-> On Fri, 2015-05-22 at 07:43AM +0200, Michal Simek wrote:
->> On 05/22/2015 01:37 AM, Moritz Fischer wrote:
->> > Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
->> > ---
->> >  .../bindings/mailbox/xilinx-mailbox.txt         | 40 ++++++++++++=
-++++++++
->> >  1 file changed, 40 insertions(+)
->> >
->>
->> IRC the rule was to send binding first and then the driver.
->>
->> > diff --git a/Documentation/devicetree/bindings/mailbox/xilinx-mail=
-box.txt b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
->> > new file mode 100644
->> > index 0000000..e559743
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
->> > @@ -0,0 +1,40 @@
->> > +Xilinx Mailbox Driver
->> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > +
->> > +Required properties:
->> > +- compatible :     "xlnx,mailbox-2.1".
->> > +- reg :    physical base address of the mailbox and length of
->> > +           memory mapped region.
->> > +- #mbox-cells:     Common mailbox binding property to identify th=
-e number
->> > +           of cells required for the mailbox specifier. Should be=
- 1.
->> > +
->> > +Optional properties:
->> > +- interrupt-parent :       interrupt source phandle.
->> > +- interrupts :             interrupt number. The interrupt specif=
-ier format
->>
->> please be consistent with spacing around :. It doesn't look nice.
->>
->> > +                   depends on the interrupt controller parent.
->> > +
->> > +Example:
->> > +   mbox: mailbox@0x40400000 {
->>
->> remove 0x prefix here.
->>
->> > +           compatible =3D "xlnx,axi-mailbox-2.1";
->> > +           reg =3D <0x100 0x3c>;
->>
->> This is weird - it should start with 40400000.
->> Or is your physical address 0x100?
->>
->>
->> > +           interrupt-parent =3D <&intc>;
->> > +           interrupts =3D <5>;
->> > +           #mbox-cells =3D <1>;
->> > +   };
->> > +
->> > +Mailbox client
->> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > +"mboxes" and the optional "mbox-names" (please see
->> > +Documentation/devicetree/bindings/mailbox/mailbox.txt for details=
-). Each value
->> > +of the mboxes property should contain a phandle to the mailbox co=
-ntroller
->> > +device node and second argument is the channel index. It must be =
-0 (hardware
->> > +support only one channel).The equivalent "mbox-names" property va=
-lue can be
->>
->> .<space>The
->>
->> > +used to give a name to the communication channel to be used by th=
-e client user.
->> > +
->> > +Example:
->> > +   mclient0: mclient0@0x400 {
->>
->> ditto.
->>
->> > +           compatible =3D "client-1.0";
->> > +           reg =3D <0x400 0x10>;
->> > +           mbox-names =3D "mbox", "mbox-rx";
->
-> This seems to consume two mailboxes but...
->
->> > +           mboxes =3D <&mbox 0>;
->
-> ... this seems to describe only one, or am I mistaken?
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-Yes.
->
->         S=C3=B6ren
+Update the arria10 gmac nodes with all the necessary properties for ethernet
+to function on the Arria10 devkit.
 
-Thanks for your feedback, these were addressed in the v1 (should've bee=
-n v2).
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+ arch/arm/boot/dts/socfpga_arria10.dtsi       | 11 +++++++++++
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-Thanks,
-
-Moritz
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 6ceb26e..f5bebdd 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -397,6 +397,7 @@
+ 
+ 		gmac0: ethernet@ff800000 {
+ 			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.72a", "snps,dwmac";
++			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
+ 			reg = <0xff800000 0x2000>;
+ 			interrupts = <0 92 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
+@@ -404,11 +405,16 @@
+ 			mac-address = [00 00 00 00 00 00];
+ 			snps,multicast-filter-bins = <256>;
+ 			snps,perfect-filter-entries = <128>;
++			tx-fifo-depth = <4096>;
++			rx-fifo-depth = <16384>;
++			clocks = <&l4_mp_clk>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+ 		gmac1: ethernet@ff802000 {
+ 			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.72a", "snps,dwmac";
++			altr,sysmgr-syscon = <&sysmgr 0x48 0>;
+ 		        reg = <0xff802000 0x2000>;
+ 			interrupts = <0 93 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
+@@ -418,11 +424,14 @@
+ 			snps,perfect-filter-entries = <128>;
+ 			tx-fifo-depth = <4096>;
+ 			rx-fifo-depth = <16384>;
++			clocks = <&l4_mp_clk>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+ 		gmac2: ethernet@ff804000 {
+ 			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.72a", "snps,dwmac";
++			altr,sysmgr-syscon = <&sysmgr 0x4C 0>;
+ 			reg = <0xff804000 0x2000>;
+ 			interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
+@@ -432,6 +441,8 @@
+ 			snps,perfect-filter-entries = <128>;
+ 			tx-fifo-depth = <4096>;
+ 			rx-fifo-depth = <16384>;
++			clocks = <&l4_mp_clk>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+index 347ca4e..94a0709 100644
+--- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+@@ -41,6 +41,34 @@
+ 	};
+ };
+ 
++&gmac0 {
++	phy-mode = "rgmii";
++	phy-addr = <0xffffffff>; /* probe for phy addr */
++
++	/*
++	 * These skews assume the user's FPGA design is adding 600ps of delay
++	 * for TX_CLK on Arria 10.
++	 *
++	 * All skews are offset since hardware skew values for the ksz9031
++	 * range from a negative skew to a positive skew.
++	 * See the micrel-ksz90x1.txt Documentation file for details.
++	 */
++	txd0-skew-ps = <0>; /* -420ps */
++	txd1-skew-ps = <0>; /* -420ps */
++	txd2-skew-ps = <0>; /* -420ps */
++	txd3-skew-ps = <0>; /* -420ps */
++	rxd0-skew-ps = <420>; /* 0ps */
++	rxd1-skew-ps = <420>; /* 0ps */
++	rxd2-skew-ps = <420>; /* 0ps */
++	rxd3-skew-ps = <420>; /* 0ps */
++	txen-skew-ps = <0>; /* -420ps */
++	txc-skew-ps = <1860>; /* 960ps */
++	rxdv-skew-ps = <420>; /* 0ps */
++	rxc-skew-ps = <1680>; /* 780ps */
++	max-frame-size = <3800>;
++	status = "okay";
++};
++
+ &uart1 {
+ 	status = "okay";
+ };
+-- 
+2.2.1
