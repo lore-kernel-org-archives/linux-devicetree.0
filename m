@@ -1,49 +1,75 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into platform
- device
-Date: Tue, 26 May 2015 11:24:03 -0700
-Message-ID: <20150526182403.GA23370@roeck-us.net>
-References: <=fu.wei@linaro.org>
- <1432548193-19569-1-git-send-email-fu.wei@linaro.org>
- <1432548193-19569-7-git-send-email-fu.wei@linaro.org>
- <55642EA8.5000003@linaro.org>
- <5564A0C7.1090306@codeaurora.org>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 2/7] clocksource: mips-gic: Add missing error returns checks
+Date: Tue, 26 May 2015 15:39:03 -0300
+Message-ID: <1432665548-16024-3-git-send-email-ezequiel.garcia@imgtec.com>
+References: <1432665548-16024-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5564A0C7.1090306-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432665548-16024-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 26, 2015 at 11:35:19AM -0500, Timur Tabi wrote:
-> On 05/26/2015 03:28 AM, Hanjun Guo wrote:
-> 
-> >>      early_acpi_os_unmap_memory((char *)table, tbl_size);
-> >>  }
-> >
-> >please add
-> >
-> >#ifdef CONFIG_ARM_SBSA_WATCHDOG
-> >(acpi gtdt code)
-> >#endif
-> 
-> I don't agree with this.  The GTDT should be parsed even if there's no
-> watchdog driver compiled for this kernel.  There are no other #ifdefs in
-> this file.
-> 
+This commit adds the required checks on the functions that return
+an error. Some of them are not critical, so only a warning is
+printed.
 
-Me not either, but then I thought this is really a maintainer question.
-If the maintainers want out-of-subsystem #ifdefs in the code, who am I
-to complain.
+Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/clocksource/mips-gic-timer.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Should be "#if IS_ENABLED(CONFIG_ARM_SBSA_WATCHDOG)", though, if we go
-along that route.
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+index 913585d..c4352f0 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -100,12 +100,18 @@ static struct notifier_block gic_cpu_nb = {
+ 
+ static int gic_clockevent_init(void)
+ {
++	int ret;
++
+ 	if (!cpu_has_counter || !gic_frequency)
+ 		return -ENXIO;
+ 
+-	setup_percpu_irq(gic_timer_irq, &gic_compare_irqaction);
++	ret = setup_percpu_irq(gic_timer_irq, &gic_compare_irqaction);
++	if (ret < 0)
++		return ret;
+ 
+-	register_cpu_notifier(&gic_cpu_nb);
++	ret = register_cpu_notifier(&gic_cpu_nb);
++	if (ret < 0)
++		pr_warn("GIC: Unable to register CPU notifier\n");
+ 
+ 	gic_clockevent_cpu_init(this_cpu_ptr(&gic_clockevent_device));
+ 
+@@ -125,13 +131,17 @@ static struct clocksource gic_clocksource = {
+ 
+ static void __init __gic_clocksource_init(void)
+ {
++	int ret;
++
+ 	/* Set clocksource mask. */
+ 	gic_clocksource.mask = CLOCKSOURCE_MASK(gic_get_count_width());
+ 
+ 	/* Calculate a somewhat reasonable rating value. */
+ 	gic_clocksource.rating = 200 + gic_frequency / 10000000;
+ 
+-	clocksource_register_hz(&gic_clocksource, gic_frequency);
++	ret = clocksource_register_hz(&gic_clocksource, gic_frequency);
++	if (ret < 0)
++		pr_warn("GIC: Unable to register clocksource\n");
+ 
+ 	gic_clockevent_init();
+ 
+-- 
+2.3.3
 
-Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
