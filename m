@@ -1,72 +1,75 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 5/5] clk: mediatek: Add USB clock support in MT8173
- APMIXEDSYS
-Date: Tue, 26 May 2015 17:58:19 +0800
-Message-ID: <1432634299.15597.36.camel@mtksdaap41>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
- <1432192376-6712-6-git-send-email-jamesjj.liao@mediatek.com>
- <20150526080516.GG6325@pengutronix.de>
- <1432631475.15597.29.camel@mtksdaap41>
- <20150526094140.GH6325@pengutronix.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] spi: orion: Fix maximum baud rates for Armada 370/XP
+Date: Tue, 26 May 2015 11:36:50 +0100
+Message-ID: <20150526103650.GM21577@sirena.org.uk>
+References: <1432633484-18758-1-git-send-email-gregory.clement@free-electrons.com>
+ <1432633484-18758-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20150526094140.GH6325-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1421285698391086533=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1432633484-18758-2-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-spi@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
 
-On Tue, 2015-05-26 at 11:41 +0200, Sascha Hauer wrote:
-> On Tue, May 26, 2015 at 05:11:15PM +0800, James Liao wrote:
-> > On Tue, 2015-05-26 at 10:05 +0200, Sascha Hauer wrote:
-> > > On Thu, May 21, 2015 at 03:12:56PM +0800, James Liao wrote:
-> > > > +static void __init mtk_clk_register_apmixedsys_special(struct device_node *node,
-> > > > +			struct clk_onecell_data *clk_data)
-> > > > +{
-> > > > +	void __iomem *base;
-> > > > +	struct clk *clk;
-> > > > +
-> > > > +	base = of_iomap(node, 0);
-> > > > +	if (!base) {
-> > > > +		pr_err("%s(): ioremap failed\n", __func__);
-> > > > +		return;
-> > > > +	}
-> > > > +
-> > > > +	clk = mtk_clk_register_ref2usb_tx("ref2usb_tx", base + 0x8);
-> > > 
-> > > The function seems to be for one special clock only. Why do you pass the
-> > > name to it? They will never be called with another name, right?
-> > 
-> > This function decides clock name and associates clock ID for special
-> > clocks. In fact there may be another "special clocks" need to add into
-> > apmixedsys. I think it's a better way to group clock names and clock IDs
-> > in the same function for maintenance.
-> 
-> How can a function with ref2usb_tx in its name ever register a clock
-> with another name? Then it seems the function name is wrong.
-
-I mean mtk_clk_register_apmixedsys_special() decides the clock names and
-clock ID bindings.
-
-mtk_clk_register_ref2usb_tx() is only used by ref2usb_tx clock. Other
-special clocks will not share the implementation with ref2usb_tx. But we
-can set names and clock IDs for different special clocks in the same
-function (mtk_clk_register_apmixedsys_special()) to avoid inconsistence
-naming.
+--===============1421285698391086533==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RzoDHZBRv7fez6cK"
+Content-Disposition: inline
 
 
-Best regards,
+--RzoDHZBRv7fez6cK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-James 
+On Tue, May 26, 2015 at 11:44:42AM +0200, Gregory CLEMENT wrote:
+
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Reported-by: Kostya Porotchkin <kostap@marvell.com>
+> Cc: <stable@vger.kernel.org> #Fixes df59fa7f4bca
+
+Applied, but please format this stuff in a standard fashion - use a
+Fixes: tag to reference commits you're fixing.  This makes it easier for
+tooling to work with the information you're providing.
+
+--RzoDHZBRv7fez6cK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVZEzBAAoJECTWi3JdVIfQ0YIH/AntfoJrPyRh9/Xt8Xh7L81m
+pL1JmYf81pDU/rpUtijQ1Z2jfHy+3OyedaE+r7mZ7YWTKTpKXT9yhtY94eHT1dSH
+ytIShvMSeCt/38tGJjRyHUb25rBRjqLliP2xyWXzWV+G67XDWLY6V5KLaXOgSXUI
+qcCXLkCOmM22OthRUUb+qkqGX9Znvnc9BpoBLSVCU/IzEdJhU+RBreSd8uFXoCaY
+I9gPd0C0H9vxoXu0NH2/s3vclAcfypHPX+8+A6zIaIb+lxa9g0daLWcsJhAOxLUQ
+/1a3x23JrrG3EV12OAGxMKTGM4L0yWRqoHLt/rX+IGbblMSx5BOmXTT0V/SLh04=
+=loyq
+-----END PGP SIGNATURE-----
+
+--RzoDHZBRv7fez6cK--
+
+
+--===============1421285698391086533==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1421285698391086533==--
