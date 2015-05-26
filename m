@@ -1,71 +1,68 @@
-From: atull <atull@opensource.altera.com>
+From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
 Subject: Re: [PATCH v4 1/2] ARM: socfpga: support suspend to ram
-Date: Tue, 26 May 2015 16:40:35 -0500
-Message-ID: <alpine.DEB.2.02.1505261638190.19205@linuxheads99>
+Date: Tue, 26 May 2015 23:56:17 +0200
+Message-ID: <20150526215617.GA3137@amd>
 References: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
  <1432317735-29413-2-git-send-email-atull@opensource.altera.com>
  <20150525124133.GF9943@amd>
+ <alpine.DEB.2.02.1505261638190.19205@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150525124133.GF9943@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1505261638190.19205@linuxheads99>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Delicious Quinoq <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 May 2015, Pavel Machek wrote:
+Hi!
 
-> Hi!
+> Thanks for the feedback.
 > 
-> > Suspend-to-RAM and EDAC support are mutually exclusive on SOCFPGA
-> > platforms.  CONFIG_SOCFPGA_SUSPEND enables suspend-to-RAM and
-> > prevents selecting CONFIG_EDAC_ALTERA_MC.
+> Yes I agree.
 > 
-> Do we went to have the dependency at the .config time? We would like
-> to do generic kernels booting on many machines, this kind of breaks
-> that...
+> One possibility is that I could add a suspend function to EDAC that
+> always fails with a helpful message like "Suspend with EDAC not
+> supported."  If someone wants to suspend, they'll have to take the
+> EDAC out of the device tree so its probe will bomb out.  I'm not
+> sure how normal it is to have suspend functions in the kernel
+> that always fail, though.
+
+"Interesting" solution, but better than config exclusion, I'd say.
+
+> > > +	/*
+> > > +	 * This code assumes that the bootloader has already
+> > > +	 * properly configured the sdram controller:
+> > 
+> > Which bootloaders can do that? 
 > 
+> Whatever bootloader is configuring the sdram controller for the
+> board.
 
-Hi Pavel,
+Ok, so direct question: will mainline u-boot 2015.04 configure the
+controller correctly?
 
-Thanks for the feedback.
-
-Yes I agree.
-
-One possibility is that I could add a suspend function to EDAC that
-always fails with a helpful message like "Suspend with EDAC not
-supported."  If someone wants to suspend, they'll have to take the
-EDAC out of the device tree so its probe will bomb out.  I'm not
-sure how normal it is to have suspend functions in the kernel
-that always fail, though.
-
-
-> > +	/*
-> > +	 * This code assumes that the bootloader has already
-> > +	 * properly configured the sdram controller:
+> > > +	 * sdr.ctrlcfg.lowpwreq.selfrfshmask = 3
+> > > +	 * sdr.ctrlcfg.lowpwrtiming.clkdisablecycles = 8
+> > > +	 * sdr.ctrlcfg.dramtiming4.selfrfshexit = 512
+> > 
+> > Would it make sense to configure it in Linux?
 > 
-> Which bootloaders can do that? 
-
-Whatever bootloader is configuring the sdram controller for the
-board.
-
+> The bootloader is responsible for configuring the sdram
+> controller with parameters appropriate for whatever vendor's DDR
+> is on the board, so that's where this must go.
 > 
-> > +	 * sdr.ctrlcfg.lowpwreq.selfrfshmask = 3
-> > +	 * sdr.ctrlcfg.lowpwrtiming.clkdisablecycles = 8
-> > +	 * sdr.ctrlcfg.dramtiming4.selfrfshexit = 512
-> 
-> Would it make sense to configure it in Linux?
-> 
-> Thanks,
-> 									Pavel
+> Now I realize I should make this message more general, since it is
+> true for the socfpga cyclone5 devkit, but may need to be adjusted
+> for other boards.
 
-The bootloader is responsible for configuring the sdram
-controller with parameters appropriate for whatever vendor's DDR
-is on the board, so that's where this must go.
-
-Now I realize I should make this message more general, since it is
-true for the socfpga cyclone5 devkit, but may need to be adjusted
-for other boards.
-
-Alan
+Aha, ok, the comment really needs to be fixed.
+								Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
