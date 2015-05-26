@@ -1,289 +1,72 @@
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Subject: [PATCH 6/7] arm-cci: Add CCI-500 PMU support
-Date: Tue, 26 May 2015 10:53:15 +0100
-Message-ID: <1432633996-7229-7-git-send-email-suzuki.poulose@arm.com>
-References: <1432633996-7229-1-git-send-email-suzuki.poulose@arm.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 5/5] clk: mediatek: Add USB clock support in MT8173
+ APMIXEDSYS
+Date: Tue, 26 May 2015 17:58:19 +0800
+Message-ID: <1432634299.15597.36.camel@mtksdaap41>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1432192376-6712-6-git-send-email-jamesjj.liao@mediatek.com>
+ <20150526080516.GG6325@pengutronix.de>
+ <1432631475.15597.29.camel@mtksdaap41>
+ <20150526094140.GH6325@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1432633996-7229-1-git-send-email-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, arnd@arndb.de, "Suzuki K. Poulose" <suzuki.poulose@arm.com>, punit.agrawal@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20150526094140.GH6325-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Hi Sascha,
 
-CCI-500 provides 8 event counters which can count any of the
-supported events independently. The PMU event id is a 9-bit
-value made of two parts.
-	bits [8:5] - Source port
-			0x0-0x6 Slave Ports
-			0x8-0xD Master Ports
-			0xf     Global Events to CCI
-			0x7,0xe Reserved
-	bits [0:4] - Event code (specific to each type of port)
+On Tue, 2015-05-26 at 11:41 +0200, Sascha Hauer wrote:
+> On Tue, May 26, 2015 at 05:11:15PM +0800, James Liao wrote:
+> > On Tue, 2015-05-26 at 10:05 +0200, Sascha Hauer wrote:
+> > > On Thu, May 21, 2015 at 03:12:56PM +0800, James Liao wrote:
+> > > > +static void __init mtk_clk_register_apmixedsys_special(struct device_node *node,
+> > > > +			struct clk_onecell_data *clk_data)
+> > > > +{
+> > > > +	void __iomem *base;
+> > > > +	struct clk *clk;
+> > > > +
+> > > > +	base = of_iomap(node, 0);
+> > > > +	if (!base) {
+> > > > +		pr_err("%s(): ioremap failed\n", __func__);
+> > > > +		return;
+> > > > +	}
+> > > > +
+> > > > +	clk = mtk_clk_register_ref2usb_tx("ref2usb_tx", base + 0x8);
+> > > 
+> > > The function seems to be for one special clock only. Why do you pass the
+> > > name to it? They will never be called with another name, right?
+> > 
+> > This function decides clock name and associates clock ID for special
+> > clocks. In fact there may be another "special clocks" need to add into
+> > apmixedsys. I think it's a better way to group clock names and clock IDs
+> > in the same function for maintenance.
+> 
+> How can a function with ref2usb_tx in its name ever register a clock
+> with another name? Then it seems the function name is wrong.
 
-The generic CCI-500 controlling interface remains the same with CCI-400.
-However there are some differences in the PMU event counters.
- - No cycle counter
- - Upto 8 counters(4 in CCI-400)
- - Each counter area is 64K(4K in CCI400)
- - The counter0 starts at offset 0x10000 from the base of CCI
+I mean mtk_clk_register_apmixedsys_special() decides the clock names and
+clock ID bindings.
 
-Cc: Punit Agrawal <punit.agrawal@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
-Acked-by: Punit Agrawal <punit.agrawal@arm.com>
+mtk_clk_register_ref2usb_tx() is only used by ref2usb_tx clock. Other
+special clocks will not share the implementation with ref2usb_tx. But we
+can set names and clock IDs for different special clocks in the same
+function (mtk_clk_register_apmixedsys_special()) to avoid inconsistence
+naming.
 
----
- Changes since V1:
-  - Port [1] to CCI500 PMU configs
-	[1] https://patchwork.kernel.org/patch/6387121/
-  - No functional changes in the code
----
- Documentation/devicetree/bindings/arm/cci.txt |    4 +-
- drivers/bus/Kconfig                           |   14 +++
- drivers/bus/arm-cci.c                         |  133 +++++++++++++++++++++++++
- 3 files changed, 150 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/devicetree/bindings/arm/cci.txt
-index 3c5c631..aef1d20 100644
---- a/Documentation/devicetree/bindings/arm/cci.txt
-+++ b/Documentation/devicetree/bindings/arm/cci.txt
-@@ -31,8 +31,9 @@ specific to ARM.
- 	- compatible
- 		Usage: required
- 		Value type: <string>
--		Definition: must be set to
-+		Definition: must contain one of the following:
- 			    "arm,cci-400"
-+			    "arm,cci-500"
- 
- 	- reg
- 		Usage: required
-@@ -99,6 +100,7 @@ specific to ARM.
- 				 "arm,cci-400-pmu,r1"
- 				 "arm,cci-400-pmu"  - DEPRECATED, permitted only where OS has
- 						      secure acces to CCI registers
-+				 "arm,cci-500-pmu,r0"
- 		- reg:
- 			Usage: required
- 			Value type: Integer cells. A register entry, expressed
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index a857936..1a82f3a 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -34,6 +34,20 @@ config ARM_CCI400_PORT_CTRL
- 	  Low level power management driver for CCI400 cache coherent
- 	  interconnect for ARM platforms.
- 
-+config ARM_CCI500_PMU
-+	bool "ARM CCI500 PMU support"
-+	default y
-+	depends on (ARM && CPU_V7) || ARM64
-+	depends on PERF_EVENTS
-+	select ARM_CCI_PMU
-+	help
-+	  Support for PMU events monitoring on the ARM CCI-500 cache coherent
-+	  interconnect. CCI-500 provides 8 independent event counters, which
-+	  can count events pertaining to the slave/master interfaces as well
-+	  as the internal events to the CCI.
-+
-+	  If unsure, say Y
-+
- config ARM_CCN
- 	bool "ARM CCN driver support"
- 	depends on ARM || ARM64
-diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index df1c2c6..1475eaf 100644
---- a/drivers/bus/arm-cci.c
-+++ b/drivers/bus/arm-cci.c
-@@ -52,6 +52,9 @@ static const struct of_device_id arm_cci_matches[] = {
- #ifdef CONFIG_ARM_CCI400_COMMON
- 	{.compatible = "arm,cci-400", .data = CCI400_PORTS_DATA },
- #endif
-+#ifdef CONFIG_ARM_CCI500_PMU
-+	{ .compatible = "arm,cci-500", },
-+#endif
- 	{},
- };
- 
-@@ -89,6 +92,9 @@ static const struct of_device_id arm_cci_matches[] = {
- enum {
- 	CCI_IF_SLAVE,
- 	CCI_IF_MASTER,
-+#ifdef CONFIG_ARM_CCI500_PMU
-+	CCI_IF_GLOBAL,
-+#endif
- 	CCI_IF_MAX,
- };
- 
-@@ -145,6 +151,9 @@ enum cci_models {
- 	CCI400_R0,
- 	CCI400_R1,
- #endif
-+#ifdef CONFIG_ARM_CCI500_PMU
-+	CCI500_R0,
-+#endif
- 	CCI_MODEL_MAX
- };
- 
-@@ -294,6 +303,101 @@ static inline struct cci_pmu_model *probe_cci_model(struct platform_device *pdev
- }
- #endif	/* CONFIG_ARM_CCI400_PMU */
- 
-+#ifdef CONFIG_ARM_CCI500_PMU
-+
-+/*
-+ * CCI500 provides 8 independent event counters that can count
-+ * any of the events available.
-+ *
-+ * CCI500 PMU event id is an 9-bit value made of two parts.
-+ *	 bits [8:5] - Source for the event
-+ *		      0x0-0x6 - Slave interfaces
-+ *		      0x8-0xD - Master interfaces
-+ *		      0xf     - Global Events
-+ *		      0x7,0xe - Reserved
-+ *
-+ *	 bits [4:0] - Event code (specific to type of interface)
-+ */
-+
-+/* Port ids */
-+#define CCI500_PORT_S0			0x0
-+#define CCI500_PORT_S1			0x1
-+#define CCI500_PORT_S2			0x2
-+#define CCI500_PORT_S3			0x3
-+#define CCI500_PORT_S4			0x4
-+#define CCI500_PORT_S5			0x5
-+#define CCI500_PORT_S6			0x6
-+
-+#define CCI500_PORT_M0			0x8
-+#define CCI500_PORT_M1			0x9
-+#define CCI500_PORT_M2			0xa
-+#define CCI500_PORT_M3			0xb
-+#define CCI500_PORT_M4			0xc
-+#define CCI500_PORT_M5			0xd
-+
-+#define CCI500_PORT_GLOBAL 		0xf
-+
-+#define CCI500_PMU_EVENT_MASK		0x1ffUL
-+#define CCI500_PMU_EVENT_SOURCE_SHIFT	0x5
-+#define CCI500_PMU_EVENT_SOURCE_MASK	0xf
-+#define CCI500_PMU_EVENT_CODE_SHIFT	0x0
-+#define CCI500_PMU_EVENT_CODE_MASK	0x1f
-+
-+#define CCI500_PMU_EVENT_SOURCE(event)	\
-+	((event >> CCI500_PMU_EVENT_SOURCE_SHIFT) & CCI500_PMU_EVENT_SOURCE_MASK)
-+#define CCI500_PMU_EVENT_CODE(event)	\
-+	((event >> CCI500_PMU_EVENT_CODE_SHIFT) & CCI500_PMU_EVENT_CODE_MASK)
-+
-+#define CCI500_SLAVE_PORT_MIN_EV	0x00
-+#define CCI500_SLAVE_PORT_MAX_EV	0x1f
-+#define CCI500_MASTER_PORT_MIN_EV	0x00
-+#define CCI500_MASTER_PORT_MAX_EV	0x06
-+#define CCI500_GLOBAL_PORT_MIN_EV	0x00
-+#define CCI500_GLOBAL_PORT_MAX_EV	0x0f
-+
-+static int cci500_validate_hw_event(struct cci_pmu *cci_pmu,
-+					unsigned long hw_event)
-+{
-+	u32 ev_source = CCI500_PMU_EVENT_SOURCE(hw_event);
-+	u32 ev_code = CCI500_PMU_EVENT_CODE(hw_event);
-+	int if_type;
-+
-+	if (hw_event & ~CCI500_PMU_EVENT_MASK)
-+		return -ENOENT;
-+
-+	switch (ev_source) {
-+	case CCI500_PORT_S0:
-+	case CCI500_PORT_S1:
-+	case CCI500_PORT_S2:
-+	case CCI500_PORT_S3:
-+	case CCI500_PORT_S4:
-+	case CCI500_PORT_S5:
-+	case CCI500_PORT_S6:
-+		if_type = CCI_IF_SLAVE;
-+		break;
-+	case CCI500_PORT_M0:
-+	case CCI500_PORT_M1:
-+	case CCI500_PORT_M2:
-+	case CCI500_PORT_M3:
-+	case CCI500_PORT_M4:
-+	case CCI500_PORT_M5:
-+		if_type = CCI_IF_MASTER;
-+		break;
-+	case CCI500_PORT_GLOBAL:
-+		if_type = CCI_IF_GLOBAL;
-+		break;
-+	default:
-+		return -ENOENT;
-+	}
-+
-+	if (ev_code >= cci_pmu->model->event_ranges[if_type].min &&
-+		ev_code <= cci_pmu->model->event_ranges[if_type].max)
-+		return hw_event;
-+
-+	return -ENOENT;
-+}
-+#endif	/* CONFIG_ARM_CCI500_PMU */
-+
- static int pmu_is_valid_counter(struct cci_pmu *cci_pmu, int idx)
- {
- 	return 0 <= idx && idx <= CCI_PMU_CNTR_LAST(cci_pmu);
-@@ -981,6 +1085,29 @@ static struct cci_pmu_model cci_pmu_models[] = {
- 		.get_event_idx = cci400_get_event_idx,
- 	},
- #endif
-+#ifdef CONFIG_ARM_CCI500_PMU
-+	[CCI500_R0] = {
-+		.name = "CCI_500",
-+		.fixed_hw_cntrs = 0,
-+		.num_hw_cntrs = 8,
-+		.cntr_size = SZ_64K,
-+		.event_ranges = {
-+			[CCI_IF_SLAVE] = {
-+				CCI500_SLAVE_PORT_MIN_EV,
-+				CCI500_SLAVE_PORT_MAX_EV,
-+			},
-+			[CCI_IF_MASTER] = {
-+				CCI500_MASTER_PORT_MIN_EV,
-+				CCI500_MASTER_PORT_MAX_EV,
-+			},
-+			[CCI_IF_GLOBAL] = {
-+				CCI500_GLOBAL_PORT_MIN_EV,
-+				CCI500_GLOBAL_PORT_MAX_EV,
-+			},
-+		},
-+		.validate_hw_event = cci500_validate_hw_event,
-+	},
-+#endif
- };
- 
- static const struct of_device_id arm_cci_pmu_matches[] = {
-@@ -998,6 +1125,12 @@ static const struct of_device_id arm_cci_pmu_matches[] = {
- 		.data	= &cci_pmu_models[CCI400_R1],
- 	},
- #endif
-+#ifdef CONFIG_ARM_CCI500_PMU
-+	{
-+		.compatible = "arm,cci-500-pmu,r0",
-+		.data = &cci_pmu_models[CCI500_R0],
-+	},
-+#endif
- 	{},
- };
- 
--- 
-1.7.9.5
+Best regards,
+
+James 
