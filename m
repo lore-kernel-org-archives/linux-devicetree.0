@@ -1,96 +1,44 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into platform
- device
-Date: Tue, 26 May 2015 08:36:13 -0700
-Message-ID: <20150526153613.GA22487@roeck-us.net>
-References: <=fu.wei@linaro.org>
- <1432548193-19569-1-git-send-email-fu.wei@linaro.org>
- <1432548193-19569-7-git-send-email-fu.wei@linaro.org>
- <20150526122858.GJ1565@arm.com>
- <CAJ5Y-eZfzrDtEL5gpZ1rRNUhr2dCZKuA-MMNcwV=TgFW_9rq=g@mail.gmail.com>
- <20150526151842.GP1565@arm.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] phy-sun4i-usb: Add a sunxi specific
+ function for setting squelch-detect
+Date: Tue, 26 May 2015 10:38:16 -0500
+Message-ID: <20150526153816.GK26599@saruman.tx.rr.com>
+References: <1427626248-6257-1-git-send-email-hdegoede@redhat.com>
+ <1427626248-6257-2-git-send-email-hdegoede@redhat.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3MHXEHrrXKLGx71o"
+Return-path: <linux-sunxi+bncBC5M7T4HYEKRB3NHSKVQKGQE5FUPFJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150526151842.GP1565@arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Ashwin Chaugule <ashwin.chaugule@linaro.org>, "fu.wei@linaro.org" <fu.wei@linaro.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, "linaro-acpi@lists.linaro.org" <linaro-acpi@lists.linaro.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tekkamanninja@gmail.com" <tekkamanninja@gmail.com>, "graeme.gregory@linaro.org" <graeme.gregory@linaro.org>, "al.stone@linaro.org" <al.stone@linaro.org>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "timur@codeaurora.org" <timur@codeaurora.org>, "arnd@arndb.de" <arnd@arndb.de>, "vgandhi@codeaurora.org" <vgandhi@codeaurora.org>, "wim@iguana.be" <wim@iguana.be>, "jcm@redhat.com" <jcm@redhat.com>, leo.duran@amd.c
+In-Reply-To: <1427626248-6257-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 26, 2015 at 04:18:42PM +0100, Will Deacon wrote:
-> On Tue, May 26, 2015 at 04:02:56PM +0100, Ashwin Chaugule wrote:
-> > On 26 May 2015 at 08:28, Will Deacon <will.deacon@arm.com> wrote:
-> > > On Mon, May 25, 2015 at 11:03:13AM +0100, fu.wei@linaro.org wrote=
-:
-> > >> From: Fu Wei <fu.wei@linaro.org>
-> > >>
-> > >> Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
-> > >> and create a platform device with that information.
-> > >> This platform device can be used by the ARM SBSA Generic
-> > >> Watchdog driver.
-> > >>
-> > >> Tested-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> > >> Tested-by: Timur Tabi <timur@codeaurora.org>
-> > >> Signed-off-by: Fu Wei <fu.wei@linaro.org>
-> > >> ---
-> > >>  arch/arm64/kernel/acpi.c | 145 ++++++++++++++++++++++++++++++++=
-+++++++++++++++
-> > >>  1 file changed, 145 insertions(+)
-> > >
-> > > Why does this all need to be under arch/arm64? The GTDT really is=
-n't
-> > > architecture-specific, so I'd *much* rather it was parsed in the =
-driver code
-> > > itself, like we already do for the architected timer. The GIC is =
-an
-> > > exception because it's in the MADT, which we need to parse in the=
- arch code
-> > > to configure SMP properly.
-> >=20
-> > I'm not really against refactoring the code. But the GTDT looks qui=
-te
-> > specific to ARM..
-> >=20
-> > ---8<----
-> > 5.2.24 Generic Timer Description Table (GTDT)
-> > This section describes the format of the Generic Timer Description
-> > Table (GTDT), which provides
-> > OSPM with information about a system=E2=80=99s Generic Timers confi=
-guration.
-> > The Generic Timer (GT) is
-> > a standard timer interface implemented on ARM processor-based syste=
-ms.
-> > The GT hardware
-> > specification can be found at Links to ACPI-Related Documents
-> > (http://uefi.org/acpi) under the
-> > heading ARM Architecture. The GTDT provides OSPM with information
-> > about a system's GT
-> > interrupt configurations, for both per-processor timers, and platfo=
-rm
-> > (memory-mapped) timers.
-> > The GT specification defines the following per-processor timers:
-> > =E2=80=A2 Secure privilege level 1 (EL1) timer,
-> > =E2=80=A2 Non-Secure EL1 timer,
-> > =E2=80=A2 Non-Secure privilege level 2 (EL2) timer,
-> > =E2=80=A2 Virtual timer,
-> > and the following Platform (memory-mapped) timers.
-> > =E2=80=A2 GT Block
-> > =E2=80=A2 Server Base System Architecture (SBSA) Generic Watchdog
-> > ---8<----
->=20
-> Sure, the device it describes may only ever exist on ARM systems, but=
- by
-> that logic then we should be moving lots of drivers back under arch/a=
-rm[64].
->=20
-It is nt the driver, but its instantiation. The question here would be
-how and where to instantiate the driver, not where the driver itself
-is located. The driver itself is ACPI agnostic.
+--3MHXEHrrXKLGx71o
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-What you are really saying is that you want the driver instantiation
-to be moved into the driver.
+On Sun, Mar 29, 2015 at 12:50:46PM +0200, Hans de Goede wrote:
+> The sunxi otg phy has a bug where it wrongly detects a high speed squelch
+> when reset on the root port gets de-asserted with a lo-speed device.
+> 
+> The workaround for this is to disable squelch detect before de-asserting
+> reset, and re-enabling it after the reset de-assert is done. Add a sunxi
+> specific phy function to allow the sunxi-musb glue to do this.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Guenter
+Kishon, do you want to take this patch?
+
+-- 
+balbi
+--3MHXEHrrXKLGx71o--
