@@ -1,108 +1,86 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v9 8/8] exynos4-is: Add support for v4l2-flash subdevs
-Date: Tue, 26 May 2015 11:28:45 +0200
-Message-ID: <55643CCD.4070607@samsung.com>
-References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
- <1432566843-6391-9-git-send-email-j.anaszewski@samsung.com>
- <5564371E.2040705@samsung.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH v4 1/2] ARM: socfpga: support suspend to ram
+Date: Tue, 26 May 2015 08:48:57 -0500
+Message-ID: <556479C9.5070208@opensource.altera.com>
+References: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
+ <1432317735-29413-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <5564371E.2040705@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432317735-29413-2-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Pavel Machek <pavel@denx.de>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+Hi Alan,
 
-Thanks for the review.
+On 5/22/15 1:02 PM, Alan Tull wrote:
+> Add code that requests that the sdr controller go into
+> self-refresh mode.  This code is run from ocram.
+> 
+> This patch assumes that u-boot has already configured sdr:
+>   sdr.ctrlcfg.lowpwreq.selfrfshmask = 3
+>   sdr.ctrlcfg.lowpwrtiming.clkdisablecycles = 8
+>   sdr.ctrlcfg.dramtiming4.selfrfshexit = 512
+> 
+> Suspend-to-RAM and EDAC support are mutually exclusive on SOCFPGA
+> platforms.  CONFIG_SOCFPGA_SUSPEND enables suspend-to-RAM and
+> prevents selecting CONFIG_EDAC_ALTERA_MC.
+> 
+> How to suspend to ram:
+>  $ echo enabled > \
+> /sys/devices/soc/ffc02000.serial0/tty/ttyS0/power/wakeup
+> 
+>  $ echo -n mem > /sys/power/state
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> Cc: Pavel Machek <pavel@denx.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Dinh Nguyen <dinguyen@opensource.altera.com>
+> Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> ---
+> v2: use Generic on-chip SRAM driver to allocate ocram
+>     rm fncpy_align since generic allocator handles alignment
+>     check __arm_ioremap_exec return code
+>     check for NULL pointers
+>     add a comment regarding sdram controller configuration
+> v3: fix renamed #define
+>     propagate socfpga_setup_ocram_self_refresh error code
+> v4: Kconfig: don't need to select GENERIC_ALLOCATER
+>     add CONFIG_SOCFPGA_SUSPEND
+>     make s2r and EDAC support mutually exclusive
+>     socfpga.c: add sdr_ctl_base_addr
+>     return error if ocram not available in device tree
+>     update copyright years
+> ---
 
-On 05/26/2015 11:04 AM, Sylwester Nawrocki wrote:
-> On 25/05/15 17:14, Jacek Anaszewski wrote:
->> This patch adds support for external v4l2-flash devices.
->> The support includes parsing "camera-flashes" DT property
->
-> "samsung,camera-flashes" ?
+<snip>
 
-Right.
+> +
+> +static int socfpga_pm_suspend(unsigned long arg)
+> +{
+> +	u32 ret;
+> +
+> +	if (!sdr_ctl_base_addr || !socfpga_scu_base_addr)
+> +		return -EFAULT;
+> +
+> +	ret = socfpga_sdram_self_refresh_in_ocram(
+> +		(u32)sdr_ctl_base_addr, (u32)socfpga_scu_base_addr);
+> +
 
->> and asynchronous sub-device registration.
->
->> +static int fimc_md_register_flash_entities(struct fimc_md *fmd)
->> +{
->> +	struct device_node *parent = fmd->pdev->dev.of_node, *np_sensor,
->> +		*np_flash;
->> +	struct v4l2_async_notifier *notifier = &fmd->subdev_notifier;
->> +	struct v4l2_async_subdev *asd;
->> +	int i, j, num_flashes = 0, num_elems;
->> +
->> +	num_elems = of_property_count_elems_of_size(parent,
->> +				"samsung,camera-flashes", sizeof(np_flash));
->
-> I think this should be of_property_count_u32_elems(), phandle is always
-> a 32-bit value [1], while size of a pointer depends on the architecture.
+I had a patch that removed socfpga_scu_base_addr from being a global and
+just a local variable in:
 
-Thanks for spotting this.
+f6e14376fb20 ARM: socfpga: use of_iomap to map the SCU
 
->
->> +	/* samsung,camera-flashes property is optional */
->> +	if (num_elems < 0)
->> +		return 0;
->> +
->> +	/* samsung,camera-flashes array must have even number of elements */
->> +	if ((num_elems & 1) || (num_elems > FIMC_MAX_SENSORS * 2))
->> +		return -EINVAL;
->> +
->> +	for (i = 0; i < num_elems; i += 2) {
->> +		np_sensor = of_parse_phandle(parent,
->> +					     "samsung,camera-flashes", i);
->> +
->> +		for (j = 0; j < fmd->num_sensors; j++)
->> +			if (fmd->async_subdevs.sensors[j].match.of.node ==
->> +			    np_sensor)
->> +				break;
->> +
->> +		of_node_put(np_sensor);
->
-> Would be good to add some comment here, why is the sensor required.
-> It's just a DT correctness check?
+This patch will be in v4.2 and is currently in arm-soc/next or
+at my fork: kernel/git/dinguyen/linux.git socfpga_for_next_arria10
 
-Yes, it checks whether the phandle points to the sensor node
-which was previously registered.
+So you will either need to make socfpga_scu_base_addr global again, or
+you can use the asm instruction to get the SCU base addr.
 
-> Couldn't we carry on with the flash
-> registration after just emitting some warning?
+Sorry about that..
 
-Hmm, I've just realized that with this code the flash phandle associated
-with the sensor phandle that hasn't been previously registered would be
-silently ignored.
-
-I agree that we should register the flash and emit warning in case
-sensor phandle doesn't point the known sensor.
-
->> +		if (j == fmd->num_sensors)
->> +			continue;
->> +
->> +		np_flash = of_parse_phandle(parent, "samsung,camera-flashes",
->> +						i + 1);
->> +
->> +		asd = &fmd->async_subdevs.flashes[num_flashes++];
->> +		asd->match_type = V4L2_ASYNC_MATCH_OF;
->> +		asd->match.of.node = np_flash;
->> +		notifier->subdevs[notifier->num_subdevs++] = asd;
->> +
->> +		of_node_put(np_flash);
->> +	}
->> +
->> +	return 0;
->> +}
->
-> Otherwise looks good to me.
->
-
-
--- 
-Best Regards,
-Jacek Anaszewski
+Dinh
