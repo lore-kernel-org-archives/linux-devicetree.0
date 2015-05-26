@@ -1,85 +1,108 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 07/13] mmc: davinci_mmc: Support for deferred
-	probing when requesting DMA channels
-Date: Tue, 26 May 2015 16:26:02 +0300
-Message-ID: <1432646768-12532-8-git-send-email-peter.ujfalusi@ti.com>
-References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v9 8/8] exynos4-is: Add support for v4l2-flash subdevs
+Date: Tue, 26 May 2015 11:28:45 +0200
+Message-ID: <55643CCD.4070607@samsung.com>
+References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
+ <1432566843-6391-9-git-send-email-j.anaszewski@samsung.com>
+ <5564371E.2040705@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: vinod.koul@intel.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-spi@vger.kernel.org, linux-crypto@vger.kernel.org, linux-serial@vger.kernel.org, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-omap@vger.kernel.org, linux-media@vger.kernel.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <5564371E.2040705@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi
 List-Id: devicetree@vger.kernel.org
 
-Switch to use ma_request_slave_channel_compat_reason() to request the DMA
-channels. Only fall back to pio mode if the error code returned is not
--EPROBE_DEFER, otherwise return from the probe with the -EPROBE_DEFER.
+Hi Sylwester,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-CC: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/mmc/host/davinci_mmc.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+Thanks for the review.
 
-diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
-index b2b3f8bbfd8c..df81e4e2f662 100644
---- a/drivers/mmc/host/davinci_mmc.c
-+++ b/drivers/mmc/host/davinci_mmc.c
-@@ -530,20 +530,20 @@ static int __init davinci_acquire_dma_channels(struct mmc_davinci_host *host)
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
- 
--	host->dma_tx =
--		dma_request_slave_channel_compat(mask, edma_filter_fn,
--				&host->txdma, mmc_dev(host->mmc), "tx");
--	if (!host->dma_tx) {
-+	host->dma_tx = dma_request_slave_channel_compat_reason(mask,
-+				edma_filter_fn, &host->txdma,
-+				mmc_dev(host->mmc), "tx");
-+	if (IS_ERR(host->dma_tx)) {
- 		dev_err(mmc_dev(host->mmc), "Can't get dma_tx channel\n");
--		return -ENODEV;
-+		return PTR_ERR(host->dma_tx);
- 	}
- 
--	host->dma_rx =
--		dma_request_slave_channel_compat(mask, edma_filter_fn,
--				&host->rxdma, mmc_dev(host->mmc), "rx");
--	if (!host->dma_rx) {
-+	host->dma_rx = dma_request_slave_channel_compat_reason(mask,
-+				edma_filter_fn, &host->rxdma,
-+				mmc_dev(host->mmc), "rx");
-+	if (IS_ERR(host->dma_rx)) {
- 		dev_err(mmc_dev(host->mmc), "Can't get dma_rx channel\n");
--		r = -ENODEV;
-+		r = PTR_ERR(host->dma_rx);
- 		goto free_master_write;
- 	}
- 
-@@ -1307,8 +1307,12 @@ static int __init davinci_mmcsd_probe(struct platform_device *pdev)
- 	host->mmc_irq = irq;
- 	host->sdio_irq = platform_get_irq(pdev, 1);
- 
--	if (host->use_dma && davinci_acquire_dma_channels(host) != 0)
-+	if (host->use_dma) {
-+		ret = davinci_acquire_dma_channels(host);
-+		if (ret == -EPROBE_DEFER)
-+			goto out;
- 		host->use_dma = 0;
-+	}
- 
- 	/* REVISIT:  someday, support IRQ-driven card detection.  */
- 	mmc->caps |= MMC_CAP_NEEDS_POLL;
+On 05/26/2015 11:04 AM, Sylwester Nawrocki wrote:
+> On 25/05/15 17:14, Jacek Anaszewski wrote:
+>> This patch adds support for external v4l2-flash devices.
+>> The support includes parsing "camera-flashes" DT property
+>
+> "samsung,camera-flashes" ?
+
+Right.
+
+>> and asynchronous sub-device registration.
+>
+>> +static int fimc_md_register_flash_entities(struct fimc_md *fmd)
+>> +{
+>> +	struct device_node *parent = fmd->pdev->dev.of_node, *np_sensor,
+>> +		*np_flash;
+>> +	struct v4l2_async_notifier *notifier = &fmd->subdev_notifier;
+>> +	struct v4l2_async_subdev *asd;
+>> +	int i, j, num_flashes = 0, num_elems;
+>> +
+>> +	num_elems = of_property_count_elems_of_size(parent,
+>> +				"samsung,camera-flashes", sizeof(np_flash));
+>
+> I think this should be of_property_count_u32_elems(), phandle is always
+> a 32-bit value [1], while size of a pointer depends on the architecture.
+
+Thanks for spotting this.
+
+>
+>> +	/* samsung,camera-flashes property is optional */
+>> +	if (num_elems < 0)
+>> +		return 0;
+>> +
+>> +	/* samsung,camera-flashes array must have even number of elements */
+>> +	if ((num_elems & 1) || (num_elems > FIMC_MAX_SENSORS * 2))
+>> +		return -EINVAL;
+>> +
+>> +	for (i = 0; i < num_elems; i += 2) {
+>> +		np_sensor = of_parse_phandle(parent,
+>> +					     "samsung,camera-flashes", i);
+>> +
+>> +		for (j = 0; j < fmd->num_sensors; j++)
+>> +			if (fmd->async_subdevs.sensors[j].match.of.node ==
+>> +			    np_sensor)
+>> +				break;
+>> +
+>> +		of_node_put(np_sensor);
+>
+> Would be good to add some comment here, why is the sensor required.
+> It's just a DT correctness check?
+
+Yes, it checks whether the phandle points to the sensor node
+which was previously registered.
+
+> Couldn't we carry on with the flash
+> registration after just emitting some warning?
+
+Hmm, I've just realized that with this code the flash phandle associated
+with the sensor phandle that hasn't been previously registered would be
+silently ignored.
+
+I agree that we should register the flash and emit warning in case
+sensor phandle doesn't point the known sensor.
+
+>> +		if (j == fmd->num_sensors)
+>> +			continue;
+>> +
+>> +		np_flash = of_parse_phandle(parent, "samsung,camera-flashes",
+>> +						i + 1);
+>> +
+>> +		asd = &fmd->async_subdevs.flashes[num_flashes++];
+>> +		asd->match_type = V4L2_ASYNC_MATCH_OF;
+>> +		asd->match.of.node = np_flash;
+>> +		notifier->subdevs[notifier->num_subdevs++] = asd;
+>> +
+>> +		of_node_put(np_flash);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>
+> Otherwise looks good to me.
+>
+
+
 -- 
-2.3.5
+Best Regards,
+Jacek Anaszewski
