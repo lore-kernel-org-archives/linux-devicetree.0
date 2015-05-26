@@ -1,38 +1,70 @@
-From: nick <xerofoify@gmail.com>
-Subject: Re: [RFC] ARM: BCM5301X: add NAND flash chip description
-Date: Tue, 26 May 2015 16:53:11 -0400
-Message-ID: <5564DD37.1090506@gmail.com>
-References: <1432492349-18517-1-git-send-email-hauke@hauke-m.de>
- <CACna6rxOBnxeNFP3ogxVyB+F_BeMN9mGq6vM+zUQeRqsz1cJuQ@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 5/7] clocksource: Add Pistachio SoC general purpose timer binding document
+Date: Tue, 26 May 2015 18:22:50 -0300
+Message-ID: <1432675370-17944-1-git-send-email-ezequiel.garcia@imgtec.com>
+References: <1432665671-16102-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CACna6rxOBnxeNFP3ogxVyB+F_BeMN9mGq6vM+zUQeRqsz1cJuQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Jonas Gorski <jogo@openwrt.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432665671-16102-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyMDE1LTA1LTI2IDA0OjIwIFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4gT24gMjQg
-TWF5IDIwMTUgYXQgMjA6MzIsIEhhdWtlIE1laHJ0ZW5zIDxoYXVrZUBoYXVrZS1tLmRlPiB3cm90
-ZToKPj4gVGhpcyBhZGRzIHRoZSBOQU5EIGZsYXNoIGNoaXAgZGVzY3JpcHRpb24gZm9yIGEgc3Rh
-bmRhcmQgY2hpcCBmb3VuZAo+PiBjb25uZWN0ZWQgdG8gdGhpcyBTb0MuIFRoaXMgbWFrZXMgdXNl
-IG9mIGdlbmVyaWMgQnJvYWRjb20gTkFORCBkcml2ZXIKPj4gd2l0aCB0aGUgaVByb2MgaW50ZXJm
-YWNlLgo+IAo+IEkgc3RpbGwgd2FpdC9ob3BlIGZvciBCcmlhbidzIHJlcGx5IGluCj4gW1BBVENI
-IDUvN10gbXRkOiBicmNtbmFuZDogYWRkIGJjbWEgZHJpdmVyCj4gCj4gX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gTGludXggTVREIGRpc2N1
-c3Npb24gbWFpbGluZyBsaXN0Cj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1tdGQvCj4gClJhZmFsLApIb3cgbG9uZyBoYXMgaXQgYmVlbiBhcyBpZiBp
-dHMgb3ZlciBhIHdlZWsgSSB3b3VsZCBsaWtlIHJlc2VuZCB0aGUgcGF0Y2guCk5pY2sKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBN
-VEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+Add a device-tree binding document for the clocksource driver provided
+by Pistachio SoC general purpose timers.
+
+Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+---
+Changes from v2:
+ * Fix spacing for consistency as pointed out by Sergei.
+Changes from v1:
+ * No changes.
+
+ .../bindings/timer/img,pistachio-gptimer.txt       | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+new file mode 100644
+index 0000000..7afce80
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+@@ -0,0 +1,28 @@
++* Pistachio general-purpose timer based clocksource
++
++Required properties:
++ - compatible: "img,pistachio-gptimer".
++ - reg: Address range of the timer registers.
++ - interrupts: An interrupt for each of the four timers
++ - clocks: Should contain a clock specifier for each entry in clock-names
++ - clock-names: Should contain the following entries:
++                "sys", interface clock
++                "slow", slow counter clock
++                "fast", fast counter clock
++ - img,cr-periph: Must contain a phandle to the peripheral control
++		  syscon node.
++
++Example:
++	timer: timer@18102000 {
++		compatible = "img,pistachio-gptimer";
++		reg = <0x18102000 0x100>;
++		interrupts = <GIC_SHARED 60 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 61 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 62 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SHARED 63 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_periph PERIPH_CLK_COUNTER_FAST>,
++		         <&clk_periph PERIPH_CLK_COUNTER_SLOW>,
++			 <&cr_periph SYS_CLK_TIMER>;
++		clock-names = "fast", "slow", "sys";
++		img,cr-periph = <&cr_periph>;
++	};
+-- 
+2.3.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
