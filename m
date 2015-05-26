@@ -1,51 +1,63 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into platform
- device
-Date: Tue, 26 May 2015 11:35:19 -0500
-Message-ID: <5564A0C7.1090306@codeaurora.org>
-References: <=fu.wei@linaro.org> <1432548193-19569-1-git-send-email-fu.wei@linaro.org> <1432548193-19569-7-git-send-email-fu.wei@linaro.org> <55642EA8.5000003@linaro.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 06/13] musb: Add support for the
+ Allwinner sunxi musb controller
+Date: Tue, 26 May 2015 18:36:30 +0200
+Message-ID: <5564A10E.3040402@redhat.com>
+References: <1426878682-14521-1-git-send-email-hdegoede@redhat.com> <1426878682-14521-7-git-send-email-hdegoede@redhat.com> <20150526154802.GL26599@saruman.tx.rr.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <55642EA8.5000003@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Hanjun Guo <hanjun.guo@linaro.org>, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBIOCSKVQKGQEE4OFYOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150526154802.GL26599-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/26/2015 03:28 AM, Hanjun Guo wrote:
+Hi,
 
->>       early_acpi_os_unmap_memory((char *)table, tbl_size);
->>   }
+On 05/26/2015 05:48 PM, Felipe Balbi wrote:
+> On Fri, Mar 20, 2015 at 08:11:15PM +0100, Hans de Goede wrote:
+>> This is based on initial code to get the Allwinner sunxi musb controller
+>> supported by Chen-Yu Tsai and Roman Byshko.
+>>
+>> This adds support for the Allwinner sunxi musb controller in both host only
+>> and otg mode. Peripheral only mode is not supported, as no boards use that.
+>>
+>> This has been tested on a cubietruck (A20 SoC) and an UTOO P66 tablet
+>> (A13 SoC) with a variety of devices in host mode and with the g_serial gadget
+>> driver in peripheral mode, plugging otg / host cables in/out a lot of times
+>> in all possible imaginable plug orders.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 >
-> please add
+> drivers/usb/musb/sunxi.c:28:11: error: unable to open 'linux/soc/sunxi/sunxi_sram.h'
+> scripts/Makefile.build:264: recipe for target 'drivers/usb/musb/sunxi.o' failed
+> make[2]: *** [drivers/usb/musb/sunxi.o] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> scripts/Makefile.build:403: recipe for target 'drivers/usb/musb' failed
+> make[1]: *** [drivers/usb/musb] Error 2
+> Makefile:1548: recipe for target 'drivers/usb/' failed
+> make: *** [drivers/usb/] Error 2
 >
-> #ifdef CONFIG_ARM_SBSA_WATCHDOG
-> (acpi gtdt code)
-> #endif
+> What is the dependency ?
 
-I don't agree with this.  The GTDT should be parsed even if there's no 
-watchdog driver compiled for this kernel.  There are no other #ifdefs in 
-this file.
+Thanks you that you're working on this, the dependency is the sunxi sram
+controller driver which was supposed to get pulled for 4.1, but like many
+other ARM related pull-reqs did not get pulled. And now for 4.2 Arnd
+has decided that he does not like the driver even though it was
+ok for 4.1, and has not yet answered how else we should solve this...
 
->> +     * Add a platform device named "sbsa-gwdt" to match the platform
->> driver.
->> +     * "sbsa-gwdt": SBSA(Server Base System Architecture) Generic
->> Watchdog
->> +     * The platform driver can get device info below by matching this
->> name.
->
-> * The platform driver (drivers/watchdog/sbsa_gwdt.c) can get device info
-> below by matching this name.
->
-> Adding the file name which will help for review and maintain in my
-> opinion.
+Arnd, we would really like to move forward with musb support for sunxi
+which means we need a solution for the sram controller, can you please
+answer Maxime's latest mails on this, or accept the driver as is ?
 
-Except it will cause problems if the driver is renamed or moved.  I 
-don't think this is a good idea, either (sorry!)
+Regards,
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Hans
