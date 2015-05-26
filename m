@@ -1,42 +1,46 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: Re: [PATCH v2] usb: chipidea: Use extcon framework for VBUS and ID
- detect
-Date: Tue, 26 May 2015 10:47:08 +0300
-Message-ID: <1432626428.2348.15.camel@linaro.org>
-References: <1429104915-11079-1-git-send-email-ivan.ivanov@linaro.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 3/5] dt-bindings: ARM: Mediatek: Document devicetree
+ bindings for clock controllers
+Date: Tue, 26 May 2015 09:56:43 +0200
+Message-ID: <20150526075643.GF6325@pengutronix.de>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1432192376-6712-4-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429104915-11079-1-git-send-email-ivan.ivanov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <Peter.Chen@freescale.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432192376-6712-4-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Wed, 2015-04-15 at 16:35 +0300, Ivan T. Ivanov wrote:
-> On recent Qualcomm platforms VBUS and ID lines are not routed to
-> USB PHY LINK controller. Use extcon framework to receive connect
-> and disconnect ID and VBUS notification.
+On Thu, May 21, 2015 at 03:12:54PM +0800, James Liao wrote:
+> This adds the binding documentation for the mmsys, imgsys, vdecsys,
+> vencsys and vencltsys controllers found on Mediatek SoCs.
 > 
-> Signed-off-by: Ivan T. Ivanov ivanov@linaro.org>
-> ---
-> 
-> Changes since v0 [1], as per Peter Chen suggestions:
-> 
-> * Moved external connector parsing code to ci_get_platdata()
-> * Moved external connector related variables to struct ci_hdrc_platform_data
-> * Rename ci_host_notifier() to ci_id_notifier()
-> * Fixed device bindings description
-> * Use select EXTCON framework, instead of depends on.
-> 
-> [1] https://lkml.org/lkml/2015/4/9/116
+> index 0000000..a5b94a7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
 
-Hi Peter, 
+Do these really become multiple drivers so that it's worth abstracting
+them in the clock framework?
 
-Did you have any further comments on this patch
-or what is your plan about it.
+Sascha
 
-Regards,
-Ivan
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
