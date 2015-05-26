@@ -1,47 +1,90 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH RESEND v7 2/2] mmc: host: sdhci: Add support to disable
- SDR104/SDR50/DDR50 based on capability register 0.
-Date: Tue, 26 May 2015 16:37:22 +0530
-Message-ID: <CAOHikRC7p+wzgHXbEYkK56dJucahf6rk=x0sphQedtSKV0N0xQ@mail.gmail.com>
-References: <1432197817-22110-1-git-send-email-stripathi@apm.com>
- <1432197817-22110-3-git-send-email-stripathi@apm.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 3/5] dt-bindings: ARM: Mediatek: Document devicetree
+ bindings for clock controllers
+Date: Tue, 26 May 2015 13:08:19 +0200
+Message-ID: <20150526110819.GI6325@pengutronix.de>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1432192376-6712-4-git-send-email-jamesjj.liao@mediatek.com>
+ <20150526075643.GF6325@pengutronix.de>
+ <1432630536.15597.16.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1432197817-22110-3-git-send-email-stripathi@apm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, Suman Tripathi <stripathi@apm.com>, Jon Masters <jcm@redhat.com>, linux-mmc <linux-mmc@vger.kernel.org>, patches <patches@apm.com>, Don Dutile <ddutile@redhat.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432630536.15597.16.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMjEsIDIwMTUgYXQgMjoxMyBQTSwgU3VtYW4gVHJpcGF0aGkgPHN0cmlwYXRo
-aUBhcG0uY29tPiB3cm90ZToKPiBUaGUgc2RoY2kgZnJhbWV3b3JrIGRpc2FibGVzIFNEUjEwNC9T
-RFI1MC9ERFI1MCBiYXNlZCBvbiBvbmx5IHF1aXJrLgo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc3Vw
-cG9ydCB0byBkaXNhYmxlIFNEUjEwNC9TRFI1MC9ERFI1MCBiYXNlZCBvbgo+IHJlYWRpbmcgdGhl
-IGNhcGFiaWxpdHkgcmVnaXN0ZXIgMC4KPgo+IFNpZ25lZC1vZmYtYnk6IFN1bWFuIFRyaXBhdGhp
-IDxzdHJpcGF0aGlAYXBtLmNvbT4KPiAtLS0KPiAtLS0KPiAgZHJpdmVycy9tbWMvaG9zdC9zZGhj
-aS5jIHwgMyArKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
-bigtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuYyBiL2RyaXZlcnMv
-bW1jL2hvc3Qvc2RoY2kuYwo+IGluZGV4IDU4YzE3NzAuLmEzZDliOGEgMTAwNjQ0Cj4gLS0tIGEv
-ZHJpdmVycy9tbWMvaG9zdC9zZGhjaS5jCj4gKysrIGIvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS5j
-Cj4gQEAgLTMxMTgsNyArMzExOCw4IEBAIGludCBzZGhjaV9hZGRfaG9zdChzdHJ1Y3Qgc2RoY2lf
-aG9zdCAqaG9zdCkKPiAgICAgICAgICAgICAgICAgfQo+ICAgICAgICAgfQo+Cj4gLSAgICAgICBp
-ZiAoaG9zdC0+cXVpcmtzMiAmIFNESENJX1FVSVJLMl9OT18xXzhfVikKPiArICAgICAgIGlmICho
-b3N0LT5xdWlya3MyICYgU0RIQ0lfUVVJUksyX05PXzFfOF9WIHx8Cj4gKyAgICAgICAgICAgIShj
-YXBzWzBdICYgU0RIQ0lfQ0FOX1ZERF8xODApKQo+ICAgICAgICAgICAgICAgICBjYXBzWzFdICY9
-IH4oU0RIQ0lfU1VQUE9SVF9TRFIxMDQgfCBTREhDSV9TVVBQT1JUX1NEUjUwIHwKPiAgICAgICAg
-ICAgICAgICAgICAgICAgIFNESENJX1NVUFBPUlRfRERSNTApOwo+Cj4gLS0KPiAxLjguMi4xCj4K
-CkFueSBjb21tZW50cyBvbiB0aGlzIHBhdGNoID8KCgotLSAKVGhhbmtzLAp3aXRoIHJlZ2FyZHMs
-ClN1bWFuIFRyaXBhdGhpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFi
-cy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On Tue, May 26, 2015 at 04:55:36PM +0800, James Liao wrote:
+> Hi Sascha,
+> 
+> On Tue, 2015-05-26 at 09:56 +0200, Sascha Hauer wrote:
+> > On Thu, May 21, 2015 at 03:12:54PM +0800, James Liao wrote:
+> > > This adds the binding documentation for the mmsys, imgsys, vdecsys,
+> > > vencsys and vencltsys controllers found on Mediatek SoCs.
+> > > 
+> > > index 0000000..a5b94a7
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
+> > 
+> > Do these really become multiple drivers so that it's worth abstracting
+> > them in the clock framework?
+> 
+> These clocks need to be controlled among several drivers. For example,
+> vdecsys clocks will be controlled by VDEC driver (not ready yet) and
+> MT8173 SMI driver [1]. That means these clocks need a mechanism to share
+> between these 2 drivers. CCF share clocks by using of reference count,
+> so I think it's suitable to implement these subsystem clocks.
+> 
+> As I know SMI driver need to access clocks among mmsys, imgsys, vdecsys,
+> vencsys and vencltsys. So in this patch I added clocks of these
+> subsystems into CCF.
+> 
+> [1]
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-March/000058.html
+
+Looking at the 3.18 tree we have this:
+
+	vdecsys: vdecsys@16000000 {
+		compatible = "mediatek,mt8173-vdecsys", "syscon";
+		reg = <0 0x16000000 0 0x1000>;
+		#clock-cells = <1>;
+	};
+
+	larb1:larb@16010000 {
+		compatible = "mediatek,mt8173-smi-larb";
+		reg = <0 0x16010000 0 0x1000>;
+		clocks = <&mmsys MM_SMI_COMMON>,
+			 <&vdecsys VDEC_CKEN>,
+			 <&vdecsys VDEC_LARB_CKEN>;
+		clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
+	};
+
+I believe that the larb needs the MM_SMI_COMMON clock to modify the larb
+registers, but is it really necessary to enable VDEC_CKEN and
+VDEC_LARB_CKEN just to set the F_SMI_MMU_EN bit in the larb?
+
+With the above we have the situation that the vdec driver calls into the
+iommu driver which then calls into the larb driver which calls back into
+the vdec driver via the clk API. This seems very suspicious.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
