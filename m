@@ -1,105 +1,29 @@
-From: <Frank.Li@freescale.com>
-Subject: [PATCH v5 5/6] Document: devicetree: input: imx: i.mx snvs power device tree bindings
-Date: Wed, 27 May 2015 00:26:01 +0800
-Message-ID: <1432657562-5592-6-git-send-email-Frank.Li@freescale.com>
-References: <1432657562-5592-1-git-send-email-Frank.Li@freescale.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 0/9] Tegra xHCI support
+Date: Tue, 26 May 2015 09:27:21 -0700
+Message-ID: <CAL1qeaFT5qH3D5Lu8UZpwx-RY6FJUu74vfhsztToPi_zg1-1dQ@mail.gmail.com>
+References: <1430761002-9327-1-git-send-email-abrestic@chromium.org>
+	<CABb+yY2WhH2gGbCr4n=m9HOa_843MuZDp=QWNDHbtB8AMYYwYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1432657562-5592-1-git-send-email-Frank.Li@freescale.com>
-Sender: linux-input-owner@vger.kernel.org
-To: lznuaa@gmail.com, shawn.guo@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, alexandre.belloni@free-electrons.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>, Robin Gong <b38343@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY2WhH2gGbCr4n=m9HOa_843MuZDp=QWNDHbtB8AMYYwYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Li <Frank.Li@freescale.com>
+Hi Jassi,
 
-The snvs-pwrkey is designed to enable POWER key function which controlled
-by SNVS ONOFF. the driver can report the status of POWER key and wakeup
-system if pressed after system suspend.
+On Mon, May 11, 2015 at 8:56 PM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Applied patches 2, 3, 6 & 7
 
-Signed-off-by: Frank Li <Frank.Li@freescale.com>
-Signed-off-by: Robin Gong <b38343@freescale.com>
----
- .../devicetree/bindings/crypto/fsl-sec4.txt        | 49 ++++++++++++++++++++++
- .../devicetree/bindings/input/snvs-pwrkey.txt      |  1 +
- 2 files changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/snvs-pwrkey.txt
+Please drop patches 6 and 7.  Lee Jones has NAK'ed the MFD driver, so
+I'll have to re-spin this series without using an MFD.
 
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-index b21e7c2..71a39c5 100644
---- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-+++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-@@ -387,6 +387,47 @@ EXAMPLE
- 	};
- 
- =====================================================================
-+System ON/OFF key driver
-+
-+  The snvs-pwrkey is designed to enable POWER key function which controlled
-+  by SNVS ONOFF, the driver can report the status of POWER key and wakeup
-+  system if pressed after system suspend.
-+
-+  - compatible:
-+      Usage: required
-+      Value type: <string>
-+      Definition: Mush include "fsl,sec-v4.0-pwrkey".
-+
-+  - interrupts:
-+      Usage: required
-+      Value type: <prop_encoded-array>
-+      Definition: The SNVS ON/OFF interrupt number to the CPU(s).
-+
-+  - linux,keycode:
-+      Usage: option
-+      Value type: <int>
-+      Definition: Keycode to emit, KEY_POWER by default.
-+
-+  - wakeup:
-+      Usage: option
-+      Value type: <boo>
-+      Definition: Button can wake-up the system.
-+
-+ - regmap:
-+      Usage: required:
-+      Value type: <phandle>
-+      Definition: this is phandle to the register map node.
-+
-+EXAMPLE:
-+	snvs-pwrkey@0x020cc000 {
-+		compatible = "fsl,sec-v4.0-pwrkey";
-+		regmap = <&snvs>;
-+		interrupts = <0 4 0x4>
-+	        linux,keycode = <116>; /* KEY_POWER */
-+		wakeup;
-+	};
-+
-+=====================================================================
- FULL EXAMPLE
- 
- 	crypto: crypto@300000 {
-@@ -466,6 +507,14 @@ FULL EXAMPLE
- 			offset = <0x34>;
- 			interrupts = <93 2>;
- 		};
-+
-+		snvs-pwrkey@0x020cc000 {
-+			compatible = "fsl,sec-v4.0-pwrkey";
-+			regmap = <&sec_mon>;
-+			interrupts = <0 4 0x4>;
-+			linux,keycode = <116>; /* KEY_POWER */
-+			wakeup;
-+		};
- 	};
- 
- =====================================================================
-diff --git a/Documentation/devicetree/bindings/input/snvs-pwrkey.txt b/Documentation/devicetree/bindings/input/snvs-pwrkey.txt
-new file mode 100644
-index 0000000..70c1425
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/snvs-pwrkey.txt
-@@ -0,0 +1 @@
-+See Documentation/devicetree/bindings/crypto/fsl-sec4.txt
--- 
-1.9.1
-
+Thanks,
+andrew
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
