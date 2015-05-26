@@ -1,56 +1,114 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [RESEND PATCH V4 3/3] mfd: da9063: MFD support for OnKey driver
-Date: Tue, 26 May 2015 14:06:46 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22CC3F@SW-EX-MBX02.diasemi.com>
-References: <cover.1432031565.git.stwiss.opensource@diasemi.com>
- <a508f5d715e94fb18e6ef4ce755c2225a17090ea.1432031565.git.stwiss.opensource@diasemi.com>
- <20150526135735.GN11677@x1>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] mailbox: arm-mhu: update the binding document
+Date: Tue, 26 May 2015 15:15:03 +0100
+Message-ID: <55647FE7.2060300@arm.com>
+References: <1430131945-20628-1-git-send-email-sudeep.holla@arm.com> <CAJe_ZhdirgXRjGOzUE4vux4ay=gL5FM7=t6m53bEN5ZND+LddQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150526135735.GN11677@x1>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJe_ZhdirgXRjGOzUE4vux4ay=gL5FM7=t6m53bEN5ZND+LddQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiAyNiBNYXkgMjAxNSAxNDo1OCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gVG86IE9wZW5zb3Vy
-Y2UgW1N0ZXZlIFR3aXNzXQ0KPiBDYzogU2FtdWVsIE9ydGl6OyBEVDsgRGF2aWQgRGFqdW4gQ2hl
-bjsgRG1pdHJ5IFRvcm9raG92OyBJTlBVVDsgSWFuDQo+IENhbXBiZWxsOyBLdW1hciBHYWxhOyBM
-S01MOyBNYXJrIFJ1dGxhbmQ7IFBhd2VsIE1vbGw7IFJvYiBIZXJyaW5nOw0KPiBTdXBwb3J0IE9w
-ZW5zb3VyY2UNCj4gU3ViamVjdDogUmU6IFtSRVNFTkQgUEFUQ0ggVjQgMy8zXSBtZmQ6IGRhOTA2
-MzogTUZEIHN1cHBvcnQgZm9yIE9uS2V5DQo+IGRyaXZlcg0KPiANCj4gT24gVHVlLCAxOSBNYXkg
-MjAxNSwgUyBUd2lzcyB3cm90ZToNCj4gDQo+ID4gRnJvbTogU3RldmUgVHdpc3MgPHN0d2lzcy5v
-cGVuc291cmNlQGRpYXNlbWkuY29tPg0KPiA+DQo+ID4gQWRkIE1GRCBzdXBwb3J0IGZvciB0aGUg
-REE5MDYzIE9uS2V5IGRyaXZlcg0KPiA+DQo+ID4gVGhlIGZ1bmN0aW9uIGRhOTA2M19jbGVhcl9m
-YXVsdF9sb2coKSBpcyBhZGRlZCB0byBtaXRpZ2F0ZSB0aGUgY2FzZSBvZiBhDQo+ID4gaGFyZHdh
-cmUgcG93ZXItY3V0IGFmdGVyIGEgbG9uZy1sb25nIE9uS2V5IHByZXNzLiBBbHRob3VnaCB0aGVy
-ZSBpcyBubw0KPiA+IHNvZnR3YXJlIGludGVydmVudGlvbiBpbiB0aGlzIGNhc2UgKGJ5IGRlZmlu
-aXRpb24pIHN1Y2ggYSBzaHV0ZG93biB3b3VsZA0KPiA+IGNhdXNlIHBlcnNpc3RlbnQgaW5mb3Jt
-YXRpb24gd2l0aGluIHRoZSBEQTkwNjMgRkFVTFRfTE9HIHRoYXQgd291bGQgYmUNCj4gPiBhdmFp
-bGFibGUgZHVyaW5nIHRoZSBuZXh0IGRldmljZSByZXN0YXJ0Lg0KPiA+DQo+ID4gQ2xlYXJhbmNl
-IG9mIHRoaXMgcGVyc2lzdGVudCByZWdpc3RlciBtdXN0IGJlIGNvbXBsZXRlZCBhZnRlciBzdWNo
-IGENCj4gPiBoYXJkd2FyZSBwb3dlci1jdXQgb3BlcmF0aW9uIGhhcyBoYXBwZW5lZCBzbyB0aGF0
-IHRoZSBGQVVMVF9MT0cgZG9lcyBub3QNCj4gPiBjb250aW51ZSB3aXRoIHByZXZpb3VzIHZhbHVl
-cy4gVGhlIGNsZWFyYW5jZSBmdW5jdGlvbiBoYXMgYmVlbiBhZGRlZCBoZXJlDQo+ID4gaW4gdGhl
-IGtlcm5lbCBkcml2ZXIgYmVjYXVzZSB3aXBpbmcgdGhlIGZhdWx0LWxvZyBjYW5ub3QgYmUgY291
-bnRlZCBvbg0KPiA+IG91dHNpZGUgdGhlIExpbnV4IGtlcm5lbC4NCj4gPg0KPiA+IEFja2VkLWJ5
-OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
-eTogU3RldmUgVHdpc3MgPHN0d2lzcy5vcGVuc291cmNlQGRpYXNlbWkuY29tPg0KPiA+DQo+ID4g
-LS0tDQo+ID4gVmVyc2lvbiBIaXN0b3J5DQo+ID4NCj4gPiBDaGFuZ2VzIGluIFY0DQo+ID4gIC0g
-QWRkaXRpb25hbCBkZXNjcmlwdGlvbiBvZiBNRkQgcGF0Y2ggY2hhbmdlcyBmb3IgRkFVTFRfTE9H
-IGluIHJlbGF0aW9uIHRvDQo+ID4gICAgdGhlIHJlcXVpcmVtZW50cyBvZiB0aGUgT25LZXkgZHJp
-dmVyLiBQbGVhc2Ugc2VlIGEgZnVydGhlciBleHBsYW5hdGlvbiBvZg0KPiA+ICAgIHRoZSBPbktl
-eSdzIG9wZXJhdGlvbiBpbiB0aGlzIHRocmVhZDogaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTUv
-NC8yOS80MDYNCj4gPg0KPiA+IENoYW5nZXMgaW4gVjMNCj4gPiAgLSBUaGUgTUZEIGNvZGUgd2Fz
-IG9yaWdpbmFsbHkgaW4gW1BBVENIIFYyIDEvMl0uIFRoaXMgaXMgbm93IGJlZW4gbW92ZWQgaW50
-bw0KPiA+ICAgIHRoaXMgcGF0Y2ggW1BBVENIIFYzIDMvM10uDQo+ID4gIC0gV2hpdGVzcGFjZSBj
-bGVhbnVwDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFwcGxpZXMgYWdhaW5zdCBsaW51eC1uZXh0IGFu
-ZCB2NC4xLXJjMw0KPiA+DQo+ID4NCj4gPiAgZHJpdmVycy9tZmQvZGE5MDYzLWNvcmUuYyAgICAg
-ICAgfCA1NA0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4g
-IGluY2x1ZGUvbGludXgvbWZkL2RhOTA2My9wZGF0YS5oIHwgIDEgKw0KPiA+ICAyIGZpbGVzIGNo
-YW5nZWQsIDU1IGluc2VydGlvbnMoKykNCj4gDQo+IEFwcGxpZWQsIHRoYW5rcy4NCj4gDQoNClRo
-YW5rIHlvdQ0KUmVnYXJkcywNClN0ZXZlDQoNCnBzLg0KYW5kIGFsc28gZm9yIERUIHBhdGNoDQoN
-ClsuLi5dDQo=
+
+
+On 19/05/15 15:42, Jassi Brar wrote:
+> On 27 April 2015 at 16:22, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> The initial version of the binding document pushed along with the driver
+>> is not clear/explicit about couple of the required properties namely:
+>> clocks and clock-names, though the AMBA primecell binding used by the
+>> arm-mhu specifies them clearly. Without these property the driver will
+>> not even get probed, so it is mandatory to have them in DT.
+>>
+>> This patch adds the above mentioned required properties to the binding.
+>> It also adds the optional interrupt-names property which is good to have
+>> along with some minor updates to replace references to the driver with
+>> the hardware IP.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Jassi Brar <jaswinder.singh@linaro.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>> ---
+>>   .../devicetree/bindings/mailbox/arm-mhu.txt        | 29 ++++++++++++++--------
+>>   1 file changed, 19 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>> index 4971f03f0b33..68146c9a0332 100644
+>> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>> @@ -1,14 +1,15 @@
+>> -ARM MHU Mailbox Driver
+>> -======================
+>> +ARM Message Handling Unit(MHU)
+>> +==============================
+>>
+>> -The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
+>> +The ARM's Message Handling Unit (MHU) is a mailbox controller that has
+>>   3 independent channels/links to communicate with remote processor(s).
+>> - MHU links are hardwired on a platform. A link raises interrupt for any
+>> -received data. However, there is no specified way of knowing if the sent
+>> -data has been read by the remote. This driver assumes the sender polls
+>> -STAT register and the remote clears it after having read the data.
+>> -The last channel is specified to be a 'Secure' resource, hence can't be
+>> -used by Linux running NS.
+>> +MHU links are hardwired on a platform. A link raises interrupt for any
+>> +received data. The platform/firmware must clear the STAT register after
+>> +having receiving the data and sender can poll on the same if the platform
+>> +lacks interrupt mechanism for sending data to remote processor.
+>> +
+>> +Out of 3 channels, the last channel is 'Secure', hence must not be used
+>> +by OS or any software running in non-secure state.
+>>
+>>   Mailbox Device Node:
+>>   ====================
+>> @@ -20,7 +21,15 @@ used by Linux running NS.
+>>                          address and length)
+>>   - #mbox-cells          Shall be 1 - the index of the channel needed.
+>>   - interrupts:          Contains the interrupt information corresponding to
+>> -                       each of the 3 links of MHU.
+>> +                       each of the MHU links.
+>> +- clocks               phandle to clock for apb pclk as specified in the
+>> +                       primecell binding
+>> +- clock-names          Shall be "apb_pclk"
+>> +
+> No other Primecell derivative specify 'apb_pclk' ... because people do
+> know that before mailbox its a an AMBA Primecell class device so its
+> implied that you look at Primecell bindings.  It doesn't hurt to
+> mention it here again, but it's definitely not worth the alarm you
+> have been raising.
+>
+
+IMO it's better to mention it here explicitly or at-least pointer to
+primecell binding document.
+
+>> +Optional properties:
+>> +--------------------
+>> +- interrupt-names      contains names of the interrupt in the order in which
+>> +                       they were specified in the interrupts property
+>>
+> Nopes. arm_mhu.c shouldn't need to have OF dependency.
+> amba_device.irq[] is good enough just like for other amba drivers.
+>
+
+In general, these supplemental names properties are optional but
+recommended and are useful. I don't understand what you mean by OF
+dependency in arm_mhu above. We are already using OF ?
+
+There can be a device(despite how crazy that sounds or may be a silicon
+bug) not implementing one of the Rx interrupts but implementing one of
+the Tx interrupts. I was just trying to make sure we make binding as
+good as possible reusing the existing properties. We need not worry
+about breaking any working system in future if we decide to use this.
+
+> And the change in documentation above is an unnecessary trainwreck. It
+> 'fixes' nothing, just changes wordings to your taste.
+>
+
+Ok, sorry for the trouble if you think so.
+
+Regards,
+Sudeep
