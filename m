@@ -1,168 +1,34 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 26 May 2015 11:50:18 -0500
-Message-ID: <5564A44A.5000606@codeaurora.org>
-References: <=fu.wei@linaro.org> <1432548193-19569-1-git-send-email-fu.wei@linaro.org> <1432548193-19569-6-git-send-email-fu.wei@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432548193-19569-6-git-send-email-fu.wei@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: Invitation and RFC: Linux Plumbers Device Tree track proposed
+Date: Tue, 26 May 2015 11:31:01 -0500
+Message-ID: <E1YxHkr-0002ah-Pz@mylo>
+References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net> <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ@mail.gmail.com> <10482596.MaespZJCtk@wuerfel>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <10482596.MaespZJCtk@wuerfel>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/25/2015 05:03 AM, fu.wei@linaro.org wrote:
+So, like, Arnd Bergmann said:
+> On Tuesday 14 April 2015 10:36:15 Rob Herring wrote:
+> > 
+> > >    4) Identifying additional people who should attend the device tree track.
+> > 
+> > Arnd Bergmann
+> > Matt Porter
+> > Jon Loeliger
+> > Gaurav Minocha
+> 
+> Sorry, I won't be there. I should have replied earlier, but I'll be on
+> parental leave at the time.
+> 
+> 	Arnd
 
-> +/*
-> + * help functions for accessing 32bit registers of SBSA Generic Watchdog
-> + */
-> +static void sbsa_gwdt_cf_write(unsigned int reg, u32 val,
-> +			       struct watchdog_device *wdd)
-> +{
-> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +	writel_relaxed(val, gwdt->control_base + reg);
-> +}
-> +
-> +static void sbsa_gwdt_rf_write(unsigned int reg, u32 val,
-> +			       struct watchdog_device *wdd)
-> +{
-> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +	writel_relaxed(val, gwdt->refresh_base + reg);
-> +}
-> +
-> +static u32 sbsa_gwdt_cf_read(unsigned int reg, struct watchdog_device *wdd)
-> +{
-> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +	return readl_relaxed(gwdt->control_base + reg);
-> +}
+Arnd,
 
-I don't understand the value of these functions.  You're just adding 
-overhead to each read and write by dereferencing wdd every time.  I 
-would get rid of them and just call readl_relaxed() and writel_relaxed() 
-directly.
+OK.  Hard to believe, but it looks like I have enough
+ducks in a row to attend Plumber's this year!
 
-> +/*
-> + * help functions for accessing 64bit WCV register
-> + */
-> +static u64 sbsa_gwdt_get_wcv(struct watchdog_device *wdd)
-> +{
-> +	u32 wcv_lo, wcv_hi;
-> +
-> +	do {
-> +		wcv_hi = sbsa_gwdt_cf_read(SBSA_GWDT_WCV_HI, wdd);
-> +		wcv_lo = sbsa_gwdt_cf_read(SBSA_GWDT_WCV_LO, wdd);
-> +	} while (wcv_hi != sbsa_gwdt_cf_read(SBSA_GWDT_WCV_HI, wdd));
-
-Please add a comment indicating that you're trying to read WCV atomically.
-
-> +
-> +	return (((u64)wcv_hi << 32) | wcv_lo);
-> +}
-
-How about defining this macro:
-
-#define make64(high, low) (((u64)(high) << 32) | (low))
-
-and using it instead?  That makes the code easier to read.
-
-> +
-> +static void sbsa_gwdt_set_wcv(struct watchdog_device *wdd, u64 value)
-> +{
-> +	u32 wcv_lo, wcv_hi;
-> +
-> +	wcv_lo = value & U32_MAX;
-> +	wcv_hi = (value >> 32) & U32_MAX;
-
-Use upper_32_bits() and lower_32_bits() instead.
-
-> +
-> +	sbsa_gwdt_cf_write(SBSA_GWDT_WCV_HI, wcv_hi, wdd);
-> +	sbsa_gwdt_cf_write(SBSA_GWDT_WCV_LO, wcv_lo, wdd);
-> +}
-> +
-> +static void reload_timeout_to_wcv(struct watchdog_device *wdd)
-
-This should be sbsa_gwdt_reload_timeout_to_wcv()
-
-> +{
-> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +	u64 wcv;
-> +
-> +	wcv = arch_counter_get_cntvct() +
-> +		(u64)(wdd->timeout - wdd->pretimeout) * gwdt->clk;
-> +
-> +	sbsa_gwdt_set_wcv(wdd, wcv);
-
-Shouldn't you program WCV and WOR together?
-
-> +static int sbsa_gwdt_set_pretimeout(struct watchdog_device *wdd,
-> +				    unsigned int pretimeout)
-> +{
-> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +	u32 wor;
-> +
-> +	wdd->pretimeout = pretimeout;
-> +	sbsa_gwdt_update_limits(wdd);
-> +
-> +	if (!pretimeout)
-> +		/* gives sbsa_gwdt_start a chance to setup timeout */
-> +		wor = gwdt->clk;
-> +	else
-> +		wor = pretimeout * gwdt->clk;
-> +
-> +	/* refresh the WOR, that will cause an explicit watchdog refresh */
-> +	sbsa_gwdt_cf_write(SBSA_GWDT_WOR, wor, wdd);
-
-Why not just ping the watchdog explicitely?
-
-> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
-> +{
-> +	struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
-> +	struct watchdog_device *wdd = &gwdt->wdd;
-> +	u32 status;
-> +
-> +	status = sbsa_gwdt_cf_read(SBSA_GWDT_WCS, wdd);
-> +
-> +	if (status & SBSA_GWDT_WCS_WS0)
-
-This should always be true.  Instead of reading WCS, I think you should 
-just panic().
-
-> +static int sbsa_gwdt_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct sbsa_gwdt *gwdt;
-> +	struct watchdog_device *wdd;
-> +	struct resource *res;
-> +	void *rf_base, *cf_base;
-> +	int irq;
-> +	u32 clk, status;
-> +	int ret = 0;
-> +	u64 first_period_max = U64_MAX;
-> +
-> +	/*
-> +	 * Get the frequency of system counter from
-> +	 * the cp15 interface of ARM Generic timer
-> +	 */
-> +	clk = arch_timer_get_cntfrq();
-> +	if (!clk) {
-
-You have
-
-	depends on ARM_ARCH_TIMER
-
-in your Kconfig, so you don't need to check the return of 
-arch_timer_get_cntfrq().  It can never be zero.
-
-Also, I would not use the variable name 'clk', because that's usually 
-used for a "struct clk" object.  I would call this "freq" instead.
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Thanks,
+jdl
