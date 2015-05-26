@@ -1,121 +1,43 @@
-From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 2/3] Phy: DT binding documentation for Broadcom Cygnus USB PHY driver
-Date: Mon, 25 May 2015 15:36:09 -0700
-Message-ID: <1432593370-14457-3-git-send-email-arun.ramamurthy@broadcom.com>
-References: <1432593370-14457-1-git-send-email-arun.ramamurthy@broadcom.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v2 2/2] usb: renesas_usbhs: Add support for R-Car E2
+Date: Tue, 26 May 2015 01:56:51 +0000
+Message-ID: <SG2PR06MB09192BBC31B9EABDFA38B383D8CC0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1431947055-4324-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1431947055-4324-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWysVJU8Kk-cDB1rOSzO8B6bGvVBbQsdEoQq0sN-AwdOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432593370-14457-1-git-send-email-arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWysVJU8Kk-cDB1rOSzO8B6bGvVBbQsdEoQq0sN-AwdOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: ja-JP
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Broadcom's Cygnus chip has a USB 2.0 host controller connected to
-three separate phys. One of the phs (port 2) is also connectd to
-a usb 2.0 device controller
-
-Signed-off-by: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- .../bindings/phy/brcm,cygnus-usb-phy.txt           | 69 ++++++++++++++++++++++
- include/dt-bindings/phy/phy.h                      |  2 +
- 2 files changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-new file mode 100644
-index 0000000..ec62044
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-@@ -0,0 +1,69 @@
-+BROADCOM CYGNUS USB PHY
-+
-+Required Properties:
-+	- compatible:  brcm,cygnus-usb-phy
-+	- reg : usbphy_regs - Base address of phy registers
-+			usb2h_idm_regs - Base address of host idm registers
-+			usb2d_idm_regs - Base address of device idm registers
-+	- phy-cells - must be 1 for each port declared. The node
-+		      that uses the phy must provide either PHY_CONFIG_DEVICE for device
-+		      or PHY_CONFIG_HOST for host
-+
-+NOTE: port 0 and port 1 are host only and port 2 can be configured for host or
-+device.
-+
-+Example of phy :
-+	usbphy0: usbphy@0x0301c000 {
-+		compatible = "brcm,cygnus-usb-phy";
-+		reg = <0x0301c000 0x2000>,
-+		      <0x18115000 0x1000>,
-+		      <0x18111000 0x1000>;
-+		status = "okay";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		usbphy0_0: usbphy0@0 {
-+			#phy-cells = <1>;
-+			reg = <0>;
-+			status = "okay";
-+			phy-supply = <&vbus_p0>;
-+		};
-+
-+		usbphy0_1: usbphy0@1 {
-+			#phy-cells = <1>;
-+			reg = <1>;
-+			status = "okay";
-+		};
-+
-+		usbphy0_2: usbphy0@2 {
-+			#phy-cells = <1>;
-+			reg = <2>;
-+			status = "okay";
-+			phy-supply = <&vbus_p2>;
-+		};
-+	};
-+
-+Example of node using the phy:
-+
-+	/* This nodes declares all three ports as host */
-+
-+	ehci0: usb@0x18048000 {
-+		compatible = "generic-ehci";
-+		reg = <0x18048000 0x100>;
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+		phys = <&usbphy0_0 PHY_CONFIG_HOST &usbphy0_1 PHY_CONFIG_HOST &usbphy0_2 PHY_CONFIG_HOST>;
-+		status = "okay";
-+	};
-+
-+	/*
-+	 * This node declares port 2 phy
-+	 * and configures it for device
-+	 */
-+
-+	usbd_udc_dwc1: usbd_udc_dwc@0x1804c000 {
-+		compatible = "iproc-udc";
-+		reg = <0x1804c000 0x2000>;
-+		interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+		phys = <&usbphy0_2 PHY_CONFIG_DEVICE>;
-+		phy-names = "usb";
-+	};
-diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-index 6c90193..a5babbc 100644
---- a/include/dt-bindings/phy/phy.h
-+++ b/include/dt-bindings/phy/phy.h
-@@ -15,5 +15,7 @@
- #define PHY_TYPE_PCIE		2
- #define PHY_TYPE_USB2		3
- #define PHY_TYPE_USB3		4
-+#define PHY_USB2_CONFIG_HOST	0
-+#define PHY_USB2_CONFIG_DEVICE	1
- 
- #endif /* _DT_BINDINGS_PHY */
--- 
-2.3.4
-
+SGkgRmVsaXBlLA0KDQo+IFNlbnQ6IE1vbmRheSwgTWF5IDE4LCAyMDE1IDg6NTYgUE0NCj4gDQo+
+IE9uIE1vbiwgTWF5IDE4LCAyMDE1IGF0IDE6MDQgUE0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5
+b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBh
+ZGRzIGEgY29tcGF0aWJsZSBzdHJpbmcgdG8gc3VwcG9ydCBmb3IgUi1DYXIgRTIuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hpbW9kYSA8eW9zaGloaXJvLnNoaW1vZGEudWhA
+cmVuZXNhcy5jb20+DQo+ID4gQWNrZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVu
+ZXNhc0BnbGlkZXIuYmU+IiBpbiBwYXRjaCAyDQo+ID4gLS0tDQo+ID4gIFJlbWFya3M6IEdlZXJ0
+J3MgQWNrZWQtYnkgaXMgZm9yIHRoZSBEVCBiaW5kaW5nIHBhcnQgKHJlbmVzYXNfdXNiaHMudHh0
+KS4NCj4gDQo+IEZvciB0aGUgcmVtYWluaW5nIHBhcnQ6DQo+IEFja2VkLWJ5OiBHZWVydCBVeXR0
+ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KDQpXb3VsZCB5b3UgYXBwbHkgdGhp
+cyBwYXRjaCBzZXQgdG8geW91ciB0ZXN0aW5nL25leHQgYnJhbmNoPw0KSSBjb25maXJtZWQgdGhh
+dCB0aGlzIHBhdGNoIHNldCBjb3VsZCBiZSBhcHBsaWVkIG9uIHRoZSBsYXRlc3QgdGVzdGluZy9u
+ZXh0IGJyYW5jaC4NCihjb21taXQgaWQgPSA2NzJiZmRhYTMxMDAwNDM2OGEwZDQ5MzQ3OGUyYTQw
+ZjJmMmY5MTRmKQ0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IEdye29l
+dGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+
+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25k
+IGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNh
+dGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQN
+Cj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVy
+IiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
