@@ -1,44 +1,95 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into platform
- device
-Date: Tue, 26 May 2015 13:28:58 +0100
-Message-ID: <20150526122858.GJ1565@arm.com>
-References: <=fu.wei@linaro.org>
- <1432548193-19569-1-git-send-email-fu.wei@linaro.org>
- <1432548193-19569-7-git-send-email-fu.wei@linaro.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 00/13] dmaengine + omap drivers: support fro
+	deferred probing
+Date: Tue, 26 May 2015 16:25:55 +0300
+Message-ID: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1432548193-19569-7-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, "linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: vinod.koul@intel.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-crypto@vger.kernel.org, linux-serial@vger.kernel.org, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-omap@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 25, 2015 at 11:03:13AM +0100, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
-> and create a platform device with that information.
-> This platform device can be used by the ARM SBSA Generic
-> Watchdog driver.
-> 
-> Tested-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-> Tested-by: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm64/kernel/acpi.c | 145 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 145 insertions(+)
+Hi,
 
-Why does this all need to be under arch/arm64? The GTDT really isn't
-architecture-specific, so I'd *much* rather it was parsed in the driver code
-itself, like we already do for the architected timer. The GIC is an
-exception because it's in the MADT, which we need to parse in the arch code
-to configure SMP properly.
+Vinod: as I promised: https://lkml.org/lkml/2015/5/8/80
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With this series it is possible to put omap-dma or edma to even late_initcall
+and the drivers will figure out the load order fine(ish).
+We need to add dma_request_slave_channel_compat_reason() which is the equivalent
+of dma_request_slave_channel_compat() but returning with error codes in case of
+failure instead of NULL pointer.
+The rest of the series just converts the OMAP/daVinci drivers to use this new
+function to get the channel(s) and to handle the deferred probing.
+
+I did not moved the omap-dma, edma or ti-dma-crossbar from arch_initcall. If I
+do so UART will only comes up after the DMA driver is loaded since we are using,
+or going to use 8250 with DAM support. This delays the kernel messages. Other
+issue is the MMC/SD cards. On  board with eMMC and SD card slot the mmcblk0/1
+might get swapped due to different probe order for the MMC/SD drivers. For
+example in omap5-uevm:
+1. omap-dma in arch_initcall the SD card is mmcblk1 (4809c000.mmc) and eMMC is
+mmcblk0 (480b4000.mmc)
+2. omap-dma in late_initcall the SD card is mmcblk0 (4809c000.mmc) and eMMC is
+mmcblk1 (480b4000.mmc)
+
+Because in case 1 the 4809c000.mmc got deferred by missing regulator so
+480b4000.mmc got registered first. In case 2 both deferring because of DMA and
+at the end 4809c000.mmc get registered first. So far I have not found a way to
+bind mmcblk0/1 to a specific node...
+
+Regards,
+Peter
+---
+Peter Ujfalusi (13):
+  dmaengine: of_dma: Correct return code for
+    of_dma_request_slave_channel in case !CONFIG_OF
+  dmaengine: Introduce dma_request_slave_channel_compat_reason()
+  serial: 8250_dma: Support for deferred probing when requesting DMA
+    channels
+  mmc: omap_hsmmc: No need to check DMA channel validity at module
+    remove
+  mmc: omap_hsmmc: Support for deferred probing when requesting DMA
+    channels
+  mmc: omap: Support for deferred probing when requesting DMA channels
+  mmc: davinci_mmc: Support for deferred probing when requesting DMA
+    channels
+  crypto: omap-aes - Support for deferred probing when requesting DMA
+    channels
+  crypto: omap-des - Support for deferred probing when requesting DMA
+    channels
+  crypto: omap-sham - Support for deferred probing when requesting DMA
+    channel
+  spi: omap2-mcspi: Support for deferred probing when requesting DMA
+    channels
+  [media] omap3isp: Support for deferred probing when requesting DMA
+    channel
+  ASoC: omap-pcm: Switch to use
+    dma_request_slave_channel_compat_reason()
+
+ drivers/crypto/omap-aes.c                 | 38 ++++++++++++++++---------------
+ drivers/crypto/omap-des.c                 | 38 ++++++++++++++++---------------
+ drivers/crypto/omap-sham.c                | 15 ++++++++----
+ drivers/media/platform/omap3isp/isphist.c | 12 +++++++---
+ drivers/mmc/host/davinci_mmc.c            | 26 ++++++++++++---------
+ drivers/mmc/host/omap.c                   | 20 ++++++++++++----
+ drivers/mmc/host/omap_hsmmc.c             | 28 ++++++++++-------------
+ drivers/spi/spi-omap2-mcspi.c             | 36 +++++++++++++++++------------
+ drivers/tty/serial/8250/8250_dma.c        | 18 +++++++--------
+ include/linux/dmaengine.h                 | 22 ++++++++++++++++++
+ include/linux/of_dma.h                    |  2 +-
+ sound/soc/omap/omap-pcm.c                 | 16 ++++++++-----
+ 12 files changed, 164 insertions(+), 107 deletions(-)
+
+-- 
+2.3.5
