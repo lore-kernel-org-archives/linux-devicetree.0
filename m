@@ -1,86 +1,52 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH v4 1/2] ARM: socfpga: support suspend to ram
-Date: Tue, 26 May 2015 08:48:57 -0500
-Message-ID: <556479C9.5070208@opensource.altera.com>
-References: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
- <1432317735-29413-2-git-send-email-atull@opensource.altera.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 08/15] of_serial: support for UARTs on I/O ports
+Date: Tue, 26 May 2015 09:53:55 -0400
+Message-ID: <55647AF3.1000508@hurleysoftware.com>
+References: <1432309875-9712-1-git-send-email-paul.burton@imgtec.com> <1432309875-9712-9-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432317735-29413-2-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Pavel Machek <pavel@denx.de>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432309875-9712-9-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+[ + Arnd who has been reviewing/acking of_serial.c changes ]
 
-On 5/22/15 1:02 PM, Alan Tull wrote:
-> Add code that requests that the sdr controller go into
-> self-refresh mode.  This code is run from ocram.
+On 05/22/2015 11:51 AM, Paul Burton wrote:
+> If the address provided for the UART is of an I/O port rather than
+> a regular memory address, then set the port iotype appropriately and
+> write the address to iobase rather than mapbase.
 > 
-> This patch assumes that u-boot has already configured sdr:
->   sdr.ctrlcfg.lowpwreq.selfrfshmask = 3
->   sdr.ctrlcfg.lowpwrtiming.clkdisablecycles = 8
->   sdr.ctrlcfg.dramtiming4.selfrfshexit = 512
-> 
-> Suspend-to-RAM and EDAC support are mutually exclusive on SOCFPGA
-> platforms.  CONFIG_SOCFPGA_SUSPEND enables suspend-to-RAM and
-> prevents selecting CONFIG_EDAC_ALTERA_MC.
-> 
-> How to suspend to ram:
->  $ echo enabled > \
-> /sys/devices/soc/ffc02000.serial0/tty/ttyS0/power/wakeup
-> 
->  $ echo -n mem > /sys/power/state
-> 
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> Cc: Pavel Machek <pavel@denx.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Dinh Nguyen <dinguyen@opensource.altera.com>
-> Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > ---
-> v2: use Generic on-chip SRAM driver to allocate ocram
->     rm fncpy_align since generic allocator handles alignment
->     check __arm_ioremap_exec return code
->     check for NULL pointers
->     add a comment regarding sdram controller configuration
-> v3: fix renamed #define
->     propagate socfpga_setup_ocram_self_refresh error code
-> v4: Kconfig: don't need to select GENERIC_ALLOCATER
->     add CONFIG_SOCFPGA_SUSPEND
->     make s2r and EDAC support mutually exclusive
->     socfpga.c: add sdr_ctl_base_addr
->     return error if ocram not available in device tree
->     update copyright years
-> ---
-
-<snip>
-
+> 
+>  drivers/tty/serial/of_serial.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+> index 137381e..ccff9ba 100644
+> --- a/drivers/tty/serial/of_serial.c
+> +++ b/drivers/tty/serial/of_serial.c
+> @@ -110,7 +110,12 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+>  
+>  	port->irq = irq_of_parse_and_map(np, 0);
+>  	port->iotype = UPIO_MEM;
+> -	if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
 > +
-> +static int socfpga_pm_suspend(unsigned long arg)
-> +{
-> +	u32 ret;
-> +
-> +	if (!sdr_ctl_base_addr || !socfpga_scu_base_addr)
-> +		return -EFAULT;
-> +
-> +	ret = socfpga_sdram_self_refresh_in_ocram(
-> +		(u32)sdr_ctl_base_addr, (u32)socfpga_scu_base_addr);
-> +
+> +	if (resource.flags & IORESOURCE_IO) {
+> +		port->iotype = UPIO_PORT;
+> +		port->iobase = port->mapbase;
+> +		port->mapbase = 0;
+> +	} else if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
+>  		switch (prop) {
+>  		case 1:
+>  			port->iotype = UPIO_MEM;
+> 
 
-I had a patch that removed socfpga_scu_base_addr from being a global and
-just a local variable in:
-
-f6e14376fb20 ARM: socfpga: use of_iomap to map the SCU
-
-This patch will be in v4.2 and is currently in arm-soc/next or
-at my fork: kernel/git/dinguyen/linux.git socfpga_for_next_arria10
-
-So you will either need to make socfpga_scu_base_addr global again, or
-you can use the asm instruction to get the SCU base addr.
-
-Sorry about that..
-
-Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
