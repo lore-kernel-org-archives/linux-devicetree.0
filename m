@@ -1,7 +1,7 @@
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v5 2/4] base/platform: Continue on insert_resource() error
-Date: Tue, 26 May 2015 09:31:24 +0200
-Message-ID: <1432625486-15442-3-git-send-email-ricardo.ribalda@gmail.com>
+Subject: [PATCH v5 3/4] of/platform: Use platform_device interface
+Date: Tue, 26 May 2015 09:31:25 +0200
+Message-ID: <1432625486-15442-4-git-send-email-ricardo.ribalda@gmail.com>
 References: <1432625486-15442-1-git-send-email-ricardo.ribalda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1432625486-15442-1-git-send-email-ricardo.ribalda@gmail.com>
@@ -10,105 +10,41 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@
 Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-insert_resource() can fail when the resource added  overlaps
-(partially or fully) with another.
+of_platform_device_create_pdata() was using of_device_add() to create
+the devices, but of_platform_device_destroy was using
+platform_device_unregister() to free them.
 
-Device tree and AMBA devices may contain resources that overlap, so they
-could not call platform_device_add (see 02bbde7849e6 ('Revert "of:
-use platform_device_add"'))"
+of_device_add(), do not call insert_resource(), which initializes the
+parent field of the resource structure, needed by release_resource(),
+called by of_platform_device_destroy(). This leads to a NULL pointer
+deference.
 
-On the other hand, device trees are released using
-platform_device_unregister(). This function calls platform_device_del(),
-which calls release_resource(), that crashes when the resource has not
-been added with with insert_resource. This was not an issue when the
-device tree could not be modified online, but this is not the case
-anymore.
+Instead of fixing the NULL pointer deference, what could hide other bugs,
+this patch, replaces of_device_add() with platform_device_data().
 
-This patch let the flow continue when there is an insert error, after
-notifying the user with a dev_err(). r->parent is set to NULL, so
-platform_device_del() knows that the resource was not added, and
-therefore it should not be released.
-
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/base/platform.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 46a56f694cec..5a29387e5ff6 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -332,7 +332,7 @@ int platform_device_add(struct platform_device *pdev)
- 		 */
- 		ret = ida_simple_get(&platform_devid_ida, 0, 0, GFP_KERNEL);
- 		if (ret < 0)
--			goto err_out;
-+			return ret;
- 		pdev->id = ret;
- 		pdev->id_auto = true;
- 		dev_set_name(&pdev->dev, "%s.%d.auto", pdev->name, pdev->id);
-@@ -340,7 +340,7 @@ int platform_device_add(struct platform_device *pdev)
- 	}
+v5:  Fix comments by Rob Herring, thanks!
+
+ drivers/of/platform.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index ddf8e42c9367..236a8dfa83e6 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -184,8 +184,9 @@ static struct platform_device *of_platform_device_create_pdata(
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
+ 	of_dma_configure(&dev->dev, dev->dev.of_node);
++	dev->name = dev_name(&dev->dev);
  
- 	for (i = 0; i < pdev->num_resources; i++) {
--		struct resource *p, *r = &pdev->resource[i];
-+		struct resource *conflict, *p, *r = &pdev->resource[i];
- 		unsigned long type = resource_type(r);
- 
- 		if (r->name == NULL)
-@@ -357,11 +357,14 @@ int platform_device_add(struct platform_device *pdev)
- 				p = &ioport_resource;
- 		}
- 
--		if (insert_resource(p, r)) {
--			dev_err(&pdev->dev, "failed to claim resource %d\n", i);
--			ret = -EBUSY;
--			goto failed;
--		}
-+		conflict = insert_resource_conflict(p, r);
-+		if (!conflict)
-+			continue;
-+
-+		dev_err(&pdev->dev,
-+			"ignoring resource %pR (conflicts with %s %pR)\n",
-+			r, conflict->name, conflict);
-+		p->parent = NULL;
- 	}
- 
- 	pr_debug("Registering platform device '%s'. Parent at %s\n",
-@@ -371,7 +374,7 @@ int platform_device_add(struct platform_device *pdev)
- 	if (ret == 0)
- 		return ret;
- 
-- failed:
-+	/* Failure path */
- 	if (pdev->id_auto) {
- 		ida_simple_remove(&platform_devid_ida, pdev->id);
- 		pdev->id = PLATFORM_DEVID_AUTO;
-@@ -381,11 +384,11 @@ int platform_device_add(struct platform_device *pdev)
- 		struct resource *r = &pdev->resource[i];
- 		unsigned long type = resource_type(r);
- 
--		if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
-+		if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
-+				r->parent)
- 			release_resource(r);
- 	}
- 
-- err_out:
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(platform_device_add);
-@@ -414,7 +417,8 @@ void platform_device_del(struct platform_device *pdev)
- 			struct resource *r = &pdev->resource[i];
- 			unsigned long type = resource_type(r);
- 
--			if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
-+			if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
-+					r->parent)
- 				release_resource(r);
- 		}
- 	}
+-	if (of_device_add(dev) != 0) {
++	if (platform_device_add(dev) != 0) {
+ 		of_dma_deconfigure(&dev->dev);
+ 		platform_device_put(dev);
+ 		goto err_clear_flag;
 -- 
 2.1.4
