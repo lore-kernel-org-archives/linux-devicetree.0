@@ -1,13 +1,13 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 2/3] spi: orion: Fix extended baud rates for each Armada SoCs
-Date: Tue, 26 May 2015 11:44:43 +0200
-Message-ID: <1432633484-18758-3-git-send-email-gregory.clement@free-electrons.com>
-References: <1432633484-18758-1-git-send-email-gregory.clement@free-electrons.com>
+From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Subject: [PATCH 6/7] arm-cci: Add CCI-500 PMU support
+Date: Tue, 26 May 2015 10:53:15 +0100
+Message-ID: <1432633996-7229-7-git-send-email-suzuki.poulose@arm.com>
+References: <1432633996-7229-1-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1432633484-18758-1-git-send-email-gregory.clement@free-electrons.com>
+In-Reply-To: <1432633996-7229-1-git-send-email-suzuki.poulose@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,120 +17,273 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+To: arm@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, arnd@arndb.de, "Suzuki K. Poulose" <suzuki.poulose@arm.com>, punit.agrawal@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The commit df59fa7f4bca "spi: orion: support armada extended baud
-rates" made the assumptions that all the Armada SoCs supported the
-same maximum frequency. However, according the hardware datasheet, the
-maximum frequency supported by the Armada 370 SoC is tclk/4, for the
-Armada XP, Armada 38x and Armada 39x SoCs the limitation is 50MHz and
-for the Armada 375 it is tclk/15.
+From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
 
-This patch introduces new compatible strings to handle all these
-case. In order to be future proof a compatible was created for each
-SoC even if currently some SoCs seem using the same IP.
+CCI-500 provides 8 event counters which can count any of the
+supported events independently. The PMU event id is a 9-bit
+value made of two parts.
+	bits [8:5] - Source port
+			0x0-0x6 Slave Ports
+			0x8-0xD Master Ports
+			0xf     Global Events to CCI
+			0x7,0xe Reserved
+	bits [0:4] - Event code (specific to each type of port)
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+The generic CCI-500 controlling interface remains the same with CCI-400.
+However there are some differences in the PMU event counters.
+ - No cycle counter
+ - Upto 8 counters(4 in CCI-400)
+ - Each counter area is 64K(4K in CCI400)
+ - The counter0 starts at offset 0x10000 from the base of CCI
+
+Cc: Punit Agrawal <punit.agrawal@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
+Acked-by: Punit Agrawal <punit.agrawal@arm.com>
+
 ---
- .../devicetree/bindings/spi/spi-orion.txt          |  8 +++-
- drivers/spi/spi-orion.c                            | 47 ++++++++++++++++++++--
- 2 files changed, 50 insertions(+), 5 deletions(-)
+ Changes since V1:
+  - Port [1] to CCI500 PMU configs
+	[1] https://patchwork.kernel.org/patch/6387121/
+  - No functional changes in the code
+---
+ Documentation/devicetree/bindings/arm/cci.txt |    4 +-
+ drivers/bus/Kconfig                           |   14 +++
+ drivers/bus/arm-cci.c                         |  133 +++++++++++++++++++++++++
+ 3 files changed, 150 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-orion.txt b/Documentation/devicetree/bindings/spi/spi-orion.txt
-index 50c3a3de61c1..51d63df3d99d 100644
---- a/Documentation/devicetree/bindings/spi/spi-orion.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-orion.txt
-@@ -1,7 +1,13 @@
- Marvell Orion SPI device
+diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/devicetree/bindings/arm/cci.txt
+index 3c5c631..aef1d20 100644
+--- a/Documentation/devicetree/bindings/arm/cci.txt
++++ b/Documentation/devicetree/bindings/arm/cci.txt
+@@ -31,8 +31,9 @@ specific to ARM.
+ 	- compatible
+ 		Usage: required
+ 		Value type: <string>
+-		Definition: must be set to
++		Definition: must contain one of the following:
+ 			    "arm,cci-400"
++			    "arm,cci-500"
  
- Required properties:
--- compatible : should be "marvell,orion-spi" or "marvell,armada-370-spi".
-+- compatible : should be on of the following:
-+    - "marvell,orion-spi" for the Orion, mv78x00, Kirkwood and Dove SoCs
-+    - "marvell,armada-370-spi", for the Armada 370 SoCs
-+    - "marvell,armada-375-spi", for the Armada 375 SoCs
-+    - "marvell,armada-380-spi", for the Armada 38x SoCs
-+    - "marvell,armada-390-spi", for the Armada 38x SoCs
-+    - "marvell,armada-xp-spi", for the Armada XP SoCs
- - reg : offset and length of the register set for the device
- - cell-index : Which of multiple SPI controllers is this.
- Optional properties:
-diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-index ff97cabdaa81..8cad107a5b3f 100644
---- a/drivers/spi/spi-orion.c
-+++ b/drivers/spi/spi-orion.c
-@@ -391,7 +391,7 @@ static const struct orion_spi_dev orion_spi_dev_data = {
- 	.prescale_mask = ORION_SPI_CLK_PRESCALE_MASK,
+ 	- reg
+ 		Usage: required
+@@ -99,6 +100,7 @@ specific to ARM.
+ 				 "arm,cci-400-pmu,r1"
+ 				 "arm,cci-400-pmu"  - DEPRECATED, permitted only where OS has
+ 						      secure acces to CCI registers
++				 "arm,cci-500-pmu,r0"
+ 		- reg:
+ 			Usage: required
+ 			Value type: Integer cells. A register entry, expressed
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index a857936..1a82f3a 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -34,6 +34,20 @@ config ARM_CCI400_PORT_CTRL
+ 	  Low level power management driver for CCI400 cache coherent
+ 	  interconnect for ARM platforms.
+ 
++config ARM_CCI500_PMU
++	bool "ARM CCI500 PMU support"
++	default y
++	depends on (ARM && CPU_V7) || ARM64
++	depends on PERF_EVENTS
++	select ARM_CCI_PMU
++	help
++	  Support for PMU events monitoring on the ARM CCI-500 cache coherent
++	  interconnect. CCI-500 provides 8 independent event counters, which
++	  can count events pertaining to the slave/master interfaces as well
++	  as the internal events to the CCI.
++
++	  If unsure, say Y
++
+ config ARM_CCN
+ 	bool "ARM CCN driver support"
+ 	depends on ARM || ARM64
+diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
+index df1c2c6..1475eaf 100644
+--- a/drivers/bus/arm-cci.c
++++ b/drivers/bus/arm-cci.c
+@@ -52,6 +52,9 @@ static const struct of_device_id arm_cci_matches[] = {
+ #ifdef CONFIG_ARM_CCI400_COMMON
+ 	{.compatible = "arm,cci-400", .data = CCI400_PORTS_DATA },
+ #endif
++#ifdef CONFIG_ARM_CCI500_PMU
++	{ .compatible = "arm,cci-500", },
++#endif
+ 	{},
  };
  
--static const struct orion_spi_dev armada_spi_dev_data = {
-+static const struct orion_spi_dev armada_370_spi_dev_data = {
- 	.typ = ARMADA_SPI,
- 	.min_divisor = 4,
- 	.max_divisor = 1920,
-@@ -399,9 +399,46 @@ static const struct orion_spi_dev armada_spi_dev_data = {
- 	.prescale_mask = ARMADA_SPI_CLK_PRESCALE_MASK,
+@@ -89,6 +92,9 @@ static const struct of_device_id arm_cci_matches[] = {
+ enum {
+ 	CCI_IF_SLAVE,
+ 	CCI_IF_MASTER,
++#ifdef CONFIG_ARM_CCI500_PMU
++	CCI_IF_GLOBAL,
++#endif
+ 	CCI_IF_MAX,
  };
  
-+static const struct orion_spi_dev armada_xp_spi_dev_data = {
-+	.typ = ARMADA_SPI,
-+	.max_hz = 50000000,
-+	.max_divisor = 1920,
-+	.prescale_mask = ARMADA_SPI_CLK_PRESCALE_MASK,
-+};
-+
-+static const struct orion_spi_dev armada_375_spi_dev_data = {
-+	.typ = ARMADA_SPI,
-+	.min_divisor = 15,
-+	.max_divisor = 1920,
-+	.prescale_mask = ARMADA_SPI_CLK_PRESCALE_MASK,
-+};
-+
- static const struct of_device_id orion_spi_of_match_table[] = {
--	{ .compatible = "marvell,orion-spi", .data = &orion_spi_dev_data, },
--	{ .compatible = "marvell,armada-370-spi", .data = &armada_spi_dev_data, },
-+	{
-+		.compatible = "marvell,orion-spi",
-+		.data = &orion_spi_dev_data,
-+	},
-+	{
-+		.compatible = "marvell,armada-370-spi",
-+		.data = &armada_370_spi_dev_data,
-+	},
-+	{
-+		.compatible = "marvell,armada-375-spi",
-+		.data = &armada_375_spi_dev_data,
-+	},
-+	{
-+		.compatible = "marvell,armada-380-spi",
-+		.data = &armada_xp_spi_dev_data,
-+	},
-+	{
-+		.compatible = "marvell,armada-390-spi",
-+		.data = &armada_xp_spi_dev_data,
-+	},
-+	{
-+		.compatible = "marvell,armada-xp-spi",
-+		.data = &armada_xp_spi_dev_data,
-+	},
-+
- 	{}
+@@ -145,6 +151,9 @@ enum cci_models {
+ 	CCI400_R0,
+ 	CCI400_R1,
+ #endif
++#ifdef CONFIG_ARM_CCI500_PMU
++	CCI500_R0,
++#endif
+ 	CCI_MODEL_MAX
  };
- MODULE_DEVICE_TABLE(of, orion_spi_of_match_table);
-@@ -473,9 +510,11 @@ static int orion_spi_probe(struct platform_device *pdev)
- 					"marvell,armada-370-spi"))
- 		master->max_speed_hz = min(devdata->max_hz,
- 				DIV_ROUND_UP(tclk_hz, devdata->min_divisor));
--	else
-+	else if (devdata->min_divisor)
- 		master->max_speed_hz =
- 			DIV_ROUND_UP(tclk_hz, devdata->min_divisor);
-+	else
-+		master->max_speed_hz = devdata->max_hz;
- 	master->min_speed_hz = DIV_ROUND_UP(tclk_hz, devdata->max_divisor);
  
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -294,6 +303,101 @@ static inline struct cci_pmu_model *probe_cci_model(struct platform_device *pdev
+ }
+ #endif	/* CONFIG_ARM_CCI400_PMU */
+ 
++#ifdef CONFIG_ARM_CCI500_PMU
++
++/*
++ * CCI500 provides 8 independent event counters that can count
++ * any of the events available.
++ *
++ * CCI500 PMU event id is an 9-bit value made of two parts.
++ *	 bits [8:5] - Source for the event
++ *		      0x0-0x6 - Slave interfaces
++ *		      0x8-0xD - Master interfaces
++ *		      0xf     - Global Events
++ *		      0x7,0xe - Reserved
++ *
++ *	 bits [4:0] - Event code (specific to type of interface)
++ */
++
++/* Port ids */
++#define CCI500_PORT_S0			0x0
++#define CCI500_PORT_S1			0x1
++#define CCI500_PORT_S2			0x2
++#define CCI500_PORT_S3			0x3
++#define CCI500_PORT_S4			0x4
++#define CCI500_PORT_S5			0x5
++#define CCI500_PORT_S6			0x6
++
++#define CCI500_PORT_M0			0x8
++#define CCI500_PORT_M1			0x9
++#define CCI500_PORT_M2			0xa
++#define CCI500_PORT_M3			0xb
++#define CCI500_PORT_M4			0xc
++#define CCI500_PORT_M5			0xd
++
++#define CCI500_PORT_GLOBAL 		0xf
++
++#define CCI500_PMU_EVENT_MASK		0x1ffUL
++#define CCI500_PMU_EVENT_SOURCE_SHIFT	0x5
++#define CCI500_PMU_EVENT_SOURCE_MASK	0xf
++#define CCI500_PMU_EVENT_CODE_SHIFT	0x0
++#define CCI500_PMU_EVENT_CODE_MASK	0x1f
++
++#define CCI500_PMU_EVENT_SOURCE(event)	\
++	((event >> CCI500_PMU_EVENT_SOURCE_SHIFT) & CCI500_PMU_EVENT_SOURCE_MASK)
++#define CCI500_PMU_EVENT_CODE(event)	\
++	((event >> CCI500_PMU_EVENT_CODE_SHIFT) & CCI500_PMU_EVENT_CODE_MASK)
++
++#define CCI500_SLAVE_PORT_MIN_EV	0x00
++#define CCI500_SLAVE_PORT_MAX_EV	0x1f
++#define CCI500_MASTER_PORT_MIN_EV	0x00
++#define CCI500_MASTER_PORT_MAX_EV	0x06
++#define CCI500_GLOBAL_PORT_MIN_EV	0x00
++#define CCI500_GLOBAL_PORT_MAX_EV	0x0f
++
++static int cci500_validate_hw_event(struct cci_pmu *cci_pmu,
++					unsigned long hw_event)
++{
++	u32 ev_source = CCI500_PMU_EVENT_SOURCE(hw_event);
++	u32 ev_code = CCI500_PMU_EVENT_CODE(hw_event);
++	int if_type;
++
++	if (hw_event & ~CCI500_PMU_EVENT_MASK)
++		return -ENOENT;
++
++	switch (ev_source) {
++	case CCI500_PORT_S0:
++	case CCI500_PORT_S1:
++	case CCI500_PORT_S2:
++	case CCI500_PORT_S3:
++	case CCI500_PORT_S4:
++	case CCI500_PORT_S5:
++	case CCI500_PORT_S6:
++		if_type = CCI_IF_SLAVE;
++		break;
++	case CCI500_PORT_M0:
++	case CCI500_PORT_M1:
++	case CCI500_PORT_M2:
++	case CCI500_PORT_M3:
++	case CCI500_PORT_M4:
++	case CCI500_PORT_M5:
++		if_type = CCI_IF_MASTER;
++		break;
++	case CCI500_PORT_GLOBAL:
++		if_type = CCI_IF_GLOBAL;
++		break;
++	default:
++		return -ENOENT;
++	}
++
++	if (ev_code >= cci_pmu->model->event_ranges[if_type].min &&
++		ev_code <= cci_pmu->model->event_ranges[if_type].max)
++		return hw_event;
++
++	return -ENOENT;
++}
++#endif	/* CONFIG_ARM_CCI500_PMU */
++
+ static int pmu_is_valid_counter(struct cci_pmu *cci_pmu, int idx)
+ {
+ 	return 0 <= idx && idx <= CCI_PMU_CNTR_LAST(cci_pmu);
+@@ -981,6 +1085,29 @@ static struct cci_pmu_model cci_pmu_models[] = {
+ 		.get_event_idx = cci400_get_event_idx,
+ 	},
+ #endif
++#ifdef CONFIG_ARM_CCI500_PMU
++	[CCI500_R0] = {
++		.name = "CCI_500",
++		.fixed_hw_cntrs = 0,
++		.num_hw_cntrs = 8,
++		.cntr_size = SZ_64K,
++		.event_ranges = {
++			[CCI_IF_SLAVE] = {
++				CCI500_SLAVE_PORT_MIN_EV,
++				CCI500_SLAVE_PORT_MAX_EV,
++			},
++			[CCI_IF_MASTER] = {
++				CCI500_MASTER_PORT_MIN_EV,
++				CCI500_MASTER_PORT_MAX_EV,
++			},
++			[CCI_IF_GLOBAL] = {
++				CCI500_GLOBAL_PORT_MIN_EV,
++				CCI500_GLOBAL_PORT_MAX_EV,
++			},
++		},
++		.validate_hw_event = cci500_validate_hw_event,
++	},
++#endif
+ };
+ 
+ static const struct of_device_id arm_cci_pmu_matches[] = {
+@@ -998,6 +1125,12 @@ static const struct of_device_id arm_cci_pmu_matches[] = {
+ 		.data	= &cci_pmu_models[CCI400_R1],
+ 	},
+ #endif
++#ifdef CONFIG_ARM_CCI500_PMU
++	{
++		.compatible = "arm,cci-500-pmu,r0",
++		.data = &cci_pmu_models[CCI500_R0],
++	},
++#endif
+ 	{},
+ };
+ 
 -- 
-2.1.0
+1.7.9.5
