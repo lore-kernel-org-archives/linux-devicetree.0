@@ -1,70 +1,76 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 5/7] clocksource: Add Pistachio SoC general purpose timer binding document
-Date: Tue, 26 May 2015 18:22:50 -0300
-Message-ID: <1432675370-17944-1-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1432665671-16102-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v4 2/2] ARM: socfpga: dts: add sdram controller dt binding
+ doc
+Date: Tue, 26 May 2015 16:37:55 -0500
+Message-ID: <alpine.DEB.2.02.1505261637120.19205@linuxheads99>
+References: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
+ <1432317735-29413-3-git-send-email-atull@opensource.altera.com>
+ <20150525123902.GE9943@amd>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432665671-16102-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150525123902.GE9943@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a device-tree binding document for the clocksource driver provided
-by Pistachio SoC general purpose timers.
+On Mon, 25 May 2015, Pavel Machek wrote:
 
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
-Changes from v2:
- * Fix spacing for consistency as pointed out by Sergei.
-Changes from v1:
- * No changes.
+> On Fri 2015-05-22 13:02:15, Alan Tull wrote:
+> > Add binding doc for Altera SOCFPGA SDRAM controller.
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > ---
+> > v4: Add bindings doc
+> > ---
+> >  .../arm/altera/socfpga-sdram-controller.txt        |   12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+> > new file mode 100644
+> > index 0000000..77ca635
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+> > @@ -0,0 +1,12 @@
+> > +Altera SOCFPGA SDRAM Controller
+> > +
+> > +Required properties:
+> > +- compatible : Should contain "altr,sdr-ctl" and "syscon".
+> > +  syscon is required by the Altera SOCFPGA SDRAM EDAC.
+> > +- reg : Should contain 1 register range (address and length)
+> > +
+> > +Example:
+> > +	sdr: sdr@ffc25000 {
+> > +		compatible = "altr,sdr-ctl", "syscon";
+> 
+> Is the syscon binding good idea? Should the EDAC driver be fixed to
+> accept altr,sdr-ctl binding, instead?
+> 							Pavel
 
- .../bindings/timer/img,pistachio-gptimer.txt       | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+What problems do you see here?  I'd like to avoid changing the
+EDAC if possible.
 
-diff --git a/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
-new file mode 100644
-index 0000000..7afce80
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
-@@ -0,0 +1,28 @@
-+* Pistachio general-purpose timer based clocksource
-+
-+Required properties:
-+ - compatible: "img,pistachio-gptimer".
-+ - reg: Address range of the timer registers.
-+ - interrupts: An interrupt for each of the four timers
-+ - clocks: Should contain a clock specifier for each entry in clock-names
-+ - clock-names: Should contain the following entries:
-+                "sys", interface clock
-+                "slow", slow counter clock
-+                "fast", fast counter clock
-+ - img,cr-periph: Must contain a phandle to the peripheral control
-+		  syscon node.
-+
-+Example:
-+	timer: timer@18102000 {
-+		compatible = "img,pistachio-gptimer";
-+		reg = <0x18102000 0x100>;
-+		interrupts = <GIC_SHARED 60 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SHARED 61 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SHARED 62 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SHARED 63 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clk_periph PERIPH_CLK_COUNTER_FAST>,
-+		         <&clk_periph PERIPH_CLK_COUNTER_SLOW>,
-+			 <&cr_periph SYS_CLK_TIMER>;
-+		clock-names = "fast", "slow", "sys";
-+		img,cr-periph = <&cr_periph>;
-+	};
--- 
-2.3.3
+We have 3 things (EDAC, fpga bridges, suspend) that need access
+to the sdc.  They access 3 nonoverlapping sets of registers
+within the sdc to get at 3 different sets of functionality.
+Both EDAC and the fpga bridge are using syscon.  The suspend
+code can't use syscon because it has to be assembly running
+in OCRAM to enable self-refresh for the DDR.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thor Thayer ended up using syscon for the EDAC after a thorough
+discussion on lkml and several revisions of the EDAC driver that
+tried it several different ways before finally ending up back
+where he started.
+
+Alan Tull
+
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
