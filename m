@@ -1,63 +1,32 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 06/13] musb: Add support for the
- Allwinner sunxi musb controller
-Date: Tue, 26 May 2015 18:36:30 +0200
-Message-ID: <5564A10E.3040402@redhat.com>
-References: <1426878682-14521-1-git-send-email-hdegoede@redhat.com> <1426878682-14521-7-git-send-email-hdegoede@redhat.com> <20150526154802.GL26599@saruman.tx.rr.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [RFC PATCH 0/3] clk: stm32: Add clock driver for STM32F4[23]xxx devices
+Date: Tue, 26 May 2015 18:41:09 +0200
+Message-ID: <CALszF6BTu_8SCE9hEiLYuvQg8J9eG5xktaVV7_LvnG3r20+wtw@mail.gmail.com>
+References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBIOCSKVQKGQEE4OFYOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150526154802.GL26599-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kamil Lulko <rev13@wp.pl>, Andreas Farber <afaerber@suse.de>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@linaro.org, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Daniel,
 
-On 05/26/2015 05:48 PM, Felipe Balbi wrote:
-> On Fri, Mar 20, 2015 at 08:11:15PM +0100, Hans de Goede wrote:
->> This is based on initial code to get the Allwinner sunxi musb controller
->> supported by Chen-Yu Tsai and Roman Byshko.
->>
->> This adds support for the Allwinner sunxi musb controller in both host only
->> and otg mode. Peripheral only mode is not supported, as no boards use that.
->>
->> This has been tested on a cubietruck (A20 SoC) and an UTOO P66 tablet
->> (A13 SoC) with a variety of devices in host mode and with the g_serial gadget
->> driver in peripheral mode, plugging otg / host cables in/out a lot of times
->> in all possible imaginable plug orders.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+2015-05-22 22:41 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
+>  2. Allocating ~80 clock components appears to fragment memory enough
+>     to prevent busybox (.text is ~300K, non-XIP) from running getty.
+>     I have to use "init=/bin/sh" to avoid OOM problems.
 >
-> drivers/usb/musb/sunxi.c:28:11: error: unable to open 'linux/soc/sunxi/sunxi_sram.h'
-> scripts/Makefile.build:264: recipe for target 'drivers/usb/musb/sunxi.o' failed
-> make[2]: *** [drivers/usb/musb/sunxi.o] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> scripts/Makefile.build:403: recipe for target 'drivers/usb/musb' failed
-> make[1]: *** [drivers/usb/musb] Error 2
-> Makefile:1548: recipe for target 'drivers/usb/' failed
-> make: *** [drivers/usb/] Error 2
->
-> What is the dependency ?
 
-Thanks you that you're working on this, the dependency is the sunxi sram
-controller driver which was supposed to get pulled for 4.1, but like many
-other ARM related pull-reqs did not get pulled. And now for 4.2 Arnd
-has decided that he does not like the driver even though it was
-ok for 4.1, and has not yet answered how else we should solve this...
+Yes, I reproduced the same issue while testing your work.
 
-Arnd, we would really like to move forward with musb support for sunxi
-which means we need a solution for the sram controller, can you please
-answer Maxime's latest mails on this, or accept the driver as is ?
+Could you try with:
+CONFIG_NOMMU_INITIAL_TRIM_EXCESS=0
 
-Regards,
+It solves (hides) the problem on my side.
+You can eventually setting it once booted to 1 via procfs.
 
-Hans
+Kind regards,
+Maxime
