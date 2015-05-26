@@ -1,104 +1,50 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 3/4] reset: socfpga: Update reset-socfpga to read the
- altr,modrst-offset property
-Date: Tue, 28 Jul 2015 10:46:30 +0200
-Message-ID: <1438073190.3193.28.camel@pengutronix.de>
-References: <1438023444-11881-1-git-send-email-dinguyen@opensource.altera.com>
-	 <1438023444-11881-4-git-send-email-dinguyen@opensource.altera.com>
+From: Michal Suchanek <hramrach@gmail.com>
+Subject: [PATCH v3] ARM: dts: Add SPI CS on exynos5250-snow
+Date: Tue, 26 May 2015 12:41:23 +0200
+Message-ID: <e1952e8c102a3b7a7f3f79c759c44093e0d11dc7.1438073049.git.hramrach@gmail.com>
+References: <a5054dfad3d48c582b062b0536125c9bcff41f31.1438027526.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438023444-11881-4-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@opensource.altera.com
-Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, s.trumtrar@pengutronix.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a5054dfad3d48c582b062b0536125c9bcff41f31.1438027526.git.hramrach@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 27.07.2015, 13:57 -0500 schrieb
-dinguyen@opensource.altera.com:
-> From: Dinh Nguyen <dinguyen@opensource.altera.com>
-> 
-> In order for the Arria10 to be able to re-use the reset driver for SoCFPGA
-> Cyclone5/Arria5, we need to read the 'altr,modrst-offset' property from the
-> device tree entry. The 'altr,modrst-offset' property is the first register
-> into the reset manager that is used for bringing peripherals out of reset.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-> ---
->  drivers/reset/reset-socfpga.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-> index 0a8def3..9074d41 100644
-> --- a/drivers/reset/reset-socfpga.c
-> +++ b/drivers/reset/reset-socfpga.c
-> @@ -24,11 +24,11 @@
->  #include <linux/types.h>
->  
->  #define NR_BANKS		4
-> -#define OFFSET_MODRST		0x10
->  
->  struct socfpga_reset_data {
->  	spinlock_t			lock;
->  	void __iomem			*membase;
-> +	u32				modrst_offset;
->  	struct reset_controller_dev	rcdev;
->  };
->  
-> @@ -45,8 +45,8 @@ static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
->  
->  	spin_lock_irqsave(&data->lock, flags);
->  
-> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> -	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
-> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
-> +	writel(reg | BIT(offset), data->membase + data->modrst_offset +
->  				 (bank * NR_BANKS));
->  	spin_unlock_irqrestore(&data->lock, flags);
->  
-> @@ -67,8 +67,8 @@ static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
->  
->  	spin_lock_irqsave(&data->lock, flags);
->  
-> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> -	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
-> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
-> +	writel(reg & ~BIT(offset), data->membase + data->modrst_offset +
->  				  (bank * NR_BANKS));
->  
->  	spin_unlock_irqrestore(&data->lock, flags);
-> @@ -85,7 +85,7 @@ static int socfpga_reset_status(struct reset_controller_dev *rcdev,
->  	int offset = id % BITS_PER_LONG;
->  	u32 reg;
->  
-> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
->  
->  	return !(reg & BIT(offset));
->  }
-> @@ -100,6 +100,8 @@ static int socfpga_reset_probe(struct platform_device *pdev)
->  {
->  	struct socfpga_reset_data *data;
->  	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
->  
->  	/*
->  	 * The binding was mainlined without the required property.
-> @@ -120,6 +122,11 @@ static int socfpga_reset_probe(struct platform_device *pdev)
->  	if (IS_ERR(data->membase))
->  		return PTR_ERR(data->membase);
->  
-> +	if (of_property_read_u32(np, "altr,modrst-offset", &data->modrst_offset)) {
-> +		dev_err(dev, "no altr,modrst-offset specified in device tree\n");
-> +		return -ENODEV;
-> +	}
-> +
+Although there is only one choice of chipselect it is necessary to
+specify it. The driver cannot claim the gpio otherwise.
 
-This should fall back to the old value of 0x10 in case the device tree
-property doesn't exist. Otherwise you are breaking Cyclone5/Arria5 with
-older device trees.
+Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+Acked-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-regards
-Philipp
+--
+ - don't move unrelated line
+ - use symbolic GPIO_ACTIVE_HIGH
+---
+ arch/arm/boot/dts/exynos5250-snow.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index b7f4122..2d6a976 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -688,6 +688,7 @@
+ 	status = "okay";
+ 	samsung,spi-src-clk = <0>;
+ 	num-cs = <1>;
++	cs-gpios = <&gpa2 5 GPIO_ACTIVE_HIGH>;
+ };
+ 
+ &usbdrd_dwc3 {
+-- 
+2.1.4
