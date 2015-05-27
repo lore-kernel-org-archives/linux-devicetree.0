@@ -1,86 +1,269 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V2 5/6] regulator: add mxs on-chip regulator driver
-Date: Wed, 27 May 2015 22:58:01 +0200 (CEST)
-Message-ID: <1973961885.66028.1432760281554.JavaMail.open-xchange@oxbsltgw06.schlund.de>
-References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com> <1430346747-28728-6-git-send-email-stefan.wahren@i2se.com> <20150504123648.GU15510@sirena.org.uk> <1693367404.879766.1430771695242.JavaMail.open-xchange@oxbaltgw08.schlund.de> <1875749167.82542.1431023838932.JavaMail.open-xchange@oxbsltgw04.schlund.de> <20150507185216.GP22845@sirena.org.uk> <535744342.64563.1431026719818.JavaMail.open-xchange@oxbsltgw09.schlund.de> <20150507193236.GS22845@sirena.org.uk> <1290103954.26573.1432642616013.JavaMail.open-xchange@oxbsltgw08.schlund.de> <20150527173321.GH21577@sirena.org.uk>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v4 2/2] soc: Add driver for Freescale Vybrid Platform
+Date: Wed, 27 May 2015 23:42:18 +0200
+Message-ID: <24142c6afd14661145517f298599c865@agner.ch>
+References: <cover.1432637313.git.maitysanchayan@gmail.com>
+ <7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150527173321.GH21577-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>, arnd@arndb.de
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2015-05-26 13:36, Sanchayan Maity wrote:
+> This adds a SoC driver to be used by the Freescale Vybrid SoC's.
+> We create the "fsl" directory for holding the different Freescale
+> designs. Driver utilises syscon to get the various register values
+> needed. After this sysfs exposes some SoC specific properties as
+> below:
+> 
+>> cd /sys/devices/soc0
+>> ls
+> family     machine    power      revision   soc_id     subsystem  uevent
+>> cat family
+> Freescale Vybrid VF610
+>> cat machine
+> Freescale Vybrid
+>> cat revision
+> 00000013
+>> cat soc_id
+> df6472a60c1c39d4
+> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> ---
+>  drivers/soc/Kconfig         |   1 +
+>  drivers/soc/Makefile        |   1 +
+>  drivers/soc/fsl/Kconfig     |   9 +++
+>  drivers/soc/fsl/Makefile    |   1 +
+>  drivers/soc/fsl/soc-vf610.c | 168 ++++++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 180 insertions(+)
+>  create mode 100644 drivers/soc/fsl/Kconfig
+>  create mode 100644 drivers/soc/fsl/Makefile
+>  create mode 100644 drivers/soc/fsl/soc-vf610.c
+> 
+> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> index d8bde82..8b4dd2b 100644
+> --- a/drivers/soc/Kconfig
+> +++ b/drivers/soc/Kconfig
+> @@ -1,5 +1,6 @@
+>  menu "SOC (System On Chip) specific Drivers"
+>  
+> +source "drivers/soc/fsl/Kconfig"
+>  source "drivers/soc/mediatek/Kconfig"
+>  source "drivers/soc/qcom/Kconfig"
+>  source "drivers/soc/ti/Kconfig"
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index 70042b2..142676e 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -2,6 +2,7 @@
+>  # Makefile for the Linux Kernel SOC specific device drivers.
+>  #
+>  
+> +obj-$(CONFIG_SOC_VF610)         += fsl/
+>  obj-$(CONFIG_ARCH_MEDIATEK)	+= mediatek/
+>  obj-$(CONFIG_ARCH_QCOM)		+= qcom/
+>  obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+> new file mode 100644
+> index 0000000..d0ac671
+> --- /dev/null
+> +++ b/drivers/soc/fsl/Kconfig
+> @@ -0,0 +1,9 @@
+> +#
+> +# Freescale SoC drivers
+> +
+> +config SOC_VF610
+> +	   bool "SoC bus device for the Freescale Vybrid platform"
+> +	   select SOC_BUS
+> +	   help
+> +	     Include support for the SoC bus on the Freescale Vybrid platform
+> +	     providing some sysfs information about the module variant.
+> \ No newline at end of file
+> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+> new file mode 100644
+> index 0000000..5fccbba
+> --- /dev/null
+> +++ b/drivers/soc/fsl/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_SOC_VF610)		+= soc-vf610.o
+> diff --git a/drivers/soc/fsl/soc-vf610.c b/drivers/soc/fsl/soc-vf610.c
+> new file mode 100644
+> index 0000000..6425cfb
+> --- /dev/null
+> +++ b/drivers/soc/fsl/soc-vf610.c
+> @@ -0,0 +1,168 @@
+> +/*
+> + * Copyright 2015 Toradex AG
+> + *
+> + * Author: Sanchayan Maity <sanchayan.maity@toradex.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2, as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/regmap.h>
+> +#include <linux/random.h>
+> +#include <linux/slab.h>
+> +#include <linux/sys_soc.h>
+> +
+> +#define DRIVER_NAME "vf610-soc-bus"
+> +
+> +#define MSCM_CPxCOUNT_OFFSET   0x0000002C
+> +#define MSCM_CPxCFG1_OFFSET    0x00000014
+> +
+> +static struct soc_device_attribute *soc_dev_attr;
+> +static struct soc_device *soc_dev;
+> +
+> +static int vf610_soc_probe(struct platform_device *pdev)
+> +{
+> +	struct regmap *ocotp_regmap, *mscm_regmap, *rom_regmap;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct device_node *soc_node;
+> +	struct of_phandle_args pargs;
+> +	char soc_type[] = "xx0";
+> +	u32 cfg0_offset, cfg1_offset, rom_rev_offset;
+> +	u32 soc_id1, soc_id2, rom_rev;
+> +	u32 cpxcount, cpxcfg1;
+> +	u64 soc_id;
+> +	int ret;
+> +
+> +	mscm_regmap = syscon_node_to_regmap(node);
+> +	if (IS_ERR(mscm_regmap)) {
+> +		dev_err(dev, "regmap lookup for mscm failed\n");
+> +		return PTR_ERR(mscm_regmap);
+> +	}
+> +
+> +	soc_node = of_find_node_by_path("/soc");
+> +
+> +	ret = of_parse_phandle_with_fixed_args(soc_node,
+> +					"ocotp-cfg", 2, 0, &pargs);
+> +	if (ret) {
+> +		dev_err(dev, "lookup failed for ocotp-cfg node %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ocotp_regmap = syscon_node_to_regmap(pargs.np);
+> +	if (IS_ERR(ocotp_regmap)) {
+> +		of_node_put(pargs.np);
+> +		dev_err(dev, "regmap lookup for ocotp failed\n");
+> +		return PTR_ERR(ocotp_regmap);
+> +	}
+> +
+> +	cfg0_offset = pargs.args[0];
+> +	cfg1_offset = pargs.args[1];
+> +	of_node_put(pargs.np);
+> +
+> +	ret = of_parse_phandle_with_fixed_args(soc_node,
+> +					"rom-revision", 1, 0, &pargs);
+> +	if (ret) {
+> +		dev_err(dev, "lookup failed for rom-revision node %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	rom_regmap = syscon_node_to_regmap(pargs.np);
+> +	if (IS_ERR(rom_regmap)) {
+> +		of_node_put(pargs.np);
+> +		dev_err(dev, "regmap lookup for ocrom failed\n");
+> +		return PTR_ERR(rom_regmap);
+> +	}
+> +
+> +	rom_rev_offset = pargs.args[0];
+> +	of_node_put(pargs.np);
+> +
+> +	ret = regmap_read(ocotp_regmap, cfg0_offset, &soc_id1);
+> +	if (ret)
+> +		return -ENODEV;
+> +
+> +	ret = regmap_read(ocotp_regmap, cfg1_offset, &soc_id2);
+> +	if (ret)
+> +		return -ENODEV;
+> +
+> +	soc_id = (u64) soc_id1 << 32 | soc_id2;
+> +	add_device_randomness(&soc_id, sizeof(soc_id));
+> +
+> +	ret = regmap_read(mscm_regmap, MSCM_CPxCOUNT_OFFSET, &cpxcount);
+> +	if (ret)
+> +		return -ENODEV;
+> +
+> +	ret = regmap_read(mscm_regmap, MSCM_CPxCFG1_OFFSET, &cpxcfg1);
+> +	if (ret)
+> +		return -ENODEV;
+> +
+> +	soc_type[0] = cpxcount ? '6' : '5'; /* Dual Core => VF6x0 */
+> +	soc_type[1] = cpxcfg1 ? '1' : '0'; /* L2 Cache => VFx10 */
+> +
+> +	ret = regmap_read(rom_regmap, rom_rev_offset, &rom_rev);
+> +	if (ret)
+> +		return -ENODEV;
+> +
+> +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> +	if (!soc_dev_attr)
+> +		return -ENOMEM;
+> +
+> +	soc_dev_attr->machine = kasprintf(GFP_KERNEL, "Freescale Vybrid");
+> +	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%016llx", soc_id);
+> +	soc_dev_attr->family = kasprintf(GFP_KERNEL, "Freescale Vybrid VF%s",
+> +								 soc_type);
+> +	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%08x", rom_rev);
+> +
+> +	soc_dev = soc_device_register(soc_dev_attr);
+> +	if (IS_ERR(soc_dev)) {
+> +		kfree(soc_dev_attr->revision);
+> +		kfree(soc_dev_attr->family);
+> +		kfree(soc_dev_attr->soc_id);
+> +		kfree(soc_dev_attr->machine);
+> +		kfree(soc_dev_attr);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int vf610_soc_remove(struct platform_device *pdev)
+> +{
+> +	if (soc_dev_attr) {
+> +		kfree(soc_dev_attr->revision);
+> +		kfree(soc_dev_attr->family);
+> +		kfree(soc_dev_attr->soc_id);
+> +		kfree(soc_dev_attr->machine);
+> +		kfree(soc_dev_attr);
+> +	}
+> +
+> +	if (soc_dev)
+> +		soc_device_unregister(soc_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id vf610_soc_bus_match[] = {
+> +	{ .compatible = "fsl,vf610-mscm-cpucfg", },
 
-> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 27. Mai 2015 um 19:33 geschrieben:
->
->
-> On Tue, May 26, 2015 at 02:16:55PM +0200, Stefan Wahren wrote:
-> > > Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 7. Mai 2015 um 21:32 geschrieben:
->
-> > > > > > In the bootloader code enabling the DC-DC is critical. There is a
-> > > > > > known
-> > > > > > issue
-> > > > > > which falsely triggers the brownout detection.
->
-> > > > > Why would the driver not provide these operations?
->
-> > > > I didn't implement this operation because the suggested workaround for
-> > > > the
-> > > > hardware issue isn't very nice
-> > > > (disable brownout detection during enabling DC-DC). I was afraid of the
-> > > > implementation.
->
-> > > That doesn't sound too complicated?
->
-> > Okay, i think i managed the brownout handling.
-> >
-> > Unfortunately i'm stuck at the next step. The DC-DC (3 way output) can
-> > supply 3
-> > LDOs vddd, vdda, vddio. In case of a DC-DC state change the 3 regulators
-> > needs
-> > to be reconfigured before.
->
-> > I tought of REGULATOR_EVENT_PRE_DISABLE and REGULATOR_EVENT_PRE_ENABLE
-> > events,
-> > but i'm not sure that's the right way to achieve a synchronization between
-> > DC-DC
-> > and consuming LDOs.
->
-> OK, that's possibly sounding a bit complicated. Is it just a case of
-> writing some value, doing a reconfiguration and rewriting the original
-> value or is it something more?
+IMHO that is a mix and match now. We still bind this driver to a
+specific device, while we point directly to the registers from the SoC
+level (in the device tree).
 
-In case of a single driver instance instead of 4 ones (vddd, vddio, vdda,
-dc-dc), things would be much easier.
+I'm not sure if the suggestion I made in v2 is acceptable: Couldn't we
+add compatible nodes to the SoC level and bind this driver to the SoC
+directly? I think if we point to the registers at SoC level, we should
+also bind this driver to the SoC level. Of course, then we additionally
+need to point to the mscm-cpucfg register to get the SoC type
+information.
 
-Here are the steps for disabling DC-DC:
+If we keep this driver bound to "fsl,vf610-mscm-cpucfg", then I think we
+should also point from this node to the other nodes/registers...
 
-1. configure vddio to work without DC-DC
-2. configure vdda to work without DC-DC
-3. configure vddd to work without DC-DC
-4. backup DC-DC settings
-5. disable brownout detection
-6. disable DC-DC
-7. restore DC-DC settings
+Arnd, where did you meant to put the pointers?
 
-My problem is that step 1 to 3 must be done step by step through the other
-regulator instances.
-
-> If it's much more complicated than that
-> then I think putting a comment in the driver explaining what the issue
-> is would be the right step, that would address the issue with the driver
-> looking strange.
-
-Enabling or disabling DC-DC is only needed internally by the power subsystem
-(e.g. in case of handoff AC to battery), because the DC-DC only supplys the
-regulator daisy. From my understanding hardware components could use only the
-regulator outputs. In the end a state change is necessary, but it shouldn't be a
-public.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
