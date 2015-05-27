@@ -1,184 +1,53 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Master-aware devices and sideband ID data
-Date: Wed, 27 May 2015 18:39:53 +0100
-Message-ID: <20150527173953.GC23176@leverpostej>
-References: <20150324155007.GC23005@leverpostej>
- <26BE36EF-2C5B-4DA6-8950-8FEBB031ED1B@caviumnetworks.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: orion: Fix extended baud rates for each Armada
+ SoCs
+Date: Wed, 27 May 2015 18:45:47 +0100
+Message-ID: <20150527174547.GI21577@sirena.org.uk>
+References: <1432633484-18758-1-git-send-email-gregory.clement@free-electrons.com>
+ <1432633484-18758-3-git-send-email-gregory.clement@free-electrons.com>
+ <20150526120853.GB28523@lunn.ch>
+ <556464F8.1020707@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3tHEeV7QUZcH1cKB"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <26BE36EF-2C5B-4DA6-8950-8FEBB031ED1B-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <556464F8.1020707-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 26, 2015 at 11:20:59PM +0100, Chalamarla, Tirumalesh wrote:
-> This is some thing we also like to see in ITS and SMMU drivers. 
-> > On Mar 24, 2015, at 8:50 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > 
-> > Hi all,
-> > 
-> > For some devices, identification of particular masters is critical to
-> > their operation (e.g. IOMMUs, MSI controllers). The identity of masters
-> > is determined from sideband signals on the bus, and it may or may not be
-> > possible to probe and/or configure this information. Worse still, these
-> > information may be rewritten by intermediate buses, so the
-> > information for a given master may differ at different points in the bus
-> > hierarchy.
-> > 
-> > We currently describe this master information for devices attached to
-> > IOMMUs, with a master ID being encoded in the iommu-cells. However this
-> > only covers the ID between the master and its IOMMU(s), and we don't
-> > currently have a mechanism to describe the master IDs as they are seen
-> > by devices beyond the IOMMU(s), or in the absence of any IOMMU(s).
-> > 
-> > The following are example of master IDs:
-> > * PCIe Requester IDs (RIDs) (bus:device.function AKA BDF)
-> > * SMMU Stream IDs (SIDs)
-> > * GICv3 ITS Device IDs (DIDs)
-> > 
-> > In the case of a system with PCIe, SMMU and GICv3, the master IDs are
-> > rewritten in a chain of RID=>SID=>DID, as in the following diagram:
-> > 
-> > +-------------+
-> > | PCIe master |
-> > +-------------+
-> >    ||
-> >    || Requester ID (RID)
-> >    || Probeable from RC.
-> >    \/
-> > +-------------------+
-> > | PCIe Root Complex |
-> > +-------------------+
-> >    ||
-> >    || SMMU Stream ID (SID)
-> >    || Derived from RID, static non-probeable mapping.
-> >    \/
-> > +--------------+
-> > | SMMU (IOMMU) |
-> > +--------------+
-> >    ||
-> >    || ITS Device ID (DID)
-> >    || Derived from SID, static non-probeable mapping.
-> >    \/
-> > +----------------------------+
-> > | GICv3 ITS (MSI controller) |
-> > +----------------------------+
-> > 
-> > In simpler cases, you might have a simpler set of master ID
-> > translations, e.g. just a DID:
-> > 
-> > +-----------------+
-> > | Platform device |
-> > +-----------------+
-> >    ||
-> >    || ITS Device ID (DID)
-> >    || Hard-wired on the bus.
-> >    \/
-> > +----------------------------+
-> > | GICv3 ITS (MSI controller) |
-> > +----------------------------+
-> > 
-> > Ignoring current bindings for the moment, I can see how we can describe
-> > this with a generic master id-binding, with master-id-map along the
-> > lines of interrupt-map, with a tuple format like:
-> > <child-id-base child-id-length parent parent-id-base>
-> > 
-> > For the PCIe example, this would look something like the following (with
-> > properties omitted for brevity):
-> > 
-> > PCI: pci@af000000 {
-> > 	...
-> > 	
-> > 	/* Requester ID of PCIe endpoints, implicit at runtime */
-> > 	master-id-cells = <1>;
-> > 
-> > 	/* RIDS idmapped to SIDS @ SMMU */
-> > 	master-id-map = <0 0x10000 &SMMU 0>;
-> > }
-> > 
-> > SMMU: iommu@bf000000 {
-> > 	...
-> > 
-> > 	/* SID, derived from RID */
-> > 	master-id-cells = <1>;
-> > 
-> > 	/* 
-> > 	 * For some reason the high bit of the ID was negated.
-> > 	 */
-> > 	master-id-map = <0x0000 0x8000 &ITS 0x0 0x8000>,
-> > 	                <0x8000 0x8000 &ITS 0x0 0x0000>;
-> > 
-> > };
-> > 
-> > ITS: its@cf000000 {
-> > 	...
-> > 
-> > 	/* DID, derived from SID */
-> > 	master-id-cells = <2>;
-> > 
-> > 	/* 
-> > 	 * Master traffic not propagated beyond this point, so no
-> > 	 * master-id-ranges
-> > 	 */
-> > };
-> 
-> I think it is nice to have max IDs supported by masters. so that drivers can check and enforce.  
 
-The set of IDs that we expect to transform (i.e. those masters use)
-would be implicit in the first master-id-map from a master. In the PCI
-example above, no master is expected to generate an ID outside of the
-range 0-0x10000 inclusive (and that's all the SMMU would see).
+--3tHEeV7QUZcH1cKB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For devices which are not hotpluggable, the nodes for those devices
-would describe the specific set of IDs they use.
+On Tue, May 26, 2015 at 02:20:08PM +0200, Gregory CLEMENT wrote:
 
-Generally, between a master and a slave there might not be one
-contiguous set of valid IDs as these may be rewritten along the way (as
-happens at the SMMU between the PCI root complex and the ITS in the
-example above).
+> Mark do you want a new patch or do you prefer fixing the typo
+> yourself ? it should be
 
-Which drivers do you think need this information? What exactly are they
-trying to check and enforce?
+I fixed it up locally (in general it's easier to just send the patch
+though).
 
-> > For the simpler case, this would look something like:
-> > 
-> > DEV: device@af000000 {
-> > 	master-id-cells = <1>;
-> > 	master-ids = <0xf>, <0xb>;
-> > 	master-id-map = <0 0xf &ITS 0 0>;
-> > };
-> > 
-> > ITS: its@cf000000 {
-> > 	...
-> > 
-> > 	/* DID */
-> > 	master-id-cells = <2>;
-> > };
-> > 
-> Is this is not depending heavily on discover order, how do drivers
-> know which device to get which ID. is it implicitly assumed in
-> discovery order? 
+--3tHEeV7QUZcH1cKB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-I'm not sure I follow the question. Could you elaborate?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> what happens to hot pluggable devices.  
+iQEcBAEBCAAGBQJVZgLKAAoJECTWi3JdVIfQkTUH/ikSDcT1xhGnHlh0t1BJdp5p
+5Xgt0vxHI9vcx2NcMYfxU80bmWEsMlL/b+1UAg6LyB+X8WXJltBQGMIabCpkVHnQ
+hz8v9yEvIcZJ9gybLElwkUAyMNrW+wpAKjGTUH2zlO4YQuvXTGznq1FaYkeipdNN
+Idsl5e8cdyQUqhj7GeIs9j5EqEjHqHZk2DryIybgnv4onGUn4VqyZBia4BkQlLgD
+NQLjcafSXTNSDfoMWn/gib87wySqNowgjLgKlZo4aNe/21tizRgTMMPeRIoEN78o
+cfcGXCjjlfhLXlwYHBjFXb28ZlB2yWQboi0IQYwJN8iqlT+YYxyRVX3xz2Vy6eQ=
+=bql6
+-----END PGP SIGNATURE-----
 
-It would be necessary to be able to discover the ID assigned to the
-device by the hotpluggable bus. For example, this could depend on which
-slot the device is plugged into.
-
-If you can't discover the ID associated with a hotpluggable device from
-the bus it is plugged into I can't see how hotplug could work.
-
->From that point on I would expect the ID transformations to be static as
-in the example.
-
-Thanks,
-Mark.
+--3tHEeV7QUZcH1cKB--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
