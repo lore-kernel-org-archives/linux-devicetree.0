@@ -1,115 +1,44 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v5 0/6] Use DRM component API in tilcdc to connect to
- tda998x
-Date: Wed, 27 May 2015 11:37:03 +0300
-Message-ID: <5565822F.3090201@ti.com>
-References: <cover.1431083641.git.jsarha@ti.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v6 1/7] drm/tilcdc: Fix module unloading
+Date: Wed, 27 May 2015 12:22:55 +0300
+Message-ID: <11f5aeadc96d41a8d40d096d044cc57884ca499c.1432718049.git.jsarha@ti.com>
+References: <cover.1432718049.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="dkETE9A5OHOrMJOuD20j696t8IxlBVFPh"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1431083641.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
-Cc: rmk+kernel@arm.linux.org.uk, robdclark@gmail.com, moinejf@free.fr
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1432718049.git.jsarha@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
+Cc: rmk+kernel@arm.linux.org.uk, tomi.valkeinen@ti.com, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---dkETE9A5OHOrMJOuD20j696t8IxlBVFPh
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-
-On 08/05/15 14:27, Jyri Sarha wrote:
-> For all that I know this should be good for taking.
->=20
-> Changes since v4
-> * Rebased on top linux-4.1-rc2
-> * Drop "drm/tilcdc: Decrement refcount of ep-node from of_graph_get_nex=
-t_..."
-> * Make connector_funcs const in struct tilcdc_drm_private because
->   struct drm_connector's helper_private has been qualified as const in
->   linux-4.1
-> * Check if a subcomponent has already triggered the unloading.
->   - Fixes an oops if the external encoder is unloaded first and tilcdc =
-after
-> * Add comment to explain hijacking of external drm connectors helper hi=
-jacking
->=20
-> Changes since v3 version of the patch-set:
-> * drm/tilcdc: Add support for external tda998x encoder
->  - Hijack external connectors helper functions
->  - Remove select of nonexistent DRM_TILCDC_INIT in tilcdc Kconfig
->  - Correct author mail address to tilcdc_exteral.h
-> * drm/tilcdc: Add DRM_TILCDC_SLAVE_COMPAT for ti,tilcdc,slave binding
->  - Add a header file for tilcdc_slave_compat.dtb symbol declarations
->=20
-> Changes since v2 version of the patch-set:
-> - use obj-y in Makefle for tilcdc subdir in:
->   "drm/tilcdc: Force building of DRM_TILCDC_SLAVE_COMPAT"
-> - move to last:
->   "drm/tilcdc: Decrement refcount of ep-node from of_graph_get_next_end=
-point"
->=20
-> Changes since first version of the patch-set:
-> - Rename DRM_TILCDC_INIT to DRM_TILCDC_SLAVE_COMPAT and make it visible=
-
-> - Add separate:=20
->   drm/tilcdc: Decrement refcount of ep-node from of_graph_get_next_endp=
-oint
-> - Reduce info-level spam
-> - Use component_master_add_with_match()
-> - Be more explicit about tda998x being the only supported external enco=
-der
->=20
-> Remove tilcdc slave support and connect to tda998x trough its
-> component DRM API. For dtb backward compatibility the code creates at
-> boot time a DT overlay based on the earlier binding. The overlay
-> conforms to the new graph based binding.
->=20
-> The "drm/tilcdc: Decrement refcount of ep-node from
-> of_graph_get_next_endpoint" should probably not be merged. The "of:
-> Decrement refcount of previous endpoint in of_graph_get_next_endpoint"
-> is eventually going to be merged and before that leaking of two
-> of-node refcount increments each time the module is loaded is not that
-> serious. The of-nodes live forever anyway.
->=20
-> The merge of the dts patch can be delayed until the next merger
-> window, when the other patches are already in. The
-> DRM_TILCDC_SLAVE_COMPAT should keep the bbb HDMI operational until
-> then.
->=20
-> The first patch is just a bugfix and can be applied or dropped
-> independently.
-
-This works fine for me, and looks ok. There is a minor problem in the
-Kconfig, where you define DRM_TILCDC_SLAVE_COMPAT before DRM_TILCDC.
-That causes menuconfig to show the items wrongly.
-
- Tomi
-
-
---dkETE9A5OHOrMJOuD20j696t8IxlBVFPh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJVZYIvAAoJEPo9qoy8lh71jh4P/0Q+ulQ+unW37B6oJhQTg4cU
-DWZghNM5IR6NoUOfWxDwYtFnfw3hpgTtdOqtfusYoujihrz0sbD5RUYBSZ6FXe8w
-X7nKlBLme9MqVqybD+gWmX4mwK2rOKir7vo0YI0ZOEvAJlVbcwPM3c4R+nmf8DbM
-VA5Pj+yuWMow9PpMe+d9wbaRo5efcEJTW5GkxcHh27da4ul5mlCiE45ibjXoU9NR
-/URAnRNHT4Fy9TMoqLcb4/8slDAxo8bG0YgliZwMxLaf3im/e0H+rRCKSxH106Y3
-L/8jxxTcNxiC0/fvijCdlAwLave5yCP0islMkBVUpGIX1Vc9ijRcUeeM0kxA1pO7
-ffptLyYq7n+SG2sigMN3x2Tq9JBUJNXGeLk2nJz4hUEIv57w09Ip87WYhpKGc8Dc
-ibwdAvfdaNUf/RkkS797D3Qb7wgO4zZP7HadMQmNhUe8LYhFQTL7J6RGv9lJ0LkC
-be/s6Pb/4VvHqoa6vYL/z9UNjH7dLJmgPpF4K1gqacjk2/J83IyhY+Z6g/MsQ2c+
-3H9IXQOW0ERayRd2mhZonpSTPdJngRsDPavfPW5bPDvknE8L7aH8HAiaHFeLPFcr
-r7pxjv0yYbOXt6KXFgrqbhW7RE0SD4q2H50KmyHpe6M4zljpEPByIrXdEAXe4/rF
-fIGpAPk9WKC47EC1sL3n
-=5bok
------END PGP SIGNATURE-----
-
---dkETE9A5OHOrMJOuD20j696t8IxlBVFPh--
+Rm9yY2UgY3J0YyBkcG1zIG9mZiBiZWZvcmUgZGVzdHJveWluZyB0aGUgY3J0YyBpbnN0ZWFkIG9m
+IGp1c3QKY2hlY2tpbmcgdGhlIGRwbXMgc3RhdGUuIFRoaXMgZml4ZXMgd2FybmluZyBtZXNzYWdl
+IGFuZCBmcm96ZW4gcGljdHVyZQphZnRlciB0aWxjZGMgbW9kdWxlIHVubG9hZGluZy4KClNpZ25l
+ZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJt
+L3RpbGNkYy90aWxjZGNfY3J0Yy5jIHwgMyArKy0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlsY2Rj
+L3RpbGNkY19jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19jcnRjLmMKaW5k
+ZXggYzczNTg4NC4uYzJkNTk4MCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90
+aWxjZGNfY3J0Yy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2NydGMuYwpA
+QCAtMTM1LDExICsxMzUsMTIgQEAgc3RhdGljIHZvaWQgc3RvcChzdHJ1Y3QgZHJtX2NydGMgKmNy
+dGMpCiAJdGlsY2RjX2NsZWFyKGRldiwgTENEQ19SQVNURVJfQ1RSTF9SRUcsIExDRENfUkFTVEVS
+X0VOQUJMRSk7CiB9CiAKK3N0YXRpYyB2b2lkIHRpbGNkY19jcnRjX2RwbXMoc3RydWN0IGRybV9j
+cnRjICpjcnRjLCBpbnQgbW9kZSk7CiBzdGF0aWMgdm9pZCB0aWxjZGNfY3J0Y19kZXN0cm95KHN0
+cnVjdCBkcm1fY3J0YyAqY3J0YykKIHsKIAlzdHJ1Y3QgdGlsY2RjX2NydGMgKnRpbGNkY19jcnRj
+ID0gdG9fdGlsY2RjX2NydGMoY3J0Yyk7CiAKLQlXQVJOX09OKHRpbGNkY19jcnRjLT5kcG1zID09
+IERSTV9NT0RFX0RQTVNfT04pOworCXRpbGNkY19jcnRjX2RwbXMoY3J0YywgRFJNX01PREVfRFBN
+U19PRkYpOwogCiAJZHJtX2NydGNfY2xlYW51cChjcnRjKTsKIAlkcm1fZmxpcF93b3JrX2NsZWFu
+dXAoJnRpbGNkY19jcnRjLT51bnJlZl93b3JrKTsKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
