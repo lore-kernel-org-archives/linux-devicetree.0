@@ -1,71 +1,31 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 14/16] ARM: marvell/dt: enable crypto on armada-xp-gp
-Date: Wed, 27 May 2015 13:33:37 +0200
-Message-ID: <5565AB91.1010008@free-electrons.com>
-References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>	<1432301642-11470-15-git-send-email-boris.brezillon@free-electrons.com>	<55633B6D.7080307@free-electrons.com>	<20150526105936.25db3afb@bbrezillon>	<55659A81.3040600@free-electrons.com> <20150527132346.40bf820c@free-electrons.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: mt8173: fix some indentation
+Date: Wed, 27 May 2015 13:35:35 +0200
+Message-ID: <CABuKBeKNWt4X7trFT-Z61TcA9tsaU6FRfXcUmrzwZvNUGQWabg@mail.gmail.com>
+References: <1432117261-8884-1-git-send-email-djkurtz@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150527132346.40bf820c@free-electrons.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432117261-8884-1-git-send-email-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas, Boris,
+2015-05-20 12:20 GMT+02:00 Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
+> Fix indentation nits to make mt8173.dtsi more consistent.
+>
+> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+>
 
-On 27/05/2015 13:23, Thomas Petazzoni wrote:
-> Dear Gregory CLEMENT,
-> 
-> On Wed, 27 May 2015 12:20:49 +0200, Gregory CLEMENT wrote:
-> 
->> But is it really depending of the board itself?
->> I see that the first lines are the same on all the dts, I just remember that
->> there was a reason why we could not put it in the dtsi.
-> 
-> Yes, because the DT language doesn't have a += operator, basically.
-> 
-> Some of the MBus ranges are inherently board-specific: when you have a
-> NOR flash, you need a specific MBus range for it. And such a MBus range
-> is board-specific.
-> 
-> Since it's not possible to do:
-> 
-> 	ranges = <SoC level ranges>
-> 
-> in .dtsi, and:
-> 
-> 	ranges += <board level ranges>
-> 
-> in .dts, we simply decided to always put:
-> 
-> 	ranges = <SoC level and board level ranges>
-> 
-> in the .dts.
-> 
-> It does create some duplication, but that's the best we could do with
-> the existing DT infrastructure.
+Applied, thanks.
 
-Thanks for the remainder.
-
-So I think we should duplicate the crypto related part in all the dts
-file which use an Armada XP SoC. And we don't have to test it again
-as soon as it was tested on an Armada XP board (and it is the case
-with the Armada XP one).
-
-Gregory
-
-
-> 
-> Best regards,
-> 
-> Thomas
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
