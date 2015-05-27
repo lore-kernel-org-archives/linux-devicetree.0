@@ -1,40 +1,66 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [v3] powerpc/mpc85xx: Add MDIO bus muxing support to the board
- device tree(s)
-Date: Tue, 26 May 2015 21:53:27 -0500
-Message-ID: <20150527025327.GA3549@home.buserror.net>
-References: <1430375362-31048-1-git-send-email-igal.liberman@freescale.com>
+From: Hanjun Guo <hanjun.guo@linaro.org>
+Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into platform
+ device
+Date: Wed, 27 May 2015 11:01:01 +0800
+Message-ID: <5565336D.6040904@linaro.org>
+References: <=fu.wei@linaro.org> <1432548193-19569-1-git-send-email-fu.wei@linaro.org> <1432548193-19569-7-git-send-email-fu.wei@linaro.org> <55642EA8.5000003@linaro.org> <5564A0C7.1090306@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1430375362-31048-1-git-send-email-igal.liberman@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: "Igal.Liberman" <igal.liberman@freescale.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, madalin.bucur@freescale.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5564A0C7.1090306@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBcHIgMzAsIDIwMTUgYXQgMDk6Mjk6MjJBTSArMDMwMCwgSWdhbC5MaWJlcm1hbiB3
-cm90ZToKPiBGcm9tOiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+
-Cj4gCj4gRGVzY3JpYmUgdGhlIFBIWSB0b3BvbG9neSBmb3IgYWxsIGNvbmZpZ3VyYXRpb25zIHN1
-cHBvcnRlZCBieSBlYWNoIGJvYXJkCj4gCj4gQmFzZWQgb24gcHJpb3Igd29yayBieSBBbmR5IEZs
-ZW1pbmcgPGFmbGVtaW5nQGZyZWVzY2FsZS5jb20+Cj4gCj4gU2lnbmVkLW9mZi1ieTogSWdhbCBM
-aWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFNo
-cnV0aSBLYW5ldGthciA8U2hydXRpQGZyZWVzY2FsZS5jb20+Cj4gU2lnbmVkLW9mZi1ieTogRW1p
-bCBNZWR2ZSA8RW1pbGlhbi5NZWR2ZUBGcmVlc2NhbGUuY29tPgo+IC0tLQo+IAo+IHYzOglGaXhl
-ZCBpbmNvcnJlY3QgRS1NYWlsIGFkZHJlc3MgKHNpZ25lZC1vZmYtYnkpCj4gCj4gdjI6CVJlbW92
-ZSAnQ2hhbmdlLUlkJwoKSSdtIG5vdCBnb2luZyB0byBtZXJnZSBhIHBhdGNoIHRoYXQgbW9kaWZp
-ZXMgZm1hbiBub2RlcyBiZWZvcmUgZm1hbiBub2RlcwpleGlzdCB0byBiZSBtb2RpZmllZC4KCi1T
-Y290dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
-eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBz
-Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+On 2015=E5=B9=B405=E6=9C=8827=E6=97=A5 00:35, Timur Tabi wrote:
+> On 05/26/2015 03:28 AM, Hanjun Guo wrote:
+>
+>>>       early_acpi_os_unmap_memory((char *)table, tbl_size);
+>>>   }
+>>
+>> please add
+>>
+>> #ifdef CONFIG_ARM_SBSA_WATCHDOG
+>> (acpi gtdt code)
+>> #endif
+>
+> I don't agree with this.  The GTDT should be parsed even if there's n=
+o
+> watchdog driver compiled for this kernel.  There are no other #ifdefs=
+ in
+> this file.
+
+So what's the point of parse GTDT and alloc memories for it if there
+is no watchdog driver compiled for the kernel? will the module insmod
+later even if the CONFIG_ARM_SBSA_WATCHDOG=3Dn?
+
+>
+>>> +     * Add a platform device named "sbsa-gwdt" to match the platfo=
+rm
+>>> driver.
+>>> +     * "sbsa-gwdt": SBSA(Server Base System Architecture) Generic
+>>> Watchdog
+>>> +     * The platform driver can get device info below by matching t=
+his
+>>> name.
+>>
+>> * The platform driver (drivers/watchdog/sbsa_gwdt.c) can get device =
+info
+>> below by matching this name.
+>>
+>> Adding the file name which will help for review and maintain in my
+>> opinion.
+>
+> Except it will cause problems if the driver is renamed or moved.  I
+> don't think this is a good idea, either (sorry!)
+
+OK, that's good point. but what I proposed is some hint to which driver
+will use the data prepared in this file, we can easily understand it
+in this patchset, but if just review the code in this fiel, I think
+people will be confused without detail comments.
+
+Thanks
+Hanjun
