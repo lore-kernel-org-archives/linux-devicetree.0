@@ -1,40 +1,79 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [RFC PATCH v1 1/3] PCI: designware: Add ARM64 support
-Date: Wed, 27 May 2015 15:52:51 +0200
-Message-ID: <5565CC33.3070301@st.com>
-References: <000001d096a9$27bf43f0$773dcbd0$@com> <5562F0C9.4090007@hisilicon.com> <000001d096f1$93dca4e0$bb95eea0$@com> <5563451B.4050609@st.com> <5563DF4F.4080601@hisilicon.com> <556428C9.9080202@st.com> <5565C598.7020809@hisilicon.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH 02/21] ARM: tegra: Add gpio-ranges property
+Date: Wed, 27 May 2015 16:18:29 +0200
+Message-ID: <CAAObsKD7YbZX01A=SS7z_PxAMPweHy6sw5ut=50h50C=j9y0zA@mail.gmail.com>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1432565608-26036-3-git-send-email-tomeu.vizoso@collabora.com> <5564CC84.1030700@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5565C598.7020809@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, zhudacai@hisilicon.com, devicetree@vger.kernel.org, 'Gabriele Paoloni' <gabriele.paoloni@huawei.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Richard Zhu' <Richard.Zhu@freescale.com>, linux-pci@vger.kernel.org, 'Pratyush Anand' <pratyush.anand@gmail.com>, 'Liviu Dudau' <liviu.dudau@arm.com>, 'Zhichang Yuan' <yuanzhichang@hisilicon.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, qiuzhenfa@hisilicon.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Zhang Jukuo' <zhangjukuo@huawei.com>, 'Liguozhu' <liguozhu@hisilicon.com>, linux-arm-kernel@lists.infradead.org, 'Lucas Stach' <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5564CC84.1030700-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/2015 03:24 PM, Zhou Wang wrote:
->> there is still code in bios32 that requires pci_sys_data.
-> Right.
+On 26 May 2015 at 21:41, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 05/25/2015 08:53 AM, Tomeu Vizoso wrote:
+>>
+>> Specify how the GPIOs map to the pins in T124, so the dependency is
+>> explicit.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/tegra124.dtsi | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/tegra124.dtsi
+>> b/arch/arm/boot/dts/tegra124.dtsi
+>> index 13cc7ca..5d1d35f 100644
+>> --- a/arch/arm/boot/dts/tegra124.dtsi
+>> +++ b/arch/arm/boot/dts/tegra124.dtsi
+>> @@ -254,6 +254,7 @@
+>>                 gpio-controller;
+>>                 #interrupt-cells = <2>;
+>>                 interrupt-controller;
+>> +               gpio-ranges = <&pinmux 0 0 250>;
 >
->> >No matters pci_common_init_dev() is being called or not :
->> >
->> >You can see pcibios_msi_controller() has a weak definition (in drivers/pci/msi.c).
->> >But bios32 defines it for arm. Then it's being used.
-> But here in dw_pcie_host_init, I directly set bus->msi = &dw_pcie_msi_chip. So in
-> drivers/pci/msi.c, we will get the msi controller by dev->bus->msi in pci_msi_controller.
-> It will not run into pcibios_msi_controller().
 >
-> Maybe there is still something I miss understood, if so, please let me know.
-Hi Zhou,
+> We should be consistent between SoCs. Why not make the same change for all
+> Tegra SoCs?
+>
+> I think this change will cause the GPIO subsystem to call into the pinctrl
+> subsystem and create/add/register a new GPIO<->pinctrl range structure. The
+> pinctrl driver already does this, so I think we'll end up with two duplicate
+> entries in the pinctrl device's gpio_ranges list. This probably won't cause
+> a problem, but I wanted to make sure you'd thought about it to make sure.
 
-Sorry, my mistake, you're right.
-I double checked, issue I'm seeing is in pcibios_align_resource...
-Please refer to Arnd's answer.
+Actually, I have checked and see that gpio-tegra.c registers 256
+gpios, but pinctrl-tegra124.c adds a range of only 251. I don't really
+remember where I got the 250 value from, sorry :(
 
-Best Regards,
-Fabrice
->
-> Best Regards,
-> Zhou
->
+I don't see how that would cause any concrete problems, but maybe we
+should have a single authoritative source (not sure we can do so
+without breaking DT ABI though).
+
+> Right now, I think we get lucky and pinctrl ends up probing first (or at
+> least very early) anyway. Somewhat related to this series, I wonder if we
+> shouldn't add pinctrl client properties to every node in the Tegra DT that
+> describes a controller that makes use of external pins that are affected by
+> the pinmux. Such a change would guarantee this desired probing order. In
+> order to preserve the "program the entire pinmux at once" semantics, these
+> new pinctrl client properties would all need to reference empty states, yet
+> would still need to exist to represent the dependency.
+
+I think so, but aren't almost all those pins used as gpios? If so,
+then such a controller's driver will request the gpio it wants which
+will cause the gpio driver to be registered (and hopefully probed) if
+needed, which in turn will check that the corresponding pinctrl device
+has been registered. Or am I missing something?
+
+Regards,
+
+Tomeu
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
