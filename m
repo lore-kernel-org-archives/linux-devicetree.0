@@ -1,72 +1,69 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH v1 1/3] PCI: designware: Add ARM64 support
-Date: Wed, 27 May 2015 17:43:14 +0200
-Message-ID: <2095085.CuXXeGT0Wg@wuerfel>
-References: <000001d096a9$27bf43f0$773dcbd0$@com> <5565CD0B.6020206@hisilicon.com> <2378629.Ocol8HRDqD@wuerfel>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [RFC PATCH] EDAC: Cleanup atomic_scrub mess
+Date: Wed, 27 May 2015 17:52:19 +0200
+Message-ID: <20150527155219.GB19407@pd.tnic>
+References: <1431991481-25684-1-git-send-email-lho@apm.com>
+ <1431991481-25684-2-git-send-email-lho@apm.com>
+ <20150519170308.GL4641@pd.tnic>
+ <CAPw-ZT=mTpt_vz+e=rM5ywK8feNKkJQrpEWg=noRCziJ0840TQ@mail.gmail.com>
+ <20150519203336.GP4641@pd.tnic>
+ <20150521180719.GE3689@pd.tnic>
+ <20150521181157.GF3689@pd.tnic>
+ <555F8DE2.4060402@ezchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2378629.Ocol8HRDqD@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Zhou Wang <wangzhou1@hisilicon.com>, zhudacai@hisilicon.com, devicetree@vger.kernel.org, 'Zhang Jukuo' <zhangjukuo@huawei.com>, 'Gabriele Paoloni' <gabriele.paoloni@huawei.com>, Jingoo Han <jingoohan1@gmail.com>, 'Pratyush Anand' <pratyush.anand@gmail.com>, 'Richard Zhu' <Richard.Zhu@freescale.com>, 'Zhichang Yuan' <yuanzhichang@hisilicon.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, qiuzhenfa@hisilicon.com, linux-pci@vger.kernel.org, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Liviu Dudau' <liviu.dudau@arm.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, 'Liguozhu' <liguozhu@hisilicon.com>, 'Lucas Stach' <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <555F8DE2.4060402-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Metcalf <cmetcalf-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>
+Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "Steven J. Hill" <Steven.Hill-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, ". Maciej W. Rozycki" <macro-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 May 2015 17:31:46 Arnd Bergmann wrote:
-> Yes, that works. However there are two problems with the approach:
+On Fri, May 22, 2015 at 04:13:22PM -0400, Chris Metcalf wrote:
+> On 05/21/2015 02:11 PM, Borislav Petkov wrote:
+> >From: Borislav Petkov<bp-l3A5Bk7waGM@public.gmane.org>
+> >
+> >So first of all, this atomic_scrub() function's naming is bad. It looks
+> >like an atomic_t helper. Change it to edac_atomic_scrub().
+> >
+> >The bigger problem is that this function is arch-specific and every new
+> >arch which doesn't necessarily need that functionality still needs to
+> >define it, otherwise EDAC doesn't compile.
+> >
+> >So instead of doing that and including arch-specific headers, have each
+> >arch define an EDAC_ATOMIC_SCRUB symbol which can be used in edac_mc.c
+> >for ifdeffery. Much cleaner.
+> >
+> >We already are doing this with another symbol - EDAC_SUPPORT. This is
+> >also much cleaner than having CONFIG_EDAC explicitly depend on all the
+> >arches which need/have EDAC support and drivers.
+> >
+> >This way I can kill the useless edac.h header in tile too.
+> >
+> >Signed-off-by: Borislav Petkov<bp-l3A5Bk7waGM@public.gmane.org>
 > 
-> - we have to change all PCI host drivers on ARM to do this in order to remove
->   the ARM-specific pcibios_msi_controller() function
-> - it's possible that there are dw_pcie implementations that do not include
->   an MSI controller, so that pointer would be NULL, which leads to the
->   core code to still call the ARM-specific pcibios_msi_controller() function
->   unless we remove it.
+> Acked-by: Chris Metcalf <cmetcalf-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org> [for tile]
 
-I wonder if this simple patch would be sufficient to kill off
-pcibios_msi_controller().
+Thanks.
 
-Can one of you try it?
+Just to clarify after today's discussion on IRC: this patch doesn't
+change current DRAM scrubbing behavior on the relevant arches - it
+simply makes the definition of that atomic_scrub thing non-mandatory on
+new arches or on those which don't need it.
 
-	Arnd
+In the meantime, patch has been build-tested on arm and ppc - the two
+I'm missing an ACK for.
 
-diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-index fcbbbb1b9e95..7afb6d253162 100644
---- a/arch/arm/kernel/bios32.c
-+++ b/arch/arm/kernel/bios32.c
-@@ -18,15 +18,6 @@
- 
- static int debug_pci;
- 
--#ifdef CONFIG_PCI_MSI
--struct msi_controller *pcibios_msi_controller(struct pci_dev *dev)
--{
--	struct pci_sys_data *sysdata = dev->bus->sysdata;
--
--	return sysdata->msi_ctrl;
--}
--#endif
--
- /*
-  * We can't use pci_get_device() here since we are
-  * called from interrupt context.
-@@ -462,9 +453,6 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
- 		if (!sys)
- 			panic("PCI: unable to allocate sys data!");
- 
--#ifdef CONFIG_PCI_MSI
--		sys->msi_ctrl = hw->msi_ctrl;
--#endif
- 		sys->busnr   = busnr;
- 		sys->swizzle = hw->swizzle;
- 		sys->map_irq = hw->map_irq;
-@@ -493,6 +481,9 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
- 				panic("PCI: unable to scan bus!");
- 
- 			busnr = sys->bus->busn_res.end + 1;
-+#ifdef CONFIG_PCI_MSI
-+			bus->msi = hw->msi_ctrl;
-+#endif
- 
- 			list_add(&sys->node, head);
- 		} else {
+:-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
