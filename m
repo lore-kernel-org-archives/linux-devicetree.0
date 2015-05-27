@@ -1,152 +1,82 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH RESEND v7 2/2] mmc: host: sdhci: Add support to disable
- SDR104/SDR50/DDR50 based on capability register 0.
-Date: Wed, 27 May 2015 19:46:59 +0530
-Message-ID: <CAOHikRASDmy7PwFjqmX7JAjW52DYR+d3RkE3yd_45NN5sHK7Pg@mail.gmail.com>
-References: <1432197817-22110-1-git-send-email-stripathi@apm.com>
- <1432197817-22110-3-git-send-email-stripathi@apm.com>
- <CAPDyKFpxkNF9C8AOJ6+18CEcpZTKycPR0i5OuwPRr1Zc+VPJ5Q@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 02/21] ARM: tegra: Add gpio-ranges property
+Date: Wed, 27 May 2015 08:49:19 -0600
+Message-ID: <5565D96F.3000600@wwwdotorg.org>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com> <1432565608-26036-3-git-send-email-tomeu.vizoso@collabora.com> <5564CC84.1030700@wwwdotorg.org> <CAAObsKD7YbZX01A=SS7z_PxAMPweHy6sw5ut=50h50C=j9y0zA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6725973021630904225=="
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <CAPDyKFpxkNF9C8AOJ6+18CEcpZTKycPR0i5OuwPRr1Zc+VPJ5Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Michal Simek <michal.simek@xilinx.com>, patches <patches@apm.com>, Don Dutile <ddutile@redhat.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKD7YbZX01A=SS7z_PxAMPweHy6sw5ut=50h50C=j9y0zA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6725973021630904225==
-Content-Type: multipart/alternative; boundary=047d7ba97f1a656728051710e5e3
-
---047d7ba97f1a656728051710e5e3
-Content-Type: text/plain; charset=UTF-8
-
-On Tue, May 26, 2015 at 6:06 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-
-> On 21 May 2015 at 10:43, Suman Tripathi <stripathi@apm.com> wrote:
-> > The sdhci framework disables SDR104/SDR50/DDR50 based on only quirk.
-> > This patch adds the support to disable SDR104/SDR50/DDR50 based on
-> > reading the capability register 0.
-> >
-> > Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> > ---
-> > ---
-> >  drivers/mmc/host/sdhci.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index 58c1770..a3d9b8a 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -3118,7 +3118,8 @@ int sdhci_add_host(struct sdhci_host *host)
-> >                 }
-> >         }
-> >
-> > -       if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V)
-> > +       if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V ||
-> > +           !(caps[0] & SDHCI_CAN_VDD_180))
-> >                 caps[1] &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_SDR50 |
-> >                        SDHCI_SUPPORT_DDR50);
-> >
-> > --
-> > 1.8.2.1
-> >
+On 05/27/2015 08:18 AM, Tomeu Vizoso wrote:
+> On 26 May 2015 at 21:41, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 05/25/2015 08:53 AM, Tomeu Vizoso wrote:
+>>>
+>>> Specify how the GPIOs map to the pins in T124, so the dependency is
+>>> explicit.
+>>>
+>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>> ---
+>>>    arch/arm/boot/dts/tegra124.dtsi | 1 +
+>>>    1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/tegra124.dtsi
+>>> b/arch/arm/boot/dts/tegra124.dtsi
+>>> index 13cc7ca..5d1d35f 100644
+>>> --- a/arch/arm/boot/dts/tegra124.dtsi
+>>> +++ b/arch/arm/boot/dts/tegra124.dtsi
+>>> @@ -254,6 +254,7 @@
+>>>                  gpio-controller;
+>>>                  #interrupt-cells = <2>;
+>>>                  interrupt-controller;
+>>> +               gpio-ranges = <&pinmux 0 0 250>;
+>>
+>>
+>> We should be consistent between SoCs. Why not make the same change for all
+>> Tegra SoCs?
+>>
+>> I think this change will cause the GPIO subsystem to call into the pinctrl
+>> subsystem and create/add/register a new GPIO<->pinctrl range structure. The
+>> pinctrl driver already does this, so I think we'll end up with two duplicate
+>> entries in the pinctrl device's gpio_ranges list. This probably won't cause
+>> a problem, but I wanted to make sure you'd thought about it to make sure.
 >
-> I have no problem with this patch, except that it would be nice to get
-> a few "tested by" to make sure it doesn't break UHS support for some
-> SoCs.
+> Actually, I have checked and see that gpio-tegra.c registers 256
+> gpios, but pinctrl-tegra124.c adds a range of only 251. I don't really
+> remember where I got the 250 value from, sorry :(
 >
-> Kind regards
-> Uffe
+> I don't see how that would cause any concrete problems, but maybe we
+> should have a single authoritative source (not sure we can do so
+> without breaking DT ABI though).
 >
+>> Right now, I think we get lucky and pinctrl ends up probing first (or at
+>> least very early) anyway. Somewhat related to this series, I wonder if we
+>> shouldn't add pinctrl client properties to every node in the Tegra DT that
+>> describes a controller that makes use of external pins that are affected by
+>> the pinmux. Such a change would guarantee this desired probing order. In
+>> order to preserve the "program the entire pinmux at once" semantics, these
+>> new pinctrl client properties would all need to reference empty states, yet
+>> would still need to exist to represent the dependency.
+>
+> I think so, but aren't almost all those pins used as gpios? If so,
+> then such a controller's driver will request the gpio it wants which
+> will cause the gpio driver to be registered (and hopefully probed) if
+> needed, which in turn will check that the corresponding pinctrl device
+> has been registered. Or am I missing something?
 
-Can anyone test this in some other SoC ? Appreciate your help ..
-
-
--- 
-Thanks,
-with regards,
-Suman Tripathi
-
---047d7ba97f1a656728051710e5e3
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Tue, May 26, 2015 at 6:06 PM, Ulf Hansson <span dir=3D"ltr">&lt;<a h=
-ref=3D"mailto:ulf.hansson@linaro.org" target=3D"_blank">ulf.hansson@linaro.=
-org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"mar=
-gin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div class=3D"H=
-OEnZb"><div class=3D"h5">On 21 May 2015 at 10:43, Suman Tripathi &lt;<a hre=
-f=3D"mailto:stripathi@apm.com">stripathi@apm.com</a>&gt; wrote:<br>
-&gt; The sdhci framework disables SDR104/SDR50/DDR50 based on only quirk.<b=
-r>
-&gt; This patch adds the support to disable SDR104/SDR50/DDR50 based on<br>
-&gt; reading the capability register 0.<br>
-&gt;<br>
-&gt; Signed-off-by: Suman Tripathi &lt;<a href=3D"mailto:stripathi@apm.com"=
->stripathi@apm.com</a>&gt;<br>
-&gt; ---<br>
-&gt; ---<br>
-&gt;=C2=A0 drivers/mmc/host/sdhci.c | 3 ++-<br>
-&gt;=C2=A0 1 file changed, 2 insertions(+), 1 deletion(-)<br>
-&gt;<br>
-&gt; diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c<br>
-&gt; index 58c1770..a3d9b8a 100644<br>
-&gt; --- a/drivers/mmc/host/sdhci.c<br>
-&gt; +++ b/drivers/mmc/host/sdhci.c<br>
-&gt; @@ -3118,7 +3118,8 @@ int sdhci_add_host(struct sdhci_host *host)<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-&gt;<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0if (host-&gt;quirks2 &amp; SDHCI_QUIRK2_NO=
-_1_8_V)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (host-&gt;quirks2 &amp; SDHCI_QUIRK2_NO=
-_1_8_V ||<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0!(caps[0] &amp; SDHCI_CAN_VD=
-D_180))<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0caps[1] &=
-amp;=3D ~(SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_SDR50 |<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 SDHCI_SUPPORT_DDR50);<br>
-&gt;<br>
-&gt; --<br>
-&gt; 1.8.2.1<br>
-&gt;<br>
-<br>
-</div></div>I have no problem with this patch, except that it would be nice=
- to get<br>
-a few &quot;tested by&quot; to make sure it doesn&#39;t break UHS support f=
-or some<br>
-SoCs.<br>
-<br>
-Kind regards<br>
-Uffe<br>
-</blockquote></div><div class=3D"gmail_extra"><br></div>Can anyone test thi=
-s in some other SoC ? Appreciate your help ..<br><br clear=3D"all"><div><br=
-></div>-- <br><div class=3D"gmail_signature"><div dir=3D"ltr"><div>Thanks,<=
-/div><div>with regards,</div>Suman Tripathi</div></div>
-</div></div>
-
---047d7ba97f1a656728051710e5e3--
-
---===============6725973021630904225==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMt
-ZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xp
-c3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
-
---===============6725973021630904225==--
+As you say this probably works out fine for pins that are used as GPIOs. 
+I was thinking more about SFIOs. Take an I2C controller, which doesn't 
+use any GPIOs itself. The pinctrl device should be probed before the I2C 
+device, so that the I2C driver can initiate transactions on the I2C bus 
+during its probe if it wanted to (or at least, clients could initiate 
+transactions at any completely arbitrary time as soon as probe was 
+complete).
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
