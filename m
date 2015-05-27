@@ -1,51 +1,43 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 11/13] spi: omap2-mcspi: Support for deferred probing
- when requesting DMA channels
-Date: Wed, 27 May 2015 14:15:12 +0300
-Message-ID: <5565A740.2020707@ti.com>
-References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com> <1432646768-12532-12-git-send-email-peter.ujfalusi@ti.com> <20150526152730.GT21577@sirena.org.uk>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 5/5] Documentation: dt-bindings: add exynos-srom binding information
+Date: Wed, 27 May 2015 20:21:55 +0900
+Message-ID: <CAJKOXPfpu+k-3u3kFzeKL4b9bkh+iwWHak2ea+9QLtGUEZGWdA@mail.gmail.com>
+References: <1430296712-10287-1-git-send-email-pankaj.dubey@samsung.com>
+	<1430296712-10287-6-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20150526152730.GT21577@sirena.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: vinod.koul@intel.com, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-spi@vger.kernel.org, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1430296712-10287-6-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux@arm.linux.org.uk, heiko@sntech.de, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, thomas.ab@samsung.com, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+2015-04-29 17:38 GMT+09:00 Pankaj Dubey <pankaj.dubey@samsung.com>:
+> This patch adds exynos-srom binding information for SROM Controller
+> driver on Exynos SoCs.
+>
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+>  .../devicetree/bindings/arm/samsung/exynos-srom.txt          | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+> new file mode 100644
+> index 0000000..482d1cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+> @@ -0,0 +1,12 @@
+> +SAMSUNG Exynos SoCs SROM Controller driver.
+> +
+> +Required properties:
+> +- compatible : Should at least contain "samsung,exynos-srom".
 
-On 05/26/2015 06:27 PM, Mark Brown wrote:
-> On Tue, May 26, 2015 at 04:26:06PM +0300, Peter Ujfalusi wrote:
->=20
->> Switch to use ma_request_slave_channel_compat_reason() to request th=
-e DMA
->> channels. Only fall back to pio mode if the error code returned is n=
-ot
->> -EPROBE_DEFER, otherwise return from the probe with the -EPROBE_DEFE=
-R.
->=20
-> I've got two patches from a patch series here with no cover letter...
-> I'm guessing there's no interdependencies or anything?  Please always
-> ensure that when sending a patch series everyone getting the patches =
-can
-> tell what the series as a whole looks like (if there's no dependencie=
-s
-> consider posting as individual patches rather than a series).
+"At least" - do you already expect other compatibles?
 
-I have put the maintainers of the relevant subsystems as CC in the comm=
-it
-message and sent the series to all of the mailing lists. This series wa=
-s
-touching 7 subsystems and I thought not spamming every maintainer with =
-all the
-mails might be better.
-
-In v2 I will keep this in mind.
-
-The series depends on the first two patch, which adds the
-dma_request_slave_channel_compat_reason() function.
-
---=20
-P=E9ter
+Best regards,
+Krzysztof
