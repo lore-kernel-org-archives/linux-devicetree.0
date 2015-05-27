@@ -1,43 +1,79 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v5 0/2] iio: adc: vf610: respect ADC clocking limitations
-Date: Wed, 27 May 2015 14:47:50 +0200
-Message-ID: <1432730872-14325-1-git-send-email-stefan@agner.ch>
+From: maitysanchayan@gmail.com
+Subject: Re: [PATCH v4 2/2] soc: Add driver for Freescale Vybrid Platform
+Date: Wed, 27 May 2015 18:37:27 +0530
+Message-ID: <20150527130727.GA3374@Sanchayan-Arch.toradex.int>
+References: <cover.1432637313.git.maitysanchayan@gmail.com>
+ <7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan@gmail.com>
+ <1432711910.27695.223.camel@x220>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432711910.27695.223.camel@x220>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, shawn.guo@linaro.org, kernel@pengutronix.de
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, B38611@freescale.com, maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: arnd@arndb.de, shawn.guo@linaro.org, kernel@pengutronix.de, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This revision is basically the same as v4, just some wording
-improvements. I would appriciate an Ack for the device tree part.
-The clock limit values are defined in the data sheet and could
-be different per SoC, hence descirbe the hardware limitation...
+Hello,
 
-Changes since v4:
-- Remove fussy english
-- Drop "iio: adc: vf610: use ADC clock within specification" since
-  that patch is already applied
+On 15-05-27 09:31:50, Paul Bolle wrote:
+> On Tue, 2015-05-26 at 17:06 +0530, Sanchayan Maity wrote:
+> > --- /dev/null
+> > +++ b/drivers/soc/fsl/Kconfig
+> 
+> > +config SOC_VF610
+> > +	   bool "SoC bus device for the Freescale Vybrid platform"
+> > +	   select SOC_BUS
+> > +	   help
+> > +	     Include support for the SoC bus on the Freescale Vybrid platform
+> > +	     providing some sysfs information about the module variant.
+> > \ No newline at end of file
+> 
+> (That review comment is courtesy of git.)
 
-Changes since v3:
-- Move device tree bindings to driver changes
+Will fix it.
 
-Changes since v2:
-- Add sysfs ABI documentation
-- Fix commit message spelling errors
+> 
+> > --- /dev/null
+> > +++ b/drivers/soc/fsl/Makefile
+> 
+> > +obj-$(CONFIG_SOC_VF610)		+= soc-vf610.o
+> 
+> > --- /dev/null
+> > +++ b/drivers/soc/fsl/soc-vf610.c
+> 
+> > +MODULE_DEVICE_TABLE(of, vf610_soc_bus_match);
+> 
+> > +module_platform_driver(vf610_soc_driver);
+> 
+> (The series starting at https://lkml.org/lkml/2015/5/10/131 would allow
+> to use builtin_platform_driver() for built-in only code.)
 
-Changes since v1:
-- Use ext_info for conversion mode
+Thanks for bringing this to my attention. I am subscribed to the mailing
+list however this skipped me.
 
-Stefan Agner (2):
-  iio: adc: vf610: implement configurable conversion modes
-  ARM: dts: add property for maximum ADC clock frequencies
+> 
+> > +MODULE_DESCRIPTION("Freescale VF610 SoC bus driver");
+> > +MODULE_LICENSE("GPL v2");
+> 
+> I think soc-vf610.o can only be built-in. But its code contains a few
+> module specific macros. Was it perhaps intended for SOC_VF610 to be
+> tristate?
 
- Documentation/ABI/testing/sysfs-bus-iio-vf610      |   7 +
- .../devicetree/bindings/iio/adc/vf610-adc.txt      |   9 ++
- arch/arm/boot/dts/vfxxx.dtsi                       |   4 +
- drivers/iio/adc/vf610_adc.c                        | 146 +++++++++++++++------
- 4 files changed, 124 insertions(+), 42 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-vf610
+I too think that should be built-in. Did not have an intention of making
+it tristate, however while using other drivers as references, the perhaps
+unneccessary stuff crept in.
 
--- 
-2.4.1
+The MODULE_* references can be removed along with the corresponding header
+file. However that series has not been merged yet, so I can't use builtin_*
+yet?
+
+@Arnd
+
+Are you ok with the patch in general? I can take care of the above changes
+and send a new version. And once the builtin_driver stuff gets merged, I
+can send a minor patch to change this module one to builtin?
+
+Regards,
+Sanchayan.
