@@ -1,62 +1,83 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into platform
- device
-Date: Wed, 27 May 2015 11:44:08 +0100
-Message-ID: <20150527104408.GB29002@arm.com>
-References: <=fu.wei@linaro.org>
- <1432548193-19569-1-git-send-email-fu.wei@linaro.org>
- <1432548193-19569-7-git-send-email-fu.wei@linaro.org>
- <20150526122858.GJ1565@arm.com>
- <CAJ5Y-eZfzrDtEL5gpZ1rRNUhr2dCZKuA-MMNcwV=TgFW_9rq=g@mail.gmail.com>
- <20150526151842.GP1565@arm.com>
- <20150526153613.GA22487@roeck-us.net>
- <CADyBb7uMh3vKktXa1VJJdchcCQPyOuZ=5ztxoujjyjmxWGhq5w@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 03/13] serial: 8250_dma: Support for deferred probing
+ when requesting DMA channels
+Date: Wed, 27 May 2015 13:58:25 +0300
+Message-ID: <5565A351.7020409@ti.com>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com> <1432646768-12532-4-git-send-email-peter.ujfalusi@ti.com> <20150526150852.GC16525@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CADyBb7uMh3vKktXa1VJJdchcCQPyOuZ=5ztxoujjyjmxWGhq5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, "linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20150526150852.GC16525@atomide.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: vinod.koul@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-spi@vger.kernel.org, linux-media@vger.kernel.org, alsa-devel@alsa-project.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 26, 2015 at 05:27:33PM +0100, Fu Wei wrote:
-> On 26 May 2015 at 23:36, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> > On Tue, May 26, 2015 at 04:18:42PM +0100, Will Deacon wrote:
-> >> Sure, the device it describes may only ever exist on ARM systems, but by
-> >> that logic then we should be moving lots of drivers back under arch/arm[64].
-> >>
-> > It is nt the driver, but its instantiation. The question here would be
-> > how and where to instantiate the driver, not where the driver itself
-> > is located. The driver itself is ACPI agnostic.
-> 
-> I really don't mind to refactor the code, If we can make this patch better.
-> 
-> But for now, I can't see the good reason to move ACPI-relevant code
-> into a watchdog driver.
+On 05/26/2015 06:08 PM, Tony Lindgren wrote:
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [150526 06:28]:
+>> Switch to use ma_request_slave_channel_compat_reason() to request th=
+e DMA
+>> channels. In case of error, return the error code we received includ=
+ing
+>> -EPROBE_DEFER
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> ---
+>>  drivers/tty/serial/8250/8250_dma.c | 18 ++++++++----------
+>>  1 file changed, 8 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/8250/8250_dma.c b/drivers/tty/serial=
+/8250/8250_dma.c
+>> index 21d01a491405..a617eca4e97d 100644
+>> --- a/drivers/tty/serial/8250/8250_dma.c
+>> +++ b/drivers/tty/serial/8250/8250_dma.c
+>> @@ -182,21 +182,19 @@ int serial8250_request_dma(struct uart_8250_po=
+rt *p)
+>>  	dma_cap_set(DMA_SLAVE, mask);
+>> =20
+>>  	/* Get a channel for RX */
+>> -	dma->rxchan =3D dma_request_slave_channel_compat(mask,
+>> -						       dma->fn, dma->rx_param,
+>> -						       p->port.dev, "rx");
+>> -	if (!dma->rxchan)
+>> -		return -ENODEV;
+>> +	dma->rxchan =3D dma_request_slave_channel_compat_reason(mask, dma-=
+>fn,
+>> +					dma->rx_param, p->port.dev, "rx");
+>> +	if (IS_ERR(dma->rxchan))
+>> +		return PTR_ERR(dma->rxchan);
+>> =20
+>>  	dmaengine_slave_config(dma->rxchan, &dma->rxconf);
+>> =20
+>>  	/* Get a channel for TX */
+>> -	dma->txchan =3D dma_request_slave_channel_compat(mask,
+>> -						       dma->fn, dma->tx_param,
+>> -						       p->port.dev, "tx");
+>> -	if (!dma->txchan) {
+>> +	dma->txchan =3D dma_request_slave_channel_compat_reason(mask, dma-=
+>fn,
+>> +					dma->tx_param, p->port.dev, "tx");
+>> +	if (IS_ERR(dma->txchan)) {
+>>  		dma_release_channel(dma->rxchan);
+>> -		return -ENODEV;
+>> +		return PTR_ERR(dma->txchan);
+>>  	}
+>> =20
+>>  	dmaengine_slave_config(dma->txchan, &dma->txconf);
+>=20
+> In general the drivers need to work just fine also without DMA.
+>=20
+> Does this handle the case properly where no DMA channel is configured
+> for the driver in the dts file?
 
-I don't really mind where you move it, just as long as it's outside of
-arch/arm64.
+The 8250 core will fall back to PIO mode if the DMA can not be requeste=
+d.
+At the morning I was looking at the 8250 stack and realized that
+serial8250_request_dma() will not be called at driver probe time so thi=
+s patch
+can be ignored and will be dropped from the v2 series.
 
-> The reasons I put the code here are
-> (1)SBSA watchdog only for ARM64
-> (2)GTDT only for ARM, design for ARM,
-> (3)For ARM Architecture, only ARM64 support ACPI.
-> 
-> For minimizing arch/arm64/kernel/acpi.c, we can't put the code here,
-> and we had better keep these code outside the driver,
-> 
-> So do you have any suggestion for the better location of the GTDT code?
-
-I don't understand why you can't do the same as
-drivers/clocksource/arm_arch_timer.c and parse the table directly in the
-driver. If there are objections from the driver/subsystem maintainers then
-it sounds like we need a mechanical ACPI table -> platform device
-conversion in the core, like we have for device-tree.
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+P=E9ter
