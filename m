@@ -1,196 +1,97 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 1/5] Documentation: add DT binding for ARM System
- Control and Power Interface(SCPI) protocol
-Date: Wed, 27 May 2015 14:37:00 +0100
-Message-ID: <20150527133700.GK8439@leverpostej>
-References: <1432720398-5701-1-git-send-email-sudeep.holla@arm.com>
- <1432720398-5701-2-git-send-email-sudeep.holla@arm.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH V2 3/6] power: mxs_power: add driver for mxs power
+ subsystem
+Date: Wed, 27 May 2015 15:51:50 +0200
+Message-ID: <20150527135150.GA9205@earth>
+References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com>
+ <1430346747-28728-4-git-send-email-stefan.wahren@i2se.com>
+ <20150523174149.GA16004@earth>
+ <55656E70.6030906@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
 Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1432720398-5701-2-git-send-email-sudeep.holla@arm.com>
-Content-Language: en-US
+In-Reply-To: <55656E70.6030906@i2se.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, fabio.estevam@freescale.com, sebastien.szymanski@armadeus.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2015 at 10:53:14AM +0100, Sudeep Holla wrote:
-> This patch adds devicetree binding for System Control and Power
-> Interface (SCPI) Message Protocol used between the Application Cores(AP)
-> and the System Control Processor(SCP). The MHU peripheral provides a
-> mechanism for inter-processor communication between SCP's M3 processor
-> and AP.
-> 
-> SCP offers control and management of the core/cluster power states,
-> various power domain DVFS including the core/cluster, certain system
-> clocks configuration, thermal sensors and many others.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> CC: Jassi Brar <jassisinghbrar@gmail.com>
-> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/arm/arm,scpi.txt | 121 +++++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> new file mode 100644
-> index 000000000000..5db235f69e54
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> @@ -0,0 +1,121 @@
-> +System Control and Power Interface (SCPI) Message Protocol
-> +----------------------------------------------------------
 
-Could we refer to the documentation for SCPI similarly to what we do
-in the PSCI binding (i.e. give the document number and title so people
-can search for it)?
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +Required properties:
-> +
-> +- compatible : should be "arm,scpi"
-> +- mboxes: List of phandle and mailbox channel specifiers
+Hi Stefan,
 
-How many, in which order, and what are they used for?
+On Wed, May 27, 2015 at 09:12:48AM +0200, Stefan Wahren wrote:
+> Am 23.05.2015 um 19:41 schrieb Sebastian Reichel:
+> > On Wed, Apr 29, 2015 at 10:32:24PM +0000, Stefan Wahren wrote:
+> >> This patch adds a minimal driver for the Freescale i.MX23, i.MX28
+> >> power subsystem. It's required to trigger the probing of the underlying
+> >> drivers like on-chip regulators.
+> > I'm not sure what you need the power supply class for. I see only
+> > one property (ac connected), which is constant. Maybe just drop
+> > the power supply stuff?
+>=20
+> those SoCs could be powered by 3 different sources:
+> - 5V wall
+> - USB
+> - battery
+>=20
+> I choose the first one as a base, because it's the simplest one.
+> Unfortunately i don't have the time to implement all of them.
 
-> +- shmem : List of phandle pointing to the shared memory(SHM) area between the
-> +	  processors using these mailboxes for IPC, one for each mailbox
+=46rom what I can see the driver does not implement the 5V wall
+charger handling. It simply assumes, that the 5V wall charger
+is there.
 
-When you say "shared memory", what exactly are we referring to? It looks
-like we refer to SRAM areas?
+While you can skip implementation of battery connection check
+you should make sure, that AC is actually connected.
 
-> +
-> +See Documentation/devicetree/bindings/mailbox/mailbox.txt
-> +for more details about the generic mailbox controller and
-> +client driver bindings.
-> +
-> +Clock bindings for the clocks based on SCPI Message Protocol
-> +------------------------------------------------------------
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +Required properties:
-> +- compatible : shall be one of the following:
+> The Freescale downstream kernel (based on 2.6.35) [1] has a driver to
+> handle all MXS power sources. But i think a clean implementation from
+> the scratch would be necessary for mainline.
+>
+> > This would leave an almost empty driver, which just sets a single
+> > register at probe time and probes more drivers. That would probably
+> > be more fitting for the MFD subsystem.
+>=20
+> I don't have any problems with fitting the driver to MFD.
 
-Nit: s/be/include/
+You can keep in in drivers/power. From your code I assumed there
+would simply be a fixed AC connection and nothing else.
 
-> +	"arm,scpi-clocks" - for the container node with all the clocks
-> +		based on the SCPI protocol
+> > -- Sebastian
+>=20
+> [1] -
+> http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/drivers/=
+power/mxs/linux.c?h=3Dimx_2.6.35_maintain
 
-Please separate this from the description of its sub-nodes (e.g. have a
-sub-nodes heading under "arm,scpi-clocks").
+-- Sebastian
 
-Is there any reason to have this container if we're only going to place
-the two clock controllers described below within it? Can't we just place
-them directly under the SCPI node?
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +	"arm,scpi-dvfs" - all the clocks that are variable and index based.
-> +		These clocks don't provide the full range between the limits
-> +		but only discrete points within the range. The firmware
-> +		provides the mapping for each such operating frequency and the
-> +		index associated with it. The firmware also manages the
-> +		voltage scaling appropriately with the clock scaling.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Could this be "arm,scpi-dvfs-clocks"?
+iQIcBAEBCgAGBQJVZcvzAAoJENju1/PIO/qaFNgQAI49PzvxnSwG3aCOOWb5v1+i
+d/AgI/2veo6+3NcGZAk12bA1AJ6ODB4S/GOv9ykDTJrQZ7DlQ1mDXz1bvUD0UzYo
+P37IzPkJ6YEjC8a3//mTsAv1lPXXPoFgczu4pLn81Mmf0SKHLkp/BhmXbqv5+wtA
+1WYz4GQwxcnoSjIcuPkqc85APaX94nwEeXyV7IYVr8+N2pRKJlYSj2s6pRlieDIm
+Ohnfvk9VhIdarRG78sIV0sH4UcYERRNcqS4HFmUvguAXEB+sv3rN1P4RNU/qCjFT
+dZyTiQuCiXCSN0rykzuRyLV0C2j2bmdnroVRafRUEb6+fKw/u/Af9ODBhJ3z2c25
+Sn+h5T0siejqnRYVhFKepg9vSscdSCQITrpOiMwNmarFisQXZ4QYt6qYsw4vuBzQ
+HTnMzlUr76ZcIauSlQ4KixzJQGZWteXfpf5tA4l9IzA6EIMv2SeprOdnoc57LB/o
+GcWrrsFMGCk18vSbVZ03JWloQykHJ70iCxOkdDwE820kFDA+MCjhQNLLf8MvXoQv
+sLQl6Tkih8CeCYEy1vsBeCc+ngzXYbaRWcnfJSFP/WC7kjEzh5mwtJCRmhma/meU
+gkbpGXj3hHRcWTZCg8hbYW4ChpE8dohGmWab2pOzVJjk21o3/GpLWPAPsXg/sdqZ
+WPLN6P3mUVi6nseip9G0
+=IX4o
+-----END PGP SIGNATURE-----
 
-> +	"arm,scpi-clk" - all the clocks that are variable and provide full
-> +		range within the specified range. The firmware provides the
-> +		supported range for each clock.
-
-Likewise "arm,scpi-variable-clocks"?
-
-Using "arm,scpi-clk" makes it sound like there's a single clock output.
-
-> +
-> +Required properties for all clocks(all from common clock binding):
-> +- #clock-cells : should be set to 1 as each of the SCPI clocks have multiple
-> +	outputs. The clock specifier will be the index to an entry in the list
-> +	of output clocks.
-> +- clock-output-names : shall be the corresponding names of the outputs.
-> +- clock-indices: The identifyng number for the clocks(clock_id) in the node as
-> +	expected by the firmware. It can be non linear and hence provide the
-> +	mapping	of identifiers into the clock-output-names array.
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Example:
-> +
-> +sram: sram@50000000 {
-> +	compatible = "arm,juno-sram-ns", "mmio-sram";
-
-Nit: undocumented compatible string.
-
-> +	reg = <0x0 0x50000000 0x0 0x10000>;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges = <0 0x0 0x50000000 0x10000>;
-> +
-> +	cpu_scp_lpri: scp-shmem@0 {
-> +		compatible = "arm,juno-scp-shmem";
-
-Nit: undocumented compatible string.
-
-> +		reg = <0x0 0x200>;
-> +	};
-> +
-> +	cpu_scp_hpri: scp-shmem@200 {
-> +		compatible = "arm,juno-scp-shmem";
-> +		reg = <0x200 0x200>;
-> +	};
-> +};
-> +
-> +mailbox: mailbox0@40000000 {
-> +	....
-> +	#mbox-cells = <1>;
-> +};
-> +
-> +scpi_protocol: scpi@2e000000 {
-> +	compatible = "arm,scpi";
-> +	mboxes = <&mailbox 0 &mailbox 1>;
-> +	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-> +
-> +	clocks {
-> +		compatible = "arm,scpi-clocks";
-> +
-> +		scpi_dvfs: scpi_clocks@0 {
-> +			compatible = "arm,scpi-dvfs";
-> +			#clock-cells = <1>;
-> +			clock-indices = <0>, <1>, <2>;
-> +			clock-output-names = "vbig", "vlittle", "vgpu";
-> +		};
-> +		scpi_clk: scpi_clocks@3 {
-> +			compatible = "arm,scpi-clk";
-> +			#clock-cells = <1>;
-> +			clock-indices = <3>, <4>;
-> +			clock-output-names = "pxlclk0", "pxlclk1";
-> +		};
-> +	};
-> +};
-> +
-> +cpu@0 {
-> +	...
-> +	reg = <0 0>;
-> +	clocks = <&scpi_dvfs 0>;
-> +	clock-names = "big";
-
-This isn't documented anywhere, and I can't see any code in this series
-using it. The Juno dts doesn't seem to have CPU clocks, and nothing in
-this series adds them -- have I missed a series?
-
-Also, I'm not keen on using software-defined names (e.g. "big") for CPU
-clocks, as it doesn't stictly relate to the hardware. That said, the set
-of clocks, their names, and how they related to CPUs is
-implementation-specific, which is somewhat painful. I'm not sure how
-we cater for that with generic software.
-
-Thanks,
-Mark.
+--7AUc2qLy4jB3hD7Z--
