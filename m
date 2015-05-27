@@ -1,103 +1,42 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] soc: Add driver for Freescale Vybrid Platform
-Date: Wed, 27 May 2015 19:47:00 +0200
-Message-ID: <CAGhQ9VxzpPP0+YiVcwE2to_8Ajm1r4659HuWM8pfxUk0jdOzcw@mail.gmail.com>
-References: <cover.1432637313.git.maitysanchayan@gmail.com>
-	<7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan@gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: orion: Fix extended baud rates for each Armada
+ SoCs
+Date: Wed, 27 May 2015 19:47:47 +0200
+Message-ID: <55660343.9060200@free-electrons.com>
+References: <1432633484-18758-1-git-send-email-gregory.clement@free-electrons.com> <1432633484-18758-3-git-send-email-gregory.clement@free-electrons.com> <20150526120853.GB28523@lunn.ch> <556464F8.1020707@free-electrons.com> <20150527174547.GI21577@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150527174547.GI21577-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 May 2015 at 13:36, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This adds a SoC driver to be used by the Freescale Vybrid SoC's.
-> We create the "fsl" directory for holding the different Freescale
-> designs. Driver utilises syscon to get the various register values
-> needed. After this sysfs exposes some SoC specific properties as
-> below:
->
->> cd /sys/devices/soc0
->> ls
-> family     machine    power      revision   soc_id     subsystem  uevent
->> cat family
-> Freescale Vybrid VF610
->> cat machine
-> Freescale Vybrid
->> cat revision
-> 00000013
->> cat soc_id
-> df6472a60c1c39d4
->
-> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-[...]
-> +static struct soc_device_attribute *soc_dev_attr;
-> +static struct soc_device *soc_dev;
+Hi Mark,
 
-Now that this is a proper platform device consider putting these in a
-struct and allocated it in probe to get rid of the global variables.
+On 27/05/2015 19:45, Mark Brown wrote:
+> On Tue, May 26, 2015 at 02:20:08PM +0200, Gregory CLEMENT wrote:
+> 
+>> Mark do you want a new patch or do you prefer fixing the typo
+>> yourself ? it should be
+> 
+> I fixed it up locally (in general it's easier to just send the patch
+> though).
+> 
 
-> +static int vf610_soc_probe(struct platform_device *pdev)
-> +{
-> +       struct regmap *ocotp_regmap, *mscm_regmap, *rom_regmap;
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *node = pdev->dev.of_node;
-[...]
-> +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-> +       if (!soc_dev_attr)
-> +               return -ENOMEM;
-> +
-> +       soc_dev_attr->machine = kasprintf(GFP_KERNEL, "Freescale Vybrid");
-> +       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%016llx", soc_id);
-> +       soc_dev_attr->family = kasprintf(GFP_KERNEL, "Freescale Vybrid VF%s",
-> +                                                                soc_type);
-> +       soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%08x", rom_rev);
-> +
-> +       soc_dev = soc_device_register(soc_dev_attr);
-> +       if (IS_ERR(soc_dev)) {
-> +               kfree(soc_dev_attr->revision);
-> +               kfree(soc_dev_attr->family);
-> +               kfree(soc_dev_attr->soc_id);
-> +               kfree(soc_dev_attr->machine);
-> +               kfree(soc_dev_attr);
+Thanks! And next time I will send a v2 then if it is easier for you.
 
-Since you now have a device pointer you can now uses all the devm_*
-functions to allocate your memory.
-There is also a devm_kasprintf function.
-
-> +               return -ENODEV;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int vf610_soc_remove(struct platform_device *pdev)
-> +{
-> +       if (soc_dev_attr) {
-> +               kfree(soc_dev_attr->revision);
-> +               kfree(soc_dev_attr->family);
-> +               kfree(soc_dev_attr->soc_id);
-> +               kfree(soc_dev_attr->machine);
-> +               kfree(soc_dev_attr);
-
-With devm_* you can remove this stuff.
-
-> +       }
-> +
-> +       if (soc_dev)
-> +               soc_device_unregister(soc_dev);
-> +
-> +       return 0;
-> +}
+Gregory
 
 
-regards,
-Joachim Eastwood
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
