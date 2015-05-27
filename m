@@ -1,97 +1,47 @@
-From: Gregory Fong <gregory.0xf0@gmail.com>
-Subject: Re: [PATCH 0/3] GPIO support for BRCMSTB
-Date: Tue, 26 May 2015 20:26:55 -0700
-Message-ID: <CADtm3G4ao=3sHx2F1+V9rwS=jWf6ZdEQi4d24HxQ6MEc+CQ8CQ@mail.gmail.com>
-References: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
- <CACRpkda3EDa7YdzeT6FQ=cQw1RrDath7pQsCos-JeB2y4r18gw@mail.gmail.com>
- <CADtm3G45-u82Rp_0dHf2EfdMokf8E4FaQ84PHnocpvXxU+5_+g@mail.gmail.com> <CACRpkdaTYAr-7K5_QZh1CyeyA1224obqEB2Sz8UHZmrWcfv+ow@mail.gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCHv1 0/2] Adding driver for Xilinx LogiCORE IP mailbox.
+Date: Wed, 27 May 2015 08:12:20 +0200
+Message-ID: <55656044.7050702@xilinx.com>
+References: <1432317791-26851-1-git-send-email-moritz.fischer@ettus.com>
+	<5562BB92.60808@xilinx.com>	<000101d096f2$97457cf0$c5d076d0$@com>
+ <CAAtXAHfFfeJtjHvVTG7r0DNg_LNgVD2RCR4B6VxB5afh39ndhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaTYAr-7K5_QZh1CyeyA1224obqEB2Sz8UHZmrWcfv+ow@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAtXAHfFfeJtjHvVTG7r0DNg_LNgVD2RCR4B6VxB5afh39ndhg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>, Jingoo Han <jingoohan1@gmail.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, akpm@linux-foundation.org, Greg KH <gregkh@linuxfoundation.org>, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On 05/26/2015 06:12 PM, Moritz Fischer wrote:
+> On Mon, May 25, 2015 at 6:56 AM, Jingoo Han <jingoohan1@gmail.com> wrote:
+>> On Monday, May 25, 2015 3:05 PM, Michal Simek wrote:
+>>> On 05/22/2015 08:03 PM, Moritz Fischer wrote:
+>>>> This patchset adds mailbox framework integration for the Xilinx LogiCORE IP
+>>>> mailbox.  The Xilinx LogiCORE IP mailbox is a fpga softcore that allows
+>>>> interprocessor communication between AXI4 stream / memory mapped
+>>>> processors.
+>>>>
+>>>> Changes from v0:
+>>>> ---------------------
+>>>>
+>>>> - Several stylistic issues
+>>>> - Dropped superfluous intr_mode member
+>>>> - Really masking the IRQs on mailbox_shutdown
+>>>> - No longer using polling by accident in non-IRQ mode
+>>>> - Swapped doc and driver commits
+>>>
+>>> Changes update should be in every particular patch.
+>>> Also v1 is used to the first version that's why this one should be v2.
+> 
+> 
+> Thanks for the feedback. I guess making the next round v2 would be
+> less confusing,
+> than restarting the entire patchset from v1?
 
-On Wed, May 13, 2015 at 1:59 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, May 12, 2015 at 9:38 PM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
->> On Tue, May 12, 2015 at 3:59 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
->>> On Wed, May 6, 2015 at 10:37 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
->>>
->>>> There is only one IRQ for each GIO IP block (i.e. several register banks share
->>>> an IRQ).  After briefly looking into the generic IRQ chip implementation, it
->>>> seemed like in this case that using it would result in the driver being more
->>>> complex than necessary because AFAICT it expects a 1:1 mapping of
->>>> irq_chip_generic to gpio_chip.  It seemed like less of a pain to have a single
->>>> irq_chip since we have a single IRQ for all register banks (multiple
->>>> gpio_chips).  I might be missing something, maybe using a shared IRQ across
->>>> multiple irq_chips is easier than I think?  Suggestions welcome.
->>>
->>> What is needed is a 1:1 mapping between GPIO offsets and IRQ
->>> offsets.
->>>
->>> If you just number your GPIOs 0...n and your IRQs 0...n
->>> it should work just fine with one irqchip for all banks.
->>>
->>> What screws things up is likely that the hardware supports
->>> 32 lines per bank and not all are used.
->>>
->>> I suggest you enable 32 line and 32 IRQs per bank,
->>> so that hwirq maps nicely 1:1 on the GPIO offsets,
->>> then just use the width thing to NACK operations on
->>> GPIO lines you are not using. This way you can also
->>> decode and warn on spurious IRQs on the unused lines.
->>
->> For having 32 lines per bank, the big problem here is the upper limit
->> of 256 GPIOs.
->
-> Which arch is this?
-> Usually this limit comes from
-> arch/*/include/asm/gpio.h
->
-> For ARM that was bumped to 512 a while back. It is also possible
-> to define a custom value for your system by defining
-> ARCH_NR_GPIOS
->
->> Anyway, I don't think I understand IRQ domains and irq_chip_generic
->> very well.  One possibility _might_ be to use multiple irq_chips.
->
-> That is probably not possible if there is just one IRQ for all
-> banks.
->
-> The task of the irqdomain is a 1-to-1 translation from one
-> hardware numberspace to the Linux IRQ number space.
->
-> In your case the hardware IRQ (hwirq) numberspace
-> should be:
->
-> bank0: 0..31
-> bank1: 32..63
-> ....
-> bankn: 32*n..32*n+31
->
-> I think the gpiolib irqchip code can translate that properly
-> as it is just a simple 0...x mapping, the irq handler need
-> some magic to loop over all banks from 0..n though.
-
-I've now actually attempted to use the gpiolib irqchip code.  This
-driver can't directly use gpiochip_irqchip_add() because of the
-multiple gpiochip : one irqchip map.  At first, I thought it might be
-possible to simply add a new argument (or break things into a helper
-function) to allow setting the associated IRQ domain, but then I can't
-use the generic map and unmap functions which expect the irq_domain
-host_data member to be struct gpiochip *, which makes no sense in this
-case.  That puts me right back to implementing a special version of
-the map and unmap function.
-
-Since there doesn't appear to be any benefit to using the gpiolib
-irqchip code for this case, I'm going to stick with my implementation
-from patch 3 of this patchset.  I've also added to it to allow for
-using the GPIOs as a wakeup source, and will submit that as well with
-V2.
+yep. v2 make sense.
 
 Thanks,
-Gregory
+Michal
