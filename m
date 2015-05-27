@@ -1,130 +1,81 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v2 2/6] dt-bindings: mediatek: Add smi dts binding
-Date: Wed, 27 May 2015 15:36:04 +0800
-Message-ID: <1432712164.721.135.camel@mhfsdcap03>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
-	 <1431683009-18158-3-git-send-email-yong.wu@mediatek.com>
-	 <CAAFQd5D_-FrVNNPfMTwaWgDHfOPWVnRCvBCV2JS6Q2xPUiEScA@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC] ARM: BCM5301X: add NAND flash chip description
+Date: Wed, 27 May 2015 09:37:53 +0200
+Message-ID: <5386954.hrl5VLbdYc@wuerfel>
+References: <1432492349-18517-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAFQd5D_-FrVNNPfMTwaWgDHfOPWVnRCvBCV2JS6Q2xPUiEScA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, pebolle@tiscali.nl, arnd@arndb.de, mitchelh@codeaurora.org, k.zhang@mediatek.com, youhua.li@mediatek.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432492349-18517-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-	
-On Mon, 2015-05-25 at 15:48 +0900, Tomasz Figa wrote:
-> Hi,
-> 
-> Please see my comments inline.
-> 
-> On Fri, May 15, 2015 at 6:43 PM, Yong Wu <yong.wu@mediatek.com> wrote:
-> > This patch add smi binding document.
-> >
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > ---
-> >  .../bindings/soc/mediatek/mediatek,smi-larb.txt    | 24 ++++++++++++++++++++++
-> >  .../bindings/soc/mediatek/mediatek,smi.txt         | 22 ++++++++++++++++++++
-> >  2 files changed, 46 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
-> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
-> > new file mode 100644
-> > index 0000000..c06c5b6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
-> > @@ -0,0 +1,24 @@
-> > +SMI(Smart Multimedia Interface) Local Arbiter
-> > +
-> > +The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
-> > +
-> > +Required properties:
-> > +- compatible : must be "mediatek,mt8173-smi-larb"
-> > +- reg : the register and size of each local arbiter.
-> 
-> Shouldn't it be "of this local arbiter"?
-> 
-> > +- smi : must be "&smi_common". Refer to bindings/soc/mediatek,smi.txt.
-> 
-> This is incorrect. Device tree source authors are free to use any
-> labels for their nodes and documentation should not rely on the fact
-> that there is some node with some particular label. This should be
-> something like:
-> 
-> - smi : a phandle to node of XYZ
-> 
-> with proper description of that node in place of XYZ.
-Thanks. how about this?
-smi : a phandle to the smi_common node 
-> 
-> > +- clocks : must contain one entry for each clock-names.
-> > +       There are 2 clockes:
-> > +       APB clock : Advanced Peripheral Bus clock, It's the clock for setting
-> > +               the register.
-> > +       SMI clock : It's the clock for transfer data and command.
-> 
-> The description of each clock should go to "clock-names" property.
-> Please use some of already existing bindings as an example.
-> 
-> > +- clock-name: must be "apb" and "smi".
-> 
-> typo: Should be "clock-names".
-> 
-> I'd recommend describing this property as below:
-> 
-> - clock-names: must contain 2 entries, as follows:
->   - "apb" : <here comes the description of APB clock>,
->   - "smi" : <here comes the description of SMI clock>.
-Thanks. I will follow this.
+On Sunday 24 May 2015 20:32:29 Hauke Mehrtens wrote:
+> @@ -124,17 +124,7 @@
+>                         <0x00026000 0 &gic GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
+>  
+>                         /* Ethernet Controller 3 */
+> -                       <0x00027000 0 &gic GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
+> -
+> -                       /* NAND Controller */
+> -                       <0x00028000 0 &gic GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
+> -                       <0x00028000 1 &gic GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+> -                       <0x00028000 2 &gic GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
+> -                       <0x00028000 3 &gic GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+> -                       <0x00028000 4 &gic GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+> -                       <0x00028000 5 &gic GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+> -                       <0x00028000 6 &gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+> -                       <0x00028000 7 &gic GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+> +                       <0x00027000 0 &gic GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
+>  
+>                 chipcommon: chipcommon@0 {
+>                         reg = <0x00000000 0x1000>;
+> @@ -143,4 +133,30 @@
+>                         #gpio-cells = <2>;
+>                 };
+>         };
+> +
+> +       nand: nand@18028000 {
+> +               compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brcmnand";
+> +               reg = <0x18028000 0x600>, <0x1811a408 0x600>, <0x18028f00 0x20>;
+> +               reg-names = "nand", "iproc-idm", "iproc-ext";
+> +               interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
 
-> > +
-> > +Example:
-> > +       larb0:larb@14021000 {
-> > +               compatible = "mediatek,mt8173-smi-larb";
-> > +               reg = <0 0x14021000 0 0x1000>;
-> > +               smi = <&smi_common>;
-> > +               clocks = <&mmsys MM_SMI_LARB0>,
-> > +                        <&mmsys MM_SMI_LARB0>;
-> > +               clock-names = "apb", "smi";
-And another question,
-Could I add a item(port-count) in larb node. like:
-	          port-count = M4U_PORT_LARB0_NR;
-This item will only check the portid in client dsti is right or not?
-                   iommu = <&iommu larbid portid>
+I think I'd rather leave the interrupt-map in the brcm node, and use
 
-Then, the port-count is necessary to add? or we could assume all the
-input is correct.
+	interrupts = <0>;
 
-> > +       };
-> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
-> > new file mode 100644
-> > index 0000000..c2389b4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
-> > @@ -0,0 +1,22 @@
-> > +SMI(Smart Multimedia Interface)
-> > +
-> > +The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
-> > +
-> > +Required properties:
-> > +- compatible : must be "mediatek,mt8173-smi"
-> > +- reg : the register and size of the smi.
-> 
-> nit: s/smi/SMI block/
-> 
-> > +- clocks : must contain one entry for each clock-names.
-> > +       There are 2 clockes:
-> > +       APB clock : Advanced Peripheral Bus clock, It's the clock for setting
-> > +               the register.
-> > +       SMI clock : It's the clock for transfer data and command.
-> > +- clock-name: must be "apb" and "smi".
-> 
-> See my comment for those properties in the first binding.
-> 
-> Best regards,
-> Tomasz
+here.
+
+> +               status = "disabled";
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               brcm,nand-has-wp;
+> +
+> +               nandcs@0 {
+> +                       compatible = "brcm,nandcs";
+> +                       reg = <0>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +
+> +                       nand-ecc-strength = <8>;
+> +                       nand-ecc-step-size = <512>;
+> +
+> +                       linux,part-probe = "ofpart", "bcm47xxpart";
+> +               };
+> +       };
+
+This seems fine in principle, once the exact binding has been nailed down.
+
+"bcm47xxpart" does not seem like an appropriate string here.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
