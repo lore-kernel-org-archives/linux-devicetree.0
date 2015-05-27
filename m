@@ -1,33 +1,40 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] ARM: BCM5301X: add NAND flash chip description
-Date: Tue, 26 May 2015 18:15:38 -0700
-Message-ID: <20150527011538.GE27753@ld-irv-0074>
-References: <1432492349-18517-1-git-send-email-hauke@hauke-m.de>
- <20150527004144.GC27753@ld-irv-0074>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [v3] powerpc/mpc85xx: Add MDIO bus muxing support to the board
+ device tree(s)
+Date: Tue, 26 May 2015 21:53:27 -0500
+Message-ID: <20150527025327.GA3549@home.buserror.net>
+References: <1430375362-31048-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
-In-Reply-To: <20150527004144.GC27753@ld-irv-0074>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
+In-Reply-To: <1430375362-31048-1-git-send-email-igal.liberman@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Igal.Liberman" <igal.liberman@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, madalin.bucur@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 26, 2015 at 05:41:44PM -0700, Brian Norris wrote:
-> > +			linux,part-probe = "ofpart", "bcm47xxpart";
-> 
-> ^ NAK to this line. You still haven't documented any semantics for this
-> property. And I gave you several comments on your previous patch about
-> what would need to change before I'd accept this property.
-
-Just noticed you sent v2 of your previous patch over the weekend, which
-does include documentation for this. That's a start, but I'm still not
-very happy with the property. I'll put my full comments there
-eventually.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBBcHIgMzAsIDIwMTUgYXQgMDk6Mjk6MjJBTSArMDMwMCwgSWdhbC5MaWJlcm1hbiB3
+cm90ZToKPiBGcm9tOiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+
+Cj4gCj4gRGVzY3JpYmUgdGhlIFBIWSB0b3BvbG9neSBmb3IgYWxsIGNvbmZpZ3VyYXRpb25zIHN1
+cHBvcnRlZCBieSBlYWNoIGJvYXJkCj4gCj4gQmFzZWQgb24gcHJpb3Igd29yayBieSBBbmR5IEZs
+ZW1pbmcgPGFmbGVtaW5nQGZyZWVzY2FsZS5jb20+Cj4gCj4gU2lnbmVkLW9mZi1ieTogSWdhbCBM
+aWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFNo
+cnV0aSBLYW5ldGthciA8U2hydXRpQGZyZWVzY2FsZS5jb20+Cj4gU2lnbmVkLW9mZi1ieTogRW1p
+bCBNZWR2ZSA8RW1pbGlhbi5NZWR2ZUBGcmVlc2NhbGUuY29tPgo+IC0tLQo+IAo+IHYzOglGaXhl
+ZCBpbmNvcnJlY3QgRS1NYWlsIGFkZHJlc3MgKHNpZ25lZC1vZmYtYnkpCj4gCj4gdjI6CVJlbW92
+ZSAnQ2hhbmdlLUlkJwoKSSdtIG5vdCBnb2luZyB0byBtZXJnZSBhIHBhdGNoIHRoYXQgbW9kaWZp
+ZXMgZm1hbiBub2RlcyBiZWZvcmUgZm1hbiBub2RlcwpleGlzdCB0byBiZSBtb2RpZmllZC4KCi1T
+Y290dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
+eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBz
+Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
