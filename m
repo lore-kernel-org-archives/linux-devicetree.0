@@ -1,67 +1,48 @@
-From: Eric Schwarz <eas-bW38P/QUPruSQf2WMc2Ye0EOCMrvLtNR@public.gmane.org>
-Subject: reserve PCIe window for hotplug device on PCIe switch
-Date: Wed, 27 May 2015 20:07:50 +0200
-Message-ID: <1054e5cfb1bc552613fa02c52f2c6f10@sw-optimization.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: [PATCHv2 0/2] Adding driver for Xilinx LogiCORE IP mailbox.
+Date: Wed, 27 May 2015 11:35:43 -0700
+Message-ID: <1432751745-17473-1-git-send-email-moritz.fischer@ettus.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jassisinghbrar@gmail.com
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, jingoohan1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Moritz Fischer <moritz.fischer@ettus.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patchset adds mailbox framework integration for the Xilinx LogiCORE IP
+mailbox.  The Xilinx LogiCORE IP mailbox is a fpga softcore that allows
+interprocessor communication between AXI4 stream / memory mapped
+processors.
 
-schematic overview:
-processor (MV78x60) - PCIe switch (PEX8619) - FPGA (Altera) loaded in 
-userland
+Changes from v1:
+- Added common clock framework support
+- Deal with IRQs that happend before driver load,
+- since HW will not let us know about them when we enable IRQs
 
-FDT (Flattened Device Tree):
+Changes from v0:
+- Several stylistic issues
+- Dropped superfluous intr_mode member
+- Really masking the IRQs on mailbox_shutdown
+- No longer using polling by accident in non-IRQ mode
+- Swapped doc and driver commits
 
-#include "armada-xp-mv78260.dtsi"
-
-...
-
-soc {
-     ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000   /* internal 
-regs */
-               MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>; /* BootROM   
-     */
-
-     pcie-mem-aperture = <0x80000000 0x50000000>;            /* window 
-needs to be big enough in
-                                                                 order to 
-host FPGA BARs et al. */
-
-     ...
-
-     pcie-controller {
-         status = "okay";
-         pcie@1,0 { /* Port 0.0 registers */
-             status = "okay";
-         };
-         pcie@9,0 { /* Port 2.0 registers */
-             status = "okay";
-         };
-     };
-};
-
-Question:
-Since the FPGA is not visible when the system boots how to reserve a 
-256MB PCI window for non-prefetchable memory for it and 1MB io-space on 
-pcie@9,0 using the FDT.
-Actually in armada-xp-mv78260.dtsi (and included files respectivley) the 
-window for the PCIe of the processor is big enough but I do not have 
-really a clue on how to reserve a memory window (maybe soc ranges?) and 
-later on assign it to an Altera FPGA (compatible attribute? and patch 
-the kernel for that string?).
-Thus, on boot-up the window for the PCIe switch needs to be big enough 
-... but how to?
+Sorry again for messing up the patch numbering and thanks for the feedback.
 
 Cheers,
-Eric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Moritz
+
+Moritz Fischer (2):
+  dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
+  mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
+
+ .../bindings/mailbox/xilinx-mailbox.txt         |  44 +++
+ MAINTAINERS                                     |   7 +
+ drivers/mailbox/Kconfig                         |   8 +
+ drivers/mailbox/Makefile                        |   2 +
+ drivers/mailbox/mailbox-xilinx.c                | 349 +++++++++++++++++++
+ 5 files changed, 410 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
+ create mode 100644 drivers/mailbox/mailbox-xilinx.c
+
+-- 
+2.4.1
