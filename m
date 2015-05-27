@@ -1,83 +1,62 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [RFC PATCH v1 1/3] PCI: designware: Add ARM64 support
-Date: Wed, 27 May 2015 18:19:57 +0200
-Message-ID: <5565EEAD.9070003@st.com>
-References: <000001d096a9$27bf43f0$773dcbd0$@com> <5565CD0B.6020206@hisilicon.com> <2378629.Ocol8HRDqD@wuerfel> <2095085.CuXXeGT0Wg@wuerfel>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V2 3/6] power: mxs_power: add driver for mxs power subsystem
+Date: Wed, 27 May 2015 18:34:01 +0200
+Message-ID: <5565F1F9.2010801@i2se.com>
+References: <1430346747-28728-1-git-send-email-stefan.wahren@i2se.com> <1430346747-28728-4-git-send-email-stefan.wahren@i2se.com> <20150523174149.GA16004@earth> <55656E70.6030906@i2se.com> <20150527135150.GA9205@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2095085.CuXXeGT0Wg@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Zhou Wang <wangzhou1@hisilicon.com>, zhudacai@hisilicon.com, devicetree@vger.kernel.org, 'Zhang Jukuo' <zhangjukuo@huawei.com>, 'Gabriele Paoloni' <gabriele.paoloni@huawei.com>, Jingoo Han <jingoohan1@gmail.com>, 'Pratyush Anand' <pratyush.anand@gmail.com>, 'Richard Zhu' <Richard.Zhu@freescale.com>, 'Zhichang Yuan' <yuanzhichang@hisilicon.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, qiuzhenfa@hisilicon.com, linux-pci@vger.kernel.org, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Liviu Dudau' <liviu.dudau@arm.com>, 'Liguozhu' <liguozhu@hisilicon.com>, 'Lucas Stach' <l.stach@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150527135150.GA9205@earth>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/2015 05:43 PM, Arnd Bergmann wrote:
-> On Wednesday 27 May 2015 17:31:46 Arnd Bergmann wrote:
->> Yes, that works. However there are two problems with the approach:
+Hi Sebastian,
+
+Am 27.05.2015 um 15:51 schrieb Sebastian Reichel:
+> Hi Stefan,
+>
+> On Wed, May 27, 2015 at 09:12:48AM +0200, Stefan Wahren wrote:
+>> Am 23.05.2015 um 19:41 schrieb Sebastian Reichel:
+>>> On Wed, Apr 29, 2015 at 10:32:24PM +0000, Stefan Wahren wrote:
+>>>> This patch adds a minimal driver for the Freescale i.MX23, i.MX28
+>>>> power subsystem. It's required to trigger the probing of the underlying
+>>>> drivers like on-chip regulators.
+>>> I'm not sure what you need the power supply class for. I see only
+>>> one property (ac connected), which is constant. Maybe just drop
+>>> the power supply stuff?
+>> those SoCs could be powered by 3 different sources:
+>> - 5V wall
+>> - USB
+>> - battery
 >>
->> - we have to change all PCI host drivers on ARM to do this in order to remove
->>    the ARM-specific pcibios_msi_controller() function
->> - it's possible that there are dw_pcie implementations that do not include
->>    an MSI controller, so that pointer would be NULL, which leads to the
->>    core code to still call the ARM-specific pcibios_msi_controller() function
->>    unless we remove it.
-> I wonder if this simple patch would be sufficient to kill off
-> pcibios_msi_controller().
->
-> Can one of you try it?
->
-> 	Arnd
+>> I choose the first one as a base, because it's the simplest one.
+>> Unfortunately i don't have the time to implement all of them.
+> From what I can see the driver does not implement the 5V wall
+> charger handling. It simply assumes, that the 5V wall charger
+> is there.
 
-Hi Arnd,
-I tested it quickly on my platform, with and without CONFIG_PCI_MSI.
-In both case it seems to run fine with dw pcie.
+the driver consists of multiple files in the mxs sub directory.
+I linked to the main file to reduce search effort. The battery
+handling incl. charging should be implemented in ddi_power_battery.c
+
+>From my understanding it's not possible to determine where the 5V
+exactly come from (either 5V wall plug or USB). The driver simply uses
+the USB PHY state.
 
 >
-> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-> index fcbbbb1b9e95..7afb6d253162 100644
-> --- a/arch/arm/kernel/bios32.c
-> +++ b/arch/arm/kernel/bios32.c
-> @@ -18,15 +18,6 @@
->   
->   static int debug_pci;
->   
-> -#ifdef CONFIG_PCI_MSI
-> -struct msi_controller *pcibios_msi_controller(struct pci_dev *dev)
-> -{
-> -	struct pci_sys_data *sysdata = dev->bus->sysdata;
-> -
-> -	return sysdata->msi_ctrl;
-> -}
-> -#endif
-> -
->   /*
->    * We can't use pci_get_device() here since we are
->    * called from interrupt context.
-> @@ -462,9 +453,6 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
->   		if (!sys)
->   			panic("PCI: unable to allocate sys data!");
->   
-> -#ifdef CONFIG_PCI_MSI
-> -		sys->msi_ctrl = hw->msi_ctrl;
-> -#endif
->   		sys->busnr   = busnr;
->   		sys->swizzle = hw->swizzle;
->   		sys->map_irq = hw->map_irq;
-> @@ -493,6 +481,9 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
->   				panic("PCI: unable to scan bus!");
->   
->   			busnr = sys->bus->busn_res.end + 1;
-> +#ifdef CONFIG_PCI_MSI
-> +			bus->msi = hw->msi_ctrl;
+> While you can skip implementation of battery connection check
+> you should make sure, that AC is actually connected.
 
-(with small adaptation here: s/bus->msi/sys->bus->msi)
+Do you refer to the right state of property POWER_SUPPLY_PROP_ONLINE or
+driver probing?
 
-BR,
-Fabrice
-> +#endif
->   
->   			list_add(&sys->node, head);
->   		} else {
->
+Stefan
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
