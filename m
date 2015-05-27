@@ -1,99 +1,38 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v4 1/2] ARM: socfpga: support suspend to ram
-Date: Wed, 27 May 2015 15:25:24 -0500
-Message-ID: <alpine.DEB.2.02.1505271520570.19205@linuxheads99>
-References: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
- <1432317735-29413-2-git-send-email-atull@opensource.altera.com>
- <556479C9.5070208@opensource.altera.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v3] ARM: zynq: DT: Use the zynq binding with macb
+Date: Wed, 27 May 2015 13:52:38 -0700
+Message-ID: <20150527205238.GJ31081@xsjsorenbubuntu>
+References: <1432756801-6896-1-git-send-email-nathan.sullivan@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <556479C9.5070208@opensource.altera.com>
+Content-Disposition: inline
+In-Reply-To: <1432756801-6896-1-git-send-email-nathan.sullivan@ni.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@opensource.altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@denx.de>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
+To: Nathan Sullivan <nathan.sullivan@ni.com>
+Cc: michal.simek@xilinx.com, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 May 2015, Dinh Nguyen wrote:
+On Wed, 2015-05-27 at 03:00PM -0500, Nathan Sullivan wrote:
+> Use the new zynq binding for macb ethernet, since it will disable hal=
+f
+> duplex gigabit like the Zynq TRM says to do. Also allow the compatibl=
+e
+> cadence gem binding that won't disable half duplex but works otherwis=
+e.
+>=20
+> Signed-off-by: Nathan Sullivan <nathan.sullivan@ni.com>
 
-> Hi Alan,
-> 
-> On 5/22/15 1:02 PM, Alan Tull wrote:
-> > Add code that requests that the sdr controller go into
-> > self-refresh mode.  This code is run from ocram.
-> > 
-> > This patch assumes that u-boot has already configured sdr:
-> >   sdr.ctrlcfg.lowpwreq.selfrfshmask = 3
-> >   sdr.ctrlcfg.lowpwrtiming.clkdisablecycles = 8
-> >   sdr.ctrlcfg.dramtiming4.selfrfshexit = 512
-> > 
-> > Suspend-to-RAM and EDAC support are mutually exclusive on SOCFPGA
-> > platforms.  CONFIG_SOCFPGA_SUSPEND enables suspend-to-RAM and
-> > prevents selecting CONFIG_EDAC_ALTERA_MC.
-> > 
-> > How to suspend to ram:
-> >  $ echo enabled > \
-> > /sys/devices/soc/ffc02000.serial0/tty/ttyS0/power/wakeup
-> > 
-> >  $ echo -n mem > /sys/power/state
-> > 
-> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > Cc: Pavel Machek <pavel@denx.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Dinh Nguyen <dinguyen@opensource.altera.com>
-> > Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > ---
-> > v2: use Generic on-chip SRAM driver to allocate ocram
-> >     rm fncpy_align since generic allocator handles alignment
-> >     check __arm_ioremap_exec return code
-> >     check for NULL pointers
-> >     add a comment regarding sdram controller configuration
-> > v3: fix renamed #define
-> >     propagate socfpga_setup_ocram_self_refresh error code
-> > v4: Kconfig: don't need to select GENERIC_ALLOCATER
-> >     add CONFIG_SOCFPGA_SUSPEND
-> >     make s2r and EDAC support mutually exclusive
-> >     socfpga.c: add sdr_ctl_base_addr
-> >     return error if ocram not available in device tree
-> >     update copyright years
-> > ---
-> 
-> <snip>
-> 
-> > +
-> > +static int socfpga_pm_suspend(unsigned long arg)
-> > +{
-> > +	u32 ret;
-> > +
-> > +	if (!sdr_ctl_base_addr || !socfpga_scu_base_addr)
-> > +		return -EFAULT;
-> > +
-> > +	ret = socfpga_sdram_self_refresh_in_ocram(
-> > +		(u32)sdr_ctl_base_addr, (u32)socfpga_scu_base_addr);
-> > +
-> 
-> I had a patch that removed socfpga_scu_base_addr from being a global and
-> just a local variable in:
-> 
-> f6e14376fb20 ARM: socfpga: use of_iomap to map the SCU
-> 
-> This patch will be in v4.2 and is currently in arm-soc/next or
-> at my fork: kernel/git/dinguyen/linux.git socfpga_for_next_arria10
-> 
-> So you will either need to make socfpga_scu_base_addr global again, or
-> you can use the asm instruction to get the SCU base addr.
-> 
-> Sorry about that..
-> 
-> Dinh
-> 
+Assuming that the corresponding patch(es) for the driver and DT docs
+went through:
+Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
 
-I can't make socfpga_scu_base_addr a global from platsmp.c since that file
-may or may not be compiled in.
+> ---
 
-That leaves me with the option of adding the code that was removed from
-socfpga.c back where it was or taking that same code moving it to pm.c
+=46or future reference, please include a changelog here documenting wha=
+t
+changes between patch iterations.
 
-What's your preference?
-
-Alan
+	Thanks,
+	S=C3=B6ren
