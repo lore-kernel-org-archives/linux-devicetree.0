@@ -1,46 +1,130 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] soc: mediatek: Add infracfg misc driver support
-Date: Wed, 27 May 2015 09:33:41 +0200
-Message-ID: <20150527073341.GU6325@pengutronix.de>
-References: <1431372206-1237-1-git-send-email-s.hauer@pengutronix.de>
- <1431372206-1237-2-git-send-email-s.hauer@pengutronix.de>
- <7hfv6jorw9.fsf@deeprootsystems.com>
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: mediatek: Add smi dts binding
+Date: Wed, 27 May 2015 15:36:04 +0800
+Message-ID: <1432712164.721.135.camel@mhfsdcap03>
+References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
+	 <1431683009-18158-3-git-send-email-yong.wu@mediatek.com>
+	 <CAAFQd5D_-FrVNNPfMTwaWgDHfOPWVnRCvBCV2JS6Q2xPUiEScA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7hfv6jorw9.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAFQd5D_-FrVNNPfMTwaWgDHfOPWVnRCvBCV2JS6Q2xPUiEScA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tfiga@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, pebolle@tiscali.nl, arnd@arndb.de, mitchelh@codeaurora.org, k.zhang@mediatek.com, youhua.li@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 26, 2015 at 04:12:06PM -0700, Kevin Hilman wrote:
-> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+Hi Tomasz,
+	
+On Mon, 2015-05-25 at 15:48 +0900, Tomasz Figa wrote:
+> Hi,
 > 
-> > This adds support for some miscellaneous bits of the infracfg controller.
-> > The mtk_infracfg_set/clear_bus_protection functions are necessary for
-> > the scpsys power domain driver to handle the bus protection bits which
-> > are contained in the infacfg register space.
+> Please see my comments inline.
+> 
+> On Fri, May 15, 2015 at 6:43 PM, Yong Wu <yong.wu@mediatek.com> wrote:
+> > This patch add smi binding document.
 > >
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > ---
+> >  .../bindings/soc/mediatek/mediatek,smi-larb.txt    | 24 ++++++++++++++++++++++
+> >  .../bindings/soc/mediatek/mediatek,smi.txt         | 22 ++++++++++++++++++++
+> >  2 files changed, 46 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
+> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
+> > new file mode 100644
+> > index 0000000..c06c5b6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
+> > @@ -0,0 +1,24 @@
+> > +SMI(Smart Multimedia Interface) Local Arbiter
+> > +
+> > +The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
+> > +
+> > +Required properties:
+> > +- compatible : must be "mediatek,mt8173-smi-larb"
+> > +- reg : the register and size of each local arbiter.
 > 
-> IMO, this feature still needs more documentation.  From an earlier
-> exchange with James Liao, he was able to get some more details from the
-> HW designer[1] which I think belong in comments somewhere in this
-> driver.
+> Shouldn't it be "of this local arbiter"?
+> 
+> > +- smi : must be "&smi_common". Refer to bindings/soc/mediatek,smi.txt.
+> 
+> This is incorrect. Device tree source authors are free to use any
+> labels for their nodes and documentation should not rely on the fact
+> that there is some node with some particular label. This should be
+> something like:
+> 
+> - smi : a phandle to node of XYZ
+> 
+> with proper description of that node in place of XYZ.
+Thanks. how about this?
+smi : a phandle to the smi_common node 
+> 
+> > +- clocks : must contain one entry for each clock-names.
+> > +       There are 2 clockes:
+> > +       APB clock : Advanced Peripheral Bus clock, It's the clock for setting
+> > +               the register.
+> > +       SMI clock : It's the clock for transfer data and command.
+> 
+> The description of each clock should go to "clock-names" property.
+> Please use some of already existing bindings as an example.
+> 
+> > +- clock-name: must be "apb" and "smi".
+> 
+> typo: Should be "clock-names".
+> 
+> I'd recommend describing this property as below:
+> 
+> - clock-names: must contain 2 entries, as follows:
+>   - "apb" : <here comes the description of APB clock>,
+>   - "smi" : <here comes the description of SMI clock>.
+Thanks. I will follow this.
 
-Ok, I'll add something like this.
+> > +
+> > +Example:
+> > +       larb0:larb@14021000 {
+> > +               compatible = "mediatek,mt8173-smi-larb";
+> > +               reg = <0 0x14021000 0 0x1000>;
+> > +               smi = <&smi_common>;
+> > +               clocks = <&mmsys MM_SMI_LARB0>,
+> > +                        <&mmsys MM_SMI_LARB0>;
+> > +               clock-names = "apb", "smi";
+And another question,
+Could I add a item(port-count) in larb node. like:
+	          port-count = M4U_PORT_LARB0_NR;
+This item will only check the portid in client dsti is right or not?
+                   iommu = <&iommu larbid portid>
 
-Sascha
+Then, the port-count is necessary to add? or we could assume all the
+input is correct.
 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +       };
+> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> > new file mode 100644
+> > index 0000000..c2389b4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> > @@ -0,0 +1,22 @@
+> > +SMI(Smart Multimedia Interface)
+> > +
+> > +The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
+> > +
+> > +Required properties:
+> > +- compatible : must be "mediatek,mt8173-smi"
+> > +- reg : the register and size of the smi.
+> 
+> nit: s/smi/SMI block/
+> 
+> > +- clocks : must contain one entry for each clock-names.
+> > +       There are 2 clockes:
+> > +       APB clock : Advanced Peripheral Bus clock, It's the clock for setting
+> > +               the register.
+> > +       SMI clock : It's the clock for transfer data and command.
+> > +- clock-name: must be "apb" and "smi".
+> 
+> See my comment for those properties in the first binding.
+> 
+> Best regards,
+> Tomasz
