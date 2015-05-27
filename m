@@ -1,66 +1,37 @@
-From: Hanjun Guo <hanjun.guo@linaro.org>
-Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into platform
- device
-Date: Wed, 27 May 2015 11:01:01 +0800
-Message-ID: <5565336D.6040904@linaro.org>
-References: <=fu.wei@linaro.org> <1432548193-19569-1-git-send-email-fu.wei@linaro.org> <1432548193-19569-7-git-send-email-fu.wei@linaro.org> <55642EA8.5000003@linaro.org> <5564A0C7.1090306@codeaurora.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: add Okaya LCD display for Nitrogen and
+ Sabrelite
+Date: Wed, 27 May 2015 11:06:37 +0800
+Message-ID: <20150527030636.GB16165@dragon>
+References: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5564A0C7.1090306@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432314867-30888-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015=E5=B9=B405=E6=9C=8827=E6=97=A5 00:35, Timur Tabi wrote:
-> On 05/26/2015 03:28 AM, Hanjun Guo wrote:
->
->>>       early_acpi_os_unmap_memory((char *)table, tbl_size);
->>>   }
->>
->> please add
->>
->> #ifdef CONFIG_ARM_SBSA_WATCHDOG
->> (acpi gtdt code)
->> #endif
->
-> I don't agree with this.  The GTDT should be parsed even if there's n=
-o
-> watchdog driver compiled for this kernel.  There are no other #ifdefs=
- in
-> this file.
+On Fri, May 22, 2015 at 07:14:25PM +0200, Gary Bisson wrote:
+> This series adds the Okaya 7" LCD display that is a WVGA (800x480) panel with
+> a 18-bit parallel interface for both Nitrogen and Sabrelite.
+> 
+> A U-Boot script to configure the displays based on detection of the
+> touch controller is available for reference here:
+> https://github.com/boundarydevices/u-boot-imx6/blob/staging/board/boundary/nitrogen6x/6x_bootscript-mainline.txt
+> 
+> Gary Bisson (2):
+>   ARM: dts: imx6qdl-nitrogen6x: add Okaya LCD display
+>   ARM: dts: imx6qdl-sabrelite: add Okaya LCD display
 
-So what's the point of parse GTDT and alloc memories for it if there
-is no watchdog driver compiled for the kernel? will the module insmod
-later even if the CONFIG_ARM_SBSA_WATCHDOG=3Dn?
+Philipp,
 
->
->>> +     * Add a platform device named "sbsa-gwdt" to match the platfo=
-rm
->>> driver.
->>> +     * "sbsa-gwdt": SBSA(Server Base System Architecture) Generic
->>> Watchdog
->>> +     * The platform driver can get device info below by matching t=
-his
->>> name.
->>
->> * The platform driver (drivers/watchdog/sbsa_gwdt.c) can get device =
-info
->> below by matching this name.
->>
->> Adding the file name which will help for review and maintain in my
->> opinion.
->
-> Except it will cause problems if the driver is renamed or moved.  I
-> don't think this is a good idea, either (sorry!)
+Are you okay with these two patches?
 
-OK, that's good point. but what I proposed is some hint to which driver
-will use the data prepared in this file, we can easily understand it
-in this patchset, but if just review the code in this fiel, I think
-people will be confused without detail comments.
-
-Thanks
-Hanjun
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
