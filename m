@@ -1,187 +1,77 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 3/3] ARM: mvebu: use improved armada spi device tree
- compatible name for each SoC
-Date: Wed, 27 May 2015 12:04:34 +0200
-Message-ID: <556596B2.4060300@free-electrons.com>
-References: <1432633484-18758-1-git-send-email-gregory.clement@free-electrons.com>
- <1432633484-18758-4-git-send-email-gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v3 14/16] ARM: marvell/dt: enable crypto on armada-xp-gp
+Date: Wed, 27 May 2015 12:20:49 +0200
+Message-ID: <55659A81.3040600@free-electrons.com>
+References: <1432301642-11470-1-git-send-email-boris.brezillon@free-electrons.com>	<1432301642-11470-15-git-send-email-boris.brezillon@free-electrons.com>	<55633B6D.7080307@free-electrons.com> <20150526105936.25db3afb@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1432633484-18758-4-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-spi@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Mark Brown <broonie@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20150526105936.25db3afb@bbrezillon>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 26/05/2015 11:44, Gregory CLEMENT wrote:
-> Use the new compatible introduced in rder to beneficiate of a wider
-> and more accurate range of baud rates to be used.
+On 26/05/2015 10:59, Boris Brezillon wrote:
+> On Mon, 25 May 2015 17:10:37 +0200
+> Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
 > 
+>> Hi Boris,
+>>
+>> On 22/05/2015 15:34, Boris Brezillon wrote:
+>>> Enable the crypto IP on armada-xp-gp.
+>>>
+>>> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+>>> ---
+>>>  arch/arm/boot/dts/armada-xp-gp.dts | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+>>> index 565227e..8a739f4 100644
+>>> --- a/arch/arm/boot/dts/armada-xp-gp.dts
+>>> +++ b/arch/arm/boot/dts/armada-xp-gp.dts
+>>> @@ -94,7 +94,9 @@
+>>>  	soc {
+>>>  		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+>>>  			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+>>> -			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000>;
+>>> +			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
+>>> +			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
+>>> +			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
+>>
+>> As the crypto engine really depend on the SoC itself and not of the board,
+>> what about updating the dts of the other board using an Armada XP?
+> 
+> But that means introducing changes I haven't tested. Are you okay with
+> that ?
 
-As the driver part was applied, I applied this patch
-on mvebu/dt
+Maybe I missed something but as the crypto is fully integrated in the SoC,
+if for a given SoC it works on a board it would work on all the boards using
+the same SoC.
+
+The board specific part seems about setting memory address on the mbus.
+
+By the way could you add a comment in front of the new line ? so next time
+someone will copy and past one of the dts file, he will understand the
+signification of these two lines.
+
+But is it really depending of the board itself?
+I see that the first lines are the same on all the dts, I just remember that
+there was a reason why we could not put it in the dtsi. My point here, is as
+the configuration is the same on all the boards, adding the crypto on all the
+board should work without any issue.
+
+
 Thanks,
 
 Gregory
 
 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  arch/arm/boot/dts/armada-370-xp.dtsi | 2 --
->  arch/arm/boot/dts/armada-370.dtsi    | 4 ++++
->  arch/arm/boot/dts/armada-375.dtsi    | 6 ++++--
->  arch/arm/boot/dts/armada-38x.dtsi    | 6 ++++--
->  arch/arm/boot/dts/armada-39x.dtsi    | 6 ++++--
->  arch/arm/boot/dts/armada-xp.dtsi     | 8 ++++++++
->  6 files changed, 24 insertions(+), 8 deletions(-)
+
+
+
 > 
-> diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-> index ec96f0b36346..7f0252c580e4 100644
-> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
-> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-> @@ -149,7 +149,6 @@
->  			};
->  
->  			spi0: spi@10600 {
-> -				compatible = "marvell,armada-370-spi", "marvell,orion-spi";
->  				reg = <0x10600 0x28>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> @@ -160,7 +159,6 @@
->  			};
->  
->  			spi1: spi@10680 {
-> -				compatible = "marvell,armada-370-spi", "marvell,orion-spi";
->  				reg = <0x10680 0x28>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-> index 00b50db57c9c..3f036bd635f4 100644
-> --- a/arch/arm/boot/dts/armada-370.dtsi
-> +++ b/arch/arm/boot/dts/armada-370.dtsi
-> @@ -139,11 +139,15 @@
->  			 * board level if a different configuration is used.
->  			 */
->  			spi0: spi@10600 {
-> +				compatible = "marvell,armada-370-spi",
-> +						"marvell,orion-spi";
->  				pinctrl-0 = <&spi0_pins1>;
->  				pinctrl-names = "default";
->  			};
->  
->  			spi1: spi@10680 {
-> +				compatible = "marvell,armada-370-spi",
-> +						"marvell,orion-spi";
->  				pinctrl-0 = <&spi1_pins>;
->  				pinctrl-names = "default";
->  			};
-> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
-> index f076ff856d8b..67a0ab0f71e0 100644
-> --- a/arch/arm/boot/dts/armada-375.dtsi
-> +++ b/arch/arm/boot/dts/armada-375.dtsi
-> @@ -238,7 +238,8 @@
->  			};
->  
->  			spi0: spi@10600 {
-> -				compatible = "marvell,orion-spi";
-> +				compatible = "marvell,armada-375-spi",
-> +						"marvell,orion-spi";
->  				reg = <0x10600 0x50>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> @@ -249,7 +250,8 @@
->  			};
->  
->  			spi1: spi@10680 {
-> -				compatible = "marvell,orion-spi";
-> +				compatible = "marvell,armada-375-spi",
-> +						"marvell,orion-spi";
->  				reg = <0x10680 0x50>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 218a2acd36e5..eace85db7c8c 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -167,7 +167,8 @@
->  			};
->  
->  			spi0: spi@10600 {
-> -				compatible = "marvell,orion-spi";
-> +				compatible = "marvell,armada-380-spi",
-> +						"marvell,orion-spi";
->  				reg = <0x10600 0x50>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> @@ -178,7 +179,8 @@
->  			};
->  
->  			spi1: spi@10680 {
-> -				compatible = "marvell,orion-spi";
-> +				compatible = "marvell,armada-380-spi",
-> +						"marvell,orion-spi";
->  				reg = <0x10680 0x50>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-> index ecd1318109ba..fc9864f85fc2 100644
-> --- a/arch/arm/boot/dts/armada-39x.dtsi
-> +++ b/arch/arm/boot/dts/armada-39x.dtsi
-> @@ -128,7 +128,8 @@
->  			};
->  
->  			spi0: spi@10600 {
-> -				compatible = "marvell,orion-spi";
-> +				compatible = "marvell,armada-390-spi",
-> +						"marvell,orion-spi";
->  				reg = <0x10600 0x50>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> @@ -139,7 +140,8 @@
->  			};
->  
->  			spi1: spi@10680 {
-> -				compatible = "marvell,orion-spi";
-> +				compatible = "marvell,armada-390-spi",
-> +						"marvell,orion-spi";
->  				reg = <0x10680 0x50>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-> index 013d63f69e36..e78ce4ab6b75 100644
-> --- a/arch/arm/boot/dts/armada-xp.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp.dtsi
-> @@ -85,10 +85,18 @@
->  			};
->  
->  			spi0: spi@10600 {
-> +				compatible = "marvell,armada-xp-spi",
-> +						"marvell,orion-spi";
->  				pinctrl-0 = <&spi0_pins>;
->  				pinctrl-names = "default";
->  			};
->  
-> +			spi1: spi@10680 {
-> +				compatible = "marvell,armada-xp-spi",
-> +						"marvell,orion-spi";
-> +			};
-> +
-> +
->  			i2c0: i2c@11000 {
->  				compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
->  				reg = <0x11000 0x100>;
 > 
 
 
