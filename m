@@ -1,102 +1,54 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 3/5] dt-bindings: ARM: Mediatek: Document devicetree
- bindings for clock controllers
-Date: Wed, 27 May 2015 09:27:59 +0200
-Message-ID: <20150527072759.GS6325@pengutronix.de>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
- <1432192376-6712-4-git-send-email-jamesjj.liao@mediatek.com>
- <20150526075643.GF6325@pengutronix.de>
- <1432630536.15597.16.camel@mtksdaap41>
- <20150526110819.GI6325@pengutronix.de>
- <1432707169.721.81.camel@mhfsdcap03>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v4 2/2] soc: Add driver for Freescale Vybrid Platform
+Date: Wed, 27 May 2015 09:31:50 +0200
+Message-ID: <1432711910.27695.223.camel@x220>
+References: <cover.1432637313.git.maitysanchayan@gmail.com>
+	 <7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432707169.721.81.camel@mhfsdcap03>
+In-Reply-To: <7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, srv_heupstream@mediatek.com, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: arnd@arndb.de, shawn.guo@linaro.org, kernel@pengutronix.de, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 27, 2015 at 02:12:49PM +0800, Yong Wu wrote:
-> On Tue, 2015-05-26 at 13:08 +0200, Sascha Hauer wrote:
-> > On Tue, May 26, 2015 at 04:55:36PM +0800, James Liao wrote:
-> > > Hi Sascha,
-> > > 
-> > > On Tue, 2015-05-26 at 09:56 +0200, Sascha Hauer wrote:
-> > > > On Thu, May 21, 2015 at 03:12:54PM +0800, James Liao wrote:
-> > > > > This adds the binding documentation for the mmsys, imgsys, vdecsys,
-> > > > > vencsys and vencltsys controllers found on Mediatek SoCs.
-> > > > > 
-> > > > > index 0000000..a5b94a7
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
-> > > > > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
-> > > > > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
-> > > > 
-> > > > Do these really become multiple drivers so that it's worth abstracting
-> > > > them in the clock framework?
-> > > 
-> > > These clocks need to be controlled among several drivers. For example,
-> > > vdecsys clocks will be controlled by VDEC driver (not ready yet) and
-> > > MT8173 SMI driver [1]. That means these clocks need a mechanism to share
-> > > between these 2 drivers. CCF share clocks by using of reference count,
-> > > so I think it's suitable to implement these subsystem clocks.
-> > > 
-> > > As I know SMI driver need to access clocks among mmsys, imgsys, vdecsys,
-> > > vencsys and vencltsys. So in this patch I added clocks of these
-> > > subsystems into CCF.
-> > > 
-> > > [1]
-> > > http://lists.infradead.org/pipermail/linux-mediatek/2015-March/000058.html
-> > 
-> > Looking at the 3.18 tree we have this:
-> > 
-> > 	vdecsys: vdecsys@16000000 {
-> > 		compatible = "mediatek,mt8173-vdecsys", "syscon";
-> > 		reg = <0 0x16000000 0 0x1000>;
-> > 		#clock-cells = <1>;
-> > 	};
-> > 
-> > 	larb1:larb@16010000 {
-> > 		compatible = "mediatek,mt8173-smi-larb";
-> > 		reg = <0 0x16010000 0 0x1000>;
-> > 		clocks = <&mmsys MM_SMI_COMMON>,
-> > 			 <&vdecsys VDEC_CKEN>,
-> > 			 <&vdecsys VDEC_LARB_CKEN>;
-> > 		clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
-> > 	};
-> > 
-> > I believe that the larb needs the MM_SMI_COMMON clock to modify the larb
-> > registers, but is it really necessary to enable VDEC_CKEN and
-> > VDEC_LARB_CKEN just to set the F_SMI_MMU_EN bit in the larb?
-> Yes. SMI need the two clock while smi work.
-> the lastest smi binding is [1].
-> smi need "apb" and "smi" clocks.
-> 
-> [1]http://lists.linuxfoundation.org/pipermail/iommu/2015-May/013025.html
-> 
-> > 
-> > With the above we have the situation that the vdec driver calls into the
-> > iommu driver which then calls into the larb driver which calls back into
-> > the vdec driver via the clk API. This seems very suspicious.
-> iommu driver will call into the larb driver.
-> but I don't think the larb driver will call into the vdec driver. is it
-> right?
+On Tue, 2015-05-26 at 17:06 +0530, Sanchayan Maity wrote:
+> --- /dev/null
+> +++ b/drivers/soc/fsl/Kconfig
 
-When the larb has clocks from the vdec like in the above example from
-the 3.18 kernel then the larb indirectly via the clk API writes to the
-vdec register space.
-In the latest code you referenced the vdec clocks are no longer assigned
-to the larbs. This means we no longer need the vdec clocks abstracted in
-CCF.
+> +config SOC_VF610
+> +	   bool "SoC bus device for the Freescale Vybrid platform"
+> +	   select SOC_BUS
+> +	   help
+> +	     Include support for the SoC bus on the Freescale Vybrid platform
+> +	     providing some sysfs information about the module variant.
+> \ No newline at end of file
 
-Sascha
+(That review comment is courtesy of git.)
+
+> --- /dev/null
+> +++ b/drivers/soc/fsl/Makefile
+
+> +obj-$(CONFIG_SOC_VF610)		+= soc-vf610.o
+
+> --- /dev/null
+> +++ b/drivers/soc/fsl/soc-vf610.c
+
+> +MODULE_DEVICE_TABLE(of, vf610_soc_bus_match);
+
+> +module_platform_driver(vf610_soc_driver);
+
+(The series starting at https://lkml.org/lkml/2015/5/10/131 would allow
+to use builtin_platform_driver() for built-in only code.)
+
+> +MODULE_DESCRIPTION("Freescale VF610 SoC bus driver");
+> +MODULE_LICENSE("GPL v2");
+
+I think soc-vf610.o can only be built-in. But its code contains a few
+module specific macros. Was it perhaps intended for SOC_VF610 to be
+tristate?
 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Paul Bolle
