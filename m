@@ -1,51 +1,97 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] ACPI: import watchdog info of GTDT into
- platform device
-Date: Tue, 26 May 2015 22:08:14 -0500
-Message-ID: <5565351E.6050708@codeaurora.org>
-References: <=fu.wei@linaro.org> <1432548193-19569-1-git-send-email-fu.wei@linaro.org> <1432548193-19569-7-git-send-email-fu.wei@linaro.org> <55642EA8.5000003@linaro.org> <5564A0C7.1090306@codeaurora.org> <5565336D.6040904@linaro.org>
+From: Gregory Fong <gregory.0xf0@gmail.com>
+Subject: Re: [PATCH 0/3] GPIO support for BRCMSTB
+Date: Tue, 26 May 2015 20:26:55 -0700
+Message-ID: <CADtm3G4ao=3sHx2F1+V9rwS=jWf6ZdEQi4d24HxQ6MEc+CQ8CQ@mail.gmail.com>
+References: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
+ <CACRpkda3EDa7YdzeT6FQ=cQw1RrDath7pQsCos-JeB2y4r18gw@mail.gmail.com>
+ <CADtm3G45-u82Rp_0dHf2EfdMokf8E4FaQ84PHnocpvXxU+5_+g@mail.gmail.com> <CACRpkdaTYAr-7K5_QZh1CyeyA1224obqEB2Sz8UHZmrWcfv+ow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5565336D.6040904-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaTYAr-7K5_QZh1CyeyA1224obqEB2Sz8UHZmrWcfv+ow@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hanjun Guo wrote:
->> I don't agree with this.  The GTDT should be parsed even if there's no
->> watchdog driver compiled for this kernel.  There are no other #ifdefs in
->> this file.
+Hi Linus,
+
+On Wed, May 13, 2015 at 1:59 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, May 12, 2015 at 9:38 PM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
+>> On Tue, May 12, 2015 at 3:59 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>> On Wed, May 6, 2015 at 10:37 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
+>>>
+>>>> There is only one IRQ for each GIO IP block (i.e. several register banks share
+>>>> an IRQ).  After briefly looking into the generic IRQ chip implementation, it
+>>>> seemed like in this case that using it would result in the driver being more
+>>>> complex than necessary because AFAICT it expects a 1:1 mapping of
+>>>> irq_chip_generic to gpio_chip.  It seemed like less of a pain to have a single
+>>>> irq_chip since we have a single IRQ for all register banks (multiple
+>>>> gpio_chips).  I might be missing something, maybe using a shared IRQ across
+>>>> multiple irq_chips is easier than I think?  Suggestions welcome.
+>>>
+>>> What is needed is a 1:1 mapping between GPIO offsets and IRQ
+>>> offsets.
+>>>
+>>> If you just number your GPIOs 0...n and your IRQs 0...n
+>>> it should work just fine with one irqchip for all banks.
+>>>
+>>> What screws things up is likely that the hardware supports
+>>> 32 lines per bank and not all are used.
+>>>
+>>> I suggest you enable 32 line and 32 IRQs per bank,
+>>> so that hwirq maps nicely 1:1 on the GPIO offsets,
+>>> then just use the width thing to NACK operations on
+>>> GPIO lines you are not using. This way you can also
+>>> decode and warn on spurious IRQs on the unused lines.
+>>
+>> For having 32 lines per bank, the big problem here is the upper limit
+>> of 256 GPIOs.
 >
-> So what's the point of parse GTDT and alloc memories for it if there
-> is no watchdog driver compiled for the kernel?
+> Which arch is this?
+> Usually this limit comes from
+> arch/*/include/asm/gpio.h
+>
+> For ARM that was bumped to 512 a while back. It is also possible
+> to define a custom value for your system by defining
+> ARCH_NR_GPIOS
+>
+>> Anyway, I don't think I understand IRQ domains and irq_chip_generic
+>> very well.  One possibility _might_ be to use multiple irq_chips.
+>
+> That is probably not possible if there is just one IRQ for all
+> banks.
+>
+> The task of the irqdomain is a 1-to-1 translation from one
+> hardware numberspace to the Linux IRQ number space.
+>
+> In your case the hardware IRQ (hwirq) numberspace
+> should be:
+>
+> bank0: 0..31
+> bank1: 32..63
+> ....
+> bankn: 32*n..32*n+31
+>
+> I think the gpiolib irqchip code can translate that properly
+> as it is just a simple 0...x mapping, the irq handler need
+> some magic to loop over all banks from 0..n though.
 
-I don't think it's normal policy to generate a platform only if one 
-specific driver is enabled.
+I've now actually attempted to use the gpiolib irqchip code.  This
+driver can't directly use gpiochip_irqchip_add() because of the
+multiple gpiochip : one irqchip map.  At first, I thought it might be
+possible to simply add a new argument (or break things into a helper
+function) to allow setting the associated IRQ domain, but then I can't
+use the generic map and unmap functions which expect the irq_domain
+host_data member to be struct gpiochip *, which makes no sense in this
+case.  That puts me right back to implementing a special version of
+the map and unmap function.
 
- > will the module insmod
-> later even if the CONFIG_ARM_SBSA_WATCHDOG=n?
+Since there doesn't appear to be any benefit to using the gpiolib
+irqchip code for this case, I'm going to stick with my implementation
+from patch 3 of this patchset.  I've also added to it to allow for
+using the GPIOs as a wakeup source, and will submit that as well with
+V2.
 
-I think that actually can work, but it's not a good reason by itself.
-
-> OK, that's good point. but what I proposed is some hint to which driver
-> will use the data prepared in this file, we can easily understand it
-> in this patchset, but if just review the code in this fiel, I think
-> people will be confused without detail comments.
-
-All anyone needs to is
-
-	git grep "sbsa-gwdt"
-
-And you'll find the driver.
-
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Gregory
