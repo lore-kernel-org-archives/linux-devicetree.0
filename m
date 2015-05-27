@@ -1,269 +1,117 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 2/2] soc: Add driver for Freescale Vybrid Platform
-Date: Wed, 27 May 2015 23:42:18 +0200
-Message-ID: <24142c6afd14661145517f298599c865@agner.ch>
-References: <cover.1432637313.git.maitysanchayan@gmail.com>
- <7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan@gmail.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [RFC] ARM: BCM5301X: add NAND flash chip description
+Date: Wed, 27 May 2015 23:46:48 +0200
+Message-ID: <55663B48.5060306@hauke-m.de>
+References: <1432492349-18517-1-git-send-email-hauke@hauke-m.de> <5386954.hrl5VLbdYc@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7df753efff77a96da285f0571f1316512787e83c.1432637313.git.maitysanchayan@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sanchayan Maity <maitysanchayan@gmail.com>, arnd@arndb.de
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5386954.hrl5VLbdYc@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-05-26 13:36, Sanchayan Maity wrote:
-> This adds a SoC driver to be used by the Freescale Vybrid SoC's.
-> We create the "fsl" directory for holding the different Freescale
-> designs. Driver utilises syscon to get the various register values
-> needed. After this sysfs exposes some SoC specific properties as
-> below:
+On 05/27/2015 09:37 AM, Arnd Bergmann wrote:
+> On Sunday 24 May 2015 20:32:29 Hauke Mehrtens wrote:
+>> @@ -124,17 +124,7 @@
+>>                         <0x00026000 0 &gic GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
+>>  
+>>                         /* Ethernet Controller 3 */
+>> -                       <0x00027000 0 &gic GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
+>> -
+>> -                       /* NAND Controller */
+>> -                       <0x00028000 0 &gic GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
+>> -                       <0x00028000 1 &gic GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+>> -                       <0x00028000 2 &gic GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
+>> -                       <0x00028000 3 &gic GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+>> -                       <0x00028000 4 &gic GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+>> -                       <0x00028000 5 &gic GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+>> -                       <0x00028000 6 &gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+>> -                       <0x00028000 7 &gic GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       <0x00027000 0 &gic GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
+>>  
+>>                 chipcommon: chipcommon@0 {
+>>                         reg = <0x00000000 0x1000>;
+>> @@ -143,4 +133,30 @@
+>>                         #gpio-cells = <2>;
+>>                 };
+>>         };
+>> +
+>> +       nand: nand@18028000 {
+>> +               compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brcmnand";
+>> +               reg = <0x18028000 0x600>, <0x1811a408 0x600>, <0x18028f00 0x20>;
+>> +               reg-names = "nand", "iproc-idm", "iproc-ext";
+>> +               interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
 > 
->> cd /sys/devices/soc0
->> ls
-> family     machine    power      revision   soc_id     subsystem  uevent
->> cat family
-> Freescale Vybrid VF610
->> cat machine
-> Freescale Vybrid
->> cat revision
-> 00000013
->> cat soc_id
-> df6472a60c1c39d4
+> I think I'd rather leave the interrupt-map in the brcm node, and use
 > 
-> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-> ---
->  drivers/soc/Kconfig         |   1 +
->  drivers/soc/Makefile        |   1 +
->  drivers/soc/fsl/Kconfig     |   9 +++
->  drivers/soc/fsl/Makefile    |   1 +
->  drivers/soc/fsl/soc-vf610.c | 168 ++++++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 180 insertions(+)
->  create mode 100644 drivers/soc/fsl/Kconfig
->  create mode 100644 drivers/soc/fsl/Makefile
->  create mode 100644 drivers/soc/fsl/soc-vf610.c
+> 	interrupts = <0>;
 > 
-> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> index d8bde82..8b4dd2b 100644
-> --- a/drivers/soc/Kconfig
-> +++ b/drivers/soc/Kconfig
-> @@ -1,5 +1,6 @@
->  menu "SOC (System On Chip) specific Drivers"
->  
-> +source "drivers/soc/fsl/Kconfig"
->  source "drivers/soc/mediatek/Kconfig"
->  source "drivers/soc/qcom/Kconfig"
->  source "drivers/soc/ti/Kconfig"
-> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> index 70042b2..142676e 100644
-> --- a/drivers/soc/Makefile
-> +++ b/drivers/soc/Makefile
-> @@ -2,6 +2,7 @@
->  # Makefile for the Linux Kernel SOC specific device drivers.
->  #
->  
-> +obj-$(CONFIG_SOC_VF610)         += fsl/
->  obj-$(CONFIG_ARCH_MEDIATEK)	+= mediatek/
->  obj-$(CONFIG_ARCH_QCOM)		+= qcom/
->  obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
-> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-> new file mode 100644
-> index 0000000..d0ac671
-> --- /dev/null
-> +++ b/drivers/soc/fsl/Kconfig
-> @@ -0,0 +1,9 @@
-> +#
-> +# Freescale SoC drivers
-> +
-> +config SOC_VF610
-> +	   bool "SoC bus device for the Freescale Vybrid platform"
-> +	   select SOC_BUS
-> +	   help
-> +	     Include support for the SoC bus on the Freescale Vybrid platform
-> +	     providing some sysfs information about the module variant.
-> \ No newline at end of file
-> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
-> new file mode 100644
-> index 0000000..5fccbba
-> --- /dev/null
-> +++ b/drivers/soc/fsl/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_SOC_VF610)		+= soc-vf610.o
-> diff --git a/drivers/soc/fsl/soc-vf610.c b/drivers/soc/fsl/soc-vf610.c
-> new file mode 100644
-> index 0000000..6425cfb
-> --- /dev/null
-> +++ b/drivers/soc/fsl/soc-vf610.c
-> @@ -0,0 +1,168 @@
-> +/*
-> + * Copyright 2015 Toradex AG
-> + *
-> + * Author: Sanchayan Maity <sanchayan.maity@toradex.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2, as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/regmap.h>
-> +#include <linux/random.h>
-> +#include <linux/slab.h>
-> +#include <linux/sys_soc.h>
-> +
-> +#define DRIVER_NAME "vf610-soc-bus"
-> +
-> +#define MSCM_CPxCOUNT_OFFSET   0x0000002C
-> +#define MSCM_CPxCFG1_OFFSET    0x00000014
-> +
-> +static struct soc_device_attribute *soc_dev_attr;
-> +static struct soc_device *soc_dev;
-> +
-> +static int vf610_soc_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap *ocotp_regmap, *mscm_regmap, *rom_regmap;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct device_node *soc_node;
-> +	struct of_phandle_args pargs;
-> +	char soc_type[] = "xx0";
-> +	u32 cfg0_offset, cfg1_offset, rom_rev_offset;
-> +	u32 soc_id1, soc_id2, rom_rev;
-> +	u32 cpxcount, cpxcfg1;
-> +	u64 soc_id;
-> +	int ret;
-> +
-> +	mscm_regmap = syscon_node_to_regmap(node);
-> +	if (IS_ERR(mscm_regmap)) {
-> +		dev_err(dev, "regmap lookup for mscm failed\n");
-> +		return PTR_ERR(mscm_regmap);
-> +	}
-> +
-> +	soc_node = of_find_node_by_path("/soc");
-> +
-> +	ret = of_parse_phandle_with_fixed_args(soc_node,
-> +					"ocotp-cfg", 2, 0, &pargs);
-> +	if (ret) {
-> +		dev_err(dev, "lookup failed for ocotp-cfg node %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ocotp_regmap = syscon_node_to_regmap(pargs.np);
-> +	if (IS_ERR(ocotp_regmap)) {
-> +		of_node_put(pargs.np);
-> +		dev_err(dev, "regmap lookup for ocotp failed\n");
-> +		return PTR_ERR(ocotp_regmap);
-> +	}
-> +
-> +	cfg0_offset = pargs.args[0];
-> +	cfg1_offset = pargs.args[1];
-> +	of_node_put(pargs.np);
-> +
-> +	ret = of_parse_phandle_with_fixed_args(soc_node,
-> +					"rom-revision", 1, 0, &pargs);
-> +	if (ret) {
-> +		dev_err(dev, "lookup failed for rom-revision node %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	rom_regmap = syscon_node_to_regmap(pargs.np);
-> +	if (IS_ERR(rom_regmap)) {
-> +		of_node_put(pargs.np);
-> +		dev_err(dev, "regmap lookup for ocrom failed\n");
-> +		return PTR_ERR(rom_regmap);
-> +	}
-> +
-> +	rom_rev_offset = pargs.args[0];
-> +	of_node_put(pargs.np);
-> +
-> +	ret = regmap_read(ocotp_regmap, cfg0_offset, &soc_id1);
-> +	if (ret)
-> +		return -ENODEV;
-> +
-> +	ret = regmap_read(ocotp_regmap, cfg1_offset, &soc_id2);
-> +	if (ret)
-> +		return -ENODEV;
-> +
-> +	soc_id = (u64) soc_id1 << 32 | soc_id2;
-> +	add_device_randomness(&soc_id, sizeof(soc_id));
-> +
-> +	ret = regmap_read(mscm_regmap, MSCM_CPxCOUNT_OFFSET, &cpxcount);
-> +	if (ret)
-> +		return -ENODEV;
-> +
-> +	ret = regmap_read(mscm_regmap, MSCM_CPxCFG1_OFFSET, &cpxcfg1);
-> +	if (ret)
-> +		return -ENODEV;
-> +
-> +	soc_type[0] = cpxcount ? '6' : '5'; /* Dual Core => VF6x0 */
-> +	soc_type[1] = cpxcfg1 ? '1' : '0'; /* L2 Cache => VFx10 */
-> +
-> +	ret = regmap_read(rom_regmap, rom_rev_offset, &rom_rev);
-> +	if (ret)
-> +		return -ENODEV;
-> +
-> +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-> +	if (!soc_dev_attr)
-> +		return -ENOMEM;
-> +
-> +	soc_dev_attr->machine = kasprintf(GFP_KERNEL, "Freescale Vybrid");
-> +	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%016llx", soc_id);
-> +	soc_dev_attr->family = kasprintf(GFP_KERNEL, "Freescale Vybrid VF%s",
-> +								 soc_type);
-> +	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%08x", rom_rev);
-> +
-> +	soc_dev = soc_device_register(soc_dev_attr);
-> +	if (IS_ERR(soc_dev)) {
-> +		kfree(soc_dev_attr->revision);
-> +		kfree(soc_dev_attr->family);
-> +		kfree(soc_dev_attr->soc_id);
-> +		kfree(soc_dev_attr->machine);
-> +		kfree(soc_dev_attr);
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int vf610_soc_remove(struct platform_device *pdev)
-> +{
-> +	if (soc_dev_attr) {
-> +		kfree(soc_dev_attr->revision);
-> +		kfree(soc_dev_attr->family);
-> +		kfree(soc_dev_attr->soc_id);
-> +		kfree(soc_dev_attr->machine);
-> +		kfree(soc_dev_attr);
-> +	}
-> +
-> +	if (soc_dev)
-> +		soc_device_unregister(soc_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id vf610_soc_bus_match[] = {
-> +	{ .compatible = "fsl,vf610-mscm-cpucfg", },
+> here.
 
-IMHO that is a mix and match now. We still bind this driver to a
-specific device, while we point directly to the registers from the SoC
-level (in the device tree).
+There are two conflicting interests ;-)
 
-I'm not sure if the suggestion I made in v2 is acceptable: Couldn't we
-add compatible nodes to the SoC level and bind this driver to the SoC
-directly? I think if we point to the registers at SoC level, we should
-also bind this driver to the SoC level. Of course, then we additionally
-need to point to the mscm-cpucfg register to get the SoC type
-information.
+In the first approach we probed the NAND controller through bcma and
+just added the additional information we can not probe through device
+tree. That was this version:
+https://patchwork.ozlabs.org/patch/473181/
 
-If we keep this driver bound to "fsl,vf610-mscm-cpucfg", then I think we
-should also point from this node to the other nodes/registers...
+This version needs some changes to the brcmnand driver and this
+additional part:
+https://patchwork.ozlabs.org/patch/473182/
 
-Arnd, where did you meant to put the pointers?
+This code is simular to the iproc_nand.c
 
+Brian wanted us to use the iproc_nand.c which is possible, but then we
+completely ignore what we have probed in bcma and only use device tree.
+And this nand driver is not a subnode of the bcma bus any more so we can
+not use the irqs defined there.
+
+> 
+>> +               status = "disabled";
+>> +
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +
+>> +               brcm,nand-has-wp;
+>> +
+>> +               nandcs@0 {
+>> +                       compatible = "brcm,nandcs";
+>> +                       reg = <0>;
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <1>;
+>> +
+>> +                       nand-ecc-strength = <8>;
+>> +                       nand-ecc-step-size = <512>;
+>> +
+>> +                       linux,part-probe = "ofpart", "bcm47xxpart";
+>> +               };
+>> +       };
+> 
+> This seems fine in principle, once the exact binding has been nailed down.
+> 
+> "bcm47xxpart" does not seem like an appropriate string here.
+
+We are already thinking and talking about how to solve this problem.
+There are some parsers that are able to parse some partition layout
+based on information various sources or some vendor headers and some are
+also guessing in addition, like they are assuming that the bootloader is
+in the first block and n bytes long. The current module is that the
+flash driver defines which partition parsers to take, it is hard coded
+into the code. I do not like that. ;-)
+
+I am trying to get a simple patch in which makes it possible to
+overwrite the defaults from the flash driver with device tree.
+As it uses the same format it should be easy to convert devices from the
+old style to the new one. This deice tree attribute is already supported
+by one driver I moved the code to make it available for all drivers.
+
+The patch I am talking about: https://patchwork.ozlabs.org/patch/475988/
+
+Hauke
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
