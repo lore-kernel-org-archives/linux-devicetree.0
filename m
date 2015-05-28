@@ -1,95 +1,71 @@
-From: Eric Anholt <eric@anholt.net>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Subject: Re: [PATCH 2/3 v4] ARM: bcm2835: Add the Raspberry Pi firmware driver
-Date: Thu, 28 May 2015 15:36:36 -0700
-Message-ID: <87twuw72iz.fsf@eliezer.anholt.net>
-References: <20150528114500.GP11677@x1> <1432837987-22861-1-git-send-email-eric@anholt.net> <5567886F.5080108@wwwdotorg.org>
+Date: Thu, 28 May 2015 15:38:02 -0700
+Message-ID: <87r3q072gl.fsf@eliezer.anholt.net>
+References: <20150528114500.GP11677@x1> <1432837987-22861-1-git-send-email-eric@anholt.net> <55678BBC.5090507@tronnes.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5567886F.5080108@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55678BBC.5090507-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 --=-=-=
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Stephen Warren <swarren@wwwdotorg.org> writes:
+Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> writes:
 
-> On 05/28/2015 12:33 PM, Eric Anholt wrote:
+> Den 28.05.2015 20:33, skrev Eric Anholt:
 >> This gives us a function for making mailbox property channel requests
 >> of the firmware, which is most notable in that it will let us get and
 >> set clock rates.
->
-> This thread was rather hard to follow since updated versions of patches
-> were sent "in response" to the original posting rather than as a new
-> thread. Generally it's best to post a complete copy of each new version
-> of the series, and as a completely standalone thread.
-
-Will do.
-
->> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
->
->> +obj-$(CONFIG_BCM2835_MBOX)	+= raspberrypi.o
->
-> I think this warrants its own Kconfig option that depends on _MBOX.
-
-Done, called it RASPBERRPI_FIRMWARE
-
->> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
->
->> +int rpi_firmware_property_list(struct device_node *of_node,
->> +			       void *data, size_t tag_size)
+>>
+>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> ...
+>> +static int rpi_firmware_probe(struct platform_device *pdev)
 >> +{
->> +	struct platform_device *pdev = of_find_device_by_node(of_node);
->
-> I would expect the of_node -> pdev mapping to happen at client device
-> probe time. Simplest for this driver would be if the
-> client-probe-time-mapping function returned the "struct rpi_firmware"
-> and the client passed that to this function.
-
-Done.
-
->> +	struct rpi_firmware *fw = platform_get_drvdata(pdev);
->> +	size_t size = tag_size + 12;
->> +	u32 *buf;
->> +	dma_addr_t bus_addr;
->> +	int ret;
+>> +	struct device *dev =3D &pdev->dev;
+>> +	struct rpi_firmware *fw;
 >> +
+>> +	fw =3D devm_kzalloc(dev, sizeof(*fw), GFP_KERNEL);
 >> +	if (!fw)
->> +		return -EPROBE_DEFER;
+>> +		return -ENOMEM;
+>> +
+>> +	fw->cl.dev =3D dev;
+>> +	fw->cl.rx_callback =3D response_callback;
+>> +	fw->cl.tx_block =3D true;
+>> +
+>> +	fw->chan =3D mbox_request_channel(&fw->cl, 0);
+>> +	if (IS_ERR(fw->chan)) {
+>> +		int ret =3D PTR_ERR(fw->chan);
+>> +		if (ret !=3D -EPROBE_DEFER)
+>> +			dev_err(dev, "Failed to get mbox channel: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	init_completion(&fw->c);
+>> +
+>> +	platform_set_drvdata(pdev, fw);
+>> +
+>> +	rpi_firmware_print_firmware_revision(dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int rpi_firmware_remove(struct platform_device *pdev)
+>> +{
+>> +	struct rpi_firmware *fw =3D platform_get_drvdata(pdev);
+>> +
+>> +	mbox_free_channel(fw->chan);
 >
-> That return code should only be used in functions called at probe time.
-> While I do see the expectation is that clients call this function once
-> at probe time and hence guarantee to see -EPROBE_DEFER at probe time (if
-> at all), it's rather odd for a function that's intended to be called at
-> times other that probe() to ever have the possibility of returning
-> -EPROBE_DEFER. If somehow that values gets returned at another time,
-> it's going to be rather confusing to the client.
+> I guess driver data has to be reset here:
+> platform_set_drvdata(pdev, NULL);
 
-Dropped now that I'm passing fw in.
-
->> +	buf[0] = size;
->> +	buf[1] = RPI_FIRMWARE_STATUS_REQUEST;
->> +	memcpy(&buf[2], data, tag_size);
->> +	buf[size / 4 - 1] = RPI_FIRMWARE_PROPERTY_END;
->
-> Out of curiosity, why not require the client to format the entire
-> message itself? In theory at least, the client could submit a whole
-> "string" of tags at once, so it really seems like the client should be
-> constructing the whole message.
-
-Because it's something extra for the client to screw up?  I mean, if we
-were going for super high performance, we'd have the client asking us
-for a DMA buffer to write into, and they'd write the whole thing, and
-submit that back to us.  But we don't need that, because the property
-channel is used so rarely.
-
-I briefly used multi-tag in a not-for-upstream KMS-using-the-firmware
-branch, but it turned out the FB MBOX channel was strictly better (once
-I worked around a fw bug).
+Fixed.
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
@@ -97,18 +73,22 @@ Content-Type: application/pgp-signature; name="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJVZ5h0AAoJELXWKTbR/J7oY7gQALygxS5WxZjfL2/U7xj78bdn
-51C5xWQkDkkHkfY/h39+JCHIcJoMGNMqCCwsLs/NfCxx8LkDrKe+0bnSRPXLN2lS
-4bgXADSZYulLkbGjwuxMy+LZ7E4OLwhQPY72R3FRYq+of5H+rEks03UN7j8zUlD1
-L8ifalRKXscF3Gue6PXq6Q/5NwDaAIc7O9WJkPSx7uNUHSGndL4rDcGG3fRZjyo+
-816VD1NjLwd5EM3qoXYYWTsoDS/WF1bmSfpC+DpP1GUqhNvVNvk7fVU5U4PnjU0N
-EL8bFIqZarKOUmxeIto8jTACdhdl/6cQggoUhcKe4rWdDSb1Vqd6UUih8eB/wc89
-cOzG24eaNO5DrbARxE/5jMPZ0TscATSgBWJAiLOGKG3jrkQaivNiV9u9JnvwUsWv
-WpraDj0bjctKEXK5XjUBRt0jqegUriFIhrJJ6/vwbyn5wUj+JDRLNEKIyZ6OqNNv
-UvJi0hIzx6DW4U2BGGwfGreC5+mUelZKVdtIuKPXjiofBXyAW8aF0VlTWuZVqQkO
-tuTOp6fTvGw/BahLKTZqFrDDtBRm29SYYef0A7JFdCf7kEW2kBSGujY6QDRFOlzq
-nZrJkSdxHw/tGaBGvi/uHTCc3DiRZaefV3tdycfxY33/+u0F38eWOEoJqeuvmZZ0
-e9flvxdTUwjgM8oFISfO
-=cwzm
+iQIcBAEBCgAGBQJVZ5jKAAoJELXWKTbR/J7obhoQAKdslT1vZ2NzV2R98tWga37H
+cwrLYqmDJpypgmPxn6xXCtrRWzESGVmV0F82ByxLhIUAM+AeoF2gx35/6u/pilUn
+zxF5Xy9qV7N514InHddQMbWu1VjcdI7mRHcOSttPqaF+yQbUFxhB7uDJYEKlXD6q
+S2AjA3gVzL/1FyDcSnFXpIBeLpovysz1ToGiXlt/maFt6u2S6FEMhX8cQJbRB2/Y
+6wOokHd93EGC53dZ9+xmGGEyv/klgnw425Djw/DMSLASNDYeHByEaV+Z0GQWCK4k
+2HYykSoYUdb60cVC9nqmLvMko4Ulaapq6mTFuG19RpQ66LPVwLMijoqrpx36UUyt
+vbHLRZjCPztqkwwAvdSlVqtXuMKoCsptS3jlcqRNRjCSGr5+ndNzUr9TEJ7E2s2S
+6g3kVHmCwQXGAnaERO2mZssXgfpFvOlkcBZ2n9ImBfOD7Fj74VJ52pbxil1b5yPw
+WhzqITkCmrgLbMXXmHG4ysjINFdHIdJbGvqDY9pO0lwhzQL2G3U0eWg+U6sHOICq
+a9/fWDrDL+PSH8y2SetmE36K2oTI3BKBjtdAjRtqmNNc9c+iU2GcJr6GHqtUzUkr
+WaMy2Xt6AV8/O2MyGlYka/kwoVt8cmP/c6SQROAtcWIUrrUH3E9vTaBiIJPZEA/K
+wHSRJ3mXM3asfJi3ZRG3
+=pI9k
 -----END PGP SIGNATURE-----
 --=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
