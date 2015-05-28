@@ -1,65 +1,40 @@
-From: =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf@tronnes.org>
-Subject: Re: [PATCH 2/3 v4] ARM: bcm2835: Add the Raspberry Pi firmware driver
-Date: Thu, 28 May 2015 23:42:20 +0200
-Message-ID: <55678BBC.5090507@tronnes.org>
-References: <20150528114500.GP11677@x1> <1432837987-22861-1-git-send-email-eric@anholt.net>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/7] dt/bindings: Add binding for the Raspberry Pi clock
+ provider
+Date: Thu, 28 May 2015 15:46:46 -0600
+Message-ID: <55678CC6.8060300@wwwdotorg.org>
+References: <1431978219-14226-1-git-send-email-eric@anholt.net> <1431978219-14226-2-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432837987-22861-1-git-send-email-eric@anholt.net>
+In-Reply-To: <1431978219-14226-2-git-send-email-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/18/2015 01:43 PM, Eric Anholt wrote:
+> The hardware clocks are not controllable by the ARM, so we have to
+> make requests to the firmware to do so from the VPU side.  This will
+> let us replace fixed clocks in our DT with actual clock control (and
+> correct frequency information).
 
-Den 28.05.2015 20:33, skrev Eric Anholt:
-> This gives us a function for making mailbox property channel requests
-> of the firmware, which is most notable in that it will let us get and
-> set clock rates.
->
-> Signed-off-by: Eric Anholt <eric@anholt.net>
+> diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,firmware-clocks.txt b/Documentation/devicetree/bindings/clock/raspberrypi,firmware-clocks.txt
+
+> +Required properties:
 ...
-> +static int rpi_firmware_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rpi_firmware *fw;
-> +
-> +	fw = devm_kzalloc(dev, sizeof(*fw), GFP_KERNEL);
-> +	if (!fw)
-> +		return -ENOMEM;
-> +
-> +	fw->cl.dev = dev;
-> +	fw->cl.rx_callback = response_callback;
-> +	fw->cl.tx_block = true;
-> +
-> +	fw->chan = mbox_request_channel(&fw->cl, 0);
-> +	if (IS_ERR(fw->chan)) {
-> +		int ret = PTR_ERR(fw->chan);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get mbox channel: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	init_completion(&fw->c);
-> +
-> +	platform_set_drvdata(pdev, fw);
-> +
-> +	rpi_firmware_print_firmware_revision(dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rpi_firmware_remove(struct platform_device *pdev)
-> +{
-> +	struct rpi_firmware *fw = platform_get_drvdata(pdev);
-> +
-> +	mbox_free_channel(fw->chan);
+> +- #clock-cells:	Shall have value <1>.  The permitted clock-specifier values
+> +		  can be found in include/dt-bindings/clk/raspberrypi.h.
 
-I guess driver data has to be reset here:
-platform_set_drvdata(pdev, NULL);
+That file is explicitly part of the binding; any driver that implements
+this binding needs to use the same values. As such, that file would
+typically be part of the patch that adds the binding doc, not part of
+the patch that implements the driver.
 
-> +
-> +	return 0;
-> +}
+No need to respin the series just because of that though.
+
+> +- firmware:	Phandle to the firmware driver node.
+
+"firmware" is rather generic. I'd suggest a vendor prefix for the
+property name; raspberrypi,firmware.
