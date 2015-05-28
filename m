@@ -1,355 +1,215 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3 v2] ARM: bcm2835: Add the Raspberry Pi firmware driver
-Date: Thu, 28 May 2015 12:45:01 +0100
-Message-ID: <20150528114500.GP11677@x1>
-References: <1431543609-19646-1-git-send-email-eric@anholt.net>
- <1431543609-19646-3-git-send-email-eric@anholt.net>
- <20150528112610.GO11677@x1>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [RFC PATCH v1 1/3] PCI: designware: Add ARM64 support
+Date: Thu, 28 May 2015 19:48:37 +0800
+Message-ID: <55670095.7020203@hisilicon.com>
+References: <000001d096a9$27bf43f0$773dcbd0$@com> <2095085.CuXXeGT0Wg@wuerfel> <5565EEAD.9070003@st.com> <16371687.jmfn381VuV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150528112610.GO11677@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <16371687.jmfn381VuV@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, linux-arm-kernel@lists.infradead.org, zhudacai@hisilicon.com, devicetree@vger.kernel.org, 'Zhang Jukuo' <zhangjukuo@huawei.com>, 'Gabriele Paoloni' <gabriele.paoloni@huawei.com>, Jingoo Han <jingoohan1@gmail.com>, 'Pratyush Anand' <pratyush.anand@gmail.com>, 'Richard Zhu' <Richard.Zhu@freescale.com>, 'Zhichang Yuan' <yuanzhichang@hisilicon.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, qiuzhenfa@hisilicon.com, linux-pci@vger.kernel.org, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Liviu Dudau' <liviu.dudau@arm.com>, 'Liguozhu' <liguozhu@hisilicon.com>, 'Lucas Stach' <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-=46ew nits, nothing major.
+On 2015/5/28 3:51, Arnd Bergmann wrote:
+> On Wednesday 27 May 2015 18:19:57 Fabrice Gasnier wrote:
+>> On 05/27/2015 05:43 PM, Arnd Bergmann wrote:
+>>> On Wednesday 27 May 2015 17:31:46 Arnd Bergmann wrote:
+>>>> Yes, that works. However there are two problems with the approach:
+>>>>
+>>>> - we have to change all PCI host drivers on ARM to do this in order to remove
+>>>>    the ARM-specific pcibios_msi_controller() function
+>>>> - it's possible that there are dw_pcie implementations that do not include
+>>>>    an MSI controller, so that pointer would be NULL, which leads to the
+>>>>    core code to still call the ARM-specific pcibios_msi_controller() function
+>>>>    unless we remove it.
+>>> I wonder if this simple patch would be sufficient to kill off
+>>> pcibios_msi_controller().
+>>>
+>>> Can one of you try it?
+>>>
+>>>       Arnd
+>>
+>> Hi Arnd,
+>> I tested it quickly on my platform, with and without CONFIG_PCI_MSI.
+>> In both case it seems to run fine with dw pcie.
+>>
+> 
+> Awesome. Now we just need to find a way to move the align_resource callback.
+> I wonder if the approach below would be acceptable.
+> 
+> 	Arnd
+> 
 
-> This gives us a function for making mailbox property channel requests
-> of the firmware, which is most notable in that it will let us get and
-> set clock rates.
->=20
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> ---
->=20
-> v2: Drop power-domains stuff for now since we don't have the driver
->     core support to make it useful.  Move to drivers/firmware/.
->     Capitalize the enums.  De-global the firmware variable.  Use the
->     firmware device to allocate our DMA buffer, so that the dma-range=
-s
->     DT property gets respected.  Simplify the property tag transactio=
-n
->     interface even more, leaving a multi-tag interface still
->     available.  For conciseness, rename "raspberrypi" to "rpi" on all
->     functions/enums/structs, and the "firmware" variable to "fw".
->     Print when the driver is probed successfully, since debugging
->     -EPROBE_DEFER handling is such a big part of bcm2835 development.
->     Drop -EBUSY mailbox handling since the mailbox core has been fixe=
-d
->     to return -EPROBE_DEFER in -next.
->=20
-> Note that I don't think I've done what srwarren wanted for
-> -EPROBE_DEFER, because I'm not clear what he wants.  I think he might
-> just be asking for a function that does:
->=20
-> /*
->  * Returns 0 if the firmware device is probed and available, otherwis=
-e
->  * -EPROBE_DEFER.
->  */
-> int rpi_firmware_get(struct device_node *firmware_node)
-> {
-> 	struct platform_device *pdev =3D of_find_device_by_node(of_node);
-> 	if (!platform_get_drvdata(pdev))
-> 		return -EPROBE_DEFER;
-> 	return 0;
-> }
-> EXPORT_SYMBOL(rpi_firmware_get)
->=20
-> If that's all, I'm happy to add it.
->=20
-> Note that a client could currently do this:
->=20
-> 	ret =3D rpi_firmware_property_list(firmware_node, NULL, 0);
->=20
-> in exchange for a bit of overhead in the case that it's actually prob=
-ed already.
->=20
->=20
->  drivers/firmware/Makefile                          |   1 +
->  drivers/firmware/raspberrypi.c                     | 224 +++++++++++=
-++++++++++
->  .../soc/bcm2835/raspberrypi-firmware-property.h    | 114 +++++++++++
->  3 files changed, 339 insertions(+)
->  create mode 100644 drivers/firmware/raspberrypi.c
->  create mode 100644 include/soc/bcm2835/raspberrypi-firmware-property=
-=2Eh
->=20
-> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-> index 3fdd391..41ced28 100644
-> --- a/drivers/firmware/Makefile
-> +++ b/drivers/firmware/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_ISCSI_IBFT)	+=3D iscsi_ibft.o
->  obj-$(CONFIG_FIRMWARE_MEMMAP)	+=3D memmap.o
->  obj-$(CONFIG_QCOM_SCM)		+=3D qcom_scm.o
->  CFLAGS_qcom_scm.o :=3D$(call as-instr,.arch_extension sec,-DREQUIRES=
-_SEC=3D1)
-> +obj-$(CONFIG_BCM2835_MBOX)	+=3D raspberrypi.o
-> =20
->  obj-$(CONFIG_GOOGLE_FIRMWARE)	+=3D google/
->  obj-$(CONFIG_EFI)		+=3D efi/
-> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspbe=
-rrypi.c
-> new file mode 100644
-> index 0000000..61bde1b
-> --- /dev/null
-> +++ b/drivers/firmware/raspberrypi.c
-> @@ -0,0 +1,224 @@
-> +/*
-> + *  Copyright =A9 2015 Broadcom
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +/*
-> + * Defines interfaces for interacting wtih the Raspberry Pi firmware=
-'s
-> + * property channel.
-> + */
+Hi Arnd,
 
-No need to separate this from the header comment above.
+Many thanks for your kindly suggestions.
 
-> +#include <linux/dma-mapping.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <soc/bcm2835/raspberrypi-firmware-property.h>
-> +
-> +#define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
-> +#define MBOX_CHAN(msg)			((msg) & 0xf)
-> +#define MBOX_DATA28(msg)		((msg) & ~0xf)
-> +#define MBOX_CHAN_PROPERTY		8
-> +
-> +struct rpi_firmware {
-> +	struct mbox_client cl;
-> +	struct mbox_chan *chan; /* The property channel. */
-> +	struct completion c;
-> +	u32 enabled;
-> +};
-> +
-> +static DEFINE_MUTEX(transaction_lock);
-> +
-> +static void response_callback(struct mbox_client *cl, void *msg)
+> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+> index fcbbbb1b9e95..20839d26a490 100644
+> --- a/arch/arm/kernel/bios32.c
+> +++ b/arch/arm/kernel/bios32.c
+> @@ -597,9 +588,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+>  
+>  	start = (start + align - 1) & ~(align - 1);
+>  
+> -	if (sys->align_resource)
+> -		return sys->align_resource(dev, res, start, size, align);
+> -
+>  	return start;
+>  }
+>  
+> diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
+> index 1ab863551920..74216c9c2822 100644
+> --- a/drivers/pci/host/pci-mvebu.c
+> +++ b/drivers/pci/host/pci-mvebu.c
+> @@ -751,27 +751,20 @@ static int mvebu_pcie_setup(int nr, struct pci_sys_data *sys)
+>  	return 1;
+>  }
+>  
+> -static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+> +static resource_size_t mvebu_pcie_align_resource(void *data,
+> +						 const struct resource *res,
+> +						 resource_size_t size,
+> +						 resource_size_t align)
+>  {
+> -	struct mvebu_pcie *pcie = sys_to_pcie(sys);
+> -	struct pci_bus *bus;
+> +	struct device *dev = data;
+>  
+> -	bus = pci_create_root_bus(&pcie->pdev->dev, sys->busnr,
+> -				  &mvebu_pcie_ops, sys, &sys->resources);
+> -	if (!bus)
+> -		return NULL;
+> +	resource_size_t start = res->start;
+>  
+> -	pci_scan_child_bus(bus);
+> +	if (res->flags & IORESOURCE_IO && start & 0x300)
+> +		start = (start + 0x3ff) & ~0x3ff;
+>  
+> -	return bus;
+> -}
+> +	start = (start + align - 1) & ~(align - 1);
+>  
+> -static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+> -						 const struct resource *res,
+> -						 resource_size_t start,
+> -						 resource_size_t size,
+> -						 resource_size_t align)
+> -{
+>  	if (dev->bus->number != 0)
+>  		return start;
+>  
+> @@ -796,6 +789,25 @@ static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+>  		return start;
+>  }
+>  
+> +static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
 > +{
-> +	struct rpi_firmware *fw =3D container_of(cl, struct rpi_firmware, c=
-l);
-> +	complete(&fw->c);
+> +	struct mvebu_pcie *pcie = sys_to_pcie(sys);
+> +	struct pci_host_bridge *phb;
+> +	struct pci_bus *bus;
+> +
+> +	bus = pci_create_root_bus(&pcie->pdev->dev, sys->busnr,
+> +				  &mvebu_pcie_ops, sys, &sys->resources);
+> +	if (!bus)
+> +		return NULL;
+> +
+> +	phb = pci_find_host_bridge(bus);
+> +	phb->align_resource = mvebu_pcie_align_resource;
+> +
+> +	pci_scan_child_bus(bus);
+> +
+> +	return bus;
 > +}
 > +
-> +/*
-> + * Sends a request to the firmware through the BCM2835 mailbox drive=
-r,
-> + * and synchronously waits for the reply.
-> + */
-> +static int
-> +rpi_firmware_transaction(struct rpi_firmware *fw, u32 chan, u32 data=
-)
-> +{
-> +	u32 message =3D MBOX_MSG(chan, data);
-> +	int ret;
+>  static void mvebu_pcie_enable(struct mvebu_pcie *pcie)
+>  {
+>  	struct hw_pci hw;
+> @@ -812,7 +824,6 @@ static void mvebu_pcie_enable(struct mvebu_pcie *pcie)
+>  	hw.scan           = mvebu_pcie_scan_bus;
+>  	hw.map_irq        = of_irq_parse_and_map_pci;
+>  	hw.ops            = &mvebu_pcie_ops;
+> -	hw.align_resource = mvebu_pcie_align_resource;
+>  
+>  	pci_common_init(&hw);
+>  }
+> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> index 232f9254c11a..e1f5e13c4636 100644
+> --- a/drivers/pci/setup-res.c
+> +++ b/drivers/pci/setup-res.c
+> @@ -200,7 +200,11 @@ static int pci_revert_fw_address(struct resource *res, struct pci_dev *dev,
+>  }
+>  
+>  static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
+> -		int resno, resource_size_t size, resource_size_t align)
+> +		int resno, resource_size_t size, resource_size_t align,
+> +		resource_size_t (*alignf)(void *,
+> +					  const struct resource *,
+> +					  resource_size_t,
+> +					  resource_size_t))
+>  {
+>  	struct resource *res = dev->resource + resno;
+>  	resource_size_t min;
+> @@ -217,7 +221,7 @@ static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
+>  	 */
+>  	ret = pci_bus_alloc_resource(bus, res, size, align, min,
+>  				     IORESOURCE_PREFETCH | IORESOURCE_MEM_64,
+> -				     pcibios_align_resource, dev);
+> +				     alignf, dev);
+>  	if (ret == 0)
+>  		return 0;
+>  
+> @@ -229,7 +233,7 @@ static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
+>  	     (IORESOURCE_PREFETCH | IORESOURCE_MEM_64)) {
+>  		ret = pci_bus_alloc_resource(bus, res, size, align, min,
+>  					     IORESOURCE_PREFETCH,
+> -					     pcibios_align_resource, dev);
+> +					     alignf, dev);
+>  		if (ret == 0)
+>  			return 0;
+>  	}
+> @@ -242,7 +246,7 @@ static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
+>  	 */
+>  	if (res->flags & (IORESOURCE_PREFETCH | IORESOURCE_MEM_64))
+>  		ret = pci_bus_alloc_resource(bus, res, size, align, min, 0,
+> -					     pcibios_align_resource, dev);
+> +					     alignf, dev);
+>  
+>  	return ret;
+>  }
+> @@ -251,10 +255,19 @@ static int _pci_assign_resource(struct pci_dev *dev, int resno,
+>  				resource_size_t size, resource_size_t min_align)
+>  {
+>  	struct pci_bus *bus;
+> +	struct pci_host_bridge *phb;
+>  	int ret;
+>  
+>  	bus = dev->bus;
+> -	while ((ret = __pci_assign_resource(bus, dev, resno, size, min_align))) {
+> +	phb = pci_find_host_bridge(bus);
 > +
-> +	WARN_ON(data & 0xf);
+> +	if (phb->align_resource)
+> +		alignf = phb->align_resource;
+> +	else
+> +		alignf = pcibios_align_resource;
 > +
-> +	mutex_lock(&transaction_lock);
-> +	reinit_completion(&fw->c);
-> +	ret =3D mbox_send_message(fw->chan, &message);
-> +	if (ret >=3D 0) {
-> +		wait_for_completion(&fw->c);
-> +		ret =3D 0;
-> +	} else {
-> +		dev_err(fw->cl.dev, "mbox_send_message returned %d\n", ret);
-> +	}
-> +	mutex_unlock(&transaction_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Submits a set of concatenated tags to the VPU firmware through th=
-e
-> + * mailbox property interface.
-> + *
-> + * The buffer header and the ending tag are added by this function a=
-nd
-> + * don't need to be supplied, just the actual tags for your operatio=
-n.
-> + * See struct rpi_firmware_property_tag_header for the per-tag
-> + * structure.
-> + */
-> +int rpi_firmware_property_list(struct device_node *of_node,
-> +			       void *data, size_t tag_size)
-> +{
-> +	struct platform_device *pdev =3D of_find_device_by_node(of_node);
-> +	struct rpi_firmware *fw =3D platform_get_drvdata(pdev);
-> +	size_t size =3D tag_size + 12;
-> +	u32 *buf;
-> +	dma_addr_t bus_addr;
-> +	int ret =3D 0;
+> +	while ((ret = __pci_assign_resource(bus, dev, resno, size,
+> +					    min_align, alignf))) {
+>  		if (!bus->parent || !bus->self->transparent)
+>  			break;
+>  		bus = bus->parent;
+> 
 
-No need to re-initialise.
+I think this code is fine, and we also should add a funtion point in struct pci_host_bridge to
+store mvebu_pcie_align_resource. How about I make a new version patchset with above codes for
+further reviewing ?
 
-> +	if (!fw)
-> +		return -EPROBE_DEFER;
-> +
-> +	/* Packets are processed a dword at a time. */
-> +	if (size & 3)
-> +		return -EINVAL;
-> +
-> +	buf =3D dma_alloc_coherent(fw->cl.dev, PAGE_ALIGN(size), &bus_addr,
-> +				 GFP_ATOMIC);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	/* The firmware will error out without parsing in this case. */
-> +	WARN_ON(size >=3D 1024 * 1024);
-> +
-> +	buf[0] =3D size;
-> +	buf[1] =3D RPI_FIRMWARE_STATUS_REQUEST;
-> +	memcpy(&buf[2], data, tag_size);
-> +	buf[size / 4 - 1] =3D RPI_FIRMWARE_PROPERTY_END;
-> +	wmb();
-> +
-> +	ret =3D rpi_firmware_transaction(fw, MBOX_CHAN_PROPERTY, bus_addr);
-> +
-> +	rmb();
-> +	memcpy(data, &buf[2], tag_size);
-> +	if (ret =3D=3D 0 && buf[1] !=3D RPI_FIRMWARE_STATUS_SUCCESS) {
-> +		/*
-> +		 * The tag name here might not be the one causing the
-> +		 * error, if there were multiple tags in the request.
-> +		 * But single-tag is the most common, so go with it.
-> +		 */
-> +		dev_err(fw->cl.dev, "Request 0x%08x returned status 0x%08x\n",
-> +			buf[2], buf[1]);
-> +		ret =3D -EINVAL;
-> +	}
-> +
-> +	dma_free_coherent(NULL, PAGE_ALIGN(size), buf, bus_addr);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(rpi_firmware_property_list);
-> +
-> +/*
-> + * Submits a single tag to the VPU firmware through the mailbox
-> + * property interface.
-> + *
-> + * This is a convenience wrapper around
-> + * rpi_firmware_property_list() to avoid some of the
-> + * boilerplate in property calls.
-> + */
-> +int rpi_firmware_property(struct device_node *of_node,
-> +			  u32 tag, void *tag_data, size_t buf_size)
-> +{
-> +	/* Single tags are very small (generally 8 bytes), so the
-> +	 * stack should be safe.
-> +	 */
-> +	u8 data[buf_size + sizeof(struct rpi_firmware_property_tag_header)]=
-;
-> +	struct rpi_firmware_property_tag_header *header =3D
-> +		(struct rpi_firmware_property_tag_header *)data;
-> +	int ret;
-> +
-> +	header->tag =3D tag;
-> +	header->buf_size =3D buf_size;
-> +	header->req_resp_size =3D 0;
-> +	memcpy(data + sizeof(struct rpi_firmware_property_tag_header),
-> +	       tag_data, buf_size);
-> +
-> +	ret =3D rpi_firmware_property_list(of_node, &data, sizeof(data));
-> +	memcpy(tag_data,
-> +	       data + sizeof(struct rpi_firmware_property_tag_header),
-> +	       buf_size);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(rpi_firmware_property);
-> +
-> +static int rpi_firmware_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	int ret =3D 0;
-> +	struct rpi_firmware *fw;
-> +
-> +	fw =3D devm_kzalloc(dev, sizeof(*fw), GFP_KERNEL);
-> +	if (!fw)
-> +		return -ENOMEM;
-> +
-> +	fw->cl.dev =3D dev;
-> +	fw->cl.rx_callback =3D response_callback;
-> +	fw->cl.tx_block =3D true;
-> +
-> +	fw->chan =3D mbox_request_channel(&fw->cl, 0);
-> +	if (IS_ERR(fw->chan)) {
-> +		ret =3D PTR_ERR(fw->chan);
-> +		/* An -EBUSY from the core means it couldn't find our
-> +		 * channel, because the mailbox driver hadn't
-> +		 * registered yet.
-> +		 */
-> +		if (ret !=3D -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get mbox channel: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	init_completion(&fw->c);
-> +
-> +	dev_info(dev, "Firmware driver\n");
+Best Regards,
+Zhou
 
-We don't normally print unless data (such as version/revision number)
-has been acquired from the h/w.
-
-> +	platform_set_drvdata(pdev, fw);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rpi_firmware_remove(struct platform_device *pdev)
-> +{
-> +	struct rpi_firmware *fw =3D platform_get_drvdata(pdev);
-> +
-> +	mbox_free_channel(fw->chan);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rpi_firmware_of_match[] =3D {
-> +	{ .compatible =3D "raspberrypi,firmware", },
-
-"firmware" sounds very generic.  Is there any other information you
-can use to make it more specific, in order to future-proof the
-addition of new incarnations?  I'm thinking "bcm2835-firmware" for
-instance.
-
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rpi_firmware_of_match);
-> +
-> +static struct platform_driver rpi_firmware_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "raspberrypi-firmware",
-> +		.owner =3D THIS_MODULE,
-
-Remove this, it's taken care of elsewhere.
-
-> +		.of_match_table =3D rpi_firmware_of_match,
-> +	},
-> +	.probe		=3D rpi_firmware_probe,
-> +	.remove		=3D rpi_firmware_remove,
-> +};
-> +module_platform_driver(rpi_firmware_driver);
-> +
-> +MODULE_AUTHOR("Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>");
-> +MODULE_DESCRIPTION("Raspberry Pi firmware driver");
-> +MODULE_LICENSE("GPL v2");
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
