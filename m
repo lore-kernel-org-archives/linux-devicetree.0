@@ -1,109 +1,37 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 4/5] doc: dt: add documentation for lpc1850-ccu clk driver
-Date: Thu, 28 May 2015 22:31:46 +0200
-Message-ID: <1432845107-12458-5-git-send-email-manabian@gmail.com>
-References: <1432845107-12458-1-git-send-email-manabian@gmail.com>
+From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] drivers: hwspinlock: add CSR atlas7 implementation
+Date: Thu, 28 May 2015 13:55:38 -0700
+Message-ID: <CAJAp7Og0GDmh7EcsDedNkRi0StoQZOE+ShP_m2GXAhq9M4UG+Q@mail.gmail.com>
+References: <1432628911-18555-1-git-send-email-21cnbao@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432845107-12458-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1432628911-18555-1-git-send-email-21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, workgroup.linux-kQvG35nSl+M@public.gmane.org, Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for lpc1850-ccu clk driver.
+On Tue, May 26, 2015 at 1:28 AM, Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>
+>
+> Add hwspinlock support for the CSR atlas7 SoC.
+>
+> The Hardware Spinlock device on atlas7 provides hardware assistance
+> for synchronization between the multiple processors in the system
+> (dual Cortex-A7, CAN bus Cortex-M3 and audio DSP).
+>
+> Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/clock/lpc1850-ccu.txt      | 77 ++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/lpc1850-ccu.txt
+Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/clock/lpc1850-ccu.txt b/Documentation/devicetree/bindings/clock/lpc1850-ccu.txt
-new file mode 100644
-index 000000000000..fa97c12014ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/lpc1850-ccu.txt
-@@ -0,0 +1,77 @@
-+* NXP LPC1850 Clock Control Unit (CCU)
-+
-+Each CGU base clock has several clock branches which can be turned on
-+or off independently by the Clock Control Units CCU1 or CCU2. The
-+branch clocks are distributed between CCU1 and CCU2.
-+
-+ - Above text taken from NXP LPC1850 User Manual.
-+
-+This binding uses the common clock binding:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible:
-+	Should be "nxp,lpc1850-ccu"
-+- reg:
-+	Shall define the base and range of the address space
-+	containing clock control registers
-+- #clock-cells:
-+	Shall have value <1>.  The permitted clock-specifier values
-+	are the branch clock names defined in table below.
-+- clocks:
-+	Shall contain a list of phandles for the base clocks routed
-+	from the CGU to the specific CCU. See mapping of base clocks
-+	and CCU in table below.
-+- clock-names:
-+	Shall contain a list of names for the base clock routed
-+	from the CGU to the specific CCU. Valid CCU clock names:
-+	"base_usb0_clk",  "base_periph_clk", "base_usb1_clk",
-+	"base_cpu_clk",   "base_spifi_clk",  "base_spi_clk",
-+	"base_apb1_clk",  "base_apb3_clk",   "base_adchs_clk",
-+	"base_sdio_clk",  "base_ssp0_clk",   "base_ssp1_clk",
-+	"base_uart0_clk", "base_uart1_clk",  "base_uart2_clk",
-+	"base_uart3_clk", "base_audio_clk"
-+
-+Which branch clocks that are available on the CCU depends on the
-+specific LPC part. Check the user manual for your specific part.
-+
-+A list of CCU clocks can be found in dt-bindings/clock/lpc18xx-ccu.h.
-+
-+Example board file:
-+
-+soc {
-+	ccu1: clock-controller@40051000 {
-+		compatible = "nxp,lpc1850-ccu";
-+		reg = <0x40051000 0x1000>;
-+		#clock-cells = <1>;
-+		clocks = <&cgu BASE_APB3_CLK>,   <&cgu BASE_APB1_CLK>,
-+			 <&cgu BASE_SPIFI_CLK>,  <&cgu BASE_CPU_CLK>,
-+			 <&cgu BASE_PERIPH_CLK>, <&cgu BASE_USB0_CLK>,
-+			 <&cgu BASE_USB1_CLK>,   <&cgu BASE_SPI_CLK>;
-+		clock-names = "base_apb3_clk",   "base_apb1_clk",
-+			      "base_spifi_clk",  "base_cpu_clk",
-+			      "base_periph_clk", "base_usb0_clk",
-+			      "base_usb1_clk",   "base_spi_clk";
-+	};
-+
-+	ccu2: clock-controller@40052000 {
-+		compatible = "nxp,lpc1850-ccu";
-+		reg = <0x40052000 0x1000>;
-+		#clock-cells = <1>;
-+		clocks = <&cgu BASE_AUDIO_CLK>, <&cgu BASE_UART3_CLK>,
-+			 <&cgu BASE_UART2_CLK>, <&cgu BASE_UART1_CLK>,
-+			 <&cgu BASE_UART0_CLK>, <&cgu BASE_SSP1_CLK>,
-+			 <&cgu BASE_SSP0_CLK>,  <&cgu BASE_SDIO_CLK>;
-+		clock-names = "base_audio_clk", "base_uart3_clk",
-+			      "base_uart2_clk", "base_uart1_clk",
-+			      "base_uart0_clk", "base_ssp1_clk",
-+			      "base_ssp0_clk",  "base_sdio_clk";
-+	};
-+
-+	/* A user of CCU brach clocks */
-+	uart1: serial@40082000 {
-+		...
-+		clocks = <&ccu2 CLK_APB0_UART1>, <&ccu1 CLK_CPU_UART1>;
-+		...
-+	};
-+};
--- 
-1.8.0
+> Signed-off-by: Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>
+> Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+> ---
 
+Regards,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
