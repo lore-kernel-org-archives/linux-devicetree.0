@@ -1,213 +1,842 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 5/7] mtd: brcmnand: add bcma driver
-Date: Thu, 28 May 2015 00:18:30 +0200
-Message-ID: <556642B6.70608@hauke-m.de>
-References: <1431877266-28566-1-git-send-email-hauke@hauke-m.de> <1431877266-28566-6-git-send-email-hauke@hauke-m.de> <20150520003402.GC11598@ld-irv-0074> <CACna6rzBn3yzzER56aAmk+VPNiMh9ikA3B1YZmMesF=3DWdq+A@mail.gmail.com> <20150520184028.GF11598@ld-irv-0074> <CACna6rwc=Qudqw8e3N9SO7xEGZCx=LgwrBEVqzJHi9KMSjhyVw@mail.gmail.com> <20150527001833.GB27753@ld-irv-0074>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH] [PATCH v3] mtd:spi-nor: Add Altera Quad SPI Driver
+Date: Wed, 27 May 2015 18:32:08 -0700
+Message-ID: <20150528013208.GM27753@ld-irv-0074>
+References: <1426493782-3791-1-git-send-email-vndao@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150527001833.GB27753@ld-irv-0074>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJl?= =?UTF-8?B?Y2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426493782-3791-1-git-send-email-vndao@altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vndao@altera.com
+Cc: dwmw2@infradead.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ngachi86@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/2015 02:18 AM, Brian Norris wrote:
-> On Thu, May 21, 2015 at 09:51:11AM +0200, Rafa=C5=82 Mi=C5=82ecki wro=
-te:
->> On 20 May 2015 at 20:40, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
->>> On Wed, May 20, 2015 at 08:39:06AM +0200, Rafa=C5=82 Mi=C5=82ecki w=
-rote:
->>>> On 20 May 2015 at 02:34, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
-> wrote:
->>>>> On Sun, May 17, 2015 at 05:41:04PM +0200, Hauke Mehrtens wrote:
->>>>>> This driver registers at the bcma bus and drives the NAND core i=
-f it
->>>>>> was found on this bus. The bcma bus with this NAND core is used =
-on the
->>>>>> bcm53xx and bcm47xx Northstar SoC with ARM CPU cores. The memory=
- ranges
->>>>>> are automatically detected by bcma and the irq numbers read from=
- device
->>>>>> tree by bcma bus driver.
->>>>>
->>>>> If you're going to use device tree for part of it (IRQs) why not =
-the
->>>>> whole thing?
->>>>>
->>>>>> This is based on the iproc driver.
->>>>>
->>>>> This looks like you could probably get by with just using iproc_n=
-and.c
->>>>> as-is. The main NAND core is apparently MMIO-accessible on your c=
-hips,
->>>>> so aren't the BCMA bits you're touching also?
->>>>
->>>> That's right, in case of SoCs cores are MMIO-accessible, however I=
- see
->>>> few reasons for writing this driver as bcma based:
->>>> 1) MMIO access isn't available for bcma bus /hosted/ on PCIe devic=
-es.
->>>> By using bcma layer we write generic drivers.
->>>
->>> I strongly doubt that this NAND core is ever put on a PCIe endpoint=
-=2E
->>
->> Sure, but I still don't understand why you want to bypass some layer
->> that helps with stuff.
-> [snip irrelevant examples]
->=20
-> My motivation: don't duplicate code unnecessarily. iproc_nand is alre=
-ady
-> necessary, and it supports everything you need (see Hauke's patch, wh=
-ich
-> apparently supports these chips with no additional code).
->=20
-> So when you say "helps with stuff", I ask "does it really help?", and
-> "is it worth the duplicated driver?"
->=20
->>>> 2) bcma detects cores and their MMIO addresses automatically, if w=
-e
->>>> are a bit lazy, it's easier to use it rather than keep hardcoding =
-all
->>>> addresses
->>>
->>> Laziness is a pretty bad excuse. You already have to do 60% of the =
-work
->>> by putting the IRQs and base NAND register range into the device tr=
-ee.
->>> Finding those remaining two register addresses is not so hard.
->>
->> Lazy I was not checking dictionary for a better word.
->> IRQs are indeed read from DT, because hardware doesn't provide info =
-about them.
->=20
-> Nor does it provide information about chip selects, ECC requirements =
-or
-> partitioning.
->=20
->> However it's a different story for register ranges. We read them fro=
-m
->> device's (bus's) EEPROM, not DT. Why is it important? One Broadcom S=
-oC
->> chipset may have various cores (SoC devices)
->> available/enabled/disabled depending on the manufacturer. It means w=
-e
->> *can't* store list of cores (SoC devices) per chip as it varies. An
->> example: some BCM4708 SoCs have 2 PCIe host cores, some have 3 of
->> them.
->=20
-> Are those all true BCM4708? Or are they bondout variations of it, wit=
-h a
-> different name (e.g., BCM47081)?
+Hi Nga,
 
-They have a different marketing name and a different package number on
-the technical side.
->=20
->> Reading info about cores from hardware (EEPROM) gives you an
->> answer.
->=20
-> For BCMA to help in consolidating the other non-BCMA information into
-> one place, you need *everything* about the NAND setup to be the same,
-> except for the presence / absence of the NAND controller. That means =
-all
-> manufacturers must be using BCH-8 / 512-byte step ECC, and they must
-> have placed it on the same chip-select.
->=20
-> And are you ever seeing the NAND core completely disabled? In my
-> experience, it has never been OTP'd out of any chip bondout.
+Sorry for some delay here. This driver is mostly pretty good, and I
+think only a few very small tweaks are needed.
 
-I haven't seen it disabled on the ARM SoCs
+(BTW, Rafal already made a few tiny comments, and I didn't see a follow
+up that fixes any of them.)
 
-> If my previous sentence holds true, then BCMA does indeed provide you
-> absolutely nothing that you describe above for this case. I don't dou=
-bt
-> it helps you for some other cores, but I don't see that for NAND.
->=20
->> I can't really imagine storing such info per every possible
->> market device nor building such DTs. I would need to ask device owne=
-r
->> to use bcma to read info about cores and them copy it into DT. I don=
-'t
->> really see the point. Please note that we are talking about every
->> single device model because there isn't anything like a set of few
->> generic PCB designs. Every manufacturer applies its own modification=
-s.
->=20
-> Are you sure it's done on a manufacturer-by-manufacturer basis?
-> Typically, I see that Broadcom chips will support a superset of featu=
-res
-> on a base SoC, then subsequent boundouts of that SoC will provide a
-> subset of those features (e.g., 2 PCIe hosts instead of 3). Each of
-> those bondouts will have a different chip name and product ID, so
-> technically you would see the same set of hardware for -- hypothetica=
-lly
-> -- all BCMabc, and a child chip of that family -- call it BCMabcd --
-> might disable a few cores. So depending on the number of SoC bondouts=
-,
-> this may or may not be cumbersome. And particularly for NAND, I expec=
-t
-> the additional work may be zero.
->=20
->> I also can't see what's so wrong with this design. I understand you
->> put info about CPU in DT, but not all stuff goes there, right?
->=20
-> A *lot* of stuff goes into DT. Enough that yes, you essentially need =
-a
-> new DT for every new board. So accounting for a few chip OTP options =
-is
-> not really out of scope of supporting a new board/chip.
->=20
->> E.g.
->> we don't put info about NAND flash connected to the controller. We
->> simply use ONFI (or some other semi-standards) to read chip info.
->> Should we now get rid of nand_flash_detect_onfi and
->> nand_flash_detect_jedec and store flash params in DT of every
->> supported device model?
->=20
-> You're going a little bit down the straw man route of argument. That'=
-s
-> nothing like what I'm suggesting.
->=20
->>>> That said, I'm for using bcma layer, even if there is some small D=
-T
->>>> involvement already.
->>>
->>> For any reasons besides the above? Cause I'm still not convinced we=
- need
->>> a BCMA driver at all.
->>
->> Could you tell me why we *don't* want to have bcma so much?
->=20
-> It's duplicating code that already exists and supports the cores you
-> want. If we find that there is enough of a significant difference, th=
-en
-> maybe we can justify a second driver. But IIUC, Hauke is showing that=
- it
-> is trivial to support your chips with trivial DT additions and zero
-> additional code.
->=20
-> --
->=20
-> On a slightly different track: if you really think BCMA+DT wins you a
-> lot over a bare DT (I'm still not convinced), then maybe there's a wa=
-y
-> to make that work. What do you think of using BCMA to generate the DT
-> automatically? Either in a pre-boot shim layer before the kernel, or =
-as
-> an in-kernel dynamic DT patch?
+On Mon, Mar 16, 2015 at 01:16:22AM -0700, vndao@altera.com wrote:
+> From: VIET NGA DAO <vndao@altera.com>
+> 
+> Altera Quad SPI Controller is a soft IP which enables access to Altera EPCQ and
+> EPCS flash chips. This patch adds driver for these devices.
+> 
+> Signed-off-by: VIET NGA DAO <vndao@altera.com>
+> 
+> ---
+> v3:
+> - Change altera_epcq driver name to altera_quadspi for more generic name
+> - Implement flash name searching in altera_quadspi.c instead of spi-nor
+> - Edit the altra quadspi info table in spi-nor
+> - Remove wait_til_ready in all read,write, erase, lock, unlock functions
+> - Merge .h and .c into 1 file
+> 
+> v2:
+> - Change to spi_nor structure
+> - Add lock and unlock functions for spi_nor
+> - Simplify the altera_epcq_lock function
+> - Replace reg by compatible in device tree
+> ---
+>  .../devicetree/bindings/mtd/altera_quadspi.txt     |  45 ++
+>  drivers/mtd/spi-nor/Kconfig                        |   8 +
+>  drivers/mtd/spi-nor/Makefile                       |   1 +
+>  drivers/mtd/spi-nor/altera_quadspi.c               | 608 +++++++++++++++++++++
+>  drivers/mtd/spi-nor/spi-nor.c                      |  11 +
+>  5 files changed, 673 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/altera_quadspi.txt
+>  create mode 100644 drivers/mtd/spi-nor/altera_quadspi.c
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/altera_quadspi.txt b/Documentation/devicetree/bindings/mtd/altera_quadspi.txt
+> new file mode 100644
+> index 0000000..f5bdd35
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/altera_quadspi.txt
+> @@ -0,0 +1,45 @@
+> +* MTD Altera QUADSPI driver
+> +
+> +Required properties:
+> +- compatible: Should be "altr,quadspi-1.0"
+> +- reg: Address and length of the register set  for the device. It contains
+> +  the information of registers in the same order as described by reg-names
+> +- reg-names: Should contain the reg names
+> +  "csr_base": Should contain the register configuration base address
+> +  "data_base": Should contain the data base address
+> +- is-epcs: boolean type.
+> +		If present, the device contains EPCS flashes.
+> +		Otherwise, it contains EPCQ flashes.
 
-I do not think that would work, because bcma still has to support the
-Broadcom PCIe wifi card with soft MAC wifi and the MIPS SoCs which are
-not using device tree and havning both interfaces does not make sense t=
-o me.
+Is this a property of the controller, or the flash? Seems like it should
+be in the subnode(s).
 
-Hauke
+> +- #address-cells: Must be <1>.
+> +- #size-cells: Must be <0>.
+> +- flash device tree subnode, there must be a node with the following fields:
+> +	- compatible: Should contain the flash name
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You should list the names here.
+
+> +	- #address-cells: please refer to /mtd/partition.txt
+> +	- #size-cells: please refer to /mtd/partition.txt
+> +	For partitions inside each flash, please refer to /mtd/partition.txt
+> +
+> +Example:
+> +
+> +			quadspi_controller_0: quadspi@0x000000000 {
+> +				compatible = "altr,quadspi-1.0";
+> +				reg = <0x00000001 0x00000000 0x00000020>,
+> +					<0x00000000 0x00000000 0x02000000>;
+> +				reg-names = "csr_base", "data_base";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				flash0: epcq256@0 {
+> +					compatible = "epcq256-nonjedec";
+
+I don't think the "-nonjedec" part is necessary; it's not really
+relevant to the binding, and it probably isn't even necessary for the ID
+table in spi-nor.c. Just stick with names like "altr,epcq256". But you
+probably should include the "altr," prefix. That will still work fine
+with the modalias stuff.
+
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +					partition@0 {
+> +						/* 16 MB for raw data. */
+> +						label = "EPCQ Flash 0 raw data";
+> +						reg = <0x0 0x1000000>;
+> +					};
+> +					partition@1000000 {
+> +						/* 16 MB for jffs2 data. */
+> +						label = "EPCQ Flash 0 JFFS 2";
+> +						reg = <0x1000000 0x1000000>;
+> +					};
+> +				};
+> +			}; //end quadspi@0x000000000 (quadspi_controller_0)
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> index 64a4f0e..b9eed6d 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -28,4 +28,12 @@ config SPI_FSL_QUADSPI
+>  	  This enables support for the Quad SPI controller in master mode.
+>  	  We only connect the NOR to this controller now.
+>  
+> +config SPI_ALTERA_QUADSPI
+> +	tristate "Support Altera EPCQ/EPCS Flash chips"
+> +	depends on OF
+> +	help
+> +	  This enables access to Altera EPCQ/EPCS flash chips, used for data
+> +	  storage. See the driver source for the current list,
+> +	  or to add other chips.
+> +
+>  endif # MTD_SPI_NOR
+> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+> index 6a7ce14..1a36a72 100644
+> --- a/drivers/mtd/spi-nor/Makefile
+> +++ b/drivers/mtd/spi-nor/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
+>  obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
+> +obj-$(CONFIG_SPI_ALTERA_QUADSPI)	+= altera_quadspi.o
+> diff --git a/drivers/mtd/spi-nor/altera_quadspi.c b/drivers/mtd/spi-nor/altera_quadspi.c
+
+Probably just use hyphens ("-") in the file name, not underscores ("_")
+to match the other files in that dir.
+
+> new file mode 100644
+> index 0000000..1d178d9
+> --- /dev/null
+> +++ b/drivers/mtd/spi-nor/altera_quadspi.c
+> @@ -0,0 +1,608 @@
+> +/*
+> + * Copyright (C) 2014 Altera Corporation. All rights reserved
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/ioport.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/log2.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/mtd/partitions.h>
+> +#include <linux/mtd/spi-nor.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/sched.h>
+> +
+> +#define ALTERA_QUADSPI_RESOURCE_NAME			"altera_quadspi"
+> +
+> +/* max possible slots for serial flash chip in the QUADSPI controller */
+> +#define MAX_NUM_FLASH_CHIP				3
+> +#define EPCS_OPCODE_ID					1
+> +#define EPCQ_OPCODE_ID					2
+> +#define WRITE_CHECK					1
+> +#define ERASE_CHECK					0
+> +
+> +/* Define max times to check status register before we give up. */
+> +#define QUADSPI_MAX_TIME_OUT				(40 * HZ)
+> +
+> +/* defines for status register */
+> +#define QUADSPI_SR_REG					0x0
+> +#define QUADSPI_SR_WIP_MASK				0x00000001
+> +#define QUADSPI_SR_WIP					0x1
+> +#define QUADSPI_SR_WEL					0x2
+> +#define QUADSPI_SR_BP0					0x4
+> +#define QUADSPI_SR_BP1					0x8
+> +#define QUADSPI_SR_BP2					0x10
+> +#define QUADSPI_SR_BP3					0x40
+> +#define QUADSPI_SR_TB					0x20
+> +#define QUADSPI_SR_MASK					0x0000000F
+> +
+> +/* defines for device id register */
+> +#define QUADSPI_SID_REG					0x4
+> +#define QUADSPI_RDID_REG				0x8
+> +#define QUADSPI_ID_MASK					0x000000FF
+> +
+> +/*
+> + * QUADSPI_MEM_OP register offset
+> + *
+> + * The QUADSPI_MEM_OP register is used to do memory protect and erase operations
+> + *
+> + */
+> +#define QUADSPI_MEM_OP_REG				0xC
+> +
+> +#define QUADSPI_MEM_OP_CMD_MASK				0x00000003
+> +#define QUADSPI_MEM_OP_BULK_ERASE_CMD			0x00000001
+> +#define QUADSPI_MEM_OP_SECTOR_ERASE_CMD			0x00000002
+> +#define QUADSPI_MEM_OP_SECTOR_PROTECT_CMD		0x00000003
+> +#define QUADSPI_MEM_OP_SECTOR_VALUE_MASK		0x0003FF00
+> +#define QUADSPI_MEM_OP_SECTOR_PROTECT_VALUE_MASK	0x00001F00
+> +#define QUADSPI_MEM_OP_SECTOR_PROTECT_SHIFT		8
+> +/*
+> + * QUADSPI_ISR register offset
+> + *
+> + * The QUADSPI_ISR register is used to determine whether an invalid write or
+> + * erase operation trigerred an interrupt
+> + *
+> + */
+> +#define QUADSPI_ISR_REG					0x10
+> +
+> +#define QUADSPI_ISR_ILLEGAL_ERASE_MASK			0x00000001
+> +#define QUADSPI_ISR_ILLEGAL_WRITE_MASK			0x00000002
+> +
+> +/*
+> + * QUADSPI_IMR register offset
+> + *
+> + * The QUADSPI_IMR register is used to mask the invalid erase or the invalid
+> + * write interrupts.
+> + *
+> + */
+> +#define QUADSPI_IMR_REG					0x14
+> +#define QUADSPI_IMR_ILLEGAL_ERASE_MASK			0x00000001
+> +
+> +#define QUADSPI_IMR_ILLEGAL_WRITE_MASK			0x00000002
+> +
+> +#define QUADSPI_CHIP_SELECT_REG				0x18
+> +#define QUADSPI_CHIP_SELECT_MASK			0x00000007
+> +#define QUADSPI_CHIP_SELECT_0				0x00000001
+> +#define QUADSPI_CHIP_SELECT_1				0x00000002
+> +#define QUADSPI_CHIP_SELECT_2				0x00000004
+> +
+> +struct altera_quadspi_plat {
+> +	void __iomem *csr_base;
+> +	void __iomem *data_base;
+> +	bool is_epcs;
+> +	u32 num_flashes;
+> +	struct device_node *np[MAX_NUM_FLASH_CHIP];
+> +};
+> +
+> +struct altera_quadspi {
+> +	struct clk *clk;
+> +	bool is_epcs;
+> +	void __iomem *csr_base;
+> +	void __iomem *data_base;
+> +	u32 num_flashes;
+> +	struct altera_quadspi_flash *flash[MAX_NUM_FLASH_CHIP];
+> +};
+> +
+> +struct altera_quadspi_flash {
+> +	struct mtd_info mtd;
+> +	struct spi_nor nor;
+> +	void *priv;
+
+Does this really need to be 'void *'? Looks like it should be 'struct
+altera_quadspi *'.
+
+> +};
+> +
+> +struct flash_device {
+> +	char *name;
+> +	u8 opcode_id;
+> +	u32 device_id;
+> +};
+> +
+> +#define FLASH_ID(_n, _opcode_id, _id)	\
+> +{					\
+> +	.name = (_n),			\
+> +	.opcode_id = (_opcode_id),	\
+> +	.device_id = (_id),		\
+> +}
+> +
+> +static struct flash_device flash_devices[] = {
+> +	FLASH_ID("epcq16-nonjedec",  2, 0x15),
+> +	FLASH_ID("epcq32-nonjedec",  2, 0x16),
+> +	FLASH_ID("epcq64-nonjedec",  2, 0x17),
+> +	FLASH_ID("epcq128-nonjedec", 2, 0x18),
+> +	FLASH_ID("epcq256-nonjedec", 2, 0x19),
+> +	FLASH_ID("epcq512-nonjedec", 2, 0x20),
+> +
+> +	FLASH_ID("epcs16-nonjedec",  1, 0x14),
+> +	FLASH_ID("epcs64-nonjedec",  1, 0x16),
+> +	FLASH_ID("epcs128-nonjedec", 1, 0x18),
+
+Rafal commented on this block, about *_OPCODE_ID.
+
+> +};
+> +
+> +static int altera_quadspi_write_reg(struct spi_nor *nor, u8 opcode, u8 *val,
+> +				    int len, int wr_en)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int altera_quadspi_read_reg(struct spi_nor *nor, u8 opcode, u8 *val,
+> +				   int len)
+> +{
+> +	struct altera_quadspi_flash *flash = nor->priv;
+> +	struct altera_quadspi *dev = flash->priv;
+> +	u32 data = 0;
+> +
+> +	switch (opcode) {
+> +	case SPINOR_OP_RDSR:
+> +		data = readl(dev->csr_base + QUADSPI_SR_REG);
+> +		*val = (u8)data & QUADSPI_SR_MASK;
+> +		break;
+> +	case SPINOR_OP_RDID:
+> +		/* opcode id */
+> +		if (dev->is_epcs)
+> +			data = readl(dev->csr_base + QUADSPI_SID_REG);
+> +		else
+> +			data = readl(dev->csr_base + QUADSPI_RDID_REG);
+> +
+> +		*val = (u8)data & QUADSPI_ID_MASK; /* device id */
+> +		break;
+> +	default:
+> +		*val = 0;
+> +		break;
+
+Zero out the rest of val, since you're only filling the first byte?
+
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int altera_quadspi_write_erase_check(struct spi_nor *nor,
+> +					    bool write_erase)
+> +{
+> +	struct altera_quadspi_flash *flash = nor->priv;
+> +	struct altera_quadspi *dev = flash->priv;
+> +	u32 val;
+> +	u32 mask;
+> +
+> +	if (write_erase)
+> +		mask = QUADSPI_ISR_ILLEGAL_WRITE_MASK;
+> +	else
+> +		mask = QUADSPI_ISR_ILLEGAL_ERASE_MASK;
+> +
+> +	val = readl(dev->csr_base + QUADSPI_ISR_REG);
+> +	if (val & mask) {
+> +		dev_err(nor->dev,
+> +			"write/erase failed, sector might be protected\n");
+> +		/* clear this status for next use */
+> +		writel(val, dev->csr_base + QUADSPI_ISR_REG);
+> +		return -EIO;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int altera_quadspi_addr_to_sector(struct mtd_info *mtd, int offset)
+> +{
+> +	if (mtd->erasesize_shift)
+> +		return offset >> mtd->erasesize_shift;
+> +	do_div(offset, mtd->erasesize);
+> +	return offset;
+> +}
+> +
+> +static int altera_quadspi_erase(struct spi_nor *nor, loff_t offset)
+> +{
+> +
+> +	struct altera_quadspi_flash *flash = nor->priv;
+> +	struct altera_quadspi *dev = flash->priv;
+> +	struct mtd_info *mtd = &flash->mtd;
+> +	u32 val;
+> +	int ret;
+> +	int sector_value;
+> +
+> +	sector_value = altera_quadspi_addr_to_sector(mtd, offset);
+> +	/* sanity check that block_offset is a valid sector number */
+> +	if (sector_value < 0)
+> +		return -EINVAL;
+> +
+> +	/* sector value should occupy bits 17:8 */
+> +	val = (sector_value << 8) & QUADSPI_MEM_OP_SECTOR_VALUE_MASK;
+> +
+> +	/* sector erase commands occupies lower 2 bits */
+> +	val |= QUADSPI_MEM_OP_SECTOR_ERASE_CMD;
+> +
+> +	/* write sector erase command to QUADSPI_MEM_OP register */
+> +	writel(val, dev->csr_base + QUADSPI_MEM_OP_REG);
+> +
+> +	ret = altera_quadspi_write_erase_check(nor, ERASE_CHECK);
+> +	if (ret < 0) {
+> +		dev_err(nor->dev, "illegal erase\n");
+> +		return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int altera_quadspi_read(struct spi_nor *nor, loff_t from, size_t len,
+> +			       size_t *retlen, u_char *buf)
+> +{
+> +	struct altera_quadspi_flash *flash = nor->priv;
+> +	struct altera_quadspi *dev = flash->priv;
+> +
+> +	memcpy_fromio(buf, dev->data_base + from, len);
+> +	*retlen = len;
+> +
+> +	return 0;
+> +}
+> +
+> +static void altera_quadspi_write(struct spi_nor *nor, loff_t to, size_t len,
+> +				 size_t *retlen, const u_char *buf)
+> +{
+> +	struct altera_quadspi_flash *flash = nor->priv;
+> +	struct altera_quadspi *dev = flash->priv;
+> +	int ret = 0;
+> +
+> +	memcpy_toio(dev->data_base + to, buf, len);
+> +	*retlen += len;
+> +
+> +	/*
+> +	 * check whether write triggered a illegal write interrupt
+> +	 */
+> +
+> +	ret = altera_quadspi_write_erase_check(nor, WRITE_CHECK);
+> +	if (ret < 0)
+> +		dev_err(nor->dev, "illegal write\n");
+> +
+> +
+> +}
+> +
+> +static int altera_quadspi_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+> +{
+> +	struct altera_quadspi_flash *flash = nor->priv;
+> +	struct altera_quadspi *dev = flash->priv;
+> +	struct mtd_info *mtd = &flash->mtd;
+> +	uint32_t offset = ofs;
+> +	u32 sector_start, sector_end;
+> +	u32 num_sectors;
+> +	u32 mem_op;
+> +	u32 sr_bp;
+> +	u32 sr_tb;
+> +
+> +	sector_start = offset;
+> +	sector_end = altera_quadspi_addr_to_sector(mtd, offset + len);
+> +	num_sectors = mtd->size;
+> +	do_div(num_sectors, mtd->erasesize);
+> +
+> +	dev_dbg(nor->dev, "%s: sector start is %u,sector end is %u\n",
+> +		__func__, sector_start, sector_end);
+> +
+> +	if (sector_start >= num_sectors / 2) {
+> +		sr_bp = fls(num_sectors - 1 - sector_start) + 1;
+> +		sr_tb = 0;
+> +	} else if ((sector_end < num_sectors / 2) && ~dev->is_epcs) {
+> +		sr_bp = fls(sector_end) + 1;
+> +		sr_tb = 1;
+> +	} else {
+> +		sr_bp = 16;
+> +		sr_tb = 0;
+> +	}
+> +
+> +	mem_op = (sr_tb << 12) | (sr_bp << 8);
+> +	mem_op &= QUADSPI_MEM_OP_SECTOR_PROTECT_VALUE_MASK;
+> +	mem_op |= QUADSPI_MEM_OP_SECTOR_PROTECT_CMD;
+> +	writel(mem_op, dev->csr_base + QUADSPI_MEM_OP_REG);
+> +
+> +	return 0;
+> +}
+> +
+> +static int altera_quadspi_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+> +{
+> +	struct altera_quadspi_flash *flash = nor->priv;
+> +	struct altera_quadspi *dev = flash->priv;
+> +	u32 mem_op;
+> +
+> +	dev_dbg(nor->dev, "Unlock all protected area\n");
+> +	mem_op = 0;
+> +	mem_op &= QUADSPI_MEM_OP_SECTOR_PROTECT_VALUE_MASK;
+> +	mem_op |= QUADSPI_MEM_OP_SECTOR_PROTECT_CMD;
+
+Can't the above 3 lines just be:
+
+	mem_op = QUADSPI_MEM_OP_SECTOR_PROTECT_CMD;
+
+?
+
+> +	writel(mem_op, dev->csr_base + QUADSPI_MEM_OP_REG);
+> +
+> +	return 0;
+> +}
+> +
+> +static void altera_quadspi_chip_select(struct altera_quadspi *dev, u32 bank)
+> +{
+> +	u32 val = 0;
+> +
+> +	switch (bank) {
+> +	case 0:
+> +		val = QUADSPI_CHIP_SELECT_0;
+> +		break;
+> +	case 1:
+> +		val = QUADSPI_CHIP_SELECT_1;
+> +		break;
+> +	case 2:
+> +		val = QUADSPI_CHIP_SELECT_2;
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +	writel(val, dev->csr_base + QUADSPI_CHIP_SELECT_REG);
+> +}
+> +
+> +
+> +static int altera_quadspi_probe_config_dt(struct platform_device *pdev,
+> +					  struct device_node *np,
+> +					  struct altera_quadspi_plat *pdata)
+> +{
+> +	struct device_node *pp = NULL;
+
+^^ Is the NULL assignment necessary?
+
+> +	struct resource *quadspi_res;
+> +	int i = 0;
+> +
+> +	pdata->is_epcs = of_property_read_bool(np, "is-epcs");
+> +
+> +	quadspi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   "csr_base");
+> +	pdata->csr_base = devm_ioremap_resource(&pdev->dev, quadspi_res);
+> +	if (IS_ERR(pdata->csr_base)) {
+> +		dev_err(&pdev->dev, "%s: ERROR: failed to map csr base\n",
+> +			__func__);
+> +		return PTR_ERR(pdata->csr_base);
+> +	}
+> +
+> +	quadspi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   "data_base");
+> +	pdata->data_base = devm_ioremap_resource(&pdev->dev, quadspi_res);
+> +	if (IS_ERR(pdata->data_base)) {
+> +		dev_err(&pdev->dev, "%s: ERROR: failed to map data base\n",
+> +			__func__);
+> +		return PTR_ERR(pdata->data_base);
+> +	}
+> +
+> +	/* Fill structs for each subnode (flash device) */
+> +	for_each_available_child_of_node(np, pp) {
+> +		/* Read bank id from DT */
+> +		pdata->np[i] = pp;
+> +		i++;
+> +	}
+> +	pdata->num_flashes = i;
+> +	return 0;
+> +}
+> +
+> +static const char *get_flash_name(struct spi_nor *nor)
+> +{
+> +	struct altera_quadspi_flash *flash = nor->priv;
+> +	struct altera_quadspi *dev = flash->priv;
+> +	int index;
+> +	int ret;
+> +	u8 id = 0;
+> +	u8 opcode_id;
+> +
+> +	opcode_id = dev->is_epcs ? EPCS_OPCODE_ID : EPCQ_OPCODE_ID;
+> +	ret = nor->read_reg(nor, SPINOR_OP_RDID, &id, 1);
+> +	if (ret)
+> +		return NULL;
+> +	for (index = 0; index < ARRAY_SIZE(flash_devices); index++) {
+> +		if (flash_devices[index].device_id == id &&
+> +		    flash_devices[index].opcode_id == opcode_id)
+> +			return flash_devices[index].name;
+> +	}
+> +
+> +	/* Memory chip is not listed and not supported */
+> +	return NULL;
+> +}
+> +
+> +static int altera_quadspi_setup_banks(struct platform_device *pdev,
+> +				   u32 bank, struct device_node *np)
+> +{
+> +	struct altera_quadspi *dev = platform_get_drvdata(pdev);
+> +	struct mtd_part_parser_data ppdata = {};
+> +	struct altera_quadspi_flash *flash;
+> +	struct spi_nor *nor;
+> +	int ret = 0;
+> +	char modalias[40];
+> +	const char *flash_name;
+> +
+> +	altera_quadspi_chip_select(dev, bank);
+> +
+> +	if (bank > dev->num_flashes - 1)
+> +		return -EINVAL;
+
+Not a big deal, but wouldn't it make sense to put the 'bank > ...' check
+before the call to altera_quadspi_chip_select()?
+
+> +
+> +	flash = devm_kzalloc(&pdev->dev, sizeof(*flash), GFP_KERNEL);
+> +	if (!flash)
+> +		return -ENOMEM;
+> +
+> +	dev->flash[bank] = flash;
+> +	nor = &flash->nor;
+> +	nor->mtd = &flash->mtd;
+> +	nor->dev = &pdev->dev;
+> +	nor->priv = flash;
+> +	flash->mtd.priv = nor;
+> +	flash->priv = dev;
+> +
+> +	/* spi nor framework*/
+> +	nor->read_reg = altera_quadspi_read_reg;
+> +	nor->write_reg = altera_quadspi_write_reg;
+> +	nor->read = altera_quadspi_read;
+> +	nor->write = altera_quadspi_write;
+> +	nor->erase = altera_quadspi_erase;
+> +	nor->flash_lock = altera_quadspi_lock;
+> +	nor->flash_unlock = altera_quadspi_unlock;
+> +
+> +	if (of_modalias_node(np, modalias, sizeof(modalias)) < 0)
+> +		return -EINVAL;
+> +
+> +	flash_name = get_flash_name(nor);
+> +	if (flash_name == NULL)
+> +		return -EINVAL;
+> +
+> +	if (strcmp(flash_name, modalias) != 0) {
+> +		dev_err(nor->dev,
+> +			"flash name %s mismatch with device tree %s\n",
+> +			flash_name, modalias);
+> +		return -EINVAL;
+> +	}
+> +	ret = spi_nor_scan(nor, flash_name, SPI_NOR_QUAD);
+> +		if (ret)
+> +			return ret;
+> +
+> +	ppdata.of_node = np;
+> +
+> +	return mtd_device_parse_register(&flash->mtd, NULL, &ppdata, NULL, 0);
+> +}
+> +
+> +static int altera_quadspi_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct altera_quadspi_plat *pdata = NULL;
+
+The NULL assignment is superfluous.
+
+> +	struct altera_quadspi *dev;
+> +	int ret = 0;
+> +	int i;
+> +
+> +	if (!np) {
+> +		ret = -ENODEV;
+> +		dev_err(&pdev->dev, "no device found\n");
+> +		goto err;
+> +	}
+> +
+> +	pdata = devm_kzalloc(&pdev->dev,
+> +			     sizeof(struct altera_quadspi_plat),
+> +			     GFP_KERNEL);
+
+It's not real clear why you're using this pdata struct at all. Are you
+planning to support non-DT platform devices, or is this going to be
+DT-only? (The check for "if (!np) { ... }" above looks like you're
+DT-only.)
+
+But anyway, this pdata struct is only used for the duration of the probe
+function, after which it is not used. It's true devm_* will take care of
+freeing it eventually, but wouldn't it make more sense to just free it
+up when you're done? e.g., put it on the stack instead (local variable)?
+Or just remove it entirely, and stash things directly into *dev and
+*flash.
+
+> +
+> +	if (!pdata) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	ret = altera_quadspi_probe_config_dt(pdev, np, pdata);
+> +	if (ret) {
+> +		ret = -ENODEV;
+> +		dev_err(&pdev->dev, "probe fail\n");
+> +		goto err;
+> +	}
+> +
+> +	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+> +	if (!dev) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	dev->is_epcs = pdata->is_epcs;
+> +	dev->csr_base = pdata->csr_base;
+> +	dev->data_base = pdata->data_base;
+> +
+> +	/* check number of flashes */
+> +	dev->num_flashes = pdata->num_flashes;
+> +	if (dev->num_flashes > MAX_NUM_FLASH_CHIP) {
+> +		dev_err(&pdev->dev, "exceeding max number of flashes\n");
+> +		dev->num_flashes = MAX_NUM_FLASH_CHIP;
+> +	}
+> +
+> +	/* check clock */
+> +	dev->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(dev->clk)) {
+> +		ret = PTR_ERR(dev->clk);
+> +		goto err;
+> +	}
+> +	ret = clk_prepare_enable(dev->clk);
+> +	if (ret)
+> +		goto err;
+> +
+> +	platform_set_drvdata(pdev, dev);
+> +
+> +	/* loop for each flash which is connected to quadspi */
+> +	for (i = 0; i < dev->num_flashes; i++) {
+> +		ret = altera_quadspi_setup_banks(pdev, i, pdata->np[i]);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "bank setup failed\n");
+> +			goto err_bank_setup;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err_bank_setup:
+> +	clk_disable_unprepare(dev->clk);
+> +err:
+> +	return ret;
+> +}
+> +
+> +static int altera_quadspi_remove(struct platform_device *pdev)
+> +{
+> +	struct altera_quadspi *dev;
+> +	struct altera_quadspi_flash *flash;
+> +	int ret, i;
+> +
+> +	dev = platform_get_drvdata(pdev);
+> +
+> +	/* clean up for all nor flash */
+> +	for (i = 0; i < dev->num_flashes; i++) {
+> +		flash = dev->flash[i];
+> +		if (!flash)
+> +			continue;
+> +
+> +		/* clean up mtd stuff */
+> +		ret = mtd_device_unregister(&flash->mtd);
+> +		if (ret)
+> +			dev_err(&pdev->dev, "error removing mtd\n");
+> +	}
+> +
+> +	clk_disable_unprepare(dev->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id altera_quadspi_id_table[] = {
+> +	{ .compatible = "altr,quadspi-1.0" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, altera_quadspi_id_table);
+> +
+> +static struct platform_driver altera_quadspi_driver = {
+> +	.driver = {
+> +		.name = ALTERA_QUADSPI_RESOURCE_NAME,
+> +		.bus = &platform_bus_type,
+
+^^ You don't need that line. module_platform_driver() (specifically,
+__platform_driver_register()) takes care of this for you.
+
+> +		.of_match_table = altera_quadspi_id_table,
+> +	},
+> +	.probe = altera_quadspi_probe,
+> +	.remove = altera_quadspi_remove,
+> +};
+> +module_platform_driver(altera_quadspi_driver);
+> +
+> +MODULE_AUTHOR("Viet Nga Dao <vndao@altera.com>");
+> +MODULE_DESCRIPTION("Altera QuadSPI Driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 43bb552..ad0c274 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -683,6 +683,17 @@ static const struct spi_device_id spi_nor_ids[] = {
+>  	{ "cat25c09", CAT25_INFO( 128, 8, 32, 2, SPI_NOR_NO_ERASE | SPI_NOR_NO_FR) },
+>  	{ "cat25c17", CAT25_INFO( 256, 8, 32, 2, SPI_NOR_NO_ERASE | SPI_NOR_NO_FR) },
+>  	{ "cat25128", CAT25_INFO(2048, 8, 64, 2, SPI_NOR_NO_ERASE | SPI_NOR_NO_FR) },
+> +
+> +	/* Altera EPCQ/EPCS Flashes */
+> +	{ "epcq16-nonjedec",  INFO(0, 0, 0x10000, 32,   0) },
+> +	{ "epcq32-nonjedec",  INFO(0, 0, 0x10000, 64,   0) },
+> +	{ "epcq64-nonjedec",  INFO(0, 0, 0x10000, 128,  0) },
+> +	{ "epcq128-nonjedec", INFO(0, 0, 0x10000, 256,  0) },
+> +	{ "epcq256-nonjedec", INFO(0, 0, 0x10000, 512,  0) },
+> +	{ "epcq512-nonjedec", INFO(0, 0, 0x10000, 1024, 0) },
+> +	{ "epcs16-nonjedec",  INFO(0, 0, 0x10000, 32,   0) },
+> +	{ "epcs64-nonjedec",  INFO(0, 0, 0x10000, 128,  0) },
+> +	{ "epcs128-nonjedec", INFO(0, 0, 0x40000, 256,  0) },
+
+You probably should just drop the "-nonjedec" part. That will help you
+have a more sane DT binding. I realize you're imitating the
+"m25p80-nonjedec" entries that already exist, but I think those names
+exist mostly because there are otherwise-identical version of them that
+just don't support the READ ID command. Your parts are unique, and don't
+have corresponding JEDEC READ ID compatible versions.
+
+You could still include a comment above them, to note their origin, and
+how they don't support many traditional commands.
+
+>  	{ },
+>  };
+>  
+
+Thanks,
+Brian
