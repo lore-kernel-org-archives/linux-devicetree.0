@@ -1,42 +1,41 @@
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH 0/6] r8a7793 SoC DT bindings
-Date: Thu, 28 May 2015 17:16:59 +0200
-Message-ID: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH 6/6] clocksource: sh_cmt: Document r8a7793-specific bindings
+Date: Thu, 28 May 2015 17:17:05 +0200
+Message-ID: <1432826225-6743-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, geert@linux-m68k.org
-Cc: horms@verge.net.au, linux-sh@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-This series contains the DT bindings used by the r8a7793 SoC;
-it has been split off the "r8a7793 SoC, Gose board support"
-version 3 series.
-
-CU
-Uli
-
-Changes since "r8a7793 SoC, Gose board support" v3:
-- updated "fallback" paragraph in cmt bindings
-
-
-Ulrich Hecht (6):
-  clk: shmobile: Add r8a7793 SoC to MSTP bindings
-  clk: shmobile: r8a7793: document DIV6 clock bindings
-  mmc: sh_mmcif: Document r8a7793 DT bindings
-  serial: sh-sci: Add device tree bindings for r8a7793
-  PCI: rcar: document r8a7793 DT bindings
-  clocksource: sh_cmt: Document r8a7793-specific bindings
-
- .../devicetree/bindings/clock/renesas,cpg-div6-clocks.txt    |  3 ++-
- .../devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt    |  3 ++-
- Documentation/devicetree/bindings/mmc/renesas,mmcif.txt      |  1 +
- Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt      |  1 +
- .../devicetree/bindings/serial/renesas,sci-serial.txt        | 12 ++++++++----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt      |  7 +++++--
- 6 files changed, 19 insertions(+), 8 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+index 1a05c1b..ca13de6 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+@@ -48,10 +48,13 @@ Required Properties:
+ 		(CMT[01])
+     - "renesas,cmt-48-r8a7791" for the r8a7791 48-bit CMT
+ 		(CMT[01])
++    - "renesas,cmt-48-r8a7793" for the r8a7793 48-bit CMT
++		(CMT[01])
+     - "renesas,cmt-48-gen2" for all second generation 48-bit CMT
+-		(CMT[01] on r8a73a4, r8a7790 and r8a7791)
++		(CMT[01] on r8a73a4, r8a7790, r8a7791, and r8a7793)
+ 		This is a fallback for the renesas,cmt-48-r8a73a4,
+-		renesas,cmt-48-r8a7790 and renesas,cmt-48-r8a7791 entries.
++		renesas,cmt-48-r8a7790, renesas,cmt-48-r8a7791, and
++		renesas,cmt-48-r8a7793 entries.
+ 
+   - reg: base address and length of the registers block for the timer module.
+   - interrupts: interrupt-specifier for the timer, one per channel.
 -- 
 2.3.5
 
