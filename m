@@ -1,41 +1,53 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH 6/6] clocksource: sh_cmt: Document r8a7793-specific bindings
-Date: Thu, 28 May 2015 17:17:05 +0200
-Message-ID: <1432826225-6743-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 4/6] serial: sh-sci: Add device tree bindings for r8a7793
+Date: Thu, 28 May 2015 17:17:03 +0200
+Message-ID: <1432826225-6743-5-git-send-email-ulrich.hecht+renesas@gmail.com>
 References: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, geert@linux-m68k.org
-Cc: horms@verge.net.au, linux-sh@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Cc: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Also replaces "R-Car M2" with "R-Car M2-W" to avoid confusion.
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index 1a05c1b..ca13de6 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -48,10 +48,13 @@ Required Properties:
- 		(CMT[01])
-     - "renesas,cmt-48-r8a7791" for the r8a7791 48-bit CMT
- 		(CMT[01])
-+    - "renesas,cmt-48-r8a7793" for the r8a7793 48-bit CMT
-+		(CMT[01])
-     - "renesas,cmt-48-gen2" for all second generation 48-bit CMT
--		(CMT[01] on r8a73a4, r8a7790 and r8a7791)
-+		(CMT[01] on r8a73a4, r8a7790, r8a7791, and r8a7793)
- 		This is a fallback for the renesas,cmt-48-r8a73a4,
--		renesas,cmt-48-r8a7790 and renesas,cmt-48-r8a7791 entries.
-+		renesas,cmt-48-r8a7790, renesas,cmt-48-r8a7791, and
-+		renesas,cmt-48-r8a7793 entries.
- 
-   - reg: base address and length of the registers block for the timer module.
-   - interrupts: interrupt-specifier for the timer, one per channel.
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+---
+ .../devicetree/bindings/serial/renesas,sci-serial.txt        | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+index ae73bb0..78419eb 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
++++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -15,10 +15,14 @@ Required properties:
+     - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
+     - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
+     - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
+-    - "renesas,scif-r8a7791" for R8A7791 (R-Car M2) SCIF compatible UART.
+-    - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2) SCIFA compatible UART.
+-    - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2) SCIFB compatible UART.
+-    - "renesas,hscif-r8a7791" for R8A7791 (R-Car M2) HSCIF compatible UART.
++    - "renesas,scif-r8a7791" for R8A7791 (R-Car M2-W) SCIF compatible UART.
++    - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2-W) SCIFA compatible UART.
++    - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2-W) SCIFB compatible UART.
++    - "renesas,hscif-r8a7791" for R8A7791 (R-Car M2-W) HSCIF compatible UART.
++    - "renesas,scif-r8a7793" for R8A7793 (R-Car M2-N) SCIF compatible UART.
++    - "renesas,scifa-r8a7793" for R8A7793 (R-Car M2-N) SCIFA compatible UART.
++    - "renesas,scifb-r8a7793" for R8A7793 (R-Car M2-N) SCIFB compatible UART.
++    - "renesas,hscif-r8a7793" for R8A7793 (R-Car M2-N) HSCIF compatible UART.
+     - "renesas,scif-r8a7794" for R8A7794 (R-Car E2) SCIF compatible UART.
+     - "renesas,scifa-r8a7794" for R8A7794 (R-Car E2) SCIFA compatible UART.
+     - "renesas,scifb-r8a7794" for R8A7794 (R-Car E2) SCIFB compatible UART.
 -- 
 2.3.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
