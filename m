@@ -1,98 +1,61 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v14 1/3] dt-bindings: add document of Rockchip power domain
-Date: Thu, 28 May 2015 11:02:27 +0200
-Message-ID: <CAPDyKFr544A46Z7kod8EVUYKV1=G6+t4d4ZRdOvskPT4pYL7+w@mail.gmail.com>
-References: <1429862868-14218-1-git-send-email-wxt@rock-chips.com>
-	<1429862868-14218-2-git-send-email-wxt@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: odroidxu3: Enable USB3 regulators
+Date: Thu, 28 May 2015 18:19:34 +0900
+Message-ID: <5566DDA6.1080508@samsung.com>
+References: <1432803494-3516-1-git-send-email-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1429862868-14218-2-git-send-email-wxt@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Kevin Hilman <khilman@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hell>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1432803494-3516-1-git-send-email-linux.amoon@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24 April 2015 at 10:07, Caesar Wang <wxt@rock-chips.com> wrote:
-> This add the necessary binding documentation for the power domain
-> found on Rockchip Socs.
->
-> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+On 28.05.2015 17:58, Anand Moon wrote:
+> Enable regulator for usbdrd3_0 and usbdrd3_1
+>>From the schematic pin diagram USB3_0 and USB3_1
+> is regulated by LDO9 and LD011.
+
+Please reformat statement above to proper sentence(s) without ">" before
+"From".
+
+> 
+> Fix the boot message of failed.
+> [    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
+> [    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
+> [    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
+> [    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
+> [    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
+> [    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
+> [    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
+> [    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
+> [    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
+> [    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
+> [    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
+> 
 > ---
->
->  .../bindings/arm/rockchip/power_domain.txt         | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt b/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
-> new file mode 100644
-> index 0000000..3e74e6d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
-> @@ -0,0 +1,48 @@
-> +* Rockchip Power Domains
-> +
-> +Rockchip processors include support for multiple power domains which can be
-> +powered up/down by software based on different application scenes to save power.
-> +
-> +Required properties for power domain controller:
-> +- compatible: should be one of the following.
-> +    * rockchip,rk3288-power-controller - for rk3288 type power domain.
-> +- #power-domain-cells: Number of cells in a power-domain specifier.
-> +                      should be 1.
-> +- rockchip,pmu: phandle referencing a syscon providing the pmu registers
-> +- #address-cells: should be 1.
-> +- #size-cells: should be 0.
-> +
-> +Required properties for power domain sub nodes:
-> +- reg: index of the power domain, should use macros in:
-> +    *  include/dt-bindings/power-domain/rk3288.h - for rk3288 type power domain.
+> This patch is based on Krzysztof github branch work-next/odroid-xu3-s2mps11-irq
+> ---
 
-I can't find the above file, nor is it being adding in $subject patch.
+I mentioned this already on previous postings. Let's make an exercise.
+Please:
+1. Save your email as mbox format (from mailer).
+2. Go to a GIT repo with kernel and checkout base branch.
+3. git am 0001-the-name-of-file.mbox
+4. git show
 
-Moreover, there are already
-"include/dt-bindings/arm/ux500_pm_domains.h".  I suppose we could move
-that file into your suggested path, since it seems more generic?
+Do you see the signed-off-by in commit?
 
-> +- clocks (optional): phandles to clocks which need to be enabled while power domain
-> +          switches state.
-> +
-> +Example:
-> +
-> +       power: power-controller {
-> +              compatible = "rockchip,rk3288-power-controller";
-> +              #power-domain-cells = <1>;
-> +              rockchip,pmu = <&pmu>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +              pd_gpu {
-> +                      reg = <RK3288_PD_GPU>;
-> +                      clocks = <&cru ACLK_GPU>;
-> +              };
-> +       };
-> +
-> +Node of a device using power domains must have a power-domains property,
-> +containing a phandle to the power device node and an index specifying which
-> +power domain to use.
-> +The index should use macros in:
-> +   * include/dt-bindings/power-domain/rk3288.h - for rk3288 type power domain.
+The patch itself looks good, thanks for fixing this. Just please fix the
+issues with commit message.
 
-Same comment as above.
+By the way:
+1. The always-on from LDO9 could be probably removed if the ehci-exynos
+driver had regulator consumer implemented.
+2. The Documentation/devicetree/bindings/usb/exynos-usb.txt (or dwc.txt)
+should proably mention the vdd-supply property.
 
-> +
-> +Example of the node using power domain:
-> +
-> +       node {
-> +               /* ... */
-> +               power-domains = <&power RK3288_PD_GPU>;
-> +               /* ... */
-> +       };
-> --
-> 1.9.1
->
->
-
-Kind regards
-Uffe
+Best regards,
+Krzysztof
