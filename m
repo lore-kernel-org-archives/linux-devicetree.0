@@ -1,107 +1,40 @@
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v4 3/4] ARM: shmobile: r8a7793: add minimal Gose board device tree
-Date: Thu, 28 May 2015 17:15:56 +0200
-Message-ID: <1432826157-6414-4-git-send-email-ulrich.hecht+renesas@gmail.com>
-References: <1432826157-6414-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH 1/6] clk: shmobile: Add r8a7793 SoC to MSTP bindings
+Date: Thu, 28 May 2015 17:17:00 +0200
+Message-ID: <1432826225-6743-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1432826157-6414-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+In-Reply-To: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org
-Cc: magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, kuninori.morimoto.gx@renesas.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, devicetree@vger.kernel.org
+To: devicetree@vger.kernel.org, geert@linux-m68k.org
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Michael Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Minmal DT description and Makefile entry for the Gose eval board.
-Support for console, timer, and Ethernet.
+Also replaces "R-Car M2" with "R-Car M2-W" to avoid confusion.
 
 Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@linaro.org>
 Cc: devicetree@vger.kernel.org
 ---
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/r8a7793-gose.dts | 63 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 64 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7793-gose.dts
+ Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 86217db..03d876f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -492,6 +492,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7790-lager.dtb \
- 	r8a7791-henninger.dtb \
- 	r8a7791-koelsch.dtb \
-+	r8a7793-gose.dtb \
- 	r8a7794-alt.dtb \
- 	sh73a0-kzm9g.dtb
- dtb-$(CONFIG_ARCH_SOCFPGA) += \
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-new file mode 100644
-index 0000000..96443ec
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -0,0 +1,63 @@
-+/*
-+ * Device Tree Source for the Gose board
-+ *
-+ * Copyright (C) 2014-2015 Renesas Electronics Corporation
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7793.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Gose";
-+	compatible = "renesas,gose", "renesas,r8a7793";
-+
-+	aliases {
-+		serial0 = &scif0;
-+		serial1 = &scif1;
-+	};
-+
-+	chosen {
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-+		stdout-path = &scif0;
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x40000000>;
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <20000000>;
-+};
-+
-+&ether {
-+	phy-handle = <&phy1>;
-+	renesas,ether-link-active-low;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		interrupt-parent = <&irqc0>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		micrel,led-mode = <1>;
-+	};
-+};
-+
-+&cmt0 {
-+	status = "okay";
-+};
-+
-+&scif0 {
-+	status = "okay";
-+};
-+
-+&scif1 {
-+	status = "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+index 0a80fa7..923ee0f 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+@@ -15,7 +15,8 @@ Required Properties:
+     - "renesas,r8a7740-mstp-clocks" for R8A7740 (R-Mobile A1) MSTP gate clocks
+     - "renesas,r8a7779-mstp-clocks" for R8A7779 (R-Car H1) MSTP gate clocks
+     - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
+-    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
++    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2-W) MSTP gate clocks
++    - "renesas,r8a7793-mstp-clocks" for R8A7793 (R-Car M2-N) MSTP gate clocks
+     - "renesas,r8a7794-mstp-clocks" for R8A7794 (R-Car E2) MSTP gate clocks
+     - "renesas,sh73a0-mstp-clocks" for SH73A0 (SH-MobileAG5) MSTP gate clocks
+     - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
 -- 
 2.3.5
 
