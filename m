@@ -1,100 +1,82 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] ARM: bcm2835: Add a Raspberry Pi-specific clock
- driver.
-Date: Thu, 28 May 2015 15:48:28 -0700
-Message-ID: <20150528224828.GI24204@codeaurora.org>
-References: <1431978219-14226-1-git-send-email-eric@anholt.net>
- <1431978219-14226-3-git-send-email-eric@anholt.net>
- <55679085.6040402@wwwdotorg.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: odroidxu3: Enable USB3 regulators
+Date: Fri, 29 May 2015 08:57:24 +0900
+Message-ID: <5567AB64.3060502@samsung.com>
+References: <1432803494-3516-1-git-send-email-linux.amoon@gmail.com>
+ <5566DDA6.1080508@samsung.com>
+ <CANAwSgRpXxq2Y72crPd3U8f-DB=nsQ021e5MY0B7GdJrqwv=wA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55679085.6040402-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CANAwSgRpXxq2Y72crPd3U8f-DB=nsQ021e5MY0B7GdJrqwv=wA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/28, Stephen Warren wrote:
-> On 05/18/2015 01:43 PM, Eric Anholt wrote:
-> > Unfortunately, the clock manager's registers are not accessible by the
-> > ARM, so we have to request that the firmware modify our clocks for us.
-> > 
-> > This driver only registers the clocks at the point they are requested
-> > by a client driver.  This is partially to support returning
-> > -EPROBE_DEFER when the firmware driver isn't supported yet, but it
-> > also avoids issues with disabling "unused" clocks due to them not yet
-> > being connected to their consumers in the DT.
+On 28.05.2015 19:28, Anand Moon wrote:
+> Hi Krzysztof,
 > 
-> It looks like you forgot to CC the clock subsystem maintainers:
-> 
-> M:      Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> M:      Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> 
+> I will take care of these issue in the future.
 
-Thanks, except I don't have the full patch context here to review
-the patch.
+Thanks. I just found that prefix ">" was added by my email client so
+never mind about that but still please write proper sentences (ending
+with full stop). :)
 
-> The description above sounds like a neat solution, but has the
-> disadvantage that the clocks without a client won't show up in debugfs.
-> I wonder if the clock maintainers know of a better way?
-
-Can you mark them as CLK_IGNORE_UNUSED? The probe defer problem
-has a solution in sight (see more below).
-
-> > +static long rpi_clk_round_rate(struct clk_hw *hw, unsigned long rate,
-> > +			       unsigned long *parent_rate)
-> > +{
-> > +	/*
-> > +	 * The firmware will end up rounding our rate to something,
-> > +	 * but we don't have an interface for it.  Just return the
-> > +	 * requested value, and it'll get updated after the clock gets
-> > +	 * set.
-> > +	 */
-> > +	return rate;
-> > +}
-> 
-> Hmm. I wonder if that will confuse things; I thought the purpose of
-> round_rate() was so code could know exactly what would happen ahead of time?
-
-We have to do the same thing on Qualcomm platforms for FW
-controlled clocks. We don't have any insight to what the rate is
-going to be. We can only ask the firmware to set a rate and the
-firmware guarantees it will be at least that rate.
+Best regards,
+Krzysztof
 
 > 
-> > +	init.flags = CLK_IS_ROOT;
+> -Anand Moon
 > 
-> Is it possible to add clock parent information to the driver, so the
-> clocks are all hooked together into the correct tree, rather than all
-> looking like root clocks?
+> On 28 May 2015 at 14:49, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+>> On 28.05.2015 17:58, Anand Moon wrote:
+>>> Enable regulator for usbdrd3_0 and usbdrd3_1
+>>> >From the schematic pin diagram USB3_0 and USB3_1
+>>> is regulated by LDO9 and LD011.
+>>
+>> Please reformat statement above to proper sentence(s) without ">" before
+>> "From".
+>>
+>>>
+>>> Fix the boot message of failed.
+>>> [    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
+>>> [    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
+>>> [    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
+>>> [    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
+>>> [    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
+>>> [    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
+>>> [    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
+>>> [    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
+>>> [    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
+>>> [    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
+>>> [    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
+>>>
+>>> ---
+>>> This patch is based on Krzysztof github branch work-next/odroid-xu3-s2mps11-irq
+>>> ---
+>>
+>> I mentioned this already on previous postings. Let's make an exercise.
+>> Please:
+>> 1. Save your email as mbox format (from mailer).
+>> 2. Go to a GIT repo with kernel and checkout base branch.
+>> 3. git am 0001-the-name-of-file.mbox
+>> 4. git show
+>>
+>> Do you see the signed-off-by in commit?
+>>
+>> The patch itself looks good, thanks for fixing this. Just please fix the
+>> issues with commit message.
+>>
+>> By the way:
+>> 1. The always-on from LDO9 could be probably removed if the ehci-exynos
+>> driver had regulator consumer implemented.
+>> 2. The Documentation/devicetree/bindings/usb/exynos-usb.txt (or dwc.txt)
+>> should proably mention the vdd-supply property.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>
 > 
-> One of the many reasons I didn't do anything FW-wise for the kernel was
-> the hope that such information would be forthcoming, and hence we could
-> have complete kernel drivers.
-> 
-> > +void __init rpi_firmware_init_clock_provider(struct device_node *node)
-> > +{
-> > +	/* We delay construction of our struct clks until get time,
-> > +	 * because we need to be able to return -EPROBE_DEFER if the
-> > +	 * firmware driver isn't up yet.  clk core doesn't support
-> > +	 * re-probing on -EPROBE_DEFER, but callers of clk_get can.
-> 
-> Oh, that's nasty. What would it take to fix the clock core to support
-> deferred probe? It really should.
-
-There are patches to support probe defer from clk_get() but they
-stalled because sunxi is needs to keep clocks on from their
-providing driver (termed "critical clocks"). If we can resolve
-the "critical clocks" thing then we should be able to support
-probe defer, unless we find other users of orphaned clk
-pointers.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
