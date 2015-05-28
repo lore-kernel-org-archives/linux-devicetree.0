@@ -1,93 +1,103 @@
-From: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
-Subject: Re: Device Tree Blob (DTB) licence
-Date: Thu, 28 May 2015 18:52:52 +0200
-Message-ID: <556747E4.6070403@melag.de>
-References: <1430820315.19516.26.camel@opteya.com> <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com> <1432289148.5304.58.camel@opteya.com> <1432322832.5304.63.camel@opteya.com> <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com> <55670AD4.8020705@melag.de> <20150528133429.GD2067@n2100.arm.linux.org.uk>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] clk: add lpc18xx ccu clk driver
+Date: Thu, 28 May 2015 19:13:32 +0200
+Message-ID: <CAGhQ9VyQV0gZQx4V+AMM6T-38x6UiL+atVro9LyTbrHqEYntfw@mail.gmail.com>
+References: <1431988559-23338-1-git-send-email-manabian@gmail.com>
+	<1431988559-23338-5-git-send-email-manabian@gmail.com>
+	<20150528034424.22384.83956@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150528133429.GD2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20150528034424.22384.83956@quantum>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 28.05.2015 um 15:34 schrieb Russell King - ARM Linux:
+Hi Michael,
 
->> What's the big deal with having DTS/DTB under GPL ?
+On 28 May 2015 at 05:44, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Thanks for sending V3. This driver is getting close!
+
+Thanks for your patience.
+
+> So the main thing I don't understand is why you do not encode the CGU
+> clock parent string names into this CCU driver. If I understand your
+> approach correctly, you do the following in lpc18xx_ccu_init:
 >
-> It's really quite simple.  Other open source projects won't touch
-> _our_ DTB with a barge pole through fear of GPL contamination.
+> 1) count the number of parent clocks (ostensibly CGU clocks)
+> 2) iterate through all of those CGU clocks, extracting a base_id value
+> (loop #1)
+> 3) using this base_id as a key you walk through an array in the CCU
+> driver trying to find a matching base_id value
+> (loop #2)
+> 4) after finding the corresponding CCU clocks you get the parent clock
+> with of_clk_get
+> 5) using of_clk_get you fetch its name with __clk_get_name
+> 6) you pass this parent name into a fairly typical looking registration
+> function
+>
+> Assuming I got all of that right, I hope we can simplify it
+> considerably.
+>
+> You already have an array of CCU clock information in this driver,
+> clk_branches[]. Why not encode the parent string name here? This would
+> involve adding a "parent_name" member to struct lpc18xx_clk_branch.
+>
+> Doing the above, your O(n^2)-ish registration function becomes O(n):
+>
+> 1) iterate through the array of the CCU clocks (clk_branchs[])
+> 2) register them
+> 3) profit
 
-Which other foss projects do you have in mind ?
-And why should they fear "poisoning" ?
+Since there are two instances of the CCU IP block and the clk_branchs[]
+table contain branch clocks from both of them the driver needs to know
+on which CCU instance the clocks belong.
 
-The DTB is an entirely separate file. Just like various firmware
-blobs, startup scripts, etc, etc. Just shipping that file (be it in
-some source tarball or in the flash of some device) doesn't make
-everything else an derived work.
+So just registering all clocks in clk_branchs[] we would end up with
+all the clocks on both CCU nodes and some clock ids would conflict.
 
-Of course, the viral effect of the GPL could catch in if somebody
-directly compiles-in the dtb into something else (so it cant be
-easily separated / replaced) - but why should anybody wanna do that ?
-Sounds to me like defeating the whole purpose of DTB.
+An alternative approach could be to split the clk_branchs[]. Each one
+with branch clocks for the respective CCU. But the driver would still
+need to know which of the tables to register. This could be done either
+by using two DT compac strings; like "nxp,lpc1850-ccu1" and "...-ccu2"
+or by having a 'id' propery in DT. I don't find these two approaches
+very appealing.
 
-> So what we'll end up with is other projects creating their own DTB
-> descriptions for the same hardware, with different properties (which
-> they'll do in an effort to ensure that it isn't a "derived work" of
-> the GPL version) and the whole thing turning into a right mess - and
-> a poor experience for users because they then end up with OS specific
-> DT files.
+So the reason for some of the complexity in the driver is to keep it
+generic and work on multiple CCU instances by looking at the connected
+clocks.
 
-Anybody is free do to everything on his own. Same as everybody is free
-to write his own kernel, etc.
+I hope this make it more understandable. Sorry for failing to describe the
+hardware properly.
 
-But I dont see a practical usecase where the GPL's viral effect could
-catch in here in the first place.
+Either way I'll send out a v4 with parent clocks in the clk_branchs[]
+and which use a clock-names property to match the clocks between the
+CCU. Let me know what you think when you get a chance to look at it.
 
-> Alternatively, as Rob points out, people will just go the ACPI route
-> to avoid the GPL contamination problem.
+> I'm starting to think any reference to base_id is sign that things are
+> wrong in your driver. I am unconvinced that you need to "share" this
+> base_id across CGU and CCU drivers in the way you do. If I'm wrong
+> please help me to understand.
 
-If they really wanna go that ugly route ... just let them go.
-I don't see where I could care at all.
+I don't mind putting the parent clock names in the clk_branches[] but
+the driver still needs to distinguish between the CCUs in the system
+and register the correct clocks on them.
 
-As I'm primarily concerned w/ embedded systems, I'll need full
-documentation and control over the device, I won't trust vendor DTBs
-anyways. And I won't help people doing crippled proprietary stuff,
-not at this critical point.
-
-Even for larger systems - except the crippled x86 world - I won't even
-allow any proprietary bootloader/firmware.
+If you have a another good way of doing so I am all ears.
 
 
+I have put up the full DT in the link if you would like to take a look.
+http://slexy.org/raw/s21h9lCxQa
 
-cu
+You may also find the data sheet at the link below. There is a figure
+of the CGU and both CCUs at page 161, Figure 34.
+http://www.nxp.com/documents/user_manual/UM10503.pdf
+
+
+regards,
+Joachim Eastwood
 --
-Enrico Weigelt, metux IT consult
-+49-151-27565287
-MELAG Medizintechnik oHG Sitz Berlin Registergericht AG Charlottenburg =
-HRA 21333 B
-
-Wichtiger Hinweis: Diese Nachricht kann vertrauliche oder nur f=FCr ein=
-en begrenzten Personenkreis bestimmte Informationen enthalten. Sie ist =
-ausschlie=DFlich f=FCr denjenigen bestimmt, an den sie gerichtet worden=
- ist. Wenn Sie nicht der Adressat dieser E-Mail sind, d=FCrfen Sie dies=
-e nicht kopieren, weiterleiten, weitergeben oder sie ganz oder teilweis=
-e in irgendeiner Weise nutzen. Sollten Sie diese E-Mail irrt=FCmlich er=
-halten haben, so benachrichtigen Sie bitte den Absender, indem Sie auf =
-diese Nachricht antworten. Bitte l=F6schen Sie in diesem Fall diese Nac=
-hricht und alle Anh=E4nge, ohne eine Kopie zu behalten.
-Important Notice: This message may contain confidential or privileged i=
-nformation. It is intended only for the person it was addressed to. If =
-you are not the intended recipient of this email you may not copy, forw=
-ard, disclose or otherwise use it or any part of it in any form whatsoe=
-ver. If you received this email in error please notify the sender by re=
-plying and delete this message and any attachments without retaining a =
-copy.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
