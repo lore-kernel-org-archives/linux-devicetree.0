@@ -1,32 +1,69 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 6/6] clocksource: sh_cmt: Document r8a7793-specific bindings
-Date: Thu, 28 May 2015 17:55:41 +0200
-Message-ID: <CAMuHMdVw3dLHnJBc747tYhsa84zC49fSeKP0t67D_q+E=JYodA@mail.gmail.com>
-References: <1432826225-6743-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1432826225-6743-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Antonio Ospite <ao2@ao2.it>
+Subject: Re: [PATCH 2/9] input: goodix: fix variable length array warning
+Date: Thu, 28 May 2015 17:57:53 +0200
+Message-ID: <20150528175753.1f85723b5b880ecf02fd4a79@ao2.it>
+References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
+	<1432817265-23891-3-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1432826225-6743-7-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1432817265-23891-3-git-send-email-irina.tirdea@intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2015 at 5:17 PM, Ulrich Hecht
-<ulrich.hecht+renesas@gmail.com> wrote:
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
+On Thu, 28 May 2015 15:47:38 +0300
+Irina Tirdea <irina.tirdea@intel.com> wrote:
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fix sparse warning:
+> drivers/input/touchscreen/goodix.c:182:26: warning:
+> Variable length array is used.
+> 
+> Replace the variable length array with fixed length.
+> 
+> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> ---
+>  drivers/input/touchscreen/goodix.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> index c2e785c..dac1b3c 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -147,7 +147,7 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
+>   */
+>  static void goodix_process_events(struct goodix_ts_data *ts)
+>  {
+> -	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
+> +	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
 
-Gr{oetje,eeting}s,
+Hi,
 
-                        Geert
+this fixes the warning from sparse, but also changes the semantics of
+the code: ts->max_touch_num is less that GOODIX_MAX_CONTACTS for 5
+touches devices and in this case we'll end up using more memory than is
+necessary.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks,
+   Antonio
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  	int touch_num;
+>  	int i;
+>  
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-input" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Antonio Ospite
+http://ao2.it
+
+A: Because it messes up the order in which people normally read text.
+   See http://en.wikipedia.org/wiki/Posting_style
+Q: Why is top-posting such a bad thing?
