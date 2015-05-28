@@ -1,90 +1,338 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 12/14] drivers: sh: Stop using pm_runtime.c for multi-platform shmobile with genpd
-Date: Thu, 28 May 2015 20:53:37 +0200
-Message-ID: <1432839219-475-13-git-send-email-geert+renesas@glider.be>
-References: <1432839219-475-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1432839219-475-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 2/7 v2] ARM: bcm2835: Add a Raspberry Pi-specific clock driver.
+Date: Thu, 28 May 2015 12:02:08 -0700
+Message-ID: <1432839728-11741-1-git-send-email-eric@anholt.net>
+References: <20150519030544.GQ2845@tarshish>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150519030544.GQ2845@tarshish>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now most multi-platform ARM shmobile platforms (SH-Mobile, R-Mobile,
-R-Car, RZ) use the CPG Clock Domain to take care of PM runtime
-management of the module clocks, we no longer need the legacy default PM
-domain hack, which also prevented registering the real PM domain.
+Unfortunately, the clock manager's registers are not accessible by the
+ARM, so we have to request that the firmware modify our clocks for us.
 
-EMMA Mobile EV2 doesn't have MSTP clocks and doesn't use the CPG Clock
-Domain. But all its device drivers manage clocks explicitly, without
-relying on Runtime PM, so it doesn't need the legacy default PM hack
-neither.
+This driver only registers the clocks at the point they are requested
+by a client driver.  This is partially to support returning
+-EPROBE_DEFER when the firmware driver isn't supported yet, but it
+also avoids issues with disabling "unused" clocks due to them not yet
+being connected to their consumers in the DT.
 
-Hence do not compile it when running an ARM multi-platform kernel with
-genpd support.
-
-The default PM domain is still needed:
-  - for legacy SuperH,
-  - for legacy (non-DT) ARM/shmobile platforms
-      - without genpd support (r8a7778, r8a7779),
-      - with genpd support, for devices in the "C5" always-on power
-	area (r8a7740, sh73a0),
-  - for the CONFIG_PM=n case.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 ---
-v2:
-  - Add Reviewed-by,
-  - Just stop compiling pm_runtime.c instead of using a runtime check,
-    as no multi-platform ARM platforms need this anymore.
----
- drivers/sh/Makefile     |  4 ++++
- drivers/sh/pm_runtime.c | 18 ------------------
- 2 files changed, 4 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/sh/Makefile b/drivers/sh/Makefile
-index 114203f32843216f..786924c34436085e 100644
---- a/drivers/sh/Makefile
-+++ b/drivers/sh/Makefile
-@@ -8,4 +8,8 @@ endif
- obj-$(CONFIG_MAPLE)			+= maple/
- obj-$(CONFIG_SUPERHYWAY)		+= superhyway/
- 
-+obj-$(CONFIG_ARCH_SHMOBILE_LEGACY)	+= pm_runtime.o
-+obj-$(CONFIG_SUPERH)			+= pm_runtime.o
-+ifneq ($(CONFIG_PM),y)
- obj-y					+= pm_runtime.o
-+endif
-diff --git a/drivers/sh/pm_runtime.c b/drivers/sh/pm_runtime.c
-index d3d1891cda3cf9a8..c887ecdaf19b7c10 100644
---- a/drivers/sh/pm_runtime.c
-+++ b/drivers/sh/pm_runtime.c
-@@ -34,24 +34,6 @@ static struct pm_clk_notifier_block platform_bus_notifier = {
- 
- static int __init sh_pm_runtime_init(void)
- {
--	if (IS_ENABLED(CONFIG_ARCH_SHMOBILE_MULTI)) {
--		if (!of_machine_is_compatible("renesas,emev2") &&
--		    !of_machine_is_compatible("renesas,r7s72100") &&
--#ifndef CONFIG_PM_GENERIC_DOMAINS_OF
--		    !of_machine_is_compatible("renesas,r8a73a4") &&
--		    !of_machine_is_compatible("renesas,r8a7740") &&
--		    !of_machine_is_compatible("renesas,sh73a0") &&
--#endif
--		    !of_machine_is_compatible("renesas,r8a7778") &&
--		    !of_machine_is_compatible("renesas,r8a7779") &&
--		    !of_machine_is_compatible("renesas,r8a7790") &&
--		    !of_machine_is_compatible("renesas,r8a7791") &&
--		    !of_machine_is_compatible("renesas,r8a7792") &&
--		    !of_machine_is_compatible("renesas,r8a7793") &&
--		    !of_machine_is_compatible("renesas,r8a7794"))
--			return 0;
--	}
--
- 	pm_clk_add_notifier(&platform_bus_type, &platform_bus_notifier);
- 	return 0;
- }
--- 
-1.9.1
+v2: Declare the mutex static (from review by Baruch Siach), merge
+    description and copyright comments.
 
+ drivers/clk/Makefile                  |   1 +
+ drivers/clk/clk-raspberrypi.c         | 239 ++++++++++++++++++++++++++=
+++++++++
+ include/dt-bindings/clk/raspberrypi.h |  23 ++++
+ 3 files changed, 263 insertions(+)
+ create mode 100644 drivers/clk/clk-raspberrypi.c
+ create mode 100644 include/dt-bindings/clk/raspberrypi.h
+
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 3d00c25..6a5dafa 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_MACH_ASM9260)		+=3D clk-asm9260.o
+ obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)	+=3D clk-axi-clkgen.o
+ obj-$(CONFIG_ARCH_AXXIA)		+=3D clk-axm5516.o
+ obj-$(CONFIG_ARCH_BCM2835)		+=3D clk-bcm2835.o
++obj-$(CONFIG_ARCH_BCM2835)		+=3D clk-raspberrypi.o
+ obj-$(CONFIG_COMMON_CLK_CDCE706)	+=3D clk-cdce706.o
+ obj-$(CONFIG_ARCH_CLPS711X)		+=3D clk-clps711x.o
+ obj-$(CONFIG_ARCH_EFM32)		+=3D clk-efm32gg.o
+diff --git a/drivers/clk/clk-raspberrypi.c b/drivers/clk/clk-raspberryp=
+i.c
+new file mode 100644
+index 0000000..b9d8f44
+--- /dev/null
++++ b/drivers/clk/clk-raspberrypi.c
+@@ -0,0 +1,239 @@
++/*
++ * Implements a clock provider for the clocks controlled by the
++ * firmware on Raspberry Pi.
++ *
++ * These clocks are controlled by the CLOCKMAN peripheral in the
++ * hardware, but the ARM doesn't have access to the registers for
++ * them.  As a result, we have to call into the firmware to get it to
++ * enable, disable, and set their frequencies.
++ *
++ * We don't have an interface for getting the set of frequencies
++ * available from the hardware.  We can request a min/max, but other
++ * than that we have to request a frequency and take what it gives us.
++ *
++ * Copyright =C2=A9 2015 Broadcom
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <dt-bindings/clk/raspberrypi.h>
++#include <linux/clk-provider.h>
++#include <soc/bcm2835/raspberrypi-firmware-property.h>
++
++struct rpi_firmware_clock {
++	/* Clock definitions in our static struct. */
++	int clock_id;
++	const char *name;
++
++	/* The rest are filled in at init time. */
++	struct clk_hw hw;
++	struct device *dev;
++	struct device_node *firmware_node;
++};
++
++static struct rpi_firmware_clock rpi_clocks[] =3D {
++	[RPI_CLOCK_EMMC] =3D { 1, "emmc" },
++	[RPI_CLOCK_UART0] =3D { 2, "uart0" },
++	[RPI_CLOCK_ARM] =3D { 3, "arm" },
++	[RPI_CLOCK_CORE] =3D { 4, "core" },
++	[RPI_CLOCK_V3D] =3D { 5, "v3d" },
++	[RPI_CLOCK_H264] =3D { 6, "h264" },
++	[RPI_CLOCK_ISP] =3D { 7, "isp" },
++	[RPI_CLOCK_SDRAM] =3D { 8, "sdram" },
++	[RPI_CLOCK_PIXEL] =3D { 9, "pixel" },
++	[RPI_CLOCK_PWM] =3D { 10, "pwm" },
++};
++
++static int rpi_clk_is_on(struct clk_hw *hw)
++{
++	struct rpi_firmware_clock *rpi_clk =3D
++		container_of(hw, struct rpi_firmware_clock, hw);
++	u32 packet[2];
++	int ret;
++
++	packet[0] =3D rpi_clk->clock_id;
++	packet[1] =3D 0;
++	ret =3D rpi_firmware_property(rpi_clk->firmware_node,
++				    RPI_FIRMWARE_GET_CLOCK_STATE,
++				    &packet, sizeof(packet));
++	if (ret) {
++		dev_err(rpi_clk->dev, "Failed to get clock state\n");
++		return 0;
++	}
++
++	return packet[1] !=3D 0;
++}
++
++static int rpi_clk_set_state(struct rpi_firmware_clock *rpi_clk, bool =
+on)
++{
++	u32 packet[2];
++	int ret;
++
++	packet[0] =3D rpi_clk->clock_id;
++	packet[1] =3D on;
++	ret =3D rpi_firmware_property(rpi_clk->firmware_node,
++				    RPI_FIRMWARE_SET_CLOCK_STATE,
++				    &packet, sizeof(packet));
++	if (ret || (packet[1] & (1 << 1))) {
++		dev_err(rpi_clk->dev, "Failed to set clock state\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int rpi_clk_on(struct clk_hw *hw)
++{
++	struct rpi_firmware_clock *rpi_clk =3D
++		container_of(hw, struct rpi_firmware_clock, hw);
++
++	return rpi_clk_set_state(rpi_clk, true);
++}
++
++static void rpi_clk_off(struct clk_hw *hw)
++{
++	struct rpi_firmware_clock *rpi_clk =3D
++		container_of(hw, struct rpi_firmware_clock, hw);
++
++	rpi_clk_set_state(rpi_clk, false);
++}
++
++static unsigned long rpi_clk_get_rate(struct clk_hw *hw,
++					      unsigned long parent_rate)
++{
++	struct rpi_firmware_clock *rpi_clk =3D
++		container_of(hw, struct rpi_firmware_clock, hw);
++	u32 packet[2];
++	int ret;
++
++	packet[0] =3D rpi_clk->clock_id;
++	packet[1] =3D 0;
++	ret =3D rpi_firmware_property(rpi_clk->firmware_node,
++				    RPI_FIRMWARE_GET_CLOCK_RATE,
++				    &packet, sizeof(packet));
++	if (ret) {
++		dev_err(rpi_clk->dev, "Failed to get clock rate\n");
++		return 0;
++	}
++
++	return packet[1];
++}
++
++static int rpi_clk_set_rate(struct clk_hw *hw,
++			    unsigned long rate, unsigned long parent_rate)
++{
++	struct rpi_firmware_clock *rpi_clk =3D
++		container_of(hw, struct rpi_firmware_clock, hw);
++	u32 packet[2];
++	int ret;
++
++	packet[0] =3D rpi_clk->clock_id;
++	packet[1] =3D rate;
++	ret =3D rpi_firmware_property(rpi_clk->firmware_node,
++				    RPI_FIRMWARE_SET_CLOCK_RATE,
++				    &packet, sizeof(packet));
++	if (ret) {
++		dev_err(rpi_clk->dev, "Failed to set clock rate\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static long rpi_clk_round_rate(struct clk_hw *hw, unsigned long rate,
++			       unsigned long *parent_rate)
++{
++	/*
++	 * The firmware will end up rounding our rate to something,
++	 * but we don't have an interface for it.  Just return the
++	 * requested value, and it'll get updated after the clock gets
++	 * set.
++	 */
++	return rate;
++}
++
++static struct clk_ops rpi_clk_ops =3D {
++	.is_prepared =3D rpi_clk_is_on,
++	.prepare =3D rpi_clk_on,
++	.unprepare =3D rpi_clk_off,
++	.recalc_rate =3D rpi_clk_get_rate,
++	.set_rate =3D rpi_clk_set_rate,
++	.round_rate =3D rpi_clk_round_rate,
++};
++
++static DEFINE_MUTEX(delayed_clock_init);
++static struct clk *rpi_firmware_delayed_get_clk(struct of_phandle_args=
+ *clkspec,
++						void *_data)
++{
++	struct device_node *of_node =3D _data;
++	struct platform_device *pdev =3D of_find_device_by_node(of_node);
++	struct device *dev =3D &pdev->dev;
++	struct device_node *firmware_node;
++	struct clk_init_data init;
++	struct rpi_firmware_clock *rpi_clk;
++	struct clk *ret_clk;
++	int ret;
++
++	if (clkspec->args_count !=3D 1) {
++		dev_err(dev, "clock phandle should have 1 argument\n");
++		return ERR_PTR(-ENODEV);
++	}
++
++	if (clkspec->args[0] >=3D ARRAY_SIZE(rpi_clocks)) {
++		dev_err(dev, "clock phandle index %d too large\n",
++			clkspec->args[0]);
++		return ERR_PTR(-ENODEV);
++	}
++
++	rpi_clk =3D &rpi_clocks[clkspec->args[0]];
++
++	firmware_node =3D of_parse_phandle(of_node, "firmware", 0);
++	if (!firmware_node) {
++		dev_err(dev, "%s: Missing firmware node\n", rpi_clk->name);
++		return ERR_PTR(-ENODEV);
++	}
++
++	/* Try a no-op transaction to see if the driver is loaded yet. */
++	ret =3D rpi_firmware_property_list(firmware_node, NULL, 0);
++	if (ret)
++		return ERR_PTR(ret);
++
++	mutex_lock(&delayed_clock_init);
++	if (rpi_clk->hw.clk) {
++		mutex_unlock(&delayed_clock_init);
++		return rpi_clk->hw.clk;
++	}
++	memset(&init, 0, sizeof(init));
++	init.ops =3D &rpi_clk_ops;
++
++	rpi_clk->firmware_node =3D firmware_node;
++	rpi_clk->dev =3D dev;
++	rpi_clk->hw.init =3D &init;
++	init.name =3D rpi_clk->name;
++	init.flags =3D CLK_IS_ROOT;
++
++	ret_clk =3D clk_register(dev, &rpi_clk->hw);
++	mutex_unlock(&delayed_clock_init);
++	if (!IS_ERR(ret_clk))
++		dev_info(dev, "registered %s clock\n", rpi_clk->name);
++	else {
++		dev_err(dev, "%s clock failed to init: %ld\n", rpi_clk->name,
++			PTR_ERR(ret_clk));
++	}
++	return ret_clk;
++}
++
++void __init rpi_firmware_init_clock_provider(struct device_node *node)
++{
++	/* We delay construction of our struct clks until get time,
++	 * because we need to be able to return -EPROBE_DEFER if the
++	 * firmware driver isn't up yet.  clk core doesn't support
++	 * re-probing on -EPROBE_DEFER, but callers of clk_get can.
++	 */
++	of_clk_add_provider(node, rpi_firmware_delayed_get_clk, node);
++}
++
++CLK_OF_DECLARE(rpi_firmware_clocks, "raspberrypi,firmware-clocks",
++	       rpi_firmware_init_clock_provider);
+diff --git a/include/dt-bindings/clk/raspberrypi.h b/include/dt-binding=
+s/clk/raspberrypi.h
+new file mode 100644
+index 0000000..c9fa85c
+--- /dev/null
++++ b/include/dt-bindings/clk/raspberrypi.h
+@@ -0,0 +1,23 @@
++#/*
++ *  Copyright =C2=A9 2015 Broadcom
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _DT_BINDINGS_CLK_RASPBERRYPI_H
++#define _DT_BINDINGS_CLK_RASPBERRYPI_H
++
++#define RPI_CLOCK_EMMC	0
++#define RPI_CLOCK_UART0	1
++#define RPI_CLOCK_ARM	2
++#define RPI_CLOCK_CORE	3
++#define RPI_CLOCK_V3D	4
++#define RPI_CLOCK_H264	5
++#define RPI_CLOCK_ISP	6
++#define RPI_CLOCK_SDRAM	7
++#define RPI_CLOCK_PIXEL	8
++#define RPI_CLOCK_PWM	9
++
++#endif
+--=20
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
