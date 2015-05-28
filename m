@@ -1,83 +1,480 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 5/6] regulator: add mxs on-chip regulator driver
-Date: Thu, 28 May 2015 15:26:55 +0100
-Message-ID: <20150528142655.GX21577@sirena.org.uk>
-References: <1430346747-28728-6-git-send-email-stefan.wahren@i2se.com>
- <20150504123648.GU15510@sirena.org.uk>
- <1693367404.879766.1430771695242.JavaMail.open-xchange@oxbaltgw08.schlund.de>
- <1875749167.82542.1431023838932.JavaMail.open-xchange@oxbsltgw04.schlund.de>
- <20150507185216.GP22845@sirena.org.uk>
- <535744342.64563.1431026719818.JavaMail.open-xchange@oxbsltgw09.schlund.de>
- <20150507193236.GS22845@sirena.org.uk>
- <1290103954.26573.1432642616013.JavaMail.open-xchange@oxbsltgw08.schlund.de>
- <20150527173321.GH21577@sirena.org.uk>
- <1973961885.66028.1432760281554.JavaMail.open-xchange@oxbsltgw06.schlund.de>
+From: "Grygorii.Strashko-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grygorii.strashko-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v1] clk: Add Suspend/Resume Callbacks in Clock
+Date: Thu, 28 May 2015 17:49:52 +0300
+Message-ID: <55672B10.8050909@linaro.org>
+References: <1432725110-11954-1-git-send-email-pankaj.dev@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rR6pEsNFzVJhSSrj"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1973961885.66028.1432760281554.JavaMail.open-xchange@oxbsltgw06.schlund.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Sebastian Reichel <sre@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, fabio.estevam@freescale.com, David Woodhouse <dwmw2@infradead.org>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, sebastien.szymanski@armadeus.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432725110-11954-1-git-send-email-pankaj.dev-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/27/2015 02:11 PM, Pankaj Dev wrote:
+> Currently the CCF doesnt have any interface with the system when it
+> goes into suspend state. This patch, on similar lines of syscore,
+> adds clk_suspend/clk_resume functions before system enters suspend state
+> Also there are suspend/resume hooks added for the clock driver
+> 
+> Acked-by: Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>
+> Acked-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
 
---rR6pEsNFzVJhSSrj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, May 27, 2015 at 10:58:01PM +0200, Stefan Wahren wrote:
+Nice:) Second try. FYI http://www.spinics.net/lists/linux-clk/msg00743.html
 
-> In case of a single driver instance instead of 4 ones (vddd, vddio, vdda,
-> dc-dc), things would be much easier.
+Regarding your patch:
+ * @prepare:	Prepare the clock for enabling. This must not return until
+ *		the clock is fully prepared, and it's safe to call clk_enable.
+ *		This callback is intended to allow clock implementations to
+ *		do any initialisation that may sleep. Called with
+ *		prepare_lock held.
+.un/prepare() callbacks intended to be used for slow clocks and may sleep, so
+you can't call them when Syscore is suspended and with disabled IRQs.
 
-> Here are the steps for disabling DC-DC:
+> ---
+>   drivers/clk/clk.c            |  194 ++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/clk-provider.h |   21 +++++
+>   include/linux/clk.h          |   23 +++++
+>   kernel/kexec.c               |    6 ++
+>   kernel/power/hibernate.c     |   16 ++++
+>   kernel/power/suspend.c       |    7 ++
+>   6 files changed, 267 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 237f23f..3e3b1d7 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -2811,6 +2811,200 @@ int clk_notifier_unregister(struct clk *clk, struct notifier_block *nb)
+>   }
+>   EXPORT_SYMBOL_GPL(clk_notifier_unregister);
+>   
+> +#ifdef CONFIG_PM_SLEEP
+> +int __clk_resume(struct clk_core *clk)
+> +{
+> +	int ret = 0;
+> +	u8 p_index;
+> +	unsigned long rate, parent_rate = 0;
+> +
+> +	/* restore parent */
+> +	if (clk->ops->set_parent) {
+> +		p_index = clk_fetch_parent_index(clk, clk->parent);
+> +
+> +		if (p_index != clk->ops->get_parent(clk->hw))
+> +			ret = clk->ops->set_parent(clk->hw, p_index);
+> +
+> +		if (ret) {
+> +			pr_err("%s: Fail to set parent %s\n",
+> +			       __func__, clk->name);
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	/* restore rate */
+> +	if (clk->ops->set_rate) {
+> +		if (clk->parent)
+> +			parent_rate = clk->parent->rate;
+> +
+> +		rate = clk->ops->recalc_rate(clk->hw, parent_rate);
+> +
+> +		if (rate != clk->rate)
+> +			ret = clk->ops->set_rate(clk->hw, clk->rate,
+> +						 parent_rate);
+> +
+> +		if (ret) {
+> +			pr_err("%s: Fail to set rate %s\n",
+> +			       __func__, clk->name);
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	/* restore prepare status */
+> +	if (clk->ops->prepare && clk->prepare_count) {
+> +		if (clk->ops->is_prepared) {
+> +			if (!clk->ops->is_prepared(clk->hw))
+> +				ret = clk->ops->prepare(clk->hw);
+> +		} else {
+> +			ret = clk->ops->prepare(clk->hw);
+> +		}
+> +		if (ret) {
+> +			pr_err("%s: Fail to prepare %s\n",
+> +			       __func__, clk->name);
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	/* restore enable status */
+> +	if (clk->ops->enable && clk->enable_count) {
+> +		if (clk->ops->is_enabled) {
+> +			if (!clk->ops->is_enabled(clk->hw))
+> +				ret = clk->ops->enable(clk->hw);
+> +		} else {
+> +			ret = clk->ops->enable(clk->hw);
+> +		}
+> +		if (ret) {
+> +			pr_err("%s: Fail to enable %s\n",
+> +			       __func__, clk->name);
+> +			goto out;
+> +		}
+> +	}
+> +	if (clk->ops->disable && !clk->enable_count) {
+> +		if (clk->ops->is_enabled) {
+> +			if (clk->ops->is_enabled(clk->hw))
+> +				clk->ops->disable(clk->hw);
+> +		} else {
+> +			clk->ops->disable(clk->hw);
+> +		}
+> +	}
+> +
+> +	/* restore unprepare status */
+> +	if (clk->ops->unprepare && !clk->prepare_count) {
+> +		if (clk->ops->is_prepared) {
+> +			if (!clk->ops->is_prepared(clk->hw))
+> +				clk->ops->unprepare(clk->hw);
+> +		} else {
+> +			clk->ops->unprepare(clk->hw);
+> +		}
+> +	}
+> +
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int _clk_resume(struct clk_core *clk)
+> +{
+> +	struct clk_core *child;
+> +	int ret = 0;
+> +
+> +	if (!clk)
+> +		return 0;
+> +
+> +	if (clk->ops->resume)
+> +		ret = clk->ops->resume(clk->hw);
+> +	else
+> +		ret = __clk_resume(clk);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	hlist_for_each_entry(child, &clk->children, child_node) {
+> +		ret = _clk_resume(child);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +void clk_resume(void)
+> +{
+> +	struct clk_core *clk;
+> +
+> +	hlist_for_each_entry(clk, &clk_root_list, child_node)
+> +		_clk_resume(clk);
+> +
+> +	hlist_for_each_entry(clk, &clk_orphan_list, child_node)
+> +		_clk_resume(clk);
+> +}
+> +
+> +int __clk_suspend(struct clk_core *clk)
+> +{
+> +	/* Currently, Nothing to do. Could be used in future */
+> +	return 0;
+> +}
+> +
+> +static int _clk_suspend(struct clk_core *clk)
+> +{
+> +	struct clk *child;
+> +	int ret = 0;
+> +
+> +	if (!clk)
+> +		return 0;
+> +
+> +	hlist_for_each_entry(child, &clk->children, child_node) {
+> +		ret = _clk_suspend(child);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (clk->ops->suspend)
+> +		return clk->ops->suspend(clk->hw);
+> +
+> +	return __clk_suspend(clk);
+> +}
+> +
+> +int clk_suspend(void)
+> +{
+> +	struct clk_core *clk, *clkerr;
+> +	int ret;
+> +
+> +	hlist_for_each_entry(clk, &clk_root_list, child_node) {
+> +		ret = _clk_suspend(clk);
+> +		if (ret) {
+> +			/* Call resume of suspended clocks if error */
+> +			hlist_for_each_entry(clkerr, &clk_root_list,
+> +					     child_node) {
+> +				if (clkerr == clk)
+> +					goto out;
+> +				_clk_resume(clkerr);
+> +			}
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	hlist_for_each_entry(clk, &clk_orphan_list, child_node) {
+> +		ret = _clk_suspend(clk);
+> +		if (ret) {
+> +			/* Call resume of suspended clocks if error */
+> +			hlist_for_each_entry(clkerr, &clk_root_list,
+> +					     child_node)
+> +				_clk_resume(clkerr);
+> +			hlist_for_each_entry(clkerr, &clk_orphan_list,
+> +					     child_node) {
+> +				if (clkerr == clk)
+> +					goto out;
+> +				_clk_resume(clkerr);
+> +			}
+> +			goto out;
+> +		}
+> +	}
+> +
+> +out:
+> +	return ret;
+> +}
+> +#endif
+> +
+>   #ifdef CONFIG_OF
+>   /**
+>    * struct of_clk_provider - Clock provider registration structure
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index 5591ea7..ec6438d 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -151,6 +151,18 @@ struct dentry;
+>    *		prepare_lock held.  Returns 0 on success, -EERROR otherwise.
+>    *
+>    *
+> + * @suspend:	Called (if defined) when the system is about to enter
+> + *		Suspend. Framework defined __clk_suspend is called, if
+> + *		this callback is not defined. Optionally the driver could
+> + *		also call __clk_suspend inside this callback.
+> + *		Returns 0 on success, -EERROR otherwise.
+> + *
+> + * @resume:	Called (if defined) when the system is about to exit
+> + *		Suspend. Framework defined __clk_resume is called, if
+> + *		this callback is not defined. Optionally the driver could
+> + *		also call __clk_resume inside this callback.
+> + *		Returns 0 on success, -EERROR otherwise.
+> + *
+>    * The clk_enable/clk_disable and clk_prepare/clk_unprepare pairs allow
+>    * implementations to split any work between atomic (enable) and sleepable
+>    * (prepare) contexts.  If enabling a clock requires code that might sleep,
+> @@ -194,6 +206,10 @@ struct clk_ops {
+>   	int		(*set_phase)(struct clk_hw *hw, int degrees);
+>   	void		(*init)(struct clk_hw *hw);
+>   	int		(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
+> +#ifdef CONFIG_PM_SLEEP
+> +	int             (*suspend)(struct clk_hw *hw);
+> +	int             (*resume)(struct clk_hw *hw);
+> +#endif
+>   };
+>   
+>   /**
+> @@ -596,6 +612,11 @@ static inline void __clk_hw_set_clk(struct clk_hw *dst, struct clk_hw *src)
+>   	dst->core = src->core;
+>   }
+>   
+> +#ifdef CONFIG_PM_SLEEP
+> +int __clk_suspend(struct clk_core *clk);
+> +int __clk_resume(struct clk_core *clk);
+> +#endif
+> +
+>   /*
+>    * FIXME clock api without lock protection
+>    */
+> diff --git a/include/linux/clk.h b/include/linux/clk.h
+> index 68c16a6..5e6a636 100644
+> --- a/include/linux/clk.h
+> +++ b/include/linux/clk.h
+> @@ -394,6 +394,23 @@ struct clk *clk_get_parent(struct clk *clk);
+>    */
+>   struct clk *clk_get_sys(const char *dev_id, const char *con_id);
+>   
+> +#ifdef CONFIG_PM_SLEEP
+> +/**
+> + * clk_suspend - Called by the suspend framework before entering System Suspend
+> + *
+> + * Returns success (0) or negative errno
+> + * Called with Interrupts disabled
+> + */
+> +int clk_suspend(void);
+> +
+> +/**
+> + * clk_resume - Called by the suspend framework after exiting System Suspend
+> + *
+> + * Called with Interrupts disabled
+> + */
+> +void clk_resume(void);
+> +#endif
+> +
+>   #else /* !CONFIG_HAVE_CLK */
+>   
+>   static inline struct clk *clk_get(struct device *dev, const char *id)
+> @@ -447,6 +464,12 @@ static inline struct clk *clk_get_parent(struct clk *clk)
+>   	return NULL;
+>   }
+>   
+> +#ifdef CONFIG_PM_SLEEP
+> +static inline int clk_suspend(void) {}
+> +
+> +static inline void clk_resume(void) {}
+> +#endif
+> +
+>   #endif
+>   
+>   /* clk_prepare_enable helps cases using clk_enable in non-atomic context. */
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 38c25b1..28bce76 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -36,6 +36,7 @@
+>   #include <linux/syscore_ops.h>
+>   #include <linux/compiler.h>
+>   #include <linux/hugetlb.h>
+> +#include <linux/clk.h>
+>   
+>   #include <asm/page.h>
+>   #include <asm/uaccess.h>
+> @@ -2724,6 +2725,9 @@ int kernel_kexec(void)
+>   		error = syscore_suspend();
+>   		if (error)
+>   			goto Enable_irqs;
+> +		error = clk_suspend();
+> +		if (error)
+> +			goto Resume_syscore;
+>   	} else
+>   #endif
+>   	{
+> @@ -2746,6 +2750,8 @@ int kernel_kexec(void)
+>   
+>   #ifdef CONFIG_KEXEC_JUMP
+>   	if (kexec_image->preserve_context) {
+> +		clk_resume();
+> + Resume_syscore:
+>   		syscore_resume();
+>    Enable_irqs:
+>   		local_irq_enable();
+> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+> index 2329daa..f9b45ff 100644
+> --- a/kernel/power/hibernate.c
+> +++ b/kernel/power/hibernate.c
+> @@ -30,6 +30,7 @@
+>   #include <linux/genhd.h>
+>   #include <linux/ktime.h>
+>   #include <trace/events/power.h>
+> +#include <linux/clk.h>
+>   
+>   #include "power.h"
+>   
+> @@ -292,6 +293,12 @@ static int create_image(int platform_mode)
+>   		goto Enable_irqs;
+>   	}
+>   
+> +	error = clk_suspend();
+> +	if (error) {
+> +		pr_err("PM: Clocks Suspend failed aborting hibernation\n");
+> +		goto Power_up;
+> +	}
+> +
+>   	if (hibernation_test(TEST_CORE) || pm_wakeup_pending())
+>   		goto Power_up;
+>   
+> @@ -310,6 +317,7 @@ static int create_image(int platform_mode)
+>   
+>   	platform_leave(platform_mode);
+>   
+> +	clk_resume();
+>    Power_up:
+>   	syscore_resume();
+>   
+> @@ -442,6 +450,10 @@ static int resume_target_kernel(bool platform_mode)
+>   	if (error)
+>   		goto Enable_irqs;
+>   
+> +	error = clk_suspend();
+> +	if (error)
+> +		goto Resume_syscore;
+> +
+>   	save_processor_state();
+>   	error = restore_highmem();
+>   	if (!error) {
+> @@ -467,6 +479,8 @@ static int resume_target_kernel(bool platform_mode)
+>   	restore_processor_state();
+>   	touch_softlockup_watchdog();
+>   
+> +	clk_resume();
+> + Resume_syscore:
+>   	syscore_resume();
+>   
+>    Enable_irqs:
+> @@ -556,6 +570,7 @@ int hibernation_platform_enter(void)
+>   
+>   	local_irq_disable();
+>   	syscore_suspend();
+> +	clk_suspend();
+>   	if (pm_wakeup_pending()) {
+>   		error = -EAGAIN;
+>   		goto Power_up;
+> @@ -566,6 +581,7 @@ int hibernation_platform_enter(void)
+>   	while (1);
+>   
+>    Power_up:
+> +	clk_resume();
+>   	syscore_resume();
+>   	local_irq_enable();
+>   	enable_nonboot_cpus();
+> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> index b7d6b3a..3a9abb7 100644
+> --- a/kernel/power/suspend.c
+> +++ b/kernel/power/suspend.c
+> @@ -28,6 +28,7 @@
+>   #include <linux/ftrace.h>
+>   #include <trace/events/power.h>
+>   #include <linux/compiler.h>
+> +#include <linux/clk.h>
+>   
+>   #include "power.h"
+>   
+> @@ -349,6 +350,10 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
+>   
+>   	error = syscore_suspend();
+>   	if (!error) {
+> +		error = clk_suspend();
+> +		if (error)
+> +			goto Resume_syscore;
+> +
+>   		*wakeup = pm_wakeup_pending();
+>   		if (!(suspend_test(TEST_CORE) || *wakeup)) {
+>   			trace_suspend_resume(TPS("machine_suspend"),
+> @@ -358,6 +363,8 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
+>   				state, false);
+>   			events_check_enabled = false;
+>   		}
+> +		clk_resume();
+> +Resume_syscore:
+>   		syscore_resume();
+>   	}
+>   
+> 
 
-> 1. configure vddio to work without DC-DC
-> 2. configure vdda to work without DC-DC
-> 3. configure vddd to work without DC-DC
-> 4. backup DC-DC settings
-> 5. disable brownout detection
-> 6. disable DC-DC
-> 7. restore DC-DC settings
 
-> My problem is that step 1 to 3 must be done step by step through the other
-> regulator instances.
-
-For the regulator API steps 1-3 aren't going to be needed since
-dependency management means that we won't try to disable a regulator
-that we think is in use.
-
-> > If it's much more complicated than that
-> > then I think putting a comment in the driver explaining what the issue
-> > is would be the right step, that would address the issue with the driver
-> > looking strange.
-
-> Enabling or disabling DC-DC is only needed internally by the power subsystem
-> (e.g. in case of handoff AC to battery), because the DC-DC only supplys the
-> regulator daisy. From my understanding hardware components could use only the
-> regulator outputs. In the end a state change is necessary, but it shouldn't be a
-> public.
-
-Should this actually be shown as a regulator then and not as part of the
-power controller?
-
---rR6pEsNFzVJhSSrj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVZyWuAAoJECTWi3JdVIfQJ6YH/jXNmOjP3xxMx4DNKgBnzedd
-vWqA2DoLDwereXlm//lgWLjKNjX5Fei2htbTev/ojkiBQMulAgIRiftCwPj0h0zq
-pxu8CQkyfmwl/7l9lxJ/BfM8qKqRps9GMSTZYvgHQAbZJlKMzt14fpY5OhNc6CFQ
-susPyRH0ZzA/74EP6q7sAfW1n53/GJNyF1Jflgzq+bBxRpxVjD1qJ6PC8lK0fxyl
-1wJ/ivVkBix/1zKIXeUmU98BK2ZjABE7iIPbxvd6kfJoC0jCETShL1eu1F7kIvq9
-sF97HbDjOe0xz8vW6kkL2bjP2iwqh37O5wpiF47DDqklQzciViKqyzoJqWfSmyc=
-=vRG0
------END PGP SIGNATURE-----
-
---rR6pEsNFzVJhSSrj--
+-- 
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
