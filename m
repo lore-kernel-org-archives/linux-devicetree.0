@@ -1,130 +1,107 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] rtc: mxc: add a second clock
-Date: Thu, 28 May 2015 13:57:31 +0200
-Message-ID: <20150528115731.GN2185@piout.net>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 2/2] rtc: mxc: add support of device tree
+Date: Thu, 28 May 2015 14:06:01 +0200
+Message-ID: <20150528120601.GO2185@piout.net>
 References: <1431729330-7625-1-git-send-email-tremyfr@gmail.com>
- <1431729330-7625-2-git-send-email-tremyfr@gmail.com>
+ <1431729330-7625-3-git-send-email-tremyfr@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1431729330-7625-2-git-send-email-tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+In-Reply-To: <1431729330-7625-3-git-send-email-tremyfr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Reynes <tremyfr@gmail.com>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, a.zummo@towertech.it, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rtc-linux@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, fabio.estevam@freescale.com
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 16/05/2015 at 00:35:29 +0200, Philippe Reynes wrote :
-> The mxc RTC needs two clocks, one for the input
-> reference, and one for the IP. But this driver
-> was only using one clock (for the reference).
-> This patch add the second clock (for the IP).
+On 16/05/2015 at 00:35:30 +0200, Philippe Reynes wrote :
 > 
-> Signed-off-by: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Please always include a commit message.
+
+> Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
 > ---
->  arch/arm/mach-imx/clk-imx31.c |    3 ++-
->  drivers/rtc/rtc-mxc.c         |   26 +++++++++++++++++---------
->  2 files changed, 19 insertions(+), 10 deletions(-)
+>  Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   27 +++++++++++++++++++++
+>  drivers/rtc/rtc-mxc.c                             |   22 ++++++++++++++++-
+>  2 files changed, 48 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
 > 
-> diff --git a/arch/arm/mach-imx/clk-imx31.c b/arch/arm/mach-imx/clk-imx31.c
-> index 286ef42..480c54f 100644
-> --- a/arch/arm/mach-imx/clk-imx31.c
-> +++ b/arch/arm/mach-imx/clk-imx31.c
-> @@ -130,7 +130,8 @@ int __init mx31_clocks_init(unsigned long fref)
->  	clk_register_clkdev(clk[cspi3_gate], NULL, "imx31-cspi.2");
->  	clk_register_clkdev(clk[pwm_gate], "pwm", NULL);
->  	clk_register_clkdev(clk[wdog_gate], NULL, "imx2-wdt.0");
-> -	clk_register_clkdev(clk[rtc_gate], NULL, "imx21-rtc");
-> +	clk_register_clkdev(clk[ckil], "rtc", "imx21-rtc");
-> +	clk_register_clkdev(clk[rtc_gate], "ipg", "imx21-rtc");
->  	clk_register_clkdev(clk[epit1_gate], "epit", NULL);
->  	clk_register_clkdev(clk[epit2_gate], "epit", NULL);
->  	clk_register_clkdev(clk[nfc], NULL, "imx27-nand.0");
-
-This should probably go in a separate patch so that Shawn can apply it.
-
-
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+> new file mode 100644
+> index 0000000..5505493
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+> @@ -0,0 +1,27 @@
+> +* Real Time Clock of the i.MX SoCs
+> +
+> +RTC controller for the i.MX SoCs
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: IRQ line for the RTC.
+> +- clocks: should contain two entries:
+> +  * one for the input reference
+> +  * one for the the SoC RTC
+> +- clock-names: should contain:
+> +  * "rtc" for the input reference clock
+> +  * "ipg" for the SoC RTC clock
+> +
+> +Example:
+> +
+> +rtc@10007000 {
+> +	compatible = "fsl,imx21-rtc";
+> +	reg = <0x10007000 0x1000>;
+> +	interrupts = <22>;
+> +	clocks = <&clks IMX27_CLK_CKIL>,
+> +	       	 <&clks IMX27_CLK_RTC_IPG_GATE>;
+> +	clock-names = "rtc, "ipg";
+> +	status = "disabled";
+> +};
 > diff --git a/drivers/rtc/rtc-mxc.c b/drivers/rtc/rtc-mxc.c
-> index 09d422b..e916a91 100644
+> index e916a91..df6483d 100644
 > --- a/drivers/rtc/rtc-mxc.c
 > +++ b/drivers/rtc/rtc-mxc.c
-> @@ -79,7 +79,8 @@ struct rtc_plat_data {
->  	struct rtc_device *rtc;
->  	void __iomem *ioaddr;
->  	int irq;
-> -	struct clk *clk;
-> +	struct clk *clk_rtc;
-> +	struct clk *clk_ipg;
->  	struct rtc_time g_rtc_alarm;
->  	enum imx_rtc_type devtype;
+> @@ -16,6 +16,8 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/clk.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #define RTC_INPUT_CLK_32768HZ	(0x00 << 5)
+>  #define RTC_INPUT_CLK_32000HZ	(0x01 << 5)
+> @@ -98,6 +100,15 @@ static struct platform_device_id imx_rtc_devtype[] = {
 >  };
-> @@ -373,17 +374,24 @@ static int mxc_rtc_probe(struct platform_device *pdev)
->  	if (IS_ERR(pdata->ioaddr))
->  		return PTR_ERR(pdata->ioaddr);
+>  MODULE_DEVICE_TABLE(platform, imx_rtc_devtype);
 >  
-> -	pdata->clk = devm_clk_get(&pdev->dev, NULL);
-> -	if (IS_ERR(pdata->clk)) {
-> -		dev_err(&pdev->dev, "unable to get clock!\n");
-> -		return PTR_ERR(pdata->clk);
-> +	pdata->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
-> +	if (IS_ERR(pdata->clk_ipg)) {
-> +		dev_err(&pdev->dev, "unable to get ipg clock!\n");
-> +		return PTR_ERR(pdata->clk_ipg);
->  	}
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id imx_rtc_dt_ids[] = {
+> +	{ .compatible = "fsl,imx1-rtc", .data = &imx_rtc_devtype[IMX1_RTC] },
+> +	{ .compatible = "fsl,imx21-rtc", .data = &imx_rtc_devtype[IMX21_RTC] },
+
+Maybe you can use directly IMX1_RTC and IMX21_RTC which...
+
+
 >  
-> -	ret = clk_prepare_enable(pdata->clk);
-> +	ret = clk_prepare_enable(pdata->clk_ipg);
->  	if (ret)
->  		return ret;
->  
-> -	rate = clk_get_rate(pdata->clk);
-> +	pdata->clk_rtc = devm_clk_get(&pdev->dev, "rtc");
-> +	if (IS_ERR(pdata->clk_rtc)) {
-> +		dev_err(&pdev->dev, "unable to get rtc clock!\n");
-> +		ret = PTR_ERR(pdata->clk_rtc);
-> +		goto exit_put_clk;
-> +	}
+> -	pdata->devtype = pdev->id_entry->driver_data;
+> +	of_id = of_match_device(imx_rtc_dt_ids, &pdev->dev);
+> +	if (of_id) {
+> +		struct platform_device_id *id_entry;
 > +
-> +	rate = clk_get_rate(pdata->clk_rtc);
+> +		id_entry = (struct platform_device_id *)of_id->data;
+> +		pdata->devtype = id_entry->driver_data;
 
-You are getting the rate but don't you need to clk_prepare_enable()?
+... also simplifies that part.
 
-Also, aren't those devm_clk_get now failing on i.mx35? Maybe it was
-already failing before that patch as I don't see any rtc clock being
-registeres in clk-imx35.c
-
+> +	} else
+> +		pdata->devtype = pdev->id_entry->driver_data;
 >  
->  	if (rate == 32768)
->  		reg = RTC_INPUT_CLK_32768HZ;
-> @@ -432,7 +440,7 @@ static int mxc_rtc_probe(struct platform_device *pdev)
->  	return 0;
->  
->  exit_put_clk:
-> -	clk_disable_unprepare(pdata->clk);
-> +	clk_disable_unprepare(pdata->clk_ipg);
->  
->  	return ret;
->  }
-> @@ -441,7 +449,7 @@ static int mxc_rtc_remove(struct platform_device *pdev)
->  {
->  	struct rtc_plat_data *pdata = platform_get_drvdata(pdev);
->  
-> -	clk_disable_unprepare(pdata->clk);
-> +	clk_disable_unprepare(pdata->clk_ipg);
->  
->  	return 0;
->  }
-> -- 
-> 1.7.4.4
-> 
 
 -- 
 Alexandre Belloni, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
