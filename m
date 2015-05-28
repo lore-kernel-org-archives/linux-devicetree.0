@@ -1,43 +1,93 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Thu, 28 May 2015 09:48:16 -0700
-Message-ID: <7hy4k8k5rj.fsf@deeprootsystems.com>
-References: <1431007225-8513-1-git-send-email-bintian.wang@huawei.com>
+From: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Thu, 28 May 2015 18:52:52 +0200
+Message-ID: <556747E4.6070403@melag.de>
+References: <1430820315.19516.26.camel@opteya.com> <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com> <1432289148.5304.58.camel@opteya.com> <1432322832.5304.63.camel@opteya.com> <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com> <55670AD4.8020705@melag.de> <20150528133429.GD2067@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431007225-8513-1-git-send-email-bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-	(Bintian Wang's message of "Thu, 7 May 2015 22:00:19 +0800")
+In-Reply-To: <20150528133429.GD2067-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.c
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> writes:
+Am 28.05.2015 um 15:34 schrieb Russell King - ARM Linux:
 
-> Hi6220 is one mobile solution of Hisilicon, this patchset contains
-> initial support for Hi6220 SoC and HiKey development board, which
-> supports octal ARM Cortex A53 cores. Initial support is minimal and
-> includes just the arch configuration, clock driver, device tree
-> configuration.
+>> What's the big deal with having DTS/DTB under GPL ?
 >
-> PSCI is enabled in device tree and there is no problem to boot all the
-> octal cores, and the CPU hotplug is also working now, you can download
-> and compile the latest firmware based on the following link to run this
-> patch set:
-> https://github.com/96boards/documentation/wiki/UEFI 
+> It's really quite simple.  Other open source projects won't touch
+> _our_ DTB with a barge pole through fear of GPL contamination.
 
-Tested-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Which other foss projects do you have in mind ?
+And why should they fear "poisoning" ?
 
-I've now tested this version on top of v4.1-rc5 using the mainline
-u-boot port[1], and confirm that all 8 cores are booting.
+The DTB is an entirely separate file. Just like various firmware
+blobs, startup scripts, etc, etc. Just shipping that file (be it in
+some source tarball or in the flash of some device) doesn't make
+everything else an derived work.
 
-No UEFI required... yay!
+Of course, the viral effect of the GPL could catch in if somebody
+directly compiles-in the dtb into something else (so it cant be
+easily separated / replaced) - but why should anybody wanna do that ?
+Sounds to me like defeating the whole purpose of DTB.
 
-Kevin
+> So what we'll end up with is other projects creating their own DTB
+> descriptions for the same hardware, with different properties (which
+> they'll do in an effort to ensure that it isn't a "derived work" of
+> the GPL version) and the whole thing turning into a right mess - and
+> a poor experience for users because they then end up with OS specific
+> DT files.
 
-[1] http://lists.denx.de/pipermail/u-boot/2015-May/214006.html
+Anybody is free do to everything on his own. Same as everybody is free
+to write his own kernel, etc.
+
+But I dont see a practical usecase where the GPL's viral effect could
+catch in here in the first place.
+
+> Alternatively, as Rob points out, people will just go the ACPI route
+> to avoid the GPL contamination problem.
+
+If they really wanna go that ugly route ... just let them go.
+I don't see where I could care at all.
+
+As I'm primarily concerned w/ embedded systems, I'll need full
+documentation and control over the device, I won't trust vendor DTBs
+anyways. And I won't help people doing crippled proprietary stuff,
+not at this critical point.
+
+Even for larger systems - except the crippled x86 world - I won't even
+allow any proprietary bootloader/firmware.
+
+
+
+cu
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Enrico Weigelt, metux IT consult
++49-151-27565287
+MELAG Medizintechnik oHG Sitz Berlin Registergericht AG Charlottenburg =
+HRA 21333 B
+
+Wichtiger Hinweis: Diese Nachricht kann vertrauliche oder nur f=FCr ein=
+en begrenzten Personenkreis bestimmte Informationen enthalten. Sie ist =
+ausschlie=DFlich f=FCr denjenigen bestimmt, an den sie gerichtet worden=
+ ist. Wenn Sie nicht der Adressat dieser E-Mail sind, d=FCrfen Sie dies=
+e nicht kopieren, weiterleiten, weitergeben oder sie ganz oder teilweis=
+e in irgendeiner Weise nutzen. Sollten Sie diese E-Mail irrt=FCmlich er=
+halten haben, so benachrichtigen Sie bitte den Absender, indem Sie auf =
+diese Nachricht antworten. Bitte l=F6schen Sie in diesem Fall diese Nac=
+hricht und alle Anh=E4nge, ohne eine Kopie zu behalten.
+Important Notice: This message may contain confidential or privileged i=
+nformation. It is intended only for the person it was addressed to. If =
+you are not the intended recipient of this email you may not copy, forw=
+ard, disclose or otherwise use it or any part of it in any form whatsoe=
+ver. If you received this email in error please notify the sender by re=
+plying and delete this message and any attachments without retaining a =
+copy.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
