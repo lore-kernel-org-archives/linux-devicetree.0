@@ -1,84 +1,83 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH 8/9] input: goodix: add support for ESD
-Date: Thu, 28 May 2015 14:26:12 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F19A77432@irsmsx105.ger.corp.intel.com>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
- <1432817265-23891-9-git-send-email-irina.tirdea@intel.com>
- <20150528132353.GJ23176@leverpostej>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 5/6] regulator: add mxs on-chip regulator driver
+Date: Thu, 28 May 2015 15:26:55 +0100
+Message-ID: <20150528142655.GX21577@sirena.org.uk>
+References: <1430346747-28728-6-git-send-email-stefan.wahren@i2se.com>
+ <20150504123648.GU15510@sirena.org.uk>
+ <1693367404.879766.1430771695242.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+ <1875749167.82542.1431023838932.JavaMail.open-xchange@oxbsltgw04.schlund.de>
+ <20150507185216.GP22845@sirena.org.uk>
+ <535744342.64563.1431026719818.JavaMail.open-xchange@oxbsltgw09.schlund.de>
+ <20150507193236.GS22845@sirena.org.uk>
+ <1290103954.26573.1432642616013.JavaMail.open-xchange@oxbsltgw08.schlund.de>
+ <20150527173321.GH21577@sirena.org.uk>
+ <1973961885.66028.1432760281554.JavaMail.open-xchange@oxbsltgw06.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150528132353.GJ23176@leverpostej>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rR6pEsNFzVJhSSrj"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1973961885.66028.1432760281554.JavaMail.open-xchange@oxbsltgw06.schlund.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Sebastian Reichel <sre@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, fabio.estevam@freescale.com, David Woodhouse <dwmw2@infradead.org>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, sebastien.szymanski@armadeus.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--rR6pEsNFzVJhSSrj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> -----Original Message-----
-> From: linux-input-owner@vger.kernel.org [mailto:linux-input-owner@vger.kernel.org] On Behalf Of Mark Rutland
-> Sent: 28 May, 2015 16:24
-> To: Tirdea, Irina
-> Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 8/9] input: goodix: add support for ESD
-> 
-> On Thu, May 28, 2015 at 01:47:44PM +0100, Irina Tirdea wrote:
-> > Add ESD (Electrostatic Discharge) protection mechanism.
-> >
-> > The driver enables ESD protection in HW and checks a register
-> > to determine if ESD occurred. If ESD is signalled by the HW,
-> > the driver will reset the device.
-> >
-> > The ESD poll time (in ms) can be set through
-> > esd-recovery-timeout-ms ACPI/DT property. If it is set to 0,
-> > ESD protection is disabled.
-> >
-> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > ---
-> >  .../bindings/input/touchscreen/goodix.txt          |   4 +
-> >  drivers/input/touchscreen/goodix.c                 | 106 ++++++++++++++++++++-
-> >  2 files changed, 106 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > index 9e4ff69..9132ee0 100644
-> > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > @@ -19,6 +19,10 @@ Optional properties:
-> >
-> >   - device-config	: device configuration information (specified as byte
-> >  			  array). Maximum size is 240 bytes.
-> > + - esd-recovery-timeout-ms : ESD poll time (in milli seconds) for the driver to
-> > +			     check if ESD occurred and in that case reset the
-> > +			     device. ESD is disabled if this property is not set
-> > +			     or is set to 0.
-> 
-> This sounds like software configuration rather than HW description. Is
-> there any reason this needs to be a DT property?
-> 
+On Wed, May 27, 2015 at 10:58:01PM +0200, Stefan Wahren wrote:
 
-Although this enables a software feature, it depends on the platform if electrostatic discharge
-protection should be enabled or not. Some platform designs handle ESD better and do not need
-the SW mechanism, so the property can be used to disable it.
+> In case of a single driver instance instead of 4 ones (vddd, vddio, vdda,
+> dc-dc), things would be much easier.
 
-I also saw an example in Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-and I though this is the standard way to use it.
+> Here are the steps for disabling DC-DC:
 
-> Can we not just choose a sensible default and allow this to be
-> overridden dynamically?
+> 1. configure vddio to work without DC-DC
+> 2. configure vdda to work without DC-DC
+> 3. configure vddd to work without DC-DC
+> 4. backup DC-DC settings
+> 5. disable brownout detection
+> 6. disable DC-DC
+> 7. restore DC-DC settings
 
-I could separate the enabling part from the actual poll timeout by using a DT property to enable/disable
-ESD and a sysfs property to set the timeout. I can also move this over to sysfs entirely if you prefer.
+> My problem is that step 1 to 3 must be done step by step through the other
+> regulator instances.
 
-Thanks,
-Irina
+For the regulator API steps 1-3 aren't going to be needed since
+dependency management means that we won't try to disable a regulator
+that we think is in use.
 
-> 
-> Mark.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-input" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > If it's much more complicated than that
+> > then I think putting a comment in the driver explaining what the issue
+> > is would be the right step, that would address the issue with the driver
+> > looking strange.
+
+> Enabling or disabling DC-DC is only needed internally by the power subsystem
+> (e.g. in case of handoff AC to battery), because the DC-DC only supplys the
+> regulator daisy. From my understanding hardware components could use only the
+> regulator outputs. In the end a state change is necessary, but it shouldn't be a
+> public.
+
+Should this actually be shown as a regulator then and not as part of the
+power controller?
+
+--rR6pEsNFzVJhSSrj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVZyWuAAoJECTWi3JdVIfQJ6YH/jXNmOjP3xxMx4DNKgBnzedd
+vWqA2DoLDwereXlm//lgWLjKNjX5Fei2htbTev/ojkiBQMulAgIRiftCwPj0h0zq
+pxu8CQkyfmwl/7l9lxJ/BfM8qKqRps9GMSTZYvgHQAbZJlKMzt14fpY5OhNc6CFQ
+susPyRH0ZzA/74EP6q7sAfW1n53/GJNyF1Jflgzq+bBxRpxVjD1qJ6PC8lK0fxyl
+1wJ/ivVkBix/1zKIXeUmU98BK2ZjABE7iIPbxvd6kfJoC0jCETShL1eu1F7kIvq9
+sF97HbDjOe0xz8vW6kkL2bjP2iwqh37O5wpiF47DDqklQzciViKqyzoJqWfSmyc=
+=vRG0
+-----END PGP SIGNATURE-----
+
+--rR6pEsNFzVJhSSrj--
