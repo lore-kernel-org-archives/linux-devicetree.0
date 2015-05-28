@@ -1,54 +1,64 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: Device Tree Blob (DTB) licence
-Date: Thu, 28 May 2015 14:34:29 +0100
-Message-ID: <20150528133429.GD2067@n2100.arm.linux.org.uk>
-References: <1430820315.19516.26.camel@opteya.com>
- <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
- <1432289148.5304.58.camel@opteya.com>
- <1432322832.5304.63.camel@opteya.com>
- <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
- <55670AD4.8020705@melag.de>
+From: S Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH V4 0/3]  da9062: DA9062 driver submission
+Date: Thu, 28 May 2015 14:33:31 +0100
+Message-ID: <cover.1432820011.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55670AD4.8020705-d/C+FbuhHiA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, S Twiss <stwiss.opensource@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Wim Van Sebroeck <wim@iguana.be>
+Cc: David Dajun Chen <david.chen@diasemi.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2015 at 02:32:20PM +0200, Enrico Weigelt, metux IT consult wrote:
-> Am 25.05.2015 um 09:14 schrieb Rob Landley:
-> 
-> >Personally, I'm sad we're starting to get ACPI for arm but if device
-> >tree data files are only available under GPL, people will hold their
-> >nose and deploy ACPI.
-> 
-> What's the big deal with having DTS/DTB under GPL ?
+From: S Twiss <stwiss.opensource@diasemi.com>
 
-It's really quite simple.  Other open source projects won't touch
-_our_ DTB with a barge pole through fear of GPL contamination.
+This patch set adds support for the Dialog DA9062 Power Management IC.
 
-So what we'll end up with is other projects creating their own DTB
-descriptions for the same hardware, with different properties (which
-they'll do in an effort to ensure that it isn't a "derived work" of
-the GPL version) and the whole thing turning into a right mess - and
-a poor experience for users because they then end up with OS specific
-DT files.
+In this patch set the following is provided:
+ - [PATCH V4 1/3]: MFD core support  
+ - [PATCH V4 2/3]: Watchdog driver
+ - [PATCH V4 3/3]: Add bindings for all DA9062 components
 
-Alternatively, as Rob points out, people will just go the ACPI route
-to avoid the GPL contamination problem.
+Changes in V4
+ - Rebase patches from linux-next/v4.1-rc3 to linux-next/v4.1-rc5
+ - [PATCH V3 2/4] BUCK and LDO regulator driver accepted by Mark Brown
+   - See https://lkml.org/lkml/2015/5/21/313 for details
+ - Reorder remaining patches for the PATCH V4 submission
 
-It doesn't matter what the legal issues actually are: if people think
-that there is the possibility of GPL contamination - even across to
-other differently licensed open source software, they won't touch the
-GPL'd code/data and they'll come up with an alternative solution.
+Changes in V3:
+ - No overall main changes, see individal patches for details
+
+Changes in V2:
+ - Alter subject title in 'cover letter'
+ - Reordered the patch numbering: now 4/4 patches instead of 6/6
+   - Dropped [PATCH V1 3/6] RTC driver
+   - Dropped [PATCH V1 4/6] OnKey driver
+
+This patch applies against linux-next and v4.1-rc5 
+
+Thank you,
+Steve Twiss, Dialog Semiconductor Ltd.
+
+S Twiss (3):
+  mfd: da9062: DA9062 MFD core driver
+  watchdog: da9062: DA9062 watchdog driver
+  devicetree: da9062: Add bindings for DA9062 driver
+
+ Documentation/devicetree/bindings/mfd/da9062.txt |   79 ++
+ drivers/mfd/Kconfig                              |   12 +
+ drivers/mfd/Makefile                             |    3 +-
+ drivers/mfd/da9062-core.c                        |  512 ++++++++++
+ drivers/watchdog/Kconfig                         |    9 +
+ drivers/watchdog/Makefile                        |    1 +
+ drivers/watchdog/da9062_wdt.c                    |  253 +++++
+ include/linux/mfd/da9062/core.h                  |   50 +
+ include/linux/mfd/da9062/registers.h             | 1108 ++++++++++++++++++++++
+ 9 files changed, 2026 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/da9062.txt
+ create mode 100644 drivers/mfd/da9062-core.c
+ create mode 100644 drivers/watchdog/da9062_wdt.c
+ create mode 100644 include/linux/mfd/da9062/core.h
+ create mode 100644 include/linux/mfd/da9062/registers.h
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+end-of-patch for PATCH V4
