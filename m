@@ -1,95 +1,113 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH 2/2] spi: Add support for Zynq Ultrascale+ MPSoC
- GQSPI controller
-Date: Thu, 28 May 2015 15:41:04 +0000
-Message-ID: <03CA77BA8AF6F1469AEDFBDA1322A7B7495AA317@XAP-PVEXMBX02.xlnx.xilinx.com>
-References: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
- <1432106871-27232-2-git-send-email-ranjit.waghmode@xilinx.com>
- <20150522115854.GG21391@sirena.org.uk>
- <CAFcVECJRqebzAjU+rfAtUQFG=7-KoE1GiXet5XJB-4D3i0or6A@mail.gmail.com>
- <20150528150356.GA21577@sirena.org.uk>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 02/21] ARM: tegra: Add gpio-ranges property
+Date: Thu, 28 May 2015 09:50:18 -0600
+Message-ID: <5567393A.6000901@wwwdotorg.org>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com> <1432565608-26036-3-git-send-email-tomeu.vizoso@collabora.com> <5564CC84.1030700@wwwdotorg.org> <CAAObsKD7YbZX01A=SS7z_PxAMPweHy6sw5ut=50h50C=j9y0zA@mail.gmail.com> <5565D96F.3000600@wwwdotorg.org> <CAAObsKB-ayRd7OB1W9nYBJzvBDK0RZk1U56Gqxn08sHPT5FvzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150528150356.GA21577-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ranjit Abhimanyu Waghmode <ranjitw-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKB-ayRd7OB1W9nYBJzvBDK0RZk1U56Gqxn08sHPT5FvzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On 05/28/2015 02:26 AM, Tomeu Vizoso wrote:
+> On 27 May 2015 at 16:49, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 05/27/2015 08:18 AM, Tomeu Vizoso wrote:
+>>>
+>>> On 26 May 2015 at 21:41, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>>
+>>>> On 05/25/2015 08:53 AM, Tomeu Vizoso wrote:
+>>>>>
+>>>>>
+>>>>> Specify how the GPIOs map to the pins in T124, so the dependency is
+>>>>> explicit.
+>>>>>
+>>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>>>> ---
+>>>>>     arch/arm/boot/dts/tegra124.dtsi | 1 +
+>>>>>     1 file changed, 1 insertion(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/tegra124.dtsi
+>>>>> b/arch/arm/boot/dts/tegra124.dtsi
+>>>>> index 13cc7ca..5d1d35f 100644
+>>>>> --- a/arch/arm/boot/dts/tegra124.dtsi
+>>>>> +++ b/arch/arm/boot/dts/tegra124.dtsi
+>>>>> @@ -254,6 +254,7 @@
+>>>>>                   gpio-controller;
+>>>>>                   #interrupt-cells = <2>;
+>>>>>                   interrupt-controller;
+>>>>> +               gpio-ranges = <&pinmux 0 0 250>;
+>>>>
+>>>>
+>>>>
+>>>> We should be consistent between SoCs. Why not make the same change for
+>>>> all
+>>>> Tegra SoCs?
+>>>>
+>>>> I think this change will cause the GPIO subsystem to call into the
+>>>> pinctrl
+>>>> subsystem and create/add/register a new GPIO<->pinctrl range structure.
+>>>> The
+>>>> pinctrl driver already does this, so I think we'll end up with two
+>>>> duplicate
+>>>> entries in the pinctrl device's gpio_ranges list. This probably won't
+>>>> cause
+>>>> a problem, but I wanted to make sure you'd thought about it to make sure.
+>>>
+>>>
+>>> Actually, I have checked and see that gpio-tegra.c registers 256
+>>> gpios, but pinctrl-tegra124.c adds a range of only 251. I don't really
+>>> remember where I got the 250 value from, sorry :(
+>>>
+>>> I don't see how that would cause any concrete problems, but maybe we
+>>> should have a single authoritative source (not sure we can do so
+>>> without breaking DT ABI though).
+>>>
+>>>> Right now, I think we get lucky and pinctrl ends up probing first (or at
+>>>> least very early) anyway. Somewhat related to this series, I wonder if we
+>>>> shouldn't add pinctrl client properties to every node in the Tegra DT
+>>>> that
+>>>> describes a controller that makes use of external pins that are affected
+>>>> by
+>>>> the pinmux. Such a change would guarantee this desired probing order. In
+>>>> order to preserve the "program the entire pinmux at once" semantics,
+>>>> these
+>>>> new pinctrl client properties would all need to reference empty states,
+>>>> yet
+>>>> would still need to exist to represent the dependency.
+>>>
+>>>
+>>> I think so, but aren't almost all those pins used as gpios? If so,
+>>> then such a controller's driver will request the gpio it wants which
+>>> will cause the gpio driver to be registered (and hopefully probed) if
+>>> needed, which in turn will check that the corresponding pinctrl device
+>>> has been registered. Or am I missing something?
+>>
+>>
+>> As you say this probably works out fine for pins that are used as GPIOs. I
+>> was thinking more about SFIOs. Take an I2C controller, which doesn't use any
+>> GPIOs itself. The pinctrl device should be probed before the I2C device, so
+>> that the I2C driver can initiate transactions on the I2C bus during its
+>> probe if it wanted to (or at least, clients could initiate transactions at
+>> any completely arbitrary time as soon as probe was complete).
+>
+> What is using the SFIO in this case, the I2C master or the I2C client?
 
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Thursday, May 28, 2015 8:34 PM
-> To: Harini Katakam
-> Cc: Ranjit Abhimanyu Waghmode; Rob Herring; Pawel Moll; Mark Rutland;
-> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; Kumar Gala; Michal Simek; Soren Brinkmann;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-spi; Punnaiah Choudary Kalluri;
-> ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Subject: Re: [RFC PATCH 2/2] spi: Add support for Zynq Ultrascale+ MPSoC
-> GQSPI controller
-> 
-> On Fri, May 22, 2015 at 08:43:54PM +0530, Harini Katakam wrote:
-> > On Fri, May 22, 2015 at 5:28 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > > On Wed, May 20, 2015 at 12:57:51PM +0530, Ranjit Waghmode wrote:
-> 
-> > > Why is there a default case here?  That's going to men we try to handle
-> > > any random chip select that gets passed in as pointing to this lower
-> > > device which doesn't seem right.  The fact that this is trying to handle
-> > > mirroring of the chip select to two devices is also raising alarm bells
-> > > here...
-> 
-> > This SPI controller has two CS lines and two data bus.
-> > Two devices can be connected to these and either the upper or the
-> > lower or both (Explained below) can be selected.
-> 
-> > When two flash devices are used, one of the HW configurations in
-> > which they can be connected is called "parallel" mode where they
-> 
-> I know what wiring chip selects in parallel is but that's not the
-> question - the question is about the handling of the default case.
+The I2C controller a/k/a the I2C master.
 
-Yes, we should not handle default case here. We will change this. 
+> In any case, is the problem you are referring to that ICs may rely on
 
-> 
-> > >> +static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool
-> is_high)
-> > >> +{
-> 
-> > >> +     if (is_high) {
-> > >> +             /* Manually start the generic FIFO command */
-> > >> +             zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
-> > >> +                             zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
-> > >> +                             GQSPI_CFG_START_GEN_FIFO_MASK);
-> 
-> > > No, this is broken - setting the chip select should set the chip select,
-> > > it shouldn't have any impact on transfers.  Transfers should be started
-> > > in the transfer operations.
-> 
-> > This is the only way to assert the CS. It doesn't start transferring any data.
-> 
-> OK, then you can't implement a separate set_cs() operation and shouldn't
-> be trying to do so.  This will break in multiple ways when the framework
-> tries to use the operations separately.  You probably need to implement
-> a single flat transfer() operation.
+s/ICs/drivers/ I think.
 
-As we said it will not start any data transfer. In order to set chip select (chip select only) we need to
-1. Frame a control word with following parameters like the chip select that we would like to set and hold time
- 2. Update the control word to fifo 
+> a specific pinmux configuration but that's not currently reflected on
+> the DT because pinmux configuration happened so early that things just
+> worked?
 
-To have a performance advantage (may be not trivial) we are executing this fifo entry along with the first
- Data transfer entry in transfer function so that we can avoid waiting for fifo empty in set_cs function.
-
- We will ensure CS assert by waiting till the fifo empty in set_cs function and justify the what the 
-Function supposed do.
-
-Regards,
-Punnaiah
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes; the dependency of some nodes on pinctrl isn't explicitly called out 
+in the DT. It's probably not a good idea to have such implicit 
+dependencies, although I suppose for something so central as pinmux, 
+maybe it's not terrible, since almost everything depends on it and it's 
+pretty obvious.
