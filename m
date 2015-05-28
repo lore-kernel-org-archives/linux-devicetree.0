@@ -1,107 +1,56 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH 02/21] ARM: tegra: Add gpio-ranges property
-Date: Thu, 28 May 2015 10:26:46 +0200
-Message-ID: <CAAObsKB-ayRd7OB1W9nYBJzvBDK0RZk1U56Gqxn08sHPT5FvzA@mail.gmail.com>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
- <1432565608-26036-3-git-send-email-tomeu.vizoso@collabora.com>
- <5564CC84.1030700@wwwdotorg.org> <CAAObsKD7YbZX01A=SS7z_PxAMPweHy6sw5ut=50h50C=j9y0zA@mail.gmail.com>
- <5565D96F.3000600@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5565D96F.3000600@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <stephane.marchesin@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alexander Holler <holler@ahsoftware.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH] ARM: dts: odroidxu3: Enable USB3 regulators
+Date: Thu, 28 May 2015 18:28:14 +0930
+Message-ID: <1432803494-3516-1-git-send-email-linux.amoon@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Anand Moon <linux.amoon@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27 May 2015 at 16:49, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 05/27/2015 08:18 AM, Tomeu Vizoso wrote:
->>
->> On 26 May 2015 at 21:41, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>>
->>> On 05/25/2015 08:53 AM, Tomeu Vizoso wrote:
->>>>
->>>>
->>>> Specify how the GPIOs map to the pins in T124, so the dependency is
->>>> explicit.
->>>>
->>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>>> ---
->>>>    arch/arm/boot/dts/tegra124.dtsi | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/tegra124.dtsi
->>>> b/arch/arm/boot/dts/tegra124.dtsi
->>>> index 13cc7ca..5d1d35f 100644
->>>> --- a/arch/arm/boot/dts/tegra124.dtsi
->>>> +++ b/arch/arm/boot/dts/tegra124.dtsi
->>>> @@ -254,6 +254,7 @@
->>>>                  gpio-controller;
->>>>                  #interrupt-cells = <2>;
->>>>                  interrupt-controller;
->>>> +               gpio-ranges = <&pinmux 0 0 250>;
->>>
->>>
->>>
->>> We should be consistent between SoCs. Why not make the same change for
->>> all
->>> Tegra SoCs?
->>>
->>> I think this change will cause the GPIO subsystem to call into the
->>> pinctrl
->>> subsystem and create/add/register a new GPIO<->pinctrl range structure.
->>> The
->>> pinctrl driver already does this, so I think we'll end up with two
->>> duplicate
->>> entries in the pinctrl device's gpio_ranges list. This probably won't
->>> cause
->>> a problem, but I wanted to make sure you'd thought about it to make sure.
->>
->>
->> Actually, I have checked and see that gpio-tegra.c registers 256
->> gpios, but pinctrl-tegra124.c adds a range of only 251. I don't really
->> remember where I got the 250 value from, sorry :(
->>
->> I don't see how that would cause any concrete problems, but maybe we
->> should have a single authoritative source (not sure we can do so
->> without breaking DT ABI though).
->>
->>> Right now, I think we get lucky and pinctrl ends up probing first (or at
->>> least very early) anyway. Somewhat related to this series, I wonder if we
->>> shouldn't add pinctrl client properties to every node in the Tegra DT
->>> that
->>> describes a controller that makes use of external pins that are affected
->>> by
->>> the pinmux. Such a change would guarantee this desired probing order. In
->>> order to preserve the "program the entire pinmux at once" semantics,
->>> these
->>> new pinctrl client properties would all need to reference empty states,
->>> yet
->>> would still need to exist to represent the dependency.
->>
->>
->> I think so, but aren't almost all those pins used as gpios? If so,
->> then such a controller's driver will request the gpio it wants which
->> will cause the gpio driver to be registered (and hopefully probed) if
->> needed, which in turn will check that the corresponding pinctrl device
->> has been registered. Or am I missing something?
->
->
-> As you say this probably works out fine for pins that are used as GPIOs. I
-> was thinking more about SFIOs. Take an I2C controller, which doesn't use any
-> GPIOs itself. The pinctrl device should be probed before the I2C device, so
-> that the I2C driver can initiate transactions on the I2C bus during its
-> probe if it wanted to (or at least, clients could initiate transactions at
-> any completely arbitrary time as soon as probe was complete).
+Enable regulator for usbdrd3_0 and usbdrd3_1
+>From the schematic pin diagram USB3_0 and USB3_1
+is regulated by LDO9 and LD011.
 
-What is using the SFIO in this case, the I2C master or the I2C client?
+Fix the boot message of failed.
+[    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
+[    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
+[    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
+[    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
+[    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
+[    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
+[    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
+[    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
+[    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
+[    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
+[    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
 
-In any case, is the problem you are referring to that ICs may rely on
-a specific pinmux configuration but that's not currently reflected on
-the DT because pinmux configuration happened so early that things just
-worked?
+---
+This patch is based on Krzysztof github branch work-next/odroid-xu3-s2mps11-irq
+---
 
-Thanks,
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+ arch/arm/boot/dts/exynos5422-odroidxu3.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Tomeu
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+index 27014bb..a353a58 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+@@ -513,3 +513,13 @@
+ &usbdrd_dwc3_1 {
+ 	dr_mode = "otg";
+ };
++
++&usbdrd3_0 {
++	vdd33-supply = <&ldo9_reg>;
++	vdd10-supply = <&ldo11_reg>;
++};
++
++&usbdrd3_1 {
++	vdd33-supply = <&ldo9_reg>;
++	vdd10-supply = <&ldo11_reg>;
++};
+-- 
+1.9.1
