@@ -1,81 +1,47 @@
-From: Y Vo <yvo@apm.com>
-Subject: [PATCH v0] gpio: xgene: add ACPI support for APM X-Gene GPIO standby
- driver
-Date: Thu, 28 May 2015 13:46:28 +0700
-Message-ID: <1432795588-17476-1-git-send-email-yvo@apm.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: zynq: DT: Use the zynq binding with macb
+Date: Thu, 28 May 2015 08:54:23 +0200
+Message-ID: <5566BB9F.7050306@xilinx.com>
+References: <1432756801-6896-1-git-send-email-nathan.sullivan@ni.com>
+ <20150527205238.GJ31081@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
-Cc: patches@apm.com, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150527205238.GJ31081@xsjsorenbubuntu>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add ACPI support for APM X-Gene GPIO standby driver.
+On 05/27/2015 10:52 PM, S=C3=B6ren Brinkmann wrote:
+> On Wed, 2015-05-27 at 03:00PM -0500, Nathan Sullivan wrote:
+>> Use the new zynq binding for macb ethernet, since it will disable ha=
+lf
+>> duplex gigabit like the Zynq TRM says to do. Also allow the compatib=
+le
+>> cadence gem binding that won't disable half duplex but works otherwi=
+se.
+>>
+>> Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+>=20
+> Assuming that the corresponding patch(es) for the driver and DT docs
+> went through:
+> Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>=20
+>> ---
+>=20
+> For future reference, please include a changelog here documenting wha=
+t
+> changes between patch iterations.
 
-Signed-off-by: Y Vo <yvo@apm.com>
----
- drivers/gpio/gpio-xgene-sb.c |   19 +++++++++++++++++++
- 1 files changed, 19 insertions(+), 0 deletions(-)
+Applied and send in my PR.
 
-diff --git a/drivers/gpio/gpio-xgene-sb.c b/drivers/gpio/gpio-xgene-sb.c
-index b6a15c3..50aaae5 100644
---- a/drivers/gpio/gpio-xgene-sb.c
-+++ b/drivers/gpio/gpio-xgene-sb.c
-@@ -25,8 +25,11 @@
- #include <linux/of_gpio.h>
- #include <linux/gpio.h>
- #include <linux/gpio/driver.h>
-+#include <linux/acpi.h>
- #include <linux/basic_mmio_gpio.h>
- 
-+#include "gpiolib.h"
-+
- #define XGENE_MAX_GPIO_DS		22
- #define XGENE_MAX_GPIO_DS_IRQ		6
- 
-@@ -129,6 +132,13 @@ static int xgene_gpio_sb_probe(struct platform_device *pdev)
- 	else
- 		dev_info(&pdev->dev, "X-Gene GPIO Standby driver registered\n");
- 
-+#ifdef CONFIG_ACPI
-+	if (priv->nirq > 0) {
-+		/* Register interrupt handlers for gpio signaled acpi events */
-+		acpi_gpiochip_request_interrupts(&priv->bgc.gc);
-+	}
-+#endif
-+
- 	return ret;
- }
- 
-@@ -145,10 +155,19 @@ static const struct of_device_id xgene_gpio_sb_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, xgene_gpio_sb_of_match);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id xgene_gpio_sb_acpi_match[] = {
-+	{"APMC0D15", 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, xgene_gpio_sb_acpi_match);
-+#endif
-+
- static struct platform_driver xgene_gpio_sb_driver = {
- 	.driver = {
- 		   .name = "xgene-gpio-sb",
- 		   .of_match_table = xgene_gpio_sb_of_match,
-+		   .acpi_match_table = ACPI_PTR(xgene_gpio_sb_acpi_match),
- 		   },
- 	.probe = xgene_gpio_sb_probe,
- 	.remove = xgene_gpio_sb_remove,
--- 
-1.7.1
+Thanks,
+Michal
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
