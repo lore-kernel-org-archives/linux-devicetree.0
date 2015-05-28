@@ -1,67 +1,130 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [RFC PATCH] EDAC: Cleanup atomic_scrub mess
-Date: Thu, 28 May 2015 12:27:22 +1000
-Message-ID: <1432780042.4979.0.camel@ellerman.id.au>
-References: <1431991481-25684-1-git-send-email-lho@apm.com>
-	 <1431991481-25684-2-git-send-email-lho@apm.com>
-	 <20150519170308.GL4641@pd.tnic>
-	 <CAPw-ZT=mTpt_vz+e=rM5ywK8feNKkJQrpEWg=noRCziJ0840TQ@mail.gmail.com>
-	 <20150519203336.GP4641@pd.tnic> <20150521180719.GE3689@pd.tnic>
-	 <20150521181157.GF3689@pd.tnic> <555F8DE2.4060402@ezchip.com>
-	 <20150527155219.GB19407@pd.tnic>
+From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] clk: add lpc18xx ccu clk driver
+Date: Wed, 27 May 2015 20:44:24 -0700
+Message-ID: <20150528034424.22384.83956@quantum>
+References: <1431988559-23338-1-git-send-email-manabian@gmail.com>
+ <1431988559-23338-5-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150527155219.GB19407-fF5Pk5pvG8Y@public.gmane.org>
+In-Reply-To: <1431988559-23338-5-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Chris Metcalf <cmetcalf-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "Steven J. Hill" <Steven.Hill-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, ". Maciej W. Rozycki" <macro-qD8j1LwMmJjtCj0u4l0SBw@public.gmane.org>
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-05-27 at 17:52 +0200, Borislav Petkov wrote:
-> On Fri, May 22, 2015 at 04:13:22PM -0400, Chris Metcalf wrote:
-> > On 05/21/2015 02:11 PM, Borislav Petkov wrote:
-> > >From: Borislav Petkov<bp-l3A5Bk7waGM@public.gmane.org>
-> > >
-> > >So first of all, this atomic_scrub() function's naming is bad. It looks
-> > >like an atomic_t helper. Change it to edac_atomic_scrub().
-> > >
-> > >The bigger problem is that this function is arch-specific and every new
-> > >arch which doesn't necessarily need that functionality still needs to
-> > >define it, otherwise EDAC doesn't compile.
-> > >
-> > >So instead of doing that and including arch-specific headers, have each
-> > >arch define an EDAC_ATOMIC_SCRUB symbol which can be used in edac_mc.c
-> > >for ifdeffery. Much cleaner.
-> > >
-> > >We already are doing this with another symbol - EDAC_SUPPORT. This is
-> > >also much cleaner than having CONFIG_EDAC explicitly depend on all the
-> > >arches which need/have EDAC support and drivers.
-> > >
-> > >This way I can kill the useless edac.h header in tile too.
-> > >
-> > >Signed-off-by: Borislav Petkov<bp-l3A5Bk7waGM@public.gmane.org>
-> > 
-> > Acked-by: Chris Metcalf <cmetcalf-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org> [for tile]
-> 
-> Thanks.
-> 
-> Just to clarify after today's discussion on IRC: this patch doesn't
-> change current DRAM scrubbing behavior on the relevant arches - it
-> simply makes the definition of that atomic_scrub thing non-mandatory on
-> new arches or on those which don't need it.
-> 
-> In the meantime, patch has been build-tested on arm and ppc - the two
-> I'm missing an ACK for.
+Hi Joachim,
 
-I haven't tested it but it looks sane:
+Quoting Joachim Eastwood (2015-05-18 15:35:57)
+<snip>
+> +static void lpc18xx_ccu_register_branch_clks(void __iomem *reg_base,
+> +                                            int base_clk_id,
+> +                                            const char *parent)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(clk_branches); i++) {
+> +               if (clk_branches[i].base_id != base_clk_id)
+> +                       continue;
+> +
+> +               lpc18xx_ccu_register_branch_gate_div(&clk_branches[i], reg_base,
+> +                                                    parent);
+> +
+> +               if (clk_branches[i].flags & CCU_BRANCH_IS_BUS)
+> +                       parent = clk_branches[i].name;
+> +       }
+> +}
+> +
+> +static void __init lpc18xx_ccu_init(struct device_node *np)
+> +{
+> +       struct lpc18xx_branch_clk_data *clk_data;
+> +       int num_base_ids, *base_ids;
+> +       void __iomem *reg_base;
+> +       const char *parent;
+> +       int base_clk_id;
+> +       int i;
+> +
+> +       reg_base = of_iomap(np, 0);
+> +       if (!reg_base) {
+> +               pr_warn("%s: failed to map address range\n", __func__);
+> +               return;
+> +       }
+> +
+> +       clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+> +       if (!clk_data)
+> +               return;
+> +
+> +       num_base_ids = of_clk_get_parent_count(np);
+> +
+> +       base_ids = kcalloc(num_base_ids, sizeof(int), GFP_KERNEL);
+> +       if (!base_ids) {
+> +               kfree(clk_data);
+> +               return;
+> +       }
+> +
+> +       clk_data->base_ids = base_ids;
+> +       clk_data->num_base_ids = num_base_ids;
+> +
+> +       for (i = 0; i < num_base_ids; i++) {
+> +               struct clk *clk = of_clk_get(np, i);
+> +               if (IS_ERR(clk)) {
+> +                       pr_warn("%s: failed to get clock at idx %d\n",
+> +                               __func__, i);
+> +                       continue;
+> +               }
+> +
+> +               parent = __clk_get_name(clk);
+> +               base_clk_id = of_clk_get_index(np, i);
+> +
+> +               clk_data->base_ids[i] = base_clk_id;
+> +               lpc18xx_ccu_register_branch_clks(reg_base, base_clk_id,
+> +                                                parent);
 
-Acked-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Thanks for sending V3. This driver is getting close!
 
-cheers
+So the main thing I don't understand is why you do not encode the CGU
+clock parent string names into this CCU driver. If I understand your
+approach correctly, you do the following in lpc18xx_ccu_init:
 
+1) count the number of parent clocks (ostensibly CGU clocks)
+2) iterate through all of those CGU clocks, extracting a base_id value
+(loop #1)
+3) using this base_id as a key you walk through an array in the CCU
+driver trying to find a matching base_id value
+(loop #2)
+4) after finding the corresponding CCU clocks you get the parent clock
+with of_clk_get
+5) using of_clk_get you fetch its name with __clk_get_name
+6) you pass this parent name into a fairly typical looking registration
+function
 
+Assuming I got all of that right, I hope we can simplify it
+considerably.
+
+You already have an array of CCU clock information in this driver,
+clk_branches[]. Why not encode the parent string name here? This would
+involve adding a "parent_name" member to struct lpc18xx_clk_branch.
+
+Doing the above, your O(n^2)-ish registration function becomes O(n):
+
+1) iterate through the array of the CCU clocks (clk_branchs[])
+2) register them
+3) profit
+
+I'm starting to think any reference to base_id is sign that things are
+wrong in your driver. I am unconvinced that you need to "share" this
+base_id across CGU and CCU drivers in the way you do. If I'm wrong
+please help me to understand.
+
+As a wild thought, if you do not want to encode parent string names into
+this driver, have you tried to use the clock-names property in the CCU
+blob? You do not need clock-output-names in the CGU blob either. But
+this is just an idea. It is far for straightforward for you t encode the
+parent names in your clk_branches[] array.
+
+Thanks,
+Mike
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
