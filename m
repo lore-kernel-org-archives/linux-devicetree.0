@@ -1,94 +1,85 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V6 3/3] OPP: Add binding for 'opp-suspend'
-Date: Thu, 28 May 2015 12:59:57 +0530
-Message-ID: <52320ac3032de17cbb0aaf518d542ebfbac4b1a4.1432797343.git.viresh.kumar@linaro.org>
-References: <cover.1432797343.git.viresh.kumar@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1432797343.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1432797343.git.viresh.kumar@linaro.org>
-References: <cover.1432797343.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com, Viresh Kumar <viresh.kumar@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 07/13] mmc: davinci_mmc: Support for deferred probing when
+ requesting DMA channels
+Date: Thu, 28 May 2015 09:31:19 +0200
+Message-ID: <CAPDyKFpiHz9nePG0D5HzMkuBGcyt7340hWjjn1emqAKZGWoUnA@mail.gmail.com>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
+	<1432646768-12532-8-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1432646768-12532-8-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, linux-crypto@vger.kernel.org, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On few platforms, for power efficiency, we want the device to be
-configured for a specific OPP while we put the device in suspend state.
+On 26 May 2015 at 15:26, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> Switch to use ma_request_slave_channel_compat_reason() to request the DMA
+> channels. Only fall back to pio mode if the error code returned is not
+> -EPROBE_DEFER, otherwise return from the probe with the -EPROBE_DEFER.
+>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> CC: Ulf Hansson <ulf.hansson@linaro.org>
 
-Add an optional property in operating-points-v2 bindings for that.
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Acked-by: Nishanth Menon <nm@ti.com>
-Suggested-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/power/opp.txt | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+Kind regards
+Uffe
 
-diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
-index f6f75545149e..e56c74824a8c 100644
---- a/Documentation/devicetree/bindings/power/opp.txt
-+++ b/Documentation/devicetree/bindings/power/opp.txt
-@@ -74,6 +74,8 @@ This describes the OPPs belonging to a device. This node can have following
-   Missing property means devices have independent clock/voltage/current lines,
-   but they share OPP tables.
- 
-+- opp-suspend: Phandle of the OPP to set while device is suspended.
-+
- 
- * OPP Node
- 
-@@ -145,9 +147,10 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
- 
- 	cpu0_opp_table: opp_table0 {
- 		compatible = "operating-points-v2";
-+		opp-suspend = <&suspend_opp>;
- 		opp-shared;
- 
--		opp00 {
-+		suspend-opp: opp00 {
- 			opp-hz = <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
-@@ -219,13 +222,14 @@ independently.
- 
- 	cpu_opp_table: opp_table {
- 		compatible = "operating-points-v2";
-+		opp-suspend = <&suspend_opp>;
- 
- 		/*
- 		 * Missing opp-shared property means CPUs switch DVFS states
- 		 * independently.
- 		 */
- 
--		opp00 {
-+		suspend-opp: opp00 {
- 			opp-hz = <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
-@@ -298,9 +302,10 @@ DVFS state together.
- 
- 	cluster0_opp: opp_table0 {
- 		compatible = "operating-points-v2";
-+		opp-suspend = <&suspend_opp0>;
- 		opp-shared;
- 
--		opp00 {
-+		suspend-opp: opp00 {
- 			opp-hz = <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
-@@ -323,9 +328,10 @@ DVFS state together.
- 
- 	cluster1_opp: opp_table1 {
- 		compatible = "operating-points-v2";
-+		opp-suspend = <&suspend_opp1>;
- 		opp-shared;
- 
--		opp10 {
-+		suspend-opp: opp10 {
- 			opp-hz = <1300000000>;
- 			opp-microvolt = <1045000 1050000 1055000>;
- 			opp-microamp = <95000>;
--- 
-2.4.0
-
+> ---
+>  drivers/mmc/host/davinci_mmc.c | 26 +++++++++++++++-----------
+>  1 file changed, 15 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
+> index b2b3f8bbfd8c..df81e4e2f662 100644
+> --- a/drivers/mmc/host/davinci_mmc.c
+> +++ b/drivers/mmc/host/davinci_mmc.c
+> @@ -530,20 +530,20 @@ static int __init davinci_acquire_dma_channels(struct mmc_davinci_host *host)
+>         dma_cap_zero(mask);
+>         dma_cap_set(DMA_SLAVE, mask);
+>
+> -       host->dma_tx =
+> -               dma_request_slave_channel_compat(mask, edma_filter_fn,
+> -                               &host->txdma, mmc_dev(host->mmc), "tx");
+> -       if (!host->dma_tx) {
+> +       host->dma_tx = dma_request_slave_channel_compat_reason(mask,
+> +                               edma_filter_fn, &host->txdma,
+> +                               mmc_dev(host->mmc), "tx");
+> +       if (IS_ERR(host->dma_tx)) {
+>                 dev_err(mmc_dev(host->mmc), "Can't get dma_tx channel\n");
+> -               return -ENODEV;
+> +               return PTR_ERR(host->dma_tx);
+>         }
+>
+> -       host->dma_rx =
+> -               dma_request_slave_channel_compat(mask, edma_filter_fn,
+> -                               &host->rxdma, mmc_dev(host->mmc), "rx");
+> -       if (!host->dma_rx) {
+> +       host->dma_rx = dma_request_slave_channel_compat_reason(mask,
+> +                               edma_filter_fn, &host->rxdma,
+> +                               mmc_dev(host->mmc), "rx");
+> +       if (IS_ERR(host->dma_rx)) {
+>                 dev_err(mmc_dev(host->mmc), "Can't get dma_rx channel\n");
+> -               r = -ENODEV;
+> +               r = PTR_ERR(host->dma_rx);
+>                 goto free_master_write;
+>         }
+>
+> @@ -1307,8 +1307,12 @@ static int __init davinci_mmcsd_probe(struct platform_device *pdev)
+>         host->mmc_irq = irq;
+>         host->sdio_irq = platform_get_irq(pdev, 1);
+>
+> -       if (host->use_dma && davinci_acquire_dma_channels(host) != 0)
+> +       if (host->use_dma) {
+> +               ret = davinci_acquire_dma_channels(host);
+> +               if (ret == -EPROBE_DEFER)
+> +                       goto out;
+>                 host->use_dma = 0;
+> +       }
+>
+>         /* REVISIT:  someday, support IRQ-driven card detection.  */
+>         mmc->caps |= MMC_CAP_NEEDS_POLL;
+> --
+> 2.3.5
+>
