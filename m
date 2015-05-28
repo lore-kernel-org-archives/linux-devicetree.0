@@ -1,49 +1,58 @@
-From: Alan Tull <atull@opensource.altera.com>
-Subject: [PATCHv5 0/2] socfpga: support suspend to ram
-Date: Thu, 28 May 2015 16:19:35 -0500
-Message-ID: <1432847977-18880-1-git-send-email-atull@opensource.altera.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] w1: masters: omap_hdq: Add support for 1-wire mode
+Date: Thu, 28 May 2015 14:27:29 -0700
+Message-ID: <20150528142729.45a8e3abf3f7a8b59bdfc1ce@linux-foundation.org>
+References: <1431950959-19606-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Delicious Quinoq <delicious.quinoa@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1431950959-19606-1-git-send-email-vigneshr@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Evgeniy Polyakov <zbr@ioremap.net>, Jonathan Corbet <corbet@lwn.net>, Tony Lindgren <tony@atomide.com>, NeilBrown <neilb@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Support suspend to ram on socfpga.
-  * allocate space in ocram using sram driver.
-  * Add a function in ocram to place DDR in self-refresh
-    and suspend.
-  * Prevent suspend if EDAC is enabled.
-  * Add a device tree binding document for the Altera
-    SOCFPGA SDRAM controller that is used to put DDR in
-    self-refresh mode.
+On Mon, 18 May 2015 17:39:19 +0530 Vignesh R <vigneshr@ti.com> wrote:
 
-Alan Tull (2):
-  ARM: socfpga: support suspend to ram
-  ARM: socfpga: dts: add sdram controller dt binding doc
+> This patches makes following changes to omap_hdq driver
+>  - Enable 1-wire mode.
+>  - Implement w1_triplet callback to facilitate search rom
+>    procedure and auto detection of 1-wire slaves.
+>  - Proper enabling and disabling of interrupt.
+>  - Cleanups (formatting and return value checks).
+> 
+> HDQ mode remains unchanged.
+> 
+> ...
+>
+> +/*
+> + * W1 triplet callback function - used for searching ROM addresses.
+> + * Registered only when controller is in 1-wire mode.
+> + */
+> +static u8 omap_w1_triplet(void *_hdq, u8 bdir)
+> +{
+> +	u8 id_bit, comp_bit;
+> +	int err;
+> +	u8 ret = 0x3; /* no slaves responded */
+> +	struct hdq_data *hdq_data = _hdq;
+> +	u8 ctrl = OMAP_HDQ_CTRL_STATUS_SINGLE | OMAP_HDQ_CTRL_STATUS_GO |
+> +		  OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK;
+> +	u8 mask = ctrl | OMAP_HDQ_CTRL_STATUS_DIR;
+> +
+> +	omap_hdq_get(_hdq);
+> +
+> +	err = mutex_lock_interruptible(&hdq_data->hdq_mutex);
+> +	if (err < 0) {
+> +		dev_dbg(hdq_data->dev, "Could not acquire mutex\n");
+> +		goto rtn;
+> +	}
 
- .../arm/altera/socfpga-sdram-controller.txt        |   12 ++
- arch/arm/mach-socfpga/Kconfig                      |   10 +-
- arch/arm/mach-socfpga/Makefile                     |    1 +
- arch/arm/mach-socfpga/core.h                       |    6 +-
- arch/arm/mach-socfpga/pm.c                         |  149 ++++++++++++++++++++
- arch/arm/mach-socfpga/self-refresh.S               |  136 ++++++++++++++++++
- arch/arm/mach-socfpga/socfpga.c                    |    6 +-
- drivers/edac/altera_edac.c                         |   20 +++
- 8 files changed, 337 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
- create mode 100644 arch/arm/mach-socfpga/pm.c
- create mode 100644 arch/arm/mach-socfpga/self-refresh.S
+The use of mutex_lock_interruptible() seems like a bad idea.  It means
+that if the calling process (modprobe?) has a signal pending,
+w1_search() will think that "no device responded".  That isn't really
+true - a true statement is "user hit ^C".  I'm not sure what the
+overall runtime effect of this will be, but I bet it hasn't been
+tested!
 
--- 
-1.7.9.5
+Wouldn't it be saner/safer to use plain old mutex_lock() here?
