@@ -1,66 +1,69 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v4 0/2] pwm: Add support for R-Car PWM Timer
-Date: Thu, 28 May 2015 10:11:43 +0000
-Message-ID: <SG2PR06MB09199F8E4E836FE928B3A266D8CA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1432205846-4312-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH] ARM: dts: odroidxu3: Enable USB3 regulators
+Date: Thu, 28 May 2015 15:58:17 +0530
+Message-ID: <CANAwSgRpXxq2Y72crPd3U8f-DB=nsQ021e5MY0B7GdJrqwv=wA@mail.gmail.com>
+References: <1432803494-3516-1-git-send-email-linux.amoon@gmail.com> <5566DDA6.1080508@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1432205846-4312-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Content-Language: ja-JP
-Sender: linux-pwm-owner@vger.kernel.org
-To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5566DDA6.1080508@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Hi Krzysztof,
 
-Would you apply this patch set to your repository?
-I checked that I could apply this patch set correctly
-on the latest linux-pwm.git / for-next branch.
-(commit id = cccb94543c8299e0bc7564cc6f8b26e0f15bafde)
+I will take care of these issue in the future.
 
-Best regards,
-Yoshihiro Shimoda
+-Anand Moon
 
-> Sent: Thursday, May 21, 2015 7:57 PM
-> 
-> This patch set is based on the linux-pwm.git / for-next branch.
-> (commit id = efb0de55b6a2ec15fc424e660601f22ae2fa487a)
-> 
-> Changes from v3:
->  - Fix register size in patch 1.
->  - Add "Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>" in patch 1
->  - Remove an unnecessary definition in patch 2.
->  - Use "ULL" to avoid overflow in patch 2.
->  - Remove unnecessary casts in patch 2.
-> 
-> Changes from v2:
->  - Add compatible string "renesas,pwm-rcar".
->  - Remove compatible strings "renesas,pwm-r8a77xx" in rcar_pwm_of_table.
->  - Fix build error.
-> 
-> Changes from v1:
->  - Change compatible string to SoC-specific compatible values.
->  - Fix #pwm-call value to 2 in the device tree document.
->  - Fix "depends on" value in Kconfig.
->  - Fix help explanation in Kconfig.
->  - Remove an unnecessary member in rcar_pwm_chip.
->  - Remove hardcoded number of channels and change chip.npwm value to 1.
->  - Fix formulas for clock calculation to improve accuracy.
-> 
-> Yoshihiro Shimoda (2):
->   pwm: Add device tree binding document for R-Car PWM Timer
->   pwm: Add support for R-Car PWM Timer
-> 
->  .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   |  27 +++
->  drivers/pwm/Kconfig                                |  11 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-rcar.c                             | 261 +++++++++++++++++++++
->  4 files changed, 300 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
->  create mode 100644 drivers/pwm/pwm-rcar.c
-> 
-> --
-> 1.9.1
+On 28 May 2015 at 14:49, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+> On 28.05.2015 17:58, Anand Moon wrote:
+>> Enable regulator for usbdrd3_0 and usbdrd3_1
+>>>From the schematic pin diagram USB3_0 and USB3_1
+>> is regulated by LDO9 and LD011.
+>
+> Please reformat statement above to proper sentence(s) without ">" before
+> "From".
+>
+>>
+>> Fix the boot message of failed.
+>> [    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
+>> [    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
+>> [    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
+>> [    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
+>> [    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
+>> [    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
+>> [    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
+>> [    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
+>> [    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
+>> [    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
+>> [    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
+>>
+>> ---
+>> This patch is based on Krzysztof github branch work-next/odroid-xu3-s2mps11-irq
+>> ---
+>
+> I mentioned this already on previous postings. Let's make an exercise.
+> Please:
+> 1. Save your email as mbox format (from mailer).
+> 2. Go to a GIT repo with kernel and checkout base branch.
+> 3. git am 0001-the-name-of-file.mbox
+> 4. git show
+>
+> Do you see the signed-off-by in commit?
+>
+> The patch itself looks good, thanks for fixing this. Just please fix the
+> issues with commit message.
+>
+> By the way:
+> 1. The always-on from LDO9 could be probably removed if the ehci-exynos
+> driver had regulator consumer implemented.
+> 2. The Documentation/devicetree/bindings/usb/exynos-usb.txt (or dwc.txt)
+> should proably mention the vdd-supply property.
+>
+> Best regards,
+> Krzysztof
+>
+>
