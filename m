@@ -1,117 +1,54 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
-Date: Thu, 28 May 2015 15:24:52 +0200
-Message-ID: <20150528132452.GI26575@pengutronix.de>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Thu, 28 May 2015 14:34:29 +0100
+Message-ID: <20150528133429.GD2067@n2100.arm.linux.org.uk>
+References: <1430820315.19516.26.camel@opteya.com>
+ <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
+ <1432289148.5304.58.camel@opteya.com>
+ <1432322832.5304.63.camel@opteya.com>
+ <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
+ <55670AD4.8020705@melag.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Henry Chen <henryc.chen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <55670AD4.8020705-d/C+FbuhHiA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 21, 2015 at 03:12:51PM +0800, James Liao wrote:
-> This patchset contains subsystem clocks support for Mediatek MT8173.
-> It also contains some bug fixes before adds new clocks support.
+On Thu, May 28, 2015 at 02:32:20PM +0200, Enrico Weigelt, metux IT consult wrote:
+> Am 25.05.2015 um 09:14 schrieb Rob Landley:
 > 
-> James Liao (4):
->   clk: mediatek: Fix apmixedsys clock registration
->   dt-bindings: ARM: Mediatek: Document devicetree bindings for clock
->     controllers
->   clk: mediatek: Add subsystem clocks of MT8173
->   clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
+> >Personally, I'm sad we're starting to get ACPI for arm but if device
+> >tree data files are only available under GPL, people will hold their
+> >nose and deploy ACPI.
 > 
-> Sascha Hauer (1):
->   clk: mediatek: mt8173: Fix enabling of critical clocks
-> 
->  .../bindings/arm/mediatek/mediatek,imgsys.txt      |  22 +
->  .../bindings/arm/mediatek/mediatek,mmsys.txt       |  22 +
->  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  22 +
->  .../bindings/arm/mediatek/mediatek,vencltsys.txt   |  22 +
->  .../bindings/arm/mediatek/mediatek,vencsys.txt     |  22 +
->  drivers/clk/mediatek/clk-mt8135.c                  |   2 +-
->  drivers/clk/mediatek/clk-mt8173.c                  | 454 ++++++++++++++++++++-
->  drivers/clk/mediatek/clk-pll.c                     |   7 +-
->  include/dt-bindings/clock/mt8173-clk.h             |  94 ++++-
->  9 files changed, 652 insertions(+), 15 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
+> What's the big deal with having DTS/DTB under GPL ?
 
-I have looked a bit closer at the vdec, venc, mmsys and other units. I
-have come to the conclusion that the units and subunits should be
-rearranged in the device tree. Currently we have a flat list of units,
-but really they are hierarchical with top devices and subdevices. Take
-vencsys as an example. Instead of:
+It's really quite simple.  Other open source projects won't touch
+_our_ DTB with a barge pole through fear of GPL contamination.
 
-	vencsys: vencsys@18000000 {
-		compatible = "mediatek,mt8173-vencsys", "syscon";
-		reg = <0 0x18000000 0 0x1000>;
-		#clock-cells = <1>;
-	};
+So what we'll end up with is other projects creating their own DTB
+descriptions for the same hardware, with different properties (which
+they'll do in an effort to ensure that it isn't a "derived work" of
+the GPL version) and the whole thing turning into a right mess - and
+a poor experience for users because they then end up with OS specific
+DT files.
 
-	larb3:larb@18001000 {
-		compatible = "mediatek,mt8173-smi-larb";
-		reg = <0 0x18001000 0 0x1000>;
-		clocks = <&mmsys MM_SMI_COMMON>,
-			 <&vencsys VENC_CKE0>,
-			 <&vencsys VENC_CKE1>;
-		clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
-	};
+Alternatively, as Rob points out, people will just go the ACPI route
+to avoid the GPL contamination problem.
 
-This should be:
-
-	vencsys: vencsys@18000000 {
-		compatible = "mediatek,mt8173-vencsys";
-		reg = <0 0x18000000 0 0x01000000>;
-		#clock-cells = <1>;
-		ranges;
-
-		larb3:larb@18001000 {
-			compatible = "mediatek,mt8173-smi-larb";
-			reg = <0 0x18001000 0 0x1000>;
-			clocks = <&mmsys MM_SMI_COMMON>,
-				 <&vencsys VENC_CKE0>,
-				 <&vencsys VENC_CKE1>;
-			clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
-		};
-
-		/* The actual video encoder */
-		venc:video-encoder@?? {
-			compatible = "mediatek,mtxxxx-videoenc";
-		};
-	};
-
-And really the driver matching "mediatek,mt8173-vencsys" should register
-the necessary clocks and reset lines and call of_platform_populate on
-the subnodes. The driver should also be a real driver, not something
-matched by CLK_OF_DECLARE. The "mediatek,mt8173-vencsys" driver now has
-the possibility to manage the toplevel vencsys unit, do runtime pm, turn
-the whole thing off and on. Using CCF for abstracting these clocks may
-be the right thing, but I believe that we should keep the code for the
-toplevel vencsys register space together in a single file and not put
-the clk bits in drivers/clk/mediatek/mt8173.c, the reset bits in
-drivers/reset/ and the remaining misc stuff in drivers/soc/mediatek/.
-
-So I think we should have a drivers/soc/mediatek/mtk-vencsys.c which
-is a regular driver, calls clk_register() for its clocks, calls
-reset_controller_register() for the reset bits, provides plain functions
-for the remaining bits which are not handled by any Linux framework.
-Finally of_platform_populate will register the child devices.
-
-I showed this using the vencsys example, but it's the same for vdecsys,
-vencltsys, imgsys and mmsys.
-
-Sascha
-
+It doesn't matter what the legal issues actually are: if people think
+that there is the possibility of GPL contamination - even across to
+other differently licensed open source software, they won't touch the
+GPL'd code/data and they'll come up with an alternative solution.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
