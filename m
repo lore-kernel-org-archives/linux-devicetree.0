@@ -1,112 +1,572 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ARM: socfpga: support suspend to ram
-Date: Thu, 28 May 2015 10:07:30 -0500
-Message-ID: <55672F32.3050506@opensource.altera.com>
-References: <1432317735-29413-1-git-send-email-atull@opensource.altera.com>
- <1432317735-29413-2-git-send-email-atull@opensource.altera.com>
- <556479C9.5070208@opensource.altera.com>
- <alpine.DEB.2.02.1505271520570.19205@linuxheads99>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1505271520570.19205@linuxheads99>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Delicious Quinoq <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH v4 2/4] ARM: shmobile: add r8a7793 minimal SoC device tree
+Date: Thu, 28 May 2015 17:15:55 +0200
+Message-ID: <1432826157-6414-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1432826157-6414-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1432826157-6414-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org
+Cc: magnus.damm@gmail.com, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, kuninori.morimoto.gx@renesas.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/2015 03:25 PM, atull wrote:
-> On Tue, 26 May 2015, Dinh Nguyen wrote:
-> 
->> Hi Alan,
->>
->> On 5/22/15 1:02 PM, Alan Tull wrote:
->>> Add code that requests that the sdr controller go into
->>> self-refresh mode.  This code is run from ocram.
->>>
->>> This patch assumes that u-boot has already configured sdr:
->>>   sdr.ctrlcfg.lowpwreq.selfrfshmask = 3
->>>   sdr.ctrlcfg.lowpwrtiming.clkdisablecycles = 8
->>>   sdr.ctrlcfg.dramtiming4.selfrfshexit = 512
->>>
->>> Suspend-to-RAM and EDAC support are mutually exclusive on SOCFPGA
->>> platforms.  CONFIG_SOCFPGA_SUSPEND enables suspend-to-RAM and
->>> prevents selecting CONFIG_EDAC_ALTERA_MC.
->>>
->>> How to suspend to ram:
->>>  $ echo enabled > \
->>> /sys/devices/soc/ffc02000.serial0/tty/ttyS0/power/wakeup
->>>
->>>  $ echo -n mem > /sys/power/state
->>>
->>> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
->>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>> ---
->>> v2: use Generic on-chip SRAM driver to allocate ocram
->>>     rm fncpy_align since generic allocator handles alignment
->>>     check __arm_ioremap_exec return code
->>>     check for NULL pointers
->>>     add a comment regarding sdram controller configuration
->>> v3: fix renamed #define
->>>     propagate socfpga_setup_ocram_self_refresh error code
->>> v4: Kconfig: don't need to select GENERIC_ALLOCATER
->>>     add CONFIG_SOCFPGA_SUSPEND
->>>     make s2r and EDAC support mutually exclusive
->>>     socfpga.c: add sdr_ctl_base_addr
->>>     return error if ocram not available in device tree
->>>     update copyright years
->>> ---
->>
->> <snip>
->>
->>> +
->>> +static int socfpga_pm_suspend(unsigned long arg)
->>> +{
->>> +	u32 ret;
->>> +
->>> +	if (!sdr_ctl_base_addr || !socfpga_scu_base_addr)
->>> +		return -EFAULT;
->>> +
->>> +	ret = socfpga_sdram_self_refresh_in_ocram(
->>> +		(u32)sdr_ctl_base_addr, (u32)socfpga_scu_base_addr);
->>> +
->>
->> I had a patch that removed socfpga_scu_base_addr from being a global and
->> just a local variable in:
->>
->> f6e14376fb20 ARM: socfpga: use of_iomap to map the SCU
->>
->> This patch will be in v4.2 and is currently in arm-soc/next or
->> at my fork: kernel/git/dinguyen/linux.git socfpga_for_next_arria10
->>
->> So you will either need to make socfpga_scu_base_addr global again, or
->> you can use the asm instruction to get the SCU base addr.
->>
->> Sorry about that..
->>
->> Dinh
->>
-> 
-> I can't make socfpga_scu_base_addr a global from platsmp.c since that file
-> may or may not be compiled in.
+Minimal r8a7793 device tree including one CPU core, interrupt controllers,
+timers, two serial ports, and the Ethernet controller, plus the required
+clock descriptions.
 
-Ah, okay..
-> 
-> That leaves me with the option of adding the code that was removed from
-> socfpga.c back where it was or taking that same code moving it to pm.c
-> 
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: devicetree@vger.kernel.org
+---
+ arch/arm/boot/dts/r8a7793.dtsi            | 368 ++++++++++++++++++++++++++++++
+ include/dt-bindings/clock/r8a7793-clock.h | 164 +++++++++++++
+ 2 files changed, 532 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7793.dtsi
+ create mode 100644 include/dt-bindings/clock/r8a7793-clock.h
 
-I think you only need the scu base address in
-socfpga_sdram_self_refresh(), so you can probably just use the single
-line assembly code to get it there.
+diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
+new file mode 100644
+index 0000000..b3095de
+--- /dev/null
++++ b/arch/arm/boot/dts/r8a7793.dtsi
+@@ -0,0 +1,368 @@
++/*
++ * Device Tree Source for the r8a7793 SoC
++ *
++ * Copyright (C) 2014-2015 Renesas Electronics Corporation
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include <dt-bindings/clock/r8a7793-clock.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/ {
++	compatible = "renesas,r8a7793";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			enable-method = "renesas,r8a7793";
++			reg = <0>;
++			clock-frequency = <1500000000>;
++			voltage-tolerance = <1>; /* 1% */
++			clocks = <&cpg_clocks R8A7793_CLK_Z>;
++			clock-latency = <300000>; /* 300 us */
++
++			/* kHz - uV - OPPs unknown yet */
++			operating-points = <1500000 1000000>,
++					   <1312500 1000000>,
++					   <1125000 1000000>,
++					   < 937500 1000000>,
++					   < 750000 1000000>,
++					   < 375000 1000000>;
++		};
++	};
++
++	gic: interrupt-controller@f1001000 {
++		compatible = "arm,cortex-a15-gic";
++		#interrupt-cells = <3>;
++		#address-cells = <0>;
++		interrupt-controller;
++		reg = <0 0xf1001000 0 0x1000>,
++			<0 0xf1002000 0 0x1000>,
++			<0 0xf1004000 0 0x2000>,
++			<0 0xf1006000 0 0x2000>;
++		interrupts = <1 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <1 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
++			     <1 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
++			     <1 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
++			     <1 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	cmt0: timer@ffca0000 {
++		compatible = "renesas,cmt-48-r8a7793", "renesas,cmt-48-gen2";
++		reg = <0 0xffca0000 0 0x1004>;
++		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7793_CLK_CMT0>;
++		clock-names = "fck";
++
++		renesas,channels-mask = <0x60>;
++
++		status = "disabled";
++	};
++
++	cmt1: timer@e6130000 {
++		compatible = "renesas,cmt-48-r8a7793", "renesas,cmt-48-gen2";
++		reg = <0 0xe6130000 0 0x1004>;
++		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7793_CLK_CMT1>;
++		clock-names = "fck";
++
++		renesas,channels-mask = <0xff>;
++
++		status = "disabled";
++	};
++
++	irqc0: interrupt-controller@e61c0000 {
++		compatible = "renesas,irqc-r8a7793", "renesas,irqc";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0 0xe61c0000 0 0x200>;
++		interrupts = <0 0 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 1 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 2 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 3 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 12 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 13 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 14 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 15 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 16 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 17 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp4_clks R8A7793_CLK_IRQC>;
++	};
++
++	scif0: serial@e6e60000 {
++		compatible = "renesas,scif-r8a7793", "renesas,scif";
++		reg = <0 0xe6e60000 0 64>;
++		interrupts = <0 152 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R8A7793_CLK_SCIF0>;
++		clock-names = "sci_ick";
++		status = "disabled";
++	};
++
++	scif1: serial@e6e68000 {
++		compatible = "renesas,scif-r8a7793", "renesas,scif";
++		reg = <0 0xe6e68000 0 64>;
++		interrupts = <0 153 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R8A7793_CLK_SCIF1>;
++		clock-names = "sci_ick";
++		status = "disabled";
++	};
++
++	ether: ethernet@ee700000 {
++		compatible = "renesas,ether-r8a7793";
++		reg = <0 0xee700000 0 0x400>;
++		interrupts = <0 162 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp8_clks R8A7793_CLK_ETHER>;
++		phy-mode = "rmii";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	clocks {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/* External root clock */
++		extal_clk: extal_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
++			clock-output-names = "extal";
++		};
++
++		/* Special CPG clocks */
++		cpg_clocks: cpg_clocks@e6150000 {
++			compatible = "renesas,r8a7793-cpg-clocks",
++				     "renesas,rcar-gen2-cpg-clocks";
++			reg = <0 0xe6150000 0 0x1000>;
++			clocks = <&extal_clk>;
++			#clock-cells = <1>;
++			clock-output-names = "main", "pll0", "pll1", "pll3",
++					     "lb", "qspi", "sdh", "sd0", "z",
++					     "rcan", "adsp";
++		};
++
++		/* Variable factor clocks */
++		sd2_clk: sd2_clk@e6150078 {
++			compatible = "renesas,r8a7793-div6-clock",
++				     "renesas,cpg-div6-clock";
++			reg = <0 0xe6150078 0 4>;
++			clocks = <&pll1_div2_clk>;
++			#clock-cells = <0>;
++			clock-output-names = "sd2";
++		};
++		sd3_clk: sd3_clk@e615026c {
++			compatible = "renesas,r8a7793-div6-clock",
++				     "renesas,cpg-div6-clock";
++			reg = <0 0xe615026c 0 4>;
++			clocks = <&pll1_div2_clk>;
++			#clock-cells = <0>;
++			clock-output-names = "sd3";
++		};
++		mmc0_clk: mmc0_clk@e6150240 {
++			compatible = "renesas,r8a7793-div6-clock",
++				     "renesas,cpg-div6-clock";
++			reg = <0 0xe6150240 0 4>;
++			clocks = <&pll1_div2_clk>;
++			#clock-cells = <0>;
++			clock-output-names = "mmc0";
++		};
++
++		/* Fixed factor clocks */
++		pll1_div2_clk: pll1_div2_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7793_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <2>;
++			clock-mult = <1>;
++			clock-output-names = "pll1_div2";
++		};
++		zg_clk: zg_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7793_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <5>;
++			clock-mult = <1>;
++			clock-output-names = "zg";
++		};
++		zx_clk: zx_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7793_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <3>;
++			clock-mult = <1>;
++			clock-output-names = "zx";
++		};
++		zs_clk: zs_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7793_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <6>;
++			clock-mult = <1>;
++			clock-output-names = "zs";
++		};
++		hp_clk: hp_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7793_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <12>;
++			clock-mult = <1>;
++			clock-output-names = "hp";
++		};
++		p_clk: p_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7793_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <24>;
++			clock-mult = <1>;
++			clock-output-names = "p";
++		};
++		rclk_clk: rclk_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7793_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <(48 * 1024)>;
++			clock-mult = <1>;
++			clock-output-names = "rclk";
++		};
++		mp_clk: mp_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&pll1_div2_clk>;
++			#clock-cells = <0>;
++			clock-div = <15>;
++			clock-mult = <1>;
++			clock-output-names = "mp";
++		};
++		cp_clk: cp_clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&extal_clk>;
++			#clock-cells = <0>;
++			clock-div = <2>;
++			clock-mult = <1>;
++			clock-output-names = "cp";
++		};
++
++		/* Gate clocks */
++		mstp1_clks: mstp1_clks@e6150134 {
++			compatible = "renesas,r8a7793-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150134 0 4>, <0 0xe6150038 0 4>;
++			clocks = <&zs_clk>, <&zs_clk>, <&zs_clk>, <&p_clk>,
++				 <&zg_clk>, <&zs_clk>, <&zs_clk>, <&zs_clk>,
++				 <&p_clk>, <&p_clk>, <&rclk_clk>, <&cp_clk>,
++				 <&zs_clk>, <&zs_clk>, <&zs_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7793_CLK_VCP0 R8A7793_CLK_VPC0
++				R8A7793_CLK_SSP1 R8A7793_CLK_TMU1
++				R8A7793_CLK_3DG R8A7793_CLK_2DDMAC
++				R8A7793_CLK_FDP1_1 R8A7793_CLK_FDP1_0
++				R8A7793_CLK_TMU3 R8A7793_CLK_TMU2
++				R8A7793_CLK_CMT0 R8A7793_CLK_TMU0
++				R8A7793_CLK_VSP1_DU1 R8A7793_CLK_VSP1_DU0
++				R8A7793_CLK_VSP1_S
++			>;
++			clock-output-names =
++				"vcp0", "vpc0", "ssp_dev", "tmu1",
++				"pvrsrvkm", "tddmac", "fdp1", "fdp0",
++				"tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
++				"vsp1-du0", "vsps";
++		};
++		mstp3_clks: mstp3_clks@e615013c {
++			compatible = "renesas,r8a7793-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
++			clocks = <&cp_clk>, <&sd3_clk>, <&sd2_clk>,
++				 <&cpg_clocks R8A7793_CLK_SD0>, <&mmc0_clk>,
++				 <&hp_clk>, <&mp_clk>, <&hp_clk>, <&mp_clk>,
++				 <&rclk_clk>, <&hp_clk>, <&hp_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7793_CLK_TPU0 R8A7793_CLK_SDHI2
++				R8A7793_CLK_SDHI1 R8A7793_CLK_SDHI0
++				R8A7793_CLK_MMCIF0 R8A7793_CLK_IIC0
++				R8A7793_CLK_PCIEC R8A7793_CLK_IIC1
++				R8A7793_CLK_SSUSB R8A7793_CLK_CMT1
++				R8A7793_CLK_USBDMAC0 R8A7793_CLK_USBDMAC1
++			>;
++			clock-output-names =
++				"tpu0", "sdhi2", "sdhi1", "sdhi0", "mmcif0",
++				"i2c7", "pciec", "i2c8", "ssusb", "cmt1",
++				"usbdmac0", "usbdmac1";
++		};
++		mstp4_clks: mstp4_clks@e6150140 {
++			compatible = "renesas,r8a7793-mstp-clocks", "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150140 0 4>, <0 0xe615004c 0 4>;
++			clocks = <&cp_clk>;
++			#clock-cells = <1>;
++			clock-indices = <R8A7793_CLK_IRQC>;
++			clock-output-names = "irqc";
++		};
++		mstp7_clks: mstp7_clks@e615014c {
++			compatible = "renesas,r8a7793-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
++			clocks = <&mp_clk>,  <&hp_clk>, <&zs_clk>, <&p_clk>,
++				 <&p_clk>, <&zs_clk>, <&zs_clk>, <&p_clk>,
++				 <&p_clk>, <&p_clk>, <&p_clk>, <&zx_clk>,
++				 <&zx_clk>, <&zx_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7793_CLK_EHCI R8A7793_CLK_HSUSB
++				R8A7793_CLK_HSCIF2 R8A7793_CLK_SCIF5
++				R8A7793_CLK_SCIF4 R8A7793_CLK_HSCIF1
++				R8A7793_CLK_HSCIF0 R8A7793_CLK_SCIF3
++				R8A7793_CLK_SCIF2 R8A7793_CLK_SCIF1
++				R8A7793_CLK_SCIF0 R8A7793_CLK_DU1
++				R8A7793_CLK_DU0 R8A7793_CLK_LVDS0
++			>;
++			clock-output-names =
++				"ehci", "hsusb", "hscif2", "scif5", "scif4",
++				"hscif1", "hscif0", "scif3", "scif2",
++				"scif1", "scif0", "du1", "du0", "lvds0";
++		};
++		mstp8_clks: mstp8_clks@e6150990 {
++			compatible = "renesas,r8a7793-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
++			clocks = <&zx_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
++				 <&p_clk>, <&zs_clk>, <&zs_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7793_CLK_IPMMU_SGX R8A7793_CLK_VIN2
++				R8A7793_CLK_VIN1 R8A7793_CLK_VIN0
++				R8A7793_CLK_ETHER R8A7793_CLK_SATA1
++				R8A7793_CLK_SATA0
++			>;
++			clock-output-names =
++				"ipmmu_sgx", "vin2", "vin1", "vin0", "ether",
++				"sata1", "sata0";
++		};
++	};
++
++};
+diff --git a/include/dt-bindings/clock/r8a7793-clock.h b/include/dt-bindings/clock/r8a7793-clock.h
+new file mode 100644
+index 0000000..1579e07
+--- /dev/null
++++ b/include/dt-bindings/clock/r8a7793-clock.h
+@@ -0,0 +1,164 @@
++/*
++ * r8a7793 clock definition
++ *
++ * Copyright (C) 2014  Renesas Electronics Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_R8A7793_H__
++#define __DT_BINDINGS_CLOCK_R8A7793_H__
++
++/* CPG */
++#define R8A7793_CLK_MAIN		0
++#define R8A7793_CLK_PLL0		1
++#define R8A7793_CLK_PLL1		2
++#define R8A7793_CLK_PLL3		3
++#define R8A7793_CLK_LB			4
++#define R8A7793_CLK_QSPI		5
++#define R8A7793_CLK_SDH			6
++#define R8A7793_CLK_SD0			7
++#define R8A7793_CLK_Z			8
++#define R8A7793_CLK_RCAN		9
++#define R8A7793_CLK_ADSP		10
++
++/* MSTP0 */
++#define R8A7793_CLK_MSIOF0		0
++
++/* MSTP1 */
++#define R8A7793_CLK_VCP0		1
++#define R8A7793_CLK_VPC0		3
++#define R8A7793_CLK_SSP1		9
++#define R8A7793_CLK_TMU1		11
++#define R8A7793_CLK_3DG			12
++#define R8A7793_CLK_2DDMAC		15
++#define R8A7793_CLK_FDP1_1		18
++#define R8A7793_CLK_FDP1_0		19
++#define R8A7793_CLK_TMU3		21
++#define R8A7793_CLK_TMU2		22
++#define R8A7793_CLK_CMT0		24
++#define R8A7793_CLK_TMU0		25
++#define R8A7793_CLK_VSP1_DU1		27
++#define R8A7793_CLK_VSP1_DU0		28
++#define R8A7793_CLK_VSP1_S		31
++
++/* MSTP2 */
++#define R8A7793_CLK_SCIFA2		2
++#define R8A7793_CLK_SCIFA1		3
++#define R8A7793_CLK_SCIFA0		4
++#define R8A7793_CLK_MSIOF2		5
++#define R8A7793_CLK_SCIFB0		6
++#define R8A7793_CLK_SCIFB1		7
++#define R8A7793_CLK_MSIOF1		8
++#define R8A7793_CLK_SCIFB2		16
++#define R8A7793_CLK_SYS_DMAC1		18
++#define R8A7793_CLK_SYS_DMAC0		19
++
++/* MSTP3 */
++#define R8A7793_CLK_TPU0		4
++#define R8A7793_CLK_SDHI2		11
++#define R8A7793_CLK_SDHI1		12
++#define R8A7793_CLK_SDHI0		14
++#define R8A7793_CLK_MMCIF0		15
++#define R8A7793_CLK_IIC0		18
++#define R8A7793_CLK_PCIEC		19
++#define R8A7793_CLK_IIC1		23
++#define R8A7793_CLK_SSUSB		28
++#define R8A7793_CLK_CMT1		29
++#define R8A7793_CLK_USBDMAC0		30
++#define R8A7793_CLK_USBDMAC1		31
++
++/* MSTP4 */
++#define R8A7793_CLK_IRQC		7
++
++/* MSTP5 */
++#define R8A7793_CLK_AUDIO_DMAC1         1
++#define R8A7793_CLK_AUDIO_DMAC0         2
++#define R8A7793_CLK_ADSP_MOD		6
++#define R8A7793_CLK_THERMAL		22
++#define R8A7793_CLK_PWM			23
++
++/* MSTP7 */
++#define R8A7793_CLK_EHCI		3
++#define R8A7793_CLK_HSUSB		4
++#define R8A7793_CLK_HSCIF2		13
++#define R8A7793_CLK_SCIF5		14
++#define R8A7793_CLK_SCIF4		15
++#define R8A7793_CLK_HSCIF1		16
++#define R8A7793_CLK_HSCIF0		17
++#define R8A7793_CLK_SCIF3		18
++#define R8A7793_CLK_SCIF2		19
++#define R8A7793_CLK_SCIF1		20
++#define R8A7793_CLK_SCIF0		21
++#define R8A7793_CLK_DU1			23
++#define R8A7793_CLK_DU0			24
++#define R8A7793_CLK_LVDS0		26
++
++/* MSTP8 */
++#define R8A7793_CLK_IPMMU_SGX		0
++#define R8A7793_CLK_VIN2		9
++#define R8A7793_CLK_VIN1		10
++#define R8A7793_CLK_VIN0		11
++#define R8A7793_CLK_ETHER		13
++#define R8A7793_CLK_SATA1		14
++#define R8A7793_CLK_SATA0		15
++
++/* MSTP9 */
++#define R8A7793_CLK_GPIO7		4
++#define R8A7793_CLK_GPIO6		5
++#define R8A7793_CLK_GPIO5		7
++#define R8A7793_CLK_GPIO4		8
++#define R8A7793_CLK_GPIO3		9
++#define R8A7793_CLK_GPIO2		10
++#define R8A7793_CLK_GPIO1		11
++#define R8A7793_CLK_GPIO0		12
++#define R8A7793_CLK_RCAN1		15
++#define R8A7793_CLK_RCAN0		16
++#define R8A7793_CLK_QSPI_MOD		17
++#define R8A7793_CLK_I2C5		25
++#define R8A7793_CLK_IICDVFS		26
++#define R8A7793_CLK_I2C4		27
++#define R8A7793_CLK_I2C3		28
++#define R8A7793_CLK_I2C2		29
++#define R8A7793_CLK_I2C1		30
++#define R8A7793_CLK_I2C0		31
++
++/* MSTP10 */
++#define R8A7793_CLK_SSI_ALL		5
++#define R8A7793_CLK_SSI9		6
++#define R8A7793_CLK_SSI8		7
++#define R8A7793_CLK_SSI7		8
++#define R8A7793_CLK_SSI6		9
++#define R8A7793_CLK_SSI5		10
++#define R8A7793_CLK_SSI4		11
++#define R8A7793_CLK_SSI3		12
++#define R8A7793_CLK_SSI2		13
++#define R8A7793_CLK_SSI1		14
++#define R8A7793_CLK_SSI0		15
++#define R8A7793_CLK_SCU_ALL		17
++#define R8A7793_CLK_SCU_DVC1		18
++#define R8A7793_CLK_SCU_DVC0		19
++#define R8A7793_CLK_SCU_SRC9		22
++#define R8A7793_CLK_SCU_SRC8		23
++#define R8A7793_CLK_SCU_SRC7		24
++#define R8A7793_CLK_SCU_SRC6		25
++#define R8A7793_CLK_SCU_SRC5		26
++#define R8A7793_CLK_SCU_SRC4		27
++#define R8A7793_CLK_SCU_SRC3		28
++#define R8A7793_CLK_SCU_SRC2		29
++#define R8A7793_CLK_SCU_SRC1		30
++#define R8A7793_CLK_SCU_SRC0		31
++
++/* MSTP11 */
++#define R8A7793_CLK_SCIFA3		6
++#define R8A7793_CLK_SCIFA4		7
++#define R8A7793_CLK_SCIFA5		8
++
++#endif /* __DT_BINDINGS_CLOCK_R8A7793_H__ */
+-- 
+2.3.5
 
-Dinh
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
