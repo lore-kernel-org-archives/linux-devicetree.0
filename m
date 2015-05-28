@@ -1,7 +1,7 @@
 From: Irina Tirdea <irina.tirdea@intel.com>
-Subject: [PATCH 2/9] input: goodix: fix variable length array warning
-Date: Thu, 28 May 2015 15:47:38 +0300
-Message-ID: <1432817265-23891-3-git-send-email-irina.tirdea@intel.com>
+Subject: [PATCH 4/9] input: goodix: add ACPI IDs for GT911 and GT9271
+Date: Thu, 28 May 2015 15:47:40 +0300
+Message-ID: <1432817265-23891-5-git-send-email-irina.tirdea@intel.com>
 References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
 Return-path: <linux-input-owner@vger.kernel.org>
 In-Reply-To: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
@@ -10,30 +10,27 @@ To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.n
 Cc: linux-kernel@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix sparse warning:
-drivers/input/touchscreen/goodix.c:182:26: warning:
-Variable length array is used.
-
-Replace the variable length array with fixed length.
+Add ACPI IDs to support Goodix GT911 and GT9271
+touchscreens.
 
 Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
 ---
- drivers/input/touchscreen/goodix.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/goodix.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index c2e785c..dac1b3c 100644
+index 9561396..9e7d215 100644
 --- a/drivers/input/touchscreen/goodix.c
 +++ b/drivers/input/touchscreen/goodix.c
-@@ -147,7 +147,7 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
-  */
- static void goodix_process_events(struct goodix_ts_data *ts)
- {
--	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
-+	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
- 	int touch_num;
- 	int i;
- 
+@@ -392,6 +392,8 @@ static const struct i2c_device_id goodix_ts_id[] = {
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id goodix_acpi_match[] = {
+ 	{ "GDIX1001", 0 },
++	{ "GDIX0911", 0 },
++	{ "GDIX9271", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
 -- 
 1.9.1
 
