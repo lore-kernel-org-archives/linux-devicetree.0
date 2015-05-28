@@ -1,58 +1,108 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2] w1: masters: omap_hdq: Add support for 1-wire mode
-Date: Thu, 28 May 2015 14:27:29 -0700
-Message-ID: <20150528142729.45a8e3abf3f7a8b59bdfc1ce@linux-foundation.org>
-References: <1431950959-19606-1-git-send-email-vigneshr@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/3 v4] ARM: bcm2835: Add the Raspberry Pi firmware driver
+Date: Thu, 28 May 2015 15:28:15 -0600
+Message-ID: <5567886F.5080108@wwwdotorg.org>
+References: <20150528114500.GP11677@x1> <1432837987-22861-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1431950959-19606-1-git-send-email-vigneshr@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Evgeniy Polyakov <zbr@ioremap.net>, Jonathan Corbet <corbet@lwn.net>, Tony Lindgren <tony@atomide.com>, NeilBrown <neilb@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432837987-22861-1-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 May 2015 17:39:19 +0530 Vignesh R <vigneshr@ti.com> wrote:
+On 05/28/2015 12:33 PM, Eric Anholt wrote:
+> This gives us a function for making mailbox property channel requests
+> of the firmware, which is most notable in that it will let us get and
+> set clock rates.
 
-> This patches makes following changes to omap_hdq driver
->  - Enable 1-wire mode.
->  - Implement w1_triplet callback to facilitate search rom
->    procedure and auto detection of 1-wire slaves.
->  - Proper enabling and disabling of interrupt.
->  - Cleanups (formatting and return value checks).
-> 
-> HDQ mode remains unchanged.
-> 
-> ...
->
-> +/*
-> + * W1 triplet callback function - used for searching ROM addresses.
-> + * Registered only when controller is in 1-wire mode.
-> + */
-> +static u8 omap_w1_triplet(void *_hdq, u8 bdir)
+This thread was rather hard to follow since updated versions of patches
+were sent "in response" to the original posting rather than as a new
+thread. Generally it's best to post a complete copy of each new version
+of the series, and as a completely standalone thread.
+
+> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+
+> +obj-$(CONFIG_BCM2835_MBOX)	+= raspberrypi.o
+
+I think this warrants its own Kconfig option that depends on _MBOX.
+
+> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
+
+> +int rpi_firmware_property_list(struct device_node *of_node,
+> +			       void *data, size_t tag_size)
 > +{
-> +	u8 id_bit, comp_bit;
-> +	int err;
-> +	u8 ret = 0x3; /* no slaves responded */
-> +	struct hdq_data *hdq_data = _hdq;
-> +	u8 ctrl = OMAP_HDQ_CTRL_STATUS_SINGLE | OMAP_HDQ_CTRL_STATUS_GO |
-> +		  OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK;
-> +	u8 mask = ctrl | OMAP_HDQ_CTRL_STATUS_DIR;
+> +	struct platform_device *pdev = of_find_device_by_node(of_node);
+
+I would expect the of_node -> pdev mapping to happen at client device
+probe time. Simplest for this driver would be if the
+client-probe-time-mapping function returned the "struct rpi_firmware"
+and the client passed that to this function.
+
+> +	struct rpi_firmware *fw = platform_get_drvdata(pdev);
+> +	size_t size = tag_size + 12;
+> +	u32 *buf;
+> +	dma_addr_t bus_addr;
+> +	int ret;
 > +
-> +	omap_hdq_get(_hdq);
-> +
-> +	err = mutex_lock_interruptible(&hdq_data->hdq_mutex);
-> +	if (err < 0) {
-> +		dev_dbg(hdq_data->dev, "Could not acquire mutex\n");
-> +		goto rtn;
+> +	if (!fw)
+> +		return -EPROBE_DEFER;
+
+That return code should only be used in functions called at probe time.
+While I do see the expectation is that clients call this function once
+at probe time and hence guarantee to see -EPROBE_DEFER at probe time (if
+at all), it's rather odd for a function that's intended to be called at
+times other that probe() to ever have the possibility of returning
+-EPROBE_DEFER. If somehow that values gets returned at another time,
+it's going to be rather confusing to the client.
+
+> +	buf[0] = size;
+> +	buf[1] = RPI_FIRMWARE_STATUS_REQUEST;
+> +	memcpy(&buf[2], data, tag_size);
+> +	buf[size / 4 - 1] = RPI_FIRMWARE_PROPERTY_END;
+
+Out of curiosity, why not require the client to format the entire
+message itself? In theory at least, the client could submit a whole
+"string" of tags at once, so it really seems like the client should be
+constructing the whole message.
+
+Still, this is something that's easy to modify later without affecting
+much (and in particular, has zero impact on DT), so feel free to ignore
+this for now.
+
+...
+> +	if (ret == 0 && buf[1] != RPI_FIRMWARE_STATUS_SUCCESS) {
+> +		/*
+> +		 * The tag name here might not be the one causing the
+> +		 * error, if there were multiple tags in the request.
+> +		 * But single-tag is the most common, so go with it.
+> +		 */
+> +		dev_err(fw->cl.dev, "Request 0x%08x returned status 0x%08x\n",
+> +			buf[2], buf[1]);
+> +		ret = -EINVAL;
 > +	}
 
-The use of mutex_lock_interruptible() seems like a bad idea.  It means
-that if the calling process (modprobe?) has a signal pending,
-w1_search() will think that "no device responded".  That isn't really
-true - a true statement is "user hit ^C".  I'm not sure what the
-overall runtime effect of this will be, but I bet it hasn't been
-tested!
+If this driver were solely a transport, and required the client driver
+to construct the whole message and parse the whole response, the gotcha
+that's documented above would be solved; the client would know exactly
+which set of tags to look at for errors.
 
-Wouldn't it be saner/safer to use plain old mutex_lock() here?
+Alternatively, iterating over all the tags is quite simple, since each
+one has a size field and there's a sentinel tag at the end. That
+enhancement could also be added later though.
+
+> +rpi_firmware_print_firmware_revision(struct device *dev)
+> +{
+> +	u32 packet;
+> +	int ret = rpi_firmware_property(dev->of_node,
+> +					RPI_FIRMWARE_GET_FIRMWARE_REVISION,
+> +					&packet, sizeof(packet));
+...
+> +		time_to_tm(packet, 0, &tm);
+
+Oh, the revision value is a time? Is so, it'd be nice if the
+documentation could be updated to state this:
+
+https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
