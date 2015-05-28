@@ -1,104 +1,52 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] doc: dt: add documentation for lpc1850-ccu clk driver
-Date: Thu, 28 May 2015 09:02:34 +0200
-Message-ID: <CAGhQ9VysK17Qy+LSTr6otz_JFY-GbD6C+D5OszSQiYErcPjMAg@mail.gmail.com>
-References: <1431988559-23338-1-git-send-email-manabian@gmail.com>
-	<1431988559-23338-6-git-send-email-manabian@gmail.com>
-	<20150528034555.22384.65723@quantum>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 04/13] mmc: omap_hsmmc: No need to check DMA channel
+ validity at module remove
+Date: Thu, 28 May 2015 09:20:18 +0200
+Message-ID: <CAPDyKFrOUOuctSMpx+RFixB_ub=d66YqXEsa7D78gyFeiGiNkQ@mail.gmail.com>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
+	<1432646768-12532-5-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150528034555.22384.65723@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1432646768-12532-5-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, linux-crypto@vger.kernel.org, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 May 2015 at 05:45, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Quoting Joachim Eastwood (2015-05-18 15:35:58)
->> Add DT binding documentation for lpc1850-ccu clk driver.
->>
->> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/clock/lpc1850-ccu.txt      | 146 +++++++++++++++++++++
->>  1 file changed, 146 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/lpc1850-ccu.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/lpc1850-ccu.txt b/Documentation/devicetree/bindings/clock/lpc1850-ccu.txt
->> new file mode 100644
->> index 000000000000..aca46805c10a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/lpc1850-ccu.txt
->> @@ -0,0 +1,146 @@
->> +* NXP LPC1850 Clock Control Unit (CCU)
->> +
->> +Each CGU base clock has several clock branches which can be turned on
->> +or off independently by the Clock Control Units CCU1 or CCU2. The
->> +branch clocks are distributed between CCU1 and CCU2.
->> +
->> + - Above text taken from NXP LPC1850 User Manual.
->> +
->> +This binding uses the common clock binding:
->> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +Required properties:
->> +- compatible:
->> +       Should be "nxp,lpc1850-ccu"
->> +- reg:
->> +       Shall define the base and range of the address space
->> +       containing clock control registers
->> +- #clock-cells:
->> +       Shall have value <1>.  The permitted clock-specifier values
->> +       are the branch clock names defined in table below.
->> +- clocks:
->> +       Shall contain a list of phandles for the base clocks routed
->> +       from the CGU to the specific CCU. See mapping of base clocks
->> +       and CCU in table below.
->> +
->> +Which brach clocks that are available on the CCU depends on the
->> +specific LPC part.
->> +
->> +CCU1 branch clocks:
->> +Base clock     Branch clock            Description
->> +BASE_APB3_CLK  CLK_APB3_BUS            APB3 bus clock.
->> +               CLK_APB3_I2C1           Clock to the I2C1 register interface
->> +                                       and I2C1 peripheral clock.
+On 26 May 2015 at 15:25, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> The driver will not probe without valid DMA channels so no need to check
+> if they are valid when the module is removed.
 >
-> You don't need to make these explicit here. Just specify that the header
-> containing these constants is located at
-> nclude/dt-bindings/clock/lpc18xx-ccu.h
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> CC: Ulf Hansson <ulf.hansson@linaro.org>
+
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/host/omap_hsmmc.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >
-> (DT people please correct me if this is bad etiquette)
-
-Okey, I'll ditch it for v4 unless someone yells out.
-
->> +
->> +Not all branch clocks are available on all LPC parts. Check the user
->> +manual for your specific part.
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index 2cd828f42151..57bb85930f81 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -2190,10 +2190,8 @@ static int omap_hsmmc_remove(struct platform_device *pdev)
+>         if (host->use_reg)
+>                 omap_hsmmc_reg_put(host);
 >
-> How many varieties of LPC part are there?
-
-Being a micro controller there are a lot of parts with small
-variations in peripherals and Flash sizes.
-For the clock stuff; the LPC43xx series added 3 base clocks to the CCU
-over the LPC18xx series. One of these clocks is only present on the
-LPC4370.
-
-So for the CGU base clocks there aren't a whole lot of variants I guess.
-
->Should these varieties each have their own .dtsi that make it clear
->which branch clocks are available on that part?
-
-Good question.
-
-For now my approach have been to stick everything in one common file
-(lpc18xx.dtsi), but this can be changed of course. Right now I think
-we should just wait and see which parts that are added to mainline and
-then split things as required.
-
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -       if (host->tx_chan)
+> -               dma_release_channel(host->tx_chan);
+> -       if (host->rx_chan)
+> -               dma_release_channel(host->rx_chan);
+> +       dma_release_channel(host->tx_chan);
+> +       dma_release_channel(host->rx_chan);
+>
+>         pm_runtime_put_sync(host->dev);
+>         pm_runtime_disable(host->dev);
+> --
+> 2.3.5
+>
