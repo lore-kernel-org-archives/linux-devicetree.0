@@ -1,143 +1,139 @@
-From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] clk: add lpc18xx ccu clk driver
-Date: Wed, 27 May 2015 20:51:43 -0700
-Message-ID: <20150528035143.22384.88862@quantum>
-References: <1431988559-23338-1-git-send-email-manabian@gmail.com>
- <1431988559-23338-5-git-send-email-manabian@gmail.com>
- <20150528034424.22384.83956@quantum>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 00/21] On-demand device registration
+Date: Wed, 27 May 2015 23:33:34 -0500
+Message-ID: <CAL_Jsq+EWLEJhRudTGAwYsOg4tX2-pGhygeQGHae9RL8rBpMiA@mail.gmail.com>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150528034424.22384.83956@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <stephane.marchesin@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alexander Holler <holler@ahsoftware.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-clk@vger.kernel.org, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.or>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Michael Turquette (2015-05-27 20:44:24)
-> Hi Joachim,
-> 
-> Quoting Joachim Eastwood (2015-05-18 15:35:57)
-> <snip>
-> > +static void lpc18xx_ccu_register_branch_clks(void __iomem *reg_base,
-> > +                                            int base_clk_id,
-> > +                                            const char *parent)
-> > +{
-> > +       int i;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(clk_branches); i++) {
-> > +               if (clk_branches[i].base_id != base_clk_id)
-> > +                       continue;
-> > +
-> > +               lpc18xx_ccu_register_branch_gate_div(&clk_branches[i], reg_base,
-> > +                                                    parent);
-> > +
-> > +               if (clk_branches[i].flags & CCU_BRANCH_IS_BUS)
-> > +                       parent = clk_branches[i].name;
-> > +       }
-> > +}
-> > +
-> > +static void __init lpc18xx_ccu_init(struct device_node *np)
-> > +{
-> > +       struct lpc18xx_branch_clk_data *clk_data;
-> > +       int num_base_ids, *base_ids;
-> > +       void __iomem *reg_base;
-> > +       const char *parent;
-> > +       int base_clk_id;
-> > +       int i;
-> > +
-> > +       reg_base = of_iomap(np, 0);
-> > +       if (!reg_base) {
-> > +               pr_warn("%s: failed to map address range\n", __func__);
-> > +               return;
-> > +       }
-> > +
-> > +       clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
-> > +       if (!clk_data)
-> > +               return;
-> > +
-> > +       num_base_ids = of_clk_get_parent_count(np);
-> > +
-> > +       base_ids = kcalloc(num_base_ids, sizeof(int), GFP_KERNEL);
-> > +       if (!base_ids) {
-> > +               kfree(clk_data);
-> > +               return;
-> > +       }
-> > +
-> > +       clk_data->base_ids = base_ids;
-> > +       clk_data->num_base_ids = num_base_ids;
-> > +
-> > +       for (i = 0; i < num_base_ids; i++) {
-> > +               struct clk *clk = of_clk_get(np, i);
-> > +               if (IS_ERR(clk)) {
-> > +                       pr_warn("%s: failed to get clock at idx %d\n",
-> > +                               __func__, i);
-> > +                       continue;
-> > +               }
-> > +
-> > +               parent = __clk_get_name(clk);
-> > +               base_clk_id = of_clk_get_index(np, i);
-> > +
-> > +               clk_data->base_ids[i] = base_clk_id;
-> > +               lpc18xx_ccu_register_branch_clks(reg_base, base_clk_id,
-> > +                                                parent);
-> 
-> Thanks for sending V3. This driver is getting close!
-> 
-> So the main thing I don't understand is why you do not encode the CGU
-> clock parent string names into this CCU driver. If I understand your
-> approach correctly, you do the following in lpc18xx_ccu_init:
+On Mon, May 25, 2015 at 9:53 AM, Tomeu Vizoso
+<tomeu.vizoso@collabora.com> wrote:
+> Hello,
+>
+> I have a problem with the panel on my Tegra Chromebook taking longer =
+than
+> expected to be ready during boot (St=C3=A9phane Marchesin reported wh=
+at is
+> basically the same issue in [0]), and have looked into ordered probin=
+g as a
+> better way of solving this than moving nodes around in the DT or play=
+ing with
+> initcall levels.
+>
+> While reading the thread [1] that Alexander Holler started with his s=
+eries to
+> make probing order deterministic, it occurred to me that it should be=
+ possible
+> to achieve the same by registering devices as they are referenced by =
+other
+> devices.
 
-Ugh, I just saw that you mentioned this approach in your cover letter.
-No need for you to answer all of my questions then.
+I like the concept and novel approach.
 
-Please make the change to encode the parent string names directly. V4
-should be good to go after that.
+> This basically reuses the information that is already implicit in the=
+ probe()
+> implementations, saving us from refactoring existing drivers or addin=
+g
+> information to DTBs.
+>
+> Something I'm not completely happy with is that I have had to move th=
+e call to
+> of_platform_populate after all platform drivers have been registered.
+> Otherwise I don't see how I could register drivers on demand as we do=
+n't have
+> yet each driver's compatible strings.
 
-Thanks,
-Mike
+Yeah, this is the opposite of what we'd really like. Ideally, we would
+have a solution that works for modules too. However, we're no worse
+off. We pretty much build-in dependencies to avoid module ordering
+problems.
 
-> 
-> 1) count the number of parent clocks (ostensibly CGU clocks)
-> 2) iterate through all of those CGU clocks, extracting a base_id value
-> (loop #1)
-> 3) using this base_id as a key you walk through an array in the CCU
-> driver trying to find a matching base_id value
-> (loop #2)
-> 4) after finding the corresponding CCU clocks you get the parent clock
-> with of_clk_get
-> 5) using of_clk_get you fetch its name with __clk_get_name
-> 6) you pass this parent name into a fairly typical looking registration
-> function
-> 
-> Assuming I got all of that right, I hope we can simplify it
-> considerably.
-> 
-> You already have an array of CCU clock information in this driver,
-> clk_branches[]. Why not encode the parent string name here? This would
-> involve adding a "parent_name" member to struct lpc18xx_clk_branch.
-> 
-> Doing the above, your O(n^2)-ish registration function becomes O(n):
-> 
-> 1) iterate through the array of the CCU clocks (clk_branchs[])
-> 2) register them
-> 3) profit
-> 
-> I'm starting to think any reference to base_id is sign that things are
-> wrong in your driver. I am unconvinced that you need to "share" this
-> base_id across CGU and CCU drivers in the way you do. If I'm wrong
-> please help me to understand.
-> 
-> As a wild thought, if you do not want to encode parent string names into
-> this driver, have you tried to use the clock-names property in the CCU
-> blob? You do not need clock-output-names in the CGU blob either. But
-> this is just an idea. It is far for straightforward for you t encode the
-> parent names in your clk_branches[] array.
-> 
-> Thanks,
-> Mike
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Perhaps we need to make the probing on-demand rather than simply on
+device<->driver match occurring.
+
+> For machs that don't move of_platform_populate() to a later point, th=
+ese
+> patches shouldn't cause any problems but it's not guaranteed that we'=
+ll avoid
+> all the deferred probes as some drivers may not be registered yet.
+
+Ideally, of_platform_populate is not explicitly called by each
+platform. So I think we need to make this work for the default case.
+
+> I have tested this on boards with Tegra, iMX.6 and Exynos SoCs, and t=
+hese
+> patches were enough to eliminate all the deferred probes.
+>
+> With this series I get the kernel to output to the panel in 0.5s, ins=
+tead of 2.8s.
+
+That's certainly compelling.
+
+Rob
+
+>
+> Regards,
+>
+> Tomeu
+>
+> [0] http://lists.freedesktop.org/archives/dri-devel/2014-August/06652=
+7.html
+>
+> [1] https://lkml.org/lkml/2014/5/12/452
+>
+> Tomeu Vizoso (21):
+>   regulator: core: Reduce critical area in _regulator_get
+>   ARM: tegra: Add gpio-ranges property
+>   ARM: tegra: Register drivers before devices
+>   ARM: EXYNOS: Register drivers before devices
+>   ARM i.MX6q: Register drivers before devices
+>   of/platform: Add of_platform_device_ensure()
+>   of/platform: Ensure device registration on lookup
+>   gpio: Probe GPIO drivers on demand
+>   gpio: Probe pinctrl devices on demand
+>   regulator: core: Probe regulators on demand
+>   drm: Probe panels on demand
+>   drm/tegra: Probe dpaux devices on demand
+>   i2c: core: Probe i2c master devices on demand
+>   pwm: Probe PWM chip devices on demand
+>   backlight: Probe backlight devices on demand
+>   usb: phy: Probe phy devices on demand
+>   clk: Probe clk providers on demand
+>   pinctrl: Probe pinctrl devices on demand
+>   phy: core: Probe phy providers on demand
+>   dma: of: Probe DMA controllers on demand
+>   power-supply: Probe power supplies on demand
+>
+>  arch/arm/boot/dts/tegra124.dtsi     |  1 +
+>  arch/arm/mach-exynos/exynos.c       |  4 +--
+>  arch/arm/mach-imx/mach-imx6q.c      | 12 ++++-----
+>  arch/arm/mach-tegra/tegra.c         | 21 ++++++---------
+>  drivers/clk/clk.c                   |  3 +++
+>  drivers/dma/of-dma.c                |  3 +++
+>  drivers/gpio/gpiolib-of.c           |  5 ++++
+>  drivers/gpu/drm/drm_panel.c         |  3 +++
+>  drivers/gpu/drm/tegra/dpaux.c       |  3 +++
+>  drivers/i2c/i2c-core.c              |  3 +++
+>  drivers/of/platform.c               | 53 +++++++++++++++++++++++++++=
+++++++++++
+>  drivers/phy/phy-core.c              |  3 +++
+>  drivers/pinctrl/devicetree.c        |  2 ++
+>  drivers/power/power_supply_core.c   |  3 +++
+>  drivers/pwm/core.c                  |  3 +++
+>  drivers/regulator/core.c            | 45 +++++++++++++++------------=
+----
+>  drivers/usb/phy/phy.c               |  3 +++
+>  drivers/video/backlight/backlight.c |  3 +++
+>  include/linux/of_platform.h         |  2 ++
+>  19 files changed, 130 insertions(+), 45 deletions(-)
+>
+> --
+> 2.4.1
+>
