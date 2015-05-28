@@ -1,43 +1,66 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: at91: dt: sama5d4ek: mci0 uses slot 0
-Date: Thu, 28 May 2015 11:55:16 +0200
-Message-ID: <1432806916-23579-1-git-send-email-ludovic.desroches@atmel.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v4 0/2] pwm: Add support for R-Car PWM Timer
+Date: Thu, 28 May 2015 10:11:43 +0000
+Message-ID: <SG2PR06MB09199F8E4E836FE928B3A266D8CA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1432205846-4312-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1432205846-4312-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Language: ja-JP
+Sender: linux-pwm-owner@vger.kernel.org
+To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-mci0 uses slot 0 not 1.
+Hi Thierry,
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Fixes: 7a4752677c44 ("ARM: at91: dt: add device tree file for SAMA5D4ek
-board")
----
- arch/arm/boot/dts/at91-sama5d4ek.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Would you apply this patch set to your repository?
+I checked that I could apply this patch set correctly
+on the latest linux-pwm.git / for-next branch.
+(commit id = cccb94543c8299e0bc7564cc6f8b26e0f15bafde)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d4ek.dts b/arch/arm/boot/dts/at91-sama5d4ek.dts
-index 89ef4a5..45e7761 100644
---- a/arch/arm/boot/dts/at91-sama5d4ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4ek.dts
-@@ -108,8 +108,8 @@
- 			mmc0: mmc@f8000000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3 &pinctrl_mmc0_cd>;
--				slot@1 {
--					reg = <1>;
-+				slot@0 {
-+					reg = <0>;
- 					bus-width = <4>;
- 					cd-gpios = <&pioE 5 0>;
- 				};
--- 
-2.2.0
+Best regards,
+Yoshihiro Shimoda
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Sent: Thursday, May 21, 2015 7:57 PM
+> 
+> This patch set is based on the linux-pwm.git / for-next branch.
+> (commit id = efb0de55b6a2ec15fc424e660601f22ae2fa487a)
+> 
+> Changes from v3:
+>  - Fix register size in patch 1.
+>  - Add "Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>" in patch 1
+>  - Remove an unnecessary definition in patch 2.
+>  - Use "ULL" to avoid overflow in patch 2.
+>  - Remove unnecessary casts in patch 2.
+> 
+> Changes from v2:
+>  - Add compatible string "renesas,pwm-rcar".
+>  - Remove compatible strings "renesas,pwm-r8a77xx" in rcar_pwm_of_table.
+>  - Fix build error.
+> 
+> Changes from v1:
+>  - Change compatible string to SoC-specific compatible values.
+>  - Fix #pwm-call value to 2 in the device tree document.
+>  - Fix "depends on" value in Kconfig.
+>  - Fix help explanation in Kconfig.
+>  - Remove an unnecessary member in rcar_pwm_chip.
+>  - Remove hardcoded number of channels and change chip.npwm value to 1.
+>  - Fix formulas for clock calculation to improve accuracy.
+> 
+> Yoshihiro Shimoda (2):
+>   pwm: Add device tree binding document for R-Car PWM Timer
+>   pwm: Add support for R-Car PWM Timer
+> 
+>  .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   |  27 +++
+>  drivers/pwm/Kconfig                                |  11 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-rcar.c                             | 261 +++++++++++++++++++++
+>  4 files changed, 300 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+>  create mode 100644 drivers/pwm/pwm-rcar.c
+> 
+> --
+> 1.9.1
