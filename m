@@ -1,50 +1,49 @@
-From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv5 2/2] ARM: socfpga: dts: add sdram controller dt binding doc
-Date: Thu, 28 May 2015 16:19:37 -0500
-Message-ID: <1432847977-18880-3-git-send-email-atull@opensource.altera.com>
-References: <1432847977-18880-1-git-send-email-atull@opensource.altera.com>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCHv5 0/2] socfpga: support suspend to ram
+Date: Thu, 28 May 2015 16:19:35 -0500
+Message-ID: <1432847977-18880-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432847977-18880-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Delicious Quinoq <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Delicious Quinoq <delicious.quinoa@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding doc for Altera SOCFPGA SDRAM controller.
+Support suspend to ram on socfpga.
+  * allocate space in ocram using sram driver.
+  * Add a function in ocram to place DDR in self-refresh
+    and suspend.
+  * Prevent suspend if EDAC is enabled.
+  * Add a device tree binding document for the Altera
+    SOCFPGA SDRAM controller that is used to put DDR in
+    self-refresh mode.
 
-Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
-v4: Add bindings doc
-v5: No change for v5
----
- .../arm/altera/socfpga-sdram-controller.txt        |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Alan Tull (2):
+  ARM: socfpga: support suspend to ram
+  ARM: socfpga: dts: add sdram controller dt binding doc
+
+ .../arm/altera/socfpga-sdram-controller.txt        |   12 ++
+ arch/arm/mach-socfpga/Kconfig                      |   10 +-
+ arch/arm/mach-socfpga/Makefile                     |    1 +
+ arch/arm/mach-socfpga/core.h                       |    6 +-
+ arch/arm/mach-socfpga/pm.c                         |  149 ++++++++++++++++++++
+ arch/arm/mach-socfpga/self-refresh.S               |  136 ++++++++++++++++++
+ arch/arm/mach-socfpga/socfpga.c                    |    6 +-
+ drivers/edac/altera_edac.c                         |   20 +++
+ 8 files changed, 337 insertions(+), 3 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+ create mode 100644 arch/arm/mach-socfpga/pm.c
+ create mode 100644 arch/arm/mach-socfpga/self-refresh.S
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
-new file mode 100644
-index 0000000..77ca635
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
-@@ -0,0 +1,12 @@
-+Altera SOCFPGA SDRAM Controller
-+
-+Required properties:
-+- compatible : Should contain "altr,sdr-ctl" and "syscon".
-+  syscon is required by the Altera SOCFPGA SDRAM EDAC.
-+- reg : Should contain 1 register range (address and length)
-+
-+Example:
-+	sdr: sdr@ffc25000 {
-+		compatible = "altr,sdr-ctl", "syscon";
-+		reg = <0xffc25000 0x1000>;
-+	};
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
