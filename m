@@ -1,28 +1,45 @@
-From: Mathieu Olivari <mathieu@codeaurora.org>
-Subject: Re: [PATCH 0/7] net: dsa: add QCA AR8xxx switch family support\
-Date: Fri, 29 May 2015 11:49:54 -0700
-Message-ID: <20150529184951.GA2458@codeaurora.org>
-References: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org>
- <20150529020001.GF11260@lunn.ch>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v11 0/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Fri, 29 May 2015 20:59:26 +0200
+Message-ID: <20150529185926.GP31435@pd.tnic>
+References: <1432337580-3750-1-git-send-email-lho@apm.com>
+ <20150529094654.GD31435@pd.tnic>
+ <CAPw-ZTnLqx0KsQkmv++zQRQ7hroaKML1rWgVafisENam0J17Mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150529020001.GF11260@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, linux@roeck-us.net, gang.chen.5i5j@gmail.com, jiri@resnulli.us, leitec@staticky.com, fabf@skynet.be, alexander.h.duyck@intel.com, pavel.nakonechny@skitlab.ru, joe@perches.com, sfeldma@gmail.com, nbd@openwrt.org, juhosg@openwrt.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+In-Reply-To: <CAPw-ZTnLqx0KsQkmv++zQRQ7hroaKML1rWgVafisENam0J17Mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 29, 2015 at 04:00:01AM +0200, Andrew Lunn wrote:
-> FYI:
+On Fri, May 29, 2015 at 11:06:35AM -0700, Loc Ho wrote:
+> I pull this and got this error:
 > 
-> I have patches which allow DSA to use two cpu interfaces. Seems to
-> work on my DIR665 with a Marvell Switch.
-> 
-> I will post the patches as an RFC.
-> 
->   Andrew
+> /projects/svdc/P4sbSW/lho/xgene2/processor/git.lho/edac-next/drivers/edac/edac_stub.c:19:22:
+> fatal error: asm/edac.h: No such file or directory
+>  #include <asm/edac.h>
+>                       ^
+> compilation terminated.
 
-Does it require the switch CPU ports to support LAG or is it generic
-enough to allow switch partitioning?
+Aah, that arch-specific header is only for the atomic_scrub thing and
+arm64 doesn't have it.
+
+But that header is actually not really needed in that file.
+
+Does it build when you remove it?
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
