@@ -1,40 +1,63 @@
-From: David Lang <david-gFPdbfVZQbY@public.gmane.org>
-Subject: Re: Device Tree Blob (DTB) licence
-Date: Fri, 29 May 2015 15:21:56 -0700 (PDT)
-Message-ID: <alpine.DEB.2.02.1505291520230.4429@nftneq.ynat.uz>
-References: <1430820315.19516.26.camel@opteya.com> <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com> <1432289148.5304.58.camel@opteya.com> <1432322832.5304.63.camel@opteya.com> <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
- <55670AD4.8020705@melag.de> <CAOS_Y6QXHdWfi9qkRmw=mCn0mqha5-NrzumBMqJ61_YRndypLA@mail.gmail.com> <55688182.3010606@melag.de>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 4/4] mfd: 88pm800: allocate pdata->rtc if not allocated earlier
+Date: Sat, 30 May 2015 03:49:22 +0530
+Message-ID: <1432937962-4537-5-git-send-email-vaibhav.hiremath@linaro.org>
+References: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55688182.3010606-d/C+FbuhHiA@public.gmane.org>
+In-Reply-To: <1432937962-4537-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 May 2015, Enrico Weigelt, metux IT consult wrote:
+RTC in pmic 88PM800 can run even the core is powered off, and user
+can set alarm in RTC. When the alarm is timed out, the PMIC will power up
+the core, and the whole system will boot up. And during PMIC driver probe,
+it will read some register to find out whether this boot is caused by RTC
+timeout or not, and pass on this information to the RTC driver.
 
->>> Important Notice: This message may contain confidential or privileged 
->>> information. It is intended only for the person it was addressed to. If you 
->>> are not the intended recipient of this email you may not copy, forward, 
->>> disclose or otherwise use it or any part of it in any form whatsoever. If 
->>> you received this email in error please notify the sender by replying and 
->>> delete this message and any attachments without retaining a copy.
->> 
->> P.S. some of us actually care about licenses being appropriate to what
->> they're applied to, and at least theoretically capable of being
->> honored. Your email footer may be very slightly undermining your
->> position here.
->
-> This is just a dumb auto-generated footer, coming from my client's
-> mail server over here ... I'm just too lazy for setting up an own
-> MTA on my workstation. You can safely ignore that.
+So we need rtc platform data to be existed in PMIC driver to pass this
+information.
 
-Arguing license issues and at the same time claiming that you should ignore a 
-legal statement like the footer is a bit odd.
+Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/mfd/88pm800.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-David Lang
+diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+index 8ea4467..34546a1 100644
+--- a/drivers/mfd/88pm800.c
++++ b/drivers/mfd/88pm800.c
+@@ -586,6 +586,25 @@ static int pm800_probe(struct i2c_client *client,
+ 			return ret;
+ 	}
+ 
++	/*
++	 * RTC in pmic can run even the core is powered off, and user can set
++	 * alarm in RTC. When the alarm is time out, the PMIC will power up
++	 * the core, and the whole system will boot up. When PMIC driver is
++	 * probed, it will read out some register to find out whether this
++	 * boot is caused by RTC timeout or not, and it need pass this
++	 * information to RTC driver.
++	 * So we need rtc platform data to be existed to pass this information.
++	 */
++	if (!pdata->rtc) {
++		pdata->rtc = devm_kzalloc(&client->dev,
++					  sizeof(*(pdata->rtc)), GFP_KERNEL);
++		if (!pdata->rtc) {
++			dev_err(&client->dev,
++					"failed to allocate memory for rtc\n");
++			return -ENOMEM;
++		}
++	}
++
+ 	ret = pm80x_init(client);
+ 	if (ret) {
+ 		dev_err(&client->dev, "pm800_init fail\n");
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
