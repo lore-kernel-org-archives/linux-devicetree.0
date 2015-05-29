@@ -1,71 +1,77 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 0/6] Marvell PXA1928 USB support
-Date: Fri, 29 May 2015 11:38:40 -0500
-Message-ID: <1432917526-9688-1-git-send-email-robh@kernel.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v3 6/6] usb: chipidea: add work-around for Marvell HSIC PHY startup
+Date: Fri, 29 May 2015 11:38:46 -0500
+Message-ID: <1432917526-9688-7-git-send-email-robh@kernel.org>
+References: <1432917526-9688-1-git-send-email-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432917526-9688-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds USB PHYs and EHCI host drivers for the Marvell PXA1928
-SOC.
+The Marvell 28nm HSIC PHY requires the port to be forced to HS mode after
+the port power is applied. This is done using the test mode in the PORTSC
+register.
 
-The OTG block is based on ChipIdea and works with the "chipidea,usb2"
-compatible driver as is just by adding the PHY driver. Yay! After more 
-testing it turns out the EHCI host is also based on ChipIdea too. So 
-this version uses the ChipIdea driver for both. A couple of fixes are 
-needed to make the ChipIdea driver work with the PXA1928 EHCI host.
+As HSIC is always HS, this work-around should be safe to do with all HSIC
+PHYs and has been tested on i.MX6S.
 
-Rob
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Tested-by: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ drivers/usb/chipidea/host.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-v3:
-- Clarify FSL only binding properties.
-- Add owner field to phy_ops.
-- Restructure split between PHY init/power_on and power_off/exit.
-- Fix PHY error path handling.
-- drop unrelated change in ci_hdrc_usb2.c.
-- Add Peter's tested-by.
-
-v2:
-- Use ChipIdea driver for EHCI host, dropping the Marvell specific EHCI 
-  driver
-- Consolidate ChipIdea bindings to single common doc.
-- rename phy driver files to phy-pxa-28nm-{usb2,hsic}.c
-- Simplified work-around for HSIC phy/controller handshake. 
-
-Rob Herring (6):
-  dt-bindings: Add Marvell PXA1928 USB and HSIC PHY bindings
-  phy: Add Marvell USB 2.0 OTG 28nm PHY
-  phy: add Marvell HSIC 28nm PHY
-  dt-bindings: Consolidate ChipIdea USB ci13xxx bindings
-  usb: chipidea: allow multiple instances to use default
-    ci_default_pdata
-  usb: chipidea: add work-around for Marvell HSIC PHY startup
-
- .../devicetree/bindings/phy/pxa1928-usb-phy.txt    |  18 ++
- .../devicetree/bindings/usb/ci-hdrc-imx.txt        |  35 --
- .../devicetree/bindings/usb/ci-hdrc-qcom.txt       |  17 -
- .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  22 +-
- .../devicetree/bindings/usb/ci-hdrc-zevio.txt      |  17 -
- drivers/phy/Kconfig                                |  20 ++
- drivers/phy/Makefile                               |   2 +
- drivers/phy/phy-pxa-28nm-hsic.c                    | 220 +++++++++++++
- drivers/phy/phy-pxa-28nm-usb2.c                    | 355 +++++++++++++++++++++
- drivers/usb/chipidea/ci_hdrc_usb2.c                |   8 +-
- drivers/usb/chipidea/host.c                        |  12 +
- 11 files changed, 653 insertions(+), 73 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
- delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
- delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
- delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
- create mode 100644 drivers/phy/phy-pxa-28nm-hsic.c
- create mode 100644 drivers/phy/phy-pxa-28nm-usb2.c
-
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 21fe1a3..6cf87b8 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -37,12 +37,14 @@ static int (*orig_bus_suspend)(struct usb_hcd *hcd);
+ 
+ struct ehci_ci_priv {
+ 	struct regulator *reg_vbus;
++	struct ci_hdrc *ci;
+ };
+ 
+ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+ {
+ 	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+ 	struct ehci_ci_priv *priv = (struct ehci_ci_priv *)ehci->priv;
++	struct ci_hdrc *ci = priv->ci;
+ 	struct device *dev = hcd->self.controller;
+ 	int ret = 0;
+ 	int port = HCS_N_PORTS(ehci->hcs_params);
+@@ -64,6 +66,15 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+ 			return ret;
+ 		}
+ 	}
++
++	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
++		/*
++		 * Marvell 28nm HSIC PHY requires forcing the port to HS mode.
++		 * As HSIC is always HS, this should be safe for others.
++		 */
++		hw_port_test_set(ci, 5);
++		hw_port_test_set(ci, 0);
++	}
+ 	return 0;
+ };
+ 
+@@ -112,6 +123,7 @@ static int host_start(struct ci_hdrc *ci)
+ 
+ 	priv = (struct ehci_ci_priv *)ehci->priv;
+ 	priv->reg_vbus = NULL;
++	priv->ci = ci;
+ 
+ 	if (ci->platdata->reg_vbus && !ci_otg_is_fsm_mode(ci)) {
+ 		if (ci->platdata->flags & CI_HDRC_TURN_VBUS_EARLY_ON) {
 -- 
 2.1.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
