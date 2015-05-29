@@ -1,79 +1,107 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of/fdt: Make fdt blob input parameters of unflatten
- functions const
-Date: Fri, 29 May 2015 10:00:02 -0500
-Message-ID: <CAL_JsqK31qK2aQGGv2Gzh3RiHZ8fzeT=VR2+poxemcXm8wzkXA@mail.gmail.com>
-References: <1431527636-14009-1-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: add helper function to retrive match data
+Date: Fri, 29 May 2015 10:00:44 -0500
+Message-ID: <CAL_JsqLYisfiBCLHw_vNrwu7ppqyzKRbomtmTzQQRmHOOK_QmA@mail.gmail.com>
+References: <1430935749-3881-1-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431527636-14009-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1430935749-3881-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 13, 2015 at 9:33 AM, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Operations to unflatten fdt blobs never modify the input blobs, hence
-> make them const. Now we no longer need to cast arbitrary const data to
-> "void *" when calling of_fdt_unflatten_tree().
+On Wed, May 6, 2015 at 1:09 PM, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> It's a common operation for device drivers to retrive the data
+> member from of_device_id struct in their probe function.
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Most driver end up doing:
+>     const struct of_device_id *match;
+>     match = of_match_device(driver_of_match, &pdev->dev);
+>     driver->data = match->data;
+>
+> With the of_device_get_match_data helper function all this can
+> done in one go.
+>
+> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Applied, thanks.
+Applied with inline fixup, thanks.
 
 Rob
 
 > ---
->  drivers/of/fdt.c       | 6 +++---
->  include/linux/of_fdt.h | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
+> Hi DT maintainers,
 >
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index caa6bc447165636f..5e83687c090f7ee2 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -168,7 +168,7 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
->   * @dad: Parent struct device_node
->   * @fpsize: Size of the node path up at the current depth.
->   */
-> -static void * unflatten_dt_node(void *blob,
-> +static void * unflatten_dt_node(const void *blob,
->                                 void *mem,
->                                 int *poffset,
->                                 struct device_node *dad,
-> @@ -378,7 +378,7 @@ static void * unflatten_dt_node(void *blob,
->   * @dt_alloc: An allocator that provides a virtual address to memory
->   * for the resulting tree
->   */
-> -static void __unflatten_device_tree(void *blob,
-> +static void __unflatten_device_tree(const void *blob,
->                              struct device_node **mynodes,
->                              void * (*dt_alloc)(u64 size, u64 align))
->  {
-> @@ -441,7 +441,7 @@ static void *kernel_tree_alloc(u64 size, u64 align)
->   * pointers of the nodes so the normal device-tree walking functions
->   * can be used.
->   */
-> -void of_fdt_unflatten_tree(unsigned long *blob,
-> +void of_fdt_unflatten_tree(const unsigned long *blob,
->                         struct device_node **mynodes)
->  {
->         __unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index 587ee507965d78a1..0cf217d404ce4660 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -37,7 +37,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
->                                  unsigned long node);
->  extern int of_fdt_match(const void *blob, unsigned long node,
->                         const char *const *compat);
-> -extern void of_fdt_unflatten_tree(unsigned long *blob,
-> +extern void of_fdt_unflatten_tree(const unsigned long *blob,
->                                struct device_node **mynodes);
+> Here is the patch to add of_device_get_match_data as indicated in:
+> http://marc.info/?l=devicetree&m=143068795621692&w=2
 >
->  /* TBD: Temporary export of fdt globals - remove when code fully merged */
+> There are lot of device driver that can be simplified with this
+> helper function. After the function has gone upstream I will
+> spend some time getting some of them converted over.
+>
+> Maybe someone with Coccinelle skills could create a script to
+> do some of the work also.
+>
+> regards,
+> Joachim Eastwood
+>
+>  drivers/of/device.c       | 12 ++++++++++++
+>  include/linux/of_device.h |  7 +++++++
+>  2 files changed, 19 insertions(+)
+>
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 20c1332a0018..8b91ea241b10 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -163,6 +163,18 @@ void of_device_unregister(struct platform_device *ofdev)
+>  }
+>  EXPORT_SYMBOL(of_device_unregister);
+>
+> +const void *of_device_get_match_data(const struct device *dev)
+> +{
+> +       const struct of_device_id *match;
+> +
+> +       match = of_match_device(dev->driver->of_match_table, dev);
+> +       if (!match)
+> +               return NULL;
+> +
+> +       return match->data;
+> +}
+> +EXPORT_SYMBOL(of_device_get_match_data);
+> +
+>  ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+>  {
+>         const char *compat;
+> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+> index 22801b10cef5..3237d34e2ab1 100644
+> --- a/include/linux/of_device.h
+> +++ b/include/linux/of_device.h
+> @@ -33,6 +33,8 @@ extern int of_device_add(struct platform_device *pdev);
+>  extern int of_device_register(struct platform_device *ofdev);
+>  extern void of_device_unregister(struct platform_device *ofdev);
+>
+> +extern const void *of_device_get_match_data(const struct device *dev);
+> +
+>  extern ssize_t of_device_get_modalias(struct device *dev,
+>                                         char *str, ssize_t len);
+>
+> @@ -65,6 +67,11 @@ static inline int of_driver_match_device(struct device *dev,
+>  static inline void of_device_uevent(struct device *dev,
+>                         struct kobj_uevent_env *env) { }
+>
+> +static const void *of_device_get_match_data(const struct device *dev)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline int of_device_get_modalias(struct device *dev,
+>                                    char *str, ssize_t len)
+>  {
 > --
-> 1.9.1
+> 1.8.0
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
