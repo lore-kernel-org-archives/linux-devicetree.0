@@ -1,51 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/6] dt-bindings: Add Marvell PXA1928 USB and HSIC PHY bindings
-Date: Fri, 29 May 2015 11:38:41 -0500
-Message-ID: <1432917526-9688-2-git-send-email-robh@kernel.org>
-References: <1432917526-9688-1-git-send-email-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432917526-9688-1-git-send-email-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Chen <peter.chen@freescale.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: l2c: add options to overwrite prefetching behavior
+Date: Fri, 29 May 2015 19:33:33 +0200
+Message-ID: <5568A2ED.4000502@hauke-m.de>
+References: <1431726751-9169-1-git-send-email-hauke@hauke-m.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431726751-9169-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1p?= =?UTF-8?B?xYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PHY binding for Marvell PXA1928 SOC's USB and HSIC PHYs.
+Will this make it into kernel 4.2 or do I have to do something so that
+this will make it into 4.2?
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/phy/pxa1928-usb-phy.txt        | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
+Hauke
 
-diff --git a/Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt b/Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
-new file mode 100644
-index 0000000..660a13c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
-@@ -0,0 +1,18 @@
-+* Marvell PXA1928 USB and HSIC PHYs
-+
-+Required properties:
-+- compatible: "marvell,pxa1928-usb-phy" or "marvell,pxa1928-hsic-phy"
-+- reg: base address and length of the registers
-+- clocks - A single clock. From common clock binding.
-+- #phys-cells: should be 0. From commmon phy binding.
-+- resets: reference to the reset controller
-+
-+Example:
-+
-+	usbphy: phy@7000 {
-+		compatible = "marvell,pxa1928-usb-phy";
-+		reg = <0x7000 0xe0>;
-+		clocks = <&apmu_clocks PXA1928_CLK_USB>;
-+		#phy-cells = <0>;
-+	};
-+
--- 
-2.1.0
+On 05/15/2015 11:52 PM, Hauke Mehrtens wrote:
+> These options make it possible to overwrites the data and instruction
+> prefetching behavior of the arm pl310 cache controller.
+> 
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> ---
+> v2: only set prefetch
+> v1: set prefetch and aux
+> 
+>  Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
+>  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> index 0dbabe9..528821a 100644
+> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> @@ -67,6 +67,10 @@ Optional properties:
+>    disable if zero.
+>  - arm,prefetch-offset : Override prefetch offset value. Valid values are
+>    0-7, 15, 23, and 31.
+> +- arm,prefetch-data : Enable data prefetch. Enabling prefetching
+> +  can improve performance.
+> +- arm,prefetch-instr : Enable instruction prefetch. Enabling prefetching
+> +  can improve performance.
+>  
+>  Example:
+>  
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index e309c8f..1aa970a 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -1199,6 +1199,26 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>  		pr_err("L2C-310 OF arm,prefetch-offset property value is missing\n");
+>  	}
+>  
+> +	ret = of_property_read_u32(np, "arm,prefetch-data", &val);
+> +	if (ret == 0) {
+> +		if (val)
+> +			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+> +		else
+> +			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+> +	} else if (ret != -EINVAL) {
+> +		pr_err("L2C-310 OF arm,prefetch-data property value is missing\n");
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "arm,prefetch-instr", &val);
+> +	if (ret == 0) {
+> +		if (val)
+> +			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
+> +		else
+> +			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+> +	} else if (ret != -EINVAL) {
+> +		pr_err("L2C-310 OF arm,prefetch-instr property value is missing\n");
+> +	}
+> +
+>  	l2x0_saved_regs.prefetch_ctrl = prefetch;
+>  }
+>  
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
