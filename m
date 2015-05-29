@@ -1,36 +1,50 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
-Date: Fri, 29 May 2015 15:10:48 -0700
-Message-ID: <5568E3E8.7070008@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>	<5564A44A.5000606@codeaurora.org>	<CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA@mail.gmail.com>	<55686960.5010503@codeaurora.org> <CADyBb7tdoajU4crdjrjCf68_Lz=8KbxAX4+Gd_H15aNaimHXww@mail.gmail.com> <556889D9.5070707@codeaurora.org>
+From: David Lang <david-gFPdbfVZQbY@public.gmane.org>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Fri, 29 May 2015 15:16:42 -0700 (PDT)
+Message-ID: <alpine.DEB.2.02.1505291512000.4429@nftneq.ynat.uz>
+References: <1430820315.19516.26.camel@opteya.com> <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com> <1432289148.5304.58.camel@opteya.com> <1432322832.5304.63.camel@opteya.com> <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
+ <55670AD4.8020705@melag.de> <20150528133429.GD2067@n2100.arm.linux.org.uk> <556747E4.6070403@melag.de> <20150529064741.GB25351@1wt.eu> <55684F07.7050402@melag.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <556889D9.5070707-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55684F07.7050402-d/C+FbuhHiA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2015 08:46 AM, Timur Tabi wrote:
-> On 05/29/2015 09:32 AM, Fu Wei wrote:
->> It is a SPI, every CPU can get it,
->> But maybe I miss something, but please let me know if other CPU can
->> not get the interrupt.
->
-> There's only one watchdog device, so there's only one interrupt.  I don't know which CPU will get the interrupt, but the watchdog is not a per-CPU device.
->
-Plus, that one interrupt is not shared, and the driver returns
-IRQ_HANDLED even if the bit is not set. So _something_ is definitely
-wrong. Either the interrupt is shared, then it needs to be requested
-as shared and the handler should only return IRQ_HANDLED if it actually
-handles the interrupt. Or it is not shared and the handler should always
-handle it.
+On Fri, 29 May 2015, Enrico Weigelt, metux IT consult wrote:
 
-Guenter
+>>> And why should they fear "poisoning" ?
+>> 
+>> Search for "GPL contamination", the problem is quite common, GPL
+>> can turn anything GPL-compatible into GPL. So for a non-GPL project
+>> it's very hard to adopt GPL code.
+>
+> Yes, that's the whole purpose of the GPL. The deal is pretty simple:
+> if you take some GPL'ed software and change it, you'll have to publish
+> your changes under the same rules. For entirely separate entities
+> (eg. dedicated programs) that's not an big issue. And for libraries,
+> we have LGPL.
+>
+> If the DTS license would be a problem, it would be worse w/ ACPI
+> and any proprietary firmware/BIOSes.
 
+not true, with a proprietary bios it's a clear "pay this much money and don't 
+worry about it" while with GPL there's a nagging fear that someone you never 
+heard of may sue you a decade from now claiming you need to give them the source 
+to your OS.
+
+Is having the DTB GPL so impartant that you would rather let things fall into 
+the windows trap ("well it booted windows, so it must be right") instead of 
+allowing a proprietary OS to use your description of the hardware?
+
+note, this whole discussion assumes that the DTB is even copyrightable. Since 
+it's intended to be strictly a functional description of what the hardware is 
+able to do, that could be questioned
+
+David Lang
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
