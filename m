@@ -1,67 +1,75 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: kvm: psci: fix handling of unimplemented functions
-Date: Fri, 29 May 2015 14:04:49 +0100
-Message-ID: <556863F1.10902@arm.com>
-References: <1432901799-18359-1-git-send-email-lorenzo.pieralisi@arm.com> <1432901799-18359-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: odroidxu3: Enable USB3 regulators
+Date: Fri, 29 May 2015 18:47:47 +0530
+Message-ID: <CANAwSgSaY2W6y-zrsF=p68Phqf7D-hTPsCxNaqFiwVc45849RQ@mail.gmail.com>
+References: <1432803494-3516-1-git-send-email-linux.amoon@gmail.com> <5566DDA6.1080508@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432901799-18359-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <5566DDA6.1080508-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 29/05/15 13:16, Lorenzo Pieralisi wrote:
-> According to the PSCI specification and the SMC/HVC calling
-> convention, PSCI function_ids that are not implemented must
-> return NOT_SUPPORTED as return value.
+On 28 May 2015 at 14:49, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 28.05.2015 17:58, Anand Moon wrote:
+>> Enable regulator for usbdrd3_0 and usbdrd3_1
+>>>From the schematic pin diagram USB3_0 and USB3_1
+>> is regulated by LDO9 and LD011.
 >
-> Current KVM implementation takes an unhandled PSCI function_id
-> as an error and injects an undefined instruction into the guest
-> if PSCI implementation is called with a function_id that is not
-> handled by the resident PSCI version (ie it is not implemented),
-> which is not the behaviour expected by a guest when calling a
-> PSCI function_id that is not implemented.
+> Please reformat statement above to proper sentence(s) without ">" before
+> "From".
 >
-> This patch fixes this issue by returning NOT_SUPPORTED whenever
-> the kvm PSCI call is executed for a function_id that is not
-> implemented by the PSCI kvm layer.
+>>
+>> Fix the boot message of failed.
+>> [    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
+>> [    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
+>> [    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
+>> [    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
+>> [    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
+>> [    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
+>> [    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
+>> [    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
+>> [    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
+>> [    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
+>> [    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
+>>
+>> ---
+>> This patch is based on Krzysztof github branch work-next/odroid-xu3-s2mps11-irq
+>> ---
 >
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> Reported-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> ---
->   arch/arm/kvm/psci.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+> I mentioned this already on previous postings. Let's make an exercise.
+> Please:
+> 1. Save your email as mbox format (from mailer).
+> 2. Go to a GIT repo with kernel and checkout base branch.
+> 3. git am 0001-the-name-of-file.mbox
+> 4. git show
 >
-> diff --git a/arch/arm/kvm/psci.c b/arch/arm/kvm/psci.c
-> index 7e9398c..ec5943b 100644
-> --- a/arch/arm/kvm/psci.c
-> +++ b/arch/arm/kvm/psci.c
-> @@ -273,7 +273,8 @@ static int kvm_psci_0_2_call(struct kvm_vcpu *vcpu)
->   		ret = 0;
->   		break;
->   	default:
-> -		return -EINVAL;
-> +		val = PSCI_RET_NOT_SUPPORTED;
-> +		break;
+> Do you see the signed-off-by in commit?
+>
+> The patch itself looks good, thanks for fixing this. Just please fix the
+> issues with commit message.
+>
+> By the way:
+> 1. The always-on from LDO9 could be probably removed if the ehci-exynos
+> driver had regulator consumer implemented.
+> 2. The Documentation/devicetree/bindings/usb/exynos-usb.txt (or dwc.txt)
+> should proably mention the vdd-supply property.
 
-IMO we can remove all the other optional non-implemented PSCI functions
-(e.g. KVM_PSCI_FN_MIGRATE, KVM_PSCI_FN_CPU_SUSPEND, ..etc) returning
-PSCI_RET_NOT_SUPPORTED here as they will be then automatically covered
-by default case.
+Hi Krzysztof,
 
-Otherwise looks good to me:
-Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Please find the patch already send by Vivek Gautam
+<gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> which address this issue.
 
-Regards,
-Sudeep
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266418.html
+
+-Anand Moon
+>
+> Best regards,
+> Krzysztof
+>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
