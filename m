@@ -1,70 +1,106 @@
-From: Andrew <andrew@ncrmnt.org>
-Subject: Re: [PATCH 1/2] pinctrl: mvebu: Fix mapping of pin 63 (gpo -> gpio)
-Date: Fri, 29 May 2015 12:55:44 +0300
-Message-ID: <1e014a41f99caee6f054713546efdf20@mail.ncrmnt.org>
-References: <1428784160-19431-1-git-send-email-andrew@ncrmnt.org>
- <1428784160-19431-2-git-send-email-andrew@ncrmnt.org>
- <20150529111002.7368ca50@free-electrons.com>
+From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] spi: Add support for Zynq Ultrascale+ MPSoC GQSPI controller
+Date: Fri, 29 May 2015 15:30:11 +0530
+Message-ID: <CAFcVECLmVXprE8gjsM6bJ3M+TG4pTCtRWDXrsim6kYhsoUyM7Q@mail.gmail.com>
+References: <1432106871-27232-1-git-send-email-ranjit.waghmode@xilinx.com>
+	<1432106871-27232-2-git-send-email-ranjit.waghmode@xilinx.com>
+	<20150522115854.GG21391@sirena.org.uk>
+	<CAFcVECJRqebzAjU+rfAtUQFG=7-KoE1GiXet5XJB-4D3i0or6A@mail.gmail.com>
+	<20150528150356.GA21577@sirena.org.uk>
+	<03CA77BA8AF6F1469AEDFBDA1322A7B7495AA317@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150529111002.7368ca50@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <03CA77BA8AF6F1469AEDFBDA1322A7B7495AA317-4lKfpRxZ5ekkx2a1wsGfbYg+Gb3gawCHQz34XiSyOiE@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ranjit Abhimanyu Waghmode <ranjitw-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thomas Petazzoni =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 29.05.2015 12:10:
-> Dear Andrew Andrianov,
->=20
-> On Sat, 11 Apr 2015 23:29:19 +0300, Andrew Andrianov wrote:
->> Signed-off-by: Andrew Andrianov <andrew@ncrmnt.org>
->> ---
->>  drivers/pinctrl/mvebu/pinctrl-armada-370.c |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-370.c=20
->> b/drivers/pinctrl/mvebu/pinctrl-armada-370.c
->> index c4f51d0..78c332d 100644
->> --- a/drivers/pinctrl/mvebu/pinctrl-armada-370.c
->> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-370.c
->> @@ -364,7 +364,7 @@ static struct mvebu_mpp_mode mv88f6710_mpp_modes=
-[]=20
->> =3D {
->>  	   MPP_FUNCTION(0x5, "audio", "mclk"),
->>  	   MPP_FUNCTION(0x6, "uart0", "cts")),
->>  	MPP_MODE(63,
->> -	   MPP_FUNCTION(0x0, "gpo", NULL),
->> +	   MPP_FUNCTION(0x0, "gpio", NULL),
->>  	   MPP_FUNCTION(0x1, "spi0", "sck"),
->>  	   MPP_FUNCTION(0x2, "tclk", NULL)),
->>  	MPP_MODE(64,
->=20
-> I know the patch has already been applied, but this is weird: I just
-> checked the datasheet again, and it really says this pin is a "gpo".
-> I'll try to get some more information.
->=20
-> Best regards,
->=20
-> Thomas
+Hi Mark,
 
-Yep, exactly. I've seen that in the public docs. It must be a typo,
-unless there's something we don't know.
+On Thu, May 28, 2015 at 9:11 PM, Punnaiah Choudary Kalluri
+<punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Mark,
+>
+>> -----Original Message-----
+>> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+>> Sent: Thursday, May 28, 2015 8:34 PM
+>> To: Harini Katakam
+>> Cc: Ranjit Abhimanyu Waghmode; Rob Herring; Pawel Moll; Mark Rutland;
+>> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; Kumar Gala; Michal Simek; Soren Brinkmann;
+>> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
+>> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-spi; Punnaiah Choudary Kalluri;
+>> ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+>> Subject: Re: [RFC PATCH 2/2] spi: Add support for Zynq Ultrascale+ MPSoC
+>> GQSPI controller
+>>
+>> On Fri, May 22, 2015 at 08:43:54PM +0530, Harini Katakam wrote:
+>> > On Fri, May 22, 2015 at 5:28 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> > > On Wed, May 20, 2015 at 12:57:51PM +0530, Ranjit Waghmode wrote:
+>>
+>> > > Why is there a default case here?  That's going to men we try to handle
+>> > > any random chip select that gets passed in as pointing to this lower
+>> > > device which doesn't seem right.  The fact that this is trying to handle
+>> > > mirroring of the chip select to two devices is also raising alarm bells
+>> > > here...
+>>
+>> > This SPI controller has two CS lines and two data bus.
+>> > Two devices can be connected to these and either the upper or the
+>> > lower or both (Explained below) can be selected.
+>>
+>> > When two flash devices are used, one of the HW configurations in
+>> > which they can be connected is called "parallel" mode where they
+>>
+>> I know what wiring chip selects in parallel is but that's not the
+>> question - the question is about the handling of the default case.
+>
+> Yes, we should not handle default case here. We will change this.
+>
 
-On DNS-327L this pin is wired as a button. Without th patch only
-gpio-buttons driver fails probing, but you can still configure the pin
-as input via sysfs gpio interface and even read sensible values from it=
-=2E
-If you have a board where this pin is broken out - it's easy to test.
+Yes, that's right. I was just elaborating the mirroring part.
 
---=20
+>>
+>> > >> +static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool
+>> is_high)
+>> > >> +{
+>>
+>> > >> +     if (is_high) {
+>> > >> +             /* Manually start the generic FIFO command */
+>> > >> +             zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
+>> > >> +                             zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
+>> > >> +                             GQSPI_CFG_START_GEN_FIFO_MASK);
+>>
+>> > > No, this is broken - setting the chip select should set the chip select,
+>> > > it shouldn't have any impact on transfers.  Transfers should be started
+>> > > in the transfer operations.
+>>
+>> > This is the only way to assert the CS. It doesn't start transferring any data.
+>>
+>> OK, then you can't implement a separate set_cs() operation and shouldn't
+>> be trying to do so.  This will break in multiple ways when the framework
+>> tries to use the operations separately.  You probably need to implement
+>> a single flat transfer() operation.
+>
+> As we said it will not start any data transfer. In order to set chip select (chip select only) we need to
+> 1. Frame a control word with following parameters like the chip select that we would like to set and hold time
+>  2. Update the control word to fifo
+>
+> To have a performance advantage (may be not trivial) we are executing this fifo entry along with the first
+>  Data transfer entry in transfer function so that we can avoid waiting for fifo empty in set_cs function.
+>
+>  We will ensure CS assert by waiting till the fifo empty in set_cs function and justify the what the
+> Function supposed do.
+>
+
+Yes, if we wait for cs assert to be executed (which is just the time
+controller takes to fetch this command
+and execute), this set_cs will be independent as expected. The
+framework can use it anytime.
+
 Regards,
-Andrew
-
+Harini
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
