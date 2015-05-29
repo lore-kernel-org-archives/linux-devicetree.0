@@ -1,7 +1,7 @@
 From: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v8 3/7] Documentation: DT: PL011: hi6220: add compatible string for Hisilicon designed UART
-Date: Fri, 29 May 2015 10:08:35 +0800
-Message-ID: <1432865319-20413-4-git-send-email-bintian.wang@huawei.com>
+Subject: [PATCH v8 4/7] clk: hisilicon: Remove __init for marking function prototypes
+Date: Fri, 29 May 2015 10:08:36 +0800
+Message-ID: <1432865319-20413-5-git-send-email-bintian.wang@huawei.com>
 References: <1432865319-20413-1-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,31 +12,51 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ke
 Cc: xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hisilicon does some performance enhancements based on PL011(e.g. larger
-FIFO length), so add one compatible string "hisilicon,hi6220-uart" for
-future optimisations or workarounds works.
+__init markings on function prototypes are useless, so remove
+them.
 
+Suggested-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Tested-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Tested-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/serial/pl011.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/hisilicon/clk.h | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/serial/pl011.txt b/Documentation/devicetree/bindings/serial/pl011.txt
-index ba3ecb8..cb9fd9d 100644
---- a/Documentation/devicetree/bindings/serial/pl011.txt
-+++ b/Documentation/devicetree/bindings/serial/pl011.txt
-@@ -1,7 +1,9 @@
- * ARM AMBA Primecell PL011 serial UART
+diff --git a/drivers/clk/hisilicon/clk.h b/drivers/clk/hisilicon/clk.h
+index 31083ff..6b6f994 100644
+--- a/drivers/clk/hisilicon/clk.h
++++ b/drivers/clk/hisilicon/clk.h
+@@ -95,17 +95,17 @@ struct clk *hisi_register_clkgate_sep(struct device *, const char *,
+ 				void __iomem *, u8,
+ 				u8, spinlock_t *);
  
- Required properties:
--- compatible: must be "arm,primecell", "arm,pl011"
-+- compatible: should contain one of the following sequences:
-+  * "arm,pl011", "arm,primecell"
-+  * "hisilicon,hi6220-pl011", "arm,pl011", "arm,primecell"
- - reg: exactly one register range with length 0x1000
- - interrupts: exactly one interrupt specifier
- 
+-struct hisi_clock_data __init *hisi_clk_init(struct device_node *, int);
+-void __init hisi_clk_register_fixed_rate(struct hisi_fixed_rate_clock *,
+-					int, struct hisi_clock_data *);
+-void __init hisi_clk_register_fixed_factor(struct hisi_fixed_factor_clock *,
+-					int, struct hisi_clock_data *);
+-void __init hisi_clk_register_mux(struct hisi_mux_clock *, int,
++struct hisi_clock_data *hisi_clk_init(struct device_node *, int);
++void hisi_clk_register_fixed_rate(struct hisi_fixed_rate_clock *,
++				int, struct hisi_clock_data *);
++void hisi_clk_register_fixed_factor(struct hisi_fixed_factor_clock *,
++				int, struct hisi_clock_data *);
++void hisi_clk_register_mux(struct hisi_mux_clock *, int,
+ 				struct hisi_clock_data *);
+-void __init hisi_clk_register_divider(struct hisi_divider_clock *,
++void hisi_clk_register_divider(struct hisi_divider_clock *,
++				int, struct hisi_clock_data *);
++void hisi_clk_register_gate(struct hisi_gate_clock *,
++				int, struct hisi_clock_data *);
++void hisi_clk_register_gate_sep(struct hisi_gate_clock *,
+ 				int, struct hisi_clock_data *);
+-void __init hisi_clk_register_gate(struct hisi_gate_clock *,
+-					int, struct hisi_clock_data *);
+-void __init hisi_clk_register_gate_sep(struct hisi_gate_clock *,
+-					int, struct hisi_clock_data *);
+ #endif	/* __HISI_CLK_H */
 -- 
 1.9.1
 
