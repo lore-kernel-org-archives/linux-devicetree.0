@@ -1,65 +1,71 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 0/6] GPIO support for BRCMSTB
-Date: Fri, 29 May 2015 09:26:13 -0700
-Message-ID: <55689325.80103@gmail.com>
-References: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Gregory Fong <gregory.0xf0@gmail.com>, linux-gpio@vger.kernel.org
-Cc: Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 0/6] Marvell PXA1928 USB support
+Date: Fri, 29 May 2015 11:38:40 -0500
+Message-ID: <1432917526-9688-1-git-send-email-robh@kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/05/15 19:14, Gregory Fong wrote:
-> This patchset adds support for the GPIO controller (UPG GIO) used on Broadcom's
-> various BRCMSTB SoCs (BCM7XXX and others). It uses the "basic-mmio-gpio"
-> interface to try to reduce duplication of the base logic.
-> 
-> For all existing hardware, this block hooked up to the BCM7120 L2 IRQ
-> controller and so will require CONFIG_BCM7120_L2_IRQ=y.
+This series adds USB PHYs and EHCI host drivers for the Marvell PXA1928
+SOC.
 
-Unless there are objections, I will take patches 5 and 6 and apply them
-to soc/next.
+The OTG block is based on ChipIdea and works with the "chipidea,usb2"
+compatible driver as is just by adding the PHY driver. Yay! After more 
+testing it turns out the EHCI host is also based on ChipIdea too. So 
+this version uses the ChipIdea driver for both. A couple of fixes are 
+needed to make the ChipIdea driver work with the PXA1928 EHCI host.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Rob
 
-Thanks!
+v3:
+- Clarify FSL only binding properties.
+- Add owner field to phy_ops.
+- Restructure split between PHY init/power_on and power_off/exit.
+- Fix PHY error path handling.
+- drop unrelated change in ci_hdrc_usb2.c.
+- Add Peter's tested-by.
 
-> 
-> New in v2:
-> - fix license mismatch as pointed out by Paul Bolle
-> - move select ARCH_WANT_OPTIONAL_GPIOLIB to separate patch
-> - change to have 32 lines per bank per Linus Walleij's comments
-> - allow this controller to be used as a wakeup source
-> - add default GPIO number for BRCMSTB
-> 
-> The device tree bindings from v1 were merged to the GPIO tree, so this patchset
-> only contains an addition to allow GPIOs to be used as a wakeup source
-> (patch 3).  The initial bindings from v1 can be found at
-> https://lkml.org/lkml/2015/5/6/200 .
-> 
-> Gregory Fong (6):
->   gpio: Add GPIO support for Broadcom STB SoCs
->   gpio: brcmstb: Add interrupt support
->   dt-bindings: brcmstb-gpio: document properties for wakeup
->   gpio: brcmstb: Allow GPIOs to be wakeup sources
->   ARM: brcmstb: Select ARCH_WANT_OPTIONAL_GPIOLIB
->   ARM: brcmstb: Add default gpio number
-> 
->  .../devicetree/bindings/gpio/brcm,brcmstb-gpio.txt |  26 +-
->  MAINTAINERS                                        |   7 +
->  arch/arm/Kconfig                                   |   3 +-
->  arch/arm/mach-bcm/Kconfig                          |   1 +
->  drivers/gpio/Kconfig                               |   9 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-brcmstb.c                        | 581 +++++++++++++++++++++
->  7 files changed, 626 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/gpio/gpio-brcmstb.c
-> 
+v2:
+- Use ChipIdea driver for EHCI host, dropping the Marvell specific EHCI 
+  driver
+- Consolidate ChipIdea bindings to single common doc.
+- rename phy driver files to phy-pxa-28nm-{usb2,hsic}.c
+- Simplified work-around for HSIC phy/controller handshake. 
 
+Rob Herring (6):
+  dt-bindings: Add Marvell PXA1928 USB and HSIC PHY bindings
+  phy: Add Marvell USB 2.0 OTG 28nm PHY
+  phy: add Marvell HSIC 28nm PHY
+  dt-bindings: Consolidate ChipIdea USB ci13xxx bindings
+  usb: chipidea: allow multiple instances to use default
+    ci_default_pdata
+  usb: chipidea: add work-around for Marvell HSIC PHY startup
+
+ .../devicetree/bindings/phy/pxa1928-usb-phy.txt    |  18 ++
+ .../devicetree/bindings/usb/ci-hdrc-imx.txt        |  35 --
+ .../devicetree/bindings/usb/ci-hdrc-qcom.txt       |  17 -
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  22 +-
+ .../devicetree/bindings/usb/ci-hdrc-zevio.txt      |  17 -
+ drivers/phy/Kconfig                                |  20 ++
+ drivers/phy/Makefile                               |   2 +
+ drivers/phy/phy-pxa-28nm-hsic.c                    | 220 +++++++++++++
+ drivers/phy/phy-pxa-28nm-usb2.c                    | 355 +++++++++++++++++++++
+ drivers/usb/chipidea/ci_hdrc_usb2.c                |   8 +-
+ drivers/usb/chipidea/host.c                        |  12 +
+ 11 files changed, 653 insertions(+), 73 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/pxa1928-usb-phy.txt
+ delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
+ delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
+ delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
+ create mode 100644 drivers/phy/phy-pxa-28nm-hsic.c
+ create mode 100644 drivers/phy/phy-pxa-28nm-usb2.c
 
 -- 
-Florian
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
