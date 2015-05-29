@@ -1,93 +1,72 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3] irqchip: renesas-intc-irqpin: Improve binding documentation
-Date: Fri, 29 May 2015 11:27:43 +0200
-Message-ID: <1432891663-23641-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 02/13] dmaengine: Introduce
+ dma_request_slave_channel_compat_reason()
+Date: Fri, 29 May 2015 15:03:17 +0530
+Message-ID: <20150529093317.GF3140@localhost>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
+ <1432646768-12532-3-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432646768-12532-3-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-spi@vger.kernel.org, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Add missing documentation for required properties:
-  - interrupt-controller,
-  - parent interrupts (one entry per provided interrupt).
+On Tue, May 26, 2015 at 04:25:57PM +0300, Peter Ujfalusi wrote:
+> dma_request_slave_channel_compat() 'eats' up the returned error codes which
+> prevents drivers using the compat call to be able to do deferred probing.
+> 
+> The new wrapper is identical in functionality but it will return with error
+> code in case of failure and will pass the -EPROBE_DEFER to the caller in
+> case dma_request_slave_channel_reason() returned with it.
+This is okay but am worried about one more warpper, how about fixing
+dma_request_slave_channel_compat()
 
-Add missing documentation for optional properties:
-  - functional clock (managed since commit 705bc96c2c15313c ("irqchip:
-    renesas-intc-irqpin: Add minimal runtime PM support")),
-  - power-domains.
 
-Add an example, taken from r8a7740.dtsi.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
----
-v3:
-  - Add Acked-by,
-
-v2:
-  - This is v2 of "Add optional functional clock to bindings",
-  - Document all missing properties, not just the functional clock,
-  - Use a generic name for the device node in the example.
----
- .../interrupt-controller/renesas,intc-irqpin.txt   | 39 ++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-index 4f7946ae8adcdc04..772c550d3b4bcfe2 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-@@ -13,9 +13,12 @@ Required properties:
- - reg: Base address and length of each register bank used by the external
-   IRQ pins driven by the interrupt controller hardware module. The base
-   addresses, length and number of required register banks varies with soctype.
--
-+- interrupt-controller: Identifies the node as an interrupt controller.
- - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
--  interrupts.txt in this directory
-+  interrupts.txt in this directory.
-+- interrupts: Must contain a list of interrupt specifiers. For each interrupt
-+  provided by this irqpin controller instance, there must be one entry,
-+  referring to the corresponding parent interrupt.
- 
- Optional properties:
- 
-@@ -25,3 +28,35 @@ Optional properties:
-   if different from the default 4 bits
- - control-parent: disable and enable interrupts on the parent interrupt
-   controller, needed for some broken implementations
-+- clocks: Must contain a reference to the functional clock.  This property is
-+  mandatory if the hardware implements a controllable functional clock for
-+  the irqpin controller instance.
-+- power-domains: Must contain a reference to the power domain. This property is
-+  mandatory if the irqpin controller instance is part of a controllable power
-+  domain.
-+
-+
-+Example
-+-------
-+
-+	irqpin1: interrupt-controller@e6900004 {
-+		compatible = "renesas,intc-irqpin-r8a7740",
-+			     "renesas,intc-irqpin";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0xe6900004 4>,
-+			<0xe6900014 4>,
-+			<0xe6900024 1>,
-+			<0xe6900044 1>,
-+			<0xe6900064 1>;
-+		interrupts = <0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH
-+			      0 149 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
-+		power-domains = <&pd_a4s>;
-+	};
 -- 
-1.9.1
+~Vinod
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  include/linux/dmaengine.h | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index abf63ceabef9..6c777394835c 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -1120,4 +1120,26 @@ static inline struct dma_chan
+>  
+>  	return __dma_request_channel(mask, fn, fn_param);
+>  }
+> +
+> +#define dma_request_slave_channel_compat_reason(mask, x, y, dev, name) \
+> +	__dma_request_slave_channel_compat_reason(&(mask), x, y, dev, name)
+> +
+> +static inline struct dma_chan
+> +*__dma_request_slave_channel_compat_reason(const dma_cap_mask_t *mask,
+> +				  dma_filter_fn fn, void *fn_param,
+> +				  struct device *dev, char *name)
+> +{
+> +	struct dma_chan *chan;
+> +
+> +	chan = dma_request_slave_channel_reason(dev, name);
+> +	/* Try via legacy API if not requesting for deferred probing */
+> +	if (IS_ERR(chan) && PTR_ERR(chan) != -EPROBE_DEFER)
+> +		chan = __dma_request_channel(mask, fn, fn_param);
+> +
+> +	if (!chan)
+> +		chan = ERR_PTR(-ENODEV);
+> +
+> +	return chan;
+> +}
+> +
+>  #endif /* DMAENGINE_H */
+> -- 
+> 2.3.5
+> 
 
+-- 
