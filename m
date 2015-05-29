@@ -1,68 +1,46 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
-Date: Sat, 30 May 2015 01:53:06 +0800
-Message-ID: <CADyBb7t4moXr_a9unRXDHZCcmbvjWui2ifJ6=eiv8Ce=FOWoYA@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>
-	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>
-	<5564A44A.5000606@codeaurora.org>
-	<CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA@mail.gmail.com>
-	<55686960.5010503@codeaurora.org>
-	<CADyBb7tdoajU4crdjrjCf68_Lz=8KbxAX4+Gd_H15aNaimHXww@mail.gmail.com>
-	<556889D9.5070707@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <556889D9.5070707@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/2] USB OTG PHY driver for NXP LPC18xx family
+Date: Fri, 29 May 2015 20:03:35 +0200
+Message-ID: <1432922617-11512-1-git-send-email-manabian@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur
+This patch set adds support for the internal USB OTG PHY found
+on NXP LPC18xx and LPC43xx devices. Driver takes care of
+enabling the PHY and setting the clock rate which is need for
+USB0 support on this platform.
 
-On 29 May 2015 at 23:46, Timur Tabi <timur@codeaurora.org> wrote:
-> On 05/29/2015 09:32 AM, Fu Wei wrote:
->>
->> It is a SPI, every CPU can get it,
->> But maybe I miss something, but please let me know if other CPU can
->> not get the interrupt.
->
->
-> There's only one watchdog device, so there's only one interrupt.  I don't
-> know which CPU will get the interrupt, but the watchdog is not a per-CPU
-> device.
->
+This version address the comments from Kishon Vijay Abraham I.
 
-OK, first of all, I know, there maybe only watchdog in the system, but
-the Interrupter is SPI,
-that means maybe some other device can also trigger the same
-Interrupter or maybe(in SMP) other CPU will handle it.
+Changes in v3:
+ - depend on MFD_SYSCON
 
-If this interrupter is triggered, that means system has goes wrong,
-who knows what is wrong ,
-I have to make sure that  system get into that routine ,because of the
-WS0, if not I won't do panic.
+Changes in v2:
+ - use PTR_ERR_OR_ZERO in phy driver
+ - rename binding doc
+ - update doc commit message
 
-And in a interrupter routine , checking the Interrupter status
-register is right way to do.
+Base support for this platform can now be found in arm-soc next.
 
+Joachim Eastwood (2):
+  phy: add lpc18xx usb otg phy driver
+  phy: dt bindings: add XP LPC18xx/43xx USB OTG PHY bindings
 
-> --
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
-
-
+ .../bindings/phy/phy-lpc18xx-usb-otg.txt           |  19 +++
+ drivers/phy/Kconfig                                |  11 ++
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-lpc18xx-usb-otg.c                  | 143 +++++++++++++++++++++
+ 4 files changed, 174 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-lpc18xx-usb-otg.txt
+ create mode 100644 drivers/phy/phy-lpc18xx-usb-otg.c
 
 -- 
-Best regards,
+1.8.0
 
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
