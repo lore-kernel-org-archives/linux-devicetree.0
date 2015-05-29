@@ -1,83 +1,68 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: l2c: add options to overwrite prefetching behavior
-Date: Fri, 29 May 2015 10:52:05 -0700
-Message-ID: <5568A745.7020502@gmail.com>
-References: <1431726751-9169-1-git-send-email-hauke@hauke-m.de>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
+Date: Sat, 30 May 2015 01:53:06 +0800
+Message-ID: <CADyBb7t4moXr_a9unRXDHZCcmbvjWui2ifJ6=eiv8Ce=FOWoYA@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>
+	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>
+	<5564A44A.5000606@codeaurora.org>
+	<CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA@mail.gmail.com>
+	<55686960.5010503@codeaurora.org>
+	<CADyBb7tdoajU4crdjrjCf68_Lz=8KbxAX4+Gd_H15aNaimHXww@mail.gmail.com>
+	<556889D9.5070707@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431726751-9169-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <556889D9.5070707@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15/05/15 14:52, Hauke Mehrtens wrote:
-> These options make it possible to overwrites the data and instruction
-> prefetching behavior of the arm pl310 cache controller.
-> 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> ---
-> v2: only set prefetch
-> v1: set prefetch and aux
-> 
->  Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
->  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index 0dbabe9..528821a 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -67,6 +67,10 @@ Optional properties:
->    disable if zero.
->  - arm,prefetch-offset : Override prefetch offset value. Valid values are
->    0-7, 15, 23, and 31.
-> +- arm,prefetch-data : Enable data prefetch. Enabling prefetching
-> +  can improve performance.
+Hi Timur
 
-I do not think the "can improve performance" has a place in a binding,
-this is either not technical enough about what this does, or marketing
-enough it does not buy us much.
+On 29 May 2015 at 23:46, Timur Tabi <timur@codeaurora.org> wrote:
+> On 05/29/2015 09:32 AM, Fu Wei wrote:
+>>
+>> It is a SPI, every CPU can get it,
+>> But maybe I miss something, but please let me know if other CPU can
+>> not get the interrupt.
+>
+>
+> There's only one watchdog device, so there's only one interrupt.  I don't
+> know which CPU will get the interrupt, but the watchdog is not a per-CPU
+> device.
+>
 
-data/instruction pre-fetching are commonly found on cache controller
-these days, so I would be tempted to remove the "arm," prefixing here
-since this can be generalized to other kinds of cache controllers.
-Documenting that this can be either a boolean, or accept a value (see
-below) could help.
+OK, first of all, I know, there maybe only watchdog in the system, but
+the Interrupter is SPI,
+that means maybe some other device can also trigger the same
+Interrupter or maybe(in SMP) other CPU will handle it.
 
-> +- arm,prefetch-instr : Enable instruction prefetch. Enabling prefetching
-> +  can improve performance.
->  
->  Example:
->  
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index e309c8f..1aa970a 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -1199,6 +1199,26 @@ static void __init l2c310_of_parse(const struct device_node *np,
->  		pr_err("L2C-310 OF arm,prefetch-offset property value is missing\n");
->  	}
->  
-> +	ret = of_property_read_u32(np, "arm,prefetch-data", &val);
-> +	if (ret == 0) {
-> +		if (val)
-> +			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
-> +		else
-> +			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
-> +	} else if (ret != -EINVAL) {
-> +		pr_err("L2C-310 OF arm,prefetch-data property value is missing\n");
-> +	}
+If this interrupter is triggered, that means system has goes wrong,
+who knows what is wrong ,
+I have to make sure that  system get into that routine ,because of the
+WS0, if not I won't do panic.
 
-If we want to generalize the use of this property, there could indeed be
-a value associated with it, if the cache controller supports different
-pre-fetching strides, however this is not the cache for these cache
-controllers it seems, are not we going to show error messages more often
-than desired?
+And in a interrupter routine , checking the Interrupter status
+register is right way to do.
+
+
+> --
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
+
+
+
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
