@@ -1,37 +1,43 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/3] clk: shmobile: Document mandatory compatible fallback
-Date: Fri, 29 May 2015 11:36:30 +0200
-Message-ID: <1432892191-24039-3-git-send-email-geert+renesas@glider.be>
-References: <1432892191-24039-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 0/3] clk: shmobile: Document mandatory compatible fallbacks
+Date: Fri, 29 May 2015 11:36:28 +0200
+Message-ID: <1432892191-24039-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1432892191-24039-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Simon Horman <horms+renesas@verge.net.au>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The generic R-Car Gen2 CPG compatible value is mandatory, as the driver
-uses only this value for matching.  Document that this is a fallback
-that must be present.
+	Hi Mike, Stephen,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
+Several DT binding docs for shmobile clock drivers declare that the
+compatible value should be one out of a list of SoC-specific values and
+a generic value.
+However, the driver only binds against the generic value.
+Hence document that the generic value is a mandatory fallback.
+
+Thanks for applying!
+
+Geert Uytterhoeven (3):
+  clk: shmobile: mstp: Document mandatory compatible fallback
+  clk: shmobile: rcar-gen2: Document mandatory compatible fallback
+  clk: shmobile: rz: Document mandatory compatible fallback
+
+ Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt     | 2 +-
  .../devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt          | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-index aa2b94511f4d9e05..1dc65fc741b3b4a3 100644
---- a/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-@@ -12,7 +12,7 @@ Required Properties:
-     - "renesas,r8a7791-cpg-clocks" for the r8a7791 CPG
-     - "renesas,r8a7793-cpg-clocks" for the r8a7793 CPG
-     - "renesas,r8a7794-cpg-clocks" for the r8a7794 CPG
--    - "renesas,rcar-gen2-cpg-clocks" for the generic R-Car Gen2 CPG
-+    and "renesas,rcar-gen2-cpg-clocks" as a fallback.
- 
-   - reg: Base address and length of the memory resource used by the CPG
- 
 -- 
 1.9.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
