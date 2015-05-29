@@ -1,83 +1,54 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: l2c: add options to overwrite prefetching behavior
-Date: Fri, 29 May 2015 19:33:33 +0200
-Message-ID: <5568A2ED.4000502@hauke-m.de>
-References: <1431726751-9169-1-git-send-email-hauke@hauke-m.de>
+From: "Mathieu Olivari" <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: RE: [PATCH 3/7] net: dsa: ar8xxx: add regmap support
+Date: Fri, 29 May 2015 10:36:49 -0700
+Message-ID: <005b01d09a36$0b77daa0$22678fe0$@codeaurora.org>
+References: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org> <1432863742-18427-4-git-send-email-mathieu@codeaurora.org> <5567C7B6.5060905@gmail.com> <20150529022329.GH11260@lunn.ch> <5567D0BA.5020409@gmail.com> <20150529024425.GI11260@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain;
+	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431726751-9169-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <20150529024425.GI11260-g2DYL2Zd6BY@public.gmane.org>
+Content-Language: en-us
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1p?= =?UTF-8?B?xYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: 'Andrew Lunn' <andrew-g2DYL2Zd6BY@public.gmane.org>, 'Florian Fainelli' <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, gang.chen.5i5j-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, leitec-z4FmpzNVuK5Wk0Htik3J/w@public.gmane.org, fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org, pavel.nakonechny-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, sfeldma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Will this make it into kernel 4.2 or do I have to do something so that
-this will make it into 4.2?
+Alternatively, we could have something similar to what happens for the phy
+in the wireless subsystems. Wireless PHYs are not registered as net_device
+but they can still be listed, queried or configured through netlink.
+Just thinking out loud here.
 
-Hauke
+Thanks,
+Mathieu
 
-On 05/15/2015 11:52 PM, Hauke Mehrtens wrote:
-> These options make it possible to overwrites the data and instruction
-> prefetching behavior of the arm pl310 cache controller.
-> 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> ---
-> v2: only set prefetch
-> v1: set prefetch and aux
-> 
->  Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
->  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index 0dbabe9..528821a 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -67,6 +67,10 @@ Optional properties:
->    disable if zero.
->  - arm,prefetch-offset : Override prefetch offset value. Valid values are
->    0-7, 15, 23, and 31.
-> +- arm,prefetch-data : Enable data prefetch. Enabling prefetching
-> +  can improve performance.
-> +- arm,prefetch-instr : Enable instruction prefetch. Enabling prefetching
-> +  can improve performance.
->  
->  Example:
->  
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index e309c8f..1aa970a 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -1199,6 +1199,26 @@ static void __init l2c310_of_parse(const struct device_node *np,
->  		pr_err("L2C-310 OF arm,prefetch-offset property value is missing\n");
->  	}
->  
-> +	ret = of_property_read_u32(np, "arm,prefetch-data", &val);
-> +	if (ret == 0) {
-> +		if (val)
-> +			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
-> +		else
-> +			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
-> +	} else if (ret != -EINVAL) {
-> +		pr_err("L2C-310 OF arm,prefetch-data property value is missing\n");
-> +	}
-> +
-> +	ret = of_property_read_u32(np, "arm,prefetch-instr", &val);
-> +	if (ret == 0) {
-> +		if (val)
-> +			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
-> +		else
-> +			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
-> +	} else if (ret != -EINVAL) {
-> +		pr_err("L2C-310 OF arm,prefetch-instr property value is missing\n");
-> +	}
-> +
->  	l2x0_saved_regs.prefetch_ctrl = prefetch;
->  }
->  
-> 
+-----Original Message-----
+From: Andrew Lunn [mailto:andrew-g2DYL2Zd6BY@public.gmane.org] 
+Sent: Thursday, May 28, 2015 7:44 PM
+To: Florian Fainelli
+Cc: Mathieu Olivari; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org;
+mark.rutland-5wv7dgnIgG8@public.gmane.org; ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org;
+davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org; gang.chen.5i5j-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org; leitec-z4FmpzNVuK5Wk0Htik3J/w@public.gmane.org; fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org;
+pavel.nakonechny-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org; joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org; sfeldma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org; juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: Re: [PATCH 3/7] net: dsa: ar8xxx: add regmap support
+
+> Fair enough, are there other global "things" besides counters that 
+> could deserve adding maybe some sort of global/master net_device to 
+> help query switch-wide information?
+
+This was discussed a while back. I like the current abstraction, all
+interfaces are real interfaces you can send and receive packets over. This
+pseudo interface cannot be used for packet transfer, which seems odd.
+
+Having access to registers for debugging, so debugfs seems like the best
+option to me.
+
+     Andrew
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
