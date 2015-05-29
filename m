@@ -1,36 +1,75 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Move OF flags to be visible even when !CONFIG_OF
-Date: Fri, 29 May 2015 10:02:43 -0500
-Message-ID: <CAL_JsqLcOQnHzELF=bAtzvz3eF=7nxiwcbKp7b_f329mYYE9jg@mail.gmail.com>
-References: <1429868516-19519-1-git-send-email-pantelis.antoniou@konsulko.com> <20150426124504.GA2647@katana>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
+Date: Fri, 29 May 2015 23:05:34 +0800
+Message-ID: <CADyBb7vcYoCMGMZ102yfHQtNQtAPdhKBSYw20naxMmjhqsf5-g@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>
+	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>
+	<55637A6D.3080403@roeck-us.net>
+	<CADyBb7t_OC0FwoCeOr-umZhjTMxXZ65g7U8Ca+SUgmiWwjvm2w@mail.gmail.com>
+	<55687D9A.8080409@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150426124504.GA2647@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <55687D9A.8080409@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 26, 2015 at 7:45 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> On Fri, Apr 24, 2015 at 12:41:56PM +0300, Pantelis Antoniou wrote:
->> We need those to be visible even when compiling with CONFIG_OF
->> disabled, since even the empty of_node_*_flag() method use the
->> flag.
+Hi Guenter,
+
+
+
+On 29 May 2015 at 22:54, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 05/29/2015 02:11 AM, Fu Wei wrote:
+> [ ... ]
+>
+>>>> +
+>>>> +       status = sbsa_gwdt_cf_read(SBSA_GWDT_WCS, wdd);
+>>>> +       if (status & SBSA_GWDT_WCS_WS1) {
+>>>> +               dev_warn(dev, "System reset by WDT(WCS: %x, WCV:
+>>>> %llx)\n",
+>>>> +                        status, sbsa_gwdt_get_wcv(wdd));
+>>>
+>>>
+>>>
+>>> Does this message (specifically the WCS / WCV values) have any
+>>> useful meaning for the user ?
 >>
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>
+>> I think so, according to SBSA spec:
+>> If WS0 is asserted and a timeout refresh occurs then the following must
+>> occur:
+>>      If the system is compliant to SBSA level 2 or higher the compare
+>> value must retain its current value. This means that the compare value
+>> records the time that WS1 is asserted.
+>>
+>> So, I think WCV can log the time when system reset by WDT, that may
+>> help user figure out the problem. but WCS can be delete I think.
+>>
 >
-> Acked-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+> How would that help ? It is just a number with no reference to anything.
 
-Applied, thanks.
-
-Rob
+This number is the time, when system reset by watchdog
+WCV : the number of clock, from system boot  to system reset.
+Is that worthy to be logged? any suggestion ? :-)
 
 >
-> You should have mentioned that this is needed to get a bugfix for
-> OF_DYNAMIC in i2c upstream!
+> Thanks,
+> Guenter
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
