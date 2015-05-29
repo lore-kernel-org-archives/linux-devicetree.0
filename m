@@ -1,74 +1,41 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH 3/4] rtc: 88pm80x: add device tree support
-Date: Sat, 30 May 2015 03:49:21 +0530
-Message-ID: <1432937962-4537-4-git-send-email-vaibhav.hiremath@linaro.org>
-References: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, sameo@linux.intel.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Chao Xie <chao.xie@marvell.com>
+From: David Lang <david-gFPdbfVZQbY@public.gmane.org>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Fri, 29 May 2015 15:21:56 -0700 (PDT)
+Message-ID: <alpine.DEB.2.02.1505291520230.4429@nftneq.ynat.uz>
+References: <1430820315.19516.26.camel@opteya.com> <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com> <1432289148.5304.58.camel@opteya.com> <1432322832.5304.63.camel@opteya.com> <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
+ <55670AD4.8020705@melag.de> <CAOS_Y6QXHdWfi9qkRmw=mCn0mqha5-NrzumBMqJ61_YRndypLA@mail.gmail.com> <55688182.3010606@melag.de>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55688182.3010606-d/C+FbuhHiA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Along with DT support, this patch also cleans up the unnecessary
-code around 'rtc_wakeup' initialization.
+On Fri, 29 May 2015, Enrico Weigelt, metux IT consult wrote:
 
-Signed-off-by: Chao Xie <chao.xie@marvell.com>
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
----
- drivers/rtc/rtc-88pm80x.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+>>> Important Notice: This message may contain confidential or privileged 
+>>> information. It is intended only for the person it was addressed to. If you 
+>>> are not the intended recipient of this email you may not copy, forward, 
+>>> disclose or otherwise use it or any part of it in any form whatsoever. If 
+>>> you received this email in error please notify the sender by replying and 
+>>> delete this message and any attachments without retaining a copy.
+>> 
+>> P.S. some of us actually care about licenses being appropriate to what
+>> they're applied to, and at least theoretically capable of being
+>> honored. Your email footer may be very slightly undermining your
+>> position here.
+>
+> This is just a dumb auto-generated footer, coming from my client's
+> mail server over here ... I'm just too lazy for setting up an own
+> MTA on my workstation. You can safely ignore that.
 
-diff --git a/drivers/rtc/rtc-88pm80x.c b/drivers/rtc/rtc-88pm80x.c
-index 7df0579..8f66519 100644
---- a/drivers/rtc/rtc-88pm80x.c
-+++ b/drivers/rtc/rtc-88pm80x.c
-@@ -251,17 +251,26 @@ static SIMPLE_DEV_PM_OPS(pm80x_rtc_pm_ops, pm80x_rtc_suspend, pm80x_rtc_resume);
- static int pm80x_rtc_probe(struct platform_device *pdev)
- {
- 	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
--	struct pm80x_platform_data *pm80x_pdata =
--				dev_get_platdata(pdev->dev.parent);
--	struct pm80x_rtc_pdata *pdata = NULL;
-+	struct pm80x_rtc_pdata *pdata = dev_get_platdata(&pdev->dev);
- 	struct pm80x_rtc_info *info;
-+	struct device_node *node = pdev->dev.of_node;
- 	struct rtc_time tm;
- 	unsigned long ticks = 0;
- 	int ret;
- 
--	pdata = dev_get_platdata(&pdev->dev);
--	if (pdata == NULL)
--		dev_warn(&pdev->dev, "No platform data!\n");
-+	if (!pdata && !node) {
-+		dev_err(&pdev->dev,
-+			"pm80x-rtc requires platform data or of_node\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!pdata) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			dev_err(&pdev->dev, "failed to allocate memory\n");
-+			return -ENOMEM;
-+		}
-+	}
- 
- 	info =
- 	    devm_kzalloc(&pdev->dev, sizeof(struct pm80x_rtc_info), GFP_KERNEL);
-@@ -327,11 +336,8 @@ static int pm80x_rtc_probe(struct platform_device *pdev)
- 	regmap_update_bits(info->map, PM800_RTC_CONTROL, PM800_RTC1_USE_XO,
- 			   PM800_RTC1_USE_XO);
- 
--	if (pm80x_pdata) {
--		pdata = pm80x_pdata->rtc;
--		if (pdata)
--			info->rtc_dev->dev.platform_data = &pdata->rtc_wakeup;
--	}
-+	/* remeber whether this power up is caused by PMIC RTC or not */
-+	info->rtc_dev->dev.platform_data = &pdata->rtc_wakeup;
- 
- 	device_init_wakeup(&pdev->dev, 1);
- 
--- 
-1.9.1
+Arguing license issues and at the same time claiming that you should ignore a 
+legal statement like the footer is a bit odd.
+
+David Lang
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
