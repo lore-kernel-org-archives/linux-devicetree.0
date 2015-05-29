@@ -1,43 +1,39 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/3] clk: shmobile: Document mandatory compatible fallbacks
-Date: Fri, 29 May 2015 11:36:28 +0200
-Message-ID: <1432892191-24039-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 1/3] clk: shmobile: mstp: Document mandatory compatible fallback
+Date: Fri, 29 May 2015 11:36:29 +0200
+Message-ID: <1432892191-24039-2-git-send-email-geert+renesas@glider.be>
+References: <1432892191-24039-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1432892191-24039-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Simon Horman <horms+renesas@verge.net.au>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Mike, Stephen,
+The generic MSTP gate clocks compatible value is mandatory, as the
+driver uses only this value for matching.  Document that this is a
+fallback that must be present.
 
-Several DT binding docs for shmobile clock drivers declare that the
-compatible value should be one out of a list of SoC-specific values and
-a generic value.
-However, the driver only binds against the generic value.
-Hence document that the generic value is a mandatory fallback.
+Also fix a typo (missing plural "s") in the compatible value.
 
-Thanks for applying!
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Geert Uytterhoeven (3):
-  clk: shmobile: mstp: Document mandatory compatible fallback
-  clk: shmobile: rcar-gen2: Document mandatory compatible fallback
-  clk: shmobile: rz: Document mandatory compatible fallback
-
- Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt     | 2 +-
- .../devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt          | 2 +-
- Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+index 0a80fa70ca265c0f..237ff1c8dd632fc3 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+@@ -18,7 +18,7 @@ Required Properties:
+     - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
+     - "renesas,r8a7794-mstp-clocks" for R8A7794 (R-Car E2) MSTP gate clocks
+     - "renesas,sh73a0-mstp-clocks" for SH73A0 (SH-MobileAG5) MSTP gate clocks
+-    - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
++    and "renesas,cpg-mstp-clocks" as a fallback.
+   - reg: Base address and length of the I/O mapped registers used by the MSTP
+     clocks. The first register is the clock control register and is mandatory.
+     The second register is the clock status register and is optional when not
 -- 
 1.9.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
