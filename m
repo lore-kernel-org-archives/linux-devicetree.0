@@ -1,72 +1,37 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 02/13] dmaengine: Introduce
- dma_request_slave_channel_compat_reason()
-Date: Fri, 29 May 2015 15:03:17 +0530
-Message-ID: <20150529093317.GF3140@localhost>
-References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
- <1432646768-12532-3-git-send-email-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432646768-12532-3-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-spi@vger.kernel.org, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 2/3] clk: shmobile: Document mandatory compatible fallback
+Date: Fri, 29 May 2015 11:36:30 +0200
+Message-ID: <1432892191-24039-3-git-send-email-geert+renesas@glider.be>
+References: <1432892191-24039-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1432892191-24039-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 26, 2015 at 04:25:57PM +0300, Peter Ujfalusi wrote:
-> dma_request_slave_channel_compat() 'eats' up the returned error codes which
-> prevents drivers using the compat call to be able to do deferred probing.
-> 
-> The new wrapper is identical in functionality but it will return with error
-> code in case of failure and will pass the -EPROBE_DEFER to the caller in
-> case dma_request_slave_channel_reason() returned with it.
-This is okay but am worried about one more warpper, how about fixing
-dma_request_slave_channel_compat()
+The generic R-Car Gen2 CPG compatible value is mandatory, as the driver
+uses only this value for matching.  Document that this is a fallback
+that must be present.
 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ .../devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt          | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+index aa2b94511f4d9e05..1dc65fc741b3b4a3 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+@@ -12,7 +12,7 @@ Required Properties:
+     - "renesas,r8a7791-cpg-clocks" for the r8a7791 CPG
+     - "renesas,r8a7793-cpg-clocks" for the r8a7793 CPG
+     - "renesas,r8a7794-cpg-clocks" for the r8a7794 CPG
+-    - "renesas,rcar-gen2-cpg-clocks" for the generic R-Car Gen2 CPG
++    and "renesas,rcar-gen2-cpg-clocks" as a fallback.
+ 
+   - reg: Base address and length of the memory resource used by the CPG
+ 
 -- 
-~Vinod
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  include/linux/dmaengine.h | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index abf63ceabef9..6c777394835c 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -1120,4 +1120,26 @@ static inline struct dma_chan
->  
->  	return __dma_request_channel(mask, fn, fn_param);
->  }
-> +
-> +#define dma_request_slave_channel_compat_reason(mask, x, y, dev, name) \
-> +	__dma_request_slave_channel_compat_reason(&(mask), x, y, dev, name)
-> +
-> +static inline struct dma_chan
-> +*__dma_request_slave_channel_compat_reason(const dma_cap_mask_t *mask,
-> +				  dma_filter_fn fn, void *fn_param,
-> +				  struct device *dev, char *name)
-> +{
-> +	struct dma_chan *chan;
-> +
-> +	chan = dma_request_slave_channel_reason(dev, name);
-> +	/* Try via legacy API if not requesting for deferred probing */
-> +	if (IS_ERR(chan) && PTR_ERR(chan) != -EPROBE_DEFER)
-> +		chan = __dma_request_channel(mask, fn, fn_param);
-> +
-> +	if (!chan)
-> +		chan = ERR_PTR(-ENODEV);
-> +
-> +	return chan;
-> +}
-> +
->  #endif /* DMAENGINE_H */
-> -- 
-> 2.3.5
-> 
+1.9.1
 
--- 
