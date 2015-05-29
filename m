@@ -1,32 +1,38 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
-Date: Fri, 29 May 2015 10:46:33 -0500
-Message-ID: <556889D9.5070707@codeaurora.org>
-References: <=fu.wei@linaro.org>	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>	<5564A44A.5000606@codeaurora.org>	<CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA@mail.gmail.com>	<55686960.5010503@codeaurora.org> <CADyBb7tdoajU4crdjrjCf68_Lz=8KbxAX4+Gd_H15aNaimHXww@mail.gmail.com>
+From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: atlas7: use general dt-binding for hwspinlock
+Date: Fri, 29 May 2015 08:50:52 -0700
+Message-ID: <CAJAp7OjjzMCGQSRx8c3f5D7uCnWUesZ5Sx8X8=BEjAuAxBqOYw@mail.gmail.com>
+References: <1432628911-18555-1-git-send-email-21cnbao@gmail.com>
+	<1432628911-18555-3-git-send-email-21cnbao@gmail.com>
+	<5567890D.30906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7tdoajU4crdjrjCf68_Lz=8KbxAX4+Gd_H15aNaimHXww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5567890D.30906-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, workgroup.linux-kQvG35nSl+M@public.gmane.org, Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2015 09:32 AM, Fu Wei wrote:
-> It is a SPI, every CPU can get it,
-> But maybe I miss something, but please let me know if other CPU can
-> not get the interrupt.
+On Thu, May 28, 2015 at 2:30 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
+[..]
+>>                               reg = <0x13240000 0x00010000>;
+>
+> An unrelated question here, why the reg is same for all the child nodes
+> of the  parent ipc node? If this is partitioned properly, then the
+> driver can be simplified a bit by using platform_get_resource and
+> devm_ioremap_resource?
+>
 
-There's only one watchdog device, so there's only one interrupt.  I 
-don't know which CPU will get the interrupt, but the watchdog is not a 
-per-CPU device.
+Good catch Suman, I missed that.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Barry, if these blocks represents various functionalities of the same
+hw block then you should consider moving them to be part of a
+simple-mfd.
+
+Regards,
+Bjorn
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
