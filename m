@@ -1,82 +1,65 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: keystone: fix dt bindings to use post div register for mainpll
-Date: Fri, 29 May 2015 12:04:13 -0400
-Message-ID: <1432915453-409-2-git-send-email-m-karicheri2@ti.com>
-References: <1432915453-409-1-git-send-email-m-karicheri2@ti.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 0/6] GPIO support for BRCMSTB
+Date: Fri, 29 May 2015 09:26:13 -0700
+Message-ID: <55689325.80103@gmail.com>
+References: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432915453-409-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gregory Fong <gregory.0xf0@gmail.com>, linux-gpio@vger.kernel.org
+Cc: Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-All of the keystone devices have a separate register to hold post
-divider value for main pll clock. Currently the fixed-postdiv
-value used for k2hk/l/e SoCs works by sheer luck as u-boot happens to
-use a value of 2 for this. Now that we have fixed this in the pll
-clock driver change the dt bindings for the same.
+On 28/05/15 19:14, Gregory Fong wrote:
+> This patchset adds support for the GPIO controller (UPG GIO) used on Broadcom's
+> various BRCMSTB SoCs (BCM7XXX and others). It uses the "basic-mmio-gpio"
+> interface to try to reduce duplication of the base logic.
+> 
+> For all existing hardware, this block hooked up to the BCM7120 L2 IRQ
+> controller and so will require CONFIG_BCM7120_L2_IRQ=y.
 
-Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/k2e-clocks.dtsi  | 5 ++---
- arch/arm/boot/dts/k2hk-clocks.dtsi | 5 ++---
- arch/arm/boot/dts/k2l-clocks.dtsi  | 5 ++---
- 3 files changed, 6 insertions(+), 9 deletions(-)
+Unless there are objections, I will take patches 5 and 6 and apply them
+to soc/next.
 
-diff --git a/arch/arm/boot/dts/k2e-clocks.dtsi b/arch/arm/boot/dts/k2e-clocks.dtsi
-index 4773d6a..d56d68f 100644
---- a/arch/arm/boot/dts/k2e-clocks.dtsi
-+++ b/arch/arm/boot/dts/k2e-clocks.dtsi
-@@ -13,9 +13,8 @@ clocks {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,main-pll-clock";
- 		clocks = <&refclksys>;
--		reg = <0x02620350 4>, <0x02310110 4>;
--		reg-names = "control", "multiplier";
--		fixed-postdiv = <2>;
-+		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
-+		reg-names = "control", "multiplier", "post-divider";
- 	};
- 
- 	papllclk: papllclk@2620358 {
-diff --git a/arch/arm/boot/dts/k2hk-clocks.dtsi b/arch/arm/boot/dts/k2hk-clocks.dtsi
-index d5adee3..af9b719 100644
---- a/arch/arm/boot/dts/k2hk-clocks.dtsi
-+++ b/arch/arm/boot/dts/k2hk-clocks.dtsi
-@@ -22,9 +22,8 @@ clocks {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,main-pll-clock";
- 		clocks = <&refclksys>;
--		reg = <0x02620350 4>, <0x02310110 4>;
--		reg-names = "control", "multiplier";
--		fixed-postdiv = <2>;
-+		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
-+		reg-names = "control", "multiplier", "post-divider";
- 	};
- 
- 	papllclk: papllclk@2620358 {
-diff --git a/arch/arm/boot/dts/k2l-clocks.dtsi b/arch/arm/boot/dts/k2l-clocks.dtsi
-index eb1e3e2..ef8464b 100644
---- a/arch/arm/boot/dts/k2l-clocks.dtsi
-+++ b/arch/arm/boot/dts/k2l-clocks.dtsi
-@@ -22,9 +22,8 @@ clocks {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,main-pll-clock";
- 		clocks = <&refclksys>;
--		reg = <0x02620350 4>, <0x02310110 4>;
--		reg-names = "control", "multiplier";
--		fixed-postdiv = <2>;
-+		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
-+		reg-names = "control", "multiplier", "post-divider";
- 	};
- 
- 	papllclk: papllclk@2620358 {
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Thanks!
+
+> 
+> New in v2:
+> - fix license mismatch as pointed out by Paul Bolle
+> - move select ARCH_WANT_OPTIONAL_GPIOLIB to separate patch
+> - change to have 32 lines per bank per Linus Walleij's comments
+> - allow this controller to be used as a wakeup source
+> - add default GPIO number for BRCMSTB
+> 
+> The device tree bindings from v1 were merged to the GPIO tree, so this patchset
+> only contains an addition to allow GPIOs to be used as a wakeup source
+> (patch 3).  The initial bindings from v1 can be found at
+> https://lkml.org/lkml/2015/5/6/200 .
+> 
+> Gregory Fong (6):
+>   gpio: Add GPIO support for Broadcom STB SoCs
+>   gpio: brcmstb: Add interrupt support
+>   dt-bindings: brcmstb-gpio: document properties for wakeup
+>   gpio: brcmstb: Allow GPIOs to be wakeup sources
+>   ARM: brcmstb: Select ARCH_WANT_OPTIONAL_GPIOLIB
+>   ARM: brcmstb: Add default gpio number
+> 
+>  .../devicetree/bindings/gpio/brcm,brcmstb-gpio.txt |  26 +-
+>  MAINTAINERS                                        |   7 +
+>  arch/arm/Kconfig                                   |   3 +-
+>  arch/arm/mach-bcm/Kconfig                          |   1 +
+>  drivers/gpio/Kconfig                               |   9 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-brcmstb.c                        | 581 +++++++++++++++++++++
+>  7 files changed, 626 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/gpio/gpio-brcmstb.c
+> 
+
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
