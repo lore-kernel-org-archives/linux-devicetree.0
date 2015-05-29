@@ -1,54 +1,46 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 0/7] net: dsa: add QCA AR8xxx switch family support
-Date: Fri, 29 May 2015 04:00:01 +0200
-Message-ID: <20150529020001.GF11260@lunn.ch>
-References: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org>
+From: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 3/7] Documentation: DT: PL011: hi6220: add compatible string for Hisilicon designed UART
+Date: Fri, 29 May 2015 10:08:35 +0800
+Message-ID: <1432865319-20413-4-git-send-email-bintian.wang@huawei.com>
+References: <1432865319-20413-1-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Mathieu Olivari <mathieu@codeaurora.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, linux@roeck-us.net, gang.chen.5i5j@gmail.com, jiri@resnulli.us, leitec@staticky.com, fabf@skynet.be, alexander.h.duyck@intel.com, pavel.nakonechny@skitlab.ru, joe@perches.com, sfeldma@gmail.com, nbd@openwrt.org, juhosg@openwrt.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432865319-20413-1-git-send-email-bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+Cc: xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2015 at 06:42:15PM -0700, Mathieu Olivari wrote:
-> This patch set adds initial support for AR8xxx switches using the DSA
-> subsystem. It currently supports QCA8337 switch, and can be extended to
-> other hardware in the same family.
-> 
-> This switch was already discussed in the following thread:
-> https://www.marc.info/?t=142601417400004&r=1&w=2
-> 
-> Below is a typical picture of a QCA8337 used in a standard home gateway
-> configuration:
-> 
-> 	+-----------+       +-----------+
-> 	|           | SGMII |           |
-> 	|       eth0+-------+           +------ 1000baseT MDI ("WAN")
-> 	|        wan|       |  7-port   +------ 1000baseT MDI ("LAN1")
-> 	|   CPU     |       |  ethernet +------ 1000baseT MDI ("LAN2")
-> 	|           | RGMII |  switch   +------ 1000baseT MDI ("LAN3")
-> 	|       eth1+-------+  w/5 PHYs +------ 1000baseT MDI ("LAN4")
-> 	|        lan|       |           |
-> 	+-----------+       +-----------+
-> 	          |   MDIO     |
-> 	          \------------/
-> 
-> The switch is connected to the CPU using 2 xMII interfaces. As DSA only
-> supports one logical interface to the switch, we split the switch using
-> device-tree information into 2 parts:
-> *port 6 (one of the xMII switch port) will be dedicated to one
->  particular Ethernet port. From a system perspective, it will be seen as
->  a regular PHY.
-> *port 0 (the other xMII port) will act as the switch master interface
+Hisilicon does some performance enhancements based on PL011(e.g. larger
+FIFO length), so add one compatible string "hisilicon,hi6220-uart" for
+future optimisations or workarounds works.
 
-FYI:
+Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/serial/pl011.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I have patches which allow DSA to use two cpu interfaces. Seems to
-work on my DIR665 with a Marvell Switch.
+diff --git a/Documentation/devicetree/bindings/serial/pl011.txt b/Documentation/devicetree/bindings/serial/pl011.txt
+index ba3ecb8..cb9fd9d 100644
+--- a/Documentation/devicetree/bindings/serial/pl011.txt
++++ b/Documentation/devicetree/bindings/serial/pl011.txt
+@@ -1,7 +1,9 @@
+ * ARM AMBA Primecell PL011 serial UART
+ 
+ Required properties:
+-- compatible: must be "arm,primecell", "arm,pl011"
++- compatible: should contain one of the following sequences:
++  * "arm,pl011", "arm,primecell"
++  * "hisilicon,hi6220-pl011", "arm,pl011", "arm,primecell"
+ - reg: exactly one register range with length 0x1000
+ - interrupts: exactly one interrupt specifier
+ 
+-- 
+1.9.1
 
-I will post the patches as an RFC.
-
-  Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
