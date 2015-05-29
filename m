@@ -1,49 +1,62 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 0/7] net: dsa: add QCA AR8xxx switch family support\
-Date: Fri, 29 May 2015 20:59:53 +0200
-Message-ID: <20150529185953.GF19580@lunn.ch>
-References: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org>
- <20150529020001.GF11260@lunn.ch>
- <20150529184951.GA2458@codeaurora.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 2/7] ARM: bcm2835: Add a Raspberry Pi-specific clock driver.
+Date: Fri, 29 May 2015 12:09:41 -0700
+Message-ID: <87mw0ncia2.fsf@eliezer.anholt.net>
+References: <1431978219-14226-1-git-send-email-eric@anholt.net> <1431978219-14226-3-git-send-email-eric@anholt.net> <55679085.6040402@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150529184951.GA2458-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, gang.chen.5i5j-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, leitec-z4FmpzNVuK5Wk0Htik3J/w@public.gmane.org, fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org, alexander.h.duyck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pavel.nakonechny-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, sfeldma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55679085.6040402@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 29, 2015 at 11:49:54AM -0700, Mathieu Olivari wrote:
-> On Fri, May 29, 2015 at 04:00:01AM +0200, Andrew Lunn wrote:
-> > FYI:
-> > 
-> > I have patches which allow DSA to use two cpu interfaces. Seems to
-> > work on my DIR665 with a Marvell Switch.
-> > 
-> > I will post the patches as an RFC.
-> > 
-> >   Andrew
-> 
-> Does it require the switch CPU ports to support LAG or is it generic
-> enough to allow switch partitioning?
+--=-=-=
+Content-Type: text/plain
 
-When using tags, DSA by default partitions the switch. Each user port
-is separate from other ports. lan4 will not bridge to lan1 unless you
-either do it in software, or you implement the
-.port_join_bridge/.port_leave_bridge/.port_stp_update methods of
-dsa_switch_driver.
+Stephen Warren <swarren@wwwdotorg.org> writes:
 
-What it requires is that for each user port, you can configure what
-cpu port it should use. Marvell devices have this ability, and at a
-first look, it seems like SF2 does as well, but i will leave Florian
-to answer definitively.
+> On 05/18/2015 01:43 PM, Eric Anholt wrote:
+>> +	init.flags = CLK_IS_ROOT;
+>
+> Is it possible to add clock parent information to the driver, so the
+> clocks are all hooked together into the correct tree, rather than all
+> looking like root clocks?
+>
+> One of the many reasons I didn't do anything FW-wise for the kernel was
+> the hope that such information would be forthcoming, and hence we could
+> have complete kernel drivers.
 
-I will be posting an RFC patchset later today.
+As far as I can tell, none of these clocks are the parent of any other.
 
-  Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There's a layer of PLLs, then clockman almost always just dividing off
+of those.  In response to a clockman request (which is what this
+property tag quickly maps to), only PLLH ever gets changed as a result
+of RPI_CLOCK_PIXEL.  PLLH feeds the HDMI and VEC (SDTV).  We don't have
+an SDTV clock for us to control through these interfaces, so there are
+no conflicts that I can see.  Only two clockman clocks I see divide off
+of on other clockman clocks, and we don't have access to those.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVaLl1AAoJELXWKTbR/J7olTcP/2iM26XYmG+ClekdnTw5gxR8
+hzZXDh0Mqy2tzK1oLFWL/EeccgfLV2wApLhHiJeu89X6OyKYg0VlAEH+ewlOUxX1
+7Ygf4XJQHUJAjRqz2vj14btwTR84Y0dZXLaC4Xq36es8qZmHWATta+OkWq28uFmW
+6Z0j8vLQxRT4gzjiKq5Xaj3/XIaA31NdHeNhXCfQvaWiatxPhGofKCniOYqyobvM
+vyQ8EeS8P4cccbV2IzrevcKdSb6QulMALHI+CERLEcIet7X1ZC9p3/esgIQGiRZS
+eYSQL+MvAaNCt3U5WQN/FCZccYjx4e19PIyiYbtSVSYPsI9JEwR0+LxBbeRUrVF0
+RJ2gLWGfQfCGykillmCcepTka7R40SX/Nd178kCIKdOPZpjmTSUGVpyBAc/eQMxB
+301Epow7eAo+fe1c/sfAxoWnJUVwRolRZ2RyNgNOQJkQUAwIKGeNvlBwX86Lr+jk
+qynsBWwiPl3g3iO7Qiy/860kpPlJoz/i6jCXB9uMjCNR//XPiPwYSLu3k3hiR7RD
+wKX3HKudunaEr0W+O2Drt5Mm+vFqABsCkpPCd5iPJ412p/k9wZPpmYLcZkf177QT
+Fi4ZMUaRzrnsZdd1Oy+x7Xipc3Ixh5vumTNzDOVNzcEZQyRjgZjAjM3wKTcWdrPV
+8bSZA55gPD6DE8STYvGU
+=yRns
+-----END PGP SIGNATURE-----
+--=-=-=--
