@@ -1,44 +1,96 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v11 0/4] edac: Add APM X-Gene SoC EDAC driver
-Date: Fri, 29 May 2015 11:06:35 -0700
-Message-ID: <CAPw-ZTnLqx0KsQkmv++zQRQ7hroaKML1rWgVafisENam0J17Mg@mail.gmail.com>
-References: <1432337580-3750-1-git-send-email-lho@apm.com>
-	<20150529094654.GD31435@pd.tnic>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: l2c: add options to overwrite prefetching behavior
+Date: Fri, 29 May 2015 20:11:59 +0200
+Message-ID: <5568ABEF.3040001@hauke-m.de>
+References: <1431726751-9169-1-git-send-email-hauke@hauke-m.de> <5568A745.7020502@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150529094654.GD31435-fF5Pk5pvG8Y@public.gmane.org>
+In-Reply-To: <5568A745.7020502-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Fri, May 29, 2015 at 2:46 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
-> On Fri, May 22, 2015 at 05:32:55PM -0600, Loc Ho wrote:
->> This patch adds support for the APM X-Gene SoC EDAC driver for DT.
->
-> Applied, thanks!
->
-> Phew, that was a looong process. But the final result looks nice. So
-> thanks for the perseverance.
->
-> All is here, if you want to do testing and other fun before the merge
-> window opens:
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git#for-next
->
 
-I pull this and got this error:
+On 05/29/2015 07:52 PM, Florian Fainelli wrote:
+> On 15/05/15 14:52, Hauke Mehrtens wrote:
+>> These options make it possible to overwrites the data and instruction
+>> prefetching behavior of the arm pl310 cache controller.
+>>
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>> ---
+>> v2: only set prefetch
+>> v1: set prefetch and aux
+>>
+>>  Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
+>>  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
+>>  2 files changed, 24 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+>> index 0dbabe9..528821a 100644
+>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+>> @@ -67,6 +67,10 @@ Optional properties:
+>>    disable if zero.
+>>  - arm,prefetch-offset : Override prefetch offset value. Valid values are
+>>    0-7, 15, 23, and 31.
+>> +- arm,prefetch-data : Enable data prefetch. Enabling prefetching
+>> +  can improve performance.
+> 
+> I do not think the "can improve performance" has a place in a binding,
+> this is either not technical enough about what this does, or marketing
+> enough it does not buy us much.
+> 
+> data/instruction pre-fetching are commonly found on cache controller
+> these days, so I would be tempted to remove the "arm," prefixing here
+> since this can be generalized to other kinds of cache controllers.
+> Documenting that this can be either a boolean, or accept a value (see
+> below) could help.
 
-/projects/svdc/P4sbSW/lho/xgene2/processor/git.lho/edac-next/drivers/edac/edac_stub.c:19:22:
-fatal error: asm/edac.h: No such file or directory
- #include <asm/edac.h>
-                      ^
-compilation terminated.
+So you think I should only add prefetch-data and prefetch-instr without
+the arm prefix.
+> 
+>> +- arm,prefetch-instr : Enable instruction prefetch. Enabling prefetching
+>> +  can improve performance.
+>>  
+>>  Example:
+>>  
+>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+>> index e309c8f..1aa970a 100644
+>> --- a/arch/arm/mm/cache-l2x0.c
+>> +++ b/arch/arm/mm/cache-l2x0.c
+>> @@ -1199,6 +1199,26 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>>  		pr_err("L2C-310 OF arm,prefetch-offset property value is missing\n");
+>>  	}
+>>  
+>> +	ret = of_property_read_u32(np, "arm,prefetch-data", &val);
+>> +	if (ret == 0) {
+>> +		if (val)
+>> +			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> +		else
+>> +			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> +	} else if (ret != -EINVAL) {
+>> +		pr_err("L2C-310 OF arm,prefetch-data property value is missing\n");
+>> +	}
+> 
+> If we want to generalize the use of this property, there could indeed be
+> a value associated with it, if the cache controller supports different
+> pre-fetching strides, however this is not the cache for these cache
+> controllers it seems, are not we going to show error messages more often
+> than desired?
+I did this so it is possible to deactivate the prefech mode. I do not
+know if somebody wants to do that. I haven't understood how you suggest
+I should change.
+When you do not associate a value with an entry in device tree it is
+there or not there, so we could only activate it when it was not
+automatically detected, but we could not deactivate it, because the case
+when this value is not specified in device tree would be, use to auto
+detected the value.
 
--Loc
+Hauke
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
