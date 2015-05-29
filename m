@@ -1,76 +1,32 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: odroidxu3: Enable USB3 regulators
-Date: Fri, 29 May 2015 18:47:47 +0530
-Message-ID: <CANAwSgSaY2W6y-zrsF=p68Phqf7D-hTPsCxNaqFiwVc45849RQ@mail.gmail.com>
-References: <1432803494-3516-1-git-send-email-linux.amoon@gmail.com> <5566DDA6.1080508@samsung.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
+Date: Fri, 29 May 2015 08:28:00 -0500
+Message-ID: <55686960.5010503@codeaurora.org>
+References: <=fu.wei@linaro.org>	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>	<5564A44A.5000606@codeaurora.org> <CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5566DDA6.1080508-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28 May 2015 at 14:49, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 28.05.2015 17:58, Anand Moon wrote:
->> Enable regulator for usbdrd3_0 and usbdrd3_1
->>>From the schematic pin diagram USB3_0 and USB3_1
->> is regulated by LDO9 and LD011.
->
-> Please reformat statement above to proper sentence(s) without ">" before
-> "From".
->
->>
->> Fix the boot message of failed.
->> [    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
->> [    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
->> [    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
->> [    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
->> [    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
->> [    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
->> [    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
->> [    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
->> [    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
->> [    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
->> [    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
->>
->> ---
->> This patch is based on Krzysztof github branch work-next/odroid-xu3-s2mps11-irq
->> ---
->
-> I mentioned this already on previous postings. Let's make an exercise.
-> Please:
-> 1. Save your email as mbox format (from mailer).
-> 2. Go to a GIT repo with kernel and checkout base branch.
-> 3. git am 0001-the-name-of-file.mbox
-> 4. git show
->
-> Do you see the signed-off-by in commit?
->
-> The patch itself looks good, thanks for fixing this. Just please fix the
-> issues with commit message.
->
-> By the way:
-> 1. The always-on from LDO9 could be probably removed if the ehci-exynos
-> driver had regulator consumer implemented.
-> 2. The Documentation/devicetree/bindings/usb/exynos-usb.txt (or dwc.txt)
-> should proably mention the vdd-supply property.
+Fu Wei wrote:
+>> This should always be true.  Instead of reading WCS, I think you should just
+>> >panic().
 
-Hi Krzysztof,
+> I thinks I need to confirm it , in case this has been cleaned.
 
-Please find the patch already send by Vivek Gautam
-<gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> which address this issue.
+I don't see how it's possible for you to receive the interrupt and have 
+WCS be cleared.
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266418.html
-
--Anand Moon
->
-> Best regards,
-> Krzysztof
->
->
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
