@@ -1,75 +1,277 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
-Date: Fri, 29 May 2015 23:05:34 +0800
-Message-ID: <CADyBb7vcYoCMGMZ102yfHQtNQtAPdhKBSYw20naxMmjhqsf5-g@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>
-	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>
-	<55637A6D.3080403@roeck-us.net>
-	<CADyBb7t_OC0FwoCeOr-umZhjTMxXZ65g7U8Ca+SUgmiWwjvm2w@mail.gmail.com>
-	<55687D9A.8080409@roeck-us.net>
+From: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Fri, 29 May 2015 17:10:58 +0200
+Message-ID: <55688182.3010606@melag.de>
+References: <1430820315.19516.26.camel@opteya.com>	<CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>	<1432289148.5304.58.camel@opteya.com>	<1432322832.5304.63.camel@opteya.com>	<CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>	<55670AD4.8020705@melag.de> <CAOS_Y6QXHdWfi9qkRmw=mCn0mqha5-NrzumBMqJ61_YRndypLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <55687D9A.8080409@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOS_Y6QXHdWfi9qkRmw=mCn0mqha5-NrzumBMqJ61_YRndypLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+Am 29.05.2015 um 05:31 schrieb Rob Landley:
 
-
-
-On 29 May 2015 at 22:54, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 05/29/2015 02:11 AM, Fu Wei wrote:
-> [ ... ]
+ >> What's the big deal with having DTS/DTB under GPL ?
 >
->>>> +
->>>> +       status = sbsa_gwdt_cf_read(SBSA_GWDT_WCS, wdd);
->>>> +       if (status & SBSA_GWDT_WCS_WS1) {
->>>> +               dev_warn(dev, "System reset by WDT(WCS: %x, WCV:
->>>> %llx)\n",
->>>> +                        status, sbsa_gwdt_get_wcv(wdd));
->>>
->>>
->>>
->>> Does this message (specifically the WCS / WCV values) have any
->>> useful meaning for the user ?
->>
->>
->> I think so, according to SBSA spec:
->> If WS0 is asserted and a timeout refresh occurs then the following must
->> occur:
->>      If the system is compliant to SBSA level 2 or higher the compare
->> value must retain its current value. This means that the compare value
->> records the time that WS1 is asserted.
->>
->> So, I think WCV can log the time when system reset by WDT, that may
->> help user figure out the problem. but WCS can be delete I think.
->>
+> One problem is that there's no such thing as "The GPL" anymore.
+
+There are different versions. The kernel source clearly states
+GPLv2 (I, personally, would prefer v3 to prevent Tivoization)
+
+> The Linux kernel and Samba can't share code anymore,
+
+Do they really need to ?
+One could ask, whether smb support should belong into the kernel
+at all (instead of, eg., going via FUSE or 9P), but that's an
+entirely different discussion.
+
+> even though they implement two ends of the same protocol, thanks to G=
+PLv3.
+
+Samba folks made the decision to prevent Tivoization of their code.
+I fully agree with that decision, and I wish the same for the kernel.
+
+> This seems to have badly damaged the long term viability of GPLv2,
+> which used to be synonymous with copyleft (category killer license)
+> and acted as a universal receiver because it was a terminal node in a
+> directed graph of license convertibility reducing most licensing
+> decisions to a simple binary "is it GPL compatible or not", which
+> greatly appealed to developers who aren't lawyers and don't want to
+> be.
+
+Well, such things happen, if people have different views. In that case
+those who want to prevent Tivoization on the one and those who wanna
+allow it on the other side.
+
+I rerely have the need to really copy-and-paste code from one project
+to another. When patching existing ones, I just stick to the upstream's
+license. And when starting new FOSS projects, I clearly choose (L)GPLv3=
+,
+because I'm strictly against Tivoization.
+
+> But now a project that's "GPLv2 or later" can't accept code from
+> _either_ the kernel or samba (neither provides the implicit dual
+> license they need).
+
+Well, that's a decision of the individual projects - everybody has
+to live with his/her own decisions.
+
+> Projects like QEMU are stuck between wanting to
+> turn kernel drivers inside out to make device emulations (GPLv2 code)
+> and grab processor definitions from gcc or binutils (GPLv3 code) and
+> one project cannot accept both because GPL + GPL is a license
+> conflict.
+
+Seems to be a rare case to me. In general, I'd suggest making things
+used by several distinct projects into their own distinct entities.
+
+Note: the GPL's viral effect doesn't depend on whether the sources
+are collected in one big repo, but on what is compiled-/linked-into
+where.
+
+> Of course "BSD-like" would be public domain except for 20 years of
+> FUD, so they're mostly choosing one of the dozens of public domain
+> equivalent licenses like the various BSDs and MIT and ISC and Apache
+> that are equivalent except for "copy this license text exactly"
+> clauses that cause endless license bloat over time.
+
+It's not entirely FUD. The questions is NOT whether the original open
+code will be wiped out of the net or people simply dont work on it
+anymore. The main question here is, whether foss developers (often
+working for free) want to help people producing non-free stuff. BSD
+like to allow that, FSF folks dont. They just have different views on
+that matter. IMHO, BSD folks are just interested in getting back
+contributions, while FSF folks also have a broader political agenda. I,
+personally, share that agenda (even more: I strongly believe that
+software patents should be eradicated).
+
+> Personally I prefer public domain equivalent licenses like CC0 or
+> unlicense.org or my own "zero clause bsd", which DON'T require you to
+> copy specific license text verbatim into derived works.
+
+Well, I have an fundamentally different oppinion on that. If I publish
+my code for free, I dont want assist anybody in producing non-free
+stuff. (free like freedom, not free beer)
+
+> Most of this can be laid at the door of GPLv3.
+
+Because many folks don't wanna fight against Tivoization.
+I'll have to accept that, but I don't need to coorporate.
+
+ > Android's "no gpl in userspace" policy is why they ripped out bluez
+ > and wrote a replacement bluedroid from scratch.
+
+The really interesting question is: why do they have that policy ?
+Maybe because they aren't interested in *free* (as freedom) software,
+but just open source.
+
+Otherwise they'd have an strict policy of nothing proprietary in
+kernel space.
+
+> The bluez developers keep going "if we just
+> improve the code enough people will get over the license" (no really:
+> https://lwn.net/Articles/597293/) but their FAQ literally doesn't
+> specify _which_ GPL they're under: http://www.bluez.org/faq/common/
+> (Is it the one you can't use with kernel code, the one you can't
+> combine with samba code, or the or-later version that can't accept
+> code from either source into its next release?
+
+Why would one want to mix bluez code with the kernel or samba ?
+
+> Apple's great GPL purge
+> (http://meta.ath0.com/2012/02/05/apples-great-gpl-purge/)
+
+Apple belongs to the really bad guys, what Microsoft previously was.
+This is the StaSi. I have no mercy for them.
+
+> is why we have LLVM replacing gcc, they literally stopped xcode on th=
+e last
+> GPLv2 releases (gcc 4.2.1 and binutils 2.17) for over five years whil=
+e
+> they sponsored work on a replacement.
+
+=46or xcode vs gcc, I dont really see any actual license _conflict_.
+This was an political action, and we should take it as that.
+Apple is against freedom. The least thing, we - the people - should
+do is not helping them, not giving them a single penny.
+
+> When samba went gplv3, they did
+> http://www.osnews.com/story/24572/Apple_Ditches_SAMBA_in_Favour_of_Ho=
+megrown_Replacement
+> for samba and so on.
+
+=46ine. They should do so. We don't need them. We lived happily without
+them, and we'll continue to do so. SMB is just old legacy anyways,
+just for interfacing with Toy-OS. (actually, I haven't had any single
+Windows system for about 20 years - never missed that).
+
+> The pro-gpl guys have tried various coercion tactics to get their way=
+,
+> which hasn't helped. The FSF sued CISCO in 2008 over the same 2003
+> vendor BSP that had already been beaten out of them to produce OpenWR=
+T
+> (and remember when I said you don't sue the upstream you sue the
+> individual customers when maximizing your payout?
+
+No, you sue them for the biggest policitical impact.
+Yes: it is very much about politics.
+
+ > The BSP was from Broadcom, so the FSF sued Cisco).
+
+CISCO distributed the devices, that's why the primary infringenment
+was done by them. Of course, Boardcom should have been sued, too.
+
+> Lesson: "These guys will never be satisifed,
+
+No. They (more precisely: we) will be satisfied, as long as you place
+by the rules. And the rules are pretty clear - just read the text.
+And if you don't like these rules, just pick something else.
+
+> The FSF also retroactively deleted binutils 2.17 (the last GPLv2
+> version) off their ftp site and replaced it with a binutils 2.17a
+> containing GPLv3 code, which they symlinked from the old name. (No
+> really. They did the same thing with gdb 6.6 except there they didn't
+> put a symlink, http://ftp.gnu.org/gnu/gdb/ .
+
+Okay, that's a bad trick. Or just a bit stupidity.
+Do we have evidence that this really was on purpose ?
+
+> Remember how I said qemu
+> wanted machine definitions they could get from _which_ two packages?
+
+Well, they still can use the old ones. And if they patch anything there=
+,
+they're free to decide whether to dual-license or not.
+
+> QEMU went GPLv2 only to stay compatible with the kernel.)
+
+I haven't had a deeper look into QEMU source, but I wonder at which
+places exactly it would make sense to share / transfer code from
+kernel to QEMU. Any example ?
+
+ > and don't forget what the FSF did to Mepis
+> http://archive09.linux.com/articles/55285 (sued them for not mirrorin=
+g
+> UNMODIFIED source tarballs readily available on the upstream website)=
+=2E
+
+They just were asked to comply to their part of the deal.
+And as they do now, no reason for whining about it anymore.
+
+> The kernel is grandfathered in, in part because it's always tolerated=
+ (if
+ > not enjoyed) binary modules,
+
+Actually, I strongly believe, they shouldn't be tolerated at all.
+
+> but do you really think that if Android  decided
+ > "time to switch to BSD" it would take them longer than 18 months to
+ > port everything they care about? They re-port every kernel release..=
+=2E
+
+Maybe. Just let them do it if they wish. I don't really care.
+
+> I gave a talk about this at Ohio LinuxFest in 2013:
 >
-> How would that help ? It is just a number with no reference to anything.
+> outline: http://landley.net/talks/ohio-2013.txt
+> audio: https://archive.org/download/OhioLinuxfest2013/24-Rob_Landley-=
+The_Rise_and_Fall_of_Copyleft.mp3
 
-This number is the time, when system reset by watchdog
-WCV : the number of clock, from system boot  to system reset.
-Is that worthy to be logged? any suggestion ? :-)
+You should learn the difference between opensource and free software.
+  --> free like freedom, not free beer.
 
+>> Important Notice: This message may contain confidential or privilege=
+d
+>> information. It is intended only for the person it was addressed to.=
+ If you
+>> are not the intended recipient of this email you may not copy, forwa=
+rd,
+>> disclose or otherwise use it or any part of it in any form whatsoeve=
+r. If
+>> you received this email in error please notify the sender by replyin=
+g and
+>> delete this message and any attachments without retaining a copy.
 >
-> Thanks,
-> Guenter
->
+> P.S. some of us actually care about licenses being appropriate to wha=
+t
+> they're applied to, and at least theoretically capable of being
+> honored. Your email footer may be very slightly undermining your
+> position here.
 
+This is just a dumb auto-generated footer, coming from my client's
+mail server over here ... I'm just too lazy for setting up an own
+MTA on my workstation. You can safely ignore that.
 
+--
+Enrico Weigelt, metux IT consult
++49-151-27565287
+MELAG Medizintechnik oHG Sitz Berlin Registergericht AG Charlottenburg =
+HRA 21333 B
 
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+Wichtiger Hinweis: Diese Nachricht kann vertrauliche oder nur f=C3=BCr =
+einen begrenzten Personenkreis bestimmte Informationen enthalten. Sie i=
+st ausschlie=C3=9Flich f=C3=BCr denjenigen bestimmt, an den sie gericht=
+et worden ist. Wenn Sie nicht der Adressat dieser E-Mail sind, d=C3=BCr=
+fen Sie diese nicht kopieren, weiterleiten, weitergeben oder sie ganz o=
+der teilweise in irgendeiner Weise nutzen. Sollten Sie diese E-Mail irr=
+t=C3=BCmlich erhalten haben, so benachrichtigen Sie bitte den Absender,=
+ indem Sie auf diese Nachricht antworten. Bitte l=C3=B6schen Sie in die=
+sem Fall diese Nachricht und alle Anh=C3=A4nge, ohne eine Kopie zu beha=
+lten.
+Important Notice: This message may contain confidential or privileged i=
+nformation. It is intended only for the person it was addressed to. If =
+you are not the intended recipient of this email you may not copy, forw=
+ard, disclose or otherwise use it or any part of it in any form whatsoe=
+ver. If you received this email in error please notify the sender by re=
+plying and delete this message and any attachments without retaining a =
+copy.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
