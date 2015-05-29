@@ -1,67 +1,47 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [RESEND PATCHv3] Documentation: DT bindings: document the clocks for Arria10
-Date: Fri, 29 May 2015 14:49:31 -0500
-Message-ID: <1432928971-2324-1-git-send-email-dinguyen@opensource.altera.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/7] net: dsa: add QCA AR8xxx switch family support\
+Date: Fri, 29 May 2015 12:58:12 -0700
+Message-ID: <5568C4D4.7010701@gmail.com>
+References: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org> <20150529020001.GF11260@lunn.ch> <20150529184951.GA2458@codeaurora.org> <20150529185953.GF19580@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20150529185953.GF19580@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Mathieu Olivari <mathieu@codeaurora.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, linux@roeck-us.net, gang.chen.5i5j@gmail.com, jiri@resnulli.us, leitec@staticky.com, fabf@skynet.be, alexander.h.duyck@intel.com, pavel.nakonechny@skitlab.ru, joe@perches.com, sfeldma@gmail.com, nbd@openwrt.org, juhosg@openwrt.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On 29/05/15 11:59, Andrew Lunn wrote:
+> On Fri, May 29, 2015 at 11:49:54AM -0700, Mathieu Olivari wrote:
+>> On Fri, May 29, 2015 at 04:00:01AM +0200, Andrew Lunn wrote:
+>>> FYI:
+>>>
+>>> I have patches which allow DSA to use two cpu interfaces. Seems to
+>>> work on my DIR665 with a Marvell Switch.
+>>>
+>>> I will post the patches as an RFC.
+>>>
+>>>   Andrew
+>>
+>> Does it require the switch CPU ports to support LAG or is it generic
+>> enough to allow switch partitioning?
+> 
+> When using tags, DSA by default partitions the switch. Each user port
+> is separate from other ports. lan4 will not bridge to lan1 unless you
+> either do it in software, or you implement the
+> .port_join_bridge/.port_leave_bridge/.port_stp_update methods of
+> dsa_switch_driver.
+> 
+> What it requires is that for each user port, you can configure what
+> cpu port it should use. Marvell devices have this ability, and at a
+> first look, it seems like SF2 does as well, but i will leave Florian
+> to answer definitively.
 
-Update the bindings document for the clocks on the SoCFPGA Arria10 platform.
-Also fix up a spelling error for the "altr,socfpga-perip-clk".
-
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- .../devicetree/bindings/clock/altr_socfpga.txt          | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/altr_socfpga.txt b/Documentation/devicetree/bindings/clock/altr_socfpga.txt
-index f72e80e..317e9cc 100644
---- a/Documentation/devicetree/bindings/clock/altr_socfpga.txt
-+++ b/Documentation/devicetree/bindings/clock/altr_socfpga.txt
-@@ -7,11 +7,15 @@ This binding uses the common clock binding[1].
- Required properties:
- - compatible : shall be one of the following:
- 	"altr,socfpga-pll-clock" - for a PLL clock
--	"altr,socfpga-perip-clock" - The peripheral clock divided from the
-+	"altr,socfpga-perip-clk" - The peripheral clock divided from the
- 		PLL clock.
- 	"altr,socfpga-gate-clk" - Clocks that directly feed peripherals and
- 		can get gated.
--
-+	"altr,socfpga-a10-pll-clock" - for a PLL clock on the Arria10.
-+	"altr,socfpga-a10-perip-clk" - The peripheral clock divided from the
-+		PLL clock on the Arria10.
-+	"altr,socfpga-a10-gate-clk" - Clocks that directly feed peripherals and
-+		can be gated.
- - reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
- - clocks : shall be the input parent clock phandle for the clock. This is
- 	either an oscillator or a pll output.
-@@ -19,10 +23,11 @@ Required properties:
- 
- Optional properties:
- - fixed-divider : If clocks have a fixed divider value, use this property.
--- clk-gate : For "socfpga-gate-clk", clk-gate contains the gating register
--        and the bit index.
--- div-reg : For "socfpga-gate-clk" and "socfpga-periph-clock", div-reg contains
--	the divider register, bit shift, and width.
-+- clk-gate : For "socfpga-gate-clk" and "altr,socfpga-a10-gate-clk", clk-gate
-+	contains the gating register and the bit index.
-+- div-reg : For "socfpga-gate-clk", "socfpga-perip-clk",
-+	"altr,socfpga-a10-gate-clk", and "altr,socfpga-a10-perip-clk", div-reg
-+	contains the divider register, bit shift, and width.
- - clk-phase : For the sdmmc_clk, contains the value of the clock phase that controls
- 	the SDMMC CIU clock. The first value is the clk_sample(smpsel), and the second
- 	value is the cclk_in_drv(drvsel). The clk-phase is used to enable the correct
+That's right, such configuration happens by using VLAN_CTL in the
+context of SF2, by default only Port <N> and CPU can talk to each other.
+Bridging ports involving putting them in the same domain, e.g: updating
+the VLAN_CTL bitmask to include all bridge members.
 -- 
-2.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
