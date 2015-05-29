@@ -1,412 +1,81 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 2/2] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
-Date: Fri, 29 May 2015 07:57:18 +0200
-Message-ID: <5567FFBE.5080205@xilinx.com>
-References: <1432849928-25457-1-git-send-email-moritz.fischer@ettus.com>
- <1432849928-25457-3-git-send-email-moritz.fischer@ettus.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
+Date: Fri, 29 May 2015 08:23:45 +0200
+Message-ID: <20150529062345.GY6325@pengutronix.de>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+ <20150528132452.GI26575@pengutronix.de>
+ <1432867649.15597.46.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432849928-25457-3-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432867649.15597.46.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/28/2015 11:52 PM, Moritz Fischer wrote:
-> The Xilinx LogiCORE IP mailbox is a FPGA core that allows for
-> interprocessor communication via AXI4 memory mapped / AXI4 stream
-> interfaces.
+On Fri, May 29, 2015 at 10:47:29AM +0800, James Liao wrote:
+> Hi Sascha,
 > 
-> It is single channel per core and allows for transmit and receive.
+> > And really the driver matching "mediatek,mt8173-vencsys" should register
+> > the necessary clocks and reset lines and call of_platform_populate on
+> > the subnodes. The driver should also be a real driver, not something
+> > matched by CLK_OF_DECLARE. The "mediatek,mt8173-vencsys" driver now has
+> > the possibility to manage the toplevel vencsys unit, do runtime pm, turn
+> > the whole thing off and on. Using CCF for abstracting these clocks may
+> > be the right thing, but I believe that we should keep the code for the
+> > toplevel vencsys register space together in a single file and not put
+> > the clk bits in drivers/clk/mediatek/mt8173.c, the reset bits in
+> > drivers/reset/ and the remaining misc stuff in drivers/soc/mediatek/.
+> > 
+> > So I think we should have a drivers/soc/mediatek/mtk-vencsys.c which
+> > is a regular driver, calls clk_register() for its clocks, calls
+> > reset_controller_register() for the reset bits, provides plain functions
+> > for the remaining bits which are not handled by any Linux framework.
+> > Finally of_platform_populate will register the child devices.
+> > 
+> > I showed this using the vencsys example, but it's the same for vdecsys,
+> > vencltsys, imgsys and mmsys.
 > 
-> Changes from v2:
-> - Fixed error handling for IRQ from >= 0 to > 0
-> - Fixed error handling for clock enabling
-> - Addressed Michal's stylistic comments
-> 
-> Changes from v1:
-> - Added common clock framework support
-> - Deal with IRQs that happend before driver load,
->   since HW will not let us know about them when we enable IRQs
-> 
-> Changes from v0:
-> - Several stylistic issues
-> - Dropped superfluous intr_mode member
-> - Really masking the IRQs on mailbox_shutdown
-> - No longer using polling by accident in non-IRQ mode
-> - Swapped doc and driver commits
-> 
-> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-> ---
->  MAINTAINERS                      |   7 +
->  drivers/mailbox/Kconfig          |   8 +
->  drivers/mailbox/Makefile         |   2 +
->  drivers/mailbox/mailbox-xilinx.c | 353 ++++++++++++++++++++++++++++++++++
->  4 files changed, 370 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f8e0afb..f1f0d10 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10986,6 +10986,13 @@ M:	John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->  S:	Maintained
->  F:	drivers/net/ethernet/xilinx/xilinx_axienet*
->  
-> +XILINX MAILBOX DRIVER
-> +M:	Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-> +L:	linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:	Maintained
-> +F:	drivers/mailbox/mailbox-xilinx.c
-> +F:	Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
-> +
->  XILINX UARTLITE SERIAL DRIVER
->  M:	Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
->  L:	linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index 84b0a2d..e11e4b2 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -60,4 +60,12 @@ config ALTERA_MBOX
->  	  An implementation of the Altera Mailbox soft core. It is used
->  	  to send message between processors. Say Y here if you want to use the
->  	  Altera mailbox support.
-> +
-> +config XILINX_MBOX
-> +	tristate "Xilinx Mailbox"
-> +	help
-> +	  An implementation of the Xilinx Mailbox soft core. It is used
-> +	  to send message between processors. Say Y here if you want to use the
-> +	  Xilinx mailbox support.
-> +
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index b18201e..d28a028 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -11,3 +11,5 @@ obj-$(CONFIG_OMAP2PLUS_MBOX)	+= omap-mailbox.o
->  obj-$(CONFIG_PCC)		+= pcc.o
->  
->  obj-$(CONFIG_ALTERA_MBOX)	+= mailbox-altera.o
-> +
-> +obj-$(CONFIG_XILINX_MBOX)	+= mailbox-xilinx.o
-> diff --git a/drivers/mailbox/mailbox-xilinx.c b/drivers/mailbox/mailbox-xilinx.c
-> new file mode 100644
-> index 0000000..680d2f9
-> --- /dev/null
-> +++ b/drivers/mailbox/mailbox-xilinx.c
-> @@ -0,0 +1,353 @@
-> +/*
-> + * Copyright (c) 2015, National Instruments Corp. All rights reserved.
-> + *
-> + * Driver for the Xilinx LogiCORE mailbox IP block
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRIVER_NAME "xilinx-mailbox"
-> +
-> +/* register offsets */
-> +#define MAILBOX_REG_WRDATA	0x00
-> +#define MAILBOX_REG_RDDATA	0x08
-> +#define MAILBOX_REG_STATUS	0x10
-> +#define MAILBOX_REG_ERROR	0x14
-> +#define MAILBOX_REG_SIT	0x18
-> +#define MAILBOX_REG_RIT	0x1c
-> +#define MAILBOX_REG_IS	0x20
-> +#define MAILBOX_REG_IE	0x24
-> +#define MAILBOX_REG_IP	0x28
-> +
-> +/* status register */
-> +#define STS_RTA	BIT(3)
-> +#define STS_STA	BIT(2)
-> +#define STS_FULL	BIT(1)
-> +#define STS_EMPTY	BIT(0)
-> +
-> +/* error register */
-> +#define ERR_FULL	BIT(1)
-> +#define ERR_EMPTY	BIT(0)
-> +
-> +/* mailbox interrupt status register */
-> +#define INT_STATUS_ERR	BIT(2)
-> +#define INT_STATUS_RTI	BIT(1)
-> +#define INT_STATUS_STI	BIT(0)
-> +
-> +/* mailbox interrupt enable register */
-> +#define INT_ENABLE_ERR	BIT(2)
-> +#define INT_ENABLE_RTI	BIT(1)
-> +#define INT_ENABLE_STI	BIT(0)
-> +
-> +#define MBOX_POLLING_MS		5	/* polling interval 5ms */
-> +
-> +struct xilinx_mbox {
-> +	int irq;
-> +	void __iomem *mbox_base;
-> +	struct clk *clk;
-> +	struct device *dev;
-> +	struct mbox_controller controller;
-> +
-> +	/* if the controller supports only RX polling mode */
-> +	struct timer_list rxpoll_timer;
-> +};
-> +
-> +static struct xilinx_mbox *mbox_chan_to_xilinx_mbox(struct mbox_chan *chan)
-> +{
-> +	if (!chan || !chan->con_priv)
-> +		return NULL;
-> +
-> +	return (struct xilinx_mbox *)chan->con_priv;
-> +}
-> +
-> +static inline bool xilinx_mbox_full(struct xilinx_mbox *mbox)
-> +{
-> +	u32 status;
-> +
-> +	status = readl_relaxed(mbox->mbox_base + MAILBOX_REG_STATUS);
-> +
-> +	return status & STS_FULL;
-> +}
-> +
-> +static inline bool xilinx_mbox_pending(struct xilinx_mbox *mbox)
-> +{
-> +	u32 status;
-> +
-> +	status = readl_relaxed(mbox->mbox_base + MAILBOX_REG_STATUS);
-> +
-> +	return !(status & STS_EMPTY);
-> +}
-> +
-> +static void xilinx_mbox_intmask(struct xilinx_mbox *mbox, u32 mask, bool enable)
-> +{
-> +	u32 mask_reg;
-> +
-> +	mask_reg = readl_relaxed(mbox->mbox_base + MAILBOX_REG_IE);
-> +	if (enable)
-> +		mask_reg |= mask;
-> +	else
-> +		mask_reg &= ~mask;
-> +
-> +	writel_relaxed(mask_reg, mbox->mbox_base + MAILBOX_REG_IE);
-> +}
-> +
-> +
-> +static inline void xilinx_mbox_rx_intmask(struct xilinx_mbox *mbox, bool enable)
-> +{
-> +	xilinx_mbox_intmask(mbox, INT_ENABLE_RTI, enable);
-> +}
-> +
-> +static inline void xilinx_mbox_tx_intmask(struct xilinx_mbox *mbox, bool enable)
-> +{
-> +	xilinx_mbox_intmask(mbox, INT_ENABLE_STI, enable);
-> +}
-> +
-> +static void xilinx_mbox_rx_data(struct mbox_chan *chan)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +	u32 data;
-> +
-> +	if (xilinx_mbox_pending(mbox)) {
-> +		data = readl_relaxed(mbox->mbox_base + MAILBOX_REG_RDDATA);
-> +		mbox_chan_received_data(chan, (void *)data);
-> +	}
-> +}
-> +
-> +static void xilinx_mbox_poll_rx(unsigned long data)
-> +{
-> +	struct mbox_chan *chan = (struct mbox_chan *)data;
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	xilinx_mbox_rx_data(chan);
-> +
-> +	mod_timer(&mbox->rxpoll_timer,
-> +		  jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
-> +}
-> +
-> +static irqreturn_t xilinx_mbox_interrupt(int irq, void *p)
-> +{
-> +	u32 mask;
-> +	struct mbox_chan *chan = (struct mbox_chan *)p;
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	mask = readl_relaxed(mbox->mbox_base + MAILBOX_REG_IS);
-> +	if (mask & INT_STATUS_RTI)
-> +		xilinx_mbox_rx_data(chan);
-> +
-> +	/* mask irqs *before* notifying done, require tx_block=true */
-> +	if (mask & INT_STATUS_STI) {
-> +		xilinx_mbox_tx_intmask(mbox, false);
-> +		mbox_chan_txdone(chan, 0);
-> +	}
-> +
-> +	writel_relaxed(mask, mbox->mbox_base + MAILBOX_REG_IS);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int xilinx_mbox_startup(struct mbox_chan *chan)
-> +{
-> +	int ret;
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	if (mbox->irq > 0) {
-> +		ret = request_irq(mbox->irq, xilinx_mbox_interrupt, 0,
-> +				  dev_name(mbox->dev), chan);
-> +		if (unlikely(ret)) {
-> +			dev_err(mbox->dev,
-> +				"failed to register mailbox interrupt:%d\n",
-> +				ret);
-> +			return ret;
-> +		}
-> +
-> +		xilinx_mbox_rx_intmask(mbox, true);
-> +
-> +		/* if fifo was full already, we didn't get an interrupt */
-> +		while (xilinx_mbox_pending(mbox))
-> +			xilinx_mbox_rx_data(chan);
-> +
-> +		return 0;
-> +	}
-> +
-> +	/* setup polling timer */
-> +	setup_timer(&mbox->rxpoll_timer, xilinx_mbox_poll_rx,
-> +		    (unsigned long)chan);
-> +	mod_timer(&mbox->rxpoll_timer,
-> +		  jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
-> +
-> +	return 0;
-> +}
-> +
-> +static int xilinx_mbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +	u32 *udata = (u32 *)data;
-> +
-> +	if (!mbox || !data)
-> +		return -EINVAL;
-> +
-> +	if (xilinx_mbox_full(mbox))
-> +		return -EBUSY;
-> +
-> +	/* enable interrupt before send */
-> +	if (mbox->irq >= 0)
-> +		xilinx_mbox_tx_intmask(mbox, true);
-> +
-> +	writel_relaxed(*udata, mbox->mbox_base + MAILBOX_REG_WRDATA);
-> +
-> +	return 0;
-> +}
-> +
-> +static bool xilinx_mbox_last_tx_done(struct mbox_chan *chan)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	/* return false if mailbox is full */
-> +	return !xilinx_mbox_full(mbox);
-> +}
-> +
-> +static bool xilinx_mbox_peek_data(struct mbox_chan *chan)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	return xilinx_mbox_pending(mbox);
-> +}
-> +
-> +static void xilinx_mbox_shutdown(struct mbox_chan *chan)
-> +{
-> +	struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +	if (mbox->irq > 0) {
-> +		/* mask all interrupts */
-> +		writel_relaxed(0, mbox->mbox_base + MAILBOX_REG_IE);
-> +		free_irq(mbox->irq, chan);
-> +	} else {
-> +		del_timer_sync(&mbox->rxpoll_timer);
-> +	}
-> +}
-> +
-> +static struct mbox_chan_ops xilinx_mbox_ops = {
-> +	.send_data = xilinx_mbox_send_data,
-> +	.startup = xilinx_mbox_startup,
-> +	.shutdown = xilinx_mbox_shutdown,
-> +	.last_tx_done = xilinx_mbox_last_tx_done,
-> +	.peek_data = xilinx_mbox_peek_data,
-> +};
-> +
-> +static int xilinx_mbox_probe(struct platform_device *pdev)
-> +{
-> +	struct xilinx_mbox *mbox;
-> +	struct resource	*regs;
-> +	struct mbox_chan *chans;
-> +	int ret;
-> +
-> +	mbox = devm_kzalloc(&pdev->dev, sizeof(*mbox), GFP_KERNEL);
-> +	if (!mbox)
-> +		return -ENOMEM;
-> +
-> +	/* get clk and enable */
-> +	mbox->clk = devm_clk_get(&pdev->dev, "mbox");
-> +	if (IS_ERR(mbox->clk)) {
-> +		dev_err(&pdev->dev, "Couldn't get clk.\n");
-> +		return PTR_ERR(mbox->clk);
-> +	}
-> +
-> +	/* allocated one channel */
-> +	chans = devm_kzalloc(&pdev->dev, sizeof(*chans), GFP_KERNEL);
-> +	if (!chans)
-> +		return -ENOMEM;
-> +
-> +	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
-> +	if (IS_ERR(mbox->mbox_base))
-> +		return PTR_ERR(mbox->mbox_base);
-> +
-> +	mbox->irq = platform_get_irq(pdev, 0);
-> +	/* if irq is present, we can use it, otherwise, poll */
-> +	if (mbox->irq > 0) {
-> +		mbox->controller.txdone_irq = true;
-> +	} else {
-> +		dev_info(&pdev->dev, "IRQ not found, fallback to polling.\n");
-> +		mbox->controller.txdone_poll = true;
-> +		mbox->controller.txpoll_period = MBOX_POLLING_MS;
-> +	}
-> +
-> +	mbox->dev = &pdev->dev;
-> +
-> +	/* hardware supports only one channel. */
-> +	chans[0].con_priv = mbox;
-> +	mbox->controller.dev = mbox->dev;
-> +	mbox->controller.num_chans = 1;
-> +	mbox->controller.chans = chans;
-> +	mbox->controller.ops = &xilinx_mbox_ops;
-> +
-> +
+> So you agree to manage these subsystem clocks in CCF, but they should be
+> provided by their own (globalcon) drivers, right?
 
-only one empty line here but otherwise
+Yes. I previously got the impression that the subsystem clocks are not
+directly associated to the larbs, but needed to be handled by the larb
+code due to some side effect. Now that I saw that the larbs are directly
+in the subsystem register space it all makes sense.
 
-Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Note that the way Mediatek SoCs are designed around sub modules is bit
+unusual and does not fit very well in the Linux directory structure.
+Normally SoCs have a single clocks controller which controls all clocks
+in the SoC. Then you often have a reset controller providing reset lines
+in the SoC. In this case it's clear that the clk driver goes to
+drivers/clk/, the reset controller driver to drivers/reset/. Mediatek
+SoCs instead have several blocks, each with its own clock and reset
+controller. Splitting each block up into parts in drivers/clk/ and
+drivers/reset/ leads to quite a code fragmentation.
+This is my opinion, it would be great to hear something from others.
+Matthias? I'd like to avoid running into a direction that is not
+acceptable in the end.
 
-Thanks,
-Michal
+> 
+> I have an implementation question. These subsystem clocks can't be
+> implemented in CCF default clock-gate. So in our previous patches, we
+> added a drivers/clk/mediate/clk-gate.c to implement new clock gate
+> operations. Is it a good way to export mediatek/clk-gate.h (put it in
+> include/linux/) for other drivers to implement their own clocks?
 
+Give it a try. If that's not acceptable we can still shuffle this around
+without much effort.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
