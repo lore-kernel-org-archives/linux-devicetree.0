@@ -1,40 +1,119 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
-Date: Fri, 29 May 2015 13:27:34 -0500
-Message-ID: <5568AF96.1000201@codeaurora.org>
-References: <=fu.wei@linaro.org>	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>	<5564A44A.5000606@codeaurora.org>	<CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA@mail.gmail.com>	<55686960.5010503@codeaurora.org>	<CADyBb7tdoajU4crdjrjCf68_Lz=8KbxAX4+Gd_H15aNaimHXww@mail.gmail.com>	<556889D9.5070707@codeaurora.org> <CADyBb7t4moXr_a9unRXDHZCcmbvjWui2ifJ6=eiv8Ce=FOWoYA@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: l2c: add options to overwrite prefetching behavior
+Date: Fri, 29 May 2015 11:30:28 -0700
+Message-ID: <5568B044.80600@gmail.com>
+References: <1431726751-9169-1-git-send-email-hauke@hauke-m.de> <5568A745.7020502@gmail.com> <5568ABEF.3040001@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7t4moXr_a9unRXDHZCcmbvjWui2ifJ6=eiv8Ce=FOWoYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5568ABEF.3040001-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2015 12:53 PM, Fu Wei wrote:
-> If this interrupter is triggered, that means system has goes wrong,
-> who knows what is wrong ,
-> I have to make sure that  system get into that routine ,because of the
-> WS0, if not I won't do panic.
+On 29/05/15 11:11, Hauke Mehrtens wrote:
+> 
+> 
+> On 05/29/2015 07:52 PM, Florian Fainelli wrote:
+>> On 15/05/15 14:52, Hauke Mehrtens wrote:
+>>> These options make it possible to overwrites the data and instruction
+>>> prefetching behavior of the arm pl310 cache controller.
+>>>
+>>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>>> ---
+>>> v2: only set prefetch
+>>> v1: set prefetch and aux
+>>>
+>>>  Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
+>>>  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
+>>>  2 files changed, 24 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> index 0dbabe9..528821a 100644
+>>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> @@ -67,6 +67,10 @@ Optional properties:
+>>>    disable if zero.
+>>>  - arm,prefetch-offset : Override prefetch offset value. Valid values are
+>>>    0-7, 15, 23, and 31.
+>>> +- arm,prefetch-data : Enable data prefetch. Enabling prefetching
+>>> +  can improve performance.
+>>
+>> I do not think the "can improve performance" has a place in a binding,
+>> this is either not technical enough about what this does, or marketing
+>> enough it does not buy us much.
+>>
+>> data/instruction pre-fetching are commonly found on cache controller
+>> these days, so I would be tempted to remove the "arm," prefixing here
+>> since this can be generalized to other kinds of cache controllers.
+>> Documenting that this can be either a boolean, or accept a value (see
+>> below) could help.
+> 
+> So you think I should only add prefetch-data and prefetch-instr without
+> the arm prefix.
 
-But the interrupt handler is not registered as shared, which means that 
-it cannot be generated by another device.
+That's what I think yes, others may disagree.
 
-> And in a interrupter routine , checking the Interrupter status
-> register is right way to do.
+>>
+>>> +- arm,prefetch-instr : Enable instruction prefetch. Enabling prefetching
+>>> +  can improve performance.
+>>>  
+>>>  Example:
+>>>  
+>>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+>>> index e309c8f..1aa970a 100644
+>>> --- a/arch/arm/mm/cache-l2x0.c
+>>> +++ b/arch/arm/mm/cache-l2x0.c
+>>> @@ -1199,6 +1199,26 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>>>  		pr_err("L2C-310 OF arm,prefetch-offset property value is missing\n");
+>>>  	}
+>>>  
+>>> +	ret = of_property_read_u32(np, "arm,prefetch-data", &val);
+>>> +	if (ret == 0) {
+>>> +		if (val)
+>>> +			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+>>> +		else
+>>> +			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>>> +	} else if (ret != -EINVAL) {
+>>> +		pr_err("L2C-310 OF arm,prefetch-data property value is missing\n");
+>>> +	}
+>>
+>> If we want to generalize the use of this property, there could indeed be
+>> a value associated with it, if the cache controller supports different
+>> pre-fetching strides, however this is not the cache for these cache
+>> controllers it seems, are not we going to show error messages more often
+>> than desired?
+> I did this so it is possible to deactivate the prefech mode. I do not
+> know if somebody wants to do that. I haven't understood how you suggest
+> I should change.
+> When you do not associate a value with an entry in device tree it is
+> there or not there, so we could only activate it when it was not
+> automatically detected, but we could not deactivate it, because the case
+> when this value is not specified in device tree would be, use to auto
+> detected the value.
 
-If you get an interrupt, but WS0 is not set, then you should return 
-IRQ_NONE instead of IRQ_HANDLED.
+My point is that you use of_read_property_u32, but your example does not
+state what should be the value associated with this property in the
+binding, so it is unclear what are the results without looking at the
+code between these examples:
 
-Also, I don't think IRQF_TIMER is correct.  It's not a timer interrupt. 
-  Watchdogs are *not* timers.
+/* Enable data pre-fetching */
+#1 arm,data-prefetch;
+#2 arm,data-prefetch = <1>;
 
+/* Disable data pre-fetching */
+#3 arm,data-prefetch = <0>;
+
+/* do nothing, empty aka retain existing settings set by firmware */
+#4
+
+Based on the code, only #2 and #3 are intended, which raises the
+question, do not we want of_read_property_bool() instead then? The
+binding does seem to suggest that only #1 and #4 are valid though.
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
