@@ -1,32 +1,261 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH] EDAC, edac_stub: Drop arch-specific include
-Date: Fri, 29 May 2015 14:25:52 -0700
-Message-ID: <CAPw-ZTnqfCLY_e91OLmbaaPMn9O9DLo1GXoA+0LZTusF01kM2g@mail.gmail.com>
-References: <1432337580-3750-1-git-send-email-lho@apm.com>
-	<20150529094654.GD31435@pd.tnic>
-	<CAPw-ZTnLqx0KsQkmv++zQRQ7hroaKML1rWgVafisENam0J17Mg@mail.gmail.com>
-	<20150529185926.GP31435@pd.tnic>
-	<20150529200520.GT31435@pd.tnic>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH] ARM: BCM5301X: add NAND flash chip description
+Date: Fri, 29 May 2015 23:39:47 +0200
+Message-ID: <1432935587-17949-1-git-send-email-hauke@hauke-m.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150529200520.GT31435-fF5Pk5pvG8Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This adds the NAND flash chip description for a standard chip found
+connected to this SoC. This makes use of generic Broadcom NAND driver
+with the iProc interface.
 
-On Fri, May 29, 2015 at 1:05 PM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
-> On Fri, May 29, 2015 at 08:59:26PM +0200, Borislav Petkov wrote:
->> Does it build when you remove it?
->
-> IOW, this should fix it:
+Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+---
 
-Confirmed.
+changes since RFC:
+* remove linux,part-probe, there are still discussion about how
+  this binding should look like
+* always activate the nand driver
+* put the description of the nand chip into an own file
+* do not remove the IRQ number from the bcma entry
 
--Loc
+This is based on Broadcom stblinux branch bcm/dts
+
+Florian can you take this.
+
+ arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts        |  1 +
+ arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts        |  1 +
+ arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts  |  1 +
+ arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts       |  9 +++-----
+ arch/arm/boot/dts/bcm4708-netgear-r6250.dts        |  1 +
+ arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts     |  1 +
+ arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts      |  1 +
+ arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts        |  1 +
+ arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts |  1 +
+ arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts  |  1 +
+ arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts  |  1 +
+ arch/arm/boot/dts/bcm4709-netgear-r8000.dts        |  1 +
+ arch/arm/boot/dts/bcm5301x-nand-cs0-bch8.dtsi      | 24 ++++++++++++++++++++++
+ arch/arm/boot/dts/bcm5301x.dtsi                    | 12 +++++++++++
+ 14 files changed, 50 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/boot/dts/bcm5301x-nand-cs0-bch8.dtsi
+
+diff --git a/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts b/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts
+index 71cff8d..112a5a8 100644
+--- a/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts
++++ b/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "asus,rt-ac56u", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts b/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts
+index 8b62836..3600f56 100644
+--- a/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts
++++ b/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "asus,rt-ac68u", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
+index 78e95c0..24f0ab5 100644
+--- a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
++++ b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "buffalo,wzr-1750dhp", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
+index 946c728..f039393 100644
+--- a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
++++ b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "luxul,xwc-1000", "brcm,bcm4708";
+@@ -23,12 +24,8 @@
+ 		reg = <0x00000000 0x08000000>;
+ 	};
+ 
+-	axi@18000000 {
+-		nand@28000 {
+-			reg = <0x00028000 0x1000>;
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-
++	nand: nand@18028000 {
++		nandcs@0 {
+ 			partition@0 {
+ 				label = "ubi";
+ 				reg = <0x00000000 0x08000000>;
+diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+index 2ed9e57..326ce8f 100644
+--- a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
++++ b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "netgear,r6250v1", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts b/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts
+index 3991042..3a94606 100644
+--- a/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts
++++ b/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "netgear,r6300v2", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+index 66dfb53..d6a033b 100644
+--- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
++++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "smartrg,sr400ac", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts b/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts
+index 0ee85ea..71b98cf 100644
+--- a/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts
++++ b/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm47081.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "asus,rt-n18u", "brcm,bcm47081", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts b/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
+index db9131e..bb0cb0b 100644
+--- a/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
++++ b/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm47081.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "buffalo,wzr-600dhp2", "brcm,bcm47081", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts b/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts
+index 7d6868a..184fd92 100644
+--- a/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts
++++ b/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm47081.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "buffalo,wzr-900dhp", "brcm,bcm47081", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts b/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts
+index 548e93b..2a92e8d 100644
+--- a/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts
++++ b/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "buffalo,wxr-1900dhp", "brcm,bcm4709", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+index ea26dd3..446c586 100644
+--- a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
++++ b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+@@ -10,6 +10,7 @@
+ /dts-v1/;
+ 
+ #include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
+ / {
+ 	compatible = "netgear,r8000", "brcm,bcm4709", "brcm,bcm4708";
+diff --git a/arch/arm/boot/dts/bcm5301x-nand-cs0-bch8.dtsi b/arch/arm/boot/dts/bcm5301x-nand-cs0-bch8.dtsi
+new file mode 100644
+index 0000000..a44ec4d
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm5301x-nand-cs0-bch8.dtsi
+@@ -0,0 +1,24 @@
++/*
++ * Broadcom BCM470X / BCM5301X Nand chip defaults.
++ * 
++ * This should be included if the NAND controller is on chip select 0 
++ * and uses 8 bit ECC.
++ *
++ * Copyright (C) 2015 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
++ *
++ * Licensed under the GNU/GPL. See COPYING for details.
++ */
++
++/ {
++	nand@18028000 {
++		nandcs@0 {
++			compatible = "brcm,nandcs";
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			nand-ecc-strength = <8>;
++			nand-ecc-step-size = <512>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index 78aec62..a97f631 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -143,4 +143,16 @@
+ 			#gpio-cells = <2>;
+ 		};
+ 	};
++
++	nand: nand@18028000 {
++		compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brcmnand";
++		reg = <0x18028000 0x600>, <0x1811a408 0x600>, <0x18028f00 0x20>;
++		reg-names = "nand", "iproc-idm", "iproc-ext";
++		interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		brcm,nand-has-wp;
++	};
+ };
+-- 
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
