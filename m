@@ -1,105 +1,44 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: add helper function to retrive match data
-Date: Fri, 29 May 2015 10:00:44 -0500
-Message-ID: <CAL_JsqLYisfiBCLHw_vNrwu7ppqyzKRbomtmTzQQRmHOOK_QmA@mail.gmail.com>
-References: <1430935749-3881-1-git-send-email-manabian@gmail.com>
+Subject: Re: [PATCH trivial] of: Grammar s/property exist/property exists/
+Date: Fri, 29 May 2015 10:01:05 -0500
+Message-ID: <CAL_JsqKMC_AnPqOAhLgxGsA97aSL_R_vTwzVz=WdZEV+tUQPfg@mail.gmail.com>
+References: <1430761339-23869-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430935749-3881-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1430761339-23869-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 6, 2015 at 1:09 PM, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> It's a common operation for device drivers to retrive the data
-> member from of_device_id struct in their probe function.
->
-> Most driver end up doing:
->     const struct of_device_id *match;
->     match = of_match_device(driver_of_match, &pdev->dev);
->     driver->data = match->data;
->
-> With the of_device_get_match_data helper function all this can
-> done in one go.
->
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, May 4, 2015 at 12:42 PM, Geert Uytterhoeven
+<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Applied with inline fixup, thanks.
+Applied, thanks.
 
 Rob
 
 > ---
-> Hi DT maintainers,
+>  include/linux/of.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Here is the patch to add of_device_get_match_data as indicated in:
-> http://marc.info/?l=devicetree&m=143068795621692&w=2
->
-> There are lot of device driver that can be simplified with this
-> helper function. After the function has gone upstream I will
-> spend some time getting some of them converted over.
->
-> Maybe someone with Coccinelle skills could create a script to
-> do some of the work also.
->
-> regards,
-> Joachim Eastwood
->
->  drivers/of/device.c       | 12 ++++++++++++
->  include/linux/of_device.h |  7 +++++++
->  2 files changed, 19 insertions(+)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 20c1332a0018..8b91ea241b10 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -163,6 +163,18 @@ void of_device_unregister(struct platform_device *ofdev)
->  }
->  EXPORT_SYMBOL(of_device_unregister);
->
-> +const void *of_device_get_match_data(const struct device *dev)
-> +{
-> +       const struct of_device_id *match;
-> +
-> +       match = of_match_device(dev->driver->of_match_table, dev);
-> +       if (!match)
-> +               return NULL;
-> +
-> +       return match->data;
-> +}
-> +EXPORT_SYMBOL(of_device_get_match_data);
-> +
->  ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->  {
->         const char *compat;
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index 22801b10cef5..3237d34e2ab1 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -33,6 +33,8 @@ extern int of_device_add(struct platform_device *pdev);
->  extern int of_device_register(struct platform_device *ofdev);
->  extern void of_device_unregister(struct platform_device *ofdev);
->
-> +extern const void *of_device_get_match_data(const struct device *dev);
-> +
->  extern ssize_t of_device_get_modalias(struct device *dev,
->                                         char *str, ssize_t len);
->
-> @@ -65,6 +67,11 @@ static inline int of_driver_match_device(struct device *dev,
->  static inline void of_device_uevent(struct device *dev,
->                         struct kobj_uevent_env *env) { }
->
-> +static const void *of_device_get_match_data(const struct device *dev)
-> +{
-> +       return NULL;
-> +}
-> +
->  static inline int of_device_get_modalias(struct device *dev,
->                                    char *str, ssize_t len)
->  {
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index ddeaae6d2083b256..6ebcec335919efab 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -815,7 +815,7 @@ static inline int of_property_read_string_index(struct device_node *np,
+>   * @propname:  name of the property to be searched.
+>   *
+>   * Search for a property in a device node.
+> - * Returns true if the property exist false otherwise.
+> + * Returns true if the property exists false otherwise.
+>   */
+>  static inline bool of_property_read_bool(const struct device_node *np,
+>                                          const char *propname)
 > --
-> 1.8.0
+> 1.9.1
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
