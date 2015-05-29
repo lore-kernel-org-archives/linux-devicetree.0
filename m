@@ -1,36 +1,82 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 3/7] net: dsa: ar8xxx: add regmap support
-Date: Fri, 29 May 2015 04:44:25 +0200
-Message-ID: <20150529024425.GI11260@lunn.ch>
-References: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org>
- <1432863742-18427-4-git-send-email-mathieu@codeaurora.org>
- <5567C7B6.5060905@gmail.com>
- <20150529022329.GH11260@lunn.ch>
- <5567D0BA.5020409@gmail.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCHv5 1/2] ARM: socfpga: support suspend to ram
+Date: Thu, 28 May 2015 22:15:16 -0500
+Message-ID: <5567D9C4.7090903@opensource.altera.com>
+References: <1432847977-18880-1-git-send-email-atull@opensource.altera.com>
+ <1432847977-18880-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5567D0BA.5020409-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, gang.chen.5i5j-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, leitec-z4FmpzNVuK5Wk0Htik3J/w@public.gmane.org, fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org, pavel.nakonechny-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, sfeldma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432847977-18880-2-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Pavel Machek <pavel@denx.de>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> Fair enough, are there other global "things" besides counters that could
-> deserve adding maybe some sort of global/master net_device to help query
-> switch-wide information?
 
-This was discussed a while back. I like the current abstraction, all
-interfaces are real interfaces you can send and receive packets
-over. This pseudo interface cannot be used for packet transfer, which
-seems odd.
 
-Having access to registers for debugging, so debugfs seems like the
-best option to me.
+On 5/28/15 4:19 PM, Alan Tull wrote:
+> Add code that requests that the sdr controller go into
+> self-refresh mode.  This code is run from ocram.
+> 
+> Suspend-to-RAM and EDAC support are mutually exclusive on
+> SOCFPGA.  If the EDAC is enabled, it will prevent the
+> platform from going into suspend.
+> 
+> Example of how to request to suspend to ram:
+>  $ echo enabled > \
+> /sys/devices/soc/ffc02000.serial0/tty/ttyS0/power/wakeup
+> 
+>  $ echo -n mem > /sys/power/state
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> Cc: Pavel Machek <pavel@denx.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Dinh Nguyen <dinguyen@opensource.altera.com>
+> Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> ---
+> v2: use Generic on-chip SRAM driver to allocate ocram
+>     rm fncpy_align since generic allocator handles alignment
+>     check __arm_ioremap_exec return code
+>     check for NULL pointers
+>     add a comment regarding sdram controller configuration
+> v3: fix renamed #define
+>     propagate socfpga_setup_ocram_self_refresh error code
+> v4: Kconfig: don't need to select GENERIC_ALLOCATER
+>     add CONFIG_SOCFPGA_SUSPEND
+>     make s2r and EDAC support mutually exclusive
+>     socfpga.c: add sdr_ctl_base_addr
+>     return error if ocram not available in device tree
+>     update copyright years
+> v5: remove compile time dependency
+>     edac driver will prevent suspend
+>     don't configure scu standby mode; done in enable_scu().
+>     fix comments about required sdram controller configuration
+> ---
+>  arch/arm/mach-socfpga/Kconfig        |   10 ++-
+>  arch/arm/mach-socfpga/Makefile       |    1 +
+>  arch/arm/mach-socfpga/core.h         |    6 +-
+>  arch/arm/mach-socfpga/pm.c           |  149 ++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-socfpga/self-refresh.S |  136 +++++++++++++++++++++++++++++++
+>  arch/arm/mach-socfpga/socfpga.c      |    6 +-
+>  drivers/edac/altera_edac.c           |   20 +++++
+>  7 files changed, 325 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/arm/mach-socfpga/pm.c
+>  create mode 100644 arch/arm/mach-socfpga/self-refresh.S
+> 
 
-     Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Which branch are you basing this patch on? I got a trivial patch
+conflict in Kconfig when I applied to arm-soc/for-next and v4.1-rc5.
+
+Also, I'm getting these sparse warnings:
+
+arch/arm/mach-socfpga/pm.c:86:25: warning: incorrect type in argument 1
+(different address spaces)
+arch/arm/mach-socfpga/pm.c:86:25:    expected void *<noident>
+arch/arm/mach-socfpga/pm.c:86:25:    got void [noderef]
+<asn:2>*[assigned] suspend_ocram_base
+arch/arm/mach-socfpga/pm.c:108:52: warning: cast removes address space
+of expression
+
+Dinh
