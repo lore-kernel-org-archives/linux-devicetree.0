@@ -1,63 +1,82 @@
-From: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v9 1/6] arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
-Date: Sat, 30 May 2015 09:50:56 +0800
-Message-ID: <1432950661-23060-2-git-send-email-bintian.wang@huawei.com>
-References: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
+From: Gregory Fong <gregory.0xf0@gmail.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: brcmstb-gpio: document properties for wakeup
+Date: Fri, 29 May 2015 18:51:48 -0700
+Message-ID: <CADtm3G5rFxU-p1BHNh-=FFA34ud_8_8uiRZSM3icF4=JfBU+Jg@mail.gmail.com>
+References: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
+ <1432865650-4062-4-git-send-email-gregory.0xf0@gmail.com> <20150530003613.GW27753@ld-irv-0074>
+ <CADtm3G43-EBUOwAxcT2B-0syzDtpjdyfPmOHmmDsNN8+FgoZAA@mail.gmail.com> <20150530013709.GY27753@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432950661-23060-1-git-send-email-bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
-Cc: xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150530013709.GY27753@ld-irv-0074>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces ARCH_HISI to enable Hisilicon SoC family in
-Kconfig and defconfig.
+On Fri, May 29, 2015 at 6:37 PM, Brian Norris
+<computersforpeace@gmail.com> wrote:
+> On Fri, May 29, 2015 at 05:57:50PM -0700, Gregory Fong wrote:
+>> On Fri, May 29, 2015 at 5:36 PM, Brian Norris
+>> <computersforpeace@gmail.com> wrote:
+>> > On Thu, May 28, 2015 at 07:14:07PM -0700, Gregory Fong wrote:
+>> >> --- a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+>> >> +++ b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+>> >> @@ -33,6 +33,12 @@ Optional properties:
+> ...
+>> >>  - #interrupt-cells:
+>> >>      Should be <2>.  The first cell is the GPIO number, the second should specify
+>> >>      flags.  The following subset of flags is supported:
+>> >> @@ -48,7 +54,10 @@ Optional properties:
+>> >>      Marks the device node as an interrupt controller
+>> >>
+>> >>  - interrupt-names:
+>> >> -    The name of the IRQ resource used by this controller
+>> >> +    The names of the IRQ resources used by this controller
+>> >
+>> > If you're specifying names, you should list them here.
+>>
+>> I was wondering about that.  Some bindings have them listed, some
+>> don't.  In this case I know what names currently exist but there could
+>> certainly be different ones in the future.  How does that work?  Or am
+>> I misunderstanding what this field is used for?  Where are the
+>> documented rules for this?
+>
+> The only documentation I see is:
+> Documentation/devicetree/bindings/resource-names.txt
+>
+> That documents the basics of the *-names properties, not their expected
+> usage.
+>
+> In practice, they're only useful if you have enough optional resources
+> that fixed indexing isn't sufficient, and you need to use
+> platform_get_resource_byname().
+>
+> So IMO, their purposes seems to be one of these:
+> (1) functional (e.g., for get_resource_byname(), when you have more than
+>     one optional resource)
+> (2) self-documentation (which might run counter to #1, as you begin
+>     generating too many unique names)
+> (3) no purpose
+>
+> So IMO, if you ever want (1), they shouldn't have instance-specific
+> naming, but should use something generic to the device class. Otherwise,
+> they are just self-documentation, and aren't functionally useful. So
+> IMO, these sorts of names:
+>
+>         interrupt-names = "upg_gio_aon", "upg_gio_aon_wakeup";
+>
+> work better as functional descriptions:
+>
+>         interrupt-names = "gio", "wakeup";
+>
+> But in the end, I wouldn't foresee you needing to do (1), so you're left
+> with (2) or (3), at which point I'm not sure if you should even mention
+> the property.
 
-Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Acked-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Tested-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Tested-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/Kconfig           |    5 +++++
- arch/arm64/configs/defconfig |    1 +
- 2 files changed, 6 insertions(+)
+I'm fine with leaving out the interrupt-names property, since we're
+not using it here anyway.  Unless there are serious objections, I'll
+plan on remove it from the bindings doc next round.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 4269dba..2af5efe 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -180,6 +180,11 @@ config ARCH_FSL_LS2085A
- 	help
- 	  This enables support for Freescale LS2085A SOC.
- 
-+config ARCH_HISI
-+	bool "Hisilicon SoC Family"
-+	help
-+	  This enables support for Hisilicon ARMv8 SoC family
-+
- config ARCH_MEDIATEK
- 	bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
- 	select ARM_GIC
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2ed7449..1d293ea 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -33,6 +33,7 @@ CONFIG_MODULE_UNLOAD=y
- # CONFIG_IOSCHED_DEADLINE is not set
- CONFIG_ARCH_EXYNOS7=y
- CONFIG_ARCH_FSL_LS2085A=y
-+CONFIG_ARCH_HISI=y
- CONFIG_ARCH_MEDIATEK=y
- CONFIG_ARCH_SEATTLE=y
- CONFIG_ARCH_TEGRA=y
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Gregory
