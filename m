@@ -1,7 +1,7 @@
 From: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v9 4/6] Documentation: DT: PL011: hi6220: add compatible string for Hisilicon designed UART
-Date: Sat, 30 May 2015 09:50:59 +0800
-Message-ID: <1432950661-23060-5-git-send-email-bintian.wang@huawei.com>
+Subject: [PATCH v9 1/6] arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
+Date: Sat, 30 May 2015 09:50:56 +0800
+Message-ID: <1432950661-23060-2-git-send-email-bintian.wang@huawei.com>
 References: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,31 +12,48 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ke
 Cc: xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hisilicon does some performance enhancements based on PL011(e.g. larger
-FIFO length), so add one compatible string "hisilicon,hi6220-uart" for
-future optimisations or workarounds works.
+This patch introduces ARCH_HISI to enable Hisilicon SoC family in
+Kconfig and defconfig.
 
 Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Tested-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Tested-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/serial/pl011.txt |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/Kconfig           |    5 +++++
+ arch/arm64/configs/defconfig |    1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/pl011.txt b/Documentation/devicetree/bindings/serial/pl011.txt
-index ba3ecb8..cb9fd9d 100644
---- a/Documentation/devicetree/bindings/serial/pl011.txt
-+++ b/Documentation/devicetree/bindings/serial/pl011.txt
-@@ -1,7 +1,9 @@
- * ARM AMBA Primecell PL011 serial UART
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 4269dba..2af5efe 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -180,6 +180,11 @@ config ARCH_FSL_LS2085A
+ 	help
+ 	  This enables support for Freescale LS2085A SOC.
  
- Required properties:
--- compatible: must be "arm,primecell", "arm,pl011"
-+- compatible: should contain one of the following sequences:
-+  * "arm,pl011", "arm,primecell"
-+  * "hisilicon,hi6220-pl011", "arm,pl011", "arm,primecell"
- - reg: exactly one register range with length 0x1000
- - interrupts: exactly one interrupt specifier
- 
++config ARCH_HISI
++	bool "Hisilicon SoC Family"
++	help
++	  This enables support for Hisilicon ARMv8 SoC family
++
+ config ARCH_MEDIATEK
+ 	bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
+ 	select ARM_GIC
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 2ed7449..1d293ea 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -33,6 +33,7 @@ CONFIG_MODULE_UNLOAD=y
+ # CONFIG_IOSCHED_DEADLINE is not set
+ CONFIG_ARCH_EXYNOS7=y
+ CONFIG_ARCH_FSL_LS2085A=y
++CONFIG_ARCH_HISI=y
+ CONFIG_ARCH_MEDIATEK=y
+ CONFIG_ARCH_SEATTLE=y
+ CONFIG_ARCH_TEGRA=y
 -- 
 1.7.9.5
 
