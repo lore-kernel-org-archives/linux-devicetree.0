@@ -1,78 +1,38 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: odroidxu3: Enable USB3 regulators
-Date: Sat, 30 May 2015 19:23:24 +0530
-Message-ID: <CANAwSgTk=YwH23F4981j6z9m4+=_Yrratz6BRSQU7PmPHGT0Bg@mail.gmail.com>
-References: <1432803494-3516-1-git-send-email-linux.amoon@gmail.com> <5566DDA6.1080508@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/6] Introduce Allwinner A33 support
+Date: Sat, 30 May 2015 16:55:00 +0200
+Message-ID: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5566DDA6.1080508-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBTM6U6VQKGQEA5CKKFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 May 2015 at 14:49, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 28.05.2015 17:58, Anand Moon wrote:
->> Enable regulator for usbdrd3_0 and usbdrd3_1
->>>From the schematic pin diagram USB3_0 and USB3_1
->> is regulated by LDO9 and LD011.
->
-> Please reformat statement above to proper sentence(s) without ">" before
-> "From".
->
->>
->> Fix the boot message of failed.
->> [    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
->> [    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
->> [    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
->> [    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
->> [    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
->> [    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
->> [    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
->> [    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
->> [    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
->> [    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
->> [    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
->>
->> ---
->> This patch is based on Krzysztof github branch work-next/odroid-xu3-s2mps11-irq
->> ---
->
-> I mentioned this already on previous postings. Let's make an exercise.
-> Please:
-> 1. Save your email as mbox format (from mailer).
-> 2. Go to a GIT repo with kernel and checkout base branch.
-> 3. git am 0001-the-name-of-file.mbox
-> 4. git show
->
-> Do you see the signed-off-by in commit?
->
-> The patch itself looks good, thanks for fixing this. Just please fix the
-> issues with commit message.
->
-> By the way:
-> 1. The always-on from LDO9 could be probably removed if the ehci-exynos
-> driver had regulator consumer implemented.
-> 2. The Documentation/devicetree/bindings/usb/exynos-usb.txt (or dwc.txt)
-> should proably mention the vdd-supply property.
+Hi Maxime,
 
-Hi Krzysztof,
+Here is a cleaned up series of Vishnu Patekar's A33 support. This should
+address all concerns raised during the posting of v1.
 
-https://patchwork.kernel.org/patch/4420061/
-https://patchwork.kernel.org/patch/4420071/
+I've tested that all peripherals declared in the shared sun8i-a23-a33.dtsi
+work on the A33 too, with the exception of the dma-controller. For the
+dma-controller I've compared the A23 vs A33 manual and the entire dma-
+controller description including the register description is bit for bit
+identical.
 
-These patch are missing for this changes to make it work correctly.
+This has been tested on a 7" Ippo Q8H v1.2 A23 tablet, a 7" Ippo Q8H v1.2
+A33 tablet and a 10" GA10H A33 tablet. The dts for the 10" tablet still
+needs some work wrt the lradc button voltages so that is not included
+in this set.
 
-Can you share you thought on this.
+Regards,
 
--Anand Moon
-
-> Best regards,
-> Krzysztof
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
