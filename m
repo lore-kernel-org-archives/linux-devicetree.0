@@ -1,47 +1,109 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv3] ARM: dts: odroidxu3: Enable USB3 regulators
-Date: Sat, 30 May 2015 09:26:18 +0900
-Message-ID: <556903AA.6080208@samsung.com>
-References: <1432909836-3952-1-git-send-email-linux.amoon@gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: brcmstb-gpio: document properties
+ for wakeup
+Date: Fri, 29 May 2015 17:36:13 -0700
+Message-ID: <20150530003613.GW27753@ld-irv-0074>
+References: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
+ <1432865650-4062-4-git-send-email-gregory.0xf0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432909836-3952-1-git-send-email-linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1432865650-4062-4-git-send-email-gregory.0xf0@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gregory Fong <gregory.0xf0@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 29.05.2015 o 23:30, Anand Moon pisze:
-> Enable regulator for usbdrd3_0 and usbdrd3_1.
-> Looking at the schematic pin diagram for MAX77802
-> USB3_0 and USB3_1 is regulated by LDO9 and LD011.
+On Thu, May 28, 2015 at 07:14:07PM -0700, Gregory Fong wrote:
+> Some brcmstb GPIO controllers can be used to wake from suspend, so use the
+> de facto standard property 'wakeup-source' to mark the nodes of controllers
+> with that capability.
 > 
-> Fix the boot message of failed.
-> [    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
-> [    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
-> [    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
-> [    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
-> [    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
-> [    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
-> [    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
-> [    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
-> [    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
-> [    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
-> [    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
+> Also document interrupts-extended, which will be used for wakeup handling
+> because the interrupt parent for the wake IRQ is different from the regular
+> IRQ.
 > 
-> Tested-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
+> ---
+> New in v2.
+> 
+>  .../devicetree/bindings/gpio/brcm,brcmstb-gpio.txt | 26 +++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+> index 435f1bc..568814f 100644
+> --- a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+> @@ -33,6 +33,12 @@ Optional properties:
+>  - interrupt-parent:
+>      phandle of the parent interrupt controller
+>  
+> +- interrupts-extended:
+> +    Alternate form of specifying interrupts and parents that allows for
+> +    multiple parents.  This takes precedence over 'interrupts' and
+> +    'interrupt-parent'.  This probably must be used if the wakeup-source
+> +    property is provided because that may have a different interrupt parent.
+> +
 
-Looks good now, thanks.
+"This probably must be used" seems a little awkward, especially when
+you're just explaining an implementation detail of our SoCs, rather than
+something unique about this binding. Maybe:
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+  "Wakeup-capable GPIO controllers often route their wakeup interrupt
+  lines through a different interrupt controller than the primary
+  interrupt line, making this property necessary."
 
-Best regards,
-Krzysztof
+>  - #interrupt-cells:
+>      Should be <2>.  The first cell is the GPIO number, the second should specify
+>      flags.  The following subset of flags is supported:
+> @@ -48,7 +54,10 @@ Optional properties:
+>      Marks the device node as an interrupt controller
+>  
+>  - interrupt-names:
+> -    The name of the IRQ resource used by this controller
+> +    The names of the IRQ resources used by this controller
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If you're specifying names, you should list them here.
+
+> +
+> +- wakeup-source:
+> +    GPIOs for this controller can be used as a wakeup source
+>  
+>  Example:
+>  	upg_gio: gpio@f040a700 {
+> @@ -63,3 +72,18 @@ Example:
+>  		interrupt-names = "upg_gio";
+>  		brcm,gpio-bank-widths = <0x20 0x20 0x20 0x18>;
+>  	};
+> +
+> +	upg_gio_aon: gpio@f04172c0 {
+> +		#gpio-cells = <0x2>;
+> +		#interrupt-cells = <0x2>;
+
+Might use decimal instead of hex for the above 2 lines?
+
+> +		compatible = "brcm,bcm7445-gpio", "brcm,brcmstb-gpio";
+> +		gpio-controller;
+> +		interrupt-controller;
+> +		reg = <0xf04172c0 0x40>;
+> +		interrupt-parent = <0xc>;
+
+That should be a phandle, not an int (I realize phandles resolve down to
+an integer, but we're speaking DTS, not DTB).
+
+> +		interrupts = <0x6>;
+> +		interrupts-extended = <0xc 0x6 0xa 0x5>;
+
+Same here (phandles).
+
+Also, even though the interrupt binding semantics specify precedence
+between interrupts and interrupts-extended, I'd think an example should
+stick to one or the other, no?
+
+> +		interrupt-names = "upg_gio_aon", "upg_gio_aon_wakeup";
+> +		wakeup-source;
+> +		brcm,gpio-bank-widths = <0x12 0x4>;
+> +	};
+
+Reviewed-by: Brian Norris <computersforpeace@gmail.com>
