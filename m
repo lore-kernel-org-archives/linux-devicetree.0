@@ -1,82 +1,33 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Device Tree at Plumbers, looking for topics and session leaders
-Date: Sat, 30 May 2015 14:39:24 -0700
-Message-ID: <556A2E0C.7050702@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
+Subject: Re: [PATCH 3/7] net: dsa: ar8xxx: add regmap support
+Date: Sun, 31 May 2015 01:38:55 +0300
+Message-ID: <CAHNKnsROztQuCvd6vSfBtXS-0aQY6KjiZTRfA=0zW6-sS5iqHw@mail.gmail.com>
+References: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org>
+ <1432863742-18427-4-git-send-email-mathieu@codeaurora.org>
+ <5567C7B6.5060905@gmail.com> <20150529022329.GH11260@lunn.ch>
+ <5567D0BA.5020409@gmail.com> <20150529024425.GI11260@lunn.ch>
+ <005b01d09a36$0b77daa0$22678fe0$@codeaurora.org> <20150529175913.GB19580@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20150529175913.GB19580@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mathieu Olivari <mathieu@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, David Miller <davem@davemloft.net>, Guenter Roeck <linux@roeck-us.net>, gang.chen.5i5j@gmail.com, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>, leitec@staticky.com, fabf@skynet.be, pavel.nakonechny@skitlab.ru, Joe Perches <joe@perches.com>, sfeldma@gmail.com, Felix Fietkau <nbd@openwrt.org>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "list@hauke-m.de:NETWORKING DRIVERS" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-I am looking for additional topics to include in the device tree track
-at Plumbers 2015.
+2015-05-29 20:59 GMT+03:00 Andrew Lunn <andrew@lunn.ch>:
+> On Fri, May 29, 2015 at 10:36:49AM -0700, Mathieu Olivari wrote:
+>> Alternatively, we could have something similar to what happens for the phy
+>> in the wireless subsystems. Wireless PHYs are not registered as net_device
+>> but they can still be listed, queried or configured through netlink.
+>
+> It is a reasonable idea, but you retrieve most of the useful
+> information using ethtool. That, as far as i know, operates on
+> net_devices, not phys.
+>
+May be it's time to rework Ethernet cards handling to decouple
+"Network interfaces" from "Ethernet ports"?
 
-I am also soliciting people who would like to be session leaders or
-scribes.
-
-I have a limited number of free registration discounts available for
-session leaders / presenters.
-
-The format at Plumbers is less about presentations and more about
-discussions.  So enough slides and presentation to set the foundation
-of the discussion.  Then lots of talking.
-
-The role of the session leader is to
-  - present a balanced description of the topic / subject area
-  - ensure multiple view points and alternatives are heard
-
-If you want to help shape the future of device tree, then your
-role as a member of the audience is to talk.  To provide ideas,
-inspiration, your experiences, how the world you live in may be
-different than the one that I live in.
-
-The track description is:
-
-  The Linux Plumbers 2015 Device Tree Tools, Validation, and
-  Troubleshooting track focuses on tools (programs and scripts),
-  techniques, and core support to enable creation of correct device
-  trees and to support troubleshooting and debugging of incorrect
-  device trees, drivers, and subsystems.
-
-  The tools encompass static (build and pre-boot) and dynamic (boot and
-  run-time) environments.
-
-  Areas of interest include
-
-    - inspection
-    - verification and validation
-    - troubleshooting
-    - debugging
-    - core support for debugging
-    - unit tests
-    - designing and implementing drivers for effective debugging
-    - impact of overlays (boot and run-time updates to the device tree)
-    - bindings
-    - documentation
-
-  Topics unrelated to the overall track but of current Device Tree
-  interest may be accepted if there is available time
-
-    - ordering of device creation and driver binding
-
-Please contact me if you plan to attend the device tree track.  If
-you are also attending other tracks, please list those tracks so that
-the Plumbers planning committee can try to minimize the schedule
-conflicts between tracks.
-
-General information about plumbers is at:
-
-   http://linuxplumbersconf.org/2015/
-
-Plumbers will be co-located with LinuxCon North America in Seattle
-(Plumbers is Aug 19-21, Linuxcon is Aug 17-19).
-
-
-Hope to see many of you in Seattle.
-
-Regards,
-
-Frank Rowand
+-- 
+Sergey
