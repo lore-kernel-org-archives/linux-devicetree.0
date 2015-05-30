@@ -1,7 +1,7 @@
 From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v4 04/12] devicetree: Add bindings for the ATH79 interrupt controllers
-Date: Sun, 31 May 2015 01:52:27 +0200
-Message-ID: <1433029955-7346-5-git-send-email-albeu@free.fr>
+Subject: [PATCH v4 05/12] devicetree: Add bindings for the ATH79 MISC interrupt controllers
+Date: Sun, 31 May 2015 01:52:28 +0200
+Message-ID: <1433029955-7346-6-git-send-email-albeu@free.fr>
 References: <1433029955-7346-1-git-send-email-albeu@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1433029955-7346-1-git-send-email-albeu-GANU6spQydw@public.gmane.org>
@@ -13,61 +13,46 @@ List-Id: devicetree@vger.kernel.org
 Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 ---
 v2: * Fixed the node names to respect ePAPR
-    * Removed the unneeded @0 on the node name
 ---
- .../interrupt-controller/qca,ath79-cpu-intc.txt    | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
+ .../interrupt-controller/qca,ath79-misc-intc.txt   | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
 new file mode 100644
-index 0000000..aabce78
+index 0000000..391717a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
-@@ -0,0 +1,44 @@
-+Binding for Qualcomm Atheros AR7xxx/AR9XXX CPU interrupt controller
++++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+@@ -0,0 +1,30 @@
++Binding for Qualcomm Atheros AR7xxx/AR9XXX MISC interrupt controller
 +
-+On most SoC the IRQ controller need to flush the DDR FIFO before running
-+the interrupt handler of some devices. This is configured using the
-+qca,ddr-wb-channels and qca,ddr-wb-channel-interrupts properties.
++The MISC interrupt controller is a secondary controller for lower priority
++interrupt.
 +
 +Required Properties:
-+
-+- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-cpu-intc"
++- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc"
 +  as fallback
++- reg: Base address and size of the controllers memory area
++- interrupt-parent: phandle of the parent interrupt controller.
++- interrupts: Interrupt specifier for the controllers interrupt.
 +- interrupt-controller : Identifies the node as an interrupt controller
 +- #interrupt-cells : Specifies the number of cells needed to encode interrupt
-+		     source, should be 1 for intc
++		     source, should be 1
 +
 +Please refer to interrupts.txt in this directory for details of the common
 +Interrupt Controllers bindings used by client devices.
 +
-+Optional Properties:
-+
-+- qca,ddr-wb-channel-interrupts: List of the interrupts needing a write
-+  buffer flush
-+- qca,ddr-wb-channels: List of phandles to the write buffer channels for
-+  each interrupt. If qca,ddr-wb-channel-interrupts is not present the interrupt
-+  default to the entry's index.
-+
 +Example:
 +
-+	interrupt-controller {
-+		compatible = "qca,ar9132-cpu-intc", "qca,ar7100-cpu-intc";
++	interrupt-controller@18060010 {
++		compatible = "qca,ar9132-misc-intc", qca,ar7100-misc-intc";
++		reg = <0x18060010 0x4>;
++
++		interrupt-parent = <&cpuintc>;
++		interrupts = <6>;
 +
 +		interrupt-controller;
 +		#interrupt-cells = <1>;
-+
-+		qca,ddr-wb-channel-interrupts = <2>, <3>, <4>, <5>;
-+		qca,ddr-wb-channels = <&ddr_ctrl 3>, <&ddr_ctrl 2>,
-+					<&ddr_ctrl 0>, <&ddr_ctrl 1>;
-+	};
-+
-+	...
-+
-+	ddr_ctrl: memory-controller@18000000 {
-+		...
-+		#qca,ddr-wb-channel-cells = <1>;
 +	};
 -- 
 2.0.0
