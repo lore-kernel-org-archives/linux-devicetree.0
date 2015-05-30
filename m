@@ -1,106 +1,183 @@
-From: Bintian Wang <bintian.wang@huawei.com>
-Subject: [PATCH v9 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Sat, 30 May 2015 09:50:55 +0800
-Message-ID: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, khilman@kernel.org, pebolle@tiscali.nl, arnd@arndb.de, marc.zyngier@arm.com
-Cc: xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.chen@hisilicon.com, dan.zhao@hisilicon.com, huxinwei@huawei.com, bintian.wang@huawei.com, z.liuxinliang@huawei.com, heyunlei@huawei.com, kong.kongxinwei@hisilicon.com, wangbintian@gmail.com, w.f@huawei.com, liguozhu@hisilicon.com
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Sat, 30 May 2015 10:43:14 +0800
+Message-ID: <B4D4CE39-6B19-481F-BB2C-55F6492BDA2D@jcrosoft.com>
+References: <1430820315.19516.26.camel@opteya.com>
+ <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
+ <1432289148.5304.58.camel@opteya.com> <1432322832.5304.63.camel@opteya.com>
+ <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
+ <55670AD4.8020705@melag.de>
+ <CAOS_Y6QXHdWfi9qkRmw=mCn0mqha5-NrzumBMqJ61_YRndypLA@mail.gmail.com>
+ <55688182.3010606@melag.de>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <55688182.3010606@melag.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Enrico Weigelt, metux IT consult" <weigelt@melag.de>
+Cc: Yann Droneaud <ydroneaud@opteya.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi6220 is one mobile solution of Hisilicon, this patchset contains
-initial support for Hi6220 SoC and HiKey development board, which
-supports octal ARM Cortex A53 cores. Initial support is minimal and
-includes just the arch configuration, device tree configuration, the
-clock driver has been picked up by clock maintainers in clk tree.
-
-PSCI is enabled in device tree and there is no problem to boot all the
-octal cores, and the CPU hotplug is also working now, you can download
-and compile the latest firmware based on the following link to run this
-patch set:
-https://github.com/96boards/documentation/wiki/UEFI
-
-Chnages v9:
-* Rebase to linus/master 4.1-rc1
-* Remove the clock driver from this version because the clock maintainers
-  have queued up the clock driver:
-  git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next-hi6220
-* This version also includes clock header file:
-  [PATCH v9 6/6] dt-bindings: Add header file of hi6220 clock driver
-  Although above patch is included in clock driver, I add to this series
-  because the device tree file includes it, there will be compile error
-  without it.
-  At last, we just need to keep one when merged together.
-
-Changes v6~v8:
-This three versions only modified the clock drivers based on the
-Stephen's review advices.
-* clk-hi6220.c:
-  ** Split the clock header file from clock driver
-  ** Delete setting the parents clock of UART1 to HI6220_150M in clock
-     driver, we can do that using assigned-clock in dts when enable
-     UART1 in the future.
-* clkdivider-hi6220.c: 
-  ** Reuse some functions exported by clk-divider.c
-  ** Remove "pr_err" and CLK_IS_BASIC flag
-  ** Fix some programing style problems
-* hisilicon/clk.h: remove the "__init" markings on some funcition
-  prototypes.
-
-Changes v5:
-* Rebase to kernel 4.1-rc2
-* Add compatible string "hisilicon,hi6220-pl011" for Hisilicon designed
-  UART
-* clk-hi6220.c: use __initdata for non-const arrays based on the commit
-  692d8328e8c039f9497eb862c6cf835de922c061 
-
-Changes v4:
-* Rebase to kernel 4.1-rc1
-* Delete "arm,cortex-a15-gic" from the gic node in dts 
-
-Changes v3:
-* Verified the CPU hotplug based on the new released firmware
-* Redefined the compatible strings of four system controllers in dts 
-* Setting COMMON_CLK_HI6220 to a bool symbol
-* Keep CONFGI_ARCH_HISI sorted alphabetically
-
-Changes v2:
-* Split the DT bindings documents into earlier patches
-* Change SMP enable method from spin-table to PSCI in device tree
-* Remove "clock-frequency" from armv8-timer device node in device tree
-* Add more description about Hisilicon designed system controllers
-  in DT bindings document
-* Enable high speed clock on UART1 mux
-* Other changes based on the discussion in the mailing list:
-  https://lkml.org/lkml/2015/2/5/147
-
-Bintian Wang (6):
-  arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
-  arm64: hi6220: Document devicetree bindings for Hisilicon hi6220 SoC
-  clk: hi6220: Document devicetree bindings for hi6220 clock
-  Documentation: DT: PL011: hi6220: add compatible string for Hisilicon
-    designed UART
-  arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-  dt-bindings: Add header file of hi6220 clock driver
-
- .../bindings/arm/hisilicon/hisilicon.txt           |   87 ++++++++++
- .../devicetree/bindings/clock/hi6220-clock.txt     |   34 ++++
- Documentation/devicetree/bindings/serial/pl011.txt |    4 +-
- arch/arm64/Kconfig                                 |    5 +
- arch/arm64/boot/dts/Makefile                       |    1 +
- arch/arm64/boot/dts/hisilicon/Makefile             |    5 +
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   31 ++++
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  172 +++++++++++++++++++
- arch/arm64/configs/defconfig                       |    1 +
- include/dt-bindings/clock/hi6220-clock.h           |  173 ++++++++++++++++++++
- 10 files changed, 512 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/clock/hi6220-clock.txt
- create mode 100644 arch/arm64/boot/dts/hisilicon/Makefile
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
- create mode 100644 include/dt-bindings/clock/hi6220-clock.h
-
--- 
-1.7.9.5
+Cj4gT24gTWF5IDI5LCAyMDE1LCBhdCAxMToxMCBQTSwgRW5yaWNvIFdlaWdlbHQsIG1ldHV4IElU
+IGNvbnN1bHQgPHdlaWdlbHRAbWVsYWcuZGU+IHdyb3RlOgo+IAo+IEFtIDI5LjA1LjIwMTUgdW0g
+MDU6MzEgc2NocmllYiBSb2IgTGFuZGxleToKPiAKPiA+PiBXaGF0J3MgdGhlIGJpZyBkZWFsIHdp
+dGggaGF2aW5nIERUUy9EVEIgdW5kZXIgR1BMID8KPj4gCj4+IE9uZSBwcm9ibGVtIGlzIHRoYXQg
+dGhlcmUncyBubyBzdWNoIHRoaW5nIGFzICJUaGUgR1BMIiBhbnltb3JlLgo+IAo+IFRoZXJlIGFy
+ZSBkaWZmZXJlbnQgdmVyc2lvbnMuIFRoZSBrZXJuZWwgc291cmNlIGNsZWFybHkgc3RhdGVzCj4g
+R1BMdjIgKEksIHBlcnNvbmFsbHksIHdvdWxkIHByZWZlciB2MyB0byBwcmV2ZW50IFRpdm9pemF0
+aW9uKQo+IAo+PiBUaGUgTGludXgga2VybmVsIGFuZCBTYW1iYSBjYW4ndCBzaGFyZSBjb2RlIGFu
+eW1vcmUsCj4gCj4gRG8gdGhleSByZWFsbHkgbmVlZCB0byA/Cj4gT25lIGNvdWxkIGFzaywgd2hl
+dGhlciBzbWIgc3VwcG9ydCBzaG91bGQgYmVsb25nIGludG8gdGhlIGtlcm5lbAo+IGF0IGFsbCAo
+aW5zdGVhZCBvZiwgZWcuLCBnb2luZyB2aWEgRlVTRSBvciA5UCksIGJ1dCB0aGF0J3MgYW4KPiBl
+bnRpcmVseSBkaWZmZXJlbnQgZGlzY3Vzc2lvbi4KPiAKPj4gZXZlbiB0aG91Z2ggdGhleSBpbXBs
+ZW1lbnQgdHdvIGVuZHMgb2YgdGhlIHNhbWUgcHJvdG9jb2wsIHRoYW5rcyB0byBHUEx2My4KPiAK
+PiBTYW1iYSBmb2xrcyBtYWRlIHRoZSBkZWNpc2lvbiB0byBwcmV2ZW50IFRpdm9pemF0aW9uIG9m
+IHRoZWlyIGNvZGUuCj4gSSBmdWxseSBhZ3JlZSB3aXRoIHRoYXQgZGVjaXNpb24sIGFuZCBJIHdp
+c2ggdGhlIHNhbWUgZm9yIHRoZSBrZXJuZWwuCmFuZCBvdGhlciB0aGluayB0aGUgR1BMdjMgaXMg
+YSBtaXN0YWtlIGFuZCBpcyBub3QgY29tbWVyY2lhbGx5IHVzYWJsZQoKSXTigJlzIGNhbGwgZnJl
+ZWRvbS4KPiAKPj4gVGhpcyBzZWVtcyB0byBoYXZlIGJhZGx5IGRhbWFnZWQgdGhlIGxvbmcgdGVy
+bSB2aWFiaWxpdHkgb2YgR1BMdjIsCj4+IHdoaWNoIHVzZWQgdG8gYmUgc3lub255bW91cyB3aXRo
+IGNvcHlsZWZ0IChjYXRlZ29yeSBraWxsZXIgbGljZW5zZSkKPj4gYW5kIGFjdGVkIGFzIGEgdW5p
+dmVyc2FsIHJlY2VpdmVyIGJlY2F1c2UgaXQgd2FzIGEgdGVybWluYWwgbm9kZSBpbiBhCj4+IGRp
+cmVjdGVkIGdyYXBoIG9mIGxpY2Vuc2UgY29udmVydGliaWxpdHkgcmVkdWNpbmcgbW9zdCBsaWNl
+bnNpbmcKPj4gZGVjaXNpb25zIHRvIGEgc2ltcGxlIGJpbmFyeSAiaXMgaXQgR1BMIGNvbXBhdGli
+bGUgb3Igbm90Iiwgd2hpY2gKPj4gZ3JlYXRseSBhcHBlYWxlZCB0byBkZXZlbG9wZXJzIHdobyBh
+cmVuJ3QgbGF3eWVycyBhbmQgZG9uJ3Qgd2FudCB0bwo+PiBiZS4KPiAKPiBXZWxsLCBzdWNoIHRo
+aW5ncyBoYXBwZW4sIGlmIHBlb3BsZSBoYXZlIGRpZmZlcmVudCB2aWV3cy4gSW4gdGhhdCBjYXNl
+Cj4gdGhvc2Ugd2hvIHdhbnQgdG8gcHJldmVudCBUaXZvaXphdGlvbiBvbiB0aGUgb25lIGFuZCB0
+aG9zZSB3aG8gd2FubmEKPiBhbGxvdyBpdCBvbiB0aGUgb3RoZXIgc2lkZS4KPiAKPiBJIHJlcmVs
+eSBoYXZlIHRoZSBuZWVkIHRvIHJlYWxseSBjb3B5LWFuZC1wYXN0ZSBjb2RlIGZyb20gb25lIHBy
+b2plY3QKPiB0byBhbm90aGVyLiBXaGVuIHBhdGNoaW5nIGV4aXN0aW5nIG9uZXMsIEkganVzdCBz
+dGljayB0byB0aGUgdXBzdHJlYW0ncwo+IGxpY2Vuc2UuIEFuZCB3aGVuIHN0YXJ0aW5nIG5ldyBG
+T1NTIHByb2plY3RzLCBJIGNsZWFybHkgY2hvb3NlIChMKUdQTHYzLAo+IGJlY2F1c2UgSSdtIHN0
+cmljdGx5IGFnYWluc3QgVGl2b2l6YXRpb24uCj4gCgpUaGlzIGlzIHlvdXIgY2hvaWNlLCB0aGlz
+IHJlbW92ZSBmcmVlZG9tIHRvbyBHUEx2My4KCj4+IEJ1dCBub3cgYSBwcm9qZWN0IHRoYXQncyAi
+R1BMdjIgb3IgbGF0ZXIiIGNhbid0IGFjY2VwdCBjb2RlIGZyb20KPj4gX2VpdGhlcl8gdGhlIGtl
+cm5lbCBvciBzYW1iYSAobmVpdGhlciBwcm92aWRlcyB0aGUgaW1wbGljaXQgZHVhbAo+PiBsaWNl
+bnNlIHRoZXkgbmVlZCkuCj4gCj4gV2VsbCwgdGhhdCdzIGEgZGVjaXNpb24gb2YgdGhlIGluZGl2
+aWR1YWwgcHJvamVjdHMgLSBldmVyeWJvZHkgaGFzCj4gdG8gbGl2ZSB3aXRoIGhpcy9oZXIgb3du
+IGRlY2lzaW9ucy4KPiAKPj4gUHJvamVjdHMgbGlrZSBRRU1VIGFyZSBzdHVjayBiZXR3ZWVuIHdh
+bnRpbmcgdG8KPj4gdHVybiBrZXJuZWwgZHJpdmVycyBpbnNpZGUgb3V0IHRvIG1ha2UgZGV2aWNl
+IGVtdWxhdGlvbnMgKEdQTHYyIGNvZGUpCj4+IGFuZCBncmFiIHByb2Nlc3NvciBkZWZpbml0aW9u
+cyBmcm9tIGdjYyBvciBiaW51dGlscyAoR1BMdjMgY29kZSkgYW5kCj4+IG9uZSBwcm9qZWN0IGNh
+bm5vdCBhY2NlcHQgYm90aCBiZWNhdXNlIEdQTCArIEdQTCBpcyBhIGxpY2Vuc2UKPj4gY29uZmxp
+Y3QuCj4gCj4gU2VlbXMgdG8gYmUgYSByYXJlIGNhc2UgdG8gbWUuIEluIGdlbmVyYWwsIEknZCBz
+dWdnZXN0IG1ha2luZyB0aGluZ3MKPiB1c2VkIGJ5IHNldmVyYWwgZGlzdGluY3QgcHJvamVjdHMg
+aW50byB0aGVpciBvd24gZGlzdGluY3QgZW50aXRpZXMuCj4gCj4gTm90ZTogdGhlIEdQTCdzIHZp
+cmFsIGVmZmVjdCBkb2Vzbid0IGRlcGVuZCBvbiB3aGV0aGVyIHRoZSBzb3VyY2VzCj4gYXJlIGNv
+bGxlY3RlZCBpbiBvbmUgYmlnIHJlcG8sIGJ1dCBvbiB3aGF0IGlzIGNvbXBpbGVkLS9saW5rZWQt
+aW50bwo+IHdoZXJlLgo+IAo+PiBPZiBjb3Vyc2UgIkJTRC1saWtlIiB3b3VsZCBiZSBwdWJsaWMg
+ZG9tYWluIGV4Y2VwdCBmb3IgMjAgeWVhcnMgb2YKPj4gRlVELCBzbyB0aGV5J3JlIG1vc3RseSBj
+aG9vc2luZyBvbmUgb2YgdGhlIGRvemVucyBvZiBwdWJsaWMgZG9tYWluCj4+IGVxdWl2YWxlbnQg
+bGljZW5zZXMgbGlrZSB0aGUgdmFyaW91cyBCU0RzIGFuZCBNSVQgYW5kIElTQyBhbmQgQXBhY2hl
+Cj4+IHRoYXQgYXJlIGVxdWl2YWxlbnQgZXhjZXB0IGZvciAiY29weSB0aGlzIGxpY2Vuc2UgdGV4
+dCBleGFjdGx5Igo+PiBjbGF1c2VzIHRoYXQgY2F1c2UgZW5kbGVzcyBsaWNlbnNlIGJsb2F0IG92
+ZXIgdGltZS4KPiAKPiBJdCdzIG5vdCBlbnRpcmVseSBGVUQuIFRoZSBxdWVzdGlvbnMgaXMgTk9U
+IHdoZXRoZXIgdGhlIG9yaWdpbmFsIG9wZW4KPiBjb2RlIHdpbGwgYmUgd2lwZWQgb3V0IG9mIHRo
+ZSBuZXQgb3IgcGVvcGxlIHNpbXBseSBkb250IHdvcmsgb24gaXQKPiBhbnltb3JlLiBUaGUgbWFp
+biBxdWVzdGlvbiBoZXJlIGlzLCB3aGV0aGVyIGZvc3MgZGV2ZWxvcGVycyAob2Z0ZW4KPiB3b3Jr
+aW5nIGZvciBmcmVlKSB3YW50IHRvIGhlbHAgcGVvcGxlIHByb2R1Y2luZyBub24tZnJlZSBzdHVm
+Zi4gQlNECj4gbGlrZSB0byBhbGxvdyB0aGF0LCBGU0YgZm9sa3MgZG9udC4gVGhleSBqdXN0IGhh
+dmUgZGlmZmVyZW50IHZpZXdzIG9uCj4gdGhhdCBtYXR0ZXIuIElNSE8sIEJTRCBmb2xrcyBhcmUg
+anVzdCBpbnRlcmVzdGVkIGluIGdldHRpbmcgYmFjawo+IGNvbnRyaWJ1dGlvbnMsIHdoaWxlIEZT
+RiBmb2xrcyBhbHNvIGhhdmUgYSBicm9hZGVyIHBvbGl0aWNhbCBhZ2VuZGEuIEksCj4gcGVyc29u
+YWxseSwgc2hhcmUgdGhhdCBhZ2VuZGEgKGV2ZW4gbW9yZTogSSBzdHJvbmdseSBiZWxpZXZlIHRo
+YXQKPiBzb2Z0d2FyZSBwYXRlbnRzIHNob3VsZCBiZSBlcmFkaWNhdGVkKS4KPiAKPj4gUGVyc29u
+YWxseSBJIHByZWZlciBwdWJsaWMgZG9tYWluIGVxdWl2YWxlbnQgbGljZW5zZXMgbGlrZSBDQzAg
+b3IKPj4gdW5saWNlbnNlLm9yZyBvciBteSBvd24gInplcm8gY2xhdXNlIGJzZCIsIHdoaWNoIERP
+TidUIHJlcXVpcmUgeW91IHRvCj4+IGNvcHkgc3BlY2lmaWMgbGljZW5zZSB0ZXh0IHZlcmJhdGlt
+IGludG8gZGVyaXZlZCB3b3Jrcy4KPiAKPiBXZWxsLCBJIGhhdmUgYW4gZnVuZGFtZW50YWxseSBk
+aWZmZXJlbnQgb3BwaW5pb24gb24gdGhhdC4gSWYgSSBwdWJsaXNoCj4gbXkgY29kZSBmb3IgZnJl
+ZSwgSSBkb250IHdhbnQgYXNzaXN0IGFueWJvZHkgaW4gcHJvZHVjaW5nIG5vbi1mcmVlCj4gc3R1
+ZmYuIChmcmVlIGxpa2UgZnJlZWRvbSwgbm90IGZyZWUgYmVlcikKPiAKPj4gTW9zdCBvZiB0aGlz
+IGNhbiBiZSBsYWlkIGF0IHRoZSBkb29yIG9mIEdQTHYzLgo+IAo+IEJlY2F1c2UgbWFueSBmb2xr
+cyBkb24ndCB3YW5uYSBmaWdodCBhZ2FpbnN0IFRpdm9pemF0aW9uLgo+IEknbGwgaGF2ZSB0byBh
+Y2NlcHQgdGhhdCwgYnV0IEkgZG9uJ3QgbmVlZCB0byBjb29ycG9yYXRlLgo+IAo+ID4gQW5kcm9p
+ZCdzICJubyBncGwgaW4gdXNlcnNwYWNlIiBwb2xpY3kgaXMgd2h5IHRoZXkgcmlwcGVkIG91dCBi
+bHVlego+ID4gYW5kIHdyb3RlIGEgcmVwbGFjZW1lbnQgYmx1ZWRyb2lkIGZyb20gc2NyYXRjaC4K
+PiAKPiBUaGUgcmVhbGx5IGludGVyZXN0aW5nIHF1ZXN0aW9uIGlzOiB3aHkgZG8gdGhleSBoYXZl
+IHRoYXQgcG9saWN5ID8KPiBNYXliZSBiZWNhdXNlIHRoZXkgYXJlbid0IGludGVyZXN0ZWQgaW4g
+KmZyZWUqIChhcyBmcmVlZG9tKSBzb2Z0d2FyZSwKPiBidXQganVzdCBvcGVuIHNvdXJjZS4KPiAK
+PiBPdGhlcndpc2UgdGhleSdkIGhhdmUgYW4gc3RyaWN0IHBvbGljeSBvZiBub3RoaW5nIHByb3By
+aWV0YXJ5IGluCj4ga2VybmVsIHNwYWNlLgo+IAo+PiBUaGUgYmx1ZXogZGV2ZWxvcGVycyBrZWVw
+IGdvaW5nICJpZiB3ZSBqdXN0Cj4+IGltcHJvdmUgdGhlIGNvZGUgZW5vdWdoIHBlb3BsZSB3aWxs
+IGdldCBvdmVyIHRoZSBsaWNlbnNlIiAobm8gcmVhbGx5Ogo+PiBodHRwczovL2x3bi5uZXQvQXJ0
+aWNsZXMvNTk3MjkzLykgYnV0IHRoZWlyIEZBUSBsaXRlcmFsbHkgZG9lc24ndAo+PiBzcGVjaWZ5
+IF93aGljaF8gR1BMIHRoZXkncmUgdW5kZXI6IGh0dHA6Ly93d3cuYmx1ZXoub3JnL2ZhcS9jb21t
+b24vCj4+IChJcyBpdCB0aGUgb25lIHlvdSBjYW4ndCB1c2Ugd2l0aCBrZXJuZWwgY29kZSwgdGhl
+IG9uZSB5b3UgY2FuJ3QKPj4gY29tYmluZSB3aXRoIHNhbWJhIGNvZGUsIG9yIHRoZSBvci1sYXRl
+ciB2ZXJzaW9uIHRoYXQgY2FuJ3QgYWNjZXB0Cj4+IGNvZGUgZnJvbSBlaXRoZXIgc291cmNlIGlu
+dG8gaXRzIG5leHQgcmVsZWFzZT8KPiAKPiBXaHkgd291bGQgb25lIHdhbnQgdG8gbWl4IGJsdWV6
+IGNvZGUgd2l0aCB0aGUga2VybmVsIG9yIHNhbWJhID8KPiAKPj4gQXBwbGUncyBncmVhdCBHUEwg
+cHVyZ2UKPj4gKGh0dHA6Ly9tZXRhLmF0aDAuY29tLzIwMTIvMDIvMDUvYXBwbGVzLWdyZWF0LWdw
+bC1wdXJnZS8pCj4gCj4gQXBwbGUgYmVsb25ncyB0byB0aGUgcmVhbGx5IGJhZCBndXlzLCB3aGF0
+IE1pY3Jvc29mdCBwcmV2aW91c2x5IHdhcy4KPiBUaGlzIGlzIHRoZSBTdGFTaS4gSSBoYXZlIG5v
+IG1lcmN5IGZvciB0aGVtLgo+IAo+PiBpcyB3aHkgd2UgaGF2ZSBMTFZNIHJlcGxhY2luZyBnY2Ms
+IHRoZXkgbGl0ZXJhbGx5IHN0b3BwZWQgeGNvZGUgb24gdGhlIGxhc3QKPj4gR1BMdjIgcmVsZWFz
+ZXMgKGdjYyA0LjIuMSBhbmQgYmludXRpbHMgMi4xNykgZm9yIG92ZXIgZml2ZSB5ZWFycyB3aGls
+ZQo+PiB0aGV5IHNwb25zb3JlZCB3b3JrIG9uIGEgcmVwbGFjZW1lbnQuCj4gCj4gRm9yIHhjb2Rl
+IHZzIGdjYywgSSBkb250IHJlYWxseSBzZWUgYW55IGFjdHVhbCBsaWNlbnNlIF9jb25mbGljdF8u
+Cj4gVGhpcyB3YXMgYW4gcG9saXRpY2FsIGFjdGlvbiwgYW5kIHdlIHNob3VsZCB0YWtlIGl0IGFz
+IHRoYXQuCj4gQXBwbGUgaXMgYWdhaW5zdCBmcmVlZG9tLiBUaGUgbGVhc3QgdGhpbmcsIHdlIC0g
+dGhlIHBlb3BsZSAtIHNob3VsZAo+IGRvIGlzIG5vdCBoZWxwaW5nIHRoZW0sIG5vdCBnaXZpbmcg
+dGhlbSBhIHNpbmdsZSBwZW5ueS4KClRoaXMga2luZCBvZiBjb21tZW50IGlzIG5vdCBhcHByb3By
+aWF0ZSBoZXJlLCBwbGVhc2Uga2VlcCBpdCB0byB5b3VyIHNlbGYgbmV4dCB0aW1lLgo+IAo+PiBX
+aGVuIHNhbWJhIHdlbnQgZ3BsdjMsIHRoZXkgZGlkCj4+IGh0dHA6Ly93d3cub3NuZXdzLmNvbS9z
+dG9yeS8yNDU3Mi9BcHBsZV9EaXRjaGVzX1NBTUJBX2luX0Zhdm91cl9vZl9Ib21lZ3Jvd25fUmVw
+bGFjZW1lbnQKPj4gZm9yIHNhbWJhIGFuZCBzbyBvbi4KCuKApgoKPiAtLT4gZnJlZSBsaWtlIGZy
+ZWVkb20sIG5vdCBmcmVlIGJlZXIuCj4gCj4+PiBJbXBvcnRhbnQgTm90aWNlOiBUaGlzIG1lc3Nh
+Z2UgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG9yIHByaXZpbGVnZWQKPj4+IGluZm9ybWF0aW9u
+LiBJdCBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgcGVyc29uIGl0IHdhcyBhZGRyZXNzZWQgdG8u
+IElmIHlvdQo+Pj4gYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZW1haWwg
+eW91IG1heSBub3QgY29weSwgZm9yd2FyZCwKPj4+IGRpc2Nsb3NlIG9yIG90aGVyd2lzZSB1c2Ug
+aXQgb3IgYW55IHBhcnQgb2YgaXQgaW4gYW55IGZvcm0gd2hhdHNvZXZlci4gSWYKPj4+IHlvdSBy
+ZWNlaXZlZCB0aGlzIGVtYWlsIGluIGVycm9yIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBieSBy
+ZXBseWluZyBhbmQKPj4+IGRlbGV0ZSB0aGlzIG1lc3NhZ2UgYW5kIGFueSBhdHRhY2htZW50cyB3
+aXRob3V0IHJldGFpbmluZyBhIGNvcHkuCj4+IAo+PiBQLlMuIHNvbWUgb2YgdXMgYWN0dWFsbHkg
+Y2FyZSBhYm91dCBsaWNlbnNlcyBiZWluZyBhcHByb3ByaWF0ZSB0byB3aGF0Cj4+IHRoZXkncmUg
+YXBwbGllZCB0bywgYW5kIGF0IGxlYXN0IHRoZW9yZXRpY2FsbHkgY2FwYWJsZSBvZiBiZWluZwo+
+PiBob25vcmVkLiBZb3VyIGVtYWlsIGZvb3RlciBtYXkgYmUgdmVyeSBzbGlnaHRseSB1bmRlcm1p
+bmluZyB5b3VyCj4+IHBvc2l0aW9uIGhlcmUuCj4gCj4gVGhpcyBpcyBqdXN0IGEgZHVtYiBhdXRv
+LWdlbmVyYXRlZCBmb290ZXIsIGNvbWluZyBmcm9tIG15IGNsaWVudCdzCj4gbWFpbCBzZXJ2ZXIg
+b3ZlciBoZXJlIC4uLiBJJ20ganVzdCB0b28gbGF6eSBmb3Igc2V0dGluZyB1cCBhbiBvd24KPiBN
+VEEgb24gbXkgd29ya3N0YXRpb24uIFlvdSBjYW4gc2FmZWx5IGlnbm9yZSB0aGF0Lgo+IAo+IC0t
+Cj4gRW5yaWNvIFdlaWdlbHQsIG1ldHV4IElUIGNvbnN1bHQKPiArNDktMTUxLTI3NTY1Mjg3Cj4g
+TUVMQUcgTWVkaXppbnRlY2huaWsgb0hHIFNpdHogQmVybGluIFJlZ2lzdGVyZ2VyaWNodCBBRyBD
+aGFybG90dGVuYnVyZyBIUkEgMjEzMzMgQgo+IAo+IFdpY2h0aWdlciBIaW53ZWlzOiBEaWVzZSBO
+YWNocmljaHQga2FubiB2ZXJ0cmF1bGljaGUgb2RlciBudXIgZsO8ciBlaW5lbiBiZWdyZW56dGVu
+IFBlcnNvbmVua3JlaXMgYmVzdGltbXRlIEluZm9ybWF0aW9uZW4gZW50aGFsdGVuLiBTaWUgaXN0
+IGF1c3NjaGxpZcOfbGljaCBmw7xyIGRlbmplbmlnZW4gYmVzdGltbXQsIGFuIGRlbiBzaWUgZ2Vy
+aWNodGV0IHdvcmRlbiBpc3QuIFdlbm4gU2llIG5pY2h0IGRlciBBZHJlc3NhdCBkaWVzZXIgRS1N
+YWlsIHNpbmQsIGTDvHJmZW4gU2llIGRpZXNlIG5pY2h0IGtvcGllcmVuLCB3ZWl0ZXJsZWl0ZW4s
+IHdlaXRlcmdlYmVuIG9kZXIgc2llIGdhbnogb2RlciB0ZWlsd2Vpc2UgaW4gaXJnZW5kZWluZXIg
+V2Vpc2UgbnV0emVuLiBTb2xsdGVuIFNpZSBkaWVzZSBFLU1haWwgaXJydMO8bWxpY2ggZXJoYWx0
+ZW4gaGFiZW4sIHNvIGJlbmFjaHJpY2h0aWdlbiBTaWUgYml0dGUgZGVuIEFic2VuZGVyLCBpbmRl
+bSBTaWUgYXVmIGRpZXNlIE5hY2hyaWNodCBhbnR3b3J0ZW4uIEJpdHRlIGzDtnNjaGVuIFNpZSBp
+biBkaWVzZW0gRmFsbCBkaWVzZSBOYWNocmljaHQgdW5kIGFsbGUgQW5ow6RuZ2UsIG9obmUgZWlu
+ZSBLb3BpZSB6dSBiZWhhbHRlbi4KPiBJbXBvcnRhbnQgTm90aWNlOiBUaGlzIG1lc3NhZ2UgbWF5
+IGNvbnRhaW4gY29uZmlkZW50aWFsIG9yIHByaXZpbGVnZWQgaW5mb3JtYXRpb24uIEl0IGlzIGlu
+dGVuZGVkIG9ubHkgZm9yIHRoZSBwZXJzb24gaXQgd2FzIGFkZHJlc3NlZCB0by4gSWYgeW91IGFy
+ZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGVtYWlsIHlvdSBtYXkgbm90IGNv
+cHksIGZvcndhcmQsIGRpc2Nsb3NlIG9yIG90aGVyd2lzZSB1c2UgaXQgb3IgYW55IHBhcnQgb2Yg
+aXQgaW4gYW55IGZvcm0gd2hhdHNvZXZlci4gSWYgeW91IHJlY2VpdmVkIHRoaXMgZW1haWwgaW4g
+ZXJyb3IgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGJ5IHJlcGx5aW5nIGFuZCBkZWxldGUgdGhp
+cyBtZXNzYWdlIGFuZCBhbnkgYXR0YWNobWVudHMgd2l0aG91dCByZXRhaW5pbmcgYSBjb3B5LgoK
+RHJvcCB0aGlzIGZvciBub3cgb24gdGhpcyBpcyBhIHB1YmxpYyBtYWlsaW5nIGxpc3QgZXZlcnkg
+b25lIGNhbiByZWNlaXZlIHRoZSBlLW1haWwuCgpJZiB5b3UgYXJlIHRvbyBsYXp5IHRvIHJlbW92
+ZSBkbyBub3QgcG9zdCBvbiB0aGUgTUwKCkJlc3QgUmVnYXJkcywKSi4KPiAKPiBfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
