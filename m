@@ -1,85 +1,81 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 4/4] ARM: dts: sun7i: Add A20 SRAM and SRAM controller
-Date: Sun, 31 May 2015 11:15:08 +0200
-Message-ID: <1433063708-11726-5-git-send-email-maxime.ripard@free-electrons.com>
-References: <1433063708-11726-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433063708-11726-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v3 0/4] ARM: sunxi: SRAM mapping support
+Date: Sun, 31 May 2015 11:15:04 +0200
+Message-ID: <1433063708-11726-1-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBVFEVOVQKGQEWFMT7WI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A20 has a few SRAM that can be mapped either to a device or to the CPU,
-with the mapping being controlled by a SRAM controller.
+Hi,
 
-Add the SRAM controller, the SRAM that it drives and the section that can
-be used by the various devices.
+The Allwinner SoCs all have a bunch of SRAMs (the exact number
+depending on the SoC itself) that can have various sections mapped to
+the CPU or to a bunch of devices, each section having different
+possible devices to be mapped to.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+Since this SRAM setup is highly SoC dependent, and that we could have
+multiple drivers trying to map a section for their own use, relying on
+syscon would put to much duplicated logic to devices that are using
+these SRAMs, among which the USB OTG and EMAC controllers, while not
+guaranteeing any kind of exclusive use of that section.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 25bd4f1d393c..6a63f30c9a69 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -534,6 +534,42 @@
- 		#size-cells = <1>;
- 		ranges;
- 
-+		sram-controller@01c00000 {
-+			compatible = "allwinner,sun4i-a10-sram-controller";
-+			reg = <0x01c00000 0x30>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			sram_a: sram@00000000 {
-+				compatible = "mmio-sram";
-+				reg = <0x00000000 0xc000>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x00000000 0xc000>;
-+
-+				emac_sram: sram-section@8000 {
-+					compatible = "allwinner,sun4i-a10-sram-a3-a4";
-+					reg = <0x8000 0x4000>;
-+					status = "disabled";
-+				};
-+			};
-+
-+			sram_d: sram@00010000 {
-+				compatible = "mmio-sram";
-+				reg = <0x00010000 0x1000>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x00010000 0x1000>;
-+
-+				otg_sram: sram-section@0000 {
-+					compatible = "allwinner,sun4i-a10-sram-d";
-+					reg = <0x0000 0x1000>;
-+					status = "disabled";
-+				};
-+			};
-+		};
-+
- 		nmi_intc: interrupt-controller@01c00030 {
- 			compatible = "allwinner,sun7i-a20-sc-nmi";
- 			interrupt-controller;
-@@ -583,6 +619,7 @@
- 			reg = <0x01c0b000 0x1000>;
- 			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ahb_gates 17>;
-+			allwinner,sram = <&emac_sram 1>;
- 			status = "disabled";
- 		};
- 
+To do this, we introduce a custom API to control the mapping of the
+sections in a SoC independent way, and a SoC driver to implement it.
+
+Let me know what you think,
+Maxime
+
+Changes from v2:
+  - Changed the DT bindings to have an explicit relationship between
+    "client" devices, the controller, and the SRAM sections it
+    controls
+  - Changed the interface to not rely on private structures anymore
+    but only the client's struct device
+  - Fixed a bug in the claiming logic
+
+Maxime Ripard (4):
+  drivers: soc: sunxi: Introduce SoC driver to map SRAMs
+  ARM: dts: sun4i: Add A10 SRAM and SRAM controller
+  ARM: dts: sun5i: Add A10s and A13 SRAM and SRAM controller
+  ARM: dts: sun7i: Add A20 SRAM and SRAM controller
+
+ .../devicetree/bindings/soc/sunxi/sram.txt         |  72 ++++++
+ arch/arm/boot/dts/sun4i-a10-a1000.dts              |   4 +
+ arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts         |   4 +
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts         |   4 +
+ arch/arm/boot/dts/sun4i-a10-hackberry.dts          |   4 +
+ arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts         |   4 +
+ arch/arm/boot/dts/sun4i-a10-marsboard.dts          |   4 +
+ arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts     |   4 +
+ arch/arm/boot/dts/sun4i-a10-pcduino.dts            |   4 +
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |  37 +++
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts   |   4 +
+ arch/arm/boot/dts/sun5i-a10s.dtsi                  |   9 +
+ arch/arm/boot/dts/sun5i.dtsi                       |  30 +++
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |  37 +++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/sunxi/Kconfig                          |  10 +
+ drivers/soc/sunxi/Makefile                         |   1 +
+ drivers/soc/sunxi/sunxi_sram.c                     | 284 +++++++++++++++++++++
+ include/linux/soc/sunxi/sunxi_sram.h               |  19 ++
+ 20 files changed, 537 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/sunxi/sram.txt
+ create mode 100644 drivers/soc/sunxi/Kconfig
+ create mode 100644 drivers/soc/sunxi/Makefile
+ create mode 100644 drivers/soc/sunxi/sunxi_sram.c
+ create mode 100644 include/linux/soc/sunxi/sunxi_sram.h
+
 -- 
 2.4.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
