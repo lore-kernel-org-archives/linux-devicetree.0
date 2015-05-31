@@ -1,43 +1,158 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH V2 0/5] Add support for QCA IPQ806x Ethernet GMAC
- controller
-Date: Sat, 30 May 2015 17:05:05 -0700 (PDT)
-Message-ID: <20150530.170505.580510463560485549.davem@davemloft.net>
-References: <1432749770-26133-1-git-send-email-mathieu@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Alban Bedel <albeu@free.fr>
+Subject: [PATCH v4 08/12] MIPS: ath79: Add OF support to the clocks
+Date: Sun, 31 May 2015 02:18:22 +0200
+Message-ID: <1433031506-7984-1-git-send-email-albeu@free.fr>
+References: <1433029955-7346-1-git-send-email-albeu@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432749770-26133-1-git-send-email-mathieu@codeaurora.org>
+In-Reply-To: <1433029955-7346-1-git-send-email-albeu@free.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mathieu@codeaurora.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@linaro.org, sboyd@codeaurora.org, peppe.cavallaro@st.com, agross@codeaurora.org, joshc@codeaurora.org, architt@codeaurora.org, georgi.djakov@linaro.org, wsa@the-dreams.de, rnayak@codeaurora.org, vbridger@opensource.altera.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, netdev@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mathieu Olivari <mathieu@codeaurora.org>
-Date: Wed, 27 May 2015 11:02:45 -0700
+Allow using the SoC clocks in the device tree.
 
-> This patch set adds support for the integrated Ethernet GMAC controller
-> on QCA IPQ806x SoC. This controller is based on a Gigabit Synopsys
-> DesignWare IP, already supported in the stmmac driver located in
-> drivers/net/ethernet/stmicro/stmmac.
-> 
-> This change is done as a follow-up to the following thread:
-> *http://www.spinics.net/lists/netdev/msg311265.html
-> While previous attempt was creating a new driver to drive this controller,
-> this new post leverages the existing stmmac driver by implementing the
-> SoC specific glue to it.
-> 
-> Aside from the pure stmmac glue layer, we have a couple of related
-> patches:
-> *IPQ806x NSS clock addition is cherry-picked and refreshed from the
->  following thread: https://lkml.org/lkml/2014/8/6/390
-> *phy-handle and fixed-link support are also added in this change set so the
->  driver can be fully functional on platforms using device-trees as well as
->  ethernet switches.
-> 
-> V2:
->  *Fix MODULE_LICENSE to "Dual BSD/GPL" as the dwmac-ipq806x.c is using
->   ISC license.
+Signed-off-by: Alban Bedel <albeu@free.fr>
+---
+v3: * Fix the compatible string for qca9550
+v4: * Added missing Signed-off-by
+---
+ arch/mips/ath79/clock.c | 63 ++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 44 insertions(+), 19 deletions(-)
 
-Series applied to net-next, thanks.
+diff --git a/arch/mips/ath79/clock.c b/arch/mips/ath79/clock.c
+index 1fcb691..eb5117c 100644
+--- a/arch/mips/ath79/clock.c
++++ b/arch/mips/ath79/clock.c
+@@ -29,7 +29,14 @@
+ #define AR724X_BASE_FREQ	5000000
+ #define AR913X_BASE_FREQ	5000000
+ 
+-static void __init ath79_add_sys_clkdev(const char *id, unsigned long rate)
++static struct clk *clks[3];
++static struct clk_onecell_data clk_data = {
++	.clks = clks,
++	.clk_num = ARRAY_SIZE(clks),
++};
++
++static struct clk *__init ath79_add_sys_clkdev(
++	const char *id, unsigned long rate)
+ {
+ 	struct clk *clk;
+ 	int err;
+@@ -41,6 +48,8 @@ static void __init ath79_add_sys_clkdev(const char *id, unsigned long rate)
+ 	err = clk_register_clkdev(clk, id, NULL);
+ 	if (err)
+ 		panic("unable to register %s clock device", id);
++
++	return clk;
+ }
+ 
+ static void __init ar71xx_clocks_init(void)
+@@ -70,9 +79,9 @@ static void __init ar71xx_clocks_init(void)
+ 	ahb_rate = cpu_rate / div;
+ 
+ 	ath79_add_sys_clkdev("ref", ref_rate);
+-	ath79_add_sys_clkdev("cpu", cpu_rate);
+-	ath79_add_sys_clkdev("ddr", ddr_rate);
+-	ath79_add_sys_clkdev("ahb", ahb_rate);
++	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
++	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
++	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
+ 
+ 	clk_add_alias("wdt", NULL, "ahb", NULL);
+ 	clk_add_alias("uart", NULL, "ahb", NULL);
+@@ -106,9 +115,9 @@ static void __init ar724x_clocks_init(void)
+ 	ahb_rate = cpu_rate / div;
+ 
+ 	ath79_add_sys_clkdev("ref", ref_rate);
+-	ath79_add_sys_clkdev("cpu", cpu_rate);
+-	ath79_add_sys_clkdev("ddr", ddr_rate);
+-	ath79_add_sys_clkdev("ahb", ahb_rate);
++	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
++	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
++	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
+ 
+ 	clk_add_alias("wdt", NULL, "ahb", NULL);
+ 	clk_add_alias("uart", NULL, "ahb", NULL);
+@@ -139,9 +148,9 @@ static void __init ar913x_clocks_init(void)
+ 	ahb_rate = cpu_rate / div;
+ 
+ 	ath79_add_sys_clkdev("ref", ref_rate);
+-	ath79_add_sys_clkdev("cpu", cpu_rate);
+-	ath79_add_sys_clkdev("ddr", ddr_rate);
+-	ath79_add_sys_clkdev("ahb", ahb_rate);
++	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
++	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
++	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
+ 
+ 	clk_add_alias("wdt", NULL, "ahb", NULL);
+ 	clk_add_alias("uart", NULL, "ahb", NULL);
+@@ -201,9 +210,9 @@ static void __init ar933x_clocks_init(void)
+ 	}
+ 
+ 	ath79_add_sys_clkdev("ref", ref_rate);
+-	ath79_add_sys_clkdev("cpu", cpu_rate);
+-	ath79_add_sys_clkdev("ddr", ddr_rate);
+-	ath79_add_sys_clkdev("ahb", ahb_rate);
++	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
++	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
++	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
+ 
+ 	clk_add_alias("wdt", NULL, "ahb", NULL);
+ 	clk_add_alias("uart", NULL, "ref", NULL);
+@@ -335,9 +344,9 @@ static void __init ar934x_clocks_init(void)
+ 		ahb_rate = cpu_pll / (postdiv + 1);
+ 
+ 	ath79_add_sys_clkdev("ref", ref_rate);
+-	ath79_add_sys_clkdev("cpu", cpu_rate);
+-	ath79_add_sys_clkdev("ddr", ddr_rate);
+-	ath79_add_sys_clkdev("ahb", ahb_rate);
++	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
++	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
++	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
+ 
+ 	clk_add_alias("wdt", NULL, "ref", NULL);
+ 	clk_add_alias("uart", NULL, "ref", NULL);
+@@ -422,9 +431,9 @@ static void __init qca955x_clocks_init(void)
+ 		ahb_rate = cpu_pll / (postdiv + 1);
+ 
+ 	ath79_add_sys_clkdev("ref", ref_rate);
+-	ath79_add_sys_clkdev("cpu", cpu_rate);
+-	ath79_add_sys_clkdev("ddr", ddr_rate);
+-	ath79_add_sys_clkdev("ahb", ahb_rate);
++	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
++	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
++	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
+ 
+ 	clk_add_alias("wdt", NULL, "ref", NULL);
+ 	clk_add_alias("uart", NULL, "ref", NULL);
+@@ -446,6 +455,8 @@ void __init ath79_clocks_init(void)
+ 		qca955x_clocks_init();
+ 	else
+ 		BUG();
++
++	of_clk_init(NULL);
+ }
+ 
+ unsigned long __init
+@@ -463,3 +474,17 @@ ath79_get_sys_clk_rate(const char *id)
+ 
+ 	return rate;
+ }
++
++#ifdef CONFIG_OF
++static void __init ath79_clocks_init_dt(struct device_node *np)
++{
++	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
++}
++
++CLK_OF_DECLARE(ar7100, "qca,ar7100-pll", ath79_clocks_init_dt);
++CLK_OF_DECLARE(ar7240, "qca,ar7240-pll", ath79_clocks_init_dt);
++CLK_OF_DECLARE(ar9130, "qca,ar9130-pll", ath79_clocks_init_dt);
++CLK_OF_DECLARE(ar9330, "qca,ar9330-pll", ath79_clocks_init_dt);
++CLK_OF_DECLARE(ar9340, "qca,ar9340-pll", ath79_clocks_init_dt);
++CLK_OF_DECLARE(ar9550, "qca,qca9550-pll", ath79_clocks_init_dt);
++#endif
+-- 
+2.0.0
