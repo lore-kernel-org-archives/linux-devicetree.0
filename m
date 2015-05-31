@@ -1,109 +1,70 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] ARM: sunxi: SRAM mapping support
-Date: Sun, 31 May 2015 13:48:41 +0200
-Message-ID: <556AF519.1000209@redhat.com>
-References: <1433063708-11726-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 03/12] devicetree: Add bindings for the ATH79 DDR controllers
+Date: Sun, 31 May 2015 15:23:53 +0300
+Message-ID: <556AFD59.4080009@cogentembedded.com>
+References: <1433029955-7346-1-git-send-email-albeu@free.fr> <1433029955-7346-4-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433063708-11726-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1433029955-7346-4-git-send-email-albeu-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-On 31-05-15 11:15, Maxime Ripard wrote:
-> Hi,
->
-> The Allwinner SoCs all have a bunch of SRAMs (the exact number
-> depending on the SoC itself) that can have various sections mapped to
-> the CPU or to a bunch of devices, each section having different
-> possible devices to be mapped to.
->
-> Since this SRAM setup is highly SoC dependent, and that we could have
-> multiple drivers trying to map a section for their own use, relying on
-> syscon would put to much duplicated logic to devices that are using
-> these SRAMs, among which the USB OTG and EMAC controllers, while not
-> guaranteeing any kind of exclusive use of that section.
->
-> To do this, we introduce a custom API to control the mapping of the
-> sections in a SoC independent way, and a SoC driver to implement it.
->
-> Let me know what you think,
+On 5/31/2015 2:52 AM, Alban Bedel wrote:
 
-Looks good, thanks for your work on this.
+> The DDR controller of the ARxxx and AR9xxx families provides an
+> interface to flush the FIFO between various devices and the DDR.
+> This is mainly used by the IRQ controller to flush the FIFO before
+> running the interrupt handler of such devices.
 
-One small nitpick:
+> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> ---
+> v2: * Fix the node names to respect ePAPR
+> v3: * Fix some typos
+>      * Really fix the node names this time
+> ---
+>   .../memory-controllers/ath79-ddr-controller.txt    | 35 ++++++++++++++++++++++
+>   1 file changed, 35 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
 
-+static struct sunxi_sram_desc sun4i_a10_sram_a3_a4 = {
-+	.data	= SUNXI_SRAM_DATA("A3-A4", 0x4, 0x4, 1,
-+				  SUNXI_SRAM_MAP(0, "cpu"),
-+				  SUNXI_SRAM_MAP(1, "emac")),
-+};
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
+> new file mode 100644
+> index 0000000..efe35a06
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
+> @@ -0,0 +1,35 @@
+> +Binding for Qualcomm  Atheros AR7xxx/AR9xxx DDR controller
+> +
+> +The DDR controller of the ARxxx and AR9xxx families provides an interface
 
-According to the A10 datasheet bits 4 and 5 control the
-A3-A4 mapping, with values 2 and 3 being reserved, so the
-first line here should be:
+    s/ARxxx/AR7xxx/.
 
-+	.data	= SUNXI_SRAM_DATA("A3-A4", 0x4, 0x4, 2,
+> +to flush the FIFO between various devices and the DDR. This is mainly used
+> +by the IRQ controller to flush the FIFO before running the interrupt handler
+> +of such devices.
+> +
+> +Required properties:
+> +
+> +- compatible: has to be "qca,<soc-type>-ddr-controller",
+> +  "qca,[ar7100|ar7240]-ddr-controller" as fallback.
+> +  On SoC with PCI support "qca,ar7100-ddr-controller" should be used as
+> +  fallback, otherwise "qca,ar7240-ddr-controller" should be used.
+> +- reg: Base address and size of the controllers memory area
 
-Other then that this looks good and is:
+    Controller's.
 
-Acked-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Tested-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>  (with otg no an A13 board)
+> +- #qca,ddr-wb-channel-cells: has to be 1, the index of the write buffer
+> +  channel
 
-Regards,
+    Hm, index? The expectation for such props is the # of cells.
 
-Hans
+WBR, Sergei
 
-
-
-> Maxime
->
-> Changes from v2:
->    - Changed the DT bindings to have an explicit relationship between
->      "client" devices, the controller, and the SRAM sections it
->      controls
->    - Changed the interface to not rely on private structures anymore
->      but only the client's struct device
->    - Fixed a bug in the claiming logic
->
-> Maxime Ripard (4):
->    drivers: soc: sunxi: Introduce SoC driver to map SRAMs
->    ARM: dts: sun4i: Add A10 SRAM and SRAM controller
->    ARM: dts: sun5i: Add A10s and A13 SRAM and SRAM controller
->    ARM: dts: sun7i: Add A20 SRAM and SRAM controller
->
->   .../devicetree/bindings/soc/sunxi/sram.txt         |  72 ++++++
->   arch/arm/boot/dts/sun4i-a10-a1000.dts              |   4 +
->   arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts         |   4 +
->   arch/arm/boot/dts/sun4i-a10-cubieboard.dts         |   4 +
->   arch/arm/boot/dts/sun4i-a10-hackberry.dts          |   4 +
->   arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts         |   4 +
->   arch/arm/boot/dts/sun4i-a10-marsboard.dts          |   4 +
->   arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts     |   4 +
->   arch/arm/boot/dts/sun4i-a10-pcduino.dts            |   4 +
->   arch/arm/boot/dts/sun4i-a10.dtsi                   |  37 +++
->   arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts   |   4 +
->   arch/arm/boot/dts/sun5i-a10s.dtsi                  |   9 +
->   arch/arm/boot/dts/sun5i.dtsi                       |  30 +++
->   arch/arm/boot/dts/sun7i-a20.dtsi                   |  37 +++
->   drivers/soc/Kconfig                                |   1 +
->   drivers/soc/Makefile                               |   1 +
->   drivers/soc/sunxi/Kconfig                          |  10 +
->   drivers/soc/sunxi/Makefile                         |   1 +
->   drivers/soc/sunxi/sunxi_sram.c                     | 284 +++++++++++++++++++++
->   include/linux/soc/sunxi/sunxi_sram.h               |  19 ++
->   20 files changed, 537 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/soc/sunxi/sram.txt
->   create mode 100644 drivers/soc/sunxi/Kconfig
->   create mode 100644 drivers/soc/sunxi/Makefile
->   create mode 100644 drivers/soc/sunxi/sunxi_sram.c
->   create mode 100644 include/linux/soc/sunxi/sunxi_sram.h
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
