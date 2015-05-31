@@ -1,57 +1,29 @@
-Return-Path: <linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org>
-Date: Sat, 2 May 2015 16:59:47 +0200
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] Show proper respect for Heinrich Hertz by using the
- correct unit for frequency
-Message-ID: <20150502145947.GA8156@xo-6d-61-c0.localdomain>
-References: <20150511131952.GD2067@n2100.arm.linux.org.uk>
-MIME-Version: 1.0
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 0/4] UART slave device support - version 4
+Date: Mon, 1 Jun 2015 07:01:34 +0900
+Message-ID: <20150531220134.GE13872@kroah.com>
+References: <20150511013540.5709.93626.stgit@notabene.brown>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150511131952.GD2067@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-List-ID: <devicetree@vger.kernel.org>
+In-Reply-To: <20150511013540.5709.93626.stgit@notabene.brown>
+Sender: linux-kernel-owner@vger.kernel.org
+To: NeilBrown <neil@brown.name>
+Cc: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> The SI unit of frequency is Hertz, named after Heinrich Hertz, and is
-> given the symbol "Hz" to denote this.  "hz" is not the unit of frequency,
-> and is in fact meaningless.
+On Mon, May 11, 2015 at 11:56:14AM +1000, NeilBrown wrote:
+> Hi all,
+>  here is version 4 of my "UART slave device" patch set, previously
+>  known as "tty slave devices".
 > 
-> Fix arch/arm to correctly use "Hz", thereby acknowledging Heinrich Hertz
-> contribution to the modern world.
-> 
+>  The most obvious change is the name.  I realized that this isn't
+>  really about "tty"s at all - it is about UARTs.
 
-> --- a/arch/arm/mach-ixp4xx/include/mach/platform.h
-> +++ b/arch/arm/mach-ixp4xx/include/mach/platform.h
-> @@ -74,7 +74,7 @@ extern unsigned long ixp4xx_exp_bus_size;
->  /*
->   * Clock Speed Definitions.
->   */
-> -#define IXP4XX_PERIPHERAL_BUS_CLOCK 	(66) /* 66Mhzi APB BUS   */ 
-> +#define IXP4XX_PERIPHERAL_BUS_CLOCK 	(66) /* 66MHzi APB BUS   */ 
->  #define IXP4XX_UART_XTAL        	14745600
->  
+Then next time you might also want to cc: the linux-serial mailing list
+so the developers there can review it :)
 
-Speaking about meaningless... What is MHzi supposed to mean?
+thanks,
 
-ACK for the rest.
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+greg k-h
