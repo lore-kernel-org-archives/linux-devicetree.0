@@ -1,71 +1,94 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 03/12] devicetree: Add bindings for the ATH79 DDR controllers
-Date: Sun, 31 May 2015 15:23:53 +0300
-Message-ID: <556AFD59.4080009@cogentembedded.com>
-References: <1433029955-7346-1-git-send-email-albeu@free.fr> <1433029955-7346-4-git-send-email-albeu@free.fr>
+From: Roman Volkov <rvolkov@v1ros.org>
+Subject: Re:
+Date: Sun, 31 May 2015 18:37:40 +0300
+Message-ID: <20150531183740.17593bd3@v1ron-s7>
+References: <E1Yz4NQ-0000Cw-B5@feisty.vs19.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433029955-7346-4-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <E1Yz4NQ-0000Cw-B5@feisty.vs19.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Prisk <linux@prisktech.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+=D0=92 Sat, 14 Mar 2015 20:20:38 -0700
+Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-On 5/31/2015 2:52 AM, Alban Bedel wrote:
+>=20
+> Hi Roman,
+>=20
+> On Mon, Feb 16, 2015 at 12:11:43AM +0300, Roman Volkov wrote:
+> > Documentation for 'intel,8042' DT compatible node.
+> >=20
+> > Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+> > Signed-off-by: Roman Volkov <v1ron@v1ros.org>
+> > ---
+> >  .../devicetree/bindings/input/intel-8042.txt       | 26
+> > ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/input/intel-8042.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/input/intel-8042.txt
+> > b/Documentation/devicetree/bindings/input/intel-8042.txt new file
+> > mode 100644 index 0000000..ab8a3e0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/intel-8042.txt
+> > @@ -0,0 +1,26 @@
+> > +Intel 8042 Keyboard Controller
+> > +
+> > +Required properties:
+> > +- compatible: should be "intel,8042"
+> > +- regs: memory for keyboard controller
+> > +- interrupts: usually, two interrupts should be specified
+> > (keyboard and aux).
+> > +	However, only one interrupt is also allowed in case of
+> > absence of the
+> > +	physical port in the controller. The i8042 driver must be
+> > loaded with
+> > +	nokbd/noaux option in this case.
+> > +- interrupt-names: interrupt names corresponding to numbers in the
+> > list.
+> > +	"kbd" is the keyboard interrupt and "aux" is the auxiliary
+> > (mouse)
+> > +	interrupt.
+> > +- command-reg: offset in memory for command register
+> > +- status-reg: offset in memory for status register
+> > +- data-reg: offset in memory for data register
+> > +
+> > +Example:
+> > +	i8042@d8008800 {
+> > +		compatible =3D "intel,8042";
+> > +		regs =3D <0xd8008800 0x100>;
+> > +		interrupts =3D <23>, <4>;
+> > +		interrupt-names =3D "kbd", "aux";
+> > +		command-reg =3D <0x04>;
+> > +		status-reg =3D <0x04>;
+> > +		data-reg =3D <0x00>;
+> > +	};
+>=20
+> No, we already have existing OF bindings for i8042 on sparc and
+> powerpc, I do not think we need to invent a brand new one.
+>=20
+> Thanks.
+>=20
 
-> The DDR controller of the ARxxx and AR9xxx families provides an
-> interface to flush the FIFO between various devices and the DDR.
-> This is mainly used by the IRQ controller to flush the FIFO before
-> running the interrupt handler of such devices.
+Hi Dmitry,
 
-> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> ---
-> v2: * Fix the node names to respect ePAPR
-> v3: * Fix some typos
->      * Really fix the node names this time
-> ---
->   .../memory-controllers/ath79-ddr-controller.txt    | 35 ++++++++++++++++++++++
->   1 file changed, 35 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
+I see some OF code in i8042-sparcio.h file. There are node definitions
+like "kb_ps2", "keyboard", "kdmouse", "mouse". Are these documented
+somewhere?
 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
-> new file mode 100644
-> index 0000000..efe35a06
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
-> @@ -0,0 +1,35 @@
-> +Binding for Qualcomm  Atheros AR7xxx/AR9xxx DDR controller
-> +
-> +The DDR controller of the ARxxx and AR9xxx families provides an interface
+Great if vt8500 is not unique with OF bindings for i8042. The code from
+sparc even looks compatible, only register offsets are hardcoded for
+specific machine. Is it possible to read offsets from Device Tree using
+these existing bindings without dealing with the kernel configuration?
 
-    s/ARxxx/AR7xxx/.
-
-> +to flush the FIFO between various devices and the DDR. This is mainly used
-> +by the IRQ controller to flush the FIFO before running the interrupt handler
-> +of such devices.
-> +
-> +Required properties:
-> +
-> +- compatible: has to be "qca,<soc-type>-ddr-controller",
-> +  "qca,[ar7100|ar7240]-ddr-controller" as fallback.
-> +  On SoC with PCI support "qca,ar7100-ddr-controller" should be used as
-> +  fallback, otherwise "qca,ar7240-ddr-controller" should be used.
-> +- reg: Base address and size of the controllers memory area
-
-    Controller's.
-
-> +- #qca,ddr-wb-channel-cells: has to be 1, the index of the write buffer
-> +  channel
-
-    Hm, index? The expectation for such props is the # of cells.
-
-WBR, Sergei
-
+Regards,
+Roman
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
