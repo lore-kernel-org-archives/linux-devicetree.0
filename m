@@ -1,84 +1,31 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH 3/5] ARM: dts: DRA7: Add TBCLK for PWMSS
-Date: Mon, 1 Jun 2015 17:23:32 +0530
-Message-ID: <1433159614-437-4-git-send-email-vigneshr@ti.com>
-References: <1433159614-437-1-git-send-email-vigneshr@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1433159614-437-1-git-send-email-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Paul Walmsley <paul@pwsan.com>, Tero Kristo <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-pwm@vger.kernel.org, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/3] iio: adc: hi-843x: Add Holt HI-8435/8436/8437 descrete ADC
+Date: Mon,  1 Jun 2015 15:17:53 +0300
+Message-ID: <1433161073-21967-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-tbclk is used by ehrpwm to generate PWM waveform on DRA7 SoC. Add Linux
-clock to control ehrpwm tbclk.
+Hello,
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
+This adds the folowing:
+- Holt descrete ADC driver for HI-8435/8436/8437 chips
+- Add vendor prefix
+- Document DT bindings
+
+Vladimir Barinov (3):
+[1/3] iio: adc: hi-843x: Holt HI-8435/8436/8437 descrete ADC
+[2/3] dt: Add vendor prefix 'holt'
+[3/3] dt: Document Holt descrete ADC bindings
+
 ---
- arch/arm/boot/dts/dra7.dtsi          |  5 +++++
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 26 ++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+This patchset is against the 'kernel/git/torvalds/linux.git' repo.
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index f03a091cd076..387c76ca41f9 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -131,6 +131,11 @@
- 							regulator-max-microvolt = <3000000>;
- 						};
- 					};
-+
-+					scm_conf_clocks: clocks {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+					};
- 				};
- 
- 				dra7_pmx_core: pinmux@1400 {
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index 3b933f74d000..92452d61cf58 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -2136,3 +2136,29 @@
- 		clocks = <&dpll_usb_ck>;
- 	};
- };
-+
-+&scm_conf_clocks {
-+       ehrpwm0_tbclk: ehrpwm0_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&l4_root_clk_div>;
-+		ti,bit-shift = <20>;
-+		reg = <0x0558>;
-+	};
-+
-+	ehrpwm1_tbclk: ehrpwm1_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&l4_root_clk_div>;
-+		ti,bit-shift = <21>;
-+		reg = <0x0558>;
-+	};
-+
-+	ehrpwm2_tbclk: ehrpwm2_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&l4_root_clk_div>;
-+		ti,bit-shift = <22>;
-+		reg = <0x0558>;
-+	};
-+};
--- 
-2.4.1
+ Documentation/devicetree/bindings/iio/adc/hi-843x.txt |   27 
+ Documentation/devicetree/bindings/vendor-prefixes.txt |    1 
+ drivers/iio/adc/Kconfig                               |   12 
+ drivers/iio/adc/Makefile                              |    1 
+ drivers/iio/adc/hi-843x.c                             |  777 ++++++++++++++++++
+ 5 files changed, 818 insertions(+)
