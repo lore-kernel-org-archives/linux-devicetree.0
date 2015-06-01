@@ -1,50 +1,55 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4] drivers: soc: sunxi: Introduce SoC
- driver to map SRAMs
-Date: Mon, 1 Jun 2015 18:07:32 +0200
-Message-ID: <20150601160732.GC23777@lukather>
-References: <1433149466-17013-1-git-send-email-maxime.ripard@free-electrons.com>
- <4341126.tsXmi47bFP@wuerfel>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [v2] powerpc/fsl: Add FMan Port 10G compatibles
+Date: Mon, 1 Jun 2015 15:06:51 +0300
+Message-ID: <1433160411-27621-1-git-send-email-igal.liberman@freescale.com>
+Reply-To: igal.liberman@freescale.com
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="11Y7aswkeuHtSBEs"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBYEHWKVQKGQEURXRFMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4341126.tsXmi47bFP@wuerfel>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, Igal Liberman <igal.liberman@freescale.com>, madalin.bucur@freescale.com
 List-Id: devicetree@vger.kernel.org
 
---11Y7aswkeuHtSBEs
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Mon, Jun 01, 2015 at 05:58:26PM +0200, Arnd Bergmann wrote:
-> > Could you please apply directly this patch to your tree?
-> > 
-> > It's the only driver related patch that should come in for this release
-> > cycle.
-> > 
-> 
-> Applied to next/drivers. Thanks for your hard work to get it adapted to all
-> my wishes over your weekend, very much appreciated.
-
-Great, thanks!
-
-And don't mention it, I'm glad we came to an agreement on this :)
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---11Y7aswkeuHtSBEs--
+RnJvbTogSWdhbCBMaWJlcm1hbiA8aWdhbC5saWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
+YXRjaCBhZGRzIHR3byBib29sZWFuIHByb3BlcnRpZXMgdG8gRk1hbiBQb3J0LgpGTWFuIGhhcyAz
+IHR5cGVzIG9mIHBvcnRzOgoJLSAxRyBwb3J0cwoJCUJ5IGRlZmF1bHQsIGFsbCBwb3J0cyBzdXBw
+b3J0IDFHIHJhdGUKCS0gMTBHIFBvcnRzCgkJUG9ydCB3aGljaCB1c2UgMTBHIGhhcmR3YXJlLCBh
+bmQgY29uZmlndXJlZCBhcyAxMEcKCS0gMTBHIEJlc3QgZWZmb3J0IHBvcnRzCgkJUG9ydHMgd2hp
+Y2ggdXNlIDFHIGhhcmR3YXJlLCBjb25maWd1cmVkIGFzIDEwRywgaW4gdGhpcyBjYXNlLAoJCXRo
+ZSByYXRlIGlzIG5vdCBndWFyYW50ZWVkLgpUaGUgbmV3IHByb3BlcnRpZXMgaGVscCB0byBkaXN0
+aW5ndWlzaCB0aGUgZGlmZmVyZW50IHR5cGUgb2YgcG9ydHMuCgp2MiAtIEFkZHJlc3NlZCBmZWVk
+YmFjayBmcm9tIFNjb3R0OgoJUmVwbGFjZWQgIjEwRy1zdXBwb3J0IiB3aXRoICJmc2wsZm1hbi0x
+MGctcG9ydCIKCVJlcGxhY2VkICJiZXN0LWVmZm9ydC1wb3J0IiB3aXRoICJmc2wsZm1hbi1iZXN0
+LWVmZm9ydC1wb3J0IgoKU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8aWdhbC5saWJlcm1h
+bkBmcmVlc2NhbGUuY29tPgpDaGFuZ2UtSWQ6IElmMWFjMTYwZmJlZGMwY2ZkMDU4ZjQ2YWU4ZDhl
+M2E1MGQzZWNlYmIyCi0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1h
+bi50eHQgICAgICAgfCAgIDEzICsrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNl
+cnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3Bvd2VycGMvZnNsL2ZtYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3Bvd2VycGMvZnNsL2ZtYW4udHh0CmluZGV4IGVkZGE1NWYuLjFmYzUzMjggMTAwNjQ0Ci0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAor
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50
+eHQKQEAgLTE4OSw2ICsxODksMTkgQEAgUFJPUEVSVElFUwogCQlEZWZpbml0aW9uOiBUaGVyZSBp
+cyBvbmUgcmVnIHJlZ2lvbiBkZXNjcmliaW5nIHRoZSBwb3J0CiAJCWNvbmZpZ3VyYXRpb24gcmVn
+aXN0ZXJzLgogCistIGZzbCxmbWFuLTEwZy1wb3J0CisJCVVzYWdlOiBvcHRpb25hbAorCQlWYWx1
+ZSB0eXBlOiBib29sZWFuCisJCURlZmluaXRpb246IFRoZSBkZWZhdWx0IHBvcnQgcmF0ZSBpcyAx
+Ry4KKwkJSWYgdGhpcyBwcm9wZXJ0eSBleGlzdHMsIHRoZSBwb3J0IGlzIHMgMTBHIHBvcnQuCisK
+Ky0gZnNsLGZtYW4tYmVzdC1lZmZvcnQtcG9ydAorCQlVc2FnZTogb3B0aW9uYWwKKwkJVmFsdWUg
+dHlwZTogYm9vbGVhbgorCQlEZWZpbml0aW9uOiBDYW4gYmUgZGVmaW5lZCBvbmx5IGlmIDEwRy1z
+dXBwb3J0IGlzIHNldC4KKwkJVGhpcyBwcm9wZXJ0eSBtYXJrcyBhIGJlc3QtZWZmb3J0IDEwRyBw
+b3J0ICgxMEcgcG9ydCB0aGF0CisJCW1heSBub3QgYmUgY2FwYWJsZSBvZiBsaW5lIHJhdGUpLgor
+CiBFWEFNUExFCiAKIHBvcnRAYTgwMDAgewotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApM
+aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlz
+dGluZm8vbGludXhwcGMtZGV2
