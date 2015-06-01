@@ -1,55 +1,60 @@
-From: Igal.Liberman <igal.liberman@freescale.com>
-Subject: [v2] powerpc/fsl: Add FMan Port 10G compatibles
-Date: Mon, 1 Jun 2015 15:06:51 +0300
-Message-ID: <1433160411-27621-1-git-send-email-igal.liberman@freescale.com>
-Reply-To: igal.liberman@freescale.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, Igal Liberman <igal.liberman@freescale.com>, madalin.bucur@freescale.com
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCHv4 0/2] Adding driver for Xilinx LogiCORE IP mailbox.
+Date: Mon,  1 Jun 2015 09:18:25 -0700
+Message-ID: <1433175507-3833-1-git-send-email-moritz.fischer@ettus.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdhbCBMaWJlcm1hbiA8aWdhbC5saWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
-YXRjaCBhZGRzIHR3byBib29sZWFuIHByb3BlcnRpZXMgdG8gRk1hbiBQb3J0LgpGTWFuIGhhcyAz
-IHR5cGVzIG9mIHBvcnRzOgoJLSAxRyBwb3J0cwoJCUJ5IGRlZmF1bHQsIGFsbCBwb3J0cyBzdXBw
-b3J0IDFHIHJhdGUKCS0gMTBHIFBvcnRzCgkJUG9ydCB3aGljaCB1c2UgMTBHIGhhcmR3YXJlLCBh
-bmQgY29uZmlndXJlZCBhcyAxMEcKCS0gMTBHIEJlc3QgZWZmb3J0IHBvcnRzCgkJUG9ydHMgd2hp
-Y2ggdXNlIDFHIGhhcmR3YXJlLCBjb25maWd1cmVkIGFzIDEwRywgaW4gdGhpcyBjYXNlLAoJCXRo
-ZSByYXRlIGlzIG5vdCBndWFyYW50ZWVkLgpUaGUgbmV3IHByb3BlcnRpZXMgaGVscCB0byBkaXN0
-aW5ndWlzaCB0aGUgZGlmZmVyZW50IHR5cGUgb2YgcG9ydHMuCgp2MiAtIEFkZHJlc3NlZCBmZWVk
-YmFjayBmcm9tIFNjb3R0OgoJUmVwbGFjZWQgIjEwRy1zdXBwb3J0IiB3aXRoICJmc2wsZm1hbi0x
-MGctcG9ydCIKCVJlcGxhY2VkICJiZXN0LWVmZm9ydC1wb3J0IiB3aXRoICJmc2wsZm1hbi1iZXN0
-LWVmZm9ydC1wb3J0IgoKU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8aWdhbC5saWJlcm1h
-bkBmcmVlc2NhbGUuY29tPgpDaGFuZ2UtSWQ6IElmMWFjMTYwZmJlZGMwY2ZkMDU4ZjQ2YWU4ZDhl
-M2E1MGQzZWNlYmIyCi0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1h
-bi50eHQgICAgICAgfCAgIDEzICsrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNl
-cnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3Bvd2VycGMvZnNsL2ZtYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3Bvd2VycGMvZnNsL2ZtYW4udHh0CmluZGV4IGVkZGE1NWYuLjFmYzUzMjggMTAwNjQ0Ci0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAor
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50
-eHQKQEAgLTE4OSw2ICsxODksMTkgQEAgUFJPUEVSVElFUwogCQlEZWZpbml0aW9uOiBUaGVyZSBp
-cyBvbmUgcmVnIHJlZ2lvbiBkZXNjcmliaW5nIHRoZSBwb3J0CiAJCWNvbmZpZ3VyYXRpb24gcmVn
-aXN0ZXJzLgogCistIGZzbCxmbWFuLTEwZy1wb3J0CisJCVVzYWdlOiBvcHRpb25hbAorCQlWYWx1
-ZSB0eXBlOiBib29sZWFuCisJCURlZmluaXRpb246IFRoZSBkZWZhdWx0IHBvcnQgcmF0ZSBpcyAx
-Ry4KKwkJSWYgdGhpcyBwcm9wZXJ0eSBleGlzdHMsIHRoZSBwb3J0IGlzIHMgMTBHIHBvcnQuCisK
-Ky0gZnNsLGZtYW4tYmVzdC1lZmZvcnQtcG9ydAorCQlVc2FnZTogb3B0aW9uYWwKKwkJVmFsdWUg
-dHlwZTogYm9vbGVhbgorCQlEZWZpbml0aW9uOiBDYW4gYmUgZGVmaW5lZCBvbmx5IGlmIDEwRy1z
-dXBwb3J0IGlzIHNldC4KKwkJVGhpcyBwcm9wZXJ0eSBtYXJrcyBhIGJlc3QtZWZmb3J0IDEwRyBw
-b3J0ICgxMEcgcG9ydCB0aGF0CisJCW1heSBub3QgYmUgY2FwYWJsZSBvZiBsaW5lIHJhdGUpLgor
-CiBFWEFNUExFCiAKIHBvcnRAYTgwMDAgewotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApM
-aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlz
-dGluZm8vbGludXhwcGMtZGV2
+This patchset adds mailbox framework integration for the Xilinx LogiCORE IP
+mailbox.  The Xilinx LogiCORE IP mailbox is a fpga softcore that allows
+interprocessor communication between AXI4 stream / memory mapped
+processors.
+
+Changes from v3:
+- Stylistic changes
+- Changed reg size in dts to 0x100
+
+Changes from v2:
+- Fixed error condition for IRQ from >= 0 to > 0
+- Fixed clock enable
+- Cleaned up docs
+
+Changes from v1:
+- Added common clock framework support
+- Deal with IRQs that happend before driver load,
+  since HW will not let us know about them when we enable IRQs
+
+Changes from v0:
+- Several stylistic issues
+- Dropped superfluous intr_mode member
+- Really masking the IRQs on mailbox_shutdown
+- No longer using polling by accident in non-IRQ mode
+- Swapped doc and driver commits
+
+Happy hacking,
+
+Moritz
+
+Moritz Fischer (2):
+  dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
+  mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
+
+ .../bindings/mailbox/xilinx-mailbox.txt         |  44 +++
+ MAINTAINERS                                     |   7 +
+ drivers/mailbox/Kconfig                         |   8 +
+ drivers/mailbox/Makefile                        |   2 +
+ drivers/mailbox/mailbox-xilinx.c                | 352 +++++++++++++++++++
+ 5 files changed, 413 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
+ create mode 100644 drivers/mailbox/mailbox-xilinx.c
+
+-- 
+2.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
