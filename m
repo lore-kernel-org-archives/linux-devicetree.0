@@ -1,48 +1,44 @@
-From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
 Subject: Re: Device Tree Blob (DTB) licence
-Date: Mon, 1 Jun 2015 14:12:40 +0100
-Message-ID: <20150601141240.216d8146@lxorguk.ukuu.org.uk>
+Date: Mon, 1 Jun 2015 14:17:30 +0100
+Message-ID: <20150601141730.1c475095@lxorguk.ukuu.org.uk>
 References: <1430820315.19516.26.camel@opteya.com>
-	<CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
-	<1432289148.5304.58.camel@opteya.com>
-	<1432322832.5304.63.camel@opteya.com>
-	<CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
-	<55670AD4.8020705@melag.de>
-	<20150528133429.GD2067@n2100.arm.linux.org.uk>
-	<556747E4.6070403@melag.de>
-	<20150529064741.GB25351@1wt.eu>
-	<55684F07.7050402@melag.de>
-	<alpine.DEB.2.02.1505291512000.4429@nftneq.ynat.uz>
+ <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
+ <1432289148.5304.58.camel@opteya.com>
+ <556A169E.8030909@myspectrum.nl>
+ <8F98C0FD-D60D-46CB-A42D-10690A097573@bsdimp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1505291512000.4429-UEhY+ZBZOcqqLGM74eQ/YA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lang <david-gFPdbfVZQbY@public.gmane.org>
-Cc: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <owner-freebsd-arm@freebsd.org>
+In-Reply-To: <8F98C0FD-D60D-46CB-A42D-10690A097573@bsdimp.com>
+List-Unsubscribe: <http://lists.freebsd.org/mailman/options/freebsd-arm>,
+ <mailto:freebsd-arm-request@freebsd.org?subject=unsubscribe>
+List-Archive: <http://lists.freebsd.org/pipermail/freebsd-arm/>
+List-Post: <mailto:freebsd-arm@freebsd.org>
+List-Help: <mailto:freebsd-arm-request@freebsd.org?subject=help>
+List-Subscribe: <http://lists.freebsd.org/mailman/listinfo/freebsd-arm>,
+ <mailto:freebsd-arm-request@freebsd.org?subject=subscribe>
+Errors-To: owner-freebsd-arm@freebsd.org
+Sender: owner-freebsd-arm@freebsd.org
+To: Warner Losh <imp@bsdimp.com>
+Cc: Yann Droneaud <ydroneaud@opteya.com>, Jeroen Hofstee <linux-arm@myspectrum.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, freebsd-arm@freebsd.org, Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org\"
+ <linux-arm-kernel@lists.infradead.org>"@lxorguk.ukuu.org.uk
 List-Id: devicetree@vger.kernel.org
 
-> not true, with a proprietary bios it's a clear "pay this much money and don't 
-> worry about it" while with GPL there's a nagging fear that someone you never 
-> heard of may sue you a decade from now claiming you need to give them the source 
-> to your OS.
-
-Not really no - the number of companies who bought proprietary products,
-resold them and then got sued because their supplier was cavalier is
-huge.
-
-> note, this whole discussion assumes that the DTB is even copyrightable. Since 
-> it's intended to be strictly a functional description of what the hardware is 
-> able to do, that could be questioned
-
-I imagine you can write a DTB that is copyrightable and one that isn't.
-
-However this is all missing one important point. Whoever wrote their DTB
-gets to decide how they license it. It's nobody else's business.
-
-Alan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiBmYWN0cyBpbiBhIGR0cyBmaWxlLiBUaGUgR1BM4oCZZCBmaWxlcyBhcmVu4oCZdCBzdG9wcGlu
+ZyBhbnlib2R5IGZyb20gY3JlYXRpbmcKPiBwcm9wcmlldGFyeSBzb2Z0d2FyZS4gUGVvcGxlIHRo
+YXQgcmVhbGx5IGNhcmUgd2lsbCByZXdyaXRlIHRoZSBmaWxlcwo+IGZyb20gc2NyYXRjaCBhbnl3
+YXkuIFBlb3BsZSB0aGF0IGRvbuKAmXQgY2FyZS4uIHdlbGwsIG9uZSBuZWVkIGxvb2sKPiBubyBm
+dXJ0aGVyIHRoYW4gdGhlIGRpZmZpY3VsdHkgb2YgZ2V0dGluZyBzb3VyY2UgY29kZSB0byBkaWZm
+ZXJlbnQgU29DCj4gc3VwcG9ydCBwYWNrYWdlcyBmb3IgdGhlIGtlcm5lbCBpbiB0aGUgQW5kcm9p
+ZCB3b3JsZCB0byBzZWUgaG93Cj4gbXVjaCBzb21lIHBlb3BsZSBjYXJlIGFib3V0IEdQTCBjb21w
+bGlhbmNlIGFuZCBob3cgbXVjaAo+IGl0IHJlYWxseSBzdG9wcyB0aGVtIGZyb20gZG9pbmcgd2hh
+dCB0aGV5IHdhbnQuCgpBbmQgYXQgaG93IG1hbnkgbGFyZ2UgY29tcGFuaWVzIGZvbGxvdyB0aGUg
+R1BMIGFuZCBkbyBwcm92aWRlIHNvdXJjZXMsCm5vbmUgb2Ygd2hvbSB3b3VsZCBwcm9iYWJseSBo
+YXZlIGJvdGhlcmVkIG90aGVyd2lzZS4uLi4KCk1vc3RseSBlZmZlY3RpdmUgaXMgYmV0dGVyIHRo
+YW4gbm90IHRyeWluZyBpbiB0aGUgZmlyc3QgcGxhY2UuCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpmcmVlYnNkLWFybUBmcmVlYnNkLm9yZyBtYWlsaW5n
+IGxpc3QKaHR0cDovL2xpc3RzLmZyZWVic2Qub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWJzZC1h
+cm0KVG8gdW5zdWJzY3JpYmUsIHNlbmQgYW55IG1haWwgdG8gImZyZWVic2QtYXJtLXVuc3Vic2Ny
+aWJlQGZyZWVic2Qub3JnIg==
