@@ -1,43 +1,56 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] ARM: shmobile: r8a7793: add minimal Gose board
- device tree
-Date: Mon, 1 Jun 2015 11:39:25 +0200
-Message-ID: <CAMuHMdVxc3NE1VaQ+1YHn9rt9sPht9qb-=ak1oiYh8NmQiLC6A@mail.gmail.com>
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: Re: [PATCH v4 2/4] ARM: shmobile: add r8a7793 minimal SoC device tree
+Date: Mon, 1 Jun 2015 11:45:45 +0200
+Message-ID: <CAO3366wm=LvYntDYBwh9AY-jpfmBF57cJhfY2A=yAk13kHg3oQ@mail.gmail.com>
 References: <1432826157-6414-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1432826157-6414-4-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<1432826157-6414-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<CAMuHMdXr3BxULQohYo1U0RuW8SRTtb5Ge_ypAbByW8vuRWs=PA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432826157-6414-4-git-send-email-ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXr3BxULQohYo1U0RuW8SRTtb5Ge_ypAbByW8vuRWs=PA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2015 at 5:15 PM, Ulrich Hecht
-<ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Minmal DT description and Makefile entry for the Gose eval board.
-
-Minimal
-
-> Support for console, timer, and Ethernet.
+On Mon, Jun 1, 2015 at 11:37 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Hi Ulrich,
 >
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> On Thu, May 28, 2015 at 5:15 PM, Ulrich Hecht
+> <ulrich.hecht+renesas@gmail.com> wrote:
+>> Minimal r8a7793 device tree including one CPU core, interrupt controllers,
+>> timers, two serial ports, and the Ethernet controller, plus the required
+>> clock descriptions.
+>
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/r8a7793.dtsi
+>> @@ -0,0 +1,368 @@
+>
+>> +       cpus {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +
+>> +               cpu0: cpu@0 {
+>> +                       device_type = "cpu";
+>> +                       compatible = "arm,cortex-a15";
+>> +                       enable-method = "renesas,r8a7793";
+>
+> I don't think we need the enable-method in a minimal tree, do we?
 
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Nope.
 
-Gr{oetje,eeting}s,
+>> +       clocks {
+[...]
+>> +       };
+>
+> I don't see the rationele behind keeping some mstp clocks, and others not,
+> for a miminal dtsi.
 
-                        Geert
+Some clocks are required by the minimal set of devices, and I did not
+want to take apart individual MSTPs because IMO it's error-prone and
+does not provide any real benefit.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CU
+Uli
