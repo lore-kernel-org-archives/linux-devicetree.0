@@ -1,49 +1,48 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 4/5] i2c: at91: print hardware version
-Date: Mon, 1 Jun 2015 17:49:14 +0200
-Message-ID: <46a3699a9449adb793a97f212d38224f33488c87.1433173031.git.cyrille.pitchen@atmel.com>
-References: <cover.1433173031.git.cyrille.pitchen@atmel.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add support for I2C and related devices to TI-NSPIRE platform
+Date: Mon, 01 Jun 2015 17:51:31 +0200
+Message-ID: <1838480.tt9zIv1PRB@wuerfel>
+References: <1433065442-92750-1-git-send-email-dt.tangr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1433173031.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1433065442-92750-1-git-send-email-dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The probe() function now prints the hardware version of the I2C controller
+On Sunday 31 May 2015 19:44:02 Daniel Tang wrote:
+> +
+> +                               touchpad@20 {
+> +                                       compatible = "synaptics_i2c";
+> +                                       reg = <0x20>;
+> +                               };
+>                         };
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- drivers/i2c/busses/i2c-at91.c | 4 ++++
- 1 file changed, 4 insertions(+)
+While this works, "synaptics_i2c" is not a well-formed DT compatible string,
+we should do it right.
 
-diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
-index e926806..ecf601a 100644
---- a/drivers/i2c/busses/i2c-at91.c
-+++ b/drivers/i2c/busses/i2c-at91.c
-@@ -85,6 +85,8 @@
- #define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
- #define	AT91_TWI_ACR_DIR	BIT(8)
- 
-+#define	AT91_TWI_VER		0x00fc	/* Version Register */
-+
- struct at91_twi_pdata {
- 	unsigned clk_max_div;
- 	unsigned clk_offset;
-@@ -870,6 +872,8 @@ static int at91_twi_probe(struct platform_device *pdev)
- 			return rc;
- 	}
- 
-+	dev_info(dev->dev, "version: 0x%x\n", at91_twi_read(dev, AT91_TWI_VER));
-+
- 	rc = of_property_read_u32(dev->dev->of_node, "clock-frequency",
- 			&bus_clk_rate);
- 	if (rc)
--- 
-1.8.2.2
+Please submit three patches:
 
+a) one patch add "syna" as the vendor string in
+   Documentation/devicetree/bindings/vendor-prefixes.txt
+   As this is a publicly traded company, we use the stock ticker
+   symbol by convention. Cc the patch to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+   for review, but I can merge it along with the dts patch if nobody
+   else does
+
+b) a patch to add an of_device_id match table to
+   drivers/input/mouse/synaptics_i2c.c, with the proper name of the
+   device. Ideally, this would be the full name of the component that
+   is used here, something like "syna,abc12345-touchscreen". If you
+   have no way of finding out the real name, "syna,i2c-touchscreen"
+   will have to suffice.
+
+c) This patch, with the correct string used for compatible.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
