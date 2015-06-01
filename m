@@ -1,39 +1,153 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] ARM: shmobile: add r8a7793 minimal SoC device tree
-Date: Mon, 1 Jun 2015 17:22:39 +0200
-Message-ID: <CAMuHMdUCPzKdeno7EusTB4e9UvmC4epxx6ga8SeDh2svrvreKQ@mail.gmail.com>
-References: <1433168577-7678-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1433168577-7678-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: [PATCH] edac: xgene: fix cpuid abuse
+Date: Mon, 01 Jun 2015 17:27:54 +0200
+Message-ID: <4966310.Xu4URPyl4o@wuerfel>
+References: <1432337580-3750-1-git-send-email-lho@apm.com> <20150601151131.GD14192@e104818-lin.cambridge.arm.com> <20150601151757.GD7443@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433168577-7678-3-git-send-email-ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150601151757.GD7443@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org" <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 1, 2015 at 4:22 PM, Ulrich Hecht
-<ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Minimal r8a7793 device tree including one CPU core, interrupt controllers,
-> timers, two serial ports, and the Ethernet controller, plus the required
-> clock descriptions.
->
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+The new x-gene EDAC driver incorrectly tried to figure out the version of
+one of its IP blocks by looking at the version of the CPU core, which is
+only vagely related.
 
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+This removes the incorrect code and instead uses the version of the IP
+block in the compatible string where it belongs.
 
-Gr{oetje,eeting}s,
+Found using build testing on x86, which does not provide the arm64
+cpuid interface.
 
-                        Geert
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+How about this one? We should make sure this gets fixed before the binding
+gets set in stone with a kernel release.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Loc, do you know if some of the other blocks might also have versions
+associated with them? Normally we try to use more specific product names,
+but in case of APM there don't seem to be any more specific names
+than X-Gene and  X-Gene2 any more.
+
+diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+index 480911c38ff9..e31b696ba939 100644
+--- a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
++++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+@@ -25,7 +25,7 @@ Required properties for memory controller subnode:
+ - memory-controller	: Instance number of the memory controller.
+ 
+ Required properties for PMD subnode:
+-- compatible		: Shall be "apm,xgene-edac-pmd".
++- compatible		: Shall be "apm,xgene-edac-pmd" or "apm,xgene-v2-edac-pmd"
+ - reg			: First resource shall be the PMD resource.
+ - pmd-controller	: Instance number of the PMD controller.
+ 
+diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
+index b5158572f6ab..8071c2223f92 100644
+--- a/drivers/edac/xgene_edac.c
++++ b/drivers/edac/xgene_edac.c
+@@ -523,6 +523,7 @@ struct xgene_edac_pmd_ctx {
+ 	struct edac_device_ctl_info *edac_dev;
+ 	void __iomem		*pmd_csr;
+ 	u32			pmd;
++	int			version;
+ };
+ 
+ static void xgene_edac_pmd_l1_check(struct edac_device_ctl_info *edac_dev,
+@@ -784,50 +785,6 @@ static void xgene_edac_pmd_cpu_hw_cfg(struct edac_device_ctl_info *edac_dev,
+ 	writel(0x00000101, pg_f + MEMERR_CPU_MMUECR_PAGE_OFFSET);
+ }
+ 
+-static bool xgene_edac_pmd_l2c_version1(void)
+-{
+-	/* Check all chips with PMD L2C version 1 HW */
+-	#define REVIDR_MINOR_REV(revidr)	((revidr) & 0x00000007)
+-
+-	switch (MIDR_VARIANT(read_cpuid_id())) {
+-	case 0:
+-		switch (MIDR_REVISION(read_cpuid_id())) {
+-		case 0:
+-
+-			switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+-			case 1:
+-			case 2:
+-				return true;
+-			};
+-			break;
+-		case 1:
+-			if (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1)) == 1)
+-				return true;
+-			break;
+-		}
+-		break;
+-	case 1:
+-		switch (MIDR_REVISION(read_cpuid_id())) {
+-		case 0:
+-			switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+-			case 1:
+-				return true;
+-			};
+-			break;
+-		case 1:
+-			switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+-			case 1:
+-			case 0:
+-				return true;
+-			};
+-			break;
+-		}
+-		break;
+-	}
+-
+-	return false;
+-}
+-
+ static void xgene_edac_pmd_hw_cfg(struct edac_device_ctl_info *edac_dev)
+ {
+ 	struct xgene_edac_pmd_ctx *ctx = edac_dev->pvt_info;
+@@ -837,7 +794,7 @@ static void xgene_edac_pmd_hw_cfg(struct edac_device_ctl_info *edac_dev)
+ 	/* Enable PMD memory error - MEMERR_L2C_L2ECR and L2C_L2RTOCR */
+ 	writel(0x00000703, pg_e + MEMERR_L2C_L2ECR_PAGE_OFFSET);
+ 	/* Configure L2C HW request time out feature if supported */
+-	if (!xgene_edac_pmd_l2c_version1())
++	if (ctx->version == 1)
+ 		writel(0x00000119, pg_d + CPUX_L2C_L2RTOCR_PAGE_OFFSET);
+ }
+ 
+@@ -956,7 +913,7 @@ static int xgene_edac_pmd_available(u32 efuse, int pmd)
+ 	return (efuse & (1 << pmd)) ? 0 : 1;
+ }
+ 
+-static int xgene_edac_pmd_add(struct xgene_edac *edac, struct device_node *np)
++static int xgene_edac_pmd_add(struct xgene_edac *edac, struct device_node *np, int version)
+ {
+ 	struct edac_device_ctl_info *edac_dev;
+ 	struct xgene_edac_pmd_ctx *ctx;
+@@ -998,6 +955,7 @@ static int xgene_edac_pmd_add(struct xgene_edac *edac, struct device_node *np)
+ 	ctx->edac = edac;
+ 	ctx->edac_dev = edac_dev;
+ 	ctx->ddev = *edac->dev;
++	ctx->version = version;
+ 	edac_dev->dev = &ctx->ddev;
+ 	edac_dev->ctl_name = ctx->name;
+ 	edac_dev->dev_name = ctx->name;
+@@ -1169,7 +1127,9 @@ static int xgene_edac_probe(struct platform_device *pdev)
+ 		if (of_device_is_compatible(child, "apm,xgene-edac-mc"))
+ 			xgene_edac_mc_add(edac, child);
+ 		if (of_device_is_compatible(child, "apm,xgene-edac-pmd"))
+-			xgene_edac_pmd_add(edac, child);
++			xgene_edac_pmd_add(edac, child, 1);
++		if (of_device_is_compatible(child, "apm,xgene-v2-edac-pmd"))
++			xgene_edac_pmd_add(edac, child, 2);
+ 	}
+ 
+ 	return 0;
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
