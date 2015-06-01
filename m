@@ -1,74 +1,32 @@
-From: Matthijs van Duin <matthijsvanduin@gmail.com>
-Subject: Re: [PATCH] ARM: dts: am335x-boneblack: disable RTC-only sleep
-Date: Mon, 1 Jun 2015 07:14:43 +0200
-Message-ID: <CAALWOA9wyCsUQqER2Cqwru_2REpX6AeryWeoSuwZWDsdPPL+Ow@mail.gmail.com>
-References: <1432136322-7609-1-git-send-email-robertcnelson@gmail.com>
- <CAALWOA8ReuBSMcu5EvLOrKGfFGBGWSdMhpL_uSnL4QvTC-n8zg@mail.gmail.com> <CAOCHtYigGmDY6c8woQxwdy9kU0J1h258jZXL7g7=VdrxKJC9cA@mail.gmail.com>
+From: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH V2 0/3] Add RS-485 support and fix RTS/CTS implementation
+Date: Mon, 1 Jun 2015 10:51:04 +0530
+Message-ID: <1433136067-20644-1-git-send-email-bhuvanchandra.dv@toradex.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary=001a11c2382c97ecdf05176de893
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAOCHtYigGmDY6c8woQxwdy9kU0J1h258jZXL7g7=VdrxKJC9cA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Robert Nelson <robertcnelson@gmail.com>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, moorray3-5tc4TXWwyLM@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhuvanchandra.dv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---001a11c2382c97ecdf05176de893
-Content-Type: text/plain; charset=UTF-8
+Changes since V1:
+Use common get/set mctrl control methods for both lpuart, lpuart32
+and fix indention.
 
-Here's a version that attempts to address Tony's earlier request to
-include some comments in the patch itself. Since I saw no way to
-concisely summarize the issues, I included links to relevant messages
-(and enough info to locate the thread again in case of link rot).
+Bhuvanchandra DV (3):
+  ARM: dts: colibri-vf: Add pinmux for UART_0 aka UART_A RTS/CTS pins
+  tty: serial: fsl_lpuart: remove RTS/CTS control from set/get_mctrl
+  tty: serial: fsl_lpuart: Add support for RS-485
 
-Since the patch itself contains more explanation, I made the commit
-message more concise.
+ arch/arm/boot/dts/vf-colibri.dtsi |   2 +
+ drivers/tty/serial/fsl_lpuart.c   | 103 ++++++++++++++++++++------------------
+ 2 files changed, 57 insertions(+), 48 deletions(-)
 
-Apologies for the attachment (inline text would get fucked up by gmail)
+-- 
+2.1.0
 
---001a11c2382c97ecdf05176de893
-Content-Type: text/x-patch; charset=US-ASCII;
-	name="0001-ARM-dts-am335x-bone-enable-pmic-shutdown-controller.patch"
-Content-Disposition: attachment;
-	filename="0001-ARM-dts-am335x-bone-enable-pmic-shutdown-controller.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_iadfxp7g0
-
-RnJvbSA0Mjc4ZWNjMzJlODg2ZDJlODNiYzQ4NmU2NDA5ZDhmNmRmODJhMGQxIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXR0aGlqcyB2YW4gRHVpbiA8bWF0dGhpanN2YW5kdWluQGdt
-YWlsLmNvbT4KRGF0ZTogTW9uLCAxIEp1biAyMDE1IDA2OjU2OjI0ICswMjAwClN1YmplY3Q6IFtQ
-QVRDSF0gQVJNOiBkdHM6IGFtMzM1eC1ib25lKiBlbmFibGUgcG1pYy1zaHV0ZG93bi1jb250cm9s
-bGVyCgpGaXhlczogaHR0cDovL2J1Z3MuZWxpbnV4Lm9yZy9pc3N1ZXMvMTQzCgpBdm9pZCBlbnRl
-cmluZyAiUlRDLW9ubHkgbW9kZSIgYXQgcG93ZXJvZmYuIEl0IGlzIHVuc3VwcG9ydGVkIGJ5IG1v
-c3QKdmVyc2lvbnMgb2YgQmVhZ2xlQm9uZSwgYW5kIHJpc2tzIGhhcmR3YXJlIGRhbWFnZS4KClJl
-cG9ydGVkLWJ5OiBNYXR0aGlqcyB2YW4gRHVpbiA8bWF0dGhpanN2YW5kdWluQGdtYWlsLmNvbT4K
-VGVzdGVkLWJ5OiBNYXR0aGlqcyB2YW4gRHVpbiA8bWF0dGhpanN2YW5kdWluQGdtYWlsLmNvbT4K
-U2lnbmVkLW9mZi1ieTogUm9iZXJ0IE5lbHNvbiA8cm9iZXJ0Y25lbHNvbkBnbWFpbC5jb20+CkNj
-OiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPgpDYzogRmVsaXBlIEJhbGJpIDxiYWxi
-aUB0aS5jb20+CkNjOiBKb2hhbiBIb3ZvbGQgPGpvaGFuQGtlcm5lbC5vcmc+CltNYXR0aGlqcyB2
-YW4gRHVpbjogYWRkZWQgZXhwbGFuYXRvcnkgY29tbWVudHNdClNpZ25lZC1vZmYtYnk6IE1hdHRo
-aWpzIHZhbiBEdWluIDxtYXR0aGlqc3ZhbmR1aW5AZ21haWwuY29tPgotLS0KIGFyY2gvYXJtL2Jv
-b3QvZHRzL2FtMzM1eC1ib25lLWNvbW1vbi5kdHNpIHwgMTggKysrKysrKysrKysrKysrKysrCiAx
-IGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2FtMzM1eC1ib25lLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4
-LWJvbmUtY29tbW9uLmR0c2kKaW5kZXggYzMyNTVlMC4uOTBmYmJiMSAxMDA2NDQKLS0tIGEvYXJj
-aC9hcm0vYm9vdC9kdHMvYW0zMzV4LWJvbmUtY29tbW9uLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvYW0zMzV4LWJvbmUtY29tbW9uLmR0c2kKQEAgLTIyMyw2ICsyMjMsMjQgQEAKIC9pbmNs
-dWRlLyAidHBzNjUyMTcuZHRzaSIKIAogJnRwcyB7CisJLy8gQ29uZmlndXJlIHBtaWMgdG8gZW50
-ZXIgT0ZGLXN0YXRlIGluc3RlYWQgb2YgU0xFRVAtc3RhdGUgKCJSVEMtb25seQorCS8vIG1vZGUi
-KSBhdCBwb3dlcm9mZi4gIE1vc3QgQmVhZ2xlQm9uZSB2ZXJzaW9ucyBkbyBub3Qgc3VwcG9ydCBS
-VEMtb25seQorCS8vIG1vZGUgYW5kIHJpc2sgaGFyZHdhcmUgZGFtYWdlIGlmIHRoaXMgbW9kZSBp
-cyBlbnRlcmVkLgorCS8vCisJLy8gRm9yIGRldGFpbHMsIHNlZSBsaW51eC1vbWFwIG1haWxpbmcg
-bGlzdCBNYXkgMjAxNSB0aHJlYWQKKwkvLwlbUEFUQ0hdIEFSTTogZHRzOiBhbTMzNXgtYm9uZSog
-ZW5hYmxlIHBtaWMtc2h1dGRvd24tY29udHJvbGxlcgorCS8vIEluIHBhcnRpY3VsYXIsIG1lc3Nh
-Z2VzOgorCS8vCWh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtb21hcC9tc2cxMTg1
-ODUuaHRtbAorCS8vCWh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtb21hcC9tc2cx
-MTg2MTUuaHRtbAorCS8vCisJdGkscG1pYy1zaHV0ZG93bi1jb250cm9sbGVyOworCS8vCisJLy8g
-WW91IGNhbiBvdmVycmlkZSB0aGlzIGxhdGVyIHdpdGgKKwkvLwkmdHBzIHsgIC9kZWxldGUtcHJv
-cGVydHkvIHRpLHBtaWMtc2h1dGRvd24tY29udHJvbGxlcjsgIH0KKwkvLyBpZiB5b3Ugd2FudCB0
-byB1c2UgUlRDLW9ubHkgbW9kZSBhbmQgbWFkZSBzdXJlIHlvdSBhcmUgbm90IGFmZmVjdGVkCisJ
-Ly8gYnkgdGhlIGhhcmR3YXJlIHByb2JsZW1zLiAoVGlwOiBkb3VibGUtY2hlY2sgYnkgcGVyZm9y
-bWluZyBhIGN1cnJlbnQKKwkvLyBtZWFzdXJlbWVudCBhZnRlciBzaHV0ZG93bjogaXQgc2hvdWxk
-IGJlIGxlc3MgdGhhbiAxIG1BLikKKwogCXJlZ3VsYXRvcnMgewogCQlkY2RjMV9yZWc6IHJlZ3Vs
-YXRvckAwIHsKIAkJCXJlZ3VsYXRvci1uYW1lID0gInZkZHNfZHByIjsKLS0gCjIuMS40Cgo=
---001a11c2382c97ecdf05176de893--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
