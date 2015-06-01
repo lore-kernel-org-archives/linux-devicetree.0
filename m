@@ -1,71 +1,42 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
-Date: Mon, 1 Jun 2015 15:50:09 +0800
-Message-ID: <CADyBb7tQ4NaX5KnfNjoL3YsjHqctW2W4J_-qbrfhvonJ9KP0MQ@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>
-	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>
-	<5564A44A.5000606@codeaurora.org>
-	<CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA@mail.gmail.com>
-	<55686960.5010503@codeaurora.org>
-	<CADyBb7tdoajU4crdjrjCf68_Lz=8KbxAX4+Gd_H15aNaimHXww@mail.gmail.com>
-	<556889D9.5070707@codeaurora.org>
-	<5568E3E8.7070008@roeck-us.net>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 1/7] net: dsa: add new driver for ar8xxx family
+Date: Mon, 01 Jun 2015 10:14:34 +0200
+Message-ID: <1433146474.2361.18.camel@x220>
+References: <1432863742-18427-1-git-send-email-mathieu@codeaurora.org>
+	 <1432863742-18427-2-git-send-email-mathieu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5568E3E8.7070008@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Timur Tabi <timur@codeaurora.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1432863742-18427-2-git-send-email-mathieu@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Mathieu Olivari <mathieu@codeaurora.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com, linux@roeck-us.net, gang.chen.5i5j@gmail.com, jiri@resnulli.us, leitec@staticky.com, fabf@skynet.be, alexander.h.duyck@intel.com, pavel.nakonechny@skitlab.ru, joe@perches.com, sfeldma@gmail.com, nbd@openwrt.org, juhosg@openwrt.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter , Timur
+Just a nit: a license mismatch.
 
-On 30 May 2015 at 06:10, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 05/29/2015 08:46 AM, Timur Tabi wrote:
->>
->> On 05/29/2015 09:32 AM, Fu Wei wrote:
->>>
->>> It is a SPI, every CPU can get it,
->>> But maybe I miss something, but please let me know if other CPU can
->>> not get the interrupt.
->>
->>
->> There's only one watchdog device, so there's only one interrupt.  I don't
->> know which CPU will get the interrupt, but the watchdog is not a per-CPU
->> device.
->>
-> Plus, that one interrupt is not shared, and the driver returns
-> IRQ_HANDLED even if the bit is not set. So _something_ is definitely
-> wrong. Either the interrupt is shared, then it needs to be requested
-> as shared and the handler should only return IRQ_HANDLED if it actually
-> handles the interrupt. Or it is not shared and the handler should always
-> handle it.
+On Thu, 2015-05-28 at 18:42 -0700, Mathieu Olivari wrote:
+> --- /dev/null
+> +++ b/drivers/net/dsa/ar8xxx.c
 
-I have thought about this again, For now, I did not find any reason to
-keep that "if (status & SBSA_GWDT_WCS_WS0)"
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 
-So you are right, I should delete it.
+This states the license is GPL v2.
 
-and for IRQF_TIMER,  I will delete it.
+> +MODULE_LICENSE("GPL");
 
-Thanks for your correction.
-
->
-> Guenter
->
+And this states, according to include/linux/module.h, that the license
+is GPL v2 or later. So I think that either the comment at the top of
+this file or the ident used in the MODULE_LICENSE() macro needs to
+change.
 
 
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+Paul Bolle
