@@ -1,55 +1,108 @@
-From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 3/3] dt: Document Holt descrete ADC bindings
-Date: Mon,  1 Jun 2015 15:20:52 +0300
-Message-ID: <1433161252-22122-1-git-send-email-vladimir.barinov@cogentembedded.com>
-References: <1433161073-21967-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433161073-21967-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: mt8173: Add I2C device node
+Date: Mon, 1 Jun 2015 14:25:41 +0200
+Message-ID: <CABuKBeLBzeibaUWT9S-tpa-JqKDW2gWLUAcJjuMWOaw5SSkEig@mail.gmail.com>
+References: <1433140153-22436-1-git-send-email-eddie.huang@mediatek.com>
+	<1433140153-22436-3-git-send-email-eddie.huang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433140153-22436-3-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These bindings can be used to register Holt HI-8435/8436/8437 descrete ADC
+2015-06-01 8:29 GMT+02:00 Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> Add MT8173 I2C device nodes, include I2C controllers and pins.
+> MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
+> The 6th I2C controller register base doesn't next to 5th I2C,
+> and there is a hardware between 5th and 6th I2C controller. So
+> SoC designer name 6th controller as "i2c6", not "i2c5".
+>
+> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 119 +++++++++++++++++++++++++++++++
+>  1 file changed, 119 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index b52ec43..72d9ab1 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -158,6 +158,53 @@
+>                         interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+>                                                 <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+>                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> +                       i2c0_pins_a: i2c0@0 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
+> +                                                <MT8173_PIN_46_SCL0__FUNC_SCL0>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
+> +
+> +                       i2c1_pins_a: i2c1@0 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_125_SDA1__FUNC_SDA1>,
+> +                                                <MT8173_PIN_126_SCL1__FUNC_SCL1>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
+> +
+> +                       i2c2_pins_a: i2c2@0 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_43_SDA2__FUNC_SDA2>,
+> +                                                <MT8173_PIN_44_SCL2__FUNC_SCL2>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
+> +
+> +                       i2c3_pins_a: i2c3@0 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_106_SDA3__FUNC_SDA3>,
+> +                                                <MT8173_PIN_107_SCL3__FUNC_SCL3>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
+> +
+> +                       i2c4_pins_a: i2c4@0 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_133_SDA4__FUNC_SDA4>,
+> +                                                <MT8173_PIN_134_SCL4__FUNC_SCL4>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
+> +
+> +                       i2c6_pins_a: i2c6@0 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_100_MSDC2_DAT0__FUNC_SDA5>,
+> +                                                <MT8173_PIN_101_MSDC2_DAT1__FUNC_SCL5>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
+>                 };
+>
+>                 watchdog: watchdog@10007000 {
+> @@ -194,6 +241,78 @@
+>                                 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>                 };
+>
+> +               i2c0: i2c@11007000 {
+> +                       compatible = "mediatek,mt8173-i2c";
+> +                       reg = <0 0x11007000 0 0x70>,
+> +                             <0 0x11000100 0 0x80>;
+> +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
+> +                       clock-div = <16>;
+> +                       clocks = <&pericfg CLK_PERI_I2C0>,
+> +                                <&pericfg CLK_PERI_AP_DMA>;
+> +                       clock-names = "main", "dma";
+> +                       status = "disabled";
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
----
- .../devicetree/bindings/iio/adc/hi-843x.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/hi-843x.txt
+Please order nodes by their register address.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/hi-843x.txt b/Documentation/devicetree/bindings/iio/adc/hi-843x.txt
-new file mode 100644
-index 0000000..872e801
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/hi-843x.txt
-@@ -0,0 +1,27 @@
-+Holt Integrated Circuits HI-8435/8436/8437 discrete ADC bindings
-+
-+Required properties:
-+ - compatible: Should be "holt,hi-8435" or "holt,hi-8436" or "holt,hi-8437"
-+ - reg: spi chip select number for the device
-+
-+Recommended properties:
-+ - spi-max-frequency: Definition as per
-+		Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Optional properties:
-+ - holt,mr-gpio: GPIO used for controlling the MR (chip reset) pin
-+ - holt,debounce-soft: enable software debounce at startup
-+ - holt,debounce-soft-delay: software debounce interval in milliseconds
-+
-+Example:
-+adc@0 {
-+	compatible = "holt,hi-8435";
-+	reg = <0>;
-+
-+	holt,mr-gpio = <&gpio6 1 0>;
-+
-+	holt,debounce-soft;
-+	holt,debounce-soft-delay = <100>;
-+
-+	spi-max-frequency = <1000000>;
-+};
--- 
-1.9.1
+Thanks,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
