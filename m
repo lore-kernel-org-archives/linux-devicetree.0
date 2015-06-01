@@ -1,42 +1,30 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v9 3/8] leds: max77693: add support for V4L2 Flash
- sub-device
-Date: Tue, 2 Jun 2015 00:21:23 +0300
-Message-ID: <20150601212123.GJ25595@valkosipuli.retiisi.org.uk>
-References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
- <1432566843-6391-4-git-send-email-j.anaszewski@samsung.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv4 10/10] arm/dts: am57xx-beagle-x15.dts: add HDMI
+Date: Mon, 1 Jun 2015 14:51:16 -0700
+Message-ID: <20150601215115.GH30984@atomide.com>
+References: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com>
+ <1433139798-23450-11-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1432566843-6391-4-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+In-Reply-To: <1433139798-23450-11-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [150531 23:25]:
+> AM57xx Beagle X15 has a HDMI output. This patch adds the device tree
+> nodes required for HDMI.
 
-On Mon, May 25, 2015 at 05:13:58PM +0200, Jacek Anaszewski wrote:
-> Add support for V4L2 Flash sub-device to the max77693 LED Flash class
-> driver. The support allows for V4L2 Flash sub-device to take the control
-> of the LED Flash class device.
-> 
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: Sakari Ailus <sakari.ailus@iki.fi>
+This one does not seem to apply to linux next, did not look
+further where it conflicts.
 
-For this and the rest in the set:
+Regards,
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-Many thanks to you for your efforts on this! It's great to see it in this
-state after all the review rounds. :-)
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
