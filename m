@@ -1,79 +1,71 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: Document the STM32F4 clock bindings
-Date: Mon, 01 Jun 2015 08:46:59 +0100
-Message-ID: <556C0DF3.7050603@linaro.org>
-References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org> <1432972448-10332-1-git-send-email-daniel.thompson@linaro.org> <1432972448-10332-3-git-send-email-daniel.thompson@linaro.org> <55698104.2070205@gmail.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v3 5/6] Watchdog: introduce ARM SBSA watchdog driver
+Date: Mon, 1 Jun 2015 15:50:09 +0800
+Message-ID: <CADyBb7tQ4NaX5KnfNjoL3YsjHqctW2W4J_-qbrfhvonJ9KP0MQ@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1432548193-19569-1-git-send-email-fu.wei@linaro.org>
+	<1432548193-19569-6-git-send-email-fu.wei@linaro.org>
+	<5564A44A.5000606@codeaurora.org>
+	<CADyBb7uQCPoerjyiGT3uUxXJk6XVTEkEuOdEB+-w6G-=RrdTmA@mail.gmail.com>
+	<55686960.5010503@codeaurora.org>
+	<CADyBb7tdoajU4crdjrjCf68_Lz=8KbxAX4+Gd_H15aNaimHXww@mail.gmail.com>
+	<556889D9.5070707@codeaurora.org>
+	<5568E3E8.7070008@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55698104.2070205-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, Andreas Farber <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5568E3E8.7070008@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Timur Tabi <timur@codeaurora.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30/05/15 10:21, Maxime Coquelin wrote:
-> HI Daniel,
->
-> On 05/30/2015 09:54 AM, Daniel Thompson wrote:
->> This adds documentation of device tree bindings for the clock related
->> portions of the STM32 RCC block.
+Hi Guenter , Timur
+
+On 30 May 2015 at 06:10, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 05/29/2015 08:46 AM, Timur Tabi wrote:
 >>
->> Signed-off-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   .../devicetree/bindings/clock/st,stm32-rcc.txt     | 65
->> ++++++++++++++++++++++
->>   1 file changed, 65 insertions(+)
->> <snip>
->> +Example:
->> +
->> +    /* Gated clock, AHB1 bit 0 (GPIOA) */
->> +    ... {
->> +        clocks = <&rcc 0 0>
->> +    };
->> +
->> +    /* Gated clock, AHB2 bit 4 (GPIOA) */
-> s/GPIOA/CRYP/
+>> On 05/29/2015 09:32 AM, Fu Wei wrote:
+>>>
+>>> It is a SPI, every CPU can get it,
+>>> But maybe I miss something, but please let me know if other CPU can
+>>> not get the interrupt.
+>>
+>>
+>> There's only one watchdog device, so there's only one interrupt.  I don't
+>> know which CPU will get the interrupt, but the watchdog is not a per-CPU
+>> device.
+>>
+> Plus, that one interrupt is not shared, and the driver returns
+> IRQ_HANDLED even if the bit is not set. So _something_ is definitely
+> wrong. Either the interrupt is shared, then it needs to be requested
+> as shared and the handler should only return IRQ_HANDLED if it actually
+> handles the interrupt. Or it is not shared and the handler should always
+> handle it.
 
-Oops! Will fix.
+I have thought about this again, For now, I did not find any reason to
+keep that "if (status & SBSA_GWDT_WCS_WS0)"
 
+So you are right, I should delete it.
 
->> +    ... {
->> +        clocks = <&rcc 0 36>
->> +    };
->> +
->> +Specifying other clocks
->> +=======================
->> +
->> +The primary index must be set to 1.
->> +
->> +The secondary index is bound with the following magic numbers:
->> +
->> +    0    SYSTICK
->> +    1    FCLK
-> How do you plan to handle the SAI & I2S clocks?
-> By adding index 3?
+and for IRQF_TIMER,  I will delete it.
 
-Pretty much. Tentatively I'm thinking of:
+Thanks for your correction.
 
-	2	I2S clocks
-	3	SAI1_A clock
-	4	SAI1_B clock
-	5	LCD-TFT clock
-
-Note: Sort order is based on the vertical ordering in the clock tree 
-diagram in the data sheet.
-
-Only reason not to include these in the bindings immediately is that I 
-wanted to check how/if these clocks are gated. The clock tree diagram 
-shows them having individual clock gates so before proposing them using 
-magic numbers I wanted to double check if these values can be identified 
-at gates clocks.
+>
+> Guenter
+>
 
 
-Daniel.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
