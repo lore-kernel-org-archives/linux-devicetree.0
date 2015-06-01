@@ -1,48 +1,33 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] dt-bindings: Consolidate ChipIdea USB ci13xxx
- bindings
-Date: Mon, 01 Jun 2015 10:09:47 +0300
-Message-ID: <1433142587.6844.11.camel@mm-sol.com>
-References: <1432917526-9688-1-git-send-email-robh@kernel.org>
-	 <1432917526-9688-5-git-send-email-robh@kernel.org>
+From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] clk: stm32: Add clock driver for STM32F4[23]xxx
+ devices
+Date: Mon, 01 Jun 2015 08:18:36 +0100
+Message-ID: <556C074C.4010302@linaro.org>
+References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org> <1432972448-10332-1-git-send-email-daniel.thompson@linaro.org> <1432972448-10332-4-git-send-email-daniel.thompson@linaro.org> <55697FCE.9040003@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432917526-9688-5-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <55697FCE.9040003-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, Andreas Farber <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 30/05/15 10:15, Maxime Coquelin wrote:
+> Hi Daniel,
+>
+>      Nice driver, please find my comments below.
+>
+>      Once fixed, you can add:
+> Reviewed-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-On Fri, 2015-05-29 at 11:38 -0500, Rob Herring wrote:
-> Combine the ChipIdea USB binding into a single document to reduce
-> duplication and fragmentation. This marks use of the old PHY bindings as
-> deprecated. Future compatible bindings should use generic PHY binding.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> Cc: Peter Chen chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Daniel Tang tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Pawel Moll moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  .../devicetree/bindings/usb/ci-hdrc-imx.txt        | 35 ----------------------
->  .../devicetree/bindings/usb/ci-hdrc-qcom.txt       | 17 -----------
->  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       | 22 +++++++++++++-
->  .../devicetree/bindings/usb/ci-hdrc-zevio.txt      | 17 -----------
->  4 files changed, 21 insertions(+), 70 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
->  delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
->  delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
+Thanks for the review.
 
-Thanks. For Qualcomm part:
+No concerns at my end. I'll act on all of the issues you raised.
 
-Acked-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+
+Daniel.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
