@@ -1,46 +1,46 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] drivers: firmware: psci: move power_state handling
- to generic code
-Date: Mon, 1 Jun 2015 10:28:04 +0100
-Message-ID: <20150601092804.GB1641@arm.com>
-References: <1432901799-18359-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1432901799-18359-4-git-send-email-lorenzo.pieralisi@arm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support for
+ usb0 phy / OTG
+Date: Mon, 01 Jun 2015 11:28:23 +0200
+Message-ID: <556C25B7.80708@redhat.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com> <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <20150601092249.GF17267@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1432901799-18359-4-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBPGLWCVQKGQETUVX3QQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150601092249.GF17267@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 29, 2015 at 01:16:36PM +0100, Lorenzo Pieralisi wrote:
-> Functions implemented on arm64 to check if a power_state parameter
-> is valid and if the power_state implies context loss are not
-> arm64 specific and should be moved to generic code so that they
-> can be reused on arm systems too.
-> 
-> This patch moves the functions handling the power_state parameter
-> to generic PSCI firmware layer code.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/kernel/psci.c | 14 --------------
->  drivers/firmware/psci.c  | 15 +++++++++++++++
->  include/linux/psci.h     |  2 ++
->  3 files changed, 17 insertions(+), 14 deletions(-)
+Hi,
 
-Looks fine to me:
+On 01-06-15 11:22, Maxime Ripard wrote:
+> On Sun, May 31, 2015 at 06:10:25PM +0200, Hans de Goede wrote:
+>> +	/* We either want both gpio pins or neither (when in host mode) */
+>> +	if (!data->id_det_gpio != !data->vbus_det_gpio) {
+>> +		dev_err(dev, "failed to get id or vbus detect pin\n");
+>> +		return -ENODEV;
+>> +	}
+>
+> The fact that the driver expects both to be set if one is should be in
+> the binding documentation.
 
-  Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+That would be behavior description, and I've always been told that the
+binding should only document the hardware description, not the behavior.
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also this may change in the future as we add support for more boards,
+e.g. the cubieboard seems to be unable to turn vbus off ever, so vbus-det
+will always read as 1 / high, making it rather useless. This is something
+which I still need to figure out how to deal with.
+
+Regards,
+
+Hans
