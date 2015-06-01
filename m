@@ -1,91 +1,70 @@
-From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] iio: adc: hi-843x: Holt HI-8435/8436/8437 descrete
- ADC
-Date: Mon, 01 Jun 2015 17:41:47 +0300
-Message-ID: <556C6F2B.5010404@cogentembedded.com>
-References: <1433161073-21967-1-git-send-email-vladimir.barinov@cogentembedded.com> <1433161211-22034-1-git-send-email-vladimir.barinov@cogentembedded.com> <alpine.DEB.2.02.1506011440121.1644@pmeerw.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v11 4/5] edac: Add APM X-Gene SoC EDAC driver
+Date: Mon, 01 Jun 2015 16:42:58 +0200
+Message-ID: <3195065.IK73o60xya@wuerfel>
+References: <1432337580-3750-1-git-send-email-lho@apm.com> <1432337580-3750-4-git-send-email-lho@apm.com> <1432337580-3750-5-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1506011440121.1644-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432337580-3750-5-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Peter,
-
-Thank you for the review.
-
-On 01.06.2015 15:55, Peter Meerwald wrote:
->> Add Holt descrete ADC driver for HI-8435/8436/8437 chips
-> discrete
-Thx, will replace in the next try.
->
-> link to datasheet would be nice, comments below
-the official link is here:
-http://www.holtic.com/products/3081-hi-8435.aspx
->
-> what is the purpose of the driver?
-Support hi-8435/36/37 chips in linux kernel via IIO subsystem with use 
-of iio-buffer and triggered-buffer features.
->
-> the driver-specific ABI needs to be documented under
-> Documentation/ABI/testing/sys-bus-iio-*
-Thanks, I will add this in the next try.
->
->> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->> ---
->>   drivers/iio/adc/Kconfig   |  12 +
->>   drivers/iio/adc/Makefile  |   1 +
->>   drivers/iio/adc/hi-843x.c | 777 ++++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 790 insertions(+)
->>   create mode 100644 drivers/iio/adc/hi-843x.c
->>
->> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->> index e36a73e..71b0efc 100644
->> --- a/drivers/iio/adc/Kconfig
->> +++ b/drivers/iio/adc/Kconfig
->> @@ -164,6 +164,18 @@ config EXYNOS_ADC
->>   	  of SoCs for drivers such as the touchscreen and hwmon to use to share
->>   	  this resource.
->>   
->> +config HI_843X
-> we recommend against using a placeholder in a drivers name;
-> we suggest to name the driver after the first/primary chip it supports
-> (that you test with most)
-Ok, I will name the driver as hi8435_adc/HI8435_ADC in the next try.
-> +#include <linux/interrupt.h>
-> +
-> +#define DRV_NAME "hi-843x"
-> HI84.. prefix
-sure, as mentioned above I will also use hi8435_adc name and rename all 
-functions appropriately with this prefix.
-> +static int hi843x_readw(struct hi843x_priv *priv, u8 reg, u16 *val)
+On Friday 22 May 2015 17:32:59 Loc Ho wrote:
+> +static bool xgene_edac_pmd_l2c_version1(void)
 > +{
-> +	int ret;
+> +       /* Check all chips with PMD L2C version 1 HW */
+> +       #define REVIDR_MINOR_REV(revidr)        ((revidr) & 0x00000007)
 > +
-> +	reg |= HI843X_READ_OPCODE;
-> +	ret = spi_write_then_read(priv->spi, &reg, 1, val, 2);
-> +	*val = swab16p(val);
-> will this work on big- and little-endian CPUs?
-Actually I've tested it with little-endian CPU.
-I will replace it with  be16_to_cpup in the next try and the same for 
-swab32p -> be32_to_cpup.
->
-> +#define HI843X_VOLTAGE_CHANNEL(num)				\
-> +	{							\
-> +		.type = IIO_VOLTAGE,				\
-> +		.indexed = 1,					\
-> +		.channel = num,					\
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
-> +		.scan_index = num,				\
-> +		.scan_type = {					\
-> +			.sign = 'u',				\
-> +			.realbits = 1,				\
-> huh? this is unusual for an ADC
-This is discrete ADC, only 2 possible results: 0 or 1.
+> +       switch (MIDR_VARIANT(read_cpuid_id())) {
+> +       case 0:
+> +               switch (MIDR_REVISION(read_cpuid_id())) {
+> +               case 0:
+> +
+> +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+> +                       case 1:
+> +                       case 2:
+> +                               return true;
+> +                       };
+> +                       break;
+> +               case 1:
+> +                       if (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1)) == 1)
+> +                               return true;
+> +                       break;
+> +               }
+> +               break;
+> +       case 1:
+> +               switch (MIDR_REVISION(read_cpuid_id())) {
+> +               case 0:
+> +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+> +                       case 1:
+> +                               return true;
+> +                       };
+> +                       break;
+> +               case 1:
+> +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+> +                       case 1:
+> +                       case 0:
+> +                               return true;
+> +                       };
+> +                       break;
+> +               }
+> +               break;
+> +       }
+> +
 
-Regards,
-Vladimir
+As this is causing build errors on other architectures with COMPILE_TEST
+now, I'd suggest removing the function completely.
+
+Please use different compatible strings for IP blocks that are different
+and undetectable, instead of reading the ID of another IP block.
+
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
