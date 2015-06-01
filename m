@@ -1,124 +1,34 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCHv4 08/10] arm/dts: dra7.dtsi: add DSS support
-Date: Mon, 1 Jun 2015 09:23:16 +0300
-Message-ID: <1433139798-23450-9-git-send-email-tomi.valkeinen@ti.com>
-References: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] arm64: dts: Mediatek: MT8173 updtes
+Date: Mon, 1 Jun 2015 14:29:11 +0800
+Message-ID: <1433140153-22436-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: paul@pwsan.com, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DRA7xxx contains a very similar DSS to OMAP5. The main differences are:
+This series add MT8173 watchdog and I2C device nodes. Both device nodes 
+are based on 4.1-rc1, but I2C need two extra CCF patches from Sascha [1][2].
 
-* no DSI or RFBI support.
-* 1 or 2 dedicated video PLLs.
-* need to do additional configuration to the DRA7 CONTROL module.
+[1] clk: Add common clock support for Mediatek MT8135 and MT8173
+    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-April/338763.html
+[2] ARM64: dts: mt8173: Add clock controller device nodes
+    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/344753.html
 
-DRA72xx has only one video PLL, and DRA74xx has two.
+Eddie Huang (2):
+  arm64: dts: mt8173: Add watchdog device node
+  arm64: dts: mt8173: Add I2C device node
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org
----
- arch/arm/boot/dts/dra7.dtsi   | 38 ++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/dra72x.dtsi | 11 +++++++++++
- arch/arm/boot/dts/dra74x.dtsi | 15 +++++++++++++++
- 3 files changed, 64 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 125 +++++++++++++++++++++++++++++++
+ 1 file changed, 125 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index db0890a36e96..f3a8237cea39 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1474,6 +1474,44 @@
- 			clocks = <&sys_clkin1>;
- 			status = "disabled";
- 		};
-+
-+		dss: dss@58000000 {
-+			compatible = "ti,dra7-dss";
-+			/* 'reg' defined in dra72x.dtsi and dra74x.dtsi */
-+			/* 'clocks' defined in dra72x.dtsi and dra74x.dtsi */
-+			status = "disabled";
-+			ti,hwmods = "dss_core";
-+			/* CTRL_CORE_DSS_PLL_CONTROL */
-+			syscon-pll-ctrl = <&scm_conf 0x538>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			dispc@58001000 {
-+				compatible = "ti,dra7-dispc";
-+				reg = <0x58001000 0x1000>;
-+				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,hwmods = "dss_dispc";
-+				clocks = <&dss_dss_clk>;
-+				clock-names = "fck";
-+				/* CTRL_CORE_SMA_SW_1 */
-+				syscon-pol = <&scm_conf 0x534>;
-+			};
-+
-+			hdmi: encoder@58060000 {
-+				compatible = "ti,dra7-hdmi";
-+				reg = <0x58040000 0x200>,
-+				      <0x58040200 0x80>,
-+				      <0x58040300 0x80>,
-+				      <0x58060000 0x19000>;
-+				reg-names = "wp", "pll", "phy", "core";
-+				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+				ti,hwmods = "dss_hdmi";
-+				clocks = <&dss_48mhz_clk>, <&dss_hdmi_clk>;
-+				clock-names = "fck", "sys_clk";
-+			};
-+		};
- 	};
- 
- 	thermal_zones: thermal-zones {
-diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
-index 03d742f8d572..eaca143faa77 100644
---- a/arch/arm/boot/dts/dra72x.dtsi
-+++ b/arch/arm/boot/dts/dra72x.dtsi
-@@ -34,3 +34,14 @@
- 		interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- };
-+
-+&dss {
-+	reg = <0x58000000 0x80>,
-+	      <0x58004054 0x4>,
-+	      <0x58004300 0x20>;
-+	reg-names = "dss", "pll1_clkctrl", "pll1";
-+
-+	clocks = <&dss_dss_clk>,
-+		 <&dss_video1_clk>;
-+	clock-names = "fck", "video1_clk";
-+};
-diff --git a/arch/arm/boot/dts/dra74x.dtsi b/arch/arm/boot/dts/dra74x.dtsi
-index cc560a70926f..fa995d0ca1f2 100644
---- a/arch/arm/boot/dts/dra74x.dtsi
-+++ b/arch/arm/boot/dts/dra74x.dtsi
-@@ -73,3 +73,18 @@
- 		};
- 	};
- };
-+
-+&dss {
-+	reg = <0x58000000 0x80>,
-+	      <0x58004054 0x4>,
-+	      <0x58004300 0x20>,
-+	      <0x58005054 0x4>,
-+	      <0x58005300 0x20>;
-+	reg-names = "dss", "pll1_clkctrl", "pll1",
-+		    "pll2_clkctrl", "pll2";
-+
-+	clocks = <&dss_dss_clk>,
-+		 <&dss_video1_clk>,
-+		 <&dss_video2_clk>;
-+	clock-names = "fck", "video1_clk", "video2_clk";
-+};
 -- 
-2.1.4
+1.8.1.1.dirty
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
