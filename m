@@ -1,50 +1,60 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] edac: Add L3/SoC support to the APM X-Gene SoC EDAC
- driver
-Date: Mon, 1 Jun 2015 20:31:14 +0200
-Message-ID: <20150601183114.GE10169@pd.tnic>
-References: <1432937075-16558-1-git-send-email-lho@apm.com>
- <1432937075-16558-2-git-send-email-lho@apm.com>
- <1432937075-16558-3-git-send-email-lho@apm.com>
- <1979546.jtvJnZomID@wuerfel>
- <CAPw-ZTm+1hfh4b-opq=HQDek-wc4A4nT=B6DcuyUBWsm8a-ZbQ@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] Remaining sunxi musb patches
+Date: Mon, 1 Jun 2015 13:34:47 -0500
+Message-ID: <20150601183447.GF26081@saruman.tx.rr.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com>
+ <79fc4306-a621-43b8-b347-e42a27beb134@googlegroups.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ExXT7PjY8AI4Hyfa"
+Return-path: <linux-sunxi+bncBC5M7T4HYEKRBW6MWKVQKGQEIO3TQSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPw-ZTm+1hfh4b-opq=HQDek-wc4A4nT=B6DcuyUBWsm8a-ZbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <79fc4306-a621-43b8-b347-e42a27beb134-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 01, 2015 at 10:46:55AM -0700, Loc Ho wrote:
-> You are right... Let me just prints the error code instead. Anyone who
-> care will have to do post processing.
+--ExXT7PjY8AI4Hyfa
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Don't forget about the usability of the driver. If a user has to go
-open manuals when an error happens, you could just as well report naked
-register values and have a tool decode them.
+On Mon, Jun 01, 2015 at 11:30:45AM -0700, Hans de Goede wrote:
+> Hi,
+> 
+> On Sunday, May 31, 2015 at 6:10:32 PM UTC+2, Hans de Goede wrote:
+> >
+> > Hi Kishon & Felipe, 
+> >
+> > Here is an updated version of the remaining (not yet merged in Felipe's 
+> > tree) 
+> > sunxi musb patches. 
+> >
+> > The "phy-sun4i-usb: Add full support for usb0 phy / OTG" patch has been 
+> > updated with a small bug-fix and is ready for merging. 
+> >
+> > The "musb: Add support for the Allwinner sunxi musb" patch has been 
+> > updated 
+> > to use the latest version of Maxime's sunxi sram controller driver. This 
+> > one has a compile-time dependency on Maxime's sunxi sram controller 
+> > driver, 
+> > so it cannot be merged until that is merged. 
+> >
+> 
+> 
+> Arnd has just merged the updated sram controller into the next branch
+> of the soc-drivers repo, so both these patches are now ready to merge.
 
-And this strategy (mcelog) turned out to be a real PITA, IMO.
-
-> Future or existent next generation may re-define them.
-
-You could easily have a strings array of per-family or per-soc error
-descriptions. For an example, take a look at drivers/edac/mce_amd.c
-which decodes MCEs on all relevant AMD machines. This is much more
-user-friendly than dumping register values which most people have no
-idea of where to start looking (and they don't really need to).
-
-HTH.
+all right, so for v4.3 merge window there will be no issues in queues
+the two remaining patches. Thanks
 
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+balbi
+--ExXT7PjY8AI4Hyfa--
