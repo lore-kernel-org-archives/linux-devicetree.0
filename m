@@ -1,82 +1,42 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: atlas7: use general dt-binding for hwspinlock
-Date: Mon, 1 Jun 2015 13:33:55 +0800
-Message-ID: <CAGsJ_4y3YwXfzveWQSHQ9ZuoJbWdJTh3PJjgs0HM6t2w5S1y_w@mail.gmail.com>
-References: <1432628911-18555-1-git-send-email-21cnbao@gmail.com>
- <1432628911-18555-3-git-send-email-21cnbao@gmail.com> <5567890D.30906@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCHv4 03/10] arm/dts: dra7xx: add 'ti,set-rate-parent' for dss_dss_clk
+Date: Mon, 1 Jun 2015 09:23:11 +0300
+Message-ID: <1433139798-23450-4-git-send-email-tomi.valkeinen@ti.com>
+References: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5567890D.30906-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: paul@pwsan.com, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2015-05-29 5:30 GMT+08:00 Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>:
-> Barry,
->
-> On 05/26/2015 03:28 AM, Barry Song wrote:
->> From: Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>
->>
->> This patch moves to use generic dt-binding for hwspinlock providers and
->> clients.
->> add #hwlock-cells for the provider and hwlocks for clients.
->>
->> Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->> Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
->> Signed-off-by: Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>
->> Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/atlas7.dtsi | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/atlas7.dtsi b/arch/arm/boot/dts/atlas7.dtsi
->> index a753178..66d3f0e 100644
->> --- a/arch/arm/boot/dts/atlas7.dtsi
->> +++ b/arch/arm/boot/dts/atlas7.dtsi
->> @@ -84,17 +84,17 @@
->>                       #address-cells = <1>;
->>                       #size-cells = <1>;
->>
->> -                     hwspinlock {
->> +                     hwlock: hwspinlock {
->>                               compatible = "sirf,hwspinlock";
->>                               reg = <0x13240000 0x00010000>;
->
-> An unrelated question here, why the reg is same for all the child nodes
-> of the  parent ipc node? If this is partitioned properly, then the
-> driver can be simplified a bit by using platform_get_resource and
-> devm_ioremap_resource?
->
->> -
->> -                             num-spinlocks = <30>;
->> +                             #hwlock-cells = <1>;
->>                       };
->>
->>                       ns_m3_rproc@0 {
->>                               compatible = "sirf,ns2m30-rproc";
->>                               reg = <0x13240000 0x00010000>;
->>                               interrupts = <0 123 0>;
->> +                             hwlocks = <&hwlock 0>, <&hwlock 1>;
->
-> Does this need to be added for the other nodes like ns_m3_rproc@1 as well?
+We need set-rate-parent flags for the display's clock path so that the
+DSS driver can change the clock rate of the PLL.
 
-now the hwlock-cells are only added for the nodes who are really using
-it. other users have not used it.
+This patchs adds the ti,set-rate-parent flag to 'dss_dss_clk' clock
+node, which is only a gate clock, allowing the setting of the clock rate
+to propagate to the PLL.
 
->
-> regards
-> Suman
->
->>                       };
->>
->>                       ns_m3_rproc@1 {
->>
->
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org
+---
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
--barry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+index 470f39c4e326..357bedeebfac 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -1531,6 +1531,7 @@
+ 		clocks = <&dpll_per_h12x2_ck>;
+ 		ti,bit-shift = <8>;
+ 		reg = <0x1120>;
++		ti,set-rate-parent;
+ 	};
+ 
+ 	dss_hdmi_clk: dss_hdmi_clk {
+-- 
+2.1.4
+
