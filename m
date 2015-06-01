@@ -1,55 +1,79 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Device Tree at Plumbers, early registration ends Friday
-Date: Mon, 01 Jun 2015 00:22:13 -0700
-Message-ID: <556C0825.8090102@gmail.com>
-References: <556A2D56.4060401@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 00/12] mfd: Add support for Clocksource to LPC set
+Date: Mon, 1 Jun 2015 08:38:23 +0100
+Message-ID: <20150601073823.GB3329@x1>
+References: <1431435500-22899-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <556A2D56.4060401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1431435500-22899-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/30/2015 2:36 PM, Frank Rowand wrote:
-> The "Linux Plumbers Device Tree" track was accepted by the Plumbers
-> conference.
+Device Tree Maintainers,
 
-The above is a pasto, ycch.  The track is, of course:
+All of the functional patches in this series have been Acked by the
+relevant maintainers, but the (pretty simple) DT changes are in need
+of a suitable Ack.
 
-   Device Tree Tools, Validation, and Troubleshooting
+Would someone mine glancing over them please?
 
+> ST's Low Power Controller (LPC) controls three devices; watchdog, RTC
+> and a Clocksource Timer.  Only one of the devices can be used at any
+> one time, which is enforced by the Device Driver model.
+> =20
+> This patchset provides support for the Clocksource driver.  Watchdog
+> and RTC are already in -next.
+>=20
+> Lee Jones (12):
+>   mfd: dt-bindings: Provide human readable define for Clocksource mod=
+e
+>   clocksource: sti: Provide support for the ST LPC Clocksource IP
+>   clocksource: sti: Provide 'use timer as sched clock' capability
+>   clocksource: bindings: Provide bindings for ST's LPC Clocksource
+>     device
+>   watchdog: st_wdt: Update IP layout information to include Clocksour=
+ce
+>   watchdog: bindings: Supply knowledge of a third supported device -
+>     clocksource
+>   rtc: st: Update IP layout information to include Clocksource
+>   rtc: bindings: Supply knowledge of a third supported device -
+>     clocksource
+>   MAINTAINERS: Add the LPC Clocksource to STi maintained driver list
+>   ARM: STi: DT: STih407: Switch LPC mode from RTC to Clocksource
+>   ARM: STi: Enable LPC Clocksource
+>   ARM: STi: Update platform level menuconfig 'help'
+>=20
+>  .../devicetree/bindings/rtc/rtc-st-lpc.txt         |  15 ++-
+>  .../devicetree/bindings/timer/st,stih407-lpc       |  28 +++++
+>  .../devicetree/bindings/watchdog/st_lpc_wdt.txt    |  12 +-
+>  MAINTAINERS                                        |   1 +
+>  arch/arm/boot/dts/stih407-family.dtsi              |   2 +-
+>  arch/arm/mach-sti/Kconfig                          |  10 +-
+>  drivers/clocksource/Kconfig                        |   9 ++
+>  drivers/clocksource/Makefile                       |   1 +
+>  drivers/clocksource/clksrc_st_lpc.c                | 129 +++++++++++=
+++++++++++
+>  drivers/rtc/rtc-st-lpc.c                           |   2 +-
+>  drivers/watchdog/st_lpc_wdt.c                      |   2 +-
+>  include/dt-bindings/mfd/st-lpc.h                   |   1 +
+>  12 files changed, 194 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/timer/st,stih40=
+7-lpc
+>  create mode 100644 drivers/clocksource/clksrc_st_lpc.c
+>=20
 
-> 
-> The DEADLINE for EARLY BIRD REGISTRATION at a reduced price
-> ends Friday, June 5.
-> 
-> I have a limited number of free registration discounts available for
-> presenters at the device tree track.
-> 
-> General information about plumbers is at:
-> 
->    http://linuxplumbersconf.org/2015/
-> 
-> Plumbers will be co-located with LinuxCon North America in Seattle
-> (Plumbers is Aug 19-21, Linuxcon is Aug 17-19).
-> 
-> On Wed Aug 19 there is a shared technical track between the two
-> conferences.  The schedule for that track should be announced very
-> soon now.  Preliminary results are that I will be presenting a talk
-> on DT debugging in that track.
-> 
-> LinuxCon North America info is at:
-> 
->    http://events.linuxfoundation.org/events/linuxcon-north-america
-> 
-> 
-> Hope to see many of you in Seattle.
-> 
-> Regards,
-> 
-> Frank Rowand
-> 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
