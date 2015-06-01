@@ -1,76 +1,61 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v11 4/5] edac: Add APM X-Gene SoC EDAC driver
-Date: Mon, 1 Jun 2015 16:11:31 +0100
-Message-ID: <20150601151131.GD14192@e104818-lin.cambridge.arm.com>
-References: <1432337580-3750-1-git-send-email-lho@apm.com>
- <1432337580-3750-4-git-send-email-lho@apm.com>
- <1432337580-3750-5-git-send-email-lho@apm.com>
- <3195065.IK73o60xya@wuerfel>
+From: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/6] xhci: probe phy before add usb_hcd
+Date: Mon, 01 Jun 2015 18:17:04 +0300
+Message-ID: <556C7770.70506@intel.com>
+References: <1432727283-20303-1-git-send-email-chunfeng.yun@mediatek.com>	 <1432727283-20303-4-git-send-email-chunfeng.yun@mediatek.com>	 <20150527121843.GA8611@saruman.tx.rr.com> <1433170337.12128.18.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3195065.IK73o60xya@wuerfel>
+In-Reply-To: <1433170337.12128.18.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org
+Cc: chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 01, 2015 at 04:42:58PM +0200, Arnd Bergmann wrote:
-> On Friday 22 May 2015 17:32:59 Loc Ho wrote:
-> > +static bool xgene_edac_pmd_l2c_version1(void)
-> > +{
-> > +       /* Check all chips with PMD L2C version 1 HW */
-> > +       #define REVIDR_MINOR_REV(revidr)        ((revidr) & 0x00000007)
-> > +
-> > +       switch (MIDR_VARIANT(read_cpuid_id())) {
-> > +       case 0:
-> > +               switch (MIDR_REVISION(read_cpuid_id())) {
-> > +               case 0:
-> > +
-> > +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
-> > +                       case 1:
-> > +                       case 2:
-> > +                               return true;
-> > +                       };
-> > +                       break;
-> > +               case 1:
-> > +                       if (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1)) == 1)
-> > +                               return true;
-> > +                       break;
-> > +               }
-> > +               break;
-> > +       case 1:
-> > +               switch (MIDR_REVISION(read_cpuid_id())) {
-> > +               case 0:
-> > +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
-> > +                       case 1:
-> > +                               return true;
-> > +                       };
-> > +                       break;
-> > +               case 1:
-> > +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
-> > +                       case 1:
-> > +                       case 0:
-> > +                               return true;
-> > +                       };
-> > +                       break;
-> > +               }
-> > +               break;
-> > +       }
-> > +
+On 01.06.2015 17:52, Yingjoe Chen wrote:
+> On Wed, 2015-05-27 at 07:18 -0500, Felipe Balbi wrote:
+>> On Wed, May 27, 2015 at 07:48:00PM +0800, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+>>> From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>
+>>> find the phy driver before add primary usb_hcd to avoid acessing
+>>> xHCI register which may hangup the system when the phy is not loaded
+>>> yet and the related powers or clocks put in phy driver are not
+>>> enabled.
+>>
+>> it seems like the same clock is needed by PHY and XHCI. This patch looks
+>> incorrect.
 > 
-> As this is causing build errors on other architectures with COMPILE_TEST
-> now, I'd suggest removing the function completely.
 > 
-> Please use different compatible strings for IP blocks that are different
-> and undetectable, instead of reading the ID of another IP block.
+> Hi,
+> 
+> I agree that the driver should enable clock it used by itself and not
+> depends on init order. This should be fixed.
+> 
+> But in general, I think it make sense to only add hcd after all required
+> resource are ready. At least it remove unnecessary calls to
+> usb_add_hcd/usb_remove_hcd. Is it better if the commit message is
+> changed to something like the below?
+> 
+> Currently xhci_plat_probe() call usb_add_hcd before trying to init the
+> phy. However if the phy is not ready at the moment, it have to remove
+> the hcd and probe again later 
+> 
+> Change the init order so we only add hcd when all required resource are
+> ready.
+> 
+Hi
 
-I fully agree, the MIDR_* macros shouldn't be used by anything under
-drivers/.
+Rogers Quadros patchseries that changes how HCDs are created and added for
+xhci-plat was just sent forward. It first creates both HCDs, then adds them.
 
--- 
-Catalin
+Doesn't usb_add_hcd() as it's first task take care of the PHYs? 
+I'm hoping to remove that part completely from xhci-plat.c but haven't
+looked into it properly yet.
+
+-Mathias
+ 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
