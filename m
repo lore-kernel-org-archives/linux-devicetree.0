@@ -1,82 +1,77 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun6i: Add a dts file for the Mele
- A1000G quad top set box
-Date: Mon,  1 Jun 2015 17:02:59 +0200
-Message-ID: <1433170979-13725-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v11 4/5] edac: Add APM X-Gene SoC EDAC driver
+Date: Mon, 1 Jun 2015 16:11:31 +0100
+Message-ID: <20150601151131.GD14192@e104818-lin.cambridge.arm.com>
+References: <1432337580-3750-1-git-send-email-lho@apm.com>
+ <1432337580-3750-4-git-send-email-lho@apm.com>
+ <1432337580-3750-5-git-send-email-lho@apm.com>
+ <3195065.IK73o60xya@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBJXIWGVQKGQE6BH7KJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3195065.IK73o60xya@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Mele A1000G-quad and the Mele M9 have the same PCB, sofar we've been using
-the same dts for both models. Unfortunately this does not work for the otg
-controller, on the M9 this is routed to a micro-usb connector on the outside,
-while as on the A1000G-quad it is connected to an usb to sata bridge
-(which is not populated on the M9 pcb).
+On Mon, Jun 01, 2015 at 04:42:58PM +0200, Arnd Bergmann wrote:
+> On Friday 22 May 2015 17:32:59 Loc Ho wrote:
+> > +static bool xgene_edac_pmd_l2c_version1(void)
+> > +{
+> > +       /* Check all chips with PMD L2C version 1 HW */
+> > +       #define REVIDR_MINOR_REV(revidr)        ((revidr) & 0x00000007)
+> > +
+> > +       switch (MIDR_VARIANT(read_cpuid_id())) {
+> > +       case 0:
+> > +               switch (MIDR_REVISION(read_cpuid_id())) {
+> > +               case 0:
+> > +
+> > +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+> > +                       case 1:
+> > +                       case 2:
+> > +                               return true;
+> > +                       };
+> > +                       break;
+> > +               case 1:
+> > +                       if (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1)) == 1)
+> > +                               return true;
+> > +                       break;
+> > +               }
+> > +               break;
+> > +       case 1:
+> > +               switch (MIDR_REVISION(read_cpuid_id())) {
+> > +               case 0:
+> > +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+> > +                       case 1:
+> > +                               return true;
+> > +                       };
+> > +                       break;
+> > +               case 1:
+> > +                       switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
+> > +                       case 1:
+> > +                       case 0:
+> > +                               return true;
+> > +                       };
+> > +                       break;
+> > +               }
+> > +               break;
+> > +       }
+> > +
+> 
+> As this is causing build errors on other architectures with COMPILE_TEST
+> now, I'd suggest removing the function completely.
+> 
+> Please use different compatible strings for IP blocks that are different
+> and undetectable, instead of reading the ID of another IP block.
 
-This commit adds a new dts for the Mele-A1000G-quad to allow using
-different otg controller settings on the 2 boards.
+I fully agree, the MIDR_* macros shouldn't be used by anything under
+drivers/.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                                        | 1 +
- arch/arm/boot/dts/{sun6i-a31-m9.dts => sun6i-a31-a1000g-quad.dts} | 4 ++--
- arch/arm/boot/dts/sun6i-a31-m9.dts                                | 2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
- copy arch/arm/boot/dts/{sun6i-a31-m9.dts => sun6i-a31-a1000g-quad.dts} (97%)
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b308baf..a413d7b 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -546,6 +546,7 @@ dtb-$(CONFIG_MACH_SUN5I) += \
- 	sun5i-a13-olinuxino-micro.dtb \
- 	sun5i-a13-utoo-p66.dtb
- dtb-$(CONFIG_MACH_SUN6I) += \
-+	sun6i-a31-a1000g-quad.dtb \
- 	sun6i-a31-app4-evb1.dtb \
- 	sun6i-a31-colombus.dtb \
- 	sun6i-a31-hummingbird.dtb \
-diff --git a/arch/arm/boot/dts/sun6i-a31-m9.dts b/arch/arm/boot/dts/sun6i-a31-a1000g-quad.dts
-similarity index 97%
-copy from arch/arm/boot/dts/sun6i-a31-m9.dts
-copy to arch/arm/boot/dts/sun6i-a31-a1000g-quad.dts
-index a5660d6..4404f37 100644
---- a/arch/arm/boot/dts/sun6i-a31-m9.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-a1000g-quad.dts
-@@ -48,8 +48,8 @@
- #include <dt-bindings/pinctrl/sun4i-a10.h>
- 
- / {
--	model = "Mele M9 / A1000G Quad top set box";
--	compatible = "mele,m9", "allwinner,sun6i-a31";
-+	model = "Mele A1000G Quad top set box";
-+	compatible = "mele,a1000g-quad", "allwinner,sun6i-a31";
- 
- 	aliases {
- 		serial0 = &uart0;
-diff --git a/arch/arm/boot/dts/sun6i-a31-m9.dts b/arch/arm/boot/dts/sun6i-a31-m9.dts
-index a5660d6..6e0e5687 100644
---- a/arch/arm/boot/dts/sun6i-a31-m9.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-m9.dts
-@@ -48,7 +48,7 @@
- #include <dt-bindings/pinctrl/sun4i-a10.h>
- 
- / {
--	model = "Mele M9 / A1000G Quad top set box";
-+	model = "Mele M9 top set box";
- 	compatible = "mele,m9", "allwinner,sun6i-a31";
- 
- 	aliases {
 -- 
-2.4.2
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
