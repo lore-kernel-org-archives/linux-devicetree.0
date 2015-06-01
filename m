@@ -1,152 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH] edac: xgene: fix cpuid abuse
-Date: Mon, 01 Jun 2015 17:27:54 +0200
-Message-ID: <4966310.Xu4URPyl4o@wuerfel>
-References: <1432337580-3750-1-git-send-email-lho@apm.com> <20150601151131.GD14192@e104818-lin.cambridge.arm.com> <20150601151757.GD7443@leverpostej>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/5] i2c: at91: add support to FIFOs and alternative command
+Date: Mon, 1 Jun 2015 17:49:10 +0200
+Message-ID: <cover.1433173031.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150601151757.GD7443@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org" <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The new x-gene EDAC driver incorrectly tried to figure out the version of
-one of its IP blocks by looking at the version of the CPU core, which is
-only vagely related.
+ChangeLog
 
-This removes the incorrect code and instead uses the version of the IP
-block in the compatible string where it belongs.
+v2:
+- fix typo in comment for AT91_TWI_SVEN.
+- document new device tree bindings like "atmel,fifo-size".
+- explicitly set the has_alt_cmd boolean to false to already existing chip
+configs.
+- use the BIT() macro to define the register bits and do a little cleanup in a
+dedicated patch.
+- reword some comments to better explain why the TXCOMP interrupt is no longer
+enabled in at91_do_twi_transfer() but later in
+at91_twi_write_data_dma_callback() to avoid a race condition when DMA is used.
+- remove useless TXCOMP interrupt enable line in at91_twi_write_next_byte()
+since this interrupt is also enabled by at91_do_twi_transfer() for PIO
+transfers.
 
-Found using build testing on x86, which does not provide the arm64
-cpuid interface.
+v1:
+This series of patches adds support of two new features which will be
+introduced with Atmel sama5d2x SoC.
 
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
+First, the alternative command mode eases the sending of STOP conditions.
+Before starting an I2C transaction, the size data to be transfered is
+written into the new Alternative Command Register. For each byte transferred,
+the I2C controller decreases this counter and automatically sends a STOP
+condition when the counter value reaches 0, that is to say when the last byte
+of the transaction has been sent/received. So there is no longer need to set
+the STOP bit into the Control Register.
 
-How about this one? We should make sure this gets fixed before the binding
-gets set in stone with a kernel release.
+Then the use of FIFOs allows to reduce number I/O accesses: for instance,
+the TX FIFO allows to write up to 4 data in a single access to the Transmit
+Holding Register. Also the RX FIFO allows to read up to 4 data in a single
+access to the Receive Holding Register. Currently only DMA transfers take
+advantage of FIFOs.
 
-Loc, do you know if some of the other blocks might also have versions
-associated with them? Normally we try to use more specific product names,
-but in case of APM there don't seem to be any more specific names
-than X-Gene and  X-Gene2 any more.
+Cyrille Pitchen (5):
+  i2c: at91: use BIT() macro to define register bits
+  i2c: at91: update documentation for DT bindings
+  i2c: at91: add support for new alternative command mode
+  i2c: at91: print hardware version
+  i2c: at91: add support to FIFOs
 
-diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
-index 480911c38ff9..e31b696ba939 100644
---- a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
-+++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
-@@ -25,7 +25,7 @@ Required properties for memory controller subnode:
- - memory-controller	: Instance number of the memory controller.
- 
- Required properties for PMD subnode:
--- compatible		: Shall be "apm,xgene-edac-pmd".
-+- compatible		: Shall be "apm,xgene-edac-pmd" or "apm,xgene-v2-edac-pmd"
- - reg			: First resource shall be the PMD resource.
- - pmd-controller	: Instance number of the PMD controller.
- 
-diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
-index b5158572f6ab..8071c2223f92 100644
---- a/drivers/edac/xgene_edac.c
-+++ b/drivers/edac/xgene_edac.c
-@@ -523,6 +523,7 @@ struct xgene_edac_pmd_ctx {
- 	struct edac_device_ctl_info *edac_dev;
- 	void __iomem		*pmd_csr;
- 	u32			pmd;
-+	int			version;
- };
- 
- static void xgene_edac_pmd_l1_check(struct edac_device_ctl_info *edac_dev,
-@@ -784,50 +785,6 @@ static void xgene_edac_pmd_cpu_hw_cfg(struct edac_device_ctl_info *edac_dev,
- 	writel(0x00000101, pg_f + MEMERR_CPU_MMUECR_PAGE_OFFSET);
- }
- 
--static bool xgene_edac_pmd_l2c_version1(void)
--{
--	/* Check all chips with PMD L2C version 1 HW */
--	#define REVIDR_MINOR_REV(revidr)	((revidr) & 0x00000007)
--
--	switch (MIDR_VARIANT(read_cpuid_id())) {
--	case 0:
--		switch (MIDR_REVISION(read_cpuid_id())) {
--		case 0:
--
--			switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
--			case 1:
--			case 2:
--				return true;
--			};
--			break;
--		case 1:
--			if (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1)) == 1)
--				return true;
--			break;
--		}
--		break;
--	case 1:
--		switch (MIDR_REVISION(read_cpuid_id())) {
--		case 0:
--			switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
--			case 1:
--				return true;
--			};
--			break;
--		case 1:
--			switch (REVIDR_MINOR_REV(read_cpuid(REVIDR_EL1))) {
--			case 1:
--			case 0:
--				return true;
--			};
--			break;
--		}
--		break;
--	}
--
--	return false;
--}
--
- static void xgene_edac_pmd_hw_cfg(struct edac_device_ctl_info *edac_dev)
- {
- 	struct xgene_edac_pmd_ctx *ctx = edac_dev->pvt_info;
-@@ -837,7 +794,7 @@ static void xgene_edac_pmd_hw_cfg(struct edac_device_ctl_info *edac_dev)
- 	/* Enable PMD memory error - MEMERR_L2C_L2ECR and L2C_L2RTOCR */
- 	writel(0x00000703, pg_e + MEMERR_L2C_L2ECR_PAGE_OFFSET);
- 	/* Configure L2C HW request time out feature if supported */
--	if (!xgene_edac_pmd_l2c_version1())
-+	if (ctx->version == 1)
- 		writel(0x00000119, pg_d + CPUX_L2C_L2RTOCR_PAGE_OFFSET);
- }
- 
-@@ -956,7 +913,7 @@ static int xgene_edac_pmd_available(u32 efuse, int pmd)
- 	return (efuse & (1 << pmd)) ? 0 : 1;
- }
- 
--static int xgene_edac_pmd_add(struct xgene_edac *edac, struct device_node *np)
-+static int xgene_edac_pmd_add(struct xgene_edac *edac, struct device_node *np, int version)
- {
- 	struct edac_device_ctl_info *edac_dev;
- 	struct xgene_edac_pmd_ctx *ctx;
-@@ -998,6 +955,7 @@ static int xgene_edac_pmd_add(struct xgene_edac *edac, struct device_node *np)
- 	ctx->edac = edac;
- 	ctx->edac_dev = edac_dev;
- 	ctx->ddev = *edac->dev;
-+	ctx->version = version;
- 	edac_dev->dev = &ctx->ddev;
- 	edac_dev->ctl_name = ctx->name;
- 	edac_dev->dev_name = ctx->name;
-@@ -1169,7 +1127,9 @@ static int xgene_edac_probe(struct platform_device *pdev)
- 		if (of_device_is_compatible(child, "apm,xgene-edac-mc"))
- 			xgene_edac_mc_add(edac, child);
- 		if (of_device_is_compatible(child, "apm,xgene-edac-pmd"))
--			xgene_edac_pmd_add(edac, child);
-+			xgene_edac_pmd_add(edac, child, 1);
-+		if (of_device_is_compatible(child, "apm,xgene-v2-edac-pmd"))
-+			xgene_edac_pmd_add(edac, child, 2);
- 	}
- 
- 	return 0;
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt |  29 +-
+ drivers/i2c/busses/i2c-at91.c                      | 350 +++++++++++++++++----
+ 2 files changed, 318 insertions(+), 61 deletions(-)
+
+-- 
+1.8.2.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
