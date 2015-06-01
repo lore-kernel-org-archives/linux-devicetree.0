@@ -1,44 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: rsnd: Document r8a7778-specific binding
-Date: Mon, 1 Jun 2015 17:24:17 +0100
-Message-ID: <20150601162417.GD14071@sirena.org.uk>
-References: <1433155455-28827-1-git-send-email-geert+renesas@glider.be>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv4 2/2] mailbox: Adding driver for Xilinx LogiCORE IP
+ mailbox.
+Date: Mon, 01 Jun 2015 09:32:30 -0700
+Message-ID: <1433176350.4861.21.camel@perches.com>
+References: <1433175507-3833-1-git-send-email-moritz.fischer@ettus.com>
+	 <1433175507-3833-3-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gdTfX7fkYsEEjebm"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433155455-28827-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433175507-3833-3-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2015-06-01 at 09:18 -0700, Moritz Fischer wrote:
+> The Xilinx LogiCORE IP mailbox is a FPGA core that allows for
+> interprocessor communication via AXI4 memory mapped / AXI4 stream
+> interfaces.
 
---gdTfX7fkYsEEjebm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+trivia:
 
-On Mon, Jun 01, 2015 at 12:44:15PM +0200, Geert Uytterhoeven wrote:
-> Add the missing r8a7778-specific compatible value, which is already in
-> use since v4.1-rc1.
+> diff --git a/drivers/mailbox/mailbox-xilinx.c b/drivers/mailbox/mailbox-xilinx.c
+[]
+> +static int xilinx_mbox_startup(struct mbox_chan *chan)
+> +{
+[]
+> +			dev_err(mbox->dev,
+> +				"failed to register mailbox interrupt:%d\n",
+> +				ret);
+[]
+> +static int xilinx_mbox_probe(struct platform_device *pdev)
+> +{
+[]
+> +		dev_err(&pdev->dev, "Couldn't get clk.\n");
+[]
+> +		dev_info(&pdev->dev, "IRQ not found, fallback to polling.\n");
+[]
+> +		dev_err(&pdev->dev, "Register mailbox failed\n");
 
-Applied, thanks.
+Perhaps it' be nicer to consistently use a "no-period"
+message style.
 
---gdTfX7fkYsEEjebm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVbIcwAAoJECTWi3JdVIfQtTcH/3rHchUl2Imq2f/1bh0ex2uK
-V3MdbPMU159rHEBkHsJtsG215vryOeiK7Hg4sYEZnzxomdVpx5ptp0uSa6vaAVur
-oUK+4lrs6ByetF0w7tKp/46brsYUu0dgpiZaOViF9RqJJxLmml19xnSSWlxh6XCO
-/Q/yD7IgBotzUX0BzwduLq+kyGrPLQpVAwMxADPp/C5gNrgMOe0E4LrrG+pq9VRn
-3lng8cYFFyWSJqTm+clg2ixWD1rni0KgLEjPdxJQ1HKkFDnfmOYSsUirdyyZnS79
-uKSrCdNZpfa/YEu9fUrx0a6w+ViXNWR6DIsFWinZTi5E24g0dXaUGBm2e3xqrjA=
-=IVqY
------END PGP SIGNATURE-----
-
---gdTfX7fkYsEEjebm--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
