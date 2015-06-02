@@ -1,55 +1,55 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] i2c: at91: add support to FIFOs and alternative
- command
-Date: Wed, 3 Jun 2015 00:58:34 +0900
-Message-ID: <20150602155833.GF2661@katana>
-References: <cover.1433250713.git.cyrille.pitchen@atmel.com>
- <20150602152647.GA2806@odux.rfo.atmel.com>
- <20150602153622.GB2661@katana>
- <20150602155222.GB2806@odux.rfo.atmel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun6i: Add a dts file for the
+ Mele A1000G quad top set box
+Date: Tue, 2 Jun 2015 17:58:16 +0200
+Message-ID: <20150602155816.GC23777@lukather>
+References: <1433170979-13725-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QXO0/MSS4VvK6f+D"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="1RftZa7o64Huaoir"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBA5GW6VQKGQE3AIAQTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150602155222.GB2806-FuRPzXQv2LUWBfJKYY8PcdBPR1lH4CV8@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1433170979-13725-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---QXO0/MSS4VvK6f+D
-Content-Type: text/plain; charset=us-ascii
+--1RftZa7o64Huaoir
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
+On Mon, Jun 01, 2015 at 05:02:59PM +0200, Hans de Goede wrote:
+> The Mele A1000G-quad and the Mele M9 have the same PCB, sofar we've been using
+> the same dts for both models. Unfortunately this does not work for the otg
+> controller, on the M9 this is routed to a micro-usb connector on the outside,
+> while as on the A1000G-quad it is connected to an usb to sata bridge
+> (which is not populated on the M9 pcb).
+> 
+> This commit adds a new dts for the Mele-A1000G-quad to allow using
+> different otg controller settings on the 2 boards.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                                        | 1 +
+>  arch/arm/boot/dts/{sun6i-a31-m9.dts => sun6i-a31-a1000g-quad.dts} | 4 ++--
 
-> I was thinking the same so I have tried to cherry-pick the patch on a 3.10.79
-> and it didn't cause any conflicts so I thought it could be sent to stable as
-> is.
+Didn't we say that we were trying to set the vendor name in the DTs
+now, at least for the new ones?
 
-OK, so reducing context seems to help. Thanks for checking!
+I can fix this and apply it if it's ok for you.
 
+Maxime
 
---QXO0/MSS4VvK6f+D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVbdKpAAoJEBQN5MwUoCm2xr4P/A+D3KDnvfeV7iiA8H0laEW3
-1ec7ifPZ6gUbkcpKxMk7mBLUcllAIzyHhvOmYxsfHONLD06AyOwfJHAAlaWAcezz
-lUnbKNMtpRAwl3TUd6BopRbEWxPqv5JP9HbavN3/134C6LaA1sw6wAxf89+GdS5d
-dour/BPOYjfHrjTLgZbxyPDwHFN1orMnHGLMlDYUwIVqs45b2POtGICTUabM91Qd
-KuosyQ1NcF7S95VJuClu1lkZmu0/O9xRa/WLe0bx91sTX6dWdZBocg12AWAFgx71
-z2kG+lVtRtcpJcuLmH6vyb/TVffHJyUIyITWtJfrqWbSxI0kcGPUWou4MH+KNwqr
-pbSjwGnUaCKNkstWwwPWx0JWbjRizOTmVBqM28VxZZ54PH1hglz9KUsew4Bg2KQM
-wqd6jVX2d4ALkF0L1FaE5rHUA2rDflF4HPyWlT0D2Ad2BORG/YKXx/bgPigX6q5/
-6eGO0Skjgw64ZZ93VP44n6oPeHUyup3rUKqF29vkfaak94waM01ZB70Pg27L2g10
-CYk8Fgg2WIFcCfcH83Lq6S1jc6Vt/UdYzpkvO0BCKHS/u9U+3UK/1qN3Um4+U9Td
-K/soziWj5P3Vy9kVkAPHEiB7B23d1tNmM0Qg7XAeHpFrNs0PqLxABu7kx4FDw8S2
-YYzf1bESRHge8lvgdOPI
-=V7H2
------END PGP SIGNATURE-----
-
---QXO0/MSS4VvK6f+D--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--1RftZa7o64Huaoir--
