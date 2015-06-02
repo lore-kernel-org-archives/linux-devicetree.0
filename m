@@ -1,92 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] of: clean-up unnecessary libfdt include paths
-Date: Wed,  3 Jun 2015 00:10:25 -0500
-Message-ID: <1433308225-13874-1-git-send-email-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH 00/21] On-demand device registration
+Date: Wed, 03 Jun 2015 00:54:31 +0200
+Message-ID: <556E3427.6000704@ahsoftware.de>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+ <CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Grant Likely <grant.likely@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, DRM PANEL DRIVERS <dri-devel@lists.freedesktop.org>, list@wandq.ahsoftware, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, linux-clk@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, open@wandq.ahsoftware, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-With the latest dtc import include fixups, it is no longer necessary to
-add explicit include paths to use libfdt. Remove these across the
-kernel.
-
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: linux-mips@linux-mips.org
-Cc: linuxppc-dev@lists.ozlabs.org
----
- arch/mips/cavium-octeon/Makefile      | 3 ---
- arch/mips/mti-sead3/Makefile          | 2 --
- arch/powerpc/kernel/Makefile          | 1 -
- drivers/firmware/efi/libstub/Makefile | 2 --
- drivers/of/Makefile                   | 3 ---
- 5 files changed, 11 deletions(-)
-
-diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
-index 69a8a8d..2a59265 100644
---- a/arch/mips/cavium-octeon/Makefile
-+++ b/arch/mips/cavium-octeon/Makefile
-@@ -9,9 +9,6 @@
- # Copyright (C) 2005-2009 Cavium Networks
- #
- 
--CFLAGS_octeon-platform.o = -I$(src)/../../../scripts/dtc/libfdt
--CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
--
- obj-y := cpu.o setup.o octeon-platform.o octeon-irq.o csrc-octeon.o
- obj-y += dma-octeon.o
- obj-y += octeon-memcpy.o
-diff --git a/arch/mips/mti-sead3/Makefile b/arch/mips/mti-sead3/Makefile
-index ecd71db..2e52cbd 100644
---- a/arch/mips/mti-sead3/Makefile
-+++ b/arch/mips/mti-sead3/Makefile
-@@ -15,5 +15,3 @@ obj-y				:= sead3-lcd.o sead3-display.o sead3-init.o \
- obj-y				+= leds-sead3.o
- 
- obj-$(CONFIG_EARLY_PRINTK)	+= sead3-console.o
--
--CFLAGS_sead3-setup.o = -I$(src)/../../../scripts/dtc/libfdt
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index c1ebbda..c16e836 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -2,7 +2,6 @@
- # Makefile for the linux kernel.
- #
- 
--CFLAGS_prom.o		= -I$(src)/../../../scripts/dtc/libfdt
- CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
- 
- subdir-ccflags-$(CONFIG_PPC_WERROR) := -Werror
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 280bc0a..816dbe9 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -24,8 +24,6 @@ KASAN_SANITIZE			:= n
- lib-y				:= efi-stub-helper.o
- lib-$(CONFIG_EFI_ARMSTUB)	+= arm-stub.o fdt.o
- 
--CFLAGS_fdt.o			+= -I$(srctree)/scripts/dtc/libfdt/
--
- #
- # arm64 puts the stub in the kernel proper, which will unnecessarily retain all
- # code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index fcacb18..156c072 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -16,6 +16,3 @@ obj-$(CONFIG_OF_RESOLVE)  += resolver.o
- obj-$(CONFIG_OF_OVERLAY) += overlay.o
- 
- obj-$(CONFIG_OF_UNITTEST) += unittest-data/
--
--CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
--CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
--- 
-2.1.0
+QW0gMDIuMDYuMjAxNSB1bSAxMDo0OCBzY2hyaWViIExpbnVzIFdhbGxlaWo6Cj4gT24gTW9uLCBN
+YXkgMjUsIDIwMTUgYXQgNDo1MyBQTSwgVG9tZXUgVml6b3NvCj4gPHRvbWV1LnZpem9zb0Bjb2xs
+YWJvcmEuY29tPiB3cm90ZToKPiAKPj4gaGF2ZSBsb29rZWQgaW50byBvcmRlcmVkIHByb2Jpbmcg
+YXMgYQo+PiBiZXR0ZXIgd2F5IG9mIHNvbHZpbmcgdGhpcyB0aGFuIG1vdmluZyBub2RlcyBhcm91
+bmQgaW4gdGhlIERUIG9yIHBsYXlpbmcgd2l0aAo+PiBpbml0Y2FsbCBsZXZlbHMuCj4+Cj4+IFdo
+aWxlIHJlYWRpbmcgdGhlIHRocmVhZCBbMV0gdGhhdCBBbGV4YW5kZXIgSG9sbGVyIHN0YXJ0ZWQg
+d2l0aCBoaXMgc2VyaWVzIHRvCj4+IG1ha2UgcHJvYmluZyBvcmRlciBkZXRlcm1pbmlzdGljLCBp
+dCBvY2N1cnJlZCB0byBtZSB0aGF0IGl0IHNob3VsZCBiZSBwb3NzaWJsZQo+PiB0byBhY2hpZXZl
+IHRoZSBzYW1lIGJ5IHJlZ2lzdGVyaW5nIGRldmljZXMgYXMgdGhleSBhcmUgcmVmZXJlbmNlZCBi
+eSBvdGhlcgo+PiBkZXZpY2VzLgo+IAo+IFRoaXMgaXMgcHJldHR5IGNvb2wsIGJ1dCBhIHRvbyBs
+b2NhbCBzb2x1dGlvbiB0byBhIGdsb2JhbCBwcm9ibGVtLgo+IAo+IERlZmVycmVkIHByb2JlIGFu
+ZCBpbml0Y2FsbCByZW9yZGVyaW5nLCBzaWxseSBhcyB0aGV5IG1heSBzZWVtLAo+IGRvZXMgbm90
+IHJlcXVpcmUgeW91IHRvIHVzZSBkZXZpY2UgdHJlZS4KPiAKPiBUaGUgcmVhbCBzb2x1dGlvbiwg
+d2hpY2ggSSB0aGluayBJIHBvaW50ZWQgb3V0IGFscmVhZHkgd2hlbiB3ZQo+IGFkZGVkIGRlZmVy
+cmVkIHByb2JlLCBpcyB0byBwdXQgZGVwZW5kZW5jeSBncmFwaHMgaW4gdGhlIGRyaXZlcnMKPiBh
+bmQgaGF2ZSB0aGUga2VybmVsIGRldmljZSBkcml2ZXIgY29yZSBwZXJjb2xhdGUgZGVwZW5kZWNp
+ZXMgYnkKPiB3YWxraW5nIHRoZSBncmFwaCBvbiBwcm9iaW5nIGRyaXZlciwgcmVtb3ZpbmcgZHJp
+dmVyICh1c3VhbGx5IHRoZQo+IGludmVyc2UgdXNlIGNhc2UpLCBbcnVudGltZV0gc3VzcGVuZCBh
+bmQgW3J1bnRpbWVdIHJlc3VtZWluZwo+IGEgZHJpdmVyLiBQb3NzaWJseSB0aGUgZGVwZW5kZW5j
+aWVzIHdpbGwgZXZlbiBiZSBkaWZmZXJlbnQKPiBkZXBlbmRpbmcgb24gdXNlIGNhc2UuCj4gCj4g
+VGhpcyBpcyB3aGF0IHN5c3RlbWQgaXMgZG9pbmcgaW4gdXNlcnNwYWNlIGZvciBzdGFydGluZyBz
+ZXJ2aWNlczoKPiBhc2sgZm9yIHlvdXIgZGVwZW5kZW5jaWVzIGFuZCB3YWl0IGZvciB0aGVtIGlm
+IHRoZXkgYXJlIG5vdAo+IHRoZXJlLiBTbyBkcml2ZXJzIGFzayBmb3IgcmVzb3VyY2VzIGFuZCB3
+YWl0IGZvciB0aGVtLiBJdCBhbHNvCj4gbmVlZHMgdG8gYmUgYWJzdHJhY3QsIHNvIGZvciBleGFt
+cGxlIHdlIG5lZWQgdG8gYmUgYWJsZSB0bwo+IGhhbmcgb24gcmVndWxhdG9yX2dldCgpIHVudGls
+IHRoZSBkcml2ZXIgaXMgdXAgYW5kIHByb3ZpZGluZyB0aGF0Cj4gcmVndWxhdG9yLCBhbmQgYXMg
+bG9uZyBhcyBldmVyeXRoaW5nIGlzIGluIHNsb3dwYXRoIGl0IHNob3VsZAo+IGJlIE9LLiAoQW5k
+IHZpY2UgdmVyc2EgbXV0YXRpcyBtdXRhbmRpcyBmb3IgY2xrLCBncGlvLCBwaW4KPiBjb250cm9s
+LCBpbnRlcnJ1cHRzICghKSBhbmQgRE1BIGNoYW5uZWxzIGZvciBleGFtcGxlLikKPiAKPiAKPiBT
+byBpZiB0aGlzIHNob3VsZCBiZSBzb2x2ZWQgaXQgc2hvdWxkIGJlIHNvbHZlZCBpbiBhbiBhYnN0
+cmFjdCB3YXkKPiBpbiB0aGUgZGV2aWNlIGRyaXZlciBjb3JlIGF2YWlsYWJsZSBmb3IgYWxsLCB0
+aGVuIGhhdmUgY2FsbHMgY2FsbGluZwo+IG91dCB0byBEVCwgQUNQSSwgcG9zc2libHkgZXZlbiBQ
+Q0kgb3IgVVNCIChhcyB0aGVzZQo+IGVudW1lcmF0ZSBkZXZpY2VzIHRoZW1zZWx2ZXMpIHRvIG9i
+dGFpbiBhIGNlcnRhaW4KPiBkZXBlbmRlbmN5LgoKSSBzdWdnZXN0IHRvIHN0YXJ0IHdpdGggbWFr
+aW5nIGl0IHBvc3NpYmxlIHRvIGlkZW50aWZ5IChhdCBsZWFzdCBtb3N0KQpkcml2ZXJzLiBJJ3Zl
+IGFscmVhZHkgcG9zdGVkIGEgcGF0Y2ggZm9yIHRoYXQgYXJvdW5kIGEgeWVhciBhZ28gYW5kIG5v
+dwpUb21ldSBkaWQgYWxtb3N0IHRoZSBzYW1lLgoKSG93ZXZlciBvbmUgd2FudHMgdG8gbWFrZSBh
+IGRldGVybWluaXN0aWMgb3JkZXIgdG8gbG9hZCBkcml2ZXJzLCB0aGVyZQp3aWxsIGJlIGFsd2F5
+cyB0aGUgbmVlZCB0byBrbm93IHdoaWNoIGRyaXZlcnMgb25lIGhhcyB0byBzb3J0LgoKUmVnYXJk
+cywKCkFsZXhhbmRlciBIb2xsZXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
