@@ -1,39 +1,30 @@
 From: Peter Seiderer <ps.report@gmx.net>
-Subject: [PATCH v3 1/2] ARM: dts: nitrogen6x: add CAN support
-Date: Tue,  2 Jun 2015 21:07:16 +0200
-Message-ID: <1433272037-6744-1-git-send-email-ps.report@gmx.net>
+Subject: [PATCH v3 2/2] ARM: dts: sabrelite: add CAN support
+Date: Tue,  2 Jun 2015 21:07:17 +0200
+Message-ID: <1433272037-6744-2-git-send-email-ps.report@gmx.net>
+References: <1433272037-6744-1-git-send-email-ps.report@gmx.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433272037-6744-1-git-send-email-ps.report@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Regulator stuff copied from imx6qdl-tx6.dtsi, pin configuration
-taken from Boundary Devices linux kernel tree ([1] and [2]).
-
-[1] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-[2] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.2_ga/arch/arm/boot/dts/imx6qdl.dtsi
-
 Signed-off-by: Peter Seiderer <ps.report@gmx.net>
 Tested-by: Eric Nelson <eric.nelson@boundarydevices.com>
 ---
-v3:
- - use GPIO_ACTIVE_LOW instead of GPIO_ACTIVE_HIGH (suggested
-   by Eric Nelson)
-
-v2:
- - fix imx6qdl-nitrogen6x.dtsi url
- - use real PAD settings (suggested by Fabio Estevam)
- - remove _1 suffix (suggested by Shawn Guo)
+v1:
+ - do the same for the sabrelite board as suggested/tested
+   by Eric Nelson
 ---
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 32 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 32 ++++++++++++++++++++++++++++++++
  1 file changed, 32 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index 3af16df..67c7688 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -54,6 +54,17 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index e00c44f..fe01059 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -53,6 +53,17 @@
  			gpio = <&gpio3 22 0>;
  			enable-active-high;
  		};
@@ -51,7 +42,7 @@ index 3af16df..67c7688 100644
  	};
  
  	gpio-keys {
-@@ -149,6 +160,13 @@
+@@ -148,6 +159,13 @@
  	status = "okay";
  };
  
@@ -65,7 +56,7 @@ index 3af16df..67c7688 100644
  &ecspi1 {
  	fsl,spi-num-chipselects = <1>;
  	cs-gpios = <&gpio3 19 0>;
-@@ -245,6 +263,20 @@
+@@ -239,6 +257,20 @@
  			>;
  		};
  
