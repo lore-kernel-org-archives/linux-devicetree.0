@@ -1,53 +1,77 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2
- with A33 and 1024x600 lcd support
-Date: Tue, 2 Jun 2015 10:14:59 +0200
-Message-ID: <20150602081459.GO23777@lukather>
-References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
- <1432997706-20172-7-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH v2 0/5] i2c: at91: add support to FIFOs and alternative
+ command
+Date: Tue, 2 Jun 2015 10:18:17 +0200
+Message-ID: <20150602081817.GM25118@odux.rfo.atmel.com>
+References: <cover.1433173031.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z87VqPJ/HsYrR2WM"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBBWMWWVQKGQED52Q4SI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1432997706-20172-7-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.1433173031.git.cyrille.pitchen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: ludovic.desroches@atmel.com, nicolas.ferre@atmel.com, linux-i2c@vger.kernel.org, wsa@the-dreams.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
---z87VqPJ/HsYrR2WM
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Cyrille,
 
-On Sat, May 30, 2015 at 04:55:06PM +0200, Hans de Goede wrote:
-> The Ippo-q8h is a tablet circuit board commonly found in cheap Android
-> tablets. The v1.2 version can be used with either an A23 or A33 SoC.
+Could you split the patch about the new alternative command mode?
+
+Reading some comments in your code, you also fixes bad management of the
+interrupt flags. It would be great if we can send this as fixes for previous
+kernels.
+
+Thanks
+
+Ludovic
+
+On Mon, Jun 01, 2015 at 05:49:10PM +0200, Cyrille Pitchen wrote:
+> ChangeLog
 > 
-> This adds a dts file for the v1.2 board with an A33 SoC and a 1024x600
-> LCD screen (most of these tablets have a 800x480 screen).
-
-I think the difference between the resolution here is more of a case
-for the DT quirks interface:
-https://lkml.org/lkml/2015/2/18/258
-
-Do you know if there's some way to autodetect the two board versions
-(like a board id somewhere in an EEPROM)?
-
-If not, then maybe u-boot can simply add that board compatible to the
-list, and we'll base our logic on that when we'll need it.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---z87VqPJ/HsYrR2WM--
+> v2:
+> - fix typo in comment for AT91_TWI_SVEN.
+> - document new device tree bindings like "atmel,fifo-size".
+> - explicitly set the has_alt_cmd boolean to false to already existing chip
+> configs.
+> - use the BIT() macro to define the register bits and do a little cleanup in a
+> dedicated patch.
+> - reword some comments to better explain why the TXCOMP interrupt is no longer
+> enabled in at91_do_twi_transfer() but later in
+> at91_twi_write_data_dma_callback() to avoid a race condition when DMA is used.
+> - remove useless TXCOMP interrupt enable line in at91_twi_write_next_byte()
+> since this interrupt is also enabled by at91_do_twi_transfer() for PIO
+> transfers.
+> 
+> v1:
+> This series of patches adds support of two new features which will be
+> introduced with Atmel sama5d2x SoC.
+> 
+> First, the alternative command mode eases the sending of STOP conditions.
+> Before starting an I2C transaction, the size data to be transfered is
+> written into the new Alternative Command Register. For each byte transferred,
+> the I2C controller decreases this counter and automatically sends a STOP
+> condition when the counter value reaches 0, that is to say when the last byte
+> of the transaction has been sent/received. So there is no longer need to set
+> the STOP bit into the Control Register.
+> 
+> Then the use of FIFOs allows to reduce number I/O accesses: for instance,
+> the TX FIFO allows to write up to 4 data in a single access to the Transmit
+> Holding Register. Also the RX FIFO allows to read up to 4 data in a single
+> access to the Receive Holding Register. Currently only DMA transfers take
+> advantage of FIFOs.
+> 
+> Cyrille Pitchen (5):
+>   i2c: at91: use BIT() macro to define register bits
+>   i2c: at91: update documentation for DT bindings
+>   i2c: at91: add support for new alternative command mode
+>   i2c: at91: print hardware version
+>   i2c: at91: add support to FIFOs
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-at91.txt |  29 +-
+>  drivers/i2c/busses/i2c-at91.c                      | 350 +++++++++++++++++----
+>  2 files changed, 318 insertions(+), 61 deletions(-)
+> 
+> -- 
+> 1.8.2.2
+> 
