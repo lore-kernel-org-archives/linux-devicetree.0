@@ -1,129 +1,67 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v4 1/4] Broadcom Bluetooth UART Device Tree bindings
-Date: Mon, 1 Jun 2015 19:18:38 -0500
-Message-ID: <CAL_JsqLO+g56KYUocpWLpz4dDTP0fEXTa4RjJzeRsPvYjCyF4A@mail.gmail.com>
-References: <1432325420-12782-1-git-send-email-ifaenson@broadcom.com> <1432325420-12782-2-git-send-email-ifaenson@broadcom.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 2/4] ARM: shmobile: add r8a7793 minimal SoC device tree
+Date: Tue, 2 Jun 2015 09:27:48 +0900
+Message-ID: <20150602002747.GA4781@verge.net.au>
+References: <1432826157-6414-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1432826157-6414-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <CAMuHMdXr3BxULQohYo1U0RuW8SRTtb5Ge_ypAbByW8vuRWs=PA@mail.gmail.com>
+ <CAO3366wm=LvYntDYBwh9AY-jpfmBF57cJhfY2A=yAk13kHg3oQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432325420-12782-2-git-send-email-ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAO3366wm=LvYntDYBwh9AY-jpfmBF57cJhfY2A=yAk13kHg3oQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 22, 2015 at 3:10 PM, Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Device Tree bindings to configure the Broadcom Bluetooth UART device.
->
-> Signed-off-by: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/bluetooth/btbcm.txt    | 82 ++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
-> new file mode 100644
-> index 0000000..968421b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
-> @@ -0,0 +1,82 @@
-> +btbcm
-> +------
-> +
-> +Required properties:
-> +
-> +       - compatible : must be "brcm,brcm-bt-uart".
-> +       - tty : tty device connected to this Bluetooth device.
+On Mon, Jun 01, 2015 at 11:45:45AM +0200, Ulrich Hecht wrote:
+> On Mon, Jun 1, 2015 at 11:37 AM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > Hi Ulrich,
+> >
+> > On Thu, May 28, 2015 at 5:15 PM, Ulrich Hecht
+> > <ulrich.hecht+renesas@gmail.com> wrote:
+> >> Minimal r8a7793 device tree including one CPU core, interrupt controllers,
+> >> timers, two serial ports, and the Ethernet controller, plus the required
+> >> clock descriptions.
+> >
+> >> --- /dev/null
+> >> +++ b/arch/arm/boot/dts/r8a7793.dtsi
+> >> @@ -0,0 +1,368 @@
+> >
+> >> +       cpus {
+> >> +               #address-cells = <1>;
+> >> +               #size-cells = <0>;
+> >> +
+> >> +               cpu0: cpu@0 {
+> >> +                       device_type = "cpu";
+> >> +                       compatible = "arm,cortex-a15";
+> >> +                       enable-method = "renesas,r8a7793";
+> >
+> > I don't think we need the enable-method in a minimal tree, do we?
+> 
+> Nope.
 
-Neil Brown has been working on generic bindings for tty/UART slaves
-which should be used here.
+Could you respin without the enable-method?
 
-> +
-> +Optional properties:
-> +
-> +  - bt-host-wake-gpios : bt-host-wake input GPIO to be used as an interrupt.
-> +
-> +  - bt-wake-gpios : bt-wake output GPIO to be used to suspend / resume device.
-> +
-> +  - bt-reg-on-gpios : reg-on output GPIO to be used to power device on/off.
-> +
-> +  - baud-rate-before-config-download : initial Bluetooth device baud rate.
-> +    Default: 3000000.
+I see there is also a minor Makefile change pending for the last patch of
+the series. With that and the above in place I think we should be very
+close.
 
-What's the baudrate after download? Why not just use standard
-"baud-rate" if you only specify one rate?
+> >> +       clocks {
+> [...]
+> >> +       };
+> >
+> > I don't see the rationele behind keeping some mstp clocks, and others not,
+> > for a miminal dtsi.
+> 
+> Some clocks are required by the minimal set of devices, and I did not
+> want to take apart individual MSTPs because IMO it's error-prone and
+> does not provide any real benefit.
 
-> +
-> +  - manual-fc : flow control UART in suspend / resume scenarios.
-> +    Default: 0.
-> +
-> +  - configure-sleep : configure suspend / resume flag.
-> +    Default: false.
-> +
-> +  - configure-audio : configure platform PCM SCO flag.
-> +    Default: false.
-> +
-> +  - PCMClockMode : PCM clock mode. 0-slave, 1-master.
-> +    Default: 0.
-> +
-> +  - PCMFillMethod : PCM fill method. 0 to 3.
-> +    Default: 2.
-> +
-> +  - PCMFillNum : PCM number of fill bits. 0 to 3.
-> +    Default: 0.
-> +
-> +  - PCMFillValue : PCM fill value. 0 to 7.
-> +    Default: 3.
-> +
-> +  - PCMInCallBitclock : PCM interface rate. 0-128Kbps, 1-256Kbps, 2-512Kbps,
-> +    3-1024Kbps, 4-2048Kbps.
-> +    Default: 0.
-> +
-> +  - PCMLSBFirst : PCM LSB first. 0 or 1.
-> +    Default: 0.
-> +
-> +  - PCMRightJustify : PCM Justify. 0-left, 1-right.
-> +    Default: 0.
-> +
-> +  - PCMRouting : PCM routing. 0-PCM, 1-SCO over HCI.
-> +    Default: 0.
-> +
-> +  - PCMShortFrameSync : PCM sync. 0-short, 1-long.
-> +    Default: 0.
-> +
-> +  - PCMSyncMode : PCM sync mode. 0-slave, 1-master.
+My feeling is that while it would be ideal to trim things down it
+this is reasonable not to do so to avoid breaking what is left.
 
-Please no CamelCase. These need better descriptions.
-
-> +    Default: 0.
-> +
-> +
-> +Example:
-> +
-> +       brcm4354_bt_uart: brcm4354-bt-uart {
-> +               compatible = "brcm,brcm-bt-uart";
-> +               bt-wake-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
-> +               bt-host-wake-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;
-> +               tty = "ttyS0";
-> +               baud-rate-before-config-download = <3000000>;
-> +               configure-sleep;
-> +               configure-audio;
-> +               PCMClockMode = <0>;
-> +               PCMFillMethod = <2>;
-> +               PCMFillNum = <0>;
-> +               PCMFillValue = <3>;
-> +               PCMInCallBitclock = <0>;
-> +               PCMLSBFirst = <0>;
-> +               PCMRightJustify = <0>;
-> +               PCMRouting = <0>;
-> +               PCMShortFrameSync = <0>;
-> +               PCMSyncMode = <0>;
-> +       };
-> +
-> --
-> 1.9.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I lean towards taking the MSTP clocks as is.
