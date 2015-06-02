@@ -1,179 +1,135 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: sun8i: Add dts file for the
- GA10H-A33 tablet
-Date: Tue,  2 Jun 2015 22:08:02 +0200
-Message-ID: <1433275682-10886-2-git-send-email-hdegoede@redhat.com>
-References: <1433275682-10886-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v3] ASoC: davinci-mcasp: Choose PCM driver based on configured DMA controller
+Date: Tue, 2 Jun 2015 23:09:34 +0300
+Message-ID: <e5dbf0a5fbb101792fd106461929c4b814dffc06.1433275670.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBKU2XCVQKGQESZ6DP7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1433275682-10886-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, misael.lopez@ti.com, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The ga10h is an 10" tablet with an A33 or A23 soc, 1G RAM, 8G or 16G nand,
-sdio wifi, 2 micro usb ports, 1 otg and 1 host and 1 micro sd slot.
+Find the configured DMA controller by asking for a DMA channel in the
+probe phase and releasing it right after. The controller device can be
+found via the dma_chan struct and the controller is recognized from
+the compatible property of its device node. The patch assumes EDMA if
+there is no device node.
 
-This commit adds a dts file for the v1.1 pcb with an a33 soc.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- arch/arm/boot/dts/Makefile                 |   1 +
- arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts | 125 +++++++++++++++++++++++++++++
- 2 files changed, 126 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
+Changes since v2:
+- Print only one error message if DMA "probing" fails
+  and none in case of -EPROBE_DEFER
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b308baf..37b7f75 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -574,6 +574,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a23-ippo-q8h-v5.dtb \
- 	sun8i-a23-ippo-q8h-v1.2.dtb \
- 	sun8i-a33-et-q8-v1.6.dtb \
-+	sun8i-a33-ga10h-v1.1.dtb \
- 	sun8i-a33-ippo-q8h-v1.2-lcd1024x600.dtb
- dtb-$(CONFIG_MACH_SUN9I) += \
- 	sun9i-a80-optimus.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-new file mode 100644
-index 0000000..8667033
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-@@ -0,0 +1,125 @@
-+/*
-+ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a33.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Allwinner GA10H Quad Core Tablet (v1.1)";
-+	compatible = "allwinner,ga10h-v1.1", "allwinner,sun8i-a33";
-+
-+	aliases {
-+		serial0 = &r_uart;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
+Changes since first patch version:
+- Change enum names from MCASP_?DMA to PCM_?DMA
+- Return PCM_EDMA if !mcasp->dev->of_node
+- Do not ignore possible error code returned by
+  davinci_mcasp_get_dma_type()
+
+ sound/soc/davinci/davinci-mcasp.c | 70 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 60 insertions(+), 10 deletions(-)
+
+diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+index d793494..a73cd57 100644
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -1565,6 +1565,49 @@ static int davinci_mcasp_init_ch_constraints(struct davinci_mcasp *mcasp)
+ 	return ret;
+ }
+ 
++enum {
++	PCM_EDMA,
++	PCM_SDMA,
 +};
++static const char *sdma_prefix = "ti,omap";
 +
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+};
++static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
++{
++	struct dma_chan *chan;
++	const char *tmp;
++	int ret = PCM_EDMA;
 +
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
++	if (!mcasp->dev->of_node)
++		return PCM_EDMA;
 +
-+&lradc {
-+	vref-supply = <&reg_vcc3v0>;
-+	status = "okay";
++	tmp = mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data;
++	chan = dma_request_slave_channel_reason(mcasp->dev, tmp);
++	if (IS_ERR(chan)) {
++		if (PTR_ERR(chan) != -EPROBE_DEFER)
++			dev_err(mcasp->dev,
++				"Can't verify DMA configuration (%ld)\n",
++				PTR_ERR(chan));
++		return PTR_ERR(chan);
++	}
++	BUG_ON(!chan->device || !chan->device->dev);
 +
-+	button@200 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <200000>;
-+	};
++	if (chan->device->dev->of_node)
++		ret = of_property_read_string(chan->device->dev->of_node,
++					      "compatible", &tmp);
++	else
++		dev_dbg(mcasp->dev, "DMA controller has no of-node\n");
 +
-+	button@400 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <400000>;
-+	};
++	dma_release_channel(chan);
++	if (ret)
++		return ret;
 +
-+	button@600 {
-+		label = "Back";
-+		linux,code = <KEY_BACK>;
-+		channel = <0>;
-+		voltage = <600000>;
-+	};
-+};
++	dev_dbg(mcasp->dev, "DMA controller compatible = \"%s\"\n", tmp);
++	if (!strncmp(tmp, sdma_prefix, strlen(sdma_prefix)))
++		return PCM_SDMA;
 +
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8h>;
-+	vmmc-supply = <&reg_vcc3v0>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
-+	cd-inverted;
-+	status = "okay";
-+};
++	return PCM_EDMA;
++}
 +
-+&pio {
-+	mmc0_cd_pin_q8h: mmc0_cd_pin@0 {
-+		allwinner,pins = "PB4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+};
-+
-+&r_uart {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&r_uart_pins_a>;
-+	status = "okay";
-+};
+ static int davinci_mcasp_probe(struct platform_device *pdev)
+ {
+ 	struct snd_dmaengine_dai_dma_data *dma_data;
+@@ -1763,27 +1806,34 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+ 	if (ret != 0)
+ 		goto err;
+ 
+-	switch (mcasp->version) {
++	ret = davinci_mcasp_get_dma_type(mcasp);
++	switch (ret) {
++	case PCM_EDMA:
+ #if IS_BUILTIN(CONFIG_SND_EDMA_SOC) || \
+ 	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
+ 	 IS_MODULE(CONFIG_SND_EDMA_SOC))
+-	case MCASP_VERSION_1:
+-	case MCASP_VERSION_2:
+-	case MCASP_VERSION_3:
+ 		ret = edma_pcm_platform_register(&pdev->dev);
+-		break;
++#else
++		dev_err(&pdev->dev, "Missing SND_EDMA_SOC\n");
++		ret = -EINVAL;
++		goto err;
+ #endif
++		break;
++	case PCM_SDMA:
+ #if IS_BUILTIN(CONFIG_SND_OMAP_SOC) || \
+ 	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
+ 	 IS_MODULE(CONFIG_SND_OMAP_SOC))
+-	case MCASP_VERSION_4:
+ 		ret = omap_pcm_platform_register(&pdev->dev);
+-		break;
++#else
++		dev_err(&pdev->dev, "Missing SND_SDMA_SOC\n");
++		ret = -EINVAL;
++		goto err;
+ #endif
++		break;
+ 	default:
+-		dev_err(&pdev->dev, "Invalid McASP version: %d\n",
+-			mcasp->version);
+-		ret = -EINVAL;
++		dev_err(&pdev->dev, "No DMA controller found (%d)\n", ret);
++	case -EPROBE_DEFER:
++		goto err;
+ 		break;
+ 	}
+ 
 -- 
-2.3.6
+1.9.1
+
