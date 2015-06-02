@@ -1,126 +1,123 @@
-From: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: mt8173: support arm64 cpuidle-dt
-Date: Tue, 2 Jun 2015 15:17:27 +0800
-Message-ID: <CAJ+MC=5oORYein5Z12Nb3vLDC4DLoyqUEyqZH95=LQWHBP23Sw@mail.gmail.com>
-References: <1432882906-7940-1-git-send-email-howard.chen@linaro.org>
-	<20150529145552.GD18512@red-moon>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2] ARM: l2c: Add support for the "arm, shared-override"
+ property
+Date: Tue, 02 Jun 2015 09:20:28 +0200
+Message-ID: <556D593C.1090002@monstr.eu>
+References: <1430990831-23825-1-git-send-email-geert+renesas@glider.be> <20150507160257.GA11067@e104818-lin.cambridge.arm.com> <20150515101028.GH2067@n2100.arm.linux.org.uk> <20150515135513.GH19345@e104818-lin.cambridge.arm.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150529145552.GD18512@red-moon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bobby Batacharia <Bobby.Batacharia-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="7xfAmuxuEe9FD7NlEFnd3RlIVCbjLquab"
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150515135513.GH19345@e104818-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 May 2015 at 22:55, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Fri, May 29, 2015 at 08:01:46AM +0100, Howard Chen wrote:
->> This patch adds an idle-states node to describe the mt8173 idle states and
->> also adds references to the idle-states node in all CPU nodes.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--7xfAmuxuEe9FD7NlEFnd3RlIVCbjLquab
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
+
+On 05/15/2015 03:55 PM, Catalin Marinas wrote:
+> On Fri, May 15, 2015 at 11:10:28AM +0100, Russell King - ARM Linux wrot=
+e:
+>> On Thu, May 07, 2015 at 05:02:57PM +0100, Catalin Marinas wrote:
+>>> On Thu, May 07, 2015 at 11:27:11AM +0200, Geert Uytterhoeven wrote:
+>>>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Docume=
+ntation/devicetree/bindings/arm/l2cc.txt
+>>>> index 0dbabe9a6b0abb91..2484aed78c86546d 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+>>>> @@ -67,6 +67,12 @@ Optional properties:
+>>>>    disable if zero.
+>>>>  - arm,prefetch-offset : Override prefetch offset value. Valid value=
+s are
+>>>>    0-7, 15, 23, and 31.
+>>>> +- arm,shared-override : The default behavior of the pl310 cache con=
+troller with
+>>>> +  respect to the shareable attribute is to transform "normal memory=
+
+>>>> +  non-cacheable transactions" into "cacheable no allocate" (for rea=
+ds) or
+>>>> +  "write through no write allocate" (for writes).
+>>>> +  On systems where this may cause DMA buffer corruption, this prope=
+rty must be
+>>>> +  specified to indicate that such transforms are precluded.
+>>>> =20
+>>>>  Example:
+>>>> =20
+>>>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+>>>> index e309c8f35af5af61..86d0e7461e5b0b18 100644
+>>>> --- a/arch/arm/mm/cache-l2x0.c
+>>>> +++ b/arch/arm/mm/cache-l2x0.c
+>>>> @@ -1149,6 +1149,11 @@ static void __init l2c310_of_parse(const stru=
+ct device_node *np,
+>>>>  		}
+>>>>  	}
+>>>> =20
+>>>> +	if (of_property_read_bool(np, "arm,shared-override")) {
+>>>> +		*aux_val |=3D L2C_AUX_CTRL_SHARED_OVERRIDE;
+>>>> +		*aux_mask &=3D ~L2C_AUX_CTRL_SHARED_OVERRIDE;
+>>>> +	}
+>>>> +
+>>>>  	prefetch =3D l2x0_saved_regs.prefetch_ctrl;
+>>>> =20
+>>>>  	ret =3D of_property_read_u32(np, "arm,double-linefill", &val);
+>>>
+>>> It looks fine to me.
+>>>
+>>> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+>>>
+>>> (even better if a subsequent patch adds this property to all the dts
+>>> files containing "arm,pl310" ;))
 >>
->> Signed-off-by: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
-> You should have added a list of incremental changes (v1->v2->v3) here
-> otherwise there is no point in adding a patch version, we are not
-> supposed to remember what you have changed.
->
-OK.
+>> Even better would be for the boot loader/firmware to set the bit.
+>=20
+> In an ideal world, I agree. But, arguably, we already set other bits in=
 
->>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index 924fdb6..47e8d56 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -49,6 +49,8 @@
->>                       device_type = "cpu";
->>                       compatible = "arm,cortex-a53";
->>                       reg = <0x000>;
->> +                     enable-method = "psci";
->> +                     cpu-idle-states = <&CPU_SLEEP_0>;
->>               };
->>
->>               cpu1: cpu@1 {
->> @@ -56,6 +58,7 @@
->>                       compatible = "arm,cortex-a53";
->>                       reg = <0x001>;
->>                       enable-method = "psci";
->> +                     cpu-idle-states = <&CPU_SLEEP_0>;
->>               };
->>
->>               cpu2: cpu@100 {
->> @@ -63,6 +66,7 @@
->>                       compatible = "arm,cortex-a57";
->>                       reg = <0x100>;
->>                       enable-method = "psci";
->> +                     cpu-idle-states = <&CPU_SLEEP_0>;
->>               };
->>
->>               cpu3: cpu@101 {
->> @@ -70,6 +74,20 @@
->>                       compatible = "arm,cortex-a57";
->>                       reg = <0x101>;
->>                       enable-method = "psci";
->> +                     cpu-idle-states = <&CPU_SLEEP_0>;
->> +             };
->> +
->> +             idle-states {
->> +                     entry-method = "arm,psci";
->> +
->> +                     CPU_SLEEP_0: cpu-sleep-0 {
->> +                             compatible = "arm,idle-state";
->
-> UltraNit: please move local-timer-stop here to keep the property ordering
-> as in the bindings.
-OK.
+> the PL310 AUXCTRL register (and related cache controllers, just look at=
 
->
-> More importantly, IIRC the idle state was not local-timer-stop in v2,
+> the l2cc.txt bindings).
+>=20
+> If you want to rely on firmware, can we at least check this bit and
+> print a warning? Or go a step further and refuse to enable PL310 when
+> this bit is clear? Otherwise coherent (non-cacheable) DMA operations ar=
+e
+> not safe.
+>=20
 
-My original idea is to hand over to a general purpose timer when the
-local timer stops, however, Danienl Lezcano naked this and points out cases
-that it may misbehave. So I fall back to the generic approach which uses the
-broadcast timer on the v3 patch.
+Any update on this one? I have the patch for Zynq pending and I want to
+have any resolution on this in this generic way or simply by enabling it
+via aux_mask as is here.
+https://lkml.org/lkml/2015/5/12/51
+This patch can be reverted when this generic solution reach mainline.
 
-> what changed in the interim ? v1->v2 the cluster idle state disappeared,
+Thanks,
+Michal
 
-The cluster idle won't be available in the near future and possibly never will,
-while the C1 state is ready and stable, so I split the C1 part out.
-
-> now the local timer seems to stop when it was not before (and that is
-> the same HW), I hope things are settled now.
->
-> https://lkml.org/lkml/2015/4/7/76
->
->> +                             arm,psci-suspend-param = <0x0010000>;
->
-> Move this property as last on the list, let's keep the generic
-> properties first.
-OK.
-
->
->> +                             entry-latency-us = <639>;
->> +                             exit-latency-us = <680>;
->> +                             min-residency-us = <1088>;
->> +                             local-timer-stop;
->> +                     };
->>               };
->>       };
->
-> I guess there is no hope of seeing the cluster state restored (?).
->
-> I would like some explanation regarding local-timer-stop change, apart
-> from that you can add:
->
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-
-Many thanks for your review and all the great comments.
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
-Regards,
-Howard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--7xfAmuxuEe9FD7NlEFnd3RlIVCbjLquab
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.14 (GNU/Linux)
+
+iEYEARECAAYFAlVtWUAACgkQykllyylKDCEKjACfQ1kniS1DNuiho3bok0WR6+t4
+rBgAnA5y0WYDhXbouQQCJOWU7pno0tPs
+=vSHA
+-----END PGP SIGNATURE-----
+
+--7xfAmuxuEe9FD7NlEFnd3RlIVCbjLquab--
