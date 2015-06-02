@@ -1,7 +1,7 @@
 From: Mike Looijmans <mike.looijmans@topic.nl>
 Subject: Re: [PATCH v3] Add TI CDCE925 I2C controlled clock synthesizer driver
-Date: Tue, 2 Jun 2015 10:39:35 +0200
-Message-ID: <556D6BC7.8000308@topic.nl>
+Date: Tue, 2 Jun 2015 10:43:32 +0200
+Message-ID: <556D6CB4.30900@topic.nl>
 References: <1433153623-29205-1-git-send-email-mike.looijmans@topic.nl> <1433231444.2361.75.camel@x220>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8;
@@ -27,6 +27,23 @@ List-Id: devicetree@vger.kernel.org
 >
 > For some silly reason (ie, I mistakenly thought I spotted an issue) I
 > did a quick build of this file. That triggered some noise on x86_64.
+
+Indeed, I hadn't verified building on a 64-bit platform, and the format=
+ string=20
+is incorrect.
+
+Thanks for spotting it and suggesting a fix, I'll integrate it in a v4 =
+patch.
+
+Out of curiousity, I did try a compile on the x86 host, but couldn't se=
+lect=20
+the driver because it depends on CONFIG_OF, so I just compiled if for t=
+he ARM=20
+target to verify that it still compiles in kernel 4.1. How did you mana=
+ge to=20
+compile the driver on the x86?
+
+
 > Excerpt:
 >
 > drivers/clk/clk-cdce925.c: In function =E2=80=98cdce925_regmap_i2c_wr=
