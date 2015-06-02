@@ -1,65 +1,55 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/6] gpio: brcmstb: Add interrupt support
-Date: Tue, 2 Jun 2015 15:33:41 +0200
-Message-ID: <CACRpkdayrD59LyQH+W7-A1n3CF5yKRjggm2f0LmEgmc7+DEyVg@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] gpio: Add GPIO support for Broadcom STB SoCs
+Date: Tue, 2 Jun 2015 15:40:53 +0200
+Message-ID: <CACRpkdaAcsB4CK9jfjTXUZDLkG3nt3ofTngmoiU92fhTowg6fw@mail.gmail.com>
 References: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
-	<1432865650-4062-3-git-send-email-gregory.0xf0@gmail.com>
+	<1432865650-4062-2-git-send-email-gregory.0xf0@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432865650-4062-3-git-send-email-gregory.0xf0@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory Fong <gregory.0xf0@gmail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432865650-4062-2-git-send-email-gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 29, 2015 at 4:14 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
+On Fri, May 29, 2015 at 4:14 AM, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Create an irq_chip for each GIO block.  Uses chained IRQ handling since
-> known uses of this block have a BCM7120 L2 interrupt controller as a
-> parent.  Supports interrupts for all GPIOs.
+> This adds support for the GPIO IP "UPG GIO" used on Broadcom STB SoCs
+> (BCM7XXX and some others).  Uses basic_mmio_gpio to instantiate a
+> gpio_chip for each bank.  The driver assumes that it handles the base
+> set of GPIOs on the system and that it can start its numbering sequence
+> from 0, so any GPIO expanders used with it must dynamically assign GPIO
+> numbers after this driver has finished registering its GPIOs.
 >
-> In the IRQ handler, we check for raised IRQs for invalid GPIOs and warn
-> (ratelimited) if they're encountered.
+> Does not implement the interrupt-controller portion yet, will be done in a
+> future commit.
 >
-> Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
+> List-usage-fixed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
 > v2:
-> - since imask member of bank struct was removed, just read and write from mask
->   reg and don't maintain a shadow
-> - warn on invalid IRQs
-> - move some irq setup to a separate function since probe is getting unwieldy
+> - change include to use <linux/gpio/driver.h> instead of <linux/gpio.h>
+> - get rid of unnecessary imask member in struct bank
+> - rename GPIO_PER_BANK -> MAX_GPIO_PER_BANK
+> - always have 32 GPIOs per bank and add 'width' member in struct bank to hold
+>   actual number of GPIOs in use
+> - mark of_match table as const
 
-This patch basically painfully reimplements GPIOLIB_IRQCHIP.
+This v2 version of 1/5 applied.
 
-Is there a reason for not using that generic mechanism?
+I recognize that you need one driver for all banks. I'm still hesitant
+about the complexity it brings to e.g. the IRQ handling.
 
-> +static int brcmstb_gpio_to_irq(struct gpio_chip *gc, unsigned gc_offset)
-> +{
-> +       struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
-> +       /* gc_offset is relative to this gpio_chip; want real offset */
-> +       int offset = gc_offset + (gc->base - priv->gpio_base);
-> +
-> +       if (offset >= priv->num_gpios)
-> +               return -ENXIO;
-> +       return irq_create_mapping(priv->irq_domain, offset);
-
-It is a no-no to rely on .to_irq() to be called before using an IRQ
-from a GPIO chip.
-
-The gpiochip and irq_chip APIs are orthogonal, and a user may
-request an interrupt from the irqchip without calling .to_irq() on any
-GPIO line first.
-
-This should only use irq_find_mapping().
-
-irq_create_mapping() needs to be called on all available
-offsets during probe.
-
-If the module is removable or at error path it also needs
-to call irq_dispose_mapping() on all lines. Also this is handled
-by GPIOLIB_IRQCHIP, and that is why it should always be
-used, if possible.
+Another possibility would be to spawn one driver per bank anyways,
+then have the IRQ requested as IRQF_SHARED so the IRQ
+handler for the shared IRQ would walk all drivers IRQ handlers
+and eventually figure out what GPIO fired it. But this
+implementation is quicker I guess.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
