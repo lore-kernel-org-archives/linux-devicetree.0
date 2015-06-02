@@ -1,55 +1,82 @@
-From: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH v4 3/7] ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
-Date: Tue,  2 Jun 2015 12:05:03 +0800
-Message-ID: <1433217907-928-4-git-send-email-fu.wei@linaro.org>
-References: <=fu.wei@linaro.org>
- <1433217907-928-1-git-send-email-fu.wei@linaro.org>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433217907-928-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: Re: [PATCH 4/4] mfd: 88pm800: allocate pdata->rtc if not allocated
+ earlier
+Date: Tue, 02 Jun 2015 10:37:32 +0530
+Message-ID: <556D3A14.6050505@linaro.org>
+References: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org> <1432937962-4537-5-git-send-email-vaibhav.hiremath@linaro.org> <20150601082200.GC3329@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150601082200.GC3329@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, sameo@linux.intel.com, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, Chao Xie <chao.xie@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This can be a example of adding SBSA Generic Watchdog device node
-into some dts files for the Soc which contains SBSA Generic Watchdog.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Acked-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Tested-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Monday 01 June 2015 01:52 PM, Lee Jones wrote:
+> On Sat, 30 May 2015, Vaibhav Hiremath wrote:
+>
+>> RTC in pmic 88PM800 can run even the core is powered off, and user
+>> can set alarm in RTC. When the alarm is timed out, the PMIC will power up
+>> the core, and the whole system will boot up. And during PMIC driver probe,
+>> it will read some register to find out whether this boot is caused by RTC
+>> timeout or not, and pass on this information to the RTC driver.
+>>
+>> So we need rtc platform data to be existed in PMIC driver to pass this
+>> information.
+>>
+>> Signed-off-by: Chao Xie <chao.xie@marvell.com>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>> ---
+>>   drivers/mfd/88pm800.c | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>> index 8ea4467..34546a1 100644
+>> --- a/drivers/mfd/88pm800.c
+>> +++ b/drivers/mfd/88pm800.c
+>> @@ -586,6 +586,25 @@ static int pm800_probe(struct i2c_client *client,
+>>   			return ret;
+>>   	}
+>>
+>> +	/*
+>> +	 * RTC in pmic can run even the core is powered off, and user can set
+>> +	 * alarm in RTC. When the alarm is time out, the PMIC will power up
+>> +	 * the core, and the whole system will boot up. When PMIC driver is
+>> +	 * probed, it will read out some register to find out whether this
+>> +	 * boot is caused by RTC timeout or not, and it need pass this
+>> +	 * information to RTC driver.
+>> +	 * So we need rtc platform data to be existed to pass this information.
+>> +	 */
+>> +	if (!pdata->rtc) {
+>> +		pdata->rtc = devm_kzalloc(&client->dev,
+>> +					  sizeof(*(pdata->rtc)), GFP_KERNEL);
+>> +		if (!pdata->rtc) {
+>> +			dev_err(&client->dev,
+>> +					"failed to allocate memory for rtc\n");
+>> +			return -ENOMEM;
+>> +		}
+>> +	}
+>> +
+>
+> Where is this memory first used?
+>
 
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index 2874d92..95994eb 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -84,6 +84,17 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
- 
-+		watchdog0: watchdog@e0bb0000 {
-+			compatible = "arm,sbsa-gwdt";
-+			reg = <0x0 0xe0bb0000 0 0x10000>,
-+				<0x0 0xe0bc0000 0 0x10000>;
-+			reg-names = "refresh",
-+				"control";
-+			interrupts = <0 337 4>;
-+			interrupt-names = "ws0";
-+			timeout-sec = <10 5>;
-+		};
-+
- 		spi0: ssp@e1020000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
--- 
-1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In the same file, look for field "rtc_wakeup".
+
+
+FYI,
+
+This field is used in two files,
+
+drivers/mfd/88pm800.c
+and
+drivers/rtc/rtc-88pm800.c	[sets the "platform_data" field]
+
+
+Thanks,
+Vaibhav
