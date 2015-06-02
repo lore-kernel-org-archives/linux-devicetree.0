@@ -1,40 +1,48 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: sunxi: Add support for the usb-clk
- on sun8i a23 and a33 SoCs
-Date: Tue, 2 Jun 2015 09:39:27 +1000
-Message-ID: <CAGRGNgXHa1K=xmF8_R9y8RJT6Y-zxmfsU19_V41gweqaZg+hVg@mail.gmail.com>
-References: <1433183008-13086-1-git-send-email-hdegoede@redhat.com>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v9 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
+Date: Mon, 01 Jun 2015 17:14:21 -0700
+Message-ID: <7hd21fc6g2.fsf@deeprootsystems.com>
+References: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBQ62WOVQKGQEAA7XUGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1433183008-13086-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
+	(Bintian Wang's message of "Sat, 30 May 2015 09:50:55 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bintian Wang <bintian.wang@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, pebolle@tiscali.nl, arnd@arndb.de, marc.zyngier@arm.com, xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.c
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Bintian Wang <bintian.wang@huawei.com> writes:
 
-On Tue, Jun 2, 2015 at 4:23 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> The usb-clk on sun8i a23 and a33 SoCs is similar to the ones found
-> on sun6i-a31 SoCs but instead of a 3th phy the a23 / a33 have a hsic
-> interface which gets enabled by almost the same bits as used on
-> the a31 for the 3th phy, but not exactly the same bits so we need
-> a new compatible for this.
+> Hi6220 is one mobile solution of Hisilicon, this patchset contains
+> initial support for Hi6220 SoC and HiKey development board, which
+> supports octal ARM Cortex A53 cores. Initial support is minimal and
+> includes just the arch configuration, device tree configuration, the
+> clock driver has been picked up by clock maintainers in clk tree.
+>
+> PSCI is enabled in device tree and there is no problem to boot all the
+> octal cores, and the CPU hotplug is also working now, you can download
+> and compile the latest firmware based on the following link to run this
+> patch set:
+> https://github.com/96boards/documentation/wiki/UEFI
+>
+> Chnages v9:
+> * Rebase to linus/master 4.1-rc1
+> * Remove the clock driver from this version because the clock maintainers
+>   have queued up the clock driver:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next-hi6220
+> * This version also includes clock header file:
+>   [PATCH v9 6/6] dt-bindings: Add header file of hi6220 clock driver
+>   Although above patch is included in clock driver, I add to this series
+>   because the device tree file includes it, there will be compile error
+>   without it.
+>   At last, we just need to keep one when merged together.
 
-Minor spelling note: it's "3rd" not "3th".
+I know I already gave my tested-by on v8, but FYI, I also tested this
+series on v4.1-rc1 merged with the clk-next-hi6220 branch currently in
+the clk-next tree, and it's booting all 8 cores.
 
-Thanks,
+Next step: collect acks from DT maintainers for the bindings.
 
--- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+Kevin
