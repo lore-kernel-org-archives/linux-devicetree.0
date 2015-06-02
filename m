@@ -1,49 +1,55 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv6 0/2] socfpga: support suspend to ram*
-Date: Tue, 2 Jun 2015 14:22:54 -0500
-Message-ID: <556E028E.2080800@opensource.altera.com>
-References: <1433270139-7042-1-git-send-email-atull@opensource.altera.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] clk: at91: add a new compatible string for Flexcom
+ in the DT documentation
+Date: Tue, 02 Jun 2015 22:49:09 +0300
+Message-ID: <556E08B5.7010208@cogentembedded.com>
+References: <cover.1433263218.git.cyrille.pitchen@atmel.com> <359f6b85c3a8b51a0ea35bacdbdc0443b9fbedcc.1433263218.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433270139-7042-1-git-send-email-atull@opensource.altera.com>
+In-Reply-To: <359f6b85c3a8b51a0ea35bacdbdc0443b9fbedcc.1433263218.git.cyrille.pitchen@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Pavel Machek <pavel@denx.de>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, linux-clk@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2015 01:35 PM, Alan Tull wrote:
-> Support suspend to ram on socfpga.
->   * allocate space in ocram using sram driver.
->   * Add a function in ocram to place DDR in self-refresh
->     and suspend.
->   * Prevent suspend if EDAC is enabled.
->   * Add a device tree binding document for the Altera
->     SOCFPGA SDRAM controller that is used to put DDR in
->     self-refresh mode.
-> 
-> Alan Tull (2):
->   ARM: socfpga: support suspend to ram
->   ARM: socfpga: dts: add sdram controller dt binding doc
-> 
->  .../arm/altera/socfpga-sdram-controller.txt        |   12 ++
->  arch/arm/mach-socfpga/Kconfig                      |   10 +-
->  arch/arm/mach-socfpga/Makefile                     |    1 +
->  arch/arm/mach-socfpga/core.h                       |    6 +-
->  arch/arm/mach-socfpga/pm.c                         |  149 ++++++++++++++++++++
->  arch/arm/mach-socfpga/self-refresh.S               |  136 ++++++++++++++++++
->  arch/arm/mach-socfpga/socfpga.c                    |    6 +-
->  drivers/edac/altera_edac.c                         |   20 +++
->  8 files changed, 337 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
->  create mode 100644 arch/arm/mach-socfpga/pm.c
->  create mode 100644 arch/arm/mach-socfpga/self-refresh.S
-> 
+Hello.
 
+On 06/02/2015 07:49 PM, Cyrille Pitchen wrote:
 
-Applied.
+> This patches documents the new bindings for the Flexcom clock, which will
+> be introduced by Atmel sama5d2x chips.
 
-Thanks Alan!
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+> ---
+>   .../devicetree/bindings/clock/at91-clock.txt         | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
 
-Dinh
+> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+> index 7a4d492..df4f40b 100644
+> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+[...]
+> @@ -461,3 +464,20 @@ For example:
+>   		compatible = "atmel,sama5d4-clk-h32mx";
+>   		clocks = <&mck>;
+>   	};
+> +
+> +Required properties for flexcom clock:
+> +- #clock-cells : from common clock binding; shall be set to 0.
+> +- clocks : shall be the Flexcom peripheral clock from PMC.
+> +- reg : shall be the range for Flexcom dedicated I/O registers (without USART,
+> +  TWI or SPI registers).
+> +- atmel,flexcom-mode : shall be a string value among { "spi", "usart", "i2c",
+> +  "twi" }. "i2c" and "twi" are synonymous.
+> +
+> +For example:
+> +	flx0: flexcom@f8034000 {
+
+    The ePAPR standard says: "The name of a node should be somewhat generic, 
+reflecting the function of the device and not its precise programming model."
+
+[...]
+
+WBR, Sergei
