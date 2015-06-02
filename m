@@ -1,114 +1,65 @@
-From: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: RE: [RFC v4 1/4] Broadcom Bluetooth UART Device Tree bindings
-Date: Tue, 2 Jun 2015 12:20:03 +0000
-Message-ID: <E0D3336E15B58B4294723AC879BA5E9425D49D@IRVEXCHMB15.corp.ad.broadcom.com>
-References: <1432325420-12782-1-git-send-email-ifaenson@broadcom.com>
- <1432325420-12782-2-git-send-email-ifaenson@broadcom.com>
- <CAL_JsqLO+g56KYUocpWLpz4dDTP0fEXTa4RjJzeRsPvYjCyF4A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLO+g56KYUocpWLpz4dDTP0fEXTa4RjJzeRsPvYjCyF4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arend Van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 06/11] doc: dt: Add documentation for lpc3220-timer
+Date: Tue,  2 Jun 2015 14:31:51 +0200
+Message-ID: <1433248316-26320-6-git-send-email-daniel.lezcano@linaro.org>
+References: <556DA1E5.1030601@linaro.org>
+ <1433248316-26320-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433248316-26320-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpBcHByZWNpYXRlIHlvdXIgaW5zaWdodHMuDQoNCi0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQpGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhlcnJpbmcyQGdtYWlsLmNv
-bV0gDQpTZW50OiBNb25kYXksIEp1bmUgMDEsIDIwMTUgODoxOSBQTQ0KVG86IElseWEgRmFlbnNv
-bg0KQ2M6IE1hcmNlbCBIb2x0bWFubjsgbGludXgtYmx1ZXRvb3RoQHZnZXIua2VybmVsLm9yZzsg
-ZGV2aWNldHJlZS1zcGVjQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmcNClN1YmplY3Q6IFJlOiBbUkZDIHY0IDEvNF0gQnJvYWRjb20gQmx1ZXRvb3RoIFVBUlQgRGV2
-aWNlIFRyZWUgYmluZGluZ3MNCg0KT24gRnJpLCBNYXkgMjIsIDIwMTUgYXQgMzoxMCBQTSwgSWx5
-YSBGYWVuc29uIDxpZmFlbnNvbkBicm9hZGNvbS5jb20+IHdyb3RlOg0KPiBEZXZpY2UgVHJlZSBi
-aW5kaW5ncyB0byBjb25maWd1cmUgdGhlIEJyb2FkY29tIEJsdWV0b290aCBVQVJUIGRldmljZS4N
-Cj4NCj4gU2lnbmVkLW9mZi1ieTogSWx5YSBGYWVuc29uIDxpZmFlbnNvbkBicm9hZGNvbS5jb20+
-DQo+IC0tLQ0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2JsdWV0b290aC9idGJjbS50
-eHQgICAgfCA4MiArKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgODIg
-aW5zZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9uZXQvYmx1ZXRvb3RoL2J0YmNtLnR4dA0KPg0KPiBkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9ibHVldG9vdGgvYnRiY20udHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9ibHVldG9vdGgvYnRiY20u
-dHh0DQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAuLjk2ODQyMWINCj4g
-LS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bmV0L2JsdWV0b290aC9idGJjbS50eHQNCj4gQEAgLTAsMCArMSw4MiBAQA0KPiArYnRiY20NCj4g
-Ky0tLS0tLQ0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArDQo+ICsgICAgICAgLSBj
-b21wYXRpYmxlIDogbXVzdCBiZSAiYnJjbSxicmNtLWJ0LXVhcnQiLg0KPiArICAgICAgIC0gdHR5
-IDogdHR5IGRldmljZSBjb25uZWN0ZWQgdG8gdGhpcyBCbHVldG9vdGggZGV2aWNlLg0KDQpOZWls
-IEJyb3duIGhhcyBiZWVuIHdvcmtpbmcgb24gZ2VuZXJpYyBiaW5kaW5ncyBmb3IgdHR5L1VBUlQg
-c2xhdmVzDQp3aGljaCBzaG91bGQgYmUgdXNlZCBoZXJlLg0KDQpJRjogSSBjZXJ0YWlubHkgbGlr
-ZSB3aGF0IGlzIGJlaW5nIGRldmVsb3BlZCBmb3IgdGhlIFVBUlQgY2hpbGQgZGV2aWNlcyBpbiB0
-aGUgRGV2aWNlVHJlZS4gSXQgd2lsbCBmaW5hbGx5IGNhdGNoIHVwIHdpdGggd2hhdCdzIGJlZW4g
-YXZhaWxhYmxlIGluIHRoZSBBQ1BJIGZvciB5ZWFycy4gSG93ZXZlciwgdG8gdGhlIGJlc3Qgb2Yg
-bXkgdW5kZXJzdGFuZGluZywgdGhhdCBlZmZvcnQgaXMgY3VycmVudGx5IG5vdCBpbiB0aGUgYmx1
-ZXRvb3RoLW5leHQgZ2l0IHJlcG8uIEFzIE1hcmNlbCB0b2xkIG1lIGVhcmxpZXIgdGhpcyB5ZWFy
-LCAiaWYgaXQgaXMgbm90IGluIHRoZSBibHVldG9vdGgtbmV4dCwgaXQgZG9lcyBub3QgZXhpc3Qi
-LiBJJ20gYWZyYWlkIEkgY2FuJ3QgdXNlIGl0IHRoZXJlZm9yZS4gQWxzbywgd2UgbmVlZCB0byBz
-aGlwIHRoaXMgZHJpdmVyIHNvb25lciByYXRoZXIgdGhhbiBsYXRlci4gVGhlIGludGVncmF0aW9u
-IHdpdGggdGhlIFVBUlQgc2xhdmUgZGV2aWNlcyBzb3VuZHMgbGlrZSBhIHdvcnRod2hpbGUgZnV0
-dXJlIGVuaGFuY2VtZW50IHRvIG1lLg0KDQo+ICsNCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+
-ICsNCj4gKyAgLSBidC1ob3N0LXdha2UtZ3Bpb3MgOiBidC1ob3N0LXdha2UgaW5wdXQgR1BJTyB0
-byBiZSB1c2VkIGFzIGFuIGludGVycnVwdC4NCj4gKw0KPiArICAtIGJ0LXdha2UtZ3Bpb3MgOiBi
-dC13YWtlIG91dHB1dCBHUElPIHRvIGJlIHVzZWQgdG8gc3VzcGVuZCAvIHJlc3VtZSBkZXZpY2Uu
-DQo+ICsNCj4gKyAgLSBidC1yZWctb24tZ3Bpb3MgOiByZWctb24gb3V0cHV0IEdQSU8gdG8gYmUg
-dXNlZCB0byBwb3dlciBkZXZpY2Ugb24vb2ZmLg0KPiArDQo+ICsgIC0gYmF1ZC1yYXRlLWJlZm9y
-ZS1jb25maWctZG93bmxvYWQgOiBpbml0aWFsIEJsdWV0b290aCBkZXZpY2UgYmF1ZCByYXRlLg0K
-PiArICAgIERlZmF1bHQ6IDMwMDAwMDAuDQoNCldoYXQncyB0aGUgYmF1ZHJhdGUgYWZ0ZXIgZG93
-bmxvYWQ/IFdoeSBub3QganVzdCB1c2Ugc3RhbmRhcmQNCiJiYXVkLXJhdGUiIGlmIHlvdSBvbmx5
-IHNwZWNpZnkgb25lIHJhdGU/DQoNCklGOiBZb3UncmUgcmlnaHQ6IHRoaXMgZG9jIHVzZWQgdG8g
-bGlzdCB0d28gcmF0ZXMuIDotKSBUbyBiZSBjb21wYXRpYmxlIHdpdGggd2hhdCBJbnRlbCBpcyBk
-b2luZyBpbiB0aGUgc2FtZSBhcmVhLCBJIHdpbGwgY2FsbCBpdCAib3Blci1zcGVlZCIgaWYgeW91
-IGRvbid0IG1pbmQuDQoNCj4gKw0KPiArICAtIG1hbnVhbC1mYyA6IGZsb3cgY29udHJvbCBVQVJU
-IGluIHN1c3BlbmQgLyByZXN1bWUgc2NlbmFyaW9zLg0KPiArICAgIERlZmF1bHQ6IDAuDQo+ICsN
-Cj4gKyAgLSBjb25maWd1cmUtc2xlZXAgOiBjb25maWd1cmUgc3VzcGVuZCAvIHJlc3VtZSBmbGFn
-Lg0KPiArICAgIERlZmF1bHQ6IGZhbHNlLg0KPiArDQo+ICsgIC0gY29uZmlndXJlLWF1ZGlvIDog
-Y29uZmlndXJlIHBsYXRmb3JtIFBDTSBTQ08gZmxhZy4NCj4gKyAgICBEZWZhdWx0OiBmYWxzZS4N
-Cj4gKw0KPiArICAtIFBDTUNsb2NrTW9kZSA6IFBDTSBjbG9jayBtb2RlLiAwLXNsYXZlLCAxLW1h
-c3Rlci4NCj4gKyAgICBEZWZhdWx0OiAwLg0KPiArDQo+ICsgIC0gUENNRmlsbE1ldGhvZCA6IFBD
-TSBmaWxsIG1ldGhvZC4gMCB0byAzLg0KPiArICAgIERlZmF1bHQ6IDIuDQo+ICsNCj4gKyAgLSBQ
-Q01GaWxsTnVtIDogUENNIG51bWJlciBvZiBmaWxsIGJpdHMuIDAgdG8gMy4NCj4gKyAgICBEZWZh
-dWx0OiAwLg0KPiArDQo+ICsgIC0gUENNRmlsbFZhbHVlIDogUENNIGZpbGwgdmFsdWUuIDAgdG8g
-Ny4NCj4gKyAgICBEZWZhdWx0OiAzLg0KPiArDQo+ICsgIC0gUENNSW5DYWxsQml0Y2xvY2sgOiBQ
-Q00gaW50ZXJmYWNlIHJhdGUuIDAtMTI4S2JwcywgMS0yNTZLYnBzLCAyLTUxMkticHMsDQo+ICsg
-ICAgMy0xMDI0S2JwcywgNC0yMDQ4S2Jwcy4NCj4gKyAgICBEZWZhdWx0OiAwLg0KPiArDQo+ICsg
-IC0gUENNTFNCRmlyc3QgOiBQQ00gTFNCIGZpcnN0LiAwIG9yIDEuDQo+ICsgICAgRGVmYXVsdDog
-MC4NCj4gKw0KPiArICAtIFBDTVJpZ2h0SnVzdGlmeSA6IFBDTSBKdXN0aWZ5LiAwLWxlZnQsIDEt
-cmlnaHQuDQo+ICsgICAgRGVmYXVsdDogMC4NCj4gKw0KPiArICAtIFBDTVJvdXRpbmcgOiBQQ00g
-cm91dGluZy4gMC1QQ00sIDEtU0NPIG92ZXIgSENJLg0KPiArICAgIERlZmF1bHQ6IDAuDQo+ICsN
-Cj4gKyAgLSBQQ01TaG9ydEZyYW1lU3luYyA6IFBDTSBzeW5jLiAwLXNob3J0LCAxLWxvbmcuDQo+
-ICsgICAgRGVmYXVsdDogMC4NCj4gKw0KPiArICAtIFBDTVN5bmNNb2RlIDogUENNIHN5bmMgbW9k
-ZS4gMC1zbGF2ZSwgMS1tYXN0ZXIuDQoNClBsZWFzZSBubyBDYW1lbENhc2UuIFRoZXNlIG5lZWQg
-YmV0dGVyIGRlc2NyaXB0aW9ucy4NCg0KSUY6IEkgYW0gY2VydGFpbmx5IGF3YXJlIHRoYXQgdGhl
-IENhbWVsQ2FzZSBpcyBnZW5lcmFsbHkgbm90IHVzZWQgb24gTGludXguIFRoZSBCcm9hZGNvbSBo
-b3dldmVyIGhhdmUgYSBzcGVjIGRlc2NyaWJpbmcgd2hhdCBuZWVkcyB0byBiZSBkb25lIHRvIGlu
-dGVncmF0ZSB0aGVzZSBraW5kcyBvZiBjaGlwcyBvbiBoYXJkd2FyZSBwbGF0Zm9ybXMgKGZvciBX
-aW5kb3dzKS4gQW55Ym9keSB3aG8gd2lzaGVzIHRvIHVzZSBTQ08gUENNIGF1ZGlvIHdpbGwgbmVl
-ZCB0byByZWFkIHRoYXQgc3BlYy4gVGhlc2UgcGFyYW1ldGVyIG5hbWVzIGFyZSBmcm9tIHRoYXQg
-c3BlYy4gQSBsb3Qgb2YgYWRkaXRpb25hbCB0ZWNobmljYWwgaW5mbyBJcyB0aGVyZSwgYWxvbmcg
-d2l0aCB2YXJpb3VzIGRpYWdyYW1zLiBJdCBjYW4ndCBiZSBhbGwgcGxhY2VkIGluIHRoaXMgaGVs
-cCBmaWxlLiBPZiBjb3Vyc2UsIEkgY2FuIGNoYW5nZSB0aGVzZSBwYXJhbWV0ZXIgbmFtZXMgYnV0
-IGl0IHdvdWxkIG1ha2UgdGhpbmdzIGhhcmRlciBmb3IgdGhvc2Ugd2lzaGluZyB0byB1c2UgdGhl
-IGhhcmR3YXJlIGFzIHRoZXkgd291bGQgbm90IG1hdGNoIHRoZSBzcGVjLiBDb3VsZCB5b3UgbWFr
-ZSBhbiBleGNlcHRpb24/DQoNCj4gKyAgICBEZWZhdWx0OiAwLg0KPiArDQo+ICsNCj4gK0V4YW1w
-bGU6DQo+ICsNCj4gKyAgICAgICBicmNtNDM1NF9idF91YXJ0OiBicmNtNDM1NC1idC11YXJ0IHsN
-Cj4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYnJjbSxicmNtLWJ0LXVhcnQiOw0KPiAr
-ICAgICAgICAgICAgICAgYnQtd2FrZS1ncGlvcyA9IDwmZ3BpbzQgMzAgR1BJT19BQ1RJVkVfSElH
-SD47DQo+ICsgICAgICAgICAgICAgICBidC1ob3N0LXdha2UtZ3Bpb3MgPSA8JmdwaW80IDMxIEdQ
-SU9fQUNUSVZFX0hJR0g+Ow0KPiArICAgICAgICAgICAgICAgdHR5ID0gInR0eVMwIjsNCj4gKyAg
-ICAgICAgICAgICAgIGJhdWQtcmF0ZS1iZWZvcmUtY29uZmlnLWRvd25sb2FkID0gPDMwMDAwMDA+
-Ow0KPiArICAgICAgICAgICAgICAgY29uZmlndXJlLXNsZWVwOw0KPiArICAgICAgICAgICAgICAg
-Y29uZmlndXJlLWF1ZGlvOw0KPiArICAgICAgICAgICAgICAgUENNQ2xvY2tNb2RlID0gPDA+Ow0K
-PiArICAgICAgICAgICAgICAgUENNRmlsbE1ldGhvZCA9IDwyPjsNCj4gKyAgICAgICAgICAgICAg
-IFBDTUZpbGxOdW0gPSA8MD47DQo+ICsgICAgICAgICAgICAgICBQQ01GaWxsVmFsdWUgPSA8Mz47
-DQo+ICsgICAgICAgICAgICAgICBQQ01JbkNhbGxCaXRjbG9jayA9IDwwPjsNCj4gKyAgICAgICAg
-ICAgICAgIFBDTUxTQkZpcnN0ID0gPDA+Ow0KPiArICAgICAgICAgICAgICAgUENNUmlnaHRKdXN0
-aWZ5ID0gPDA+Ow0KPiArICAgICAgICAgICAgICAgUENNUm91dGluZyA9IDwwPjsNCj4gKyAgICAg
-ICAgICAgICAgIFBDTVNob3J0RnJhbWVTeW5jID0gPDA+Ow0KPiArICAgICAgICAgICAgICAgUENN
-U3luY01vZGUgPSA8MD47DQo+ICsgICAgICAgfTsNCj4gKw0KPiAtLQ0KPiAxLjkuMQ0KPg0KPiAt
-LQ0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJz
-Y3JpYmUgZGV2aWNldHJlZS1zcGVjIiBpbg0KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFq
-b3Jkb21vQHZnZXIua2VybmVsLm9yZw0KPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8v
-dmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg==
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Add DT bindings documentation for lpc3220-timer. This timer is
+used as clocksource on many NXP platforms.
+
+Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+ .../bindings/timer/nxp,lpc3220-timer.txt           | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,lpc3220-timer.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/nxp,lpc3220-timer.txt b/Documentation/devicetree/bindings/timer/nxp,lpc3220-timer.txt
+new file mode 100644
+index 0000000..51b05a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nxp,lpc3220-timer.txt
+@@ -0,0 +1,26 @@
++* NXP LPC3220 timer
++
++The NXP LPC3220 timer is used on a wide range of NXP SoCs. This
++includes LPC32xx, LPC178x, LPC18xx and LPC43xx parts.
++
++Required properties:
++- compatible:
++	Should be "nxp,lpc3220-timer".
++- reg:
++	Address and length of the register set.
++- interrupts:
++	Reference to the timer interrupt
++- clocks:
++	Should contain a reference to timer clock.
++- clock-names:
++	Should contain "timerclk".
++
++Example:
++
++timer1: timer@40085000 {
++	compatible = "nxp,lpc3220-timer";
++	reg = <0x40085000 0x1000>;
++	interrupts = <13>;
++	clocks = <&ccu1 CLK_CPU_TIMER1>;
++	clock-names = "timerclk";
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
