@@ -1,180 +1,187 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 02 Jun 2015 10:32:37 -0500
-Message-ID: <556DCC95.806@codeaurora.org>
-References: <=fu.wei@linaro.org> <1433217907-928-1-git-send-email-fu.wei@linaro.org> <1433217907-928-6-git-send-email-fu.wei@linaro.org>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v9 2/8] media: Add registration helpers for V4L2 flash
+ sub-devices
+Date: Tue, 2 Jun 2015 18:32:35 +0300
+Message-ID: <20150602153234.GL25595@valkosipuli.retiisi.org.uk>
+References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
+ <1432566843-6391-3-git-send-email-j.anaszewski@samsung.com>
+ <20150601205921.GH25595@valkosipuli.retiisi.org.uk>
+ <556D73D2.20600@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433217907-928-6-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <556D73D2.20600-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2015 11:05 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+Hi, Jacek!
 
-> +/*
-> + * help functions for accessing 32bit registers of SBSA Generic Watchdog
-> + */
-> +static void sbsa_gwdt_cf_write(unsigned int reg, u32 val,
-> +			       struct watchdog_device *wdd)
-> +{
-> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +	writel_relaxed(val, gwdt->control_base + reg);
-> +}
-> +
-> +static void sbsa_gwdt_rf_write(unsigned int reg, u32 val,
-> +			       struct watchdog_device *wdd)
-> +{
-> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +	writel_relaxed(val, gwdt->refresh_base + reg);
-> +}
-> +
-> +static u32 sbsa_gwdt_cf_read(unsigned int reg, struct watchdog_device *wdd)
-> +{
-> +	struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +	return readl_relaxed(gwdt->control_base + reg);
-> +}
+On Tue, Jun 02, 2015 at 11:13:54AM +0200, Jacek Anaszewski wrote:
+> Hi Sakari,
+> 
+> On 06/01/2015 10:59 PM, Sakari Ailus wrote:
+> >Hi Jacek,
+> >
+> >On Mon, May 25, 2015 at 05:13:57PM +0200, Jacek Anaszewski wrote:
+> >>This patch adds helper functions for registering/unregistering
+> >>LED Flash class devices as V4L2 sub-devices. The functions should
+> >>be called from the LED subsystem device driver. In case the
+> >>support for V4L2 Flash sub-devices is disabled in the kernel
+> >>config the functions' empty versions will be used.
+> >>
+> >>Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> >>Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> >
+> >Thanks for adding indicator support!
+> >
+> >Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >
+> 
+> I missed one thing - sysfs interface of the indicator LED class
+> also has to be disabled/enabled of v4l2_flash_open/close.
 
-I still think you should get rid of these functions and just call 
-readl_relaxed() and writel_relaxed() every time, but I won't complain 
-again if you keep them.
+Good catch.
 
-> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
-> +{
-> +	struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
-> +	struct watchdog_device *wdd = &gwdt->wdd;
-> +
-> +	if (wdd->pretimeout)
-> +		/* The pretimeout is valid, go panic */
-> +		panic("SBSA Watchdog pre-timeout");
-> +	else
-> +		/* We don't use pretimeout, trigger WS1 now*/
-> +		sbsa_gwdt_set_wcv(wdd, 0);
+> 
+> I am planning to reimplement the functions as follows,
+> please let me know if you see any issues here:
+> 
+> static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
+> *fh)
+> {
+>         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
+> 
+>         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
+> 
+>         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
+>         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
+> 
+>         struct led_classdev *led_cdev_ind;
+> 
+>         int ret = 0;
 
-I don't like this.  The triggering of the hardware reset should never 
-depend on an interrupt being handled properly.  You should always 
-program WCV correctly in advance.  This is especially true since 
-pre-timeout will probably rarely be used.  So what happens if the CPU is 
-totally hung and this interrupt handler is never called?  When will the 
-timeout occur?
+I think you could spare some newlines above (and below as well).
 
-> +static int sbsa_gwdt_probe(struct platform_device *pdev)
-> +{
-> +	u64 first_period_max = U64_MAX;
-> +	struct device *dev = &pdev->dev;
-> +	struct watchdog_device *wdd;
-> +	struct sbsa_gwdt *gwdt;
-> +	struct resource *res;
-> +	void *rf_base, *cf_base;
-> +	int ret, irq;
-> +	u32 status;
-> +
-> +	gwdt = devm_kzalloc(dev, sizeof(*gwdt), GFP_KERNEL);
-> +	if (!gwdt)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, gwdt);
+> 
+> 
+>         mutex_lock(&led_cdev->led_access);
+> 
+> 
+>         if (!v4l2_fh_is_singular(&fh->vfh))
+> 
+>                 goto unlock;
+> 
+> 
+>         led_sysfs_disable(led_cdev);
+>         led_trigger_remove(led_cdev);
+> 
+> 
+>         if (iled_cdev) {
+>                 led_cdev_ind = &iled_cdev->led_cdev;
 
-You should probably do this *after* calling platform_get_irq_byname().
+You can also declare led_cdev_ind here as you don't need it outside the
+basic block.
 
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "refresh");
-> +	rf_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(rf_base))
-> +		return PTR_ERR(rf_base);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
-> +	cf_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(cf_base))
-> +		return PTR_ERR(cf_base);
-> +
-> +	irq = platform_get_irq_byname(pdev, "ws0");
-> +	if (irq < 0) {
-> +		dev_err(dev, "unable to get ws0 interrupt.\n");
-> +		return irq;
-> +	}
-> +
-> +	/*
-> +	 * Get the frequency of system counter from the cp15 interface of ARM
-> +	 * Generic timer. We don't need to check it, because if it returns "0",
-> +	 * system would panic in very early stage.
-> +	 */
-> +	gwdt->clk = arch_timer_get_cntfrq();
-> +	gwdt->refresh_base = rf_base;
-> +	gwdt->control_base = cf_base;
-> +
-> +	wdd = &gwdt->wdd;
-> +	wdd->parent = dev;
-> +	wdd->info = &sbsa_gwdt_info;
-> +	wdd->ops = &sbsa_gwdt_ops;
-> +	watchdog_set_drvdata(wdd, gwdt);
-> +	watchdog_set_nowayout(wdd, nowayout);
-> +
-> +	wdd->min_pretimeout = 0;
-> +	wdd->max_pretimeout = U32_MAX / gwdt->clk;
-> +	wdd->min_timeout = 1;
-> +	do_div(first_period_max, gwdt->clk);
-> +	wdd->max_timeout = first_period_max;
-> +
-> +	wdd->pretimeout = DEFAULT_PRETIMEOUT;
-> +	wdd->timeout = DEFAULT_TIMEOUT;
-> +	watchdog_init_timeouts(wdd, pretimeout, timeout, dev);
-> +
-> +	status = sbsa_gwdt_cf_read(SBSA_GWDT_WCS, wdd);
-> +	if (status & SBSA_GWDT_WCS_WS1) {
-> +		dev_warn(dev, "System reset by WDT(WCV: %llx)\n",
-> +			 sbsa_gwdt_get_wcv(wdd));
+> 
+> 
+>                 mutex_lock(&led_cdev_ind->led_access);
+> 
+> 
+>                 led_sysfs_disable(led_cdev_ind);
+>                 led_trigger_remove(led_cdev_ind);
+> 
+> 
+>                 mutex_unlock(&led_cdev_ind->led_access);
 
-"System was previously reset via watchdog" is much clearer.
+Please don't acquire the indicator mutex while holding the flash mutex. I
+don't think there's a need to do so, thus creating a dependency between the
+two. Just remember to check for v4l2_fh_is_singular() in both cases.
 
-> +		wdd->bootstatus |= WDIOF_CARDRESET;
-> +	}
-> +	/* Check if watchdog is already enabled */
-> +	if (status & SBSA_GWDT_WCS_EN) {
-> +		dev_warn(dev, "already enabled!\n");
+> 
+>         }
+> 
+> 
+>         ret = __sync_device_with_v4l2_controls(v4l2_flash);
 
-"watchdog is already enabled".  Never use exclamation marks in kernel 
-messages.
+If ret is < 0 here, you end up disabling the sysfs interface while open()
+fails (and v4l2_flash_close() will not be run). Shouldn't you handle that?
 
-> +		sbsa_gwdt_keepalive(wdd);
-> +	}
-> +
-> +	/* update pretimeout to WOR */
-> +	sbsa_gwdt_set_pretimeout(wdd, wdd->pretimeout);
-> +
-> +	ret = devm_request_irq(dev, irq, sbsa_gwdt_interrupt, 0,
-> +			       pdev->name, gwdt);
-> +	if (ret) {
-> +		dev_err(dev, "unable to request IRQ %d\n", irq);
-> +		return ret;
-> +	}
-> +
-> +	ret = watchdog_register_device(wdd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(dev, "Initialized with %ds timeout, %ds pretimeout @ %u Hz\n",
-> +		 wdd->timeout, wdd->pretimeout, gwdt->clk);
+> 
+> 
+> unlock:
+>         mutex_unlock(&led_cdev->led_access);
+> 
+>         return ret;
+> 
+> }
+> 
+> 
+> static int v4l2_flash_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh
+> *fh)
+> {
+>         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
+> 
+>         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
+> 
+>         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
+>         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
+> 
+>         struct led_classdev *led_cdev_ind;
+> 
+>         int ret = 0;
+> 
+> 
+>         mutex_lock(&led_cdev->led_access);
+> 
+> 
+>         if (v4l2_fh_is_singular(&fh->vfh)) {
+>                 if (v4l2_flash->ctrls[STROBE_SOURCE])
+>                         ret = v4l2_ctrl_s_ctrl(v4l2_flash->ctrls[STROBE_SV4L2_FLASH_STROBE_SOURCE_SOFTWARE);
+> 
+>                 led_sysfs_enable(led_cdev);
+> 
+> 
+>                 if (iled_cdev) {
+>                         led_cdev_ind = &iled_cdev->led_cdev;
+> 
+> 
+>                         mutex_lock(&led_cdev_ind->led_access);
 
-if (wdd->pretimeout)
-	"watchdog initialized to %us timeout and %us pre-timeout at %u Hz\n", 
-wdd->timeout, wdd->pretimeout, gwdt->clk
-else
-	"watchdog initialized to %us timeout at %u Hz\n", wdd->timeout, gwdt->clk
+Ditto.
 
-I think it's unlikely that users will use pre-timeout, so your code 
-should treat pre-timeout as a special case, not the normal usage.
+> 
+> 
+>                         led_sysfs_enable(led_cdev_ind);
+> 
+> 
+>                         mutex_unlock(&led_cdev_ind->led_access);
+> 
+>                 }
+> 
+> 
+>         }
+> 
+> 
+>         mutex_unlock(&led_cdev->led_access);
+> 
+> 
+>         return ret;
+> 
+> }
+> 
+> 
 
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
