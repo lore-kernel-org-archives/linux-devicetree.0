@@ -1,115 +1,58 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v3] Add TI CDCE925 I2C controlled clock synthesizer driver
-Date: Tue, 2 Jun 2015 10:43:32 +0200
-Message-ID: <556D6CB4.30900@topic.nl>
-References: <1433153623-29205-1-git-send-email-mike.looijmans@topic.nl> <1433231444.2361.75.camel@x220>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 00/21] On-demand device registration
+Date: Tue, 2 Jun 2015 10:48:50 +0200
+Message-ID: <CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433231444.2361.75.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: linux-clk@vger.kernel.org, sboyd@codeaurora.org, mturquette@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Grant Likely <grant.likely@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, dmaengine@vger.kernel.org, Alexander Holler <holler@ahsoftware.de>, Dan Williams <dan.j.williams@intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.or
 List-Id: devicetree@vger.kernel.org
 
-=EF=BB=BFOn 02-06-15 09:50, Paul Bolle wrote:
-> On Mon, 2015-06-01 at 12:13 +0200, Mike Looijmans wrote:
->> --- /dev/null
->> +++ b/drivers/clk/clk-cdce925.c
->
->> +static int cdce925_regmap_i2c_write(
->> +	void *context, const void *data, size_t count)
->
->> +	dev_dbg(&i2c->dev, "%s(%u) %#x %#x\n", __func__, count,
->> +			reg_data[0], reg_data[1]);
->
-> For some silly reason (ie, I mistakenly thought I spotted an issue) I
-> did a quick build of this file. That triggered some noise on x86_64.
-
-Indeed, I hadn't verified building on a 64-bit platform, and the format=
- string=20
-is incorrect.
-
-Thanks for spotting it and suggesting a fix, I'll integrate it in a v4 =
-patch.
-
-Out of curiousity, I did try a compile on the x86 host, but couldn't se=
-lect=20
-the driver because it depends on CONFIG_OF, so I just compiled if for t=
-he ARM=20
-target to verify that it still compiles in kernel 4.1. How did you mana=
-ge to=20
-compile the driver on the x86?
-
-
-> Excerpt:
->
-> drivers/clk/clk-cdce925.c: In function =E2=80=98cdce925_regmap_i2c_wr=
-ite=E2=80=99:
-> include/linux/dynamic_debug.h:64:16: warning: format =E2=80=98%u=E2=80=
-=99 expects argument of type =E2=80=98unsigned int=E2=80=99, but argume=
-nt 5 has type =E2=80=98size_t=E2=80=99 [-Wformat=3D]
->    static struct _ddebug  __aligned(8)   \
->                  ^
-> [...]
-> drivers/clk/clk-cdce925.c:505:2: note: in expansion of macro =E2=80=98=
-dev_dbg=E2=80=99
->    dev_dbg(&i2c->dev, "%s(%u) %#x %#x\n", __func__, count,
->    ^
->
-> A quick look at Documentation/printk-formats.txt suggested this (very
-> lightly tested) fix:
-> @@ -502,7 +502,7 @@ static int cdce925_regmap_i2c_write(
->          reg_data[0] =3D CDCE925_I2C_COMMAND_BYTE_TRANSFER | ((u8 *)d=
-ata)[0];
->          reg_data[1] =3D ((u8 *)data)[1];
->
-> -       dev_dbg(&i2c->dev, "%s(%u) %#x %#x\n", __func__, count,
-> +       dev_dbg(&i2c->dev, "%s(%zu) %#x %#x\n", __func__, count,
->                          reg_data[0], reg_data[1]);
->
->          ret =3D i2c_master_send(i2c, reg_data, count);
->
->> +static int cdce925_regmap_i2c_read(void *context,
->> +	   const void *reg, size_t reg_size, void *val, size_t val_size)
->
->> +		dev_dbg(&i2c->dev, "%s(%u, %u) %#x %#x\n", __func__,
->> +				reg_size, val_size, reg_data[0], *((u8 *)val));
->
-> Likewise:
-> @@ -547,7 +547,7 @@ static int cdce925_regmap_i2c_read(void *context,
->
->          ret =3D i2c_transfer(i2c->adapter, xfer, 2);
->          if (likely(ret =3D=3D 2)) {
-> -               dev_dbg(&i2c->dev, "%s(%u, %u) %#x %#x\n", __func__,
-> +               dev_dbg(&i2c->dev, "%s(%zu, %zu) %#x %#x\n", __func__=
-,
->                                  reg_size, val_size, reg_data[0], *((=
-u8 *)val));
->                  return 0;
->          } else if (ret < 0)
->
-> Thanks,
->
->
-> Paul Bolle
->
-
-
-
-Kind regards,
-
-Mike Looijmans
-System Expert
-
-TOPIC Embedded Products
-Eindhovenseweg 32-C, NL-5683 KH Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-Telefax: +31 (0) 499 33 69 70
-E-mail: mike.looijmans@topicproducts.com
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
+T24gTW9uLCBNYXkgMjUsIDIwMTUgYXQgNDo1MyBQTSwgVG9tZXUgVml6b3NvCjx0b21ldS52aXpv
+c29AY29sbGFib3JhLmNvbT4gd3JvdGU6Cgo+IGhhdmUgbG9va2VkIGludG8gb3JkZXJlZCBwcm9i
+aW5nIGFzIGEKPiBiZXR0ZXIgd2F5IG9mIHNvbHZpbmcgdGhpcyB0aGFuIG1vdmluZyBub2RlcyBh
+cm91bmQgaW4gdGhlIERUIG9yIHBsYXlpbmcgd2l0aAo+IGluaXRjYWxsIGxldmVscy4KPgo+IFdo
+aWxlIHJlYWRpbmcgdGhlIHRocmVhZCBbMV0gdGhhdCBBbGV4YW5kZXIgSG9sbGVyIHN0YXJ0ZWQg
+d2l0aCBoaXMgc2VyaWVzIHRvCj4gbWFrZSBwcm9iaW5nIG9yZGVyIGRldGVybWluaXN0aWMsIGl0
+IG9jY3VycmVkIHRvIG1lIHRoYXQgaXQgc2hvdWxkIGJlIHBvc3NpYmxlCj4gdG8gYWNoaWV2ZSB0
+aGUgc2FtZSBieSByZWdpc3RlcmluZyBkZXZpY2VzIGFzIHRoZXkgYXJlIHJlZmVyZW5jZWQgYnkg
+b3RoZXIKPiBkZXZpY2VzLgoKVGhpcyBpcyBwcmV0dHkgY29vbCwgYnV0IGEgdG9vIGxvY2FsIHNv
+bHV0aW9uIHRvIGEgZ2xvYmFsIHByb2JsZW0uCgpEZWZlcnJlZCBwcm9iZSBhbmQgaW5pdGNhbGwg
+cmVvcmRlcmluZywgc2lsbHkgYXMgdGhleSBtYXkgc2VlbSwKZG9lcyBub3QgcmVxdWlyZSB5b3Ug
+dG8gdXNlIGRldmljZSB0cmVlLgoKVGhlIHJlYWwgc29sdXRpb24sIHdoaWNoIEkgdGhpbmsgSSBw
+b2ludGVkIG91dCBhbHJlYWR5IHdoZW4gd2UKYWRkZWQgZGVmZXJyZWQgcHJvYmUsIGlzIHRvIHB1
+dCBkZXBlbmRlbmN5IGdyYXBocyBpbiB0aGUgZHJpdmVycwphbmQgaGF2ZSB0aGUga2VybmVsIGRl
+dmljZSBkcml2ZXIgY29yZSBwZXJjb2xhdGUgZGVwZW5kZWNpZXMgYnkKd2Fsa2luZyB0aGUgZ3Jh
+cGggb24gcHJvYmluZyBkcml2ZXIsIHJlbW92aW5nIGRyaXZlciAodXN1YWxseSB0aGUKaW52ZXJz
+ZSB1c2UgY2FzZSksIFtydW50aW1lXSBzdXNwZW5kIGFuZCBbcnVudGltZV0gcmVzdW1laW5nCmEg
+ZHJpdmVyLiBQb3NzaWJseSB0aGUgZGVwZW5kZW5jaWVzIHdpbGwgZXZlbiBiZSBkaWZmZXJlbnQK
+ZGVwZW5kaW5nIG9uIHVzZSBjYXNlLgoKVGhpcyBpcyB3aGF0IHN5c3RlbWQgaXMgZG9pbmcgaW4g
+dXNlcnNwYWNlIGZvciBzdGFydGluZyBzZXJ2aWNlczoKYXNrIGZvciB5b3VyIGRlcGVuZGVuY2ll
+cyBhbmQgd2FpdCBmb3IgdGhlbSBpZiB0aGV5IGFyZSBub3QKdGhlcmUuIFNvIGRyaXZlcnMgYXNr
+IGZvciByZXNvdXJjZXMgYW5kIHdhaXQgZm9yIHRoZW0uIEl0IGFsc28KbmVlZHMgdG8gYmUgYWJz
+dHJhY3QsIHNvIGZvciBleGFtcGxlIHdlIG5lZWQgdG8gYmUgYWJsZSB0bwpoYW5nIG9uIHJlZ3Vs
+YXRvcl9nZXQoKSB1bnRpbCB0aGUgZHJpdmVyIGlzIHVwIGFuZCBwcm92aWRpbmcgdGhhdApyZWd1
+bGF0b3IsIGFuZCBhcyBsb25nIGFzIGV2ZXJ5dGhpbmcgaXMgaW4gc2xvd3BhdGggaXQgc2hvdWxk
+CmJlIE9LLiAoQW5kIHZpY2UgdmVyc2EgbXV0YXRpcyBtdXRhbmRpcyBmb3IgY2xrLCBncGlvLCBw
+aW4KY29udHJvbCwgaW50ZXJydXB0cyAoISkgYW5kIERNQSBjaGFubmVscyBmb3IgZXhhbXBsZS4p
+CgoKU28gaWYgdGhpcyBzaG91bGQgYmUgc29sdmVkIGl0IHNob3VsZCBiZSBzb2x2ZWQgaW4gYW4g
+YWJzdHJhY3Qgd2F5CmluIHRoZSBkZXZpY2UgZHJpdmVyIGNvcmUgYXZhaWxhYmxlIGZvciBhbGws
+IHRoZW4gaGF2ZSBjYWxscyBjYWxsaW5nCm91dCB0byBEVCwgQUNQSSwgcG9zc2libHkgZXZlbiBQ
+Q0kgb3IgVVNCIChhcyB0aGVzZQplbnVtZXJhdGUgZGV2aWNlcyB0aGVtc2VsdmVzKSB0byBvYnRh
+aW4gYSBjZXJ0YWluCmRlcGVuZGVuY3kuCgpZb3VycywKTGludXMgV2FsbGVpagpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
