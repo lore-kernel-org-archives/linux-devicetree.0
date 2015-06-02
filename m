@@ -1,30 +1,65 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: xgene-dma: Fix "incorrect type in
- assignement" warnings
-Date: Tue, 2 Jun 2015 19:05:38 +0530
-Message-ID: <20150602133538.GZ3140@localhost>
-References: <1433235813-3225-1-git-send-email-rsahu@apm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/6] gpio: brcmstb: Add interrupt support
+Date: Tue, 2 Jun 2015 15:33:41 +0200
+Message-ID: <CACRpkdayrD59LyQH+W7-A1n3CF5yKRjggm2f0LmEgmc7+DEyVg@mail.gmail.com>
+References: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
+	<1432865650-4062-3-git-send-email-gregory.0xf0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1433235813-3225-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432865650-4062-3-git-send-email-gregory.0xf0@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory Fong <gregory.0xf0@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2015 at 02:33:33PM +0530, Rameshwar Prasad Sahu wrote:
-> This patch fixes sparse warnings like incorrect type in assignment
-> (different base types), cast to restricted __le64.
-> 
-I am appliying this but ideally you should have split thsi into seprate
-patches for each fix
+On Fri, May 29, 2015 at 4:14 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
 
--- 
-~Vinod
+> Create an irq_chip for each GIO block.  Uses chained IRQ handling since
+> known uses of this block have a BCM7120 L2 interrupt controller as a
+> parent.  Supports interrupts for all GPIOs.
+>
+> In the IRQ handler, we check for raised IRQs for invalid GPIOs and warn
+> (ratelimited) if they're encountered.
+>
+> Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
+> ---
+> v2:
+> - since imask member of bank struct was removed, just read and write from mask
+>   reg and don't maintain a shadow
+> - warn on invalid IRQs
+> - move some irq setup to a separate function since probe is getting unwieldy
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch basically painfully reimplements GPIOLIB_IRQCHIP.
+
+Is there a reason for not using that generic mechanism?
+
+> +static int brcmstb_gpio_to_irq(struct gpio_chip *gc, unsigned gc_offset)
+> +{
+> +       struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
+> +       /* gc_offset is relative to this gpio_chip; want real offset */
+> +       int offset = gc_offset + (gc->base - priv->gpio_base);
+> +
+> +       if (offset >= priv->num_gpios)
+> +               return -ENXIO;
+> +       return irq_create_mapping(priv->irq_domain, offset);
+
+It is a no-no to rely on .to_irq() to be called before using an IRQ
+from a GPIO chip.
+
+The gpiochip and irq_chip APIs are orthogonal, and a user may
+request an interrupt from the irqchip without calling .to_irq() on any
+GPIO line first.
+
+This should only use irq_find_mapping().
+
+irq_create_mapping() needs to be called on all available
+offsets during probe.
+
+If the module is removable or at error path it also needs
+to call irq_dispose_mapping() on all lines. Also this is handled
+by GPIOLIB_IRQCHIP, and that is why it should always be
+used, if possible.
+
+Yours,
+Linus Walleij
