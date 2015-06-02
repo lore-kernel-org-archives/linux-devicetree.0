@@ -1,123 +1,46 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2] ARM: l2c: Add support for the "arm, shared-override"
- property
-Date: Tue, 02 Jun 2015 09:20:28 +0200
-Message-ID: <556D593C.1090002@monstr.eu>
-References: <1430990831-23825-1-git-send-email-geert+renesas@glider.be> <20150507160257.GA11067@e104818-lin.cambridge.arm.com> <20150515101028.GH2067@n2100.arm.linux.org.uk> <20150515135513.GH19345@e104818-lin.cambridge.arm.com>
-Reply-To: monstr@monstr.eu
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] ARM: sunxi: Add Machine support for A33
+Date: Tue, 2 Jun 2015 09:28:11 +0200
+Message-ID: <20150602072811.GK23777@lukather>
+References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
+ <1432997706-20172-2-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="7xfAmuxuEe9FD7NlEFnd3RlIVCbjLquab"
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150515135513.GH19345@e104818-lin.cambridge.arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
+	protocol="application/pgp-signature"; boundary="5V5c01chtBAiSHoy"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB65WWWVQKGQEQMZLNYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432997706-20172-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---7xfAmuxuEe9FD7NlEFnd3RlIVCbjLquab
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+--5V5c01chtBAiSHoy
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 05/15/2015 03:55 PM, Catalin Marinas wrote:
-> On Fri, May 15, 2015 at 11:10:28AM +0100, Russell King - ARM Linux wrot=
-e:
->> On Thu, May 07, 2015 at 05:02:57PM +0100, Catalin Marinas wrote:
->>> On Thu, May 07, 2015 at 11:27:11AM +0200, Geert Uytterhoeven wrote:
->>>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Docume=
-ntation/devicetree/bindings/arm/l2cc.txt
->>>> index 0dbabe9a6b0abb91..2484aed78c86546d 100644
->>>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
->>>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
->>>> @@ -67,6 +67,12 @@ Optional properties:
->>>>    disable if zero.
->>>>  - arm,prefetch-offset : Override prefetch offset value. Valid value=
-s are
->>>>    0-7, 15, 23, and 31.
->>>> +- arm,shared-override : The default behavior of the pl310 cache con=
-troller with
->>>> +  respect to the shareable attribute is to transform "normal memory=
+On Sat, May 30, 2015 at 04:55:01PM +0200, Hans de Goede wrote:
+> From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Add machine support for the Allwinner A33 quad core cortex-a7 based SoC,
+> which is similar to the A23 SoC.
+> 
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
->>>> +  non-cacheable transactions" into "cacheable no allocate" (for rea=
-ds) or
->>>> +  "write through no write allocate" (for writes).
->>>> +  On systems where this may cause DMA buffer corruption, this prope=
-rty must be
->>>> +  specified to indicate that such transforms are precluded.
->>>> =20
->>>>  Example:
->>>> =20
->>>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
->>>> index e309c8f35af5af61..86d0e7461e5b0b18 100644
->>>> --- a/arch/arm/mm/cache-l2x0.c
->>>> +++ b/arch/arm/mm/cache-l2x0.c
->>>> @@ -1149,6 +1149,11 @@ static void __init l2c310_of_parse(const stru=
-ct device_node *np,
->>>>  		}
->>>>  	}
->>>> =20
->>>> +	if (of_property_read_bool(np, "arm,shared-override")) {
->>>> +		*aux_val |=3D L2C_AUX_CTRL_SHARED_OVERRIDE;
->>>> +		*aux_mask &=3D ~L2C_AUX_CTRL_SHARED_OVERRIDE;
->>>> +	}
->>>> +
->>>>  	prefetch =3D l2x0_saved_regs.prefetch_ctrl;
->>>> =20
->>>>  	ret =3D of_property_read_u32(np, "arm,double-linefill", &val);
->>>
->>> It looks fine to me.
->>>
->>> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
->>>
->>> (even better if a subsequent patch adds this property to all the dts
->>> files containing "arm,pl310" ;))
->>
->> Even better would be for the boot loader/firmware to set the bit.
->=20
-> In an ideal world, I agree. But, arguably, we already set other bits in=
+Applied, thanks!
 
-> the PL310 AUXCTRL register (and related cache controllers, just look at=
+Maxime
 
-> the l2cc.txt bindings).
->=20
-> If you want to rely on firmware, can we at least check this bit and
-> print a warning? Or go a step further and refuse to enable PL310 when
-> this bit is clear? Otherwise coherent (non-cacheable) DMA operations ar=
-e
-> not safe.
->=20
-
-Any update on this one? I have the patch for Zynq pending and I want to
-have any resolution on this in this generic way or simply by enabling it
-via aux_mask as is here.
-https://lkml.org/lkml/2015/5/12/51
-This patch can be reverted when this generic solution reach mainline.
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---7xfAmuxuEe9FD7NlEFnd3RlIVCbjLquab
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.14 (GNU/Linux)
-
-iEYEARECAAYFAlVtWUAACgkQykllyylKDCEKjACfQ1kniS1DNuiho3bok0WR6+t4
-rBgAnA5y0WYDhXbouQQCJOWU7pno0tPs
-=vSHA
------END PGP SIGNATURE-----
-
---7xfAmuxuEe9FD7NlEFnd3RlIVCbjLquab--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--5V5c01chtBAiSHoy--
