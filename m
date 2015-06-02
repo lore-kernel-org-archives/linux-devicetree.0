@@ -1,38 +1,46 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v9 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Tue, 2 Jun 2015 10:05:37 +0100
-Message-ID: <20150602090537.GB22569@arm.com>
-References: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
- <556D29B4.7@huawei.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v3] Add TI CDCE925 I2C controlled clock synthesizer
+ driver
+Date: Tue, 02 Jun 2015 11:07:14 +0200
+Message-ID: <1433236034.2361.90.camel@x220>
+References: <1433153623-29205-1-git-send-email-mike.looijmans@topic.nl>
+	 <1433231444.2361.75.camel@x220> <556D6CB4.30900@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <556D29B4.7@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bintian <bintian.wang@huawei.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, "tyler.baker@linaro.org" <tyler.baker@linaro.org>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "wangbintian@gmail.com" <wangbintian@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisil>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <556D6CB4.30900@topic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: linux-clk@vger.kernel.org, sboyd@codeaurora.org, mturquette@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2015 at 04:57:40AM +0100, Bintian wrote:
-> Hi Will, Mark and other ARM64 DT maintainers,
-> 
-> Could you help ack this version? although Will, Kevin and Tyler have
-> tested this patch set, I think also need an ack from you.
+On Tue, 2015-06-02 at 10:43 +0200, Mike Looijmans wrote:
+> Out of curiousity, I did try a compile on the x86 host, but couldn't select 
+> the driver because it depends on CONFIG_OF, so I just compiled if for the ARM 
+> target to verify that it still compiles in kernel 4.1. How did you manage to 
+> compile the driver on the x86?
 
-I'm not a DT maintainer, but Mark and/or Rob should be able to review the
-bindings.
+With this hack:
+    make drivers/clk/clk-cdce925.o
 
-I acked the Kconfig bits, FWIW, so I don't think you need any more on the
-arch side.
+(I thought this is documented somewhere, but I can't actually find the
+documentation. I guess it's just a feature of make.)
 
-Will
+It bypasses much of the build infrastructure, but comes in handy when
+you quickly want to know whether something can actually be build. Eg,
+you see some code and wonder "how can this build?"
+
+(Sometimes this requires setting CFLAGS on the make command line, or
+adding things like CONFIG_WHATEVER=y to the command line to get sane
+results, for some value of sane. By that time I usually give up.)
+
+Downside is, of course, that you can build things outside of the
+supported configurations. So it's best to state clearly that one built
+something using this hack. I sinned against that rule, but apparently
+got lucky, because this driver is not 32 bits only!
+
+Thanks,
+
+
+Paul Bolle
