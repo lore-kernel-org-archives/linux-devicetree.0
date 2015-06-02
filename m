@@ -1,48 +1,129 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v9 0/6] arm64,hi6220: Enable Hisilicon Hi6220 SoC
-Date: Mon, 01 Jun 2015 17:14:21 -0700
-Message-ID: <7hd21fc6g2.fsf@deeprootsystems.com>
-References: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC v4 1/4] Broadcom Bluetooth UART Device Tree bindings
+Date: Mon, 1 Jun 2015 19:18:38 -0500
+Message-ID: <CAL_JsqLO+g56KYUocpWLpz4dDTP0fEXTa4RjJzeRsPvYjCyF4A@mail.gmail.com>
+References: <1432325420-12782-1-git-send-email-ifaenson@broadcom.com> <1432325420-12782-2-git-send-email-ifaenson@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
-	(Bintian Wang's message of "Sat, 30 May 2015 09:50:55 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bintian Wang <bintian.wang@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, pebolle@tiscali.nl, arnd@arndb.de, marc.zyngier@arm.com, xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.c
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432325420-12782-2-git-send-email-ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Bintian Wang <bintian.wang@huawei.com> writes:
-
-> Hi6220 is one mobile solution of Hisilicon, this patchset contains
-> initial support for Hi6220 SoC and HiKey development board, which
-> supports octal ARM Cortex A53 cores. Initial support is minimal and
-> includes just the arch configuration, device tree configuration, the
-> clock driver has been picked up by clock maintainers in clk tree.
+On Fri, May 22, 2015 at 3:10 PM, Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> Device Tree bindings to configure the Broadcom Bluetooth UART device.
 >
-> PSCI is enabled in device tree and there is no problem to boot all the
-> octal cores, and the CPU hotplug is also working now, you can download
-> and compile the latest firmware based on the following link to run this
-> patch set:
-> https://github.com/96boards/documentation/wiki/UEFI
+> Signed-off-by: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/bluetooth/btbcm.txt    | 82 ++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
 >
-> Chnages v9:
-> * Rebase to linus/master 4.1-rc1
-> * Remove the clock driver from this version because the clock maintainers
->   have queued up the clock driver:
->   git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next-hi6220
-> * This version also includes clock header file:
->   [PATCH v9 6/6] dt-bindings: Add header file of hi6220 clock driver
->   Although above patch is included in clock driver, I add to this series
->   because the device tree file includes it, there will be compile error
->   without it.
->   At last, we just need to keep one when merged together.
+> diff --git a/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+> new file mode 100644
+> index 0000000..968421b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+> @@ -0,0 +1,82 @@
+> +btbcm
+> +------
+> +
+> +Required properties:
+> +
+> +       - compatible : must be "brcm,brcm-bt-uart".
+> +       - tty : tty device connected to this Bluetooth device.
 
-I know I already gave my tested-by on v8, but FYI, I also tested this
-series on v4.1-rc1 merged with the clk-next-hi6220 branch currently in
-the clk-next tree, and it's booting all 8 cores.
+Neil Brown has been working on generic bindings for tty/UART slaves
+which should be used here.
 
-Next step: collect acks from DT maintainers for the bindings.
+> +
+> +Optional properties:
+> +
+> +  - bt-host-wake-gpios : bt-host-wake input GPIO to be used as an interrupt.
+> +
+> +  - bt-wake-gpios : bt-wake output GPIO to be used to suspend / resume device.
+> +
+> +  - bt-reg-on-gpios : reg-on output GPIO to be used to power device on/off.
+> +
+> +  - baud-rate-before-config-download : initial Bluetooth device baud rate.
+> +    Default: 3000000.
 
-Kevin
+What's the baudrate after download? Why not just use standard
+"baud-rate" if you only specify one rate?
+
+> +
+> +  - manual-fc : flow control UART in suspend / resume scenarios.
+> +    Default: 0.
+> +
+> +  - configure-sleep : configure suspend / resume flag.
+> +    Default: false.
+> +
+> +  - configure-audio : configure platform PCM SCO flag.
+> +    Default: false.
+> +
+> +  - PCMClockMode : PCM clock mode. 0-slave, 1-master.
+> +    Default: 0.
+> +
+> +  - PCMFillMethod : PCM fill method. 0 to 3.
+> +    Default: 2.
+> +
+> +  - PCMFillNum : PCM number of fill bits. 0 to 3.
+> +    Default: 0.
+> +
+> +  - PCMFillValue : PCM fill value. 0 to 7.
+> +    Default: 3.
+> +
+> +  - PCMInCallBitclock : PCM interface rate. 0-128Kbps, 1-256Kbps, 2-512Kbps,
+> +    3-1024Kbps, 4-2048Kbps.
+> +    Default: 0.
+> +
+> +  - PCMLSBFirst : PCM LSB first. 0 or 1.
+> +    Default: 0.
+> +
+> +  - PCMRightJustify : PCM Justify. 0-left, 1-right.
+> +    Default: 0.
+> +
+> +  - PCMRouting : PCM routing. 0-PCM, 1-SCO over HCI.
+> +    Default: 0.
+> +
+> +  - PCMShortFrameSync : PCM sync. 0-short, 1-long.
+> +    Default: 0.
+> +
+> +  - PCMSyncMode : PCM sync mode. 0-slave, 1-master.
+
+Please no CamelCase. These need better descriptions.
+
+> +    Default: 0.
+> +
+> +
+> +Example:
+> +
+> +       brcm4354_bt_uart: brcm4354-bt-uart {
+> +               compatible = "brcm,brcm-bt-uart";
+> +               bt-wake-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
+> +               bt-host-wake-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;
+> +               tty = "ttyS0";
+> +               baud-rate-before-config-download = <3000000>;
+> +               configure-sleep;
+> +               configure-audio;
+> +               PCMClockMode = <0>;
+> +               PCMFillMethod = <2>;
+> +               PCMFillNum = <0>;
+> +               PCMFillValue = <3>;
+> +               PCMInCallBitclock = <0>;
+> +               PCMLSBFirst = <0>;
+> +               PCMRightJustify = <0>;
+> +               PCMRouting = <0>;
+> +               PCMShortFrameSync = <0>;
+> +               PCMSyncMode = <0>;
+> +       };
+> +
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
