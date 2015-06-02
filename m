@@ -1,58 +1,49 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v7 0/3] Add support for Richtek RT9455 battery charger
-Date: Tue, 2 Jun 2015 21:27:48 +0200
-Message-ID: <20150602192748.GA13930@earth>
-References: <1432909545-31895-1-git-send-email-anda-maria.nicolae@intel.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCHv6 0/2] socfpga: support suspend to ram*
+Date: Tue, 2 Jun 2015 14:22:54 -0500
+Message-ID: <556E028E.2080800@opensource.altera.com>
+References: <1433270139-7042-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432909545-31895-1-git-send-email-anda-maria.nicolae@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-Cc: dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433270139-7042-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Pavel Machek <pavel@denx.de>, Arnd Bergmann <arnd@arndb.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Delicious Quinoq <delicious.quinoa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 06/02/2015 01:35 PM, Alan Tull wrote:
+> Support suspend to ram on socfpga.
+>   * allocate space in ocram using sram driver.
+>   * Add a function in ocram to place DDR in self-refresh
+>     and suspend.
+>   * Prevent suspend if EDAC is enabled.
+>   * Add a device tree binding document for the Altera
+>     SOCFPGA SDRAM controller that is used to put DDR in
+>     self-refresh mode.
+> 
+> Alan Tull (2):
+>   ARM: socfpga: support suspend to ram
+>   ARM: socfpga: dts: add sdram controller dt binding doc
+> 
+>  .../arm/altera/socfpga-sdram-controller.txt        |   12 ++
+>  arch/arm/mach-socfpga/Kconfig                      |   10 +-
+>  arch/arm/mach-socfpga/Makefile                     |    1 +
+>  arch/arm/mach-socfpga/core.h                       |    6 +-
+>  arch/arm/mach-socfpga/pm.c                         |  149 ++++++++++++++++++++
+>  arch/arm/mach-socfpga/self-refresh.S               |  136 ++++++++++++++++++
+>  arch/arm/mach-socfpga/socfpga.c                    |    6 +-
+>  drivers/edac/altera_edac.c                         |   20 +++
+>  8 files changed, 337 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+>  create mode 100644 arch/arm/mach-socfpga/pm.c
+>  create mode 100644 arch/arm/mach-socfpga/self-refresh.S
+> 
 
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Hi Anda,
+Applied.
 
-On Fri, May 29, 2015 at 05:25:42PM +0300, Anda-Maria Nicolae wrote:
-> The next 3 patches do the following:
-> - first patch adds Richtek Technology Corporation in the vendor-prefixes list
-> - second patch adds device tree binding example for Richtek RT9455 battery charger
-> - third patch adds the driver for Richtek RT9455 battery charger
+Thanks Alan!
 
-Queued for 4.2. I slightly modified the DT binding to specify the
-default value for optional properties based upon the values encoded
-in the driver.
-
--- Sebastian
-
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVbgOxAAoJENju1/PIO/qaDS4P/2SrsMlfMOOxkhn9igp9/Rnt
-m49GglxgJZY6d/vLpBXYOeR7zsRxsOrpQq6wo3JZHwRYnlx4y+/IHUMNpQ+mfq7a
-+cmxAcnSXJHnf/GDT0a/hSACXZnJa/0bhjePK+7S0ns88hZRNsJMNXInQZrc2bZC
-c7O4Ipg0oy/Sg4Hg5Ty3s9zr08IzEe5C4aeQV/1WIp0XuAwDerjIOl+075caiT4S
-F4wZejBzISRkIKLCxWaEeHv5JUsZdV/9IYQV9DXWpKHXNQud59/IhF/vLA01Cq5K
-GEP2Wn1ngFMSNcTBSx3bCzIUmVr3CLDUeLj2Eb0bSxrkfqPBGMRF6oYqHy4/d+x0
-3tDcTSzinhIDamLIUE4xn3fLaaaDooN2RQizXIZLVsFOBTHlNfXobsxbxxG/+CE2
-GECmZHTbmerXeJR+GFXwi6ojUY9BX4N92X3Kukr2WSQNibX/qksn3nQ54oxCa6dC
-hjMKf/1/YtKZoYmWEb74Kn3OhVpLXlKktmSnTx6IIGcOQA7oHzhQYgOgGL+MESwf
-ByczWXQXFGWtOC2zrHetmeoe4nWXZvblw64Ya1OgYfjQh4VYPEtXMugQkQPBWWxO
-hnDdpDvgSCkEN+yXfGGodBrgCd+Sj/hRXCi9ksGuIJErGGx3frsMa+VEIQLY34jQ
-laOKLkj5Ck9WXo8rhgqi
-=CO4i
------END PGP SIGNATURE-----
-
---gKMricLos+KVdGMg--
+Dinh
