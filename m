@@ -1,43 +1,78 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] Introduce Allwinner A33 support
-Date: Tue, 2 Jun 2015 15:43:25 +0800
-Message-ID: <CAGb2v64Nm8jp+xEoUyPKV7UuhUXW3HS87hbp68MZAdrHR4uNgw@mail.gmail.com>
-References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v3] Add TI CDCE925 I2C controlled clock synthesizer
+ driver
+Date: Tue, 02 Jun 2015 09:50:44 +0200
+Message-ID: <1433231444.2361.75.camel@x220>
+References: <1433153623-29205-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBON5WWVQKGQEZYIKYRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1432997706-20172-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433153623-29205-1-git-send-email-mike.looijmans@topic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: linux-clk@vger.kernel.org, sboyd@codeaurora.org, mturquette@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 30, 2015 at 10:55 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi Maxime,
->
-> Here is a cleaned up series of Vishnu Patekar's A33 support. This should
-> address all concerns raised during the posting of v1.
->
-> I've tested that all peripherals declared in the shared sun8i-a23-a33.dtsi
-> work on the A33 too, with the exception of the dma-controller. For the
-> dma-controller I've compared the A23 vs A33 manual and the entire dma-
-> controller description including the register description is bit for bit
-> identical.
->
-> This has been tested on a 7" Ippo Q8H v1.2 A23 tablet, a 7" Ippo Q8H v1.2
-> A33 tablet and a 10" GA10H A33 tablet. The dts for the 10" tablet still
-> needs some work wrt the lradc button voltages so that is not included
-> in this set.
+On Mon, 2015-06-01 at 12:13 +0200, Mike Looijmans wrote:
+> --- /dev/null
+> +++ b/drivers/clk/clk-cdce925.c
 
-Whole series is
+> +static int cdce925_regmap_i2c_write(
+> +	void *context, const void *data, size_t count)
 
-Tested-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> +	dev_dbg(&i2c->dev, "%s(%u) %#x %#x\n", __func__, count,
+> +			reg_data[0], reg_data[1]);
 
-on my Sinlinx SinA33 dev board. I'll send patches for it later.
+=46or some silly reason (ie, I mistakenly thought I spotted an issue) I
+did a quick build of this file. That triggered some noise on x86_64.
+Excerpt:
+
+drivers/clk/clk-cdce925.c: In function =E2=80=98cdce925_regmap_i2c_writ=
+e=E2=80=99:
+include/linux/dynamic_debug.h:64:16: warning: format =E2=80=98%u=E2=80=99=
+ expects argument of type =E2=80=98unsigned int=E2=80=99, but argument =
+5 has type =E2=80=98size_t=E2=80=99 [-Wformat=3D]
+  static struct _ddebug  __aligned(8)   \
+                ^
+[...]
+drivers/clk/clk-cdce925.c:505:2: note: in expansion of macro =E2=80=98d=
+ev_dbg=E2=80=99
+  dev_dbg(&i2c->dev, "%s(%u) %#x %#x\n", __func__, count,
+  ^
+
+A quick look at Documentation/printk-formats.txt suggested this (very
+lightly tested) fix:
+@@ -502,7 +502,7 @@ static int cdce925_regmap_i2c_write(
+        reg_data[0] =3D CDCE925_I2C_COMMAND_BYTE_TRANSFER | ((u8 *)data=
+)[0];
+        reg_data[1] =3D ((u8 *)data)[1];
+=20
+-       dev_dbg(&i2c->dev, "%s(%u) %#x %#x\n", __func__, count,
++       dev_dbg(&i2c->dev, "%s(%zu) %#x %#x\n", __func__, count,
+                        reg_data[0], reg_data[1]);
+=20
+        ret =3D i2c_master_send(i2c, reg_data, count);
+
+> +static int cdce925_regmap_i2c_read(void *context,
+> +	   const void *reg, size_t reg_size, void *val, size_t val_size)
+
+> +		dev_dbg(&i2c->dev, "%s(%u, %u) %#x %#x\n", __func__,
+> +				reg_size, val_size, reg_data[0], *((u8 *)val));
+
+Likewise:
+@@ -547,7 +547,7 @@ static int cdce925_regmap_i2c_read(void *context,
+=20
+        ret =3D i2c_transfer(i2c->adapter, xfer, 2);
+        if (likely(ret =3D=3D 2)) {
+-               dev_dbg(&i2c->dev, "%s(%u, %u) %#x %#x\n", __func__,
++               dev_dbg(&i2c->dev, "%s(%zu, %zu) %#x %#x\n", __func__,
+                                reg_size, val_size, reg_data[0], *((u8 =
+*)val));
+                return 0;
+        } else if (ret < 0)
+
+Thanks,
+
+
+Paul Bolle
