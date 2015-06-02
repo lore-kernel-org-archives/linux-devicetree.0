@@ -1,285 +1,56 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 02 Jun 2015 10:07:33 -0700
-Message-ID: <556DE2D5.3090906@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org> <CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] clk: at91: add Flexcom clock
+Date: Tue, 2 Jun 2015 19:15:36 +0200
+Message-ID: <20150602171536.GG1715@piout.net>
+References: <cover.1433264017.git.cyrille.pitchen@atmel.com>
+ <62cb26952d0688c6f37ad84d253d5302818a20ae.1433264017.git.cyrille.pitchen@atmel.com>
+ <20150602190435.4698a4db@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150602190435.4698a4db@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2015 09:55 AM, Fu Wei wrote:
-> Hi Timur,
->
-> Thanks , feedback inline
->
-> On 2 June 2015 at 23:32, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> On 06/01/2015 11:05 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->>
->>> +/*
->>> + * help functions for accessing 32bit registers of SBSA Generic Watchdog
->>> + */
->>> +static void sbsa_gwdt_cf_write(unsigned int reg, u32 val,
->>> +                              struct watchdog_device *wdd)
->>> +{
->>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->>> +
->>> +       writel_relaxed(val, gwdt->control_base + reg);
->>> +}
->>> +
->>> +static void sbsa_gwdt_rf_write(unsigned int reg, u32 val,
->>> +                              struct watchdog_device *wdd)
->>> +{
->>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->>> +
->>> +       writel_relaxed(val, gwdt->refresh_base + reg);
->>> +}
->>> +
->>> +static u32 sbsa_gwdt_cf_read(unsigned int reg, struct watchdog_device
->>> *wdd)
->>> +{
->>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->>> +
->>> +       return readl_relaxed(gwdt->control_base + reg);
->>> +}
->>
->>
->> I still think you should get rid of these functions and just call
->> readl_relaxed() and writel_relaxed() every time, but I won't complain again
->> if you keep them.
->
-> yes, that make sense, and will reduce the size of code, and I think
-> the code's readability will be OK too.
-> will try in my next patch,
->
->>
->>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
->>> +{
->>> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
->>> +       struct watchdog_device *wdd = &gwdt->wdd;
->>> +
->>> +       if (wdd->pretimeout)
->>> +               /* The pretimeout is valid, go panic */
->>> +               panic("SBSA Watchdog pre-timeout");
->>> +       else
->>> +               /* We don't use pretimeout, trigger WS1 now*/
->>> +               sbsa_gwdt_set_wcv(wdd, 0);
->>
->>
->> I don't like this.
->
-> If so, what is your idea ,if pretimeout == 0?
->
-> the reason of using WCV as (timout - pretimeout): it can provide the
-> longer timeout period,
-> (1)If we use WOR, it can only provide 10s @ 400MHz(max).
-> as Guenter said earlier, the default timer out for most watchdog will
-> be 30s, so I think 10s limit will be a little short
-> (2)we can always program WCV just like ping.
-> (3)if a timeout arrives, WOR will be use, so use it as pretimeout, but
-> we still can make this pretimeout longer by programming WCV(I don't
-> think it's necessary)
->
->
->> The triggering of the hardware reset should never depend
->> on an interrupt being handled properly.
->
-> if this fail, system reset in 1S, because WOR == (1s)
->
-So ?
+On 02/06/2015 at 19:04:35 +0200, Boris Brezillon wrote :
+> Hi Cyrille,
+> 
+> On Tue, 2 Jun 2015 18:57:19 +0200
+> Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > This driver supports the new Atmel Flexcom. The Flexcom is a wrapper which
+> > integrates one SPI controller, one I2C controller and one USART. Only one
+> > function can be enabled at a time. This driver selects the function once for
+> > all, when the Flexcom is probed, according to the value of the new
+> > "atmel,flexcom-mode" device tree property.
+> > 
+> > This driver has chosen to present the Flexcom to the system as a clock so the
+> > implementation is seamless for the existing Atmel SPI, I2C and USART drivers.
+> 
+> Could detail a bit more why you chose to represent this flexcom IP as
+> a clock device ?
+> 
+> I don't like to use this 'DT should represent real hardware' argument,
+> but to me, it looks like you're trying to use a false hardware
+> representation to avoid changing the peripheral drivers code, which is
+> wrong since the DT is supposed to represent the hardware blocks.
+> 
+> How about representing the flexcom as an MFD instead ?
+> 
 
->> You should always program WCV
->> correctly in advance.  This is especially true since pre-timeout will
->> probably rarely be used.
->
-> always programming WCV is doable.  But I absolutely can not agree "
-> pre-timeout will probably rarely be used"
-> If so, SBSA watchdog is just a normal watchdog,  This use case just
-> makes this HW useless.
-> If so, go to use SP805.
-> you still don't see the importance of this warning and pretimeout to a
-> real server.
->
+It should probably be represented as an MFD. The MFD driver will parse
+the chosen configuration and the probe the correct driver. You can have
+a look at the recent ST LPC driver from Lee.
 
-If pretimeout isn't used, why not just set WCV = timeout, WOR = 0 ?
 
-Guenter
-
-> If the software of a real server goes wrong, then you just directly restart it ,
-> never try to sync/protect the current data, never try to figure out
-> what is wrong with it.
-> I don't think that is a good server software.
->
-> At least, I don't thinks " pre-timeout will probably rarely be used"
-> is a good idea for a server.
-> in another word, in a server ,pre-timeout should always be used.
->
->> So what happens if the CPU is totally hung and
->
-> Again, system reset in 1S, because WOR == (1s).
->
->> this interrupt handler is never called?  When will the timeout occur?
->
-> if this interrupt hardler is never called,  what I can see is "some
-> one is feeding the dog".
-> OK, in case, WS0 is triggered, but  this interrupt hardler isn't
-> called, then software really goes wrong.  Then , Again, Again system
-> reset in 1S, because WOR == (1s).
->
->>
->>> +static int sbsa_gwdt_probe(struct platform_device *pdev)
->>> +{
->>> +       u64 first_period_max = U64_MAX;
->>> +       struct device *dev = &pdev->dev;
->>> +       struct watchdog_device *wdd;
->>> +       struct sbsa_gwdt *gwdt;
->>> +       struct resource *res;
->>> +       void *rf_base, *cf_base;
->>> +       int ret, irq;
->>> +       u32 status;
->>> +
->>> +       gwdt = devm_kzalloc(dev, sizeof(*gwdt), GFP_KERNEL);
->>> +       if (!gwdt)
->>> +               return -ENOMEM;
->>> +       platform_set_drvdata(pdev, gwdt);
->>
->>
->> You should probably do this *after* calling platform_get_irq_byname().
->
->   it just dose (pdev->) dev->driver_data = gwdt
-> If we got gwdt, we can do that.
->
-> But maybe I miss something(or a rule of usage),  so please let know
-> why this has to be called  *after* calling platform_get_irq_byname().
->
->>
->>> +
->>> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->>> "refresh");
->>> +       rf_base = devm_ioremap_resource(dev, res);
->>> +       if (IS_ERR(rf_base))
->>> +               return PTR_ERR(rf_base);
->>> +
->>> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->>> "control");
->>> +       cf_base = devm_ioremap_resource(dev, res);
->>> +       if (IS_ERR(cf_base))
->>> +               return PTR_ERR(cf_base);
->>> +
->>> +       irq = platform_get_irq_byname(pdev, "ws0");
->>> +       if (irq < 0) {
->>> +               dev_err(dev, "unable to get ws0 interrupt.\n");
->>> +               return irq;
->>> +       }
->>> +
->>> +       /*
->>> +        * Get the frequency of system counter from the cp15 interface of
->>> ARM
->>> +        * Generic timer. We don't need to check it, because if it returns
->>> "0",
->>> +        * system would panic in very early stage.
->>> +        */
->>> +       gwdt->clk = arch_timer_get_cntfrq();
->>> +       gwdt->refresh_base = rf_base;
->>> +       gwdt->control_base = cf_base;
->>> +
->>> +       wdd = &gwdt->wdd;
->>> +       wdd->parent = dev;
->>> +       wdd->info = &sbsa_gwdt_info;
->>> +       wdd->ops = &sbsa_gwdt_ops;
->>> +       watchdog_set_drvdata(wdd, gwdt);
->>> +       watchdog_set_nowayout(wdd, nowayout);
->>> +
->>> +       wdd->min_pretimeout = 0;
->>> +       wdd->max_pretimeout = U32_MAX / gwdt->clk;
->>> +       wdd->min_timeout = 1;
->>> +       do_div(first_period_max, gwdt->clk);
->>> +       wdd->max_timeout = first_period_max;
->>> +
->>> +       wdd->pretimeout = DEFAULT_PRETIMEOUT;
->>> +       wdd->timeout = DEFAULT_TIMEOUT;
->>> +       watchdog_init_timeouts(wdd, pretimeout, timeout, dev);
->>> +
->>> +       status = sbsa_gwdt_cf_read(SBSA_GWDT_WCS, wdd);
->>> +       if (status & SBSA_GWDT_WCS_WS1) {
->>> +               dev_warn(dev, "System reset by WDT(WCV: %llx)\n",
->>> +                        sbsa_gwdt_get_wcv(wdd));
->>
->>
->> "System was previously reset via watchdog" is much clearer.
->
-> OK
->
->>
->>> +               wdd->bootstatus |= WDIOF_CARDRESET;
->>> +       }
->>> +       /* Check if watchdog is already enabled */
->>> +       if (status & SBSA_GWDT_WCS_EN) {
->>> +               dev_warn(dev, "already enabled!\n");
->>
->>
->> "watchdog is already enabled".
->
-> I think I don't need to print "watchdog",   dev_warn(dev,  has help us on this.
-> If you do so , the message will be "watchdog: watchdog0: watchdog is
-> already enabled"
->
->   > Never use exclamation marks in kernel
->> messages.
->
-> that make sense , will delete it.
->
->>
->>> +               sbsa_gwdt_keepalive(wdd);
->>> +       }
->>> +
->>> +       /* update pretimeout to WOR */
->>> +       sbsa_gwdt_set_pretimeout(wdd, wdd->pretimeout);
->>> +
->>> +       ret = devm_request_irq(dev, irq, sbsa_gwdt_interrupt, 0,
->>> +                              pdev->name, gwdt);
->>> +       if (ret) {
->>> +               dev_err(dev, "unable to request IRQ %d\n", irq);
->>> +               return ret;
->>> +       }
->>> +
->>> +       ret = watchdog_register_device(wdd);
->>> +       if (ret)
->>> +               return ret;
->>> +
->>> +       dev_info(dev, "Initialized with %ds timeout, %ds pretimeout @ %u
->>> Hz\n",
->>> +                wdd->timeout, wdd->pretimeout, gwdt->clk);
->>
->>
->> if (wdd->pretimeout)
->>          "watchdog initialized to %us timeout and %us pre-timeout at %u
->> Hz\n", wdd->timeout, wdd->pretimeout, gwdt->clk
->> else
->>          "watchdog initialized to %us timeout at %u Hz\n", wdd->timeout,
->> gwdt->clk
->>
->> I think it's unlikely that users will use pre-timeout, so your code should
->> treat pre-timeout as a special case, not the normal usage.
->
-> I don't think so, that why you didn't use pretimeout in your driver.
-> Because you don't see the meaning of "pretimeout" to a  server.
->
->>
->> --
->> Qualcomm Innovation Center, Inc.
->> The Qualcomm Innovation Center, Inc. is a member of the
->> Code Aurora Forum, a Linux Foundation Collaborative Project.
->
->
->
-
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
