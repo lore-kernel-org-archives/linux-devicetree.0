@@ -1,65 +1,57 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 06/11] doc: dt: Add documentation for lpc3220-timer
-Date: Tue,  2 Jun 2015 14:31:51 +0200
-Message-ID: <1433248316-26320-6-git-send-email-daniel.lezcano@linaro.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 09/11] dt-bindings: Document the STM32 timer bindings
+Date: Tue,  2 Jun 2015 14:31:54 +0200
+Message-ID: <1433248316-26320-9-git-send-email-daniel.lezcano@linaro.org>
 References: <556DA1E5.1030601@linaro.org>
  <1433248316-26320-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433248316-26320-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433248316-26320-1-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, mingo@kernel.org
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 
-Add DT bindings documentation for lpc3220-timer. This timer is
-used as clocksource on many NXP platforms.
+This adds documentation of device tree bindings for the
+STM32 timer.
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- .../bindings/timer/nxp,lpc3220-timer.txt           | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,lpc3220-timer.txt
+ .../devicetree/bindings/timer/st,stm32-timer.txt   | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/st,stm32-timer.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/nxp,lpc3220-timer.txt b/Documentation/devicetree/bindings/timer/nxp,lpc3220-timer.txt
+diff --git a/Documentation/devicetree/bindings/timer/st,stm32-timer.txt b/Documentation/devicetree/bindings/timer/st,stm32-timer.txt
 new file mode 100644
-index 0000000..51b05a0
+index 0000000..8ef28e7
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nxp,lpc3220-timer.txt
-@@ -0,0 +1,26 @@
-+* NXP LPC3220 timer
++++ b/Documentation/devicetree/bindings/timer/st,stm32-timer.txt
+@@ -0,0 +1,22 @@
++. STMicroelectronics STM32 timer
 +
-+The NXP LPC3220 timer is used on a wide range of NXP SoCs. This
-+includes LPC32xx, LPC178x, LPC18xx and LPC43xx parts.
++The STM32 MCUs family has several general-purpose 16 and 32 bits timers.
 +
 +Required properties:
-+- compatible:
-+	Should be "nxp,lpc3220-timer".
-+- reg:
-+	Address and length of the register set.
-+- interrupts:
-+	Reference to the timer interrupt
-+- clocks:
-+	Should contain a reference to timer clock.
-+- clock-names:
-+	Should contain "timerclk".
++- compatible : Should be "st,stm32-timer"
++- reg : Address and length of the register set
++- clocks : Reference on the timer input clock
++- interrupts : Reference to the timer interrupt
++
++Optional properties:
++- resets: Reference to a reset controller asserting the timer
 +
 +Example:
 +
-+timer1: timer@40085000 {
-+	compatible = "nxp,lpc3220-timer";
-+	reg = <0x40085000 0x1000>;
-+	interrupts = <13>;
-+	clocks = <&ccu1 CLK_CPU_TIMER1>;
-+	clock-names = "timerclk";
++timer5: timer@40000c00 {
++	compatible = "st,stm32-timer";
++	reg = <0x40000c00 0x400>;
++	interrupts = <50>;
++	resets = <&rrc 259>;
++	clocks = <&clk_pmtr1>;
 +};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
