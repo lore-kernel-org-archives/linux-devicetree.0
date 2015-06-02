@@ -1,141 +1,41 @@
-From: Misael Lopez Cruz <misael.lopez@ti.com>
-Subject: Re: [PATCH v2] ASoC: davinci-mcasp: Choose PCM driver based on configured
- DMA controller
-Date: Tue, 2 Jun 2015 11:16:43 -0500
-Message-ID: <556DD6EB.5010504@ti.com>
-References: <7230089f10ea27a9bd76eb8bfffcef754e71f274.1433252849.git.jsarha@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] GPIO support for BRCMSTB
+Date: Tue, 2 Jun 2015 17:28:31 +0100
+Message-ID: <20150602162830.GI2067@n2100.arm.linux.org.uk>
+References: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
+ <CACRpkda3EDa7YdzeT6FQ=cQw1RrDath7pQsCos-JeB2y4r18gw@mail.gmail.com>
+ <CADtm3G45-u82Rp_0dHf2EfdMokf8E4FaQ84PHnocpvXxU+5_+g@mail.gmail.com>
+ <CACRpkdaTYAr-7K5_QZh1CyeyA1224obqEB2Sz8UHZmrWcfv+ow@mail.gmail.com>
+ <CADtm3G4ao=3sHx2F1+V9rwS=jWf6ZdEQi4d24HxQ6MEc+CQ8CQ@mail.gmail.com>
+ <CACRpkdY_-zq-1srBC213MK_RoVvPsfTpRTQyx-4yRvCOV5JdxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <7230089f10ea27a9bd76eb8bfffcef754e71f274.1433252849.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY_-zq-1srBC213MK_RoVvPsfTpRTQyx-4yRvCOV5JdxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jyri,
+On Tue, Jun 02, 2015 at 11:05:21AM +0200, Linus Walleij wrote:
+> ... and have the
+> IRQ handler return IRQ_NONE if the IRQ comes from this
+> bank, or IRQ_HANDLED if it has handled an IRQ from its own
+> space.
 
-On 06/02/2015 08:49 AM, Jyri Sarha wrote:
-> Find the configured DMA controller by asking for a DMA channel in the
-> probe phase and releasing it right after. The controller device can be
-> found via the dma_chan struct and the controller is recognized from
-> the compatible property of its device node. The patch assumes EDMA if
-> there is no device node.
->
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> ---
-> Changes since first patch version:
-> - Change enum names from MCASP_?DMA to PCM_?DMA
-> - Return PCM_EDMA if !mcasp->dev->of_node
-> - Do not ignore possible error code returned by
->    davinci_mcasp_get_dma_type()
->
->   sound/soc/davinci/davinci-mcasp.c | 68 +++++++++++++++++++++++++++++++++------
->   1 file changed, 58 insertions(+), 10 deletions(-)
->
-> diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
-> index d793494..3b78c3e 100644
-> --- a/sound/soc/davinci/davinci-mcasp.c
-> +++ b/sound/soc/davinci/davinci-mcasp.c
-> @@ -1565,6 +1565,49 @@ static int davinci_mcasp_init_ch_constraints(struct davinci_mcasp *mcasp)
->   	return ret;
->   }
->
-> +enum {
-> +	PCM_EDMA,
-> +	PCM_SDMA,
-> +};
-> +static const char *sdma_prefix = "ti,omap";
-> +
-> +static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
-> +{
-> +	struct dma_chan *chan;
-> +	const char *tmp;
-> +	int ret = PCM_EDMA;
-> +
-> +	if (!mcasp->dev->of_node)
-> +		return PCM_EDMA;
-> +
-> +	tmp = mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data;
-> +	chan = dma_request_slave_channel_reason(mcasp->dev, tmp);
-> +	if (IS_ERR(chan)) {
-> +		if (PTR_ERR(chan) != -EPROBE_DEFER)
-> +			dev_err(mcasp->dev,
-> +				"Can't verify DMA configuration (%ld)\n",
-> +				PTR_ERR(chan));
-> +		return PTR_ERR(chan);
-> +	}
-> +	BUG_ON(!chan->device || !chan->device->dev);
-> +
-> +	if (chan->device->dev->of_node)
-> +		ret = of_property_read_string(chan->device->dev->of_node,
-> +					      "compatible", &tmp);
+I'm not sure that's worded correctly or not, but... fwiw, all IRQ handlers
+_should_ be returning IRQ_NONE if the IRQ does not belong to them whether
+or not they're shared handlers.
 
-I wonder how this is going to play out when the DMA crossbar is present 
-(i.e. dra7 family).
+That is so the kernel can detect stuck IRQs and report that fact, rather
+than just locking up silently.  ARM CPUs make no progress when the IRQ to
+them is permanently asserted, so a stuck IRQ can be rather problematical.
 
-In that case, isn't the 'compatible' string here that of the DMA 
-crossbar (not the one from the DMA controller)?
-
-> +	else
-> +		dev_dbg(mcasp->dev, "DMA controller has no of-node\n");
-> +
-> +	dma_release_channel(chan);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_dbg(mcasp->dev, "DMA controller compatible = \"%s\"\n", tmp);
-> +	if (!strncmp(tmp, sdma_prefix, strlen(sdma_prefix)))
-> +		return PCM_SDMA;
-> +
-> +	return PCM_EDMA;
-> +}
-> +
->   static int davinci_mcasp_probe(struct platform_device *pdev)
->   {
->   	struct snd_dmaengine_dai_dma_data *dma_data;
-> @@ -1763,27 +1806,32 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
->   	if (ret != 0)
->   		goto err;
->
-> -	switch (mcasp->version) {
-> +	ret = davinci_mcasp_get_dma_type(mcasp);
-> +	switch (ret) {
-> +	case PCM_EDMA:
->   #if IS_BUILTIN(CONFIG_SND_EDMA_SOC) || \
->   	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
->   	 IS_MODULE(CONFIG_SND_EDMA_SOC))
-> -	case MCASP_VERSION_1:
-> -	case MCASP_VERSION_2:
-> -	case MCASP_VERSION_3:
->   		ret = edma_pcm_platform_register(&pdev->dev);
-> -		break;
-> +#else
-> +		dev_err(&pdev->dev, "Missing SND_EDMA_SOC\n");
-> +		ret = -EINVAL;
->   #endif
-> +		break;
-> +	case PCM_SDMA:
->   #if IS_BUILTIN(CONFIG_SND_OMAP_SOC) || \
->   	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
->   	 IS_MODULE(CONFIG_SND_OMAP_SOC))
-> -	case MCASP_VERSION_4:
->   		ret = omap_pcm_platform_register(&pdev->dev);
-> -		break;
-> +#else
-> +		dev_err(&pdev->dev, "Missing SND_SDMA_SOC\n");
-> +		ret = -EINVAL;
->   #endif
-> +		break;
-> +	case -EPROBE_DEFER:
-> +		break;
->   	default:
-> -		dev_err(&pdev->dev, "Invalid McASP version: %d\n",
-> -			mcasp->version);
-> -		ret = -EINVAL;
-> +		dev_err(&pdev->dev, "No DMA controller found (%d)\n", ret);
->   		break;
->   	}
->
->
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
