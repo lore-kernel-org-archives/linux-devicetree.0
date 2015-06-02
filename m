@@ -1,46 +1,32 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v3] Add TI CDCE925 I2C controlled clock synthesizer
- driver
-Date: Tue, 02 Jun 2015 11:07:14 +0200
-Message-ID: <1433236034.2361.90.camel@x220>
-References: <1433153623-29205-1-git-send-email-mike.looijmans@topic.nl>
-	 <1433231444.2361.75.camel@x220> <556D6CB4.30900@topic.nl>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH resend 0/1] pinctrl: sunxi: Add allwinner A33
+ PIO controller
+Date: Tue,  2 Jun 2015 11:08:39 +0200
+Message-ID: <1433236120-11249-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <556D6CB4.30900@topic.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: linux-clk@vger.kernel.org, sboyd@codeaurora.org, mturquette@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBHHFWWVQKGQEPBX4WEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-06-02 at 10:43 +0200, Mike Looijmans wrote:
-> Out of curiousity, I did try a compile on the x86 host, but couldn't select 
-> the driver because it depends on CONFIG_OF, so I just compiled if for the ARM 
-> target to verify that it still compiles in kernel 4.1. How did you manage to 
-> compile the driver on the x86?
+Hi Linus,
 
-With this hack:
-    make drivers/clk/clk-cdce925.o
+I just realized that when I resend this patch as part of posting a v2
+of Vishnu's A33 series (which otherwise consists of dts patches) I did
+not add you as a direct recipient, so hence this resend.
 
-(I thought this is documented somewhere, but I can't actually find the
-documentation. I guess it's just a feature of make.)
+This patch is unchanged from the original version as posted by Vishnu
+other then adding my and Maxime's Acked-by-s, and it is ready for merging.
 
-It bypasses much of the build infrastructure, but comes in handy when
-you quickly want to know whether something can actually be build. Eg,
-you see some code and wonder "how can this build?"
+Regards,
 
-(Sometimes this requires setting CFLAGS on the make command line, or
-adding things like CONFIG_WHATEVER=y to the command line to get sane
-results, for some value of sane. By that time I usually give up.)
-
-Downside is, of course, that you can build things outside of the
-supported configurations. So it's best to state clearly that one built
-something using this hack. I sinned against that rule, but apparently
-got lucky, because this driver is not 32 bits only!
-
-Thanks,
-
-
-Paul Bolle
+Hans
