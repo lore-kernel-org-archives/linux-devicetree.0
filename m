@@ -1,126 +1,94 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 02 Jun 2015 12:21:51 -0500
-Message-ID: <556DE62F.1040401@codeaurora.org>
-References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org> <CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
+From: Gregory Fong <gregory.0xf0@gmail.com>
+Subject: Re: [PATCH v2 4/6] gpio: brcmstb: Allow GPIOs to be wakeup sources
+Date: Tue, 2 Jun 2015 10:27:16 -0700
+Message-ID: <CADtm3G6fd3=xPL-LSMCahoR2X+R60ryPrnVVy589MO3vyfj9VA@mail.gmail.com>
+References: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
+ <1432865650-4062-5-git-send-email-gregory.0xf0@gmail.com> <20150530004343.GX27753@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150530004343.GX27753@ld-irv-0074>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2015 11:55 AM, Fu Wei wrote:
-
->>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
->>> +{
->>> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
->>> +       struct watchdog_device *wdd = &gwdt->wdd;
->>> +
->>> +       if (wdd->pretimeout)
->>> +               /* The pretimeout is valid, go panic */
->>> +               panic("SBSA Watchdog pre-timeout");
->>> +       else
->>> +               /* We don't use pretimeout, trigger WS1 now*/
->>> +               sbsa_gwdt_set_wcv(wdd, 0);
+On Fri, May 29, 2015 at 5:43 PM, Brian Norris
+<computersforpeace@gmail.com> wrote:
+> On Thu, May 28, 2015 at 07:14:08PM -0700, Gregory Fong wrote:
+>> Several drivers (e.g. gpio-keys) allow for GPIOs to be configured as
+>> wakeup sources, and this GPIO controller supports that through a
+>> separate interrupt path.
 >>
+>> The de-facto standard DT property "wakeup-source" is checked, since
+>> that indicates whether the GPIO controller hardware can wake.  Uses
+>> the IRQCHIP_MASK_ON_SUSPEND irq_chip flag because UPG GIO doesn't have
+>> any of its own wakeup source configuration.
 >>
->> I don't like this.
+>> Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
+>> ---
+>> New in v2.
+>>
+>>  drivers/gpio/gpio-brcmstb.c | 53 +++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 53 insertions(+)
+>>
+>> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+>> index b9962ff..2598c1e 100644
+>> --- a/drivers/gpio/gpio-brcmstb.c
+>> +++ b/drivers/gpio/gpio-brcmstb.c
+>> [...]
+>> @@ -369,6 +396,32 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
+>>       priv->irq_chip.irq_mask = brcmstb_gpio_irq_mask;
+>>       priv->irq_chip.irq_unmask = brcmstb_gpio_irq_unmask;
+>>       priv->irq_chip.irq_set_type = brcmstb_gpio_irq_set_type;
+>> +
+>> +     /* Ensures that all non-wakeup IRQs are disabled at suspend */
+>> +     priv->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND;
+>> +
+>> +     if (IS_ENABLED(CONFIG_PM_SLEEP) &&
+>> +                     of_get_property(np, "wakeup-source", NULL)) {
 >
-> If so, what is your idea ,if pretimeout == 0?
+> of_property_read_bool()?
 
-If pretimeout == 0, then WCV should be set to timeout/2.  The WS0 
-timeout will occur after timeout/2 seconds, and the driver will ignore 
-it in the interrupt handler.  Then after another timeout/2 seconds, WS1 
-will timeout and the system will reset.
+Will change.
 
-> the reason of using WCV as (timout - pretimeout): it can provide the
-> longer timeout period,
-> (1)If we use WOR, it can only provide 10s @ 400MHz(max).
-> as Guenter said earlier, the default timer out for most watchdog will
-> be 30s, so I think 10s limit will be a little short
-> (2)we can always program WCV just like ping.
-> (3)if a timeout arrives, WOR will be use, so use it as pretimeout, but
-> we still can make this pretimeout longer by programming WCV(I don't
-> think it's necessary)
-
-I understand that, but like I said, I think pretimeout will be rarely 
-used, and so the driver should work best with pre-timeout enabled.
-
->> The triggering of the hardware reset should never depend
->> on an interrupt being handled properly.
 >
-> if this fail, system reset in 1S, because WOR == (1s)
+>> +             priv->parent_wake_irq = platform_get_irq(pdev, 1);
+>> +             if (priv->parent_wake_irq < 0)  {
+>> +                     dev_warn(dev,
+>> +                             "Couldn't get wake IRQ - GPIOs will not be able to wake from sleep");
+>> +             } else {
+>> +                     int err = devm_request_irq(dev, priv->parent_wake_irq,
+>> +                                     brcmstb_gpio_wake_irq_handler, 0,
+>> +                                     "brcmstb-gpio-wake", priv);
+>> +
+>> +                     if (err < 0) {
+>> +                             dev_err(dev, "Couldn't request wake IRQ");
+>> +                             return err;
+>> +                     }
+>> +
+>> +                     device_set_wakeup_capable(dev, true);
+>> +                     device_wakeup_enable(dev);
 >
->> You should always program WCV
->> correctly in advance.  This is especially true since pre-timeout will
->> probably rarely be used.
+> Might want to move these two lines above the devm_request_irq(), so that
+> you're ready to record PM events immediately at probe time. This is
+> important when waking from S5 states, where we sometimes want to be able
+> to check the /sys/devices/.../wakeup_count stats to see what woke us up.
+
+Makes sense.  We'll also need a reboot notifier for S5 to work.
+
 >
-> always programming WCV is doable.  But I absolutely can not agree "
-> pre-timeout will probably rarely be used"
-> If so, SBSA watchdog is just a normal watchdog,
-
-So what? What's wrong with that?  Users don't have any control over 
-which watchdog hardware is on the SOC, and they don't care.  They will 
-use the same watchdog software as they do on x86.
-
-Users *want* a normal watchdog.  Pre-timeout is only supported on time 
-watchdog hardware, so no one will standardize on it.  ARM servers 
-supposed to be interchangeable with x86 servers.  Customers are not 
-going to do anything special on an ARM server that they don't do on an 
-x86 server.  I've been working in the ARM server industry for over two 
-years, and that's why everyone says.
-
-> This use case just
-> makes this HW useless.
-> If so, go to use SP805.
-> you still don't see the importance of this warning and pretimeout to a
-> real server.
+>> +                     priv->irq_chip.irq_set_wake = brcmstb_gpio_irq_set_wake;
+>> +             }
+>> +     }
+>> +
+>>       priv->irq_domain =
+>>               irq_domain_add_linear(np, priv->num_gpios,
+>>                                     &brcmstb_gpio_irq_domain_ops,
 >
-> If the software of a real server goes wrong, then you just directly restart it ,
-> never try to sync/protect the current data, never try to figure out
-> what is wrong with it.
-> I don't think that is a good server software.
-
-And that is exactly why my driver treats WS0 as the real timeout, and 
-WS1 as a "backup" timeout.  When WS0 expires, the system tries to do a 
-"polite" reset.  If that doesn't work, then WS1 will do a hard reset.
-
-This also allows me to have a timeout that's twice as long as your 
-driver, so my timeout occurs in WS0, not WS1.
-
-> At least, I don't thinks " pre-timeout will probably rarely be used"
-> is a good idea for a server.
-> in another word, in a server ,pre-timeout should always be used.
-
-Except that few servers today support pre-timeout, so customers won't 
-depend on it.
-
->> You should probably do this *after* calling platform_get_irq_byname().
+> With that:
 >
->   it just dose (pdev->) dev->driver_data = gwdt
-> If we got gwdt, we can do that.
->
-> But maybe I miss something(or a rule of usage),  so please let know
-> why this has to be called  *after* calling platform_get_irq_byname().
+> Reviewed-by: Brian Norris <computersforpeace@gmail.com>
 
-It's just so that you can avoid calling kzalloc() if the 
-platform_get_irq_byname() fails.  It's not important.
-
-> I think I don't need to print "watchdog",   dev_warn(dev,  has help us on this.
-> If you do so , the message will be "watchdog: watchdog0: watchdog is
-> already enabled"
-
-Ok.
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Gregory
