@@ -1,64 +1,171 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] i2c: at91: add support to FIFOs and alternative
- command
-Date: Wed, 3 Jun 2015 00:36:28 +0900
-Message-ID: <20150602153622.GB2661@katana>
-References: <cover.1433250713.git.cyrille.pitchen@atmel.com>
- <20150602152647.GA2806@odux.rfo.atmel.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 02 Jun 2015 08:37:47 -0700
+Message-ID: <556DCDCB.4000808@roeck-us.net>
+References: <=fu.wei@linaro.org> <1433217907-928-1-git-send-email-fu.wei@linaro.org> <1433217907-928-6-git-send-email-fu.wei@linaro.org> <556DCC95.806@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150602152647.GA2806-FuRPzXQv2LUWBfJKYY8PcdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <556DCC95.806-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/02/2015 08:32 AM, Timur Tabi wrote:
+> On 06/01/2015 11:05 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>
+>> +/*
+>> + * help functions for accessing 32bit registers of SBSA Generic Watchdog
+>> + */
+>> +static void sbsa_gwdt_cf_write(unsigned int reg, u32 val,
+>> +                   struct watchdog_device *wdd)
+>> +{
+>> +    struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +
+>> +    writel_relaxed(val, gwdt->control_base + reg);
+>> +}
+>> +
+>> +static void sbsa_gwdt_rf_write(unsigned int reg, u32 val,
+>> +                   struct watchdog_device *wdd)
+>> +{
+>> +    struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +
+>> +    writel_relaxed(val, gwdt->refresh_base + reg);
+>> +}
+>> +
+>> +static u32 sbsa_gwdt_cf_read(unsigned int reg, struct watchdog_device *wdd)
+>> +{
+>> +    struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +
+>> +    return readl_relaxed(gwdt->control_base + reg);
+>> +}
+>
+> I still think you should get rid of these functions and just call readl_relaxed() and writel_relaxed() every time, but I won't complain again if you keep them.
+>
+>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
+>> +{
+>> +    struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
+>> +    struct watchdog_device *wdd = &gwdt->wdd;
+>> +
+>> +    if (wdd->pretimeout)
+>> +        /* The pretimeout is valid, go panic */
+>> +        panic("SBSA Watchdog pre-timeout");
+>> +    else
+>> +        /* We don't use pretimeout, trigger WS1 now*/
+>> +        sbsa_gwdt_set_wcv(wdd, 0);
+>
+> I don't like this.  The triggering of the hardware reset should never depend on an interrupt being handled properly.  You should always program WCV correctly in advance.  This is especially true since pre-timeout will probably rarely be used.  So what happens if the CPU is totally hung and this interrupt handler is never called?  When will the timeout occur?
+>
+>> +static int sbsa_gwdt_probe(struct platform_device *pdev)
+>> +{
+>> +    u64 first_period_max = U64_MAX;
+>> +    struct device *dev = &pdev->dev;
+>> +    struct watchdog_device *wdd;
+>> +    struct sbsa_gwdt *gwdt;
+>> +    struct resource *res;
+>> +    void *rf_base, *cf_base;
+>> +    int ret, irq;
+>> +    u32 status;
+>> +
+>> +    gwdt = devm_kzalloc(dev, sizeof(*gwdt), GFP_KERNEL);
+>> +    if (!gwdt)
+>> +        return -ENOMEM;
+>> +    platform_set_drvdata(pdev, gwdt);
+>
+> You should probably do this *after* calling platform_get_irq_byname().
+>
+>> +
+>> +    res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "refresh");
+>> +    rf_base = devm_ioremap_resource(dev, res);
+>> +    if (IS_ERR(rf_base))
+>> +        return PTR_ERR(rf_base);
+>> +
+>> +    res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
+>> +    cf_base = devm_ioremap_resource(dev, res);
+>> +    if (IS_ERR(cf_base))
+>> +        return PTR_ERR(cf_base);
+>> +
+>> +    irq = platform_get_irq_byname(pdev, "ws0");
+>> +    if (irq < 0) {
+>> +        dev_err(dev, "unable to get ws0 interrupt.\n");
+>> +        return irq;
+>> +    }
+>> +
+>> +    /*
+>> +     * Get the frequency of system counter from the cp15 interface of ARM
+>> +     * Generic timer. We don't need to check it, because if it returns "0",
+>> +     * system would panic in very early stage.
+>> +     */
+>> +    gwdt->clk = arch_timer_get_cntfrq();
+>> +    gwdt->refresh_base = rf_base;
+>> +    gwdt->control_base = cf_base;
+>> +
+>> +    wdd = &gwdt->wdd;
+>> +    wdd->parent = dev;
+>> +    wdd->info = &sbsa_gwdt_info;
+>> +    wdd->ops = &sbsa_gwdt_ops;
+>> +    watchdog_set_drvdata(wdd, gwdt);
+>> +    watchdog_set_nowayout(wdd, nowayout);
+>> +
+>> +    wdd->min_pretimeout = 0;
+>> +    wdd->max_pretimeout = U32_MAX / gwdt->clk;
+>> +    wdd->min_timeout = 1;
+>> +    do_div(first_period_max, gwdt->clk);
+>> +    wdd->max_timeout = first_period_max;
+>> +
+>> +    wdd->pretimeout = DEFAULT_PRETIMEOUT;
+>> +    wdd->timeout = DEFAULT_TIMEOUT;
+>> +    watchdog_init_timeouts(wdd, pretimeout, timeout, dev);
+>> +
+>> +    status = sbsa_gwdt_cf_read(SBSA_GWDT_WCS, wdd);
+>> +    if (status & SBSA_GWDT_WCS_WS1) {
+>> +        dev_warn(dev, "System reset by WDT(WCV: %llx)\n",
+>> +             sbsa_gwdt_get_wcv(wdd));
+>
+> "System was previously reset via watchdog" is much clearer.
+>
+>> +        wdd->bootstatus |= WDIOF_CARDRESET;
+>> +    }
+>> +    /* Check if watchdog is already enabled */
+>> +    if (status & SBSA_GWDT_WCS_EN) {
+>> +        dev_warn(dev, "already enabled!\n");
+>
+> "watchdog is already enabled".  Never use exclamation marks in kernel messages.
+>
+>> +        sbsa_gwdt_keepalive(wdd);
+>> +    }
+>> +
+>> +    /* update pretimeout to WOR */
+>> +    sbsa_gwdt_set_pretimeout(wdd, wdd->pretimeout);
+>> +
+>> +    ret = devm_request_irq(dev, irq, sbsa_gwdt_interrupt, 0,
+>> +                   pdev->name, gwdt);
+>> +    if (ret) {
+>> +        dev_err(dev, "unable to request IRQ %d\n", irq);
+>> +        return ret;
+>> +    }
+>> +
+>> +    ret = watchdog_register_device(wdd);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    dev_info(dev, "Initialized with %ds timeout, %ds pretimeout @ %u Hz\n",
+>> +         wdd->timeout, wdd->pretimeout, gwdt->clk);
+>
+> if (wdd->pretimeout)
+>      "watchdog initialized to %us timeout and %us pre-timeout at %u Hz\n", wdd->timeout, wdd->pretimeout, gwdt->clk
+> else
+>      "watchdog initialized to %us timeout at %u Hz\n", wdd->timeout, gwdt->clk
+>
+> I think it's unlikely that users will use pre-timeout, so your code should treat pre-timeout as a special case, not the normal usage.
+>
++1 to all your comments.
 
---GRPZ8SYKNexpdSJ7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Guenter
 
-
-> If you send a new version, could you add stable in Cc to patch 3/6:
-
-No need to send a new version just because of an additional ack. I can
-apply that. However...
-
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org #3.10 and later
-> If not, Wolfram could you do it please?
-
-The problem with 3/6 is that it seems to depend on 1/6 which is a
-cleanup patch. If cleaning up is not essential for the bugfix, the
-latter should be done first. To avoid exactly this problem.
-
-
-
---GRPZ8SYKNexpdSJ7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVbc12AAoJEBQN5MwUoCm25FsP/RLLZt4YutoPp7csQ5HYTibB
-jcGuDKdKBuDUg0qGYAfL9OPSSQoObt9QgPnD90IkCTuURL1xtXY3OJ+qeydSu6Rg
-FKfGgCY5B7KQny0Cr7YZrjcGPVRFmshgo8I/Q14a9Pnyl1bUUhiZSdkJSEifVJzO
-xRhzVBRctxqrnIXVfbr3i1h6N+YoUbGib1BcRAxYBMUvCFTWc2w5sg+HooDzmFT+
-OCKQywcIEUKLKDUrj09/C64MmXebYe20oXD2DJlkHNmhiPrQQCW/VtVCvTeZvtPC
-UKnhVX62rFuTOEahAwNMigW6uFx/qH17i0B1eKjs9qrk+waxf8TDXr1vi72N3XwH
-J6EWmHSu+YZwAafj4Y57Bb6NxDdjaqXzROK2hCc24DZdQOgsSR/C7B78UCPuk2nl
-l1Fg1MERxwh0ZaQtwbRDKoVO4kvnhKg9efKfxpPZ3b0TAqQ8wO3bGm0YDClt8aX3
-AOkJGglQOxP/Spvn8J8+6eEE1EfFr6HktFjFksgFyjjo97qQi3zJct+A6TzreAU9
-P7q5HqSJu4Evbv/usBkOKRStoEnVENT/WJmPd6uyEa0fYvV4LeTBBcZqldILMYXl
-FZHhdMvE369QsUBN7cimJiTyL4d/rEDjZB5X2cTiDajLF0sz887d/w2vYG2TC3gP
-CgTL+UAp/FF3JAvwsRRs
-=d++R
------END PGP SIGNATURE-----
-
---GRPZ8SYKNexpdSJ7--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
