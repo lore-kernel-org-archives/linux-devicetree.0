@@ -1,141 +1,160 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH 4/4] mfd: 88pm800: allocate pdata->rtc if not allocated
- earlier
-Date: Tue, 02 Jun 2015 15:48:38 +0530
-Message-ID: <556D82FE.4010102@linaro.org>
-References: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org> <1432937962-4537-5-git-send-email-vaibhav.hiremath@linaro.org> <20150601082200.GC3329@x1> <556D3A14.6050505@linaro.org> <20150602074004.GH3329@x1> <556D71F6.4030608@linaro.org> <20150602093323.GI3329@x1> <556D7C32.9080806@linaro.org> <20150602100739.GK3329@x1>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ASoC: davinci-mcasp: Choose PCM driver based on configured
+ DMA controller
+Date: Tue, 2 Jun 2015 13:31:28 +0300
+Message-ID: <556D8600.1060204@ti.com>
+References: <bcd986aa18bf41643f1d190739381a890313ac61.1433235274.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150602100739.GK3329@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, sameo@linux.intel.com, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, Chao Xie <chao.xie@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <bcd986aa18bf41643f1d190739381a890313ac61.1433235274.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, misael.lopez@ti.com
 List-Id: devicetree@vger.kernel.org
 
+On 06/02/2015 11:58 AM, Jyri Sarha wrote:
+> Find the configured DMA controller by asking for a DMA channel in the
+> probe phase and releasing it right after. The controller device can b=
+e
+> found via the dma_chan struct and the controller is recognized from
+> the compatible property of its device node. The patch assumes EDMA if
+> there is no device node.
+>=20
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  sound/soc/davinci/davinci-mcasp.c | 61 +++++++++++++++++++++++++++++=
++++-------
+>  1 file changed, 51 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/da=
+vinci-mcasp.c
+> index d793494..5bc2712 100644
+> --- a/sound/soc/davinci/davinci-mcasp.c
+> +++ b/sound/soc/davinci/davinci-mcasp.c
+> @@ -1565,6 +1565,46 @@ static int davinci_mcasp_init_ch_constraints(s=
+truct davinci_mcasp *mcasp)
+>  	return ret;
+>  }
+> =20
+> +enum {
+> +	MCASP_EDMA =3D 1,
+
+Why start from 1?
+I'm not sure about the name. It somehow implies that McASP has somethin=
+g to do
+with the dma engine.
+MCASP_SERVICED_BY_E/SDMA
+PLATFORM_USES_E/SDMA
+
+I can not come up with a decent name :(
 
 
-On Tuesday 02 June 2015 03:37 PM, Lee Jones wrote:
-> On Tue, 02 Jun 2015, Vaibhav Hiremath wrote:
->> On Tuesday 02 June 2015 03:03 PM, Lee Jones wrote:
->>> On Tue, 02 Jun 2015, Vaibhav Hiremath wrote:
->>>> On Tuesday 02 June 2015 01:10 PM, Lee Jones wrote:
->>>>> On Tue, 02 Jun 2015, Vaibhav Hiremath wrote:
->>>>>> On Monday 01 June 2015 01:52 PM, Lee Jones wrote:
->>>>>>> On Sat, 30 May 2015, Vaibhav Hiremath wrote:
->>>>>>>
->>>>>>>> RTC in pmic 88PM800 can run even the core is powered off, and user
->>>>>>>> can set alarm in RTC. When the alarm is timed out, the PMIC will power up
->>>>>>>> the core, and the whole system will boot up. And during PMIC driver probe,
->>>>>>>> it will read some register to find out whether this boot is caused by RTC
->>>>>>>> timeout or not, and pass on this information to the RTC driver.
->>>>>>>>
->>>>>>>> So we need rtc platform data to be existed in PMIC driver to pass this
->>>>>>>> information.
->>>>>>>>
->>>>>>>> Signed-off-by: Chao Xie <chao.xie@marvell.com>
->>>>>>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
->>>>>>>> ---
->>>>>>>>   drivers/mfd/88pm800.c | 19 +++++++++++++++++++
->>>>>>>>   1 file changed, 19 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
->>>>>>>> index 8ea4467..34546a1 100644
->>>>>>>> --- a/drivers/mfd/88pm800.c
->>>>>>>> +++ b/drivers/mfd/88pm800.c
->>>>>>>> @@ -586,6 +586,25 @@ static int pm800_probe(struct i2c_client *client,
->>>>>>>>   			return ret;
->>>>>>>>   	}
->>>>>>>>
->>>>>>>> +	/*
->>>>>>>> +	 * RTC in pmic can run even the core is powered off, and user can set
->>>>>>>> +	 * alarm in RTC. When the alarm is time out, the PMIC will power up
->>>>>>>> +	 * the core, and the whole system will boot up. When PMIC driver is
->>>>>>>> +	 * probed, it will read out some register to find out whether this
->>>>>>>> +	 * boot is caused by RTC timeout or not, and it need pass this
->>>>>>>> +	 * information to RTC driver.
->>>>>>>> +	 * So we need rtc platform data to be existed to pass this information.
->>>>>>>> +	 */
->>>>>>>> +	if (!pdata->rtc) {
->>>>>>>> +		pdata->rtc = devm_kzalloc(&client->dev,
->>>>>>>> +					  sizeof(*(pdata->rtc)), GFP_KERNEL);
->>>>>>>> +		if (!pdata->rtc) {
->>>>>>>> +			dev_err(&client->dev,
->>>>>>>> +					"failed to allocate memory for rtc\n");
->>>>>>>> +			return -ENOMEM;
->>>>>>>> +		}
->>>>>>>> +	}
->>>>>>>> +
->>>>>>>
->>>>>>> Where is this memory first used?
->>>>>>>
->>>>>>
->>>>>> In the same file, look for field "rtc_wakeup".
->>>>>>
->>>>>> FYI,
->>>>>>
->>>>>> This field is used in two files,
->>>>>>
->>>>>> drivers/mfd/88pm800.c
->>>>>> and
->>>>>> drivers/rtc/rtc-88pm800.c	[sets the "platform_data" field]
->>>>>
->>>>> Then were is the platform_data field subsequently used?
->>>>
->>>> Currently not used, but it is for future use, where we would be
->>>> interested to know that the wakeup is really from reset or RTC wakeup.
->>>
->>> Well it was introduced 3 years ago, so the chances of it being "used
->>> in the future" are probably pretty low.  Unless of course, you are
->>> planning on submitting that code.  In which case, you can add this
->>> patch to that set and I can re-review it then.
->>>
->>>>> Looking at the RTC platform data declaration I see:
->>>>>
->>>>> struct pm80x_rtc_pdata {
->>>>>      int             vrtc;
->>>>>      int             rtc_wakeup;
->>>>> };
->>>>>
->>>>> Is 'vrtc' even used?  If so, where?
->>>>
->>>> No, it is not.
->>>
->>> So either submit a patch-set that makes use of them, or let me know
->>> that you're not going to do that and I'll remove it altogether.
->>> Likewise for rtc_wakeup.
->>>
->>
->> I am ok with vrtc field, we can remove it.
->
-> Okay, I will do so, thanks.
->
->> But,
->> I would recommend _not_ to remove rtc_wakeup, as it may not be used
->> immediately, but still have logical significance.
->>
->> Consuming rtc_wakeup in the code is dependant on overall power
->> management support, which is always long pole for development. As you
->> would have seen, we have just started with baseport for pxa1928 and I
->> am starting on upstreaming driver part.
->>
->>
->>  From hardware perspective, this is important feature, where it indicate
->> whether the boot was triggered by reset assertion or by RTC wakeup. So
->> as of now from driver perspective I feel no harm to have one field for
->> this.
->>
->> Finally, its your call. I will let you decide.
->> The field can be added later when it actually gets consumed.
->
-> I will not remove the wake-up field.  Equally, I will not accept code
-> which allocates memory for it whilst it is not being used.
->
+> +	MCASP_SDMA,
+> +};
+> +static const char *sdma_prefix =3D "ti,omap";
+> +
+> +static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
+> +{
+> +	struct dma_chan *chan;
+> +	const char *tmp;
+> +	int ret =3D MCASP_EDMA;
+> +
+> +	tmp =3D mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data;
+> +	chan =3D dma_request_slave_channel_reason(mcasp->dev, tmp);
+
+this will return with error in case of !dev->of_node.
+The first check should be:
+if (!mcasp->dev->of_node)
+	return MCASP_EDMA;
+
+since we can only boot in legacy mode with daVinci devices and they are=
+ using
+eDMA.
+
+> +	if (IS_ERR(chan)) {
+> +		if (PTR_ERR(chan) !=3D -EPROBE_DEFER)
+> +			dev_err(mcasp->dev,
+> +				"Can't verify DMA configuration (%ld)\n",
+> +				PTR_ERR(chan));
+> +		return PTR_ERR(chan);
+> +	}
+> +	BUG_ON(!chan->device || !chan->device->dev);
+> +
+> +	if (chan->device->dev->of_node)
+> +		ret =3D of_property_read_string(chan->device->dev->of_node,
+> +					      "compatible", &tmp);
+> +	else
+> +		dev_dbg(mcasp->dev, "DMA controller has no of-node\n");
+
+Now this is not likely to happen...
+
+> +
+> +	dma_release_channel(chan);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(mcasp->dev, "DMA controller compatible =3D \"%s\"\n", tmp);
+> +	if (!strncmp(tmp, sdma_prefix, strlen(sdma_prefix)))
+> +		return MCASP_SDMA;
+> +
+> +	return MCASP_EDMA;
+> +}
+> +
+>  static int davinci_mcasp_probe(struct platform_device *pdev)
+>  {
+>  	struct snd_dmaengine_dai_dma_data *dma_data;
+> @@ -1763,27 +1803,28 @@ static int davinci_mcasp_probe(struct platfor=
+m_device *pdev)
+>  	if (ret !=3D 0)
+>  		goto err;
+> =20
+> -	switch (mcasp->version) {
+> +	ret =3D -EINVAL;
+
+Why? What was the problem with setting the ret in the default case?
+
+> +	switch (davinci_mcasp_get_dma_type(mcasp)) {
+> +	case MCASP_EDMA:
+>  #if IS_BUILTIN(CONFIG_SND_EDMA_SOC) || \
+>  	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
+>  	 IS_MODULE(CONFIG_SND_EDMA_SOC))
+> -	case MCASP_VERSION_1:
+> -	case MCASP_VERSION_2:
+> -	case MCASP_VERSION_3:
+>  		ret =3D edma_pcm_platform_register(&pdev->dev);
+> -		break;
+> +#else
+> +		dev_err(&pdev->dev, "Missing SND_EDMA_SOC\n");
+>  #endif
+> +		break;
+> +	case MCASP_SDMA:
+>  #if IS_BUILTIN(CONFIG_SND_OMAP_SOC) || \
+>  	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
+>  	 IS_MODULE(CONFIG_SND_OMAP_SOC))
+> -	case MCASP_VERSION_4:
+>  		ret =3D omap_pcm_platform_register(&pdev->dev);
+> -		break;
+> +#else
+> +		dev_err(&pdev->dev, "Missing SND_SDMA_SOC\n");
+>  #endif
+> +		break;
+>  	default:
+> -		dev_err(&pdev->dev, "Invalid McASP version: %d\n",
+> -			mcasp->version);
+> -		ret =3D -EINVAL;
+> +		dev_err(&pdev->dev, "No DMA controller found\n");
+>  		break;
+>  	}
+> =20
+>=20
 
 
-Not an issue.
-As I said, it can be added later when we actually consume it.
-
-Thanks,
-Vaibhav
+--=20
+P=C3=A9ter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
