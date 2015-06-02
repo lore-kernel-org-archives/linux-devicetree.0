@@ -1,44 +1,129 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] gpio: brcmstb: Allow GPIOs to be wakeup sources
-Date: Tue, 2 Jun 2015 15:45:01 +0200
-Message-ID: <CACRpkdYnZ9nYHPoUsmgLUtKhB2Us0c_scAYsZVJJQK2orKcpVA@mail.gmail.com>
-References: <1432865650-4062-1-git-send-email-gregory.0xf0@gmail.com>
-	<1432865650-4062-5-git-send-email-gregory.0xf0@gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v2] ASoC: davinci-mcasp: Choose PCM driver based on configured DMA controller
+Date: Tue, 2 Jun 2015 16:49:56 +0300
+Message-ID: <7230089f10ea27a9bd76eb8bfffcef754e71f274.1433252849.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432865650-4062-5-git-send-email-gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, misael.lopez@ti.com, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 29, 2015 at 4:14 AM, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Find the configured DMA controller by asking for a DMA channel in the
+probe phase and releasing it right after. The controller device can be
+found via the dma_chan struct and the controller is recognized from
+the compatible property of its device node. The patch assumes EDMA if
+there is no device node.
 
-> Several drivers (e.g. gpio-keys) allow for GPIOs to be configured as
-> wakeup sources, and this GPIO controller supports that through a
-> separate interrupt path.
->
-> The de-facto standard DT property "wakeup-source" is checked, since
-> that indicates whether the GPIO controller hardware can wake.  Uses
-> the IRQCHIP_MASK_ON_SUSPEND irq_chip flag because UPG GIO doesn't have
-> any of its own wakeup source configuration.
->
-> Signed-off-by: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+Changes since first patch version:
+- Change enum names from MCASP_?DMA to PCM_?DMA
+- Return PCM_EDMA if !mcasp->dev->of_node
+- Do not ignore possible error code returned by
+  davinci_mcasp_get_dma_type()
 
-(...)
-> +       if (enable)
-> +               enable_irq_wake(priv->parent_wake_irq);
-> +       else
-> +               disable_irq_wake(priv->parent_wake_irq);
-> +       return 0;
+ sound/soc/davinci/davinci-mcasp.c | 68 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 58 insertions(+), 10 deletions(-)
 
-No error handling? If the code assumes these calls will
-always succeed, atleast write that in a comment.
+diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+index d793494..3b78c3e 100644
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -1565,6 +1565,49 @@ static int davinci_mcasp_init_ch_constraints(struct davinci_mcasp *mcasp)
+ 	return ret;
+ }
+ 
++enum {
++	PCM_EDMA,
++	PCM_SDMA,
++};
++static const char *sdma_prefix = "ti,omap";
++
++static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
++{
++	struct dma_chan *chan;
++	const char *tmp;
++	int ret = PCM_EDMA;
++
++	if (!mcasp->dev->of_node)
++		return PCM_EDMA;
++
++	tmp = mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data;
++	chan = dma_request_slave_channel_reason(mcasp->dev, tmp);
++	if (IS_ERR(chan)) {
++		if (PTR_ERR(chan) != -EPROBE_DEFER)
++			dev_err(mcasp->dev,
++				"Can't verify DMA configuration (%ld)\n",
++				PTR_ERR(chan));
++		return PTR_ERR(chan);
++	}
++	BUG_ON(!chan->device || !chan->device->dev);
++
++	if (chan->device->dev->of_node)
++		ret = of_property_read_string(chan->device->dev->of_node,
++					      "compatible", &tmp);
++	else
++		dev_dbg(mcasp->dev, "DMA controller has no of-node\n");
++
++	dma_release_channel(chan);
++	if (ret)
++		return ret;
++
++	dev_dbg(mcasp->dev, "DMA controller compatible = \"%s\"\n", tmp);
++	if (!strncmp(tmp, sdma_prefix, strlen(sdma_prefix)))
++		return PCM_SDMA;
++
++	return PCM_EDMA;
++}
++
+ static int davinci_mcasp_probe(struct platform_device *pdev)
+ {
+ 	struct snd_dmaengine_dai_dma_data *dma_data;
+@@ -1763,27 +1806,32 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+ 	if (ret != 0)
+ 		goto err;
+ 
+-	switch (mcasp->version) {
++	ret = davinci_mcasp_get_dma_type(mcasp);
++	switch (ret) {
++	case PCM_EDMA:
+ #if IS_BUILTIN(CONFIG_SND_EDMA_SOC) || \
+ 	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
+ 	 IS_MODULE(CONFIG_SND_EDMA_SOC))
+-	case MCASP_VERSION_1:
+-	case MCASP_VERSION_2:
+-	case MCASP_VERSION_3:
+ 		ret = edma_pcm_platform_register(&pdev->dev);
+-		break;
++#else
++		dev_err(&pdev->dev, "Missing SND_EDMA_SOC\n");
++		ret = -EINVAL;
+ #endif
++		break;
++	case PCM_SDMA:
+ #if IS_BUILTIN(CONFIG_SND_OMAP_SOC) || \
+ 	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
+ 	 IS_MODULE(CONFIG_SND_OMAP_SOC))
+-	case MCASP_VERSION_4:
+ 		ret = omap_pcm_platform_register(&pdev->dev);
+-		break;
++#else
++		dev_err(&pdev->dev, "Missing SND_SDMA_SOC\n");
++		ret = -EINVAL;
+ #endif
++		break;
++	case -EPROBE_DEFER:
++		break;
+ 	default:
+-		dev_err(&pdev->dev, "Invalid McASP version: %d\n",
+-			mcasp->version);
+-		ret = -EINVAL;
++		dev_err(&pdev->dev, "No DMA controller found (%d)\n", ret);
+ 		break;
+ 	}
+ 
+-- 
+1.9.1
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
