@@ -1,67 +1,49 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 2/4] ARM: shmobile: add r8a7793 minimal SoC device tree
-Date: Tue, 2 Jun 2015 09:27:48 +0900
-Message-ID: <20150602002747.GA4781@verge.net.au>
-References: <1432826157-6414-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1432826157-6414-3-git-send-email-ulrich.hecht+renesas@gmail.com>
- <CAMuHMdXr3BxULQohYo1U0RuW8SRTtb5Ge_ypAbByW8vuRWs=PA@mail.gmail.com>
- <CAO3366wm=LvYntDYBwh9AY-jpfmBF57cJhfY2A=yAk13kHg3oQ@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: rsnd: Document r8a7778-specific binding
+Date: Tue, 2 Jun 2015 09:34:58 +0900
+Message-ID: <20150602003457.GB4781@verge.net.au>
+References: <1433155455-28827-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAO3366wm=LvYntDYBwh9AY-jpfmBF57cJhfY2A=yAk13kHg3oQ@mail.gmail.com>
+In-Reply-To: <1433155455-28827-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 01, 2015 at 11:45:45AM +0200, Ulrich Hecht wrote:
-> On Mon, Jun 1, 2015 at 11:37 AM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > Hi Ulrich,
-> >
-> > On Thu, May 28, 2015 at 5:15 PM, Ulrich Hecht
-> > <ulrich.hecht+renesas@gmail.com> wrote:
-> >> Minimal r8a7793 device tree including one CPU core, interrupt controllers,
-> >> timers, two serial ports, and the Ethernet controller, plus the required
-> >> clock descriptions.
-> >
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/r8a7793.dtsi
-> >> @@ -0,0 +1,368 @@
-> >
-> >> +       cpus {
-> >> +               #address-cells = <1>;
-> >> +               #size-cells = <0>;
-> >> +
-> >> +               cpu0: cpu@0 {
-> >> +                       device_type = "cpu";
-> >> +                       compatible = "arm,cortex-a15";
-> >> +                       enable-method = "renesas,r8a7793";
-> >
-> > I don't think we need the enable-method in a minimal tree, do we?
+On Mon, Jun 01, 2015 at 12:44:15PM +0200, Geert Uytterhoeven wrote:
+> Add the missing r8a7778-specific compatible value, which is already in
+> use since v4.1-rc1.
 > 
-> Nope.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Could you respin without the enable-method?
+Apologies for not noticing this myself.
 
-I see there is also a minor Makefile change pending for the last patch of
-the series. With that and the above in place I think we should be very
-close.
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-> >> +       clocks {
-> [...]
-> >> +       };
-> >
-> > I don't see the rationele behind keeping some mstp clocks, and others not,
-> > for a miminal dtsi.
+> ---
+>  Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Some clocks are required by the minimal set of devices, and I did not
-> want to take apart individual MSTPs because IMO it's error-prone and
-> does not provide any real benefit.
-
-My feeling is that while it would be ideal to trim things down it
-this is reasonable not to do so to avoid breaking what is left.
-
-I lean towards taking the MSTP clocks as is.
+> diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+> index 62ece4c59da759a4..b6b3a786855f275b 100644
+> --- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+> +++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>  				  "renesas,rcar_sound-gen1" if generation1, and
+>  				  "renesas,rcar_sound-gen2" if generation2
+>  				  Examples with soctypes are:
+> +				    - "renesas,rcar_sound-r8a7778" (R-Car M1A)
+>  				    - "renesas,rcar_sound-r8a7790" (R-Car H2)
+>  				    - "renesas,rcar_sound-r8a7791" (R-Car M2-W)
+>  - reg				: Should contain the register physical address.
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
