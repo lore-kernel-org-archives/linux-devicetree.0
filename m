@@ -1,81 +1,115 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] ARM: dts: sun8i: Add sun8i-a23-a33 dtsi
-Date: Tue, 02 Jun 2015 10:08:39 +0200
-Message-ID: <556D6487.4010207@redhat.com>
-References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com> <1432997706-20172-4-git-send-email-hdegoede@redhat.com> <20150602075120.GL23777@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150602075120.GL23777@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v4 0/8] mfd: cros_ec: Add multi EC and proto v3 support
+Date: Tue,  2 Jun 2015 10:11:03 +0200
+Message-ID: <1433232671-27679-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Bill Richardson <wfrichar@chromium.org>, Simon Glass <sjg@google.com>, Gwendal Grignou <gwendal@google.com>, Stephen Barber <smbarber@chromium.org>, Filipe Brandenburger <filbranden@google.com>, Todd Broch <tbroch@chromium.org>, Alexandru M Stan <amstan@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On 02-06-15 09:51, Maxime Ripard wrote:
-> On Sat, May 30, 2015 at 04:55:03PM +0200, Hans de Goede wrote:
->> From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Rename sun8i-a23.dtsi to sun8i-a23-a33.dtsi as the base dtsi for the A33
->> is 99% the same and add a new sun8i-a23.dtsi including sun8i-a23-a33.dtsi
->> and setting the few things not shared with the A33 (mbus-clk, pio
->> compatible and interrupts).
->>
->> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->
-> Fixed the conflicts and applied.
->
-> Also judging from a quick look at the datasheet, the A33 doesn't seem
-> to have that clock gates tree but rather one similar to the H3's. That
-> will probably mean we'll have to move out the gates from this DTSI at
-> some point.
+Newer Chromebooks have more than one Embedded Controller (EC) in the
+system. These additional ECs are connected through I2C with a host EC
+which is the one that is connected to the Application Processor (AP)
+through different transports (I2C, SPI or LPC).
 
-Heuh...
+So on these platforms, sub-processors are chained to each other:
 
-Ok so I've done a full bit for bit comparison of the 2 datasheets for
-the clk gates, mostly they are mostly the same and the registers seem to
-just be renamed.
+AP <--> Host EC <--> Power Delivery (PD) EC
 
-The only differences are:
+The AP sends commands to the additional EC through the host EC using
+a set of passthru commands and the host redirects to the correct EC.
 
-01c200060 (AHB1 MODULE CLOCK GATING REGISTER 0 / Bus Clock Gating Register 0):
+This is a v4 of a series that adds support for multiple EC in a system
+and also for the protocol version 3 that is used on newer ECs.
 
-Only A33 has bit 5 SS gating
+Most patches were taken from the downstream ChromiumOS v3.14 tree with
+fixes squashed, split to minimise the cross subsystem churn and changes
+for mainline inclusion but were not modified functionality wise.
 
-01c200064 (AHB1 MODULE CLOCK GATING REGISTER 1 / Bus Clock Gating Register 1):
+This version addresses a lot of issues pointed out by Lee Jones on the v3
+posted before [0].
 
-Only A33 has bit 26 SAT gating, note that if we add support for this we
-must add it as a needed clock to the simplefb node
+The patches are based on top of "[PATCH 0/2] mfd: cros_ec: Small cleanups"
+[1] that were posted before and was already picked by Lee Jones.
 
-Only A33 has bit 21 MSGBOX_GATING
+Testing was done on some Chromebooks that have a single EC and support
+protocol v2 such as the Exynos5250 Snow, Exynos5420 Peach Pit and Exynos5800
+Peach Pi to be sure that no regressions were introduced for these machines.
 
-01c200068 (APB1 MODULE CLOCK GATING REGISTER / Bus Clock Gating Register 2):
+The series were tested using a modified ectool [2] that supports the new
+cros_ec IOCTL API. They were also tested on a x86 Pixel Chromebook 2 (Samus)
+that uses the new protocol v3 and has 2 EC (cros_ec and cros_pd). But for
+testing on Samus, also the posted "[PATCH 0/3] platform/chrome: Changes for
+cros_ec_lpc and cros_ec_dev" series [3] are needed.
 
-No differences
+The series is composed of the following patches:
 
-01c20006c (APB2 MODULE CLOCK GATING REGISTER / Bus Clock Gating Register 3):
+Alexandru M Stan (2):
+  mfd: cros_ec: spi: Add a DT property to delay asserting the CS
+  mfd: cros_ec: spi: Add delay for asserting CS
 
-No differences
+Gwendal Grignou (1):
+  mfd: cros_ec: Support multiple EC in a system
 
+Javier Martinez Canillas (2):
+  mfd: cros_ec: Use a zero-length array for command data
+  mfd: cros_ec: Move protocol helpers out of the MFD driver
 
-So you are right that in the near future we should add a separate compatible
-+ clk driver or the ahb1_gates on the A33, but it does not seem that there is
-the issue of one gate register having multiple parents like on the H3. Or maybe
-the H3 does also not have that issue, and this is a misinterpretation of
-the H3 datasheet ?
+Stephen Barber (3):
+  mfd: cros_ec: rev cros_ec_commands.h
+  mfd: cros_ec: add proto v3 skeleton
+  mfd: cros_ec: add bus-specific proto v3 code
 
-Note I do not know what the actual parent clock for the new gates is, but
-it stands to reason that it is AHB1, I've been unable to find anything to
-confirm or deny this.
+ Documentation/devicetree/bindings/mfd/cros-ec.txt |   4 +
+ drivers/i2c/busses/Kconfig                        |   2 +-
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c           |  45 ++-
+ drivers/input/keyboard/Kconfig                    |   2 +-
+ drivers/input/keyboard/cros_ec_keyb.c             |  31 +-
+ drivers/mfd/Kconfig                               |   6 +-
+ drivers/mfd/cros_ec.c                             | 158 ++++-----
+ drivers/mfd/cros_ec_i2c.c                         | 169 ++++++++-
+ drivers/mfd/cros_ec_spi.c                         | 407 +++++++++++++++++++---
+ drivers/platform/chrome/Kconfig                   |   9 +-
+ drivers/platform/chrome/Makefile                  |   1 +
+ drivers/platform/chrome/cros_ec_dev.c             | 189 ++++++----
+ drivers/platform/chrome/cros_ec_dev.h             |   7 -
+ drivers/platform/chrome/cros_ec_lightbar.c        | 217 +++++++-----
+ drivers/platform/chrome/cros_ec_lpc.c             |  84 ++++-
+ drivers/platform/chrome/cros_ec_proto.c           | 382 ++++++++++++++++++++
+ drivers/platform/chrome/cros_ec_sysfs.c           | 178 ++++++----
+ include/linux/mfd/cros_ec.h                       |  84 ++++-
+ include/linux/mfd/cros_ec_commands.h              | 277 +++++++++++++--
+ 19 files changed, 1803 insertions(+), 449 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_proto.c
 
-Regards,
+Patch #1 modifies the struct cros_ec_command to use a zero-length array for
+the buffer used for EC input and output data.
 
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch #2 synchronises the cros_ec_commands.h with a newer version of the
+file in the EC firmware repository.
+
+Patch #3 moves the EC communication protocol helper functions out of the MFD
+driver.
+
+Patch #4 adds the EC host command protocol v3 support to the cros_ec driver
+and patch #5 adds the bus specific proto v3 support for I2C, SPI and LPC.
+
+Patch #6 adds support to make multiple EC have a different device id and
+also exposing a per EC character device interface.
+
+Patch #7 adds support to the cros_ec_spi driver to specify a delay before
+receiving SPI transfers to make sure that the EC has already waked up.
+
+Since the changes are quite intrusive and affects all ChromeOS EC related
+drivers, the patches should be merged through the MFD subsystem tree.
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2015/5/9/73
+[1]: https://lkml.org/lkml/2015/5/20/235
+[2]: http://cgit.collabora.com/git/user/javier/ec.git/log/?h=mainline-ioctl-zero-length
+[3]: https://lkml.org/lkml/2015/5/20/184
