@@ -1,129 +1,53 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v2] ASoC: davinci-mcasp: Choose PCM driver based on configured DMA controller
-Date: Tue, 2 Jun 2015 16:49:56 +0300
-Message-ID: <7230089f10ea27a9bd76eb8bfffcef754e71f274.1433252849.git.jsarha@ti.com>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH linux-next 0/4] tty/serial: at91: add support to FIFOs
+Date: Tue, 2 Jun 2015 16:18:20 +0200
+Message-ID: <cover.1433253787.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, misael.lopez@ti.com, Jyri Sarha <jsarha@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, gregkh@linuxfoundation.org, wenyou.yang@atmel.com, ludovic.desroches@atmel.com, leilei.zhao@atmel.com, josh.wu@atmel.com, alexandre.belloni@free-electrons.com, linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Find the configured DMA controller by asking for a DMA channel in the
-probe phase and releasing it right after. The controller device can be
-found via the dma_chan struct and the controller is recognized from
-the compatible property of its device node. The patch assumes EDMA if
-there is no device node.
+ChangeLog
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
-Changes since first patch version:
-- Change enum names from MCASP_?DMA to PCM_?DMA
-- Return PCM_EDMA if !mcasp->dev->of_node
-- Do not ignore possible error code returned by
-  davinci_mcasp_get_dma_type()
+v1:
+This series of patches add support to FIFOs which will be introduced with Atmel
+sama5d2x SoC.
 
- sound/soc/davinci/davinci-mcasp.c | 68 +++++++++++++++++++++++++++++++++------
- 1 file changed, 58 insertions(+), 10 deletions(-)
+FIFOs allow to reduce the number of I/O access. Indeed depending on the data
+size and the USART mode, FIFOs work in either single or multiple data. For
+multiple data, up to 4 data can be written into the Transmit Holding Register
+or read from the Receive Holding Register in a single word access.
 
-diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
-index d793494..3b78c3e 100644
---- a/sound/soc/davinci/davinci-mcasp.c
-+++ b/sound/soc/davinci/davinci-mcasp.c
-@@ -1565,6 +1565,49 @@ static int davinci_mcasp_init_ch_constraints(struct davinci_mcasp *mcasp)
- 	return ret;
- }
- 
-+enum {
-+	PCM_EDMA,
-+	PCM_SDMA,
-+};
-+static const char *sdma_prefix = "ti,omap";
-+
-+static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
-+{
-+	struct dma_chan *chan;
-+	const char *tmp;
-+	int ret = PCM_EDMA;
-+
-+	if (!mcasp->dev->of_node)
-+		return PCM_EDMA;
-+
-+	tmp = mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data;
-+	chan = dma_request_slave_channel_reason(mcasp->dev, tmp);
-+	if (IS_ERR(chan)) {
-+		if (PTR_ERR(chan) != -EPROBE_DEFER)
-+			dev_err(mcasp->dev,
-+				"Can't verify DMA configuration (%ld)\n",
-+				PTR_ERR(chan));
-+		return PTR_ERR(chan);
-+	}
-+	BUG_ON(!chan->device || !chan->device->dev);
-+
-+	if (chan->device->dev->of_node)
-+		ret = of_property_read_string(chan->device->dev->of_node,
-+					      "compatible", &tmp);
-+	else
-+		dev_dbg(mcasp->dev, "DMA controller has no of-node\n");
-+
-+	dma_release_channel(chan);
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(mcasp->dev, "DMA controller compatible = \"%s\"\n", tmp);
-+	if (!strncmp(tmp, sdma_prefix, strlen(sdma_prefix)))
-+		return PCM_SDMA;
-+
-+	return PCM_EDMA;
-+}
-+
- static int davinci_mcasp_probe(struct platform_device *pdev)
- {
- 	struct snd_dmaengine_dai_dma_data *dma_data;
-@@ -1763,27 +1806,32 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
- 	if (ret != 0)
- 		goto err;
- 
--	switch (mcasp->version) {
-+	ret = davinci_mcasp_get_dma_type(mcasp);
-+	switch (ret) {
-+	case PCM_EDMA:
- #if IS_BUILTIN(CONFIG_SND_EDMA_SOC) || \
- 	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
- 	 IS_MODULE(CONFIG_SND_EDMA_SOC))
--	case MCASP_VERSION_1:
--	case MCASP_VERSION_2:
--	case MCASP_VERSION_3:
- 		ret = edma_pcm_platform_register(&pdev->dev);
--		break;
-+#else
-+		dev_err(&pdev->dev, "Missing SND_EDMA_SOC\n");
-+		ret = -EINVAL;
- #endif
-+		break;
-+	case PCM_SDMA:
- #if IS_BUILTIN(CONFIG_SND_OMAP_SOC) || \
- 	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
- 	 IS_MODULE(CONFIG_SND_OMAP_SOC))
--	case MCASP_VERSION_4:
- 		ret = omap_pcm_platform_register(&pdev->dev);
--		break;
-+#else
-+		dev_err(&pdev->dev, "Missing SND_SDMA_SOC\n");
-+		ret = -EINVAL;
- #endif
-+		break;
-+	case -EPROBE_DEFER:
-+		break;
- 	default:
--		dev_err(&pdev->dev, "Invalid McASP version: %d\n",
--			mcasp->version);
--		ret = -EINVAL;
-+		dev_err(&pdev->dev, "No DMA controller found (%d)\n", ret);
- 		break;
- 	}
- 
+Also the RX FIFO allows to reduce the risk of receive overrun and data loss,
+especially when the DMA controller is not used.
+
+Finally, when the hardware handshake mode is selected, the RTS line can now be
+controlled by two thresholds on the RX FIFO. When FIFO level (the number of
+data available to be read) crosses the high threshold, the RTS line is set to
+high level telling the peer that it should stop sending new data. Data are read
+from the RX FIFO and when the FIFO level crosses the low threshold, the RTS
+is set back to low level telling the remote peer that it can send data again.
+
+This new feature resolves a long time hardware limitation where the RTS line
+was directly controlled by a PDC signal. There is no equivalent of that signal
+for the DMA controller so for all SoCs without PDC for USART there was no mean
+to control the RTS line properly: once the hardware handshake mode selected,
+the RTS line remains high level. Next SoCs with FIFOs will be able to use the
+hardware handshake mode thanks to the RX FIFO.
+
+Cyrille Pitchen (4):
+  ARM: at91/dt: add new DT properties for Atmel usart
+  tty/serial: at91: fix some macro definitions to fit coding style
+  tty/serial: at91: add support to FIFOs
+  tty/serial: at91: use 32bit writes into TX FIFO when DMA is enabled
+
+ .../devicetree/bindings/serial/atmel-usart.txt     |  15 ++
+ drivers/tty/serial/atmel_serial.c                  | 195 +++++++++++++----
+ include/linux/atmel_serial.h                       | 240 ++++++++++++---------
+ 3 files changed, 307 insertions(+), 143 deletions(-)
+
 -- 
-1.9.1
-
+1.8.2.2
