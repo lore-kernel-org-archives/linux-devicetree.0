@@ -1,116 +1,61 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH] ASoC: davinci-mcasp: Choose PCM driver based on configured DMA controller
-Date: Tue, 2 Jun 2015 11:58:25 +0300
-Message-ID: <bcd986aa18bf41643f1d190739381a890313ac61.1433235274.git.jsarha@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v9 4/6] Documentation: DT: PL011: hi6220: add compatible
+ string for Hisilicon designed UART
+Date: Tue, 2 Jun 2015 10:59:28 +0200
+Message-ID: <CACRpkdav_5x6RC9F++ErvqGyxDCF-=kap7-jCsO4zZ6QGVLfBQ@mail.gmail.com>
+References: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
+	<1432950661-23060-5-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, misael.lopez@ti.com, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432950661-23060-5-git-send-email-bintian.wang@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bintian Wang <bintian.wang@huawei.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Jaehoon Chung <jh80.chung@samsung.com>, Olof Johansson <olof@lixom.net>, yanhaifeng@gmail.com, Stephen Boyd <sboyd@codeaurora.org>, xuejiancheng@hua
 List-Id: devicetree@vger.kernel.org
 
-Find the configured DMA controller by asking for a DMA channel in the
-probe phase and releasing it right after. The controller device can be
-found via the dma_chan struct and the controller is recognized from
-the compatible property of its device node. The patch assumes EDMA if
-there is no device node.
+On Sat, May 30, 2015 at 3:50 AM, Bintian Wang <bintian.wang@huawei.com> wrote:
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- sound/soc/davinci/davinci-mcasp.c | 61 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 51 insertions(+), 10 deletions(-)
+> Hisilicon does some performance enhancements based on PL011(e.g. larger
+> FIFO length), so add one compatible string "hisilicon,hi6220-uart" for
 
-diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
-index d793494..5bc2712 100644
---- a/sound/soc/davinci/davinci-mcasp.c
-+++ b/sound/soc/davinci/davinci-mcasp.c
-@@ -1565,6 +1565,46 @@ static int davinci_mcasp_init_ch_constraints(struct davinci_mcasp *mcasp)
- 	return ret;
- }
- 
-+enum {
-+	MCASP_EDMA = 1,
-+	MCASP_SDMA,
-+};
-+static const char *sdma_prefix = "ti,omap";
-+
-+static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
-+{
-+	struct dma_chan *chan;
-+	const char *tmp;
-+	int ret = MCASP_EDMA;
-+
-+	tmp = mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data;
-+	chan = dma_request_slave_channel_reason(mcasp->dev, tmp);
-+	if (IS_ERR(chan)) {
-+		if (PTR_ERR(chan) != -EPROBE_DEFER)
-+			dev_err(mcasp->dev,
-+				"Can't verify DMA configuration (%ld)\n",
-+				PTR_ERR(chan));
-+		return PTR_ERR(chan);
-+	}
-+	BUG_ON(!chan->device || !chan->device->dev);
-+
-+	if (chan->device->dev->of_node)
-+		ret = of_property_read_string(chan->device->dev->of_node,
-+					      "compatible", &tmp);
-+	else
-+		dev_dbg(mcasp->dev, "DMA controller has no of-node\n");
-+
-+	dma_release_channel(chan);
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(mcasp->dev, "DMA controller compatible = \"%s\"\n", tmp);
-+	if (!strncmp(tmp, sdma_prefix, strlen(sdma_prefix)))
-+		return MCASP_SDMA;
-+
-+	return MCASP_EDMA;
-+}
-+
- static int davinci_mcasp_probe(struct platform_device *pdev)
- {
- 	struct snd_dmaengine_dai_dma_data *dma_data;
-@@ -1763,27 +1803,28 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
- 	if (ret != 0)
- 		goto err;
- 
--	switch (mcasp->version) {
-+	ret = -EINVAL;
-+	switch (davinci_mcasp_get_dma_type(mcasp)) {
-+	case MCASP_EDMA:
- #if IS_BUILTIN(CONFIG_SND_EDMA_SOC) || \
- 	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
- 	 IS_MODULE(CONFIG_SND_EDMA_SOC))
--	case MCASP_VERSION_1:
--	case MCASP_VERSION_2:
--	case MCASP_VERSION_3:
- 		ret = edma_pcm_platform_register(&pdev->dev);
--		break;
-+#else
-+		dev_err(&pdev->dev, "Missing SND_EDMA_SOC\n");
- #endif
-+		break;
-+	case MCASP_SDMA:
- #if IS_BUILTIN(CONFIG_SND_OMAP_SOC) || \
- 	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
- 	 IS_MODULE(CONFIG_SND_OMAP_SOC))
--	case MCASP_VERSION_4:
- 		ret = omap_pcm_platform_register(&pdev->dev);
--		break;
-+#else
-+		dev_err(&pdev->dev, "Missing SND_SDMA_SOC\n");
- #endif
-+		break;
- 	default:
--		dev_err(&pdev->dev, "Invalid McASP version: %d\n",
--			mcasp->version);
--		ret = -EINVAL;
-+		dev_err(&pdev->dev, "No DMA controller found\n");
- 		break;
- 	}
- 
--- 
-1.9.1
+That compatible string in the commit message is not even
+the same as in the patch.
 
+> future optimisations or workarounds works.
+>
+> Signed-off-by: Bintian Wang <bintian.wang@huawei.com>
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+
+Maybe I missed out on the earlier conversation, but do you
+mean that the PrimeCell ID has not been properly set up
+to something unique in this HiSilicon version of the PL011
+block?
+
+Even if so: do not override the compatible string like this,
+that is not the PrimeCell style.
+
+Define an 8 bit vendor ID (like tha ASCII for 'H' 0x48
+or whatever) and encode it for these variants, if the
+hardware is just using the ARM default PrimeCell
+ID, override it in the device tree like Broadcom
+are doing in arch/arm/boot/dts/bcm2835.dtsi:
+
+arm,primecell-periphid = <0x00241011>;
+
+Maybe yours would be:
+
+arm,primecell-periphid = <0x00048011>;
+
+For a first HiSilicon variant, then do some
+<include/linux/amba/bus.h>:
+
+enum amba_vendor {
+        AMBA_VENDOR_ARM = 0x41,
++       AMBA_VENDOR_HISILICON = 0x48,
+
+Then patch drivers/tty/serial/amba_pl011.c to add vendor_hisilicon
+and a match table for 0x00048011 just like everyone else.
+
+Yours,
+Linus Walleij
