@@ -1,47 +1,65 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv4 03/10] arm/dts: dra7xx: add 'ti,set-rate-parent' for
- dss_dss_clk
-Date: Tue, 2 Jun 2015 09:57:35 +0300
-Message-ID: <556D53DF.7070006@ti.com>
-References: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com> <1433139798-23450-4-git-send-email-tomi.valkeinen@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] Remaining sunxi musb patches
+Date: Tue, 02 Jun 2015 09:14:05 +0200
+Message-ID: <556D57BD.90502@redhat.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com> <79fc4306-a621-43b8-b347-e42a27beb134@googlegroups.com> <20150601183447.GF26081@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1433139798-23450-4-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: paul@pwsan.com, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150601183447.GF26081-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, Hans de Goede <jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2015 09:23 AM, Tomi Valkeinen wrote:
-> We need set-rate-parent flags for the display's clock path so that the
-> DSS driver can change the clock rate of the PLL.
->
-> This patchs adds the ti,set-rate-parent flag to 'dss_dss_clk' clock
-> node, which is only a gate clock, allowing the setting of the clock rate
-> to propagate to the PLL.
->
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: devicetree@vger.kernel.org
+Hi,
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
+On 01-06-15 20:34, Felipe Balbi wrote:
+> On Mon, Jun 01, 2015 at 11:30:45AM -0700, Hans de Goede wrote:
+>> Hi,
+>>
+>> On Sunday, May 31, 2015 at 6:10:32 PM UTC+2, Hans de Goede wrote:
+>>>
+>>> Hi Kishon & Felipe,
+>>>
+>>> Here is an updated version of the remaining (not yet merged in Felipe's
+>>> tree)
+>>> sunxi musb patches.
+>>>
+>>> The "phy-sun4i-usb: Add full support for usb0 phy / OTG" patch has been
+>>> updated with a small bug-fix and is ready for merging.
+>>>
+>>> The "musb: Add support for the Allwinner sunxi musb" patch has been
+>>> updated
+>>> to use the latest version of Maxime's sunxi sram controller driver. This
+>>> one has a compile-time dependency on Maxime's sunxi sram controller
+>>> driver,
+>>> so it cannot be merged until that is merged.
+>>>
+>>
+>>
+>> Arnd has just merged the updated sram controller into the next branch
+>> of the soc-drivers repo, so both these patches are now ready to merge.
+>
+> all right, so for v4.3 merge window there will be no issues in queues
+> the two remaining patches. Thanks
 
-> ---
->   arch/arm/boot/dts/dra7xx-clocks.dtsi | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> index 470f39c4e326..357bedeebfac 100644
-> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> @@ -1531,6 +1531,7 @@
->   		clocks = <&dpll_per_h12x2_ck>;
->   		ti,bit-shift = <8>;
->   		reg = <0x1120>;
-> +		ti,set-rate-parent;
->   	};
->
->   	dss_hdmi_clk: dss_hdmi_clk {
->
+So I take it that it is too late to get these 2 into 4.2 ? I've a bunch
+of (small) follow up patches coming up to enable support for the musb
+controller on new boards, merging those would be easier if these were
+already merged. And there also is a largish set of sunxi dts patches
+actually enabling the musb code which is sorta waiting for merging
+these 2 (waiting for the dt binding to be stable).
 
+If this is not going to make 4.2, can you and Kishon at least review
+them and let me know of they will get merged for 4.3 as is (baring
+any merge issues) ?
+
+Regards,
+
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
