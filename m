@@ -1,57 +1,51 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/3] of: make CONFIG_OF user selectable
-Date: Tue,  2 Jun 2015 17:46:43 -0500
-Message-ID: <1433285204-4307-3-git-send-email-robh@kernel.org>
-References: <1433285204-4307-1-git-send-email-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433285204-4307-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: Add dts file for the
+ GA10H-A33 tablet
+Date: Wed, 3 Jun 2015 10:35:22 +1000
+Message-ID: <CAGRGNgVTuik13PG41tebjfPkGfyDVZw54hGgMH79bpeT1mCOiw@mail.gmail.com>
+References: <1433274598-17366-1-git-send-email-hdegoede@redhat.com> <CAKON4OxsJO28aDMCvFzx_Z9n=Hyq6uBYo3hWR+04YDwjJVcTnA@mail.gmail.com>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBX4XXGVQKGQEKFACHLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAKON4OxsJO28aDMCvFzx_Z9n=Hyq6uBYo3hWR+04YDwjJVcTnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jon Smirl <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the addition of overlays, it is now plausible to use DT on any arch
-and without an arch using it at boot time. It is also desirable to
-expand the compile coverage of the DT code. Make CONFIG_OF user
-selectable by converting the menu to menuconfig.
+Hi Jon,
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/of/Kconfig | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+On Wed, Jun 3, 2015 at 6:20 AM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Resend with plain text for image links....
+>
+> I have one of these GA10H-A33 and tore it apart. They used an uncommon
+> wifi/BT chip - RDA5990P. Took mine apart since the wifi didn't work worth
+> two cents.
+> http://www.rdaic.com/sites/default/files/public/RDA5990P_datasheet_V1.4.pdf
+>
+> Is that unpopulated pad next to the RSA5990P an option to use an Ampak
+> module? I am looking for a A33 PCBA where I can mount a 5Ghz wi-fi module.
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 07bb3c8..415b51d 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -1,11 +1,10 @@
- config DTC
- 	bool
- 
--config OF
--	bool
-+menuconfig OF
-+	bool "Device Tree and Open Firmware support"
- 
--menu "Device Tree and Open Firmware support"
--	depends on OF
-+if OF
- 
- config OF_UNITTEST
- 	bool "Device Tree runtime unit tests"
-@@ -97,4 +96,4 @@ config OF_OVERLAY
- 	  While this option is selected automatically when needed, you can
- 	  enable it manually to improve device tree unit test coverage.
- 
--endmenu # OF
-+endif # OF
+Potential driver:
+https://github.com/linuxium/3188-SRC-ORIG/tree/master/kernel/drivers/net/wireless/rda5990
+
+(Code implies GPL but is missing copyright / license notices, might be
+for an older part.)
+
+On an unrelated note, is MediaTek buying up every last small
+manufacturer of WiFi parts?
+
+Thanks,
+
 -- 
-2.1.0
+Julian Calaby
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
