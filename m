@@ -1,70 +1,41 @@
-From: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Wed, 3 Jun 2015 15:08:25 +0200
-Message-ID: <20150603130825.GA23991@breakpoint.cc>
-References: <1427300909-20825-1-git-send-email-stefan@agner.ch>
- <1427300909-20825-2-git-send-email-stefan@agner.ch>
+From: Christ van Willegen <cvwillegen@gmail.com>
+Subject: Re: [Gta04-owner] [PATCH RFC 3/3] misc: Add w2g0004 gps receiver driver
+Date: Wed, 3 Jun 2015 14:09:50 +0200
+Message-ID: <CA+Ot1Oyb428UGQje9uKUp8-S0otndfCQmNoP8r_GnSZbCSj0BQ@mail.gmail.com>
+References: <55492001.30806@hurleysoftware.com> <DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com>
+ <20150506092738.GB4508@amd> <A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
+ <554A03A7.2000504@hurleysoftware.com> <D10E1092-E75F-48F7-86F1-F8987973CEB5@goldelico.com>
+ <20150506123632.GA1764@leverpostej> <BD3D34DD-2FC8-44A2-89FA-35843065F50F@goldelico.com>
+ <20150506141547.GB1764@leverpostej> <EA4AC398-CAEA-40E1-A998-BC528B3788E1@goldelico.com>
+ <20150506171802.GE2974@leverpostej> <B4D487C5-C260-497B-A441-6C381D53616C@goldelico.com>
+ <554B7D33.602@hurleysoftware.com> <9EF54D80-F634-4D59-BFD9-FC79FCFE06DE@goldelico.com>
+ <554B8A14.2080904@hurleysoftware.com> <21C337B3-D612-4931-BA23-6B7518E6E4DD@goldelico.com>
+ <112A49DF-935D-41DF-8DF7-F04CC13B9598@goldelico.com> <463356C5-E3C6-432C-A1C5-71F0287F1FEE@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427300909-20825-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <463356C5-E3C6-432C-A1C5-71F0287F1FEE@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Pavel Machek <pavel@ucw.cz>, linux-serial@vger.kernel.org, NeilBrown <neil@brown.name>, Marek Belisko <marek@goldelico.com>, Jiri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-03-25 17:28:24 [+0100], Stefan Agner wrote:
-> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nf=
-c.c
-> new file mode 100644
-> index 0000000..23c1510
-> --- /dev/null
-> +++ b/drivers/mtd/nand/vf610_nfc.c
-> @@ -0,0 +1,686 @@
-=E2=80=A6
-> +static inline u32 vf610_nfc_read(struct vf610_nfc *nfc, uint reg)
-> +{
-> +	return readl(nfc->regs + reg);
-> +}
-> +
-> +static inline void vf610_nfc_write(struct vf610_nfc *nfc, uint reg, =
-u32 val)
-> +{
-> +	writel(val, nfc->regs + reg);
-> +}
-=E2=80=A6
+Hi all,
 
-> +static void vf610_nfc_send_command(struct vf610_nfc *nfc, u32 cmd_by=
-te1,
-> +				   u32 cmd_code)
-> +{
-> +	void __iomem *reg =3D nfc->regs + NFC_FLASH_CMD2;
-> +	u32 tmp;
-> +
-> +	vf610_nfc_clear_status(nfc);
-> +
-> +	tmp =3D __raw_readl(reg);
-> +	tmp &=3D ~(CMD_BYTE1_MASK | CMD_CODE_MASK | BUFNO_MASK);
-> +	tmp |=3D cmd_byte1 << CMD_BYTE1_SHIFT;
-> +	tmp |=3D cmd_code << CMD_CODE_SHIFT;
-> +	__raw_writel(tmp, reg);
-> +}
+On Wed, Jun 3, 2015 at 1:51 PM, Dr. H. Nikolaus Schaller
+<hns@goldelico.com> wrote:
+> Add driver for Wi2Wi w2g004 GPS module connected through  uart. Use uart
+> slave + notification hooks to glue with tty.
 
-Why readl() vs __raw_readl() dito for write?
-vf610_nfc_{read|write} is good since for PPC we would need out_be32()
-here instead.
-It would be nice if you could abstract the __raw_ once as well. And I a=
-m
-not sure if you need those at all since the former functions should wor=
-k
-here just fine.
+Just a _very_ minor documentation nit-pick here:
 
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +config W2SG0004
+> +       tristate "W2SG0004 on/off control"
+> +       depends on GPIOLIB
+> +       help
+> +         Enable on/off control of W2SG0004 GPS using a tty slave to
+> +         to allow powering up if the /dev/tty$n is opened.
+
+The 'to' at the start of the 2nd line here is better removed.
+
+Christ van Willegen
