@@ -1,33 +1,61 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: mx23: fix iio-hwmon support
-Date: Wed, 3 Jun 2015 14:41:53 +0200
-Message-ID: <201506031441.53944.marex@denx.de>
-References: <1433282608-16257-1-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433282608-16257-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v5 8/9] mfd: cros_ec: spi: Add a DT property to delay asserting the CS
+Date: Wed,  3 Jun 2015 15:04:03 +0200
+Message-ID: <1433336644-20532-9-git-send-email-javier.martinez@collabora.co.uk>
+References: <1433336644-20532-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433336644-20532-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Bill Richardson <wfrichar@chromium.org>, Simon Glass <sjg@google.com>, Gwendal Grignou <gwendal@google.com>, Stephen Barber <smbarber@chromium.org>, Filipe Brandenburger <filbranden@google.com>, Todd Broch <tbroch@chromium.org>, Alexandru M Stan <amstan@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chris Zhong <zyw@rock-chips.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 03, 2015 at 12:03:28 AM, Stefan Wahren wrote:
-> In order to get iio-hwmon support, the lradc must be declared as an
-> iio provider. So fix this issue by adding the #io-channel-cells property.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> Fixes: bd798f9c7b30 ("ARM: dts: mxs: Add iio-hwmon to mx23 soc")
+From: Alexandru M Stan <amstan@chromium.org>
 
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Some ECs need a little time for waking up before they can accept
+SPI data at a high speed. Add a "google,cros-ec-spi-pre-delay"
+property to the DT binding to configure this.
 
-[...]
+If this property isn't set, then no delay will be added. However,
+if set it will cause a delay equal to the value passed to it to
+be inserted at the beginning of a transaction.
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Alexandru M Stan <amstan@chromium.org>
+Reviewed-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
+
+Changes since v4: None.
+
+Changes since v3:
+ - Split DT binding and driver change as suggested by Lee Jones.
+ - Add tested-by tag from Heiko Stuebner
+ - Add acked-by tag from Lee Jones.
+
+Changes since v2: None
+
+Changes since v1: None, new patch
+---
+ Documentation/devicetree/bindings/mfd/cros-ec.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+index dcf404d16067..e03a61c54954 100644
+--- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
++++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+@@ -18,6 +18,10 @@ Required properties (SPI):
+ - reg: SPI chip select
+ 
+ Optional properties (SPI):
++- google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
++  time to wake up from sleep before they can receive SPI transfers at a high
++  clock rate. This property specifies the delay, in usecs, between the
++  assertion of the CS to the start of the first clock pulse.
+ - google,cros-ec-spi-msg-delay: Some implementations of the EC require some
+   additional processing time in order to accept new transactions. If the delay
+   between transactions is not long enough the EC may not be able to respond
+-- 
+2.1.4
