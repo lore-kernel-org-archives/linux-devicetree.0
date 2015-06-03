@@ -1,300 +1,36 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v2 2/5] ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
-Date: Wed, 3 Jun 2015 17:21:21 +0530
-Message-ID: <1433332284-10766-3-git-send-email-vigneshr@ti.com>
-References: <1433332284-10766-1-git-send-email-vigneshr@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/3] GPIO support for BRCMSTB
+Date: Wed, 3 Jun 2015 14:46:24 +0200
+Message-ID: <CACRpkdbDYGyX4-7U4rx3vzH2do7e=3U2qeqa=2j11E6z1Bqqyw@mail.gmail.com>
+References: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
+	<CACRpkda3EDa7YdzeT6FQ=cQw1RrDath7pQsCos-JeB2y4r18gw@mail.gmail.com>
+	<CADtm3G45-u82Rp_0dHf2EfdMokf8E4FaQ84PHnocpvXxU+5_+g@mail.gmail.com>
+	<CACRpkdaTYAr-7K5_QZh1CyeyA1224obqEB2Sz8UHZmrWcfv+ow@mail.gmail.com>
+	<CADtm3G4ao=3sHx2F1+V9rwS=jWf6ZdEQi4d24HxQ6MEc+CQ8CQ@mail.gmail.com>
+	<CACRpkdY_-zq-1srBC213MK_RoVvPsfTpRTQyx-4yRvCOV5JdxQ@mail.gmail.com>
+	<20150602162830.GI2067@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1433332284-10766-1-git-send-email-vigneshr@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>, Tero Kristo <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150602162830.GI2067@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Gregory Fong <gregory.0xf0@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add hwmod entries for the PWMSS on DRA7.
+On Tue, Jun 2, 2015 at 6:28 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Tue, Jun 02, 2015 at 11:05:21AM +0200, Linus Walleij wrote:
+>> ... and have the
+>> IRQ handler return IRQ_NONE if the IRQ comes from this
+>> bank, or IRQ_HANDLED if it has handled an IRQ from its own
+>> space.
+>
+> I'm not sure that's worded correctly or not, but... fwiw, all IRQ handlers
+> _should_ be returning IRQ_NONE if the IRQ does not belong to them whether
+> or not they're shared handlers.
 
-Set l4_root_clk_div as the main_clk of PWMSS. It is fixed-factored clock
-equal to L4PER2_L3_GICLK/2(l3_iclk_div/2).
-As per AM57x TRM SPRUHZ6[1], October 2014, Section 29.1.3 Table 29-4,
-clock source to PWMSS is L4PER2_L3_GICLK. But it is actually
-L4PER2_L3_GICLK/2. The TRM does not show the division by 2.
+Yup that's right. Sorry for being unclear.
 
-[1] www.ti.com/lit/ug/spruhz6/spruhz6.pdf
-
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
-
-v2:
- * add TRM references.
-
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 239 ++++++++++++++++++++++++++++++
- 1 file changed, 239 insertions(+)
-
-diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-index 0e64c2fac0b5..86a7ac9a3138 100644
---- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-@@ -362,6 +362,149 @@ static struct omap_hwmod dra7xx_dcan2_hwmod = {
- 	},
- };
- 
-+/* pwmss  */
-+static struct omap_hwmod_class_sysconfig dra7xx_epwmss_sysc = {
-+	.rev_offs	= 0x0,
-+	.sysc_offs	= 0x4,
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_RESET_STATUS,
-+	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
-+	.sysc_fields	= &omap_hwmod_sysc_type2,
-+};
-+
-+struct omap_hwmod_class dra7xx_epwmss_hwmod_class = {
-+	.name		= "epwmss",
-+	.sysc		= &dra7xx_epwmss_sysc,
-+};
-+
-+static struct omap_hwmod_class dra7xx_ecap_hwmod_class = {
-+	.name		= "ecap",
-+};
-+
-+static struct omap_hwmod_class dra7xx_eqep_hwmod_class = {
-+	.name		= "eqep",
-+};
-+
-+struct omap_hwmod_class dra7xx_ehrpwm_hwmod_class = {
-+	.name		= "ehrpwm",
-+};
-+
-+/* epwmss0 */
-+struct omap_hwmod dra7xx_epwmss0_hwmod = {
-+	.name		= "epwmss0",
-+	.class		= &dra7xx_epwmss_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+	.prcm		= {
-+		.omap4	= {
-+			.modulemode	= MODULEMODE_SWCTRL,
-+			.clkctrl_offs	= DRA7XX_CM_L4PER2_PWMSS1_CLKCTRL_OFFSET,
-+			.context_offs	= DRA7XX_RM_L4PER2_PWMSS1_CONTEXT_OFFSET,
-+		},
-+	},
-+};
-+
-+/* ecap0 */
-+struct omap_hwmod dra7xx_ecap0_hwmod = {
-+	.name		= "ecap0",
-+	.class		= &dra7xx_ecap_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
-+/* eqep0 */
-+struct omap_hwmod dra7xx_eqep0_hwmod = {
-+	.name		= "eqep0",
-+	.class		= &dra7xx_eqep_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
-+/* ehrpwm0 */
-+struct omap_hwmod dra7xx_ehrpwm0_hwmod = {
-+	.name		= "ehrpwm0",
-+	.class		= &dra7xx_ehrpwm_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
-+/* epwmss1 */
-+struct omap_hwmod dra7xx_epwmss1_hwmod = {
-+	.name		= "epwmss1",
-+	.class		= &dra7xx_epwmss_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+	.prcm		= {
-+		.omap4	= {
-+			.modulemode	= MODULEMODE_SWCTRL,
-+			.clkctrl_offs	= DRA7XX_CM_L4PER2_PWMSS2_CLKCTRL_OFFSET,
-+			.context_offs	= DRA7XX_RM_L4PER2_PWMSS2_CONTEXT_OFFSET,
-+		},
-+	},
-+};
-+
-+/* ecap1 */
-+struct omap_hwmod dra7xx_ecap1_hwmod = {
-+	.name		= "ecap1",
-+	.class		= &dra7xx_ecap_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
-+/* eqep1 */
-+struct omap_hwmod dra7xx_eqep1_hwmod = {
-+	.name		= "eqep1",
-+	.class		= &dra7xx_eqep_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
-+/* ehrpwm1 */
-+struct omap_hwmod dra7xx_ehrpwm1_hwmod = {
-+	.name		= "ehrpwm1",
-+	.class		= &dra7xx_ehrpwm_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
-+/* epwmss2 */
-+struct omap_hwmod dra7xx_epwmss2_hwmod = {
-+	.name		= "epwmss2",
-+	.class		= &dra7xx_epwmss_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+	.prcm		= {
-+		.omap4	= {
-+			.modulemode	= MODULEMODE_SWCTRL,
-+			.clkctrl_offs	= DRA7XX_CM_L4PER2_PWMSS3_CLKCTRL_OFFSET,
-+			.context_offs	= DRA7XX_RM_L4PER2_PWMSS3_CONTEXT_OFFSET,
-+		},
-+	},
-+};
-+
-+/* ecap2 */
-+struct omap_hwmod dra7xx_ecap2_hwmod = {
-+	.name		= "ecap2",
-+	.class		= &dra7xx_ecap_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
-+/* eqep2 */
-+struct omap_hwmod dra7xx_eqep2_hwmod = {
-+	.name		= "eqep2",
-+	.class		= &dra7xx_eqep_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
-+/* ehrpwm2 */
-+struct omap_hwmod dra7xx_ehrpwm2_hwmod = {
-+	.name		= "ehrpwm2",
-+	.class		= &dra7xx_ehrpwm_hwmod_class,
-+	.clkdm_name	= "l4per2_clkdm",
-+	.main_clk	= "l4_root_clk_div",
-+};
-+
- /*
-  * 'dma' class
-  *
-@@ -2601,6 +2744,90 @@ static struct omap_hwmod_ocp_if dra7xx_l4_per1__gpio6 = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
-+struct omap_hwmod_ocp_if dra7xx_l4_per2__epwmss0 = {
-+	.master		= &dra7xx_l4_per2_hwmod,
-+	.slave		= &dra7xx_epwmss0_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss0__ecap0 = {
-+	.master		= &dra7xx_epwmss0_hwmod,
-+	.slave		= &dra7xx_ecap0_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss0__eqep0 = {
-+	.master		= &dra7xx_epwmss0_hwmod,
-+	.slave		= &dra7xx_eqep0_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss0__ehrpwm0 = {
-+	.master		= &dra7xx_epwmss0_hwmod,
-+	.slave		= &dra7xx_ehrpwm0_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_l4_per2__epwmss1 = {
-+	.master		= &dra7xx_l4_per2_hwmod,
-+	.slave		= &dra7xx_epwmss1_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss1__ecap1 = {
-+	.master		= &dra7xx_epwmss1_hwmod,
-+	.slave		= &dra7xx_ecap1_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss1__eqep1 = {
-+	.master		= &dra7xx_epwmss1_hwmod,
-+	.slave		= &dra7xx_eqep1_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss1__ehrpwm1 = {
-+	.master		= &dra7xx_epwmss1_hwmod,
-+	.slave		= &dra7xx_ehrpwm1_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_l4_per2__epwmss2 = {
-+	.master		= &dra7xx_l4_per2_hwmod,
-+	.slave		= &dra7xx_epwmss2_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss2__ecap2 = {
-+	.master		= &dra7xx_epwmss2_hwmod,
-+	.slave		= &dra7xx_ecap2_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss2__eqep2 = {
-+	.master		= &dra7xx_epwmss2_hwmod,
-+	.slave		= &dra7xx_eqep2_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+struct omap_hwmod_ocp_if dra7xx_epwmss2__ehrpwm2 = {
-+	.master		= &dra7xx_epwmss2_hwmod,
-+	.slave		= &dra7xx_ehrpwm2_hwmod,
-+	.clk		= "l4_root_clk_div",
-+	.user		= OCP_USER_MPU,
-+};
-+
- /* l4_per1 -> gpio7 */
- static struct omap_hwmod_ocp_if dra7xx_l4_per1__gpio7 = {
- 	.master		= &dra7xx_l4_per1_hwmod,
-@@ -3394,6 +3621,18 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
- 	&dra7xx_l3_main_1__vcp2,
- 	&dra7xx_l4_per2__vcp2,
- 	&dra7xx_l4_wkup__wd_timer2,
-+	&dra7xx_l4_per2__epwmss0,
-+	&dra7xx_epwmss0__ecap0,
-+	&dra7xx_epwmss0__eqep0,
-+	&dra7xx_epwmss0__ehrpwm0,
-+	&dra7xx_l4_per2__epwmss1,
-+	&dra7xx_epwmss1__ecap1,
-+	&dra7xx_epwmss1__eqep1,
-+	&dra7xx_epwmss1__ehrpwm1,
-+	&dra7xx_l4_per2__epwmss2,
-+	&dra7xx_epwmss2__ecap2,
-+	&dra7xx_epwmss2__eqep2,
-+	&dra7xx_epwmss2__ehrpwm2,
- 	NULL,
- };
- 
--- 
-2.4.1
-
+Yours,
+Linus Walleij
