@@ -1,119 +1,189 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2 with A33 and
- 1024x600 lcd support
-Date: Wed, 3 Jun 2015 11:45:35 +0200
-Message-ID: <20150603094535.GI23777@lukather>
-References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
- <1432997706-20172-7-git-send-email-hdegoede@redhat.com>
- <20150602081459.GO23777@lukather>
- <556D6955.8030708@redhat.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v4 6/8] mfd: cros_ec: Support multiple EC in a system
+Date: Wed, 03 Jun 2015 12:12:19 +0200
+Message-ID: <556ED303.6090401@collabora.co.uk>
+References: <1433232671-27679-1-git-send-email-javier.martinez@collabora.co.uk> <1433232671-27679-7-git-send-email-javier.martinez@collabora.co.uk> <20150603085340.GL3329@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+HaDSJYnsYzHewVa"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <556D6955.8030708-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150603085340.GL3329@x1>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Bill Richardson <wfrichar@chromium.org>, Simon Glass <sjg@google.com>, Gwendal Grignou <gwendal@google.com>, Stephen Barber <smbarber@chromium.org>, Filipe Brandenburger <filbranden@google.com>, Todd Broch <tbroch@chromium.org>, Alexandru M Stan <amstan@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Lee,
 
---+HaDSJYnsYzHewVa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks a lot for your feedback.
 
-On Tue, Jun 02, 2015 at 10:29:09AM +0200, Hans de Goede wrote:
-> Hi,
->=20
-> On 02-06-15 10:14, Maxime Ripard wrote:
-> >On Sat, May 30, 2015 at 04:55:06PM +0200, Hans de Goede wrote:
-> >>The Ippo-q8h is a tablet circuit board commonly found in cheap Android
-> >>tablets. The v1.2 version can be used with either an A23 or A33 SoC.
-> >>
-> >>This adds a dts file for the v1.2 board with an A33 SoC and a 1024x600
-> >>LCD screen (most of these tablets have a 800x480 screen).
-> >
-> >I think the difference between the resolution here is more of a case
-> >for the DT quirks interface:
-> >https://lkml.org/lkml/2015/2/18/258
->=20
-> I would expect the only difference between the 2 dts files to be the
-> node describing the lcd panel, so yes that makes somewhat sense.
->=20
-> >Do you know if there's some way to autodetect the two board versions
-> >(like a board id somewhere in an EEPROM)?
->=20
-> No, AFAIK there is no way to tell the difference. There is no eeprom no
-> the board, and we really cannot rely on the nand contents.
+On 06/03/2015 10:53 AM, Lee Jones wrote:
+> On Tue, 02 Jun 2015, Javier Martinez Canillas wrote:
+> 
+>> From: Gwendal Grignou <gwendal@chromium.org>
+>> 
+>> Chromebooks can have more than one Embedded Controller so the
+>> cros_ec device id has to be incremented for each EC registered.
+>> 
+>> Add code to handle multiple EC. First ec found is cros-ec0,
+>> second cros-ec1 and so on.
+>> 
+>> Add a new structure to represent multiple EC as different char
+>> devices (e.g: /dev/cros_ec, /dev/cros_pd). It connects to
+>> cros_ec_device and allows sysfs inferface for cros_pd.
+>> 
+>> Also reduce number of allocated objects, make chromeos sysfs
+>> class object a static and add refcounting to prevent object
+>> deletion while command is in progress.
+>> 
+>> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+>> Reviewed-by: Dmitry Torokhov <dtor@chromium.org>
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> ---
+>> 
+>> Changes since v3:
+>>  - Add defines for the EC and PD index constants.
+>>  - Remove cros_ec_dev_register() and declare the mfd_cells as static structs.
+>>    Suggested by Lee Jones.
+>>  - Add a new line before the return statement in cros_ec_dev_register().
+>>    Suggested by Lee Jones.
+>> 
+>> Changes since v2: None
+>> 
+>> Changes since v1:
+>>   - Squash patch that adds support to represent EC's as different
+>>     char devices (e.g: /dev/cros_ec, /dev/cros_pd):
+>>     https://chromium-review.googlesource.com/#/c/217297/
+>>     Suggested by Gwendal Grignou
+>>   - Use cros_ec instead of cros-ec in the subject line to be consistent.
+>>     Suggested by Gwendal Grignou
+>> ---
+>>  drivers/input/keyboard/cros_ec_keyb.c      |   2 +-
+>>  drivers/mfd/cros_ec.c                      |  59 +++++++++++--
+>>  drivers/mfd/cros_ec_i2c.c                  |   1 -
+>>  drivers/mfd/cros_ec_spi.c                  |   1 -
+>>  drivers/platform/chrome/cros_ec_dev.c      | 128 ++++++++++++++++++++---------
+>>  drivers/platform/chrome/cros_ec_dev.h      |   7 --
+>>  drivers/platform/chrome/cros_ec_lightbar.c |  75 +++++++++--------
+>>  drivers/platform/chrome/cros_ec_lpc.c      |   1 -
+>>  drivers/platform/chrome/cros_ec_sysfs.c    |  48 +++++------
+>>  include/linux/mfd/cros_ec.h                |  44 ++++++++--
+>>  10 files changed, 240 insertions(+), 126 deletions(-)
+>> 
+>> diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
+>> index 974154a74505..b01966dc7eb3 100644
+>> --- a/drivers/input/keyboard/cros_ec_keyb.c
+>> +++ b/drivers/input/keyboard/cros_ec_keyb.c
+>> @@ -275,7 +275,7 @@ static int cros_ec_keyb_probe(struct platform_device *pdev)
+>>  	ckdev->dev = dev;
+>>  	dev_set_drvdata(&pdev->dev, ckdev);
+>>  
+>> -	idev->name = ec->ec_name;
+>> +	idev->name = CROS_EC_DEV_NAME;
+>>  	idev->phys = ec->phys_name;
+>>  	__set_bit(EV_REP, idev->evbit);
+>>  
+>> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+>> index 08d82bfc5268..4fbb4ce8f81e 100644
+>> --- a/drivers/mfd/cros_ec.c
+>> +++ b/drivers/mfd/cros_ec.c
+>> @@ -24,11 +24,29 @@
+>>  #include <linux/mfd/core.h>
+>>  #include <linux/mfd/cros_ec.h>
+>>  
+>> -static const struct mfd_cell cros_devs[] = {
+>> -	{
+>> -		.name = "cros-ec-ctl",
+>> -		.id = PLATFORM_DEVID_AUTO,
+>> -	},
+>> +#define CROS_EC_DEV_EC_INDEX 0
+>> +#define CROS_EC_DEV_PD_INDEX 1
+>> +
+>> +struct cros_ec_platform ec_p = {
+>> +	.cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_EC_INDEX),
+>> +};
+>> +
+>> +struct cros_ec_platform pd_p = {
+>> +	.cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX),
+>> +};
+>> +
+>> +struct mfd_cell ec_cell = {
+>> +	.name = "cros-ec-ctl",
+>> +	.id = PLATFORM_DEVID_AUTO,
+>> +	.platform_data = &ec_p,
+>> +	.pdata_size = sizeof(ec_p),
+>> +};
+>> +
+>> +struct mfd_cell ec_pd_cell = {
+>> +	.name = "cros-ec-ctl",
+>> +	.id = PLATFORM_DEVID_AUTO,
+>> +	.platform_data = &pd_p,
+>> +	.pdata_size = sizeof(pd_p),
+>>  };
+>>  
+>>  int cros_ec_register(struct cros_ec_device *ec_dev)
+>> @@ -52,14 +70,39 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+>>  
+>>  	cros_ec_query_all(ec_dev);
+>>  
+>> -	err = mfd_add_devices(dev, 0, cros_devs,
+>> -			      ARRAY_SIZE(cros_devs),
+>> +	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+>> +		ec_p.ec_name = of_get_property(dev->of_node, "devname",
+>> +					       NULL);
+> 
+> Has this binding already been accepted?  We don't normally allow
+> "device name"properties in DT.
+> 
 
-Ok.
+Sigh, I now noticed that I missed the DT binding change when originally
+forward porting the patches from the downstream ChromiumOS tree. I'm so
+sorry about that.
 
-> >If not, then maybe u-boot can simply add that board compatible to the
-> >list, and we'll base our logic on that when we'll need it.
->=20
-> That means extra logic in u-boot, and on the kernel side, for what
-> benefit exactly? Such logic would make sense if there was one u-boot
-> image which runtime adjusted itself, but that is not an option.
+ChromiumOS tree has in Documentation/devicetree/bindings/mfd/cros-ec.txt:
 
-For what benefit? One kernel image which runtime adjusts itself. It's
-especially possible if u-boot's image is not, which seems to be what
-you're saying.
+Optional properties (All):
+- devname: name of the EC. Can be based on its function: for instance,
+  for Sensor Hub, 'cros_sh', for Power Delivery MCU 'cros_pd'.
+  If not present, 'cros_ec' can be assumed.
 
-> And we can avoid copy and paste on the dts side by putting all
-> the common stuff in a common file and including that, I believe
-> that that is better (KISS =3D better) since we've no way to runtime
-> do the right thing AFAICT.
+When you say that normally device names are not allowed in DT, do you mean
+that "devname" is a too generic property name? (which I totally agree) or
+that DT bindings shouldn't have a property to change a device's name for
+something more descriptive?
 
-My concern is about the ever-growing number of DTS that just are small
-variations of one or the other. What about the time when we'll
-discover that this board has a variant that has an emmc, and some that
-don't have any button, or the i2c bus 2 not wired, and one other that
-doesn't have any HDMI?
+Because for example, the regulator bindings has a "regulator-name" property.
+If you agree I can change the property to "google,cros-ec-name" which should
+be more precise.
 
-Do we really want to have a dts called
-sun8i-a33-q8h-emmc-lcd800x600-nohdmi-noi2c2-nobuttons.dts?
+>> +	if (!ec_p.ec_name)
+>> +		ec_p.ec_name = CROS_EC_DEV_NAME;
+>> +
+>> +	err = mfd_add_devices(ec_dev->dev, CROS_EC_DEV_EC_INDEX, &ec_cell, 1,
+>>  			      NULL, ec_dev->irq, NULL);
+> 
+> Take a look at how 'id' (second argument) is handled in mfd-core, then
+> try to figure out why what you're doing is not correct.
+>
 
-Especially when we will have the one that we include here that will
-not have followed this convention because it was introduced before
-that, and that we have a way to deal with this nicely?
+I see, so I should not set the struct mfd_cell .id to PLATFORM_DEVID_AUTO and
+just pass PLATFORM_DEVID_AUTO to mfd_add_devices() so platform_device_add()
+automatically allocates a device ID and sets pdev->id_auto = true.
 
-You chose to consider the DTS names an ABI, the best way to handle
-this is to have a DTS as generic as possible, and leave all these
-small variations outside of the name.
+It was only working because CROS_EC_DEV_EC_INDEX was zero so id + cell->id
+was still PLATFORM_DEVID_AUTO but for CROS_EC_DEV_PD_INDEX, it was set to
+PLATFORM_DEVID_NONE...
 
-Maxime
+I'll change that, thanks for pointing it out.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+>>  	if (err) {
+>> -		dev_err(dev, "failed to add mfd devices\n");
+>> +		dev_err(dev, "failed to add ec\n");
+>>  		return err;
+>>  	}
+> 
+> [...]
+> 
 
---+HaDSJYnsYzHewVa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVbsy/AAoJEBx+YmzsjxAg8zQP/A1NHpQRl4WRF0hWstLp39Qv
-eHkqtZxG9JmX62+X4uVWnw7tFI6y9GQSnsWdmzORsTv+xdp4Z2IfnWZH9QWXUtBT
-jwbrFp0w61trDZv3ulMRx0NSksvVp3ur+RIBhhsulEe6lx52gytvixHaFMQf/3NR
-N6e+S6SmLunWgj7dbvj9AOId6II5JpbTpr0MVVQF8gJLCVJqUOFjBpVMNj4ukfZi
-uaNAO1NbkTvHOClnXnMqyuzeq7wbCL3WtsA/31vZeuOXMkTMvGU5g224zXHSjUtV
-caZVcwVDPxqRkhR2NkBPGpfXz9dLQaEkPiswJEUJ76jD32BaqU9NuUq1t74AkR7h
-sVQfrcp7BVMXklaRkKHMMbLZtVw7p5KWC4HhoOIPiTHkBxb99fdYd5kxE8QjtsYf
-zqRc/rHvkBLZnNZq9skF+vdi85cwSDdoHjv8ilgQ5dBAIyfUXWTdFW5A0p7YBz6o
-zKKTOEz434p7z//2rBSCBNTH5eDM70a8sHSUAuhVsJaQpB04Voi5N/zVCTfPYiHd
-FZTflssGNppvYJM63RKS/gRVvKkDk9XVgaaaTRoeXH81pC0Qn5ahA6nBAcav8tUR
-RAIoZ533oN3qriwo+oHEMwbVvt1yMW3hG+zzvnLCxg+ttyyr/LuWdW2WhwjYwuL5
-VAyr7wtzBvobjT8Y2J/Y
-=1u8F
------END PGP SIGNATURE-----
-
---+HaDSJYnsYzHewVa--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
