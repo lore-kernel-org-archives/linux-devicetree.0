@@ -1,162 +1,57 @@
-From: Yaniv Gardi <ygardi@codeaurora.org>
-Subject: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from the platform device
-Date: Wed,  3 Jun 2015 12:37:35 +0300
-Message-ID: <1433324255-27510-5-git-send-email-ygardi@codeaurora.org>
-References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: James.Bottomley@HansenPartnership.com
-Cc: linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, ygardi@codeaurora.org, pebolle@tiscali.nl, gbroner@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v4 1/6] mtd: nand: =?UTF-8?Q?vf=36=31=30=5Fnfc=3A=20Fr?=
+ =?UTF-8?Q?eescale=20NFC=20for=20VF=36=31=30=2C=20MPC=35=31=32=35=20and=20?=
+ =?UTF-8?Q?others?=
+Date: Wed, 03 Jun 2015 11:45:50 +0200
+Message-ID: <821b4731043fef279b6a82b920707982@agner.ch>
+References: <1427300909-20825-1-git-send-email-stefan@agner.ch>
+ <1427300909-20825-2-git-send-email-stefan@agner.ch>
+ <20150603081059.GA6944@breakpoint.cc>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150603081059.GA6944@breakpoint.cc>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, bpringlemeir@nbsps.com
 List-Id: devicetree@vger.kernel.org
 
-It does so by adding the following changes:
-1. Introducing SCSI_UFS_QCOM as a platform device. Its probe
-   function registers a set of vops to its driver_data.
-2. Adding an optional device tree sub-node, under SCSI_UFSHCD_PLATFORM.
-   Now, the probe function of SCSI_UFSHCD_PLATFORM invokes the probe
-   function of its sub-node (if it exists), by calling
-   of_platform_populate(). It ensures that vops are set, and ready to
-   be used, by the time the UFSHCD driver starts its initialization
-   procedure.
+On 2015-06-03 10:10, Sebastian Andrzej Siewior wrote:
+> On 2015-03-25 17:28:24 [+0100], Stefan Agner wrote:
+>> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_n=
+fc.c
+>> new file mode 100644
+>> index 0000000..23c1510
+>> --- /dev/null
+>> +++ b/drivers/mtd/nand/vf610_nfc.c
+> =E2=80=A6
+>> +static void vf610_nfc_addr_cycle(struct vf610_nfc *nfc, int column,=
+ int page)
+>> +{
+>> +	if (column !=3D -1) {
+>> +		if (nfc->chip.options | NAND_BUSWIDTH_16)
+>> +			column =3D column/2;
+>> +		vf610_nfc_set_field(nfc, NFC_COL_ADDR, COL_ADDR_MASK,
+>> +				    COL_ADDR_SHIFT, column);
+>> +	}
+>> +	if (page !=3D -1)
+>> +		vf610_nfc_set_field(nfc, NFC_ROW_ADDR, ROW_ADDR_MASK,
+>> +				    ROW_ADDR_SHIFT, page);
+>> +}
+>=20
+> Do you have here also a different NAND layout on your boot-page vs
+> remaining pages? The mpc5125 has this different layout.
 
-Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
+There is the boot configuration block which uses a Parity 13/8
+algorithm, is it that you are referring to? The format parity is in the
+main area, hence it doesn't clash with the HW ECC of the controller. On=
+e
+can use normal NAND write functions to write this page. See the
+implementation in our downstream U-Boot:
 
----
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  8 +++++
- drivers/scsi/ufs/ufs-qcom.c                        | 40 ++++++++++++++++++++++
- drivers/scsi/ufs/ufshcd-pltfrm.c                   | 33 +++++++++++-------
- 3 files changed, 68 insertions(+), 13 deletions(-)
+http://git.toradex.com/cgit/u-boot-toradex.git/commit/?h=3D2015.04-tora=
+dex-next&id=3Db004926168f3bc15f9e26f14c16ae60a252b1304
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index 5357919..e2f3058 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -55,3 +55,11 @@ Example:
- 		clock-names = "core_clk", "ref_clk", "iface_clk";
- 		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
- 	};
-+
-+This is an example to a variant sub-node of ufshc:
-+	ufs_variant {
-+		compatible = "qcom,ufs_variant";
-+	};
-+
-+This sub-node holds various specific information that is not defined in the
-+standard and that may differ between platforms.
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 6671a8e..ad5ffa8 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -1018,4 +1018,44 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
- };
- EXPORT_SYMBOL(ufs_hba_qcom_vops);
- 
-+/**
-+ * ufs_qcom_probe - probe routine of the driver
-+ * @pdev: pointer to Platform device handle
-+ *
-+ * Always return 0
-+ */
-+static int ufs_qcom_probe(struct platform_device *pdev)
-+{
-+	dev_set_drvdata(&pdev->dev, (void *)&ufs_hba_qcom_vops);
-+	return 0;
-+}
-+
-+/**
-+ * ufs_qcom_remove - set driver_data of the device to NULL
-+ * @pdev: pointer to platform device handle
-+ *
-+ * Always return 0
-+ */
-+static int ufs_qcom_remove(struct platform_device *pdev)
-+{
-+	dev_set_drvdata(&pdev->dev, NULL);
-+	return 0;
-+}
-+
-+static const struct of_device_id ufs_qcom_of_match[] = {
-+	{ .compatible = "qcom,ufs_variant"},
-+	{},
-+};
-+
-+static struct platform_driver ufs_qcom_pltform = {
-+	.probe	= ufs_qcom_probe,
-+	.remove	= ufs_qcom_remove,
-+	.driver	= {
-+		.name	= "ufs_qcom",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(ufs_qcom_of_match),
-+	},
-+};
-+module_platform_driver(ufs_qcom_pltform);
-+
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index 7db9564..7bf2f44 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -36,22 +36,11 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/of.h>
-+#include <linux/of_platform.h>
- 
- #include "ufshcd.h"
- 
- static const struct of_device_id ufs_of_match[];
--static struct ufs_hba_variant_ops *get_variant_ops(struct device *dev)
--{
--	if (dev->of_node) {
--		const struct of_device_id *match;
--
--		match = of_match_node(ufs_of_match, dev->of_node);
--		if (match)
--			return (struct ufs_hba_variant_ops *)match->data;
--	}
--
--	return NULL;
--}
- 
- static int ufshcd_parse_clock_info(struct ufs_hba *hba)
- {
-@@ -300,6 +289,9 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
- 	struct resource *mem_res;
- 	int irq, err;
- 	struct device *dev = &pdev->dev;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *ufs_variant_node;
-+	struct platform_device *ufs_variant_pdev;
- 
- 	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	mmio_base = devm_ioremap_resource(dev, mem_res);
-@@ -321,7 +313,22 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
- 		goto out;
- 	}
- 
--	hba->vops = get_variant_ops(&pdev->dev);
-+	err = of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	if (err)
-+		dev_err(&pdev->dev,
-+			"%s: of_platform_populate() failed\n", __func__);
-+
-+	ufs_variant_node = of_get_next_available_child(node, NULL);
-+
-+	if (!ufs_variant_node) {
-+		dev_dbg(&pdev->dev, "failed to find ufs_variant_node child\n");
-+	} else {
-+		ufs_variant_pdev = of_find_device_by_node(ufs_variant_node);
-+
-+		if (ufs_variant_pdev)
-+			hba->vops = (struct ufs_hba_variant_ops *)
-+				dev_get_drvdata(&ufs_variant_pdev->dev);
-+	}
- 
- 	err = ufshcd_parse_clock_info(hba);
- 	if (err) {
--- 
-1.8.5.2
-
--- 
-QUALCOMM ISRAEL, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--
+Stefan
