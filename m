@@ -1,59 +1,50 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: [PATCH 11/11] dt: Exynos: add Snow SPI NOR node.
-Date: 3 Jun 2015 21:26:42 -0000
-Message-ID: <3234c12c90eabbeeb6d33604a324231937e309ec.1433364398.git.hramrach@gmail.com>
-References: <cover.1433364398.git.hramrach@gmail.com>
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] ARM: bcm2835: Add the Raspberry Pi firmware driver
+Date: Wed, 3 Jun 2015 22:35:29 +0100
+Message-ID: <20150603213529.GF12304@x1>
+References: <1432928535-27522-1-git-send-email-eric@anholt.net>
+ <1432928535-27522-2-git-send-email-eric@anholt.net>
+ <1433148509.2361.35.camel@x220>
+ <87vbf75n2l.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1433364398.git.hramrach@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Michal Suchanek <hramrach@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marex@denx.de>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87vbf75n2l.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Snow has onboard SPI NOR flash which contains the bootloader.
+On Mon, 01 Jun 2015, Eric Anholt wrote:
 
-Add DT node for this flash chip. The flash is rated 133MHz but the pl330
-controller can transfer only up to 128 bytes at this speed so use more
-conservative settings. Even at 40MHz pl330 can transfer at most 64k with
-the current driver.
+> Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> writes:
+> 
+> > On Fri, 2015-05-29 at 12:42 -0700, Eric Anholt wrote:
+> >> This gives us a function for making mailbox property channel requests
+> >> of the firmware, which is most notable in that it will let us get and
+> >> set clock rates.
+> 
+> >> v6: Drop the try_module_get/module_put stuff, since all clients will
+> >>     be referencing our symbols in order to call those functions,
+> >>     anyway.  Fix the kerneldoc comments for the changes in v5.
+> >
+> > (This style of commit explanation is getting quite common. I must say I
+> > rather dislike it. I think people should just update the entire commit
+> > explanation when needed, and not simply paste any changes at the end of
+> > it, thereby forcing the the reader to determine which older parts are
+> > actually overruled by newer parts. Besides, many, or maybe even most, of
+> > the changes are really not interesting enough to keep in the commit
+> > explanation.)
+> 
+> It was a slip-up that I didn't move it below the '---'this time (I
+> changed my workflow a bit, and missed the step).  I was assuming that
+> Lee would just trim them on pulling in the changes.
 
-Signed-off-by: Michal Suchanek <hramrach@gmail.com>
----
- arch/arm/boot/dts/exynos5250-snow.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-index 1fa72cf..38e4cda 100644
---- a/arch/arm/boot/dts/exynos5250-snow.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow.dts
-@@ -691,6 +691,18 @@
- 	num-cs = <1>;
- 	cs-gpios = <&gpa2 5 0>;
- 	status = "okay";
-+		flash: m25p80@0 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "jedec,spi-nor";
-+			reg = <0>;
-+			spi-max-frequency = <40000000>;
-+			linux,max_tx_len = <65536>;
-+			m25p,fast-read;
-+			controller-data {
-+				samsung,spi-feedback-delay = <0>;
-+			};
-+		};
- };
- 
- &usbdrd_dwc3 {
--- 
-2.1.4
+I'm not the Firmware Maintainer, but I'm sure whoever is will be happy
+to remove the changelog.  But Paul is correct, the commit should be
+updated.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
