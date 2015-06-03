@@ -1,84 +1,92 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V6 1/3] OPP: Add new bindings to address shortcomings of
- existing bindings
-Date: Wed, 3 Jun 2015 10:10:06 +0530
-Message-ID: <20150603044006.GB4527@linux>
-References: <cover.1432797343.git.viresh.kumar@linaro.org>
- <96d49e7e6747c1a65c5f285d70600795126641cc.1432797343.git.viresh.kumar@linaro.org>
- <20150602183120.GB24349@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150602183120.GB24349@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] of: clean-up unnecessary libfdt include paths
+Date: Wed,  3 Jun 2015 00:10:25 -0500
+Message-ID: <1433308225-13874-1-git-send-email-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 02-06-15, 11:31, Stephen Boyd wrote:
-> Also, is there already code written to handle these new
-> bindings in the OPP library? If not, it would be good to write
-> some to flush out any problems that may be lurking in actual
-> implementation.
+With the latest dtc import include fixups, it is no longer necessary to
+add explicit include paths to use libfdt. Remove these across the
+kernel.
 
-I had written code earlier for V2 or something, but then we went back
-to the improvements in bindings and I stopped writing code for it.
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: linux-mips@linux-mips.org
+Cc: linuxppc-dev@lists.ozlabs.org
+---
+ arch/mips/cavium-octeon/Makefile      | 3 ---
+ arch/mips/mti-sead3/Makefile          | 2 --
+ arch/powerpc/kernel/Makefile          | 1 -
+ drivers/firmware/efi/libstub/Makefile | 2 --
+ drivers/of/Makefile                   | 3 ---
+ 5 files changed, 11 deletions(-)
 
-http://marc.info/?i=cover.1423642246.git.viresh.kumar%40linaro.org
-
-But that just requires to be updated a bit now. Will do that once I am
-sure the bindings are all good now, with all Acks and RBYs.
-
-> > +
-> > +Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
-> > +
-> > +/ {
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu@0 {
-> > +			compatible = "arm,cortex-a9";
-> > +			reg = <0>;
-> > +			next-level-cache = <&L2>;
-> > +			clocks = <&clk_controller 0>;
-> > +			clock-names = "cpu";
-> > +			opp-supply = <&cpu_supply0>;
-> 
-> opp-supply isn't mentioned anywhere. Is that intentional? Is it
-
-This should have been 'cpu-supply' instead.
-
-> supposed to be cpu-supply still?
-
-Yes.
-
-> It isn't clear to me from the
-> previous discussion where this all ended up, but I'm not sure how
-> the in-kernel API is going to match up regulators with OPPs. I
-> mean, how are we going to ask the OPP library what the
-> min/max/target voltage is at a particular frequency when we have
-> multiple regulators? Is that some string based interface? 
-> 
-> 	dev_pm_opp_get_voltage(name, &target, &min, &max);
-> 
-> Or a regulator pointer interface?
-> 
-> 	dev_pm_opp_get_voltage(regulator, &target, &min, &max);
-
-Probably this.
-
-> Or something else? Does this mean the OPP library is going to get
-> the CPU device to request the opp-supply from the CPU node?
-
-Maybe yes. That will clarify more with more code in place.
-
-> Furthermore, why don't we care about opp-clocks? Are clocks
-> somehow special?
-
-There shouldn't be opp-supply in the first place and so no need of
-opp-clocks as well.
-
+diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+index 69a8a8d..2a59265 100644
+--- a/arch/mips/cavium-octeon/Makefile
++++ b/arch/mips/cavium-octeon/Makefile
+@@ -9,9 +9,6 @@
+ # Copyright (C) 2005-2009 Cavium Networks
+ #
+ 
+-CFLAGS_octeon-platform.o = -I$(src)/../../../scripts/dtc/libfdt
+-CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
+-
+ obj-y := cpu.o setup.o octeon-platform.o octeon-irq.o csrc-octeon.o
+ obj-y += dma-octeon.o
+ obj-y += octeon-memcpy.o
+diff --git a/arch/mips/mti-sead3/Makefile b/arch/mips/mti-sead3/Makefile
+index ecd71db..2e52cbd 100644
+--- a/arch/mips/mti-sead3/Makefile
++++ b/arch/mips/mti-sead3/Makefile
+@@ -15,5 +15,3 @@ obj-y				:= sead3-lcd.o sead3-display.o sead3-init.o \
+ obj-y				+= leds-sead3.o
+ 
+ obj-$(CONFIG_EARLY_PRINTK)	+= sead3-console.o
+-
+-CFLAGS_sead3-setup.o = -I$(src)/../../../scripts/dtc/libfdt
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index c1ebbda..c16e836 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -2,7 +2,6 @@
+ # Makefile for the linux kernel.
+ #
+ 
+-CFLAGS_prom.o		= -I$(src)/../../../scripts/dtc/libfdt
+ CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
+ 
+ subdir-ccflags-$(CONFIG_PPC_WERROR) := -Werror
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 280bc0a..816dbe9 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -24,8 +24,6 @@ KASAN_SANITIZE			:= n
+ lib-y				:= efi-stub-helper.o
+ lib-$(CONFIG_EFI_ARMSTUB)	+= arm-stub.o fdt.o
+ 
+-CFLAGS_fdt.o			+= -I$(srctree)/scripts/dtc/libfdt/
+-
+ #
+ # arm64 puts the stub in the kernel proper, which will unnecessarily retain all
+ # code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index fcacb18..156c072 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -16,6 +16,3 @@ obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+ obj-$(CONFIG_OF_OVERLAY) += overlay.o
+ 
+ obj-$(CONFIG_OF_UNITTEST) += unittest-data/
+-
+-CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+-CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
 -- 
-viresh
+2.1.0
