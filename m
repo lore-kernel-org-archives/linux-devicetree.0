@@ -1,213 +1,60 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v6 3/3] dts: hi6220: enable thermal sensor for hisilicon
- SoC
-Date: Wed, 3 Jun 2015 16:06:50 -0700
-Message-ID: <20150603230648.GB7640@localhost.localdomain>
-References: <1432120598-18268-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1432120598-18268-4-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv4 10/10] arm/dts: am57xx-beagle-x15.dts: add HDMI
+Date: Wed, 3 Jun 2015 09:10:08 -0700
+Message-ID: <20150603161008.GT30984@atomide.com>
+References: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com>
+ <1433139798-23450-11-git-send-email-tomi.valkeinen@ti.com>
+ <20150601215115.GH30984@atomide.com>
+ <556EE463.6000502@ti.com>
+ <20150603154438.GS30984@atomide.com>
+ <556F24E6.7040003@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p4qYPpj5QlsIQJ0K"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1432120598-18268-4-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Xinwei Kong <kong.kongxinwei@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>
-Cc: rui.zhuang@intel.com, amit.kucheria@linaro.org, punit.agrawal@arm.com, Javi.Merino@arm.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, dan.zhao@hisilicon.com, devicetree@vger.kernel.org, gongyu@hisilicon.com, guodong.xu@linaro.org, robh@kernel.org, linuxarm@huawei.com, zhenwei.wang@hisilicon.com, leo.yan@linaro.org, mporter@konsulko.com, liguozhu@hisilicon.com
+In-Reply-To: <556F24E6.7040003-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [150603 09:03]:
+> 
+> 
+> On 03/06/15 18:44, Tony Lindgren wrote:
+> > * Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [150603 04:28]:
+> >>
+> >>
+> >> On 02/06/15 00:51, Tony Lindgren wrote:
+> >>> * Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [150531 23:25]:
+> >>>> AM57xx Beagle X15 has a HDMI output. This patch adds the device tree
+> >>>> nodes required for HDMI.
+> >>>
+> >>> This one does not seem to apply to linux next, did not look
+> >>> further where it conflicts.
+> >>
+> >> Looks like the change was also in -rc6. I've rebased my patches on -rc6,
+> >> and added the acks:
+> >>
+> >> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git dra7-dss-arch
+> > 
+> > OK, since there are no other merge conflicts that I'm aware of,
+> > it's best that you merge the whole branch. I've acked the patches,
+> > so for this one too:
+> 
+> Ok, I can do that, but isn't this more linux-arm stuff? All the driver
+> side code is already in the mainline.
 
---p4qYPpj5QlsIQJ0K
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes but we're getting so late into merge window that I'd rather not
+take it for v4.2 at this point. And it's all DSS related.
 
-On Wed, May 20, 2015 at 07:16:38PM +0800, Xinwei Kong wrote:
-> From: kongxinwei <kong.kongxinwei@hisilicon.com>
->=20
-> Dts includes two part: the first part is related with thermal sensor;
-> the second part is related with thermal zones, in this part it will
-> define the thermal zones and which sensor device should be bound to.
-> it also need specify the polling interval for every thermal zone.
->=20
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
+Please make sure you get an ack for the drivers/clk/omap change from
+Mike or Stephen though.
 
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
+Regards,
 
-I have taken the patches containing the driver changes and the
-Documentation entry. But this patch needs to go via your your
-machine code tree (Wei Xu).
-
-BR,
-
-Eduardo Valentin
-
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 124 ++++++++++++++++++++++++=
-++++++
->  1 file changed, 124 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/=
-dts/hisilicon/hi6220.dtsi
-> index 8ade3d9..eb465a6 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -6,6 +6,7 @@
-> =20
->  #include <dt-bindings/clock/hi6220-clock.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/thermal/thermal.h>
-> =20
->  / {
->  	compatible =3D "hisilicon,hi6220";
-> @@ -173,4 +174,127 @@
->  			clock-names =3D "uartclk", "apb_pclk";
->  		};
->  	};
-> +
-> +	tsensor: tsensor@0,f7030700 {
-> +		compatible =3D "hisilicon,tsensor";
-> +		reg =3D <0x0 0xf7030700 0x0 0x1000>;
-> +		interrupts =3D <0 7 0x4>;
-> +		clocks =3D <&sys_ctrl HI6220_TSENSOR_CLK>;
-> +		clock-names =3D "thermal_clk";
-> +		#thermal-sensor-cells =3D <1>;
-> +	};
-> +
-> +	thermal-zones {
-> +		local: local {
-> +			/* milliseconds */
-> +			polling-delay-passive =3D <1000>;
-> +			/* milliseconds */
-> +			polling-delay =3D <5000>;
-> +
-> +			/* sensor	ID */
-> +			thermal-sensors =3D <&tsensor  0>;
-> +
-> +			trips {
-> +				local_alert: local_alert {
-> +					/* millicelsius */
-> +					temperature =3D <70000>;
-> +					/* millicelsius */
-> +					hysteresis =3D <2000>;
-> +					type =3D "passive";
-> +				};
-> +				local_crit: local_crit {
-> +					temperature =3D <90000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				/* There are currently no cooling maps
-> +				because there are no cooling devices */
-> +			};
-> +		};
-> +
-> +		cluster1: cluster1 {
-> +			polling-delay-passive =3D <1000>;
-> +			polling-delay =3D <5000>;
-> +
-> +			/* sensor	ID */
-> +			thermal-sensors =3D <&tsensor  1>;
-> +
-> +			trips {
-> +				cluster1_alert: cluster1_alert {
-> +					temperature =3D <70000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "passive";
-> +				};
-> +				cluster1_crit: cluster1_crit {
-> +					temperature =3D <90000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				/* There are currently no cooling maps
-> +				because there are no cooling devices */
-> +			};
-> +		};
-> +
-> +		cluster0: cluster0 {
-> +			polling-delay-passive =3D <1000>;
-> +			polling-delay =3D <5000>;
-> +
-> +			/* sensor	ID */
-> +			thermal-sensors =3D <&tsensor  2>;
-> +
-> +			trips {
-> +				cluster0_alert: cluster0_alert {
-> +					temperature =3D <70000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "passive";
-> +				};
-> +				cluster0_crit: cluster0_crit {
-> +					temperature =3D <90000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip =3D <&cluster0_alert>;
-> +					cooling-device =3D
-> +					    <&cpu0 THERMAL_NO_LIMIT
-> +						THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +		};
-> +
-> +		gpu: gpu {
-> +			polling-delay-passive =3D <1000>;
-> +			polling-delay =3D <5000>;
-> +
-> +			/* sensor	ID */
-> +			thermal-sensors =3D <&tsensor  3>;
-> +
-> +			trips {
-> +				gpu_alert: gpu_alert {
-> +					temperature =3D <70000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "passive";
-> +				};
-> +				gpu_crit: gpu_crit {
-> +					temperature =3D <90000>;
-> +					hysteresis =3D <2000>;
-> +					type =3D "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				/* There are currently no cooling maps
-> +				because there are no cooling devices */
-> +			};
-> +		};
-> +	};
->  };
-> --=20
-> 1.9.1
->=20
->=20
-
---p4qYPpj5QlsIQJ0K
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQEcBAEBAgAGBQJVb4iCAAoJEMLUO4d9pOJWGPMH/RWHDBzErFhVs+qlgW/zyYLz
-/x+Ygoqr3I/jUBztOIuzKGNlxdZ6smBVW8Eg4PYLLGwiUOJhOkwS6kw9ePbslwUn
-XhO+5mcvjJ6eOjz5NVSBO6WEqpikkWKe3kkd5WGD0usQ6Wct7eFcTWtaNBcoV3YN
-27rzCJ/0G8J4XuUltdI+V5u1op+OqOp+u9R7o/4JyMIvi2jhkdwrKsl4BaIDEE1T
-jKHVwlgTuPFbgk3/DYJ1bRXaD2uBJODwzzbV6bW+6CYvVauX0y77RDB1gS39cW9v
-Y8plXzPsVHN9fzMd98qer7Jc/ndy7XBJrITzpuIe8+Rp53ZL+LZcPMkjj00yxRs=
-=z5fO
------END PGP SIGNATURE-----
-
---p4qYPpj5QlsIQJ0K--
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
