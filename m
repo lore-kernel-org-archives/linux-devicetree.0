@@ -1,79 +1,130 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 0/3] Pistachio USB2.0 PHY
-Date: Wed, 3 Jun 2015 11:37:48 +0530
-Message-ID: <556E99B4.6090307@ti.com>
-References: <1428444258-25852-1-git-send-email-abrestic@chromium.org> <CAL1qeaE0+aMLBgk8SKgJ3fXm==M2-Z_yEPYNVZ0yxSee-p7YOw@mail.gmail.com> <5549083F.8080505@imgtec.com> <5550C06D.2010409@ti.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v4 1/2] dma: Add Xilinx Central DMA DT Binding
+ Documentation
+Date: Wed, 3 Jun 2015 06:21:26 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A49A8B5A9@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1432228194-6760-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5550C06D.2010409-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 1428444258-25852-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1432228194-6760-1-git-send-email-appanad@xilinx.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Appana Durga Kedareswara Rao <appanad@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Michal Simek <michals@xilinx.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "appand@xilinx.com" <appand@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Srikanth Thokala <sthokal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+Ping!
 
 
-On Monday 11 May 2015 08:15 PM, Kishon Vijay Abraham I wrote:
+> -----Original Message-----
+> From: Kedareswara rao Appana [mailto:appana.durga.rao@xilinx.com]
+> Sent: Thursday, May 21, 2015 10:40 PM
+> To: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; Michal Simek; galak@codeaurora.org;
+> appand@xilinx.com; Soren Brinkmann
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; Appana Durga Kedareswara Rao; Srikanth Thokala
+> Subject: [PATCH v4 1/2] dma: Add Xilinx Central DMA DT Binding
+> Documentation
 >
+> Device-tree binding documentation of Xilinx Central DMA Engine.
 >
-> On Tuesday 05 May 2015 11:43 PM, Ezequiel Garcia wrote:
->> Hi Kishon,
->>
->>>
->>> This series adds support for the USB2.0 PHY present on the IMG Pistachio SoC.
->>>
->>> Based on mips-for-linux-next and tested on the IMG Pistachio BuB.  If possible,
->>> I'd like this to go through the MIPS tree with Kishon's ACK.
->>>
->>
->> Tested-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>
->> Can we have your Ack for this series so Ralf can pick it?
+> Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> ---
+> This patch is rebased on the commit
+> Merge tag 'nfs-for-4.1-2' of git://git.linux-nfs.org/projects/trondmy/linux-nfs
 >
-> sure..
+> Changes in v4:
+> - None.
+> Changes in v3:
+> - Used proper alignment for all the properties.
+> Changes in v2:
+> - Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
+>   to match the implementation.
 >
-> Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>  .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt | 54
+> ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+>
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+> b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+> new file mode 100644
+> index 0000000..d1637de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+> @@ -0,0 +1,54 @@
+> +Xilinx AXI CDMA engine, it does transfers between memory-mapped
+> source
+> +address and a memory-mapped destination address.
+> +
+> +Required properties:
+> +- compatible         : Should be "xlnx,axi-cdma-1.00.a"
+> +- #dma-cells         : Should be <1>, see "dmas" property below
+> +- reg                        : Should contain cdma registers location and length.
+> +- dma-channel child node: Should have only one channel
+> +
+> +Optional properties:
+> +- xlnx,include-sg    : Tells whether configured for Scatter-mode in
+> +                       the hardware.
+> +
+> +Required child node properties:
+> +- compatible         : It should be "xlnx,axi-cdma-channel".
+> +- interrupts         : Should contain per channel CDMA interrupts.
+> +- xlnx,datawidth     : Should contain the stream data width, take values
+> +                       {32,64...1024}.
+> +
+> +Option child node properties:
+> +- xlnx,include-dre   : Tells whether hardware is configured for Data
+> +                       Realignment Engine.
+> +
+> +Example:
+> +++++++++
+> +
+> +axi_cdma_0: axicdma@7e200000 {
+> +       compatible = "xlnx,axi-cdma-1.00.a";
+> +       #dma_cells = <1>;
+> +       reg = < 0x7e200000 0x10000 >;
+> +       dma-channel@7e200000 {
+> +               compatible = "xlnx,axi-cdma-channel";
+> +               interrupts = < 0 55 4 >;
+> +               xlnx,datawidth = <0x40>;
+> +       } ;
+> +} ;
+> +
+> +
+> +* DMA client
+> +
+> +Required properties:
+> +- dmas               : a list of <[Central DMA device phandle] [Channel
+> ID]> pairs,
+> +               where Channel ID is '0' for write/tx and '1' for read/rx
+> +                  channel.
+> +- dma-names  : a list of DMA channel names, one per "dmas" entry
+> +
+> +Example:
+> +++++++++
+> +
+> +cdmatest_0: cdmatest@0 {
+> +       compatible ="xlnx,axi-cdma-test-1.00.a";
+> +       dmas = <&axi_cdma_0 0>;
+> +       dma-names = "cdma";
+> +} ;
+> --
+> 2.1.2
 
-I'm not sure if this has been merged yet. But this will cause conflicts with 
-other PHY patches in Makefile and Kconfig when linus merges to his tree. I'd 
-prefer the phy patches go in PHY tree itself.
 
-Thanks
-Kishon
->>
->> Thanks!
->> Ezequiel
->>
->>> Cc: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>> Cc: Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>>
->>> Changes from v1:
->>>    - Added patch to enable PHY driver in pistachio_defconfig
->>>    - Fixed a couple of spelling errors
->>>
->>> Andrew Bresticker (3):
->>>     phy: Add binding document for Pistachio USB2.0 PHY
->>>     phy: Add driver for Pistachio USB2.0 PHY
->>>     MIPS: pistachio: Enable USB PHY driver in defconfig
->>>
->>>    .../devicetree/bindings/phy/pistachio-usb-phy.txt  |  29 +++
->>>    arch/mips/configs/pistachio_defconfig              |   1 +
->>>    drivers/phy/Kconfig                                |   7 +
->>>    drivers/phy/Makefile                               |   1 +
->>>    drivers/phy/phy-pistachio-usb.c                    | 206 +++++++++++++++++++++
->>>    include/dt-bindings/phy/phy-pistachio-usb.h        |  16 ++
->>>    6 files changed, 260 insertions(+)
->>>    create mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
->>>    create mode 100644 drivers/phy/phy-pistachio-usb.c
->>>    create mode 100644 include/dt-bindings/phy/phy-pistachio-usb.h
->>>
->>> --
->>> 2.2.0.rc0.207.ga3a616c
->>>
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
