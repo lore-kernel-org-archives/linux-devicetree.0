@@ -1,111 +1,67 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: [PATCH 07/11] mtd: spi-nor: rework write loop
-Date: 3 Jun 2015 21:26:41 -0000
-Message-ID: <df028a8d9cff88f0acecb950839255a6ede492d0.1433364398.git.hramrach@gmail.com>
-References: <cover.1433364398.git.hramrach@gmail.com>
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] dt/bindings: Add binding for the Raspberry Pi
+ firmware driver
+Date: Wed, 3 Jun 2015 22:30:46 +0100
+Message-ID: <20150603213046.GE12304@x1>
+References: <1432928535-27522-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1433364398.git.hramrach@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Michal Suchanek <hramrach@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marex@denx.de>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432928535-27522-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The write loop assumes that what is passed to write() is what gets
-written. When write() writes less than page size at once data is dropped
-on the floor. Check the amount of data writen.
+What's going on here?  This is unlike you.
 
-Signed-off-by: Michal Suchanek <hramrach@gmail.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 48 ++++++++++++++-----------------------------
- 1 file changed, 15 insertions(+), 33 deletions(-)
+> This driver will provide support for calls into the firmware that will
+> be used by other drivers like cpufreq and vc4.
+> 
+> v2: Improve commit message, point to mailbox.txt for how mboxes work.
+> v3: Use Lee's suggestion for mailbox phandle docs, fix spelling of
+>     "raspberry".
+> v4: Change the compatible string to "raspberrypi,bcm2835-firmware"
+>     (requested by Lee, agreed by Stephen)
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index c851bb5..76f4970 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -823,7 +823,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 	size_t *retlen, const u_char *buf)
- {
- 	struct spi_nor *nor = mtd_to_spi_nor(mtd);
--	u32 page_offset, page_size, i;
-+	size_t page_offset, page_remain, i;
- 	int ret;
- 
- 	dev_dbg(nor->dev, "to 0x%08x, len %zd\n", (u32)to, len);
-@@ -832,45 +832,27 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 	if (ret)
- 		return ret;
- 
--	write_enable(nor);
--
--	page_offset = to & (nor->page_size - 1);
-+	for (i = 0; i < len; ) {
-+		int written;
- 
--	/* do all the bytes fit onto one page? */
--	if (page_offset + len <= nor->page_size) {
--		ret = nor->write(nor, to, len, buf);
--		if (ret < 0)
--			goto write_err;
--		*retlen += ret;
--	} else {
-+		page_offset = to & (nor->page_size - 1);
- 		/* the size of data remaining on the first page */
--		page_size = nor->page_size - page_offset;
--		nor->write(nor, to, page_size, buf);
-+		page_remain = min_t(size_t,
-+				    nor->page_size - page_offset, len - i);
-+
-+		write_enable(nor);
-+		ret = nor->write(nor, to + i, page_remain, buf + i);
- 		if (ret < 0)
- 			goto write_err;
--		*retlen += ret;
--
--		/* write everything in nor->page_size chunks */
--		for (i = ret; i < len; ) {
--			page_size = len - i;
--			if (page_size > nor->page_size)
--				page_size = nor->page_size;
--
--			ret = spi_nor_wait_till_ready(nor);
--			if (ret)
--				goto write_err;
-+		written = ret;
- 
--			write_enable(nor);
--
--			ret = nor->write(nor, to + i, page_size, buf + i);
--			if (ret < 0)
--				goto write_err;
--			*retlen += ret;
--			i += ret;
--		}
-+		ret = spi_nor_wait_till_ready(nor);
-+		if (ret)
-+			goto write_err;
-+		*retlen += written;
-+		i += written;
- 	}
- 
--	ret = spi_nor_wait_till_ready(nor);
- write_err:
- 	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_WRITE);
- 	return ret;
--- 
-2.1.4
+Perhaps this should have culminated in a Suggested-by.
 
+The change-log should be below the "---".
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+
+Where's your SoB?
+
+> ---
+>  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt      | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+> new file mode 100644
+> index 0000000..5fb1868
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+> @@ -0,0 +1,14 @@
+> +Raspberry Pi VideoCore firmware driver
+> +
+> +Required properties:
+> +
+> +- compatible:		Should be "rasbperrypi,bcm2835-firmware"
+
+Spelling.
+
+> +- mboxes:		Phandle to the firmware device's Mailbox.
+> +			  (See: ../mailbox/mailbox.txt for more information)
+> +
+> +Example:
+> +
+> +firmware {
+> +	compatible = "raspberrypi,bcm2835-firmware";
+> +	mboxes = <&mailbox>;
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
