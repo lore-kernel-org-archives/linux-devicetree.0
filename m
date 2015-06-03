@@ -1,45 +1,84 @@
-From: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] GPIO support for BRCMSTB
-Date: Tue, 2 Jun 2015 21:13:19 -0700
-Message-ID: <CADtm3G7mKJ6b9Koy0DeTAVUeJyhS9Lw+AzEvKf-xmFXTmAuG2w@mail.gmail.com>
-References: <1430901477-10678-1-git-send-email-gregory.0xf0@gmail.com>
- <CACRpkda3EDa7YdzeT6FQ=cQw1RrDath7pQsCos-JeB2y4r18gw@mail.gmail.com>
- <CADtm3G45-u82Rp_0dHf2EfdMokf8E4FaQ84PHnocpvXxU+5_+g@mail.gmail.com>
- <CACRpkdaTYAr-7K5_QZh1CyeyA1224obqEB2Sz8UHZmrWcfv+ow@mail.gmail.com>
- <CADtm3G4ao=3sHx2F1+V9rwS=jWf6ZdEQi4d24HxQ6MEc+CQ8CQ@mail.gmail.com> <CACRpkdY_-zq-1srBC213MK_RoVvPsfTpRTQyx-4yRvCOV5JdxQ@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V6 1/3] OPP: Add new bindings to address shortcomings of
+ existing bindings
+Date: Wed, 3 Jun 2015 10:10:06 +0530
+Message-ID: <20150603044006.GB4527@linux>
+References: <cover.1432797343.git.viresh.kumar@linaro.org>
+ <96d49e7e6747c1a65c5f285d70600795126641cc.1432797343.git.viresh.kumar@linaro.org>
+ <20150602183120.GB24349@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdY_-zq-1srBC213MK_RoVvPsfTpRTQyx-4yRvCOV5JdxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150602183120.GB24349@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 2, 2015 at 2:05 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, May 27, 2015 at 5:26 AM, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> I've now actually attempted to use the gpiolib irqchip code.  This
->> driver can't directly use gpiochip_irqchip_add() because of the
->> multiple gpiochip : one irqchip map.  At first, I thought it might be
->> possible to simply add a new argument (or break things into a helper
->> function) to allow setting the associated IRQ domain, but then I can't
->> use the generic map and unmap functions which expect the irq_domain
->> host_data member to be struct gpiochip *, which makes no sense in this
->> case.  That puts me right back to implementing a special version of
->> the map and unmap function.
->
-> I see.
->
+On 02-06-15, 11:31, Stephen Boyd wrote:
+> Also, is there already code written to handle these new
+> bindings in the OPP library? If not, it would be good to write
+> some to flush out any problems that may be lurking in actual
+> implementation.
 
-I think I was wrong, it isn't actually necessary to have a single
-irq_chip as long as all of the IRQs use the same handler.  I have a
-preliminary implementation doing that instead that seems to work fine.
-Once I've had a chance to verify that it works in all cases, will post
-that as v3.
+I had written code earlier for V2 or something, but then we went back
+to the improvements in bindings and I stopped writing code for it.
 
-Cheers,
-Gregory
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://marc.info/?i=cover.1423642246.git.viresh.kumar%40linaro.org
+
+But that just requires to be updated a bit now. Will do that once I am
+sure the bindings are all good now, with all Acks and RBYs.
+
+> > +
+> > +Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+> > +
+> > +/ {
+> > +	cpus {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		cpu@0 {
+> > +			compatible = "arm,cortex-a9";
+> > +			reg = <0>;
+> > +			next-level-cache = <&L2>;
+> > +			clocks = <&clk_controller 0>;
+> > +			clock-names = "cpu";
+> > +			opp-supply = <&cpu_supply0>;
+> 
+> opp-supply isn't mentioned anywhere. Is that intentional? Is it
+
+This should have been 'cpu-supply' instead.
+
+> supposed to be cpu-supply still?
+
+Yes.
+
+> It isn't clear to me from the
+> previous discussion where this all ended up, but I'm not sure how
+> the in-kernel API is going to match up regulators with OPPs. I
+> mean, how are we going to ask the OPP library what the
+> min/max/target voltage is at a particular frequency when we have
+> multiple regulators? Is that some string based interface? 
+> 
+> 	dev_pm_opp_get_voltage(name, &target, &min, &max);
+> 
+> Or a regulator pointer interface?
+> 
+> 	dev_pm_opp_get_voltage(regulator, &target, &min, &max);
+
+Probably this.
+
+> Or something else? Does this mean the OPP library is going to get
+> the CPU device to request the opp-supply from the CPU node?
+
+Maybe yes. That will clarify more with more code in place.
+
+> Furthermore, why don't we care about opp-clocks? Are clocks
+> somehow special?
+
+There shouldn't be opp-supply in the first place and so no need of
+opp-clocks as well.
+
+-- 
+viresh
