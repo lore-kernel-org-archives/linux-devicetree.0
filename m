@@ -1,68 +1,22 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun6i: Add a dts file for
- the Mele A1000G quad top set box
-Date: Wed, 03 Jun 2015 09:22:35 +0200
-Message-ID: <556EAB3B.1050708@redhat.com>
-References: <1433170979-13725-1-git-send-email-hdegoede@redhat.com> <20150602155816.GC23777@lukather> <556DF6DB.8040601@redhat.com> <20150602214946.GF23777@lukather>
+From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Subject: Re: [PATCH v4 00/12] MIPS: ath79: Add OF support and DTS for
+ TL-WR1043ND
+Date: Wed, 3 Jun 2015 09:34:22 +0200
+Message-ID: <20150603073422.GN26432@linux-mips.org>
+References: <1433029955-7346-1-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150602214946.GF23777@lukather>
+Content-Disposition: inline
+In-Reply-To: <1433029955-7346-1-git-send-email-albeu-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Thanks, I replaced the v3 series in my tree with v4.
 
-On 02-06-15 23:49, Maxime Ripard wrote:
-> On Tue, Jun 02, 2015 at 08:32:59PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 06/02/2015 05:58 PM, Maxime Ripard wrote:
->>> On Mon, Jun 01, 2015 at 05:02:59PM +0200, Hans de Goede wrote:
->>>> The Mele A1000G-quad and the Mele M9 have the same PCB, sofar we've been using
->>>> the same dts for both models. Unfortunately this does not work for the otg
->>>> controller, on the M9 this is routed to a micro-usb connector on the outside,
->>>> while as on the A1000G-quad it is connected to an usb to sata bridge
->>>> (which is not populated on the M9 pcb).
->>>>
->>>> This commit adds a new dts for the Mele-A1000G-quad to allow using
->>>> different otg controller settings on the 2 boards.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>   arch/arm/boot/dts/Makefile                                        | 1 +
->>>>   arch/arm/boot/dts/{sun6i-a31-m9.dts => sun6i-a31-a1000g-quad.dts} | 4 ++--
->>>
->>> Didn't we say that we were trying to set the vendor name in the DTs
->>> now, at least for the new ones?
->>
->> I think we said that Paul would write a proposal to standardize
->> naming for future boards, but that never materialized.
->>
->>> I can fix this and apply it if it's ok for you.
->>
->> I'm fine with throwing -mele- in there, or not, what ever you
->> prefer.
->
-> Ok, applied and fixed the name.
->
-> This is probably going to be the last patch pulled for 4.2, unless
-> something important shows up in the next few days.
-
-That is fine with me, the only thing which I've pending on the dts
-side is a hole lot of musb related patches which belong in 4.3 anyways.
-
-What about the "ARM: dts: sun8i: Add Ippo-q8h v1.2 with A33 and 1024x600 lcd support"
-commit? You had a remark on doing that differently to which I replied,
-so that one is still in limbo a bit...
-
-Regards,
-
-Hans
-
+  Ralf
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
