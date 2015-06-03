@@ -1,90 +1,106 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH 2/9] input: goodix: fix variable length array warning
-Date: Wed, 3 Jun 2015 10:26:47 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F19A78DD0@irsmsx105.ger.corp.intel.com>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
-	<1432817265-23891-3-git-send-email-irina.tirdea@intel.com>
- <20150528175753.1f85723b5b880ecf02fd4a79@ao2.it>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2
+ with A33 and 1024x600 lcd support
+Date: Wed, 03 Jun 2015 13:12:04 +0200
+Message-ID: <556EE104.3090803@redhat.com>
+References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com> <1432997706-20172-7-git-send-email-hdegoede@redhat.com> <20150602081459.GO23777@lukather> <556D6955.8030708@redhat.com> <20150603094535.GI23777@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150528175753.1f85723b5b880ecf02fd4a79@ao2.it>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Antonio Ospite <ao2@ao2.it>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBCOCXOVQKGQEHN2VX2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150603094535.GI23777@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On 03-06-15 11:45, Maxime Ripard wrote:
+> On Tue, Jun 02, 2015 at 10:29:09AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 02-06-15 10:14, Maxime Ripard wrote:
+>>> On Sat, May 30, 2015 at 04:55:06PM +0200, Hans de Goede wrote:
+>>>> The Ippo-q8h is a tablet circuit board commonly found in cheap Android
+>>>> tablets. The v1.2 version can be used with either an A23 or A33 SoC.
+>>>>
+>>>> This adds a dts file for the v1.2 board with an A33 SoC and a 1024x600
+>>>> LCD screen (most of these tablets have a 800x480 screen).
+>>>
+>>> I think the difference between the resolution here is more of a case
+>>> for the DT quirks interface:
+>>> https://lkml.org/lkml/2015/2/18/258
+>>
+>> I would expect the only difference between the 2 dts files to be the
+>> node describing the lcd panel, so yes that makes somewhat sense.
+>>
+>>> Do you know if there's some way to autodetect the two board versions
+>>> (like a board id somewhere in an EEPROM)?
+>>
+>> No, AFAIK there is no way to tell the difference. There is no eeprom no
+>> the board, and we really cannot rely on the nand contents.
+>
+> Ok.
+>
+>>> If not, then maybe u-boot can simply add that board compatible to the
+>>> list, and we'll base our logic on that when we'll need it.
+>>
+>> That means extra logic in u-boot, and on the kernel side, for what
+>> benefit exactly? Such logic would make sense if there was one u-boot
+>> image which runtime adjusted itself, but that is not an option.
+>
+> For what benefit? One kernel image which runtime adjusts itself.
 
-> -----Original Message-----
-> From: Antonio Ospite [mailto:ao2@ao2.it]
-> Sent: 28 May, 2015 18:58
-> To: Tirdea, Irina
-> Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 2/9] input: goodix: fix variable length array warning
-> 
-> On Thu, 28 May 2015 15:47:38 +0300
-> Irina Tirdea <irina.tirdea@intel.com> wrote:
-> 
-> > Fix sparse warning:
-> > drivers/input/touchscreen/goodix.c:182:26: warning:
-> > Variable length array is used.
-> >
-> > Replace the variable length array with fixed length.
-> >
-> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > ---
-> >  drivers/input/touchscreen/goodix.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> > index c2e785c..dac1b3c 100644
-> > --- a/drivers/input/touchscreen/goodix.c
-> > +++ b/drivers/input/touchscreen/goodix.c
-> > @@ -147,7 +147,7 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
-> >   */
-> >  static void goodix_process_events(struct goodix_ts_data *ts)
-> >  {
-> > -	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
-> > +	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
-> 
-> Hi,
-> 
+You mean one dtb right, because the kernel itself already runtime
+adjusts itself.
 
-Hi Antonio,
+> It's especially possible if u-boot's image is not, which seems to be what
+> you're saying.
 
-> this fixes the warning from sparse, but also changes the semantics of
-> the code: ts->max_touch_num is less that GOODIX_MAX_CONTACTS for 5
-> touches devices and in this case we'll end up using more memory than is
-> necessary.
-> 
+But we will still need different configs in u-boot, and we need
+to add code + config to u-boot to plug in the extra compatibles
+to automatically select the right built-in overlays.
 
-I wasn't sure if it is better to save the 5 bytes or fix the warning, so I sent this to get some more input.
-Thanks for the feedback, I will  drop this patch.
+>> And we can avoid copy and paste on the dts side by putting all
+>> the common stuff in a common file and including that, I believe
+>> that that is better (KISS = better) since we've no way to runtime
+>> do the right thing AFAICT.
+>
+> My concern is about the ever-growing number of DTS that just are small
+> variations of one or the other. What about the time when we'll
+> discover that this board has a variant that has an emmc, and some that
+> don't have any button, or the i2c bus 2 not wired, and one other that
+> doesn't have any HDMI?
+>
+> Do we really want to have a dts called
+> sun8i-a33-q8h-emmc-lcd800x600-nohdmi-noi2c2-nobuttons.dts?
+>
+> Especially when we will have the one that we include here that will
+> not have followed this convention because it was introduced before
+> that, and that we have a way to deal with this nicely?
+>
+> You chose to consider the DTS names an ABI, the best way to handle
+> this is to have a DTS as generic as possible, and leave all these
+> small variations outside of the name.
 
-Thanks,
-Irina
+Ok, so for now this is not really an issue at all since the dts
+does not yet decribe the lcd at all. So can you merge this one
+renamed to a more generic name for 4.2?
 
-> Thanks,
->    Antonio
-> 
-> >  	int touch_num;
-> >  	int i;
-> >
-> > --
-> > 1.9.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-input" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> --
-> Antonio Ospite
-> http://ao2.it
-> 
-> A: Because it messes up the order in which people normally read text.
->    See http://en.wikipedia.org/wiki/Posting_style
-> Q: Why is top-posting such a bad thing?
+That will work fine for now.
+
+Then we can use the DT quirks interface to add different lcd
+nodes for different variants once we get lcd support in the kernel,
+and teach u-boot to add the extra board compatible to select
+the right lcd node at that time.
+
+Regards,
+
+Hans
