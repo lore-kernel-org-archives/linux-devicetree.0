@@ -2,76 +2,112 @@ From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 Subject: Re: [PATCH v4 1/6] mtd: nand: =?UTF-8?Q?vf=36=31=30=5Fnfc=3A=20Fr?=
  =?UTF-8?Q?eescale=20NFC=20for=20VF=36=31=30=2C=20MPC=35=31=32=35=20and=20?=
  =?UTF-8?Q?others?=
-Date: Wed, 03 Jun 2015 17:05:16 +0200
-Message-ID: <b3b09b4b8c97cbfc88fa0d5fdc5e40cd@agner.ch>
+Date: Wed, 03 Jun 2015 17:09:33 +0200
+Message-ID: <b457fab56ff3ebc72f264a400a0ab33f@agner.ch>
 References: <1427300909-20825-1-git-send-email-stefan@agner.ch>
  <1427300909-20825-2-git-send-email-stefan@agner.ch>
- <20150603130825.GA23991@breakpoint.cc>
+ <20150603081059.GA6944@breakpoint.cc>
+ <821b4731043fef279b6a82b920707982@agner.ch>
+ <20150603120355.GA1668@breakpoint.cc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150603130825.GA23991-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+In-Reply-To: <20150603120355.GA1668-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
 Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-06-03 15:08, Sebastian Andrzej Siewior wrote:
-> On 2015-03-25 17:28:24 [+0100], Stefan Agner wrote:
->> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_n=
-fc.c
->> new file mode 100644
->> index 0000000..23c1510
->> --- /dev/null
->> +++ b/drivers/mtd/nand/vf610_nfc.c
->> @@ -0,0 +1,686 @@
-> =E2=80=A6
->> +static inline u32 vf610_nfc_read(struct vf610_nfc *nfc, uint reg)
->> +{
->> +	return readl(nfc->regs + reg);
->> +}
->> +
->> +static inline void vf610_nfc_write(struct vf610_nfc *nfc, uint reg,=
- u32 val)
->> +{
->> +	writel(val, nfc->regs + reg);
->> +}
-> =E2=80=A6
+On 2015-06-03 14:03, Sebastian Andrzej Siewior wrote:
+> On Wed, Jun 03, 2015 at 11:45:50AM +0200, Stefan Agner wrote:
+>> On 2015-06-03 10:10, Sebastian Andrzej Siewior wrote:
+>> > On 2015-03-25 17:28:24 [+0100], Stefan Agner wrote:
+>> >> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf61=
+0_nfc.c
+>> >> new file mode 100644
+>> >> index 0000000..23c1510
+>> >> --- /dev/null
+>> >> +++ b/drivers/mtd/nand/vf610_nfc.c
+>> > =E2=80=A6
+>> >> +static void vf610_nfc_addr_cycle(struct vf610_nfc *nfc, int colu=
+mn, int page)
+>> >> +{
+>> >> +	if (column !=3D -1) {
+>> >> +		if (nfc->chip.options | NAND_BUSWIDTH_16)
+>> >> +			column =3D column/2;
+>> >> +		vf610_nfc_set_field(nfc, NFC_COL_ADDR, COL_ADDR_MASK,
+>> >> +				    COL_ADDR_SHIFT, column);
+>> >> +	}
+>> >> +	if (page !=3D -1)
+>> >> +		vf610_nfc_set_field(nfc, NFC_ROW_ADDR, ROW_ADDR_MASK,
+>> >> +				    ROW_ADDR_SHIFT, page);
+>> >> +}
+>> >
+>> > Do you have here also a different NAND layout on your boot-page vs
+>> > remaining pages? The mpc5125 has this different layout.
+>>
+>> There is the boot configuration block which uses a Parity 13/8
+>> algorithm, is it that you are referring to? The format parity is in =
+the
+>> main area, hence it doesn't clash with the HW ECC of the controller.=
+ One
+>> can use normal NAND write functions to write this page. See the
 >=20
->> +static void vf610_nfc_send_command(struct vf610_nfc *nfc, u32 cmd_b=
-yte1,
->> +				   u32 cmd_code)
->> +{
->> +	void __iomem *reg =3D nfc->regs + NFC_FLASH_CMD2;
->> +	u32 tmp;
->> +
->> +	vf610_nfc_clear_status(nfc);
->> +
->> +	tmp =3D __raw_readl(reg);
->> +	tmp &=3D ~(CMD_BYTE1_MASK | CMD_CODE_MASK | BUFNO_MASK);
->> +	tmp |=3D cmd_byte1 << CMD_BYTE1_SHIFT;
->> +	tmp |=3D cmd_code << CMD_CODE_SHIFT;
->> +	__raw_writel(tmp, reg);
->> +}
->=20
-> Why readl() vs __raw_readl() dito for write?
-> vf610_nfc_{read|write} is good since for PPC we would need out_be32()
-> here instead.
-> It would be nice if you could abstract the __raw_ once as well. And I=
- am
-> not sure if you need those at all since the former functions should w=
-ork
-> here just fine.
+> No, this sounds different. The first few pages which are used for nan=
+d-boot
+> are using 1056 for sector size with 32bit-ecc. This configuration is =
+always
+> used depsite what the physical NAND offers. Which means if you config=
+ure later
+> the proper sector size for your NAND with 2K (or 4K) pages the conten=
+t in the
+> first page(s) can not be read. Even if you disable ECC correction on =
+read the
+> content looks a little different due to the two sector size beeing in=
+volved.
+> And I am not sure if the layout if data/ECC is the same here, to. On =
+top of
+> this writting without ECC is not usefull.
 
-As Boris guessed correctly, the reason I used the raw variant was due t=
-o
-performance improvements due to the barrier. However, I will use
-{read|write}l_relaxed instead, which should offer endian abstraction
-while not having the performance penalty due to extensive barriers...
+Hm, so on PPC the boot ROM is making use of the HW ECC controller, is
+this correct?
+
+I guess if this is a hard wired behavior of the boot ROM for the first
+few pages, one could add such hard wired behavior for the affected page=
+s
+in the driver too. However, since other platforms don't use that, it
+probably would need to be done in a device specific way (e.g. quirks
+field which is set according to compatible...)
+
+> The FSL's BSP for mpc5125 had some funny commands in their u-boot in =
+order to
+> write the boot-page(s).
+>=20
+> That said, I added here in the addr cycle a check for the lower page =
+numbers
+> to switch the sector size at runtime. With the proper partition entry=
+ I am
+> able to read/write the boot pages(s). The only extra magic involved i=
+s the
+> rearrangement of the binary data before writing it into the boot page=
+ because
+> the SoC's bootmode uses a different layout here.
+> Since you probably not doing this at all it probably remains unique t=
+o the
+> mpc5125. Please keep this in mind if someone with mpc5125 comes along=
+ that it
+> might be usefull to switch the sector size for the boot-pages so one =
+can
+> easily read/write it from linux.
+
+In the end, if somebody wants that feature, somebody will have to do
+that change to the driver... But thanks for the information, will keep
+that in mind.
 
 --
 Stefan
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
