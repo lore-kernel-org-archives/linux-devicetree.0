@@ -1,165 +1,71 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 6/8] mfd: cros_ec: Support multiple EC in a system
-Date: Wed, 3 Jun 2015 09:53:40 +0100
-Message-ID: <20150603085340.GL3329@x1>
-References: <1433232671-27679-1-git-send-email-javier.martinez@collabora.co.uk>
- <1433232671-27679-7-git-send-email-javier.martinez@collabora.co.uk>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/6] i2c: at91: add support to FIFOs and alternative command
+Date: Wed, 3 Jun 2015 10:59:07 +0200
+Message-ID: <cover.1433321260.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433232671-27679-7-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Bill Richardson <wfrichar@chromium.org>, Simon Glass <sjg@google.com>, Gwendal Grignou <gwendal@google.com>, Stephen Barber <smbarber@chromium.org>, Filipe Brandenburger <filbranden@google.com>, Todd Broch <tbroch@chromium.org>, Alexandru M Stan <amstan@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 02 Jun 2015, Javier Martinez Canillas wrote:
+ChangeLog
 
-> From: Gwendal Grignou <gwendal@chromium.org>
->=20
-> Chromebooks can have more than one Embedded Controller so the
-> cros_ec device id has to be incremented for each EC registered.
->=20
-> Add code to handle multiple EC. First ec found is cros-ec0,
-> second cros-ec1 and so on.
->=20
-> Add a new structure to represent multiple EC as different char
-> devices (e.g: /dev/cros_ec, /dev/cros_pd). It connects to
-> cros_ec_device and allows sysfs inferface for cros_pd.
->=20
-> Also reduce number of allocated objects, make chromeos sysfs
-> class object a static and add refcounting to prevent object
-> deletion while command is in progress.
->=20
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> Reviewed-by: Dmitry Torokhov <dtor@chromium.org>
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
-=2Euk>
-> ---
->=20
-> Changes since v3:
->  - Add defines for the EC and PD index constants.
->  - Remove cros_ec_dev_register() and declare the mfd_cells as static =
-structs.
->    Suggested by Lee Jones.
->  - Add a new line before the return statement in cros_ec_dev_register=
-().
->    Suggested by Lee Jones.
->=20
-> Changes since v2: None
->=20
-> Changes since v1:
->   - Squash patch that adds support to represent EC's as different
->     char devices (e.g: /dev/cros_ec, /dev/cros_pd):
->     https://chromium-review.googlesource.com/#/c/217297/
->     Suggested by Gwendal Grignou
->   - Use cros_ec instead of cros-ec in the subject line to be consiste=
-nt.
->     Suggested by Gwendal Grignou
-> ---
->  drivers/input/keyboard/cros_ec_keyb.c      |   2 +-
->  drivers/mfd/cros_ec.c                      |  59 +++++++++++--
->  drivers/mfd/cros_ec_i2c.c                  |   1 -
->  drivers/mfd/cros_ec_spi.c                  |   1 -
->  drivers/platform/chrome/cros_ec_dev.c      | 128 +++++++++++++++++++=
-+---------
->  drivers/platform/chrome/cros_ec_dev.h      |   7 --
->  drivers/platform/chrome/cros_ec_lightbar.c |  75 +++++++++--------
->  drivers/platform/chrome/cros_ec_lpc.c      |   1 -
->  drivers/platform/chrome/cros_ec_sysfs.c    |  48 +++++------
->  include/linux/mfd/cros_ec.h                |  44 ++++++++--
->  10 files changed, 240 insertions(+), 126 deletions(-)
->=20
-> diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/ke=
-yboard/cros_ec_keyb.c
-> index 974154a74505..b01966dc7eb3 100644
-> --- a/drivers/input/keyboard/cros_ec_keyb.c
-> +++ b/drivers/input/keyboard/cros_ec_keyb.c
-> @@ -275,7 +275,7 @@ static int cros_ec_keyb_probe(struct platform_dev=
-ice *pdev)
->  	ckdev->dev =3D dev;
->  	dev_set_drvdata(&pdev->dev, ckdev);
-> =20
-> -	idev->name =3D ec->ec_name;
-> +	idev->name =3D CROS_EC_DEV_NAME;
->  	idev->phys =3D ec->phys_name;
->  	__set_bit(EV_REP, idev->evbit);
-> =20
-> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-> index 08d82bfc5268..4fbb4ce8f81e 100644
-> --- a/drivers/mfd/cros_ec.c
-> +++ b/drivers/mfd/cros_ec.c
-> @@ -24,11 +24,29 @@
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/cros_ec.h>
-> =20
-> -static const struct mfd_cell cros_devs[] =3D {
-> -	{
-> -		.name =3D "cros-ec-ctl",
-> -		.id =3D PLATFORM_DEVID_AUTO,
-> -	},
-> +#define CROS_EC_DEV_EC_INDEX 0
-> +#define CROS_EC_DEV_PD_INDEX 1
-> +
-> +struct cros_ec_platform ec_p =3D {
-> +	.cmd_offset =3D EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_EC_INDEX),
-> +};
-> +
-> +struct cros_ec_platform pd_p =3D {
-> +	.cmd_offset =3D EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX),
-> +};
-> +
-> +struct mfd_cell ec_cell =3D {
-> +	.name =3D "cros-ec-ctl",
-> +	.id =3D PLATFORM_DEVID_AUTO,
-> +	.platform_data =3D &ec_p,
-> +	.pdata_size =3D sizeof(ec_p),
-> +};
-> +
-> +struct mfd_cell ec_pd_cell =3D {
-> +	.name =3D "cros-ec-ctl",
-> +	.id =3D PLATFORM_DEVID_AUTO,
-> +	.platform_data =3D &pd_p,
-> +	.pdata_size =3D sizeof(pd_p),
->  };
-> =20
->  int cros_ec_register(struct cros_ec_device *ec_dev)
-> @@ -52,14 +70,39 @@ int cros_ec_register(struct cros_ec_device *ec_de=
-v)
-> =20
->  	cros_ec_query_all(ec_dev);
-> =20
-> -	err =3D mfd_add_devices(dev, 0, cros_devs,
-> -			      ARRAY_SIZE(cros_devs),
-> +	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
-> +		ec_p.ec_name =3D of_get_property(dev->of_node, "devname",
-> +					       NULL);
+v4:
+- replace 0x%x by %#x when printing I2C controller version
+- change the order of patches: the race condition bug fix becomes the first
+  patch so it be can more easily applied to older kernels.
 
-Has this binding already been accepted?  We don't normally allow
-"device name"properties in DT.
+v3:
+- fix braces {} coding style issue
+- split the alternative command patch into 2 patches: the first one fixes
+  a race condition whereas the second one is the actual alternative command
+  patch
 
-> +	if (!ec_p.ec_name)
-> +		ec_p.ec_name =3D CROS_EC_DEV_NAME;
-> +
-> +	err =3D mfd_add_devices(ec_dev->dev, CROS_EC_DEV_EC_INDEX, &ec_cell=
-, 1,
->  			      NULL, ec_dev->irq, NULL);
+v2:
+- fix typo in comment for AT91_TWI_SVEN.
+- document new device tree bindings like "atmel,fifo-size".
+- explicitly set the has_alt_cmd boolean to false to already existing chip
+  configs.
+- use the BIT() macro to define the register bits and do a little cleanup in a
+  dedicated patch.
+- reword some comments to better explain why the TXCOMP interrupt is no longer
+  enabled in at91_do_twi_transfer() but later in
+  at91_twi_write_data_dma_callback() to avoid a race condition when DMA is used.
+- remove useless TXCOMP interrupt enable line in at91_twi_write_next_byte()
+  since this interrupt is also enabled by at91_do_twi_transfer() for PIO
+  transfers.
 
-Take a look at how 'id' (second argument) is handled in mfd-core, then
-try to figure out why what you're doing is not correct.
+v1:
+This series of patches adds support of two new features which will be
+introduced with Atmel sama5d2x SoC.
 
->  	if (err) {
-> -		dev_err(dev, "failed to add mfd devices\n");
-> +		dev_err(dev, "failed to add ec\n");
->  		return err;
->  	}
+First, the alternative command mode eases the sending of STOP conditions.
+Before starting an I2C transaction, the size data to be transfered is
+written into the new Alternative Command Register. For each byte transferred,
+the I2C controller decreases this counter and automatically sends a STOP
+condition when the counter value reaches 0, that is to say when the last byte
+of the transaction has been sent/received. So there is no longer need to set
+the STOP bit into the Control Register.
 
-[...]
+Then the use of FIFOs allows to reduce number I/O accesses: for instance,
+the TX FIFO allows to write up to 4 data in a single access to the Transmit
+Holding Register. Also the RX FIFO allows to read up to 4 data in a single
+access to the Receive Holding Register. Currently only DMA transfers take
+advantage of FIFOs.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Cyrille Pitchen (6):
+  i2c: at91: fix a race condition when using the DMA controller
+  i2c: at91: use BIT() macro to define register bits
+  i2c: at91: update documentation for DT bindings
+  i2c: at91: add support for new alternative command mode
+  i2c: at91: print hardware version
+  i2c: at91: add support to FIFOs
+
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt |  29 +-
+ drivers/i2c/busses/i2c-at91.c                      | 354 +++++++++++++++++----
+ 2 files changed, 321 insertions(+), 62 deletions(-)
+
+-- 
+1.8.2.2
