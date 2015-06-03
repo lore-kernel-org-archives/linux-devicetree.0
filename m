@@ -1,60 +1,39 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv4 10/10] arm/dts: am57xx-beagle-x15.dts: add HDMI
-Date: Wed, 3 Jun 2015 10:16:28 -0700
-Message-ID: <20150603171627.GU30984@atomide.com>
-References: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com>
- <1433139798-23450-11-git-send-email-tomi.valkeinen@ti.com>
- <20150601215115.GH30984@atomide.com>
- <556EE463.6000502@ti.com>
- <20150603154438.GS30984@atomide.com>
- <556F24E6.7040003@ti.com>
- <20150603161008.GT30984@atomide.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Wed, 03 Jun 2015 13:16:41 -0500
+Message-ID: <556F4489.6030206@codeaurora.org>
+References: <=fu.wei@linaro.org> <1433217907-928-1-git-send-email-fu.wei@linaro.org> <1433217907-928-6-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150603161008.GT30984@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, paul@pwsan.com, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433217907-928-6-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [150603 09:11]:
-> * Tomi Valkeinen <tomi.valkeinen@ti.com> [150603 09:03]:
-> > 
-> > 
-> > On 03/06/15 18:44, Tony Lindgren wrote:
-> > > * Tomi Valkeinen <tomi.valkeinen@ti.com> [150603 04:28]:
-> > >>
-> > >>
-> > >> On 02/06/15 00:51, Tony Lindgren wrote:
-> > >>> * Tomi Valkeinen <tomi.valkeinen@ti.com> [150531 23:25]:
-> > >>>> AM57xx Beagle X15 has a HDMI output. This patch adds the device tree
-> > >>>> nodes required for HDMI.
-> > >>>
-> > >>> This one does not seem to apply to linux next, did not look
-> > >>> further where it conflicts.
-> > >>
-> > >> Looks like the change was also in -rc6. I've rebased my patches on -rc6,
-> > >> and added the acks:
-> > >>
-> > >> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git dra7-dss-arch
-> > > 
-> > > OK, since there are no other merge conflicts that I'm aware of,
-> > > it's best that you merge the whole branch. I've acked the patches,
-> > > so for this one too:
-> > 
-> > Ok, I can do that, but isn't this more linux-arm stuff? All the driver
-> > side code is already in the mainline.
-> 
-> Yes but we're getting so late into merge window that I'd rather not
-> take it for v4.2 at this point. And it's all DSS related.
-> 
-> Please make sure you get an ack for the drivers/clk/omap change from
-> Mike or Stephen though.
+On 06/01/2015 11:05 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> +	if (wdd->pretimeout)
+> +		/* The pretimeout is valid, go panic */
+> +		panic("SBSA Watchdog pre-timeout");
 
-Naturally I mean "getting so close to the merge window" above :)
+The problem with this is that WS1 will still occur.  So a few seconds 
+after the panic() call, the hardware will reset.  There won't be any 
+time to debug or log anything.
 
-Regards,
+> +		/* We don't use pretimeout, trigger WS1 now*/
+> +		sbsa_gwdt_set_wcv(wdd, 0);
 
-Tony
+Are you sure this will work?   This will set WCV to 0, which means it 
+the WS1 reset won't happen until the timestamp counter wraps around to 
+0.  That could be a very long time from now.
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
