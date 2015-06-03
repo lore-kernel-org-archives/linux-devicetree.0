@@ -1,65 +1,82 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] power_supply: rt9455_charger: Check if CONFIG_USB_PHY is
- enabled
-Date: Wed, 3 Jun 2015 15:20:55 +0200
-Message-ID: <20150603132054.GA18181@earth>
-References: <1433321223-19442-1-git-send-email-anda-maria.nicolae@intel.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 0/2] get pinctrl more flexible for per pin muxing controllers
+Date: Wed, 3 Jun 2015 15:31:56 +0200
+Message-ID: <556F01CC.8020305@atmel.com>
+References: <1430729776-27797-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1433321223-19442-1-git-send-email-anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1430729776-27797-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linus.walleij@linaro.org
+Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Le 04/05/2015 10:56, Ludovic Desroches a =E9crit :
+> Hi,
+>=20
+> The way pins, groups and functions are tied is too constraining for s=
+ome
+> controllers. It concerns mainly the ones we don't care about groups a=
+nd
+> functions, each pin can be muxed to any functions.
+> The goal of these two patches is too remove some of the constraints.
+>=20
+> I have added the prototype of a pin controller and device tree to sho=
+w the
+> way I want to use these changes. I couldn't test it on boards using g=
+eneric
+> pinconf so I am not sure that I don't break something...
+>=20
+>=20
+> Ludovic Desroches (4):
+>   pinctrl: change function behavior for per pin muxing controllers
+>   pinctrl: introduce complex pin description
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Linus,
 
-Hi Anda-Maria,
+Ludovic sent this series nearly one month ago. It was posted after a RF=
+C
+series on the same topic two months ago. As we don't see any comment on
+neither of them we assume that it's okay to include them.
 
-On Wed, Jun 03, 2015 at 11:47:03AM +0300, Anda-Maria Nicolae wrote:
-> If CONFIG_USB_PHY is not enabled, struct notifier_block is not defined and
-> compilation fails. Therefore, the functions that process USB event
-> notifications are defined only if CONFIG_USB_PHY is enabled.
-> There is no need to define these functions if CONFIG_USB_PHY is not
-> enabled, since no USB notifications are received in this case.
-> Also, since rt9455_set_boost_voltage_before_boost_mode() function is
-> called only if USB_EVENT_ID notification is received, this function should
-> also be defined only if CONFIG_USB_PHY is enabled.
+So, is it possible for you to merge these 2 patches in
+pinmux/pinconf-generic? The driver making use of this work, which was
+marked a "PROTO" in the series sent by Ludovic, is being finalized and
+sent: it would be good to have it working early.
 
-Thanks, queued for 4.2.
+Best regards,
 
--- Sebastian
 
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>   pinctrl: rough draft for a future controller
+>   ARM: at91/dt: proto dt
+>=20
+>  arch/arm/boot/dts/Makefile                 |   1 +
+>  arch/arm/boot/dts/at91-sama5d4ek_proto.dts | 243 ++++++++++
+>  arch/arm/boot/dts/sama5d4_proto-pinfunc.h  | 463 +++++++++++++++++++
+>  arch/arm/boot/dts/sama5d4_proto.dtsi       | 716 +++++++++++++++++++=
+++++++++++
+>  drivers/pinctrl/Kconfig                    |  10 +
+>  drivers/pinctrl/Makefile                   |   1 +
+>  drivers/pinctrl/pinconf-generic.c          |  44 +-
+>  drivers/pinctrl/pinctrl-at91-pio4.c        | 625 +++++++++++++++++++=
+++++++
+>  drivers/pinctrl/pinmux.c                   |  58 +--
+>  include/linux/pinctrl/pinctrl.h            |   6 +
+>  include/linux/pinctrl/pinmux.h             |   3 +
+>  11 files changed, 2134 insertions(+), 36 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/at91-sama5d4ek_proto.dts
+>  create mode 100644 arch/arm/boot/dts/sama5d4_proto-pinfunc.h
+>  create mode 100644 arch/arm/boot/dts/sama5d4_proto.dtsi
+>  create mode 100644 drivers/pinctrl/pinctrl-at91-pio4.c
+>=20
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBCgAGBQJVbv80AAoJENju1/PIO/qaF+UP/0JR+CtIfOxjyg6GathzQZhr
-l6DHkNgPwjsokSqVSEx33BpXe9745+NMSc1aNEN9dIedK/MQMovKSCP/xGHucGwc
-TpeFq4VjWG4kSrbCAulJHT4cD6ZiVg9ZlU5zbOv0iCgIYFhw+jJ6X/SU5vb/nVrp
-b6KHjLcohTYqg1oVhSIAMYxuZT1mReZoYoIS0fBHAJg0ZP1gDCIOGba9O57TwOeK
-yg5SMmzB8B4nCmszkjfdyzcz8/8v2nuNbrPPd6ebmP/LyavNj2s59dNOxBe3BgOZ
-ofHtIjf84FmPYFjn9J2nWZr4t+bLrCy8wbdLkitUM9VZxzW90lB03uY+o43wDWc6
-BndBnWTAHEQLeZOQFa3PmAiUUbN7bao81xjKr8SuXtJh5lF/ILVpJCu2jxwGQahY
-Ne2c21TFiGGvsmdtyd9/C7a9u1Sg+sp/5UWKNWMN6wj5nPK/gmA4JTCsfmVdO5pd
-t6hFxyiO1mlE82acdCdp+Uikbofipz3ctceE3ZBRyl1o1vUDa1Q9YnnXZeMPriC5
-RsCfQgvfybwJKksnqIy3Ds02tsZL7VsC0L4RDXF2qYNiSjojcJqG4NpxC9Xa3EUc
-QcRKvEcUVCdUUYSeu5rhVA1Z9ERUhwUPN07AX9MxAo5rgE48rHxZq5EQJ1+6Ozg5
-rhjSf2+ixr/A4XAGuVIm
-=KecI
------END PGP SIGNATURE-----
-
---bp/iNruPH9dso1Pn--
+--=20
+Nicolas Ferre
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
