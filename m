@@ -1,106 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2
- with A33 and 1024x600 lcd support
-Date: Wed, 03 Jun 2015 13:12:04 +0200
-Message-ID: <556EE104.3090803@redhat.com>
-References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com> <1432997706-20172-7-git-send-email-hdegoede@redhat.com> <20150602081459.GO23777@lukather> <556D6955.8030708@redhat.com> <20150603094535.GI23777@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv4 10/10] arm/dts: am57xx-beagle-x15.dts: add HDMI
+Date: Wed, 3 Jun 2015 14:26:27 +0300
+Message-ID: <556EE463.6000502@ti.com>
+References: <1433139798-23450-1-git-send-email-tomi.valkeinen@ti.com> <1433139798-23450-11-git-send-email-tomi.valkeinen@ti.com> <20150601215115.GH30984@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBCOCXOVQKGQEHN2VX2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150603094535.GI23777@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="agKiT81iWUJeuFWQJMpoPfsFCBSGBtUjU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150601215115.GH30984-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--agKiT81iWUJeuFWQJMpoPfsFCBSGBtUjU
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On 03-06-15 11:45, Maxime Ripard wrote:
-> On Tue, Jun 02, 2015 at 10:29:09AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 02-06-15 10:14, Maxime Ripard wrote:
->>> On Sat, May 30, 2015 at 04:55:06PM +0200, Hans de Goede wrote:
->>>> The Ippo-q8h is a tablet circuit board commonly found in cheap Android
->>>> tablets. The v1.2 version can be used with either an A23 or A33 SoC.
->>>>
->>>> This adds a dts file for the v1.2 board with an A33 SoC and a 1024x600
->>>> LCD screen (most of these tablets have a 800x480 screen).
->>>
->>> I think the difference between the resolution here is more of a case
->>> for the DT quirks interface:
->>> https://lkml.org/lkml/2015/2/18/258
->>
->> I would expect the only difference between the 2 dts files to be the
->> node describing the lcd panel, so yes that makes somewhat sense.
->>
->>> Do you know if there's some way to autodetect the two board versions
->>> (like a board id somewhere in an EEPROM)?
->>
->> No, AFAIK there is no way to tell the difference. There is no eeprom no
->> the board, and we really cannot rely on the nand contents.
->
-> Ok.
->
->>> If not, then maybe u-boot can simply add that board compatible to the
->>> list, and we'll base our logic on that when we'll need it.
->>
->> That means extra logic in u-boot, and on the kernel side, for what
->> benefit exactly? Such logic would make sense if there was one u-boot
->> image which runtime adjusted itself, but that is not an option.
->
-> For what benefit? One kernel image which runtime adjusts itself.
 
-You mean one dtb right, because the kernel itself already runtime
-adjusts itself.
 
-> It's especially possible if u-boot's image is not, which seems to be what
-> you're saying.
+On 02/06/15 00:51, Tony Lindgren wrote:
+> * Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [150531 23:25]:
+>> AM57xx Beagle X15 has a HDMI output. This patch adds the device tree
+>> nodes required for HDMI.
+>=20
+> This one does not seem to apply to linux next, did not look
+> further where it conflicts.
 
-But we will still need different configs in u-boot, and we need
-to add code + config to u-boot to plug in the extra compatibles
-to automatically select the right built-in overlays.
+Looks like the change was also in -rc6. I've rebased my patches on -rc6,
+and added the acks:
 
->> And we can avoid copy and paste on the dts side by putting all
->> the common stuff in a common file and including that, I believe
->> that that is better (KISS = better) since we've no way to runtime
->> do the right thing AFAICT.
->
-> My concern is about the ever-growing number of DTS that just are small
-> variations of one or the other. What about the time when we'll
-> discover that this board has a variant that has an emmc, and some that
-> don't have any button, or the i2c bus 2 not wired, and one other that
-> doesn't have any HDMI?
->
-> Do we really want to have a dts called
-> sun8i-a33-q8h-emmc-lcd800x600-nohdmi-noi2c2-nobuttons.dts?
->
-> Especially when we will have the one that we include here that will
-> not have followed this convention because it was introduced before
-> that, and that we have a way to deal with this nicely?
->
-> You chose to consider the DTS names an ABI, the best way to handle
-> this is to have a DTS as generic as possible, and leave all these
-> small variations outside of the name.
+git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git dra7-dss-ar=
+ch
 
-Ok, so for now this is not really an issue at all since the dts
-does not yet decribe the lcd at all. So can you merge this one
-renamed to a more generic name for 4.2?
+ Tomi
 
-That will work fine for now.
 
-Then we can use the DT quirks interface to add different lcd
-nodes for different variants once we get lcd support in the kernel,
-and teach u-boot to add the extra board compatible to select
-the right lcd node at that time.
 
-Regards,
+--agKiT81iWUJeuFWQJMpoPfsFCBSGBtUjU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Hans
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJVbuRjAAoJEPo9qoy8lh71MOgP/jnIL3B8Nj/ejupu6+3LLtY8
++T/cA2W+vX6T+Ea3dUBKPS4EEzzpTQ8eJXKWHS9fxFzvXDb8XNEnLnA+f8cijLa9
++79L2TSpS7ksjXQG4Cyv63BiLlpibLVB5pcCwhYjSL7giUxYAJT7/s65RG/1ASwr
+xh57KYUcq0PFVoVPCLfJTQ+0yQdpycY99zoKWyjmstUcMSCqTtw8o0wAFJXZHTKn
+pVyA3qdRH1eRmpLFUf9sGz1ttLxTTadqXGG7UuemE2gDIL9mbaAEN35sCLD/vj1I
+pz4hXPI7Dg1Qap4yQQKpTAjbFyJ7o0K69C+eHaXamWzAavOR9O8GaXEnldzU2W9F
+fBtG08u5gVK06QkV6RZ2JyYvIsAhcEqMnQnG7Jmoi7vOAnlxY9xc/r+/25Tx2TR2
+y0+IZcUUwrfALsZnp4qI0LA9AoRRZC5g2quXdJZVXxJ3I1+IUJyweC8WMflI1eCX
+F5Q0tfpyS90Y9PLK4tiv7pXXs0pF8UK40aTdl2pkFvGo2lyyjFhloJ85NGOrSZRe
+TrptF4rP05K56eF0ShpPggCzO8+LBMrvIqnHcgOSNNBZjanU7E8z2A2utgnpCdgv
+mcri+rhjqr63WEKzMWh5xpoAmlttfw5a9IwIKip98Ty2tmyUpTKza2MvjhPX23V7
+PYya9XJwRT1H3BD4micm
+=ZnC5
+-----END PGP SIGNATURE-----
+
+--agKiT81iWUJeuFWQJMpoPfsFCBSGBtUjU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
