@@ -1,62 +1,36 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH 2/3] of: make CONFIG_OF user selectable
-Date: Wed, 3 Jun 2015 11:14:14 +0300
-Message-ID: <85E4D22F-9BE5-402F-B22D-2D13CB0732AF@konsulko.com>
-References: <1433285204-4307-1-git-send-email-robh@kernel.org> <1433285204-4307-3-git-send-email-robh@kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH 1/3] MIPS: prepare for user enabling of CONFIG_OF
+Date: Wed, 3 Jun 2015 10:24:10 +0200
+Message-ID: <20150603082410.GI9839@linux-mips.org>
+References: <1433285204-4307-1-git-send-email-robh@kernel.org>
+ <1433285204-4307-2-git-send-email-robh@kernel.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433285204-4307-3-git-send-email-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <1433285204-4307-2-git-send-email-robh@kernel.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Tue, Jun 02, 2015 at 05:46:42PM -0500, Rob Herring wrote:
 
-> On Jun 3, 2015, at 01:46 , Rob Herring <robh@kernel.org> wrote:
-> 
-> With the addition of overlays, it is now plausible to use DT on any arch
-> and without an arch using it at boot time. It is also desirable to
-> expand the compile coverage of the DT code. Make CONFIG_OF user
-> selectable by converting the menu to menuconfig.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> ---
-> drivers/of/Kconfig | 9 ++++-----
-> 1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 07bb3c8..415b51d 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -1,11 +1,10 @@
-> config DTC
-> 	bool
-> 
-> -config OF
-> -	bool
-> +menuconfig OF
-> +	bool "Device Tree and Open Firmware support"
-> 
-> -menu "Device Tree and Open Firmware support"
-> -	depends on OF
-> +if OF
-> 
-> config OF_UNITTEST
-> 	bool "Device Tree runtime unit tests"
-> @@ -97,4 +96,4 @@ config OF_OVERLAY
-> 	  While this option is selected automatically when needed, you can
-> 	  enable it manually to improve device tree unit test coverage.
-> 
-> -endmenu # OF
-> +endif # OF
-> -- 
-> 2.1.0
-> 
+> In preparation to allow users to enable DeviceTree without arch or
+> machine selecting it, we need to fix build errors on MIPS. When
+> CONFIG_OF is enabled, device_tree_init cannot be resolved. This is
+> trivially fixed by using CONFIG_USE_OF instead of CONFIG_OF for prom.h.
 
-Acked-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Want to take this through your tree?  If so,
+
+Acked-by: Ralf Baechle <ralf@linux-mips.org>
+
+  Ralf
