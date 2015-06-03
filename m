@@ -1,98 +1,259 @@
-From: Antonio Ospite <ao2@ao2.it>
-Subject: Re: [PATCH 2/9] input: goodix: fix variable length array warning
-Date: Wed, 3 Jun 2015 22:49:53 +0200
-Message-ID: <20150603224953.6613b674931390f187b81e7a@ao2.it>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
-	<1432817265-23891-3-git-send-email-irina.tirdea@intel.com>
-	<20150528175753.1f85723b5b880ecf02fd4a79@ao2.it>
-	<1F3AC3675D538145B1661F571FE1805F19A78DD0@irsmsx105.ger.corp.intel.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v9 2/8] media: Add registration helpers for V4L2 flash
+ sub-devices
+Date: Wed, 3 Jun 2015 23:59:46 +0300
+Message-ID: <20150603205946.GM25595@valkosipuli.retiisi.org.uk>
+References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
+ <1432566843-6391-3-git-send-email-j.anaszewski@samsung.com>
+ <20150601205921.GH25595@valkosipuli.retiisi.org.uk>
+ <556D73D2.20600@samsung.com>
+ <20150602153234.GL25595@valkosipuli.retiisi.org.uk>
+ <556EB337.4010608@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F19A78DD0@irsmsx105.ger.corp.intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Tirdea, Irina" <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <556EB337.4010608-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 3 Jun 2015 10:26:47 +0000
-"Tirdea, Irina" <irina.tirdea@intel.com> wrote:
+Hi Jacek,
 
-> > -----Original Message-----
-> > From: Antonio Ospite [mailto:ao2@ao2.it]
-> > Sent: 28 May, 2015 18:58
-> > To: Tirdea, Irina
-> > Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org; d=
-evicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 2/9] input: goodix: fix variable length array w=
-arning
-> >=20
-> > On Thu, 28 May 2015 15:47:38 +0300
-> > Irina Tirdea <irina.tirdea@intel.com> wrote:
-> >=20
-> > > Fix sparse warning:
-> > > drivers/input/touchscreen/goodix.c:182:26: warning:
-> > > Variable length array is used.
-> > >
-> > > Replace the variable length array with fixed length.
-> > >
-> > > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > > ---
-> > >  drivers/input/touchscreen/goodix.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/t=
-ouchscreen/goodix.c
-> > > index c2e785c..dac1b3c 100644
-> > > --- a/drivers/input/touchscreen/goodix.c
-> > > +++ b/drivers/input/touchscreen/goodix.c
-> > > @@ -147,7 +147,7 @@ static void goodix_ts_report_touch(struct goo=
-dix_ts_data *ts, u8 *coor_data)
-> > >   */
-> > >  static void goodix_process_events(struct goodix_ts_data *ts)
-> > >  {
-> > > -	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
-> > > +	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
-> >=20
-> > Hi,
-> >=20
->=20
-> Hi Antonio,
->=20
-> > this fixes the warning from sparse, but also changes the semantics =
-of
-> > the code: ts->max_touch_num is less that GOODIX_MAX_CONTACTS for 5
-> > touches devices and in this case we'll end up using more memory tha=
-n is
-> > necessary.
-> >=20
->=20
-> I wasn't sure if it is better to save the 5 bytes or fix the warning,
-> so I sent this to get some more input.
-> Thanks for the feedback, I will  drop this patch.
->
+On Wed, Jun 03, 2015 at 09:56:39AM +0200, Jacek Anaszewski wrote:
+> Hi Sakari,
+> 
+> On 06/02/2015 05:32 PM, Sakari Ailus wrote:
+> >Hi, Jacek!
+> >
+> >On Tue, Jun 02, 2015 at 11:13:54AM +0200, Jacek Anaszewski wrote:
+> >>Hi Sakari,
+> >>
+> >>On 06/01/2015 10:59 PM, Sakari Ailus wrote:
+> >>>Hi Jacek,
+> >>>
+> >>>On Mon, May 25, 2015 at 05:13:57PM +0200, Jacek Anaszewski wrote:
+> >>>>This patch adds helper functions for registering/unregistering
+> >>>>LED Flash class devices as V4L2 sub-devices. The functions should
+> >>>>be called from the LED subsystem device driver. In case the
+> >>>>support for V4L2 Flash sub-devices is disabled in the kernel
+> >>>>config the functions' empty versions will be used.
+> >>>>
+> >>>>Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>>>Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>>>Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> >>>>Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> >>>
+> >>>Thanks for adding indicator support!
+> >>>
+> >>>Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >>>
+> >>
+> >>I missed one thing - sysfs interface of the indicator LED class
+> >>also has to be disabled/enabled of v4l2_flash_open/close.
+> >
+> >Good catch.
+> >
+> >>
+> >>I am planning to reimplement the functions as follows,
+> >>please let me know if you see any issues here:
+> >>
+> >>static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
+> >>*fh)
+> >>{
+> >>         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
+> >>
+> >>         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
+> >>
+> >>         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
+> >>         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
+> >>
+> >>         struct led_classdev *led_cdev_ind;
+> >>
+> >>         int ret = 0;
+> >
+> >I think you could spare some newlines above (and below as well).
+> 
+> There must have been some issue on thunderbird side,
+> originally there were no newlines above.
 
-Use kmalloc() or, alternatively, add at least a comment telling why you
-think that sacrificing a few bytes =E2=80=94only for some devices=E2=80=
-=94 has
-advantages over dynamic allocation.
+Ok. I've used Seamonkey, I believe it uses the same editor. Some bugs were
+unintroduced a few years ago, and since that I've mostly used a different
+editor (and MUA) when replying to patches.
 
-I am not necessarily against the static allocation change, I was just
-pointing out the issue.
+> >>
+> >>
+> >>         mutex_lock(&led_cdev->led_access);
+> >>
+> >>
+> >>         if (!v4l2_fh_is_singular(&fh->vfh))
+> >>
+> >>                 goto unlock;
+> >>
+> >>
+> >>         led_sysfs_disable(led_cdev);
+> >>         led_trigger_remove(led_cdev);
+> >>
+> >>
+> >>         if (iled_cdev) {
+> >>                 led_cdev_ind = &iled_cdev->led_cdev;
+> >
+> >You can also declare led_cdev_ind here as you don't need it outside the
+> >basic block.
+> 
+> With new approach it will be required also in error path.
 
-Thanks,
-   Antonio
+True.
 
---=20
-Antonio Ospite
-http://ao2.it
+> >>
+> >>
+> >>                 mutex_lock(&led_cdev_ind->led_access);
+> >>
+> >>
+> >>                 led_sysfs_disable(led_cdev_ind);
+> >>                 led_trigger_remove(led_cdev_ind);
+> >>
+> >>
+> >>                 mutex_unlock(&led_cdev_ind->led_access);
+> >
+> >Please don't acquire the indicator mutex while holding the flash mutex. I
+> >don't think there's a need to do so, thus creating a dependency between the
+> >two.Just remember to check for v4l2_fh_is_singular() in both cases.
+> 
+> I thought that the code would be simpler this way. Nevertheless I
+> produced a new version by following your advise.
+> 
+> >
+> >>
+> >>         }
+> >>
+> >>
+> >>         ret = __sync_device_with_v4l2_controls(v4l2_flash);
+> >
+> >If ret is < 0 here, you end up disabling the sysfs interface while open()
+> >fails (and v4l2_flash_close() will not be run). Shouldn't you handle that?
+> 
+> Good point.
+> 
+> Please find the new version of v4l2_flash{open|close} functions below:
+> 
+> static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
+> *fh)
+> {
+>         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
+>         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
+>         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
+>         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
+>         struct led_classdev *led_cdev_ind = NULL;
+>         int ret = 0;
+> 
+>         mutex_lock(&led_cdev->led_access);
+> 
+>         if (!v4l2_fh_is_singular(&fh->vfh)) {
 
-A: Because it messes up the order in which people normally read text.
-   See http://en.wikipedia.org/wiki/Posting_style
-Q: Why is top-posting such a bad thing?
+Hmm. I just realised that this might be a bit broken ---
+v4l2_fh_is_singular() should return the same value independently of where in
+subdev's open() handler it is called.
+
+But adding file handles to the list and checking how many there are of them
+is not properly serialised, i.e. another process could change the list in
+between. I'll try to submit a patch for that. No need to wait for that
+though.
+
+So please ignore my earlier request to check for v4l2_fh_is_singular() for
+multiple times, it won't help. Once is enough, albeit more than that won't
+hurt.
+
+>                 mutex_unlock(&led_cdev->led_access);
+>                 return 0;
+>         }
+> 
+>         led_sysfs_disable(led_cdev);
+>         led_trigger_remove(led_cdev);
+> 
+>         mutex_unlock(&led_cdev->led_access);
+> 
+>         if (iled_cdev) {
+>                 led_cdev_ind = &iled_cdev->led_cdev;
+> 
+>                 mutex_lock(&led_cdev_ind->led_access);
+> 
+>                 if (!v4l2_fh_is_singular(&fh->vfh)) {
+>                         mutex_unlock(&led_cdev_ind->led_access);
+>                         return 0;
+>                 }
+> 
+>                 led_sysfs_disable(led_cdev_ind);
+>                 led_trigger_remove(led_cdev_ind);
+> 
+>                 mutex_unlock(&led_cdev_ind->led_access);
+>         }
+> 
+>         ret = __sync_device_with_v4l2_controls(v4l2_flash);
+>         if (ret < 0)
+>                 goto out_sync_device;
+> 
+>         return 0;
+> out_sync_device:
+>         mutex_lock(&led_cdev->led_access);
+>         if (v4l2_fh_is_singular(&fh->vfh))
+>                 led_sysfs_enable(led_cdev);
+>         mutex_unlock(&led_cdev->led_access);
+> 
+>         if (led_cdev_ind) {
+>                 mutex_lock(&led_cdev_ind->led_access);
+>                 if (v4l2_fh_is_singular(&fh->vfh))
+>                         led_sysfs_enable(led_cdev_ind);
+>                 mutex_unlock(&led_cdev_ind->led_access);
+>         }
+> 
+>         return ret;
+> }
+> 
+> static int v4l2_flash_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh
+> *fh)
+> {
+>         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
+>         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
+>         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
+>         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
+>         int ret = 0;
+> 
+>         mutex_lock(&led_cdev->led_access);
+> 
+>         if (v4l2_fh_is_singular(&fh->vfh)) {
+>                 if (v4l2_flash->ctrls[STROBE_SOURCE])
+>                         ret =
+> v4l2_ctrl_s_ctrl(v4l2_flash->ctrls[STROBE_SOURCE],
+>                                         V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
+>                 led_sysfs_enable(led_cdev);
+>         }
+> 
+>         mutex_unlock(&led_cdev->led_access);
+> 
+>         if (iled_cdev) {
+>                 struct led_classdev *led_cdev_ind = &iled_cdev->led_cdev;
+> 
+>                 mutex_lock(&led_cdev_ind->led_access);
+> 
+>                 if (v4l2_fh_is_singular(&fh->vfh))
+>                         led_sysfs_enable(led_cdev_ind);
+> 
+>                 mutex_unlock(&led_cdev_ind->led_access);
+>         }
+> 
+>         return ret;
+> }
+> 
+> 
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
