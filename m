@@ -1,116 +1,89 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] mtd: nand: =?UTF-8?Q?vf=36=31=30=5Fnfc=3A=20Fr?=
- =?UTF-8?Q?eescale=20NFC=20for=20VF=36=31=30=2C=20MPC=35=31=32=35=20and=20?=
- =?UTF-8?Q?others?=
-Date: Wed, 03 Jun 2015 17:09:33 +0200
-Message-ID: <b457fab56ff3ebc72f264a400a0ab33f@agner.ch>
-References: <1427300909-20825-1-git-send-email-stefan@agner.ch>
- <1427300909-20825-2-git-send-email-stefan@agner.ch>
- <20150603081059.GA6944@breakpoint.cc>
- <821b4731043fef279b6a82b920707982@agner.ch>
- <20150603120355.GA1668@breakpoint.cc>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] i2c: at91: print hardware version
+Date: Thu, 4 Jun 2015 00:19:22 +0900
+Message-ID: <20150603151921.GA2873@katana>
+References: <cover.1433321260.git.cyrille.pitchen@atmel.com>
+ <03bf4d8906d12a87fee7238764074bc5687972be.1433321260.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150603120355.GA1668-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <03bf4d8906d12a87fee7238764074bc5687972be.1433321260.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-06-03 14:03, Sebastian Andrzej Siewior wrote:
-> On Wed, Jun 03, 2015 at 11:45:50AM +0200, Stefan Agner wrote:
->> On 2015-06-03 10:10, Sebastian Andrzej Siewior wrote:
->> > On 2015-03-25 17:28:24 [+0100], Stefan Agner wrote:
->> >> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf61=
-0_nfc.c
->> >> new file mode 100644
->> >> index 0000000..23c1510
->> >> --- /dev/null
->> >> +++ b/drivers/mtd/nand/vf610_nfc.c
->> > =E2=80=A6
->> >> +static void vf610_nfc_addr_cycle(struct vf610_nfc *nfc, int colu=
-mn, int page)
->> >> +{
->> >> +	if (column !=3D -1) {
->> >> +		if (nfc->chip.options | NAND_BUSWIDTH_16)
->> >> +			column =3D column/2;
->> >> +		vf610_nfc_set_field(nfc, NFC_COL_ADDR, COL_ADDR_MASK,
->> >> +				    COL_ADDR_SHIFT, column);
->> >> +	}
->> >> +	if (page !=3D -1)
->> >> +		vf610_nfc_set_field(nfc, NFC_ROW_ADDR, ROW_ADDR_MASK,
->> >> +				    ROW_ADDR_SHIFT, page);
->> >> +}
->> >
->> > Do you have here also a different NAND layout on your boot-page vs
->> > remaining pages? The mpc5125 has this different layout.
->>
->> There is the boot configuration block which uses a Parity 13/8
->> algorithm, is it that you are referring to? The format parity is in =
-the
->> main area, hence it doesn't clash with the HW ECC of the controller.=
- One
->> can use normal NAND write functions to write this page. See the
+
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 03, 2015 at 11:04:26AM +0200, Cyrille Pitchen wrote:
+> The probe() function now prints the hardware version of the I2C
+> controller.
 >=20
-> No, this sounds different. The first few pages which are used for nan=
-d-boot
-> are using 1056 for sector size with 32bit-ecc. This configuration is =
-always
-> used depsite what the physical NAND offers. Which means if you config=
-ure later
-> the proper sector size for your NAND with 2K (or 4K) pages the conten=
-t in the
-> first page(s) can not be read. Even if you disable ECC correction on =
-read the
-> content looks a little different due to the two sector size beeing in=
-volved.
-> And I am not sure if the layout if data/ECC is the same here, to. On =
-top of
-> this writting without ECC is not usefull.
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Hm, so on PPC the boot ROM is making use of the HW ECC controller, is
-this correct?
+Kernel has already very much printout, so I don't see the gain in adding
+another one. At least, combine it with the other printout we have
+already, but I wonder what new information will be in here? We should
+know from the compatible binding which version we serve? Is it really
+needed? Helpful for the user?
 
-I guess if this is a hard wired behavior of the boot ROM for the first
-few pages, one could add such hard wired behavior for the affected page=
-s
-in the driver too. However, since other platforms don't use that, it
-probably would need to be done in a device specific way (e.g. quirks
-field which is set according to compatible...)
-
-> The FSL's BSP for mpc5125 had some funny commands in their u-boot in =
-order to
-> write the boot-page(s).
+> ---
+>  drivers/i2c/busses/i2c-at91.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >=20
-> That said, I added here in the addr cycle a check for the lower page =
-numbers
-> to switch the sector size at runtime. With the proper partition entry=
- I am
-> able to read/write the boot pages(s). The only extra magic involved i=
-s the
-> rearrangement of the binary data before writing it into the boot page=
- because
-> the SoC's bootmode uses a different layout here.
-> Since you probably not doing this at all it probably remains unique t=
-o the
-> mpc5125. Please keep this in mind if someone with mpc5125 comes along=
- that it
-> might be usefull to switch the sector size for the boot-pages so one =
-can
-> easily read/write it from linux.
+> diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
+> index 67b4f15..cbe6684 100644
+> --- a/drivers/i2c/busses/i2c-at91.c
+> +++ b/drivers/i2c/busses/i2c-at91.c
+> @@ -85,6 +85,8 @@
+>  #define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
+>  #define	AT91_TWI_ACR_DIR	BIT(8)
+> =20
+> +#define	AT91_TWI_VER		0x00fc	/* Version Register */
+> +
+>  struct at91_twi_pdata {
+>  	unsigned clk_max_div;
+>  	unsigned clk_offset;
+> @@ -872,6 +874,8 @@ static int at91_twi_probe(struct platform_device *pde=
+v)
+>  			return rc;
+>  	}
+> =20
+> +	dev_info(dev->dev, "version: %#x\n", at91_twi_read(dev, AT91_TWI_VER));
+> +
+>  	rc =3D of_property_read_u32(dev->dev->of_node, "clock-frequency",
+>  			&bus_clk_rate);
+>  	if (rc)
+> --=20
+> 1.8.2.2
+>=20
 
-In the end, if somebody wants that feature, somebody will have to do
-that change to the driver... But thanks for the information, will keep
-that in mind.
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-Stefan
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iQIcBAEBAgAGBQJVbxr5AAoJEBQN5MwUoCm22jcP/0fgCYhcPxYtBTeCp6WNyNCx
+vIkcAYktIdkpHPNWQI6BPMaeI0S0VVV+03NTQMcvILyLx5mnBSi3tqHolrovkoCd
+CH9Ws6LzZdKpC78y8ghkoTB95l0pboqP2U+k3jetmD5YmGPx3CSIY5Wv7LfSYpQ2
+6092mKb0zMXpLUR4ZQSCIcie+mZm2jBMf9nXFYu2mHdVGQRkiN8tOZ6S5MWhmckU
+/9IjtZs24wnVIVB8KZ2x5DemI+18AzQnmRfgVnO0n1a/pRndYZrLcipkjMlntus6
+0i/MIMOnrzv1ukFgCYoab7RYJ8dO1gqyKw3HROtp4d+J3FByokz6nXH/whV3h0zf
+3GgzrEvhAOytvDFa/Kh1+r7yAOLIZTZObHhvVpWg5py7R6JYV4T31tGoe+jKLGTH
+YD6aKxfcHhLXRrWpQBn5aEcGiZL38zYcrPBooAsDGy6ubSwS8zstAp0oGVPfhL0l
+gV3CqOV6olc0zkCiBr1vpRKxp5Zo1zixCy14PNDm/QfO9Cho0Vlh+EmiuLkD6PRN
+EJs5pjdKELn0ZKM99gbP0wD4iY06JBUZA2l3viLEWh29+VprvGD/LjfOLmJQoSOj
+ZvhScyQOLLADljM/Y8146dZixIEaLNd+OiipmmB7257qkgsFBMj9k/xqfq5XmLkF
+2tJcdgM/yvGV0m6H/alM
+=Xtte
+-----END PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--y0ulUmNC+osPPQO6--
