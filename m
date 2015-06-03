@@ -1,231 +1,44 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v9 2/8] media: Add registration helpers for V4L2 flash
- sub-devices
-Date: Wed, 03 Jun 2015 09:56:39 +0200
-Message-ID: <556EB337.4010608@samsung.com>
-References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
- <1432566843-6391-3-git-send-email-j.anaszewski@samsung.com>
- <20150601205921.GH25595@valkosipuli.retiisi.org.uk>
- <556D73D2.20600@samsung.com>
- <20150602153234.GL25595@valkosipuli.retiisi.org.uk>
+From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Subject: Re: [PATCH v4 1/6] mtd: nand: vf610_nfc: Freescale NFC for VF610,
+ MPC5125 and others
+Date: Wed, 3 Jun 2015 10:10:59 +0200
+Message-ID: <20150603081059.GA6944@breakpoint.cc>
+References: <1427300909-20825-1-git-send-email-stefan@agner.ch>
+ <1427300909-20825-2-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20150602153234.GL25595@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1427300909-20825-2-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, bpringlemeir@nbsps.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On 2015-03-25 17:28:24 [+0100], Stefan Agner wrote:
+> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nf=
+c.c
+> new file mode 100644
+> index 0000000..23c1510
+> --- /dev/null
+> +++ b/drivers/mtd/nand/vf610_nfc.c
+=E2=80=A6
+> +static void vf610_nfc_addr_cycle(struct vf610_nfc *nfc, int column, =
+int page)
+> +{
+> +	if (column !=3D -1) {
+> +		if (nfc->chip.options | NAND_BUSWIDTH_16)
+> +			column =3D column/2;
+> +		vf610_nfc_set_field(nfc, NFC_COL_ADDR, COL_ADDR_MASK,
+> +				    COL_ADDR_SHIFT, column);
+> +	}
+> +	if (page !=3D -1)
+> +		vf610_nfc_set_field(nfc, NFC_ROW_ADDR, ROW_ADDR_MASK,
+> +				    ROW_ADDR_SHIFT, page);
+> +}
 
-On 06/02/2015 05:32 PM, Sakari Ailus wrote:
-> Hi, Jacek!
->
-> On Tue, Jun 02, 2015 at 11:13:54AM +0200, Jacek Anaszewski wrote:
->> Hi Sakari,
->>
->> On 06/01/2015 10:59 PM, Sakari Ailus wrote:
->>> Hi Jacek,
->>>
->>> On Mon, May 25, 2015 at 05:13:57PM +0200, Jacek Anaszewski wrote:
->>>> This patch adds helper functions for registering/unregistering
->>>> LED Flash class devices as V4L2 sub-devices. The functions should
->>>> be called from the LED subsystem device driver. In case the
->>>> support for V4L2 Flash sub-devices is disabled in the kernel
->>>> config the functions' empty versions will be used.
->>>>
->>>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>> Cc: Sakari Ailus <sakari.ailus@iki.fi>
->>>> Cc: Hans Verkuil <hans.verkuil@cisco.com>
->>>
->>> Thanks for adding indicator support!
->>>
->>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>>
->>
->> I missed one thing - sysfs interface of the indicator LED class
->> also has to be disabled/enabled of v4l2_flash_open/close.
->
-> Good catch.
->
->>
->> I am planning to reimplement the functions as follows,
->> please let me know if you see any issues here:
->>
->> static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
->> *fh)
->> {
->>          struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
->>
->>          struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
->>
->>          struct led_classdev *led_cdev = &fled_cdev->led_cdev;
->>          struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
->>
->>          struct led_classdev *led_cdev_ind;
->>
->>          int ret = 0;
->
-> I think you could spare some newlines above (and below as well).
+Do you have here also a different NAND layout on your boot-page vs
+remaining pages? The mpc5125 has this different layout.
 
-There must have been some issue on thunderbird side,
-originally there were no newlines above.
-
->>
->>
->>          mutex_lock(&led_cdev->led_access);
->>
->>
->>          if (!v4l2_fh_is_singular(&fh->vfh))
->>
->>                  goto unlock;
->>
->>
->>          led_sysfs_disable(led_cdev);
->>          led_trigger_remove(led_cdev);
->>
->>
->>          if (iled_cdev) {
->>                  led_cdev_ind = &iled_cdev->led_cdev;
->
-> You can also declare led_cdev_ind here as you don't need it outside the
-> basic block.
-
-With new approach it will be required also in error path.
-
->>
->>
->>                  mutex_lock(&led_cdev_ind->led_access);
->>
->>
->>                  led_sysfs_disable(led_cdev_ind);
->>                  led_trigger_remove(led_cdev_ind);
->>
->>
->>                  mutex_unlock(&led_cdev_ind->led_access);
->
-> Please don't acquire the indicator mutex while holding the flash mutex. I
-> don't think there's a need to do so, thus creating a dependency between the
-> two.Just remember to check for v4l2_fh_is_singular() in both cases.
-
-I thought that the code would be simpler this way. Nevertheless I
-produced a new version by following your advise.
-
->
->>
->>          }
->>
->>
->>          ret = __sync_device_with_v4l2_controls(v4l2_flash);
->
-> If ret is < 0 here, you end up disabling the sysfs interface while open()
-> fails (and v4l2_flash_close() will not be run). Shouldn't you handle that?
-
-Good point.
-
-Please find the new version of v4l2_flash{open|close} functions below:
-
-static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh 
-*fh)
-{
-         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
-         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
-         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
-         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
-         struct led_classdev *led_cdev_ind = NULL;
-         int ret = 0;
-
-         mutex_lock(&led_cdev->led_access);
-
-         if (!v4l2_fh_is_singular(&fh->vfh)) {
-                 mutex_unlock(&led_cdev->led_access);
-                 return 0;
-         }
-
-         led_sysfs_disable(led_cdev);
-         led_trigger_remove(led_cdev);
-
-         mutex_unlock(&led_cdev->led_access);
-
-         if (iled_cdev) {
-                 led_cdev_ind = &iled_cdev->led_cdev;
-
-                 mutex_lock(&led_cdev_ind->led_access);
-
-                 if (!v4l2_fh_is_singular(&fh->vfh)) {
-                         mutex_unlock(&led_cdev_ind->led_access);
-                         return 0;
-                 }
-
-                 led_sysfs_disable(led_cdev_ind);
-                 led_trigger_remove(led_cdev_ind);
-
-                 mutex_unlock(&led_cdev_ind->led_access);
-         }
-
-         ret = __sync_device_with_v4l2_controls(v4l2_flash);
-         if (ret < 0)
-                 goto out_sync_device;
-
-         return 0;
-out_sync_device:
-         mutex_lock(&led_cdev->led_access);
-         if (v4l2_fh_is_singular(&fh->vfh))
-                 led_sysfs_enable(led_cdev);
-         mutex_unlock(&led_cdev->led_access);
-
-         if (led_cdev_ind) {
-                 mutex_lock(&led_cdev_ind->led_access);
-                 if (v4l2_fh_is_singular(&fh->vfh))
-                         led_sysfs_enable(led_cdev_ind);
-                 mutex_unlock(&led_cdev_ind->led_access);
-         }
-
-         return ret;
-}
-
-static int v4l2_flash_close(struct v4l2_subdev *sd, struct 
-v4l2_subdev_fh *fh)
-{
-         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
-         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
-         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
-         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
-         int ret = 0;
-
-         mutex_lock(&led_cdev->led_access);
-
-         if (v4l2_fh_is_singular(&fh->vfh)) {
-                 if (v4l2_flash->ctrls[STROBE_SOURCE])
-                         ret = 
-v4l2_ctrl_s_ctrl(v4l2_flash->ctrls[STROBE_SOURCE],
-                                         V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
-                 led_sysfs_enable(led_cdev);
-         }
-
-         mutex_unlock(&led_cdev->led_access);
-
-         if (iled_cdev) {
-                 struct led_classdev *led_cdev_ind = &iled_cdev->led_cdev;
-
-                 mutex_lock(&led_cdev_ind->led_access);
-
-                 if (v4l2_fh_is_singular(&fh->vfh))
-                         led_sysfs_enable(led_cdev_ind);
-
-                 mutex_unlock(&led_cdev_ind->led_access);
-         }
-
-         return ret;
-}
-
-
-
-
-
--- 
-Best Regards,
-Jacek Anaszewski
+Sebastian
