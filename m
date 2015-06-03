@@ -1,323 +1,62 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v2 3/4] PCI: hisi: Add PCIe host support for Hisilicon Soc
- Hip05
-Date: Wed, 3 Jun 2015 16:35:41 +0800
-Message-ID: <1433320542-49576-4-git-send-email-wangzhou1@hisilicon.com>
-References: <1433320542-49576-1-git-send-email-wangzhou1@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1433320542-49576-1-git-send-email-wangzhou1@hisilicon.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, fabrice.gasnier@st.com, Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: zhudacai@hisilicon.com, devicetree@vger.kernel.org, gabriele.paoloni@huawei.com, linux-pci@vger.kernel.org, yuanzhichang@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>, qiuzhenfa@hisilicon.com, zhangjukuo@huawei.com, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
+From: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Subject: [PATCH] power_supply: rt9455_charger: Check if CONFIG_USB_PHY is enabled
+Date: Wed,  3 Jun 2015 11:47:03 +0300
+Message-ID: <1433321223-19442-1-git-send-email-anda-maria.nicolae@intel.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: sre@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds PCIe host support for Hisilicon Soc Hip05.
+If CONFIG_USB_PHY is not enabled, struct notifier_block is not defined and
+compilation fails. Therefore, the functions that process USB event
+notifications are defined only if CONFIG_USB_PHY is enabled.
+There is no need to define these functions if CONFIG_USB_PHY is not
+enabled, since no USB notifications are received in this case.
+Also, since rt9455_set_boost_voltage_before_boost_mode() function is
+called only if USB_EVENT_ID notification is received, this function should
+also be defined only if CONFIG_USB_PHY is enabled.
 
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
 ---
- drivers/pci/host/Kconfig     |   5 +
- drivers/pci/host/Makefile    |   1 +
- drivers/pci/host/pcie-hisi.c | 258 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 264 insertions(+)
- create mode 100644 drivers/pci/host/pcie-hisi.c
+ drivers/power/rt9455_charger.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index 1dfb567..486d822 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -125,4 +125,9 @@ config PCIE_IPROC_PLATFORM
- 	  Say Y here if you want to use the Broadcom iProc PCIe controller
- 	  through the generic platform bus interface
+diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
+index 7c0c1ff..de86913 100644
+--- a/drivers/power/rt9455_charger.c
++++ b/drivers/power/rt9455_charger.c
+@@ -804,6 +804,7 @@ static int rt9455_hw_init(struct rt9455_info *info, u32 ichrg,
+ 	return 0;
+ }
  
-+config PCI_HISI
-+	depends on OF && ARM64
-+	bool "Hisilicon Soc HIP05 PCIe controller"
-+	select PCIE_DW
-+
- endmenu
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index f733b4e..562142e 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -15,3 +15,4 @@ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
- obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
- obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
- obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
-+obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
-diff --git a/drivers/pci/host/pcie-hisi.c b/drivers/pci/host/pcie-hisi.c
-new file mode 100644
-index 0000000..2a4d72e
---- /dev/null
-+++ b/drivers/pci/host/pcie-hisi.c
-@@ -0,0 +1,258 @@
-+/*
-+ * PCIe host controller driver for Hisilicon Hip05 SoCs
-+ *
-+ * Copyright (C) 2015 Hisilicon Co., Ltd. http://www.hisilicon.com
-+ *
-+ * Author: Zhou Wang <wangzhou1@hisilicon.com>
-+ *         Dacai Zhu <zhudacai@hisilicon.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_pci.h>
-+#include <linux/platform_device.h>
-+
-+#include "pcie-designware.h"
-+
-+#define PCIE_SUBCTRL_MODE_REG                           0x2800
-+#define PCIE_SUBCTRL_SYS_STATE4_REG                     0x6818
-+#define PCIE_SLV_DBI_MODE                               0x0
-+#define PCIE_SLV_SYSCTRL_MODE                           0x1
-+#define PCIE_SLV_CONTENT_MODE                           0x2
-+#define PCIE_SLV_MSI_ASID                               0x10
-+#define PCIE_LTSSM_LINKUP_STATE                         0x11
-+#define PCIE_LTSSM_STATE_MASK                           0x3F
-+#define PCIE_MSI_ASID_ENABLE                            (0x1 << 12)
-+#define PCIE_MSI_ASID_VALUE                             (0x1 << 16)
-+#define PCIE_MSI_TRANS_ENABLE                           (0x1 << 12)
-+#define PCIE_MSI_TRANS_REG                              0x1c8
-+#define PCIE_MSI_LOW_ADDRESS                            0x1b4
-+#define PCIE_MSI_HIGH_ADDRESS                           0x1c4
-+#define PCIE_MSI_ADDRESS_VAL                            0xb7010040
-+
-+#define to_hisi_pcie(x)	container_of(x, struct hisi_pcie, pp)
-+
-+struct hisi_pcie {
-+	void __iomem *subctrl_base;
-+	void __iomem *reg_base;
-+	struct msi_controller *msi;
-+	u32 port_id;
-+	struct pcie_port pp;
-+};
-+
-+static inline void hisi_pcie_subctrl_writel(struct hisi_pcie *pcie,
-+					    u32 val, u32 reg)
-+{
-+	writel(val, pcie->subctrl_base + reg);
-+}
-+
-+static inline u32 hisi_pcie_subctrl_readl(struct hisi_pcie *pcie, u32 reg)
-+{
-+	return readl(pcie->subctrl_base + reg);
-+}
-+
-+static inline void hisi_pcie_apb_writel(struct hisi_pcie *pcie,
-+					u32 val, u32 reg)
-+{
-+	writel(val, pcie->reg_base + reg);
-+}
-+
-+static inline u32 hisi_pcie_apb_readl(struct hisi_pcie *pcie, u32 reg)
-+{
-+	return readl(pcie->reg_base + reg);
-+}
-+
-+/*
-+ * Change mode to indicate the same reg_base to base of PCIe host configure
-+ * registers, base of RC configure space or base of vmid/asid context table
-+ */
-+static void hisi_pcie_change_apb_mode(struct hisi_pcie *pcie, u32 mode)
-+{
-+	u32 val;
-+	u32 bit_mask;
-+	u32 bit_shift;
-+	u32 port_id = pcie->port_id;
-+	u32 reg = PCIE_SUBCTRL_MODE_REG + 0x100 * port_id;
-+
-+	if ((port_id == 1) || (port_id == 2)) {
-+		bit_mask = 0xc;
-+		bit_shift = 0x2;
-+	} else {
-+		bit_mask = 0x6;
-+		bit_shift = 0x1;
-+	}
-+
-+	val = hisi_pcie_subctrl_readl(pcie, reg);
-+	val = (val & (~bit_mask)) | (mode << bit_shift);
-+	hisi_pcie_subctrl_writel(pcie, val, reg);
-+}
-+
-+/* Configure vmid/asid table in PCIe host */
-+static void hisi_pcie_config_context(struct hisi_pcie *pcie)
-+{
-+	int i;
-+
-+	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_CONTENT_MODE);
-+
-+	/*
-+	 * init vmid and asid tables for all PCIes device as 0
-+	 * vmid table: 0 ~ 0x3ff, asid table: 0x400 ~ 0x7ff
-+	 */
-+	for (i = 0; i < 0x800; i++)
-+		hisi_pcie_apb_writel(pcie, 0x0, i * 4);
-+
-+	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_SYSCTRL_MODE);
-+
-+	hisi_pcie_apb_writel(pcie, PCIE_MSI_ADDRESS_VAL, PCIE_MSI_LOW_ADDRESS);
-+	hisi_pcie_apb_writel(pcie, 0x0, PCIE_MSI_HIGH_ADDRESS);
-+	hisi_pcie_apb_writel(pcie, PCIE_MSI_ASID_ENABLE | PCIE_MSI_ASID_VALUE,
-+			     PCIE_SLV_MSI_ASID);
-+	hisi_pcie_apb_writel(pcie, PCIE_MSI_TRANS_ENABLE, PCIE_MSI_TRANS_REG);
-+
-+	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_DBI_MODE);
-+}
-+
-+static int hisi_pcie_link_up(struct pcie_port *pp)
-+{
-+	u32 val;
-+
-+	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
-+
-+	val = hisi_pcie_subctrl_readl(hisi_pcie, PCIE_SUBCTRL_SYS_STATE4_REG +
-+				      0x100 * hisi_pcie->port_id);
-+
-+	return ((val & PCIE_LTSSM_STATE_MASK) == PCIE_LTSSM_LINKUP_STATE);
-+}
-+
-+static
-+int hisi_pcie_msi_host_init(struct pcie_port *pp, struct msi_controller *chip)
-+{
-+	struct device_node *msi_node;
-+	struct msi_controller *msi;
-+	struct device_node *np = pp->dev->of_node;
-+	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
-+
-+	msi_node = of_parse_phandle(np, "msi-parent", 0);
-+	if (!msi_node) {
-+		pr_err("failed to find msi-parent\n");
-+		return -ENODEV;
-+	}
-+
-+	msi = of_pci_find_msi_chip_by_node(msi_node);
-+	hisi_pcie->msi = msi;
-+
-+	pp->irq_domain = msi->domain;
-+
-+	return 0;
-+}
-+
-+static struct pcie_host_ops hisi_pcie_host_ops = {
-+	.link_up = hisi_pcie_link_up,
-+	.msi_host_init = hisi_pcie_msi_host_init,
-+};
-+
-+static int __init hisi_add_pcie_port(struct pcie_port *pp,
-+				     struct platform_device *pdev)
-+{
-+	int ret;
-+	u32 port_id;
-+	struct resource busn;
-+
-+	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
-+
-+	if (of_property_read_u32(pdev->dev.of_node, "port-id", &port_id)) {
-+		dev_err(&pdev->dev, "failed to read port-id\n");
-+		return -EINVAL;
-+	}
-+	if (port_id > 3) {
-+		dev_err(&pdev->dev, "Invalid port-id\n");
-+		return -EINVAL;
-+	}
-+
-+	hisi_pcie->port_id = port_id;
-+
-+	if (of_pci_parse_bus_range(pdev->dev.of_node, &busn)) {
-+		dev_err(&pdev->dev, "failed to parse bus-ranges\n");
-+		return -EINVAL;
-+	}
-+
-+	pp->root_bus_nr = busn.start;
-+	pp->ops = &hisi_pcie_host_ops;
-+
-+	hisi_pcie_config_context(hisi_pcie);
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to initialize host\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init hisi_pcie_probe(struct platform_device *pdev)
-+{
-+	struct hisi_pcie *hisi_pcie;
-+	struct pcie_port *pp;
-+	struct resource *reg;
-+	struct resource *subctrl;
-+	int ret;
-+
-+	hisi_pcie = devm_kzalloc(&pdev->dev, sizeof(*hisi_pcie), GFP_KERNEL);
-+	if (!hisi_pcie)
-+		return -ENOMEM;
-+
-+	pp = &hisi_pcie->pp;
-+	pp->dev = &pdev->dev;
-+
-+	subctrl = platform_get_resource_byname(pdev, IORESOURCE_MEM, "subctrl");
-+	hisi_pcie->subctrl_base = devm_ioremap_nocache(&pdev->dev,
-+					subctrl->start, resource_size(subctrl));
-+	if (IS_ERR(hisi_pcie->subctrl_base)) {
-+		dev_err(pp->dev, "cannot get subctrl base\n");
-+		return PTR_ERR(hisi_pcie->subctrl_base);
-+	}
-+
-+	reg = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbi");
-+	hisi_pcie->reg_base = devm_ioremap_resource(&pdev->dev, reg);
-+	if (IS_ERR(hisi_pcie->reg_base)) {
-+		dev_err(pp->dev, "cannot get reg base\n");
-+		return PTR_ERR(hisi_pcie->reg_base);
-+	}
-+
-+	hisi_pcie->pp.dbi_base = hisi_pcie->reg_base;
-+
-+	ret = hisi_add_pcie_port(pp, pdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, hisi_pcie);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id hisi_pcie_of_match[] = {
-+	{.compatible = "hisilicon,hip05-pcie",},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, hisi_pcie_of_match);
-+
-+static struct platform_driver hisi_pcie_driver = {
-+	.probe  = hisi_pcie_probe,
-+	.driver = {
-+		   .name = "hisi-pcie",
-+		   .owner = THIS_MODULE,
-+		   .of_match_table = hisi_pcie_of_match,
-+	},
-+};
-+
-+module_platform_driver(hisi_pcie_driver);
-+
-+MODULE_AUTHOR("Zhou Wang <wangzhou1@huawei.com>");
-+MODULE_AUTHOR("Dacai Zhu <zhudacai@huawei.com>");
-+MODULE_LICENSE("GPL v2");
++#if IS_ENABLED(CONFIG_USB_PHY)
+ /*
+  * Before setting the charger into boost mode, boost output voltage is
+  * set. This is needed because boost output voltage may differ from battery
+@@ -828,6 +829,7 @@ static int rt9455_set_boost_voltage_before_boost_mode(struct rt9455_info *info)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ /*
+  * Before setting the charger into charge mode, battery regulation voltage is
+@@ -1241,6 +1243,7 @@ static int rt9455_discover_charger(struct rt9455_info *info, u32 *ichrg,
+ 	return 0;
+ }
+ 
++#if IS_ENABLED(CONFIG_USB_PHY)
+ static int rt9455_usb_event_none(struct rt9455_info *info,
+ 				 u8 opa_mode, u8 iaicr)
+ {
+@@ -1445,6 +1448,7 @@ static int rt9455_usb_event(struct notifier_block *nb,
+ 	}
+ 	return NOTIFY_DONE;
+ }
++#endif
+ 
+ static void rt9455_pwr_rdy_work_callback(struct work_struct *work)
+ {
 -- 
-1.9.1
+1.7.9.5
+
