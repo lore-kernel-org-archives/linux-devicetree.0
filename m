@@ -1,71 +1,35 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/6] i2c: at91: add support to FIFOs and alternative command
-Date: Wed, 3 Jun 2015 10:59:07 +0200
-Message-ID: <cover.1433321260.git.cyrille.pitchen@atmel.com>
+From: Richard Weinberger <richard.weinberger@gmail.com>
+Subject: Re: [PATCH_V3 0/2] mtd: nand: jz4780: Add nand and bch driver
+Date: Wed, 3 Jun 2015 11:02:05 +0200
+Message-ID: <CAFLxGvxsatxukr0ohuWsbm9cgPSkL_aod8527Ue02kY-ksPyqg@mail.gmail.com>
+References: <1427821181-40843-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+	<20150331172030.GE19571@brian-ubuntu>
+	<551BBA9F.1010809@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <551BBA9F.1010809@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-ChangeLog
+Zubair,
 
-v4:
-- replace 0x%x by %#x when printing I2C controller version
-- change the order of patches: the race condition bug fix becomes the first
-  patch so it be can more easily applied to older kernels.
+On Wed, Apr 1, 2015 at 11:30 AM, Zubair Lutfullah Kakakhel
+<Zubair.Kakakhel@imgtec.com> wrote:
+> NEMC is going via greg-kh. They went through greg's char-misc-testing and
+> just got applied here.
+>
+> https://git.kernel.org/cgit/linux/kernel/git/gregkh/char-misc.git/log/?h=char-misc-next
+>
+> Do you think that can work for compile testing? It is the upstream tree with nemc.
+>
+> I could point our github ones for the ci20 board.
+> But it has quite a bit of other code too for jz4780 support.
 
-v3:
-- fix braces {} coding style issue
-- split the alternative command patch into 2 patches: the first one fixes
-  a race condition whereas the second one is the actual alternative command
-  patch
-
-v2:
-- fix typo in comment for AT91_TWI_SVEN.
-- document new device tree bindings like "atmel,fifo-size".
-- explicitly set the has_alt_cmd boolean to false to already existing chip
-  configs.
-- use the BIT() macro to define the register bits and do a little cleanup in a
-  dedicated patch.
-- reword some comments to better explain why the TXCOMP interrupt is no longer
-  enabled in at91_do_twi_transfer() but later in
-  at91_twi_write_data_dma_callback() to avoid a race condition when DMA is used.
-- remove useless TXCOMP interrupt enable line in at91_twi_write_next_byte()
-  since this interrupt is also enabled by at91_do_twi_transfer() for PIO
-  transfers.
-
-v1:
-This series of patches adds support of two new features which will be
-introduced with Atmel sama5d2x SoC.
-
-First, the alternative command mode eases the sending of STOP conditions.
-Before starting an I2C transaction, the size data to be transfered is
-written into the new Alternative Command Register. For each byte transferred,
-the I2C controller decreases this counter and automatically sends a STOP
-condition when the counter value reaches 0, that is to say when the last byte
-of the transaction has been sent/received. So there is no longer need to set
-the STOP bit into the Control Register.
-
-Then the use of FIFOs allows to reduce number I/O accesses: for instance,
-the TX FIFO allows to write up to 4 data in a single access to the Transmit
-Holding Register. Also the RX FIFO allows to read up to 4 data in a single
-access to the Receive Holding Register. Currently only DMA transfers take
-advantage of FIFOs.
-
-Cyrille Pitchen (6):
-  i2c: at91: fix a race condition when using the DMA controller
-  i2c: at91: use BIT() macro to define register bits
-  i2c: at91: update documentation for DT bindings
-  i2c: at91: add support for new alternative command mode
-  i2c: at91: print hardware version
-  i2c: at91: add support to FIFOs
-
- Documentation/devicetree/bindings/i2c/i2c-at91.txt |  29 +-
- drivers/i2c/busses/i2c-at91.c                      | 354 +++++++++++++++++----
- 2 files changed, 321 insertions(+), 62 deletions(-)
+what's the state of this driver? It would be nice to see it upstream.
 
 -- 
-1.8.2.2
+Thanks,
+//richard
