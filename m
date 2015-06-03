@@ -1,189 +1,90 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v4 6/8] mfd: cros_ec: Support multiple EC in a system
-Date: Wed, 03 Jun 2015 12:12:19 +0200
-Message-ID: <556ED303.6090401@collabora.co.uk>
-References: <1433232671-27679-1-git-send-email-javier.martinez@collabora.co.uk> <1433232671-27679-7-git-send-email-javier.martinez@collabora.co.uk> <20150603085340.GL3329@x1>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH 2/9] input: goodix: fix variable length array warning
+Date: Wed, 3 Jun 2015 10:26:47 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F19A78DD0@irsmsx105.ger.corp.intel.com>
+References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
+	<1432817265-23891-3-git-send-email-irina.tirdea@intel.com>
+ <20150528175753.1f85723b5b880ecf02fd4a79@ao2.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20150603085340.GL3329@x1>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Bill Richardson <wfrichar@chromium.org>, Simon Glass <sjg@google.com>, Gwendal Grignou <gwendal@google.com>, Stephen Barber <smbarber@chromium.org>, Filipe Brandenburger <filbranden@google.com>, Todd Broch <tbroch@chromium.org>, Alexandru M Stan <amstan@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150528175753.1f85723b5b880ecf02fd4a79@ao2.it>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Antonio Ospite <ao2@ao2.it>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
 
-Thanks a lot for your feedback.
 
-On 06/03/2015 10:53 AM, Lee Jones wrote:
-> On Tue, 02 Jun 2015, Javier Martinez Canillas wrote:
+> -----Original Message-----
+> From: Antonio Ospite [mailto:ao2@ao2.it]
+> Sent: 28 May, 2015 18:58
+> To: Tirdea, Irina
+> Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 2/9] input: goodix: fix variable length array warning
 > 
->> From: Gwendal Grignou <gwendal@chromium.org>
->> 
->> Chromebooks can have more than one Embedded Controller so the
->> cros_ec device id has to be incremented for each EC registered.
->> 
->> Add code to handle multiple EC. First ec found is cros-ec0,
->> second cros-ec1 and so on.
->> 
->> Add a new structure to represent multiple EC as different char
->> devices (e.g: /dev/cros_ec, /dev/cros_pd). It connects to
->> cros_ec_device and allows sysfs inferface for cros_pd.
->> 
->> Also reduce number of allocated objects, make chromeos sysfs
->> class object a static and add refcounting to prevent object
->> deletion while command is in progress.
->> 
->> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
->> Reviewed-by: Dmitry Torokhov <dtor@chromium.org>
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> ---
->> 
->> Changes since v3:
->>  - Add defines for the EC and PD index constants.
->>  - Remove cros_ec_dev_register() and declare the mfd_cells as static structs.
->>    Suggested by Lee Jones.
->>  - Add a new line before the return statement in cros_ec_dev_register().
->>    Suggested by Lee Jones.
->> 
->> Changes since v2: None
->> 
->> Changes since v1:
->>   - Squash patch that adds support to represent EC's as different
->>     char devices (e.g: /dev/cros_ec, /dev/cros_pd):
->>     https://chromium-review.googlesource.com/#/c/217297/
->>     Suggested by Gwendal Grignou
->>   - Use cros_ec instead of cros-ec in the subject line to be consistent.
->>     Suggested by Gwendal Grignou
->> ---
->>  drivers/input/keyboard/cros_ec_keyb.c      |   2 +-
->>  drivers/mfd/cros_ec.c                      |  59 +++++++++++--
->>  drivers/mfd/cros_ec_i2c.c                  |   1 -
->>  drivers/mfd/cros_ec_spi.c                  |   1 -
->>  drivers/platform/chrome/cros_ec_dev.c      | 128 ++++++++++++++++++++---------
->>  drivers/platform/chrome/cros_ec_dev.h      |   7 --
->>  drivers/platform/chrome/cros_ec_lightbar.c |  75 +++++++++--------
->>  drivers/platform/chrome/cros_ec_lpc.c      |   1 -
->>  drivers/platform/chrome/cros_ec_sysfs.c    |  48 +++++------
->>  include/linux/mfd/cros_ec.h                |  44 ++++++++--
->>  10 files changed, 240 insertions(+), 126 deletions(-)
->> 
->> diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
->> index 974154a74505..b01966dc7eb3 100644
->> --- a/drivers/input/keyboard/cros_ec_keyb.c
->> +++ b/drivers/input/keyboard/cros_ec_keyb.c
->> @@ -275,7 +275,7 @@ static int cros_ec_keyb_probe(struct platform_device *pdev)
->>  	ckdev->dev = dev;
->>  	dev_set_drvdata(&pdev->dev, ckdev);
->>  
->> -	idev->name = ec->ec_name;
->> +	idev->name = CROS_EC_DEV_NAME;
->>  	idev->phys = ec->phys_name;
->>  	__set_bit(EV_REP, idev->evbit);
->>  
->> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
->> index 08d82bfc5268..4fbb4ce8f81e 100644
->> --- a/drivers/mfd/cros_ec.c
->> +++ b/drivers/mfd/cros_ec.c
->> @@ -24,11 +24,29 @@
->>  #include <linux/mfd/core.h>
->>  #include <linux/mfd/cros_ec.h>
->>  
->> -static const struct mfd_cell cros_devs[] = {
->> -	{
->> -		.name = "cros-ec-ctl",
->> -		.id = PLATFORM_DEVID_AUTO,
->> -	},
->> +#define CROS_EC_DEV_EC_INDEX 0
->> +#define CROS_EC_DEV_PD_INDEX 1
->> +
->> +struct cros_ec_platform ec_p = {
->> +	.cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_EC_INDEX),
->> +};
->> +
->> +struct cros_ec_platform pd_p = {
->> +	.cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX),
->> +};
->> +
->> +struct mfd_cell ec_cell = {
->> +	.name = "cros-ec-ctl",
->> +	.id = PLATFORM_DEVID_AUTO,
->> +	.platform_data = &ec_p,
->> +	.pdata_size = sizeof(ec_p),
->> +};
->> +
->> +struct mfd_cell ec_pd_cell = {
->> +	.name = "cros-ec-ctl",
->> +	.id = PLATFORM_DEVID_AUTO,
->> +	.platform_data = &pd_p,
->> +	.pdata_size = sizeof(pd_p),
->>  };
->>  
->>  int cros_ec_register(struct cros_ec_device *ec_dev)
->> @@ -52,14 +70,39 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
->>  
->>  	cros_ec_query_all(ec_dev);
->>  
->> -	err = mfd_add_devices(dev, 0, cros_devs,
->> -			      ARRAY_SIZE(cros_devs),
->> +	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
->> +		ec_p.ec_name = of_get_property(dev->of_node, "devname",
->> +					       NULL);
+> On Thu, 28 May 2015 15:47:38 +0300
+> Irina Tirdea <irina.tirdea@intel.com> wrote:
 > 
-> Has this binding already been accepted?  We don't normally allow
-> "device name"properties in DT.
+> > Fix sparse warning:
+> > drivers/input/touchscreen/goodix.c:182:26: warning:
+> > Variable length array is used.
+> >
+> > Replace the variable length array with fixed length.
+> >
+> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > ---
+> >  drivers/input/touchscreen/goodix.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> > index c2e785c..dac1b3c 100644
+> > --- a/drivers/input/touchscreen/goodix.c
+> > +++ b/drivers/input/touchscreen/goodix.c
+> > @@ -147,7 +147,7 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
+> >   */
+> >  static void goodix_process_events(struct goodix_ts_data *ts)
+> >  {
+> > -	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
+> > +	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
+> 
+> Hi,
 > 
 
-Sigh, I now noticed that I missed the DT binding change when originally
-forward porting the patches from the downstream ChromiumOS tree. I'm so
-sorry about that.
+Hi Antonio,
 
-ChromiumOS tree has in Documentation/devicetree/bindings/mfd/cros-ec.txt:
-
-Optional properties (All):
-- devname: name of the EC. Can be based on its function: for instance,
-  for Sensor Hub, 'cros_sh', for Power Delivery MCU 'cros_pd'.
-  If not present, 'cros_ec' can be assumed.
-
-When you say that normally device names are not allowed in DT, do you mean
-that "devname" is a too generic property name? (which I totally agree) or
-that DT bindings shouldn't have a property to change a device's name for
-something more descriptive?
-
-Because for example, the regulator bindings has a "regulator-name" property.
-If you agree I can change the property to "google,cros-ec-name" which should
-be more precise.
-
->> +	if (!ec_p.ec_name)
->> +		ec_p.ec_name = CROS_EC_DEV_NAME;
->> +
->> +	err = mfd_add_devices(ec_dev->dev, CROS_EC_DEV_EC_INDEX, &ec_cell, 1,
->>  			      NULL, ec_dev->irq, NULL);
-> 
-> Take a look at how 'id' (second argument) is handled in mfd-core, then
-> try to figure out why what you're doing is not correct.
->
-
-I see, so I should not set the struct mfd_cell .id to PLATFORM_DEVID_AUTO and
-just pass PLATFORM_DEVID_AUTO to mfd_add_devices() so platform_device_add()
-automatically allocates a device ID and sets pdev->id_auto = true.
-
-It was only working because CROS_EC_DEV_EC_INDEX was zero so id + cell->id
-was still PLATFORM_DEVID_AUTO but for CROS_EC_DEV_PD_INDEX, it was set to
-PLATFORM_DEVID_NONE...
-
-I'll change that, thanks for pointing it out.
-
->>  	if (err) {
->> -		dev_err(dev, "failed to add mfd devices\n");
->> +		dev_err(dev, "failed to add ec\n");
->>  		return err;
->>  	}
-> 
-> [...]
+> this fixes the warning from sparse, but also changes the semantics of
+> the code: ts->max_touch_num is less that GOODIX_MAX_CONTACTS for 5
+> touches devices and in this case we'll end up using more memory than is
+> necessary.
 > 
 
-Best regards,
-Javier
+I wasn't sure if it is better to save the 5 bytes or fix the warning, so I sent this to get some more input.
+Thanks for the feedback, I will  drop this patch.
+
+Thanks,
+Irina
+
+> Thanks,
+>    Antonio
+> 
+> >  	int touch_num;
+> >  	int i;
+> >
+> > --
+> > 1.9.1
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-input" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> --
+> Antonio Ospite
+> http://ao2.it
+> 
+> A: Because it messes up the order in which people normally read text.
+>    See http://en.wikipedia.org/wiki/Posting_style
+> Q: Why is top-posting such a bad thing?
