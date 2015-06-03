@@ -1,67 +1,52 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] dt/bindings: Add binding for the Raspberry Pi
- firmware driver
-Date: Wed, 3 Jun 2015 22:30:46 +0100
-Message-ID: <20150603213046.GE12304@x1>
-References: <1432928535-27522-1-git-send-email-eric@anholt.net>
+From: Michal Suchanek <hramrach@gmail.com>
+Subject: [PATCH 09/11] dma: pl330: fix wording in mcbufsz message
+Date: 3 Jun 2015 21:26:41 -0000
+Message-ID: <14872fc6f86b7f4976d539b47a7899904cd954f6.1433364398.git.hramrach@gmail.com>
+References: <cover.1433364398.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1432928535-27522-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1433364398.git.hramrach@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Michal Suchanek <hramrach@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marex@denx.de>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-What's going on here?  This is unlike you.
+The kernel is not trying to increase mcbufsz. It suggests you should try
+doing so. Also print the calculated required size of mcbufsz.
 
-> This driver will provide support for calls into the firmware that will
-> be used by other drivers like cpufreq and vc4.
-> 
-> v2: Improve commit message, point to mailbox.txt for how mboxes work.
-> v3: Use Lee's suggestion for mailbox phandle docs, fix spelling of
->     "raspberry".
-> v4: Change the compatible string to "raspberrypi,bcm2835-firmware"
->     (requested by Lee, agreed by Stephen)
+Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+---
+ drivers/dma/pl330.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Perhaps this should have culminated in a Suggested-by.
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 9015a74..00ab733 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1436,8 +1436,8 @@ static int pl330_submit_req(struct pl330_thread *thrd,
+ 		goto xfer_exit;
+ 
+ 	if (ret > pl330->mcbufsz / 2) {
+-		dev_info(pl330->ddma.dev, "%s:%d Trying increasing mcbufsz\n",
+-				__func__, __LINE__);
++		dev_info(pl330->ddma.dev, "%s:%d Try increasing mcbufsz (%i/%i)\n",
++				__func__, __LINE__, ret, pl330->mcbufsz / 2);
+ 		ret = -ENOMEM;
+ 		goto xfer_exit;
+ 	}
+-- 
+2.1.4
 
-The change-log should be below the "---".
 
-> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-
-Where's your SoB?
-
-> ---
->  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt      | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
-> new file mode 100644
-> index 0000000..5fb1868
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
-> @@ -0,0 +1,14 @@
-> +Raspberry Pi VideoCore firmware driver
-> +
-> +Required properties:
-> +
-> +- compatible:		Should be "rasbperrypi,bcm2835-firmware"
-
-Spelling.
-
-> +- mboxes:		Phandle to the firmware device's Mailbox.
-> +			  (See: ../mailbox/mailbox.txt for more information)
-> +
-> +Example:
-> +
-> +firmware {
-> +	compatible = "raspberrypi,bcm2835-firmware";
-> +	mboxes = <&mailbox>;
-> +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
