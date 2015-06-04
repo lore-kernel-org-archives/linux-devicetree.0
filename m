@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 21/42] powerpc/powernv: Drop pnv_ioda_setup_dev_PE()
-Date: Thu,  4 Jun 2015 16:41:50 +1000
-Message-ID: <1433400131-18429-22-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 26/42] powerpc/powernv: Use PCI slot reset infrastructure
+Date: Thu,  4 Jun 2015 16:41:55 +1000
+Message-ID: <1433400131-18429-27-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,98 +10,81 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Nobody is using the this function. The patch drops it.
+The skiboot firmware might provide the capability of resetting PCI
+slot by property "ibm,reset-by-firmware" on the PCI slot associated
+device node. The patch checks on the property and route the reset
+to firmware if the property exists. Otherwise, we fail back to the
+old path as before.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 ---
 v5:
-  * Derived from PATCH[v4 08/21]
+  * Derived from PATCH[v4 09/21]
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 71 -------------------------------
- 1 file changed, 71 deletions(-)
+ arch/powerpc/platforms/powernv/eeh-powernv.c | 44 +++++++++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index e9165fa..8a79403 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -1111,77 +1111,6 @@ static int pnv_pci_vf_resource_shift(struct pci_dev *dev, int offset)
+diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+index 4fd8f15..4feb533 100644
+--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
++++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+@@ -841,7 +841,7 @@ out:
+ 	return 0;
  }
- #endif /* CONFIG_PCI_IOV */
  
--#if 0
--static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
--{
--	struct pci_controller *hose = pci_bus_to_host(dev->bus);
--	struct pnv_phb *phb = hose->private_data;
--	struct pci_dn *pdn = pci_get_pdn(dev);
--	struct pnv_ioda_pe *pe;
--	int pe_num;
--
--	if (!pdn) {
--		pr_err("%s: Device tree node not associated properly\n",
--			   pci_name(dev));
--		return NULL;
--	}
--	if (pdn->pe_number != IODA_INVALID_PE)
--		return NULL;
--
--	/* PE#0 has been pre-set */
--	if (dev->bus->number == 0)
--		pe_num = 0;
--	else
--		pe_num = pnv_ioda_alloc_pe(phb);
--	if (pe_num == IODA_INVALID_PE) {
--		pr_warning("%s: Not enough PE# available, disabling device\n",
--			   pci_name(dev));
--		return NULL;
--	}
--
--	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
--	 * pointer in the PE data structure, both should be destroyed at the
--	 * same time. However, this needs to be looked at more closely again
--	 * once we actually start removing things (Hotplug, SR-IOV, ...)
--	 *
--	 * At some point we want to remove the PDN completely anyways
--	 */
--	pe = &phb->ioda.pe_array[pe_num];
--	pci_dev_get(dev);
--	pdn->pcidev = dev;
--	pdn->pe_number = pe_num;
--	pe->pdev = dev;
--	pe->pbus = NULL;
--	pe->tce32_seg = -1;
--	pe->mve_number = -1;
--	pe->rid = dev->bus->number << 8 | pdn->devfn;
--
--	pe_info(pe, "Associated device to PE\n");
--
--	if (pnv_ioda_configure_pe(phb, pe)) {
--		/* XXX What do we do here ? */
--		if (pe_num)
--			pnv_ioda_free_pe(phb, pe_num);
--		pdn->pe_number = IODA_INVALID_PE;
--		pe->pdev = NULL;
--		pci_dev_put(dev);
--		return NULL;
--	}
--
--	/* Assign a DMA weight to the device */
--	pe->dma_weight = pnv_ioda_dma_weight(dev);
--	if (pe->dma_weight != 0) {
--		phb->ioda.dma_weight += pe->dma_weight;
--		phb->ioda.dma_pe_count++;
--	}
--
--	/* Link the PE */
--	pnv_ioda_link_pe_by_weight(phb, pe);
--
--	return pe;
--}
--#endif /* Useful for SRIOV case */
--
- static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
+-static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
++static int __pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
  {
- 	struct pci_dev *dev;
+ 	struct pci_dn *pdn = pci_get_pdn_by_devfn(dev->bus, dev->devfn);
+ 	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
+@@ -892,6 +892,48 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+ 	return 0;
+ }
+ 
++static int pnv_eeh_bridge_reset(struct pci_dev *pdev, int option)
++{
++	struct pci_controller *hose;
++	struct pnv_phb *phb;
++	struct device_node *dn = pdev ? pci_device_to_OF_node(pdev) : NULL;
++	uint64_t id = (0x1ul << 60);
++	uint8_t scope;
++	int64_t rc;
++
++	/*
++	 * If the firmware can't handle it, we will issue hot reset
++	 * on the secondary bus despite the requested reset type.
++	 */
++	if (!dn || !of_get_property(dn, "ibm,reset-by-firmware", NULL))
++		return __pnv_eeh_bridge_reset(pdev, option);
++
++	/* The firmware can handle the request */
++	switch (option) {
++	case EEH_RESET_HOT:
++		scope = OPAL_RESET_PCI_HOT;
++		break;
++	case EEH_RESET_FUNDAMENTAL:
++		scope = OPAL_RESET_PCI_FUNDAMENTAL;
++		break;
++	case EEH_RESET_DEACTIVATE:
++		return 0;
++	default:
++		dev_warn(&pdev->dev, "%s: Unsupported reset %d\n",
++			 __func__, option);
++		return -EINVAL;
++	}
++
++	hose = pci_bus_to_host(pdev->bus);
++	phb = hose->private_data;
++	id |= (pdev->bus->number << 24) | (pdev->devfn << 16) | phb->opal_id;
++	rc = opal_pci_reset(id, scope, OPAL_ASSERT_RESET);
++	if (rc > 0)
++		rc = pnv_eeh_poll(id);
++
++	return (rc == OPAL_SUCCESS) ? 0 : -EIO;
++}
++
+ static void pnv_eeh_wait_for_pending(struct pci_dn *pdn, int pos,
+ 				     u16 mask, bool af_flr_rst)
+ {
 -- 
 2.1.0
