@@ -1,65 +1,49 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Thu, 4 Jun 2015 10:31:45 +0200
-Message-ID: <CAOMqctS6KNrTATB6MYCZLBnZUQmX=e0qQvGf78YtLaF8pkibhQ@mail.gmail.com>
-References: <cover.1433364398.git.hramrach@gmail.com> <8fc4b9f5291a509c4c35782a1337bf536f1019af.1433364398.git.hramrach@gmail.com>
- <CAMuHMdVT2M7pPHDDHmoNF_zVXhz1PUm5PiYxDKcAjSAcfSDiZg@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH resend] pinctrl: sunxi: Add allwinner A33
+ PIO controller support
+Date: Thu, 4 Jun 2015 10:33:34 +0200
+Message-ID: <CACRpkdZPcLaSPmZ8Bqd-xsVns+xeq_m8J0QpPcB2W0wNKXvO4g@mail.gmail.com>
+References: <1433236120-11249-1-git-send-email-hdegoede@redhat.com>
+	<1433236120-11249-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVT2M7pPHDDHmoNF_zVXhz1PUm5PiYxDKcAjSAcfSDiZg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marex@denx.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>, =?UTF-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBXU2YCVQKGQE3GXGT2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1433236120-11249-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4 June 2015 at 08:42, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Wed, Jun 3, 2015 at 11:26 PM, Michal Suchanek <hramrach@gmail.com> wrote:
->> On sunxi the SPI controller currently does not have DMA support and fails
->> any transfer larger than 63 bytes.
+On Tue, Jun 2, 2015 at 11:08 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+
+> From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >
-> This is a driver limitation, not a hardware limitation.
+> A33 PIO has 7 ports which starts from PB and has two interrupt ports.
 >
->> On Exynos the pl330 DMA controller fails any transfer larger than 64kb
->> when using slower speed like 40MHz and any transfer larger than 128bytes
->> when running at 133MHz.
->
-> This may be a driver bug.
->
->> The best thing is that in both cases the controller can just lock up and
->> never finish potentially leaving the hardware in unusable state.
->>
->> So it is required that the m25p80 driver actively prevents doing
->> transfers that are too large for the current driver state on a
->> particular piece of hardware.
->
-> OK.
->
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-> DT describes the hardware, not buggy drivers.
->
-> So IMHO this doesn't belong in DT, but it can be a field in struct spi_master.
->
+Patch applied.
 
-Unfortunately, this cannot be a field in struct spi_master. The value
-can and does vary with device configuration and device configuration
-is only available in DT.
+BTW: is your name Hans de G=C3=B6de and you just gave up trying
+to get UTF-8 right, or is it really spelled like so?
 
-For example, on the Snow board one working configuration is
+Yours,
+Linus Walleij
 
-40MHz spi bus speed, feedback delay 0 and maximum transfer size 64k.
-
-Another working configuration is 133MHz bus speed, feedback delay 3,
-and maximum transfer size 128 bytes.
-
-You might want to try to run the bus at 60MHz or 80MHz and then the
-values would probably again be different.
-
-The first two values are set in DT so the logical place for setting
-the third is also in DT.
-
-Otherwise you would need some in-kernel table of these settings.
-
-Thanks
-
-Michal
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
