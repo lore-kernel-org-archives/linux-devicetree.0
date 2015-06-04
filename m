@@ -1,128 +1,122 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 2/7] mmc: mediatek: Add Mediatek MMC driver
-Date: Thu, 4 Jun 2015 09:32:19 +0200
-Message-ID: <CAPDyKFqH3jx9_uDPNY_+332DQ6_zROCPbPx=YaXbLN5qehno1g@mail.gmail.com>
-References: <1432017411-2996-1-git-send-email-chaotian.jing@mediatek.com>
-	<1432017411-2996-3-git-send-email-chaotian.jing@mediatek.com>
-	<CAPDyKFo5788uRqAaXUZ-OiS1XF8NPmg4tn2ipZNJdx4dci+KMQ@mail.gmail.com>
-	<1432284000.23435.38.camel@mhfsdcap03>
-	<CAPDyKFpWCvJXL-W5P83ucBM2-b5cDFEtSLnN6J6WLyR_9CuvWw@mail.gmail.com>
-	<1432620991.647.6.camel@mhfsdcap03>
-	<CAPDyKFrNQ6E4cU1_gK56ZNYgb=9EzHoJ=vXyraYoKNnRL=Umyg@mail.gmail.com>
-	<1432726480.647.16.camel@mhfsdcap03>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1432726480.647.16.camel@mhfsdcap03>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v6 0/8] mfd: cros_ec: Add multi EC and proto v3 support
+Date: Thu,  4 Jun 2015 10:05:46 +0200
+Message-ID: <1433405154-16273-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bill Richardson <wfrichar-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Gwendal Grignou <gwendal-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Filipe Brandenburger <filbranden-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Todd Broch <tbroch-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 May 2015 at 13:34, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
-> On Tue, 2015-05-26 at 14:33 +0200, Ulf Hansson wrote:
->> [...]
->>
->> >> >> > +{
->> >> >> > +       unsigned long tmo = jiffies + msecs_to_jiffies(20);
->> >> >> > +
->> >> >> > +       while ((readl(host->base + SDC_STS) & SDC_STS_CMDBUSY)
->> >> >> > +                       && time_before(jiffies, tmo))
->> >> >> > +               continue;
->> >> >> > +
->> >> >> > +       if (readl(host->base + SDC_STS) & SDC_STS_CMDBUSY) {
->> >> >> > +               dev_err(host->dev, "CMD bus busy detected\n");
->> >> >> > +               host->error |= REQ_CMD_BUSY;
->> >> >> > +               msdc_cmd_done(host, MSDC_INT_CMDTMO, mrq, cmd);
->> >> >> > +               return false;
->> >> >> > +       }
->> >> >> > +
->> >> >> > +       if (mmc_resp_type(cmd) == MMC_RSP_R1B || cmd->data) {
->> >> >> > +               /* R1B or with data, should check SDCBUSY */
->> >> >> > +               while (readl(host->base + SDC_STS) & SDC_STS_SDCBUSY)
->> >> >> > +                       cpu_relax();
->> >> >> > +       }
->> >> >>
->> >> >> MSDC seems to be handling card busy detection in HW, right?
->> >> >>
->> >> > Do not have this ability, HW only know if CMD/DAT is low, but do not
->> >> > have any interrupt for it,
->> >>
->> >> I see, but doesn't the above polling mean that msdc will not propagate
->> >> the response until the card have stopped signal busy? That's what
->> >> MMC_CAP_WAIT_WHILE_BUSY shall be used for.
->> >>
->> > As you see, we only check the "busy state" BEFORE issue a R1B command or
->> > with data command, but do not check if AFTER the request was done, that
->> > would do not match the "MMC_CAP_WAIT_WHILE_BUSY"(eg. CMD5 to sleep)
->>
->> Okay, fair enough. Still, I don't understand why you want to do that?
->>
-> Below is the description of these 2 bits:
-> 1       CMDBSY  CMDBUSY SD Command line busy status
-> S/W should always read this bit to make sure the command line is not
-> busy before sending the next command.
-> If the command is R1B or data read/write command, S/W should check
-> SDCBUSY bit too.
-> Note: When Auto command 12 is enabled, this bit will be asserted
-> immediately after SDC_CMD is written and de-asserted after auto-command
-> 12 finishes.
-> 1'b0: No transmission is going on CMD line on SD bus
-> 1'b1: There exists transmission going on CMD line on SD bus
-> 0       SDCBSY  SDCBUSY SD controller busy status
-> 1'b0: SD controller is idle
-> 1'b1: SD controller is busy
->
+Hello,
 
-Thanks, for elaborating. I get it know. :-)
+Newer Chromebooks have more than one Embedded Controller (EC) in the
+system. These additional ECs are connected through I2C with a host EC
+which is the one that is connected to the Application Processor (AP)
+through different transports (I2C, SPI or LPC).
 
->> > In addition, about CMD5, I find that the suspend/resume flow of EMMC is
->> > stranger in new kernel version, when suspend, it may issue CMD5 to enter
->> > sleep mode, then power off MMC, but when resume, it will
->> > re-initialization, So that why need do the redundant CMD5 in suspend ?
->>
->> Both CMD0 and CMD5 are valid as wakeup commands.
->>
->> To be able to use CMD5, the VCCQ regulator must be kept enabled in the
->> sleep state. That's when it becomes a bit tricky, due to the range of
->> different host drivers and SoCs for how VCCQ is managed.
->>
->> To be safe we have chosen to use CMD0, since it works for *all* cases
->> no matter if VCCQ get gated or not.
->>
->> Moreover, using CMD5 as the wakeup command would require added
->> complexity in the code dealing with suspend/resume. I don't think the
->> effort is worth it, at least until someone has proven that the resume
->> time is greatly decreased by using CMD5.
->>
->> >
->> >> Perhaps you should remove the above polling, and rely on the MMC core
->> >> to poll with CMD13 instead?
->> > before any read/write command, core will issue CMD13 to confirm card
->> > status, here is just only do double confirm to avoid HW issue.
->>
->> What HW issue and why do you need to double confirm? It seems strange.
-> Some fake SD card, even the CMD13 get card status is in transfer state,
-> but when we do read/write, the data0 was pull low.
+So on these platforms, sub-processors are chained to each other:
 
-Okay. So in this case your mmc host driver will take care of this. That's fine.
+AP <--> Host EC <--> Power Delivery (PD) EC
 
-My concern is then how other mmc host drivers will deal with these
-kind of cards that violates the spec. It would be nice if you could
-add a card quirk for these cards, if you still recall what cards that
-were causing these issues.
+The AP sends commands to the additional EC through the host EC using
+a set of passthru commands and the host redirects to the correct EC.
 
->
-> By the way, do you think need do some spinlock protect in our code ?
-> I cannot find a good reason to use spin lock, it seems no need
-> it,although there will be many thread(mmcqd, mmcqd/0boot1,) and the irq
-> handler.
+This is a v6 of a series that adds support for multiple EC in a system
+and also for the protocol version 3 that is used on newer ECs.
 
->From mmc core layer point of view, you shouldn't be needing any spinlocks.
+Most patches were taken from the downstream ChromiumOS v3.14 tree with
+fixes squashed, split to minimise the cross subsystem churn and changes
+for mainline inclusion but were not modified functionality wise.
 
-Whether your driver has a potential concurrent access of the same
-registers, I don't know. If that's the case you probably want to
-protect this from happening.
+This version addresses a lot of issues pointed out by Lee Jones on the v5
+posted before [0].
 
-Kind regards
-Uffe
+The patches are based on top of "[PATCH 0/2] mfd: cros_ec: Small cleanups"
+[1] that were posted before and already picked by Lee Jones.
+
+Testing was done on some Chromebooks that have a single EC and support
+protocol v2 such as the Exynos5250 Snow, Exynos5420 Peach Pit and Exynos5800
+Peach Pi to be sure that no regressions were introduced for these machines.
+
+The series were tested using a modified ectool [2] that supports the new
+cros_ec IOCTL API. They were also tested on a x86 Pixel Chromebook 2 (Samus)
+that uses the new protocol v3 and has 2 EC (cros_ec and cros_pd). But for
+testing on Samus, also the posted "[PATCH 0/3] platform/chrome: Changes for
+cros_ec_lpc and cros_ec_dev" series [3] are needed.
+
+The series is composed of the following patches:
+
+Alexandru M Stan (2):
+  mfd: cros_ec: spi: Add a DT property to delay asserting the CS
+  mfd: cros_ec: spi: Add delay for asserting CS
+
+Gwendal Grignou (1):
+  mfd: cros_ec: Support multiple EC in a system
+
+Javier Martinez Canillas (2):
+  mfd: cros_ec: Use a zero-length array for command data
+  mfd: cros_ec: Move protocol helpers out of the MFD driver
+
+Stephen Barber (3):
+  mfd: cros_ec: rev cros_ec_commands.h
+  mfd: cros_ec: add proto v3 skeleton
+  mfd: cros_ec: add bus-specific proto v3 code
+
+ Documentation/devicetree/bindings/mfd/cros-ec.txt |   4 +
+ drivers/i2c/busses/Kconfig                        |   2 +-
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c           |  45 ++-
+ drivers/input/keyboard/Kconfig                    |   2 +-
+ drivers/input/keyboard/cros_ec_keyb.c             |  31 +-
+ drivers/mfd/Kconfig                               |   6 +-
+ drivers/mfd/cros_ec.c                             | 151 +++-----
+ drivers/mfd/cros_ec_i2c.c                         | 169 ++++++++-
+ drivers/mfd/cros_ec_spi.c                         | 407 +++++++++++++++++++---
+ drivers/platform/chrome/Kconfig                   |   9 +-
+ drivers/platform/chrome/Makefile                  |   1 +
+ drivers/platform/chrome/cros_ec_dev.c             | 189 ++++++----
+ drivers/platform/chrome/cros_ec_dev.h             |   7 -
+ drivers/platform/chrome/cros_ec_lightbar.c        | 217 +++++++-----
+ drivers/platform/chrome/cros_ec_lpc.c             |  84 ++++-
+ drivers/platform/chrome/cros_ec_proto.c           | 382 ++++++++++++++++++++
+ drivers/platform/chrome/cros_ec_sysfs.c           | 178 ++++++----
+ include/linux/mfd/cros_ec.h                       |  84 ++++-
+ include/linux/mfd/cros_ec_commands.h              | 277 +++++++++++++--
+ 19 files changed, 1796 insertions(+), 449 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_proto.c
+
+Patch #1 modifies the struct cros_ec_command to use a zero-length array for
+the buffer used for EC input and output data.
+
+Patch #2 synchronises the cros_ec_commands.h with a newer version of the
+file in the EC firmware repository.
+
+Patch #3 moves the EC communication protocol helper functions out of the MFD
+driver.
+
+Patch #4 adds the EC host command protocol v3 support to the cros_ec driver
+and patch #5 adds the bus specific proto v3 support for I2C, SPI and LPC.
+
+Patch #6 adds support to make multiple EC have a different device id and
+also exposing a per EC character device interface.
+
+Patch #7 adds a DT property to the cros_ec DT binding to specify a delay
+before receiving SPI transfers to make sure that the EC has already waked
+up and patch #8 implements it in the cros_ec_spi driver.
+
+Since the changes are quite intrusive and affects all ChromeOS EC related
+drivers, the patches should be merged through the MFD subsystem tree with
+the ack of the drivers/platform/chrome maintainer.
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2015/6/3/585
+[1]: https://lkml.org/lkml/2015/5/20/235
+[2]: http://cgit.collabora.com/git/user/javier/ec.git/log/?h=mainline-ioctl-zero-length
+[3]: https://lkml.org/lkml/2015/5/20/184
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
