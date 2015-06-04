@@ -1,114 +1,56 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 1/4] edac, altera: Generalize driver to use DT Memory size
-Date: Thu, 4 Jun 2015 09:28:45 -0500
-Message-ID: <1433428128-7292-2-git-send-email-tthayer@opensource.altera.com>
-References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: Re: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from
+ the platform device
+Date: Thu, 4 Jun 2015 23:32:16 +0900
+Message-ID: <CAC5umyis6HU06KU-aSGoy6mCt-u+5Pz16nDk1qHrcsTnFo_2hA@mail.gmail.com>
+References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
+	<1433324255-27510-5-git-send-email-ygardi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1433324255-27510-5-git-send-email-ygardi@codeaurora.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Yaniv Gardi <ygardi@codeaurora.org>
+Cc: Jej B <James.Bottomley@hansenpartnership.com>, LKML <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Paul Bolle <pebolle@tiscali.nl>, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vge>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+Hi Yaniv,
 
-The Arria10 SOC uses a completely different SDRAM controller from the
-earlier CycloneV and ArriaV SoCs. The memory size is calculated in
-the bootloader and passed via the device tree. Using this device
-tree size is more generic than using the register fields to
-calculate the memory size for different SDRAM controllers.
+2015-06-03 18:37 GMT+09:00 Yaniv Gardi <ygardi@codeaurora.org>:
+> @@ -321,7 +313,22 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
+>                 goto out;
+>         }
+>
+> -       hba->vops = get_variant_ops(&pdev->dev);
+> +       err = of_platform_populate(node, NULL, NULL, &pdev->dev);
+> +       if (err)
+> +               dev_err(&pdev->dev,
+> +                       "%s: of_platform_populate() failed\n", __func__);
+> +
+> +       ufs_variant_node = of_get_next_available_child(node, NULL);
+> +
+> +       if (!ufs_variant_node) {
+> +               dev_dbg(&pdev->dev, "failed to find ufs_variant_node child\n");
+> +       } else {
+> +               ufs_variant_pdev = of_find_device_by_node(ufs_variant_node);
+> +
+> +               if (ufs_variant_pdev)
+> +                       hba->vops = (struct ufs_hba_variant_ops *)
+> +                               dev_get_drvdata(&ufs_variant_pdev->dev);
+> +       }
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
-v2: Use edac_dbg() for memory size print. Use loop for DT memory.
----
- drivers/edac/altera_edac.c |   55 ++++++++++++++++++++------------------------
- 1 file changed, 25 insertions(+), 30 deletions(-)
+I have no strong objection to 'ufs_variant' sub-node.  But why can't we
+simply add an of_device_id to ufs_of_match, like below:
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 806b63b..a9e7c69 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -219,36 +219,31 @@ static void altr_sdr_mc_create_debugfs_nodes(struct mem_ctl_info *mci)
- {}
- #endif
- 
--/* Get total memory size in bytes */
--static u32 altr_sdram_get_total_mem_size(struct regmap *mc_vbase)
-+/* Get total memory size from Open Firmware DTB */
-+static unsigned long get_total_mem(void)
- {
--	u32 size, read_reg, row, bank, col, cs, width;
--
--	if (regmap_read(mc_vbase, DRAMADDRW_OFST, &read_reg) < 0)
--		return 0;
--
--	if (regmap_read(mc_vbase, DRAMIFWIDTH_OFST, &width) < 0)
--		return 0;
--
--	col = (read_reg & DRAMADDRW_COLBIT_MASK) >>
--		DRAMADDRW_COLBIT_SHIFT;
--	row = (read_reg & DRAMADDRW_ROWBIT_MASK) >>
--		DRAMADDRW_ROWBIT_SHIFT;
--	bank = (read_reg & DRAMADDRW_BANKBIT_MASK) >>
--		DRAMADDRW_BANKBIT_SHIFT;
--	cs = (read_reg & DRAMADDRW_CSBIT_MASK) >>
--		DRAMADDRW_CSBIT_SHIFT;
--
--	/* Correct for ECC as its not addressible */
--	if (width == DRAMIFWIDTH_32B_ECC)
--		width = 32;
--	if (width == DRAMIFWIDTH_16B_ECC)
--		width = 16;
--
--	/* calculate the SDRAM size base on this info */
--	size = 1 << (row + bank + col);
--	size = size * cs * (width / 8);
--	return size;
-+	struct device_node *np = NULL;
-+	const unsigned int *reg, *reg_end;
-+	int len, sw, aw;
-+	unsigned long start, size, total_mem = 0;
-+
-+	for_each_node_by_type(np, "memory") {
-+		aw = of_n_addr_cells(np);
-+		sw = of_n_size_cells(np);
-+		reg = (const unsigned int *)of_get_property(np, "reg", &len);
-+		reg_end = reg + (len / sizeof(u32));
-+
-+		total_mem = 0;
-+		do {
-+			start = of_read_number(reg, aw);
-+			reg += aw;
-+			size = of_read_number(reg, sw);
-+			reg += sw;
-+			total_mem += size;
-+		} while (reg < reg_end);
-+	}
-+	edac_dbg(0, "total_mem 0x%lx\n", total_mem);
-+	return total_mem;
- }
- 
- static int altr_sdram_probe(struct platform_device *pdev)
-@@ -280,7 +275,7 @@ static int altr_sdram_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Grab memory size from device tree. */
--	mem_size = altr_sdram_get_total_mem_size(mc_vbase);
-+	mem_size = get_total_mem();
- 	if (!mem_size) {
- 		edac_printk(KERN_ERR, EDAC_MC,
- 			    "Unable to calculate memory size\n");
--- 
-1.7.9.5
+static const struct of_device_id ufs_of_match[] = {
+        { .compatible = "jedec,ufs-1.1"},
+#if IS_ENABLED(SCSI_UFS_QCOM)
+        { .compatible = "qcom,ufs", .data = &ufs_hba_qcom_vops },
+#neidf
+        {},
+};
+
+and get hba->vops by get_variant_ops()?
+
+There is something similar in
+drivers/net/ethernet/freescale/fsl_pq_mdio.c
