@@ -1,79 +1,86 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
-Date: Thu, 4 Jun 2015 14:02:12 -0700
-Message-ID: <20150604210212.GM676@codeaurora.org>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
- <20150528132452.GI26575@pengutronix.de>
- <1432867649.15597.46.camel@mtksdaap41>
- <20150529062345.GY6325@pengutronix.de>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH 00/21] On-demand device registration
+Date: Thu, 04 Jun 2015 23:03:46 +0200
+Message-ID: <5570BD32.9020705@ahsoftware.de>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com> <CAF6AEGuOP-3sxDQcNOjVmfP4ue6LmY7KFrj9W75aHKuvZpTFMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150529062345.GY6325-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAF6AEGuOP-3sxDQcNOjVmfP4ue6LmY7KFrj9W75aHKuvZpTFMw@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, linux-usb@vger.kernel.org, linux-pwm@vger.kernel.org, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <stephane.marchesin@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29, Sascha Hauer wrote:
-> On Fri, May 29, 2015 at 10:47:29AM +0800, James Liao wrote:
-> > Hi Sascha,
-> > 
-> > > And really the driver matching "mediatek,mt8173-vencsys" should register
-> > > the necessary clocks and reset lines and call of_platform_populate on
-> > > the subnodes. The driver should also be a real driver, not something
-> > > matched by CLK_OF_DECLARE. The "mediatek,mt8173-vencsys" driver now has
-> > > the possibility to manage the toplevel vencsys unit, do runtime pm, turn
-> > > the whole thing off and on. Using CCF for abstracting these clocks may
-> > > be the right thing, but I believe that we should keep the code for the
-> > > toplevel vencsys register space together in a single file and not put
-> > > the clk bits in drivers/clk/mediatek/mt8173.c, the reset bits in
-> > > drivers/reset/ and the remaining misc stuff in drivers/soc/mediatek/.
-> > > 
-> > > So I think we should have a drivers/soc/mediatek/mtk-vencsys.c which
-> > > is a regular driver, calls clk_register() for its clocks, calls
-> > > reset_controller_register() for the reset bits, provides plain functions
-> > > for the remaining bits which are not handled by any Linux framework.
-> > > Finally of_platform_populate will register the child devices.
-> > > 
-> > > I showed this using the vencsys example, but it's the same for vdecsys,
-> > > vencltsys, imgsys and mmsys.
-> > 
-> > So you agree to manage these subsystem clocks in CCF, but they should be
-> > provided by their own (globalcon) drivers, right?
-> 
-> Yes. I previously got the impression that the subsystem clocks are not
-> directly associated to the larbs, but needed to be handled by the larb
-> code due to some side effect. Now that I saw that the larbs are directly
-> in the subsystem register space it all makes sense.
-> 
-> Note that the way Mediatek SoCs are designed around sub modules is bit
-> unusual and does not fit very well in the Linux directory structure.
-> Normally SoCs have a single clocks controller which controls all clocks
-> in the SoC. Then you often have a reset controller providing reset lines
-> in the SoC. In this case it's clear that the clk driver goes to
-> drivers/clk/, the reset controller driver to drivers/reset/. Mediatek
-> SoCs instead have several blocks, each with its own clock and reset
-> controller. Splitting each block up into parts in drivers/clk/ and
-> drivers/reset/ leads to quite a code fragmentation.
-> This is my opinion, it would be great to hear something from others.
-> Matthias? I'd like to avoid running into a direction that is not
-> acceptable in the end.
+Am 03.06.2015 um 23:12 schrieb Rob Clark:
+> On Mon, May 25, 2015 at 10:53 AM, Tomeu Vizoso
+> <tomeu.vizoso@collabora.com> wrote:
+>> Hello,
+>>
+>> I have a problem with the panel on my Tegra Chromebook taking longer=
+ than
+>> expected to be ready during boot (St=C3=A9phane Marchesin reported w=
+hat is
+>> basically the same issue in [0]), and have looked into ordered probi=
+ng as a
+>> better way of solving this than moving nodes around in the DT or pla=
+ying with
+>> initcall levels.
+>>
+>> While reading the thread [1] that Alexander Holler started with his =
+series to
+>> make probing order deterministic, it occurred to me that it should b=
+e possible
+>> to achieve the same by registering devices as they are referenced by=
+ other
+>> devices.
+>>
+>> This basically reuses the information that is already implicit in th=
+e probe()
+>> implementations, saving us from refactoring existing drivers or addi=
+ng
+>> information to DTBs.
+>>
+>> Something I'm not completely happy with is that I have had to move t=
+he call to
+>> of_platform_populate after all platform drivers have been registered=
+=2E
+>> Otherwise I don't see how I could register drivers on demand as we d=
+on't have
+>> yet each driver's compatible strings.
+>>
+>> For machs that don't move of_platform_populate() to a later point, t=
+hese
+>> patches shouldn't cause any problems but it's not guaranteed that we=
+'ll avoid
+>> all the deferred probes as some drivers may not be registered yet.
+>>
+>> I have tested this on boards with Tegra, iMX.6 and Exynos SoCs, and =
+these
+>> patches were enough to eliminate all the deferred probes.
+>>
+>> With this series I get the kernel to output to the panel in 0.5s, in=
+stead of 2.8s.
+>=20
+> So, complete drive-by comment (and I won't claim to be a DT expert,
+> etc, etc, so take this with a few grains of salt), but why not push
+> the problem to the DT compiler (or a pre-process step that could be
+> run on existing DT blobs), which generates an optional DT node that i=
+s
+> the recommended probe order?  That seems like it avoids adding
+> complexity into the early boot code (which seems like a good thing)..
 
-We already have drivers registering clocks and resets under
-drivers/clk, so it's not unheard of. An alternative solution is
-to make child devices for the clock part and the reset part at
-runtime in the toplevel driver for the vencsys device (don't do
-any sort of DT description for this) and use regmap to mediate
-the register accesses and locking. That way we can put the clk
-driver in drivers/clk/, the reset driver in drivers/reset, etc.
-so that logically related code is grouped.
+I've played with that approach too (as my patches for dtc do contain th=
+e
+same code I've put into the kernel, but decided that it doesn't make
+much sense. The sort algorithm is really small (some dozen lines), very
+fast (around 3-5ms on a omap) and might be later used to sort necessary
+module loading too. So there would be no advantage to put a sorted list
+into the DT. And having the sort algorithm in the kernel, would make it
+possible to use it for acpi or something else too, if they manage it to
+provide the necessary dependencies.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Alexander Holler
