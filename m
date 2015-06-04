@@ -1,89 +1,44 @@
-From: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4] ARM: dts: mt8173: support arm64 cpuidle-dt
-Date: Thu,  4 Jun 2015 15:13:37 +0800
-Message-ID: <1433402017-7711-1-git-send-email-howard.chen@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Bobby Batacharia <bobby.batacharia-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Y Vo <yvo@apm.com>
+Subject: [PATCH v0] arm64: dts: Add APM X-Gene standby GPIO controller DTS entries
+Date: Thu,  4 Jun 2015 14:19:04 +0700
+Message-ID: <1433402344-20836-1-git-send-email-yvo@apm.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, arm@kernel.org, linux-kernel@vger.kernel.org
+Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds an idle-states node to describe the mt8173 idle states and
-also adds references to the idle-states node in all CPU nodes.
+Add standby domain gpio controller for APM X-Gene SoC platform.
 
-Changes:
-
-v4:
-- Refine the property ordering.
-
-v3:
-- Add the local-timer-stop property.
-
-v2:
-- Remove the change to the PSCI version.
-- Remove the cluster idle state.
-- Fine tune the latency properties of the idle state.
-
-Signed-off-by: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Y Vo <yvo@apm.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/boot/dts/apm/apm-storm.dtsi |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 27237a1..5587375 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -49,6 +49,8 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
- 			reg = <0x000>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index f1ad9c2..2e1c438 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -587,6 +587,19 @@
+ 			phy-names = "sata-phy";
  		};
  
- 		cpu1: cpu@1 {
-@@ -56,6 +58,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x001>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
- 		cpu2: cpu@100 {
-@@ -63,6 +66,7 @@
- 			compatible = "arm,cortex-a57";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
- 		cpu3: cpu@101 {
-@@ -70,6 +74,20 @@
- 			compatible = "arm,cortex-a57";
- 			reg = <0x101>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
++		sbgpio: sbgpio@17001000{
++			compatible = "apm,xgene-gpio-sb";
++			reg = <0x0 0x17001000 0x0 0x400>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			interrupts = 	<0x0 0x28 0x1>,
++					<0x0 0x29 0x1>,
++					<0x0 0x2a 0x1>,
++					<0x0 0x2b 0x1>,
++					<0x0 0x2c 0x1>,
++					<0x0 0x2d 0x1>;
 +		};
 +
-+		idle-states {
-+			entry-method = "arm,psci";
-+
-+			CPU_SLEEP_0: cpu-sleep-0 {
-+				compatible = "arm,idle-state";
-+				local-timer-stop;
-+				entry-latency-us = <639>;
-+				exit-latency-us = <680>;
-+				min-residency-us = <1088>;
-+				arm,psci-suspend-param = <0x0010000>;
-+			};
- 		};
- 	};
- 
+ 		rtc: rtc@10510000 {
+ 			compatible = "apm,xgene-rtc";
+ 			reg = <0x0 0x10510000 0x0 0x400>;
 -- 
-1.9.1
+1.7.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
