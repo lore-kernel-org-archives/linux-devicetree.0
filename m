@@ -1,65 +1,114 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 4/4] arm: socfpga: dts: Arria10 SDRAM EDAC DTS additions.
-Date: Thu, 4 Jun 2015 09:28:48 -0500
-Message-ID: <1433428128-7292-5-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv2 1/4] edac, altera: Generalize driver to use DT Memory size
+Date: Thu, 4 Jun 2015 09:28:45 -0500
+Message-ID: <1433428128-7292-2-git-send-email-tthayer@opensource.altera.com>
 References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Support for the Arria10 SDRAM EDAC is added to the device tree.
-Update the bindings document for the new match string.
+The Arria10 SOC uses a completely different SDRAM controller from the
+earlier CycloneV and ArriaV SoCs. The memory size is calculated in
+the bootloader and passed via the device tree. Using this device
+tree size is more generic than using the register fields to
+calculate the memory size for different SDRAM controllers.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2: Change subject description format.
+v2: Use edac_dbg() for memory size print. Use loop for DT memory.
 ---
- .../bindings/arm/altera/socfpga-sdram-edac.txt     |    2 +-
- arch/arm/boot/dts/socfpga_arria10.dtsi             |   11 +++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ drivers/edac/altera_edac.c |   55 ++++++++++++++++++++------------------------
+ 1 file changed, 25 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-index d0ce01d..f5ad0ff 100644
---- a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-@@ -2,7 +2,7 @@ Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
- The EDAC accesses a range of registers in the SDRAM controller.
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 806b63b..a9e7c69 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -219,36 +219,31 @@ static void altr_sdr_mc_create_debugfs_nodes(struct mem_ctl_info *mci)
+ {}
+ #endif
  
- Required properties:
--- compatible : should contain "altr,sdram-edac";
-+- compatible : should contain "altr,sdram-edac" or "altr,sdram-edac-a10"
- - altr,sdr-syscon : phandle of the sdr module
- - interrupts : Should contain the SDRAM ECC IRQ in the
- 	appropriate format for the IRQ controller.
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index f5bebdd..4779b07 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -548,6 +548,17 @@
- 			status = "disabled";
- 		};
+-/* Get total memory size in bytes */
+-static u32 altr_sdram_get_total_mem_size(struct regmap *mc_vbase)
++/* Get total memory size from Open Firmware DTB */
++static unsigned long get_total_mem(void)
+ {
+-	u32 size, read_reg, row, bank, col, cs, width;
+-
+-	if (regmap_read(mc_vbase, DRAMADDRW_OFST, &read_reg) < 0)
+-		return 0;
+-
+-	if (regmap_read(mc_vbase, DRAMIFWIDTH_OFST, &width) < 0)
+-		return 0;
+-
+-	col = (read_reg & DRAMADDRW_COLBIT_MASK) >>
+-		DRAMADDRW_COLBIT_SHIFT;
+-	row = (read_reg & DRAMADDRW_ROWBIT_MASK) >>
+-		DRAMADDRW_ROWBIT_SHIFT;
+-	bank = (read_reg & DRAMADDRW_BANKBIT_MASK) >>
+-		DRAMADDRW_BANKBIT_SHIFT;
+-	cs = (read_reg & DRAMADDRW_CSBIT_MASK) >>
+-		DRAMADDRW_CSBIT_SHIFT;
+-
+-	/* Correct for ECC as its not addressible */
+-	if (width == DRAMIFWIDTH_32B_ECC)
+-		width = 32;
+-	if (width == DRAMIFWIDTH_16B_ECC)
+-		width = 16;
+-
+-	/* calculate the SDRAM size base on this info */
+-	size = 1 << (row + bank + col);
+-	size = size * cs * (width / 8);
+-	return size;
++	struct device_node *np = NULL;
++	const unsigned int *reg, *reg_end;
++	int len, sw, aw;
++	unsigned long start, size, total_mem = 0;
++
++	for_each_node_by_type(np, "memory") {
++		aw = of_n_addr_cells(np);
++		sw = of_n_size_cells(np);
++		reg = (const unsigned int *)of_get_property(np, "reg", &len);
++		reg_end = reg + (len / sizeof(u32));
++
++		total_mem = 0;
++		do {
++			start = of_read_number(reg, aw);
++			reg += aw;
++			size = of_read_number(reg, sw);
++			reg += sw;
++			total_mem += size;
++		} while (reg < reg_end);
++	}
++	edac_dbg(0, "total_mem 0x%lx\n", total_mem);
++	return total_mem;
+ }
  
-+		sdr: sdr@ffc25000 {
-+			compatible = "syscon";
-+			reg = <0xffcfb100 0x80>;
-+		};
-+
-+		sdramedac {
-+			compatible = "altr,sdram-edac-a10";
-+			altr,sdr-syscon = <&sdr>;
-+			interrupts = <0 2 4>, <0 0 4>;
-+		};
-+
- 		L2: l2-cache@fffff000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0xfffff000 0x1000>;
+ static int altr_sdram_probe(struct platform_device *pdev)
+@@ -280,7 +275,7 @@ static int altr_sdram_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Grab memory size from device tree. */
+-	mem_size = altr_sdram_get_total_mem_size(mc_vbase);
++	mem_size = get_total_mem();
+ 	if (!mem_size) {
+ 		edac_printk(KERN_ERR, EDAC_MC,
+ 			    "Unable to calculate memory size\n");
 -- 
 1.7.9.5
-
