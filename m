@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 20/42] powerpc/powernv: Rename pnv_ioda_get_pe() to pnv_ioda_dev_to_pe()
-Date: Thu,  4 Jun 2015 16:41:49 +1000
-Message-ID: <1433400131-18429-21-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 23/42] powerpc/powernv: Cleanup on pnv_pci_ioda2_release_dma_pe()
+Date: Thu,  4 Jun 2015 16:41:52 +1000
+Message-ID: <1433400131-18429-24-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,60 +10,82 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-pnv_ioda_get_pe() indicates it's increasing refcount to the given
-PE instance from the name. However, it gets the instance of the
-PE, which contains the indicated PCI device. The patch renames it
-to pnv_ioda_dev_to_pe() to reflect its purpose.
+The patch applies cleanup on pnv_pci_ioda2_release_dma_pe():
+
+  * Rename it to pnv_pci_ioda2_release_pe_dma() to match the
+    function names used to release resources for one PE in the
+    subsequent patches.
+  * Remove the parameter of PCI device, which is used to figure
+    out device node. VFs don't have associated device nodes in
+    SRIOV case. For other cases, the device node can be figured
+    out from the PCI bus or device the PE was allocated for.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
 v5:
-  * Split from PATCH[v4 07/21]
-  * Fixed "do not use assignment in if condition" from checkpatch.pl
+  * Newly introduced
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
 diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 0447534..e9165fa 100644
+index 3d5aec8d..2e31472 100644
 --- a/arch/powerpc/platforms/powernv/pci-ioda.c
 +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -702,7 +702,7 @@ static int pnv_ioda_get_pe_state(struct pnv_phb *phb, int pe_no)
-  * but in the meantime, we need to protect them to avoid warnings
-  */
- #ifdef CONFIG_PCI_MSI
--static struct pnv_ioda_pe *pnv_ioda_get_pe(struct pci_dev *dev)
-+static struct pnv_ioda_pe *pnv_ioda_dev_to_pe(struct pci_dev *dev)
+@@ -197,11 +197,11 @@ static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable)
+ 		pe->tce_bypass_enabled = enable;
+ }
+ 
+-static void pnv_pci_ioda2_release_dma_pe(struct pci_dev *dev,
+-					 struct pnv_ioda_pe *pe)
++static void pnv_pci_ioda2_release_pe_dma(struct pnv_ioda_pe *pe)
  {
- 	struct pci_controller *hose = pci_bus_to_host(dev->bus);
- 	struct pnv_phb *phb = hose->private_data;
-@@ -2671,7 +2671,7 @@ int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode)
- 	struct pnv_ioda_pe *pe;
- 	int rc;
+-	struct iommu_table    *tbl;
+-	int64_t               rc;
++	struct iommu_table *tbl;
++	struct device_node *dn;
++	int64_t rc;
  
--	pe = pnv_ioda_get_pe(dev);
-+	pe = pnv_ioda_dev_to_pe(dev);
- 	if (!pe)
- 		return -ENODEV;
+ 	tbl = pe->table_group.tables[0];
+ 	rc = pnv_pci_ioda2_unset_window(&pe->table_group, 0);
+@@ -213,8 +213,20 @@ static void pnv_pci_ioda2_release_dma_pe(struct pci_dev *dev,
+ 		iommu_group_put(pe->table_group.group);
+ 		BUG_ON(pe->table_group.group);
+ 	}
++
++	if (pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL))
++		dn = pci_bus_to_OF_node(pe->pbus);
++	else if (pe->flags & PNV_IODA_PE_DEV)
++		dn = pci_device_to_OF_node(pe->pdev);
++#ifdef CONFIG_PCI_IOV
++	else if (pe->flags & PNV_IODA_PE_VF)
++		dn = pci_device_to_OF_node(pe->parent_dev);
++#endif
++	else
++		dn = NULL;
++
+ 	pnv_pci_ioda2_table_free_pages(tbl);
+-	iommu_free_table(tbl, of_node_full_name(dev->dev.of_node));
++	iommu_free_table(tbl, of_node_full_name(dn));
+ }
  
-@@ -2787,7 +2787,8 @@ int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
- 	struct pnv_ioda_pe *pe;
- 	int rc;
+ static int pnv_ioda_set_one_peltv(struct pnv_phb *phb,
+@@ -1495,14 +1507,14 @@ static void pnv_ioda_release_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+ 		if ((pe->flags & PNV_IODA_PE_MASTER) &&
+ 		    (pe->flags & PNV_IODA_PE_VF)) {
+ 			list_for_each_entry_safe(s, sn, &pe->slaves, list) {
+-				pnv_pci_ioda2_release_dma_pe(pdev, s);
++				pnv_pci_ioda2_release_pe_dma(s);
+ 				list_del(&s->list);
+ 				pnv_ioda_deconfigure_pe(phb, s);
+ 				pnv_ioda_free_pe(phb, s->pe_number);
+ 			}
+ 		}
  
--	if (!(pe = pnv_ioda_get_pe(dev)))
-+	pe = pnv_ioda_dev_to_pe(dev);
-+	if (!pe)
- 		return -ENODEV;
+-		pnv_pci_ioda2_release_dma_pe(pdev, pe);
++		pnv_pci_ioda2_release_pe_dma(pe);
  
- 	/* Assign XIVE to PE */
-@@ -2809,7 +2810,7 @@ static int pnv_pci_ioda_msi_setup(struct pnv_phb *phb, struct pci_dev *dev,
- 				  unsigned int hwirq, unsigned int virq,
- 				  unsigned int is_64, struct msi_msg *msg)
- {
--	struct pnv_ioda_pe *pe = pnv_ioda_get_pe(dev);
-+	struct pnv_ioda_pe *pe = pnv_ioda_dev_to_pe(dev);
- 	unsigned int xive_num = hwirq - phb->msi_base;
- 	__be32 data;
- 	int rc;
+ 		/* Remove from list */
+ 		mutex_lock(&phb->ioda.pe_list_mutex);
 -- 
 2.1.0
