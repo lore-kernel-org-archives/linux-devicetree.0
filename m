@@ -1,199 +1,181 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 06/42] powerpc/powernv: Improve IO and M32 mapping
-Date: Thu,  4 Jun 2015 16:41:35 +1000
-Message-ID: <1433400131-18429-7-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 32/42] powerpc/powernv: Introduce pnv_pci_poll()
+Date: Thu,  4 Jun 2015 16:42:01 +1000
+Message-ID: <1433400131-18429-33-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433400131-18429-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The PHB's IO or M32 window is divided evenly to segments, each of
-them can be mapped to arbitrary PE# by IODT or M32DT. Current code
-figures out the consumed IO and M32 segments by one particular PE
-from the windows of the PE's upstream bridge. It won't be reliable
-once we extend M64 windows of root port, or the upstream port of
-the PCIE switch behind root port to PHB's IO or M32 window, in order
-to support PCI hotplug in future.
+The patch obsoletes pnv_eeh_poll() with pnv_pci_poll():
 
-The patch improves the above situation by calculating PE's consumed
-IO or M32 segments from its contained devices, no PCI bridge windows
-involved if the PE doesn't contain all the subordinate PCI buses.
-Otherwise, the PCI bridge windows still contribute to PE's consumed
-IO or M32 segments.
+   * The return value from last OPAL API is passed to the
+     pnv_pci_poll() and handled there.
+   * More information (e.g. PCI slot power status) is retrieved
+     if the last argument is valid.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 136 ++++++++++++++++++------------
- 1 file changed, 80 insertions(+), 56 deletions(-)
+v5:
+  * Derived from PATCH[v4 13/21]
+---
+ arch/powerpc/platforms/powernv/eeh-powernv.c | 46 ++++++----------------------
+ arch/powerpc/platforms/powernv/pci.c         | 21 +++++++++++++
+ arch/powerpc/platforms/powernv/pci.h         |  1 +
+ 3 files changed, 31 insertions(+), 37 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 3bb4ce8..46a5e10 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2959,76 +2959,100 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
+diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+index 4eb53ed..7ee328b 100644
+--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
++++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+@@ -743,28 +743,11 @@ static int pnv_eeh_get_state(struct eeh_pe *pe, int *delay)
+ 	return ret;
  }
- #endif /* CONFIG_PCI_IOV */
  
--/*
-- * This function is supposed to be called on basis of PE from top
-- * to bottom style. So the the I/O or MMIO segment assigned to
-- * parent PE could be overrided by its child PEs if necessary.
-- */
--static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
--				  struct pnv_ioda_pe *pe)
-+static int pnv_ioda_map_pe_one_res(struct pci_controller *hose,
-+				   struct pnv_ioda_pe *pe,
-+				   struct resource *res)
+-static s64 pnv_eeh_poll(uint64_t id)
+-{
+-	s64 rc = OPAL_HARDWARE;
+-
+-	while (1) {
+-		rc = opal_pci_poll(id, NULL);
+-		if (rc <= 0)
+-			break;
+-
+-		if (system_state < SYSTEM_RUNNING)
+-			udelay(1000 * rc);
+-		else
+-			msleep(rc);
+-	}
+-
+-	return rc;
+-}
+-
+ int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
  {
  	struct pnv_phb *phb = hose->private_data;
- 	struct pci_bus_region region;
--	struct resource *res;
--	int i, index;
-+	int index;
- 	unsigned int segsize;
- 	unsigned long *segmap, *pe_segmap;
- 	uint16_t win;
- 	int64_t rc;
+ 	s64 rc = OPAL_HARDWARE;
++	int ret;
  
--	/*
--	 * NOTE: We only care PCI bus based PE for now. For PCI
--	 * device based PE, for example SRIOV sensitive VF should
--	 * be figured out later.
--	 */
--	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
-+	/* Check if we need map the resource */
-+	if (!res->parent ||
-+	    !res->flags ||
-+	    res->start > res->end ||
-+	    pnv_pci_is_mem_pref_64(res->flags))
-+		return 0;
+ 	pr_debug("%s: Reset PHB#%x, option=%d\n",
+ 		 __func__, hose->global_number, option);
+@@ -779,8 +762,6 @@ int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
+ 		rc = opal_pci_reset(phb->opal_id,
+ 				    OPAL_RESET_PHB_COMPLETE,
+ 				    OPAL_DEASSERT_RESET);
+-	if (rc < 0)
+-		goto out;
  
--	pci_bus_for_each_resource(pe->pbus, res, i) {
--		if (!res || !res->flags ||
--		    res->start > res->end)
--			continue;
-+	if (res->flags & IORESOURCE_IO) {
-+		region.start = res->start - phb->ioda.io_pci_base;
-+		region.end   = res->end - phb->ioda.io_pci_base;
-+		segsize      = phb->ioda.io_segsize;
-+		segmap       = phb->ioda.io_segmap;
-+		pe_segmap    = pe->io_segmap;
-+		win          = OPAL_IO_WINDOW_TYPE;
-+	} else if ((res->flags & IORESOURCE_MEM) &&
-+		   !pnv_pci_is_mem_pref_64(res->flags)) {
-+		region.start = res->start -
-+			       hose->mem_offset[0] -
-+			       phb->ioda.m32_pci_base;
-+		region.end   = res->end -
-+			       hose->mem_offset[0] -
-+			       phb->ioda.m32_pci_base;
-+		segsize      = phb->ioda.m32_segsize;
-+		segmap       = phb->ioda.m32_segmap;
-+		pe_segmap    = pe->m32_segmap;
-+		win          = OPAL_M32_WINDOW_TYPE;
-+	} else {
-+		return 0;
-+	}
+ 	/*
+ 	 * Poll state of the PHB until the request is done
+@@ -788,24 +769,22 @@ int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
+ 	 * reset followed by hot reset on root bus. So we also
+ 	 * need the PCI bus settlement delay.
+ 	 */
+-	rc = pnv_eeh_poll(phb->opal_id);
+-	if (option == EEH_RESET_DEACTIVATE) {
++	ret = pnv_pci_poll(phb->opal_id, rc, NULL);
++	if (option == EEH_RESET_DEACTIVATE && !ret) {
+ 		if (system_state < SYSTEM_RUNNING)
+ 			udelay(1000 * EEH_PE_RST_SETTLE_TIME);
+ 		else
+ 			msleep(EEH_PE_RST_SETTLE_TIME);
+ 	}
+-out:
+-	if (rc != OPAL_SUCCESS)
+-		return -EIO;
  
--		if (res->flags & IORESOURCE_IO) {
--			region.start = res->start - phb->ioda.io_pci_base;
--			region.end   = res->end - phb->ioda.io_pci_base;
--			segsize      = phb->ioda.io_segsize;
--			segmap       = phb->ioda.io_segmap;
--			pe_segmap    = pe->io_segmap;
--			win          = OPAL_IO_WINDOW_TYPE;
--		} else if ((res->flags & IORESOURCE_MEM) &&
--			    !pnv_pci_is_mem_pref_64(res->flags)) {
--			region.start = res->start -
--				       hose->mem_offset[0] -
--				       phb->ioda.m32_pci_base;
--			region.end   = res->end -
--				       hose->mem_offset[0] -
--				       phb->ioda.m32_pci_base;
--			segsize      = phb->ioda.m32_segsize;
--			segmap       = phb->ioda.m32_segmap;
--			pe_segmap    = pe->m32_segmap;
--			win          = OPAL_M32_WINDOW_TYPE;
--		} else {
--			continue;
-+	index = region.start / phb->ioda.io_segsize;
-+	while (index < phb->ioda.total_pe &&
-+	       region.start <= region.end) {
-+		set_bit(index, segmap);
-+		set_bit(index, pe_segmap);
+-	return 0;
++	return ret;
+ }
+ 
+ static int pnv_eeh_root_reset(struct pci_controller *hose, int option)
+ {
+ 	struct pnv_phb *phb = hose->private_data;
+ 	s64 rc = OPAL_HARDWARE;
++	int ret;
+ 
+ 	pr_debug("%s: Reset PHB#%x, option=%d\n",
+ 		 __func__, hose->global_number, option);
+@@ -827,18 +806,13 @@ static int pnv_eeh_root_reset(struct pci_controller *hose, int option)
+ 		rc = opal_pci_reset(phb->opal_id,
+ 				    OPAL_RESET_PCI_HOT,
+ 				    OPAL_DEASSERT_RESET);
+-	if (rc < 0)
+-		goto out;
+ 
+ 	/* Poll state of the PHB until the request is done */
+-	rc = pnv_eeh_poll(phb->opal_id);
+-	if (option == EEH_RESET_DEACTIVATE)
++	ret = pnv_pci_poll(phb->opal_id, rc, NULL);
++	if (option == EEH_RESET_DEACTIVATE && !ret)
+ 		msleep(EEH_PE_RST_SETTLE_TIME);
+-out:
+-	if (rc != OPAL_SUCCESS)
+-		return -EIO;
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int __pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+@@ -928,10 +902,8 @@ static int pnv_eeh_bridge_reset(struct pci_dev *pdev, int option)
+ 	phb = hose->private_data;
+ 	id |= (pdev->bus->number << 24) | (pdev->devfn << 16) | phb->opal_id;
+ 	rc = opal_pci_reset(id, scope, OPAL_ASSERT_RESET);
+-	if (rc > 0)
+-		rc = pnv_eeh_poll(id);
+ 
+-	return (rc == OPAL_SUCCESS) ? 0 : -EIO;
++	return pnv_pci_poll(id, rc, NULL);
+ }
+ 
+ static void pnv_eeh_wait_for_pending(struct pci_dn *pdn, int pos,
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index 678eb24..bf5df04 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -44,6 +44,27 @@
+ #define cfg_dbg(fmt...)	do { } while(0)
+ //#define cfg_dbg(fmt...)	printk(fmt)
+ 
++int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *pval)
++{
++	while (rval > 0) {
++		if (system_state < SYSTEM_RUNNING)
++			udelay(1000 * rval);
++		else
++			msleep(rval);
 +
-+		rc = opal_pci_map_pe_mmio_window(phb->opal_id,
-+				pe->pe_number, win, 0, index);
-+		if (rc != OPAL_SUCCESS) {
-+			pr_err("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
-+				__func__, rc, win, index,
-+				pe->phb->hose->global_number,
-+				pe->pe_number);
-+			return -EIO;
- 		}
- 
--		index = region.start / phb->ioda.io_segsize;
--		while (index < phb->ioda.total_pe &&
--		       region.start <= region.end) {
--			set_bit(index, segmap);
--			set_bit(index, pe_segmap);
-+		region.start += segsize;
-+		index++;
++		rval = opal_pci_poll(id, pval);
 +	}
- 
--			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
--					pe->pe_number, win, 0, index);
--			if (rc != OPAL_SUCCESS) {
--				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
--					__func__, rc, win, index,
--					pe->phb->hose->global_number,
--					pe->pe_number);
--				break;
--			}
-+	return 0;
++
++	/*
++	 * The caller expects to retrieve additional information
++	 * if the last argument is valid.
++	 */
++	if (rval == OPAL_SUCCESS && pval)
++		rval = opal_pci_poll(id, pval);
++
++	return rval ? -EIO : 0;
 +}
 +
-+static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
-+				  struct pnv_ioda_pe *pe)
-+{
-+	struct pci_dev *pdev;
-+	struct resource *res;
-+	int i;
-+
-+	/* This function only works for bus dependent PE */
-+	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
-+
-+	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
-+		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
-+			res = &pdev->resource[i];
-+			if (pnv_ioda_map_pe_one_res(hose, pe, res))
-+				return;
-+		}
-+
-+		/* If the PE contains all subordinate PCI buses, the
-+		 * resources of the child bridges should be mapped
-+		 * to the PE as well.
-+		 */
-+		if (!(pe->flags & PNV_IODA_PE_BUS_ALL) ||
-+		    (pdev->class >> 8) != PCI_CLASS_BRIDGE_PCI)
-+			continue;
+ #ifdef CONFIG_PCI_MSI
+ static int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+ {
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index f68e036..510e781 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -214,6 +214,7 @@ extern int pnv_tce_xchg(struct iommu_table *tbl, long index,
+ 		unsigned long *hpa, enum dma_data_direction *direction);
+ extern unsigned long pnv_tce_get(struct iommu_table *tbl, long index);
  
--			region.start += segsize;
--			index++;
-+		for (i = 0; i <= PCI_BRIDGE_RESOURCE_NUM; i++) {
-+			res = &pdev->resource[PCI_BRIDGE_RESOURCES + i];
-+			if (pnv_ioda_map_pe_one_res(hose, pe, res))
-+				return;
- 		}
- 	}
- }
++int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *pval);
+ void pnv_pci_dump_phb_diag_data(struct pci_controller *hose,
+ 				unsigned char *log_buff);
+ int pnv_pci_cfg_read(struct pci_dn *pdn,
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
