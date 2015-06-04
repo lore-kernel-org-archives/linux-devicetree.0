@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 04/42] powerpc/powernv: Trace consumed IO and M32 segments by PE
-Date: Thu,  4 Jun 2015 16:41:33 +1000
-Message-ID: <1433400131-18429-5-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 36/42] powerpc/pci: Export traverse_pci_device_nodes()
+Date: Thu,  4 Jun 2015 16:42:05 +1000
+Message-ID: <1433400131-18429-37-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1433400131-18429-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
@@ -10,109 +10,228 @@ To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch introduces two bitmaps to trace the IO and M32 segments
-consumed by one particular PE, which can be released once the PE
-is destroyed during PCI unplugging time. Also, we're using fixed
-quantity of bits to trace the used IO and M32 segments by PEs in
-one particular PHB. Besides, @pe_array is put to the location
-adjacent to @pe_alloc on account of their close relation.
+The patch exports following functions, which are derived from their
+original implementation, so that the PCI hotplug logic can reuse
+the functions to add or remove pci_dn for all device nodes under
+specified PCI slot.
+
+   traverse_pci_device_nodes()     traverse_pci_devices()
+   add_pci_device_node_info()      update_dn_pci_info()
+   remove_pci_device_node_info()   newly added
+
+The patch also releases eeh_dev when its corresponding pci_dn
+is released, indicating they have same life cycle.
 
 Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
 v5:
-  * Split from PATCH[v4 04/21]
+  * Derived from PATCH[v4 17/21]
+  * Fixed "assignment in if condition" from checkpatch.pl
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 17 +++++------------
- arch/powerpc/platforms/powernv/pci.h      | 11 ++++++-----
- 2 files changed, 11 insertions(+), 17 deletions(-)
+ arch/powerpc/include/asm/pci-bridge.h  |  4 +-
+ arch/powerpc/include/asm/ppc-pci.h     |  7 ++--
+ arch/powerpc/kernel/pci_dn.c           | 71 ++++++++++++++++++++++++++++------
+ arch/powerpc/platforms/pseries/msi.c   |  4 +-
+ arch/powerpc/platforms/pseries/setup.c |  2 +-
+ 5 files changed, 70 insertions(+), 18 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 71afb38..53d0efd 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2992,7 +2992,8 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index 9a83cdb..d0b4b1a 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -222,7 +222,9 @@ extern struct pci_dn *pci_get_pdn_by_devfn(struct pci_bus *bus,
+ extern struct pci_dn *pci_get_pdn(struct pci_dev *pdev);
+ extern struct pci_dn *add_dev_pci_data(struct pci_dev *pdev);
+ extern void remove_dev_pci_data(struct pci_dev *pdev);
+-extern void *update_dn_pci_info(struct device_node *dn, void *data);
++extern void *add_pci_device_node_info(struct device_node *dn,
++				      struct pci_controller *phb);
++extern void remove_pci_device_node_info(struct device_node *dn);
  
- 			while (index < phb->ioda.total_pe &&
- 			       region.start <= region.end) {
--				phb->ioda.io_segmap[index] = pe->pe_number;
-+				set_bit(index, phb->ioda.io_segmap);
-+				set_bit(index, pe->io_segmap);
- 				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
- 					pe->pe_number, OPAL_IO_WINDOW_TYPE, 0, index);
- 				if (rc != OPAL_SUCCESS) {
-@@ -3017,7 +3018,8 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+ static inline int pci_device_from_OF_node(struct device_node *np,
+ 					  u8 *bus, u8 *devfn)
+diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
+index 7388316..a5b0ea0 100644
+--- a/arch/powerpc/include/asm/ppc-pci.h
++++ b/arch/powerpc/include/asm/ppc-pci.h
+@@ -33,9 +33,10 @@ extern struct pci_dev *isa_bridge_pcidev;	/* may be NULL if no ISA bus */
+ struct device_node;
+ struct pci_dn;
  
- 			while (index < phb->ioda.total_pe &&
- 			       region.start <= region.end) {
--				phb->ioda.m32_segmap[index] = pe->pe_number;
-+				set_bit(index, phb->ioda.m32_segmap);
-+				set_bit(index, pe->m32_segmap);
- 				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
- 					pe->pe_number, OPAL_M32_WINDOW_TYPE, 0, index);
- 				if (rc != OPAL_SUCCESS) {
-@@ -3196,7 +3198,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+-typedef void *(*traverse_func)(struct device_node *me, void *data);
+-void *traverse_pci_devices(struct device_node *start, traverse_func pre,
+-		void *data);
++void *traverse_pci_device_nodes(struct device_node *start,
++				void *(*fn)(struct device_node *,
++					    struct pci_controller *),
++				void *data);
+ void *traverse_pci_dn(struct pci_dn *root,
+ 		      void *(*fn)(struct pci_dn *, void *),
+ 		      void *data);
+diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
+index d4330d2..f821e96 100644
+--- a/arch/powerpc/kernel/pci_dn.c
++++ b/arch/powerpc/kernel/pci_dn.c
+@@ -276,13 +276,17 @@ void remove_dev_pci_data(struct pci_dev *pdev)
+ #endif /* CONFIG_PCI_IOV */
+ }
+ 
+-/*
+- * Traverse_func that inits the PCI fields of the device node.
+- * NOTE: this *must* be done before read/write config to the device.
++/**
++ * add_pci_device_node_info - Add pci_dn for PCI device node
++ * @dn: PCI device node
++ * @phb: PHB
++ *
++ * Add pci_dn for the indicated PCI device node. The newly created
++ * pci_dn will be put into the child list of the parent device node.
+  */
+-void *update_dn_pci_info(struct device_node *dn, void *data)
++void *add_pci_device_node_info(struct device_node *dn,
++			       struct pci_controller *phb)
  {
- 	struct pci_controller *hose;
- 	struct pnv_phb *phb;
--	unsigned long size, m32map_off, pemap_off, iomap_off = 0;
-+	unsigned long size, pemap_off;
- 	const __be64 *prop64;
- 	const __be32 *prop32;
- 	int len;
-@@ -3281,19 +3283,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+-	struct pci_controller *phb = data;
+ 	const __be32 *type = of_get_property(dn, "ibm,pci-config-space-type", NULL);
+ 	const __be32 *regs;
+ 	struct device_node *parent;
+@@ -339,8 +343,48 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
  
- 	/* Allocate aux data & arrays. We don't have IO ports on PHB3 */
- 	size = _ALIGN_UP(phb->ioda.total_pe / 8, sizeof(unsigned long));
--	m32map_off = size;
--	size += phb->ioda.total_pe * sizeof(phb->ioda.m32_segmap[0]);
--	if (phb->type == PNV_PHB_IODA1) {
--		iomap_off = size;
--		size += phb->ioda.total_pe * sizeof(phb->ioda.io_segmap[0]);
--	}
- 	pemap_off = size;
- 	size += phb->ioda.total_pe * sizeof(struct pnv_ioda_pe);
- 	aux = memblock_virt_alloc(size, 0);
- 	phb->ioda.pe_alloc = aux;
--	phb->ioda.m32_segmap = aux + m32map_off;
--	if (phb->type == PNV_PHB_IODA1)
--		phb->ioda.io_segmap = aux + iomap_off;
- 	phb->ioda.pe_array = aux + pemap_off;
- 	set_bit(phb->ioda.reserved_pe, phb->ioda.pe_alloc);
+ 	return NULL;
+ }
++EXPORT_SYMBOL(add_pci_device_node_info);
  
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 54657f4..0a8cecb 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -54,6 +54,8 @@ struct pnv_ioda_pe {
- 	 * by slave PEs will be contributed to the master PE. One
- 	 * PE can own multiple IO and M32 segments.
- 	 */
-+	unsigned long		io_segmap[8];
-+	unsigned long		m32_segmap[8];
- 	unsigned long		m64_segmap[8];
+-/*
++/**
++ * remove_pci_device_node_info - Remove pci_dn from PCI device node
++ * @dn: PCI device node
++ *
++ * Remove pci_dn from PCI device node. The pci_dn is also removed
++ * from the child list of the parent pci_dn.
++ */
++void remove_pci_device_node_info(struct device_node *np)
++{
++	struct pci_dn *pdn = np ? PCI_DN(np) : NULL;
++#ifdef CONFIG_EEH
++	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
++#endif
++
++	if (!pdn)
++		return;
++
++#ifdef CONFIG_EEH
++	if (edev) {
++		pdn->edev = NULL;
++		kfree(edev);
++	}
++#endif
++
++	BUG_ON(!list_empty(&pdn->child_list));
++	list_del(&pdn->list);
++	if (pdn->parent)
++		of_node_put(pdn->parent->node);
++
++	np->data = NULL;
++	kfree(pdn);
++}
++EXPORT_SYMBOL(remove_pci_device_node_info);
++
++/**
++ * traverse_pci_device_nodes - Traverse children of indicated device node
++ * @start: indicated device node
++ * @pre: callback
++ * @data: additional parameter to the callback
++ *
+  * Traverse a device tree stopping each PCI device in the tree.
+  * This is done depth first.  As each node is processed, a "pre"
+  * function is called and the children are processed recursively.
+@@ -358,8 +402,10 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
+  * one of these nodes we also assume its siblings are non-pci for
+  * performance.
+  */
+-void *traverse_pci_devices(struct device_node *start, traverse_func pre,
+-		void *data)
++void *traverse_pci_device_nodes(struct device_node *start,
++				void *(*fn)(struct device_node *,
++					    struct pci_controller *phb),
++				void *data)
+ {
+ 	struct device_node *dn, *nextdn;
+ 	void *ret;
+@@ -374,7 +420,8 @@ void *traverse_pci_devices(struct device_node *start, traverse_func pre,
+ 		if (classp)
+ 			class = of_read_number(classp, 1);
  
- 	/* "Weight" assigned to the PE for the sake of DMA resource
-@@ -154,16 +156,15 @@ struct pnv_phb {
- 			unsigned int		io_segsize;
- 			unsigned int		io_pci_base;
+-		if (pre && ((ret = pre(dn, data)) != NULL))
++		ret = fn ? fn(dn, data) : NULL;
++		if (ret != NULL)
+ 			return ret;
  
--			/* PE allocation bitmap */
-+			/* PE allocation */
- 			unsigned long		*pe_alloc;
--			/* PE allocation mutex */
-+			struct pnv_ioda_pe	*pe_array;
- 			struct mutex		pe_alloc_mutex;
+ 		/* If we are a PCI bridge, go down */
+@@ -395,8 +442,10 @@ void *traverse_pci_devices(struct device_node *start, traverse_func pre,
+ 			nextdn = dn->sibling;
+ 		}
+ 	}
++
+ 	return NULL;
+ }
++EXPORT_SYMBOL_GPL(traverse_pci_device_nodes);
  
- 			/* M32 & IO segment maps */
-+			unsigned long		io_segmap[8];
-+			unsigned long		m32_segmap[8];
- 			unsigned long		m64_segmap[8];
--			unsigned int		*m32_segmap;
--			unsigned int		*io_segmap;
--			struct pnv_ioda_pe	*pe_array;
+ static struct pci_dn *pci_dn_next_one(struct pci_dn *root,
+ 				      struct pci_dn *pdn)
+@@ -452,7 +501,7 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
+ 	struct pci_dn *pdn;
  
- 			/* IRQ chip */
- 			int			irq_chip_init;
+ 	/* PHB nodes themselves must not match */
+-	update_dn_pci_info(dn, phb);
++	add_pci_device_node_info(dn, phb);
+ 	pdn = dn->data;
+ 	if (pdn) {
+ 		pdn->devfn = pdn->busno = -1;
+@@ -462,7 +511,7 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
+ 	}
+ 
+ 	/* Update dn->phb ptrs for new phb and children devices */
+-	traverse_pci_devices(dn, update_dn_pci_info, phb);
++	traverse_pci_device_nodes(dn, add_pci_device_node_info, phb);
+ }
+ 
+ /** 
+diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
+index c8d24f9..9ebbd19 100644
+--- a/arch/powerpc/platforms/pseries/msi.c
++++ b/arch/powerpc/platforms/pseries/msi.c
+@@ -303,7 +303,7 @@ static int msi_quota_for_device(struct pci_dev *dev, int request)
+ 	memset(&counts, 0, sizeof(struct msi_counts));
+ 
+ 	/* Work out how many devices we have below this PE */
+-	traverse_pci_devices(pe_dn, count_non_bridge_devices, &counts);
++	traverse_pci_device_nodes(pe_dn, count_non_bridge_devices, &counts);
+ 
+ 	if (counts.num_devices == 0) {
+ 		pr_err("rtas_msi: found 0 devices under PE for %s\n",
+@@ -318,7 +318,7 @@ static int msi_quota_for_device(struct pci_dev *dev, int request)
+ 	/* else, we have some more calculating to do */
+ 	counts.requestor = pci_device_to_OF_node(dev);
+ 	counts.request = request;
+-	traverse_pci_devices(pe_dn, count_spare_msis, &counts);
++	traverse_pci_device_nodes(pe_dn, count_spare_msis, &counts);
+ 
+ 	/* If the quota isn't an integer multiple of the total, we can
+ 	 * use the remainder as spare MSIs for anyone that wants them. */
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 92974aa..ed8c894 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -262,7 +262,7 @@ static int pci_dn_reconfig_notifier(struct notifier_block *nb, unsigned long act
+ 	case OF_RECONFIG_ATTACH_NODE:
+ 		pci = np->parent->data;
+ 		if (pci)
+-			update_dn_pci_info(np, pci->phb);
++			add_pci_device_node_info(np, pci->phb);
+ 		break;
+ 	default:
+ 		err = NOTIFY_DONE;
 -- 
 2.1.0
 
