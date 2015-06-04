@@ -1,31 +1,86 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from
- the platform device
-Date: Thu, 04 Jun 2015 16:42:10 +0200
-Message-ID: <1433428930.15728.18.camel@x220>
-References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
-	 <1433324255-27510-5-git-send-email-ygardi@codeaurora.org>
-	 <1433426833.15728.15.camel@x220>
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mtd: spi-nor: add driver for NXP SPI Flash Interface
+ (SPIFI)
+Date: Thu, 04 Jun 2015 12:05:18 -0300
+Message-ID: <5570692E.2050603@vanguardiasur.com.ar>
+References: <1433106362-6032-1-git-send-email-manabian@gmail.com> <1433106362-6032-2-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1433426833.15728.15.camel@x220>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Yaniv Gardi <ygardi@codeaurora.org>
-Cc: James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, gbroner@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433106362-6032-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-06-04 at 16:07 +0200, Paul Bolle wrote:
-> On Wed, 2015-06-03 at 12:37 +0300, Yaniv Gardi wrote:
-> > +static int ufs_qcom_probe(struct platform_device *pdev)
-> > +{
-> > +	dev_set_drvdata(&pdev->dev, (void *)&ufs_hba_qcom_vops);
-> 
-> (Cast to void * should not be needed.)
+Joachim,
 
-Only if ufs_hba_qcom_vops wasn't a _const_ struct ufs_hba_variant_ops,
-that is. Never mind.
+I tested the driver and found an issue with it.
 
+On 05/31/2015 06:06 PM, Joachim Eastwood wrote:
+> +
+> +	spifi->mtd.priv  = &spifi->nor;
+> +	spifi->nor.mtd   = &spifi->mtd;
+> +	spifi->nor.dev   = spifi->dev;
+> +	spifi->nor.priv  = spifi;
+> +	spifi->nor.read  = nxp_spifi_read;
+> +	spifi->nor.write = nxp_spifi_write;
+> +	spifi->nor.erase = nxp_spifi_erase;
+> +	spifi->nor.read_reg  = nxp_spifi_read_reg;
+> +	spifi->nor.write_reg = nxp_spifi_write_reg;
+> +
+> +	ret = of_modalias_node(np, modalias, sizeof(modalias));
+> +	if (ret < 0) {
+> +		dev_err(spifi->dev, "unable to get device modalias\n");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * The first read on a hard reset isn't reliable so do a
+> +	 * dummy read of the id before calling spi_nor_scan().
+> +	 * The reason for this problem is unknown.
+> +	 *
+> +	 * The official NXP spifilib uses more or less the same
+> +	 * workaround that is applied here by reading the device
+> +	 * id multiple times.
+> +	 */
+> +	nxp_spifi_dummy_id_read(&spifi->nor);
+> +
 
-Paul Bolle
+Actually, I think there's an issue here. See how m25p80 deals
+with modalias:
+
+	[..]
+        else if (!strcmp(spi->modalias, "spi-nor"))
+                flash_name = NULL; /* auto-detect */
+        else
+                flash_name = spi->modalias;
+
+        ret = spi_nor_scan(nor, flash_name, mode);
+        if (ret)
+                return ret;
+
+I think the "auto-detect" quirk is really needed, or you are will
+otherwise fail to probe with the generic "jedec,spi-nor" compatible
+string.
+
+Notice that the binding specifies the chip-specific compatible
+as optional (it says _May_):
+
+- compatible : May include a device-specific string consisting of the
+               manufacturer and name of the chip.
+
+> +	ret = spi_nor_scan(&spifi->nor, modalias, flash_read);
+> +	if (ret) {
+> +		dev_err(spifi->dev, "device scan failed\n");
+> +		return ret;
+> +	}
+
+-- 
+Ezequiel Garcia, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
