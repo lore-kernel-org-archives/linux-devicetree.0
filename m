@@ -1,119 +1,108 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC PATCH 2/3] clk: stm32: Add clock driver for STM32F4[23]xxx
- devices
-Date: Thu, 4 Jun 2015 15:07:25 -0700
-Message-ID: <20150604220725.GT676@codeaurora.org>
-References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
- <1432327273-6810-3-git-send-email-daniel.thompson@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] base/platform: Continue on insert_resource() error
+Date: Thu, 4 Jun 2015 17:07:52 -0500
+Message-ID: <CAL_JsqLWddtdKpuJpep5g291X+rKXuu-rq1SXX5JCAD8YRpq7g@mail.gmail.com>
+References: <1432625486-15442-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1432625486-15442-3-git-send-email-ricardo.ribalda@gmail.com> <20150604075425.BC0E7C406CA@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432327273-6810-3-git-send-email-daniel.thompson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kamil Lulko <rev13@wp.pl>, Andreas Farber <afaerber@suse.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@linaro.org, linaro-kernel@lists.linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150604075425.BC0E7C406CA-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22, Daniel Thompson wrote:
-> +
-> +#include <linux/clk.h>
+On Thu, Jun 4, 2015 at 2:54 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 26 May 2015 09:31:24 +0200
+> , Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>  wrote:
+>> insert_resource() can fail when the resource added  overlaps
+>> (partially or fully) with another.
+>>
+>> Device tree and AMBA devices may contain resources that overlap, so they
+>> could not call platform_device_add (see 02bbde7849e6 ('Revert "of:
+>> use platform_device_add"'))"
+>>
+>> On the other hand, device trees are released using
+>> platform_device_unregister(). This function calls platform_device_del(),
+>> which calls release_resource(), that crashes when the resource has not
+>> been added with with insert_resource. This was not an issue when the
+>> device tree could not be modified online, but this is not the case
+>> anymore.
+>>
+>> This patch let the flow continue when there is an insert error, after
+>> notifying the user with a dev_err(). r->parent is set to NULL, so
+>> platform_device_del() knows that the resource was not added, and
+>> therefore it should not be released.
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/base/platform.c | 26 +++++++++++++++-----------
+>>  1 file changed, 15 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+>> index 46a56f694cec..5a29387e5ff6 100644
+>> --- a/drivers/base/platform.c
+>> +++ b/drivers/base/platform.c
+>> @@ -332,7 +332,7 @@ int platform_device_add(struct platform_device *pdev)
+>>                */
+>>               ret = ida_simple_get(&platform_devid_ida, 0, 0, GFP_KERNEL);
+>>               if (ret < 0)
+>> -                     goto err_out;
+>> +                     return ret;
+>>               pdev->id = ret;
+>>               pdev->id_auto = true;
+>>               dev_set_name(&pdev->dev, "%s.%d.auto", pdev->name, pdev->id);
+>> @@ -340,7 +340,7 @@ int platform_device_add(struct platform_device *pdev)
+>>       }
+>>
+>>       for (i = 0; i < pdev->num_resources; i++) {
+>> -             struct resource *p, *r = &pdev->resource[i];
+>> +             struct resource *conflict, *p, *r = &pdev->resource[i];
+>>               unsigned long type = resource_type(r);
+>>
+>>               if (r->name == NULL)
+>> @@ -357,11 +357,14 @@ int platform_device_add(struct platform_device *pdev)
+>>                               p = &ioport_resource;
+>>               }
+>>
+>> -             if (insert_resource(p, r)) {
+>> -                     dev_err(&pdev->dev, "failed to claim resource %d\n", i);
+>> -                     ret = -EBUSY;
+>> -                     goto failed;
+>> -             }
+>> +             conflict = insert_resource_conflict(p, r);
+>> +             if (!conflict)
+>> +                     continue;
+>> +
+>> +             dev_err(&pdev->dev,
+>> +                     "ignoring resource %pR (conflicts with %s %pR)\n",
+>> +                     r, conflict->name, conflict);
+>> +             p->parent = NULL;
+>
+> I'm pretty sure this is going to break some platforms. I described it in
+> my earlier email today, but I'll summarize here too since this is the
+> latest patch set.
+>
+> Making this change allows the registration of devices to continue, but
+> it will still break device drivers that do a request_resource() on a
+> region that another device managed to claim with insert_resource(). The
+> only way around this is to not do insert_resource() at all, or to remove
+> the request_resource() from all drivers (not feasible).
 
-Are you using this include?
+Do we have some clue as to which platforms have problems? I seem to
+recall some i.MX platform.
 
-> +#include <linux/clkdev.h>
+> I think we have to deal with it by making resource insertion optional.
+> I'd like to make the default be to do the insertion, and be able to
+> blacklist platforms that have issues.
 
-Are you using this include?
+Yes, otherwise we'll never put this issue to bed.
 
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +
-> +#include <linux/debugfs.h>
-
-Are you using this include?
-
-> +
-> +static long clk_apb_mul_round_rate(struct clk_hw *hw, unsigned long rate,
-> +				   unsigned long *prate)
-> +{
-> +	struct clk_apb_mul *am = to_clk_apb_mul(hw);
-> +	unsigned long mult = 1;
-> +
-> +	if (readl(base + STM32F4_RCC_CFGR) & BIT(am->bit_idx))
-> +		mult *= 2;
-
-Isn't this the same as mult = 2? I guess we could rely on the
-compiler to figure out this one.
-
-> +
-> +	if (__clk_get_flags(hw->clk) & CLK_SET_RATE_PARENT) {
-> +		unsigned long best_parent = rate / mult;
-> +
-> +		*prate =
-> +		    __clk_round_rate(__clk_get_parent(hw->clk), best_parent);
-> +	}
-> +
-> +	return *prate * mult;
-> +}
-> +
-> +static int clk_apb_mul_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				 unsigned long parent_rate)
-> +{
-
-Why don't we need to do anything here?
-
-> +	return 0;
-> +}
-> +
-> +static struct clk_ops clk_apb_mul_factor_ops = {
-
-const?
-
-> +	.round_rate = clk_apb_mul_round_rate,
-> +	.set_rate = clk_apb_mul_set_rate,
-> +	.recalc_rate = clk_apb_mul_recalc_rate,
-> +};
-> +
-> +struct clk *clk_register_apb_mul(struct device *dev, const char *name,
-> +				 const char *parent_name, unsigned long flags,
-> +				 u8 bit_idx)
-> +{
-> +	struct clk_apb_mul *am;
-> +	struct clk_init_data init;
-> +	struct clk *clk;
-> +
-> +	am = kzalloc(sizeof(*am), GFP_KERNEL);
-> +	if (!am)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	am->bit_idx = bit_idx;
-> +	am->hw.init = &init;
-> +
-> +	init.name = name;
-> +	init.ops = &clk_apb_mul_factor_ops;
-> +	init.flags = flags | CLK_IS_BASIC;
-
-Is it basic?
-
-> +	init.parent_names = &parent_name;
-> +	init.num_parents = 1;
-> +
-> +	clk = clk_register(dev, &am->hw);
-> +
-> +	if (IS_ERR(clk))
-> +		kfree(am);
-> +
-> +	return clk;
-> +}
-> +
-> +static const char __initdata *sys_parents[] =   { "hsi", NULL, "pll" };
-
-__initdata goes after the []
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
