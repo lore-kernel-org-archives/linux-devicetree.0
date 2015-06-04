@@ -1,64 +1,57 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 10/11] spi: add more debug prints in s3c64xx
-Date: Thu, 4 Jun 2015 10:42:48 +0100
-Message-ID: <20150604094248.GA14071@sirena.org.uk>
-References: <cover.1433364398.git.hramrach@gmail.com>
- <305830ebf9c0ae98c4f6e0ebbdec7414d6762b36.1433364398.git.hramrach@gmail.com>
- <20150604091634.GY14071@sirena.org.uk>
- <CAMuHMdWHPm6exq4O3CNvVuiZOgLHuxyCrR548BFmbOPikvNRLw@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH resend] pinctrl: sunxi: Add allwinner A33 PIO controller
+ support
+Date: Thu, 04 Jun 2015 12:10:20 +0200
+Message-ID: <5570240C.90706@redhat.com>
+References: <1433236120-11249-1-git-send-email-hdegoede@redhat.com>	<1433236120-11249-2-git-send-email-hdegoede@redhat.com> <CACRpkdZPcLaSPmZ8Bqd-xsVns+xeq_m8J0QpPcB2W0wNKXvO4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="988dVgVOOB5COf1N"
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWHPm6exq4O3CNvVuiZOgLHuxyCrR548BFmbOPikvNRLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CACRpkdZPcLaSPmZ8Bqd-xsVns+xeq_m8J0QpPcB2W0wNKXvO4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Han Xu <han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Knut Wohlrab <knut.wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <bean>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---988dVgVOOB5COf1N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 04-06-15 10:33, Linus Walleij wrote:
+> On Tue, Jun 2, 2015 at 11:08 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> =
+wrote:
+>
+>> From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> A33 PIO has 7 ports which starts from PB and has two interrupt ports=
+=2E
+>>
+>> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>
+> Patch applied.
 
-On Thu, Jun 04, 2015 at 11:30:15AM +0200, Geert Uytterhoeven wrote:
-> On Thu, Jun 4, 2015 at 11:16 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >> --- a/drivers/spi/spi-s3c64xx.c
-> >> +++ b/drivers/spi/spi-s3c64xx.c
-> >> @@ -18,6 +18,7 @@
-> >>  #include <linux/interrupt.h>
-> >>  #include <linux/delay.h>
-> >>  #include <linux/clk.h>
-> >> +#include <linux/clk-provider.h>
+Thanks.
 
-> > Whatever you're doing here this indicates that there's a very big
-> > abstraction problem going on.
+> BTW: is your name Hans de G=C3=B6de and you just gave up trying
+> to get UTF-8 right, or is it really spelled like so?
 
-> I guess it's needed for __clk_get_name(), which can be avoided by using
-> the "%pC" printf format specifier instead.
+LOL, no my name fits perfectly in plane old ASCII and it
+is really spelled that way, "oe" in Dutch is the same as
+"u" (without umlaut) in German.
 
-Right, or by adding an externally usable API - the point is that using
-internal functions in a client driver is a big red flag.
+Basically my name is "Hans the Good" when translated to
+English, and when in doubt how to pronounce it just pronounce
+it like that, that is way better then what most people
+make of it :)
 
---988dVgVOOB5COf1N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Regards,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVcB2YAAoJECTWi3JdVIfQO6EH/2yX1CkVIi3J13r7qH1fI02p
-U4vHVMtnfVXqaWbob/bIt1vn/L8D8L5ojQ5l5p6AoRrXkb9p3XwMOTV4no8JuS1/
-+F28Qy6+RFDcYGWcc8E5KvpNLWIreXEYx3J0NTvjtxzl1UIYHVs5RVlYflh2kmqj
-qn2Jsmy13TcGcohUAbQGFSG662iGeV+KdAsWwD2rql+awInCYJT1lwvUqkujEXJ9
-eM+MxZn8ZgEUWoqEBzfGDZaahs/ORdgx9XgAOwPsimAsqYbTeN95L6o90x/TL5ZM
-IG3t6XBCgGwIWNLz0T/WzYO2n1T3d8TOH+ShqGbtpmMvTpyZ4Rt/XruByI00BO8=
-=qp8l
------END PGP SIGNATURE-----
-
---988dVgVOOB5COf1N--
+Hans
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
