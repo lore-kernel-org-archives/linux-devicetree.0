@@ -1,52 +1,64 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2 v2] of/platform: Use platform_device interface
-Date: Thu, 4 Jun 2015 10:48:37 +0200
-Message-ID: <CAPybu_0xjwExa4=6soyF=Uad6yxiFaCnO32FY5h7YLfg-SMovg@mail.gmail.com>
-References: <1429604702-14157-1-git-send-email-ricardo.ribalda@gmail.com>
- <1429604702-14157-2-git-send-email-ricardo.ribalda@gmail.com>
- <CAL_Jsq+ux9aCNUNVH+Vwy_j9oeV0CLbruPN4arkuCBPxvgrzhw@mail.gmail.com>
- <CAPybu_0C=iAGY9cFgxOt7YgCRG+xvKo1YBJfWent5+xord-xmg@mail.gmail.com>
- <CAL_JsqKV-+A196XaiGTGdx6tr1DStWYca5JnHR-QgBbMUyOiRA@mail.gmail.com> <20150604052536.DA31EC40548@trevor.secretlab.ca>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v4 2/7] mmc: mediatek: Add Mediatek MMC driver
+Date: Thu, 4 Jun 2015 11:02:12 +0200
+Message-ID: <20150604090212.GY6325@pengutronix.de>
+References: <1432017411-2996-1-git-send-email-chaotian.jing@mediatek.com>
+ <1432017411-2996-3-git-send-email-chaotian.jing@mediatek.com>
+ <20150519111558.GD6325@pengutronix.de>
+ <1433386443.3304.2.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150604052536.DA31EC40548-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1433386443.3304.2.camel@mhfsdcap03>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, bin.zhang@mediatek.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Grant
+On Thu, Jun 04, 2015 at 10:54:03AM +0800, Chaotian Jing wrote:
+> On Tue, 2015-05-19 at 13:15 +0200, Sascha Hauer wrote:
+> > On Tue, May 19, 2015 at 02:36:46PM +0800, Chaotian Jing wrote:
+> > > Add Mediatek MMC driver code
+> > > Support eMMC/SD/SDIO
+> > > 
+> > > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> > > ---
+> > >  drivers/mmc/host/Kconfig  |    8 +
+> > >  drivers/mmc/host/Makefile |    1 +
+> > >  drivers/mmc/host/mtk-sd.c | 1422 +++++++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 1431 insertions(+)
+> > >  create mode 100644 drivers/mmc/host/mtk-sd.c
+> > > 
+> > > +
+> > > +	host->src_clk = devm_clk_get(&pdev->dev, "source");
+> > > +	if (IS_ERR(host->src_clk)) {
+> > > +		ret = PTR_ERR(host->src_clk);
+> > > +		goto host_free;
+> > > +	}
+> > > +
+> > > +	host->h_clk = devm_clk_get(&pdev->dev, "hclk");
+> > > +	if (IS_ERR(host->h_clk)) {
+> > > +		/* host->h_clk is optional, Only for MSDC0/3 at MT8173 */
+> > > +		dev_dbg(&pdev->dev,
+> > > +				"Invalied hclk from the device tree!\n");
+> > > +	}
+> > 
+> > s/Invalied/Invalid/
+> > 
+> > According to my reference manual the controller always needs a hclk. It
+> > seems on some controllers it is just not software controllable. If
+> > that's the case you should always provide a hclk to the driver and make
+> > this clock mandatory.
+> For MT8173, MSDC1, MSDC2's HCLK are in Infra, software cannot control
+> it. So just set the HCLK to clk_null ?
 
-On Thu, Jun 4, 2015 at 7:25 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Yes, please.
 
->
-> I think I tried that too and then ran in to a problem where drivers will
-> fail if a different device 'owns' the resource.
->
-> For example, if device-a and device-b have overlapping regions, device-a
-> gets registered first and claims the region. device-b tries to claim the
-> region, fails, but is allowed to continue anyway. When driver-b tries to
-> bind to device-b, and does a request_resource(), it will fail because
-> device-a already owns it. I don't have a good solution for that other
-> than to completely disable insert_resource() when using devicetree.
-
-If someone is following this conversation I have already replied in
-
-[PATCH v5 2/4] base/platform: Continue on insert_resource() error
-
-Message-ID: <CAPybu_3gYAZTHHYD7y2MdKFJBwDVyb5a9fwQqEMc+0xmKSTpKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-
-Regards!
-
->
-> g.
-
-
+Sascha
 
 -- 
-Ricardo Ribalda
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
