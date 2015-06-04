@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 27/42] powerpc/powernv: Simplify pnv_eeh_reset()
-Date: Thu,  4 Jun 2015 16:41:56 +1000
-Message-ID: <1433400131-18429-28-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 11/42] powerpc/powernv: Increase PE# capacity
+Date: Thu,  4 Jun 2015 16:41:40 +1000
+Message-ID: <1433400131-18429-12-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,105 +10,64 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch simplifies pnv_eeh_reset() by dropping unnecessary nested
-if statement. No logic changed by the patch.
+Each PHB maintains an array helping to translate RID (Request
+ID) to PE# with the assumption that PE# takes 8 bits, indicating
+that we can't have more than 256 PEs. However, pci_dn->pe_number
+already had 4-bytes for the PE#.
+
+The patch extends the PE# capacity so that each of them will be
+4-bytes long. Then we can use IODA_INVALID_PE to check one entry
+in phb->pe_rmap[] is valid or not.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
 v5:
-  * Split from PATCH[v4 09/21]
-  * Fixed "quoted string split across lines" from checkpatch.pl
+  * Split from [PATCH v5 v4 06/21]
 ---
- arch/powerpc/platforms/powernv/eeh-powernv.c | 65 +++++++++++++---------------
- 1 file changed, 31 insertions(+), 34 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 5 ++++-
+ arch/powerpc/platforms/powernv/pci.h      | 5 ++---
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
-index 4feb533..4669122 100644
---- a/arch/powerpc/platforms/powernv/eeh-powernv.c
-+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
-@@ -1084,7 +1084,9 @@ void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
- static int pnv_eeh_reset(struct eeh_pe *pe, int option)
- {
- 	struct pci_controller *hose = pe->phb;
-+	struct pnv_phb *phb = hose->private_data;
- 	struct pci_bus *bus;
-+	int64_t rc;
- 	int ret;
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 2087c5c..d8b0ef5 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -840,7 +840,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
  
- 	/*
-@@ -1101,44 +1103,39 @@ static int pnv_eeh_reset(struct eeh_pe *pe, int option)
- 	 * reset. The side effect is that EEH core has to clear the frozen
- 	 * state explicitly after BAR restore.
- 	 */
--	if (pe->type & EEH_PE_PHB) {
--		ret = pnv_eeh_phb_reset(hose, option);
--	} else {
--		struct pnv_phb *phb;
--		s64 rc;
-+	if (pe->type & EEH_PE_PHB)
-+		return pnv_eeh_phb_reset(hose, option);
+ 	/* Clear the reverse map */
+ 	for (rid = pe->rid; rid < rid_end; rid++)
+-		phb->ioda.pe_rmap[rid] = 0;
++		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
  
--		/*
--		 * The frozen PE might be caused by PAPR error injection
--		 * registers, which are expected to be cleared after hitting
--		 * frozen PE as stated in the hardware spec. Unfortunately,
--		 * that's not true on P7IOC. So we have to clear it manually
--		 * to avoid recursive EEH errors during recovery.
--		 */
--		phb = hose->private_data;
--		if (phb->model == PNV_PHB_MODEL_P7IOC &&
--		    (option == EEH_RESET_HOT ||
--		    option == EEH_RESET_FUNDAMENTAL)) {
--			rc = opal_pci_reset(phb->opal_id,
--					    OPAL_RESET_PHB_ERROR,
--					    OPAL_ASSERT_RESET);
--			if (rc != OPAL_SUCCESS) {
--				pr_warn("%s: Failure %lld clearing "
--					"error injection registers\n",
--					__func__, rc);
--				return -EIO;
--			}
-+	/*
-+	 * The frozen PE might be caused by PAPR error injection
-+	 * registers, which are expected to be cleared after hitting
-+	 * frozen PE as stated in the hardware spec. Unfortunately,
-+	 * that's not true on P7IOC. So we have to clear it manually
-+	 * to avoid recursive EEH errors during recovery.
-+	 */
-+	phb = hose->private_data;
-+	if (phb->model == PNV_PHB_MODEL_P7IOC &&
-+	    (option == EEH_RESET_HOT ||
-+	    option == EEH_RESET_FUNDAMENTAL)) {
-+		rc = opal_pci_reset(phb->opal_id,
-+				    OPAL_RESET_PHB_ERROR,
-+				    OPAL_ASSERT_RESET);
-+		if (rc != OPAL_SUCCESS) {
-+			pr_warn("%s: Error %lld clearing errinjct registers\n",
-+				__func__, rc);
-+			return -EIO;
- 		}
--
--		bus = eeh_pe_bus_get(pe);
--		if (pe->type & EEH_PE_VF)
--			ret = pnv_eeh_vf_pe_reset(pe, option);
--		else if (pci_is_root_bus(bus) ||
--			pci_is_root_bus(bus->parent))
--			ret = pnv_eeh_root_reset(hose, option);
--		else
--			ret = pnv_eeh_bridge_reset(bus->self, option);
- 	}
+ 	/* Release from all parents PELT-V */
+ 	while (parent) {
+@@ -3303,6 +3303,9 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	if (prop32)
+ 		phb->ioda.reserved_pe = be32_to_cpup(prop32);
  
-+	bus = eeh_pe_bus_get(pe);
-+	if (pe->type & EEH_PE_VF)
-+		ret = pnv_eeh_vf_pe_reset(pe, option);
-+	else if (pci_is_root_bus(bus) ||
-+		pci_is_root_bus(bus->parent))
-+		ret = pnv_eeh_root_reset(hose, option);
-+	else
-+		ret = pnv_eeh_bridge_reset(bus->self, option);
++	/* Invalidate RID to PE# mapping */
++	memset(phb->ioda.pe_rmap, 0xff, sizeof(phb->ioda.pe_rmap));
 +
- 	return ret;
- }
+ 	/* Parse 64-bit MMIO range */
+ 	pnv_ioda_parse_m64_window(phb);
  
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 94ef1df..590f778 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -175,11 +175,10 @@ struct pnv_phb {
+ 			struct list_head	pe_list;
+ 			struct mutex            pe_list_mutex;
+ 
+-			/* Reverse map of PEs, will have to extend if
+-			 * we are to support more than 256 PEs, indexed
++			/* Reverse map of PEs, indexed by
+ 			 * bus { bus, devfn }
+ 			 */
+-			unsigned char		pe_rmap[0x10000];
++			int			pe_rmap[0x10000];
+ 
+ 			/* Number of 32-bit DMA segments */
+ 			unsigned long		dma32_segcount;
 -- 
 2.1.0
