@@ -1,63 +1,122 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 14/42] powerpc/powernv: Allocate PE# in deasending order
-Date: Thu,  4 Jun 2015 16:41:43 +1000
-Message-ID: <1433400131-18429-15-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 04/42] powerpc/powernv: Trace consumed IO and M32 segments by PE
+Date: Thu,  4 Jun 2015 16:41:33 +1000
+Message-ID: <1433400131-18429-5-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433400131-18429-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The available PE#, represented by a bitmap in the PHB, is allocated
-in asending order. It conflicts with the fact that M64 segments are
-assigned in same order. In order to avoid the conflict, the patch
-allocates PE# in deasending order.
+The patch introduces two bitmaps to trace the IO and M32 segments
+consumed by one particular PE, which can be released once the PE
+is destroyed during PCI unplugging time. Also, we're using fixed
+quantity of bits to trace the used IO and M32 segments by PEs in
+one particular PHB. Besides, @pe_array is put to the location
+adjacent to @pe_alloc on account of their close relation.
 
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
 v5:
-  * Split from [PATCH v5 v4 06/21]
+  * Split from PATCH[v4 04/21]
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 17 +++++------------
+ arch/powerpc/platforms/powernv/pci.h      | 11 ++++++-----
+ 2 files changed, 11 insertions(+), 17 deletions(-)
 
 diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index d8b0ef5..0d6539a 100644
+index 71afb38..53d0efd 100644
 --- a/arch/powerpc/platforms/powernv/pci-ioda.c
 +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -152,18 +152,23 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
+@@ -2992,7 +2992,8 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
  
- static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
+ 			while (index < phb->ioda.total_pe &&
+ 			       region.start <= region.end) {
+-				phb->ioda.io_segmap[index] = pe->pe_number;
++				set_bit(index, phb->ioda.io_segmap);
++				set_bit(index, pe->io_segmap);
+ 				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+ 					pe->pe_number, OPAL_IO_WINDOW_TYPE, 0, index);
+ 				if (rc != OPAL_SUCCESS) {
+@@ -3017,7 +3018,8 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+ 
+ 			while (index < phb->ioda.total_pe &&
+ 			       region.start <= region.end) {
+-				phb->ioda.m32_segmap[index] = pe->pe_number;
++				set_bit(index, phb->ioda.m32_segmap);
++				set_bit(index, pe->m32_segmap);
+ 				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+ 					pe->pe_number, OPAL_M32_WINDOW_TYPE, 0, index);
+ 				if (rc != OPAL_SUCCESS) {
+@@ -3196,7 +3198,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
  {
--	unsigned long pe;
-+	unsigned long pe_no;
-+	unsigned long limit = phb->ioda.total_pe - 1;
+ 	struct pci_controller *hose;
+ 	struct pnv_phb *phb;
+-	unsigned long size, m32map_off, pemap_off, iomap_off = 0;
++	unsigned long size, pemap_off;
+ 	const __be64 *prop64;
+ 	const __be32 *prop32;
+ 	int len;
+@@ -3281,19 +3283,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
  
- 	do {
--		pe = find_next_zero_bit(phb->ioda.pe_alloc,
--					phb->ioda.total_pe, 0);
--		if (pe >= phb->ioda.total_pe)
-+		pe_no = find_next_zero_bit(phb->ioda.pe_alloc,
-+					   phb->ioda.total_pe, limit);
-+		if (pe_no < phb->ioda.total_pe &&
-+		    !test_and_set_bit(pe_no, phb->ioda.pe_alloc))
-+			break;
-+
-+		if (--limit >= phb->ioda.total_pe)
- 			return IODA_INVALID_PE;
--	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
-+	} while (1);
+ 	/* Allocate aux data & arrays. We don't have IO ports on PHB3 */
+ 	size = _ALIGN_UP(phb->ioda.total_pe / 8, sizeof(unsigned long));
+-	m32map_off = size;
+-	size += phb->ioda.total_pe * sizeof(phb->ioda.m32_segmap[0]);
+-	if (phb->type == PNV_PHB_IODA1) {
+-		iomap_off = size;
+-		size += phb->ioda.total_pe * sizeof(phb->ioda.io_segmap[0]);
+-	}
+ 	pemap_off = size;
+ 	size += phb->ioda.total_pe * sizeof(struct pnv_ioda_pe);
+ 	aux = memblock_virt_alloc(size, 0);
+ 	phb->ioda.pe_alloc = aux;
+-	phb->ioda.m32_segmap = aux + m32map_off;
+-	if (phb->type == PNV_PHB_IODA1)
+-		phb->ioda.io_segmap = aux + iomap_off;
+ 	phb->ioda.pe_array = aux + pemap_off;
+ 	set_bit(phb->ioda.reserved_pe, phb->ioda.pe_alloc);
  
--	phb->ioda.pe_array[pe].phb = phb;
--	phb->ioda.pe_array[pe].pe_number = pe;
--	return pe;
-+	phb->ioda.pe_array[pe_no].phb = phb;
-+	phb->ioda.pe_array[pe_no].pe_number = pe_no;
-+	return pe_no;
- }
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 54657f4..0a8cecb 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -54,6 +54,8 @@ struct pnv_ioda_pe {
+ 	 * by slave PEs will be contributed to the master PE. One
+ 	 * PE can own multiple IO and M32 segments.
+ 	 */
++	unsigned long		io_segmap[8];
++	unsigned long		m32_segmap[8];
+ 	unsigned long		m64_segmap[8];
  
- static void pnv_ioda_free_pe(struct pnv_phb *phb, int pe)
+ 	/* "Weight" assigned to the PE for the sake of DMA resource
+@@ -154,16 +156,15 @@ struct pnv_phb {
+ 			unsigned int		io_segsize;
+ 			unsigned int		io_pci_base;
+ 
+-			/* PE allocation bitmap */
++			/* PE allocation */
+ 			unsigned long		*pe_alloc;
+-			/* PE allocation mutex */
++			struct pnv_ioda_pe	*pe_array;
+ 			struct mutex		pe_alloc_mutex;
+ 
+ 			/* M32 & IO segment maps */
++			unsigned long		io_segmap[8];
++			unsigned long		m32_segmap[8];
+ 			unsigned long		m64_segmap[8];
+-			unsigned int		*m32_segmap;
+-			unsigned int		*io_segmap;
+-			struct pnv_ioda_pe	*pe_array;
+ 
+ 			/* IRQ chip */
+ 			int			irq_chip_init;
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
