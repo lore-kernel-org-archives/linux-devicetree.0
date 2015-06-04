@@ -1,52 +1,61 @@
-From: Arun Bharadwaj <arun@gumstix.com>
-Subject: [PATCH 1/3] ARM: dts: Correct audio input route & set mic bias
-Date: Thu,  4 Jun 2015 11:08:17 -0700
-Message-ID: <1433441299-18887-2-git-send-email-arun@gumstix.com>
-References: <1433441299-18887-1-git-send-email-arun@gumstix.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1433441299-18887-1-git-send-email-arun@gumstix.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Adam YH Lee <adam.yh.lee@gmail.com>, Ash Charles <ashcharles@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V7 1/3] OPP: Add new bindings to address shortcomings of
+ existing bindings
+Date: Thu, 4 Jun 2015 11:37:52 -0700
+Message-ID: <20150604183752.GI490@codeaurora.org>
+References: <cover.1433434659.git.viresh.kumar@linaro.org>
+ <d83c0b6b1768c7229384216329b607d13886aa02.1433434659.git.viresh.kumar@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d83c0b6b1768c7229384216329b607d13886aa02.1433434659.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-From: Adam YH Lee <adam.yh.lee@gmail.com>
+On 06/04, Viresh Kumar wrote:
+> Current OPP (Operating performance point) device tree bindings have been
+> insufficient due to the inflexible nature of the original bindings. Over
+> time, we have realized that Operating Performance Point definitions and
+> usage is varied depending on the SoC and a "single size (just frequency,
+> voltage) fits all" model which the original bindings attempted and
+> failed.
+> 
+> The proposed next generation of the bindings addresses by providing a
+> expandable binding for OPPs and introduces the following common
+> shortcomings seen with the original bindings:
+> 
+> - Getting clock/voltage/current rails sharing information between CPUs.
+>   Shared by all cores vs independent clock per core vs shared clock per
+>   cluster.
+> 
+> - Support for specifying current levels along with voltages.
+> 
+> - Support for multiple regulators.
+> 
+> - Support for turbo modes.
+> 
+> - Other per OPP settings: transition latencies, disabled status, etc.?
+> 
+> - Expandability of OPPs in future.
+> 
+> This patch introduces new bindings "operating-points-v2" to get these problems
+> solved. Refer to the bindings for more details.
+> 
+> We now have multiple versions of OPP binding and only one of them should
+> be used per device.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Audio-in was incorrectly routed to Line In. It should be Mic3L as per
-schematic.
+Ok. I'm still interested to see if this binding will have to
+change to support how multiple regulators will be matched up with
+the device using the OPP. But for now,
 
-Using mic-bias voltage at 2.0v (<0x1>) does not work for some reason. There
-is no voltage seen on micbias (R127). Mic-bias voltage of 2.5v (<0x2>) works.
-I see voltage of 2.475v across GND and micbias.
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 
-With these changes, I can record audio with a pair of proliferate TRRS earbuds.
-
-Signed-off-by: Ash Charles <ashcharles@gmail.com>
----
- arch/arm/boot/dts/am335x-pepper.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
-index 0d35ab6..473d8ee 100644
---- a/arch/arm/boot/dts/am335x-pepper.dts
-+++ b/arch/arm/boot/dts/am335x-pepper.dts
-@@ -74,6 +74,7 @@
- 	audio_codec: tlv320aic3106@1b {
- 		compatible = "ti,tlv320aic3106";
- 		reg = <0x1b>;
-+		ai3x-micbias-vg = <0x2>;
- 	};
- 
- 	accel: lis331dlh@1d {
-@@ -153,7 +154,7 @@
- 	ti,audio-routing =
- 		"Headphone Jack",	"HPLOUT",
- 		"Headphone Jack",	"HPROUT",
--		"LINE1L",		"Line In";
-+		"MIC3L",		"Mic3L Switch";
- };
- 
- &mcasp0 {
 -- 
-2.1.4
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
