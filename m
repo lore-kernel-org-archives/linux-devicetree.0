@@ -1,86 +1,87 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mtd: spi-nor: add driver for NXP SPI Flash Interface
- (SPIFI)
-Date: Thu, 04 Jun 2015 12:05:18 -0300
-Message-ID: <5570692E.2050603@vanguardiasur.com.ar>
-References: <1433106362-6032-1-git-send-email-manabian@gmail.com> <1433106362-6032-2-git-send-email-manabian@gmail.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
+Date: Thu, 4 Jun 2015 17:15:12 +0200
+Message-ID: <201506041715.12904.marex@denx.de>
+References: <cover.1433364398.git.hramrach@gmail.com> <201506040103.09555.marex@denx.de> <CAOMqctQeg0Sj1pGOQsK1nNB6=-H9koH_5nrXYBq_NKeVt369dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433106362-6032-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMqctQeg0Sj1pGOQsK1nNB6=-H9koH_5nrXYBq_NKeVt369dw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo@micron.com>, grmoo
 List-Id: devicetree@vger.kernel.org
 
-Joachim,
+On Thursday, June 04, 2015 at 06:31:45 AM, Michal Suchanek wrote:
+> On 4 June 2015 at 01:03, Marek Vasut <marex@denx.de> wrote:
+> > On Wednesday, June 03, 2015 at 11:26:41 PM, Michal Suchanek wrote:
+> >> On sunxi the SPI controller currently does not have DMA support and
+> >> fails any transfer larger than 63 bytes.
+> >> 
+> >> On Exynos the pl330 DMA controller fails any transfer larger than 64kb
+> >> when using slower speed like 40MHz and any transfer larger than 128bytes
+> >> when running at 133MHz.
+> > 
+> > This smells more like some corruption of the data on the bus or something
+> > even more obscure.
+> 
+> If the data was corrupted you would get corrupted data and not
+> transfer failure. AFAIK there is no checksum or anything. I actually
+> do get corrupted data when I use wrong feedback delay setting.
 
-I tested the driver and found an issue with it.
+OK
 
-On 05/31/2015 06:06 PM, Joachim Eastwood wrote:
-> +
-> +	spifi->mtd.priv  = &spifi->nor;
-> +	spifi->nor.mtd   = &spifi->mtd;
-> +	spifi->nor.dev   = spifi->dev;
-> +	spifi->nor.priv  = spifi;
-> +	spifi->nor.read  = nxp_spifi_read;
-> +	spifi->nor.write = nxp_spifi_write;
-> +	spifi->nor.erase = nxp_spifi_erase;
-> +	spifi->nor.read_reg  = nxp_spifi_read_reg;
-> +	spifi->nor.write_reg = nxp_spifi_write_reg;
-> +
-> +	ret = of_modalias_node(np, modalias, sizeof(modalias));
-> +	if (ret < 0) {
-> +		dev_err(spifi->dev, "unable to get device modalias\n");
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * The first read on a hard reset isn't reliable so do a
-> +	 * dummy read of the id before calling spi_nor_scan().
-> +	 * The reason for this problem is unknown.
-> +	 *
-> +	 * The official NXP spifilib uses more or less the same
-> +	 * workaround that is applied here by reading the device
-> +	 * id multiple times.
-> +	 */
-> +	nxp_spifi_dummy_id_read(&spifi->nor);
-> +
+> >> The best thing is that in both cases the controller can just lock up and
+> >> never finish potentially leaving the hardware in unusable state.
 
-Actually, I think there's an issue here. See how m25p80 deals
-with modalias:
+[...]
 
-	[..]
-        else if (!strcmp(spi->modalias, "spi-nor"))
-                flash_name = NULL; /* auto-detect */
-        else
-                flash_name = spi->modalias;
+> >> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> >> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> >> 
+> >> @@ -19,6 +19,12 @@ Optional properties:
+> >>                     all chips and support for it can not be detected at
+> >> 
+> >> runtime. Refer to your chips' datasheet to check if this is supported by
+> >> your chip.
+> >> +- linux,max_tx_len : With some SPI controller drivers possible transfer
+> >> size is +                     limited. This may be hardware or driver
+> >> bug. +                     Transfer data in chunks no larger than this
+> >> value. +
+> >> 
+> >>                     Using this option may severely degrade performance
+> >>                     and
+> >> 
+> >> +                     possibly flash memory life when max_tx_len is
+> >> smaller than +                     flash page size (typically 256 bytes)
+> > 
+> > Will we need similar patch for all other SPI slave drivers, like SPI NAND
+> > ?
+> 
+> Probably. Some SPI slave drivers already do have similar option.
 
-        ret = spi_nor_scan(nor, flash_name, mode);
-        if (ret)
-                return ret;
+So the SPI device drivers are implementing workarounds for buggy SPI hosts,
+even if those SPI devices themselves don't suffer from such limitations. Yes,
+this seems like the seriously wrong thing to do.
 
-I think the "auto-detect" quirk is really needed, or you are will
-otherwise fail to probe with the generic "jedec,spi-nor" compatible
-string.
+> In general it cannot be expected that you can reliably transfer
+> arbitrarily large data over SPI it seems.
 
-Notice that the binding specifies the chip-specific compatible
-as optional (it says _May_):
+This is what should be expected because this is how the bus is supposed
+to work in fact. You can transfer an arbitrary amount of data over SPI
+bus.
 
-- compatible : May include a device-specific string consisting of the
-               manufacturer and name of the chip.
+If some driver has a limitation, it's that (bus, dma) driver which needs
+to implement a fix or a workaround.
 
-> +	ret = spi_nor_scan(&spifi->nor, modalias, flash_read);
-> +	if (ret) {
-> +		dev_err(spifi->dev, "device scan failed\n");
-> +		return ret;
-> +	}
+> However, if the nand driver transfers data a page at a time it should
+> be fine.
 
--- 
-Ezequiel Garcia, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+... until someone issues multi-block read, in which case it all falls
+down like a house of cards. It is impossible to build a reliable system
+on "should" and similar assumptions ; the driver must be solid.
+
+Best regards,
+Marek Vasut
