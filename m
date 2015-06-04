@@ -1,158 +1,102 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 35/42] powerpc/pci: Create eeh_dev while creating pci_dn
-Date: Thu,  4 Jun 2015 16:42:04 +1000
-Message-ID: <1433400131-18429-36-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 15/42] powerpc/powernv: Reserve PE# for root bus
+Date: Thu,  4 Jun 2015 16:41:44 +1000
+Message-ID: <1433400131-18429-16-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433400131-18429-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The eeh_dev is always created based on pci_dn, but with initcall
-core_initcall_sync(). The patch creates eeh_dev when pci_dn is
-created, indicating they have same life cycle.
+pcibios_setup_bridge(), called to update PCI bridge windows, will
+allocate PE for PCI buses. The function isn't called for root bus
+that doesn't have upstream bridge. The patch reserves PE# for root
+bus in advance so that we can setup it in next patch.
 
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
 v5:
-  * Derived from PATCH[v4 16/21]
+  * Split from [PATCH v5 v4 06/21]
+  * Replace "strip of" with "strip off" in comments
 ---
- arch/powerpc/include/asm/eeh.h         |  6 ++++--
- arch/powerpc/kernel/eeh_dev.c          | 18 ++++--------------
- arch/powerpc/kernel/pci_dn.c           | 12 ++++++++++++
- arch/powerpc/platforms/pseries/setup.c |  6 +-----
- 4 files changed, 21 insertions(+), 21 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 31 ++++++++++++++++++++++++++++++-
+ arch/powerpc/platforms/powernv/pci.h      |  1 +
+ 2 files changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/eeh.h b/arch/powerpc/include/asm/eeh.h
-index ea1f13c4..c0236a6 100644
---- a/arch/powerpc/include/asm/eeh.h
-+++ b/arch/powerpc/include/asm/eeh.h
-@@ -272,7 +272,8 @@ void eeh_pe_restore_bars(struct eeh_pe *pe);
- const char *eeh_pe_loc_get(struct eeh_pe *pe);
- struct pci_bus *eeh_pe_bus_get(struct eeh_pe *pe);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 0d6539a..2eb8baa 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -230,6 +230,13 @@ static int pnv_ioda1_init_m64(struct pnv_phb *phb)
+ 		pr_warn("  Cannot strip M64 segment for reserved PE#%d\n",
+ 			phb->ioda.reserved_pe);
  
--void *eeh_dev_init(struct pci_dn *pdn, void *data);
-+struct eeh_dev *eeh_dev_init(struct pci_dn *pdn,
-+			     struct pci_controller *phb);
- void eeh_dev_phb_init_dynamic(struct pci_controller *phb);
- int eeh_init(void);
- int __init eeh_ops_register(struct eeh_ops *ops);
-@@ -325,7 +326,8 @@ static inline int eeh_init(void)
- 	return 0;
- }
- 
--static inline void *eeh_dev_init(struct pci_dn *pdn, void *data)
-+static inline struct eeh_dev *eeh_dev_init(struct pci_dn *pdn,
-+					   struct pci_controller *phb)
- {
- 	return NULL;
- }
-diff --git a/arch/powerpc/kernel/eeh_dev.c b/arch/powerpc/kernel/eeh_dev.c
-index f33ce5b..7486932 100644
---- a/arch/powerpc/kernel/eeh_dev.c
-+++ b/arch/powerpc/kernel/eeh_dev.c
-@@ -44,14 +44,14 @@
- /**
-  * eeh_dev_init - Create EEH device according to OF node
-  * @pdn: PCI device node
-- * @data: PHB
-+ * @phb: PCI controller
-  *
-  * It will create EEH device according to the given OF node. The function
-  * might be called by PCI emunation, DR, PHB hotplug.
-  */
--void *eeh_dev_init(struct pci_dn *pdn, void *data)
-+struct eeh_dev *eeh_dev_init(struct pci_dn *pdn,
-+			     struct pci_controller *phb)
- {
--	struct pci_controller *phb = data;
- 	struct eeh_dev *edev;
- 
- 	/* Allocate EEH device */
-@@ -68,7 +68,7 @@ void *eeh_dev_init(struct pci_dn *pdn, void *data)
- 	edev->phb = phb;
- 	INIT_LIST_HEAD(&edev->list);
- 
--	return NULL;
-+	return edev;
- }
- 
- /**
-@@ -80,16 +80,8 @@ void *eeh_dev_init(struct pci_dn *pdn, void *data)
-  */
- void eeh_dev_phb_init_dynamic(struct pci_controller *phb)
- {
--	struct pci_dn *root = phb->pci_data;
--
- 	/* EEH PE for PHB */
- 	eeh_phb_pe_create(phb);
--
--	/* EEH device for PHB */
--	eeh_dev_init(root, phb);
--
--	/* EEH devices for children OF nodes */
--	traverse_pci_dn(root, eeh_dev_init, phb);
- }
- 
- /**
-@@ -105,8 +97,6 @@ static int __init eeh_dev_phb_init(void)
- 	list_for_each_entry_safe(phb, tmp, &hose_list, list_node)
- 		eeh_dev_phb_init_dynamic(phb);
- 
--	pr_info("EEH: devices created\n");
--
- 	return 0;
- }
- 
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 35554c2..d4330d2 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -287,6 +287,9 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
- 	const __be32 *regs;
- 	struct device_node *parent;
- 	struct pci_dn *pdn;
-+#ifdef CONFIG_EEH
-+	struct eeh_dev *edev;
-+#endif
- 
- 	pdn = kzalloc(sizeof(*pdn), GFP_KERNEL);
- 	if (pdn == NULL)
-@@ -317,6 +320,15 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
- 	/* Extended config space */
- 	pdn->pci_ext_config_space = (type && of_read_number(type, 1) == 1);
- 
-+	/* Initialize EEH device */
-+#ifdef CONFIG_EEH
-+	edev = eeh_dev_init(pdn, phb);
-+	if (!edev) {
-+		kfree(pdn);
-+		return NULL;
-+	}
-+#endif
++	/* Strip off the segment used by PE for PCI root bus,
++	 * which is last supported PE#, or one next to the
++	 * reserved PE#
++	 */
++	if (phb->ioda.root_pe != IODA_INVALID_PE)
++		r->end -= phb->ioda.m64_segsize;
 +
- 	/* Attach to parent node */
- 	INIT_LIST_HEAD(&pdn->child_list);
- 	INIT_LIST_HEAD(&pdn->list);
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 5f80758..92974aa 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -261,12 +261,8 @@ static int pci_dn_reconfig_notifier(struct notifier_block *nb, unsigned long act
- 	switch (action) {
- 	case OF_RECONFIG_ATTACH_NODE:
- 		pci = np->parent->data;
--		if (pci) {
-+		if (pci)
- 			update_dn_pci_info(np, pci->phb);
--
--			/* Create EEH device for the OF node */
--			eeh_dev_init(PCI_DN(np), pci->phb);
--		}
- 		break;
- 	default:
- 		err = NOTIFY_DONE;
+ 	return 0;
+ 
+ fail:
+@@ -287,6 +294,13 @@ static int pnv_ioda2_init_m64(struct pnv_phb *phb)
+ 		pr_warn("  Cannot strip M64 segment for reserved PE#%d\n",
+ 			phb->ioda.reserved_pe);
+ 
++	/* Strip off the segment used by PE for PCI root bus,
++	 * which is last supported PE#, or one next to the
++	 * reserved PE#
++	 */
++	if (phb->ioda.root_pe != IODA_INVALID_PE)
++		r->end -= phb->ioda.m64_segsize;
++
+ 	return 0;
+ 
+ fail:
+@@ -3331,7 +3345,22 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	aux = memblock_virt_alloc(size, 0);
+ 	phb->ioda.pe_alloc = aux;
+ 	phb->ioda.pe_array = aux + pemap_off;
+-	set_bit(phb->ioda.reserved_pe, phb->ioda.pe_alloc);
++
++	/* Choose number of PE for root bus, which shouldn't consume
++	 * any M64 resource. So we avoid picking low-end PE#, which
++	 * is usually binding with 64-bits prefetchable memory resources
++	 * closely.
++	 */
++	pnv_ioda_reserve_pe(phb, phb->ioda.reserved_pe);
++	if (phb->ioda.reserved_pe == 0) {
++		phb->ioda.root_pe = phb->ioda.total_pe - 1;
++		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe);
++	} else if (phb->ioda.reserved_pe == (phb->ioda.total_pe - 1)) {
++		phb->ioda.root_pe = phb->ioda.reserved_pe - 1;
++		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe);
++	} else {
++		phb->ioda.root_pe = IODA_INVALID_PE;
++	}
+ 
+ 	INIT_LIST_HEAD(&phb->ioda.pe_dma_list);
+ 	INIT_LIST_HEAD(&phb->ioda.pe_list);
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 590f778..e372b9f 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -133,6 +133,7 @@ struct pnv_phb {
+ 		struct {
+ 			/* Global bridge info */
+ 			unsigned int		total_pe;
++			unsigned int		root_pe;
+ 			unsigned int		reserved_pe;
+ 
+ 			/* 32-bit MMIO window */
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
