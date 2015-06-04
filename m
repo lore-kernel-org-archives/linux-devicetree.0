@@ -1,61 +1,167 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V7 1/3] OPP: Add new bindings to address shortcomings of
- existing bindings
-Date: Thu, 4 Jun 2015 11:37:52 -0700
-Message-ID: <20150604183752.GI490@codeaurora.org>
-References: <cover.1433434659.git.viresh.kumar@linaro.org>
- <d83c0b6b1768c7229384216329b607d13886aa02.1433434659.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d83c0b6b1768c7229384216329b607d13886aa02.1433434659.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 07/15] ARM: shmobile: r8a7790 dtsi: Add L1 cache information to CPU nodes
+Date: Thu,  4 Jun 2015 20:53:33 +0200
+Message-ID: <1433444021-22167-8-git-send-email-geert+renesas@glider.be>
+References: <1433444021-22167-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1433444021-22167-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 06/04, Viresh Kumar wrote:
-> Current OPP (Operating performance point) device tree bindings have been
-> insufficient due to the inflexible nature of the original bindings. Over
-> time, we have realized that Operating Performance Point definitions and
-> usage is varied depending on the SoC and a "single size (just frequency,
-> voltage) fits all" model which the original bindings attempted and
-> failed.
-> 
-> The proposed next generation of the bindings addresses by providing a
-> expandable binding for OPPs and introduces the following common
-> shortcomings seen with the original bindings:
-> 
-> - Getting clock/voltage/current rails sharing information between CPUs.
->   Shared by all cores vs independent clock per core vs shared clock per
->   cluster.
-> 
-> - Support for specifying current levels along with voltages.
-> 
-> - Support for multiple regulators.
-> 
-> - Support for turbo modes.
-> 
-> - Other per OPP settings: transition latencies, disabled status, etc.?
-> 
-> - Expandability of OPPs in future.
-> 
-> This patch introduces new bindings "operating-points-v2" to get these problems
-> solved. Refer to the bindings for more details.
-> 
-> We now have multiple versions of OPP binding and only one of them should
-> be used per device.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Describe the L1 instruction and data caches in the CPU nodes:
+  - The L1 caches for the Cortex-A15 CPU cores, and the L1 instruction
+    caches for the Cortex-A7 CPU cores are organized as 16 KiB x 2
+    ways,
+  - The L1 data caches for the Cortex-A7 CPU cores are organized as 8
+    KiB x 4 ways.
 
-Ok. I'm still interested to see if this binding will have to
-change to support how multiple regulators will be matched up with
-the device using the OPP. But for now,
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 80 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 729172090f865e4d..bc98bb6cff635ae5 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -53,6 +53,16 @@
+ 			clocks = <&cpg_clocks R8A7790_CLK_Z>;
+ 			clock-latency = <300000>; /* 300 us */
+ 
++			i-cache-size = <0x8000>;
++			i-cache-sets = <512>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <512>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2_CA15>;
++
+ 			/* kHz - uV - OPPs unknown yet */
+ 			operating-points = <1400000 1000000>,
+ 					   <1225000 1000000>,
+@@ -67,6 +77,16 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <1>;
+ 			clock-frequency = <1300000000>;
++
++			i-cache-size = <0x8000>;
++			i-cache-sets = <512>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <512>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2_CA15>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -74,6 +94,16 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <2>;
+ 			clock-frequency = <1300000000>;
++
++			i-cache-size = <0x8000>;
++			i-cache-sets = <512>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <512>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2_CA15>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -81,6 +111,16 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <3>;
+ 			clock-frequency = <1300000000>;
++
++			i-cache-size = <0x8000>;
++			i-cache-sets = <512>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <512>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2_CA15>;
+ 		};
+ 
+ 		cpu4: cpu@4 {
+@@ -88,6 +128,16 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x100>;
+ 			clock-frequency = <780000000>;
++
++			i-cache-size = <0x8000>;
++			i-cache-sets = <512>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <256>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2_CA7>;
+ 		};
+ 
+ 		cpu5: cpu@5 {
+@@ -95,6 +145,16 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x101>;
+ 			clock-frequency = <780000000>;
++
++			i-cache-size = <0x8000>;
++			i-cache-sets = <512>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <256>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2_CA7>;
+ 		};
+ 
+ 		cpu6: cpu@6 {
+@@ -102,6 +162,16 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x102>;
+ 			clock-frequency = <780000000>;
++
++			i-cache-size = <0x8000>;
++			i-cache-sets = <512>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <256>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2_CA7>;
+ 		};
+ 
+ 		cpu7: cpu@7 {
+@@ -109,6 +179,16 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x103>;
+ 			clock-frequency = <780000000>;
++
++			i-cache-size = <0x8000>;
++			i-cache-sets = <512>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <256>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2_CA7>;
+ 		};
+ 	};
+ 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
+
