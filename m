@@ -1,62 +1,126 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [PATCH 00/21] On-demand device registration
-Date: Thu, 04 Jun 2015 22:39:31 +0200
-Message-ID: <5570B783.1050808@ahsoftware.de>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com> <CAL_Jsq+EWLEJhRudTGAwYsOg4tX2-pGhygeQGHae9RL8rBpMiA@mail.gmail.com> <556F5C24.1030101@linaro.org>
+From: ygardi@codeaurora.org
+Subject: Re: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from
+ the platform device
+Date: Thu, 4 Jun 2015 20:42:58 -0000
+Message-ID: <27c2bccc1e1824de1e930bfe0df6caf7.squirrel@www.codeaurora.org>
+References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
+    <1433324255-27510-5-git-send-email-ygardi@codeaurora.org>
+    <1433426833.15728.15.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <556F5C24.1030101-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Grygorii.Strashko-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grygorii.strashko-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TZUIDd8j+nm9g@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1433426833.15728.15.camel@x220>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Yaniv Gardi <ygardi@codeaurora.org>, james.bottomley@hansenpartnership.com, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, gbroner@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jbottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 03.06.2015 um 21:57 schrieb Grygorii.Strashko-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
+> On Wed, 2015-06-03 at 12:37 +0300, Yaniv Gardi wrote:
+>> --- a/drivers/scsi/ufs/ufs-qcom.c
+>> +++ b/drivers/scsi/ufs/ufs-qcom.c
+>
+>>  EXPORT_SYMBOL(ufs_hba_qcom_vops);
+>
+> Nothing uses this export. It's still a (static) symbol that is not
+> included in any header. I think this export serves no purpose. Am I
+> missing something subtle here?
+>
 
-=2E..
+correct Paul. I will remove it.
 
-> So few comments from above:
-> - registering devices later during the System boot may improve boot t=
-ime.
->   But resolving of all deferred probes may NOT improve boot time ;)=20
->   Have you seen smth like this?
 
-If someone is out for boot time reduction, I think one of the best ways
-would by making driver initialization parallel. Keep in mind that all
-linked in drivers currently are initialized in series.
+>> +/**
+>> + * ufs_qcom_probe - probe routine of the driver
+>> + * @pdev: pointer to Platform device handle
+>> + *
+>> + * Always return 0
+>> + */
+>> +static int ufs_qcom_probe(struct platform_device *pdev)
+>> +{
+>> +	dev_set_drvdata(&pdev->dev, (void *)&ufs_hba_qcom_vops);
+>
+> (Cast to void * should not be needed.)
+>
+>> +	return 0;
+>> +}
+>> +
+>> +/**
+>> + * ufs_qcom_remove - set driver_data of the device to NULL
+>> + * @pdev: pointer to platform device handle
+>> + *
+>> + * Always return 0
+>> + */
+>> +static int ufs_qcom_remove(struct platform_device *pdev)
+>> +{
+>> +	dev_set_drvdata(&pdev->dev, NULL);
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id ufs_qcom_of_match[] = {
+>> +	{ .compatible = "qcom,ufs_variant"},
+>> +	{},
+>> +};
+>> +
+>> +static struct platform_driver ufs_qcom_pltform = {
+>> +	.probe	= ufs_qcom_probe,
+>> +	.remove	= ufs_qcom_remove,
+>> +	.driver	= {
+>> +		.name	= "ufs_qcom",
+>> +		.owner	= THIS_MODULE,
+>> +		.of_match_table = of_match_ptr(ufs_qcom_of_match),
+>> +	},
+>> +};
+>> +module_platform_driver(ufs_qcom_pltform);
+>
+>> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
+>> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+>
+>> +	struct device_node *node = pdev->dev.of_node;
+>> +	struct device_node *ufs_variant_node;
+>> +	struct platform_device *ufs_variant_pdev;
+>
+>> -	hba->vops = get_variant_ops(&pdev->dev);
+>> +	err = of_platform_populate(node, NULL, NULL, &pdev->dev);
+>> +	if (err)
+>> +		dev_err(&pdev->dev,
+>> +			"%s: of_platform_populate() failed\n", __func__);
+>> +
+>> +	ufs_variant_node = of_get_next_available_child(node, NULL);
+>> +
+>> +	if (!ufs_variant_node) {
+>> +		dev_dbg(&pdev->dev, "failed to find ufs_variant_node child\n");
+>> +	} else {
+>> +		ufs_variant_pdev = of_find_device_by_node(ufs_variant_node);
+>> +
+>> +		if (ufs_variant_pdev)
+>> +			hba->vops = (struct ufs_hba_variant_ops *)
+>> +				dev_get_drvdata(&ufs_variant_pdev->dev);
+>
+> (Another cast that I think is not needed.)
+>
+>> +	}
+>
+> If I scanned this correctly, the dev_set_drvdata() and dev_get_drvdata()
+> pair adds an actual user of ufs_hba_qcom_vops. So that ends the obvious
+> issue I think the code currently has. And I gladly defer to the scsi
+> people to determine whether that is done the right way.
+>
 
-As it seems to have been forgotten or overread, I've mentioned in my
-series of patches last year that, with a few changes, it's possible to
-let the algorithm I've used (dfs) to spit out all drivers which can be
-initialized in parallel.
+yes, you got it right.
+these 2 routines use the vops structure, that binds the driver and the
+variant (in our case qcom)
 
-But as I'm not paid for the work I've done and just did it out of
-curiosity, interest or how ever you want name it, I haven't spend any
-more time into that topic, especially as I'm missing the necessary
-connections to get patches into the kernel. ;)
+thanks for your time, Paul
 
-But, as said, it's easy (at least if aren't getting panic when it comes
-to a bit of algorithm theory) to get a list drivers you can start in
-parallel if you have such a complete list of dependencies as DT already
-offers. Just look at the pictures generate by dtc (using my patches),
-you will see, they already show which drivers can be initialized in
-parallel.
 
-So it would be easy to use e.g. all cores already very early at boot to
-initialize drivers, not just after init got started. Besides that the
-w=C3=BCrgaround of defered init (which, btw. leads devs to supress erro=
-r
-messages, which is especially bad if you are searching a problem) isn't
-needed anymore if you have a list of dependecies (however you get it,
-I've used DT because the dependencies already are all there).
-
-Regards,
-
-Alexander Holler
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks,
+>
+>
+> Paul Bolle
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
