@@ -1,72 +1,68 @@
-From: S Twiss <stwiss.opensource@diasemi.com>
-Subject: [RESEND PATCH V4 0/1]  Add OnKey support for DA9063
-Date: Thu, 4 Jun 2015 12:02:32 +0100
-Message-ID: <cover.1433415752.git.stwiss.opensource@diasemi.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] tee: add OP-TEE driver
+Date: Thu, 4 Jun 2015 13:00:05 +0100
+Message-ID: <20150604120005.GA10283@sirena.org.uk>
+References: <1431671667-11219-1-git-send-email-jens.wiklander@linaro.org>
+ <1431671667-11219-3-git-send-email-jens.wiklander@linaro.org>
+ <20150518131850.GA7064@leverpostej>
+ <20150520121648.GA9819@ermac>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Kosina <jkosina@suse.cz>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150520121648.GA9819@ermac>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org" <javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org>, "emmanuel.michel-qxv4g6HH51o@public.gmane.org" <emmanuel.michel-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jean-michel.delorme-qxv4g6HH51o@public.gmane.org" <jean-michel.delorme-qxv4g6HH51o@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-Hello,
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is a resend, now adding Andrew Morton and Jiri Kosina with the hope
-it might help to unblock this patch.
+On Wed, May 20, 2015 at 02:16:48PM +0200, Jens Wiklander wrote:
 
-The OnKey patch originally reviewed by Dmitry Torokhov and re-submitted in
-return -- it has been resent several times in the past six weeks but has had
-no further responses to any e-mails.
+> > > +#define OPTEE_SMC_SHM_NONCACHED                0ULL
+> > > +#define OPTEE_SMC_SHM_CACHED           1ULL
 
-- https://lkml.org/lkml/2015/6/3/99
+> > What precise set of memory attributes do these imply?
 
-I would like to promote this last remaining OnKey patch to other maintainers
-in the hierarchy with the hope I can get a reply.
+...
 
-The original patch set for adding OnKey driver support for the Dialog
-Semiconductor DA9063 PMIC contained MFD core support, DT bindings and
-the OnKey driver itself.
+> OP-TEE is more or less always compiled for a specific platform so if the
+> kernel uses some other mapping for a particular platform we'll change the
+> OP-TEE settings to be compatible with the kernel on that platform.
 
-All files have been reviewed by the maintainers and my reponses have been
-sent quickly. Two out of the three patches in this set were Acked and have
-already been applied to linux-next kernel:
+I'm not convinced that's a realistic assumption going forwards - I
+certainly hope it isn't.  Currently TEE code tends to be only built for
+verticial systems because of this lack of standardiation (and the fact
+that so much is proprietary at the minute) but hopefully one of the
+results of having a reusable solution in the standard kernel with an
+open platform for the secure side will be that people will be more able
+to use this, perhaps in applications where things like single kernel
+support are much more important than they are for the environments where
+TEEs are currently deployed.
 
-a5df460 mfd: dt: Add bindings for DA9063 OnKey
-d497c625 mfd: da9063: Add support for OnKey driver
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This is the remaining patch being resent:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-[RESEND PATCH V4 1/1]: kernel driver onkey support for DA9063
+iQEcBAEBCAAGBQJVcD3EAAoJECTWi3JdVIfQS6UH/2LDUpjJ8sGwjmRc4sYgoy+H
+Ts7Wiiqi0R5chHyj/5snGg0swiImOP6249j6ywn+CfKP1FYiyeF3J5GVDle8oI7O
+pGg1LxYaQyPhgZKfj/E70/IYj/k1CaMedc3gWI0g9T+3Pfw37boyU2UfMv37f2kb
+5N6JvPcRdQhamvcj5PreUm8vdw13GJVsgg9o1Y+CJdTmZdOJLI4rsq1qLT5EWrHS
+qNZXyNDdyfZfJS6Fv50sPGWfY35slM28savnlxmcXNtQ7yoDcATu2IFeIgBOEP+4
+ymeoS9fRwy8fLK5SNIyb6Fw3DjcevP/LxpB91BBeisn2DnkXeUe2Pjq0UPE9pDU=
+=UBUk
+-----END PGP SIGNATURE-----
 
-This particular OnKey patch will only support the DA9063 PMIC. If this patch
-makes it into the kernel it was the request of the maintainers and is my
-intention to use this OnKey driver as the starting point for other Dialog
-Semiconductor chips which also use a functionally similar OnKey block.
-
-One of these PMIC chips is currently under submission to the kernel and the
-MFD part has already been reviewed and my replies for that one sent. I expect
-this hanging patch for OnKey will eventually block further development in
-other Dialog chips: this is another reason I have for wanting to promote the
-DA9063 OnKey driver further.
-
-I would like to move this driver development forward again, so if there are
-any issues relating to this OnKey driver I would very much appreciate any
-response so I can unblock things.
- 
-Thank you,
-Steve Twiss, Dialog Semiconductor Ltd.
-
-S Twiss (1):
-  input: misc: da9063: OnKey driver
-
- drivers/input/misc/Kconfig        |  10 ++
- drivers/input/misc/Makefile       |   1 +
- drivers/input/misc/da9063_onkey.c | 227 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 238 insertions(+)
- create mode 100644 drivers/input/misc/da9063_onkey.c
-
--- 
-end-of-patch for RESEND PATCH V4
+--5mCyUwZo2JvN/JJP--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
