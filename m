@@ -1,81 +1,143 @@
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/7] arm64: dts: qcom: Add msm8916 sdhci configuration nodes
-Date: Thu,  4 Jun 2015 12:19:02 +0300
-Message-ID: <1433409546-23995-4-git-send-email-ivan.ivanov@linaro.org>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: [PATCH 7/7] arm64: dts: qcom: Add apq8016-sbc board LED's related device nodes
+Date: Thu,  4 Jun 2015 12:19:06 +0300
+Message-ID: <1433409546-23995-8-git-send-email-ivan.ivanov@linaro.org>
 References: <1433409546-23995-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433409546-23995-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1433409546-23995-1-git-send-email-ivan.ivanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+APQ8016 SBC board have 6 user controllable LED's.
 
-Add sdhci1 and sdhci2 device configuration nodes.
+Add following devices:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+LED1 green LED triggered by system heartbeat.
+LED2 green LED triggered by access to eMMC device.
+LED3 green LED triggered by access to SD card.
+LED4 green LED no trigger assigned.
+LED5 yellow LED triggered by access to WLAN.
+LED6 blue LED triggered by access to Bluetooth.
+
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
+ .../arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi | 19 ++++++++
+ arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi | 11 ++---
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 51 ++++++++++++++++++++++
+ 3 files changed, 73 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 6681c65..9ff0eb4 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -24,7 +24,10 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
-
--	aliases { };
-+	aliases {
-+		sdhc1 = &sdhc_1; /* SDC1 eMMC slot */
-+		sdhc2 = &sdhc_2; /* SDC2 SD card slot */
-+	};
-
- 	chosen { };
-
-@@ -236,6 +239,35 @@
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+index b568c49..e03c11d 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+@@ -18,4 +18,23 @@
+ 			input-disable;
  		};
+ 	};
++
++	pm8916_gpios_leds: pm8916_gpios_leds {
++		pinconf {
++			pins = "gpio1", "gpio2";
++			function = PMIC_GPIO_FUNC_NORMAL;
++			output-low;
++		};
++	};
++};
++
++&pm8916_mpps {
++
++	pm8916_mpps_leds: pm8916_mpps_leds {
++		pinconf {
++			pins = "mpp2", "mpp3";
++			function = PMIC_GPIO_FUNC_NORMAL;
++			output-low;
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+index 27087cf..cbeee0b 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+@@ -3,14 +3,9 @@
 
-+		sdhc_1: sdhci@07824000 {
-+			compatible = "qcom,sdhci-msm-v4";
-+			reg = <0x07824900 0x11c>, <0x07824000 0x800>;
-+			reg-names = "hc_mem", "core_mem";
+ &msmgpio {
+
+-	soc_gpios_default: default {
+-		usr_led_1_ctrl_default: usr_led_1_ctrl_default {
+-			pins = "gpio21";
+-			function = "gpio";
+-			output-low;
+-		};
+-		usr_led_2_ctrl_default: usr_led_2_ctrl_default {
+-			pins = "gpio120";
++	msmgpio_leds: msmgpio_leds {
++		pinconf {
++			pins = "gpio21", "gpio120";
+ 			function = "gpio";
+ 			output-low;
+ 		};
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 98abece..66804ff 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -32,5 +32,56 @@
+ 			pinctrl-0 = <&blsp1_uart2_default>;
+ 			pinctrl-1 = <&blsp1_uart2_sleep>;
+ 		};
 +
-+			interrupts = <0 123 0>, <0 138 0>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-+				 <&gcc GCC_SDCC1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			bus-width = <8>;
-+			non-removable;
-+			status = "disabled";
++		leds {
++			pinctrl-names = "default";
++			pinctrl-0 = <&msmgpio_leds>,
++				    <&pm8916_gpios_leds>,
++				    <&pm8916_mpps_leds>;
++
++			compatible = "gpio-leds";
++
++			led@1 {
++				label = "apq8016-sbc:green:user1";
++				gpios = <&msmgpio 21 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "heartbeat";
++				default-state = "off";
++			};
++
++			led@2 {
++				label = "apq8016-sbc:green:user2";
++				gpios = <&msmgpio 120 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "mmc0";
++				default-state = "off";
++			};
++
++			led@3 {
++				label = "apq8016-sbc:green:user3";
++				gpios = <&pm8916_gpios 1 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "mmc1";
++				default-state = "off";
++			};
++
++			led@4 {
++				label = "apq8016-sbc:green:user4";
++				gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "none";
++				default-state = "off";
++			};
++
++			led@5 {
++				label = "apq8016-sbc:yellow:wlan";
++				gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "wlan";
++				default-state = "off";
++			};
++
++			led@6 {
++				label = "apq8016-sbc:blue:bt";
++				gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "bt";
++				default-state = "off";
++			};
 +		};
-+
-+		sdhc_2: sdhci@07864000 {
-+			compatible = "qcom,sdhci-msm-v4";
-+			reg = <0x07864900 0x11c>, <0x07864000 0x800>;
-+			reg-names = "hc_mem", "core_mem";
-+
-+			interrupts = <0 125 0>, <0 221 0>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
-+				 <&gcc GCC_SDCC2_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
+ 	};
+ };
 --
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
