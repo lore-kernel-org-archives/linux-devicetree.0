@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 31/42] powerpc/pci: Move pcibios_find_pci_bus() around
-Date: Thu,  4 Jun 2015 16:42:00 +1000
-Message-ID: <1433400131-18429-32-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 14/42] powerpc/powernv: Allocate PE# in deasending order
+Date: Thu,  4 Jun 2015 16:41:43 +1000
+Message-ID: <1433400131-18429-15-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,109 +10,54 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch moves pcibios_find_pci_bus() to PPC kerenl directory so
-that it can be reused by hotplug code for pSeries and PowerNV
-platform at the same time.
+The available PE#, represented by a bitmap in the PHB, is allocated
+in asending order. It conflicts with the fact that M64 segments are
+assigned in same order. In order to avoid the conflict, the patch
+allocates PE# in deasending order.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
 v5:
-  * Derived from PATCH[v4 12/21]
+  * Split from [PATCH v5 v4 06/21]
 ---
- arch/powerpc/kernel/pci-hotplug.c          | 36 ++++++++++++++++++++++++++++++
- arch/powerpc/platforms/pseries/pci_dlpar.c | 32 --------------------------
- 2 files changed, 36 insertions(+), 32 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-index ca392fc..1482bc1 100644
---- a/arch/powerpc/kernel/pci-hotplug.c
-+++ b/arch/powerpc/kernel/pci-hotplug.c
-@@ -21,6 +21,42 @@
- #include <asm/firmware.h>
- #include <asm/eeh.h>
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index d8b0ef5..0d6539a 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -152,18 +152,23 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
  
-+static struct pci_bus *find_pci_bus(struct pci_bus *bus,
-+				    struct device_node *dn)
-+{
-+	struct pci_bus *tmp, *child = NULL;
-+	struct device_node *busdn;
-+
-+	busdn = pci_bus_to_OF_node(bus);
-+	if (busdn == dn)
-+		return bus;
-+
-+	list_for_each_entry(tmp, &bus->children, node) {
-+		child = find_pci_bus(tmp, dn);
-+		if (child)
-+			break;
-+	}
-+
-+	return child;
-+}
-+
-+/**
-+ * pcibios_find_pci_bus - find PCI bus according to the given device node
-+ * @dn: Device node
-+ *
-+ * Find the corresponding PCI bus according to the given device node.
-+ */
-+struct pci_bus *pcibios_find_pci_bus(struct device_node *dn)
-+{
-+	struct pci_dn *pdn = PCI_DN(dn);
-+
-+	if (!pdn  || !pdn->phb || !pdn->phb->bus)
-+		return NULL;
-+
-+	return find_pci_bus(pdn->phb->bus, dn);
-+}
-+EXPORT_SYMBOL_GPL(pcibios_find_pci_bus);
-+
- /**
-  * pcibios_release_device - release PCI device
-  * @dev: PCI device
-diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
-index 5d4a3df..906dbaa 100644
---- a/arch/powerpc/platforms/pseries/pci_dlpar.c
-+++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
-@@ -34,38 +34,6 @@
- 
- #include "pseries.h"
- 
--static struct pci_bus *
--find_bus_among_children(struct pci_bus *bus,
--                        struct device_node *dn)
--{
--	struct pci_bus *child = NULL;
--	struct pci_bus *tmp;
--	struct device_node *busdn;
--
--	busdn = pci_bus_to_OF_node(bus);
--	if (busdn == dn)
--		return bus;
--
--	list_for_each_entry(tmp, &bus->children, node) {
--		child = find_bus_among_children(tmp, dn);
--		if (child)
--			break;
--	};
--	return child;
--}
--
--struct pci_bus *
--pcibios_find_pci_bus(struct device_node *dn)
--{
--	struct pci_dn *pdn = dn->data;
--
--	if (!pdn  || !pdn->phb || !pdn->phb->bus)
--		return NULL;
--
--	return find_bus_among_children(pdn->phb->bus, dn);
--}
--EXPORT_SYMBOL_GPL(pcibios_find_pci_bus);
--
- struct pci_controller *init_phb_dynamic(struct device_node *dn)
+ static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
  {
- 	struct pci_controller *phb;
+-	unsigned long pe;
++	unsigned long pe_no;
++	unsigned long limit = phb->ioda.total_pe - 1;
+ 
+ 	do {
+-		pe = find_next_zero_bit(phb->ioda.pe_alloc,
+-					phb->ioda.total_pe, 0);
+-		if (pe >= phb->ioda.total_pe)
++		pe_no = find_next_zero_bit(phb->ioda.pe_alloc,
++					   phb->ioda.total_pe, limit);
++		if (pe_no < phb->ioda.total_pe &&
++		    !test_and_set_bit(pe_no, phb->ioda.pe_alloc))
++			break;
++
++		if (--limit >= phb->ioda.total_pe)
+ 			return IODA_INVALID_PE;
+-	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
++	} while (1);
+ 
+-	phb->ioda.pe_array[pe].phb = phb;
+-	phb->ioda.pe_array[pe].pe_number = pe;
+-	return pe;
++	phb->ioda.pe_array[pe_no].phb = phb;
++	phb->ioda.pe_array[pe_no].pe_number = pe_no;
++	return pe_no;
+ }
+ 
+ static void pnv_ioda_free_pe(struct pnv_phb *phb, int pe)
 -- 
 2.1.0
