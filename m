@@ -1,118 +1,58 @@
-From: Philippe Reynes <tremyfr@gmail.com>
-Subject: Re: [PATCH 2/2] rtc: mxc: add support of device tree
-Date: Thu, 04 Jun 2015 23:26:05 +0200
-Message-ID: <5570C26D.5080204@gmail.com>
-References: <1431729330-7625-1-git-send-email-tremyfr@gmail.com> <1431729330-7625-3-git-send-email-tremyfr@gmail.com> <20150528120601.GO2185@piout.net>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCHv2 2/4] edac, altera: Refactor EDAC for Altera CycloneV
+ SoC.
+Date: Thu, 4 Jun 2015 16:34:49 -0500
+Message-ID: <5570C479.7010902@opensource.altera.com>
+References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
+ <1433428128-7292-3-git-send-email-tthayer@opensource.altera.com>
+ <55706E25.8050105@opensource.altera.com>
+Reply-To: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150528120601.GO2185@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, a.zummo@towertech.it, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rtc-linux@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, fabio.estevam@freescale.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55706E25.8050105-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
 
-
-On 28/05/15 14:06, Alexandre Belloni wrote:
-> Hi,
->
-> On 16/05/2015 at 00:35:30 +0200, Philippe Reynes wrote :
+On 06/04/2015 10:26 AM, Dinh Nguyen wrote:
+> On 06/04/2015 09:28 AM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >>
->
-> Please always include a commit message.
-
-Oh yes, sorry about that.
-
->> Signed-off-by: Philippe Reynes<tremyfr@gmail.com>
+>> The Arria10 SOC uses a completely different SDRAM controller from the
+>> earlier CycloneV and ArriaV SoCs. This patch abstracts the SDRAM bits
+>> for the CycloneV/ArriaV SoCs in preparation for the Arria10 support.
+>>
+>> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >> ---
->>   Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   27 +++++++++++++++++++++
->>   drivers/rtc/rtc-mxc.c                             |   22 ++++++++++++++++-
->>   2 files changed, 48 insertions(+), 1 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+>> v2: Make c5_data static.
+>> ---
+>>   drivers/edac/altera_edac.c |  194 ++++++++++++++++++++------------------------
+>>   drivers/edac/altera_edac.h |  116 ++++++++++++++++++++++++++
+>>   2 files changed, 206 insertions(+), 104 deletions(-)
+>>   create mode 100644 drivers/edac/altera_edac.h
 >>
->> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
->> new file mode 100644
->> index 0000000..5505493
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
->> @@ -0,0 +1,27 @@
->> +* Real Time Clock of the i.MX SoCs
->> +
->> +RTC controller for the i.MX SoCs
->> +
->> +Required properties:
->> +- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
->> +- reg: physical base address of the controller and length of memory mapped
->> +  region.
->> +- interrupts: IRQ line for the RTC.
->> +- clocks: should contain two entries:
->> +  * one for the input reference
->> +  * one for the the SoC RTC
->> +- clock-names: should contain:
->> +  * "rtc" for the input reference clock
->> +  * "ipg" for the SoC RTC clock
->> +
->> +Example:
->> +
->> +rtc@10007000 {
->> +	compatible = "fsl,imx21-rtc";
->> +	reg =<0x10007000 0x1000>;
->> +	interrupts =<22>;
->> +	clocks =<&clks IMX27_CLK_CKIL>,
->> +	       	<&clks IMX27_CLK_RTC_IPG_GATE>;
->> +	clock-names = "rtc, "ipg";
->> +	status = "disabled";
->> +};
->> diff --git a/drivers/rtc/rtc-mxc.c b/drivers/rtc/rtc-mxc.c
->> index e916a91..df6483d 100644
->> --- a/drivers/rtc/rtc-mxc.c
->> +++ b/drivers/rtc/rtc-mxc.c
->> @@ -16,6 +16,8 @@
->>   #include<linux/interrupt.h>
->>   #include<linux/platform_device.h>
->>   #include<linux/clk.h>
->> +#include<linux/of.h>
->> +#include<linux/of_device.h>
->>
->>   #define RTC_INPUT_CLK_32768HZ	(0x00<<  5)
->>   #define RTC_INPUT_CLK_32000HZ	(0x01<<  5)
->> @@ -98,6 +100,15 @@ static struct platform_device_id imx_rtc_devtype[] = {
->>   };
->>   MODULE_DEVICE_TABLE(platform, imx_rtc_devtype);
->>
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id imx_rtc_dt_ids[] = {
->> +	{ .compatible = "fsl,imx1-rtc", .data =&imx_rtc_devtype[IMX1_RTC] },
->> +	{ .compatible = "fsl,imx21-rtc", .data =&imx_rtc_devtype[IMX21_RTC] },
+>> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+>> index a9e7c69..a8350f6 100644
+>> --- a/drivers/edac/altera_edac.c
+>> +++ b/drivers/edac/altera_edac.c
 >
-> Maybe you can use directly IMX1_RTC and IMX21_RTC which...
-
-I've seen both "style" on the code. I may change the code to simply use IMX1_RTC
-and IMX21_RTC.
-
->>
->> -	pdata->devtype = pdev->id_entry->driver_data;
->> +	of_id = of_match_device(imx_rtc_dt_ids,&pdev->dev);
->> +	if (of_id) {
->> +		struct platform_device_id *id_entry;
->> +
->> +		id_entry = (struct platform_device_id *)of_id->data;
->> +		pdata->devtype = id_entry->driver_data;
+> What branch are you basing this patch on? I get the following error when
+> applied to both v4.1-rc6, linux-next, and linux-edac/linux-next.
 >
-> ... also simplifies that part.
-
-I'll do it in the next version of this patch.
-  
->> +	} else
->> +		pdata->devtype = pdev->id_entry->driver_data;
->>
+> Applying: edac, altera: Refactor EDAC for Altera CycloneV SoC.
+> error: patch failed: drivers/edac/altera_edac.c:400
+> error: drivers/edac/altera_edac.c: patch does not apply
+> Patch failed at 0001 edac, altera: Refactor EDAC for Altera CycloneV SoC.
+>
+> Dinh
 >
 
-Do you prefer that I wait the clock driver has move to drivers/clk/imx
-(as requested by Shawn) before sending a v2 ?
-
-Regards,
-Philippe
+OK. I'll refactor and resend. I was using Altera's internal for-next branch.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
