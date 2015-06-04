@@ -1,103 +1,87 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: Re: [PATCH 04/11] mtd: ofpart: do not fail probe when no partitions exist
-Date: Thu, 4 Jun 2015 17:40:58 +0200
-Message-ID: <CAOMqctQTxVZspcocDsNP6GzsRw5-0zPqkNScS8PzNvkFjBWatQ@mail.gmail.com>
-References: <cover.1433364398.git.hramrach@gmail.com> <201506040058.52882.marex@denx.de>
- <CAOMqctTB2AYOQZUc9o-R4PF1DQ-HY0RfSw5T-T28r5uP2s=qZA@mail.gmail.com> <201506041728.50227.marex@denx.de>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mtd: spi-nor: add driver for NXP SPI Flash
+ Interface (SPIFI)
+Date: Thu, 4 Jun 2015 17:58:07 +0200
+Message-ID: <CAGhQ9VzU+J1ZT45e-yZ+BAmyZvLUm1cyXE2T__O_4gGjtHrX-w@mail.gmail.com>
+References: <1433106362-6032-1-git-send-email-manabian@gmail.com>
+	<1433106362-6032-2-git-send-email-manabian@gmail.com>
+	<5570692E.2050603@vanguardiasur.com.ar>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201506041728.50227.marex@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>, =?UTF-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@micron.com>, grmoore@altera.c
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5570692E.2050603-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 June 2015 at 17:28, Marek Vasut <marex@denx.de> wrote:
-> On Thursday, June 04, 2015 at 06:54:00 AM, Michal Suchanek wrote:
->> On 4 June 2015 at 00:58, Marek Vasut <marex@denx.de> wrote:
->> > On Wednesday, June 03, 2015 at 11:26:40 PM, Michal Suchanek wrote:
->> >> On Exynos it is necessary to set SPI controller parameters that apply to
->> >> a SPI slave in a DT subnode of the slave device. The ofpart code returns
->> >> an error when there are subnodes of the SPI flash but no partitions are
->> >> found. Change this condition to a warning so that flash without
->> >> partitions can be accessed on Exynos.
->> >
->> > I have to admit the rationale for this patch is not very clear to me,
->> > sorry. Can you please explain this a bit more ?
->>
->> This is how the DT entry for SPI slave looks with s3c64xx:
->> flash: m25p80@0 {
->>         #address-cells = <1>;
->>         #size-cells = <1>;
->>         compatible = "jedec,spi-nor";
->>         reg = <0>;
->>         spi-max-frequency = <40000000>;
->>         linux,max_tx_len = <65536>;
+On 4 June 2015 at 17:05, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+> Joachim,
 >
-> SIDENOTE: I thought this was actually added by your patch #8 in this
-> series. The underscores in the name of the property are not really
-> consistent with the rest of the names.
+> I tested the driver and found an issue with it.
 >
->>         m25p,fast-read;
->>         controller-data {
->>             samsung,spi-feedback-delay = <0>;
->>         };
->>     };
->>
->> this is example of flash partitions:
->> flash@0 {
->>         #address-cells = <1>;
->>         #size-cells = <1>;
->>
->>         partition@0 {
->>                 label = "u-boot";
->>                 reg = <0x0000000 0x100000>;
->>                 read-only;
->>         };
->>
->>         uimage@100000 {
->>                 reg = <0x0100000 0x200000>;
->>         };
->> };
->>
->> The parser ignores any flash without subnodes and returns 0 (no
->> partititon). When there is a subnode it assumes the flash is
->> partitioned and tries to parse the subnodes as partitions. When there
->> are subnodes and none parses as partition an error is returned. As
->> shown above it is valid to have subnodes on unpartitioned flash.
->>
->> When an error is returned from a partition parser the mtdpart code
->> passes on this error to the flash probe function and the proble of the
->> flash fails.
+> On 05/31/2015 06:06 PM, Joachim Eastwood wrote:
+>> +
+>> +     spifi->mtd.priv  = &spifi->nor;
+>> +     spifi->nor.mtd   = &spifi->mtd;
+>> +     spifi->nor.dev   = spifi->dev;
+>> +     spifi->nor.priv  = spifi;
+>> +     spifi->nor.read  = nxp_spifi_read;
+>> +     spifi->nor.write = nxp_spifi_write;
+>> +     spifi->nor.erase = nxp_spifi_erase;
+>> +     spifi->nor.read_reg  = nxp_spifi_read_reg;
+>> +     spifi->nor.write_reg = nxp_spifi_write_reg;
+>> +
+>> +     ret = of_modalias_node(np, modalias, sizeof(modalias));
+>> +     if (ret < 0) {
+>> +             dev_err(spifi->dev, "unable to get device modalias\n");
+>> +             return ret;
+>> +     }
+>> +
+>> +     /*
+>> +      * The first read on a hard reset isn't reliable so do a
+>> +      * dummy read of the id before calling spi_nor_scan().
+>> +      * The reason for this problem is unknown.
+>> +      *
+>> +      * The official NXP spifilib uses more or less the same
+>> +      * workaround that is applied here by reading the device
+>> +      * id multiple times.
+>> +      */
+>> +     nxp_spifi_dummy_id_read(&spifi->nor);
+>> +
 >
-> What does /proc/mtd tell you when you have no partitions defined
-> in the DT ? It should provide you with the entire MTD device and
-> the code shouldn't even try to parse any OF partitions, since you
-> don't have any.
+> Actually, I think there's an issue here. See how m25p80 deals
+> with modalias:
+>
+>         [..]
+>         else if (!strcmp(spi->modalias, "spi-nor"))
+>                 flash_name = NULL; /* auto-detect */
+>         else
+>                 flash_name = spi->modalias;
+>
+>         ret = spi_nor_scan(nor, flash_name, mode);
+>         if (ret)
+>                 return ret;
+>
+> I think the "auto-detect" quirk is really needed, or you are will
+> otherwise fail to probe with the generic "jedec,spi-nor" compatible
+> string.
 
-mtdinfo shows I have no mtd devices and the log shows that probe
-failed unless I patch the kernel.
+I see.
 
-When there is *support* for of partitions the ofparser is run on mtd
-probe. If it fails because it considers
+Seem easy enough to fix. I'll send out new version after doing some
+more tests here.
 
->>         controller-data {
->>             samsung,spi-feedback-delay = <0>;
->>         };
+Note that this code was copied from fsl-quadspi so I assume it has the
+same problem.
 
-an invalid partition and does not find any valid partition the probe fails.
 
-There are two problems here
+Thanks for testing and catching the issue, Ezequiel.
 
-1) the above is not invalid. It just is not a partition. The parser
-should not fail seeing this
 
-2) the mtd probe should not fail when a partition parser fails and
-should present the unpartitioned device
-
-Both are addressed in separate patches.
-
-Thanks
-
-Michal
+regards,
+Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
