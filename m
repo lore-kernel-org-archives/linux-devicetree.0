@@ -1,76 +1,118 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 18/42] powerpc/powernv: Helper function pnv_ioda_init_pe()
-Date: Thu,  4 Jun 2015 16:41:47 +1000
-Message-ID: <1433400131-18429-19-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 31/42] powerpc/pci: Move pcibios_find_pci_bus() around
+Date: Thu,  4 Jun 2015 16:42:00 +1000
+Message-ID: <1433400131-18429-32-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433400131-18429-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch introduces helper function pnv_ioda_init_pe(), which
-initialize PE instance after reserving or allocating PE#, to
-simplify the code. The patch doesn't introduce behavioural
-changes.
+The patch moves pcibios_find_pci_bus() to PPC kerenl directory so
+that it can be reused by hotplug code for pSeries and PowerNV
+platform at the same time.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
 v5:
-  * Split from PATCH[v4 07/21]
+  * Derived from PATCH[v4 12/21]
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/pci-hotplug.c          | 36 ++++++++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/pci_dlpar.c | 32 --------------------------
+ 2 files changed, 36 insertions(+), 32 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 6187f84..f0b54ab 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -132,6 +132,17 @@ static inline bool pnv_pci_is_mem_pref_64(unsigned long flags)
- 		(IORESOURCE_MEM_64 | IORESOURCE_PREFETCH));
- }
+diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
+index ca392fc..1482bc1 100644
+--- a/arch/powerpc/kernel/pci-hotplug.c
++++ b/arch/powerpc/kernel/pci-hotplug.c
+@@ -21,6 +21,42 @@
+ #include <asm/firmware.h>
+ #include <asm/eeh.h>
  
-+static struct pnv_ioda_pe *pnv_ioda_init_pe(struct pnv_phb *phb, int pe_no)
++static struct pci_bus *find_pci_bus(struct pci_bus *bus,
++				    struct device_node *dn)
 +{
-+	struct pnv_ioda_pe *pe = &phb->ioda.pe_array[pe_no];
++	struct pci_bus *tmp, *child = NULL;
++	struct device_node *busdn;
 +
-+	pe->phb = phb;
-+	pe->pe_number = pe_no;
-+	INIT_LIST_HEAD(&pe->list);
++	busdn = pci_bus_to_OF_node(bus);
++	if (busdn == dn)
++		return bus;
 +
-+	return pe;
++	list_for_each_entry(tmp, &bus->children, node) {
++		child = find_pci_bus(tmp, dn);
++		if (child)
++			break;
++	}
++
++	return child;
 +}
 +
- static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
++/**
++ * pcibios_find_pci_bus - find PCI bus according to the given device node
++ * @dn: Device node
++ *
++ * Find the corresponding PCI bus according to the given device node.
++ */
++struct pci_bus *pcibios_find_pci_bus(struct device_node *dn)
++{
++	struct pci_dn *pdn = PCI_DN(dn);
++
++	if (!pdn  || !pdn->phb || !pdn->phb->bus)
++		return NULL;
++
++	return find_pci_bus(pdn->phb->bus, dn);
++}
++EXPORT_SYMBOL_GPL(pcibios_find_pci_bus);
++
+ /**
+  * pcibios_release_device - release PCI device
+  * @dev: PCI device
+diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
+index 5d4a3df..906dbaa 100644
+--- a/arch/powerpc/platforms/pseries/pci_dlpar.c
++++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
+@@ -34,38 +34,6 @@
+ 
+ #include "pseries.h"
+ 
+-static struct pci_bus *
+-find_bus_among_children(struct pci_bus *bus,
+-                        struct device_node *dn)
+-{
+-	struct pci_bus *child = NULL;
+-	struct pci_bus *tmp;
+-	struct device_node *busdn;
+-
+-	busdn = pci_bus_to_OF_node(bus);
+-	if (busdn == dn)
+-		return bus;
+-
+-	list_for_each_entry(tmp, &bus->children, node) {
+-		child = find_bus_among_children(tmp, dn);
+-		if (child)
+-			break;
+-	};
+-	return child;
+-}
+-
+-struct pci_bus *
+-pcibios_find_pci_bus(struct device_node *dn)
+-{
+-	struct pci_dn *pdn = dn->data;
+-
+-	if (!pdn  || !pdn->phb || !pdn->phb->bus)
+-		return NULL;
+-
+-	return find_bus_among_children(pdn->phb->bus, dn);
+-}
+-EXPORT_SYMBOL_GPL(pcibios_find_pci_bus);
+-
+ struct pci_controller *init_phb_dynamic(struct device_node *dn)
  {
- 	if (!(pe_no >= 0 && pe_no < phb->ioda.total_pe)) {
-@@ -146,9 +157,7 @@ static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
- 		return NULL;
- 	}
- 
--	phb->ioda.pe_array[pe_no].phb = phb;
--	phb->ioda.pe_array[pe_no].pe_number = pe_no;
--	return &phb->ioda.pe_array[pe_no];
-+	return pnv_ioda_init_pe(phb, pe_no);
- }
- 
- static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
-@@ -167,9 +176,7 @@ static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
- 			return NULL;
- 	} while (1);
- 
--	phb->ioda.pe_array[pe_no].phb = phb;
--	phb->ioda.pe_array[pe_no].pe_number = pe_no;
--	return &phb->ioda.pe_array[pe_no];
-+	return pnv_ioda_init_pe(phb, pe_no);
- }
- 
- static void pnv_ioda_free_pe(struct pnv_phb *phb, int pe)
+ 	struct pci_controller *phb;
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
