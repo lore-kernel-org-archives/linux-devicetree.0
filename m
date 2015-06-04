@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 09/42] powerpc/powernv: pnv_ioda_setup_dma() configure one PE only
-Date: Thu,  4 Jun 2015 16:41:38 +1000
-Message-ID: <1433400131-18429-10-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 17/42] powerpc/powernv: PE oriented during configuration
+Date: Thu,  4 Jun 2015 16:41:46 +1000
+Message-ID: <1433400131-18429-18-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,121 +10,170 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The original implementation of pnv_ioda_setup_dma() iterates the
-list of PEs and configures the DMA32 space for them one by one.
-The function was designed to be called during PHB fixup time.
-When configuring PE's DMA32 space in pcibios_setup_bridge(), in
-order to support PCI hotplug, we have to have the function PE
-oriented.
-
-The patch introduces one more argument "struct pnv_ioda_pe *pe"
-to pnv_ioda_setup_dma(). The caller, pnv_pci_ioda_setup_DMA(),
-gets PE from the list and passes to it. The patch shouldn't
-cause logic changes.
+Except pnv_ioda_configure_pe(), all PE configuration related functions
+are already PE oriented. The patch changes the return value from PE
+number to PE instance for its callee for the purpose.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
 v5:
-  * Split from PATCH[v4 06/21]
+  * Split from PATCH[v4 07/21]
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 60 ++++++++++++++-----------------
- 1 file changed, 27 insertions(+), 33 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 44 ++++++++++++++++---------------
+ arch/powerpc/platforms/powernv/pci.h      |  3 ++-
+ 2 files changed, 25 insertions(+), 22 deletions(-)
 
 diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 4af3d06..63fad4d 100644
+index fd2f898..6187f84 100644
 --- a/arch/powerpc/platforms/powernv/pci-ioda.c
 +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2558,12 +2558,14 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
- 		pnv_ioda_setup_bus_dma(pe, pe->pbus);
+@@ -132,25 +132,26 @@ static inline bool pnv_pci_is_mem_pref_64(unsigned long flags)
+ 		(IORESOURCE_MEM_64 | IORESOURCE_PREFETCH));
  }
  
--static void pnv_ioda_setup_dma(struct pnv_phb *phb)
-+static void pnv_ioda_setup_dma(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+-static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
++static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
  {
- 	struct pci_controller *hose = phb->hose;
+ 	if (!(pe_no >= 0 && pe_no < phb->ioda.total_pe)) {
+ 		pr_warn("%s: Invalid PE %d on PHB#%x\n",
+ 			__func__, pe_no, phb->hose->global_number);
+-		return;
++		return NULL;
+ 	}
+ 
+ 	if (test_and_set_bit(pe_no, phb->ioda.pe_alloc)) {
+ 		pr_warn("%s: PE %d was assigned on PHB#%x\n",
+ 			__func__, pe_no, phb->hose->global_number);
+-		return;
++		return NULL;
+ 	}
+ 
+ 	phb->ioda.pe_array[pe_no].phb = phb;
+ 	phb->ioda.pe_array[pe_no].pe_number = pe_no;
++	return &phb->ioda.pe_array[pe_no];
+ }
+ 
+-static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
++static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
+ {
+ 	unsigned long pe_no;
+ 	unsigned long limit = phb->ioda.total_pe - 1;
+@@ -163,12 +164,12 @@ static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
+ 			break;
+ 
+ 		if (--limit >= phb->ioda.total_pe)
+-			return IODA_INVALID_PE;
++			return NULL;
+ 	} while (1);
+ 
+ 	phb->ioda.pe_array[pe_no].phb = phb;
+ 	phb->ioda.pe_array[pe_no].pe_number = pe_no;
+-	return pe_no;
++	return &phb->ioda.pe_array[pe_no];
+ }
+ 
+ static void pnv_ioda_free_pe(struct pnv_phb *phb, int pe)
+@@ -389,8 +390,8 @@ static void pnv_ioda_reserve_m64_pe(struct pnv_phb *phb,
+ 	}
+ }
+ 
+-static int pnv_ioda_pick_m64_pe(struct pnv_phb *phb,
+-				struct pci_bus *bus, int all)
++static struct pnv_ioda_pe *pnv_ioda_pick_m64_pe(struct pnv_phb *phb,
++						struct pci_bus *bus, int all)
+ {
+ 	resource_size_t segsz = phb->ioda.m64_segsize;
+ 	struct pci_dev *pdev;
+@@ -401,13 +402,13 @@ static int pnv_ioda_pick_m64_pe(struct pnv_phb *phb,
+ 	int i;
+ 
+ 	if (!pnv_ioda_need_m64_pe(phb, bus))
+-		return IODA_INVALID_PE;
++		return NULL;
+ 
+ 	/* Allocate bitmap */
+ 	size = _ALIGN_UP(phb->ioda.total_pe / 8, sizeof(unsigned long));
+ 	pe_bitmap = kzalloc(size, GFP_KERNEL);
+ 	if (!pe_bitmap)
+-		return IODA_INVALID_PE;
++		return NULL;
+ 
+ 	/* The bridge's M64 window might be extended to PHB's M64
+ 	 * window by intention to support PCI hotplug. So we have
+@@ -444,7 +445,7 @@ static int pnv_ioda_pick_m64_pe(struct pnv_phb *phb,
+ 	/* No M64 window found ? */
+ 	if (bitmap_empty(pe_bitmap, phb->ioda.total_pe)) {
+ 		kfree(pe_bitmap);
+-		return IODA_INVALID_PE;
++		return NULL;
+ 	}
+ 
+ 	/* Figure out the master PE and put all slave PEs
+@@ -495,7 +496,7 @@ static int pnv_ioda_pick_m64_pe(struct pnv_phb *phb,
+ 	}
+ 
+ 	kfree(pe_bitmap);
+-	return master_pe->pe_number;
++	return master_pe;
+ }
+ 
+ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
+@@ -1224,7 +1225,7 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, int all)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(bus);
+ 	struct pnv_phb *phb = hose->private_data;
 -	struct pnv_ioda_pe *pe;
- 	unsigned int dma_weight;
++	struct pnv_ioda_pe *pe = NULL;
+ 	int pe_num = IODA_INVALID_PE;
  
-+	if (!pe->dma32_weight)
-+		return;
-+
- 	/* Calculate the PHB's DMA weight */
- 	dma_weight = pnv_ioda_phb_dma_weight(phb);
- 	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
-@@ -2571,38 +2573,28 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
- 
- 	pnv_pci_ioda_setup_opal_tce_kill(phb);
- 
--	/* Walk our PE list and configure their DMA segments, hand them
--	 * out one base segment plus any residual segments based on
--	 * weight
-+	/*
-+	 * For IODA2 compliant PHB3, we needn't care about the weight.
-+	 * The all available 32-bits DMA space will be assigned to
-+	 * the specific PE.
- 	 */
--	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
--		if (!pe->dma32_weight)
--			continue;
-+	if (phb->type == PNV_PHB_IODA1) {
-+		unsigned int segs, base = 0;
- 
--		/*
--		 * For IODA2 compliant PHB3, we needn't care about the weight.
--		 * The all available 32-bits DMA space will be assigned to
--		 * the specific PE.
--		 */
--		if (phb->type == PNV_PHB_IODA1) {
--			unsigned int segs, base = 0;
--
--			if (pe->dma32_weight <
--			    dma_weight / phb->ioda.dma32_segcount)
--				segs = 1;
--			else
--				segs = (pe->dma32_weight *
--					phb->ioda.dma32_segcount) / dma_weight;
--
--			pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
--				pe->dma32_weight, segs);
--			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
-+		if (pe->dma32_weight <
-+		    dma_weight / phb->ioda.dma32_segcount)
-+			segs = 1;
-+		else
-+			segs = (pe->dma32_weight *
-+				phb->ioda.dma32_segcount) / dma_weight;
- 
--			base += segs;
--		} else {
--			pe_info(pe, "Assign DMA32 space\n");
--			pnv_pci_ioda2_setup_dma_pe(phb, pe);
--		}
-+		pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
-+			pe->dma32_weight, segs);
-+		pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
-+		base += segs;
-+	} else {
-+		pe_info(pe, "Assign DMA32 space\n");
-+		pnv_pci_ioda2_setup_dma_pe(phb, pe);
+ 	/* For partial hotplug case, the PE instance hasn't been destroyed
+@@ -1240,24 +1241,25 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, int all)
  	}
- }
  
-@@ -3073,12 +3065,14 @@ static void pnv_pci_ioda_setup_DMA(void)
- {
- 	struct pci_controller *hose, *tmp;
- 	struct pnv_phb *phb;
-+	struct pnv_ioda_pe *pe;
+ 	/* PE number for root bus should have been reserved */
+-	if (pci_is_root_bus(bus))
+-		pe_num = phb->ioda.root_pe;
++	if (pci_is_root_bus(bus) &&
++	    phb->ioda.root_pe != IODA_INVALID_PE)
++		pe = &phb->ioda.pe_array[phb->ioda.root_pe];
  
- 	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
--		pnv_ioda_setup_dma(hose->private_data);
-+		phb = hose->private_data;
-+		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link)
-+			pnv_ioda_setup_dma(phb, pe);
+ 	/* Check if PE is determined by M64 */
+-	if (pe_num == IODA_INVALID_PE && phb->pick_m64_pe)
+-		pe_num = phb->pick_m64_pe(phb, bus, all);
++	if (!pe && phb->pick_m64_pe)
++		pe = phb->pick_m64_pe(phb, bus, all);
  
- 		/* Mark the PHB initialization done */
--		phb = hose->private_data;
- 		phb->initialized = 1;
+ 	/* The PE number isn't pinned by M64 */
+-	if (pe_num == IODA_INVALID_PE)
+-		pe_num = pnv_ioda_alloc_pe(phb);
++	if (!pe)
++		pe = pnv_ioda_alloc_pe(phb);
+ 
+-	if (pe_num == IODA_INVALID_PE) {
++	if (!pe) {
+ 		pr_warning("%s: Not enough PE# available for PCI bus %04x:%02x\n",
+ 			__func__, pci_domain_nr(bus), bus->number);
+ 		return NULL;
  	}
- }
+ 
+-	pe = &phb->ioda.pe_array[pe_num];
++	pe_num = pe->pe_number;
+ 	pe->flags |= (all ? PNV_IODA_PE_BUS_ALL : PNV_IODA_PE_BUS);
+ 	pe->pbus = bus;
+ 	pe->pdev = NULL;
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 45a6450..64c7f03 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -119,7 +119,8 @@ struct pnv_phb {
+ 	void (*shutdown)(struct pnv_phb *phb);
+ 	int (*init_m64)(struct pnv_phb *phb);
+ 	void (*reserve_m64_pe)(struct pnv_phb *phb, struct pci_bus *bus);
+-	int (*pick_m64_pe)(struct pnv_phb *phb, struct pci_bus *bus, int all);
++	struct pnv_ioda_pe * (*pick_m64_pe)(struct pnv_phb *phb,
++					    struct pci_bus *bus, int all);
+ 	int (*get_pe_state)(struct pnv_phb *phb, int pe_no);
+ 	void (*freeze_pe)(struct pnv_phb *phb, int pe_no);
+ 	int (*unfreeze_pe)(struct pnv_phb *phb, int pe_no, int opt);
 -- 
 2.1.0
