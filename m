@@ -1,73 +1,86 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/11] mtd: ofpart: do not fail probe when no partitions exist
-Date: Thu, 4 Jun 2015 06:54:00 +0200
-Message-ID: <CAOMqctTB2AYOQZUc9o-R4PF1DQ-HY0RfSw5T-T28r5uP2s=qZA@mail.gmail.com>
-References: <cover.1433364398.git.hramrach@gmail.com> <36e315552c849a4d22ac0fcff7958f6ffcafb160.1433364398.git.hramrach@gmail.com>
- <201506040058.52882.marex@denx.de>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] i2c: at91: add support to FIFOs and alternative
+ command
+Date: Thu, 4 Jun 2015 08:02:49 +0200
+Message-ID: <20150604060249.GB11060@odux.rfo.atmel.com>
+References: <cover.1433348016.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201506040058.52882.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Han Xu <han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Knut Wohlrab <knut.wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, grmoore@altera.c
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1433348016.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 June 2015 at 00:58, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> On Wednesday, June 03, 2015 at 11:26:40 PM, Michal Suchanek wrote:
->> On Exynos it is necessary to set SPI controller parameters that apply to
->> a SPI slave in a DT subnode of the slave device. The ofpart code returns
->> an error when there are subnodes of the SPI flash but no partitions are
->> found. Change this condition to a warning so that flash without
->> partitions can be accessed on Exynos.
->
-> I have to admit the rationale for this patch is not very clear to me, sorry.
-> Can you please explain this a bit more ?
+For the whole set of patches:
+Acked-by: Ludovic Desroches
 
-This is how the DT entry for SPI slave looks with s3c64xx:
-flash: m25p80@0 {
-        #address-cells = <1>;
-        #size-cells = <1>;
-        compatible = "jedec,spi-nor";
-        reg = <0>;
-        spi-max-frequency = <40000000>;
-        linux,max_tx_len = <65536>;
-        m25p,fast-read;
-        controller-data {
-            samsung,spi-feedback-delay = <0>;
-        };
-    };
+Thanks Cyrille
 
-this is example of flash partitions:
-flash@0 {
-        #address-cells = <1>;
-        #size-cells = <1>;
-
-        partition@0 {
-                label = "u-boot";
-                reg = <0x0000000 0x100000>;
-                read-only;
-        };
-
-        uimage@100000 {
-                reg = <0x0100000 0x200000>;
-        };
-};
-
-The parser ignores any flash without subnodes and returns 0 (no
-partititon). When there is a subnode it assumes the flash is
-partitioned and tries to parse the subnodes as partitions. When there
-are subnodes and none parses as partition an error is returned. As
-shown above it is valid to have subnodes on unpartitioned flash.
-
-When an error is returned from a partition parser the mtdpart code
-passes on this error to the flash probe function and the proble of the
-flash fails.
-
-Thanks
-
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Jun 03, 2015 at 06:25:16PM +0200, Cyrille Pitchen wrote:
+> ChangeLog
+> 
+> v5:
+> - print I2C controller version in an already existing dev_info() instead of
+>   adding a new one.
+> 
+> v4:
+> - replace 0x%x by %#x when printing I2C controller version
+> - change the order of patches: the race condition bug fix becomes the first
+>   patch so it be can more easily applied to older kernels.
+> 
+> v3:
+> - fix braces {} coding style issue
+> - split the alternative command patch into 2 patches: the first one fixes
+>   a race condition whereas the second one is the actual alternative command
+>   patch
+> 
+> v2:
+> - fix typo in comment for AT91_TWI_SVEN.
+> - document new device tree bindings like "atmel,fifo-size".
+> - explicitly set the has_alt_cmd boolean to false to already existing chip
+>   configs.
+> - use the BIT() macro to define the register bits and do a little cleanup in a
+>   dedicated patch.
+> - reword some comments to better explain why the TXCOMP interrupt is no longer
+>   enabled in at91_do_twi_transfer() but later in
+>   at91_twi_write_data_dma_callback() to avoid a race condition when DMA is used.
+> - remove useless TXCOMP interrupt enable line in at91_twi_write_next_byte()
+>   since this interrupt is also enabled by at91_do_twi_transfer() for PIO
+>   transfers.
+> 
+> v1:
+> This series of patches adds support of two new features which will be
+> introduced with Atmel sama5d2x SoC.
+> 
+> First, the alternative command mode eases the sending of STOP conditions.
+> Before starting an I2C transaction, the size data to be transfered is
+> written into the new Alternative Command Register. For each byte transferred,
+> the I2C controller decreases this counter and automatically sends a STOP
+> condition when the counter value reaches 0, that is to say when the last byte
+> of the transaction has been sent/received. So there is no longer need to set
+> the STOP bit into the Control Register.
+> 
+> Then the use of FIFOs allows to reduce number I/O accesses: for instance,
+> the TX FIFO allows to write up to 4 data in a single access to the Transmit
+> Holding Register. Also the RX FIFO allows to read up to 4 data in a single
+> access to the Receive Holding Register. Currently only DMA transfers take
+> advantage of FIFOs.
+> 
+> Cyrille Pitchen (6):
+>   i2c: at91: fix a race condition when using the DMA controller
+>   i2c: at91: use BIT() macro to define register bits
+>   i2c: at91: update documentation for DT bindings
+>   i2c: at91: add support for new alternative command mode
+>   i2c: at91: print hardware version
+>   i2c: at91: add support to FIFOs
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-at91.txt |  29 +-
+>  drivers/i2c/busses/i2c-at91.c                      | 356 +++++++++++++++++----
+>  2 files changed, 322 insertions(+), 63 deletions(-)
+> 
+> -- 
+> 1.8.2.2
+> 
