@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 40/42] drivers/of: Allow to specify root node in of_fdt_unflatten_tree()
-Date: Thu,  4 Jun 2015 16:42:09 +1000
-Message-ID: <1433400131-18429-41-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 35/42] powerpc/pci: Create eeh_dev while creating pci_dn
+Date: Thu,  4 Jun 2015 16:42:04 +1000
+Message-ID: <1433400131-18429-36-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,127 +10,149 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch introduces one more argument to of_fdt_unflatten_tree()
-to specify the root node for the FDT blob, which is going to be
-unflattened. In the result, the function can be used to unflatten
-FDT blob, which represents device sub-tree in subsequent patches.
+The eeh_dev is always created based on pci_dn, but with initcall
+core_initcall_sync(). The patch creates eeh_dev when pci_dn is
+created, indicating they have same life cycle.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
 v5:
-  * Newly introduced
+  * Derived from PATCH[v4 16/21]
 ---
- drivers/of/fdt.c       | 26 ++++++++++++++++++--------
- drivers/of/unittest.c  |  2 +-
- include/linux/of_fdt.h |  3 ++-
- 3 files changed, 21 insertions(+), 10 deletions(-)
+ arch/powerpc/include/asm/eeh.h         |  6 ++++--
+ arch/powerpc/kernel/eeh_dev.c          | 18 ++++--------------
+ arch/powerpc/kernel/pci_dn.c           | 12 ++++++++++++
+ arch/powerpc/platforms/pseries/setup.c |  6 +-----
+ 4 files changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index b87c157..b6a6c59 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -380,9 +380,16 @@ static void *unflatten_dt_node(void *blob,
- 			       struct device_node **nodepp,
- 			       bool dryrun)
+diff --git a/arch/powerpc/include/asm/eeh.h b/arch/powerpc/include/asm/eeh.h
+index ea1f13c4..c0236a6 100644
+--- a/arch/powerpc/include/asm/eeh.h
++++ b/arch/powerpc/include/asm/eeh.h
+@@ -272,7 +272,8 @@ void eeh_pe_restore_bars(struct eeh_pe *pe);
+ const char *eeh_pe_loc_get(struct eeh_pe *pe);
+ struct pci_bus *eeh_pe_bus_get(struct eeh_pe *pe);
+ 
+-void *eeh_dev_init(struct pci_dn *pdn, void *data);
++struct eeh_dev *eeh_dev_init(struct pci_dn *pdn,
++			     struct pci_controller *phb);
+ void eeh_dev_phb_init_dynamic(struct pci_controller *phb);
+ int eeh_init(void);
+ int __init eeh_ops_register(struct eeh_ops *ops);
+@@ -325,7 +326,8 @@ static inline int eeh_init(void)
+ 	return 0;
+ }
+ 
+-static inline void *eeh_dev_init(struct pci_dn *pdn, void *data)
++static inline struct eeh_dev *eeh_dev_init(struct pci_dn *pdn,
++					   struct pci_controller *phb)
  {
-+	unsigned long fpsize = 0;
-+
-+	if (dad)
-+		fpsize = strlen(of_node_full_name(dad));
-+	else
-+		fpsize = 0;
-+
- 	cur_node_depth = 1;
- 	return __unflatten_dt_node(blob, mem, poffset,
--				   dad, nodepp, 0, dryrun);
-+				   dad, nodepp, fpsize, dryrun);
+ 	return NULL;
+ }
+diff --git a/arch/powerpc/kernel/eeh_dev.c b/arch/powerpc/kernel/eeh_dev.c
+index f33ce5b..7486932 100644
+--- a/arch/powerpc/kernel/eeh_dev.c
++++ b/arch/powerpc/kernel/eeh_dev.c
+@@ -44,14 +44,14 @@
+ /**
+  * eeh_dev_init - Create EEH device according to OF node
+  * @pdn: PCI device node
+- * @data: PHB
++ * @phb: PCI controller
+  *
+  * It will create EEH device according to the given OF node. The function
+  * might be called by PCI emunation, DR, PHB hotplug.
+  */
+-void *eeh_dev_init(struct pci_dn *pdn, void *data)
++struct eeh_dev *eeh_dev_init(struct pci_dn *pdn,
++			     struct pci_controller *phb)
+ {
+-	struct pci_controller *phb = data;
+ 	struct eeh_dev *edev;
+ 
+ 	/* Allocate EEH device */
+@@ -68,7 +68,7 @@ void *eeh_dev_init(struct pci_dn *pdn, void *data)
+ 	edev->phb = phb;
+ 	INIT_LIST_HEAD(&edev->list);
+ 
+-	return NULL;
++	return edev;
  }
  
  /**
-@@ -393,13 +400,15 @@ static void *unflatten_dt_node(void *blob,
-  * pointers of the nodes so the normal device-tree walking functions
-  * can be used.
-  * @blob: The blob to expand
-+ * @dad: The root node of the created device_node tree
-  * @mynodes: The device_node tree created by the call
-  * @dt_alloc: An allocator that provides a virtual address to memory
-  * for the resulting tree
+@@ -80,16 +80,8 @@ void *eeh_dev_init(struct pci_dn *pdn, void *data)
   */
- static void __unflatten_device_tree(void *blob,
--			     struct device_node **mynodes,
--			     void * (*dt_alloc)(u64 size, u64 align))
-+				    struct device_node *dad,
-+				    struct device_node **mynodes,
-+				    void * (*dt_alloc)(u64 size, u64 align))
+ void eeh_dev_phb_init_dynamic(struct pci_controller *phb)
  {
- 	unsigned long size;
- 	int start;
-@@ -425,7 +434,7 @@ static void __unflatten_device_tree(void *blob,
- 	/* First pass, scan for size */
- 	start = 0;
- 	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
--						NULL, NULL, true);
-+						dad, NULL, true);
- 	size = ALIGN(size, 4);
- 
- 	pr_debug("  size is %lx, allocating...\n", size);
-@@ -440,7 +449,7 @@ static void __unflatten_device_tree(void *blob,
- 
- 	/* Second pass, do actual unflattening */
- 	start = 0;
--	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
-+	unflatten_dt_node(blob, mem, &start, dad, mynodes, false);
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
-@@ -462,9 +471,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
-  * can be used.
-  */
- void of_fdt_unflatten_tree(unsigned long *blob,
--			struct device_node **mynodes)
-+			   struct device_node *dad,
-+			   struct device_node **mynodes)
- {
--	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-+	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
+-	struct pci_dn *root = phb->pci_data;
+-
+ 	/* EEH PE for PHB */
+ 	eeh_phb_pe_create(phb);
+-
+-	/* EEH device for PHB */
+-	eeh_dev_init(root, phb);
+-
+-	/* EEH devices for children OF nodes */
+-	traverse_pci_dn(root, eeh_dev_init, phb);
  }
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
  
-@@ -1095,7 +1105,7 @@ bool __init early_init_dt_scan(void *params)
-  */
- void __init unflatten_device_tree(void)
- {
--	__unflatten_device_tree(initial_boot_params, &of_root,
-+	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
- 				early_init_dt_alloc_memory_arch);
+ /**
+@@ -105,8 +97,6 @@ static int __init eeh_dev_phb_init(void)
+ 	list_for_each_entry_safe(phb, tmp, &hose_list, list_node)
+ 		eeh_dev_phb_init_dynamic(phb);
  
- 	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 1801634..2270830 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
- 			"not running tests\n", __func__);
- 		return -ENOMEM;
- 	}
--	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
-+	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
- 	if (!unittest_data_node) {
- 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
- 		return -ENODATA;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 587ee50..8882640 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -38,7 +38,8 @@ extern bool of_fdt_is_big_endian(const void *blob,
- extern int of_fdt_match(const void *blob, unsigned long node,
- 			const char *const *compat);
- extern void of_fdt_unflatten_tree(unsigned long *blob,
--			       struct device_node **mynodes);
-+				  struct device_node *dad,
-+				  struct device_node **mynodes);
+-	pr_info("EEH: devices created\n");
+-
+ 	return 0;
+ }
  
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
- extern int __initdata dt_root_addr_cells;
+diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
+index 35554c2..d4330d2 100644
+--- a/arch/powerpc/kernel/pci_dn.c
++++ b/arch/powerpc/kernel/pci_dn.c
+@@ -287,6 +287,9 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
+ 	const __be32 *regs;
+ 	struct device_node *parent;
+ 	struct pci_dn *pdn;
++#ifdef CONFIG_EEH
++	struct eeh_dev *edev;
++#endif
+ 
+ 	pdn = kzalloc(sizeof(*pdn), GFP_KERNEL);
+ 	if (pdn == NULL)
+@@ -317,6 +320,15 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
+ 	/* Extended config space */
+ 	pdn->pci_ext_config_space = (type && of_read_number(type, 1) == 1);
+ 
++	/* Initialize EEH device */
++#ifdef CONFIG_EEH
++	edev = eeh_dev_init(pdn, phb);
++	if (!edev) {
++		kfree(pdn);
++		return NULL;
++	}
++#endif
++
+ 	/* Attach to parent node */
+ 	INIT_LIST_HEAD(&pdn->child_list);
+ 	INIT_LIST_HEAD(&pdn->list);
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 5f80758..92974aa 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -261,12 +261,8 @@ static int pci_dn_reconfig_notifier(struct notifier_block *nb, unsigned long act
+ 	switch (action) {
+ 	case OF_RECONFIG_ATTACH_NODE:
+ 		pci = np->parent->data;
+-		if (pci) {
++		if (pci)
+ 			update_dn_pci_info(np, pci->phb);
+-
+-			/* Create EEH device for the OF node */
+-			eeh_dev_init(PCI_DN(np), pci->phb);
+-		}
+ 		break;
+ 	default:
+ 		err = NOTIFY_DONE;
 -- 
 2.1.0
