@@ -1,55 +1,53 @@
-From: Y Vo <yvo@apm.com>
-Subject: [PATCH v0] gpio_keys: fix gpio key driver to proper support GIC interrupt
-Date: Thu,  4 Jun 2015 14:25:12 +0700
-Message-ID: <1433402712-21399-1-git-send-email-yvo@apm.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, patches@apm.com
+From: <Yuantian.Tang@freescale.com>
+Subject: [PATCH] ahci: added support for Freescale AHCI sata
+Date: Thu, 4 Jun 2015 15:10:04 +0800
+Message-ID: <1433401804-21524-1-git-send-email-Yuantian.Tang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: hdegoede@redhat.com
+Cc: tj@kernel.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Tang Yuantian <Yuantian.Tang@freescale.com>, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-GIC is designed to support two of trigger mechanisms - active level
-high or edge rising. But in the gpio_keys driver, it tries to use both
-edge rising and edge falling trigger. This patch fixes the gpio_keys
-driver to request only the edge rising event when failed to configure the
-interrupt.
+From: Tang Yuantian <Yuantian.Tang@freescale.com>
 
-Signed-off-by: Y Vo <yvo@apm.com>
+Freescale introduced QorIQ series SOCs, like ls1021 ls2085, with AHCI
+sata support. It complies with the serial ATA 3.0 specification
+and the AHCI 1.3 specification.
+
+Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
+Signed-off-by: Yuantian Tang <Yuantian.Tang@freescale.com>
 ---
- drivers/input/keyboard/gpio_keys.c |   20 +++++++++++++++++---
- 1 files changed, 17 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/ata/ahci-platform.txt | 2 ++
+ drivers/ata/ahci_platform.c                             | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index ddf4045..7c3da2c 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -532,9 +532,23 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 	error = devm_request_any_context_irq(&pdev->dev, bdata->irq,
- 					     isr, irqflags, desc, bdata);
- 	if (error < 0) {
--		dev_err(dev, "Unable to claim irq %d; error %d\n",
--			bdata->irq, error);
--		return error;
-+		/*
-+		 * Attempt to request again with only rising edge trigger
-+		 */
-+		if ((irqflags & (IRQ_TYPE_EDGE_RISING | IRQF_TRIGGER_FALLING))) {
-+			irqflags = IRQ_TYPE_EDGE_RISING;
-+			error = devm_request_any_context_irq(&pdev->dev, bdata->irq,
-+							     isr, irqflags, desc, bdata);
-+			if (error < 0) {
-+				dev_err(dev, "Unable to claim irq %d; error %d\n",
-+					bdata->irq, error);
-+				return error;
-+			}
-+		} else {
-+			dev_err(dev, "Unable to claim irq %d; error %d\n",
-+				bdata->irq, error);
-+			return error;
-+		}
- 	}
- 
- 	return 0;
+diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+index c2340ee..a232181 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+@@ -16,6 +16,8 @@ Required properties:
+   - "snps,dwc-ahci"
+   - "snps,exynos5440-ahci"
+   - "snps,spear-ahci"
++  - "fsl,qoriq-ahci" : for qoriq series socs which include ls1021, ls2085, etc.
++  - "fsl,<chip>-ahci" : chip could be ls1021, ls2085 etc.
+   - "generic-ahci"
+ - interrupts        : <interrupt mapping for SATA IRQ>
+ - reg               : <registers mapping>
+diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+index 78d6ae0..614c78f 100644
+--- a/drivers/ata/ahci_platform.c
++++ b/drivers/ata/ahci_platform.c
+@@ -74,6 +74,7 @@ static const struct of_device_id ahci_of_match[] = {
+ 	{ .compatible = "ibm,476gtr-ahci", },
+ 	{ .compatible = "snps,dwc-ahci", },
+ 	{ .compatible = "hisilicon,hisi-ahci", },
++	{ .compatible = "fsl,qoriq-ahci", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ahci_of_match);
 -- 
-1.7.1
+2.1.0.27.g96db324
 
