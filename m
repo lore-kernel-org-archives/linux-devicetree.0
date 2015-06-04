@@ -1,128 +1,114 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 05/42] powerpc/powernv: Simplify pnv_ioda_setup_pe_seg()
-Date: Thu,  4 Jun 2015 16:41:34 +1000
-Message-ID: <1433400131-18429-6-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 27/42] powerpc/powernv: Simplify pnv_eeh_reset()
+Date: Thu,  4 Jun 2015 16:41:56 +1000
+Message-ID: <1433400131-18429-28-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433400131-18429-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The original implementation of pnv_ioda_setup_pe_seg() configures
-IO and M32 segments by separate logics, which can be merged by
-by caching @seg_bitmap, @seg_size, @win in advance. The patch
-shouldn't cause any behavioural changes.
+The patch simplifies pnv_eeh_reset() by dropping unnecessary nested
+if statement. No logic changed by the patch.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
 v5:
-  * Split from PATCH[v4 04/21]
-  * Fixed coding style complained by checkpatch.pl
+  * Split from PATCH[v4 09/21]
+  * Fixed "quoted string split across lines" from checkpatch.pl
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 67 +++++++++++++++----------------
- 1 file changed, 32 insertions(+), 35 deletions(-)
+ arch/powerpc/platforms/powernv/eeh-powernv.c | 65 +++++++++++++---------------
+ 1 file changed, 31 insertions(+), 34 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 53d0efd..3bb4ce8 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2971,7 +2971,10 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
- 	struct pci_bus_region region;
- 	struct resource *res;
- 	int i, index;
--	int rc;
-+	unsigned int segsize;
-+	unsigned long *segmap, *pe_segmap;
-+	uint16_t win;
+diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+index 4feb533..4669122 100644
+--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
++++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+@@ -1084,7 +1084,9 @@ void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
+ static int pnv_eeh_reset(struct eeh_pe *pe, int option)
+ {
+ 	struct pci_controller *hose = pe->phb;
++	struct pnv_phb *phb = hose->private_data;
+ 	struct pci_bus *bus;
 +	int64_t rc;
+ 	int ret;
  
  	/*
- 	 * NOTE: We only care PCI bus based PE for now. For PCI
-@@ -2988,50 +2991,44 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
- 		if (res->flags & IORESOURCE_IO) {
- 			region.start = res->start - phb->ioda.io_pci_base;
- 			region.end   = res->end - phb->ioda.io_pci_base;
--			index = region.start / phb->ioda.io_segsize;
--
--			while (index < phb->ioda.total_pe &&
--			       region.start <= region.end) {
--				set_bit(index, phb->ioda.io_segmap);
--				set_bit(index, pe->io_segmap);
--				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
--					pe->pe_number, OPAL_IO_WINDOW_TYPE, 0, index);
--				if (rc != OPAL_SUCCESS) {
--					pr_err("%s: OPAL error %d when mapping IO "
--					       "segment #%d to PE#%d\n",
--					       __func__, rc, index, pe->pe_number);
--					break;
--				}
--
--				region.start += phb->ioda.io_segsize;
--				index++;
+@@ -1101,44 +1103,39 @@ static int pnv_eeh_reset(struct eeh_pe *pe, int option)
+ 	 * reset. The side effect is that EEH core has to clear the frozen
+ 	 * state explicitly after BAR restore.
+ 	 */
+-	if (pe->type & EEH_PE_PHB) {
+-		ret = pnv_eeh_phb_reset(hose, option);
+-	} else {
+-		struct pnv_phb *phb;
+-		s64 rc;
++	if (pe->type & EEH_PE_PHB)
++		return pnv_eeh_phb_reset(hose, option);
+ 
+-		/*
+-		 * The frozen PE might be caused by PAPR error injection
+-		 * registers, which are expected to be cleared after hitting
+-		 * frozen PE as stated in the hardware spec. Unfortunately,
+-		 * that's not true on P7IOC. So we have to clear it manually
+-		 * to avoid recursive EEH errors during recovery.
+-		 */
+-		phb = hose->private_data;
+-		if (phb->model == PNV_PHB_MODEL_P7IOC &&
+-		    (option == EEH_RESET_HOT ||
+-		    option == EEH_RESET_FUNDAMENTAL)) {
+-			rc = opal_pci_reset(phb->opal_id,
+-					    OPAL_RESET_PHB_ERROR,
+-					    OPAL_ASSERT_RESET);
+-			if (rc != OPAL_SUCCESS) {
+-				pr_warn("%s: Failure %lld clearing "
+-					"error injection registers\n",
+-					__func__, rc);
+-				return -EIO;
 -			}
-+			segsize      = phb->ioda.io_segsize;
-+			segmap       = phb->ioda.io_segmap;
-+			pe_segmap    = pe->io_segmap;
-+			win          = OPAL_IO_WINDOW_TYPE;
- 		} else if ((res->flags & IORESOURCE_MEM) &&
--			   !pnv_pci_is_mem_pref_64(res->flags)) {
-+			    !pnv_pci_is_mem_pref_64(res->flags)) {
- 			region.start = res->start -
- 				       hose->mem_offset[0] -
- 				       phb->ioda.m32_pci_base;
- 			region.end   = res->end -
- 				       hose->mem_offset[0] -
- 				       phb->ioda.m32_pci_base;
--			index = region.start / phb->ioda.m32_segsize;
-+			segsize      = phb->ioda.m32_segsize;
-+			segmap       = phb->ioda.m32_segmap;
-+			pe_segmap    = pe->m32_segmap;
-+			win          = OPAL_M32_WINDOW_TYPE;
-+		} else {
-+			continue;
-+		}
- 
--			while (index < phb->ioda.total_pe &&
--			       region.start <= region.end) {
--				set_bit(index, phb->ioda.m32_segmap);
--				set_bit(index, pe->m32_segmap);
--				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
--					pe->pe_number, OPAL_M32_WINDOW_TYPE, 0, index);
--				if (rc != OPAL_SUCCESS) {
--					pr_err("%s: OPAL error %d when mapping M32 "
--					       "segment#%d to PE#%d",
--					       __func__, rc, index, pe->pe_number);
--					break;
--				}
-+		index = region.start / phb->ioda.io_segsize;
-+		while (index < phb->ioda.total_pe &&
-+		       region.start <= region.end) {
-+			set_bit(index, segmap);
-+			set_bit(index, pe_segmap);
- 
--				region.start += phb->ioda.m32_segsize;
--				index++;
-+			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
-+					pe->pe_number, win, 0, index);
-+			if (rc != OPAL_SUCCESS) {
-+				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
-+					__func__, rc, win, index,
-+					pe->phb->hose->global_number,
-+					pe->pe_number);
-+				break;
- 			}
-+
-+			region.start += segsize;
-+			index++;
++	/*
++	 * The frozen PE might be caused by PAPR error injection
++	 * registers, which are expected to be cleared after hitting
++	 * frozen PE as stated in the hardware spec. Unfortunately,
++	 * that's not true on P7IOC. So we have to clear it manually
++	 * to avoid recursive EEH errors during recovery.
++	 */
++	phb = hose->private_data;
++	if (phb->model == PNV_PHB_MODEL_P7IOC &&
++	    (option == EEH_RESET_HOT ||
++	    option == EEH_RESET_FUNDAMENTAL)) {
++		rc = opal_pci_reset(phb->opal_id,
++				    OPAL_RESET_PHB_ERROR,
++				    OPAL_ASSERT_RESET);
++		if (rc != OPAL_SUCCESS) {
++			pr_warn("%s: Error %lld clearing errinjct registers\n",
++				__func__, rc);
++			return -EIO;
  		}
+-
+-		bus = eeh_pe_bus_get(pe);
+-		if (pe->type & EEH_PE_VF)
+-			ret = pnv_eeh_vf_pe_reset(pe, option);
+-		else if (pci_is_root_bus(bus) ||
+-			pci_is_root_bus(bus->parent))
+-			ret = pnv_eeh_root_reset(hose, option);
+-		else
+-			ret = pnv_eeh_bridge_reset(bus->self, option);
  	}
+ 
++	bus = eeh_pe_bus_get(pe);
++	if (pe->type & EEH_PE_VF)
++		ret = pnv_eeh_vf_pe_reset(pe, option);
++	else if (pci_is_root_bus(bus) ||
++		pci_is_root_bus(bus->parent))
++		ret = pnv_eeh_root_reset(hose, option);
++	else
++		ret = pnv_eeh_bridge_reset(bus->self, option);
++
+ 	return ret;
  }
+ 
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
