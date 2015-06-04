@@ -1,57 +1,40 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH resend] pinctrl: sunxi: Add allwinner A33 PIO controller
- support
-Date: Thu, 04 Jun 2015 12:10:20 +0200
-Message-ID: <5570240C.90706@redhat.com>
-References: <1433236120-11249-1-git-send-email-hdegoede@redhat.com>	<1433236120-11249-2-git-send-email-hdegoede@redhat.com> <CACRpkdZPcLaSPmZ8Bqd-xsVns+xeq_m8J0QpPcB2W0wNKXvO4g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: of: clean-up unnecessary libfdt include paths
+Date: Thu,  4 Jun 2015 20:20:32 +1000 (AEST)
+Message-ID: <20150604102032.DF5B4140280@ozlabs.org>
+References: <1433308225-13874-1-git-send-email-robh@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZPcLaSPmZ8Bqd-xsVns+xeq_m8J0QpPcB2W0wNKXvO4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1433308225-13874-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 2015-03-06 at 05:10:25 UTC, Rob Herring wrote:
+> With the latest dtc import include fixups, it is no longer necessary to
+> add explicit include paths to use libfdt. Remove these across the
+> kernel.
 
-On 04-06-15 10:33, Linus Walleij wrote:
-> On Tue, Jun 2, 2015 at 11:08 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> =
-wrote:
->
->> From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> A33 PIO has 7 ports which starts from PB and has two interrupt ports=
-=2E
->>
->> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Acked-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->
-> Patch applied.
+What are the "latest dtc import include fixups" ?
 
-Thanks.
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index c1ebbda..c16e836 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -2,7 +2,6 @@
+>  # Makefile for the linux kernel.
+>  #
+>  
+> -CFLAGS_prom.o		= -I$(src)/../../../scripts/dtc/libfdt
+>  CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
+>  
+>  subdir-ccflags-$(CONFIG_PPC_WERROR) := -Werror
 
-> BTW: is your name Hans de G=C3=B6de and you just gave up trying
-> to get UTF-8 right, or is it really spelled like so?
+Acked-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 
-LOL, no my name fits perfectly in plane old ASCII and it
-is really spelled that way, "oe" in Dutch is the same as
-"u" (without umlaut) in German.
 
-Basically my name is "Hans the Good" when translated to
-English, and when in doubt how to pronounce it just pronounce
-it like that, that is way better then what most people
-make of it :)
-
-Regards,
-
-Hans
+cheers
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
