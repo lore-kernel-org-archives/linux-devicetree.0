@@ -1,79 +1,68 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Thu, 4 Jun 2015 08:42:59 +0200
-Message-ID: <CAMuHMdVT2M7pPHDDHmoNF_zVXhz1PUm5PiYxDKcAjSAcfSDiZg@mail.gmail.com>
-References: <cover.1433364398.git.hramrach@gmail.com>
-	<8fc4b9f5291a509c4c35782a1337bf536f1019af.1433364398.git.hramrach@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8fc4b9f5291a509c4c35782a1337bf536f1019af.1433364398.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Han Xu <han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Knut Wohlrab <knut.wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 01/42] PCI: Add pcibios_setup_bridge()
+Date: Thu,  4 Jun 2015 16:41:30 +1000
+Message-ID: <1433400131-18429-2-git-send-email-gwshan@linux.vnet.ibm.com>
+References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 3, 2015 at 11:26 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On sunxi the SPI controller currently does not have DMA support and fails
-> any transfer larger than 63 bytes.
+Currently, PowerPC PowerNV platform utilizes ppc_md.pcibios_fixup(),
+which is called for once after PCI probing and resource assignment
+are completed, to allocate platform required resources for PCI devices:
+PE#, IO and MMIO mapping, DMA address translation (TCE) table etc.
+Obviously, it's not hotplug friendly.
 
-This is a driver limitation, not a hardware limitation.
+The patch adds weak function pcibios_setup_bridge(), which is called
+by pci_setup_bridge(). PowerPC PowerNV platform will reuse the function
+to assign above platform required resources to newly added PCI devices,
+in order to support PCI hotplug in subsequent patches.
 
-> On Exynos the pl330 DMA controller fails any transfer larger than 64kb
-> when using slower speed like 40MHz and any transfer larger than 128bytes
-> when running at 133MHz.
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+---
+v5:
+  * Corrected subject as Bjorn suggested
+  * pci_setup_bridge() calls pcibios_setup_bridge() and __pci_setup_bridge()
+---
+ drivers/pci/setup-bus.c | 5 +++++
+ include/linux/pci.h     | 1 +
+ 2 files changed, 6 insertions(+)
 
-This may be a driver bug.
-
-> The best thing is that in both cases the controller can just lock up and
-> never finish potentially leaving the hardware in unusable state.
->
-> So it is required that the m25p80 driver actively prevents doing
-> transfers that are too large for the current driver state on a
-> particular piece of hardware.
-
-OK.
-
-> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> --
->
-> Update commit message and documentation text.
-> ---
->  .../devicetree/bindings/mtd/jedec,spi-nor.txt      |  6 ++++++
->  drivers/mtd/devices/m25p80.c                       | 24 ++++++++++++++++++++--
->  2 files changed, 28 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> index 2bee681..4e63ae8 100644
-> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -19,6 +19,12 @@ Optional properties:
->                     all chips and support for it can not be detected at runtime.
->                     Refer to your chips' datasheet to check if this is supported
->                     by your chip.
-> +- linux,max_tx_len : With some SPI controller drivers possible transfer size is
-> +                     limited. This may be hardware or driver bug.
-> +                     Transfer data in chunks no larger than this value.
-> +                     Using this option may severely degrade performance and
-> +                     possibly flash memory life when max_tx_len is smaller than
-> +                     flash page size (typically 256 bytes)
-
-DT describes the hardware, not buggy drivers.
-
-So IMHO this doesn't belong in DT, but it can be a field in struct spi_master.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 4fd0cac..623dee3 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -693,11 +693,16 @@ static void __pci_setup_bridge(struct pci_bus *bus, unsigned long type)
+ 	pci_write_config_word(bridge, PCI_BRIDGE_CONTROL, bus->bridge_ctl);
+ }
+ 
++void __weak pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
++{
++}
++
+ void pci_setup_bridge(struct pci_bus *bus)
+ {
+ 	unsigned long type = IORESOURCE_IO | IORESOURCE_MEM |
+ 				  IORESOURCE_PREFETCH;
+ 
++	pcibios_setup_bridge(bus, type);
+ 	__pci_setup_bridge(bus, type);
+ }
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 94bacfa..5aacd0a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -811,6 +811,7 @@ void pci_stop_and_remove_bus_device_locked(struct pci_dev *dev);
+ void pci_stop_root_bus(struct pci_bus *bus);
+ void pci_remove_root_bus(struct pci_bus *bus);
+ void pci_setup_cardbus(struct pci_bus *bus);
++void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type);
+ void pci_sort_breadthfirst(void);
+ #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
+ #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
+-- 
+2.1.0
