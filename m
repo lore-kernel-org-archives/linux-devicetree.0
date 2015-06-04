@@ -1,45 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: of: clean-up unnecessary libfdt include paths
-Date: Thu, 4 Jun 2015 12:02:55 -0500
-Message-ID: <CAL_JsqKTNiVqZoPHn-UCPXMkddruNbywwiA2nwLkfbzaziXFBg@mail.gmail.com>
-References: <1433308225-13874-1-git-send-email-robh@kernel.org> <20150604102032.DF5B4140280@ozlabs.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
+Date: Thu, 4 Jun 2015 19:15:47 +0200
+Message-ID: <20150604171547.GA1530@localhost.localdomain>
+References: <cover.1433364398.git.hramrach@gmail.com>
+ <8fc4b9f5291a509c4c35782a1337bf536f1019af.1433364398.git.hramrach@gmail.com>
+ <CAMuHMdVT2M7pPHDDHmoNF_zVXhz1PUm5PiYxDKcAjSAcfSDiZg@mail.gmail.com>
+ <CAOMqctS6KNrTATB6MYCZLBnZUQmX=e0qQvGf78YtLaF8pkibhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150604102032.DF5B4140280@ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMqctS6KNrTATB6MYCZLBnZUQmX=e0qQvGf78YtLaF8pkibhQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, MTD Maling List <linux-mtd@lists.infradead.org>, Alison Chaiken <alison_chaiken@mentor.com>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@micron.com>, Marek Vasut <marex@denx.de>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Kukjin Kim <kgene@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Dan Williams <dan.j.williams@inte>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 4, 2015 at 5:20 AM, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> On Wed, 2015-03-06 at 05:10:25 UTC, Rob Herring wrote:
->> With the latest dtc import include fixups, it is no longer necessary to
->> add explicit include paths to use libfdt. Remove these across the
->> kernel.
->
-> What are the "latest dtc import include fixups" ?
+On Thu, Jun 04, 2015 at 10:31:45AM +0200, Michal Suchanek wrote:
+> You might want to try to run the bus at 60MHz or 80MHz and then the
+> values would probably again be different.
+> 
+> The first two values are set in DT so the logical place for setting
+> the third is also in DT.
+> 
+> Otherwise you would need some in-kernel table of these settings.
 
-Changing the scripts/dtc/libfdt/libfdt.h includes from <> to "". The
-import script does this now and the recent import in my for-next tree
-has this. I'll clarify this in the commit message.
+Or a formula.
 
->
->> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
->> index c1ebbda..c16e836 100644
->> --- a/arch/powerpc/kernel/Makefile
->> +++ b/arch/powerpc/kernel/Makefile
->> @@ -2,7 +2,6 @@
->>  # Makefile for the linux kernel.
->>  #
->>
->> -CFLAGS_prom.o                = -I$(src)/../../../scripts/dtc/libfdt
->>  CFLAGS_ptrace.o              += -DUTS_MACHINE='"$(UTS_MACHINE)"'
->>
->>  subdir-ccflags-$(CONFIG_PPC_WERROR) := -Werror
->
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-
-Thanks.
-
-Rob
+Thanks,
+Richard
