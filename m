@@ -1,34 +1,29 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v0] gpio_keys: fix gpio key driver to proper support GIC
- interrupt
-Date: Thu, 4 Jun 2015 10:23:24 -0700
-Message-ID: <20150604172324.GA9074@dtor-ws>
-References: <1433402712-21399-1-git-send-email-yvo@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: Changes for Gumstix Pepper dts
+Date: Thu,  4 Jun 2015 11:08:16 -0700
+Message-ID: <1433441299-18887-1-git-send-email-arun@gumstix.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1433402712-21399-1-git-send-email-yvo-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Toan Le <toanle-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Y,
-On Thu, Jun 04, 2015 at 02:25:12PM +0700, Y Vo wrote:
-> GIC is designed to support two of trigger mechanisms - active level
-> high or edge rising. But in the gpio_keys driver, it tries to use both
-> edge rising and edge falling trigger. This patch fixes the gpio_keys
-> driver to request only the edge rising event when failed to configure the
-> interrupt.
+These 3 patches are included to fix the following issues
+with pepper device tree source. The patches are based against
+linux-omap/master.
 
-How do we get notified of button release if we only get interrupt on
-rising edge?
+Adam YH Lee (2):
+  ARM: dts: Correct audio input route & set mic bias
+  ARM: dts: configure regulators for Gumstix Pepper
 
-Thanks.
+Arun Bharadwaj (1):
+  ARM: dts: Fix frequency scaling on Gumstix Pepper.
+
+ arch/arm/boot/dts/am335x-pepper.dts | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
 -- 
-Dmitry
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
