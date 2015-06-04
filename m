@@ -1,105 +1,199 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 41/42] drivers/of: Return allocated memory chunk from of_fdt_unflatten_tree()
-Date: Thu,  4 Jun 2015 16:42:10 +1000
-Message-ID: <1433400131-18429-42-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 06/42] powerpc/powernv: Improve IO and M32 mapping
+Date: Thu,  4 Jun 2015 16:41:35 +1000
+Message-ID: <1433400131-18429-7-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433400131-18429-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch changes of_fdt_unflatten_tree() so that it returns the
-allocated memory chunk for unflattened device-tree, which can be
-released once it's obsoleted.
+The PHB's IO or M32 window is divided evenly to segments, each of
+them can be mapped to arbitrary PE# by IODT or M32DT. Current code
+figures out the consumed IO and M32 segments by one particular PE
+from the windows of the PE's upstream bridge. It won't be reliable
+once we extend M64 windows of root port, or the upstream port of
+the PCIE switch behind root port to PHB's IO or M32 window, in order
+to support PCI hotplug in future.
 
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
----
-v5:
-  * Newly introduced
----
- drivers/of/fdt.c       | 21 +++++++++++----------
- include/linux/of_fdt.h |  6 +++---
- 2 files changed, 14 insertions(+), 13 deletions(-)
+The patch improves the above situation by calculating PE's consumed
+IO or M32 segments from its contained devices, no PCI bridge windows
+involved if the PE doesn't contain all the subordinate PCI buses.
+Otherwise, the PCI bridge windows still contribute to PE's consumed
+IO or M32 segments.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index b6a6c59..a954279 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -405,10 +405,10 @@ static void *unflatten_dt_node(void *blob,
-  * @dt_alloc: An allocator that provides a virtual address to memory
-  * for the resulting tree
-  */
--static void __unflatten_device_tree(void *blob,
--				    struct device_node *dad,
--				    struct device_node **mynodes,
--				    void * (*dt_alloc)(u64 size, u64 align))
-+static void *__unflatten_device_tree(void *blob,
-+				     struct device_node *dad,
-+				     struct device_node **mynodes,
-+				     void * (*dt_alloc)(u64 size, u64 align))
- {
- 	unsigned long size;
- 	int start;
-@@ -418,7 +418,7 @@ static void __unflatten_device_tree(void *blob,
- 
- 	if (!blob) {
- 		pr_debug("No device tree pointer\n");
--		return;
-+		return NULL;
- 	}
- 
- 	pr_debug("Unflattening device tree:\n");
-@@ -428,7 +428,7 @@ static void __unflatten_device_tree(void *blob,
- 
- 	if (fdt_check_header(blob)) {
- 		pr_err("Invalid device tree blob header\n");
--		return;
-+		return NULL;
- 	}
- 
- 	/* First pass, scan for size */
-@@ -455,6 +455,7 @@ static void __unflatten_device_tree(void *blob,
- 			   be32_to_cpup(mem + size));
- 
- 	pr_debug(" <- unflatten_device_tree()\n");
-+	return mem;
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+---
+ arch/powerpc/platforms/powernv/pci-ioda.c | 136 ++++++++++++++++++------------
+ 1 file changed, 80 insertions(+), 56 deletions(-)
+
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 3bb4ce8..46a5e10 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2959,76 +2959,100 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
  }
+ #endif /* CONFIG_PCI_IOV */
  
- static void *kernel_tree_alloc(u64 size, u64 align)
-@@ -470,11 +471,11 @@ static void *kernel_tree_alloc(u64 size, u64 align)
-  * pointers of the nodes so the normal device-tree walking functions
-  * can be used.
-  */
--void of_fdt_unflatten_tree(unsigned long *blob,
--			   struct device_node *dad,
--			   struct device_node **mynodes)
-+void *of_fdt_unflatten_tree(unsigned long *blob,
-+			    struct device_node *dad,
-+			    struct device_node **mynodes)
+-/*
+- * This function is supposed to be called on basis of PE from top
+- * to bottom style. So the the I/O or MMIO segment assigned to
+- * parent PE could be overrided by its child PEs if necessary.
+- */
+-static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+-				  struct pnv_ioda_pe *pe)
++static int pnv_ioda_map_pe_one_res(struct pci_controller *hose,
++				   struct pnv_ioda_pe *pe,
++				   struct resource *res)
  {
--	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
-+	return __unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
+ 	struct pnv_phb *phb = hose->private_data;
+ 	struct pci_bus_region region;
+-	struct resource *res;
+-	int i, index;
++	int index;
+ 	unsigned int segsize;
+ 	unsigned long *segmap, *pe_segmap;
+ 	uint16_t win;
+ 	int64_t rc;
+ 
+-	/*
+-	 * NOTE: We only care PCI bus based PE for now. For PCI
+-	 * device based PE, for example SRIOV sensitive VF should
+-	 * be figured out later.
+-	 */
+-	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
++	/* Check if we need map the resource */
++	if (!res->parent ||
++	    !res->flags ||
++	    res->start > res->end ||
++	    pnv_pci_is_mem_pref_64(res->flags))
++		return 0;
+ 
+-	pci_bus_for_each_resource(pe->pbus, res, i) {
+-		if (!res || !res->flags ||
+-		    res->start > res->end)
+-			continue;
++	if (res->flags & IORESOURCE_IO) {
++		region.start = res->start - phb->ioda.io_pci_base;
++		region.end   = res->end - phb->ioda.io_pci_base;
++		segsize      = phb->ioda.io_segsize;
++		segmap       = phb->ioda.io_segmap;
++		pe_segmap    = pe->io_segmap;
++		win          = OPAL_IO_WINDOW_TYPE;
++	} else if ((res->flags & IORESOURCE_MEM) &&
++		   !pnv_pci_is_mem_pref_64(res->flags)) {
++		region.start = res->start -
++			       hose->mem_offset[0] -
++			       phb->ioda.m32_pci_base;
++		region.end   = res->end -
++			       hose->mem_offset[0] -
++			       phb->ioda.m32_pci_base;
++		segsize      = phb->ioda.m32_segsize;
++		segmap       = phb->ioda.m32_segmap;
++		pe_segmap    = pe->m32_segmap;
++		win          = OPAL_M32_WINDOW_TYPE;
++	} else {
++		return 0;
++	}
+ 
+-		if (res->flags & IORESOURCE_IO) {
+-			region.start = res->start - phb->ioda.io_pci_base;
+-			region.end   = res->end - phb->ioda.io_pci_base;
+-			segsize      = phb->ioda.io_segsize;
+-			segmap       = phb->ioda.io_segmap;
+-			pe_segmap    = pe->io_segmap;
+-			win          = OPAL_IO_WINDOW_TYPE;
+-		} else if ((res->flags & IORESOURCE_MEM) &&
+-			    !pnv_pci_is_mem_pref_64(res->flags)) {
+-			region.start = res->start -
+-				       hose->mem_offset[0] -
+-				       phb->ioda.m32_pci_base;
+-			region.end   = res->end -
+-				       hose->mem_offset[0] -
+-				       phb->ioda.m32_pci_base;
+-			segsize      = phb->ioda.m32_segsize;
+-			segmap       = phb->ioda.m32_segmap;
+-			pe_segmap    = pe->m32_segmap;
+-			win          = OPAL_M32_WINDOW_TYPE;
+-		} else {
+-			continue;
++	index = region.start / phb->ioda.io_segsize;
++	while (index < phb->ioda.total_pe &&
++	       region.start <= region.end) {
++		set_bit(index, segmap);
++		set_bit(index, pe_segmap);
++
++		rc = opal_pci_map_pe_mmio_window(phb->opal_id,
++				pe->pe_number, win, 0, index);
++		if (rc != OPAL_SUCCESS) {
++			pr_err("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
++				__func__, rc, win, index,
++				pe->phb->hose->global_number,
++				pe->pe_number);
++			return -EIO;
+ 		}
+ 
+-		index = region.start / phb->ioda.io_segsize;
+-		while (index < phb->ioda.total_pe &&
+-		       region.start <= region.end) {
+-			set_bit(index, segmap);
+-			set_bit(index, pe_segmap);
++		region.start += segsize;
++		index++;
++	}
+ 
+-			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+-					pe->pe_number, win, 0, index);
+-			if (rc != OPAL_SUCCESS) {
+-				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
+-					__func__, rc, win, index,
+-					pe->phb->hose->global_number,
+-					pe->pe_number);
+-				break;
+-			}
++	return 0;
++}
++
++static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
++				  struct pnv_ioda_pe *pe)
++{
++	struct pci_dev *pdev;
++	struct resource *res;
++	int i;
++
++	/* This function only works for bus dependent PE */
++	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
++
++	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
++		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
++			res = &pdev->resource[i];
++			if (pnv_ioda_map_pe_one_res(hose, pe, res))
++				return;
++		}
++
++		/* If the PE contains all subordinate PCI buses, the
++		 * resources of the child bridges should be mapped
++		 * to the PE as well.
++		 */
++		if (!(pe->flags & PNV_IODA_PE_BUS_ALL) ||
++		    (pdev->class >> 8) != PCI_CLASS_BRIDGE_PCI)
++			continue;
+ 
+-			region.start += segsize;
+-			index++;
++		for (i = 0; i <= PCI_BRIDGE_RESOURCE_NUM; i++) {
++			res = &pdev->resource[PCI_BRIDGE_RESOURCES + i];
++			if (pnv_ioda_map_pe_one_res(hose, pe, res))
++				return;
+ 		}
+ 	}
  }
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
- 
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 8882640..8a38c6a 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -37,9 +37,9 @@ extern bool of_fdt_is_big_endian(const void *blob,
- 				 unsigned long node);
- extern int of_fdt_match(const void *blob, unsigned long node,
- 			const char *const *compat);
--extern void of_fdt_unflatten_tree(unsigned long *blob,
--				  struct device_node *dad,
--				  struct device_node **mynodes);
-+extern void *of_fdt_unflatten_tree(unsigned long *blob,
-+				   struct device_node *dad,
-+				   struct device_node **mynodes);
- 
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
- extern int __initdata dt_root_addr_cells;
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
