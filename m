@@ -1,44 +1,55 @@
 From: Y Vo <yvo@apm.com>
-Subject: [PATCH v0] arm64: dts: Add APM X-Gene standby GPIO controller DTS entries
-Date: Thu,  4 Jun 2015 14:19:04 +0700
-Message-ID: <1433402344-20836-1-git-send-email-yvo@apm.com>
+Subject: [PATCH v0] gpio_keys: fix gpio key driver to proper support GIC interrupt
+Date: Thu,  4 Jun 2015 14:25:12 +0700
+Message-ID: <1433402712-21399-1-git-send-email-yvo@apm.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, arm@kernel.org, linux-kernel@vger.kernel.org
-Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches@apm.com, Loc Ho <lho@apm.com>
+To: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Add standby domain gpio controller for APM X-Gene SoC platform.
+GIC is designed to support two of trigger mechanisms - active level
+high or edge rising. But in the gpio_keys driver, it tries to use both
+edge rising and edge falling trigger. This patch fixes the gpio_keys
+driver to request only the edge rising event when failed to configure the
+interrupt.
 
 Signed-off-by: Y Vo <yvo@apm.com>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi |   13 +++++++++++++
- 1 files changed, 13 insertions(+), 0 deletions(-)
+ drivers/input/keyboard/gpio_keys.c |   20 +++++++++++++++++---
+ 1 files changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index f1ad9c2..2e1c438 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -587,6 +587,19 @@
- 			phy-names = "sata-phy";
- 		};
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index ddf4045..7c3da2c 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -532,9 +532,23 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+ 	error = devm_request_any_context_irq(&pdev->dev, bdata->irq,
+ 					     isr, irqflags, desc, bdata);
+ 	if (error < 0) {
+-		dev_err(dev, "Unable to claim irq %d; error %d\n",
+-			bdata->irq, error);
+-		return error;
++		/*
++		 * Attempt to request again with only rising edge trigger
++		 */
++		if ((irqflags & (IRQ_TYPE_EDGE_RISING | IRQF_TRIGGER_FALLING))) {
++			irqflags = IRQ_TYPE_EDGE_RISING;
++			error = devm_request_any_context_irq(&pdev->dev, bdata->irq,
++							     isr, irqflags, desc, bdata);
++			if (error < 0) {
++				dev_err(dev, "Unable to claim irq %d; error %d\n",
++					bdata->irq, error);
++				return error;
++			}
++		} else {
++			dev_err(dev, "Unable to claim irq %d; error %d\n",
++				bdata->irq, error);
++			return error;
++		}
+ 	}
  
-+		sbgpio: sbgpio@17001000{
-+			compatible = "apm,xgene-gpio-sb";
-+			reg = <0x0 0x17001000 0x0 0x400>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			interrupts = 	<0x0 0x28 0x1>,
-+					<0x0 0x29 0x1>,
-+					<0x0 0x2a 0x1>,
-+					<0x0 0x2b 0x1>,
-+					<0x0 0x2c 0x1>,
-+					<0x0 0x2d 0x1>;
-+		};
-+
- 		rtc: rtc@10510000 {
- 			compatible = "apm,xgene-rtc";
- 			reg = <0x0 0x10510000 0x0 0x400>;
+ 	return 0;
 -- 
 1.7.1
 
