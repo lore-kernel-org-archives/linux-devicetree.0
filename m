@@ -1,56 +1,53 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: clean-up unnecessary libfdt include paths
-Date: Thu, 04 Jun 2015 17:02:10 +0900
-Message-ID: <20150604080210.B6467C40D75@trevor.secretlab.ca>
-References: <1433308225-13874-1-git-send-email-robh@kernel.org>
-        <20150603082638.GJ9839@linux-mips.org>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20150603082638.GJ9839@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] of/fdt: fix argument name and add comments of
+ unflatten_dt_node()
+Date: Thu, 04 Jun 2015 14:53:28 +0900
+Message-ID: <20150604055328.6F296C4095F@trevor.secretlab.ca>
+References: <1428888620-307-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428888620-307-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 3 Jun 2015 10:26:38 +0200
-, Ralf Baechle <ralf@linux-mips.org>
+On Mon, 13 Apr 2015 10:30:20 +0900
+, Masahiro Yamada <yamada.masahiro@socionext.com>
  wrote:
-> On Wed, Jun 03, 2015 at 12:10:25AM -0500, Rob Herring wrote:
-> > Date:   Wed,  3 Jun 2015 00:10:25 -0500
-> > From: Rob Herring <robh@kernel.org>
-> > To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-> > Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh@kernel.org>,
-> >  Ralf Baechle <ralf@linux-mips.org>, Benjamin Herrenschmidt
-> >  <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael
-> >  Ellerman <mpe@ellerman.id.au>, linux-mips@linux-mips.org,
-> >  linuxppc-dev@lists.ozlabs.org
-> > Subject: [PATCH] of: clean-up unnecessary libfdt include paths
-> > 
-> > With the latest dtc import include fixups, it is no longer necessary to
-> > add explicit include paths to use libfdt. Remove these across the
-> > kernel.
-> > 
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > Cc: Paul Mackerras <paulus@samba.org>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Grant Likely <grant.likely@linaro.org>
-> > Cc: linux-mips@linux-mips.org
-> > Cc: linuxppc-dev@lists.ozlabs.org
+> Match the name of the third argument in the comment block
+> to the actual function: p -> poffset
 > 
-> For the MIPS bits;
+> Add missing comments about the arguments "nodepp" and "dryrun".
 > 
-> Acked-by: Ralf Baechle <ralf@linux-mips.org>
-> 
->   Ralf
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
+Applied, thanks.
 
-Acked-by: Grant Likely <grant.likely@lianro.org>
+g.
+
+> ---
+> 
+>  drivers/of/fdt.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 3a896c9..35898ca 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -145,9 +145,12 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+>   * unflatten_dt_node - Alloc and populate a device_node from the flat tree
+>   * @blob: The parent device tree blob
+>   * @mem: Memory chunk to use for allocating device nodes and properties
+> - * @p: pointer to node in flat tree
+> + * @poffset: pointer to node in flat tree
+>   * @dad: Parent struct device_node
+> + * @nodepp: The device_node tree created by the call
+>   * @fpsize: Size of the node path up at the current depth.
+> + * @dryrun: If true, do not allocate device nodes but still calculate needed
+> + * memory size
+>   */
+>  static void * unflatten_dt_node(void *blob,
+>  				void *mem,
+> -- 
+> 1.9.1
+> 
