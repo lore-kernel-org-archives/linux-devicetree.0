@@ -1,41 +1,39 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 2/2] rtc: mxc: add support of device tree
-Date: Fri, 5 Jun 2015 00:22:08 +0200
-Message-ID: <20150604222208.GE713@piout.net>
-References: <1431729330-7625-1-git-send-email-tremyfr@gmail.com>
- <1431729330-7625-3-git-send-email-tremyfr@gmail.com>
- <20150528120601.GO2185@piout.net>
- <5570C26D.5080204@gmail.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCHv2 2/4] edac, altera: Refactor EDAC for Altera CycloneV
+ SoC.
+Date: Thu, 4 Jun 2015 17:27:28 -0500
+Message-ID: <5570D0D0.9030803@opensource.altera.com>
+References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
+ <1433428128-7292-3-git-send-email-tthayer@opensource.altera.com>
+ <55706E25.8050105@opensource.altera.com>
+ <5570C479.7010902@opensource.altera.com> <20150604220609.GK3795@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5570C26D.5080204@gmail.com>
+In-Reply-To: <20150604220609.GK3795@pd.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Reynes <tremyfr@gmail.com>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, a.zummo@towertech.it, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rtc-linux@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, fabio.estevam@freescale.com
+To: Borislav Petkov <bp@alien8.de>, Thor Thayer <tthayer@opensource.altera.com>
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2015 at 23:26:05 +0200, Philippe Reynes wrote :
-> I'll do it in the next version of this patch.
-> >>+	} else
-> >>+		pdata->devtype = pdev->id_entry->driver_data;
-> >>
-> >
+On 06/04/2015 05:06 PM, Borislav Petkov wrote:
+> On Thu, Jun 04, 2015 at 04:34:49PM -0500, Thor Thayer wrote:
+>> OK. I'll refactor and resend. I was using Altera's internal for-next branch.
 > 
-> Do you prefer that I wait the clock driver has move to drivers/clk/imx
-> (as requested by Shawn) before sending a v2 ?
+> Use this one:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git#for-next
 > 
 
-It would have been good to get the clock change in 4.2 but it is already
-late in the cycle now so I'm not sure it can go in. That would have
-removed the dependency.
+This is my mistake. I applied Alan Tull's patch for suspend-to-ram which
+also touches drivers/edac/altera_edac.c.
 
-The other solution is to merge everything through Shawn's tree.
+https://git.kernel.org/cgit/linux/kernel/git/dinguyen/linux.git/commit/?h=socfpga_for_next_arria10&id=d44a92eb044f4cc1abf34a790d647e9fa356d7b0
 
-Anyway, you can send the patches, we'll handle that part :)
+I think I will have to ask Alan to split up his patch and send the part
+that touches altera_edac.c to linux-edac.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Sorry about the confusion.
+
+Dinh
