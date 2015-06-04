@@ -1,66 +1,71 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: [PATCH 4/7] arm64: dts: qcom: Add msm8916 USB configuration nodes
-Date: Thu,  4 Jun 2015 12:19:03 +0300
-Message-ID: <1433409546-23995-5-git-send-email-ivan.ivanov@linaro.org>
+From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 3/7] arm64: dts: qcom: Add msm8916 sdhci configuration nodes
+Date: Thu,  4 Jun 2015 12:19:02 +0300
+Message-ID: <1433409546-23995-4-git-send-email-ivan.ivanov@linaro.org>
 References: <1433409546-23995-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1433409546-23995-1-git-send-email-ivan.ivanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433409546-23995-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add Host, Device and OTG configuration nodes.
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+Add sdhci1 and sdhci2 device configuration nodes.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 39 +++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9ff0eb4..5911de0 100644
+index 6681c65..9ff0eb4 100644
 --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -268,6 +268,45 @@
+@@ -24,7 +24,10 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+
+-	aliases { };
++	aliases {
++		sdhc1 = &sdhc_1; /* SDC1 eMMC slot */
++		sdhc2 = &sdhc_2; /* SDC2 SD card slot */
++	};
+
+ 	chosen { };
+
+@@ -236,6 +239,35 @@
  			status = "disabled";
  		};
 
-+		usb_dev: usb@78d9000 {
-+			compatible = "qcom,ci-hdrc";
-+			reg = <0x78d9000 0x400>;
-+			dr_mode = "peripheral";
-+			interrupts = <GIC_SPI 134 IRQ_TYPE_NONE>;
-+			usb-phy = <&usb_otg>;
++		sdhc_1: sdhci@07824000 {
++			compatible = "qcom,sdhci-msm-v4";
++			reg = <0x07824900 0x11c>, <0x07824000 0x800>;
++			reg-names = "hc_mem", "core_mem";
++
++			interrupts = <0 123 0>, <0 138 0>;
++			interrupt-names = "hc_irq", "pwr_irq";
++			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
++				 <&gcc GCC_SDCC1_AHB_CLK>;
++			clock-names = "core", "iface";
++			bus-width = <8>;
++			non-removable;
 +			status = "disabled";
 +		};
 +
-+		usb_host: ehci@78d9000 {
-+			compatible = "qcom,ehci-host";
-+			reg = <0x78d9000 0x400>;
-+			interrupts = <GIC_SPI 134 IRQ_TYPE_NONE>;
-+			usb-phy = <&usb_otg>;
-+			status = "disabled";
-+		};
++		sdhc_2: sdhci@07864000 {
++			compatible = "qcom,sdhci-msm-v4";
++			reg = <0x07864900 0x11c>, <0x07864000 0x800>;
++			reg-names = "hc_mem", "core_mem";
 +
-+		usb_otg: phy@78d9000 {
-+			compatible = "qcom,usb-otg-snps";
-+			reg = <0x78d9000 0x400>;
-+			interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_BOTH>,
-+				     <GIC_SPI 140 IRQ_TYPE_EDGE_RISING>;
-+
-+			qcom,vdd-levels = <1 5 7>;
-+			qcom,phy-init-sequence = <0x44 0x6B 0x24 0x13>;
-+			dr_mode = "peripheral";
-+			qcom,otg-control = <2>; // PMIC
-+
-+			clocks = <&gcc GCC_USB_HS_AHB_CLK>,
-+				 <&gcc GCC_USB_HS_SYSTEM_CLK>,
-+				 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
-+			clock-names = "iface", "core", "sleep";
-+
-+			resets = <&gcc GCC_USB2A_PHY_BCR>,
-+				 <&gcc GCC_USB_HS_BCR>;
-+			reset-names = "phy", "link";
++			interrupts = <0 125 0>, <0 221 0>;
++			interrupt-names = "hc_irq", "pwr_irq";
++			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
++				 <&gcc GCC_SDCC2_AHB_CLK>;
++			clock-names = "core", "iface";
++			bus-width = <4>;
 +			status = "disabled";
 +		};
 +
@@ -69,3 +74,8 @@ index 9ff0eb4..5911de0 100644
  			interrupt-controller;
 --
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
