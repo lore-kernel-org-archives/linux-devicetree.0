@@ -1,45 +1,134 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH 0/9] Goodix touchscreen enhancements
-Date: Thu, 04 Jun 2015 15:04:38 +0200
-Message-ID: <1433423078.5346.27.camel@hadess.net>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v2 1/4] ARM/PCI: remove align_resource callback in pcibios_align_resource
+Date: Thu, 04 Jun 2015 14:18:46 +0100
+Message-ID: <55705036.7030004@arm.com>
+References: <1433320542-49576-1-git-send-email-wangzhou1@hisilicon.com> <1433320542-49576-2-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1433320542-49576-2-git-send-email-wangzhou1@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "fabrice.gasnier@st.com" <fabrice.gasnier@st.com>, Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, "yuanzhichang@hisilicon.com" <yuanzhichang@hisilicon.com>, "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>, "zhangjukuo@huawei.com" <zhangjukuo@huawei.com>, "qiuzhenfa@hisilicon.com" <qiuzhenfa@hisilicon.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hey Irina,
+On 03/06/15 09:35, Zhou Wang wrote:
+> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+> index fcbbbb1..47588dc 100644
+> --- a/arch/arm/kernel/bios32.c
+> +++ b/arch/arm/kernel/bios32.c
+> @@ -468,7 +468,6 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
+>  		sys->busnr   = busnr;
+>  		sys->swizzle = hw->swizzle;
+>  		sys->map_irq = hw->map_irq;
+> -		sys->align_resource = hw->align_resource;
+>  		INIT_LIST_HEAD(&sys->resources);
+>  
+>  		if (hw->private_data)
+> @@ -597,9 +596,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+>  
+>  	start = (start + align - 1) & ~(align - 1);
+>  
+> -	if (sys->align_resource)
+> -		return sys->align_resource(dev, res, start, size, align);
+> -
+>  	return start;
+>  }
 
-On Thu, 2015-05-28 at 15:47 +0300, Irina Tirdea wrote:
-> Add several enhancements to the Goodix touchscreen driver:
->  - write configuration data to the device
->  - power management support
->  - cleanup and refactoring
-> 
-> Irina Tirdea (9):
->   input: goodix: fix alignment issues
->   input: goodix: fix variable length array warning
->   input: goodix: export id and version read from device
->   input: goodix: add ACPI IDs for GT911 and GT9271
->   input: goodix: reset device at init
->   input: goodix: write configuration data to device
->   input: goodix: add power management support
->   input: goodix: add support for ESD
->   input: goodix: use goodix_i2c_write_u8 instead of i2c_master_send
+This leaves both 'sys' and 'dev' in this function as unused variables.
+Please remove them too.
 
-Thanks a lot of that patch series. I was travelling when you sent it,
-but I should be able to test the patch series quicker when you send a
-v2.
+> diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
+> index 1ab8635..155d05f 100644
+> --- a/drivers/pci/host/pci-mvebu.c
+> +++ b/drivers/pci/host/pci-mvebu.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/of_pci.h>
+>  #include <linux/of_platform.h>
+>  
+> +#include "../pci.h" /* HACK to see pci_find_host_bridge */
+> +
 
-Could you please also add some references to hardware that you're
-enabling (and presumably have been testing on) to the driver's Kconfig?
-If the hardware is still not public, any sort of other reference would
-be useful (Windows 8 compatible harwdare? Hardware that usually runs a
-particular Android vendor tree?...)
+Wouldn't it be better to promote pci_find_host_bridge to be declared in
+include/linux/pci.h instead?
 
-Cheers
+
+Thanks,
+
+James
+
+>  /*
+>   * PCIe unit register offsets.
+>   */
+> @@ -751,27 +753,20 @@ static int mvebu_pcie_setup(int nr, struct pci_sys_data *sys)
+>  	return 1;
+>  }
+>  
+> -static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+> +static resource_size_t mvebu_pcie_align_resource(void *data,
+> +						 const struct resource *res,
+> +						 resource_size_t size,
+> +						 resource_size_t align)
+>  {
+> -	struct mvebu_pcie *pcie = sys_to_pcie(sys);
+> -	struct pci_bus *bus;
+> +	struct pci_dev *dev = data;
+>  
+> -	bus = pci_create_root_bus(&pcie->pdev->dev, sys->busnr,
+> -				  &mvebu_pcie_ops, sys, &sys->resources);
+> -	if (!bus)
+> -		return NULL;
+> +	resource_size_t start = res->start;
+>  
+> -	pci_scan_child_bus(bus);
+> +	if (res->flags & IORESOURCE_IO && start & 0x300)
+> +		start = (start + 0x3ff) & ~0x3ff;
+>  
+> -	return bus;
+> -}
+> +	start = (start + align - 1) & ~(align - 1);
+>  
+> -static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+> -						 const struct resource *res,
+> -						 resource_size_t start,
+> -						 resource_size_t size,
+> -						 resource_size_t align)
+> -{
+>  	if (dev->bus->number != 0)
+>  		return start;
+>  
+> @@ -796,6 +791,25 @@ static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+>  		return start;
+>  }
+>  
+> +static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+> +{
+> +	struct mvebu_pcie *pcie = sys_to_pcie(sys);
+> +	struct pci_host_bridge *phb;
+> +	struct pci_bus *bus;
+> +
+> +	bus = pci_create_root_bus(&pcie->pdev->dev, sys->busnr,
+> +				  &mvebu_pcie_ops, sys, &sys->resources);
+> +	if (!bus)
+> +		return NULL;
+> +
+> +	phb = pci_find_host_bridge(bus);
+> +	phb->align_resource = mvebu_pcie_align_resource;
+> +
+> +	pci_scan_child_bus(bus);
+> +
+> +	return bus;
+> +}
+> +
+>  static void mvebu_pcie_enable(struct mvebu_pcie *pcie)
+>  {
+>  	struct hw_pci hw;
+> @@ -812,7 +826,6 @@ static void mvebu_pcie_enable(struct mvebu_pcie *pcie)
+>  	hw.scan           = mvebu_pcie_scan_bus;
+>  	hw.map_irq        = of_irq_parse_and_map_pci;
+>  	hw.ops            = &mvebu_pcie_ops;
+> -	hw.align_resource = mvebu_pcie_align_resource;
+>  
+>  	pci_common_init(&hw);
+>  }
