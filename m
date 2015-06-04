@@ -1,40 +1,44 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v5 1/2] Renesas Ethernet AVB driver proper
-Date: Wed, 03 Jun 2015 20:12:04 -0700 (PDT)
-Message-ID: <20150603.201204.761049104805679684.davem@davemloft.net>
-References: <1752433.KgeJV8aUGv@wasted.cogentembedded.com>
+From: Michal Suchanek <hramrach@gmail.com>
+Subject: Re: [PATCH 00/11] Enable access to SPI NOR flash on Samsung Snow board
+Date: Thu, 4 Jun 2015 06:21:32 +0200
+Message-ID: <CAOMqctRkoQrP7wAgXfWXHb2fbi2-6VayHRx5DgUKn6Djz0qtQQ@mail.gmail.com>
+References: <cover.1433364398.git.hramrach@gmail.com> <201506040053.29482.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1752433.KgeJV8aUGv@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201506040053.29482.marex@denx.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Vasut <marex@denx.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>, =?UTF-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@micron.com>, grmoore@altera.c
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Date: Tue, 02 Jun 2015 23:44:10 +0300
+On 4 June 2015 at 00:53, Marek Vasut <marex@denx.de> wrote:
+> On Wednesday, June 03, 2015 at 11:26:39 PM, Michal Suchanek wrote:
+>> Hello,
+>
+> Hi,
+>
+>> this patch series makes it possible to access the SPI NOR flash in the
+>> Samsung XE303 'Snow' Chromebook.
+>>
+>> Unfortunately not all issues are resolved. To work around an issue with the
+>> pl330 dma engine I respun the patch for limiting transfer size in m25p80
+>> driver.
+>
+> Looks like fixing a bug at the wrong place to me ...
+>
+>> As the flash does not contain any sane filesystem and is only likely to be
+>> accessed with mtd_debug or similar tool the limit of the dma engine is
+>> easily reached. Filesystems using shorter data transfers are less likely
+>> to be affected.
+>
+> Sounds like the DMA engine driver should be fixed.
 
-> +		/* Received network control queue */
-> +		if (ris0 & RIS0_FRF1) {
-> +			ravb_write(ndev, ~RIS0_FRF1, RIS0);
-> +			/* Timestamp of network control packets that is based
-> +			 * on IEEE802.1AS, is used time synchronization of PTP.
-> +			 * It should not be handled by NAPI scheduling, because
-> +			 * it needs to be received as soon as possible.
-> +			 */
-> +			ravb_rx(ndev, NULL, RAVB_NC);
-> +			result = IRQ_HANDLED;
-> +		}
+I looked at the pl330 datasheet and don't see anything obviusly wrong
+with the pl330 driver in Linux.
 
-Nobody else makes this distinction, all packets should be processed
-via your NAPI path.
+Ideally it would be fixed but I have no idea what's wrong with it.
 
-When I see people conditionally invoking netif_rx()
-vs. netif_receive_skb() in their packet receive routine, like
-conditional locking, it's a big red flag.
+Thanks
 
-Furthermore, you should pass the NAPI context into ravb_rx() and use
-it so that you can invoke napi_gro_receive() on all of the packets and
-therefore support GRO.
+Michal
