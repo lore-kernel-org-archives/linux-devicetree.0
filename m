@@ -1,7 +1,7 @@
 From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: [PATCH 1/7] arm64: dts: qcom: Extend msm8916 pinctrl device coverage
-Date: Thu,  4 Jun 2015 12:19:00 +0300
-Message-ID: <1433409546-23995-2-git-send-email-ivan.ivanov@linaro.org>
+Subject: [PATCH 4/7] arm64: dts: qcom: Add msm8916 USB configuration nodes
+Date: Thu,  4 Jun 2015 12:19:03 +0300
+Message-ID: <1433409546-23995-5-git-send-email-ivan.ivanov@linaro.org>
 References: <1433409546-23995-1-git-send-email-ivan.ivanov@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1433409546-23995-1-git-send-email-ivan.ivanov@linaro.org>
@@ -10,494 +10,62 @@ To: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Create separate file for MSM8916 pinctrl default/sleep pins state
-definitions. Move in UART2 states and add SPI, I2C and SDC configurations.
+Add Host, Device and OTG configuration nodes.
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 430 +++++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi      |  26 +-
- 2 files changed, 432 insertions(+), 24 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 39 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-new file mode 100644
-index 0000000..5689568
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -0,0 +1,430 @@
-+/*
-+ * Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+&msmgpio {
-+
-+	blsp1_uart2_default: blsp1_uart2_default {
-+		pinmux {
-+			function = "blsp_uart2";
-+			pins = "gpio4", "gpio5";
-+		};
-+		pinconf {
-+			pins = "gpio4", "gpio5";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	blsp1_uart2_sleep: blsp1_uart2_sleep {
-+		pinmux {
-+			function = "blsp_uart2";
-+			pins = "gpio4", "gpio5";
-+		};
-+		pinconf {
-+			pins = "gpio4", "gpio5";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	spi1_default: spi1_default {
-+		pinmux {
-+			function = "blsp_spi1";
-+			pins = "gpio0", "gpio1", "gpio3";
-+		};
-+		pinmux_cs {
-+			function = "gpio";
-+			pins = "gpio2";
-+		};
-+		pinconf {
-+			pins = "gpio0", "gpio1", "gpio3";
-+			drive-strength = <12>;
-+			bias-disable;
-+		};
-+		pinconf_cs {
-+			pins = "gpio2";
-+			drive-strength = <2>;
-+			bias-disable;
-+			output-high;
-+		};
-+	};
-+
-+	spi1_sleep: spi1_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio0", "gpio1", "gpio2", "gpio3";
-+		};
-+		pinconf {
-+			pins = "gpio0", "gpio1", "gpio2", "gpio3";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	spi2_default: spi2_default {
-+		pinmux {
-+			function = "blsp_spi2";
-+			pins = "gpio4", "gpio5", "gpio7";
-+		};
-+		pinmux_cs {
-+			function = "gpio";
-+			pins = "gpio6";
-+		};
-+		pinconf {
-+			pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+			drive-strength = <12>;
-+			bias-disable;
-+		};
-+		pinconf_cs {
-+			pins = "gpio6";
-+			drive-strength = <2>;
-+			bias-disable;
-+			output-high;
-+		};
-+	};
-+
-+	spi2_sleep: spi2_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+		};
-+		pinconf {
-+			pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	spi3_default: spi3_default {
-+		pinmux {
-+			function = "blsp_spi3";
-+			pins = "gpio8", "gpio9", "gpio11";
-+		};
-+		pinmux_cs {
-+			function = "gpio";
-+			pins = "gpio10";
-+		};
-+		pinconf {
-+			pins = "gpio8", "gpio9", "gpio10", "gpio11";
-+			drive-strength = <12>;
-+			bias-disable;
-+		};
-+		pinconf_cs {
-+			pins = "gpio10";
-+			drive-strength = <2>;
-+			bias-disable;
-+			output-high;
-+		};
-+	};
-+
-+	spi3_sleep: spi3_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio8", "gpio9", "gpio10", "gpio11";
-+		};
-+		pinconf {
-+			pins = "gpio8", "gpio9", "gpio10", "gpio11";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	spi4_default: spi4_default {
-+		pinmux {
-+			function = "blsp_spi4";
-+			pins = "gpio12", "gpio13", "gpio15";
-+		};
-+		pinmux_cs {
-+			function = "gpio";
-+			pins = "gpio14";
-+		};
-+		pinconf {
-+			pins = "gpio12", "gpio13", "gpio14", "gpio15";
-+			drive-strength = <12>;
-+			bias-disable;
-+		};
-+		pinconf_cs {
-+			pins = "gpio14";
-+			drive-strength = <2>;
-+			bias-disable;
-+			output-high;
-+		};
-+	};
-+
-+	spi4_sleep: spi4_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio12", "gpio13", "gpio14", "gpio15";
-+		};
-+		pinconf {
-+			pins = "gpio12", "gpio13", "gpio14", "gpio15";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	spi5_default: spi5_default {
-+		pinmux {
-+			function = "blsp_spi5";
-+			pins = "gpio16", "gpio17", "gpio19";
-+		};
-+		pinmux_cs {
-+			function = "gpio";
-+			pins = "gpio18";
-+		};
-+		pinconf {
-+			pins = "gpio16", "gpio17", "gpio18", "gpio19";
-+			drive-strength = <12>;
-+			bias-disable;
-+		};
-+		pinconf_cs {
-+			pins = "gpio18";
-+			drive-strength = <2>;
-+			bias-disable;
-+			output-high;
-+		};
-+	};
-+
-+	spi5_sleep: spi5_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio16", "gpio17", "gpio18", "gpio19";
-+		};
-+		pinconf {
-+			pins = "gpio16", "gpio17", "gpio18", "gpio19";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	spi6_default: spi6_default {
-+		pinmux {
-+			function = "blsp_spi6";
-+			pins = "gpio20", "gpio21", "gpio23";
-+		};
-+		pinmux_cs {
-+			function = "gpio";
-+			pins = "gpio22";
-+		};
-+		pinconf {
-+			pins = "gpio20", "gpio21", "gpio22", "gpio23";
-+			drive-strength = <12>;
-+			bias-disable;
-+		};
-+		pinconf_cs {
-+			pins = "gpio22";
-+			drive-strength = <2>;
-+			bias-disable;
-+			output-high;
-+		};
-+	};
-+
-+	spi6_sleep: spi6_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio20", "gpio21", "gpio22", "gpio23";
-+		};
-+		pinconf {
-+			pins = "gpio20", "gpio21", "gpio22", "gpio23";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	i2c4_default: i2c4_default {
-+		pinmux {
-+			function = "blsp_i2c4";
-+			pins = "gpio14", "gpio15";
-+		};
-+		pinconf {
-+			pins = "gpio14", "gpio15";
-+			drive-strength = <2>;
-+			bias-disable = <0>;
-+		};
-+	};
-+
-+	i2c4_sleep: i2c4_sleep {
-+		pinmux {
-+			function = "blsp_i2c4";
-+			pins = "gpio14", "gpio15";
-+		};
-+		pinconf {
-+			pins = "gpio14", "gpio15";
-+			drive-strength = <2>;
-+			bias-disable = <0>;
-+		};
-+	};
-+
-+	sdhc2_cd_pin {
-+		sdc2_cd_on: cd_on {
-+			pinmux {
-+				function = "gpio";
-+				pins = "gpio38";
-+			};
-+			pinconf {
-+				pins = "gpio38";
-+				drive-strength = <2>;
-+				bias-pull-up;
-+			};
-+		};
-+		sdc2_cd_off: cd_off {
-+			pinmux {
-+				function = "gpio";
-+				pins = "gpio38";
-+			};
-+			pinconf {
-+				pins = "gpio38";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+	};
-+
-+	pmx_sdc1_clk {
-+		sdc1_clk_on: clk_on {
-+			pinmux {
-+				pins = "sdc1_clk";
-+			};
-+			pinconf {
-+				pins = "sdc1_clk";
-+				bias-disable;
-+				drive-strength = <16>;
-+			};
-+		};
-+		sdc1_clk_off: clk_off {
-+			pinmux {
-+				pins = "sdc1_clk";
-+			};
-+			pinconf {
-+				pins = "sdc1_clk";
-+				bias-disable;
-+				drive-strength = <2>;
-+			};
-+		};
-+	};
-+
-+	pmx_sdc1_cmd {
-+		sdc1_cmd_on: cmd_on {
-+			pinmux {
-+				pins = "sdc1_cmd";
-+			};
-+			pinconf {
-+				pins = "sdc1_cmd";
-+				bias-pull-up;
-+				drive-strength = <10>;
-+			};
-+		};
-+		sdc1_cmd_off: cmd_off {
-+			pinmux {
-+				pins = "sdc1_cmd";
-+			};
-+			pinconf {
-+				pins = "sdc1_cmd";
-+				bias-pull-up;
-+				drive-strength = <2>;
-+			};
-+		};
-+	};
-+
-+	pmx_sdc1_data {
-+		sdc1_data_on: data_on {
-+			pinmux {
-+				pins = "sdc1_data";
-+			};
-+			pinconf {
-+				pins = "sdc1_data";
-+				bias-pull-up;
-+				drive-strength = <10>;
-+			};
-+		};
-+		sdc1_data_off: data_off {
-+			pinmux {
-+				pins = "sdc1_data";
-+			};
-+			pinconf {
-+				pins = "sdc1_data";
-+				bias-pull-up;
-+				drive-strength = <2>;
-+			};
-+		};
-+	};
-+
-+	pmx_sdc2_clk {
-+		sdc2_clk_on: clk_on {
-+			pinmux {
-+				pins = "sdc2_clk";
-+			};
-+			pinconf {
-+				pins = "sdc2_clk";
-+				bias-disable;
-+				drive-strength = <16>;
-+			};
-+		};
-+		sdc2_clk_off: clk_off {
-+			pinmux {
-+				pins = "sdc2_clk";
-+			};
-+			pinconf {
-+				pins = "sdc2_clk";
-+				bias-disable;
-+				drive-strength = <2>;
-+			};
-+		};
-+	};
-+
-+	pmx_sdc2_cmd {
-+		sdc2_cmd_on: cmd_on {
-+			pinmux {
-+				pins = "sdc2_cmd";
-+			};
-+			pinconf {
-+				pins = "sdc2_cmd";
-+				bias-pull-up;
-+				drive-strength = <10>;
-+			};
-+		};
-+		sdc2_cmd_off: cmd_off {
-+			pinmux {
-+				pins = "sdc2_cmd";
-+			};
-+			pinconf {
-+				pins = "sdc2_cmd";
-+				bias-pull-up;
-+				drive-strength = <2>;
-+			};
-+		};
-+	};
-+
-+	pmx_sdc2_data {
-+		sdc2_data_on: data_on {
-+			pinmux {
-+				pins = "sdc2_data";
-+			};
-+			pinconf {
-+				pins = "sdc2_data";
-+				bias-pull-up;
-+				drive-strength = <10>;
-+			};
-+		};
-+		sdc2_data_off: data_off {
-+			pinmux {
-+				pins = "sdc2_data";
-+			};
-+			pinconf {
-+				pins = "sdc2_data";
-+				bias-pull-up;
-+				drive-strength = <2>;
-+			};
-+		};
-+	};
-+};
 diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 0f49ebd..9ab9a92 100644
+index 9ff0eb4..5911de0 100644
 --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -90,30 +90,6 @@
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
--
--			blsp1_uart2_default: blsp1_uart2_default {
--				pinmux {
--					function = "blsp_uart2";
--					pins = "gpio4", "gpio5";
--				};
--				pinconf {
--					pins = "gpio4", "gpio5";
--					drive-strength = <16>;
--					bias-disable;
--				};
--			};
--
--			blsp1_uart2_sleep: blsp1_uart2_sleep {
--				pinmux {
--					function = "blsp_uart2";
--					pins = "gpio4", "gpio5";
--				};
--				pinconf {
--					pins = "gpio4", "gpio5";
--					drive-strength = <2>;
--					bias-pull-down;
--				};
--			};
+@@ -268,6 +268,45 @@
+ 			status = "disabled";
  		};
 
- 		gcc: qcom,gcc@1800000 {
-@@ -217,3 +193,5 @@
- 		};
- 	};
- };
++		usb_dev: usb@78d9000 {
++			compatible = "qcom,ci-hdrc";
++			reg = <0x78d9000 0x400>;
++			dr_mode = "peripheral";
++			interrupts = <GIC_SPI 134 IRQ_TYPE_NONE>;
++			usb-phy = <&usb_otg>;
++			status = "disabled";
++		};
 +
-+#include "msm8916-pins.dtsi"
++		usb_host: ehci@78d9000 {
++			compatible = "qcom,ehci-host";
++			reg = <0x78d9000 0x400>;
++			interrupts = <GIC_SPI 134 IRQ_TYPE_NONE>;
++			usb-phy = <&usb_otg>;
++			status = "disabled";
++		};
++
++		usb_otg: phy@78d9000 {
++			compatible = "qcom,usb-otg-snps";
++			reg = <0x78d9000 0x400>;
++			interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_BOTH>,
++				     <GIC_SPI 140 IRQ_TYPE_EDGE_RISING>;
++
++			qcom,vdd-levels = <1 5 7>;
++			qcom,phy-init-sequence = <0x44 0x6B 0x24 0x13>;
++			dr_mode = "peripheral";
++			qcom,otg-control = <2>; // PMIC
++
++			clocks = <&gcc GCC_USB_HS_AHB_CLK>,
++				 <&gcc GCC_USB_HS_SYSTEM_CLK>,
++				 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
++			clock-names = "iface", "core", "sleep";
++
++			resets = <&gcc GCC_USB2A_PHY_BCR>,
++				 <&gcc GCC_USB_HS_BCR>;
++			reset-names = "phy", "link";
++			status = "disabled";
++		};
++
+ 		intc: interrupt-controller@b000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
 --
 1.9.1
