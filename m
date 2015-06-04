@@ -1,192 +1,169 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v5 33/42] powerpc/powernv: Functions to get/reset PCI slot status
-Date: Thu,  4 Jun 2015 16:42:02 +1000
-Message-ID: <1433400131-18429-34-git-send-email-gwshan@linux.vnet.ibm.com>
-References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v5 00/42] PowerPC/PowerNV: PCI Slot Management
+Date: Thu,  4 Jun 2015 16:41:29 +1000
+Message-ID: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch exports 4 functions, which base on corresponding OPAL
-APIs to get or set PCI slot status. Those functions are going to
-be used by PCI hotplug module in subsequent patches:
+The series of patches intend to support PCI slot for PowerPC PowerNV platform,
+which is running on top of skiboot firmware. The patchset requires corresponding
+changes from skiboot firmware, which is sent to skiboot@lists.ozlabs.org
+for review. The PCI slots are exposed by skiboot with device node properties,
+and kernel utilizes those properties to populated PCI slots accordingly.
 
-   pnv_pci_get_overlay_dt()       opal_get_overlay_dt()
-   pnv_pci_get_presence_status()  opal_pci_get_presence_status()
-   pnv_pci_get_power_status()     opal_pci_get_power_status()
-   pnv_pci_set_power_status()     opal_pci_set_power_status()
+The original PCI infrastructure on PowerNV platform can't support hotplug
+because the PE is assigned during PHB fixup time, which is called for once
+during system boot time. For this, the PCI infrastructure on PowerNV platform
+has been reworked for a lot. After that, the PE and its corresponding resources
+(IODT, M32DT, M64 segments, DMA32 and bypass window) are assigned upon updating
+PCI bridge's resources, which might decide PE# assigned to the PE (e.g. M64
+resources, on P8 strictly speaking). Each PE will maintain a reference count,
+which is (number of child PCI devices + 1). That indicates when last child PCI
+device leaves the PE, the PE and its included resources will be relased and put
+back into free pool again. With this design, the PE will be released when EEH PE
+is released. PATCH[1 - 24] are related to this part.
 
-Besides, the patch also exports pnv_pci_hotplug_notifier_{register,
-unregister}() to allow registration and unregistration of PCI hotplug
-notifier, which will be used to receive PCI hotplug message from skiboot
-firmware.
+>From skiboot perspective, PCI slot is providing (hot/fundamental/complete)
+resets to EEH. The kernel gets to know if skiboot supports various reset on one
+particular PCI slot through device-tree node. If it does, EEH will utilize the
+functionality provided by skiboot. Besides, the device-tree nodes have to change
+in order to support PCI hotplug. For example, when one PCI adapter inserted to
+one slot, its device-tree node should be added to the system dynamically. Conversely,
+the device-tree node should be removed from the system when the PCI adapter is going
+to be offline. Since pci_dn and eeh_dev have same life cyle as PCI device nodes,
+they should be added/removed accordingly during PCI hotplug. PATCH[25 - 38] are
+doing the related work.
 
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
----
+The OF driver is changed to support unflattening FDT blob for sub-stree, which
+is covered by PATCH[39 - 41].
+
+The last patch is the standalone PCI hotplug driver for PowerNV platform. When
+removing PCI adapter from one PCI slot, which is invoked by command in userland,
+the skiboot will power off the slot to save power and remove all device-tree
+nodes for all PCI devices behind the slot. Conversely, the Power to the slot
+is turned on, the PCI devices behind the slot is rescanned, and the device-tree
+nodes for those newly detected PCI devices will be built in skiboot. For both
+of cases, one message will be sent to kernel by skiboot so that the kernel
+can adjust the device-tree accordingly. At the same time, the kernel also have
+to deallocate or allocate PE# and its related resources (PE# and so on) for the
+removed/added PCI devices.
+
+Changelog
+=========
 v5:
-  * Derived from PATCH[v4 14/21]
-  * No polling required for pnv_pci_get_presence_status()
-  * Separate functions for registration and unregistration of PCI
-    hotplug notifier
-  * int64_t for value returned from OPAL API
----
- arch/powerpc/include/asm/opal-api.h            |  8 +++-
- arch/powerpc/include/asm/opal.h                |  4 ++
- arch/powerpc/include/asm/pnv-pci.h             |  7 +++
- arch/powerpc/platforms/powernv/opal-wrappers.S |  4 ++
- arch/powerpc/platforms/powernv/pci.c           | 66 ++++++++++++++++++++++++++
- 5 files changed, 88 insertions(+), 1 deletion(-)
+   * Rebased to 4.1.rc6 and some unmerged patches as below:
+     Alexey's DDW patchset (v11);
+     Gavin's EEH error injection support (in mpe's next branch);
+     Richard's EEH cleanup patches (in mpe's next branch);
+     Richard's EEH support for VF (v7);
+     Gavin's misc EEH fixes for 4.2;
+   * The revision bases on skiboot corresponding patches (v7):
+     https://patchwork.ozlabs.org/patch/480437/
+   * Utilize OF overlay to update device-tree with help of newly introduced
+     OPAL API opal_get_overlay_dt().
+   * Split patches for easy review according to aik's comments.
+   * Fix coding style from checkpatchc.pl as pointed by aik.
+   * Code cleanup and misc fixup according to aik's input.
+v4:
+   * Rebased to 4.1.RC1
+   * Added API to unflatten FDT blob to device node sub-tree, which is attached
+     the indicated parent device node. The original mechanism based on formatted
+     string stream has been dropped.
+   * The PATCH[v3 09/21] ("powerpc/eeh: Delay probing EEH device during hotplug")
+     was picked up sent to linux-ppc@ separately for review as Richard's "VF EEH
+     Support" depends on that.
+v3:
+   * Rebased to 4.1.RC0
+   * PowerNV PCI infrasturcture is total refactored in order to support PCI
+     hotplug. The PowerNV hotplug driver is also reworked a lot because of
+     the changes in skiboot in order to support PCI hotplug.
 
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index 0321a90..c534dd8 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -153,7 +153,11 @@
- #define OPAL_FLASH_READ				110
- #define OPAL_FLASH_WRITE			111
- #define OPAL_FLASH_ERASE			112
--#define OPAL_LAST				112
-+#define OPAL_GET_OVERLAY_DT			116
-+#define OPAL_PCI_GET_PRESENCE_STATUS		117
-+#define OPAL_PCI_GET_POWER_STATUS		118
-+#define OPAL_PCI_SET_POWER_STATUS		119
-+#define OPAL_LAST				119
- 
- /* Device tree flags */
- 
-@@ -352,6 +356,8 @@ enum opal_msg_type {
- 	OPAL_MSG_SHUTDOWN,		/* params[0] = 1 reboot, 0 shutdown */
- 	OPAL_MSG_HMI_EVT,
- 	OPAL_MSG_DPO,
-+	OPAL_MSG_PRD,
-+	OPAL_MSG_PCI_HOTPLUG,
- 	OPAL_MSG_TYPE_MAX,
- };
- 
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 6d467df..2d1c825 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -200,6 +200,10 @@ int64_t opal_flash_write(uint64_t id, uint64_t offset, uint64_t buf,
- 		uint64_t size, uint64_t token);
- int64_t opal_flash_erase(uint64_t id, uint64_t offset, uint64_t size,
- 		uint64_t token);
-+int64_t opal_get_overlay_dt(uint64_t *counter, void *buf, uint64_t len);
-+int64_t opal_pci_get_presence_status(uint64_t id, uint8_t *status);
-+int64_t opal_pci_get_power_status(uint64_t id, uint8_t *status);
-+int64_t opal_pci_set_power_status(uint64_t id, uint8_t status);
- 
- /* Internal functions */
- extern int early_init_dt_scan_opal(unsigned long node, const char *uname,
-diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
-index f9b4982..9f63375 100644
---- a/arch/powerpc/include/asm/pnv-pci.h
-+++ b/arch/powerpc/include/asm/pnv-pci.h
-@@ -13,6 +13,13 @@
- #include <linux/pci.h>
- #include <misc/cxl.h>
- 
-+extern int pnv_pci_get_overlay_dt(uint64_t *counter, void *buf, uint64_t len);
-+extern int pnv_pci_get_presence_status(uint64_t id, uint8_t *status);
-+extern int pnv_pci_get_power_status(uint64_t id, uint8_t *status);
-+extern int pnv_pci_set_power_status(uint64_t id, uint8_t status);
-+extern int pnv_pci_hotplug_notifier_register(struct notifier_block *nb);
-+extern int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb);
-+
- int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
- int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
- 			   unsigned int virq);
-diff --git a/arch/powerpc/platforms/powernv/opal-wrappers.S b/arch/powerpc/platforms/powernv/opal-wrappers.S
-index a7ade94..1d87c30 100644
---- a/arch/powerpc/platforms/powernv/opal-wrappers.S
-+++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
-@@ -295,3 +295,7 @@ OPAL_CALL(opal_i2c_request,			OPAL_I2C_REQUEST);
- OPAL_CALL(opal_flash_read,			OPAL_FLASH_READ);
- OPAL_CALL(opal_flash_write,			OPAL_FLASH_WRITE);
- OPAL_CALL(opal_flash_erase,			OPAL_FLASH_ERASE);
-+OPAL_CALL(opal_get_overlay_dt,			OPAL_GET_OVERLAY_DT);
-+OPAL_CALL(opal_pci_get_presence_status,		OPAL_PCI_GET_PRESENCE_STATUS);
-+OPAL_CALL(opal_pci_get_power_status,		OPAL_PCI_GET_POWER_STATUS);
-+OPAL_CALL(opal_pci_set_power_status,		OPAL_PCI_SET_POWER_STATUS);
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index bf5df04..c332ea7 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -65,6 +65,72 @@ int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *pval)
- 	return rval ? -EIO : 0;
- }
- 
-+int pnv_pci_get_overlay_dt(uint64_t *counter, void *buf, uint64_t len)
-+{
-+	int64_t rc;
-+
-+	if (!opal_check_token(OPAL_GET_OVERLAY_DT))
-+		return -ENXIO;
-+
-+	rc = opal_get_overlay_dt(counter, buf, len);
-+	if (rc != OPAL_SUCCESS)
-+		return -EIO;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_get_overlay_dt);
-+
-+int pnv_pci_get_presence_status(uint64_t id, uint8_t *status)
-+{
-+	int64_t rc;
-+
-+	if (!opal_check_token(OPAL_PCI_GET_PRESENCE_STATUS))
-+		return -ENXIO;
-+
-+	rc = opal_pci_get_presence_status(id, status);
-+	if (rc != OPAL_SUCCESS)
-+		return -EIO;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_get_presence_status);
-+
-+int pnv_pci_get_power_status(uint64_t id, uint8_t *status)
-+{
-+	int64_t rc;
-+
-+	if (!opal_check_token(OPAL_PCI_GET_POWER_STATUS))
-+		return -ENXIO;
-+
-+	rc = opal_pci_get_power_status(id, status);
-+	return pnv_pci_poll(id, rc, status);
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_get_power_status);
-+
-+int pnv_pci_set_power_status(uint64_t id, uint8_t status)
-+{
-+	int64_t rc;
-+
-+	if (!opal_check_token(OPAL_PCI_SET_POWER_STATUS))
-+		return -ENXIO;
-+
-+	rc = opal_pci_set_power_status(id, status);
-+	return pnv_pci_poll(id, rc, NULL);
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_set_power_status);
-+
-+int pnv_pci_hotplug_notifier_register(struct notifier_block *nb)
-+{
-+	return opal_message_notifier_register(OPAL_MSG_PCI_HOTPLUG, nb);
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_register);
-+
-+int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb)
-+{
-+	return opal_message_notifier_unregister(OPAL_MSG_PCI_HOTPLUG, nb);
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_unregister);
-+
- #ifdef CONFIG_PCI_MSI
- static int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
- {
+
+Gavin Shan (42):
+  PCI: Add pcibios_setup_bridge()
+  powerpc/powernv: Enable M64 on P7IOC
+  powerpc/powernv: M64 support improvement
+  powerpc/powernv: Trace consumed IO and M32 segments by PE
+  powerpc/powernv: Simplify pnv_ioda_setup_pe_seg()
+  powerpc/powernv: Improve IO and M32 mapping
+  powerpc/powernv: Calculate PHB's DMA weight dynamically
+  powerpc/powernv: DMA32 cleanup
+  powerpc/powernv: pnv_ioda_setup_dma() configure one PE only
+  powerpc/powernv: Trace DMA32 segments consumed by PE
+  powerpc/powernv: Increase PE# capacity
+  powerpc/pci: Cleanup on pci_controller_ops
+  powerpc/pci: Override pcibios_setup_bridge()
+  powerpc/powernv: Allocate PE# in deasending order
+  powerpc/powernv: Reserve PE# for root bus
+  powerpc/powernv: Create PEs dynamically
+  powerpc/powernv: PE oriented during configuration
+  powerpc/powernv: Helper function pnv_ioda_init_pe()
+  powerpc/powernv: Remove DMA32 list of PEs
+  powerpc/powernv: Rename pnv_ioda_get_pe() to pnv_ioda_dev_to_pe()
+  powerpc/powernv: Drop pnv_ioda_setup_dev_PE()
+  powerpc/powernv: Move functions around
+  powerpc/powernv: Cleanup on pnv_pci_ioda2_release_dma_pe()
+  powerpc/powernv: Release PEs dynamically
+  powerpc/powernv: Supports slot ID
+  powerpc/powernv: Use PCI slot reset infrastructure
+  powerpc/powernv: Simplify pnv_eeh_reset()
+  powerpc/powernv: Don't cover root bus in pnv_pci_reset_secondary_bus()
+  powerpc/powernv: Issue fundamental reset in
+    pnv_pci_reset_secondary_bus()
+  powerpc/pci: Don't scan empty slot
+  powerpc/pci: Move pcibios_find_pci_bus() around
+  powerpc/powernv: Introduce pnv_pci_poll()
+  powerpc/powernv: Functions to get/reset PCI slot status
+  powerpc/pci: Delay creating pci_dn
+  powerpc/pci: Create eeh_dev while creating pci_dn
+  powerpc/pci: Export traverse_pci_device_nodes()
+  powerpc/pci: Update bridge windows on PCI plugging
+  powerpc/powernv: Select OF_OVERLAY
+  drivers/of: Unflatten nodes equal or deeper than specified level
+  drivers/of: Allow to specify root node in of_fdt_unflatten_tree()
+  drivers/of: Return allocated memory chunk from of_fdt_unflatten_tree()
+  pci/hotplug: PowerPC PowerNV PCI hotplug driver
+
+ MAINTAINERS                                    |    6 +
+ arch/powerpc/include/asm/eeh.h                 |    6 +-
+ arch/powerpc/include/asm/opal-api.h            |    8 +-
+ arch/powerpc/include/asm/opal.h                |    8 +-
+ arch/powerpc/include/asm/pci-bridge.h          |   14 +-
+ arch/powerpc/include/asm/pnv-pci.h             |    7 +
+ arch/powerpc/include/asm/ppc-pci.h             |    8 +-
+ arch/powerpc/kernel/eeh_dev.c                  |   20 +-
+ arch/powerpc/kernel/pci-common.c               |   16 +-
+ arch/powerpc/kernel/pci-hotplug.c              |   44 +-
+ arch/powerpc/kernel/pci_dn.c                   |   91 +-
+ arch/powerpc/platforms/maple/pci.c             |   35 +-
+ arch/powerpc/platforms/pasemi/pci.c            |    3 -
+ arch/powerpc/platforms/powermac/pci.c          |   39 +-
+ arch/powerpc/platforms/powernv/Kconfig         |    1 +
+ arch/powerpc/platforms/powernv/eeh-powernv.c   |  180 +--
+ arch/powerpc/platforms/powernv/opal-wrappers.S |    4 +
+ arch/powerpc/platforms/powernv/pci-ioda.c      | 1770 ++++++++++++++----------
+ arch/powerpc/platforms/powernv/pci.c           |   90 +-
+ arch/powerpc/platforms/powernv/pci.h           |   59 +-
+ arch/powerpc/platforms/pseries/msi.c           |    4 +-
+ arch/powerpc/platforms/pseries/pci_dlpar.c     |   32 -
+ arch/powerpc/platforms/pseries/setup.c         |    9 +-
+ drivers/of/fdt.c                               |   85 +-
+ drivers/of/unittest.c                          |    2 +-
+ drivers/pci/hotplug/Kconfig                    |   12 +
+ drivers/pci/hotplug/Makefile                   |    4 +
+ drivers/pci/hotplug/powernv_php.c              |  140 ++
+ drivers/pci/hotplug/powernv_php.h              |   90 ++
+ drivers/pci/hotplug/powernv_php_slot.c         |  732 ++++++++++
+ drivers/pci/setup-bus.c                        |    5 +
+ include/linux/of_fdt.h                         |    5 +-
+ include/linux/pci.h                            |    1 +
+ 33 files changed, 2559 insertions(+), 971 deletions(-)
+ create mode 100644 drivers/pci/hotplug/powernv_php.c
+ create mode 100644 drivers/pci/hotplug/powernv_php.h
+ create mode 100644 drivers/pci/hotplug/powernv_php_slot.c
+
 -- 
 2.1.0
