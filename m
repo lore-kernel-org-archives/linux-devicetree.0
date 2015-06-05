@@ -1,70 +1,146 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCHv6 0/2] socfpga: support suspend to ram*
-Date: Fri, 5 Jun 2015 09:11:23 -0500
-Message-ID: <alpine.DEB.2.02.1506050910460.20527@linuxheads99>
-References: <1433270139-7042-1-git-send-email-atull@opensource.altera.com>
- <556E028E.2080800@opensource.altera.com>
- <5570D29A.2030007@opensource.altera.com>
- <CADhT+wc+w6QvUmtD_ie2_hfb_uowpfwM0YHDeasXE86MKOjA8A@mail.gmail.com>
+From: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] drivers: firmware: psci: add extended stateid
+ power_state support
+Date: Fri, 5 Jun 2015 10:16:36 -0400
+Message-ID: <CAJ5Y-eYLAjOcTU1Md3Rmc0E49A5Dby1aoBzwtpKpD4Rg=XAYfA@mail.gmail.com>
+References: <1432901799-18359-1-git-send-email-lorenzo.pieralisi@arm.com>
+	<1432901799-18359-6-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADhT+wc+w6QvUmtD_ie2_hfb_uowpfwM0YHDeasXE86MKOjA8A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinh.linux@gmail.com>
-Cc: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pavel Machek <pavel@denx.de>, Linux List <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Delicious Quinoq <delicious.quinoa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432901799-18359-6-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Jun 2015, Dinh Nguyen wrote:
+On 29 May 2015 at 08:16, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> PSCI v1.0 augmented the power_state parameter format specification
+> (extended stateid) and introduced a way to probe it through the
+> PSCI_FEATURES interface.
+>
+> This patch implements code that detects the power_state format at
+> run-time through the PSCI_FEATURES interface, so that the power_state
+> argument can be properly detected and validated in the kernel according
+> to the information provided through firmware.
+>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/firmware/psci.c   | 34 ++++++++++++++++++++++++++++++++--
+>  include/uapi/linux/psci.h | 12 ++++++++++++
+>  2 files changed, 44 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+> index 2330099..4063784 100644
+> --- a/drivers/firmware/psci.c
+> +++ b/drivers/firmware/psci.c
+> @@ -74,14 +74,34 @@ static u32 psci_function_id[PSCI_FN_MAX];
+>                                 PSCI_0_2_POWER_STATE_TYPE_MASK | \
+>                                 PSCI_0_2_POWER_STATE_AFFL_MASK)
+>
+> +#define PSCI_EXT_POWER_STATE_MASK              \
+> +                               (PSCI_EXT_POWER_STATE_ID_MASK | \
+> +                               PSCI_EXT_POWER_STATE_TYPE_MASK)
+> +
+> +static u32 psci_cpu_suspend_feature;
+> +
+> +static inline bool psci_has_ext_power_state(void)
+> +{
+> +       return psci_cpu_suspend_feature &
+> +                               PSCI_FEATURES_CPU_SUSPEND_PF_MASK;
+> +}
+> +
+>  bool psci_power_state_loses_context(u32 state)
+>  {
+> -       return state & PSCI_0_2_POWER_STATE_TYPE_MASK;
+> +       const u32 mask = psci_has_ext_power_state() ?
+> +                                       PSCI_EXT_POWER_STATE_TYPE_MASK :
+> +                                       PSCI_0_2_POWER_STATE_TYPE_MASK;
+> +
+> +       return state & mask;
+>  }
+>
+>  bool psci_power_state_is_valid(u32 state)
+>  {
+> -       return !(state & ~PSCI_0_2_POWER_STATE_MASK);
+> +       const u32 valid_mask = psci_has_ext_power_state() ?
+> +                              PSCI_EXT_POWER_STATE_MASK :
+> +                              PSCI_0_2_POWER_STATE_MASK;
+> +
+> +       return !(state & ~valid_mask);
+>  }
+>
+>  static int psci_to_linux_errno(int errno)
+> @@ -202,6 +222,14 @@ static int __init psci_features(u32 psci_func_id)
+>                               psci_func_id, 0, 0);
+>  }
+>
+> +static void __init psci_init_cpu_suspend(void)
+> +{
+> +       int feature = psci_features(psci_function_id[PSCI_FN_CPU_SUSPEND]);
+> +
+> +       if (feature != PSCI_RET_NOT_SUPPORTED)
+> +               psci_cpu_suspend_feature = feature;
+> +}
+> +
+>  /*
+>   * Detect the presence of a resident Trusted OS which may cause CPU_OFF to
+>   * return DENIED (which would be fatal).
+> @@ -280,6 +308,8 @@ static int __init psci_probe(void)
+>
+>         psci_init_migrate();
+>
+> +       psci_init_cpu_suspend();
+> +
+>         return 0;
+>  }
+>
+> diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
+> index 187b828d..2598d7c 100644
+> --- a/include/uapi/linux/psci.h
+> +++ b/include/uapi/linux/psci.h
+> @@ -58,6 +58,13 @@
+>  #define PSCI_0_2_POWER_STATE_AFFL_MASK         \
+>                                 (0x3 << PSCI_0_2_POWER_STATE_AFFL_SHIFT)
+>
+> +/* PSCI extended power state encoding for CPU_SUSPEND function */
+> +#define PSCI_EXT_POWER_STATE_ID_MASK           0xfffffff
+> +#define PSCI_EXT_POWER_STATE_ID_SHIFT          0
+> +#define PSCI_EXT_POWER_STATE_TYPE_SHIFT                30
+> +#define PSCI_EXT_POWER_STATE_TYPE_MASK         \
+> +                               (0x1 << PSCI_EXT_POWER_STATE_TYPE_SHIFT)
+> +
 
-> On Thu, Jun 4, 2015 at 5:35 PM, Dinh Nguyen
-> <dinguyen@opensource.altera.com> wrote:
-> > Hi Alan,
-> >
-> > On 06/02/2015 02:22 PM, Dinh Nguyen wrote:
-> >> On 06/02/2015 01:35 PM, Alan Tull wrote:
-> >>> Support suspend to ram on socfpga.
-> >>>   * allocate space in ocram using sram driver.
-> >>>   * Add a function in ocram to place DDR in self-refresh
-> >>>     and suspend.
-> >>>   * Prevent suspend if EDAC is enabled.
-> >>>   * Add a device tree binding document for the Altera
-> >>>     SOCFPGA SDRAM controller that is used to put DDR in
-> >>>     self-refresh mode.
-> >>>
-> >>> Alan Tull (2):
-> >>>   ARM: socfpga: support suspend to ram
-> >>>   ARM: socfpga: dts: add sdram controller dt binding doc
-> >>>
-> >>>  .../arm/altera/socfpga-sdram-controller.txt        |   12 ++
-> >>>  arch/arm/mach-socfpga/Kconfig                      |   10 +-
-> >>>  arch/arm/mach-socfpga/Makefile                     |    1 +
-> >>>  arch/arm/mach-socfpga/core.h                       |    6 +-
-> >>>  arch/arm/mach-socfpga/pm.c                         |  149 ++++++++++++++++++++
-> >>>  arch/arm/mach-socfpga/self-refresh.S               |  136 ++++++++++++++++++
-> >>>  arch/arm/mach-socfpga/socfpga.c                    |    6 +-
-> >>>  drivers/edac/altera_edac.c                         |   20 +++
-> >>>  8 files changed, 337 insertions(+), 3 deletions(-)
-> >>>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
-> >>>  create mode 100644 arch/arm/mach-socfpga/pm.c
-> >>>  create mode 100644 arch/arm/mach-socfpga/self-refresh.S
-> >>>
-> >>
-> >>
-> >> Applied.
-> >>
-> >
-> > I had to un-apply this patch because I noticed that it's touching
-> > drivers/edac/altera_edac.c. This part should be a separate patch and
-> > need to go through linux-edac.
-> >
-> 
-> Nevermind on this, I got an ack-by from Borislav Petkov for the edac
-> part. No need to split the patch up.
-> 
-> Dinh
-> 
+For consistency, dont you need version numbers here, like we have for v0.2?
 
-Sorry for the trouble and Thanks!
+>  /* PSCI v0.2 affinity level state returned by AFFINITY_INFO */
+>  #define PSCI_0_2_AFFINITY_LEVEL_ON             0
+>  #define PSCI_0_2_AFFINITY_LEVEL_OFF            1
+> @@ -78,6 +85,11 @@
+>  #define PSCI_VERSION_MINOR(ver)                        \
+>                 ((ver) & PSCI_VERSION_MINOR_MASK)
+>
+> +/* PSCI features decoding (>=1.0) */
+> +#define PSCI_FEATURES_CPU_SUSPEND_PF_SHIFT     1
+> +#define PSCI_FEATURES_CPU_SUSPEND_PF_MASK      \
+> +                       (0x1 << PSCI_FEATURES_CPU_SUSPEND_PF_SHIFT)
+> +
 
-Alan
+Likewise.
+
+>  /* PSCI return values (inclusive of all PSCI versions) */
+>  #define PSCI_RET_SUCCESS                       0
+>  #define PSCI_RET_NOT_SUPPORTED                 -1
+> --
+> 2.2.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
