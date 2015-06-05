@@ -1,21 +1,36 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v7 2/3] ARM: bcm2835: Add the Raspberry Pi firmware driver
-Date: Thu, 04 Jun 2015 21:14:48 -0600
-Message-ID: <55711428.4080506@wwwdotorg.org>
-References: <1433448707-18104-1-git-send-email-eric@anholt.net> <1433448707-18104-2-git-send-email-eric@anholt.net>
+From: Feng Kan <fkan@apm.com>
+Subject: Re: [PATCH v0] gpio_keys: fix gpio key driver to proper support GIC interrupt
+Date: Thu, 4 Jun 2015 20:37:50 -0700
+Message-ID: <CAL85gmC2oHVKzgfNFXRzSzigQu++OJv-TpwzeN5fC-5s3U0U-Q@mail.gmail.com>
+References: <1433402712-21399-1-git-send-email-yvo@apm.com>
+	<20150604172324.GA9074@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433448707-18104-2-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, Lee Jones <lee@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150604172324.GA9074@dtor-ws>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Y Vo <yvo@apm.com>, linux-input@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/04/2015 02:11 PM, Eric Anholt wrote:
-> This gives us a function for making mailbox property channel requests
-> of the firmware, which is most notable in that it will let us get and
-> set clock rates.
+On Thu, Jun 4, 2015 at 10:23 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> Hi Y,
+> On Thu, Jun 04, 2015 at 02:25:12PM +0700, Y Vo wrote:
+>> GIC is designed to support two of trigger mechanisms - active level
+>> high or edge rising. But in the gpio_keys driver, it tries to use both
+>> edge rising and edge falling trigger. This patch fixes the gpio_keys
+>> driver to request only the edge rising event when failed to configure the
+>> interrupt.
+>
+> How do we get notified of button release if we only get interrupt on
+> rising edge?
 
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+On the arm gic, only the rising edge is supported. So key press can
+only be defined
+as rising edge and no key release.
+>
+> Thanks.
+>
+> --
+> Dmitry
