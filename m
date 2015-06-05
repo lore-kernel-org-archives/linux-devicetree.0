@@ -1,43 +1,53 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Dealing with optional i2c devices in a devicetree
-Date: Fri, 5 Jun 2015 06:03:30 +0000
-Message-ID: <55713BB1.80004@alliedtelesis.co.nz>
+From: YH Huang <yh.huang@mediatek.com>
+Subject: Re: [PATCH v2 0/2] Add MediaTek display PWM driver
+Date: Fri, 5 Jun 2015 14:15:29 +0800
+Message-ID: <1433484929.17376.17.camel@mtksdaap41>
+References: <1432214964-40644-1-git-send-email-yh.huang@mediatek.com>
+	 <1432520091.23308.5.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Content-ID: <A3BC7F62CB85944BA8075D6309CB73F9-aR5bhbO/t7M@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "jdelvare-l3A5Bk7waGM@public.gmane.org" <jdelvare-l3A5Bk7waGM@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org" <guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432520091.23308.5.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkknbSB3b3JraW5nIG9uIGEgbmV3IGJvYXJkIGFuZCBvbmUgZmVhdHVyZSBpdCBhcyBp
-cyBhIHBsdWctaW4gbW9kdWxlIA0Kd2l0aCBhbiBBRFM3ODMwIHZvbHRhZ2UgbW9uaXRvciBvbiBp
-dC4gVGhpcyB3aWxsIGJlIHVzZWQgZHVyaW5nIA0KbWFudWZhY3R1cmluZyB0byBzYW5pdHkgY2hl
-Y2sgdGhhdCB2YXJpb3VzIHZvbHRhZ2UgcmFpbHMgYXJlIHdpdGhpbiANCmV4cGVjdGVkIHJhbmdl
-cy4NCg0KSSBoYXZlIGEgZHRzIGVudHJ5IGZvciB0aGUgZGV2aWNlIGFzIGJlbG93ICh3aXRoIHNv
-bWUgb21pc3Npb25zIGZvciB0aGUgDQpzYWtlIG9mIGNsYXJpdHkpDQoNCglzb2Mgew0KCQlpbnRl
-cm5hbC1yZWdzIHsNCgkJCWkyY0AxMTAwMCB7DQoJCQkJYWRzNzgzMEA0OCB7DQoJCQkJCWNvbXBh
-dGlibGUgPSAiYWRzNzgzMCI7DQoJCQkJCXJlZyA9IDwweDQ4PjsNCgkJCQl9Ow0KCQkJfTsNCgkJ
-fTsNCgl9Ow0KDQpUaGUgcHJvYmxlbSBpcyB0aGF0IHdoZW4gdGhlIG1hbnVmYWN0dXJpbmcgY2Fy
-ZCBpcyBub3QgaW5zdGFsbGVkIHRoZSANCmRldmljZSBzdGlsbCBzaG93cyB1cCBpbiAvc3lzL2Ns
-YXNzL2h3bW9uL2h3bW9uMC8gYW5kIA0KL3N5cy9idXMvaTJjL2RldmljZXMvMC0wMDQ4LyBkZXNw
-aXRlIGl0IG5vdCBhY3R1YWxseSBiZWluZyBwcmVzZW50LiBJZiBJIA0Kd2FzIHVzaW5nIGFuIG9s
-ZCBzdHlsZSBpbml0aWFsaXphdGlvbiBJIGNvdWxkIHVzZSANCmkyY19uZXdfcHJvYmVkX2Rldmlj
-ZSgpIHdoaWNoIEkgdGhpbmsgd291bGQgc3RvcCB0aGUgZHJpdmVycyBwcm9iZSgpIA0KZnVuY3Rp
-b24gZnJvbSBiZWluZyBjYWxsZWQNCg0KTG9va2luZyBhdCB0aGUgYWRzNzgyOF9wcm9iZSgpIGZ1
-bmN0aW9uIGl0IGRvZXNuJ3QgYWN0dWFsbHkgZG8gYW55dGhpbmcgDQp3aXRoIHRoZSBpMmMgZGV2
-aWNlIGJlZm9yZSBjYWxsaW5nIGh3bW9uX2RldmljZV9yZWdpc3RlcigpLiBTb21lIGh3bW9uIA0K
-ZHJpdmVycyBsaWtlIGxtNzNfcHJvYmUoKSBkbyBhdHRlbXB0IHRvIHJlYWQgZnJvbSB0aGUgZGV2
-aWNlIGFuZCBiYWlsIGlmIA0KdGhlIHJlYWQgZmFpbHMuIEkgY2FuIHByb2JhYmx5IGZpeCBteSBw
-cm9ibGVtIGJ5IGRvaW5nIHNvbWV0aGluZyBzaW1pbGFyIA0KaW4gdGhlIGFkczc4MjhfcHJvYmUo
-KSwgYnV0IHRoZXJlIGFyZSBvdGhlciBkcml2ZXJzIHRoYXQgaGF2ZSBhIHNpbWlsYXIgDQpwcm9i
-ZSBmdW5jdGlvbi4NCg0KSXMgdGhlcmUgYSBiZXR0ZXIgd2F5IG9mIGdldHRpbmcgdGhlIGRldmlj
-ZXRyZWUgbWFjaGluZXJ5IHRvIGF2b2lkIHRoZSANCmNhbGwgdG8gdGhlIGRyaXZlciBwcm9iZSBm
-dW5jdGlvbiBpbiB0aGUgZmlyc3QgcGxhY2U/DQoNClRoYW5rcywNCkNocmlz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, 2015-05-25 at 10:14 +0800, Yingjoe Chen wrote:
+> On Thu, 2015-05-21 at 21:29 +0800, YH Huang wrote:
+
+This patch series add the use of display PWM driver and documentation 
+for Mediatek SoCs. The driver is used to support the backlight of 
+the panel. This is based on v4.1-rc1. 
+
+> > YH Huang (2):
+> >   dt-bindings: pwm: add MediaTek display PWM bindings
+> >   pwm: add MediaTek display PWM driver support
+> > 
+> >  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |  25 +++
+> >  drivers/pwm/Kconfig                                |  10 +
+> >  drivers/pwm/Makefile                               |   1 +
+> >  drivers/pwm/pwm-mtk-disp.c                         | 228 +++++++++++++++++++++
+> >  4 files changed, 264 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> >  create mode 100644 drivers/pwm/pwm-mtk-disp.c
+> 
+> Hi YH,
+> 
+> It would be easier for reviewer if you have a summary here on what you
+> have changed compare to last version.
+> Also, please add patch series summary even for v2, it remind reviewer
+> what this series is about.
+> 
+> Joe.C
+> 
+
+The patch v2 is refined with everybody's suggestions.
+It is much readable and consistent.
+
+If anyone has any suggestions, please just let me know.
+Thank you.
+
+Regards,
+YH Huang
