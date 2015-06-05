@@ -1,34 +1,77 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v7 2/3] ARM: bcm2835: Add the Raspberry Pi firmware driver
-Date: Fri, 05 Jun 2015 13:41:15 -0600
-Message-ID: <5571FB5B.2030805@wwwdotorg.org>
-References: <1433448707-18104-1-git-send-email-eric@anholt.net> <1433448707-18104-2-git-send-email-eric@anholt.net> <55711428.4080506@wwwdotorg.org> <20150605192135.GA3301@x1>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v5 01/42] PCI: Add pcibios_setup_bridge()
+Date: Fri, 5 Jun 2015 14:44:32 -0500
+Message-ID: <20150605194432.GN3631@google.com>
+References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1433400131-18429-2-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150605192135.GA3301@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1433400131-18429-2-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, aik@ozlabs.ru, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/2015 01:21 PM, Lee Jones wrote:
-> On Thu, 04 Jun 2015, Stephen Warren wrote:
->
->> On 06/04/2015 02:11 PM, Eric Anholt wrote:
->>> This gives us a function for making mailbox property channel requests
->>> of the firmware, which is most notable in that it will let us get and
->>> set clock rates.
->>
->> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->
-> Does anyone know how drivers/firmware/ is managed?  I don't seem to be
-> able to find a maintainer/supporter listed in MAINTAINERS.
+On Thu, Jun 04, 2015 at 04:41:30PM +1000, Gavin Shan wrote:
+> Currently, PowerPC PowerNV platform utilizes ppc_md.pcibios_fixup(),
+> which is called for once after PCI probing and resource assignment
+> are completed, to allocate platform required resources for PCI devices:
+> PE#, IO and MMIO mapping, DMA address translation (TCE) table etc.
+> Obviously, it's not hotplug friendly.
+> 
+> The patch adds weak function pcibios_setup_bridge(), which is called
+> by pci_setup_bridge(). PowerPC PowerNV platform will reuse the function
+> to assign above platform required resources to newly added PCI devices,
+> in order to support PCI hotplug in subsequent patches.
+> 
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 
-git log implies lots of different committers. I'd suggest send it 
-through arm-soc with the rest of the series.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+> v5:
+>   * Corrected subject as Bjorn suggested
+>   * pci_setup_bridge() calls pcibios_setup_bridge() and __pci_setup_bridge()
+> ---
+>  drivers/pci/setup-bus.c | 5 +++++
+>  include/linux/pci.h     | 1 +
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 4fd0cac..623dee3 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -693,11 +693,16 @@ static void __pci_setup_bridge(struct pci_bus *bus, unsigned long type)
+>  	pci_write_config_word(bridge, PCI_BRIDGE_CONTROL, bus->bridge_ctl);
+>  }
+>  
+> +void __weak pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
+> +{
+> +}
+> +
+>  void pci_setup_bridge(struct pci_bus *bus)
+>  {
+>  	unsigned long type = IORESOURCE_IO | IORESOURCE_MEM |
+>  				  IORESOURCE_PREFETCH;
+>  
+> +	pcibios_setup_bridge(bus, type);
+>  	__pci_setup_bridge(bus, type);
+>  }
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 94bacfa..5aacd0a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -811,6 +811,7 @@ void pci_stop_and_remove_bus_device_locked(struct pci_dev *dev);
+>  void pci_stop_root_bus(struct pci_bus *bus);
+>  void pci_remove_root_bus(struct pci_bus *bus);
+>  void pci_setup_cardbus(struct pci_bus *bus);
+> +void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type);
+>  void pci_sort_breadthfirst(void);
+>  #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
+>  #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
+> -- 
+> 2.1.0
+> 
