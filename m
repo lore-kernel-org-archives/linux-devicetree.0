@@ -1,102 +1,101 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 15/20] ARM: dts: sun7i: Enable USB DRC on Bananapi (BROKEN!)
-Date: Fri, 05 Jun 2015 21:15:09 +0200
-Message-ID: <5571F53D.1090104@redhat.com>
-References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com> <1433530943-12599-16-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH 5/7] musb: sunxi: Remove special MUSB_SUN4I flag for clearing ep0 addr on disconnect
+Date: Fri,  5 Jun 2015 20:53:39 +0200
+Message-ID: <1433530421-12197-6-git-send-email-hdegoede@redhat.com>
+References: <1433530421-12197-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433530943-12599-16-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1433530421-12197-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+We can cleanly handle this inside the sunxi glue, instead of adding special
+casing to the core, but setting ep0 addr to 0 on a reset interrupt.
 
-On 05-06-15 21:02, Hans de Goede wrote:
-> Enable the otg/drc usb controller on the Bananapi.
->
-> This is based on the fex file settings which claim that vbus-det is
-> PH5, but this does not work and the schematic shows that it is actually
-> connected to gpio1 of the axp209, so we cannot add otg support for the
-> bananapi until we get support for the axp209 gpio pins in the kernel.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/usb/musb/musb_core.h    | 1 -
+ drivers/usb/musb/musb_gadget.c  | 6 ------
+ drivers/usb/musb/musb_virthub.c | 6 ------
+ drivers/usb/musb/sunxi.c        | 8 +++++++-
+ 4 files changed, 7 insertions(+), 14 deletions(-)
 
-This one obviously should not have been part of this set, please
-ignore this one.
+diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+index 30a3123..b1cb2c3 100644
+--- a/drivers/usb/musb/musb_core.h
++++ b/drivers/usb/musb/musb_core.h
+@@ -169,7 +169,6 @@ struct musb_io;
+  */
+ struct musb_platform_ops {
+ 
+-#define MUSB_SUN4I		BIT(7)
+ #define MUSB_DMA_UX500		BIT(6)
+ #define MUSB_DMA_CPPI41		BIT(5)
+ #define MUSB_DMA_CPPI		BIT(4)
+diff --git a/drivers/usb/musb/musb_gadget.c b/drivers/usb/musb/musb_gadget.c
+index ec2e908..4c481cd 100644
+--- a/drivers/usb/musb/musb_gadget.c
++++ b/drivers/usb/musb/musb_gadget.c
+@@ -2003,12 +2003,6 @@ void musb_g_disconnect(struct musb *musb)
+ 		spin_lock(&musb->lock);
+ 	}
+ 
+-	/* On sunxi ep0 FADDR must be 0 when (re)entering peripheral mode */
+-	if (musb->io.quirks & MUSB_SUN4I) {
+-		musb_ep_select(musb->mregs, 0);
+-		musb_writeb(musb->mregs, MUSB_FADDR, 0);
+-	}
+-
+ 	switch (musb->xceiv->otg->state) {
+ 	default:
+ 		dev_dbg(musb->controller, "Unhandled disconnect %s, setting a_idle\n",
+diff --git a/drivers/usb/musb/musb_virthub.c b/drivers/usb/musb/musb_virthub.c
+index fe98623..30842bc 100644
+--- a/drivers/usb/musb/musb_virthub.c
++++ b/drivers/usb/musb/musb_virthub.c
+@@ -226,12 +226,6 @@ void musb_root_disconnect(struct musb *musb)
+ 	usb_hcd_poll_rh_status(musb->hcd);
+ 	musb->is_active = 0;
+ 
+-	/* On sunxi ep0 FADDR must be 0 when (re)entering peripheral mode */
+-	if (musb->io.quirks & MUSB_SUN4I) {
+-		musb_ep_select(musb->mregs, 0);
+-		musb_writeb(musb->mregs, MUSB_FADDR, 0);
+-	}
+-
+ 	switch (musb->xceiv->otg->state) {
+ 	case OTG_STATE_A_SUSPEND:
+ 		if (otg->host->b_hnp_enable) {
+diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
+index 5db882f..8fc39af 100644
+--- a/drivers/usb/musb/sunxi.c
++++ b/drivers/usb/musb/sunxi.c
+@@ -183,6 +183,12 @@ static irqreturn_t sunxi_musb_interrupt(int irq, void *__hci)
+ 		musb->int_usb |= MUSB_INTR_DISCONNECT;
+ 	}
+ 
++	if ((musb->int_usb & MUSB_INTR_RESET) && !is_host_active(musb)) {
++		/* ep0 FADDR must be 0 when (re)entering peripheral mode */
++		musb_ep_select(musb->mregs, 0);
++		musb_writeb(musb->mregs, MUSB_FADDR, 0);
++	}
++
+ 	musb->int_tx = readw(musb->mregs + SUNXI_MUSB_INTRTX);
+ 	if (musb->int_tx)
+ 		writew(musb->int_tx, musb->mregs + SUNXI_MUSB_INTRTX);
+@@ -519,7 +525,7 @@ static void sunxi_musb_writew(void __iomem *addr, unsigned offset, u16 data)
+ }
+ 
+ static const struct musb_platform_ops sunxi_musb_ops = {
+-	.quirks		= MUSB_INDEXED_EP | MUSB_SUN4I,
++	.quirks		= MUSB_INDEXED_EP,
+ 	.init		= sunxi_musb_init,
+ 	.exit		= sunxi_musb_exit,
+ 	.enable		= sunxi_musb_enable,
+-- 
+2.4.2
 
-Thanks,
-
-Hans
-
-
-> ---
->   arch/arm/boot/dts/sun7i-a20-bananapi.dts | 32 ++++++++++++++++++++++++++++++++
->   1 file changed, 32 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> index 9f7b472..ce318bf 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> @@ -159,7 +159,25 @@
->   	status = "okay";
->   };
->
-> +&otg_sram {
-> +	status = "okay";
-> +};
-> +
->   &pio {
-> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-> +		allwinner,pins = "PH4";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +	};
-> +
-> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-> +		allwinner,pins = "PH5";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
-> +	};
-> +
->   	mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
->   		allwinner,pins = "PH10";
->   		allwinner,function = "gpio_in";
-> @@ -182,6 +200,10 @@
->   	};
->   };
->
-> +&reg_usb0_vbus {
-> +	status = "okay";
-> +};
-> +
->   &reg_usb1_vbus {
->   	status = "okay";
->   };
-> @@ -216,7 +238,17 @@
->   	status = "okay";
->   };
->
-> +&usb_otg {
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
->   &usbphy {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-> +	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-> +	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-> +	usb0_vbus-supply = <&reg_usb0_vbus>;
->   	usb1_vbus-supply = <&reg_usb1_vbus>;
->   	usb2_vbus-supply = <&reg_usb2_vbus>;
->   	status = "okay";
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
