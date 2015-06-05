@@ -1,48 +1,62 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: of/dynamic: Fix test for PPC_PSERIES
-Date: Fri, 05 Jun 2015 10:44:48 +0900
-Message-ID: <20150605014448.8C8C5C407BD@trevor.secretlab.ca>
-References: <20150604105732.77DFE140273@ozlabs.org>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
+Date: Fri, 5 Jun 2015 09:45:37 +0800
+Message-ID: <1433468737.14416.7.camel@mtksdaap41>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <20150528132452.GI26575@pengutronix.de>
+	 <1432867649.15597.46.camel@mtksdaap41>
+	 <20150529062345.GY6325@pengutronix.de>
+	 <20150604210212.GM676@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150604105732.77DFE140273-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20150604210212.GM676-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  4 Jun 2015 20:57:32 +1000 (AEST)
-, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
- wrote:
-> On Thu, 2015-04-06 at 09:34:41 UTC, Geert Uytterhoeven wrote:
-> > "IS_ENABLED(PPC_PSERIES)" always evaluates to false, as IS_ENABLED() is
-> > supposed to be used with the full Kconfig symbol name, including the
-> > "CONFIG_" prefix.
-> > 
-> > Add the missing "CONFIG_" prefix to fix this.
-> > 
-> > Fixes: a25095d451ece23b ("of: Move dynamic node fixups out of powerpc and into common code")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> > ---
-> 
-> > Did this bug cause any breakage?
-> > If yes, the fix should go to stable (for v3.17 and later).
-> 
-> Yikes. Not that I've heard of. But it's reasonably new so possibly it's not hit
-> distros that folks tend to run on those machines.
-> 
-> I'm also not clear how it would break, it could be subtle and we've not noticed.
-> 
-> Nathan might have more of an idea (on CC).
-> 
-> On my machine here everything that has an ibm,phandle also has a linux,phandle,
-> so we wouldn't hit that code path. But I'm not sure how representative that box
-> is.
-> 
-> cheers
+Hi Stephen,
 
-Still, an obvious bug. I've picked it up and marked for stable.
+On Thu, 2015-06-04 at 14:02 -0700, Stephen Boyd wrote:
+> On 05/29, Sascha Hauer wrote:
+> > Yes. I previously got the impression that the subsystem clocks are not
+> > directly associated to the larbs, but needed to be handled by the larb
+> > code due to some side effect. Now that I saw that the larbs are directly
+> > in the subsystem register space it all makes sense.
+> > 
+> > Note that the way Mediatek SoCs are designed around sub modules is bit
+> > unusual and does not fit very well in the Linux directory structure.
+> > Normally SoCs have a single clocks controller which controls all clocks
+> > in the SoC. Then you often have a reset controller providing reset lines
+> > in the SoC. In this case it's clear that the clk driver goes to
+> > drivers/clk/, the reset controller driver to drivers/reset/. Mediatek
+> > SoCs instead have several blocks, each with its own clock and reset
+> > controller. Splitting each block up into parts in drivers/clk/ and
+> > drivers/reset/ leads to quite a code fragmentation.
+> > This is my opinion, it would be great to hear something from others.
+> > Matthias? I'd like to avoid running into a direction that is not
+> > acceptable in the end.
+> 
+> We already have drivers registering clocks and resets under
+> drivers/clk, so it's not unheard of. An alternative solution is
+> to make child devices for the clock part and the reset part at
+> runtime in the toplevel driver for the vencsys device (don't do
+> any sort of DT description for this) and use regmap to mediate
+> the register accesses and locking. That way we can put the clk
+> driver in drivers/clk/, the reset driver in drivers/reset, etc.
+> so that logically related code is grouped.
 
-g.
+I have a question about the alternative way you mentioned. Currently
+clock providers and consumers describe what clocks they will provide /
+consume in device tree. If we don't describe vencsys clocks in device
+tree, how to get vencsys clocks for drivers that need to control them?
+
+
+Best regards,
+
+James
 
 
 --
