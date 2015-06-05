@@ -1,66 +1,50 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Fri, 5 Jun 2015 13:02:01 +0200
-Message-ID: <20150605110159.GA16254@ulmo.nvidia.com>
-References: <4184159.j0iXe39dFB@phil>
- <2619686.csNBBFyt8W@phil>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv2 0/4] Add Altera Arria10 EDAC Support
+Date: Fri, 5 Jun 2015 13:02:56 +0200
+Message-ID: <20150605110255.GE3679@pd.tnic>
+References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2619686.csNBBFyt8W@phil>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMjMsIDIwMTUgYXQgMDc6MTc6NDlQTSArMDEwMCwgSGVpa28gU3R1ZWJuZXIg
-d3JvdGU6Cj4gSGkgUGhpbGlwcCwKPiAKPiBBbSBEb25uZXJzdGFnLCAxMi4gTcOkcnogMjAxNSwg
-MjE6NDU6MTkgc2NocmllYiBIZWlrbyBTdHVlYm5lcjoKPiA+IEF0IGxlYXN0IHRoZSBSb2NrY2hp
-cCB2YXJpYW50IG9mIHRoZSBkd19oZG1pIGNhbiBoYXZlIGNvbnRyb2xsYWJsZSBwb3dlcgo+ID4g
-c3VwcGxpZXMgcHJvdmlkaW5nIDEuMCBhbmQgMS44Vi4gVGhlcmVmb3JlIGFkZCB0aGUgcG9zc2li
-aWxpdHkgZm9yIHRoZQo+ID4gZ2VuZXJpYyBicmlkZ2UgZHJpdmVyIHRvIGVuYWJsZSBzdXBwbGll
-cyBwcm92aWRlZCBieSB0aGUgaHctc3BlY2lmaWMKPiA+IGRyaXZlcnMuCj4gPiAKPiA+IFNpZ25l
-ZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gCj4gZG9lcyB0aGlz
-IGxvb2sgb2sgbm93Pwo+IAo+IEFuZCBhcyB3ZSB0YWxrZWQgYWJvdXQgaW4gQ2hlbW5pdHosIHdo
-byB3aWxsIGJlIHRha2luZyBzdWNoIGJyaWRnZS1yZWxhdGVkIAo+IGNoYW5nZXMsIGFzIHlvdSBt
-ZW50aW9uZWQgc29tZSBsYXN0IGJyaWRnZS1wYXRjaGVzIGdvaW5nIHRocm91Z2ggVGhpZXJyeS4K
-ClNvcnJ5LCBJIGhhZCBjb21wbGV0ZWx5IG1pc3NlZCB0aGlzLgoKPiA+IC0tLQo+ID4gY2hhbmdl
-cyBzaW5jZSB2MjoKPiA+IC0gcmVuYW1lIHN1cHBsaWVzIHRvIHRoZSBuYW1lcyBmb3VuZCBpbiB0
-aGUgaGRtaSBJUCBkYXRhYm9vawo+ID4gY2hhbmdlcyBzaW5jZSB2MToKPiA+IC0gZm9sbG93IHN1
-Z2dlc3Rpb24gZnJvbSBSdXNzZWxsIEtpbmcgdG8ga2VlcCByZWd1bGF0b3IgaGFuZGxpbmcgbG9j
-YWwKPiA+ICAgdG8gdGhlIHJvY2tjaGlwIGltcGxlbWVudGF0aW9uIGZvciB0aGUgdGltZSBiZWlu
-ZyBhbmQgb25seSBnZW5lcmFsaXplCj4gPiAgIHdoZW4gYSByZWFsIHNlY29uZCBpbXBsZW1lbnRh
-dGlvbiBuZWVkcyByZWd1bGF0b3IgaGFuZGxpbmcKPiA+IAo+ID4gIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQgICAgIHwgIDUgKysrKwo+ID4gIGRyaXZlcnMv
-Z3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAgICAgIHwgMzIKPiA+ICsrKysr
-KysrKysrKysrKysrKysrKy0gMiBmaWxlcyBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspLCAxIGRl
-bGV0aW9uKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dCBpbmRleAo+ID4gYTkwNWMxNC4u
-YmI3NDY0MCAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+ID4gQEAgLTIyLDYgKzIyLDExIEBA
-IE9wdGlvbmFsIHByb3BlcnRpZXMKPiA+ICAtIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEky
-QyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPiA+ICAtIGNsb2NrcywgY2xv
-Y2stbmFtZXM6IHBoYW5kbGUgdG8gdGhlIEhETUkgQ0VDIGNsb2NrLCBuYW1lIHNob3VsZCBiZSAi
-Y2VjIgo+ID4gCj4gPiArT3B0aW9uYWwgc3VwcGxpZXM6Cj4gPiArcm9ja2NoaXAscmszMjg4LWR3
-LWhkbWkgaGFuZGxlcyB0d28gb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXM6Cj4gPiArLSB2cC1zdXBw
-bHk6IDEuMFYgcG93ZXIgc3VwcGx5Cj4gPiArLSB2cGgtc3VwcGx5OiAxLjhWIHBvd2VyIHN1cHBs
-eQoKSWYgdGhpcyBpcyBzcGVjaWZpYyB0byB0aGUgUm9ja2NoaXAgaW1wbGVtZW50YXRpb24sIHNo
-b3VsZG4ndCB0aGlzIGdvCmludG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Zp
-ZGVvL2R3X2hkbWktcm9ja2NoaXAudHh0PyBJdApjb3VsZCB0aGVuIHNpbXBseSBnbyBpbnRvIHRo
-ZSBSb2NrY2hpcCBEUk0gdHJlZS4KClRoaWVycnkKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Jun 04, 2015 at 09:28:44AM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> This series of patches adds support for the Arria10 EDAC. The
+> SDRAM controller and ECC registers are significantly different
+> from the CycloneV/ArriaV but common areas could be abstracted.
+> 
+> Thor Thayer (4):
+>   edac, altera: Generalize driver to use DT Memory size
+>   edac, altera: Refactor EDAC for Altera CycloneV SoC.
+>   edac, altera: Addition of Arria10 EDAC
+>   arm: socfpga: dts: Arria10 SDRAM EDAC DTS additions.
+> 
+>  .../bindings/arm/altera/socfpga-sdram-edac.txt     |    2 +-
+>  arch/arm/boot/dts/socfpga_arria10.dtsi             |   11 +
+>  drivers/edac/altera_edac.c                         |  364 ++++++++++++--------
+>  drivers/edac/altera_edac.h                         |  201 +++++++++++
+>  4 files changed, 437 insertions(+), 141 deletions(-)
+>  create mode 100644 drivers/edac/altera_edac.h
+
+Ok, all applied, no need to redo them.
+
+altera_edac still builds ok with the cross compiler here but you should
+doublecheck my final result just in case:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git#for-next
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
