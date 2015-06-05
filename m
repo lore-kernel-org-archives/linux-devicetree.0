@@ -1,175 +1,44 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 6/7] musb: sunxi: Add support for musb controller in A31 SoC
-Date: Fri,  5 Jun 2015 20:53:40 +0200
-Message-ID: <1433530421-12197-7-git-send-email-hdegoede@redhat.com>
-References: <1433530421-12197-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 17/20] ARM: dts: sun8i: Enable USB DRC on Ippo Q8H-A33 tablet
+Date: Fri,  5 Jun 2015 21:02:20 +0200
+Message-ID: <1433530943-12599-18-git-send-email-hdegoede@redhat.com>
+References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433530421-12197-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1433530943-12599-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A31 SoC uses the same musb controller as found in earlier SoCs, but it
-is hooked up slightly different. Its SRAM is private and no longer controlled
-through the SRAM controller, and its reset is controlled via a separate
-reset controller. This commit adds support for this setup.
+Enable the otg/drc usb controller on the Ippo Q8H-A33 tablet, for now it
+is enabled in host-only mode, because true OTG support requires support
+for detecting and enabling Vbus through the axp221 pmic.
+
+For this to work the Vbus on the port must be enabled by u-boot,
+or a powered hub must be used.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- .../bindings/usb/allwinner,sun4i-a10-musb.txt      |  3 +-
- drivers/usb/musb/sunxi.c                           | 50 +++++++++++++++++++---
- 2 files changed, 46 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2-lcd1024x600.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
-index 21dfc7f..c5ef893 100644
---- a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
-+++ b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
-@@ -2,9 +2,10 @@ Allwinner sun4i A10 musb DRC/OTG controller
- -------------------------------------------
- 
- Required properties:
-- - compatible      : "allwinner,sun4i-a10-musb"
-+ - compatible      : "allwinner,sun4i-a10-musb" or "allwinner,sun6i-a31-musb"
-  - reg             : mmio address range of the musb controller
-  - clocks          : clock specifier for the musb controller ahb gate clock
-+ - reset           : reset specifier for the ahb reset (A31 and newer only)
-  - interrupts      : interrupt to which the musb controller is connected
-  - interrupt-names : must be "mc"
-  - phys            : phy specifier for the otg phy
-diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
-index 8fc39af..8eccbb7 100644
---- a/drivers/usb/musb/sunxi.c
-+++ b/drivers/usb/musb/sunxi.c
-@@ -26,6 +26,7 @@
- #include <linux/of.h>
- #include <linux/phy/phy-sun4i-usb.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- #include <linux/soc/sunxi/sunxi_sram.h>
- #include <linux/usb/musb.h>
- #include <linux/usb/of.h>
-@@ -70,6 +71,8 @@
- #define SUNXI_MUSB_FL_HOSTMODE_PEND		2
- #define SUNXI_MUSB_FL_VBUS_ON			3
- #define SUNXI_MUSB_FL_PHY_ON			4
-+#define SUNXI_MUSB_FL_HAS_SRAM			5
-+#define SUNXI_MUSB_FL_HAS_RESET			6
- 
- /* Our read/write methods need access and do not get passed in a musb ref :| */
- struct musb *sunxi_musb;
-@@ -78,6 +81,7 @@ struct sunxi_glue {
- 	struct device		*dev;
- 	struct platform_device	*musb;
- 	struct clk		*clk;
-+	struct reset_control	*rst;
- 	struct phy		*phy;
- 	struct platform_device	*usb_phy;
- 	struct usb_phy		*xceiv;
-@@ -229,14 +233,22 @@ static int sunxi_musb_init(struct musb *musb)
- 	musb->phy = glue->phy;
- 	musb->xceiv = glue->xceiv;
- 
--	ret = sunxi_sram_claim(musb->controller->parent);
--	if (ret)
--		return ret;
-+	if (test_bit(SUNXI_MUSB_FL_HAS_SRAM, &glue->flags)) {
-+		ret = sunxi_sram_claim(musb->controller->parent);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	ret = clk_prepare_enable(glue->clk);
- 	if (ret)
- 		goto error_sram_release;
- 
-+	if (test_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags)) {
-+		ret = reset_control_deassert(glue->rst);
-+		if (ret)
-+			goto error_clk_disable;
-+	}
-+
- 	writeb(SUNXI_MUSB_VEND0_PIO_MODE, musb->mregs + SUNXI_MUSB_VEND0);
- 
- 	/* Register interest before calling phy_init() */
-@@ -246,7 +258,7 @@ static int sunxi_musb_init(struct musb *musb)
- 					extcon_cable_name[EXTCON_USB_HOST],
- 					&glue->host_nb);
- 		if (ret)
--			goto error_clk_disable;
-+			goto error_reset_assert;
- 	}
- 
- 	ret = phy_init(glue->phy);
-@@ -274,10 +286,14 @@ error_phy_exit:
- error_unregister_interest:
- 	if (musb->port_mode == MUSB_PORT_MODE_DUAL_ROLE)
- 		extcon_unregister_interest(&glue->host_cable_nb);
-+error_reset_assert:
-+	if (test_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags))
-+		reset_control_assert(glue->rst);
- error_clk_disable:
- 	clk_disable_unprepare(glue->clk);
- error_sram_release:
--	sunxi_sram_release(musb->controller->parent);
-+	if (test_bit(SUNXI_MUSB_FL_HAS_SRAM, &glue->flags))
-+		sunxi_sram_release(musb->controller->parent);
- 	return ret;
- }
- 
-@@ -296,8 +312,12 @@ static int sunxi_musb_exit(struct musb *musb)
- 	if (musb->port_mode == MUSB_PORT_MODE_DUAL_ROLE)
- 		extcon_unregister_interest(&glue->host_cable_nb);
- 
-+	if (test_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags))
-+		reset_control_assert(glue->rst);
-+
- 	clk_disable_unprepare(glue->clk);
--	sunxi_sram_release(musb->controller->parent);
-+	if (test_bit(SUNXI_MUSB_FL_HAS_SRAM, &glue->flags))
-+		sunxi_sram_release(musb->controller->parent);
- 
- 	return 0;
- }
-@@ -610,6 +630,12 @@ static int sunxi_musb_probe(struct platform_device *pdev)
- 	INIT_WORK(&glue->work, sunxi_musb_work);
- 	glue->host_nb.notifier_call = sunxi_musb_host_notifier;
- 
-+	if (of_device_is_compatible(np, "allwinner,sun4i-a10-musb"))
-+		set_bit(SUNXI_MUSB_FL_HAS_SRAM, &glue->flags);
-+
-+	if (of_device_is_compatible(np, "allwinner,sun6i-a31-musb"))
-+		set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
-+
- 	glue->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(glue->clk)) {
- 		dev_err(&pdev->dev, "Error getting clock: %ld\n",
-@@ -617,6 +643,17 @@ static int sunxi_musb_probe(struct platform_device *pdev)
- 		return PTR_ERR(glue->clk);
- 	}
- 
-+	if (test_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags)) {
-+		glue->rst = devm_reset_control_get(&pdev->dev, NULL);
-+		if (IS_ERR(glue->rst)) {
-+			if (PTR_ERR(glue->rst) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+			dev_err(&pdev->dev, "Error getting reset %ld\n",
-+				PTR_ERR(glue->rst));
-+			return PTR_ERR(glue->rst);
-+		}
-+	}
-+
- 	glue->phy = devm_phy_get(&pdev->dev, "usb");
- 	if (IS_ERR(glue->phy)) {
- 		if (PTR_ERR(glue->phy) == -EPROBE_DEFER)
-@@ -678,6 +715,7 @@ static int sunxi_musb_remove(struct platform_device *pdev)
- 
- static const struct of_device_id sunxi_musb_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-musb", },
-+	{ .compatible = "allwinner,sun6i-a31-musb", },
- 	{}
+diff --git a/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2-lcd1024x600.dts b/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2-lcd1024x600.dts
+index 12dfb1e..dc14091 100644
+--- a/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2-lcd1024x600.dts
++++ b/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2-lcd1024x600.dts
+@@ -116,3 +116,12 @@
+ 	pinctrl-0 = <&r_uart_pins_a>;
+ 	status = "okay";
  };
- 
++
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbphy {
++	status = "okay";
++};
 -- 
 2.4.2
 
