@@ -1,52 +1,75 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: atlas7: use general dt-binding for hwspinlock
-Date: Fri, 5 Jun 2015 12:16:48 -0500
-Message-ID: <5571D980.2050908@ti.com>
-References: <1432628911-18555-1-git-send-email-21cnbao@gmail.com> <1432628911-18555-3-git-send-email-21cnbao@gmail.com> <5567890D.30906@ti.com> <CAJAp7OjjzMCGQSRx8c3f5D7uCnWUesZ5Sx8X8=BEjAuAxBqOYw@mail.gmail.com> <CAGsJ_4xGHQ4aqrejr7WwQKbn_7Mgfxv7ntxqYVxPzQGNW+KBPw@mail.gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 1/9] input: goodix: fix alignment issues
+Date: Fri, 05 Jun 2015 10:17:58 -0700
+Message-ID: <1433524678.2658.70.camel@perches.com>
+References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
+	 <1432817265-23891-2-git-send-email-irina.tirdea@intel.com>
+	 <20150605164901.GE26708@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGsJ_4xGHQ4aqrejr7WwQKbn_7Mgfxv7ntxqYVxPzQGNW+KBPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150605164901.GE26708@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Irina Tirdea <irina.tirdea@intel.com>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2015 12:31 AM, Barry Song wrote:
-> 2015-05-29 23:50 GMT+08:00 Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>:
->> On Thu, May 28, 2015 at 2:30 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->> [..]
->>>>                               reg = <0x13240000 0x00010000>;
->>>
->>> An unrelated question here, why the reg is same for all the child nodes
->>> of the  parent ipc node? If this is partitioned properly, then the
->>> driver can be simplified a bit by using platform_get_resource and
->>> devm_ioremap_resource?
->>>
->>
->> Good catch Suman, I missed that.
->>
->> Barry, if these blocks represents various functionalities of the same
->> hw block then you should consider moving them to be part of a
->> simple-mfd.
+On Fri, 2015-06-05 at 09:49 -0700, Dmitry Torokhov wrote:
+> Hi Irina,
 > 
-> the hwspinlock and the IPC, which works for kicking interrupts between
-> multiple cores in the SoC,  are in one bus node but there is no
-> overlapping register.
-> hwspinlock:
-> begin from 0x13240000 + 0x400
-> IPC:
-> begin from 0x13240000, and end at begin from 0x13240000 + 0x400 - 0x4 ?
+> On Thu, May 28, 2015 at 03:47:37PM +0300, Irina Tirdea wrote:
+> > Fix alignment to match open parenthesis detected by
+> > running checkpatch.pl --strict.
 > 
-> so i guess we can refine the dts memory region to avoid MFD?
+> Mixed bag of changes here, but that's checkpatch for you.
 
-Yeah, that should be fine from the hwspinlock perspective, all its
-registers are self-contained.
+Yup,
 
-regards
-Suman
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+checkpatch output is definitely a mix of automated
+semi-competence and brain-deadness.
+
+> > diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+[]
+> > @@ -112,7 +112,7 @@ static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
+> >  		data += 1 + GOODIX_CONTACT_SIZE;
+> >  		error = goodix_i2c_read(ts->client,
+> >  					GOODIX_READ_COOR_ADDR +
+> > -						1 + GOODIX_CONTACT_SIZE,
+> > +					1 + GOODIX_CONTACT_SIZE,
+> 
+> Bad - makes 1 + GOODIX_CONTACT_SIZE look like extra argument, not
+> continuation of expression.
+
+<shrug>  There's no great way to do this.
+
+Parentheses around the longer expression work.
+
+		error = goodix_i2c_read(ts->client,
+					(GOODIX_READ_COOR_ADDR +
+					 1 + GOODIX_CONTACT_SIZE),
+
+Exceeding 80 columns may be better.
+Leaving it alone would be OK too.
+
+Maybe starting with 1 to be more similar
+to the below would be better.
+
+> > @@ -157,7 +157,8 @@ static void goodix_process_events(struct goodix_ts_data *ts)
+> >  
+> >  	for (i = 0; i < touch_num; i++)
+> >  		goodix_ts_report_touch(ts,
+> > -				&point_data[1 + GOODIX_CONTACT_SIZE * i]);
+> > +				       &point_data[1 +
+> > +				       GOODIX_CONTACT_SIZE * i]);
+> 
+> No, this is plain ugly.
+
+Sometimes it's better to exceed 80 columns or
+maybe use temporaries.  Something like:
+
+	u8 *tmp = point_data + 1;
+	...
+
+	for (i = 0; i < touch_num; i++, tmp += GOODIX_CONTACT_SIZE)
+		goodix_ts_report_touch(ts, tmp);
