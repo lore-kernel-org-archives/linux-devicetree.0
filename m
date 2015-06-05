@@ -1,61 +1,44 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 0/2] Add MediaTek display PWM driver
-Date: Fri, 5 Jun 2015 10:39:11 +0200
-Message-ID: <CABuKBeLaVXxqBgy7AMoZ73+GoUknC6Zq=fJdcyZZjP5VYRZSkg@mail.gmail.com>
-References: <1432214964-40644-1-git-send-email-yh.huang@mediatek.com>
-	<1432520091.23308.5.camel@mtksdaap41>
-	<1433484929.17376.17.camel@mtksdaap41>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Master-aware devices and sideband ID data
+Date: Fri, 5 Jun 2015 10:05:34 +0100
+Message-ID: <20150605090534.GC1198@arm.com>
+References: <20150324155007.GC23005@leverpostej>
+ <26BE36EF-2C5B-4DA6-8950-8FEBB031ED1B@caviumnetworks.com>
+ <20150527173953.GC23176@leverpostej>
+ <E342D737-5DD5-48C7-BB01-B83C29CB6E31@caviumnetworks.com>
+ <20150601102208.GD22406@leverpostej>
+ <158EFC9F-FCAF-44D3-AD40-804EDFE0CE25@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433484929.17376.17.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: YH Huang <yh.huang@mediatek.com>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <158EFC9F-FCAF-44D3-AD40-804EDFE0CE25-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi YH,
+On Thu, Jun 04, 2015 at 11:19:30PM +0100, Chalamarla, Tirumalesh wrote:
+> > On Jun 1, 2015, at 3:22 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > It's possible to specify that the paths exist. I expect that software
+> > would select which to use at runtime.
+> > 
+> My worry is how to define any priorities/preferences between masters. 
+> in general the proposal looks reasonable.
 
-2015-06-05 8:15 GMT+02:00 YH Huang <yh.huang@mediatek.com>:
-> On Mon, 2015-05-25 at 10:14 +0800, Yingjoe Chen wrote:
->> On Thu, 2015-05-21 at 21:29 +0800, YH Huang wrote:
->
-> This patch series add the use of display PWM driver and documentation
-> for Mediatek SoCs. The driver is used to support the backlight of
-> the panel. This is based on v4.1-rc1.
->
->> > YH Huang (2):
->> >   dt-bindings: pwm: add MediaTek display PWM bindings
->> >   pwm: add MediaTek display PWM driver support
->> >
->> >  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |  25 +++
->> >  drivers/pwm/Kconfig                                |  10 +
->> >  drivers/pwm/Makefile                               |   1 +
->> >  drivers/pwm/pwm-mtk-disp.c                         | 228 +++++++++++++++++++++
->> >  4 files changed, 264 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
->> >  create mode 100644 drivers/pwm/pwm-mtk-disp.c
->>
->> Hi YH,
->>
->> It would be easier for reviewer if you have a summary here on what you
->> have changed compare to last version.
->> Also, please add patch series summary even for v2, it remind reviewer
->> what this series is about.
->>
->> Joe.C
->>
->
-> The patch v2 is refined with everybody's suggestions.
-> It is much readable and consistent.
+I agree that the proposal looks reasonable (in terms of the ability to
+describe the sort of topologies that we will face) but I still don't
+understand what I need to do in e.g. my IOMMU driver to support this
+binding whilst continuing to support the existing iommus binding, which
+is relied upon to configure dma-mapping.
 
-I suppose that Yingjoe wanted to emphasis that for the reviewer it is
-much easier if you describe the changes you made from v1 to v2.
-You can find an example (random pick from the mailing list) here:
-http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000572.html
+Mark: how do you see this co-existing/merging with the current bindings?
+I don't think it's practical to throw away what we have and move over to
+something totally different all in one go, but there clearly *is* benefit
+in your proposal over the existing scheme.
 
-Thanks,
-Matthias
-
--- 
-motzblog.wordpress.com
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
