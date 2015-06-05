@@ -1,132 +1,264 @@
-From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 0/2] Implement SoC bus support for Vybrid
-Date: Fri,  5 Jun 2015 14:52:36 +0530
-Message-ID: <cover.1433494491.git.maitysanchayan@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: [PATCH v5 2/2] soc: Add driver for Freescale Vybrid Platform
+Date: Fri,  5 Jun 2015 14:52:38 +0530
+Message-ID: <d702301bce77fb08dd6556e93b553485f3e84b73.1433494491.git.maitysanchayan@gmail.com>
+References: <cover.1433494491.git.maitysanchayan@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1433494491.git.maitysanchayan@gmail.com>
+In-Reply-To: <cover.1433494491.git.maitysanchayan@gmail.com>
+References: <cover.1433494491.git.maitysanchayan@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Cc: kernel@pengutronix.de, stefan@agner.ch, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This adds a SoC driver to be used by the Freescale Vybrid SoC's.
+We create the "fsl" directory for holding the different Freescale
+designs. Driver utilises syscon to get the various register values
+needed. After this sysfs exposes some SoC specific properties as
+below:
 
-This patchset implements SoC bus support for Freescale Vybrid platform,
-implementing the following
-https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-devices-soc
-and is the fifth revision. Tested on a Colibri VF61 module after
-rebasing on shawn's for-next branch.
+> cd /sys/devices/soc0
+> ls
+family     machine    power      revision   soc_id     subsystem  uevent
+> cat family
+Freescale Vybrid VF610
+> cat machine
+Freescale Vybrid
+> cat revision
+00000013
+> cat soc_id
+df6472a60c1c39d4
 
-Arnd and Shawn I did like to have your comments to get this in a
-mergeable state and make any changes as necessary and required.
-
-Thanks for the comments and feedback till now. Feedback is most
-welcome.
-
-Version 4 of the patchset can be found here
-https://lkml.org/lkml/2015/5/26/199
-
-Version 3 of the patchset can be found here
-http://www.spinics.net/lists/arm-kernel/msg420847.html
-
-Version 2 of the patchset can be found here
-http://www.spinics.net/lists/devicetree/msg80654.html
-
-Version 1 of the patchset can be found here
-http://www.spinics.net/lists/devicetree/msg80257.html
-
-The RFC version can be found here
-https://lkml.org/lkml/2015/5/11/13
-
-Changes since v4:
-- Use devm_* family of functions and use a struct to get rid of
-  global variables (suggested by Joachim Eastwood)
-- Make Kconfig govern the compilation with tristate, instead of
-  earlier bool. Paul Bolle raised a valid point that perhaps this
-  should have been built in with the bool, however I had not taken
-  into consideration generic distro kernels and it makes sense to
-  have this tristated. (comments from Paul Bolle and Andreas Farber)
-
-Changes since v3:
-- Instead of using the syscon_regmap_lookup_by_compatible function
-  use a phandle in the device tree along with offsets specified in
-  this phandle node and then read the offset along with the device
-  node in the driver for reading from the required region.
-
-Changes since v2:
-- Implement the SoC bus code as a driver in drivers/soc
-  by registering with fsl,mscm-cpucfg as per Arnd's feedback
-
-Changes since v1:
-- Sort the headers in alphabetical order
-
-Changes since RFC:
-- Use a DT entry for the ROM area while specifying it as syscon.
-
-Notes same since v1:
-Currently the required information is more or less read across the whole
-SoC, but I guess we cannot change that since these are the locations
-with the required information.
-
-There seem to be three options for the revision field:
-- ROM revision (see https://community.freescale.com/docs/DOC-94802)
-- ANADIG revision (ANADIG_DIGIPROC, as used for the i.MX SoC's)
-- OCOTP revision
-
-Some numbers:
-
-Colibri VF61 1.1A (2N02G)
-- 0x00000013
-- 0x00610000
-- 0x01000000
-- 0x410000c8
-
-Colibri VF61 V1.0B (1N02G)
-- 0x00000011
-- 0x00610000
-- 0x01000000
-- 0x410000c8
-
-Colibri VF61 V1.0A (which is actually a VF600 SoC, no L2 cache, since
-that was the only one we could buy back then, 1N02G printed on it)
-- 0x00000011
-- 0x00610000
-- 0x01000000
-- none...
-
-Colibri VF50 V1.0A (1N02G)
-- 0x00000011
-- 0x00610000
-- 0x01000000
-- none...
-
-Vybrid Tower Rev J (1N02G)
-- 0x00000011
-- 0x00610000
-- 0x01000000
-- 0x410000c8
-
-The ROM revision differs the most, so we would like to go with the
-revision information from the ROM register 0x80.
-
-Sanchayan Maity (2):
-  ARM: dts: vfxxx: Add OCOTP and OCROM nodes
-  soc: Add driver for Freescale Vybrid Platform
-
- arch/arm/boot/dts/vfxxx.dtsi |  12 ++++
- drivers/soc/Kconfig          |   1 +
- drivers/soc/Makefile         |   1 +
- drivers/soc/fsl/Kconfig      |  10 +++
- drivers/soc/fsl/Makefile     |   1 +
- drivers/soc/fsl/soc-vf610.c  | 166 +++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 191 insertions(+)
+Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+---
+ drivers/soc/Kconfig         |   1 +
+ drivers/soc/Makefile        |   1 +
+ drivers/soc/fsl/Kconfig     |  10 +++
+ drivers/soc/fsl/Makefile    |   1 +
+ drivers/soc/fsl/soc-vf610.c | 166 ++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 179 insertions(+)
  create mode 100644 drivers/soc/fsl/Kconfig
  create mode 100644 drivers/soc/fsl/Makefile
  create mode 100644 drivers/soc/fsl/soc-vf610.c
 
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index d8bde82..8b4dd2b 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -1,5 +1,6 @@
+ menu "SOC (System On Chip) specific Drivers"
+ 
++source "drivers/soc/fsl/Kconfig"
+ source "drivers/soc/mediatek/Kconfig"
+ source "drivers/soc/qcom/Kconfig"
+ source "drivers/soc/ti/Kconfig"
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 70042b2..142676e 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -2,6 +2,7 @@
+ # Makefile for the Linux Kernel SOC specific device drivers.
+ #
+ 
++obj-$(CONFIG_SOC_VF610)        += fsl/
+ obj-$(CONFIG_ARCH_MEDIATEK)	+= mediatek/
+ obj-$(CONFIG_ARCH_QCOM)		+= qcom/
+ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+new file mode 100644
+index 0000000..5752f77
+--- /dev/null
++++ b/drivers/soc/fsl/Kconfig
+@@ -0,0 +1,10 @@
++#
++# Freescale SoC drivers
++
++config SOC_BUS_VF610
++	   tristate "SoC bus device for the Freescale Vybrid platform"
++	   depends on SOC_VF610
++	   select SOC_BUS
++	   help
++	     Include support for the SoC bus on the Freescale Vybrid platform
++		 providing some sysfs information about the module variant.
+diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+new file mode 100644
+index 0000000..3d6b331
+--- /dev/null
++++ b/drivers/soc/fsl/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_SOC_BUS_VF610)		+= soc-vf610.o
+diff --git a/drivers/soc/fsl/soc-vf610.c b/drivers/soc/fsl/soc-vf610.c
+new file mode 100644
+index 0000000..d66360e
+--- /dev/null
++++ b/drivers/soc/fsl/soc-vf610.c
+@@ -0,0 +1,166 @@
++/*
++ * Copyright 2015 Toradex AG
++ *
++ * Author: Sanchayan Maity <sanchayan.maity@toradex.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2, as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/mfd/syscon.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
++#include <linux/random.h>
++#include <linux/slab.h>
++#include <linux/sys_soc.h>
++
++#define DRIVER_NAME "vf610-soc-bus"
++
++#define MSCM_CPxCOUNT_OFFSET   0x0000002C
++#define MSCM_CPxCFG1_OFFSET    0x00000014
++
++struct vf610_soc {
++	struct device *dev;
++	struct soc_device_attribute *soc_dev_attr;
++	struct soc_device *soc_dev;
++};
++
++static int vf610_soc_probe(struct platform_device *pdev)
++{
++	struct vf610_soc *info;
++	struct regmap *ocotp_regmap, *mscm_regmap, *rom_regmap;
++	struct device *dev = &pdev->dev;
++	struct device_node *node = pdev->dev.of_node;
++	struct device_node *soc_node;
++	struct of_phandle_args pargs;
++	char soc_type[] = "xx0";
++	u32 cfg0_offset, cfg1_offset, rom_rev_offset;
++	u32 soc_id1, soc_id2, rom_rev;
++	u32 cpxcount, cpxcfg1;
++	u64 soc_id;
++	int ret;
++
++	info = devm_kzalloc(&pdev->dev, sizeof(struct vf610_soc), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	info->dev = &pdev->dev;
++	platform_set_drvdata(pdev, info);
++
++	mscm_regmap = syscon_node_to_regmap(node);
++	if (IS_ERR(mscm_regmap)) {
++		dev_err(dev, "regmap lookup for mscm failed\n");
++		return PTR_ERR(mscm_regmap);
++	}
++
++	soc_node = of_find_node_by_path("/soc");
++
++	ret = of_parse_phandle_with_fixed_args(soc_node,
++					"ocotp-cfg", 2, 0, &pargs);
++	if (ret) {
++		dev_err(dev, "lookup failed for ocotp-cfg node %d\n", ret);
++		return ret;
++	}
++
++	ocotp_regmap = syscon_node_to_regmap(pargs.np);
++	if (IS_ERR(ocotp_regmap)) {
++		of_node_put(pargs.np);
++		dev_err(dev, "regmap lookup for ocotp failed\n");
++		return PTR_ERR(ocotp_regmap);
++	}
++
++	cfg0_offset = pargs.args[0];
++	cfg1_offset = pargs.args[1];
++	of_node_put(pargs.np);
++
++	ret = of_parse_phandle_with_fixed_args(soc_node,
++					"rom-revision", 1, 0, &pargs);
++	if (ret) {
++		dev_err(dev, "lookup failed for rom-revision node %d\n", ret);
++		return ret;
++	}
++
++	rom_regmap = syscon_node_to_regmap(pargs.np);
++	if (IS_ERR(rom_regmap)) {
++		of_node_put(pargs.np);
++		dev_err(dev, "regmap lookup for ocrom failed\n");
++		return PTR_ERR(rom_regmap);
++	}
++
++	rom_rev_offset = pargs.args[0];
++	of_node_put(pargs.np);
++
++	ret = regmap_read(ocotp_regmap, cfg0_offset, &soc_id1);
++	if (ret)
++		return -ENODEV;
++
++	ret = regmap_read(ocotp_regmap, cfg1_offset, &soc_id2);
++	if (ret)
++		return -ENODEV;
++
++	soc_id = (u64) soc_id1 << 32 | soc_id2;
++	add_device_randomness(&soc_id, sizeof(soc_id));
++
++	ret = regmap_read(mscm_regmap, MSCM_CPxCOUNT_OFFSET, &cpxcount);
++	if (ret)
++		return -ENODEV;
++
++	ret = regmap_read(mscm_regmap, MSCM_CPxCFG1_OFFSET, &cpxcfg1);
++	if (ret)
++		return -ENODEV;
++
++	soc_type[0] = cpxcount ? '6' : '5'; /* Dual Core => VF6x0 */
++	soc_type[1] = cpxcfg1 ? '1' : '0'; /* L2 Cache => VFx10 */
++
++	ret = regmap_read(rom_regmap, rom_rev_offset, &rom_rev);
++	if (ret)
++		return -ENODEV;
++
++	info->soc_dev_attr = devm_kzalloc(&pdev->dev,
++				sizeof(info->soc_dev_attr), GFP_KERNEL);
++	if (!info->soc_dev_attr)
++		return -ENOMEM;
++
++	info->soc_dev_attr->machine = devm_kasprintf(&pdev->dev,
++				GFP_KERNEL, "Freescale Vybrid");
++	info->soc_dev_attr->soc_id = devm_kasprintf(&pdev->dev,
++				GFP_KERNEL, "%016llx", soc_id);
++	info->soc_dev_attr->family = devm_kasprintf(&pdev->dev,
++				GFP_KERNEL, "Freescale Vybrid VF%s",
++				soc_type);
++	info->soc_dev_attr->revision = devm_kasprintf(&pdev->dev,
++				GFP_KERNEL, "%08x", rom_rev);
++
++	info->soc_dev = soc_device_register(info->soc_dev_attr);
++	if (IS_ERR(info->soc_dev))
++		return -ENODEV;
++
++	return 0;
++}
++
++static int vf610_soc_remove(struct platform_device *pdev)
++{
++	struct vf610_soc *info = platform_get_drvdata(pdev);
++
++	if (info->soc_dev)
++		soc_device_unregister(info->soc_dev);
++
++	return 0;
++}
++
++static const struct of_device_id vf610_soc_bus_match[] = {
++	{ .compatible = "fsl,vf610-mscm-cpucfg", },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver vf610_soc_driver = {
++	.probe          = vf610_soc_probe,
++	.remove         = vf610_soc_remove,
++	.driver         = {
++		.name   = DRIVER_NAME,
++		.of_match_table = vf610_soc_bus_match,
++	},
++};
++module_platform_driver(vf610_soc_driver);
 -- 
 2.4.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
