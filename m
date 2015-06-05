@@ -1,50 +1,74 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv2 0/4] Add Altera Arria10 EDAC Support
-Date: Fri, 5 Jun 2015 13:02:56 +0200
-Message-ID: <20150605110255.GE3679@pd.tnic>
-References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
+ regulators
+Date: Fri, 05 Jun 2015 14:16:40 +0200
+Message-ID: <23123577.mOoqGCAPdL@diego>
+References: <4184159.j0iXe39dFB@phil> <2619686.csNBBFyt8W@phil>
+ <20150605110159.GA16254@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150605110159.GA16254@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2015 at 09:28:44AM -0500, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> This series of patches adds support for the Arria10 EDAC. The
-> SDRAM controller and ECC registers are significantly different
-> from the CycloneV/ArriaV but common areas could be abstracted.
-> 
-> Thor Thayer (4):
->   edac, altera: Generalize driver to use DT Memory size
->   edac, altera: Refactor EDAC for Altera CycloneV SoC.
->   edac, altera: Addition of Arria10 EDAC
->   arm: socfpga: dts: Arria10 SDRAM EDAC DTS additions.
-> 
->  .../bindings/arm/altera/socfpga-sdram-edac.txt     |    2 +-
->  arch/arm/boot/dts/socfpga_arria10.dtsi             |   11 +
->  drivers/edac/altera_edac.c                         |  364 ++++++++++++--------
->  drivers/edac/altera_edac.h                         |  201 +++++++++++
->  4 files changed, 437 insertions(+), 141 deletions(-)
->  create mode 100644 drivers/edac/altera_edac.h
-
-Ok, all applied, no need to redo them.
-
-altera_edac still builds ok with the cross compiler here but you should
-doublecheck my final result just in case:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git#for-next
-
-Thanks.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+SGkgVGhpZXJyeQoKQW0gRnJlaXRhZywgNS4gSnVuaSAyMDE1LCAxMzowMjowMSBzY2hyaWViIFRo
+aWVycnkgUmVkaW5nOgo+IE9uIE1vbiwgTWFyIDIzLCAyMDE1IGF0IDA3OjE3OjQ5UE0gKzAxMDAs
+IEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+ID4gSGkgUGhpbGlwcCwKPiA+IAo+ID4gQW0gRG9ubmVy
+c3RhZywgMTIuIE3DpHJ6IDIwMTUsIDIxOjQ1OjE5IHNjaHJpZWIgSGVpa28gU3R1ZWJuZXI6Cj4g
+PiA+IEF0IGxlYXN0IHRoZSBSb2NrY2hpcCB2YXJpYW50IG9mIHRoZSBkd19oZG1pIGNhbiBoYXZl
+IGNvbnRyb2xsYWJsZSBwb3dlcgo+ID4gPiBzdXBwbGllcyBwcm92aWRpbmcgMS4wIGFuZCAxLjhW
+LiBUaGVyZWZvcmUgYWRkIHRoZSBwb3NzaWJpbGl0eSBmb3IgdGhlCj4gPiA+IGdlbmVyaWMgYnJp
+ZGdlIGRyaXZlciB0byBlbmFibGUgc3VwcGxpZXMgcHJvdmlkZWQgYnkgdGhlIGh3LXNwZWNpZmlj
+Cj4gPiA+IGRyaXZlcnMuCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5l
+ciA8aGVpa29Ac250ZWNoLmRlPgo+ID4gCj4gPiBkb2VzIHRoaXMgbG9vayBvayBub3c/Cj4gPiAK
+PiA+IEFuZCBhcyB3ZSB0YWxrZWQgYWJvdXQgaW4gQ2hlbW5pdHosIHdobyB3aWxsIGJlIHRha2lu
+ZyBzdWNoIGJyaWRnZS1yZWxhdGVkCj4gPiBjaGFuZ2VzLCBhcyB5b3UgbWVudGlvbmVkIHNvbWUg
+bGFzdCBicmlkZ2UtcGF0Y2hlcyBnb2luZyB0aHJvdWdoIFRoaWVycnkuCj4gCj4gU29ycnksIEkg
+aGFkIGNvbXBsZXRlbHkgbWlzc2VkIHRoaXMuCj4gCj4gPiA+IC0tLQo+ID4gPiBjaGFuZ2VzIHNp
+bmNlIHYyOgo+ID4gPiAtIHJlbmFtZSBzdXBwbGllcyB0byB0aGUgbmFtZXMgZm91bmQgaW4gdGhl
+IGhkbWkgSVAgZGF0YWJvb2sKPiA+ID4gY2hhbmdlcyBzaW5jZSB2MToKPiA+ID4gLSBmb2xsb3cg
+c3VnZ2VzdGlvbiBmcm9tIFJ1c3NlbGwgS2luZyB0byBrZWVwIHJlZ3VsYXRvciBoYW5kbGluZyBs
+b2NhbAo+ID4gPiAKPiA+ID4gICB0byB0aGUgcm9ja2NoaXAgaW1wbGVtZW50YXRpb24gZm9yIHRo
+ZSB0aW1lIGJlaW5nIGFuZCBvbmx5IGdlbmVyYWxpemUKPiA+ID4gICB3aGVuIGEgcmVhbCBzZWNv
+bmQgaW1wbGVtZW50YXRpb24gbmVlZHMgcmVndWxhdG9yIGhhbmRsaW5nCj4gPiA+ICAKPiA+ID4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQgICAgIHwgIDUg
+KysrKwo+ID4gPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyAg
+ICAgICAgfCAzMgo+ID4gPiAKPiA+ID4gKysrKysrKysrKysrKysrKysrKysrLSAyIGZpbGVzIGNo
+YW5nZWQsIDM2IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+ID4gCj4gPiA+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19o
+ZG1pLnR4dAo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJp
+ZGdlL2R3X2hkbWkudHh0IGluZGV4Cj4gPiA+IGE5MDVjMTQuLmJiNzQ2NDAgMTAwNjQ0Cj4gPiA+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hk
+bWkudHh0Cj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0v
+YnJpZGdlL2R3X2hkbWkudHh0Cj4gPiA+IEBAIC0yMiw2ICsyMiwxMSBAQCBPcHRpb25hbCBwcm9w
+ZXJ0aWVzCj4gPiA+IAo+ID4gPiAgLSBkZGMtaTJjLWJ1czogcGhhbmRsZSBvZiBhbiBJMkMgY29u
+dHJvbGxlciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5nCj4gPiA+ICAtIGNsb2NrcywgY2xvY2st
+bmFtZXM6IHBoYW5kbGUgdG8gdGhlIEhETUkgQ0VDIGNsb2NrLCBuYW1lIHNob3VsZCBiZQo+ID4g
+PiAgImNlYyIKPiA+ID4gCj4gPiA+ICtPcHRpb25hbCBzdXBwbGllczoKPiA+ID4gK3JvY2tjaGlw
+LHJrMzI4OC1kdy1oZG1pIGhhbmRsZXMgdHdvIG9wdGlvbmFsIHBvd2VyIHN1cHBsaWVzOgo+ID4g
+PiArLSB2cC1zdXBwbHk6IDEuMFYgcG93ZXIgc3VwcGx5Cj4gPiA+ICstIHZwaC1zdXBwbHk6IDEu
+OFYgcG93ZXIgc3VwcGx5Cj4gCj4gSWYgdGhpcyBpcyBzcGVjaWZpYyB0byB0aGUgUm9ja2NoaXAg
+aW1wbGVtZW50YXRpb24sIHNob3VsZG4ndCB0aGlzIGdvCj4gaW50byBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZHdfaGRtaS1yb2NrY2hpcC50eHQ/IEl0Cj4gY291bGQg
+dGhlbiBzaW1wbHkgZ28gaW50byB0aGUgUm9ja2NoaXAgRFJNIHRyZWUuCgphY3R1YWxseSwgd2Ug
+ZGV0ZXJtaW5lZCB0aGF0IHRoZSBzdXBwbHkgbmFtZXMgYXJlIHVuaXZlcnNhbCB0byB0aGUgSVAg
+KGJvdGggaW4gCmlteCBhbmQgcm9ja2NoaXAgYW5kIHByb2JhYmx5IG1vcmUgaWYgdGhlcmUgYXJl
+IG1vcmUgdXNlcnMgb3V0IHRoZXJlKS4gSnVzdCAKUnVzc2VsbCByZXF1ZXN0ZWQgdGhhdCB3ZSBk
+b24ndCBwb2xsdXRlIHRoZSBnZW5lcmljIGNvZGUgdW50aWwgbmVjZXNzYXJ5LCBhcyAKaXQgbG9v
+a3MgbGlrZSB0aGUgc3VwcGx5IG9mIHRob3NlIGlzIHNvbWVob3cgaGFuZGxlZCBpbnRlcm5hbGx5
+IG9uIHRoZSBpbXguCgoKSGVpa28KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
