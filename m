@@ -1,36 +1,48 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V7 1/3] OPP: Add new bindings to address shortcomings of
- existing bindings
-Date: Fri, 5 Jun 2015 08:11:24 +0530
-Message-ID: <20150605024124.GA9448@linux>
-References: <cover.1433434659.git.viresh.kumar@linaro.org>
- <d83c0b6b1768c7229384216329b607d13886aa02.1433434659.git.viresh.kumar@linaro.org>
- <20150604183752.GI490@codeaurora.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/7] ARM: bcm2835: Add a Raspberry Pi-specific clock driver.
+Date: Thu, 04 Jun 2015 20:56:30 -0600
+Message-ID: <55710FDE.90609@wwwdotorg.org>
+References: <1431978219-14226-1-git-send-email-eric@anholt.net> <1431978219-14226-3-git-send-email-eric@anholt.net> <55679085.6040402@wwwdotorg.org> <87h9qvcd1i.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150604183752.GI490@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87h9qvcd1i.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04-06-15, 11:37, Stephen Boyd wrote:
-> Ok. I'm still interested to see if this binding will have to
-> change to support how multiple regulators will be matched up with
-> the device using the OPP.
-
-I can understand your concern here, but getting everything working
-on the first attempt would be difficult to write/review.. There will at
-least be 5-7 patches just for getting the very basic v2 bindings
-coded. And so we can get all that coded slowly and steadily.
-
-> But for now,
+On 05/29/2015 03:02 PM, Eric Anholt wrote:
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 > 
-> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+>> On 05/18/2015 01:43 PM, Eric Anholt wrote:
 
-Thanks. Finally :)
+>>> +static struct clk *rpi_firmware_delayed_get_clk(struct 
+>>> of_phandle_args *clkspec, + void *_data)
+>> 
+>>> +	rpi_clk = &rpi_clocks[clkspec->args[0]]; + +	firmware_node =
+>>> of_parse_phandle(of_node, "firmware", 0); +	if (!firmware_node)
+>>> { +		dev_err(dev, "%s: Missing firmware node\n",
+>>> rpi_clk->name); +		return ERR_PTR(-ENODEV); +	} + +	/* Try a
+>>> no-op transaction to see if the driver is loaded yet. */ +	ret
+>>> = rpi_firmware_property_list(firmware_node, NULL, 0); +	if
+>>> (ret) +		return ERR_PTR(ret);
+>> 
+>> I would move all that into this driver's probe().
+> 
+> We can't move all this into the driver's probe, because this is
+> where we're returning -EPROBE_DEFER.  We could potentially do just
+> the phandle parse up front and allocate some memory to pass it and
+> our own device node to this function through the _data arg, but I
+> don't see much point.
 
--- 
-viresh
+Well, once the clock core correctly supports deferred probe, that can
+be moved.
+
+Aside from that, I think all your other replies to my replies in this
+thread/series make sense.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
