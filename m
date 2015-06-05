@@ -1,38 +1,118 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [PATCH 0/3] Pinctrl support for msm8660
-Date: Fri, 5 Jun 2015 15:52:22 -0700
-Message-ID: <1433544745-325-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH 2/3] pinctrl: dt-binding: Add DT binding documentation for MSM8660
+Date: Fri, 5 Jun 2015 15:52:24 -0700
+Message-ID: <1433544745-325-3-git-send-email-bjorn.andersson@sonymobile.com>
+References: <1433544745-325-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433544745-325-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Per your request Linus, happy birthday!
-
-Regards,
-Bjorn
-
-Bjorn Andersson (3):
-  pinctrl: qcom: Add MSM8660 pinctrl definitions
-  pinctrl: dt-binding: Add DT binding documentation for MSM8660
-  ARM: dts: qcom: Replace gpio node with pinctrl node
-
- .../bindings/pinctrl/qcom,msm8660-pinctrl.txt      |  90 ++
- arch/arm/boot/dts/qcom-msm8660.dtsi                |  11 +-
- drivers/pinctrl/qcom/Kconfig                       |   8 +
- drivers/pinctrl/qcom/Makefile                      |   1 +
- drivers/pinctrl/qcom/pinctrl-msm8660.c             | 984 +++++++++++++++++++++
- 5 files changed, 1089 insertions(+), 5 deletions(-)
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ .../bindings/pinctrl/qcom,msm8660-pinctrl.txt      | 90 ++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
- create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8660.c
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+new file mode 100644
+index 000000000000..77aa11790163
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+@@ -0,0 +1,90 @@
++Qualcomm MSM8660 TLMM block
++
++Required properties:
++- compatible: "qcom,msm8660-pinctrl"
++- reg: Should be the base address and length of the TLMM block.
++- interrupts: Should be the parent IRQ of the TLMM block.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells: Should be two.
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells : Should be two.
++                The first cell is the gpio pin number and the
++                second cell is used for optional parameters.
++
++Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
++a general description of GPIO and interrupt bindings.
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++Qualcomm's pin configuration nodes act as a container for an arbitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as pull-up, drive strength, etc.
++
++The name of each subnode is not important; all subnodes should be enumerated
++and processed purely based on their content.
++
++Each subnode only affects those parameters that are explicitly listed. In
++other words, a subnode that lists a mux function but no pin configuration
++parameters implies no information about any pin configuration parameters.
++Similarly, a pin subnode that describes a pullup parameter implies no
++information about e.g. the mux function.
++
++
++The following generic properties as defined in pinctrl-bindings.txt are valid
++to specify in a pin configuration subnode:
++
++ pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-strength,
++ output-low, output-high.
++
++Non-empty subnodes must specify the 'pins' property.
++
++Valid values for pins are:
++  gpio0-gpio172, sdc3_clk, sdc3_cmd, sdc3_data sdc4_clk, sdc4_cmd, sdc4_data
++
++Valid values for function are:
++  gpio, cam_mclk, dsub, ext_gps, gp_clk_0a, gp_clk_0b, gp_clk_1a, gp_clk_1b,
++  gp_clk_2a, gp_clk_2b, gp_mn, gsbi1, gsbi1_spi_cs1_n, gsbi1_spi_cs2a_n,
++  gsbi1_spi_cs2b_n, gsbi1_spi_cs3_n, gsbi2, gsbi2_spi_cs1_n, gsbi2_spi_cs2_n,
++  gsbi2_spi_cs3_n, gsbi3, gsbi3_spi_cs1_n, gsbi3_spi_cs2_n, gsbi3_spi_cs3_n,
++  gsbi4, gsbi5, gsbi6, gsbi7, gsbi8, gsbi9, gsbi10, gsbi11, gsbi12, hdmi, i2s,
++  lcdc, mdp_vsync, mi2s, pcm, ps_hold, sdc1, sdc2, sdc5, tsif1, tsif2, usb_fs1,
++  usb_fs1_oe_n, usb_fs2, usb_fs2_oe_n, vfe, vsens_alarm,
++
++Example:
++
++	msmgpio: pinctrl@800000 {
++		compatible = "qcom,msm8660-pinctrl";
++		reg = <0x800000 0x4000>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <0 16 0x4>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&gsbi12_uart>;
++
++		gsbi12_uart: gsbi12-uart {
++			mux {
++				pins = "gpio117", "gpio118";
++				function = "gsbi12";
++			};
++
++			tx {
++				pins = "gpio118";
++				drive-strength = <8>;
++				bias-disable;
++			};
++
++			rx {
++				pins = "gpio117";
++				drive-strength = <2>;
++				bias-pull-up;
++			};
++		};
++	};
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
