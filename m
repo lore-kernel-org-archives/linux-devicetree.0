@@ -1,152 +1,92 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/9] input: goodix: fix variable length array warning
-Date: Fri, 5 Jun 2015 10:11:38 -0700
-Message-ID: <20150605171138.GF26708@dtor-ws>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
- <1432817265-23891-3-git-send-email-irina.tirdea@intel.com>
- <20150528175753.1f85723b5b880ecf02fd4a79@ao2.it>
- <1F3AC3675D538145B1661F571FE1805F19A78DD0@irsmsx105.ger.corp.intel.com>
- <20150603224953.6613b674931390f187b81e7a@ao2.it>
- <1F3AC3675D538145B1661F571FE1805F19A79D7B@irsmsx105.ger.corp.intel.com>
- <20150605164053.GA26708@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F19A79E7E@irsmsx105.ger.corp.intel.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: atlas7: use general dt-binding for hwspinlock
+Date: Fri, 5 Jun 2015 12:15:54 -0500
+Message-ID: <5571D94A.4020406@ti.com>
+References: <1432628911-18555-1-git-send-email-21cnbao@gmail.com> <1432628911-18555-3-git-send-email-21cnbao@gmail.com> <5567890D.30906@ti.com> <CAGsJ_4y3YwXfzveWQSHQ9ZuoJbWdJTh3PJjgs0HM6t2w5S1y_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F19A79E7E@irsmsx105.ger.corp.intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Tirdea, Irina" <irina.tirdea@intel.com>
-Cc: 'Antonio Ospite' <ao2@ao2.it>, Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGsJ_4y3YwXfzveWQSHQ9ZuoJbWdJTh3PJjgs0HM6t2w5S1y_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2015 at 05:00:05PM +0000, Tirdea, Irina wrote:
->=20
->=20
-> > -----Original Message-----
-> > From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
-> > Sent: 05 June, 2015 19:41
-> > To: Tirdea, Irina
-> > Cc: 'Antonio Ospite'; Bastien Nocera; linux-input@vger.kernel.org; =
-devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 2/9] input: goodix: fix variable length array w=
-arning
-> >=20
-> > On Fri, Jun 05, 2015 at 04:34:38PM +0000, Tirdea, Irina wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: linux-input-owner@vger.kernel.org [mailto:linux-input-own=
-er@vger.kernel.org] On Behalf Of Antonio Ospite
-> > > > Sent: 03 June, 2015 23:50
-> > > > To: Tirdea, Irina
-> > > > Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.or=
-g; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH 2/9] input: goodix: fix variable length arr=
-ay warning
-> > > >
-> > > > On Wed, 3 Jun 2015 10:26:47 +0000
-> > > > "Tirdea, Irina" <irina.tirdea@intel.com> wrote:
-> > > >
-> > > > > > -----Original Message-----
-> > > > > > From: Antonio Ospite [mailto:ao2@ao2.it]
-> > > > > > Sent: 28 May, 2015 18:58
-> > > > > > To: Tirdea, Irina
-> > > > > > Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kerne=
-l.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > > > > Subject: Re: [PATCH 2/9] input: goodix: fix variable length=
- array warning
-> > > > > >
-> > > > > > On Thu, 28 May 2015 15:47:38 +0300
-> > > > > > Irina Tirdea <irina.tirdea@intel.com> wrote:
-> > > > > >
-> > > > > > > Fix sparse warning:
-> > > > > > > drivers/input/touchscreen/goodix.c:182:26: warning:
-> > > > > > > Variable length array is used.
-> > > > > > >
-> > > > > > > Replace the variable length array with fixed length.
-> > > > > > >
-> > > > > > > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > > > > > > ---
-> > > > > > >  drivers/input/touchscreen/goodix.c | 2 +-
-> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/input/touchscreen/goodix.c b/drivers=
-/input/touchscreen/goodix.c
-> > > > > > > index c2e785c..dac1b3c 100644
-> > > > > > > --- a/drivers/input/touchscreen/goodix.c
-> > > > > > > +++ b/drivers/input/touchscreen/goodix.c
-> > > > > > > @@ -147,7 +147,7 @@ static void goodix_ts_report_touch(st=
-ruct goodix_ts_data *ts, u8 *coor_data)
-> > > > > > >   */
-> > > > > > >  static void goodix_process_events(struct goodix_ts_data =
-*ts)
-> > > > > > >  {
-> > > > > > > -	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_=
-num];
-> > > > > > > +	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CON=
-TACTS];
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > >
-> > > > > Hi Antonio,
-> > > > >
-> > > > > > this fixes the warning from sparse, but also changes the se=
-mantics of
-> > > > > > the code: ts->max_touch_num is less that GOODIX_MAX_CONTACT=
-S for 5
-> > > > > > touches devices and in this case we'll end up using more me=
-mory than is
-> > > > > > necessary.
-> > > > > >
-> > > > >
-> > > > > I wasn't sure if it is better to save the 5 bytes or fix the =
-warning,
-> > > > > so I sent this to get some more input.
-> > > > > Thanks for the feedback, I will  drop this patch.
-> > > > >
-> > > >
-> > > > Use kmalloc() or, alternatively, add at least a comment telling=
- why you
-> > > > think that sacrificing a few bytes =E2=80=94only for some devic=
-es=E2=80=94 has
-> > > > advantages over dynamic allocation.
-> > > >
-> > >
-> > > You are right, kmalloc will solve both problems - the sparse warn=
-ing and allocating
-> > > more bytes than necessary. Don't know why I did not think of that=
-=2E
-> > > Will use that in v2.
-> >=20
-> > Please leave the patch as is. We can spare 80 bytes on the stack gi=
-ven
-> > that we are running in threaded IRQ. kmallocing will use more code =
-and
-> > runtime resources and won't give any benefits.
->=20
-> I was actually thinking of allocating it with devm_kzalloc just once =
-at device init and
-> storing a pointer to it in the goodix_ts_data structure.=20
+On 06/01/2015 12:33 AM, Barry Song wrote:
+> 2015-05-29 5:30 GMT+08:00 Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>:
+>> Barry,
+>>
+>> On 05/26/2015 03:28 AM, Barry Song wrote:
+>>> From: Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>
+>>>
+>>> This patch moves to use generic dt-binding for hwspinlock providers and
+>>> clients.
+>>> add #hwlock-cells for the provider and hwlocks for clients.
+>>>
+>>> Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>>> Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+>>> Signed-off-by: Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>
+>>> Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/atlas7.dtsi | 6 +++---
+>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/atlas7.dtsi b/arch/arm/boot/dts/atlas7.dtsi
+>>> index a753178..66d3f0e 100644
+>>> --- a/arch/arm/boot/dts/atlas7.dtsi
+>>> +++ b/arch/arm/boot/dts/atlas7.dtsi
+>>> @@ -84,17 +84,17 @@
+>>>                       #address-cells = <1>;
+>>>                       #size-cells = <1>;
+>>>
+>>> -                     hwspinlock {
+>>> +                     hwlock: hwspinlock {
+>>>                               compatible = "sirf,hwspinlock";
+>>>                               reg = <0x13240000 0x00010000>;
+>>
+>> An unrelated question here, why the reg is same for all the child nodes
+>> of the  parent ipc node? If this is partitioned properly, then the
+>> driver can be simplified a bit by using platform_get_resource and
+>> devm_ioremap_resource?
+>>
+>>> -
+>>> -                             num-spinlocks = <30>;
+>>> +                             #hwlock-cells = <1>;
+>>>                       };
+>>>
+>>>                       ns_m3_rproc@0 {
+>>>                               compatible = "sirf,ns2m30-rproc";
+>>>                               reg = <0x13240000 0x00010000>;
+>>>                               interrupts = <0 123 0>;
+>>> +                             hwlocks = <&hwlock 0>, <&hwlock 1>;
+>>
+>> Does this need to be added for the other nodes like ns_m3_rproc@1 as well?
+> 
+> now the hwlock-cells are only added for the nodes who are really using
+> it. other users have not used it.
 
-Still, why? Even if you do this once you will need both code and runtim=
-e
-resources to bookkeeping whereas allocating 80 bytes on stack are just =
-a
-matter of register addition. And because we are running in threaded IRQ
-context there is no concern of blowing up the limited stack.
+OK, may be split it out then and add these in a subsequent patch with
+proper usage description.
 
-The story would be different if you needed, let's say 800 or 1600 bytes=
-=2E
+regards
+Suman
 
-Thanks.
+> 
+>>
+>> regards
+>> Suman
+>>
+>>>                       };
+>>>
+>>>                       ns_m3_rproc@1 {
+>>>
+>>
+> 
+> -barry
+> 
 
---=20
-Dmitry
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
