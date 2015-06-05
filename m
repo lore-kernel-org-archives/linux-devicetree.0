@@ -1,123 +1,132 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 04/11] mtd: ofpart: do not fail probe when no partitions exist
-Date: Fri, 5 Jun 2015 16:13:09 +0200
-Message-ID: <201506051613.09187.marex@denx.de>
-References: <cover.1433364398.git.hramrach@gmail.com> <201506041728.50227.marex@denx.de> <CAOMqctQTxVZspcocDsNP6GzsRw5-0zPqkNScS8PzNvkFjBWatQ@mail.gmail.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH RESEND v7 2/2] mmc: host: sdhci: Add support to disable
+ SDR104/SDR50/DDR50 based on capability register 0.
+Date: Fri, 5 Jun 2015 22:53:26 +0800
+Message-ID: <20150605145323.GA15110@shlinux1.ap.freescale.net>
+References: <1432197817-22110-1-git-send-email-stripathi@apm.com>
+ <1432197817-22110-3-git-send-email-stripathi@apm.com>
+ <CAPDyKFpxkNF9C8AOJ6+18CEcpZTKycPR0i5OuwPRr1Zc+VPJ5Q@mail.gmail.com>
+ <CAOHikRASDmy7PwFjqmX7JAjW52DYR+d3RkE3yd_45NN5sHK7Pg@mail.gmail.com>
+ <CAOHikRBB9Uyh4Z34_pFTdmA0A-vnV09zTi8iYEU+01XvmzSr_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMqctQTxVZspcocDsNP6GzsRw5-0zPqkNScS8PzNvkFjBWatQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo@micron.com>, grmoo
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAOHikRBB9Uyh4Z34_pFTdmA0A-vnV09zTi8iYEU+01XvmzSr_A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: aisheng.dong@freescale.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, Anton Vorontsov <anton@enomsg.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Michal Simek <michal.simek@xilinx.com>, patches <patches@apm.com>, Don Dutile <ddutile@redhat.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, June 04, 2015 at 05:40:58 PM, Michal Suchanek wrote:
-> On 4 June 2015 at 17:28, Marek Vasut <marex@denx.de> wrote:
-> > On Thursday, June 04, 2015 at 06:54:00 AM, Michal Suchanek wrote:
-> >> On 4 June 2015 at 00:58, Marek Vasut <marex@denx.de> wrote:
-> >> > On Wednesday, June 03, 2015 at 11:26:40 PM, Michal Suchanek wrote:
-> >> >> On Exynos it is necessary to set SPI controller parameters that apply
-> >> >> to a SPI slave in a DT subnode of the slave device. The ofpart code
-> >> >> returns an error when there are subnodes of the SPI flash but no
-> >> >> partitions are found. Change this condition to a warning so that
-> >> >> flash without partitions can be accessed on Exynos.
-> >> > 
-> >> > I have to admit the rationale for this patch is not very clear to me,
-> >> > sorry. Can you please explain this a bit more ?
-> >> 
-> >> This is how the DT entry for SPI slave looks with s3c64xx:
-> >> flash: m25p80@0 {
-> >> 
-> >>         #address-cells = <1>;
-> >>         #size-cells = <1>;
-> >>         compatible = "jedec,spi-nor";
-> >>         reg = <0>;
-> >>         spi-max-frequency = <40000000>;
-> >>         linux,max_tx_len = <65536>;
-> > 
-> > SIDENOTE: I thought this was actually added by your patch #8 in this
-> > series. The underscores in the name of the property are not really
-> > consistent with the rest of the names.
-> > 
-> >>         m25p,fast-read;
-> >>         controller-data {
-> >>         
-> >>             samsung,spi-feedback-delay = <0>;
-> >>         
-> >>         };
-> >>     
-> >>     };
-> >> 
-> >> this is example of flash partitions:
-> >> flash@0 {
-> >> 
-> >>         #address-cells = <1>;
-> >>         #size-cells = <1>;
-> >>         
-> >>         partition@0 {
-> >>         
-> >>                 label = "u-boot";
-> >>                 reg = <0x0000000 0x100000>;
-> >>                 read-only;
-> >>         
-> >>         };
-> >>         
-> >>         uimage@100000 {
-> >>         
-> >>                 reg = <0x0100000 0x200000>;
-> >>         
-> >>         };
-> >> 
-> >> };
-> >> 
-> >> The parser ignores any flash without subnodes and returns 0 (no
-> >> partititon). When there is a subnode it assumes the flash is
-> >> partitioned and tries to parse the subnodes as partitions. When there
-> >> are subnodes and none parses as partition an error is returned. As
-> >> shown above it is valid to have subnodes on unpartitioned flash.
-> >> 
-> >> When an error is returned from a partition parser the mtdpart code
-> >> passes on this error to the flash probe function and the proble of the
-> >> flash fails.
-> > 
-> > What does /proc/mtd tell you when you have no partitions defined
-> > in the DT ? It should provide you with the entire MTD device and
-> > the code shouldn't even try to parse any OF partitions, since you
-> > don't have any.
+On Mon, Jun 01, 2015 at 01:38:47PM +0530, Suman Tripathi wrote:
+>    Hi Aisheng,
+>    On Wed, May 27, 2015 at 7:46 PM, Suman Tripathi <[1]stripathi@apm.com>
+>    wrote:
 > 
-> mtdinfo shows I have no mtd devices and the log shows that probe
-> failed unless I patch the kernel.
+>      On Tue, May 26, 2015 at 6:06 PM, Ulf Hansson <[2]ulf.hansson@linaro.org>
+>      wrote:
 > 
-> When there is *support* for of partitions the ofparser is run on mtd
-> probe. If it fails because it considers
+>        On 21 May 2015 at 10:43, Suman Tripathi <[3]stripathi@apm.com> wrote:
+>        > The sdhci framework disables SDR104/SDR50/DDR50 based on only quirk.
+>        > This patch adds the support to disable SDR104/SDR50/DDR50 based on
+>        > reading the capability register 0.
+>        >
+>        > Signed-off-by: Suman Tripathi <[4]stripathi@apm.com>
+>        > ---
+>        > ---
+>        >  drivers/mmc/host/sdhci.c | 3 ++-
+>        >  1 file changed, 2 insertions(+), 1 deletion(-)
+>        >
+>        > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>        > index 58c1770..a3d9b8a 100644
+>        > --- a/drivers/mmc/host/sdhci.c
+>        > +++ b/drivers/mmc/host/sdhci.c
+>        > @@ -3118,7 +3118,8 @@ int sdhci_add_host(struct sdhci_host *host)
+>        >                 }
+>        >         }
+>        >
+>        > -       if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V)
+>        > +       if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V ||
+>        > +           !(caps[0] & SDHCI_CAN_VDD_180))
+>        >                 caps[1] &= ~(SDHCI_SUPPORT_SDR104 |
+>        SDHCI_SUPPORT_SDR50 |
+>        >                        SDHCI_SUPPORT_DDR50);
+>        >
+>        > --
+>        > 1.8.2.1
+>        >
 > 
-> >>         controller-data {
-> >>         
-> >>             samsung,spi-feedback-delay = <0>;
-> >>         
-> >>         };
+>        I have no problem with this patch, except that it would be nice to get
+>        a few "tested by" to make sure it doesn't break UHS support for some
+>        SoCs.
 > 
-> an invalid partition and does not find any valid partition the probe fails.
+>        Kind regards
+>        Uffe
+> 
+>      Can anyone test this in some other SoC ? Appreciate your help ..
+> 
+>    Can you test this patch  on imx SoC ?
+> 
 
-OK, now it has become clearer to me, thanks!
+(Your email have some format issue.)
 
-> There are two problems here
+I have tested this patch and it does not break imx SoC.
+You can add my tag.
+Tested-by: Dong Aisheng <aisheng.dong@freescale.com>
+
+However, it looks to me SDHCI_CAN_VDD_180 is only indicating the host VDD
+capabiliies, not IO voltage capability.
+SD3.0 cards require 1.8v IO voltage support.
+So should this bit affect SD3.0 support?
+e.g. some hosts can only work at VDD_330 (most VDD of SD slot on IMX boards
+is using external regulator and is fixed to 3.3v), but it can support 1.8v
+IO voltage, so it can support SD3.0 cards as well.
+
+Ulf,
+Can you help confirm it?
+
+Regards
+Dong Aisheng
+
+>      --
+>      Thanks,
+>      with regards,
+>      Suman Tripathi
 > 
-> 1) the above is not invalid. It just is not a partition. The parser
-> should not fail seeing this
-
-The parser should complain verbosely and ignore this I guess ?
-
-> 2) the mtd probe should not fail when a partition parser fails and
-> should present the unpartitioned device
-
-OK
-
-> Both are addressed in separate patches.
+>    --
+>    Thanks,
+>    with regards,
+>    Suman Tripathi
 > 
-> Thanks
+> References
 > 
-> Michal
+>    Visible links
+>    1. mailto:stripathi@apm.com
+>    2. mailto:ulf.hansson@linaro.org
+>    3. mailto:stripathi@apm.com
+>    4. mailto:stripathi@apm.com
+> perl: warning: Setting locale failed.
+> perl: warning: Please check that your locale settings:
+> 	LANGUAGE = (unset),
+> 	LC_ALL = (unset),
+> 	LC_TIME = "zh_CN.UTF-8",
+> 	LC_MONETARY = "zh_CN.UTF-8",
+> 	LC_ADDRESS = "zh_CN.UTF-8",
+> 	LC_TELEPHONE = "zh_CN.UTF-8",
+> 	LC_NAME = "zh_CN.UTF-8",
+> 	LC_MEASUREMENT = "zh_CN.UTF-8",
+> 	LC_IDENTIFICATION = "zh_CN.UTF-8",
+> 	LC_NUMERIC = "zh_CN.UTF-8",
+> 	LC_PAPER = "zh_CN.UTF-8",
+> 	LANG = "en_US.UTF-8"
+>     are supported and installed on your system.
+> perl: warning: Falling back to the standard locale ("C").
