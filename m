@@ -1,86 +1,45 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Fri, 5 Jun 2015 14:30:41 +0100
-Message-ID: <20150605133040.GH1198@arm.com>
-References: <1431683009-18158-1-git-send-email-yong.wu@mediatek.com>
- <1431683009-18158-6-git-send-email-yong.wu@mediatek.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCHv2 2/4] edac, altera: Refactor EDAC for Altera CycloneV
+ SoC.
+Date: Fri, 5 Jun 2015 08:57:07 -0500
+Message-ID: <5571AAB3.2000005@opensource.altera.com>
+References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
+ <1433428128-7292-3-git-send-email-tthayer@opensource.altera.com>
+ <55706E25.8050105@opensource.altera.com>
+ <5570C479.7010902@opensource.altera.com> <20150604220609.GK3795@pd.tnic>
+ <5570D0D0.9030803@opensource.altera.com> <20150605091731.GA3679@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1431683009-18158-6-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, mitchelh-sgV2jX0FEOJiIJoWrK/4GQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20150605091731.GA3679@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thor Thayer <tthayer@opensource.altera.com>, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 15, 2015 at 10:43:28AM +0100, Yong Wu wrote:
-> This patch adds support for mediatek m4u (MultiMedia Memory Management Unit).
+Hi Boris,
 
-After looking at the page table code, I thought I'd come and check your
-TLB invalidate code here.
+On 6/5/15 4:17 AM, Borislav Petkov wrote:
+> On Thu, Jun 04, 2015 at 05:27:28PM -0500, Dinh Nguyen wrote:
+>> This is my mistake. I applied Alan Tull's patch for suspend-to-ram which
+>> also touches drivers/edac/altera_edac.c.
+>>
+>> https://git.kernel.org/cgit/linux/kernel/git/dinguyen/linux.git/commit/?h=socfpga_for_next_arria10&id=d44a92eb044f4cc1abf34a790d647e9fa356d7b0
+>>
+>> I think I will have to ask Alan to split up his patch and send the part
+>> that touches altera_edac.c to linux-edac.
+> 
+> Nah, that's fine. If it is that hunk adding altr_sdram_prepare(), he can
+> simply add my ACK for the EDAC bits:
+> 
+> Acked-by: Borislav Petkov <bp@suse.de>
+> 
 
-> +static void mtk_iommu_tlb_flush_all(void *cookie)
-> +{
-> +       struct mtk_iommu_domain *domain = cookie;
-> +       u32 val;
-> +
-> +       val = F_INVLD_EN1 | F_INVLD_EN0;
-> +       writel(val, domain->imuinfo->base + REG_MMU_INV_SEL);
-> +       writel(F_ALL_INVLD, domain->imuinfo->base + REG_MMU_INVALIDATE);
-> +}
-> +
-> +static void mtk_iommu_tlb_add_flush(unsigned long iova, size_t size,
-> +                                   bool leaf, void *cookie)
-> +{
-> +       struct mtk_iommu_domain *domain = cookie;
-> +       void __iomem *m4u_base = domain->imuinfo->base;
-> +       unsigned int iova_start = iova, iova_end = iova + size - 1;
-> +       int ret;
-> +       u32 val;
-> +
-> +       val = F_INVLD_EN1 | F_INVLD_EN0;
-> +       writel(val, m4u_base + REG_MMU_INV_SEL);
-> +
-> +       writel(iova_start, m4u_base + REG_MMU_INVLD_START_A);
-> +       writel(iova_end, m4u_base + REG_MMU_INVLD_END_A);
-> +       writel(F_MMU_INV_RANGE, m4u_base + REG_MMU_INVALIDATE);
-> +
-> +       ret = readl_poll_timeout_atomic(m4u_base + REG_MMU_CPE_DONE, val,
-> +                                       val != 0, 10, 1000000);
-> +       if (ret) {
-> +               dev_warn(domain->imuinfo->dev, "Invalid tlb don't done\n");
-> +               mtk_iommu_tlb_flush_all(cookie);
-> +       }
-> +       writel(0, m4u_base + REG_MMU_CPE_DONE);
-> +}
+Thanks alot for doing that! But I have sent you a separate patch for
+this. It would have caused a merge conflict for v4.2 if I left the
+suspend-to-ram patch as is.
 
-You don't need to wait for completion here if you can implement a proper
-->tlb_sync callback.
+Thanks,
 
-> +static void mtk_iommu_flush_pgtable(void *ptr, size_t size, void *cookie)
-> +{
-> +       /*
-> +        * After delete arch_setup_dma_ops,
-> +        * This will be replaced with dma_map_page
-> +        */
-> +        __dma_flush_range(ptr, ptr + size);
-> +}
-
-This should give you the necessary barriers to ensure visibility of the
-updated page tables, so you can use the _relaxed io accessors for the
-other TLB functions.
-
-> +static struct iommu_gather_ops mtk_iommu_gather_ops = {
-> +       .tlb_flush_all = mtk_iommu_tlb_flush_all,
-> +       .tlb_add_flush = mtk_iommu_tlb_add_flush,
-> +       .tlb_sync = mtk_iommu_tlb_flush_all,
-
-sync isn't required to flush anything; it's just supposed to wait for
-any outstanding invalidation (i.e. from tlb_add_flush) to complete.
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dinh
