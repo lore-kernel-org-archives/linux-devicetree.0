@@ -1,41 +1,34 @@
-From: Rabin Vincent <rabin@rab.in>
-Subject: Re: [PATCH] gpio: add ETRAXFS GPIO driver
-Date: Fri, 5 Jun 2015 21:36:31 +0200
-Message-ID: <20150605193631.GA28794@debian>
-References: <1431728843-21583-1-git-send-email-rabin@rab.in>
- <CACRpkdZcbvrcOMJavU5TacR1nD5+ot2FdC5zxBc=8XdhZN0SqQ@mail.gmail.com>
- <20150521184855.GA6159@debian>
- <CACRpkdabE5ztEDT8797iOO3fwDLgJOYyQp_cfjk7iDEAE+Uh8A@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v7 2/3] ARM: bcm2835: Add the Raspberry Pi firmware driver
+Date: Fri, 05 Jun 2015 13:41:15 -0600
+Message-ID: <5571FB5B.2030805@wwwdotorg.org>
+References: <1433448707-18104-1-git-send-email-eric@anholt.net> <1433448707-18104-2-git-send-email-eric@anholt.net> <55711428.4080506@wwwdotorg.org> <20150605192135.GA3301@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdabE5ztEDT8797iOO3fwDLgJOYyQp_cfjk7iDEAE+Uh8A@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150605192135.GA3301@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 01, 2015 at 03:45:35PM +0200, Linus Walleij wrote:
-> There is also the code such as of_gpio_simple_xlate()
-> that can't be reused for this, so thus it needs its own xlate
-> function and adds some complexity to the code.
-> But the convention in of_gpio_simple_xlate() is that
-> cell 0 is offset, and cell 1 is flags, so what about
-> moving the bank number to the last argument so you
-> can still use of_gpio_simple_xlate()?
-> 
-> Like so:
-> gpios = <&gio 5 0 0xD>, <&gio 6 0 0xD>;
-> 
-> I.e. extra cells go at the end. I can see you have a check
-> hack to see it is hitting a valid GPIO chip by using the label,
-> but that doesn't seem totally necessary.
+On 06/05/2015 01:21 PM, Lee Jones wrote:
+> On Thu, 04 Jun 2015, Stephen Warren wrote:
+>
+>> On 06/04/2015 02:11 PM, Eric Anholt wrote:
+>>> This gives us a function for making mailbox property channel requests
+>>> of the firmware, which is most notable in that it will let us get and
+>>> set clock rates.
+>>
+>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>
+> Does anyone know how drivers/firmware/ is managed?  I don't seem to be
+> able to find a maintainer/supporter listed in MAINTAINERS.
 
-That code is quite necessary, because that is what makes us bind to the
-correct gpio chip.  The wrong gpio chips' xlate() return an error code
-and the code in of_gpiochip_find_and_xlate() makes sure we look through
-the rest of the chips in the OF node until we find the right one.
-
-But the xlate function can change the order as you suggest and use
-of_gpio_simple_xlate() as a helper.  I'll make it do that.
+git log implies lots of different committers. I'd suggest send it 
+through arm-soc with the rest of the series.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
