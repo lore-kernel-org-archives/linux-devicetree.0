@@ -1,72 +1,68 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 2/3] dmaengine: ti-dma-crossbar: Make idr xbar instance-specific
-Date: Fri, 5 Jun 2015 18:34:33 +0300
-Message-ID: <1433518474-26628-3-git-send-email-peter.ujfalusi@ti.com>
-References: <1433518474-26628-1-git-send-email-peter.ujfalusi@ti.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [LINUX RFC V2 1/2] devicetree: Add DT bindings documentation for
+ Zynq Ultrascale+ MPSoC GQSPI controller
+Date: Fri, 5 Jun 2015 09:00:17 -0700
+Message-ID: <20150605160017.GA8863@xsjsorenbubuntu>
+References: <1433509653-15142-1-git-send-email-ranjit.waghmode@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433518474-26628-1-git-send-email-peter.ujfalusi@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1433509653-15142-1-git-send-email-ranjit.waghmode@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, Tony Lindgren <tony@atomide.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-omap@vger.kernel.org, misael.lopez@ti.com
+To: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, ran27jit@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Misael Lopez Cruz <misael.lopez@ti.com>
+On Fri, 2015-06-05 at 06:37PM +0530, Ranjit Waghmode wrote:
+> Add bindings documentation for GQSPI controller driver used by
+> Zynq Ultrascale+ MPSoC
+>=20
+> Signed-off-by: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+> ---
+> No changes in v2
+> ---
+>  .../devicetree/bindings/spi/spi-zynqmp-qspi.txt    | 26 ++++++++++++=
+++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-zynqmp-=
+qspi.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.tx=
+t b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
+> new file mode 100644
+> index 0000000..cec6330
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
+> @@ -0,0 +1,26 @@
+> +Xilinx Zynq UltraScale+ MPSoC GQSPI controller Device Tree Bindings
+> +-------------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Should be "xlnx,zynqmp-qspi-1.0".
+> +- reg			: Physical base address and size of GQSPI registers map.
+> +- interrupts		: Property with a value describing the interrupt
+> +			  number.
+> +- interrupt-parent	: Must be core interrupt controller.
+> +- clock-names		: List of input clock names - "ref_clk", "pclk"
+> +			  (See clock bindings for details).
+> +- clocks		: Clock phandles (see clock bindings for details).
+> +
+> +Optional properties:
+> +- num-cs		: Number of chip selects used.
+> +
+> +Example:
+> +	qspi: spi@ff0f0000 {
+> +		compatible =3D "xlnx,zynqmp-qspi-1.0";
+> +		clock-names =3D "ref_clk", "pclk";
+> +		clocks =3D <&misc_clk &misc_clk>;
+> +		interrupts =3D <0 15 4>;
+> +		interrupt-parent =3D <&gic>;
+> +		num-cs =3D <1>;
+> +		reg =3D <0x0 0xff0f0000 0x1000 0x0 0xc0000000 0x8000000>;
 
-In preparation for supporting multiple DMA crossbar instances,
-make the idr xbar instance specific.
+Please make this
+  reg =3D <0x0 0xff0f0000 0x1000>, <0x0 0xc0000000 0x8000000>;
 
-Signed-off-by: Misael Lopez Cruz <misael.lopez@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/ti-dma-crossbar.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/ti-dma-crossbar.c b/drivers/dma/ti-dma-crossbar.c
-index 73ecd0a1e312..887cfe676b6d 100644
---- a/drivers/dma/ti-dma-crossbar.c
-+++ b/drivers/dma/ti-dma-crossbar.c
-@@ -20,12 +20,11 @@
- #define TI_XBAR_OUTPUTS	127
- #define TI_XBAR_INPUTS	256
- 
--static DEFINE_IDR(map_idr);
--
- struct ti_dma_xbar_data {
- 	void __iomem *iomem;
- 
- 	struct dma_router dmarouter;
-+	struct idr map_idr;
- 
- 	u16 safe_val; /* Value to rest the crossbar lines */
- 	u32 xbar_requests; /* number of DMA requests connected to XBAR */
-@@ -51,7 +50,7 @@ static void ti_dma_xbar_free(struct device *dev, void *route_data)
- 		map->xbar_in, map->xbar_out);
- 
- 	ti_dma_xbar_write(xbar->iomem, map->xbar_out, xbar->safe_val);
--	idr_remove(&map_idr, map->xbar_out);
-+	idr_remove(&xbar->map_idr, map->xbar_out);
- 	kfree(map);
- }
- 
-@@ -81,7 +80,7 @@ static void *ti_dma_xbar_route_allocate(struct of_phandle_args *dma_spec,
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
--	map->xbar_out = idr_alloc(&map_idr, NULL, 0, xbar->dma_requests,
-+	map->xbar_out = idr_alloc(&xbar->map_idr, NULL, 0, xbar->dma_requests,
- 				  GFP_KERNEL);
- 	map->xbar_in = (u16)dma_spec->args[0];
- 
-@@ -113,6 +112,8 @@ static int ti_dma_xbar_probe(struct platform_device *pdev)
- 	if (!xbar)
- 		return -ENOMEM;
- 
-+	idr_init(&xbar->map_idr);
-+
- 	dma_node = of_parse_phandle(node, "dma-masters", 0);
- 	if (!dma_node) {
- 		dev_err(&pdev->dev, "Can't get DMA master node\n");
--- 
-2.4.2
+  	S=C3=B6ren
