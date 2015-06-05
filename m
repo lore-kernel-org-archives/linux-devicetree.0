@@ -1,68 +1,69 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [LINUX RFC V2 1/2] devicetree: Add DT bindings documentation for
- Zynq Ultrascale+ MPSoC GQSPI controller
-Date: Fri, 5 Jun 2015 09:00:17 -0700
-Message-ID: <20150605160017.GA8863@xsjsorenbubuntu>
-References: <1433509653-15142-1-git-send-email-ranjit.waghmode@xilinx.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 0/3] dmaengine: ti-dma-crossbar: Support for eDMA
+Date: Fri, 5 Jun 2015 19:17:17 +0300
+Message-ID: <5571CB8D.7030401@ti.com>
+References: <1433518474-26628-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433509653-15142-1-git-send-email-ranjit.waghmode@xilinx.com>
+In-Reply-To: <1433518474-26628-1-git-send-email-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, ran27jit@gmail.com
+To: vinod.koul@intel.com, Tony Lindgren <tony@atomide.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-omap@vger.kernel.org, misael.lopez@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-06-05 at 06:37PM +0530, Ranjit Waghmode wrote:
-> Add bindings documentation for GQSPI controller driver used by
-> Zynq Ultrascale+ MPSoC
+On 06/05/2015 06:34 PM, Peter Ujfalusi wrote:
+> Hi,
 >=20
-> Signed-off-by: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
-> ---
-> No changes in v2
-> ---
->  .../devicetree/bindings/spi/spi-zynqmp-qspi.txt    | 26 ++++++++++++=
-++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-zynqmp-=
-qspi.txt
+> The ti-dma-crossbar driver in it's current form can work when it is u=
+sed with
+> sDMA (omap-dma). On DRA7x class of devices we have both sDMA and eDMA=
+ available.
+> The DT bindings for sDMA has been done in a way that DMA users need t=
+o specify
+> the required DMA request number + 1 when they request for channel and=
+ the driver
+> stack has been written in this way also for sDMA.
+> Since right now we do not have the crossbar enabled we can still chan=
+ge the
+> compatible string to reflect the crossbar use. The TRM also refers th=
+e crossbars
+> in this way.
+
+Now that I have sent this series...
+Would it be better to not touch the compatible strings, but add of_devi=
+ce_id
+table in the ti-dma-crossbar driver containing the supported dma contro=
+llers,
+like "ti,omap4430-sdma" and "ti,edma3" and to of_match_node() against t=
+he node
+we got via dma-masters?
+
+So we would keep the ti,dra7-dma-crossbar and depending on where the
+dma-masters point us we can decide in the code on how to handle?
+
+Just a thought.
+
 >=20
-> diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.tx=
-t b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
-> new file mode 100644
-> index 0000000..cec6330
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
-> @@ -0,0 +1,26 @@
-> +Xilinx Zynq UltraScale+ MPSoC GQSPI controller Device Tree Bindings
-> +-------------------------------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Should be "xlnx,zynqmp-qspi-1.0".
-> +- reg			: Physical base address and size of GQSPI registers map.
-> +- interrupts		: Property with a value describing the interrupt
-> +			  number.
-> +- interrupt-parent	: Must be core interrupt controller.
-> +- clock-names		: List of input clock names - "ref_clk", "pclk"
-> +			  (See clock bindings for details).
-> +- clocks		: Clock phandles (see clock bindings for details).
-> +
-> +Optional properties:
-> +- num-cs		: Number of chip selects used.
-> +
-> +Example:
-> +	qspi: spi@ff0f0000 {
-> +		compatible =3D "xlnx,zynqmp-qspi-1.0";
-> +		clock-names =3D "ref_clk", "pclk";
-> +		clocks =3D <&misc_clk &misc_clk>;
-> +		interrupts =3D <0 15 4>;
-> +		interrupt-parent =3D <&gic>;
-> +		num-cs =3D <1>;
-> +		reg =3D <0x0 0xff0f0000 0x1000 0x0 0xc0000000 0x8000000>;
+> Regards,
+> Peter
+> ---
+> Misael Lopez Cruz (2):
+>   dmaengine: ti-dma-crossbar: Make idr xbar instance-specific
+>   dmaengine: ti-dma-crossbar: Add support for eDMA xbar
+>=20
+> Peter Ujfalusi (1):
+>   dmaengine: ti-dma-crossbar: Change the compatible string to
+>     ti,dra7-sdma-crossbar
+>=20
+>  Documentation/devicetree/bindings/dma/dma.txt      |  2 +-
+>  .../devicetree/bindings/dma/ti-dma-crossbar.txt    |  5 +--
+>  drivers/dma/ti-dma-crossbar.c                      | 37 ++++++++++++=
+++++------
+>  3 files changed, 31 insertions(+), 13 deletions(-)
+>=20
 
-Please make this
-  reg =3D <0x0 0xff0f0000 0x1000>, <0x0 0xc0000000 0x8000000>;
 
-  	S=C3=B6ren
+--=20
+P=E9ter
