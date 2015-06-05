@@ -1,177 +1,90 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v3 4/6] dt-bindings: Consolidate ChipIdea USB ci13xxx
- bindings
-Date: Fri, 5 Jun 2015 14:22:15 +0800
-Message-ID: <20150605062213.GF15169@shlinux2>
+Subject: Re: [PATCH v3 6/6] usb: chipidea: add work-around for Marvell HSIC
+ PHY startup
+Date: Fri, 5 Jun 2015 14:32:03 +0800
+Message-ID: <20150605063202.GG15169@shlinux2>
 References: <1432917526-9688-1-git-send-email-robh@kernel.org>
- <1432917526-9688-5-git-send-email-robh@kernel.org>
+ <1432917526-9688-7-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1432917526-9688-5-git-send-email-robh@kernel.org>
+In-Reply-To: <1432917526-9688-7-git-send-email-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Daniel Tang <dt.tangr@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 29, 2015 at 11:38:44AM -0500, Rob Herring wrote:
-> Combine the ChipIdea USB binding into a single document to reduce
-> duplication and fragmentation. This marks use of the old PHY bindings as
-> deprecated. Future compatible bindings should use generic PHY binding.
+On Fri, May 29, 2015 at 11:38:46AM -0500, Rob Herring wrote:
+> The Marvell 28nm HSIC PHY requires the port to be forced to HS mode after
+> the port power is applied. This is done using the test mode in the PORTSC
+> register.
+> 
+> As HSIC is always HS, this work-around should be safe to do with all HSIC
+> PHYs and has been tested on i.MX6S.
+
+tested on i.mx6sx
+
 > 
 > Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Ivan T. Ivanov <iivanov@mm-sol.com>
-> Cc: Peter Chen <peter.chen@freescale.com>
-> Cc: Daniel Tang <dt.tangr@gmail.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: devicetree@vger.kernel.org
+> Tested-by: Peter Chen <Peter.Chen@freescale.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-usb@vger.kernel.org
 > ---
->  .../devicetree/bindings/usb/ci-hdrc-imx.txt        | 35 ----------------------
->  .../devicetree/bindings/usb/ci-hdrc-qcom.txt       | 17 -----------
->  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       | 22 +++++++++++++-
->  .../devicetree/bindings/usb/ci-hdrc-zevio.txt      | 17 -----------
->  4 files changed, 21 insertions(+), 70 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
->  delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
->  delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
+>  drivers/usb/chipidea/host.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
-> deleted file mode 100644
-> index 38a5480..0000000
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
-> +++ /dev/null
-> @@ -1,35 +0,0 @@
-> -* Freescale i.MX ci13xxx usb controllers
-> -
-> -Required properties:
-> -- compatible: Should be "fsl,imx27-usb"
-> -- reg: Should contain registers location and length
-> -- interrupts: Should contain controller interrupt
-> -- fsl,usbphy: phandle of usb phy that connects to the port
-> -
-> -Recommended properies:
-> -- phy_type: the type of the phy connected to the core. Should be one
-> -  of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
-> -  property the PORTSC register won't be touched
-> -- dr_mode: One of "host", "peripheral" or "otg". Defaults to "otg"
-> -
-> -Optional properties:
-> -- fsl,usbmisc: phandler of non-core register device, with one argument
-> -  that indicate usb controller index
-> -- vbus-supply: regulator for vbus
-> -- disable-over-current: disable over current detect
-> -- external-vbus-divider: enables off-chip resistor divider for Vbus
-> -- maximum-speed: limit the maximum connection speed to "full-speed".
-> -- tpl-support: TPL (Targeted Peripheral List) feature for targeted hosts
-> -
-> -Examples:
-> -usb@02184000 { /* USB OTG */
-> -	compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
-> -	reg = <0x02184000 0x200>;
-> -	interrupts = <0 43 0x04>;
-> -	fsl,usbphy = <&usbphy1>;
-> -	fsl,usbmisc = <&usbmisc 0>;
-> -	disable-over-current;
-> -	external-vbus-divider;
-> -	maximum-speed = "full-speed";
-> -	tpl-support;
-> -};
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-> deleted file mode 100644
-> index f2899b5..0000000
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-> +++ /dev/null
-> @@ -1,17 +0,0 @@
-> -Qualcomm CI13xxx (Chipidea) USB controllers
-> -
-> -Required properties:
-> -- compatible:   should contain "qcom,ci-hdrc"
-> -- reg:          offset and length of the register set in the memory map
-> -- interrupts:   interrupt-specifier for the controller interrupt.
-> -- usb-phy:      phandle for the PHY device
-> -- dr_mode:      Should be "peripheral"
-> -
-> -Examples:
-> -	gadget@f9a55000 {
-> -		compatible = "qcom,ci-hdrc";
-> -		reg = <0xf9a55000 0x400>;
-> -		dr_mode = "peripheral";
-> -		interrupts = <0 134 0>;
-> -		usb-phy = <&usbphy0>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> index 27f8b1e..553e2fa 100644
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> @@ -1,15 +1,35 @@
->  * USB2 ChipIdea USB controller for ci13xxx
+> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+> index 21fe1a3..6cf87b8 100644
+> --- a/drivers/usb/chipidea/host.c
+> +++ b/drivers/usb/chipidea/host.c
+> @@ -37,12 +37,14 @@ static int (*orig_bus_suspend)(struct usb_hcd *hcd);
 >  
->  Required properties:
-> -- compatible: should be "chipidea,usb2"
-> +- compatible: should be one of:
-> +	"fsl,imx27-usb"
-> +	"lsi,zevio-usb"
-> +	"qcom,ci-hdrc"
-> +	"chipidea,usb2"
->  - reg: base address and length of the registers
->  - interrupts: interrupt for the USB controller
+>  struct ehci_ci_priv {
+>  	struct regulator *reg_vbus;
+> +	struct ci_hdrc *ci;
+>  };
 >  
-> +Recommended properies:
-> +- phy_type: the type of the phy connected to the core. Should be one
-> +  of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
-> +  property the PORTSC register won't be touched.
-> +- dr_mode: One of "host", "peripheral" or "otg". Defaults to "otg"
+>  static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+>  {
+>  	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+>  	struct ehci_ci_priv *priv = (struct ehci_ci_priv *)ehci->priv;
+> +	struct ci_hdrc *ci = priv->ci;
+>  	struct device *dev = hcd->self.controller;
+
+Forgot to comment last time, the ci is the private driver_data for
+ci->dev, so you can get ci by calling dev_get_drvdata(dev), no need
+to add an entry at struct ehci_ci_priv.
+
+>  	int ret = 0;
+>  	int port = HCS_N_PORTS(ehci->hcs_params);
+> @@ -64,6 +66,15 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+>  			return ret;
+>  		}
+>  	}
 > +
-> +Deprecated properties:
-> +- usb-phy:      phandle for the PHY device. Use "phys" instead.
-> +- fsl,usbphy: phandle of usb phy that connects to the port. Use "phys" instead.
-> +
->  Optional properties:
->  - clocks: reference to the USB clock
->  - phys: reference to the USB PHY
->  - phy-names: should be "usb-phy"
->  - vbus-supply: reference to the VBUS regulator
-> +- maximum-speed: limit the maximum connection speed to "full-speed".
-> +- tpl-support: TPL (Targeted Peripheral List) feature for targeted hosts
-> +- fsl,usbmisc: (FSL only) phandler of non-core register device, with one
-> +  argument that indicate usb controller index
-> +- disable-over-current: (FSL only) disable over current detect
-> +- external-vbus-divider: (FSL only) enables off-chip resistor divider for Vbus
+> +	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
+> +		/*
+> +		 * Marvell 28nm HSIC PHY requires forcing the port to HS mode.
+> +		 * As HSIC is always HS, this should be safe for others.
+> +		 */
+> +		hw_port_test_set(ci, 5);
+> +		hw_port_test_set(ci, 0);
+> +	}
+>  	return 0;
+>  };
 >  
->  Example:
+> @@ -112,6 +123,7 @@ static int host_start(struct ci_hdrc *ci)
 >  
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
-> deleted file mode 100644
-> index abbcb2a..0000000
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
-> +++ /dev/null
-> @@ -1,17 +0,0 @@
-> -* LSI Zevio USB OTG Controller
-> -
-> -Required properties:
-> -- compatible: Should be "lsi,zevio-usb"
-> -- reg: Should contain registers location and length
-> -- interrupts: Should contain controller interrupt
-> -
-> -Optional properties:
-> -- vbus-supply: regulator for vbus
-> -
-> -Examples:
-> -		usb0: usb@b0000000 {
-> -			reg = <0xb0000000 0x1000>;
-> -			compatible = "lsi,zevio-usb";
-> -			interrupts = <8>;
-> -			vbus-supply = <&vbus_reg>;
-> -		};
+>  	priv = (struct ehci_ci_priv *)ehci->priv;
+>  	priv->reg_vbus = NULL;
+> +	priv->ci = ci;
+>  
+>  	if (ci->platdata->reg_vbus && !ci_otg_is_fsm_mode(ci)) {
+>  		if (ci->platdata->flags & CI_HDRC_TURN_VBUS_EARLY_ON) {
 > -- 
 > 2.1.0
 > 
-
-Acked-by:Peter Chen <peter.chen@freescale.com>
 
 -- 
 
