@@ -1,143 +1,97 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/7] phy-sun4i-usb: Add support for boards with
- broken Vusb-detection
-Date: Fri,  5 Jun 2015 20:53:38 +0200
-Message-ID: <1433530421-12197-5-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 7/7] musb: sunxi: Add support for musb controller in A33 SoC
+Date: Fri,  5 Jun 2015 20:53:41 +0200
+Message-ID: <1433530421-12197-8-git-send-email-hdegoede@redhat.com>
 References: <1433530421-12197-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBRHAY6VQKGQECQ37HTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1433530421-12197-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On some boards we cannot detect the presence of an external Vusb, because
-e.g. the 5V of the otg connector is directly connected to the 5V of the board,
-and thus is always high.
-
-This commit adds support for using such boards by only looking at the
-id-detection pin.
+The A33 SoC uses the same musb controller as found on the A31 and later,
+but allwinner has removed the configdata register, this commit adds special
+handling for this.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/phy/phy-sun4i-usb.c | 44 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt  |  3 ++-
+ drivers/usb/musb/sunxi.c                                  | 15 +++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index 7d067ee..4981041 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -22,6 +22,7 @@
-  */
+diff --git a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
+index c5ef893..fff87c8 100644
+--- a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
++++ b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
+@@ -2,7 +2,8 @@ Allwinner sun4i A10 musb DRC/OTG controller
+ -------------------------------------------
  
- #include <linux/clk.h>
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/extcon.h>
- #include <linux/io.h>
-@@ -312,7 +313,7 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
- 	phy->regulator_on = true;
+ Required properties:
+- - compatible      : "allwinner,sun4i-a10-musb" or "allwinner,sun6i-a31-musb"
++ - compatible      : "allwinner,sun4i-a10-musb", "allwinner,sun6i-a31-musb"
++                     or "allwinner,sun8i-a33-musb"
+  - reg             : mmio address range of the musb controller
+  - clocks          : clock specifier for the musb controller ahb gate clock
+  - reset           : reset specifier for the ahb reset (A31 and newer only)
+diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
+index 8eccbb7..b0fdd83 100644
+--- a/drivers/usb/musb/sunxi.c
++++ b/drivers/usb/musb/sunxi.c
+@@ -73,6 +73,7 @@
+ #define SUNXI_MUSB_FL_PHY_ON			4
+ #define SUNXI_MUSB_FL_HAS_SRAM			5
+ #define SUNXI_MUSB_FL_HAS_RESET			6
++#define SUNXI_MUSB_FL_NO_CONFIGDATA		7
  
- 	/* We must report Vbus high within OTG_TIME_A_WAIT_VRISE msec. */
--	if (phy->index == 0 && data->phy0_poll)
-+	if (phy->index == 0 && data->vbus_det_gpio && data->phy0_poll)
- 		mod_delayed_work(system_wq, &data->detect, DEBOUNCE_TIME);
+ /* Our read/write methods need access and do not get passed in a musb ref :| */
+ struct musb *sunxi_musb;
+@@ -370,6 +371,8 @@ static u32 sunxi_musb_busctl_offset(u8 epnum, u16 offset)
  
- 	return 0;
-@@ -333,7 +334,7 @@ static int sun4i_usb_phy_power_off(struct phy *_phy)
- 	 * phy0 vbus typically slowly discharges, sometimes this causes the
- 	 * Vbus gpio to not trigger an edge irq on Vbus off, so force a rescan.
- 	 */
--	if (phy->index == 0 && !data->phy0_poll)
-+	if (phy->index == 0 && data->vbus_det_gpio && !data->phy0_poll)
- 		mod_delayed_work(system_wq, &data->detect, POLL_TIME);
+ static u8 sunxi_musb_readb(const void __iomem *addr, unsigned offset)
+ {
++	struct sunxi_glue *glue;
++
+ 	if (addr == sunxi_musb->mregs) {
+ 		/* generic control or fifo control reg access */
+ 		switch (offset) {
+@@ -392,6 +395,12 @@ static u8 sunxi_musb_readb(const void __iomem *addr, unsigned offset)
+ 		case MUSB_RXFIFOSZ:
+ 			return readb(addr + SUNXI_MUSB_RXFIFOSZ);
+ 		case MUSB_CONFIGDATA + 0x10: /* See musb_read_configdata() */
++			glue = dev_get_drvdata(sunxi_musb->controller->parent);
++			/* A33 saves a reg, and we get to hardcode this */
++			if (test_bit(SUNXI_MUSB_FL_NO_CONFIGDATA,
++				     &glue->flags))
++				return 0xde;
++
+ 			return readb(addr + SUNXI_MUSB_CONFIGDATA);
+ 		/* Offset for these is fixed by sunxi_musb_busctl_offset() */
+ 		case SUNXI_MUSB_TXFUNCADDR:
+@@ -636,6 +645,11 @@ static int sunxi_musb_probe(struct platform_device *pdev)
+ 	if (of_device_is_compatible(np, "allwinner,sun6i-a31-musb"))
+ 		set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
  
- 	return 0;
-@@ -362,7 +363,10 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	int id_det, vbus_det, id_notify = 0, vbus_notify = 0;
- 
- 	id_det = gpiod_get_value_cansleep(data->id_det_gpio);
--	vbus_det = gpiod_get_value_cansleep(data->vbus_det_gpio);
-+	if (data->vbus_det_gpio)
-+		vbus_det = gpiod_get_value_cansleep(data->vbus_det_gpio);
-+	else
-+		vbus_det = 1; /* Report vbus as high */
- 
- 	mutex_lock(&phy0->mutex);
- 
-@@ -372,6 +376,16 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	}
- 
- 	if (id_det != data->id_det) {
-+		/*
-+		 * When a host cable (id == 0) gets plugged in on systems
-+		 * without vbus detection report vbus low for long enough for
-+		 * the musb-ip to end the current device session.
-+		 */
-+		if (!data->vbus_det_gpio && id_det == 0) {
-+			sun4i_usb_phy0_set_vbus_detect(phy0, 0);
-+			msleep(200);
-+			sun4i_usb_phy0_set_vbus_detect(phy0, 1);
-+		}
- 		sun4i_usb_phy0_set_id_detect(phy0, id_det);
- 		data->id_det = id_det;
- 		id_notify = 1;
-@@ -385,10 +399,23 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 
- 	mutex_unlock(&phy0->mutex);
- 
--	if (id_notify)
-+	if (id_notify) {
- 		extcon_set_cable_state(&data->extcon,
- 				       extcon_cable_name[EXTCON_USB_HOST],
- 				       !id_det);
-+		/*
-+		 * When a host cable gets unplugged (id == 1) on systems
-+		 * without vbus detection report vbus low for long enough to
-+		 * the musb-ip to end the current host session.
-+		 */
-+		if (!data->vbus_det_gpio && id_det == 1) {
-+			mutex_lock(&phy0->mutex);
-+			sun4i_usb_phy0_set_vbus_detect(phy0, 0);
-+			msleep(1000);
-+			sun4i_usb_phy0_set_vbus_detect(phy0, 1);
-+			mutex_unlock(&phy0->mutex);
-+		}
++	if (of_device_is_compatible(np, "allwinner,sun8i-a33-musb")) {
++		set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
++		set_bit(SUNXI_MUSB_FL_NO_CONFIGDATA, &glue->flags);
 +	}
++
+ 	glue->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(glue->clk)) {
+ 		dev_err(&pdev->dev, "Error getting clock: %ld\n",
+@@ -716,6 +730,7 @@ static int sunxi_musb_remove(struct platform_device *pdev)
+ static const struct of_device_id sunxi_musb_match[] = {
+ 	{ .compatible = "allwinner,sun4i-a10-musb", },
+ 	{ .compatible = "allwinner,sun6i-a31-musb", },
++	{ .compatible = "allwinner,sun8i-a33-musb", },
+ 	{}
+ };
  
- 	if (vbus_notify)
- 		extcon_set_cable_state(&data->extcon,
-@@ -485,9 +512,9 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 		data->vbus_det_gpio = NULL;
- 	}
- 
--	/* We either want both gpio pins or neither (when in host mode) */
--	if (!data->id_det_gpio != !data->vbus_det_gpio) {
--		dev_err(dev, "failed to get id or vbus detect pin\n");
-+	/* vbus_det without id_det makes no sense, and is not supported */
-+	if (data->vbus_det_gpio && !data->id_det_gpio) {
-+		dev_err(dev, "usb0_id_det missing or invalid\n");
- 		return -ENODEV;
- 	}
- 
-@@ -550,7 +577,8 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 
- 	data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
- 	data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
--	if (data->id_det_irq  < 0 || data->vbus_det_irq < 0)
-+	if ((data->id_det_gpio && data->id_det_irq < 0) ||
-+	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
- 		data->phy0_poll = true;
- 
- 	if (data->id_det_irq >= 0) {
 -- 
 2.4.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
