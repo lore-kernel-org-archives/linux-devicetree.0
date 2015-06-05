@@ -1,56 +1,41 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 3/3] ARM: bcm2835: Add the firmware driver information
- to the RPi DT
-Date: Fri, 5 Jun 2015 20:24:25 +0100
-Message-ID: <20150605192425.GC3301@x1>
-References: <1433448707-18104-1-git-send-email-eric@anholt.net>
- <1433448707-18104-3-git-send-email-eric@anholt.net>
+From: Rabin Vincent <rabin@rab.in>
+Subject: Re: [PATCH] gpio: add ETRAXFS GPIO driver
+Date: Fri, 5 Jun 2015 21:36:31 +0200
+Message-ID: <20150605193631.GA28794@debian>
+References: <1431728843-21583-1-git-send-email-rabin@rab.in>
+ <CACRpkdZcbvrcOMJavU5TacR1nD5+ot2FdC5zxBc=8XdhZN0SqQ@mail.gmail.com>
+ <20150521184855.GA6159@debian>
+ <CACRpkdabE5ztEDT8797iOO3fwDLgJOYyQp_cfjk7iDEAE+Uh8A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1433448707-18104-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CACRpkdabE5ztEDT8797iOO3fwDLgJOYyQp_cfjk7iDEAE+Uh8A@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 04 Jun 2015, Eric Anholt wrote:
-
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Acked-by: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (previous version with pm-domains)
-> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> ---
+On Mon, Jun 01, 2015 at 03:45:35PM +0200, Linus Walleij wrote:
+> There is also the code such as of_gpio_simple_xlate()
+> that can't be reused for this, so thus it needs its own xlate
+> function and adds some complexity to the code.
+> But the convention in of_gpio_simple_xlate() is that
+> cell 0 is offset, and cell 1 is flags, so what about
+> moving the bank number to the last argument so you
+> can still use of_gpio_simple_xlate()?
 > 
-> v2: Drop pm-domains stuff since I've dropped it from the firmware
->     driver for now, until we get drivers/base fixed.
+> Like so:
+> gpios = <&gio 5 0 0xD>, <&gio 6 0 0xD>;
 > 
-> v3: Rename the compatible to "raspberrypi,bcm2835-firmware"
-> 
->  arch/arm/boot/dts/bcm2835-rpi.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
+> I.e. extra cells go at the end. I can see you have a check
+> hack to see it is hitting a valid GPIO chip by using the label,
+> but that doesn't seem totally necessary.
 
-Applied for v4.2, thanks.
+That code is quite necessary, because that is what makes us bind to the
+correct gpio chip.  The wrong gpio chips' xlate() return an error code
+and the code in of_gpiochip_find_and_xlate() makes sure we look through
+the rest of the chips in the OF node until we find the right one.
 
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> index 46780bb..ab5474e 100644
-> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> @@ -14,6 +14,13 @@
->  			linux,default-trigger = "heartbeat";
->  		};
->  	};
-> +
-> +	soc {
-> +		firmware: firmware {
-> +			compatible = "raspberrypi,bcm2835-firmware";
-> +			mboxes = <&mailbox>;
-> +		};
-> +	};
->  };
->  
->  &gpio {
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+But the xlate function can change the order as you suggest and use
+of_gpio_simple_xlate() as a helper.  I'll make it do that.
