@@ -1,57 +1,76 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply regulators
-Date: Sat, 06 Jun 2015 01:03:25 +0200
-Message-ID: <1590039.lzO65vr8K7@diego>
-References: <4184159.j0iXe39dFB@phil> <23123577.mOoqGCAPdL@diego> <20150605122311.GA759@ulmo.nvidia.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
+ regulators
+Date: Sat, 6 Jun 2015 00:10:58 +0100
+Message-ID: <20150605231058.GQ7557@n2100.arm.linux.org.uk>
+References: <4184159.j0iXe39dFB@phil> <2619686.csNBBFyt8W@phil>
+ <20150605110159.GA16254@ulmo.nvidia.com>
+ <23123577.mOoqGCAPdL@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150605122311.GA759-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <23123577.mOoqGCAPdL@diego>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry
-
-Am Freitag, 5. Juni 2015, 14:23:14 schrieb Thierry Reding:
-> On Fri, Jun 05, 2015 at 02:16:40PM +0200, Heiko St=FCbner wrote:
-> > > If this is specific to the Rockchip implementation, shouldn't thi=
-s go
-> > > into Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt=
-? It
-> > > could then simply go into the Rockchip DRM tree.
-> >=20
-> > actually, we determined that the supply names are universal to the =
-IP
-> > (both in imx and rockchip and probably more if there are more users=
- out
-> > there). Just Russell requested that we don't pollute the generic co=
-de
-> > until necessary, as it looks like the supply of those is somehow ha=
-ndled
-> > internally on the imx.
-> If it's universal then there should be no need to mention the Rockchi=
-p
-> compatible specifically. Also, it might be better to submit this as t=
-wo
-> separate patches, one for the binding and another for the driver.
->=20
-> I could extract the DT binding piece myself and apply only that, then
-> somebody else can apply the Rockchip change to that driver separately=
-=2E
-
-so I've sent a v4 where the dt-binding is split off (and without the Ro=
-ckchip=20
-specific text), so if you want to take patch1, Mark could take patch2 a=
-nd I=20
-would take the dts changes in patch3.
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKdW4gMDUsIDIwMTUgYXQgMDI6MTY6NDBQTSArMDIwMCwgSGVpa28gU3TDvGJuZXIg
+d3JvdGU6Cj4gSGkgVGhpZXJyeQo+IAo+IEFtIEZyZWl0YWcsIDUuIEp1bmkgMjAxNSwgMTM6MDI6
+MDEgc2NocmllYiBUaGllcnJ5IFJlZGluZzoKPiA+IElmIHRoaXMgaXMgc3BlY2lmaWMgdG8gdGhl
+IFJvY2tjaGlwIGltcGxlbWVudGF0aW9uLCBzaG91bGRuJ3QgdGhpcyBnbwo+ID4gaW50byBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZHdfaGRtaS1yb2NrY2hpcC50eHQ/
+IEl0Cj4gPiBjb3VsZCB0aGVuIHNpbXBseSBnbyBpbnRvIHRoZSBSb2NrY2hpcCBEUk0gdHJlZS4K
+PiAKPiBhY3R1YWxseSwgd2UgZGV0ZXJtaW5lZCB0aGF0IHRoZSBzdXBwbHkgbmFtZXMgYXJlIHVu
+aXZlcnNhbCB0byB0aGUgSVAKPiAoYm90aCBpbiBpbXggYW5kIHJvY2tjaGlwIGFuZCBwcm9iYWJs
+eSBtb3JlIGlmIHRoZXJlIGFyZSBtb3JlIHVzZXJzCj4gb3V0IHRoZXJlKS4gSnVzdCBSdXNzZWxs
+IHJlcXVlc3RlZCB0aGF0IHdlIGRvbid0IHBvbGx1dGUgdGhlIGdlbmVyaWMKPiBjb2RlIHVudGls
+IG5lY2Vzc2FyeSwgYXMgaXQgbG9va3MgbGlrZSB0aGUgc3VwcGx5IG9mIHRob3NlIGlzIHNvbWVo
+b3cKPiBoYW5kbGVkIGludGVybmFsbHkgb24gdGhlIGlteC4KCldoeSBkbyB5b3UgdGhpbmsgaXQn
+cyB1bml2ZXJzYWw/CgpMZXQncyBzdGFydCBmcm9tIHRoZSBiZWdpbm5pbmcsIGJlZm9yZSB3ZSBj
+cmVhdGUgc29tZXRoaW5nIHRoYXQncyBub3QKcmVwcmVzZW50YXRpdmUgb2YgdGhlIGhhcmR3YXJl
+LgoKZHdfaGRtaSBhY3R1YWxseSBkcml2ZXMgdHdvIHBpZWNlcyBvZiBoYXJkd2FyZSAtIHRoZSBI
+RE1JIHRyYW5zbWl0dGVyLAphbmQgYSBzZXBhcmF0ZSBoYXJkd2FyZSBibG9jaywgdGhlIEhETUkg
+cGh5LgoKVGhlcmUgYXJlIGF0IGxlYXN0IHR3byBwb3NzaWJsZSBIRE1JIHBoeXMgcmVmZXJlbmNl
+ZCBpbiB0aGUgaU1YCmRvY3VtZW50YXRpb24gLSB0aGVyZSBpcyBvbmUgY2FsbGVkIEhFQUMgd2hp
+Y2ggZG9lc24ndCBhcHBlYXIgaW4gaU1YCmRldmljZXMgYWZhaWssIGFuZCB0aGUgb25lIHdoaWNo
+IGRvZXMsIHdoaWNoIGlzIGEgM0QgcGh5LgoKVGhlIDNEIHBoeSB0b3AgbGV2ZWwgSU8gZGlhZ3Jh
+bSBkb2VzIGhhdmUgVlBIIGFuZCBWUCBwb3dlciBzdXBwbGllcywKYnV0IGl0IGFsc28gaGFzIFZQ
+X0ZJTFQwLCBWUF9GSUxUMSwgVlBfRklMVDIsIFZQX0ZJTFQzIGFuZCBHRCBsYWJlbGxlZAp1cCBh
+cyAiUG93ZXIgc3VwcGx5IHNpZ25hbHMiLiAgV2hlcmUgdGhleSBjb25uZWN0IHRvIGluIHRoZSBy
+ZXN0IG9mIHRoZQpzeXN0ZW0gLSBvciB3aGV0aGVyIHRoZXkgYXJlIGNvbm5lY3RlZCAtIGlzIHVu
+ZG9jdW1lbnRlZC4KClRoZSBIRE1JIHRyYW5zbWl0dGVyIGl0c2VsZiBpcyBub3QgZG9jdW1lbnRl
+ZCB3aGF0IGl0J3Mgc3VwcGxpZXMKYWN0dWFsbHkgYXJlLgoKU28sIHdoYXQgd2UgY3VycmVudGx5
+IGhhdmUgaW4gRFQgZm9yIGR3X2hkbWkgaXMgc29tZXRoaW5nIHdoaWNoIGRvZXNuJ3QKX3F1aXRl
+XyByZWZsZWN0IHRoZSBoYXJkd2FyZSByaWdodCBub3csIGFuZCB0byBnbyBhZGRpbmcgVlAgYW5k
+IFZQSApzdXBwbGllcyB0byB0aGUgZ2VuZXJpYyBiaW5kaW5nIGlzIHdyb25nIC0gaXQgZG9lc24n
+dCBmb2xsb3cgdGhlCmhhcmR3YXJlIHN0cnVjdHVyZSBkZXRhaWxlZCBpbiB0aGUgaU1YIGRvY3Vt
+ZW50YXRpb24gSSBoYXZlLgoKQXMgdGhlIFJvY2tjaGlwIGRvY3VtZW50YXRpb24gaXMgbm90IGF2
+YWlsYWJsZSwgSSBjYW4ndCBjb21tZW50IHdoZXRoZXIKaXQgd291bGQgYmUgY3VycmVudCBwcm9w
+b3NhbCBpcyBhcHByb3ByaWF0ZSBmb3IgUm9ja2NoaXAgb3Igbm90LCB3aGljaAppcyB3aHkgSSBo
+YXZlbid0IGNvbW1lbnRlZCBvbiB0aGlzIG90aGVyIHRoYW4gc2F5aW5nIHRoYXQgaXQncyBub3QK
+YXBwcm9wcmlhdGUgdG8gYmUgYSBnZW5lcmljIGR3X2hkbWkgYmluZGluZy4KCklmIHdlIHdhbnRl
+ZCB0byBtb2RlbCB0aGlzIGNvcnJlY3RseSwgdGhlbiBmb3IgaU1YLCBJIHdvdWxkIHN1Z2dlc3QK
+dGhhdCB0aGUgSERNSSBwaHkgc2hvdWxkIGJlIG1vZGVsbGVkIGluIERULCBhbmQgX2FsbF8gdGhl
+IHNpeCBWUCoKc3VwcGxpZXMgYXJlIG1vZGVsbGVkIC0gYW5kIHdlIHNob3VsZCBhc3N1bWUgdGhh
+dCAiR0QiIGlzIGEgInBvd2VyCmdvb2QiIHNpZ25hbCwgdGhvdWdoIHdlIGRvbid0IGtub3cgdGhh
+dCBmb3IgY2VydGFpbi4KCldoYXQgd2UgYWxzbyBkb24ndCBrbm93IG9uIGlNWDYgaXMgd2hhdCB2
+b2x0YWdlcyBhbnkgb2YgdGhlc2UgYXJlCnN1cHBsaWVkIHdpdGguCgpTbywgYXMgd2UgZG9uJ3Qg
+aGF2ZSBtdWNoIGNlcnRhaW50eSBoZXJlLCBhbmQgd2Uga25vdyB0aGF0IGFkZGluZyBpdAp0byB3
+aGF0IGlzIHRoZSBIRE1JIHRyYW5zbWl0dGVyIHdvdWxkIGJlIHdyb25nLCBJJ2Qgc3VnZ2VzdCBu
+b3QKbW9kZWxsaW5nIGl0IGluIGEgZ2VuZXJpYyB3YXkgYXQgcHJlc2VudC4KCi0tIApGVFRDIGJy
+b2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBr
+YnBzIHVwCmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
