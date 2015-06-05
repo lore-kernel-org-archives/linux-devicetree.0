@@ -1,135 +1,45 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH 6/9] input: goodix: write configuration data to device
-Date: Fri, 5 Jun 2015 17:05:31 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F19A79EAE@irsmsx105.ger.corp.intel.com>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
- <1432817265-23891-7-git-send-email-irina.tirdea@intel.com>
- <20150528132133.GI23176@leverpostej>
- <1F3AC3675D538145B1661F571FE1805F19A773BB@irsmsx105.ger.corp.intel.com>
- <1433422507.5346.18.camel@hadess.net>
- <1F3AC3675D538145B1661F571FE1805F19A79DAD@irsmsx105.ger.corp.intel.com>
- <20150605164326.GC26708@dtor-ws>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH v4 1/3] dt-bindings: describe dw_hdmi supplies
+Date: Fri, 05 Jun 2015 19:05:43 +0200
+Message-ID: <1707049.JEvfTcofKv@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150605164326.GC26708@dtor-ws>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Bastien Nocera <hadess@hadess.net>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Purdila, Octavian" <octavian.purdila@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Mark Yao <mark.yao@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
-> Sent: 05 June, 2015 19:43
-> To: Tirdea, Irina
-> Cc: Bastien Nocera; Mark Rutland; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Purdila,
-> Octavian
-> Subject: Re: [PATCH 6/9] input: goodix: write configuration data to device
-> 
-> On Fri, Jun 05, 2015 at 04:36:24PM +0000, Tirdea, Irina wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Bastien Nocera [mailto:hadess@hadess.net]
-> > > Sent: 04 June, 2015 15:55
-> > > To: Tirdea, Irina
-> > > Cc: Mark Rutland; Dmitry Torokhov; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> Purdila,
-> > > Octavian
-> > > Subject: Re: [PATCH 6/9] input: goodix: write configuration data to device
-> > >
-> > > On Thu, 2015-05-28 at 13:51 +0000, Tirdea, Irina wrote:
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Mark Rutland [mailto:mark.rutland@arm.com]
-> > > > > Sent: 28 May, 2015 16:22
-> > > > > To: Tirdea, Irina
-> > > > > Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org;
-> > > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > > Purdila, Octavian
-> > > > > Subject: Re: [PATCH 6/9] input: goodix: write configuration data to
-> > > > > device
-> > > > >
-> > > > > On Thu, May 28, 2015 at 01:47:42PM +0100, Irina Tirdea wrote:
-> > > > > > Goodix devices can be configured by writing this information
-> > > > > > to the device at init. The configuration data can
-> > > > > > be provided through the ACPI/device tree property
-> > > > > > "device-config". If "device-config" is not set, the default
-> > > > > > device configuration will be used.
-> > > > > >
-> > > > > > Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
-> > > > > > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > > > > > ---
-> > > > > >  .../bindings/input/touchscreen/goodix.txt          |   5 +
-> > > > > >  drivers/input/touchscreen/goodix.c                 | 143
-> > > > > > +++++++++++++++++++++
-> > > > > >  2 files changed, 148 insertions(+)
-> > > > > >
-> > > > > > diff --git
-> > > > > > a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > index 7137881..9e4ff69 100644
-> > > > > > ---
-> > > > > > a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > +++
-> > > > > > b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > @@ -15,6 +15,11 @@ Required properties:
-> > > > > >   - irq-gpio              : GPIO pin used for IRQ
-> > > > > >   - reset-gpio            : GPIO pin used for reset
-> > > > > >
-> > > > > > +Optional properties:
-> > > > > > +
-> > > > > > + - device-config : device configuration information
-> > > > > > (specified as byte
-> > > > > > +                   array). Maximum size is 240 bytes.
-> > > > >
-> > > > > Generally we frown on passing opaque data.
-> > > > >
-> > > > > What exactly is encoded in device-config? The description is very
-> > > > > vague.
-> > > > >
-> > > > > Does this correspond to anything in a data sheet or manual?
-> > > >
-> > > > Yes, it is configuration data described in chapter 6.2. b of the
-> > > > datasheet:
-> > > > https://drive.google.com/folderview?id=0BxCVOQS3ZymGfmJyY2RKbE5XbVlKN
-> > > > lktVTlwV0lxNEdxd2dzeWZER094cmJPVnMxN1F0Yzg&usp=sharing.
-> > > > This includes things like x/y resolution, maximum touch numbers
-> > > > supported,
-> > > > interrupt flags, various sensitivity factors.
-> > > >
-> > > > I should have included a link to the datasheet in the commit message
-> > > > - will do that in v2 for all patches.
-> > > >
-> > > > I did consider writing this as firmware, but it seems that some
-> > > > Goodix touchscreens have a
-> > > > real firmware they need to write in addition to this configuration
-> > > > data.
-> > > > If there is a better way to do this, please let me know and I will
-> > > > change it.
-> > >
-> > > I would at least expect an excerpt from an ACPI DSDT that would make
-> > > use of that feature.
-> >
-> > Ok, I will add this to the commit message.
-> 
-> No, it really shoudl be done via request_firmware() mechanism. There are
-> drivers in kernel that use request_firmware() for both firmware and
-> configuration data (see elan_i2c, elants_i2c, atmel_mxt_ts and I am sure
-> there are others).
-> 
-
-Ok, I didn't know there are these other drivers that already do that.
-I will change this to use request_firmware then.
-
-Thanks,
-Irina
-
-> Thanks.
-> 
-> --
-> Dmitry
+VGhlIERlc2lnbndhcmUgSERNSSBibG9jayBoYXMgdHdvIHN1cHBsaWVzIGZvciAxLjAgYW5kIDEu
+OFYuIE5vdCBhbGwgSVAKaW1wbGVtZW50YXRpb25zIGV4cG9zZSBvciB3YW50IHRvIHVzZSB0aGVz
+ZSwgc28gdGhleSByZW1haW4gb3B0aW9uYWwuCgpTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5l
+ciA8aGVpa29Ac250ZWNoLmRlPgpBY2tlZC1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5n
+dXRyb25peC5kZT4KLS0tCmNoYW5nZXMgc2luY2UgdjM6Ci0gc3BsaXQgZ2VuZXJpYyBkdC1iaW5k
+aW5ncyBhbmQgcm9ja2NoaXAgaW1wbGVtZW50YXRpb24KLSBhZGQgQWNrIGZyb20gUGhpbGlwcCBa
+YWJlbApjaGFuZ2VzIHNpbmNlIHYyOgotIHJlbmFtZSBzdXBwbGllcyB0byB0aGUgbmFtZXMgZm91
+bmQgaW4gdGhlIGhkbWkgSVAgZGF0YWJvb2sKCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dCB8IDQgKysrKwogMSBmaWxlIGNoYW5nZWQsIDQg
+aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQKaW5kZXggYTkwNWMxNC4uYmE0MmQ4OSAxMDA2
+NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdf
+aGRtaS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlk
+Z2UvZHdfaGRtaS50eHQKQEAgLTIyLDYgKzIyLDEwIEBAIE9wdGlvbmFsIHByb3BlcnRpZXMKIC0g
+ZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVE
+SUQgcHJvYmluZwogLSBjbG9ja3MsIGNsb2NrLW5hbWVzOiBwaGFuZGxlIHRvIHRoZSBIRE1JIENF
+QyBjbG9jaywgbmFtZSBzaG91bGQgYmUgImNlYyIKIAorT3B0aW9uYWwgc3VwcGxpZXM6CistIHZw
+LXN1cHBseTogMS4wViBwb3dlciBzdXBwbHkKKy0gdnBoLXN1cHBseTogMS44ViBwb3dlciBzdXBw
+bHkKKwogRXhhbXBsZToKIAloZG1pOiBoZG1pQDAxMjAwMDAgewogCQljb21wYXRpYmxlID0gImZz
+bCxpbXg2cS1oZG1pIjsKLS0gCjIuMS40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
