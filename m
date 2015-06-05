@@ -1,52 +1,143 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH v4 3/3] ARM: dts: rockchip: add hdmi analog power supplies to
- rk3288 boards
-Date: Fri, 05 Jun 2015 19:07:34 +0200
-Message-ID: <2174509.z9PNBvxjWd@diego>
-References: <1707049.JEvfTcofKv@diego>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH 1/9] input: goodix: fix alignment issues
+Date: Fri, 5 Jun 2015 17:07:53 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F19A79EC9@irsmsx105.ger.corp.intel.com>
+References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
+ <1432817265-23891-2-git-send-email-irina.tirdea@intel.com>
+ <20150605164901.GE26708@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1707049.JEvfTcofKv@diego>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150605164901.GE26708@dtor-ws>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSByZWNlbnRseSBhZGRlZCBoZG1pIHBvd2VyIHN1cHBsaWVzIHRvIGV2YiBhbmQgZmly
-ZWZseSBib2FyZHMuCgpTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNo
-LmRlPgotLS0KY2hhbmdlcyBzaW5jZSB2MzoKLSBhZGQgZW50cmllcyBmb3IgcG9wbWV0YWwgYm9h
-cmQKCiBhcmNoL2FybS9ib290L2R0cy9yazMyODgtZXZiLmR0c2kgICAgIHwgMiArKwogYXJjaC9h
-cm0vYm9vdC9kdHMvcmszMjg4LWZpcmVmbHkuZHRzaSB8IDIgKysKIGFyY2gvYXJtL2Jvb3QvZHRz
-L3JrMzI4OC1wb3BtZXRhbC5kdHMgfCAyICsrCiAzIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9u
-cygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaQppbmRleCA4NDRhNmZiLi5hNTdmYmUzIDEw
-MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtZXZiLmR0c2kKKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvcmszMjg4LWV2Yi5kdHNpCkBAIC0xNzIsNiArMTcyLDggQEAKIH07CiAKICZo
-ZG1pIHsKIAlkZGMtaTJjLWJ1cyA9IDwmaTJjNT47CisJdnAtc3VwcGx5ID0gPCZ2ZGQxMF9sY2Q+
-OworCXZwaC1zdXBwbHkgPSA8JnZjYzE4X2xjZD47CiAJc3RhdHVzID0gIm9rYXkiOwogfTsKZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1maXJlZmx5LmR0c2kgYi9hcmNoL2Fy
-bS9ib290L2R0cy9yazMyODgtZmlyZWZseS5kdHNpCmluZGV4IDBiNDIzNzIuLjY4MDY4ZDkgMTAw
-NjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1maXJlZmx5LmR0c2kKKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvcmszMjg4LWZpcmVmbHkuZHRzaQpAQCAtMTk2LDYgKzE5Niw4IEBACiB9
-OwogCiAmaGRtaSB7CiAJZGRjLWkyYy1idXMgPSA8JmkyYzU+OworCXZwLXN1cHBseSA9IDwmdmRk
-MTBfbGNkPjsKKwl2cGgtc3VwcGx5ID0gPCZ2Y2MxOF9sY2Q+OwogCXN0YXR1cyA9ICJva2F5IjsK
-IH07CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtcG9wbWV0YWwuZHRzIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXBvcG1ldGFsLmR0cwppbmRleCBkNTgyODExLi45OGY0
-ZDc3IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtcG9wbWV0YWwuZHRzCisr
-KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1wb3BtZXRhbC5kdHMKQEAgLTE0MSw2ICsxNDEs
-OCBAQAogCiAmaGRtaSB7CiAJZGRjLWkyYy1idXMgPSA8JmkyYzU+OworCXZwLXN1cHBseSA9IDwm
-dmRkMTBfbGNkPjsKKwl2cGgtc3VwcGx5ID0gPCZ2Y2MxOF9sY2Q+OwogCXN0YXR1cyA9ICJva2F5
-IjsKIH07CiAKLS0gCjIuMS40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+
+
+> -----Original Message-----
+> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
+> Sent: 05 June, 2015 19:49
+> To: Tirdea, Irina
+> Cc: Bastien Nocera; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 1/9] input: goodix: fix alignment issues
+> 
+> Hi Irina,
+> 
+
+Hi Dmitry,
+
+Thanks for the review!
+
+Will keep the good parts below and remove the bad ones.
+
+Thanks,
+Irina
+
+> On Thu, May 28, 2015 at 03:47:37PM +0300, Irina Tirdea wrote:
+> > Fix alignment to match open parenthesis detected by
+> > running checkpatch.pl --strict.
+> 
+> Mixed bag of changes here, but that's checkpatch for you.
+> 
+> >
+> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > ---
+> >  drivers/input/touchscreen/goodix.c | 17 +++++++++--------
+> >  1 file changed, 9 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> > index 0d93b1e..c2e785c 100644
+> > --- a/drivers/input/touchscreen/goodix.c
+> > +++ b/drivers/input/touchscreen/goodix.c
+> > @@ -69,7 +69,7 @@ static const unsigned long goodix_irq_flags[] = {
+> >   * @len: length of the buffer to write
+> >   */
+> >  static int goodix_i2c_read(struct i2c_client *client,
+> > -				u16 reg, u8 *buf, int len)
+> > +			   u16 reg, u8 *buf, int len)
+> >  {
+> >  	struct i2c_msg msgs[2];
+> >  	u16 wbuf = cpu_to_be16(reg);
+> > @@ -78,7 +78,7 @@ static int goodix_i2c_read(struct i2c_client *client,
+> >  	msgs[0].flags = 0;
+> >  	msgs[0].addr  = client->addr;
+> >  	msgs[0].len   = 2;
+> > -	msgs[0].buf   = (u8 *) &wbuf;
+> > +	msgs[0].buf   = (u8 *)&wbuf;
+> 
+> Good.
+> 
+> >
+> >  	msgs[1].flags = I2C_M_RD;
+> >  	msgs[1].addr  = client->addr;
+> > @@ -112,7 +112,7 @@ static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
+> >  		data += 1 + GOODIX_CONTACT_SIZE;
+> >  		error = goodix_i2c_read(ts->client,
+> >  					GOODIX_READ_COOR_ADDR +
+> > -						1 + GOODIX_CONTACT_SIZE,
+> > +					1 + GOODIX_CONTACT_SIZE,
+> 
+> Bad - makes 1 + GOODIX_CONTACT_SIZE look like extra argument, not
+> continuation of expression.
+> 
+> 
+> >  					data,
+> >  					GOODIX_CONTACT_SIZE * (touch_num - 1));
+> >  		if (error)
+> > @@ -157,7 +157,8 @@ static void goodix_process_events(struct goodix_ts_data *ts)
+> >
+> >  	for (i = 0; i < touch_num; i++)
+> >  		goodix_ts_report_touch(ts,
+> > -				&point_data[1 + GOODIX_CONTACT_SIZE * i]);
+> > +				       &point_data[1 +
+> > +				       GOODIX_CONTACT_SIZE * i]);
+> 
+> No, this is plain ugly.
+> 
+> >
+> >  	input_mt_sync_frame(ts->input_dev);
+> >  	input_sync(ts->input_dev);
+> > @@ -199,8 +200,8 @@ static void goodix_read_config(struct goodix_ts_data *ts)
+> >  	int error;
+> >
+> >  	error = goodix_i2c_read(ts->client, GOODIX_REG_CONFIG_DATA,
+> > -			      config,
+> > -			   GOODIX_CONFIG_MAX_LENGTH);
+> > +				config,
+> > +				GOODIX_CONFIG_MAX_LENGTH);
+> 
+> Good.
+> 
+> >  	if (error) {
+> >  		dev_warn(&ts->client->dev,
+> >  			 "Error reading config (%d), using defaults\n",
+> > @@ -297,9 +298,9 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
+> >  				  BIT_MASK(EV_ABS);
+> >
+> >  	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0,
+> > -				ts->abs_x_max, 0, 0);
+> > +			     ts->abs_x_max, 0, 0);
+> 
+> Good.
+> 
+> >  	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0,
+> > -				ts->abs_y_max, 0, 0);
+> > +			     ts->abs_y_max, 0, 0);
+> 
+> Good.
+> 
+> >  	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
+> >  	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
+> >
+> > --
+> > 1.9.1
+> >
+> 
+> Thanks.
+> 
+> --
+> Dmitry
