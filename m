@@ -1,132 +1,67 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 8/8] dt: regulator: pwm-regulator: Re-write bindings
-Date: Fri, 5 Jun 2015 19:47:11 +0100
-Message-ID: <20150605184711.GG7058@x1>
-References: <1433529771-24496-1-git-send-email-lee.jones@linaro.org>
- <1433529771-24496-9-git-send-email-lee.jones@linaro.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/7] phy-sun4i-usb: Swap check for disconnect threshold
+Date: Fri,  5 Jun 2015 20:53:35 +0200
+Message-ID: <1433530421-12197-2-git-send-email-hdegoede@redhat.com>
+References: <1433530421-12197-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433529771-24496-9-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, broonie@kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBPPAY6VQKGQE2O2S6RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1433530421-12197-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Whoops, nearly forgot the DT folks.
+Before this commit the code for determining the disconnect threshold was
+checking for "allwinner,sun4i-a10-usb-phy" or "allwinner,sun6i-a31-usb-phy"
+assuming that those where the exception and then newer SoCs would use a
+disconnect threshold of 2 like sun7i does. But it turns out that newer
+SoCs use a disconnect threshold of 3 and sun5i and sun7i are the
+exceptions, so check for those instead.
 
-Sorry chaps.
+Here are the settings from the various Allwinner SDK sources:
+ sun4i-a10: USBC_Phy_Write(usbc_no, 0x2a, 3, 2);
+ sun5i-a13: USBC_Phy_Write(usbc_no, 0x2a, 2, 2);
+ sun6i-a31: USBC_Phy_Write(usbc_no, 0x2a, 3, 2);
+ sun7i-a20: USBC_Phy_Write(usbc_no, 0x2a, 2, 2);
+ sun8i-a23: USBC_Phy_Write(usbc_no, 0x2a, 3, 2);
+ sun8i-h3:  USBC_Phy_Write(usbc_no, 0x2a, 3, 2);
+ sun9i-a80: USBC_Phy_Write(usbc_no, 0x2a, 3, 2);
 
-> * Add support for continuous-voltage mode
-> * Put more meat on the bones with regards to voltage-table mode
-> * Sort out formatting for ease of consumption
->=20
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  .../bindings/regulator/pwm-regulator.txt           | 66 ++++++++++++=
-++++++----
->  1 file changed, 54 insertions(+), 12 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulato=
-r.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> index ce91f61..9a8269f 100644
-> --- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> @@ -1,27 +1,69 @@
-> -pwm regulator bindings
-> +Bindings for the Generic PWM Regulator
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Currently supports 2 modes of operation:
-> +
-> +voltage-table:		When in this mode, a voltage table (See below) of pr=
-edefined
-> +			voltage <=3D> duty-cycle values must be provided via DT.
-> +			Limitations are that the regulator can only operate at the
-> +			voltages supplied in the table.  Intermediary duty-cycle
-> +			values which would normally allow finer grained voltage
-> +			selection are ignored and rendered useless.  Although more
-> +			control is given to the user if the assumptions made in
-> +			continuous-voltage mode do not reign true.
-> +
-> +continuous-voltage:	This mode uses the regulator's maximum and minim=
-um supplied
-> +			voltages specified in the regulator-{min,max}-microvolt
-> +			properties to calculate appropriate duty-cycle values.  This
-> +			allows for a much more fine grained solution when compared
-> +			with voltage-table mode above.  This solution does make an
-> +			assumption that a %50 duty-cycle value will cause the
-> +			regulator voltage to run at half way between the supplied
-> +			max_uV and min_uV values.
-> =20
->  Required properties:
-> -- compatible: Should be "pwm-regulator"
-> -- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
-> -- voltage-table: voltage and duty table, include 2 members in each s=
-et of
-> -  brackets, first one is voltage(unit: uv), the next is duty(unit: p=
-ercent)
-> +--------------------
-> +- compatible:		Should be "pwm-regulator"
-> +
-> +- pwms:			PWM specification (See: ../pwm/pwm.txt)
-> +
-> +One of these must be provided:
-> +- voltage-table: 	Voltage and Duty-Cycle table consisting of 2 cells
-> +			    First cell is voltage in microvolts (uV)
-> +			    Second cell is duty-cycle in percent (%)
-> +
-> +- max-duty-cycle:	Maximum Duty-Cycle value -- this will normally be =
-255 (0xff)
-> +			for an 8 bit PMU device
-> =20
-> -Any property defined as part of the core regulator binding defined i=
-n
-> -regulator.txt can also be used.
-> +If both are provided, the current default is voltage-table mode.
-> =20
-> -Example:
-> +Any property defined as part of the core regulator binding can also =
-be used.
-> +(See: ../regulator/regulator.txt)
-> +
-> +Continuous Voltage Example:
->  	pwm_regulator {
->  		compatible =3D "pwm-regulator;
->  		pwms =3D <&pwm1 0 8448 0>;
-> +		regulator-min-microvolt =3D <1016000>;
-> +		regulator-max-microvolt =3D <1114000>;
-> +		regulator-name =3D "vdd_logic";
-> +
-> +		max-duty-cycle =3D <255>; /* 8bit PWM */
-> +	};
-> =20
-> +Voltage Table Example:
-> +	pwm_regulator {
-> +		compatible =3D "pwm-regulator;
-> +		pwms =3D <&pwm1 0 8448 0>;
-> +		regulator-min-microvolt =3D <1016000>;
-> +		regulator-max-microvolt =3D <1114000>;
-> +		regulator-name =3D "vdd_logic";
-> +
-> +			      /* Voltage Duty-Cycle */
->  		voltage-table =3D <1114000 0>,
->  				<1095000 10>,
->  				<1076000 20>,
->  				<1056000 30>,
->  				<1036000 40>,
->  				<1016000 50>;
-> -
-> -		regulator-min-microvolt =3D <1016000>;
-> -		regulator-max-microvolt =3D <1114000>;
-> -		regulator-name =3D "vdd_logic";
->  	};
+Note this commit makes no functional changes as currently we only support
+sun4i - sun7i.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/phy/phy-sun4i-usb.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+index b45d707..0df1c4f 100644
+--- a/drivers/phy/phy-sun4i-usb.c
++++ b/drivers/phy/phy-sun4i-usb.c
+@@ -437,11 +437,11 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 	else
+ 		data->num_phys = 3;
+ 
+-	if (of_device_is_compatible(np, "allwinner,sun4i-a10-usb-phy") ||
+-	    of_device_is_compatible(np, "allwinner,sun6i-a31-usb-phy"))
+-		data->disc_thresh = 3;
+-	else
++	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
++	    of_device_is_compatible(np, "allwinner,sun7i-a20-usb-phy"))
+ 		data->disc_thresh = 2;
++	else
++		data->disc_thresh = 3;
+ 
+ 	if (of_device_is_compatible(np, "allwinner,sun6i-a31-usb-phy"))
+ 		dedicated_clocks = true;
+-- 
+2.4.2
