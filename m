@@ -1,122 +1,43 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/9] input: goodix: fix alignment issues
-Date: Fri, 5 Jun 2015 09:49:01 -0700
-Message-ID: <20150605164901.GE26708@dtor-ws>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
- <1432817265-23891-2-git-send-email-irina.tirdea@intel.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/platform: Mark all device tree resources as SHARED
+Date: Fri, 5 Jun 2015 18:51:36 +0200
+Message-ID: <CAPybu_0s=9yTFH5jngh6=Zuz0iia0F1RU6AsLi-vcWNrF3-qYg@mail.gmail.com>
+References: <1433501478-15164-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1433501478-15164-2-git-send-email-ricardo.ribalda@gmail.com> <CAL_JsqLOqpP4E5mG5t5RvaTs96jLC=umY2cUQEhyZiWJNOt1nQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1432817265-23891-2-git-send-email-irina.tirdea@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLOqpP4E5mG5t5RvaTs96jLC=umY2cUQEhyZiWJNOt1nQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cliff Wickman <cpw-sJ/iWh9BUns@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Irina,
+Hello Rob,
 
-On Thu, May 28, 2015 at 03:47:37PM +0300, Irina Tirdea wrote:
-> Fix alignment to match open parenthesis detected by
-> running checkpatch.pl --strict.
+Thanks for your feedback!
 
-Mixed bag of changes here, but that's checkpatch for you.
+On Fri, Jun 5, 2015 at 6:45 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Jun 5, 2015 at 5:51 AM, Ricardo Ribalda Delgado
+> <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Some device tree platform do not define their resources properly. i.e.
+>> overlapping or repeated resources.
+>>
+>> This patch mark all device tree resources as shareable.
+>>
+>> In the future this should only be set for the platforms that have
+>> problems.
+>
+> I don't think we want to do this globally. This should be very rare
+> and we want to discourage any new cases.
 
-> 
-> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> ---
->  drivers/input/touchscreen/goodix.c | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index 0d93b1e..c2e785c 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -69,7 +69,7 @@ static const unsigned long goodix_irq_flags[] = {
->   * @len: length of the buffer to write
->   */
->  static int goodix_i2c_read(struct i2c_client *client,
-> -				u16 reg, u8 *buf, int len)
-> +			   u16 reg, u8 *buf, int len)
->  {
->  	struct i2c_msg msgs[2];
->  	u16 wbuf = cpu_to_be16(reg);
-> @@ -78,7 +78,7 @@ static int goodix_i2c_read(struct i2c_client *client,
->  	msgs[0].flags = 0;
->  	msgs[0].addr  = client->addr;
->  	msgs[0].len   = 2;
-> -	msgs[0].buf   = (u8 *) &wbuf;
-> +	msgs[0].buf   = (u8 *)&wbuf;
+I just wanted to mimic the original behaviour. Unfortunately I have no
+idea of what platform is broken.  Grant needs to help us here :)
 
-Good.
+What do you think about the new flag? Does it make any sense for you?
 
->  
->  	msgs[1].flags = I2C_M_RD;
->  	msgs[1].addr  = client->addr;
-> @@ -112,7 +112,7 @@ static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
->  		data += 1 + GOODIX_CONTACT_SIZE;
->  		error = goodix_i2c_read(ts->client,
->  					GOODIX_READ_COOR_ADDR +
-> -						1 + GOODIX_CONTACT_SIZE,
-> +					1 + GOODIX_CONTACT_SIZE,
-
-Bad - makes 1 + GOODIX_CONTACT_SIZE look like extra argument, not
-continuation of expression.
-
-
->  					data,
->  					GOODIX_CONTACT_SIZE * (touch_num - 1));
->  		if (error)
-> @@ -157,7 +157,8 @@ static void goodix_process_events(struct goodix_ts_data *ts)
->  
->  	for (i = 0; i < touch_num; i++)
->  		goodix_ts_report_touch(ts,
-> -				&point_data[1 + GOODIX_CONTACT_SIZE * i]);
-> +				       &point_data[1 +
-> +				       GOODIX_CONTACT_SIZE * i]);
-
-No, this is plain ugly.
-
->  
->  	input_mt_sync_frame(ts->input_dev);
->  	input_sync(ts->input_dev);
-> @@ -199,8 +200,8 @@ static void goodix_read_config(struct goodix_ts_data *ts)
->  	int error;
->  
->  	error = goodix_i2c_read(ts->client, GOODIX_REG_CONFIG_DATA,
-> -			      config,
-> -			   GOODIX_CONFIG_MAX_LENGTH);
-> +				config,
-> +				GOODIX_CONFIG_MAX_LENGTH);
-
-Good.
-
->  	if (error) {
->  		dev_warn(&ts->client->dev,
->  			 "Error reading config (%d), using defaults\n",
-> @@ -297,9 +298,9 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
->  				  BIT_MASK(EV_ABS);
->  
->  	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0,
-> -				ts->abs_x_max, 0, 0);
-> +			     ts->abs_x_max, 0, 0);
-
-Good.
-
->  	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0,
-> -				ts->abs_y_max, 0, 0);
-> +			     ts->abs_y_max, 0, 0);
-
-Good.
-
->  	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
->  	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
->  
-> -- 
-> 1.9.1
-> 
-
-Thanks.
-
--- 
-Dmitry
+Thanks!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
