@@ -1,51 +1,123 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv2 0/4] Add Altera Arria10 EDAC Support
-Date: Fri, 5 Jun 2015 09:17:21 -0500
-Message-ID: <5571AF71.8070103@opensource.altera.com>
-References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
- <20150605110255.GE3679@pd.tnic>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 04/11] mtd: ofpart: do not fail probe when no partitions exist
+Date: Fri, 5 Jun 2015 16:13:09 +0200
+Message-ID: <201506051613.09187.marex@denx.de>
+References: <cover.1433364398.git.hramrach@gmail.com> <201506041728.50227.marex@denx.de> <CAOMqctQTxVZspcocDsNP6GzsRw5-0zPqkNScS8PzNvkFjBWatQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20150605110255.GE3679@pd.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, tthayer@opensource.altera.com
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMqctQTxVZspcocDsNP6GzsRw5-0zPqkNScS8PzNvkFjBWatQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo@micron.com>, grmoo
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 6/5/15 6:02 AM, Borislav Petkov wrote:
-> On Thu, Jun 04, 2015 at 09:28:44AM -0500, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> This series of patches adds support for the Arria10 EDAC. The
->> SDRAM controller and ECC registers are significantly different
->> from the CycloneV/ArriaV but common areas could be abstracted.
->>
->> Thor Thayer (4):
->>   edac, altera: Generalize driver to use DT Memory size
->>   edac, altera: Refactor EDAC for Altera CycloneV SoC.
->>   edac, altera: Addition of Arria10 EDAC
->>   arm: socfpga: dts: Arria10 SDRAM EDAC DTS additions.
->>
->>  .../bindings/arm/altera/socfpga-sdram-edac.txt     |    2 +-
->>  arch/arm/boot/dts/socfpga_arria10.dtsi             |   11 +
->>  drivers/edac/altera_edac.c                         |  364 ++++++++++++--------
->>  drivers/edac/altera_edac.h                         |  201 +++++++++++
->>  4 files changed, 437 insertions(+), 141 deletions(-)
->>  create mode 100644 drivers/edac/altera_edac.h
+On Thursday, June 04, 2015 at 05:40:58 PM, Michal Suchanek wrote:
+> On 4 June 2015 at 17:28, Marek Vasut <marex@denx.de> wrote:
+> > On Thursday, June 04, 2015 at 06:54:00 AM, Michal Suchanek wrote:
+> >> On 4 June 2015 at 00:58, Marek Vasut <marex@denx.de> wrote:
+> >> > On Wednesday, June 03, 2015 at 11:26:40 PM, Michal Suchanek wrote:
+> >> >> On Exynos it is necessary to set SPI controller parameters that apply
+> >> >> to a SPI slave in a DT subnode of the slave device. The ofpart code
+> >> >> returns an error when there are subnodes of the SPI flash but no
+> >> >> partitions are found. Change this condition to a warning so that
+> >> >> flash without partitions can be accessed on Exynos.
+> >> > 
+> >> > I have to admit the rationale for this patch is not very clear to me,
+> >> > sorry. Can you please explain this a bit more ?
+> >> 
+> >> This is how the DT entry for SPI slave looks with s3c64xx:
+> >> flash: m25p80@0 {
+> >> 
+> >>         #address-cells = <1>;
+> >>         #size-cells = <1>;
+> >>         compatible = "jedec,spi-nor";
+> >>         reg = <0>;
+> >>         spi-max-frequency = <40000000>;
+> >>         linux,max_tx_len = <65536>;
+> > 
+> > SIDENOTE: I thought this was actually added by your patch #8 in this
+> > series. The underscores in the name of the property are not really
+> > consistent with the rest of the names.
+> > 
+> >>         m25p,fast-read;
+> >>         controller-data {
+> >>         
+> >>             samsung,spi-feedback-delay = <0>;
+> >>         
+> >>         };
+> >>     
+> >>     };
+> >> 
+> >> this is example of flash partitions:
+> >> flash@0 {
+> >> 
+> >>         #address-cells = <1>;
+> >>         #size-cells = <1>;
+> >>         
+> >>         partition@0 {
+> >>         
+> >>                 label = "u-boot";
+> >>                 reg = <0x0000000 0x100000>;
+> >>                 read-only;
+> >>         
+> >>         };
+> >>         
+> >>         uimage@100000 {
+> >>         
+> >>                 reg = <0x0100000 0x200000>;
+> >>         
+> >>         };
+> >> 
+> >> };
+> >> 
+> >> The parser ignores any flash without subnodes and returns 0 (no
+> >> partititon). When there is a subnode it assumes the flash is
+> >> partitioned and tries to parse the subnodes as partitions. When there
+> >> are subnodes and none parses as partition an error is returned. As
+> >> shown above it is valid to have subnodes on unpartitioned flash.
+> >> 
+> >> When an error is returned from a partition parser the mtdpart code
+> >> passes on this error to the flash probe function and the proble of the
+> >> flash fails.
+> > 
+> > What does /proc/mtd tell you when you have no partitions defined
+> > in the DT ? It should provide you with the entire MTD device and
+> > the code shouldn't even try to parse any OF partitions, since you
+> > don't have any.
 > 
-> Ok, all applied, no need to redo them.
+> mtdinfo shows I have no mtd devices and the log shows that probe
+> failed unless I patch the kernel.
 > 
-> altera_edac still builds ok with the cross compiler here but you should
-> doublecheck my final result just in case:
+> When there is *support* for of partitions the ofparser is run on mtd
+> probe. If it fails because it considers
 > 
-> git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git#for-next
+> >>         controller-data {
+> >>         
+> >>             samsung,spi-feedback-delay = <0>;
+> >>         
+> >>         };
 > 
+> an invalid partition and does not find any valid partition the probe fails.
 
-This builds fine for me.
+OK, now it has become clearer to me, thanks!
 
-Thanks,
-Dinh
+> There are two problems here
+> 
+> 1) the above is not invalid. It just is not a partition. The parser
+> should not fail seeing this
+
+The parser should complain verbosely and ignore this I guess ?
+
+> 2) the mtd probe should not fail when a partition parser fails and
+> should present the unpartitioned device
+
+OK
+
+> Both are addressed in separate patches.
+> 
+> Thanks
+> 
+> Michal
