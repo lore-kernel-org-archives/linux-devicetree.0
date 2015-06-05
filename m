@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 19/20] ARM: dts: sun8i: Enable USB host on GA10H-A33 tablets
-Date: Fri,  5 Jun 2015 21:02:22 +0200
-Message-ID: <1433530943-12599-20-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 18/20] ARM: dts: sun8i: Enable USB DRC on GA10H-A33 tablets
+Date: Fri,  5 Jun 2015 21:02:21 +0200
+Message-ID: <1433530943-12599-19-git-send-email-hdegoede@redhat.com>
 References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1433530943-12599-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,40 +10,35 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The GA10H tablets not only have an otg connector, but also a normal
-usb host connector, enabled support for this.
+Enable the otg controller on GA10H-A33 tablets, for now it is enabled
+in host-only mode, because true OTG support requires support for
+detecting and enabling Vbus through the axp221 pmic.
+
+For this to work the Vbus on the port must be enabled by u-boot,
+or a powered hub must be used.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-index 7520e06..1aefc67 100644
+index 8667033..7520e06 100644
 --- a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
 +++ b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-@@ -61,6 +61,10 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
-@@ -109,6 +113,10 @@
+@@ -123,3 +123,12 @@
+ 	pinctrl-0 = <&r_uart_pins_a>;
  	status = "okay";
  };
- 
-+&ohci0 {
++
++&usb_otg {
++	dr_mode = "host";
 +	status = "okay";
 +};
 +
- &pio {
- 	mmc0_cd_pin_q8h: mmc0_cd_pin@0 {
- 		allwinner,pins = "PB4";
++&usbphy {
++	status = "okay";
++};
 -- 
 2.4.2
 
