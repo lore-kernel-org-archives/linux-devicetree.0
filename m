@@ -1,34 +1,66 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2 v2] of/platform: Use platform_device interface
-Date: Fri, 5 Jun 2015 12:52:51 +0200
-Message-ID: <CAPybu_1mKN9k-AyBYxnuSZWcbke+G6fDCYUZN==t8bnUMrWRHQ@mail.gmail.com>
-References: <1429604702-14157-1-git-send-email-ricardo.ribalda@gmail.com>
- <1429604702-14157-2-git-send-email-ricardo.ribalda@gmail.com>
- <CAL_Jsq+ux9aCNUNVH+Vwy_j9oeV0CLbruPN4arkuCBPxvgrzhw@mail.gmail.com>
- <CAPybu_0C=iAGY9cFgxOt7YgCRG+xvKo1YBJfWent5+xord-xmg@mail.gmail.com>
- <CAL_JsqKV-+A196XaiGTGdx6tr1DStWYca5JnHR-QgBbMUyOiRA@mail.gmail.com>
- <20150604052536.DA31EC40548@trevor.secretlab.ca> <CAPybu_0xjwExa4=6soyF=Uad6yxiFaCnO32FY5h7YLfg-SMovg@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
+ regulators
+Date: Fri, 5 Jun 2015 13:02:01 +0200
+Message-ID: <20150605110159.GA16254@ulmo.nvidia.com>
+References: <4184159.j0iXe39dFB@phil>
+ <2619686.csNBBFyt8W@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_0xjwExa4=6soyF=Uad6yxiFaCnO32FY5h7YLfg-SMovg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <2619686.csNBBFyt8W@phil>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Grant and Rob
-
-Could you take a look to these two patches that I have just sent.
-
-kernel/resource: Add new flag IORESOURCE_SHARED
-of/platform: Mark all device tree resources as SHARED
-
-I think it fixes Grant problem.
-
-
-Regards!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBNYXIgMjMsIDIwMTUgYXQgMDc6MTc6NDlQTSArMDEwMCwgSGVpa28gU3R1ZWJuZXIg
+d3JvdGU6Cj4gSGkgUGhpbGlwcCwKPiAKPiBBbSBEb25uZXJzdGFnLCAxMi4gTcOkcnogMjAxNSwg
+MjE6NDU6MTkgc2NocmllYiBIZWlrbyBTdHVlYm5lcjoKPiA+IEF0IGxlYXN0IHRoZSBSb2NrY2hp
+cCB2YXJpYW50IG9mIHRoZSBkd19oZG1pIGNhbiBoYXZlIGNvbnRyb2xsYWJsZSBwb3dlcgo+ID4g
+c3VwcGxpZXMgcHJvdmlkaW5nIDEuMCBhbmQgMS44Vi4gVGhlcmVmb3JlIGFkZCB0aGUgcG9zc2li
+aWxpdHkgZm9yIHRoZQo+ID4gZ2VuZXJpYyBicmlkZ2UgZHJpdmVyIHRvIGVuYWJsZSBzdXBwbGll
+cyBwcm92aWRlZCBieSB0aGUgaHctc3BlY2lmaWMKPiA+IGRyaXZlcnMuCj4gPiAKPiA+IFNpZ25l
+ZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gCj4gZG9lcyB0aGlz
+IGxvb2sgb2sgbm93Pwo+IAo+IEFuZCBhcyB3ZSB0YWxrZWQgYWJvdXQgaW4gQ2hlbW5pdHosIHdo
+byB3aWxsIGJlIHRha2luZyBzdWNoIGJyaWRnZS1yZWxhdGVkIAo+IGNoYW5nZXMsIGFzIHlvdSBt
+ZW50aW9uZWQgc29tZSBsYXN0IGJyaWRnZS1wYXRjaGVzIGdvaW5nIHRocm91Z2ggVGhpZXJyeS4K
+ClNvcnJ5LCBJIGhhZCBjb21wbGV0ZWx5IG1pc3NlZCB0aGlzLgoKPiA+IC0tLQo+ID4gY2hhbmdl
+cyBzaW5jZSB2MjoKPiA+IC0gcmVuYW1lIHN1cHBsaWVzIHRvIHRoZSBuYW1lcyBmb3VuZCBpbiB0
+aGUgaGRtaSBJUCBkYXRhYm9vawo+ID4gY2hhbmdlcyBzaW5jZSB2MToKPiA+IC0gZm9sbG93IHN1
+Z2dlc3Rpb24gZnJvbSBSdXNzZWxsIEtpbmcgdG8ga2VlcCByZWd1bGF0b3IgaGFuZGxpbmcgbG9j
+YWwKPiA+ICAgdG8gdGhlIHJvY2tjaGlwIGltcGxlbWVudGF0aW9uIGZvciB0aGUgdGltZSBiZWlu
+ZyBhbmQgb25seSBnZW5lcmFsaXplCj4gPiAgIHdoZW4gYSByZWFsIHNlY29uZCBpbXBsZW1lbnRh
+dGlvbiBuZWVkcyByZWd1bGF0b3IgaGFuZGxpbmcKPiA+IAo+ID4gIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQgICAgIHwgIDUgKysrKwo+ID4gIGRyaXZlcnMv
+Z3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAgICAgIHwgMzIKPiA+ICsrKysr
+KysrKysrKysrKysrKysrKy0gMiBmaWxlcyBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspLCAxIGRl
+bGV0aW9uKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dCBpbmRleAo+ID4gYTkwNWMxNC4u
+YmI3NDY0MCAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+ID4gQEAgLTIyLDYgKzIyLDExIEBA
+IE9wdGlvbmFsIHByb3BlcnRpZXMKPiA+ICAtIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEky
+QyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPiA+ICAtIGNsb2NrcywgY2xv
+Y2stbmFtZXM6IHBoYW5kbGUgdG8gdGhlIEhETUkgQ0VDIGNsb2NrLCBuYW1lIHNob3VsZCBiZSAi
+Y2VjIgo+ID4gCj4gPiArT3B0aW9uYWwgc3VwcGxpZXM6Cj4gPiArcm9ja2NoaXAscmszMjg4LWR3
+LWhkbWkgaGFuZGxlcyB0d28gb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXM6Cj4gPiArLSB2cC1zdXBw
+bHk6IDEuMFYgcG93ZXIgc3VwcGx5Cj4gPiArLSB2cGgtc3VwcGx5OiAxLjhWIHBvd2VyIHN1cHBs
+eQoKSWYgdGhpcyBpcyBzcGVjaWZpYyB0byB0aGUgUm9ja2NoaXAgaW1wbGVtZW50YXRpb24sIHNo
+b3VsZG4ndCB0aGlzIGdvCmludG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Zp
+ZGVvL2R3X2hkbWktcm9ja2NoaXAudHh0PyBJdApjb3VsZCB0aGVuIHNpbXBseSBnbyBpbnRvIHRo
+ZSBSb2NrY2hpcCBEUk0gdHJlZS4KClRoaWVycnkKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
