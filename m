@@ -1,45 +1,68 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv2 2/4] edac, altera: Refactor EDAC for Altera CycloneV
- SoC.
-Date: Fri, 5 Jun 2015 08:57:07 -0500
-Message-ID: <5571AAB3.2000005@opensource.altera.com>
-References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
- <1433428128-7292-3-git-send-email-tthayer@opensource.altera.com>
- <55706E25.8050105@opensource.altera.com>
- <5570C479.7010902@opensource.altera.com> <20150604220609.GK3795@pd.tnic>
- <5570D0D0.9030803@opensource.altera.com> <20150605091731.GA3679@pd.tnic>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH 0/4] arc: add AXS101 board support
+Date: Fri, 5 Jun 2015 19:43:08 +0530
+Message-ID: <5571AE74.2010502@synopsys.com>
+References: <1431607724-9142-1-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20150605091731.GA3679@pd.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thor Thayer <tthayer@opensource.altera.com>, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1431607724-9142-1-git-send-email-abrodkin@synopsys.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, arc-linux-dev@synopsys.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-On 6/5/15 4:17 AM, Borislav Petkov wrote:
-> On Thu, Jun 04, 2015 at 05:27:28PM -0500, Dinh Nguyen wrote:
->> This is my mistake. I applied Alan Tull's patch for suspend-to-ram which
->> also touches drivers/edac/altera_edac.c.
->>
->> https://git.kernel.org/cgit/linux/kernel/git/dinguyen/linux.git/commit/?h=socfpga_for_next_arria10&id=d44a92eb044f4cc1abf34a790d647e9fa356d7b0
->>
->> I think I will have to ask Alan to split up his patch and send the part
->> that touches altera_edac.c to linux-edac.
+On Thursday 14 May 2015 06:19 PM, Alexey Brodkin wrote:
+> AXS101 is a new generation of devlopment boards from Synopsys that houses
+> ASIC with ARC700 and lots of DesignWare peripherals:
 > 
-> Nah, that's fine. If it is that hunk adding altr_sdram_prepare(), he can
-> simply add my ACK for the EDAC bits:
+>  * DW APB UART
+>  * DW Mobile Storage (MMC/SD)
+>  * DW I2C
+>  * DW GMAC
 > 
-> Acked-by: Borislav Petkov <bp@suse.de>
+> More info about DesignWare ARC Software Development Platforms (SDP) is here:
+> http://www.synopsys.com/dw/ipdir.php?ds=arc-software-development-platform
 > 
+> More info about AXS101 in particular is here (it's required to enter contact
+> details to obtain the document):
+> http://www.synopsys.com/dw/doc.php/ds/cc/arc_axs101_sdp.pdf
+> 
+> Alexey Brodkin (2):
+>   ARC: [axs101] Add support for AXS101 SDP (software development
+>     platform)
+>   ARC: [axs101] STAR 9000799830: Fix SD cards support
+> 
+> Vineet Gupta (2):
+>   ARC: [axs101] support early 8250 uart
+>   ARC: [axs101] Tweak DDR port aperture mappings for performance
 
-Thanks alot for doing that! But I have sent you a separate patch for
-this. It would have caused a merge conflict for v4.2 if I left the
-suspend-to-ram patch as is.
+Added to ARC for-next - finally !
 
-Thanks,
+Thx Alexey - good stuff.
+-Vineet
 
-Dinh
+> 
+>  Documentation/devicetree/bindings/arc/axs10x.txt |   7 +
+>  MAINTAINERS                                      |   7 +
+>  arch/arc/Kconfig                                 |   1 +
+>  arch/arc/Makefile                                |   1 +
+>  arch/arc/boot/dts/axc001.dtsi                    |  79 ++++++
+>  arch/arc/boot/dts/axs101.dts                     |  21 ++
+>  arch/arc/boot/dts/axs10x_mb.dtsi                 | 241 ++++++++++++++++++
+>  arch/arc/configs/axs101_defconfig                | 112 +++++++++
+>  arch/arc/kernel/devtree.c                        |   2 +
+>  arch/arc/plat-axs10x/Kconfig                     |  35 +++
+>  arch/arc/plat-axs10x/Makefile                    |   9 +
+>  arch/arc/plat-axs10x/axs10x.c                    | 298 +++++++++++++++++++++++
+>  12 files changed, 813 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arc/axs10x.txt
+>  create mode 100644 arch/arc/boot/dts/axc001.dtsi
+>  create mode 100644 arch/arc/boot/dts/axs101.dts
+>  create mode 100644 arch/arc/boot/dts/axs10x_mb.dtsi
+>  create mode 100644 arch/arc/configs/axs101_defconfig
+>  create mode 100644 arch/arc/plat-axs10x/Kconfig
+>  create mode 100644 arch/arc/plat-axs10x/Makefile
+>  create mode 100644 arch/arc/plat-axs10x/axs10x.c
+> 
