@@ -1,115 +1,55 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 6/9] input: goodix: write configuration data to device
-Date: Fri, 5 Jun 2015 09:43:26 -0700
-Message-ID: <20150605164326.GC26708@dtor-ws>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
- <1432817265-23891-7-git-send-email-irina.tirdea@intel.com>
- <20150528132133.GI23176@leverpostej>
- <1F3AC3675D538145B1661F571FE1805F19A773BB@irsmsx105.ger.corp.intel.com>
- <1433422507.5346.18.camel@hadess.net>
- <1F3AC3675D538145B1661F571FE1805F19A79DAD@irsmsx105.ger.corp.intel.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/platform: Mark all device tree resources as SHARED
+Date: Fri, 5 Jun 2015 11:45:22 -0500
+Message-ID: <CAL_JsqLOqpP4E5mG5t5RvaTs96jLC=umY2cUQEhyZiWJNOt1nQ@mail.gmail.com>
+References: <1433501478-15164-1-git-send-email-ricardo.ribalda@gmail.com> <1433501478-15164-2-git-send-email-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F19A79DAD@irsmsx105.ger.corp.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Tirdea, Irina" <irina.tirdea@intel.com>
-Cc: Bastien Nocera <hadess@hadess.net>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Purdila, Octavian" <octavian.purdila@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433501478-15164-2-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cliff Wickman <cpw-sJ/iWh9BUns@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2015 at 04:36:24PM +0000, Tirdea, Irina wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Bastien Nocera [mailto:hadess@hadess.net]
-> > Sent: 04 June, 2015 15:55
-> > To: Tirdea, Irina
-> > Cc: Mark Rutland; Dmitry Torokhov; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Purdila,
-> > Octavian
-> > Subject: Re: [PATCH 6/9] input: goodix: write configuration data to device
-> > 
-> > On Thu, 2015-05-28 at 13:51 +0000, Tirdea, Irina wrote:
-> > >
-> > > > -----Original Message-----
-> > > > From: Mark Rutland [mailto:mark.rutland@arm.com]
-> > > > Sent: 28 May, 2015 16:22
-> > > > To: Tirdea, Irina
-> > > > Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org;
-> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > Purdila, Octavian
-> > > > Subject: Re: [PATCH 6/9] input: goodix: write configuration data to
-> > > > device
-> > > >
-> > > > On Thu, May 28, 2015 at 01:47:42PM +0100, Irina Tirdea wrote:
-> > > > > Goodix devices can be configured by writing this information
-> > > > > to the device at init. The configuration data can
-> > > > > be provided through the ACPI/device tree property
-> > > > > "device-config". If "device-config" is not set, the default
-> > > > > device configuration will be used.
-> > > > >
-> > > > > Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
-> > > > > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > > > > ---
-> > > > >  .../bindings/input/touchscreen/goodix.txt          |   5 +
-> > > > >  drivers/input/touchscreen/goodix.c                 | 143
-> > > > > +++++++++++++++++++++
-> > > > >  2 files changed, 148 insertions(+)
-> > > > >
-> > > > > diff --git
-> > > > > a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > index 7137881..9e4ff69 100644
-> > > > > ---
-> > > > > a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > +++
-> > > > > b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > @@ -15,6 +15,11 @@ Required properties:
-> > > > >   - irq-gpio              : GPIO pin used for IRQ
-> > > > >   - reset-gpio            : GPIO pin used for reset
-> > > > >
-> > > > > +Optional properties:
-> > > > > +
-> > > > > + - device-config : device configuration information
-> > > > > (specified as byte
-> > > > > +                   array). Maximum size is 240 bytes.
-> > > >
-> > > > Generally we frown on passing opaque data.
-> > > >
-> > > > What exactly is encoded in device-config? The description is very
-> > > > vague.
-> > > >
-> > > > Does this correspond to anything in a data sheet or manual?
-> > >
-> > > Yes, it is configuration data described in chapter 6.2. b of the
-> > > datasheet:
-> > > https://drive.google.com/folderview?id=0BxCVOQS3ZymGfmJyY2RKbE5XbVlKN
-> > > lktVTlwV0lxNEdxd2dzeWZER094cmJPVnMxN1F0Yzg&usp=sharing.
-> > > This includes things like x/y resolution, maximum touch numbers
-> > > supported,
-> > > interrupt flags, various sensitivity factors.
-> > >
-> > > I should have included a link to the datasheet in the commit message
-> > > - will do that in v2 for all patches.
-> > >
-> > > I did consider writing this as firmware, but it seems that some
-> > > Goodix touchscreens have a
-> > > real firmware they need to write in addition to this configuration
-> > > data.
-> > > If there is a better way to do this, please let me know and I will
-> > > change it.
-> > 
-> > I would at least expect an excerpt from an ACPI DSDT that would make
-> > use of that feature.
-> 
-> Ok, I will add this to the commit message.
+On Fri, Jun 5, 2015 at 5:51 AM, Ricardo Ribalda Delgado
+<ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Some device tree platform do not define their resources properly. i.e.
+> overlapping or repeated resources.
+>
+> This patch mark all device tree resources as shareable.
+>
+> In the future this should only be set for the platforms that have
+> problems.
 
-No, it really shoudl be done via request_firmware() mechanism. There are
-drivers in kernel that use request_firmware() for both firmware and
-configuration data (see elan_i2c, elants_i2c, atmel_mxt_ts and I am sure
-there are others).
+I don't think we want to do this globally. This should be very rare
+and we want to discourage any new cases.
 
-Thanks.
+Rob
 
--- 
-Dmitry
+>
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/platform.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index ddf8e42c9367..89cb502f8812 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -136,6 +136,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>                 if (of_irq_to_resource_table(np, res, num_irq) != num_irq)
+>                         pr_debug("not all legacy IRQ resources mapped for %s\n",
+>                                  np->name);
+> +               for (i = 0; i < num_reg + num_irq; i++, res++)
+> +                       dev->resource[i].flags |= IORESOURCE_SHARED;
+>         }
+>
+>         dev->dev.of_node = of_node_get(np);
+> --
+> 2.1.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
