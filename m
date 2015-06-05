@@ -1,155 +1,53 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/7] phy-sun4i-usb: Add support for the usb-phys on the sun8i-a33 SoC
-Date: Fri,  5 Jun 2015 20:53:37 +0200
-Message-ID: <1433530421-12197-4-git-send-email-hdegoede@redhat.com>
-References: <1433530421-12197-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433530421-12197-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 01/20] ARM: dts: sun4i: Add USB Dual Role Controller
+Date: Fri,  5 Jun 2015 21:02:04 +0200
+Message-ID: <1433530943-12599-2-git-send-email-hdegoede@redhat.com>
+References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBRHEY6VQKGQE3KPMRAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1433530943-12599-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The usb-phys on the sun8i-a33 SoC are mostly the same as sun8i-a23 but for
-some reason (hw bug?) the phyctl register was moved to a different address
-and is not initialized to 0 on reset.
+Add a node for the otg/drc usb controller to sun4i-a10.dtsi.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
- drivers/phy/phy-sun4i-usb.c                        | 39 ++++++++++++++++------
- 2 files changed, 29 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/sun4i-a10.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-index f0c640a..5f48979 100644
---- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-@@ -8,6 +8,7 @@ Required properties:
-   * allwinner,sun6i-a31-usb-phy
-   * allwinner,sun7i-a20-usb-phy
-   * allwinner,sun8i-a23-usb-phy
-+  * allwinner,sun8i-a33-usb-phy
- - reg : a list of offset + length pairs
- - reg-names :
-   * "phy_ctrl"
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index 7d96414..7d067ee 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -42,9 +42,10 @@
- #define DRIVER_NAME "sun4i-usb-phy"
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 61c03d1..30f663a 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -611,6 +611,18 @@
+ 			#size-cells = <0>;
+ 		};
  
- #define REG_ISCR			0x00
--#define REG_PHYCTL			0x04
-+#define REG_PHYCTL_A10			0x04
- #define REG_PHYBIST			0x08
- #define REG_PHYTUNE			0x0c
-+#define REG_PHYCTL_A33			0x10
- 
- #define PHYCTL_DATA			BIT(7)
- 
-@@ -92,6 +93,7 @@ struct sun4i_usb_phy_data {
- 	struct mutex mutex;
- 	int num_phys;
- 	u32 disc_thresh;
-+	bool has_a33_phyctl;
- 	struct sun4i_usb_phy {
- 		struct phy *phy;
- 		void __iomem *pmu;
-@@ -155,37 +157,46 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
- {
- 	struct sun4i_usb_phy_data *phy_data = to_sun4i_usb_phy_data(phy);
- 	u32 temp, usbc_bit = BIT(phy->index * 2);
-+	void *phyctl;
- 	int i;
- 
- 	mutex_lock(&phy_data->mutex);
- 
-+	if (phy_data->has_a33_phyctl) {
-+		phyctl = phy_data->base + REG_PHYCTL_A33;
-+		/* A33 needs us to set phyctl to 0 explictly */
-+		writel(0, phyctl);
-+	} else {
-+		phyctl = phy_data->base + REG_PHYCTL_A10;
-+	}
++		usb_otg: usb@01c13000 {
++			compatible = "allwinner,sun4i-a10-musb";
++			reg = <0x01c13000 0x0400>;
++			clocks = <&ahb_gates 0>;
++			interrupts = <38>;
++			interrupt-names = "mc";
++			phys = <&usbphy 0>;
++			phy-names = "usb";
++			allwinner,sram = <&otg_sram 1>;
++			status = "disabled";
++		};
 +
- 	for (i = 0; i < len; i++) {
--		temp = readl(phy_data->base + REG_PHYCTL);
-+		temp = readl(phyctl);
- 
- 		/* clear the address portion */
- 		temp &= ~(0xff << 8);
- 
- 		/* set the address */
- 		temp |= ((addr + i) << 8);
--		writel(temp, phy_data->base + REG_PHYCTL);
-+		writel(temp, phyctl);
- 
- 		/* set the data bit and clear usbc bit*/
--		temp = readb(phy_data->base + REG_PHYCTL);
-+		temp = readb(phyctl);
- 		if (data & 0x1)
- 			temp |= PHYCTL_DATA;
- 		else
- 			temp &= ~PHYCTL_DATA;
- 		temp &= ~usbc_bit;
--		writeb(temp, phy_data->base + REG_PHYCTL);
-+		writeb(temp, phyctl);
- 
- 		/* pulse usbc_bit */
--		temp = readb(phy_data->base + REG_PHYCTL);
-+		temp = readb(phyctl);
- 		temp |= usbc_bit;
--		writeb(temp, phy_data->base + REG_PHYCTL);
-+		writeb(temp, phyctl);
- 
--		temp = readb(phy_data->base + REG_PHYCTL);
-+		temp = readb(phyctl);
- 		temp &= ~usbc_bit;
--		writeb(temp, phy_data->base + REG_PHYCTL);
-+		writeb(temp, phyctl);
- 
- 		data >>= 1;
- 	}
-@@ -433,7 +444,8 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 	data->extcon.dev.parent = dev;
- 
- 	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
--	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy"))
-+	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
-+	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
- 		data->num_phys = 2;
- 	else
- 		data->num_phys = 3;
-@@ -445,11 +457,15 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 		data->disc_thresh = 3;
- 
- 	if (of_device_is_compatible(np, "allwinner,sun6i-a31-usb-phy") ||
--	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy"))
-+	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
-+	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
- 		dedicated_clocks = true;
- 	else
- 		dedicated_clocks = false;
- 
-+	if (of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
-+		data->has_a33_phyctl = true;
-+
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
- 	data->base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(data->base))
-@@ -586,6 +602,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun6i-a31-usb-phy" },
- 	{ .compatible = "allwinner,sun7i-a20-usb-phy" },
- 	{ .compatible = "allwinner,sun8i-a23-usb-phy" },
-+	{ .compatible = "allwinner,sun8i-a33-usb-phy" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
+ 		usbphy: phy@01c13400 {
+ 			#phy-cells = <1>;
+ 			compatible = "allwinner,sun4i-a10-usb-phy";
 -- 
 2.4.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
