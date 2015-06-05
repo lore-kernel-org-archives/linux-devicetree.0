@@ -1,44 +1,41 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Master-aware devices and sideband ID data
-Date: Fri, 5 Jun 2015 10:05:34 +0100
-Message-ID: <20150605090534.GC1198@arm.com>
-References: <20150324155007.GC23005@leverpostej>
- <26BE36EF-2C5B-4DA6-8950-8FEBB031ED1B@caviumnetworks.com>
- <20150527173953.GC23176@leverpostej>
- <E342D737-5DD5-48C7-BB01-B83C29CB6E31@caviumnetworks.com>
- <20150601102208.GD22406@leverpostej>
- <158EFC9F-FCAF-44D3-AD40-804EDFE0CE25@caviumnetworks.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv2 2/4] edac, altera: Refactor EDAC for Altera CycloneV
+ SoC.
+Date: Fri, 5 Jun 2015 11:17:31 +0200
+Message-ID: <20150605091731.GA3679@pd.tnic>
+References: <1433428128-7292-1-git-send-email-tthayer@opensource.altera.com>
+ <1433428128-7292-3-git-send-email-tthayer@opensource.altera.com>
+ <55706E25.8050105@opensource.altera.com>
+ <5570C479.7010902@opensource.altera.com>
+ <20150604220609.GK3795@pd.tnic>
+ <5570D0D0.9030803@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <158EFC9F-FCAF-44D3-AD40-804EDFE0CE25-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <5570D0D0.9030803@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@opensource.altera.com>
+Cc: Thor Thayer <tthayer@opensource.altera.com>, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2015 at 11:19:30PM +0100, Chalamarla, Tirumalesh wrote:
-> > On Jun 1, 2015, at 3:22 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > It's possible to specify that the paths exist. I expect that software
-> > would select which to use at runtime.
-> > 
-> My worry is how to define any priorities/preferences between masters. 
-> in general the proposal looks reasonable.
+On Thu, Jun 04, 2015 at 05:27:28PM -0500, Dinh Nguyen wrote:
+> This is my mistake. I applied Alan Tull's patch for suspend-to-ram which
+> also touches drivers/edac/altera_edac.c.
+> 
+> https://git.kernel.org/cgit/linux/kernel/git/dinguyen/linux.git/commit/?h=socfpga_for_next_arria10&id=d44a92eb044f4cc1abf34a790d647e9fa356d7b0
+> 
+> I think I will have to ask Alan to split up his patch and send the part
+> that touches altera_edac.c to linux-edac.
 
-I agree that the proposal looks reasonable (in terms of the ability to
-describe the sort of topologies that we will face) but I still don't
-understand what I need to do in e.g. my IOMMU driver to support this
-binding whilst continuing to support the existing iommus binding, which
-is relied upon to configure dma-mapping.
+Nah, that's fine. If it is that hunk adding altr_sdram_prepare(), he can
+simply add my ACK for the EDAC bits:
 
-Mark: how do you see this co-existing/merging with the current bindings?
-I don't think it's practical to throw away what we have and move over to
-something totally different all in one go, but there clearly *is* benefit
-in your proposal over the existing scheme.
+Acked-by: Borislav Petkov <bp@suse.de>
 
-Will
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
