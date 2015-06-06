@@ -1,141 +1,99 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v2 02/17] nfc: nci: Add few fixes to handle proprietary response and notification
-Date: Sat,  6 Jun 2015 13:16:38 +0200
-Message-ID: <1433589413-19680-3-git-send-email-christophe-h.ricard@st.com>
-References: <1433589413-19680-1-git-send-email-christophe-h.ricard@st.com>
+Subject: [RFC v2 00/18] Few fixes, add hibernate and ST21NFCC support
+Date: Sat,  6 Jun 2015 13:16:36 +0200
+Message-ID: <1433589413-19680-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433589413-19680-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fixing:
-- some few logic errors in conditions
-- memory leak
+Hi Samuel,
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- include/net/nfc/nci_core.h |  6 ++++--
- net/nfc/nci/core.c         | 12 ++++++------
- net/nfc/nci/ntf.c          |  9 ++++++---
- net/nfc/nci/rsp.c          |  9 ++++++---
- 4 files changed, 22 insertions(+), 14 deletions(-)
+Sorry for the delay.
+I agree with your proposal. However, i added an additionnal minor fix patch
+to get it to work.
 
-diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
-index 8e948f0..c49688c 100644
---- a/include/net/nfc/nci_core.h
-+++ b/include/net/nfc/nci_core.h
-@@ -330,8 +330,10 @@ static inline void *nci_get_drvdata(struct nci_dev *ndev)
- 
- void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb);
- void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb);
--int nci_prop_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb);
--int nci_prop_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb);
-+int nci_prop_rsp_packet(struct nci_dev *ndev, __u16 opcode,
-+			struct sk_buff *skb);
-+int nci_prop_ntf_packet(struct nci_dev *ndev, __u16 opcode,
-+			struct sk_buff *skb);
- void nci_rx_data_packet(struct nci_dev *ndev, struct sk_buff *skb);
- int nci_send_cmd(struct nci_dev *ndev, __u16 opcode, __u8 plen, void *payload);
- int nci_send_data(struct nci_dev *ndev, __u8 conn_id, struct sk_buff *skb);
-diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
-index 31ac86b..56d57c9 100644
---- a/net/nfc/nci/core.c
-+++ b/net/nfc/nci/core.c
-@@ -1193,25 +1193,25 @@ static struct nci_prop_ops *prop_cmd_lookup(struct nci_dev *ndev,
- 	return NULL;
- }
- 
--int nci_prop_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
-+int nci_prop_rsp_packet(struct nci_dev *ndev, __u16 rsp_opcode,
-+			struct sk_buff *skb)
- {
--	__u16 rsp_opcode = nci_opcode(skb->data);
- 	struct nci_prop_ops *prop_op;
- 
- 	prop_op = prop_cmd_lookup(ndev, rsp_opcode);
--	if (!prop_op || prop_op->rsp)
-+	if (!prop_op || !prop_op->rsp)
- 		return -ENOTSUPP;
- 
- 	return prop_op->rsp(ndev, skb);
- }
- 
--int nci_prop_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
-+int nci_prop_ntf_packet(struct nci_dev *ndev, __u16 ntf_opcode,
-+			struct sk_buff *skb)
- {
--	__u16 ntf_opcode = nci_opcode(skb->data);
- 	struct nci_prop_ops *prop_op;
- 
- 	prop_op = prop_cmd_lookup(ndev, ntf_opcode);
--	if (!prop_op || prop_op->ntf)
-+	if (!prop_op || !prop_op->ntf)
- 		return -ENOTSUPP;
- 
- 	return prop_op->ntf(ndev, skb);
-diff --git a/net/nfc/nci/ntf.c b/net/nfc/nci/ntf.c
-index 5ae8c29..5d1c2e3 100644
---- a/net/nfc/nci/ntf.c
-+++ b/net/nfc/nci/ntf.c
-@@ -758,13 +758,15 @@ void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
- 	/* strip the nci control header */
- 	skb_pull(skb, NCI_CTRL_HDR_SIZE);
- 
--	if (nci_opcode_gid(ntf_opcode) == NCI_GID_PROPRIETARY)
--		if (nci_prop_ntf_packet(ndev, skb)) {
-+	if (nci_opcode_gid(ntf_opcode) == NCI_GID_PROPRIETARY) {
-+		if (nci_prop_ntf_packet(ndev, ntf_opcode, skb)) {
- 			pr_err("unsupported ntf opcode 0x%x\n",
- 			       ntf_opcode);
--			return;
- 		}
- 
-+		goto end;
-+	}
-+
- 	switch (ntf_opcode) {
- 	case NCI_OP_CORE_CONN_CREDITS_NTF:
- 		nci_core_conn_credits_ntf_packet(ndev, skb);
-@@ -803,5 +805,6 @@ void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
- 		break;
- 	}
- 
-+end:
- 	kfree_skb(skb);
- }
-diff --git a/net/nfc/nci/rsp.c b/net/nfc/nci/rsp.c
-index d6e7991..408bd8f 100644
---- a/net/nfc/nci/rsp.c
-+++ b/net/nfc/nci/rsp.c
-@@ -296,13 +296,15 @@ void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
- 	/* strip the nci control header */
- 	skb_pull(skb, NCI_CTRL_HDR_SIZE);
- 
--	if (nci_opcode_gid(rsp_opcode) == NCI_GID_PROPRIETARY)
--		if (nci_prop_rsp_packet(ndev, skb)) {
-+	if (nci_opcode_gid(rsp_opcode) == NCI_GID_PROPRIETARY) {
-+		if (nci_prop_rsp_packet(ndev, rsp_opcode, skb) == -ENOTSUPP) {
- 			pr_err("unsupported rsp opcode 0x%x\n",
- 			       rsp_opcode);
--			return;
- 		}
- 
-+		goto end;
-+	}
-+
- 	switch (rsp_opcode) {
- 	case NCI_OP_CORE_RESET_RSP:
- 		nci_core_reset_rsp_packet(ndev, skb);
-@@ -353,6 +355,7 @@ void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
- 		break;
- 	}
- 
-+end:
- 	kfree_skb(skb);
- 
- 	/* trigger the next cmd */
+I also got to the option to add a specific handler to send proprietary commands.
+
+Best Regards
+Christophe
+
+Christophe Ricard (17):
+  nci: Handle proprietary response and notifications
+  nfc: nci: Add few fixes to handle proprietary response and
+    notification
+  nfc: nci: Add NCI_RESET return code check before setup
+  nfc: nci: Add nci init ops for early device initialization
+  nfc: nci: Add nci_prop_cmd allowing to send proprietary nci cmd
+  nfc: st21nfcb: Remove inappropriate kfree on a devm_kzalloc pointer
+  nfc: st21nfcb: Do not remove header once the payload is sent
+  nfc: st21nfcb: remove st21nfcb_nci_i2c_disable in
+    st21nfcb_nci_i2c_remove
+  nfc: st21nfcb: Add ndlc_close in st21nfcb_nci_remove
+  nfc: st21nfcb: Fix st21nfcb_nci_close
+  nfc: st21nfcb: Add support for nci proprietary commands
+  nfc: nci: Move close ops call in nci_close_device
+  nfc: st21nfcb: Move st21nfcb_nci_remove in ndlc_remove
+  nfc: st21nfcb: Move powered flag from phy to ndlc layer
+  nfc: st21nfcb: disable irq when st21nfcb is disabled
+  nfc: st21nfcb: Configure CLF with nci proprietary command during
+    init/deinit stage
+  nfc: st-nci: Rename st21nfcb to st-nci to support ST NCI NFC
+    controllers
+
+ .../devicetree/bindings/net/nfc/st-nci.txt         |  33 +
+ .../devicetree/bindings/net/nfc/st21nfcb.txt       |  33 -
+ drivers/nfc/Kconfig                                |   2 +-
+ drivers/nfc/Makefile                               |   2 +-
+ drivers/nfc/st-nci/Kconfig                         |  23 +
+ drivers/nfc/st-nci/Makefile                        |   9 +
+ drivers/nfc/st-nci/core.c                          | 179 ++++++
+ drivers/nfc/st-nci/i2c.c                           | 385 +++++++++++
+ drivers/nfc/st-nci/ndlc.c                          | 313 +++++++++
+ drivers/nfc/st-nci/ndlc.h                          |  60 ++
+ drivers/nfc/st-nci/st-nci.h                        |  50 ++
+ drivers/nfc/st-nci/st-nci_se.c                     | 713 +++++++++++++++++++++
+ drivers/nfc/st-nci/st-nci_se.h                     |  61 ++
+ drivers/nfc/st21nfcb/Kconfig                       |  22 -
+ drivers/nfc/st21nfcb/Makefile                      |   9 -
+ drivers/nfc/st21nfcb/i2c.c                         | 398 ------------
+ drivers/nfc/st21nfcb/ndlc.c                        | 300 ---------
+ drivers/nfc/st21nfcb/ndlc.h                        |  59 --
+ drivers/nfc/st21nfcb/st21nfcb.c                    | 143 -----
+ drivers/nfc/st21nfcb/st21nfcb.h                    |  38 --
+ drivers/nfc/st21nfcb/st21nfcb_se.c                 | 713 ---------------------
+ drivers/nfc/st21nfcb/st21nfcb_se.h                 |  61 --
+ include/linux/platform_data/st-nci.h               |  29 +
+ include/linux/platform_data/st21nfcb.h             |  29 -
+ include/net/nfc/nci_core.h                         |  17 +
+ net/nfc/nci/core.c                                 | 103 ++-
+ net/nfc/nci/ntf.c                                  |  10 +
+ net/nfc/nci/rsp.c                                  |  10 +
+ 28 files changed, 1989 insertions(+), 1815 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/nfc/st-nci.txt
+ delete mode 100644 Documentation/devicetree/bindings/net/nfc/st21nfcb.txt
+ create mode 100644 drivers/nfc/st-nci/Kconfig
+ create mode 100644 drivers/nfc/st-nci/Makefile
+ create mode 100644 drivers/nfc/st-nci/core.c
+ create mode 100644 drivers/nfc/st-nci/i2c.c
+ create mode 100644 drivers/nfc/st-nci/ndlc.c
+ create mode 100644 drivers/nfc/st-nci/ndlc.h
+ create mode 100644 drivers/nfc/st-nci/st-nci.h
+ create mode 100644 drivers/nfc/st-nci/st-nci_se.c
+ create mode 100644 drivers/nfc/st-nci/st-nci_se.h
+ delete mode 100644 drivers/nfc/st21nfcb/Kconfig
+ delete mode 100644 drivers/nfc/st21nfcb/Makefile
+ delete mode 100644 drivers/nfc/st21nfcb/i2c.c
+ delete mode 100644 drivers/nfc/st21nfcb/ndlc.c
+ delete mode 100644 drivers/nfc/st21nfcb/ndlc.h
+ delete mode 100644 drivers/nfc/st21nfcb/st21nfcb.c
+ delete mode 100644 drivers/nfc/st21nfcb/st21nfcb.h
+ delete mode 100644 drivers/nfc/st21nfcb/st21nfcb_se.c
+ delete mode 100644 drivers/nfc/st21nfcb/st21nfcb_se.h
+ create mode 100644 include/linux/platform_data/st-nci.h
+ delete mode 100644 include/linux/platform_data/st21nfcb.h
+
 -- 
 2.1.4
 
