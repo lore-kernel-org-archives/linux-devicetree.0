@@ -1,117 +1,56 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
-Date: Fri, 5 Jun 2015 17:59:12 -0700
-Message-ID: <20150606005912.GC29237@codeaurora.org>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
- <20150528132452.GI26575@pengutronix.de>
- <1432867649.15597.46.camel@mtksdaap41>
- <20150529062345.GY6325@pengutronix.de>
- <20150604210212.GM676@codeaurora.org>
- <1433468737.14416.7.camel@mtksdaap41>
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] reset driver for NXP LPC18xx family
+Date: Sat, 06 Jun 2015 02:52:12 -0300
+Message-ID: <55728A8C.10207@vanguardiasur.com.ar>
+References: <1430863827-21898-1-git-send-email-manabian@gmail.com> <1431003665.3014.36.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433468737.14416.7.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431003665.3014.36.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05, James Liao wrote:
-> Hi Stephen,
+On 05/07/2015 10:01 AM, Philipp Zabel wrote:
+> Am Mittwoch, den 06.05.2015, 00:10 +0200 schrieb Joachim Eastwood:
+>> This patch set adds a reset driver for NXP LPC18xx/43xx devices.
+>>
+>> Changes in v3:
+>> * add patch descriptions
+>> * change parameter name in to_rgu_data macro to avoid a potential
+>>   issue if code is changed.
+>>
+>> Changes in v2:
+>> * clean up header includes
+>> * prefix M0 reset defines with LPC43XX
+>> * fix comment about M0 reset lines
+>> * reorganize reset call chains
+>> * add reset number table to dt doc
+>>
+>> There are no dependencies in this patch set. The DTS changes will
+>> be sent separately to arm-soc once this patch set goes upstream.
+>>
+>> Base support for the NXP LPC18xx family can be found here:
+>> http://marc.info/?l=linux-arm-kernel&m=143016894704253&w=2
+>>
+>> Joachim Eastwood (2):
+>>   reset: add driver for lpc18xx rgu
+>>   doc: dt: add documentation for lpc1850-rgu reset driver
 > 
-> On Thu, 2015-06-04 at 14:02 -0700, Stephen Boyd wrote:
-> > On 05/29, Sascha Hauer wrote:
-> > > Yes. I previously got the impression that the subsystem clocks are not
-> > > directly associated to the larbs, but needed to be handled by the larb
-> > > code due to some side effect. Now that I saw that the larbs are directly
-> > > in the subsystem register space it all makes sense.
-> > > 
-> > > Note that the way Mediatek SoCs are designed around sub modules is bit
-> > > unusual and does not fit very well in the Linux directory structure.
-> > > Normally SoCs have a single clocks controller which controls all clocks
-> > > in the SoC. Then you often have a reset controller providing reset lines
-> > > in the SoC. In this case it's clear that the clk driver goes to
-> > > drivers/clk/, the reset controller driver to drivers/reset/. Mediatek
-> > > SoCs instead have several blocks, each with its own clock and reset
-> > > controller. Splitting each block up into parts in drivers/clk/ and
-> > > drivers/reset/ leads to quite a code fragmentation.
-> > > This is my opinion, it would be great to hear something from others.
-> > > Matthias? I'd like to avoid running into a direction that is not
-> > > acceptable in the end.
-> > 
-> > We already have drivers registering clocks and resets under
-> > drivers/clk, so it's not unheard of. An alternative solution is
-> > to make child devices for the clock part and the reset part at
-> > runtime in the toplevel driver for the vencsys device (don't do
-> > any sort of DT description for this) and use regmap to mediate
-> > the register accesses and locking. That way we can put the clk
-> > driver in drivers/clk/, the reset driver in drivers/reset, etc.
-> > so that logically related code is grouped.
-> 
-> I have a question about the alternative way you mentioned. Currently
-> clock providers and consumers describe what clocks they will provide /
-> consume in device tree. If we don't describe vencsys clocks in device
-> tree, how to get vencsys clocks for drivers that need to control them?
+> Applied both, thanks.
 > 
 
-Perhaps an example would be best. In DT we would have:
+Philipp,
 
-	vencsys: vencsys@10000 {
-		compatible = "mtk,vencsys";
-		reg = <0x10000 0x1000>;
-		#clock-cells = <1>;
-		#reset-cells = <1>;
-	};
+Any chance we can have the reset controllers' tree to linux-next?
 
-	myconsumer@12000 {
-		compatible = "mtk,vencsys";
-		reg = <0x12000 0x100>;
-		clocks = <&vencsys 10>;
-		clock-names = "core";
-	};
-
-	(Or are the consumers only children of the subsystem?
-	It's not clear to me)
-
-And then in the mtk,vencsys driver we would create a platform
-device named something like "mtk-vencsys-clk" and assign the
-of_node of the device to be the of_node that is assigned to the
-mtk,vencsys device.
-
-	static int vencsys_probe(struct platform_device *pdev)
-	{
-		int ret;
-		struct device_node *np = pdev->dev.of_node;
-		struct platform_device *clk_pdev;
-
-		clk_pdev = platform_device_alloc("mtk-vencsys-clk", -1);
-		clk_pdev->dev.of_node = of_node;
-		ret = platform_device_add(clk_pdev);
-		if (ret)
-			return ret;
-	}
-
-Then we could put a mtk-vencsys-clk driver in drivers/clk/ that
-does the clk driver part...
-
-	static int clk_vencsys_probe(struct platform_device *pdev)
-	{
-		int ret;
-		struct device_node *np = pdev->dev.of_node;
-		struct regmap *regmap;
-
-		ret = of_clk_add_provider(np, of_clk_src_onecell_get, ..);
-		if (ret)
-			return ret;
-
-		regmap = dev_get_regmap(pdev->dev.parent, NULL);
-
-	}
-
-And similar things could be done for the reset driver.
-
+Thanks!
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Ezequiel Garcia, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
