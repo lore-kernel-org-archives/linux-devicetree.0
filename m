@@ -1,50 +1,48 @@
-From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [RFC v2 07/17] nfc: st21nfcb: Do not remove header once the payload is sent
-Date: Sat,  6 Jun 2015 13:16:43 +0200
-Message-ID: <1433589413-19680-8-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC v2 13/17] nfc: st21nfcb: Move st21nfcb_nci_remove in ndlc_remove
+Date: Sat,  6 Jun 2015 13:16:49 +0200
+Message-ID: <1433589413-19680-14-git-send-email-christophe-h.ricard@st.com>
 References: <1433589413-19680-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1433589413-19680-1-git-send-email-christophe-h.ricard@st.com>
-Sender: stable-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, devicetree@vger.kernel.org, christophe.ricard@gmail.com, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433589413-19680-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Once the data is sent, we need to preserve the full frame for the ndlc
-state machine. If the NDLC ACK is not received in time, the ndlc layer
-will resend the same frame.
-Having the header byte pulled will corrupt the frame.
+Removing st21nfcb may need to execute some specific commands before
+stopping the ndlc state machine.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfcb/i2c.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/nfc/st21nfcb/ndlc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/st21nfcb/i2c.c b/drivers/nfc/st21nfcb/i2c.c
-index 76a4cad..4bc15ec 100644
---- a/drivers/nfc/st21nfcb/i2c.c
-+++ b/drivers/nfc/st21nfcb/i2c.c
-@@ -87,11 +87,6 @@ static void st21nfcb_nci_i2c_disable(void *phy_id)
- 	gpio_set_value(phy->gpio_reset, 1);
- }
+diff --git a/drivers/nfc/st21nfcb/ndlc.c b/drivers/nfc/st21nfcb/ndlc.c
+index 6014b58..429cf05 100644
+--- a/drivers/nfc/st21nfcb/ndlc.c
++++ b/drivers/nfc/st21nfcb/ndlc.c
+@@ -286,6 +286,8 @@ EXPORT_SYMBOL(ndlc_probe);
  
--static void st21nfcb_nci_remove_header(struct sk_buff *skb)
--{
--	skb_pull(skb, ST21NFCB_FRAME_HEADROOM);
--}
+ void ndlc_remove(struct llt_ndlc *ndlc)
+ {
++	st21nfcb_nci_remove(ndlc->ndev);
++
+ 	/* cancel timers */
+ 	del_timer_sync(&ndlc->t1_timer);
+ 	del_timer_sync(&ndlc->t2_timer);
+@@ -294,7 +296,5 @@ void ndlc_remove(struct llt_ndlc *ndlc)
+ 
+ 	skb_queue_purge(&ndlc->rcv_q);
+ 	skb_queue_purge(&ndlc->send_q);
 -
- /*
-  * Writing a frame must not return the number of written bytes.
-  * It must return either zero for success, or <0 for error.
-@@ -121,8 +116,6 @@ static int st21nfcb_nci_i2c_write(void *phy_id, struct sk_buff *skb)
- 			r = 0;
- 	}
- 
--	st21nfcb_nci_remove_header(skb);
--
- 	return r;
+-	st21nfcb_nci_remove(ndlc->ndev);
  }
- 
+ EXPORT_SYMBOL(ndlc_remove);
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
