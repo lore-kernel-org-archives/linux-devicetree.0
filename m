@@ -1,144 +1,116 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC PATCH 2/3] clk: stm32: Add clock driver for STM32F4[23]xxx
- devices
-Date: Fri, 5 Jun 2015 17:10:26 -0700
-Message-ID: <20150606001026.GA29237@codeaurora.org>
-References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
- <1432327273-6810-3-git-send-email-daniel.thompson@linaro.org>
- <20150604220725.GT676@codeaurora.org>
- <55716D9B.4040209@linaro.org>
+Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
+Date: Fri, 5 Jun 2015 17:59:12 -0700
+Message-ID: <20150606005912.GC29237@codeaurora.org>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+ <20150528132452.GI26575@pengutronix.de>
+ <1432867649.15597.46.camel@mtksdaap41>
+ <20150529062345.GY6325@pengutronix.de>
+ <20150604210212.GM676@codeaurora.org>
+ <1433468737.14416.7.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55716D9B.4040209@linaro.org>
+In-Reply-To: <1433468737.14416.7.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kamil Lulko <rev13@wp.pl>, Andreas Farber <afaerber@suse.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@linaro.org, linaro-kernel@lists.linaro.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05, Daniel Thompson wrote:
-> On 04/06/15 23:07, Stephen Boyd wrote:
-> >On 05/22, Daniel Thompson wrote:
-> >>+#include <linux/clkdev.h>
-> >
-> >Are you using this include?
+On 06/05, James Liao wrote:
+> Hi Stephen,
 > 
-> Not very much?
+> On Thu, 2015-06-04 at 14:02 -0700, Stephen Boyd wrote:
+> > On 05/29, Sascha Hauer wrote:
+> > > Yes. I previously got the impression that the subsystem clocks are not
+> > > directly associated to the larbs, but needed to be handled by the larb
+> > > code due to some side effect. Now that I saw that the larbs are directly
+> > > in the subsystem register space it all makes sense.
+> > > 
+> > > Note that the way Mediatek SoCs are designed around sub modules is bit
+> > > unusual and does not fit very well in the Linux directory structure.
+> > > Normally SoCs have a single clocks controller which controls all clocks
+> > > in the SoC. Then you often have a reset controller providing reset lines
+> > > in the SoC. In this case it's clear that the clk driver goes to
+> > > drivers/clk/, the reset controller driver to drivers/reset/. Mediatek
+> > > SoCs instead have several blocks, each with its own clock and reset
+> > > controller. Splitting each block up into parts in drivers/clk/ and
+> > > drivers/reset/ leads to quite a code fragmentation.
+> > > This is my opinion, it would be great to hear something from others.
+> > > Matthias? I'd like to avoid running into a direction that is not
+> > > acceptable in the end.
+> > 
+> > We already have drivers registering clocks and resets under
+> > drivers/clk, so it's not unheard of. An alternative solution is
+> > to make child devices for the clock part and the reset part at
+> > runtime in the toplevel driver for the vencsys device (don't do
+> > any sort of DT description for this) and use regmap to mediate
+> > the register accesses and locking. That way we can put the clk
+> > driver in drivers/clk/, the reset driver in drivers/reset, etc.
+> > so that logically related code is grouped.
 > 
-> Turns out I was relying on these to get kzalloc() defined but there
-> are better headers for me to use for that!
+> I have a question about the alternative way you mentioned. Currently
+> clock providers and consumers describe what clocks they will provide /
+> consume in device tree. If we don't describe vencsys clocks in device
+> tree, how to get vencsys clocks for drivers that need to control them?
+> 
 
-Hah ok. We should delete some of those arch specific clkdev.h
-files...
+Perhaps an example would be best. In DT we would have:
 
-> 
-> >
-> >>+#include <linux/err.h>
-> >>+#include <linux/io.h>
-> >>+#include <linux/clk-provider.h>
-> >>+#include <linux/spinlock.h>
-> >>+#include <linux/of.h>
-> >>+#include <linux/of_address.h>
-> >>+
-> >>+#include <linux/debugfs.h>
-> >
-> >Are you using this include?
-> 
-> No (this is already gone in v2).
+	vencsys: vencsys@10000 {
+		compatible = "mtk,vencsys";
+		reg = <0x10000 0x1000>;
+		#clock-cells = <1>;
+		#reset-cells = <1>;
+	};
 
-Oh hrm.. I must have missed v2.
+	myconsumer@12000 {
+		compatible = "mtk,vencsys";
+		reg = <0x12000 0x100>;
+		clocks = <&vencsys 10>;
+		clock-names = "core";
+	};
 
-> 
-> >>+
-> >>+	if (__clk_get_flags(hw->clk) & CLK_SET_RATE_PARENT) {
-> >>+		unsigned long best_parent = rate / mult;
-> >>+
-> >>+		*prate =
-> >>+		    __clk_round_rate(__clk_get_parent(hw->clk), best_parent);
-> >>+	}
-> >>+
-> >>+	return *prate * mult;
-> >>+}
-> >>+
-> >>+static int clk_apb_mul_set_rate(struct clk_hw *hw, unsigned long rate,
-> >>+				 unsigned long parent_rate)
-> >>+{
-> >
-> >Why don't we need to do anything here?
-> 
-> This clock cannot change its own rate. It is very nearly a fixed
-> factor clock but with the additional quirk that the "fixed" factor
-> changes depending upon the rate of the parent clock.
-> 
-> This is the same implementation as clk-fixed-factor. I concluded
-> that it returns success because round rate should always result in
-> the set rate for this clock being a nop.
+	(Or are the consumers only children of the subsystem?
+	It's not clear to me)
 
-Ok. A comment here would be helpful in the future. We probably
-ought to have a comment in clk-fixed-factor as well.
+And then in the mtk,vencsys driver we would create a platform
+device named something like "mtk-vencsys-clk" and assign the
+of_node of the device to be the of_node that is assigned to the
+mtk,vencsys device.
 
-> 
-> 
-> >>+	return 0;
-> >>+}
-> >>+
-> >>+static struct clk_ops clk_apb_mul_factor_ops = {
-> >
-> >const?
-> 
-> Makes sense...
-> 
-> You want a patch for clk-fixed-factor too?
+	static int vencsys_probe(struct platform_device *pdev)
+	{
+		int ret;
+		struct device_node *np = pdev->dev.of_node;
+		struct platform_device *clk_pdev;
 
-Sure.
+		clk_pdev = platform_device_alloc("mtk-vencsys-clk", -1);
+		clk_pdev->dev.of_node = of_node;
+		ret = platform_device_add(clk_pdev);
+		if (ret)
+			return ret;
+	}
 
-> 
-> 
-> >>+struct clk *clk_register_apb_mul(struct device *dev, const char *name,
-> >>+				 const char *parent_name, unsigned long flags,
-> >>+				 u8 bit_idx)
-> >>+{
-> >>+	struct clk_apb_mul *am;
-> >>+	struct clk_init_data init;
-> >>+	struct clk *clk;
-> >>+
-> >>+	am = kzalloc(sizeof(*am), GFP_KERNEL);
-> >>+	if (!am)
-> >>+		return ERR_PTR(-ENOMEM);
-> >>+
-> >>+	am->bit_idx = bit_idx;
-> >>+	am->hw.init = &init;
-> >>+
-> >>+	init.name = name;
-> >>+	init.ops = &clk_apb_mul_factor_ops;
-> >>+	init.flags = flags | CLK_IS_BASIC;
-> >
-> >Is it basic?
-> 
-> Tough question.
-> 
-> The absence of this flag appears grants arch code permission to use
-> secret backdoors to do "weird stuff" but making special assumptions
-> about the type of the clock. This clock keeps its implementation
-> private so noone outside the compilation unit can usefully cast it.
-> 
-> However, it also looks like only omap2 is the only platform that
-> makes these special assumptions so when this code is run on STM32
-> there is nothing to actually consume the CLK_IS_BASIC flag at
-> runtime.
-> 
-> In other words the flag is useless but, I think, also correctly applied.
-> 
-> I'd be happy to remove it if anyone disagrees with the guesswork above.
-> 
-> Alternatively, I could write a patch to *invert* CLK_IS_BASIC and
-> rename it CLK_CASTABLE on the grounds that only the people doing
-> "weird stuff" should have to care about this flag at all. Any
-> interest in that?
+Then we could put a mtk-vencsys-clk driver in drivers/clk/ that
+does the clk driver part...
 
-No I think we should delete CLK_IS_BASIC. So please remove it
-unless you actually need it.
+	static int clk_vencsys_probe(struct platform_device *pdev)
+	{
+		int ret;
+		struct device_node *np = pdev->dev.of_node;
+		struct regmap *regmap;
+
+		ret = of_clk_add_provider(np, of_clk_src_onecell_get, ..);
+		if (ret)
+			return ret;
+
+		regmap = dev_get_regmap(pdev->dev.parent, NULL);
+
+	}
+
+And similar things could be done for the reset driver.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
