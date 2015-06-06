@@ -1,46 +1,30 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 4/6] ARM: dts; pxa: add embedded pxa camera capture interface
-Date: Sun, 07 Jun 2015 01:07:01 +0300
-Message-ID: <55736F05.8000904@cogentembedded.com>
-References: <1433624953-28165-1-git-send-email-robert.jarzmik@free.fr> <1433624953-28165-4-git-send-email-robert.jarzmik@free.fr>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: BCM5301X: add NAND flash chip description
+Date: Sat, 06 Jun 2015 16:07:02 -0700
+Message-ID: <55737D16.6020709@gmail.com>
+References: <1432935587-17949-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433624953-28165-4-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432935587-17949-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Le 05/29/15 14:39, Hauke Mehrtens a =C3=A9crit :
+> This adds the NAND flash chip description for a standard chip found
+> connected to this SoC. This makes use of generic Broadcom NAND driver
+> with the iProc interface.
+>=20
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 
-On 06/07/2015 12:09 AM, Robert Jarzmik wrote:
-
-> The pxa27x SoCs have an embedded camera host controller. Add the
-> description to the family description.
-
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> ---
->   arch/arm/boot/dts/pxa27x.dtsi | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
-
-> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-> index 506db86..9ebfd7f 100644
-> --- a/arch/arm/boot/dts/pxa27x.dtsi
-> +++ b/arch/arm/boot/dts/pxa27x.dtsi
-> @@ -77,6 +77,23 @@
->   			clocks = <&clks CLK_KEYPAD>;
->   			status = "disabled";
->   		};
-> +
-> +		pxa_camera: pxa_camera@50000000 {
-
-    The ePAPR standard has something to say about the node naming:
-"The name of a node should be somewhat generic, reflecting the function of the 
-device and not its precise programming model." So I'd suggest "video@50000000" 
-instead...
-
-[...]
-
-WBR, Sergei
+Applied to devicetree/next, thanks!
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
