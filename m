@@ -1,76 +1,145 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Sat, 6 Jun 2015 00:10:58 +0100
-Message-ID: <20150605231058.GQ7557@n2100.arm.linux.org.uk>
-References: <4184159.j0iXe39dFB@phil> <2619686.csNBBFyt8W@phil>
- <20150605110159.GA16254@ulmo.nvidia.com>
- <23123577.mOoqGCAPdL@diego>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC PATCH 2/3] clk: stm32: Add clock driver for STM32F4[23]xxx
+ devices
+Date: Fri, 5 Jun 2015 17:10:26 -0700
+Message-ID: <20150606001026.GA29237@codeaurora.org>
+References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
+ <1432327273-6810-3-git-send-email-daniel.thompson@linaro.org>
+ <20150604220725.GT676@codeaurora.org>
+ <55716D9B.4040209@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <23123577.mOoqGCAPdL@diego>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <55716D9B.4040209@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kamil Lulko <rev13@wp.pl>, Andreas Farber <afaerber@suse.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@linaro.org, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMDUsIDIwMTUgYXQgMDI6MTY6NDBQTSArMDIwMCwgSGVpa28gU3TDvGJuZXIg
-d3JvdGU6Cj4gSGkgVGhpZXJyeQo+IAo+IEFtIEZyZWl0YWcsIDUuIEp1bmkgMjAxNSwgMTM6MDI6
-MDEgc2NocmllYiBUaGllcnJ5IFJlZGluZzoKPiA+IElmIHRoaXMgaXMgc3BlY2lmaWMgdG8gdGhl
-IFJvY2tjaGlwIGltcGxlbWVudGF0aW9uLCBzaG91bGRuJ3QgdGhpcyBnbwo+ID4gaW50byBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZHdfaGRtaS1yb2NrY2hpcC50eHQ/
-IEl0Cj4gPiBjb3VsZCB0aGVuIHNpbXBseSBnbyBpbnRvIHRoZSBSb2NrY2hpcCBEUk0gdHJlZS4K
-PiAKPiBhY3R1YWxseSwgd2UgZGV0ZXJtaW5lZCB0aGF0IHRoZSBzdXBwbHkgbmFtZXMgYXJlIHVu
-aXZlcnNhbCB0byB0aGUgSVAKPiAoYm90aCBpbiBpbXggYW5kIHJvY2tjaGlwIGFuZCBwcm9iYWJs
-eSBtb3JlIGlmIHRoZXJlIGFyZSBtb3JlIHVzZXJzCj4gb3V0IHRoZXJlKS4gSnVzdCBSdXNzZWxs
-IHJlcXVlc3RlZCB0aGF0IHdlIGRvbid0IHBvbGx1dGUgdGhlIGdlbmVyaWMKPiBjb2RlIHVudGls
-IG5lY2Vzc2FyeSwgYXMgaXQgbG9va3MgbGlrZSB0aGUgc3VwcGx5IG9mIHRob3NlIGlzIHNvbWVo
-b3cKPiBoYW5kbGVkIGludGVybmFsbHkgb24gdGhlIGlteC4KCldoeSBkbyB5b3UgdGhpbmsgaXQn
-cyB1bml2ZXJzYWw/CgpMZXQncyBzdGFydCBmcm9tIHRoZSBiZWdpbm5pbmcsIGJlZm9yZSB3ZSBj
-cmVhdGUgc29tZXRoaW5nIHRoYXQncyBub3QKcmVwcmVzZW50YXRpdmUgb2YgdGhlIGhhcmR3YXJl
-LgoKZHdfaGRtaSBhY3R1YWxseSBkcml2ZXMgdHdvIHBpZWNlcyBvZiBoYXJkd2FyZSAtIHRoZSBI
-RE1JIHRyYW5zbWl0dGVyLAphbmQgYSBzZXBhcmF0ZSBoYXJkd2FyZSBibG9jaywgdGhlIEhETUkg
-cGh5LgoKVGhlcmUgYXJlIGF0IGxlYXN0IHR3byBwb3NzaWJsZSBIRE1JIHBoeXMgcmVmZXJlbmNl
-ZCBpbiB0aGUgaU1YCmRvY3VtZW50YXRpb24gLSB0aGVyZSBpcyBvbmUgY2FsbGVkIEhFQUMgd2hp
-Y2ggZG9lc24ndCBhcHBlYXIgaW4gaU1YCmRldmljZXMgYWZhaWssIGFuZCB0aGUgb25lIHdoaWNo
-IGRvZXMsIHdoaWNoIGlzIGEgM0QgcGh5LgoKVGhlIDNEIHBoeSB0b3AgbGV2ZWwgSU8gZGlhZ3Jh
-bSBkb2VzIGhhdmUgVlBIIGFuZCBWUCBwb3dlciBzdXBwbGllcywKYnV0IGl0IGFsc28gaGFzIFZQ
-X0ZJTFQwLCBWUF9GSUxUMSwgVlBfRklMVDIsIFZQX0ZJTFQzIGFuZCBHRCBsYWJlbGxlZAp1cCBh
-cyAiUG93ZXIgc3VwcGx5IHNpZ25hbHMiLiAgV2hlcmUgdGhleSBjb25uZWN0IHRvIGluIHRoZSBy
-ZXN0IG9mIHRoZQpzeXN0ZW0gLSBvciB3aGV0aGVyIHRoZXkgYXJlIGNvbm5lY3RlZCAtIGlzIHVu
-ZG9jdW1lbnRlZC4KClRoZSBIRE1JIHRyYW5zbWl0dGVyIGl0c2VsZiBpcyBub3QgZG9jdW1lbnRl
-ZCB3aGF0IGl0J3Mgc3VwcGxpZXMKYWN0dWFsbHkgYXJlLgoKU28sIHdoYXQgd2UgY3VycmVudGx5
-IGhhdmUgaW4gRFQgZm9yIGR3X2hkbWkgaXMgc29tZXRoaW5nIHdoaWNoIGRvZXNuJ3QKX3F1aXRl
-XyByZWZsZWN0IHRoZSBoYXJkd2FyZSByaWdodCBub3csIGFuZCB0byBnbyBhZGRpbmcgVlAgYW5k
-IFZQSApzdXBwbGllcyB0byB0aGUgZ2VuZXJpYyBiaW5kaW5nIGlzIHdyb25nIC0gaXQgZG9lc24n
-dCBmb2xsb3cgdGhlCmhhcmR3YXJlIHN0cnVjdHVyZSBkZXRhaWxlZCBpbiB0aGUgaU1YIGRvY3Vt
-ZW50YXRpb24gSSBoYXZlLgoKQXMgdGhlIFJvY2tjaGlwIGRvY3VtZW50YXRpb24gaXMgbm90IGF2
-YWlsYWJsZSwgSSBjYW4ndCBjb21tZW50IHdoZXRoZXIKaXQgd291bGQgYmUgY3VycmVudCBwcm9w
-b3NhbCBpcyBhcHByb3ByaWF0ZSBmb3IgUm9ja2NoaXAgb3Igbm90LCB3aGljaAppcyB3aHkgSSBo
-YXZlbid0IGNvbW1lbnRlZCBvbiB0aGlzIG90aGVyIHRoYW4gc2F5aW5nIHRoYXQgaXQncyBub3QK
-YXBwcm9wcmlhdGUgdG8gYmUgYSBnZW5lcmljIGR3X2hkbWkgYmluZGluZy4KCklmIHdlIHdhbnRl
-ZCB0byBtb2RlbCB0aGlzIGNvcnJlY3RseSwgdGhlbiBmb3IgaU1YLCBJIHdvdWxkIHN1Z2dlc3QK
-dGhhdCB0aGUgSERNSSBwaHkgc2hvdWxkIGJlIG1vZGVsbGVkIGluIERULCBhbmQgX2FsbF8gdGhl
-IHNpeCBWUCoKc3VwcGxpZXMgYXJlIG1vZGVsbGVkIC0gYW5kIHdlIHNob3VsZCBhc3N1bWUgdGhh
-dCAiR0QiIGlzIGEgInBvd2VyCmdvb2QiIHNpZ25hbCwgdGhvdWdoIHdlIGRvbid0IGtub3cgdGhh
-dCBmb3IgY2VydGFpbi4KCldoYXQgd2UgYWxzbyBkb24ndCBrbm93IG9uIGlNWDYgaXMgd2hhdCB2
-b2x0YWdlcyBhbnkgb2YgdGhlc2UgYXJlCnN1cHBsaWVkIHdpdGguCgpTbywgYXMgd2UgZG9uJ3Qg
-aGF2ZSBtdWNoIGNlcnRhaW50eSBoZXJlLCBhbmQgd2Uga25vdyB0aGF0IGFkZGluZyBpdAp0byB3
-aGF0IGlzIHRoZSBIRE1JIHRyYW5zbWl0dGVyIHdvdWxkIGJlIHdyb25nLCBJJ2Qgc3VnZ2VzdCBu
-b3QKbW9kZWxsaW5nIGl0IGluIGEgZ2VuZXJpYyB3YXkgYXQgcHJlc2VudC4KCi0tIApGVFRDIGJy
-b2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBr
-YnBzIHVwCmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 06/05, Daniel Thompson wrote:
+> On 04/06/15 23:07, Stephen Boyd wrote:
+> >On 05/22, Daniel Thompson wrote:
+> >>+#include <linux/clkdev.h>
+> >
+> >Are you using this include?
+> 
+> Not very much?
+> 
+> Turns out I was relying on these to get kzalloc() defined but there
+> are better headers for me to use for that!
+
+Hah ok. We should delete some of those arch specific clkdev.h
+files...
+
+> 
+> >
+> >>+#include <linux/err.h>
+> >>+#include <linux/io.h>
+> >>+#include <linux/clk-provider.h>
+> >>+#include <linux/spinlock.h>
+> >>+#include <linux/of.h>
+> >>+#include <linux/of_address.h>
+> >>+
+> >>+#include <linux/debugfs.h>
+> >
+> >Are you using this include?
+> 
+> No (this is already gone in v2).
+
+Oh hrm.. I must have missed v2.
+
+> 
+> >>+
+> >>+	if (__clk_get_flags(hw->clk) & CLK_SET_RATE_PARENT) {
+> >>+		unsigned long best_parent = rate / mult;
+> >>+
+> >>+		*prate =
+> >>+		    __clk_round_rate(__clk_get_parent(hw->clk), best_parent);
+> >>+	}
+> >>+
+> >>+	return *prate * mult;
+> >>+}
+> >>+
+> >>+static int clk_apb_mul_set_rate(struct clk_hw *hw, unsigned long rate,
+> >>+				 unsigned long parent_rate)
+> >>+{
+> >
+> >Why don't we need to do anything here?
+> 
+> This clock cannot change its own rate. It is very nearly a fixed
+> factor clock but with the additional quirk that the "fixed" factor
+> changes depending upon the rate of the parent clock.
+> 
+> This is the same implementation as clk-fixed-factor. I concluded
+> that it returns success because round rate should always result in
+> the set rate for this clock being a nop.
+
+Ok. A comment here would be helpful in the future. We probably
+ought to have a comment in clk-fixed-factor as well.
+
+> 
+> 
+> >>+	return 0;
+> >>+}
+> >>+
+> >>+static struct clk_ops clk_apb_mul_factor_ops = {
+> >
+> >const?
+> 
+> Makes sense...
+> 
+> You want a patch for clk-fixed-factor too?
+
+Sure.
+
+> 
+> 
+> >>+struct clk *clk_register_apb_mul(struct device *dev, const char *name,
+> >>+				 const char *parent_name, unsigned long flags,
+> >>+				 u8 bit_idx)
+> >>+{
+> >>+	struct clk_apb_mul *am;
+> >>+	struct clk_init_data init;
+> >>+	struct clk *clk;
+> >>+
+> >>+	am = kzalloc(sizeof(*am), GFP_KERNEL);
+> >>+	if (!am)
+> >>+		return ERR_PTR(-ENOMEM);
+> >>+
+> >>+	am->bit_idx = bit_idx;
+> >>+	am->hw.init = &init;
+> >>+
+> >>+	init.name = name;
+> >>+	init.ops = &clk_apb_mul_factor_ops;
+> >>+	init.flags = flags | CLK_IS_BASIC;
+> >
+> >Is it basic?
+> 
+> Tough question.
+> 
+> The absence of this flag appears grants arch code permission to use
+> secret backdoors to do "weird stuff" but making special assumptions
+> about the type of the clock. This clock keeps its implementation
+> private so noone outside the compilation unit can usefully cast it.
+> 
+> However, it also looks like only omap2 is the only platform that
+> makes these special assumptions so when this code is run on STM32
+> there is nothing to actually consume the CLK_IS_BASIC flag at
+> runtime.
+> 
+> In other words the flag is useless but, I think, also correctly applied.
+> 
+> I'd be happy to remove it if anyone disagrees with the guesswork above.
+> 
+> Alternatively, I could write a patch to *invert* CLK_IS_BASIC and
+> rename it CLK_CASTABLE on the grounds that only the people doing
+> "weird stuff" should have to care about this flag at all. Any
+> interest in that?
+
+No I think we should delete CLK_IS_BASIC. So please remove it
+unless you actually need it.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
