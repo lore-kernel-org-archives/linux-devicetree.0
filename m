@@ -1,78 +1,267 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version 3.
-Date: Sat, 6 Jun 2015 20:55:20 +0200
-Message-ID: <CAAfyv36QhBT2A9cBkLyCu8-shDxcANk3WTCsZTpjJejHi7fd8A@mail.gmail.com>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
-	<55492001.30806@hurleysoftware.com>
-	<DE60E7AA-1BF4-4A68-9638-E09F85FD5C72@goldelico.com>
-	<20150506092738.GB4508@amd>
-	<A2594559-CA92-40C2-A06A-AC2483E85CB1@goldelico.com>
-	<20150506142849.GA14839@amd>
-	<C68A105A-7147-4143-9B91-1A239726A780@goldelico.com>
-	<20150606130949.GB1329@xo-6d-61-c0.localdomain>
-	<CAAfyv37oYHrSsqie=ccG4QFcEwnvcpq7NmYVtDvhH3JddQN9Cg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAfyv37oYHrSsqie=ccG4QFcEwnvcpq7NmYVtDvhH3JddQN9Cg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, Pavel Machek <pavel@ucw.cz>
-Cc: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, NeilBrown <neil@brown.name>, Jiri Slaby <jslaby@suse.cz>
+From: Rabin Vincent <rabin@rab.in>
+Subject: [PATCHv3] gpio: add ETRAXFS GPIO driver
+Date: Sat,  6 Jun 2015 22:30:40 +0200
+Message-ID: <1433622640-26231-1-git-send-email-rabin@rab.in>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gnurou@gmail.com
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Rabin Vincent <rabin@rab.in>
 List-Id: devicetree@vger.kernel.org
 
-CC-ing author of below reply
+Add a GPIO driver for the General I/O block on Axis ETRAX FS SoCs.
 
-On Sat, Jun 6, 2015 at 8:53 PM, Belisko Marek <marek.belisko@gmail.com> wrote:
-> On Sat, Jun 6, 2015 at 3:09 PM, Pavel Machek <pavel@ucw.cz> wrote:
->> Hi!
->>
->>> None was ?wonderful?. They were valid concerns about my proposal
->>> and I have replied to them how I see it.
->>>
->>> Generally, if you are not interested in people dedicated and committed to
->>> fight for the better solution with (technical) arguments and concrete proposals
->>> how it should be in their opinion, then please just tell and I will shut up.
->>> But only then.
->>
->> Whatever, if it makes you shut up:
->>
->> I'm not interested in <fill in the blanks here>.
->>
->>> Or if some DT maintainer makes a decision and says: I have listened and
->>> understood all arguments pro and con and I decide this or that way (preferrably
->>> with giving reasons of decision as a guidance for similar problems in the future).
->>
->> The DT maintainers are saying just that for 10 mails now, as anybody who understands
->> english will agree.
->>
->> You are behaving like a troll. Go away.
-> Please stop this non constructive emails. You don't need to reply with
-> reply like this. Nikolaus
-> post his version and wait for conclusion and feedback from maintainers.
-> I suggest you to read : Documentation/CodeOfConflict. Thanks.
->>
->>                                                                                 Pavel
->>
->> --
->> (english) http://www.livejournal.com/~pavelmachek
->> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
->> _______________________________________________
->> Gta04-owner mailing list
->> Gta04-owner@goldelico.com
->> http://lists.goldelico.com/mailman/listinfo.cgi/gta04-owner
->
-> BR,
->
-> marek
->
-> --
-> as simple and primitive as possible
-> -------------------------------------------------
-> Marek Belisko - OPEN-NANDRA
-> Freelance Developer
->
-> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-> Tel: +421 915 052 184
-> skype: marekwhite
-> twitter: #opennandra
-> web: http://open-nandra.com
+Signed-off-by: Rabin Vincent <rabin@rab.in>
+---
+v3: Move port number to last cell and use of_gpio_simple_xlate().
+
+ .../devicetree/bindings/gpio/gpio-etraxfs.txt      |  21 +++
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-etraxfs.c                        | 176 +++++++++++++++++++++
+ 4 files changed, 206 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt
+ create mode 100644 drivers/gpio/gpio-etraxfs.c
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt b/Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt
+new file mode 100644
+index 0000000..abf4db7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt
+@@ -0,0 +1,21 @@
++Axis ETRAX FS General I/O controller bindings
++
++Required properties:
++
++- compatible:
++  - "axis,etraxfs-gio"
++- reg: Physical base address and length of the controller's registers.
++- #gpio-cells: Should be 3
++  - The first cell is the gpio offset number.
++  - The second cell is reserved and is currently unused.
++  - The third cell is the port number (hex).
++- gpio-controller: Marks the device node as a GPIO controller.
++
++Example:
++
++	gio: gpio@b001a000 {
++		compatible = "axis,etraxfs-gio";
++		reg = <0xb001a000 0x1000>;
++		gpio-controller;
++		#gpio-cells = <3>;
++	};
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index caefe80..fe0b9da 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -159,6 +159,14 @@ config GPIO_EP93XX
+ 	depends on ARCH_EP93XX
+ 	select GPIO_GENERIC
+ 
++config GPIO_ETRAXFS
++	bool "Axis ETRAX FS General I/O"
++	depends on CRIS || COMPILE_TEST
++	depends on OF
++	select GPIO_GENERIC
++	help
++	  Say yes here to support the GPIO controller on Axis ETRAX FS SoCs.
++
+ config GPIO_F7188X
+ 	tristate "F71869, F71869A, F71882FG and F71889F GPIO support"
+ 	depends on X86
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index f71bb97..4f816ec 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -32,6 +32,7 @@ obj-$(CONFIG_GPIO_DLN2)		+= gpio-dln2.o
+ obj-$(CONFIG_GPIO_DWAPB)	+= gpio-dwapb.o
+ obj-$(CONFIG_GPIO_EM)		+= gpio-em.o
+ obj-$(CONFIG_GPIO_EP93XX)	+= gpio-ep93xx.o
++obj-$(CONFIG_GPIO_ETRAXFS)	+= gpio-etraxfs.o
+ obj-$(CONFIG_GPIO_F7188X)	+= gpio-f7188x.o
+ obj-$(CONFIG_GPIO_GE_FPGA)	+= gpio-ge.o
+ obj-$(CONFIG_GPIO_GRGPIO)	+= gpio-grgpio.o
+diff --git a/drivers/gpio/gpio-etraxfs.c b/drivers/gpio/gpio-etraxfs.c
+new file mode 100644
+index 0000000..28071f4
+--- /dev/null
++++ b/drivers/gpio/gpio-etraxfs.c
+@@ -0,0 +1,176 @@
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
++#include <linux/io.h>
++#include <linux/platform_device.h>
++#include <linux/basic_mmio_gpio.h>
++
++#define ETRAX_FS_rw_pa_dout	0
++#define ETRAX_FS_r_pa_din	4
++#define ETRAX_FS_rw_pa_oe	8
++#define ETRAX_FS_rw_intr_cfg	12
++#define ETRAX_FS_rw_intr_mask	16
++#define ETRAX_FS_rw_ack_intr	20
++#define ETRAX_FS_r_intr		24
++#define ETRAX_FS_rw_pb_dout	32
++#define ETRAX_FS_r_pb_din	36
++#define ETRAX_FS_rw_pb_oe	40
++#define ETRAX_FS_rw_pc_dout	48
++#define ETRAX_FS_r_pc_din	52
++#define ETRAX_FS_rw_pc_oe	56
++#define ETRAX_FS_rw_pd_dout	64
++#define ETRAX_FS_r_pd_din	68
++#define ETRAX_FS_rw_pd_oe	72
++#define ETRAX_FS_rw_pe_dout	80
++#define ETRAX_FS_r_pe_din	84
++#define ETRAX_FS_rw_pe_oe	88
++
++struct etraxfs_gpio_port {
++	const char *label;
++	unsigned int oe;
++	unsigned int dout;
++	unsigned int din;
++	unsigned int ngpio;
++};
++
++struct etraxfs_gpio_info {
++	unsigned int num_ports;
++	const struct etraxfs_gpio_port *ports;
++};
++
++static const struct etraxfs_gpio_port etraxfs_gpio_etraxfs_ports[] = {
++	{
++		.label	= "A",
++		.ngpio	= 8,
++		.oe	= ETRAX_FS_rw_pa_oe,
++		.dout	= ETRAX_FS_rw_pa_dout,
++		.din	= ETRAX_FS_r_pa_din,
++	},
++	{
++		.label	= "B",
++		.ngpio	= 18,
++		.oe	= ETRAX_FS_rw_pb_oe,
++		.dout	= ETRAX_FS_rw_pb_dout,
++		.din	= ETRAX_FS_r_pb_din,
++	},
++	{
++		.label	= "C",
++		.ngpio	= 18,
++		.oe	= ETRAX_FS_rw_pc_oe,
++		.dout	= ETRAX_FS_rw_pc_dout,
++		.din	= ETRAX_FS_r_pc_din,
++	},
++	{
++		.label	= "D",
++		.ngpio	= 18,
++		.oe	= ETRAX_FS_rw_pd_oe,
++		.dout	= ETRAX_FS_rw_pd_dout,
++		.din	= ETRAX_FS_r_pd_din,
++	},
++	{
++		.label	= "E",
++		.ngpio	= 18,
++		.oe	= ETRAX_FS_rw_pe_oe,
++		.dout	= ETRAX_FS_rw_pe_dout,
++		.din	= ETRAX_FS_r_pe_din,
++	},
++};
++
++static const struct etraxfs_gpio_info etraxfs_gpio_etraxfs = {
++	.num_ports = ARRAY_SIZE(etraxfs_gpio_etraxfs_ports),
++	.ports = etraxfs_gpio_etraxfs_ports,
++};
++
++static int etraxfs_gpio_of_xlate(struct gpio_chip *gc,
++			       const struct of_phandle_args *gpiospec,
++			       u32 *flags)
++{
++	/*
++	 * Port numbers are A to E, and the properties are integers, so we
++	 * specify them as 0xA - 0xE.
++	 */
++	if (gc->label[0] - 'A' + 0xA != gpiospec->args[2])
++		return -EINVAL;
++
++	return of_gpio_simple_xlate(gc, gpiospec, flags);
++}
++
++static const struct of_device_id etraxfs_gpio_of_table[] = {
++	{
++		.compatible = "axis,etraxfs-gio",
++		.data = &etraxfs_gpio_etraxfs,
++	},
++	{},
++};
++
++static int etraxfs_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const struct etraxfs_gpio_info *info;
++	const struct of_device_id *match;
++	struct bgpio_chip *chips;
++	struct resource *res;
++	void __iomem *regs;
++	int ret;
++	int i;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	regs = devm_ioremap_resource(dev, res);
++	if (!regs)
++		return -ENOMEM;
++
++	match = of_match_node(etraxfs_gpio_of_table, dev->of_node);
++	if (!match)
++		return -EINVAL;
++
++	info = match->data;
++
++	chips = devm_kzalloc(dev, sizeof(*chips) * info->num_ports, GFP_KERNEL);
++	if (!chips)
++		return -ENOMEM;
++
++	for (i = 0; i < info->num_ports; i++) {
++		struct bgpio_chip *bgc = &chips[i];
++		const struct etraxfs_gpio_port *port = &info->ports[i];
++
++		ret = bgpio_init(bgc, dev, 4,
++				 regs + port->din,	/* dat */
++				 regs + port->dout,	/* set */
++				 NULL,			/* clr */
++				 regs + port->oe,	/* dirout */
++				 NULL,			/* dirin */
++				 BGPIOF_UNREADABLE_REG_SET);
++		if (ret)
++			return ret;
++
++		bgc->gc.ngpio = port->ngpio;
++		bgc->gc.label = port->label;
++
++		bgc->gc.of_node = dev->of_node;
++		bgc->gc.of_gpio_n_cells = 3;
++		bgc->gc.of_xlate = etraxfs_gpio_of_xlate;
++
++		ret = gpiochip_add(&bgc->gc);
++		if (ret)
++			dev_err(dev, "Unable to register port %s\n",
++				bgc->gc.label);
++	}
++
++	return 0;
++}
++
++static struct platform_driver etraxfs_gpio_driver = {
++	.driver = {
++		.name		= "etraxfs-gpio",
++		.of_match_table = of_match_ptr(etraxfs_gpio_of_table),
++	},
++	.probe	= etraxfs_gpio_probe,
++};
++
++static int __init etraxfs_gpio_init(void)
++{
++	return platform_driver_register(&etraxfs_gpio_driver);
++}
++
++device_initcall(etraxfs_gpio_init);
+-- 
+2.1.4
+
