@@ -1,22 +1,23 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: BCM5301X: add NAND flash chip description
-Date: Sat, 06 Jun 2015 16:07:02 -0700
-Message-ID: <55737D16.6020709@gmail.com>
-References: <1432935587-17949-1-git-send-email-hauke@hauke-m.de>
+Subject: Re: [PATCH] ARM: BCM5301X: add IRQ numbers for PCIe controller
+Date: Sat, 06 Jun 2015 16:14:22 -0700
+Message-ID: <55737ECE.3080500@gmail.com>
+References: <1432494494-13361-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432935587-17949-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <1432494494-13361-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 05/29/15 14:39, Hauke Mehrtens a =C3=A9crit :
-> This adds the NAND flash chip description for a standard chip found
-> connected to this SoC. This makes use of generic Broadcom NAND driver
-> with the iProc interface.
+Le 05/24/15 12:08, Hauke Mehrtens a =C3=A9crit :
+> The driver for the PCIe controller was just added, this adds the
+> missing definition of the IRQ numbers to device tree. The driver itse=
+lf
+> will be automatically detected by bcma.
 >=20
 > Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 
