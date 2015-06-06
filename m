@@ -1,46 +1,50 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v2 06/17] nfc: st21nfcb: Remove inappropriate kfree on a devm_kzalloc pointer
-Date: Sat,  6 Jun 2015 13:16:42 +0200
-Message-ID: <1433589413-19680-7-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard@gmail.com>
+Subject: [RFC v2 07/17] nfc: st21nfcb: Do not remove header once the payload is sent
+Date: Sat,  6 Jun 2015 13:16:43 +0200
+Message-ID: <1433589413-19680-8-git-send-email-christophe-h.ricard@st.com>
 References: <1433589413-19680-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433589413-19680-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Firo Yang <firogm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1433589413-19680-1-git-send-email-christophe-h.ricard@st.com>
+Sender: stable-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, devicetree@vger.kernel.org, christophe.ricard@gmail.com, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since ndev->driver_data is allocated by devm_kzalloc(), we do not
-need the inappropriate kfree to free it in driver's remove function.
-Freeing will trigger when driver unloads.
+Once the data is sent, we need to preserve the full frame for the ndlc
+state machine. If the NDLC ACK is not received in time, the ndlc layer
+will resend the same frame.
+Having the header byte pulled will corrupt the frame.
 
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Firo Yang <firogm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 ---
- drivers/nfc/st21nfcb/st21nfcb.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/nfc/st21nfcb/i2c.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/nfc/st21nfcb/st21nfcb.c b/drivers/nfc/st21nfcb/st21nfcb.c
-index ca9871a..c7dc282 100644
---- a/drivers/nfc/st21nfcb/st21nfcb.c
-+++ b/drivers/nfc/st21nfcb/st21nfcb.c
-@@ -131,11 +131,8 @@ EXPORT_SYMBOL_GPL(st21nfcb_nci_probe);
- 
- void st21nfcb_nci_remove(struct nci_dev *ndev)
- {
--	struct st21nfcb_nci_info *info = nci_get_drvdata(ndev);
--
- 	nci_unregister_device(ndev);
- 	nci_free_device(ndev);
--	kfree(info);
+diff --git a/drivers/nfc/st21nfcb/i2c.c b/drivers/nfc/st21nfcb/i2c.c
+index 76a4cad..4bc15ec 100644
+--- a/drivers/nfc/st21nfcb/i2c.c
++++ b/drivers/nfc/st21nfcb/i2c.c
+@@ -87,11 +87,6 @@ static void st21nfcb_nci_i2c_disable(void *phy_id)
+ 	gpio_set_value(phy->gpio_reset, 1);
  }
- EXPORT_SYMBOL_GPL(st21nfcb_nci_remove);
+ 
+-static void st21nfcb_nci_remove_header(struct sk_buff *skb)
+-{
+-	skb_pull(skb, ST21NFCB_FRAME_HEADROOM);
+-}
+-
+ /*
+  * Writing a frame must not return the number of written bytes.
+  * It must return either zero for success, or <0 for error.
+@@ -121,8 +116,6 @@ static int st21nfcb_nci_i2c_write(void *phy_id, struct sk_buff *skb)
+ 			r = 0;
+ 	}
+ 
+-	st21nfcb_nci_remove_header(skb);
+-
+ 	return r;
+ }
  
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
