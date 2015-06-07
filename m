@@ -1,103 +1,114 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] arch: arm: Show the serial number from
- devicetree =?iso-8859-1?Q?in=0D?= cpuinfo
-Date: Sun, 07 Jun 2015 18:03:06 +0100
-Message-ID: <20150607170306.376FBC40580@trevor.secretlab.ca>
-References: <1430206196-3483-1-git-send-email-contact@paulk.fr>
-	<1430206196-3483-2-git-send-email-contact@paulk.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430206196-3483-2-git-send-email-contact-W9ppeneeCTY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+Date: Sun, 7 Jun 2015 20:13:15 +0200
+Message-ID: <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org> <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Apr 2015 09:29:56 +0200
-, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
- wrote:
-> This grabs the serial number shown in cpuinfo from the serial-number devicetree
-> property in priority. When booting with ATAGs (and without device-tree), the
-> provided number is still shown instead.
-> 
-> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Hello Grant
 
-One comment below, but otherwise:
+I would ask you to go through all the discussion related to this bug.
+Here is a summary (please anyone involved correct me if I am wrong)
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+1) I send a patch to fix the oops if release resource is executed with
+a resource without parent
+2) Bjorn says that we should fix the issue of the problem, which he
+pointed out being that we use platform_device_del() after using
+of_device_add()
+3) I resend a patchset to use platform_devide_add()
+4) 3 series of cleanouts after the help from Rob and Bjorn
+5) Greg adds the series (v5) to his device core tree
+6) You complaint that that series can break miss behaved platforms
+7) I send a couple of patches that fix your problem and leaves the
+window open to blacklist the platforms that miss behave.
 
+now you send a patch that takes us to back to step 1), and adds some
+code that is already merged into gregk's
+https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/tree/drivers/base/platform.c?h=driver-core-testing#n314
+
+
+Wouldn't you agree that it will be a better solution to give your
+feedback regarding https://lkml.org/lkml/2015/6/5/246 and fix this
+issue together?
+
+that solution has been reviewed by a bunch of people, removes code
+duplication and afaik, is tested, does not break any platform, and I
+believe that is closer to an scenario when we can remove
+of_device_add() and all the devices behave similarly.
+
+
+Best Regards
+
+
+
+On Sun, Jun 7, 2015 at 4:20 PM, Grant Likely <grant.likely@linaro.org> wrote:
+> The unregister path of platform_device is broken. On registration, it
+> will register all resources with either a parent already set, or
+> type==IORESOURCE_{IO,MEM}. However, on unregister it will release
+> everything with type==IORESOURCE_{IO,MEM}, but ignore the others. There
+> are also cases where resources don't get registered in the first place,
+> like with devices created by of_platform_populate()*.
+>
+> Fix the unregister path to be symmetrical with the register path by
+> checking the parent pointer instead of the type field to decide which
+> resources to unregister. This is safe because the upshot of the
+> registration path algorithm is that registered resources have a parent
+> pointer, and non-registered resources do not.
+>
+> * It can be argued that of_platform_populate() should be registering
+>   it's resources, and they argument has some merit. However, there are
+>   quite a few platforms that end up broken if we try to do that due to
+>   overlapping resources in the device tree. Until that is fixed, we need
+>   to solve the immediate problem.
+>
+> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
 > ---
->  arch/arm/include/asm/system_info.h |  1 +
->  arch/arm/kernel/setup.c            | 23 +++++++++++++++++++++--
->  2 files changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/system_info.h b/arch/arm/include/asm/system_info.h
-> index 720ea03..3860cbd40 100644
-> --- a/arch/arm/include/asm/system_info.h
-> +++ b/arch/arm/include/asm/system_info.h
-> @@ -17,6 +17,7 @@
->  
->  /* information about the system we're running on */
->  extern unsigned int system_rev;
-> +extern const char *system_serial;
->  extern unsigned int system_serial_low;
->  extern unsigned int system_serial_high;
->  extern unsigned int mem_fclk_21285;
-> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-> index 1d60beb..b501754 100644
-> --- a/arch/arm/kernel/setup.c
-> +++ b/arch/arm/kernel/setup.c
-> @@ -93,6 +93,9 @@ unsigned int __atags_pointer __initdata;
->  unsigned int system_rev;
->  EXPORT_SYMBOL(system_rev);
->  
-> +const char *system_serial;
-> +EXPORT_SYMBOL(system_serial);
-> +
+>  drivers/base/platform.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index ebf034b97278..7403de94832c 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -375,9 +375,7 @@ int platform_device_add(struct platform_device *pdev)
+>
+>         while (--i >= 0) {
+>                 struct resource *r = &pdev->resource[i];
+> -               unsigned long type = resource_type(r);
+> -
+> -               if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
+> +               if (r->parent)
+>                         release_resource(r);
+>         }
+>
+> @@ -408,9 +406,7 @@ void platform_device_del(struct platform_device *pdev)
+>
+>                 for (i = 0; i < pdev->num_resources; i++) {
+>                         struct resource *r = &pdev->resource[i];
+> -                       unsigned long type = resource_type(r);
+> -
+> -                       if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
+> +                       if (r->parent)
+>                                 release_resource(r);
+>                 }
+>         }
+> --
+> 2.1.4
+>
 
-Is there any need to export this symbol? It's only used by built-in
-code. Not by modules.
 
->  unsigned int system_serial_low;
->  EXPORT_SYMBOL(system_serial_low);
->  
-> @@ -821,8 +824,25 @@ arch_initcall(customize_machine);
->  
->  static int __init init_machine_late(void)
->  {
-> +	struct device_node *root;
-> +	int ret;
-> +
->  	if (machine_desc->init_late)
->  		machine_desc->init_late();
-> +
-> +	root = of_find_node_by_path("/");
-> +	if (root) {
-> +		ret = of_property_read_string(root, "serial-number",
-> +					      &system_serial);
 
-of_property_read_string() will not modify the argument on failure. If
-system_serial is initialized to NULL, then the failure path is
-unnecessary.
-
-> +		if (ret)
-> +			system_serial = NULL;
-> +	}
-
-Calls to of_find_node* functions increment the refcount for the node.
-Need an of_node_put() here, or just use the of_root pointer directly. It
-is safe to call of_property_read_string() with a NULL node pointer too,
-it will fail gracefully.
-
-So, the whole thing can safely boil down to:
-
-	of_property_read_string(of_root, "serial-number", &system_serial);
-	if (!system_serial)
-		system_serial = kasprintf(GFP_KERNEL, "%08x%08x",
-					  system_serial_high, system_serial_low);
-
-g.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Ricardo Ribalda
