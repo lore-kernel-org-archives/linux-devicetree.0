@@ -1,129 +1,72 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
-Date: Sun, 07 Jun 2015 08:54:22 +0100
-Message-ID: <20150607075422.6ECE9C40A12@trevor.secretlab.ca>
-References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	<1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
-	<CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
-	<1430493730.7979.58.camel@kernel.crashing.org>
-	<CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
-	<1430521038.7979.70.camel@kernel.crashing.org>
-	<A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
-	<1430774063.7979.139.camel@kernel.crashing.org>
-	<1431560124.20218.91.camel@kernel.crashing.org>
-	<CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
-	<1431564871.4160.8.camel@kernel.crashing.org>
+Subject: Re: [PATCH v4 1/4] base/platform: Only insert MEM and IO resources
+Date: Sun, 07 Jun 2015 15:26:16 +0100
+Message-ID: <20150607142616.B21B3C4244B@trevor.secretlab.ca>
+References: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
+	<1429797494-29242-2-git-send-email-ricardo.ribalda@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431564871.4160.8.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1429797494-29242-2-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry for not weighing in earlier, I've had other work keeping me away.
-
-My short answer: don't use overlays. They're not what you need. Generic
-CONFIG_OF_DYNAMIC should be all that is required to make changes in your
-use case.
-
-Overlays are a specific api for being able to apply a set of changes in
-a revertable way, but as you say, it is a lot more complicated. However,
-overlays are built on top of the of_changeset API which is a lot
-simpler. It doesn't do any phandle resolution, and it doesn't do any
-tracking. It takes a set of changes (attach node, detach node, add
-property, remove property), an applies them to the live tree. At that
-point the changes are permenant*.
-
-It is documented in Documentation/devicetree/changesets.txt
-
-Ideally, I want all DT changes to go through the changeset API so that
-the lifecycle issues are delt with in one place. It also defers firing
-notifiers until after the entire changeset is applied. With
-of_attach_node/of_detach_node the notifiers are sent immediately after
-each change when the tree may be in an inconsistent state. For example,
-a driver expecting child nodes, but the child nodes haven't been added
-yet.
-
-Comments below...
-
-* There is an API for reverting a changeset, which simply applies the
-  changes backwards and in reverse. The overlay code uses it, but you
-  won't need it.
-
-On Thu, 14 May 2015 10:54:31 +1000
-, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+On Thu, 23 Apr 2015 15:58:11 +0200
+, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
  wrote:
-> On Wed, 2015-05-13 at 19:18 -0500, Rob Herring wrote:
+> platform_device_del only checks the type of the resource in order to
+> call release_resource.
 > 
-> > I haven't decided really.
-> > 
-> > The main thing with the current patch is I don't really like the added
-> > complexity to unflatten_dt_node. It is already a fairly complex
-> > function. Perhaps removing of "hybrid" as discussed will help?
+> On the other hand, platform_device_add calls insert_resource for any
+> resource that has a parent.
 > 
-> I agree, we should be able to make that much simpler, I was planning on
-> sorting that out with Gavin.
+> Make both code branches balanced.
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/base/platform.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index ebf034b..6028681 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -341,19 +341,23 @@ int platform_device_add(struct platform_device *pdev)
+>  
+>  	for (i = 0; i < pdev->num_resources; i++) {
+>  		struct resource *p, *r = &pdev->resource[i];
+> +		unsigned long type = resource_type(r);
+>  
+>  		if (r->name == NULL)
+>  			r->name = dev_name(&pdev->dev);
+>  
+> +		if (!(type == IORESOURCE_MEM || type == IORESOURCE_IO))
+> +			continue;
+> +
+>  		p = r->parent;
+>  		if (!p) {
+> -			if (resource_type(r) == IORESOURCE_MEM)
+> +			if (type == IORESOURCE_MEM)
+>  				p = &iomem_resource;
+> -			else if (resource_type(r) == IORESOURCE_IO)
+> +			else if (type == IORESOURCE_IO)
+>  				p = &ioport_resource;
+>  		}
+>  
+> -		if (p && insert_resource(p, r)) {
+> +		if (insert_resource(p, r)) {
+>  			dev_err(&pdev->dev, "failed to claim resource %d\n", i);
+>  			ret = -EBUSY;
+>  			goto failed;
 
-Ditto here. I don't want to have any new kinds of nodes created either.
-They are either OF_DYNAMIC, and therefore freeable, or they are not and
-cannot be freed.
+This patch is correct in that it makes things balanced, but I don't
+think it is the right behaviour. I've just posted a patch that does it
+the other way around, based on a patch that Pantelis posted doing the
+same thing, but without refactoring at the same time.
 
-> > If there are things we can do to make overlays easier to use in your
-> > use case, I'd like to hear ideas. I don't really buy that being more
-> > complex than needed is an obstacle. That is very often the case to
-> > have common, scale-able solutions. I want to see a simple case be
-> > simple to support.
-> 
-> Well, it's a LOT more complex from the FW perspective for a bunch of
-> features we don't really need, in a way because the DT update in our
-> case is just purely informational to avoid keeping wrong/outdated DT
-> bits, it has little functional impact (it might have a bit for interrupt
-> routing through bridges though).
-> 
-> However, I am also pursuing an approach on FW side using a generation
-> count in our nodes and properties which we could use to generate
-> arbitrary overlays if we know what generation linux has.
-> 
-> There might actual be a usage scenario for a generic way for our
-> firwmare to convey DT updates to Linux for other reasons.
-> 
-> A few things that I don't find in the overlay code (but maybe I haven't
-> looked at it hard enough):
-> 
->  - Can it remove nodes/properties ?
-
-Overlays: No, because I asked Pantelis to drop them.
-Changeset: yes, absolutely
-
->  - Can it "commit" a changeset so it's permanently part of the main DT ?
-> We will never have a concept of "revertable" changesets, if we need a
-> subsequent update, we will get a new overlay from FW that will remove
-> what needs to be removed and add what needs to be added.
-
-Yes
-
-> IE, our current mechanism without overlay is fairly simple:
-> 
->   - On PCI unplug, we remove all nodes below the slot (from linux),
-> the FW does the equivalent internally.
-> 
->   - On PCI re-plug, the FW internally builds new nodes and sends a
-> new subtree as an FDT that we can expand/attach.
-> 
-> Now we could consider that subtree as a changeset that can be undone,
-> but that wouldn't work for boot time. And subsequent updates wouldn't
-> have that concept of "undoing" anyway.
-> 
-> IE. conceptually, what overlays do today is quite rooted around the idea
-> of having a fixed "base" DT and some pre-compiled DTB overlays that
-> get added/removed. The design completely ignore the idea of a FW that
-> maintains a "live" tree which we want to keep in sync, which is what we
-> want to do here, or what we could do with a "live" open firmware
-> implementation.
-
-Right, which is exactly the reason for the changeset/overlay split.
-Overlays assume a fixed base, and that overlays are kind of like plug-in
-modules. changeset makes no such assumption.
+Instead of filtering out the non-MEM/IO resources, the new code checks
+the parent pointer on removal, because that is the safe test of if a
+resource has been registered in the first place.
 
 g.
 --
