@@ -1,124 +1,61 @@
-From: ygardi@codeaurora.org
-Subject: Re: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from
- the platform device
-Date: Sun, 7 Jun 2015 15:32:02 -0000
-Message-ID: <68c91f08f2be6c84055a303ca8aa3fe0.squirrel@www.codeaurora.org>
-References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
-    <1433324255-27510-5-git-send-email-ygardi@codeaurora.org>
-    <CAC5umyis6HU06KU-aSGoy6mCt-u+5Pz16nDk1qHrcsTnFo_2hA@mail.gmail.com>
-    <763dbc7b708b5d5b18ce0b5adcc41016.squirrel@www.codeaurora.org>
-    <CAC5umyhWTLe_K+q9U=4M4N4Yu4Hp7hUxy4QiL=ch=JmYEiMBnQ@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] dt: Document Holt descrete ADC bindings
+Date: Sun, 07 Jun 2015 16:43:47 +0100
+Message-ID: <557466B3.3030907@kernel.org>
+References: <1433161073-21967-1-git-send-email-vladimir.barinov@cogentembedded.com> <1433161252-22122-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <CAC5umyhWTLe_K+q9U=4M4N4Yu4Hp7hUxy4QiL=ch=JmYEiMBnQ@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: Yaniv Gardi <ygardi@codeaurora.org>, merez@qti.qualcomm.com, dovl@qti.qualcomm.com, Jej B <james.bottomley@hansenpartnership.com>, LKML <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Paul Bolle <pebolle@tiscali.nl>, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jbottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433161252-22122-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> 2015-06-05 5:53 GMT+09:00  <ygardi@codeaurora.org>:
->>> Hi Yaniv,
->>>
->>> 2015-06-03 18:37 GMT+09:00 Yaniv Gardi <ygardi@codeaurora.org>:
->>>> @@ -321,7 +313,22 @@ static int ufshcd_pltfrm_probe(struct
->>>> platform_device *pdev)
->>>>                 goto out;
->>>>         }
->>>>
->>>> -       hba->vops = get_variant_ops(&pdev->dev);
->>>> +       err = of_platform_populate(node, NULL, NULL, &pdev->dev);
->>>> +       if (err)
->>>> +               dev_err(&pdev->dev,
->>>> +                       "%s: of_platform_populate() failed\n",
->>>> __func__);
->>>> +
->>>> +       ufs_variant_node = of_get_next_available_child(node, NULL);
->>>> +
->>>> +       if (!ufs_variant_node) {
->>>> +               dev_dbg(&pdev->dev, "failed to find ufs_variant_node
->>>> child\n");
->>>> +       } else {
->>>> +               ufs_variant_pdev =
->>>> of_find_device_by_node(ufs_variant_node);
->>>> +
->>>> +               if (ufs_variant_pdev)
->>>> +                       hba->vops = (struct ufs_hba_variant_ops *)
->>>> +
->>>> dev_get_drvdata(&ufs_variant_pdev->dev);
->>>> +       }
->>>
->>> I have no strong objection to 'ufs_variant' sub-node.  But why can't we
->>> simply add an of_device_id to ufs_of_match, like below:
->>>
->>> static const struct of_device_id ufs_of_match[] = {
->>>         { .compatible = "jedec,ufs-1.1"},
->>> #if IS_ENABLED(SCSI_UFS_QCOM)
->>>         { .compatible = "qcom,ufs", .data = &ufs_hba_qcom_vops },
->>> #neidf
->>>         {},
->>> };
->>>
->>> and get hba->vops by get_variant_ops()?
->>>
->>
->> Hi Mita,
->> thanks for your comments.
->>
->> The whole idea, of having a sub-node which includes all variant specific
->> attributes is to separate the UFS Platform device component, from the
->> need
->> to know "qcom" or any other future variant.
->> I believe it keeps the code more modular, and clean - meaning - no
->> #ifdef's and no need to include all variant attributes inside the driver
->> DT node.
->> in that case, we simply have a DT node that is compatible to the Jdec
->> standard, and sub-node to include variant info.
->>
->> I hope you agree with this new design, since it provides a good answer
->> to every future variant that will be added, without the need to change
->> the
->> platform file.
->
-> Thanks for your explanation, I agree with it.
->
-> I found two problems in the current code, but both can be fixed
-> relatively easily as described below:
->
-> 1) If ufshcd-pltfrm driver is loaded before ufs-qcom driver,
-> ufshcd_pltfrm_probe() can't find a ufs_variant device.
->
-> In order to trigger re-probing ufs device when ufs-qcom driver has
-> been loaded, ufshcd_pltfrm_probe() should return -EPROBE_DEFER in
-> case 'ufs_variant' sub-node exists and no hba->vops found.
->
-> 2) Nothing prevents ufs-qcom module from being unloaded while the
-> variant_ops is referenced by ufshcd-pltfrm.
->
-> It can be fixed by incrementing module refcount of ufs_variant module
-> by __module_get(ufs_variant_pdev->dev.driver->owener) in
-> ufshcd_pltfrm_probe(), and module_put() in ufshcd_pltfrm_remove()
-> to descrement the refcount.
->
-
-again, Mita, your comments are very appreciated.
-
-1)
-If ufshcd-pltfrm driver is loaded before ufs-qcom, (what actually happens
-always), then the calling to of_platform_populate() which is added,
-guarantees that ufs-qcom probe will be called and finish, before
-ufshcd_pltfrm probe continues.
-so ufs_variant device is always there, and ready.
-I think it means we are safe - since either way, we make sure ufs-qcom
-probe will be called and finish before dealing with ufs_variant device in
-ufshcd_pltfrm probe.
-
-2) you are right. the fix added as you suggested.
-
-let us know your thoughts about the V3 once it's uploaded
-
-thanks
-
-
-
+On 01/06/15 13:20, Vladimir Barinov wrote:
+> These bindings can be used to register Holt HI-8435/8436/8437 descrete ADC
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/adc/hi-843x.txt        | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/hi-843x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/hi-843x.txt b/Documentation/devicetree/bindings/iio/adc/hi-843x.txt
+> new file mode 100644
+> index 0000000..872e801
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/hi-843x.txt
+> @@ -0,0 +1,27 @@
+> +Holt Integrated Circuits HI-8435/8436/8437 discrete ADC bindings
+> +
+> +Required properties:
+> + - compatible: Should be "holt,hi-8435" or "holt,hi-8436" or "holt,hi-8437"
+> + - reg: spi chip select number for the device
+> +
+> +Recommended properties:
+> + - spi-max-frequency: Definition as per
+> +		Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Optional properties:
+> + - holt,mr-gpio: GPIO used for controlling the MR (chip reset) pin
+Unless there is anything unusual about the chip reset line, I'd 
+be tempted to go with reset-gpios which seems to be somewhat
+of a convention based on a quick grep of existing bindings.
+> + - holt,debounce-soft: enable software debounce at startup
+> + - holt,debounce-soft-delay: software debounce interval in milliseconds
+> +
+> +Example:
+> +adc@0 {
+> +	compatible = "holt,hi-8435";
+> +	reg = <0>;
+> +
+> +	holt,mr-gpio = <&gpio6 1 0>;
+> +
+> +	holt,debounce-soft;
+> +	holt,debounce-soft-delay = <100>;
+> +
+> +	spi-max-frequency = <1000000>;
+> +};
+> 
