@@ -1,60 +1,131 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] of/platform: Mark all device tree resources as
- SHARED
-Date: Sun, 07 Jun 2015 15:01:37 +0100
-Message-ID: <20150607140138.026C4C412C8@trevor.secretlab.ca>
-References: <1433501478-15164-1-git-send-email-ricardo.ribalda@gmail.com>
-	<1433501478-15164-2-git-send-email-ricardo.ribalda@gmail.com>
-	<CAL_JsqLOqpP4E5mG5t5RvaTs96jLC=umY2cUQEhyZiWJNOt1nQ@mail.gmail.com>
-	<CAPybu_0s=9yTFH5jngh6=Zuz0iia0F1RU6AsLi-vcWNrF3-qYg@mail.gmail.com>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Sun, 07 Jun 2015 08:54:22 +0100
+Message-ID: <20150607075422.6ECE9C40A12@trevor.secretlab.ca>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+	<1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+	<CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+	<1430493730.7979.58.camel@kernel.crashing.org>
+	<CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+	<1430521038.7979.70.camel@kernel.crashing.org>
+	<A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
+	<1430774063.7979.139.camel@kernel.crashing.org>
+	<1431560124.20218.91.camel@kernel.crashing.org>
+	<CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
+	<1431564871.4160.8.camel@kernel.crashing.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_0s=9yTFH5jngh6=Zuz0iia0F1RU6AsLi-vcWNrF3-qYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1431564871.4160.8.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cliff Wickman <cpw-sJ/iWh9BUns@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Jun 2015 18:51:36 +0200
-, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sorry for not weighing in earlier, I've had other work keeping me away.
+
+My short answer: don't use overlays. They're not what you need. Generic
+CONFIG_OF_DYNAMIC should be all that is required to make changes in your
+use case.
+
+Overlays are a specific api for being able to apply a set of changes in
+a revertable way, but as you say, it is a lot more complicated. However,
+overlays are built on top of the of_changeset API which is a lot
+simpler. It doesn't do any phandle resolution, and it doesn't do any
+tracking. It takes a set of changes (attach node, detach node, add
+property, remove property), an applies them to the live tree. At that
+point the changes are permenant*.
+
+It is documented in Documentation/devicetree/changesets.txt
+
+Ideally, I want all DT changes to go through the changeset API so that
+the lifecycle issues are delt with in one place. It also defers firing
+notifiers until after the entire changeset is applied. With
+of_attach_node/of_detach_node the notifiers are sent immediately after
+each change when the tree may be in an inconsistent state. For example,
+a driver expecting child nodes, but the child nodes haven't been added
+yet.
+
+Comments below...
+
+* There is an API for reverting a changeset, which simply applies the
+  changes backwards and in reverse. The overlay code uses it, but you
+  won't need it.
+
+On Thu, 14 May 2015 10:54:31 +1000
+, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
  wrote:
-> Hello Rob,
+> On Wed, 2015-05-13 at 19:18 -0500, Rob Herring wrote:
 > 
-> Thanks for your feedback!
+> > I haven't decided really.
+> > 
+> > The main thing with the current patch is I don't really like the added
+> > complexity to unflatten_dt_node. It is already a fairly complex
+> > function. Perhaps removing of "hybrid" as discussed will help?
 > 
-> On Fri, Jun 5, 2015 at 6:45 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Fri, Jun 5, 2015 at 5:51 AM, Ricardo Ribalda Delgado
-> > <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> Some device tree platform do not define their resources properly. i.e.
-> >> overlapping or repeated resources.
-> >>
-> >> This patch mark all device tree resources as shareable.
-> >>
-> >> In the future this should only be set for the platforms that have
-> >> problems.
-> >
-> > I don't think we want to do this globally. This should be very rare
-> > and we want to discourage any new cases.
+> I agree, we should be able to make that much simpler, I was planning on
+> sorting that out with Gavin.
+
+Ditto here. I don't want to have any new kinds of nodes created either.
+They are either OF_DYNAMIC, and therefore freeable, or they are not and
+cannot be freed.
+
+> > If there are things we can do to make overlays easier to use in your
+> > use case, I'd like to hear ideas. I don't really buy that being more
+> > complex than needed is an obstacle. That is very often the case to
+> > have common, scale-able solutions. I want to see a simple case be
+> > simple to support.
 > 
-> I just wanted to mimic the original behaviour. Unfortunately I have no
-> idea of what platform is broken.  Grant needs to help us here :)
+> Well, it's a LOT more complex from the FW perspective for a bunch of
+> features we don't really need, in a way because the DT update in our
+> case is just purely informational to avoid keeping wrong/outdated DT
+> bits, it has little functional impact (it might have a bit for interrupt
+> routing through bridges though).
+> 
+> However, I am also pursuing an approach on FW side using a generation
+> count in our nodes and properties which we could use to generate
+> arbitrary overlays if we know what generation linux has.
+> 
+> There might actual be a usage scenario for a generic way for our
+> firwmare to convey DT updates to Linux for other reasons.
+> 
+> A few things that I don't find in the overlay code (but maybe I haven't
+> looked at it hard enough):
+> 
+>  - Can it remove nodes/properties ?
 
-I know of powerpc platforms that split the ethernet and mdio controllers
-into separate nodes, even though they share a register block. Those ones
-are broken (ie. mpc5200). I know there are ARM platforms that exhibited
-the same behaviour, but I can't remember specifics at the moment.
+Overlays: No, because I asked Pantelis to drop them.
+Changeset: yes, absolutely
 
-> What do you think about the new flag? Does it make any sense for you?
+>  - Can it "commit" a changeset so it's permanently part of the main DT ?
+> We will never have a concept of "revertable" changesets, if we need a
+> subsequent update, we will get a new overlay from FW that will remove
+> what needs to be removed and add what needs to be added.
 
-I think I have another solution to the whole problem. IIUC, the problem
-is the kernel crashes on unregistering resources. I've got a patch that
-doesn't try to unregister resources that weren't registered in the first
-place. It doesn't fix the problem of DT not registering the resources in
-the first place, but it makes the unregister path safe.
+Yes
 
-I'll cc: you on the patch series.
+> IE, our current mechanism without overlay is fairly simple:
+> 
+>   - On PCI unplug, we remove all nodes below the slot (from linux),
+> the FW does the equivalent internally.
+> 
+>   - On PCI re-plug, the FW internally builds new nodes and sends a
+> new subtree as an FDT that we can expand/attach.
+> 
+> Now we could consider that subtree as a changeset that can be undone,
+> but that wouldn't work for boot time. And subsequent updates wouldn't
+> have that concept of "undoing" anyway.
+> 
+> IE. conceptually, what overlays do today is quite rooted around the idea
+> of having a fixed "base" DT and some pre-compiled DTB overlays that
+> get added/removed. The design completely ignore the idea of a FW that
+> maintains a "live" tree which we want to keep in sync, which is what we
+> want to do here, or what we could do with a "live" open firmware
+> implementation.
+
+Right, which is exactly the reason for the changeset/overlay split.
+Overlays assume a fixed base, and that overlays are kind of like plug-in
+modules. changeset makes no such assumption.
 
 g.
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
