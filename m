@@ -1,55 +1,115 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
-Date: Sun, 07 Jun 2015 08:05:39 +0100
-Message-ID: <20150607070539.A8C7EC409D1@trevor.secretlab.ca>
-References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
-	<1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
-	<555B2C9C.1000709@arm.com> <20150519171732.GD9213@kroah.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
+Date: Sun, 07 Jun 2015 12:16:32 +0100
+Message-ID: <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
+References: <1427814771-30335-1-git-send-email-wsa@the-dreams.de>
+	<AEA6F5CA-D520-4F34-BE6B-EF2839501089@konsulko.com>
+	<20150414132709.GA1375@katana>
+	<83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150519171732.GD9213-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 May 2015 10:17:32 -0700
-, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+On Wed, 22 Apr 2015 15:30:28 +0300
+, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
  wrote:
-> On Tue, May 19, 2015 at 01:29:16PM +0100, Sudeep Holla wrote:
-> > Hi Rob/Greg,
-> > 
-> > On 14/05/15 15:28, Sudeep Holla wrote:
-> > >Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> > >devices with an OF node") adds the symlink `of_node` for each device
-> > >pointing to it's device tree node while creating/initialising it.
-> > >
-> > >However the devicetree sysfs is created and setup in of_init which is
-> > >executed at core_initcall level. For all the devices created before
-> > >of_init, the following error is thrown:
-> > >	"Error -2(-ENOENT) creating of_node link"
-> > >
-> > >Like many other components in driver model, initialize the sysfs support
-> > >for OF/devicetree from driver_init so that it's ready before any devices
-> > >are created.
-> > >
-> > >Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-> > >	devices with an OF node")
-> > >Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > >Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> > >Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> > >Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> > 
-> > I assume one of you will pick this up if there are no further comments ?
-> 
-> I will once things settle down...
+> Hi Wolfram,
+>=20
+> > On Apr 14, 2015, at 16:27 , Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> >=20
+> > Hi Pantelis,
+> >=20
+> > thanks for your prompt reply. Unfortunately, I had to wait until I =
+could
+> > access the test system again.
+> >=20
+>=20
+> [snip]
+>=20
+> Sorry for the non-prompt reply; but just for kicks, can you try the a=
+ttached patch?
+>=20
+> I have a hunch this might be the problem.
+>=20
+> Regards
+>=20
+> =E2=80=94 Pantelis
+>=20
+>=20
 
-I've picked it up. Yell if you'd prefer to take it by your tree.
+I played around with this some today. If I'm reading it correctly, the
+following patch reproduces the same problem:
 
-g.
+(continued below patch)
+---
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 18016341d5a9..0a27b38c3041 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void)
+ 	}
+ }
+=20
++static struct resource test_bus_res =3D {
++	.start =3D 0xfffffff8,
++	.end =3D 0xfffffff9,
++	.flags =3D IORESOURCE_MEM,
++};
+ static const struct platform_device_info test_bus_info =3D {
+ 	.name =3D "unittest-bus",
+ };
+@@ -795,6 +800,7 @@ static void __init of_unittest_platform_populate(vo=
+id)
+ 	if (rc)
+ 		return;
+ 	test_bus->dev.of_node =3D np;
++	platform_device_add_resources(test_bus, &test_bus_res, 1);
+=20
+ 	of_platform_populate(np, match, NULL, &test_bus->dev);
+ 	for_each_child_of_node(np, child) {
+
+---
+
+I think the fixup patch boils down to the following. It's hard to tell
+because it combines refactoring with the bug fix. Do I have it correct?
+If so, I'd rather commit the simple fix which can be committed now for
+v4.1, and the refactoring can be pushed for v4.2
+
+---
+
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index ebf034b97278..b3042e6ee3ef 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -377,7 +377,7 @@ int platform_device_add(struct platform_device *pde=
+v)
+ 		struct resource *r =3D &pdev->resource[i];
+ 		unsigned long type =3D resource_type(r);
+=20
+-		if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
++		if (r->parent)
+ 			release_resource(r);
+ 	}
+=20
+@@ -410,7 +410,7 @@ void platform_device_del(struct platform_device *pd=
+ev)
+ 			struct resource *r =3D &pdev->resource[i];
+ 			unsigned long type =3D resource_type(r);
+=20
+-			if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
++			if (r->parent)
+ 				release_resource(r);
+ 		}
+ 	}
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
