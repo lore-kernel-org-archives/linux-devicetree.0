@@ -1,115 +1,134 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
-Date: Sun, 07 Jun 2015 12:16:32 +0100
-Message-ID: <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
-References: <1427814771-30335-1-git-send-email-wsa@the-dreams.de>
-	<AEA6F5CA-D520-4F34-BE6B-EF2839501089@konsulko.com>
-	<20150414132709.GA1375@katana>
-	<83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] base/platform: Remove code duplication
+Date: Sun, 07 Jun 2015 15:32:20 +0100
+Message-ID: <20150607143220.B3807C42468@trevor.secretlab.ca>
+References: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
+	<1429797494-29242-5-git-send-email-ricardo.ribalda@gmail.com>
+	<CAL_JsqLOBvTgaLx7Ev3y5UQQdKGqMwnYSptDKvBQmmN0EnQL5Q@mail.gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAL_JsqLOBvTgaLx7Ev3y5UQQdKGqMwnYSptDKvBQmmN0EnQL5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Apr 2015 15:30:28 +0300
-, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+On Wed, 13 May 2015 09:03:31 -0500
+, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
  wrote:
-> Hi Wolfram,
->=20
-> > On Apr 14, 2015, at 16:27 , Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> >=20
-> > Hi Pantelis,
-> >=20
-> > thanks for your prompt reply. Unfortunately, I had to wait until I =
-could
-> > access the test system again.
-> >=20
->=20
-> [snip]
->=20
-> Sorry for the non-prompt reply; but just for kicks, can you try the a=
-ttached patch?
->=20
-> I have a hunch this might be the problem.
->=20
-> Regards
->=20
-> =E2=80=94 Pantelis
->=20
->=20
+> On Thu, Apr 23, 2015 at 8:58 AM, Ricardo Ribalda Delgado
+> <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Failure path of platform_device_add was almost the same as
+> > platform_device_del. Refactor same code in a function.
+> >
+> > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Clean-ups should come first in the series. Otherwise:
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-I played around with this some today. If I'm reading it correctly, the
-following patch reproduces the same problem:
+I disagree in this case, but only because the bug fix needs to be fixed
+immediately, but the refactoring can wait for v4.1. Ricardo, if you can
+confirm my patch solves the problem, then I'll push it to Linus, and you
+can respin this patch to match.
 
-(continued below patch)
----
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 18016341d5a9..0a27b38c3041 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void)
- 	}
- }
-=20
-+static struct resource test_bus_res =3D {
-+	.start =3D 0xfffffff8,
-+	.end =3D 0xfffffff9,
-+	.flags =3D IORESOURCE_MEM,
-+};
- static const struct platform_device_info test_bus_info =3D {
- 	.name =3D "unittest-bus",
- };
-@@ -795,6 +800,7 @@ static void __init of_unittest_platform_populate(vo=
-id)
- 	if (rc)
- 		return;
- 	test_bus->dev.of_node =3D np;
-+	platform_device_add_resources(test_bus, &test_bus_res, 1);
-=20
- 	of_platform_populate(np, match, NULL, &test_bus->dev);
- 	for_each_child_of_node(np, child) {
+g.
 
----
-
-I think the fixup patch boils down to the following. It's hard to tell
-because it combines refactoring with the bug fix. Do I have it correct?
-If so, I'd rather commit the simple fix which can be committed now for
-v4.1, and the refactoring can be pushed for v4.2
-
----
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index ebf034b97278..b3042e6ee3ef 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -377,7 +377,7 @@ int platform_device_add(struct platform_device *pde=
-v)
- 		struct resource *r =3D &pdev->resource[i];
- 		unsigned long type =3D resource_type(r);
-=20
--		if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
-+		if (r->parent)
- 			release_resource(r);
- 	}
-=20
-@@ -410,7 +410,7 @@ void platform_device_del(struct platform_device *pd=
-ev)
- 			struct resource *r =3D &pdev->resource[i];
- 			unsigned long type =3D resource_type(r);
-=20
--			if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
-+			if (r->parent)
- 				release_resource(r);
- 		}
- 	}
+> 
+> > ---
+> >  drivers/base/platform.c | 60 +++++++++++++++++++++----------------------------
+> >  1 file changed, 25 insertions(+), 35 deletions(-)
+> >
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 2e7e904..152d84d 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -298,6 +298,25 @@ int platform_device_add_data(struct platform_device *pdev, const void *data,
+> >  }
+> >  EXPORT_SYMBOL_GPL(platform_device_add_data);
+> >
+> > +static void platform_device_cleanout(struct platform_device *pdev, int n_res)
+> > +{
+> > +       int i;
+> > +
+> > +       if (pdev->id_auto) {
+> > +               ida_simple_remove(&platform_devid_ida, pdev->id);
+> > +               pdev->id = PLATFORM_DEVID_AUTO;
+> > +       }
+> > +
+> > +       for (i = 0; i < n_res; i++) {
+> > +               struct resource *r = &pdev->resource[i];
+> > +               unsigned long type = resource_type(r);
+> > +
+> > +               if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
+> > +                               r->parent)
+> > +                       release_resource(r);
+> > +       }
+> > +}
+> > +
+> >  /**
+> >   * platform_device_add - add a platform device to device hierarchy
+> >   * @pdev: platform device we're adding
+> > @@ -371,23 +390,8 @@ int platform_device_add(struct platform_device *pdev)
+> >                  dev_name(&pdev->dev), dev_name(pdev->dev.parent));
+> >
+> >         ret = device_add(&pdev->dev);
+> > -       if (ret == 0)
+> > -               return ret;
+> > -
+> > -       /* Failure path */
+> > -       if (pdev->id_auto) {
+> > -               ida_simple_remove(&platform_devid_ida, pdev->id);
+> > -               pdev->id = PLATFORM_DEVID_AUTO;
+> > -       }
+> > -
+> > -       while (--i >= 0) {
+> > -               struct resource *r = &pdev->resource[i];
+> > -               unsigned long type = resource_type(r);
+> > -
+> > -               if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
+> > -                               r->parent)
+> > -                       release_resource(r);
+> > -       }
+> > +       if (ret)
+> > +               platform_device_cleanout(pdev, i);
+> >
+> >         return ret;
+> >  }
+> > @@ -403,25 +407,11 @@ EXPORT_SYMBOL_GPL(platform_device_add);
+> >   */
+> >  void platform_device_del(struct platform_device *pdev)
+> >  {
+> > -       int i;
+> > -
+> > -       if (pdev) {
+> > -               device_del(&pdev->dev);
+> > -
+> > -               if (pdev->id_auto) {
+> > -                       ida_simple_remove(&platform_devid_ida, pdev->id);
+> > -                       pdev->id = PLATFORM_DEVID_AUTO;
+> > -               }
+> > -
+> > -               for (i = 0; i < pdev->num_resources; i++) {
+> > -                       struct resource *r = &pdev->resource[i];
+> > -                       unsigned long type = resource_type(r);
+> > +       if (!pdev)
+> > +               return;
+> >
+> > -                       if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
+> > -                                       r->parent)
+> > -                               release_resource(r);
+> > -               }
+> > -       }
+> > +       device_del(&pdev->dev);
+> > +       platform_device_cleanout(pdev, pdev->num_resources);
+> >  }
+> >  EXPORT_SYMBOL_GPL(platform_device_del);
+> >
+> > --
+> > 2.1.4
+> >
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
