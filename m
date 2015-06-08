@@ -1,92 +1,65 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v4 1/2] usb: ehci-exynos: Make provision for vdd regulators
-Date: Mon, 8 Jun 2015 11:17:13 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1506081111050.1574-100000@iolanthe.rowland.org>
-References: <1433761633-8542-1-git-send-email-gautam.vivek@samsung.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433761633-8542-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
+Date: Mon, 08 Jun 2015 16:19:35 +0100
+Message-ID: <20150608151935.2783CC407C6@trevor.secretlab.ca>
+References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
+	<1431613704-30801-1-git-send-email-sudeep.holla@arm.com>
+	<555B2C9C.1000709@arm.com> <20150519171732.GD9213@kroah.com>
+	<20150607070539.A8C7EC409D1@trevor.secretlab.ca>
+	<CAL_JsqKEcpWiPsORFrQs+dhqM4qcgMPyaz0ijVEMNkFeVQfkWQ@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKEcpWiPsORFrQs+dhqM4qcgMPyaz0ijVEMNkFeVQfkWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Jun 2015, Vivek Gautam wrote:
-
-> Facilitate getting required 3.3V and 1.0V VDD supply for
-> EHCI controller on Exynos.
+On Sun, 7 Jun 2015 19:29:17 -0500
+, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ wrote:
+> On Sun, Jun 7, 2015 at 2:05 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, 19 May 2015 10:17:32 -0700
+> > , Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> >  wrote:
+> >> On Tue, May 19, 2015 at 01:29:16PM +0100, Sudeep Holla wrote:
+> >> > Hi Rob/Greg,
+> >> >
+> >> > On 14/05/15 15:28, Sudeep Holla wrote:
+> >> > >Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+> >> > >devices with an OF node") adds the symlink `of_node` for each device
+> >> > >pointing to it's device tree node while creating/initialising it.
+> >> > >
+> >> > >However the devicetree sysfs is created and setup in of_init which is
+> >> > >executed at core_initcall level. For all the devices created before
+> >> > >of_init, the following error is thrown:
+> >> > >   "Error -2(-ENOENT) creating of_node link"
+> >> > >
+> >> > >Like many other components in driver model, initialize the sysfs support
+> >> > >for OF/devicetree from driver_init so that it's ready before any devices
+> >> > >are created.
+> >> > >
+> >> > >Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+> >> > >   devices with an OF node")
+> >> > >Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> > >Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> > >Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> > >Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >> > >Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> >> > >Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> >> > >Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> >> >
+> >> > I assume one of you will pick this up if there are no further comments ?
+> >>
+> >> I will once things settle down...
+> >
+> > I've picked it up. Yell if you'd prefer to take it by your tree.
 > 
-> For example, patches for regulators' nodes:
-> c8c253f ARM: dts: Add regulator entries to smdk5420
-> 275dcd2 ARM: dts: add max77686 pmic node for smdk5250,
-> enable only minimum number of regulators on smdk5250.
-> 
-> So ensuring now that the controller driver requests the necessary
-> VDD regulators (if available, unless there are direct VDD rails),
-> and enable them so as to make them working on exynos systems.
-> 
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Greg already applied it. It just hit Linus' tree Sat.
 
-Something about this looks a little fishy...
+Yeah, I only just saw that today. I'll drop it from mine.
 
-> @@ -170,7 +173,27 @@ static int exynos_ehci_probe(struct platform_device *pdev)
->  
->  	err = exynos_ehci_get_phy(&pdev->dev, exynos_ehci);
->  	if (err)
-> -		goto fail_clk;
-> +		goto fail_regulator1;
-> +
-> +	exynos_ehci->vdd33 = devm_regulator_get_optional(&pdev->dev, "vdd33");
-
-Just before this region of code, there is:
-
-	if (of_device_is_compatible(pdev->dev.of_node,
-					"samsung,exynos5440-ehci"))
-		goto skip_phy;
-
-If that "goto" is taken, exynos_ehci->vdd33 and ->vdd10 will be NULL, 
-not an ERR_PTR code.
-
-> +	if (!IS_ERR(exynos_ehci->vdd33)) {
-> +		err = regulator_enable(exynos_ehci->vdd33);
-> +		if (err) {
-> +			dev_err(&pdev->dev,
-> +				"Failed to enable 3.3V Vdd supply\n");
-> +			goto fail_regulator1;
-> +		}
-> +	}
-> +
-> +	exynos_ehci->vdd10 = devm_regulator_get_optional(&pdev->dev, "vdd10");
-> +	if (!IS_ERR(exynos_ehci->vdd10)) {
-> +		err = regulator_enable(exynos_ehci->vdd10);
-> +		if (err) {
-> +			dev_err(&pdev->dev,
-> +				"Failed to enable 1.0V Vdd supply\n");
-> +			goto fail_regulator2;
-> +		}
-> +	}
->  
->  skip_phy:
->  
-> @@ -231,6 +254,12 @@ fail_add_hcd:
->  fail_io:
->  	clk_disable_unprepare(exynos_ehci->clk);
->  fail_clk:
-> +	if (!IS_ERR(exynos_ehci->vdd10))
-> +		regulator_disable(exynos_ehci->vdd10);
-> +fail_regulator2:
-> +	if (!IS_ERR(exynos_ehci->vdd33))
-> +		regulator_disable(exynos_ehci->vdd33);
-
-Which means these regulator_disable() calls will crash when they 
-dereference a NULL pointer.
-
-I think it would be simpler in the end to let a NULL pointer mean the 
-regulator isn't present.  If devm_regulator_get_optional() returns an 
-error, convert it to NULL (or don't do the assignment to 
-exynos_ehci->vdd?? in the first place).
-
-The same criticism applies to the other patch in this series.
-
-Alan Stern
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
