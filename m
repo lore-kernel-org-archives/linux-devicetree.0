@@ -1,208 +1,75 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] iio: adc: Determine sampling frequencies by using
- minimum sample time
-Date: Mon, 8 Jun 2015 12:51:32 -0500
-Message-ID: <CAL_JsqLyTo0jvC0rAKXB3ZLdMHeFjmMcCjd7i04D4jqHKUUvqQ@mail.gmail.com>
-References: <cover.1433740528.git.maitysanchayan@gmail.com> <0e624f1c1efff7e209c93406f5d4bc51c41a9f45.1433740528.git.maitysanchayan@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Mon, 8 Jun 2015 18:59:27 +0100
+Message-ID: <20150608175927.GO14071@sirena.org.uk>
+References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
+ <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
+ <20150508175306.GG2761@sirena.org.uk>
+ <1431434356.2128.9.camel@mhfsdcap03>
+ <20150512160540.GB3066@sirena.org.uk>
+ <1431675522.2128.13.camel@mhfsdcap03>
+ <20150515092543.GY2761@sirena.org.uk>
+ <1433758546.19786.16.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0e624f1c1efff7e209c93406f5d4bc51c41a9f45.1433740528.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="QRcNICV7MHA2HUNl"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1433758546.19786.16.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Leilk Liu =?utf-8?B?KOWImOejiik=?= <Leilk.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, HongZhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 8, 2015 at 12:42 AM, Sanchayan Maity
-<maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The driver currently does not take into account the minimum sample time
-> as per the Figure 6-8 Chapter 9.1.1 12-bit ADC electrical characteristics.
-> We set a static amount of cycles instead of considering the sample time as
-> a given value, which depends on hardware characteristics.
->
-> Determine sampling frequencies by first reading the device tree property
-> node and then calculating the required Long Sample Time Adder (LSTAdder)
-> value based on the ADC clock frequency and sample time value obtained
-> from the device tree, this LSTAdder value is then used for calculating
-> the sampling frequencies possible.
->
-> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/vf610-adc.txt      |  6 ++
->  drivers/iio/adc/vf610_adc.c                        | 74 ++++++++++++++++++++--
->  2 files changed, 76 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> index 3eb40e2..4419126 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> @@ -17,6 +17,11 @@ Recommended properties:
->    - Frequency in normal mode (ADLPC=0, ADHSC=0)
->    - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
->    - Frequency in low-power mode (ADLPC=1, ADHSC=0)
-> +  - fsl,min-sample-time: Minimum sampling time in nanoseconds. This value has
 
-Add a "-ns' suffix.
+--QRcNICV7MHA2HUNl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Seems like this could be a common ADC property.
+On Mon, Jun 08, 2015 at 06:15:46PM +0800, Eddie Huang wrote:
+> On Fri, 2015-05-15 at 17:25 +0800, Mark Brown wrote:
 
-> +    to be chosen according to the conversion mode and the connected analog
-> +        source resistance (R_as) and capacitance (C_as). Refer the datasheet's
-> +        operating requirements. A safe default across a wide range of R_as and
-> +        C_as as well as conversion modes is 1000ns.
->
->  Example:
->  adc0: adc@4003b000 {
-> @@ -27,5 +32,6 @@ adc0: adc@4003b000 {
->         clock-names = "adc";
->         fsl,adck-max-frequency = <30000000>, <40000000>,
->                                 <20000000>;
-> +       fsl,min-sample-time = <1000>;
->         vref-supply = <&reg_vcc_3v3_mcu>;
->  };
-> diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
-> index 480f335..bcae8fd 100644
-> --- a/drivers/iio/adc/vf610_adc.c
-> +++ b/drivers/iio/adc/vf610_adc.c
-> @@ -68,6 +68,9 @@
->  #define VF610_ADC_CLK_DIV8             0x60
->  #define VF610_ADC_CLK_MASK             0x60
->  #define VF610_ADC_ADLSMP_LONG          0x10
-> +#define VF610_ADC_ADSTS_SHORT   0x100
-> +#define VF610_ADC_ADSTS_NORMAL  0x200
-> +#define VF610_ADC_ADSTS_LONG    0x300
->  #define VF610_ADC_ADSTS_MASK           0x300
->  #define VF610_ADC_ADLPC_EN             0x80
->  #define VF610_ADC_ADHSC_EN             0x400
-> @@ -124,6 +127,17 @@ enum conversion_mode_sel {
->         VF610_ADC_CONV_LOW_POWER,
->  };
->
-> +enum lst_adder_sel {
-> +       VF610_ADCK_CYCLES_3,
-> +       VF610_ADCK_CYCLES_5,
-> +       VF610_ADCK_CYCLES_7,
-> +       VF610_ADCK_CYCLES_9,
-> +       VF610_ADCK_CYCLES_13,
-> +       VF610_ADCK_CYCLES_17,
-> +       VF610_ADCK_CYCLES_21,
-> +       VF610_ADCK_CYCLES_25,
-> +};
-> +
->  struct vf610_adc_feature {
->         enum clk_sel    clk_sel;
->         enum vol_ref    vol_ref;
-> @@ -132,6 +146,8 @@ struct vf610_adc_feature {
->         int     clk_div;
->         int     sample_rate;
->         int     res_mode;
-> +       u32 lst_adder_index;
-> +       u32 default_sample_time;
->
->         bool    calibration;
->         bool    ovwren;
-> @@ -155,11 +171,13 @@ struct vf610_adc {
->  };
->
->  static const u32 vf610_hw_avgs[] = { 1, 4, 8, 16, 32 };
-> +static const u32 vf610_lst_adder[] = { 3, 5, 7, 9, 13, 17, 21, 25 };
->
->  static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
->  {
->         struct vf610_adc_feature *adc_feature = &info->adc_feature;
->         unsigned long adck_rate, ipg_rate = clk_get_rate(info->clk);
-> +       u32 adck_period, lst_addr_min;
->         int divisor, i;
->
->         adck_rate = info->max_adck_rate[adc_feature->conv_mode];
-> @@ -174,6 +192,19 @@ static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
->         }
->
->         /*
-> +        * Determine the long sample time adder value to be used based
-> +        * on the default minimum sample time provided.
-> +        */
-> +       adck_period = NSEC_PER_SEC / adck_rate;
-> +       lst_addr_min = adc_feature->default_sample_time / adck_period;
-> +       for (i = 0; i < ARRAY_SIZE(vf610_lst_adder); i++) {
-> +               if (vf610_lst_adder[i] > lst_addr_min) {
-> +                       adc_feature->lst_adder_index = i;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       /*
->          * Calculate ADC sample frequencies
->          * Sample time unit is ADCK cycles. ADCK clk source is ipg clock,
->          * which is the same as bus clock.
-> @@ -182,12 +213,13 @@ static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
->          * SFCAdder: fixed to 6 ADCK cycles
->          * AverageNum: 1, 4, 8, 16, 32 samples for hardware average.
->          * BCT (Base Conversion Time): fixed to 25 ADCK cycles for 12 bit mode
-> -        * LSTAdder(Long Sample Time): fixed to 3 ADCK cycles
-> +        * LSTAdder(Long Sample Time): 3, 5, 7, 9, 13, 17, 21, 25 ADCK cycles
->          */
->         adck_rate = ipg_rate / info->adc_feature.clk_div;
->         for (i = 0; i < ARRAY_SIZE(vf610_hw_avgs); i++)
->                 info->sample_freq_avail[i] =
-> -                       adck_rate / (6 + vf610_hw_avgs[i] * (25 + 3));
-> +                       adck_rate / (6 + vf610_hw_avgs[i] *
-> +                        (25 + vf610_lst_adder[adc_feature->lst_adder_index]));
->  }
->
->  static inline void vf610_adc_cfg_init(struct vf610_adc *info)
-> @@ -347,8 +379,40 @@ static void vf610_adc_sample_set(struct vf610_adc *info)
->                 break;
->         }
->
-> -       /* Use the short sample mode */
-> -       cfg_data &= ~(VF610_ADC_ADLSMP_LONG | VF610_ADC_ADSTS_MASK);
-> +       /*
-> +        * Set ADLSMP and ADSTS based on the Long Sample Time Adder value
-> +        * determined.
-> +        */
-> +       switch (adc_feature->lst_adder_index) {
-> +       case VF610_ADCK_CYCLES_3:
-> +               break;
-> +       case VF610_ADCK_CYCLES_5:
-> +               cfg_data |= VF610_ADC_ADSTS_SHORT;
-> +               break;
-> +       case VF610_ADCK_CYCLES_7:
-> +               cfg_data |= VF610_ADC_ADSTS_NORMAL;
-> +               break;
-> +       case VF610_ADCK_CYCLES_9:
-> +               cfg_data |= VF610_ADC_ADSTS_LONG;
-> +               break;
-> +       case VF610_ADCK_CYCLES_13:
-> +               cfg_data |= VF610_ADC_ADLSMP_LONG;
-> +               break;
-> +       case VF610_ADCK_CYCLES_17:
-> +               cfg_data |= VF610_ADC_ADLSMP_LONG;
-> +               cfg_data |= VF610_ADC_ADSTS_SHORT;
-> +               break;
-> +       case VF610_ADCK_CYCLES_21:
-> +               cfg_data |= VF610_ADC_ADLSMP_LONG;
-> +               cfg_data |= VF610_ADC_ADSTS_NORMAL;
-> +               break;
-> +       case VF610_ADCK_CYCLES_25:
-> +               cfg_data |= VF610_ADC_ADLSMP_LONG;
-> +               cfg_data |= VF610_ADC_ADSTS_NORMAL;
-> +               break;
-> +       default:
-> +               dev_err(info->dev, "error in sample time select\n");
-> +       }
->
->         /* update hardware average selection */
->         cfg_data &= ~VF610_ADC_AVGS_MASK;
-> @@ -712,6 +776,8 @@ static int vf610_adc_probe(struct platform_device *pdev)
->
->         of_property_read_u32_array(pdev->dev.of_node, "fsl,adck-max-frequency",
->                         info->max_adck_rate, 3);
-> +       of_property_read_u32(pdev->dev.of_node, "fsl,min-sample-time",
-> +                       &info->adc_feature.default_sample_time);
->
->         platform_set_drvdata(pdev, indio_dev);
->
-> --
-> 2.4.2
->
+> > That's how a very large proportion of devices that work with DMA are
+> > done - why would this be complicated?  All can_dma() does is report if
+> > DMA is possible.
+
+> In include/linux/spi/spi.h, it describes if can_dma() exists and returns
+> true, dma_tx and dma_rx must be set.But Medaitek SPI controller has its
+> own dma hardware, which means this dma resides in the same base address
+> range with SPI controller, and only used by SPI, so we don't implement
+> generic DMA driver, such that can't provide dma channel and assign to
+> dmx_tx, dmx_rx parameter. We think it's strange to implement generic dma
+> driver for dma that only used by specific hardware.Can we just provide
+> can_dma() function and return false ? But I think it's a little odd that
+> there actually has dma. So can we just skip can_dma() function let it be
+> NULL ?
+
+If it's simply the unavailbility of a struct dma_chan we must be able to
+get a better solution than just open coding all the DMA mapping and
+unmapping in the driver.  The only thing we actually use the channel for
+is to get the device we need to use to do the mapping and unmapping,
+either we need a way for devices to provide their own channels easily or
+a way for SPI drivers to specify a device here instead of a channel.
+The latter seems easier if a bit clunky (with having to work with both).
+
+--QRcNICV7MHA2HUNl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVddf+AAoJECTWi3JdVIfQAZIH/0sUOQ+RBf1d0D9B6b2gBA6F
+iDrVFDptnTYNw0zBXXO7nI2POB3QaoPGIADgh/7XznJX8pwiC0t8yeN44mu+RXmw
+bxoJXfya+qHl1DEIQNSf7bd1LJawQNwaJ7Oj//x3dp5X71fQyexpZogpe/wu4TfL
+rnlPKNRQLprlEBBScR3qUmhdrB1dJKXgvqKeNRpwOUUjmxXqFYZ0ssSu7fvi+HYN
+EJXO/zi/IBMSDAvz4FWipI261xAJINHFdxTn9qtZfDyBLeJzREvTi3x5JYeQNcZz
+QA6OZMHW5fPJI8gHZi4M6fpMtRiuIu+qeVNkIwevC0+t/+sjIURRC3f91TK5e/Q=
+=sEvi
+-----END PGP SIGNATURE-----
+
+--QRcNICV7MHA2HUNl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
