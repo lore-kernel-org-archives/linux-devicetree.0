@@ -1,53 +1,109 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH v10 7/8] DT: Add documentation for exynos4-is 'flashes' property
-Date: Mon, 08 Jun 2015 11:02:24 +0200
-Message-ID: <1433754145-12765-8-git-send-email-j.anaszewski@samsung.com>
-References: <1433754145-12765-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1433754145-12765-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
-Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: Re: [RESEND 1/2] usb: ehci-exynos: Make provision for vdd regulators
+Date: Mon, 08 Jun 2015 10:58:47 +0530
+Message-ID: <44B5E2FDCD3244AAA418BB8EC28FEA25@sisodomain.com>
+References: <1433683242-3945-1-git-send-email-linux.amoon@gmail.com>
+ <5574F97A.5030104@samsung.com>
+ <CANAwSgTjx8uxyOTW8uuiqrcNzF+UwLMmML2OcDgG5Ku_56=vJQ@mail.gmail.com>
+ <CAJKOXPfDmt5VMqr-P+OpWy1+jz675CFRPmtS_N0HjN4tWxfwtA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=UTF-8; reply-type=original
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJKOXPfDmt5VMqr-P+OpWy1+jz675CFRPmtS_N0HjN4tWxfwtA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, linux-arm-kernel@lists.infradead.orgKrzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a description of 'samsung,camera-flashes'
-property to the samsung-fimc.txt.
+Hi,
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/media/samsung-fimc.txt     |   10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-index 922d6f8..0554cad 100644
---- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-+++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-@@ -40,6 +40,14 @@ should be inactive. For the "active-a" state the camera port A must be activated
- and the port B deactivated and for the state "active-b" it should be the other
- way around.
- 
-+Optional properties:
-+
-+- samsung,camera-flashes - Array of pairs of phandles to the camera sensor
-+	devices and flash LEDs respectively. The pairs must reflect the board
-+	configuration, i.e. a sensor has to be able to strobe a flash LED by
-+	hardware. Flash LED is represented by a child node of a flash LED
-+	device (see Documentation/devicetree/bindings/leds/common.txt).
-+
- The 'camera' node must include at least one 'fimc' child node.
- 
- 
-@@ -166,6 +174,8 @@ Example:
- 		clock-output-names = "cam_a_clkout", "cam_b_clkout";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&cam_port_a_clk_active>;
-+		samsung,camera-flashes = <&rear_camera &rear_flash>,
-+					 <&front_camera &front_flash>;
- 		status = "okay";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-1.7.9.5
+
+On Monday, June 08, 2015 10:44 AM, "Krzysztof Kozlowski" 
+<k.kozlowski@samsung.com> wrote:
+
+my apologies for being late in replying to this thread.
+
+> 2015-06-08 13:21 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>> Hi Krzysztof ,
+>>
+>> On 8 June 2015 at 07:40, Krzysztof Kozlowski <k.kozlowski@samsung.com> 
+>> wrote:
+>>> On 07.06.2015 22:20, Anand Moon wrote:
+>>>> Facilitate getting required 3.3V and 1.0V VDD supply for
+>>>> EHCI controller on Exynos.
+>>>>
+>>>> With the patches for regulators' nodes merged in 3.15:
+>>>> c8c253f ARM: dts: Add regulator entries to smdk5420
+>>>> 275dcd2 ARM: dts: add max77686 pmic node for smdk5250,
+>>>> the exynos systems turn on only minimal number of regulators.
+>>>>
+>>>> Until now, the VDD regulator supplies were either turned on
+>>>> by the bootloader, or the regulators were enabled by default
+>>>> in the kernel, so that the controller drivers did not need to
+>>>> care about turning on these regulators on their own.
+>>>> This was rather bad about these controller drivers.
+>>>> So ensuring now that the controller driver requests the necessary
+>>>> VDD regulators (if available, unless there are direct VDD rails),
+>>>> and enable them so as to make them working.
+>>>>
+>>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>> Cc: Jingoo Han <jg1.han@samsung.com>
+>>>> Cc: Alan Stern <stern@rowland.harvard.edu>
+>>>> ---
+>>>> Initial version of this patch was part of following series, though
+>>>> they are not dependent on each other, resubmitting after rebasing.
+>>>>
+>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266418.html
+>>>
+>>> So you just took Vivek's patch along with all the credits... That is not
+>>> how we usually do this.
+>>>
+>>> I would expect that rebasing a patch won't change the author unless this
+>>> is fine with Vivek.
+>>>
+>>
+>> Sorry If I have done some mistake on my part.
+>> I just looked at below mail chain. Before I send it.
+>>
+>> http://www.spinics.net/lists/linux-samsung-soc/msg44136.html
+>
+> I don't get it. The patch you are referring to has a proper "From"
+> field. So please use it as an example.
+>
+>>
+>> I don't want to take any credit out of it. I just re-base on the new 
+>> kernel.
+Perhaps, you would have maintained the authorship !
+
+>> I could not test this patch as it meant for exynos5440 boards.
+>
+> Are you sure? I think the driver is used on almost all of Exynos SoCs
+> (Exynos4, Exynos5250, Exynos542x).
+
+That's correct, as pointed by Krzysztof Kozlowski, the driver is same for 
+Exynos4 and Exynos5 series
+of SoCs.
+
+> Untested code should not go to the kernel. Additionally you should
+> mark it as not-tested. Marking such patch as non-tested could help you
+> finding some independent tests (tests performed by someone else).
+>
+> To summarize my point of view:
+> 1. Unless Vivek's says otherwise, please give him the credits with
+> proper "from" field.
+> 2. Issues mentioned in previous mail should be addressed (missing
+> IS_ERR(), how disabling the regulator during suspend affects waking
+> up).
+> 3. The patchset must be tested, even after rebasing.
+
+Unfortunately, I got busy  with a different project and lost track of the 
+patches posted upstream.
+If it's not too late I can post a rebased version of the patch with previous 
+review comments addressed.
+
+>
+> Best regards,
+> Krzysztof 
