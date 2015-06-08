@@ -1,63 +1,67 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: mt8173: Add I2C device node
-Date: Mon, 8 Jun 2015 19:10:37 +0800
-Message-ID: <1433761837.31929.3.camel@mtksdaap41>
-References: <1433164107-26568-1-git-send-email-eddie.huang@mediatek.com>
-	 <1433164107-26568-3-git-send-email-eddie.huang@mediatek.com>
-	 <20150608072725.GJ6325@pengutronix.de>
+From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [RESEND PATCH V4 1/1] input: misc: da9063: OnKey driver
+Date: Mon, 8 Jun 2015 11:38:47 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22F122@SW-EX-MBX02.diasemi.com>
+References: <cover.1433415752.git.stwiss.opensource@diasemi.com>
+ <c84964549832af45f56362e0f6c0cb8b76b2878f.1433415752.git.stwiss.opensource@diasemi.com>
+ <20150605174931.GH26708@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150608072725.GJ6325-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20150605174931.GH26708@dtor-ws>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, "Opensource [Adam Ward]" <Adam.Ward.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+On 05 June 2015 18:50 Dmitry Torokhov wrote:
 
-On Mon, 2015-06-08 at 09:27 +0200, Sascha Hauer wrote:
-> Hi Eddie,
-> 
-> On Mon, Jun 01, 2015 at 09:08:27PM +0800, Eddie Huang wrote:
-> > Add MT8173 I2C device nodes, include I2C controllers and pins.
-> > MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
-> > The 6th I2C controller register base doesn't next to 5th I2C,
-> > and there is a hardware between 5th and 6th I2C controller. So
-> > SoC designer name 6th controller as "i2c6", not "i2c5".
-> > 
-> > Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Subject: Re: [RESEND PATCH V4 1/1] input: misc: da9063: OnKey driver
+> On Thu, Jun 04, 2015 at 12:02:32PM +0100, S Twiss wrote:
+> > From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> >
+> > Add OnKey driver support for DA9063
+> >
+> > Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> >
 > > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 119 +++++++++++++++++++++++++++++++
-> >  1 file changed, 119 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index b52ec43..7003ed2 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -158,6 +158,53 @@
-> >  			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-> >  						<GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-> >  						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> > +			i2c0_pins_a: i2c0@0 {
-> > +				pins1 {
-> > +					pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
-> > +						 <MT8173_PIN_46_SCL0__FUNC_SCL0>;
-> > +					bias-disable;
-> > +				};
-> > +			};
+> > The changes made in PATCH V3 have been taken from the DA9062 OnKey review
+> > thread. Please see https://lkml.org/lkml/2015/4/29/406 for more information
+> > on this.
+> >
+> > Version History
+> >
+> > Changes in V4
+> >  - No change, just a resend.
 > 
-> The pinmux nodes should be in the board dts, not in the SoC dtsi.
+> Sorry for the delay.
+> 
+> I took the liberty of rearranging the code a bit and converting it to
+> devm* fully, does the version below still work for you?
 > 
 
-These pins are fixed, and all boards using MT8173 SoC I2C controller
-should use these pins. To reduce spread these to many board dts files,
-so I put i2c pins in SoC dtsi.
+Hi Dmitry,
 
-Eddie
-Thanks
+No problem. Thank you for getting back to me and for taking the time to work
+through this code.
 
+Everything looks fine for me thank you.
+
+Tested-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+
+I see now: in future I will make use of the devm_add_action() and use the devm*
+properly & your changes have simplified the error handling and negated the need
+for a .remove function. The devm release cleans up in reverse -- preserving
+the free_irq() and cancel_delayed_work_sync() ordering ...
+
+Regards,
+Steve.
+
+CC: Adam Ward <adam.ward.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+
+[...]
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
