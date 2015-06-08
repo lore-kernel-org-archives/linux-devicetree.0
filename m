@@ -1,58 +1,177 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH v0] gpio_keys: fix gpio key driver to proper support GIC interrupt
-Date: Mon, 8 Jun 2015 09:48:29 +0700
-Message-ID: <CAL4ahLeMm_Qvk0BWxOYTc973_4=TPjZStgTNe5uJL53FBhMRvg@mail.gmail.com>
-References: <1433402712-21399-1-git-send-email-yvo@apm.com>
-	<2953428.ar7Re29b0L@wuerfel>
+From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND 1/2] usb: ehci-exynos: Make provision for vdd regulators
+Date: Mon, 8 Jun 2015 09:51:08 +0530
+Message-ID: <CANAwSgTjx8uxyOTW8uuiqrcNzF+UwLMmML2OcDgG5Ku_56=vJQ@mail.gmail.com>
+References: <1433683242-3945-1-git-send-email-linux.amoon@gmail.com> <5574F97A.5030104@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2953428.ar7Re29b0L@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, patches <patches@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5574F97A.5030104-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 5, 2015 at 7:50 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 04 June 2015 14:25:12 Y Vo wrote:
->> GIC is designed to support two of trigger mechanisms - active level
->> high or edge rising. But in the gpio_keys driver, it tries to use both
->> edge rising and edge falling trigger. This patch fixes the gpio_keys
->> driver to request only the edge rising event when failed to configure the
->> interrupt.
+Hi Krzysztof ,
+
+On 8 June 2015 at 07:40, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 07.06.2015 22:20, Anand Moon wrote:
+>> Facilitate getting required 3.3V and 1.0V VDD supply for
+>> EHCI controller on Exynos.
 >>
->> Signed-off-by: Y Vo <yvo@apm.com>
+>> With the patches for regulators' nodes merged in 3.15:
+>> c8c253f ARM: dts: Add regulator entries to smdk5420
+>> 275dcd2 ARM: dts: add max77686 pmic node for smdk5250,
+>> the exynos systems turn on only minimal number of regulators.
+>>
+>> Until now, the VDD regulator supplies were either turned on
+>> by the bootloader, or the regulators were enabled by default
+>> in the kernel, so that the controller drivers did not need to
+>> care about turning on these regulators on their own.
+>> This was rather bad about these controller drivers.
+>> So ensuring now that the controller driver requests the necessary
+>> VDD regulators (if available, unless there are direct VDD rails),
+>> and enable them so as to make them working.
+>>
+>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+>> ---
+>> Initial version of this patch was part of following series, though
+>> they are not dependent on each other, resubmitting after rebasing.
+>>
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266418.html
 >
-> I think you want to use an 'interrupts' property instead of a 'gpios'
-> property (or possibly both), so you can pass the right polarity.
-
-        gpio-keys {
-                compatible = "gpio-keys";
-                apm_ctrl_name = "Power Button";
-                btn2 {
-                        label = "EXT_INT2";
-                        gpios = <&sbgpio 13 0x0>;
-                        linux,code = <116>;
-                        linux,input-type = <0x1>;     /* EV_KEY */
-                };
-        };
-
-         sbgpio: sbgpio@17001000{
-                        compatible = "apm,xgene-gpio-sb";
-                        reg = <0x0 0x17001000 0x0 0x400>;
-                        #gpio-cells = <2>;
-                        gpio-controller;
-                        interrupts =    <0x0 0x28 0x1>,
-                                        <0x0 0x29 0x1>,
-                                        <0x0 0x2a 0x1>,
-                                        <0x0 0x2b 0x1>,
-                                        <0x0 0x2c 0x1>,
-                                        <0x0 0x2d 0x1>;
-                };
-I can change the polarity of interrupt in the sbgpio node, but the
-issue here is the gpio_key driver always set interrupt type to
-(irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING). And the GIC
-driver only support edge rising or level high. So that's our issue.
-
+> So you just took Vivek's patch along with all the credits... That is not
+> how we usually do this.
 >
->         Arnd
+> I would expect that rebasing a patch won't change the author unless this
+> is fine with Vivek.
+>
+
+Sorry If I have done some mistake on my part.
+I just looked at below mail chain. Before I send it.
+
+http://www.spinics.net/lists/linux-samsung-soc/msg44136.html
+
+I don't want to take any credit out of it. I just re-base on the new kernel.
+I could not test this patch as it meant for exynos5440 boards.
+
+-Anand Moon
+
+>> ---
+>>  .../devicetree/bindings/usb/exynos-usb.txt         |  2 +
+>>  drivers/usb/host/ehci-exynos.c                     | 55 +++++++++++++++++++++-
+>>  2 files changed, 56 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+>> index 9b4dbe3..776fa03 100644
+>> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
+>> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+>> @@ -23,6 +23,8 @@ Required properties:
+>>  Optional properties:
+>>   - samsung,vbus-gpio:  if present, specifies the GPIO that
+>>     needs to be pulled up for the bus to be powered.
+>> + - vdd33-supply: handle to 3.3V Vdd supply regulator for the controller.
+>> + - vdd10-supply: handle to 1.0V Vdd supply regulator for the controller.
+>>
+>>  Example:
+>>
+>> diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+>> index df538fd..4f8f9d2 100644
+>> --- a/drivers/usb/host/ehci-exynos.c
+>> +++ b/drivers/usb/host/ehci-exynos.c
+>> @@ -21,6 +21,7 @@
+>>  #include <linux/of_gpio.h>
+>>  #include <linux/phy/phy.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/regulator/consumer.h>
+>>  #include <linux/usb.h>
+>>  #include <linux/usb/hcd.h>
+>>
+>> @@ -45,6 +46,8 @@ static struct hc_driver __read_mostly exynos_ehci_hc_driver;
+>>  struct exynos_ehci_hcd {
+>>       struct clk *clk;
+>>       struct phy *phy[PHY_NUMBER];
+>> +     struct regulator *vdd33;
+>> +     struct regulator *vdd10;
+>>  };
+>>
+>>  #define to_exynos_ehci(hcd) (struct exynos_ehci_hcd *)(hcd_to_ehci(hcd)->priv)
+>> @@ -170,7 +173,27 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+>>
+>>       err = exynos_ehci_get_phy(&pdev->dev, exynos_ehci);
+>>       if (err)
+>> -             goto fail_clk;
+>> +             goto fail_regulator1;
+>> +
+>> +     exynos_ehci->vdd33 = devm_regulator_get_optional(&pdev->dev, "vdd33");
+>> +     if (!IS_ERR(exynos_ehci->vdd33)) {
+>> +             err = regulator_enable(exynos_ehci->vdd33);
+>> +             if (err) {
+>> +                     dev_err(&pdev->dev,
+>> +                             "Failed to enable 3.3V Vdd supply\n");
+>> +                     goto fail_regulator1;
+>> +             }
+>> +     }
+>> +
+>> +     exynos_ehci->vdd10 = devm_regulator_get_optional(&pdev->dev, "vdd10");
+>> +     if (!IS_ERR(exynos_ehci->vdd10)) {
+>> +             err = regulator_enable(exynos_ehci->vdd10);
+>> +             if (err) {
+>> +                     dev_err(&pdev->dev,
+>> +                             "Failed to enable 1.0V Vdd supply\n");
+>> +                     goto fail_regulator2;
+>> +             }
+>> +     }
+>>
+>>  skip_phy:
+>>
+>> @@ -231,6 +254,10 @@ fail_add_hcd:
+>>  fail_io:
+>>       clk_disable_unprepare(exynos_ehci->clk);
+>>  fail_clk:
+>> +     regulator_disable(exynos_ehci->vdd10);
+>> +fail_regulator2:
+>> +     regulator_disable(exynos_ehci->vdd33);
+>
+> if (!IS_ERR()).
+>
+>> +fail_regulator1:
+>>       usb_put_hcd(hcd);
+>>       return err;
+>>  }
+>> @@ -246,6 +273,11 @@ static int exynos_ehci_remove(struct platform_device *pdev)
+>>
+>>       clk_disable_unprepare(exynos_ehci->clk);
+>>
+>> +     if (!IS_ERR(exynos_ehci->vdd33))
+>> +             regulator_disable(exynos_ehci->vdd33);
+>> +     if (!IS_ERR(exynos_ehci->vdd10))
+>> +             regulator_disable(exynos_ehci->vdd10);
+>> +
+>>       usb_put_hcd(hcd);
+>>
+>>       return 0;
+>> @@ -268,6 +300,11 @@ static int exynos_ehci_suspend(struct device *dev)
+>>
+>>       clk_disable_unprepare(exynos_ehci->clk);
+>>
+>> +     if (!IS_ERR(exynos_ehci->vdd33))
+>> +             regulator_disable(exynos_ehci->vdd33);
+>> +     if (!IS_ERR(exynos_ehci->vdd10))
+>> +             regulator_disable(exynos_ehci->vdd10);
+>> +
+>
+>
+> Is EHCI a wakeup source? If yes then how disabling regulators during
+> suspend affects waking up process?
+>
+> Best regards,
+> Krzysztof
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
