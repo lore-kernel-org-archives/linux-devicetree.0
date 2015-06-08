@@ -1,145 +1,161 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Mon, 08 Jun 2015 11:26:16 -0700
-Message-ID: <5575DE48.8010308@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org>	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>	<556DE2D5.3090906@roeck-us.net> <CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform
+ devices
+Date: Mon, 08 Jun 2015 19:47:13 +0100
+Message-ID: <20150608184713.446B7C406AA@trevor.secretlab.ca>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
+	<1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+	<CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2015 09:05 AM, Fu Wei wrote:
-> Hi Gurnter
->
-> On 3 June 2015 at 01:07, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->> On 06/02/2015 09:55 AM, Fu Wei wrote:
->>>
->>> Hi Timur,
->>>
->>> Thanks , feedback inline
->>>
->>> On 2 June 2015 at 23:32, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>>
->>>> On 06/01/2015 11:05 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->>>>
->>>>> +/*
->>>>> + * help functions for accessing 32bit registers of SBSA Generic
->>>>> Watchdog
->>>>> + */
->>>>> +static void sbsa_gwdt_cf_write(unsigned int reg, u32 val,
->>>>> +                              struct watchdog_device *wdd)
->>>>> +{
->>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->>>>> +
->>>>> +       writel_relaxed(val, gwdt->control_base + reg);
->>>>> +}
->>>>> +
->>>>> +static void sbsa_gwdt_rf_write(unsigned int reg, u32 val,
->>>>> +                              struct watchdog_device *wdd)
->>>>> +{
->>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->>>>> +
->>>>> +       writel_relaxed(val, gwdt->refresh_base + reg);
->>>>> +}
->>>>> +
->>>>> +static u32 sbsa_gwdt_cf_read(unsigned int reg, struct watchdog_device
->>>>> *wdd)
->>>>> +{
->>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->>>>> +
->>>>> +       return readl_relaxed(gwdt->control_base + reg);
->>>>> +}
->>>>
->>>>
->>>>
->>>> I still think you should get rid of these functions and just call
->>>> readl_relaxed() and writel_relaxed() every time, but I won't complain
->>>> again
->>>> if you keep them.
->>>
->>>
->>> yes, that make sense, and will reduce the size of code, and I think
->>> the code's readability will be OK too.
->>> will try in my next patch,
->>>
->>>>
->>>>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
->>>>> +{
->>>>> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
->>>>> +       struct watchdog_device *wdd = &gwdt->wdd;
->>>>> +
->>>>> +       if (wdd->pretimeout)
->>>>> +               /* The pretimeout is valid, go panic */
->>>>> +               panic("SBSA Watchdog pre-timeout");
->>>>> +       else
->>>>> +               /* We don't use pretimeout, trigger WS1 now*/
->>>>> +               sbsa_gwdt_set_wcv(wdd, 0);
->>>>
->>>>
->>>>
->>>> I don't like this.
->>>
->>>
->>> If so, what is your idea ,if pretimeout == 0?
->>>
->>> the reason of using WCV as (timout - pretimeout): it can provide the
->>> longer timeout period,
->>> (1)If we use WOR, it can only provide 10s @ 400MHz(max).
->>> as Guenter said earlier, the default timer out for most watchdog will
->>> be 30s, so I think 10s limit will be a little short
->>> (2)we can always program WCV just like ping.
->>> (3)if a timeout arrives, WOR will be use, so use it as pretimeout, but
->>> we still can make this pretimeout longer by programming WCV(I don't
->>> think it's necessary)
->>>
->>>
->>>> The triggering of the hardware reset should never depend
->>>> on an interrupt being handled properly.
->>>
->>>
->>> if this fail, system reset in 1S, because WOR == (1s)
->>>
->> So ?
->
-> Even the interrupt routine isn't triggered,  (WOR + system counter) --> WCV,
-> then, sy system reset in 1S.
->
-> the hardware reset doesn't depend on an interrupt.
->
->
->>
->>>> You should always program WCV
->>>> correctly in advance.  This is especially true since pre-timeout will
->>>> probably rarely be used.
->>>
->>>
->>> always programming WCV is doable.  But I absolutely can not agree "
->>> pre-timeout will probably rarely be used"
->>> If so, SBSA watchdog is just a normal watchdog,  This use case just
->>> makes this HW useless.
->>> If so, go to use SP805.
->>> you still don't see the importance of this warning and pretimeout to a
->>> real server.
->>>
->>
->> If pretimeout isn't used, why not just set WCV = timeout, WOR = 0 ?
->
-> Because if WOR = 0 , according to SBSA,  once you want to enable watchdog,
-> (0 + system counter) --> WCV , then , WS0 and WS1 will be triggered immediately.
-> we have not a chance(a time slot) to update WCV.
->
+Hi Ricardo,
 
-I would have thought that this is exactly what we want if pretimeout is not used.
-What am I missing here ?
+Comments below...
 
-Guenter
+On Sun, 7 Jun 2015 20:13:15 +0200
+, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ wrote:
+> Hello Grant
+> 
+> I would ask you to go through all the discussion related to this bug.
+> Here is a summary (please anyone involved correct me if I am wrong)
+> 
+> 1) I send a patch to fix the oops if release resource is executed with
+> a resource without parent
+> 2) Bjorn says that we should fix the issue of the problem, which he
+> pointed out being that we use platform_device_del() after using
+> of_device_add()
+
+Bjorn's comments on v3 of your patchset were correct. The proposed bug
+fix hacked the __release_resource function directly, when the bug is in
+the platform_bus_type code.
+
+> 3) I resend a patchset to use platform_devide_add()
+> 4) 3 series of cleanouts after the help from Rob and Bjorn
+> 5) Greg adds the series (v5) to his device core tree
+
+The series is still wrong.
+
+Greg, please drop Ricardo's series. It isn't correct and it will cause
+breakage.
+
+There are two issues that need to be delt with:
+
+First, there is the immediate bug fix which should go to Linus before
+v4.1. I believe my patch handles it correctly. I've included a test
+case, but I would like to have acks from Rob and Pantelis before merging
+it. Ricardo's v5 patch 2/4 comes close to solving it, but it still
+doesn't make the unregister path symmetric with the register path.
+
+Second, there is the issue of making devicetree platform_devices request
+resources.  That's harder, and we are *NOT* ready to merge anything. Nor
+is it a time critical issue.
+
+> 6) You complaint that that series can break miss behaved platforms
+
+Yes, because it will.
+
+> 7) I send a couple of patches that fix your problem and leaves the
+> window open to blacklist the platforms that miss behave.
+
+I've replied to that series. It isn't a good solution either.
+> 
+> now you send a patch that takes us to back to step 1), and adds some
+> code that is already merged into gregk's
+> https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/tree/drivers/base/platform.c?h=driver-core-testing#n314
+
+My patch is different. In v3 __release_resource was hacked directly. By
+v5 you were fixing platform_device_{add,del}, which is the right thing,
+but still isn't symmetric. My patch I think handles the bug fix
+correctly.
+
+> Wouldn't you agree that it will be a better solution to give your
+> feedback regarding https://lkml.org/lkml/2015/6/5/246 and fix this
+> issue together?
+
+That I've done. I'm not happy with it. Sorry.
+
+> that solution has been reviewed by a bunch of people, removes code
+> duplication and afaik, is tested, does not break any platform, and I
+> believe that is closer to an scenario when we can remove
+> of_device_add() and all the devices behave similarly.
+> 
+> 
+> Best Regards
+> 
+> 
+> 
+> On Sun, Jun 7, 2015 at 4:20 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > The unregister path of platform_device is broken. On registration, it
+> > will register all resources with either a parent already set, or
+> > type==IORESOURCE_{IO,MEM}. However, on unregister it will release
+> > everything with type==IORESOURCE_{IO,MEM}, but ignore the others. There
+> > are also cases where resources don't get registered in the first place,
+> > like with devices created by of_platform_populate()*.
+> >
+> > Fix the unregister path to be symmetrical with the register path by
+> > checking the parent pointer instead of the type field to decide which
+> > resources to unregister. This is safe because the upshot of the
+> > registration path algorithm is that registered resources have a parent
+> > pointer, and non-registered resources do not.
+> >
+> > * It can be argued that of_platform_populate() should be registering
+> >   it's resources, and they argument has some merit. However, there are
+> >   quite a few platforms that end up broken if we try to do that due to
+> >   overlapping resources in the device tree. Until that is fixed, we need
+> >   to solve the immediate problem.
+> >
+> > Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> > Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> > Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/base/platform.c | 8 ++------
+> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index ebf034b97278..7403de94832c 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -375,9 +375,7 @@ int platform_device_add(struct platform_device *pdev)
+> >
+> >         while (--i >= 0) {
+> >                 struct resource *r = &pdev->resource[i];
+> > -               unsigned long type = resource_type(r);
+> > -
+> > -               if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
+> > +               if (r->parent)
+> >                         release_resource(r);
+> >         }
+> >
+> > @@ -408,9 +406,7 @@ void platform_device_del(struct platform_device *pdev)
+> >
+> >                 for (i = 0; i < pdev->num_resources; i++) {
+> >                         struct resource *r = &pdev->resource[i];
+> > -                       unsigned long type = resource_type(r);
+> > -
+> > -                       if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
+> > +                       if (r->parent)
+> >                                 release_resource(r);
+> >                 }
+> >         }
+> > --
+> > 2.1.4
+> >
+> 
+> 
+> 
+> -- 
+> Ricardo Ribalda
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
