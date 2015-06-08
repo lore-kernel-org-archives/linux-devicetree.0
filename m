@@ -1,38 +1,42 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v5 1/2] Renesas Ethernet AVB driver proper
-Date: Mon, 08 Jun 2015 15:19:54 -0700 (PDT)
-Message-ID: <20150608.151954.191885697349673611.davem@davemloft.net>
-References: <1752433.KgeJV8aUGv@wasted.cogentembedded.com>
-	<20150603.201204.761049104805679684.davem@davemloft.net>
-	<55760CB0.1020503@cogentembedded.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [RFC v2 00/18] Few fixes, add hibernate and ST21NFCC support
+Date: Tue, 9 Jun 2015 00:37:21 +0200
+Message-ID: <20150608223721.GJ5089@ribalta.mp.intel.com>
+References: <1433589413-19680-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <55760CB0.1020503@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1433589413-19680-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Date: Tue, 09 Jun 2015 00:44:16 +0300
+Hi Christophe,
 
-> On 06/04/2015 06:12 AM, David Miller wrote:
+On Sat, Jun 06, 2015 at 01:16:36PM +0200, Christophe Ricard wrote:
+> Hi Samuel,
 > 
->> Furthermore, you should pass the NAPI context into ravb_rx() and use
-> 
->    I guess I should have one NAPI context per RX queue?
+> Sorry for the delay.
+No worries.
 
-Yes.
+> I agree with your proposal. However, i added an additionnal minor fix patch
+> to get it to work.
+I squashed the first 2 patches.
 
-> 
->> it so that you can invoke napi_gro_receive() on all of the packets and
->> therefore support GRO.
-> 
->    Hmm, I don't think I have a hardware support for generic RX offload...
-> I'm still unsure what it is anyway -- is it used for IP packet
-> defragmentation?
 
-It's completely implemented in software, you don't need to do anything
-other than properly invoke napi_gro_receive().
+> I also got to the option to add a specific handler to send proprietary commands.
+Sure.
+
+The last patch did not apply properly because I had to fix patch #16 as
+it was using some symbols defined in patch #17.
+Could you please resend me a rebased patch #17, I applied and pushed
+patches [1-16] to nfc-next.
+
+Cheers,
+Samuel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
