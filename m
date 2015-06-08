@@ -1,270 +1,347 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Mon, 8 Jun 2015 17:44:53 +0200
-Message-ID: <20150608154448.GA11103@ulmo.nvidia.com>
-References: <4184159.j0iXe39dFB@phil> <2619686.csNBBFyt8W@phil>
- <20150605110159.GA16254@ulmo.nvidia.com>
- <23123577.mOoqGCAPdL@diego>
- <20150605231058.GQ7557@n2100.arm.linux.org.uk>
- <20150608140256.GA10354@ulmo.nvidia.com>
- <20150608142926.GY7557@n2100.arm.linux.org.uk>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 9 Jun 2015 00:05:41 +0800
+Message-ID: <CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
+	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
+	<556DCC95.806@codeaurora.org>
+	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
+	<556DE2D5.3090906@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0432448851=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150608142926.GY7557@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <556DE2D5.3090906-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Gurnter
 
---===============0432448851==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
-Content-Disposition: inline
+On 3 June 2015 at 01:07, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On 06/02/2015 09:55 AM, Fu Wei wrote:
+>>
+>> Hi Timur,
+>>
+>> Thanks , feedback inline
+>>
+>> On 2 June 2015 at 23:32, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>
+>>> On 06/01/2015 11:05 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>>>
+>>>> +/*
+>>>> + * help functions for accessing 32bit registers of SBSA Generic
+>>>> Watchdog
+>>>> + */
+>>>> +static void sbsa_gwdt_cf_write(unsigned int reg, u32 val,
+>>>> +                              struct watchdog_device *wdd)
+>>>> +{
+>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>>>> +
+>>>> +       writel_relaxed(val, gwdt->control_base + reg);
+>>>> +}
+>>>> +
+>>>> +static void sbsa_gwdt_rf_write(unsigned int reg, u32 val,
+>>>> +                              struct watchdog_device *wdd)
+>>>> +{
+>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>>>> +
+>>>> +       writel_relaxed(val, gwdt->refresh_base + reg);
+>>>> +}
+>>>> +
+>>>> +static u32 sbsa_gwdt_cf_read(unsigned int reg, struct watchdog_device
+>>>> *wdd)
+>>>> +{
+>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>>>> +
+>>>> +       return readl_relaxed(gwdt->control_base + reg);
+>>>> +}
+>>>
+>>>
+>>>
+>>> I still think you should get rid of these functions and just call
+>>> readl_relaxed() and writel_relaxed() every time, but I won't complain
+>>> again
+>>> if you keep them.
+>>
+>>
+>> yes, that make sense, and will reduce the size of code, and I think
+>> the code's readability will be OK too.
+>> will try in my next patch,
+>>
+>>>
+>>>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
+>>>> +{
+>>>> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
+>>>> +       struct watchdog_device *wdd = &gwdt->wdd;
+>>>> +
+>>>> +       if (wdd->pretimeout)
+>>>> +               /* The pretimeout is valid, go panic */
+>>>> +               panic("SBSA Watchdog pre-timeout");
+>>>> +       else
+>>>> +               /* We don't use pretimeout, trigger WS1 now*/
+>>>> +               sbsa_gwdt_set_wcv(wdd, 0);
+>>>
+>>>
+>>>
+>>> I don't like this.
+>>
+>>
+>> If so, what is your idea ,if pretimeout == 0?
+>>
+>> the reason of using WCV as (timout - pretimeout): it can provide the
+>> longer timeout period,
+>> (1)If we use WOR, it can only provide 10s @ 400MHz(max).
+>> as Guenter said earlier, the default timer out for most watchdog will
+>> be 30s, so I think 10s limit will be a little short
+>> (2)we can always program WCV just like ping.
+>> (3)if a timeout arrives, WOR will be use, so use it as pretimeout, but
+>> we still can make this pretimeout longer by programming WCV(I don't
+>> think it's necessary)
+>>
+>>
+>>> The triggering of the hardware reset should never depend
+>>> on an interrupt being handled properly.
+>>
+>>
+>> if this fail, system reset in 1S, because WOR == (1s)
+>>
+> So ?
+
+Even the interrupt routine isn't triggered,  (WOR + system counter) --> WCV,
+then, sy system reset in 1S.
+
+the hardware reset doesn't depend on an interrupt.
 
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>
+>>> You should always program WCV
+>>> correctly in advance.  This is especially true since pre-timeout will
+>>> probably rarely be used.
+>>
+>>
+>> always programming WCV is doable.  But I absolutely can not agree "
+>> pre-timeout will probably rarely be used"
+>> If so, SBSA watchdog is just a normal watchdog,  This use case just
+>> makes this HW useless.
+>> If so, go to use SP805.
+>> you still don't see the importance of this warning and pretimeout to a
+>> real server.
+>>
+>
+> If pretimeout isn't used, why not just set WCV = timeout, WOR = 0 ?
 
-On Mon, Jun 08, 2015 at 03:29:26PM +0100, Russell King - ARM Linux wrote:
-> On Mon, Jun 08, 2015 at 04:02:58PM +0200, Thierry Reding wrote:
-> > On Sat, Jun 06, 2015 at 12:10:58AM +0100, Russell King - ARM Linux wrot=
-e:
-> > > On Fri, Jun 05, 2015 at 02:16:40PM +0200, Heiko St=C3=BCbner wrote:
-> > > > Hi Thierry
-> > > >=20
-> > > > Am Freitag, 5. Juni 2015, 13:02:01 schrieb Thierry Reding:
-> > > > > If this is specific to the Rockchip implementation, shouldn't thi=
-s go
-> > > > > into Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt=
-? It
-> > > > > could then simply go into the Rockchip DRM tree.
-> > > >=20
-> > > > actually, we determined that the supply names are universal to the =
-IP
-> > > > (both in imx and rockchip and probably more if there are more users
-> > > > out there). Just Russell requested that we don't pollute the generic
-> > > > code until necessary, as it looks like the supply of those is someh=
-ow
-> > > > handled internally on the imx.
-> > >=20
-> > > Why do you think it's universal?
-> > >=20
-> > > Let's start from the beginning, before we create something that's not
-> > > representative of the hardware.
-> > >=20
-> > > dw_hdmi actually drives two pieces of hardware - the HDMI transmitter,
-> > > and a separate hardware block, the HDMI phy.
-> > >=20
-> > > There are at least two possible HDMI phys referenced in the iMX
-> > > documentation - there is one called HEAC which doesn't appear in iMX
-> > > devices afaik, and the one which does, which is a 3D phy.
-> >=20
-> > I'm not sure I understand correctly. Are these PHYs exchangeable? Does
-> > the DesignWare IP provide them or could they be provided separately?
->=20
-> You're asking questions we have no real answers to - all we have is the
-> available documentation provided by Freescale - we don't even have the
-> Rochchip documentation.
->=20
-> From the Freescale documentation, which documents the HDMI transmitter
-> entirely separately from the HDMI phy, I would say that the IP is
-> structured as two entirely separate blocks, and the chip designer is
-> free to choose an appropriate phy from a range of HDMI phys.
+Because if WOR = 0 , according to SBSA,  once you want to enable watchdog,
+(0 + system counter) --> WCV , then , WS0 and WS1 will be triggered immediately.
+we have not a chance(a time slot) to update WCV.
 
-Does it associate any of the registers with the HDMI PHY? According to
-the register definitions in drivers/gpu/drm/bridge/dw_hdmi.h the PHY
-registers are interleaved with other registers that are likely part of
-the HDMI transmitter proper (there are things like HDCP and CEC engines
-in that IP as well).
+>
+> Guenter
+>
+>
+>> If the software of a real server goes wrong, then you just directly
+>> restart it ,
+>> never try to sync/protect the current data, never try to figure out
+>> what is wrong with it.
+>> I don't think that is a good server software.
+>>
+>> At least, I don't thinks " pre-timeout will probably rarely be used"
+>> is a good idea for a server.
+>> in another word, in a server ,pre-timeout should always be used.
+>>
+>>> So what happens if the CPU is totally hung and
+>>
+>>
+>> Again, system reset in 1S, because WOR == (1s).
+>>
+>>> this interrupt handler is never called?  When will the timeout occur?
+>>
+>>
+>> if this interrupt hardler is never called,  what I can see is "some
+>> one is feeding the dog".
+>> OK, in case, WS0 is triggered, but  this interrupt hardler isn't
+>> called, then software really goes wrong.  Then , Again, Again system
+>> reset in 1S, because WOR == (1s).
+>>
+>>>
+>>>> +static int sbsa_gwdt_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +       u64 first_period_max = U64_MAX;
+>>>> +       struct device *dev = &pdev->dev;
+>>>> +       struct watchdog_device *wdd;
+>>>> +       struct sbsa_gwdt *gwdt;
+>>>> +       struct resource *res;
+>>>> +       void *rf_base, *cf_base;
+>>>> +       int ret, irq;
+>>>> +       u32 status;
+>>>> +
+>>>> +       gwdt = devm_kzalloc(dev, sizeof(*gwdt), GFP_KERNEL);
+>>>> +       if (!gwdt)
+>>>> +               return -ENOMEM;
+>>>> +       platform_set_drvdata(pdev, gwdt);
+>>>
+>>>
+>>>
+>>> You should probably do this *after* calling platform_get_irq_byname().
+>>
+>>
+>>   it just dose (pdev->) dev->driver_data = gwdt
+>> If we got gwdt, we can do that.
+>>
+>> But maybe I miss something(or a rule of usage),  so please let know
+>> why this has to be called  *after* calling platform_get_irq_byname().
+>>
+>>>
+>>>> +
+>>>> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>>> "refresh");
+>>>> +       rf_base = devm_ioremap_resource(dev, res);
+>>>> +       if (IS_ERR(rf_base))
+>>>> +               return PTR_ERR(rf_base);
+>>>> +
+>>>> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>>> "control");
+>>>> +       cf_base = devm_ioremap_resource(dev, res);
+>>>> +       if (IS_ERR(cf_base))
+>>>> +               return PTR_ERR(cf_base);
+>>>> +
+>>>> +       irq = platform_get_irq_byname(pdev, "ws0");
+>>>> +       if (irq < 0) {
+>>>> +               dev_err(dev, "unable to get ws0 interrupt.\n");
+>>>> +               return irq;
+>>>> +       }
+>>>> +
+>>>> +       /*
+>>>> +        * Get the frequency of system counter from the cp15 interface
+>>>> of
+>>>> ARM
+>>>> +        * Generic timer. We don't need to check it, because if it
+>>>> returns
+>>>> "0",
+>>>> +        * system would panic in very early stage.
+>>>> +        */
+>>>> +       gwdt->clk = arch_timer_get_cntfrq();
+>>>> +       gwdt->refresh_base = rf_base;
+>>>> +       gwdt->control_base = cf_base;
+>>>> +
+>>>> +       wdd = &gwdt->wdd;
+>>>> +       wdd->parent = dev;
+>>>> +       wdd->info = &sbsa_gwdt_info;
+>>>> +       wdd->ops = &sbsa_gwdt_ops;
+>>>> +       watchdog_set_drvdata(wdd, gwdt);
+>>>> +       watchdog_set_nowayout(wdd, nowayout);
+>>>> +
+>>>> +       wdd->min_pretimeout = 0;
+>>>> +       wdd->max_pretimeout = U32_MAX / gwdt->clk;
+>>>> +       wdd->min_timeout = 1;
+>>>> +       do_div(first_period_max, gwdt->clk);
+>>>> +       wdd->max_timeout = first_period_max;
+>>>> +
+>>>> +       wdd->pretimeout = DEFAULT_PRETIMEOUT;
+>>>> +       wdd->timeout = DEFAULT_TIMEOUT;
+>>>> +       watchdog_init_timeouts(wdd, pretimeout, timeout, dev);
+>>>> +
+>>>> +       status = sbsa_gwdt_cf_read(SBSA_GWDT_WCS, wdd);
+>>>> +       if (status & SBSA_GWDT_WCS_WS1) {
+>>>> +               dev_warn(dev, "System reset by WDT(WCV: %llx)\n",
+>>>> +                        sbsa_gwdt_get_wcv(wdd));
+>>>
+>>>
+>>>
+>>> "System was previously reset via watchdog" is much clearer.
+>>
+>>
+>> OK
+>>
+>>>
+>>>> +               wdd->bootstatus |= WDIOF_CARDRESET;
+>>>> +       }
+>>>> +       /* Check if watchdog is already enabled */
+>>>> +       if (status & SBSA_GWDT_WCS_EN) {
+>>>> +               dev_warn(dev, "already enabled!\n");
+>>>
+>>>
+>>>
+>>> "watchdog is already enabled".
+>>
+>>
+>> I think I don't need to print "watchdog",   dev_warn(dev,  has help us on
+>> this.
+>> If you do so , the message will be "watchdog: watchdog0: watchdog is
+>> already enabled"
+>>
+>>   > Never use exclamation marks in kernel
+>>>
+>>> messages.
+>>
+>>
+>> that make sense , will delete it.
+>>
+>>>
+>>>> +               sbsa_gwdt_keepalive(wdd);
+>>>> +       }
+>>>> +
+>>>> +       /* update pretimeout to WOR */
+>>>> +       sbsa_gwdt_set_pretimeout(wdd, wdd->pretimeout);
+>>>> +
+>>>> +       ret = devm_request_irq(dev, irq, sbsa_gwdt_interrupt, 0,
+>>>> +                              pdev->name, gwdt);
+>>>> +       if (ret) {
+>>>> +               dev_err(dev, "unable to request IRQ %d\n", irq);
+>>>> +               return ret;
+>>>> +       }
+>>>> +
+>>>> +       ret = watchdog_register_device(wdd);
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +
+>>>> +       dev_info(dev, "Initialized with %ds timeout, %ds pretimeout @ %u
+>>>> Hz\n",
+>>>> +                wdd->timeout, wdd->pretimeout, gwdt->clk);
+>>>
+>>>
+>>>
+>>> if (wdd->pretimeout)
+>>>          "watchdog initialized to %us timeout and %us pre-timeout at %u
+>>> Hz\n", wdd->timeout, wdd->pretimeout, gwdt->clk
+>>> else
+>>>          "watchdog initialized to %us timeout at %u Hz\n", wdd->timeout,
+>>> gwdt->clk
+>>>
+>>> I think it's unlikely that users will use pre-timeout, so your code
+>>> should
+>>> treat pre-timeout as a special case, not the normal usage.
+>>
+>>
+>> I don't think so, that why you didn't use pretimeout in your driver.
+>> Because you don't see the meaning of "pretimeout" to a  server.
+>>
+>>>
+>>> --
+>>> Qualcomm Innovation Center, Inc.
+>>> The Qualcomm Innovation Center, Inc. is a member of the
+>>> Code Aurora Forum, a Linux Foundation Collaborative Project.
+>>
+>>
+>>
+>>
+>
 
-> Moreover, in the feature list for the HDMI transmitter, it says (though
-> this is not applicable to iMX6 - and is probably lifted from the
-> Synopsis documentation):
->=20
-> "* Option to remove pixel repetition clock from HDMI TX interface for an
->   easy integration with third party HDMI TX PHYs"
->=20
-> So - here's the question: what do we do when we find something using the
-> Synopsis design-ware HDMI transmitter with a different HDMI phy?
->=20
-> Remember, VP, VPH, VP_FILT_* are all part of the HDMI phy according to
-> the freescale documentation, and not part of the HDMI transmitter.
->=20
-> > I
-> > see register definitions for a "source" PHY and a "master" PHY, where
-> > the latter seems to be an I2C controller rather than a PHY. Perhaps it
-> > is used to communicate with an external PHY?
->=20
-> I'm not sure where you get that from.  Maybe you could give a chapter
-> reference?
 
-That's just from skimming drivers/gpu/drm/bridge/dw_hdmi.h (register
-offsets 0x3000 and the following). The large gap between them and the
-preceding FC registers could be an additional indication that they are
-indeed separate IP blocks. Then again, the AUD registers start at an
-offset of 0x3100, so maybe it's no indication at all.
 
-Are these the registers used to control the PHY that you're referring
-to? It seems odd to me that the documentation would specify these
-registers interleaved with other registers if the PHYs can be freely
-chosen from a set of HDMI PHYs. Perhaps the set of PHYs that can be used
-need to expose the same integration interface? Maybe these registers
-aren't used to control the PHY at all but rather configure the interface
-between transmitter and PHY?
+-- 
+Best regards,
 
-Sorry if these are more questions that the documentation doesn't answer.
-Just trying to understand what's going on.
-
-> Looking deeper at this HEAC issue, that is a separate, smaller phy which
-> doesn't have much to do with video - though it remains rather undocumented
-> in the freescale docs.  That's only going on a block diagram near the
-> start of the HDMI transmitter chapter though.
-
-HEAC could be "HDMI Ethernet Audio Control", see here:
-
-	http://en.wikipedia.org/wiki/HDMI#ARC
-	http://en.wikipedia.org/wiki/HDMI#HEC
-
-> > > If we wanted to model this correctly, then for iMX, I would suggest
-> > > that the HDMI phy should be modelled in DT, and _all_ the six VP*
-> > > supplies are modelled - and we should assume that "GD" is a "power
-> > > good" signal, though we don't know that for certain.
-> >=20
-> > Perhaps VP_FILT* are sourced from the same supply as VP, so maybe we
-> > don't have to care at the DT level?
->=20
-> We'd be guessing - and that's exactly my point.  Designing something at
-> DT level based on guesswork is no way to go, especially with a generic
-> bit of IP which would be re-used across multiple different platforms.
-
-Agreed.
-
-> > > What we also don't know on iMX6 is what voltages any of these are
-> > > supplied with.
-> >=20
-> > A rather common nuisance with these licensed IP blocks is that some of
-> > the details may be hidden in SoC glue, resulting in the interface being
-> > different on each SoC. Given all of the above it sounds like i.MX could
-> > have some internal glue to supply VP and VPH and there'd be no sensible
-> > way to represent them in DT.
->=20
-> ... or it's entirely possible that all these supplies are always fed by
-> the iMX6 SoC all the time.
-
-Yes, that's what I was implying.
-
-> > > So, as we don't have much certainty here, and we know that adding it
-> > > to what is the HDMI transmitter would be wrong, I'd suggest not
-> > > modelling it in a generic way at present.
-> >=20
-> > Does DesignWare by any chance offer documentation about the IP? If not I
-> > agree that the safest thing to do for now would be to make this Rockchip
-> > specific.
->=20
-> That's _exactly_ why I raised the point originally, and said that it shou=
-ld
-> be Rockchip specific until we know better.  Glad you've caught up with my
-> thinking. :)
->=20
-> However, my thinking _now_ is that it shouldn't even be modelled as part
-> of our HDMI transmitter DT blob, but we should be modelling the HDMI
-> transmitter separately from the HDMI phy as two separate DT blobs, and
-> then the HDMI phy blob gets the (possibly optional) VPH and VP supplies.
-
-Yes, I agree. One problem that you could run into with such a split is
-that the PHY control registers may be interleaved with the registers of
-the HDMI transmitter. But perhaps my understanding is wrong and the PHY
-is truly controlled via a completely own set of registers. Looking at
-the implementation, the HDMI_PHY_* registers seem to be used to control
-various aspects of an interface between transmitter and PHY rather than
-the PHY itself and it seems like the PHY itself is really an I2C slave
-accessed using the I2C master controlled using the HDMI_PHY_I2CM_*
-registers.
-
-So perhaps the HDMI transmitter DT node really should expose the PHY as
-an I2C child. In fact, looking at HDMI_PHY_I2CM_SLAVE_ADDR_* field
-values (lines 870 and 871 in dw_hdmi.h) it should have two children, one
-for the "GEN2" PHY and one for the "HEAC" PHY. You could even go as far
-as exposing the HDMI_PHY_I2CM_* registers as I2C master and implement
-the PHYs as proper I2C client drivers, but that might be overkill,
-especially considering that you'd need to have extra API to convey the
-HDMI configuration. Still, might be worth considering to make the split
-really explicit.
-
-I guess I've answered most of my earlier questions myself...
-
-> What if someone designs a chip with their own HDMI phy which uses
-> different supplies?
-
-That's really one more reason to write proper drivers for the PHYs. If
-you really ever have to deal with a different PHY chances are that more
-than just the supplies will be different, in which case you'd need to
-somehow also abstract away the interoperation between HDMI transmitter
-and PHY.
-
-> This is one of the problems I have with DT - DT needs us to describe
-> the hardware correctly first time around, when we may not have all the
-> available facts to make proper decisions, and wrong decisions can very
-> well lead to serious headaches later on because we didn't model
-> something correctly - and we're stuck with the wrong decisions for ever.
-
-I feel the same way. Although there have been occasional exceptions to
-the DT ABI stability rule if it could be proven that an existing binding
-was completely wrong, I've made the experience that putting as little as
-possible into DT (and at the same time resist the temptation of a
-generic solution) helps keep the headaches in check.
-
-Fortunately the dw-hdmi driver gets much of this right already (it's
-helper code rather than a proper driver), so keeping things like power
-supplies specific to a particular integration should be easy to do and
-prevent potential future incompatibilities.
-
-Thierry
-
---pf9I7BMVVzbSWLtt
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJVdbhtAAoJEN0jrNd/PrOhxq8QAJWd+NdwWoMDN+dHnUEaBvJU
-Kkd5CN+XZjIzgsX5nRrRnwoybSGioKiauk7vDvwPyK87XUbcfUlpOo7EaPYhrCzp
-ozQnsYjMW4WaBxALFVHOtMsoHn6YyHKcao3vQJXPP6w8rr3GIZrLX8d1X3Rq4/oJ
-adAsW9T+NnvSG8rlcJL7zpiQ5etQIT6n53qvIfSZ/U4lRR87PudYoZezhJpxOykO
-d5xAJY03rdEskdZCvp6YTRl7Qa/hGIWDrPqsgDAk+vcGLfrrUce9e/ZKkgaLib5J
-osUFIeaw3edQivBSaSDy2Cz2bs635V1RrxExNHPkFtnTDSTh+gulT0SxeYsIu0sN
-PlaQVQbVNTLomebCvJELEC5WcjcUEWZT6V7jSGzgH2NFl7H40g1AlX10+qjwknNE
-lUi0udUoidldGObTu85LIFamXKVVx4JOyowp76ouji3YzrB9dBo4HHMlHNFd0ivK
-4m+GGIC9etIEoBy/rqz0hBs3UvK2LCvKx+eSwRnr6iCEBQ8KluXq7dr///f/KoVf
-nhcjpG3pO4Ub5YcIeEpD/X4HgB/QfpQZ/oUucQHuoHJ1KTXJ/WyYVYc3AQzhRNVy
-KccbSno7FWJDJFszoBGnkmgrtvdyi9gfNmu9lkWOgArP+BKamubiCrXmgeTIImsE
-FN3ccLhOYgPpqVi3k5Xr
-=UFWQ
------END PGP SIGNATURE-----
-
---pf9I7BMVVzbSWLtt--
-
---===============0432448851==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============0432448851==--
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
