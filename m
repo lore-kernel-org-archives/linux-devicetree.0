@@ -1,37 +1,92 @@
-From: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V2 0/3] Add RS-485 support and fix RTS/CTS implementation
-Date: Mon, 8 Jun 2015 11:28:13 +0530
-Message-ID: <55752EF5.1040103@toradex.com>
-References: <1433136067-20644-1-git-send-email-bhuvanchandra.dv@toradex.com>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: Dealing with optional i2c devices in a devicetree
+Date: Mon, 8 Jun 2015 06:01:42 +0000
+Message-ID: <55752FC5.3040004@alliedtelesis.co.nz>
+References: <55713BB1.80004@alliedtelesis.co.nz> <2658431.5aULpGi9jh@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433136067-20644-1-git-send-email-bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <2658431.5aULpGi9jh@wuerfel>
+Content-Language: en-US
+Content-ID: <2564747D5712D347919F3815D8263CDE-aR5bhbO/t7M@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, moorray3-5tc4TXWwyLM@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhuvanchandra.dv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jdelvare-l3A5Bk7waGM@public.gmane.org" <jdelvare-l3A5Bk7waGM@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org" <guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-Ping!
 
-On 06/01/2015 10:51 AM, Bhuvanchandra DV wrote:
-> Changes since V1:
-> Use common get/set mctrl control methods for both lpuart, lpuart32
-> and fix indention.
+On 06/05/2015 07:26 PM, Arnd Bergmann wrote:
+> On Friday 05 June 2015 06:03:30 Chris Packham wrote:
+>>
+>> Is there a better way of getting the devicetree machinery to avoid the
+>> call to the driver probe function in the first place?
+>>
+>>
 >
-> Bhuvanchandra DV (3):
->    ARM: dts: colibri-vf: Add pinmux for UART_0 aka UART_A RTS/CTS pins
->    tty: serial: fsl_lpuart: remove RTS/CTS control from set/get_mctrl
->    tty: serial: fsl_lpuart: Add support for RS-485
+> The newly added DT overlay support should do what you need, but it might
+> not be the easiest solution.
 >
->   arch/arm/boot/dts/vf-colibri.dtsi |   2 +
->   drivers/tty/serial/fsl_lpuart.c   | 103 ++++++++++++++++++++------------------
->   2 files changed, 57 insertions(+), 48 deletions(-)
+> To start out with the device not getting probed at first, add a
+> 'status="disabled"' property, which will prevent the i2c_device from
+> getting added. At runtime you then need a way to change that from
+> "disabled" to "ok" and retrigger the probe. I haven't done that myself,
+> so it might need some i2c core changes to work correctly.
 >
---
+
+So I pursued this idea a little.
+
+I set the node to status = "disabled" in the dts. Then I added some code 
+to probe for the i2c device using
+i2c_probe_func_quick_read() and updated the device tree to remove the 
+status property based on the result of the probe.
+
+Then I was able to call of_platform_populate(node->parent, ...). This 
+got me as far as the platform device being created but none of the i2c 
+or hwmon code kicked in. I may have missed something, perhaps the 
+platform bus needs to be re-probed now that there is a new device.
+
+I think I'll look at updating the device tree passed by the bootloader 
+which should be easier to do at this point.
+
+For future (and current) mailing list readers this is the gist of my 
+detect function.
+
+static void board_detect(struct device *dev)
+{
+	struct i2c_adapter *adap = i2c_get_adapter(0);
+
+	/* Ugly hack. The ads7830 device is a SMBUS device at 0x48.
+	 * SMBUS is not i2c but the quick read should be OK-ish.
+	 */
+	if (i2c_probe_func_quick_read(adap, 0x48)) {
+		int ret;
+		struct device_node *node;
+
+		dev_info(dev, "board detected");
+		for_each_compatible_node(node, NULL, "ads7830") {
+			struct property *prop;
+			const struct of_device_id match_table[] = {
+				{ .compatible = "ads7830", },
+				{} /* Empty terminated list */
+			};
+
+			prop = of_find_property(node, "status", NULL);
+			if (prop)
+				of_remove_property(node, prop);
+
+			ret = of_platform_populate(node->parent,
+						   match_table,
+						   NULL, NULL);
+			if (ret)
+				dev_err(dev, "populate failed\n");
+		}
+	}
+
+	i2c_put_adapter(adap);
+	return;
+}--
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
