@@ -1,169 +1,63 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
-Date: Mon, 8 Jun 2015 22:47:38 +0200
-Message-ID: <CAPybu_1QYHh7Kv1mnm8qpA9abx_XNMgt8x5n5Y-7k2HNqrqruQ@mail.gmail.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
- <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
- <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
- <20150608184713.446B7C406AA@trevor.secretlab.ca> <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Tue, 09 Jun 2015 06:57:53 +1000
+Message-ID: <1433797073.4526.163.camel@kernel.crashing.org>
+References: <1430460188-31343-1-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <1430460188-31343-20-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <CAL_JsqKEUevxSe0Q=pGdsWOiT+TW9iAnCsAWuuqOYj3ZPOG7dg@mail.gmail.com>
+	 <1430493730.7979.58.camel@kernel.crashing.org>
+	 <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+	 <1430521038.7979.70.camel@kernel.crashing.org>
+	 <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
+	 <1430774063.7979.139.camel@kernel.crashing.org>
+	 <1431560124.20218.91.camel@kernel.crashing.org>
+	 <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
+	 <1431564871.4160.8.camel@kernel.crashing.org>
+	 <20150607075422.6ECE9C40A12@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150607075422.6ECE9C40A12-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello
+On Sun, 2015-06-07 at 08:54 +0100, Grant Likely wrote:
+> > IE. conceptually, what overlays do today is quite rooted around the idea
+> > of having a fixed "base" DT and some pre-compiled DTB overlays that
+> > get added/removed. The design completely ignore the idea of a FW that
+> > maintains a "live" tree which we want to keep in sync, which is what we
+> > want to do here, or what we could do with a "live" open firmware
+> > implementation.
+> 
+> Right, which is exactly the reason for the changeset/overlay split.
+> Overlays assume a fixed base, and that overlays are kind of like plug-in
+> modules. changeset makes no such assumption.
 
-Regarding the two problems
+So you suggest we create a function that takes an fdt and an "anchor" as input,
+and expands that FDT below that anchor, but does so by using the changeset API
+under the hood ?
 
-1) The  immediate bug fix  for dt unload
+Even that looks somewhat tricky (turn that bit of FDT into a pile of changeset
+actions), however, I can see how we could create a new function inside changeset
+to attach a subtree.
 
-I agree that we should use the simplest possible patch for
-backporting, but I believe that Grant patch does not differ too much
-from
+Ie. of_attach_subtree() (which could have it's own reconfig action but we
+don't care that much yet), which takes an expanded subtree and an anchor, and
+calls of_attach_node() in effect for all nodes in there.
 
-https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=e50e69d1ac4232af0b6890f16929bf5ceee81538
+We could then have a two pass mechanism in our hotplug code:
 
-which is already in driver-core-next and throws a nice warning message
-for debugging.  I believe that this is the patch that should be
-backported.
+ - Expand the bit of fdt into a separate tree
+ - Use of_attach_subtree to "add" that subtree to the main tree
 
+What do you think ?
 
-2) Not adding resources:
-
-Until we found a solution for the platforms that are broken we only
-need to revert
-https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=b6d2233f2916fa9338786aeab2e936c5a07e4d0c
-
-We get a lot of code cleanout (already reviewed) by doing this.
-
-
-I think reverting the whole series is not the best solution specially
-being a v5 :)
-
-Anyway whatever we decide I have some hardware where I can run tests if needed
-
-
-Regards and sorry for the flood!
-
-On Mon, Jun 8, 2015 at 10:09 PM, Ricardo Ribalda Delgado
-<ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hello Grant
->
->
-> On Mon, Jun 8, 2015 at 8:47 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Hi Ricardo,
->>
->> Comments below...
->>
->> On Sun, 7 Jun 2015 20:13:15 +0200
->> , Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>  wrote:
->>> Hello Grant
->>>
->>> I would ask you to go through all the discussion related to this bug.
->>> Here is a summary (please anyone involved correct me if I am wrong)
->>>
->>> 1) I send a patch to fix the oops if release resource is executed with
->>> a resource without parent
->>> 2) Bjorn says that we should fix the issue of the problem, which he
->>> pointed out being that we use platform_device_del() after using
->>> of_device_add()
->>
->> Bjorn's comments on v3 of your patchset were correct. The proposed bug
->> fix hacked the __release_resource function directly, when the bug is in
->> the platform_bus_type code.
->>
->
-> The bug is not in the platform subsystem but in the of subsystem. Your
-> patch fixes it in the platform subsystem, so it is as bad as fixing it
-> directly on the resource interface.
->
->
->>> 3) I resend a patchset to use platform_devide_add()
->>> 4) 3 series of cleanouts after the help from Rob and Bjorn
->>> 5) Greg adds the series (v5) to his device core tree
->>
->> The series is still wrong.
->>
->> Greg, please drop Ricardo's series. It isn't correct and it will cause
->> breakage.
->
-> The series can be kept, only
->
-> patch "of/platform: Use platform_device interface"
->
-> needs to be reverted.
->
->>
->> There are two issues that need to be delt with:
->>
->> First, there is the immediate bug fix which should go to Linus before
->> v4.1. I believe my patch handles it correctly. I've included a test
->> case, but I would like to have acks from Rob and Pantelis before merging
->> it. Ricardo's v5 patch 2/4 comes close to solving it, but it still
->> doesn't make the unregister path symmetric with the register path.
->
-> Could you please be more specific. what is not symmetric after
-> applying the patchset?
->
->
->> Second, there is the issue of making devicetree platform_devices request
->> resources.  That's harder, and we are *NOT* ready to merge anything. Nor
->> is it a time critical issue.
->>
->>> 6) You complaint that that series can break miss behaved platforms
->>
->> Yes, because it will.
->>
->>> 7) I send a couple of patches that fix your problem and leaves the
->>> window open to blacklist the platforms that miss behave.
->>
->> I've replied to that series. It isn't a good solution either.
->
-> I have also replied, please provide a testcase and we will figure it
-> if it is not handled properly. So far it works fine on my tests.
->
->>>
->>> now you send a patch that takes us to back to step 1), and adds some
->>> code that is already merged into gregk's
->>> https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/tree/drivers/base/platform.c?h=driver-core-testing#n314
->>
->> My patch is different. In v3 __release_resource was hacked directly. By
->> v5 you were fixing platform_device_{add,del}, which is the right thing,
->> but still isn't symmetric. My patch I think handles the bug fix
->> correctly.
->
-> There is no need to apply your patch, that behaviour is already
-> impletented in my patchset. If we want to pospone the non registry of
-> resources on of devices we just need to revert
->
-> "of/platform: Use platform_device interface"
->
-> I believe reverting 1 patch is patch is better than reverting 4
-> reviewed patches and applying a new one.
->
->>
->>> Wouldn't you agree that it will be a better solution to give your
->>> feedback regarding https://lkml.org/lkml/2015/6/5/246 and fix this
->>> issue together?
->>
->> That I've done. I'm not happy with it. Sorry.
->
-> No worries :), but we need to find another sollution. And if we can
-> remove all the duplicated code in /of we will have much less bugs in
-> the future.
->
->
-> Regards
+Ben.
 
 
-
--- 
-Ricardo Ribalda
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
