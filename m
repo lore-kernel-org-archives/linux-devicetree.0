@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 20/22] usb: gadget: printer: init usb_otg_descriptor via usb_otg_descriptor_add
-Date: Mon, 8 Jun 2015 23:02:15 +0800
-Message-ID: <1433775737-9816-21-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v2 21/22] usb: gadget: serial: init usb_otg_descriptor via usb_otg_descriptor_add
+Date: Mon, 8 Jun 2015 23:02:16 +0800
+Message-ID: <1433775737-9816-22-git-send-email-jun.li@freescale.com>
 References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -17,21 +17,25 @@ free it while composite unbind.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/printer.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/usb/gadget/legacy/serial.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/printer.c b/drivers/usb/gadget/legacy/printer.c
-index 1ce7df1..4611040 100644
---- a/drivers/usb/gadget/legacy/printer.c
-+++ b/drivers/usb/gadget/legacy/printer.c
-@@ -82,16 +82,7 @@ static struct usb_device_descriptor device_desc = {
- 	.bNumConfigurations =	1
+diff --git a/drivers/usb/gadget/legacy/serial.c b/drivers/usb/gadget/legacy/serial.c
+index 8b7528f..20e9f49 100644
+--- a/drivers/usb/gadget/legacy/serial.c
++++ b/drivers/usb/gadget/legacy/serial.c
+@@ -79,20 +79,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
  };
  
 -static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =              sizeof otg_descriptor,
--	.bDescriptorType =      USB_DT_OTG,
--	.bmAttributes =         USB_OTG_SRP,
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
+-
+-	/* REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
 -};
 -
 -static const struct usb_descriptor_header *otg_desc[] = {
@@ -42,25 +46,25 @@ index 1ce7df1..4611040 100644
  
  /*-------------------------------------------------------------------------*/
  
-@@ -136,7 +127,13 @@ static int printer_do_config(struct usb_configuration *c)
- 	usb_gadget_set_selfpowered(gadget);
+@@ -191,6 +178,13 @@ static int gs_bind(struct usb_composite_dev *cdev)
+ 	serial_config_driver.iConfiguration = status;
  
- 	if (gadget_is_otg(gadget)) {
--		otg_descriptor.bmAttributes |= USB_OTG_HNP;
+ 	if (gadget_is_otg(cdev->gadget)) {
 +		if (!otg_desc[0]) {
 +			otg_desc[0] = (struct usb_descriptor_header *)
-+				usb_otg_descriptor_add(c->cdev->gadget);
++					usb_otg_descriptor_add(cdev->gadget);
 +			if (!otg_desc[0])
 +				return -ENOMEM;
 +			otg_desc[1] = NULL;
 +		}
- 		printer_cfg_driver.descriptors = otg_desc;
- 		printer_cfg_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+ 		serial_config_driver.descriptors = otg_desc;
+ 		serial_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
  	}
-@@ -196,6 +193,9 @@ static int printer_unbind(struct usb_composite_dev *cdev)
- 	usb_put_function(f_printer);
- 	usb_put_function_instance(fi_printer);
- 
+@@ -227,6 +221,10 @@ static int gs_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_serial[i]);
+ 		usb_put_function_instance(fi_serial[i]);
+ 	}
++
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
