@@ -1,57 +1,114 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Duplicated device tree and Dynamic symbols
-Date: Mon, 8 Jun 2015 17:27:38 +0100
-Message-ID: <CACxGe6sRW3nrExniVH7dw23=XCqHzv73E4Km8o=5Sr+mcNe34Q@mail.gmail.com>
-References: <CAPybu_3CQ0vD=uj_gKwdcsQ_W7u-SRKzKDWOYaXvU83V8iYOqw@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
+ regulators
+Date: Mon, 8 Jun 2015 17:34:21 +0100
+Message-ID: <20150608163420.GZ7557@n2100.arm.linux.org.uk>
+References: <4184159.j0iXe39dFB@phil> <2619686.csNBBFyt8W@phil>
+ <20150605110159.GA16254@ulmo.nvidia.com>
+ <23123577.mOoqGCAPdL@diego>
+ <20150605231058.GQ7557@n2100.arm.linux.org.uk>
+ <20150608140256.GA10354@ulmo.nvidia.com>
+ <20150608142926.GY7557@n2100.arm.linux.org.uk>
+ <20150608154448.GA11103@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_3CQ0vD=uj_gKwdcsQ_W7u-SRKzKDWOYaXvU83V8iYOqw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150608154448.GA11103@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2015 at 9:16 AM, Ricardo Ribalda Delgado
-<ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> Hello
->
-> I have an X86 platform with device tree support. It has multiple pci
-> slots with a custom board that is described with a device tree.
->
-> When the pci device is probed, the driver fetches a device tree from
-> the firmware infrastructure, patches the range property based on the
-> bar address and adds the device to the main device tree.
->
-> This works perfectly fine with only one card, but when the second card
-> is connected: Here be dragons :)
->
-> The main issue is that of_find_node_by_phandle always resolves to the
-> first connected card. I fixed this by creating a new function.
-> of_find_node_by_phandle_family() that chooses the closest phandle on
-> the tree, not just the first one.
->
-> By reading the "Dynamic Symbols support and fixup support"
-> here:
-> http://events.linuxfoundation.org/sites/events/files/slides/dynamic-dt-elce14.pdf
-> and here
-> https://lwn.net/Articles/616859/
->
-> It seemed that the patch would fix my issue and it would be already
-> merged, but I cannot find the patch here
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
-> or here
-> https://git.kernel.org/cgit/linux/kernel/git/jdl/dtc.git
->
-> So I am wondering some stuff:
->
-> Would a patch adding my of_find_node_by_phandle_family() would be accepted.?
-
-No, phandles must be unique. That's what phandles are; unique identifiers. :-)
-
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBKdW4gMDgsIDIwMTUgYXQgMDU6NDQ6NTNQTSArMDIwMCwgVGhpZXJyeSBSZWRpbmcg
+d3JvdGU6Cj4gT24gTW9uLCBKdW4gMDgsIDIwMTUgYXQgMDM6Mjk6MjZQTSArMDEwMCwgUnVzc2Vs
+bCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOgo+ID4gWW91J3JlIGFza2luZyBxdWVzdGlvbnMgd2Ug
+aGF2ZSBubyByZWFsIGFuc3dlcnMgdG8gLSBhbGwgd2UgaGF2ZSBpcyB0aGUKPiA+IGF2YWlsYWJs
+ZSBkb2N1bWVudGF0aW9uIHByb3ZpZGVkIGJ5IEZyZWVzY2FsZSAtIHdlIGRvbid0IGV2ZW4gaGF2
+ZSB0aGUKPiA+IFJvY2hjaGlwIGRvY3VtZW50YXRpb24uCj4gPiAKPiA+IEZyb20gdGhlIEZyZWVz
+Y2FsZSBkb2N1bWVudGF0aW9uLCB3aGljaCBkb2N1bWVudHMgdGhlIEhETUkgdHJhbnNtaXR0ZXIK
+PiA+IGVudGlyZWx5IHNlcGFyYXRlbHkgZnJvbSB0aGUgSERNSSBwaHksIEkgd291bGQgc2F5IHRo
+YXQgdGhlIElQIGlzCj4gPiBzdHJ1Y3R1cmVkIGFzIHR3byBlbnRpcmVseSBzZXBhcmF0ZSBibG9j
+a3MsIGFuZCB0aGUgY2hpcCBkZXNpZ25lciBpcwo+ID4gZnJlZSB0byBjaG9vc2UgYW4gYXBwcm9w
+cmlhdGUgcGh5IGZyb20gYSByYW5nZSBvZiBIRE1JIHBoeXMuCj4gCj4gRG9lcyBpdCBhc3NvY2lh
+dGUgYW55IG9mIHRoZSByZWdpc3RlcnMgd2l0aCB0aGUgSERNSSBQSFk/IEFjY29yZGluZyB0bwo+
+IHRoZSByZWdpc3RlciBkZWZpbml0aW9ucyBpbiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hk
+bWkuaCB0aGUgUEhZCj4gcmVnaXN0ZXJzIGFyZSBpbnRlcmxlYXZlZCB3aXRoIG90aGVyIHJlZ2lz
+dGVycyB0aGF0IGFyZSBsaWtlbHkgcGFydCBvZgo+IHRoZSBIRE1JIHRyYW5zbWl0dGVyIHByb3Bl
+ciAodGhlcmUgYXJlIHRoaW5ncyBsaWtlIEhEQ1AgYW5kIENFQyBlbmdpbmVzCj4gaW4gdGhhdCBJ
+UCBhcyB3ZWxsKS4KClRoZSBwcm90b2NvbCBzdHVmZiBpcyBoYW5kbGVkIGJ5IHRoZSBIRE1JIFR4
+IC0gdGhlIHBoeSBpcyB0aGUgY29udmVyc2lvbgpmcm9tIHRoZSBpbnRlcm5hbCBkaWdpdGFsIHRv
+IHRoZSBpbnRlcmZhY2UgZG9tYWluLgoKSSBjb3VsZCB3cml0ZSBsb3RzIHRvIGRlc2NyaWJlIGl0
+LCBidXQgcmVhbGx5LCB0aGUgYmVzdCB0aGluZyB0byBkbyBpcwp0byBkb3dubG9hZCB0aGUgaU1Y
+NiBkb2N1bWVudGF0aW9uIGFuZCB0YWtlIGEgcGVlayBhdCBpdC4uLgoKaHR0cHM6Ly9jb21tdW5p
+dHkuZnJlZXNjYWxlLmNvbS9kb2NzL0RPQy0xMDE4NDAKClBhcnRpY3VsYXJseSwgbG9vayBhdCB0
+aGUgSERNSSAzRCBQaHkgc2VjdGlvbiwgdGhlIHN5c3RlbSBsZXZlbCBibG9jawpkaWFncmFtICgz
+NC4xLjUuMSksIGFuZCAzNC4yLjEgd2hpY2ggaGFzIHRoZSB0b3AgbGV2ZWwgSS9PIGRpYWdyYW0g
+Zm9yCmp1c3QgdGhlIDNEIHBoeS4KClRoZSBwcmV2aW91cyBzZWN0aW9uIChzZWN0aW9uIDMzKSBj
+b3ZlcnMgdGhlIEhETUkgVHguCgo+ID4gTW9yZW92ZXIsIGluIHRoZSBmZWF0dXJlIGxpc3QgZm9y
+IHRoZSBIRE1JIHRyYW5zbWl0dGVyLCBpdCBzYXlzICh0aG91Z2gKPiA+IHRoaXMgaXMgbm90IGFw
+cGxpY2FibGUgdG8gaU1YNiAtIGFuZCBpcyBwcm9iYWJseSBsaWZ0ZWQgZnJvbSB0aGUKPiA+IFN5
+bm9wc2lzIGRvY3VtZW50YXRpb24pOgo+ID4gCj4gPiAiKiBPcHRpb24gdG8gcmVtb3ZlIHBpeGVs
+IHJlcGV0aXRpb24gY2xvY2sgZnJvbSBIRE1JIFRYIGludGVyZmFjZSBmb3IgYW4KPiA+ICAgZWFz
+eSBpbnRlZ3JhdGlvbiB3aXRoIHRoaXJkIHBhcnR5IEhETUkgVFggUEhZcyIKPiA+IAo+ID4gU28g
+LSBoZXJlJ3MgdGhlIHF1ZXN0aW9uOiB3aGF0IGRvIHdlIGRvIHdoZW4gd2UgZmluZCBzb21ldGhp
+bmcgdXNpbmcgdGhlCj4gPiBTeW5vcHNpcyBkZXNpZ24td2FyZSBIRE1JIHRyYW5zbWl0dGVyIHdp
+dGggYSBkaWZmZXJlbnQgSERNSSBwaHk/Cj4gPiAKPiA+IFJlbWVtYmVyLCBWUCwgVlBILCBWUF9G
+SUxUXyogYXJlIGFsbCBwYXJ0IG9mIHRoZSBIRE1JIHBoeSBhY2NvcmRpbmcgdG8KPiA+IHRoZSBm
+cmVlc2NhbGUgZG9jdW1lbnRhdGlvbiwgYW5kIG5vdCBwYXJ0IG9mIHRoZSBIRE1JIHRyYW5zbWl0
+dGVyLgo+ID4gCj4gPiA+IEkKPiA+ID4gc2VlIHJlZ2lzdGVyIGRlZmluaXRpb25zIGZvciBhICJz
+b3VyY2UiIFBIWSBhbmQgYSAibWFzdGVyIiBQSFksIHdoZXJlCj4gPiA+IHRoZSBsYXR0ZXIgc2Vl
+bXMgdG8gYmUgYW4gSTJDIGNvbnRyb2xsZXIgcmF0aGVyIHRoYW4gYSBQSFkuIFBlcmhhcHMgaXQK
+PiA+ID4gaXMgdXNlZCB0byBjb21tdW5pY2F0ZSB3aXRoIGFuIGV4dGVybmFsIFBIWT8KPiA+IAo+
+ID4gSSdtIG5vdCBzdXJlIHdoZXJlIHlvdSBnZXQgdGhhdCBmcm9tLiAgTWF5YmUgeW91IGNvdWxk
+IGdpdmUgYSBjaGFwdGVyCj4gPiByZWZlcmVuY2U/Cj4gCj4gVGhhdCdzIGp1c3QgZnJvbSBza2lt
+bWluZyBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3X2hkbWkuaCAocmVnaXN0ZXIKPiBvZmZzZXRz
+IDB4MzAwMCBhbmQgdGhlIGZvbGxvd2luZykuIFRoZSBsYXJnZSBnYXAgYmV0d2VlbiB0aGVtIGFu
+ZCB0aGUKPiBwcmVjZWRpbmcgRkMgcmVnaXN0ZXJzIGNvdWxkIGJlIGFuIGFkZGl0aW9uYWwgaW5k
+aWNhdGlvbiB0aGF0IHRoZXkgYXJlCj4gaW5kZWVkIHNlcGFyYXRlIElQIGJsb2Nrcy4gVGhlbiBh
+Z2FpbiwgdGhlIEFVRCByZWdpc3RlcnMgc3RhcnQgYXQgYW4KPiBvZmZzZXQgb2YgMHgzMTAwLCBz
+byBtYXliZSBpdCdzIG5vIGluZGljYXRpb24gYXQgYWxsLgoKQWgsIHlvdSdyZSBnZXR0aW5nIHNs
+aWdodGx5IGNvbmZ1c2VkLgoKQWxsIHRob3NlIHJlZ2lzdGVycyBhcmUgdG8gZG8gd2l0aCB0aGUg
+SERNSSBUeCBpdHNlbGYuICBUaGUgYmxvY2sgYXQKMHgzMDAwIHRvIDB4MzAwNyBpcyB0byBkbyB3
+aXRoIHRoZSBIRE1JIFR4IHJlY2VpdmluZyB2YXJpb3VzIHN0YXR1cwpzaWduYWxzIGZyb20gdGhl
+IEhETUkgUGh5LCBzdWNoIGFzIEhQRCwgcnhzZW5zZSwgYW5kIHdoZXRoZXIgdGhlIHBoeQpQTEwg
+aXMgbG9ja2VkICh3aGljaCBJJ20gZmFpcmx5IGNlcnRhaW4gaXMgbWlzLWRlc2NyaWJlZCwgYXMg
+dGhlcmUgaXMKbm8gb3V0cHV0IHNpZ25hbCBmcm9tIHRoZSBwaHkgdG8gaW5kaWNhdGUgdGhpcywg
+YnV0IHRoZXJlIGlzIGEgVFhfUkVBRFkKc2lnbmFsLikKClRoZSBzZXQgYXQgMHgzMDIwLTB4MzAz
+MiBhcmUgdG8gZG8gd2l0aCB0YWxraW5nIHRvIHRoZSBIRE1JIHBoeSBvdmVyCnRoZSBkZWRpY2F0
+ZWQgSTJDIGludGVyZmFjZSBpbnRlZ3JhdGVkIGludG8gdGhlIEhETUkgVHguICBBbGwgdGhlCkhE
+TUkgUGh5IHJlZ2lzdGVycyBhcmUgYWNjZXNzZWQgdGhyb3VnaCB0aGlzIEkyQyBpbnRlcmZhY2Uu
+Cgo+ID4gV2hhdCBpZiBzb21lb25lIGRlc2lnbnMgYSBjaGlwIHdpdGggdGhlaXIgb3duIEhETUkg
+cGh5IHdoaWNoIHVzZXMKPiA+IGRpZmZlcmVudCBzdXBwbGllcz8KPiAKPiBUaGF0J3MgcmVhbGx5
+IG9uZSBtb3JlIHJlYXNvbiB0byB3cml0ZSBwcm9wZXIgZHJpdmVycyBmb3IgdGhlIFBIWXMuIElm
+Cj4geW91IHJlYWxseSBldmVyIGhhdmUgdG8gZGVhbCB3aXRoIGEgZGlmZmVyZW50IFBIWSBjaGFu
+Y2VzIGFyZSB0aGF0IG1vcmUKPiB0aGFuIGp1c3QgdGhlIHN1cHBsaWVzIHdpbGwgYmUgZGlmZmVy
+ZW50LCBpbiB3aGljaCBjYXNlIHlvdSdkIG5lZWQgdG8KPiBzb21laG93IGFsc28gYWJzdHJhY3Qg
+YXdheSB0aGUgaW50ZXJvcGVyYXRpb24gYmV0d2VlbiBIRE1JIHRyYW5zbWl0dGVyCj4gYW5kIFBI
+WS4KCkV4YWN0bHksIGJ1dCB0aGF0IGRpZG4ndCBoYXBwZW4gYmVmb3JlIHRoaXMgY29kZSBtb3Zl
+ZCBvdXQgb2YKZHJpdmVycy9zdGFnaW5nLCB3aGljaCBpcyByYXRoZXIgdW5mb3J0dW5hdGUsIGJ1
+dCBldmVyeW9uZSB3YXMgdG9vIGJ1c3kKdG8gcHV0IG11Y2ggdGhvdWdodCBpbnRvIHRoYXQuCgpU
+aGlzIGlzIG9uZSBvZiB0aGUgcHJvYmxlbXMgd2hlbiBkcml2ZXJzIGFyZSB0YWtlbiBmcm9tIEJT
+UHMgcmF0aGVyIHRoYW4KZ29pbmcgYXdheSBhbmQgd3JpdGluZyBzb21ldGhpbmcgZnJvbSBkb2N1
+bWVudGF0aW9uOiBpZiB5b3Ugc3RhcnQgYWZyZXNoLAp5b3UgY2FuIG1vZGVsIHRoZSBjb2RlIGFj
+Y29yZGluZyB0byB0aGUgZG9jdW1lbnRhdGlvbiB3aXRob3V0IGFueSBvZiB0aGUKb3JpZ2luYWwg
+QlNQIGRlY2lzaW9ucyBpbiBwbGFjZS4gIElmIHlvdSBzdGFydCBmcm9tIHRoZSBCU1AgY29kZSwg
+eW91CmhhdmUgYSB3aG9sZSBwaWxlIG9mIGNoYW5nZXMgeW91IG5lZWQgdG8gaWRlbnRpZnksIGFu
+ZCBpdCdzIHZlcnkgZWFzeSB0bwpvdmVybG9vayBzb21ldGhpbmcsIGJlY2F1c2Ugd2hhdCB5b3Ug
+aGF2ZSB3b3Jrcy4KCkl0J3Mgc29tZXRoaW5nIHdoaWNoIF9zaG91bGRfIGJlIGRvbmUgbmV2ZXJ0
+aGVsZXNzLiAgVGhlIHByb2JsZW0gaXMKZmluZGluZyBzb21lb25lIHdpdGggdGhlIHRpbWUgYW5k
+IG1vdGl2YXRpb24gdG8gZG8gYSBnb29kIGpvYi4KCi0tIApGVFRDIGJyb2FkYmFuZCBmb3IgMC44
+bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBrYnBzIHVwCmFjY29yZGlu
+ZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
