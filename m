@@ -1,65 +1,153 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 9 Jun 2015 00:10:42 +0800
-Message-ID: <CADyBb7t04N1_AhtVdahijm4zFWc52XJ5NmM9Rn7OEpmiAPEzRQ@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
-	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
-	<556F4489.6030206@codeaurora.org>
-	<20150603182503.GD6460@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20150603182503.GD6460@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Timur Tabi <timur@codeaurora.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] ARM: STi: Add code to release secondary cores from holding pen.
+Date: Mon,  8 Jun 2015 17:16:58 +0100
+Message-ID: <1433780219-1245-2-git-send-email-peter.griffin@linaro.org>
+References: <1433780219-1245-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433780219-1245-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+Most upstream devs boot STi platform via JTAG which abuses the
+boot process by setting the PC of secondary cores directly. As
+a consquence, booting STi platforms via u-boot results in only
+the primary core being brought up as the code to manage the
+holding pen is not upstream.
 
+This patch adds the necessary code to bring the secondary cores
+out of the holding pen. It uses the cpu-release-addr DT property
+to get the address of the holding pen from the bootloader.
 
-On 4 June 2015 at 02:25, Guenter Roeck <linux@roeck-us.net> wrote:
-> On Wed, Jun 03, 2015 at 01:16:41PM -0500, Timur Tabi wrote:
->> On 06/01/2015 11:05 PM, fu.wei@linaro.org wrote:
->> >+    if (wdd->pretimeout)
->> >+            /* The pretimeout is valid, go panic */
->> >+            panic("SBSA Watchdog pre-timeout");
->>
->> The problem with this is that WS1 will still occur.  So a few seconds after
->> the panic() call, the hardware will reset.  There won't be any time to debug
->> or log anything.
->>
->
-> In general the idea here would be to use a crashdump kernel, which,
-> when loaded, would reset the watchdog before it fires. This kernel
-> would then write a core dump to a specified location.
->
-> If arm64 doesn't support a crashdump kernel, it might still be possible
-> to log the backtrace somewhere (eg in nvram using pstore if that is
-> supported via acpi or efi).
+With this patch booting upstream kernels via u-boot works
+correctly:
 
-yes, you are right , thanks for explaining this.
+[    0.045456] CPU: Testing write buffer coherency: ok
+[    0.045597] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.045734] Setting up static identity map for 0x40209000 - 0x40209098
+[    0.065047] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    0.065081] Brought up 2 CPUs
+[    0.065089] SMP: Total of 2 processors activated (5983.43 BogoMIPS).
+[    0.065092] CPU: All CPU(s) started in SVC mode.
 
->
-> Is there reason to believe that this all won't work on arm64 ?
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/mach-sti/headsmp.S |  1 +
+ arch/arm/mach-sti/platsmp.c | 56 ++++++++++++++++++++++++++++++++++++++++++---
+ arch/arm/mach-sti/smp.h     |  2 ++
+ 3 files changed, 56 insertions(+), 3 deletions(-)
 
-I don't think there is a reason.
-
->
-> Thanks,
-> Guenter
-
-
-
+diff --git a/arch/arm/mach-sti/headsmp.S b/arch/arm/mach-sti/headsmp.S
+index 4c09bae..e0ad4517 100644
+--- a/arch/arm/mach-sti/headsmp.S
++++ b/arch/arm/mach-sti/headsmp.S
+@@ -37,6 +37,7 @@ pen:	ldr	r7, [r6]
+ 	 * should now contain the SVC stack for this core
+ 	 */
+ 	b	secondary_startup
++ENDPROC(sti_secondary_startup)
+ 
+ 1:	.long	.
+ 	.long	pen_release
+diff --git a/arch/arm/mach-sti/platsmp.c b/arch/arm/mach-sti/platsmp.c
+index d4b624f..6597ed8 100644
+--- a/arch/arm/mach-sti/platsmp.c
++++ b/arch/arm/mach-sti/platsmp.c
+@@ -20,6 +20,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/memblock.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/smp_plat.h>
+@@ -99,14 +100,62 @@ static int sti_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 
+ static void __init sti_smp_prepare_cpus(unsigned int max_cpus)
+ {
+-	void __iomem *scu_base = NULL;
+-	struct device_node *np = of_find_compatible_node(
+-					NULL, NULL, "arm,cortex-a9-scu");
++	struct device_node *np;
++	void __iomem *scu_base;
++	u32 __iomem *cpu_strt_ptr;
++	u32 release_phys;
++	int cpu;
++	unsigned long entry_pa = virt_to_phys(sti_secondary_startup);
++
++	np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
++
+ 	if (np) {
+ 		scu_base = of_iomap(np, 0);
+ 		scu_enable(scu_base);
+ 		of_node_put(np);
+ 	}
++
++	if (max_cpus <= 1)
++		return;
++
++	for_each_possible_cpu(cpu) {
++
++		np = of_get_cpu_node(cpu, NULL);
++
++		if (!np)
++			continue;
++
++		if (of_property_read_u32(np, "cpu-release-addr",
++						&release_phys)) {
++			pr_err("CPU %d: missing or invalid cpu-release-addr "
++				"property\n", cpu);
++			continue;
++		}
++
++		/*
++		 * holding pen is usually configured in SBC DMEM but can also be
++		 * in RAM.
++		 */
++
++		if (!memblock_is_memory(release_phys))
++			cpu_strt_ptr =
++				ioremap(release_phys, sizeof(release_phys));
++		else
++			cpu_strt_ptr =
++				(u32 __iomem *)phys_to_virt(release_phys);
++
++		__raw_writel(entry_pa, cpu_strt_ptr);
++
++		/*
++		 * wmb so that data is actually written
++		 * before cache flush is done
++		 */
++		smp_wmb();
++		sync_cache_w(cpu_strt_ptr);
++
++		if (!memblock_is_memory(release_phys))
++			iounmap(cpu_strt_ptr);
++	}
+ }
+ 
+ struct smp_operations __initdata sti_smp_ops = {
+@@ -114,3 +163,4 @@ struct smp_operations __initdata sti_smp_ops = {
+ 	.smp_secondary_init	= sti_secondary_init,
+ 	.smp_boot_secondary	= sti_boot_secondary,
+ };
++
+diff --git a/arch/arm/mach-sti/smp.h b/arch/arm/mach-sti/smp.h
+index 1871b72..ae22707 100644
+--- a/arch/arm/mach-sti/smp.h
++++ b/arch/arm/mach-sti/smp.h
+@@ -14,4 +14,6 @@
+ 
+ extern struct smp_operations	sti_smp_ops;
+ 
++void sti_secondary_startup(void);
++
+ #endif
 -- 
-Best regards,
+1.9.1
 
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
