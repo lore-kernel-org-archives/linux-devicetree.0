@@ -1,258 +1,80 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v9 2/8] media: Add registration helpers for V4L2 flash
- sub-devices
-Date: Mon, 08 Jun 2015 09:21:10 +0200
-Message-ID: <55754266.2020709@samsung.com>
-References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
- <1432566843-6391-3-git-send-email-j.anaszewski@samsung.com>
- <20150601205921.GH25595@valkosipuli.retiisi.org.uk>
- <556D73D2.20600@samsung.com>
- <20150602153234.GL25595@valkosipuli.retiisi.org.uk>
- <556EB337.4010608@samsung.com>
- <20150603205946.GM25595@valkosipuli.retiisi.org.uk>
+From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Subject: Re: [PATCH V2 2/3] tty: serial: fsl_lpuart: remove RTS/CTS control
+ from set/get_mctrl
+Date: Mon, 8 Jun 2015 12:55:45 +0530
+Message-ID: <55754379.90804@toradex.com>
+References: <1433136067-20644-1-git-send-email-bhuvanchandra.dv@toradex.com> <1433136067-20644-3-git-send-email-bhuvanchandra.dv@toradex.com> <20150608064113.GX18985@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20150603205946.GM25595@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150608064113.GX18985@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, moorray3@wp.pl, linux-kernel@vger.kernel.org, stefan@agner.ch, bhuvanchandra.dv@gmail.com, kernel@pengutronix.de, shawn.guo@linaro.org, jslaby@suse.cz, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hello,
 
-On 06/03/2015 10:59 PM, Sakari Ailus wrote:
-> Hi Jacek,
+On 06/08/2015 12:11 PM, Uwe Kleine-K=F6nig wrote:
+> Hello,
 >
-> On Wed, Jun 03, 2015 at 09:56:39AM +0200, Jacek Anaszewski wrote:
->> Hi Sakari,
+> On Mon, Jun 01, 2015 at 10:51:06AM +0530, Bhuvanchandra DV wrote:
+>> The LPUART does not provide manual control of RTS/CTS signals,
+>> those can only be controlled by the hardware directly. Therefore
+>> manual control of those signals through mctrl can not be provided.
+>> The current implementation enables/disables the automatic control,
+>> which is not what mctrl should do, hence remove the incorrect
+>> implementation.
 >>
->> On 06/02/2015 05:32 PM, Sakari Ailus wrote:
->>> Hi, Jacek!
->>>
->>> On Tue, Jun 02, 2015 at 11:13:54AM +0200, Jacek Anaszewski wrote:
->>>> Hi Sakari,
->>>>
->>>> On 06/01/2015 10:59 PM, Sakari Ailus wrote:
->>>>> Hi Jacek,
->>>>>
->>>>> On Mon, May 25, 2015 at 05:13:57PM +0200, Jacek Anaszewski wrote:
->>>>>> This patch adds helper functions for registering/unregistering
->>>>>> LED Flash class devices as V4L2 sub-devices. The functions should
->>>>>> be called from the LED subsystem device driver. In case the
->>>>>> support for V4L2 Flash sub-devices is disabled in the kernel
->>>>>> config the functions' empty versions will be used.
->>>>>>
->>>>>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>>>> Cc: Sakari Ailus <sakari.ailus@iki.fi>
->>>>>> Cc: Hans Verkuil <hans.verkuil@cisco.com>
->>>>>
->>>>> Thanks for adding indicator support!
->>>>>
->>>>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>>>>
->>>>
->>>> I missed one thing - sysfs interface of the indicator LED class
->>>> also has to be disabled/enabled of v4l2_flash_open/close.
->>>
->>> Good catch.
->>>
->>>>
->>>> I am planning to reimplement the functions as follows,
->>>> please let me know if you see any issues here:
->>>>
->>>> static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
->>>> *fh)
->>>> {
->>>>          struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
->>>>
->>>>          struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
->>>>
->>>>          struct led_classdev *led_cdev = &fled_cdev->led_cdev;
->>>>          struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
->>>>
->>>>          struct led_classdev *led_cdev_ind;
->>>>
->>>>          int ret = 0;
->>>
->>> I think you could spare some newlines above (and below as well).
+>> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+>> ---
+>>   drivers/tty/serial/fsl_lpuart.c | 63 +++++------------------------=
+------------
+>>   1 file changed, 7 insertions(+), 56 deletions(-)
 >>
->> There must have been some issue on thunderbird side,
->> originally there were no newlines above.
+>> diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fs=
+l_lpuart.c
+>> index 08ce76f..532cfb7 100644
+>> --- a/drivers/tty/serial/fsl_lpuart.c
+>> +++ b/drivers/tty/serial/fsl_lpuart.c
+>> @@ -822,64 +822,15 @@ static unsigned int lpuart32_tx_empty(struct u=
+art_port *port)
+>>
+>>   static unsigned int lpuart_get_mctrl(struct uart_port *port)
+>>   {
+>> -	unsigned int temp =3D 0;
+>> -	unsigned char reg;
+>> -
+>> -	reg =3D readb(port->membase + UARTMODEM);
+>> -	if (reg & UARTMODEM_TXCTSE)
+>> -		temp |=3D TIOCM_CTS;
+>> -
+>> -	if (reg & UARTMODEM_RXRTSE)
+>> -		temp |=3D TIOCM_RTS;
+>> -
+>> -	return temp;
+>  From reading the commit log I would expect that you only touch the
+> set_mctrl function, but not get_mctrl. Assuming your code change is
+> right, can you mention this in the commit log please? The bits
+> UARTMODEM_TXCTSE and UARTMODEM_RXRTSE only control the automatic mode=
+?
+OK, will use 'get/set_mctrl' instead of 'mctrl' in the commit log.
+Yes, those bits are only responsible for enabling/disabling the auto=20
+hardware flow control, not for controlling the RTS/CTS signals directly=
+=2E
 >
-> Ok. I've used Seamonkey, I believe it uses the same editor. Some bugs were
-> unintroduced a few years ago, and since that I've mostly used a different
-> editor (and MUA) when replying to patches.
+> What is the problem you're fixing here? I'm not sure how such an UART
+> should be handled, but I imagine that you want to make use of automat=
+ic
+> mode in some cases. Greg?
 >
->>>>
->>>>
->>>>          mutex_lock(&led_cdev->led_access);
->>>>
->>>>
->>>>          if (!v4l2_fh_is_singular(&fh->vfh))
->>>>
->>>>                  goto unlock;
->>>>
->>>>
->>>>          led_sysfs_disable(led_cdev);
->>>>          led_trigger_remove(led_cdev);
->>>>
->>>>
->>>>          if (iled_cdev) {
->>>>                  led_cdev_ind = &iled_cdev->led_cdev;
->>>
->>> You can also declare led_cdev_ind here as you don't need it outside the
->>> basic block.
->>
->> With new approach it will be required also in error path.
+=46ixing the implementation of hardware flow control wrt LPUART hardwar=
+e.
+> Best regards
+> Uwe
 >
-> True.
->
->>>>
->>>>
->>>>                  mutex_lock(&led_cdev_ind->led_access);
->>>>
->>>>
->>>>                  led_sysfs_disable(led_cdev_ind);
->>>>                  led_trigger_remove(led_cdev_ind);
->>>>
->>>>
->>>>                  mutex_unlock(&led_cdev_ind->led_access);
->>>
->>> Please don't acquire the indicator mutex while holding the flash mutex. I
->>> don't think there's a need to do so, thus creating a dependency between the
->>> two.Just remember to check for v4l2_fh_is_singular() in both cases.
->>
->> I thought that the code would be simpler this way. Nevertheless I
->> produced a new version by following your advise.
->>
->>>
->>>>
->>>>          }
->>>>
->>>>
->>>>          ret = __sync_device_with_v4l2_controls(v4l2_flash);
->>>
->>> If ret is < 0 here, you end up disabling the sysfs interface while open()
->>> fails (and v4l2_flash_close() will not be run). Shouldn't you handle that?
->>
->> Good point.
->>
->> Please find the new version of v4l2_flash{open|close} functions below:
->>
->> static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
->> *fh)
->> {
->>          struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
->>          struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
->>          struct led_classdev *led_cdev = &fled_cdev->led_cdev;
->>          struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
->>          struct led_classdev *led_cdev_ind = NULL;
->>          int ret = 0;
->>
->>          mutex_lock(&led_cdev->led_access);
->>
->>          if (!v4l2_fh_is_singular(&fh->vfh)) {
->
-> Hmm. I just realised that this might be a bit broken ---
-> v4l2_fh_is_singular() should return the same value independently of where in
-> subdev's open() handler it is called.
->
-> But adding file handles to the list and checking how many there are of them
-> is not properly serialised, i.e. another process could change the list in
-> between. I'll try to submit a patch for that. No need to wait for that
-> though.
->
-> So please ignore my earlier request to check for v4l2_fh_is_singular() for
-> multiple times, it won't help. Once is enough, albeit more than that won't
-> hurt.
 
-Let's agree on the new shape of the functions then:
-
-tatic int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-{
-         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
-         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
-         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
-         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
-         struct led_classdev *led_cdev_ind = NULL;
-         int ret = 0;
-
-         if (!v4l2_fh_is_singular(&fh->vfh))
-                 return 0;
-
-         mutex_lock(&led_cdev->led_access);
-
-         led_sysfs_disable(led_cdev);
-         led_trigger_remove(led_cdev);
-
-         mutex_unlock(&led_cdev->led_access);
-
-         if (iled_cdev) {
-                 led_cdev_ind = &iled_cdev->led_cdev;
-
-                 mutex_lock(&led_cdev_ind->led_access);
-
-                 led_sysfs_disable(led_cdev_ind);
-                 led_trigger_remove(led_cdev_ind);
-
-                 mutex_unlock(&led_cdev_ind->led_access);
-         }
-
-         ret = __sync_device_with_v4l2_controls(v4l2_flash);
-         if (ret < 0)
-                 goto out_sync_device;
-
-         return 0;
-out_sync_device:
-         mutex_lock(&led_cdev->led_access);
-         led_sysfs_enable(led_cdev);
-         mutex_unlock(&led_cdev->led_access);
-
-         if (led_cdev_ind) {
-                 mutex_lock(&led_cdev_ind->led_access);
-                 led_sysfs_enable(led_cdev_ind);
-                 mutex_unlock(&led_cdev_ind->led_access);
-         }
-
-         return ret;
-}
-
-static int v4l2_flash_close(struct v4l2_subdev *sd, struct 
-v4l2_subdev_fh *fh)
-{
-         struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
-         struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
-         struct led_classdev *led_cdev = &fled_cdev->led_cdev;
-         struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
-         int ret = 0;
-
-         if (!v4l2_fh_is_singular(&fh->vfh))
-                 return 0;
-
-         mutex_lock(&led_cdev->led_access);
-
-         if (v4l2_flash->ctrls[STROBE_SOURCE])
-                 ret = v4l2_ctrl_s_ctrl(v4l2_flash->ctrls[STROBE_SOURCE],
-                                 V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
-         led_sysfs_enable(led_cdev);
-
-         mutex_unlock(&led_cdev->led_access);
-
-         if (iled_cdev) {
-                 struct led_classdev *led_cdev_ind = &iled_cdev->led_cdev;
-
-                 mutex_lock(&led_cdev_ind->led_access);
-                 led_sysfs_enable(led_cdev_ind);
-                 mutex_unlock(&led_cdev_ind->led_access);
-         }
-
-         return ret;
-}
-
-
--- 
-Best Regards,
-Jacek Anaszewski
+Best regards,
+Bhuvan
