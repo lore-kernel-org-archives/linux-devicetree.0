@@ -1,65 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] of/unittest: Show broken behaviour in the platform bus
-Date: Mon, 8 Jun 2015 15:16:39 -0500
-Message-ID: <CAL_JsqK0rq6+WeK4hVMYQnKUd2K7co3vi=DpF8pjH6tbt0B5vQ@mail.gmail.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org> <1433686811-12303-2-git-send-email-grant.likely@linaro.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v6 6/8] mfd: cros_ec: Support multiple EC in a system
+Date: Mon, 8 Jun 2015 13:46:14 -0700
+Message-ID: <20150608204614.GA20574@quad.lixom.net>
+References: <1433405154-16273-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1433405154-16273-7-git-send-email-javier.martinez@collabora.co.uk>
+ <20150605101730.GE7058@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433686811-12303-2-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150605101730.GE7058@x1>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, Doug Anderson <dianders@chromium.org>, Bill Richardson <wfrichar@chromium.org>, Simon Glass <sjg@google.com>, Gwendal Grignou <gwendal@google.com>, Stephen Barber <smbarber@chromium.org>, Filipe Brandenburger <filbranden@google.com>, Todd Broch <tbroch@chromium.org>, Alexandru M Stan <amstan@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 7, 2015 at 9:20 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> Add a single resource to the test bus device to exercise the platform
-> bus code a little more. This isn't strictly a devicetree test, but it is
-> a corner case that the devicetree runs into. Until we've got platform
-> device unittests, it can live here. It doesn't need to be an explicit
-> text because the kernel will oops when it is wrong.
+On Fri, Jun 05, 2015 at 11:17:30AM +0100, Lee Jones wrote:
+> On Thu, 04 Jun 2015, Javier Martinez Canillas wrote:
+> 
+> > From: Gwendal Grignou <gwendal@chromium.org>
+> > 
+> > Chromebooks can have more than one Embedded Controller so the
+> > cros_ec device id has to be incremented for each EC registered.
+> > 
+> > Add a new structure to represent multiple EC as different char
+> > devices (e.g: /dev/cros_ec, /dev/cros_pd). It connects to
+> > cros_ec_device and allows sysfs inferface for cros_pd.
+> > 
+> > Also reduce number of allocated objects, make chromeos sysfs
+> > class object a static and add refcounting to prevent object
+> > deletion while command is in progress.
+> > 
+> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> > Reviewed-by: Dmitry Torokhov <dtor@chromium.org>
+> > Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> > Tested-by: Heiko Stuebner <heiko@sntech.de>
+> > ---
+> > 
+> > Changes since v5:
+> >  - Don't allow to change the device name from DT. Suggested by Lee Jones.
+> >  - Expand error messages in case of mfd_add_devices() failure.
+> >    Suggested by Lee Jones.
+> > 
+> > Changes since v4:
+> >  - Use cros-ec-name DT property instead of devname. Suggested by Lee Jones.
+> >  - Pass PLATFORM_DEVID_AUTO directly to mfd_add_devices().
+> >    Suggested by Lee Jones.
+> >  - Add Heiko Stuebner tested-by tag.
+> >  - Fix get_version by passing the cmd_offset to EC_CMD_GET_VERSION.
+> > 
+> > Changes since v3:
+> >  - Add defines for the EC and PD index constants.
+> >  - Remove cros_ec_dev_register() and declare the mfd_cells as static structs.
+> >    Suggested by Lee Jones.
+> >  - Add a new line before the return statement in cros_ec_dev_register().
+> >    Suggested by Lee Jones.
+> > 
+> > Changes since v2: None
+> > 
+> > Changes since v1:
+> >   - Squash patch that adds support to represent EC's as different
+> >     char devices (e.g: /dev/cros_ec, /dev/cros_pd):
+> >     https://chromium-review.googlesource.com/#/c/217297/
+> >     Suggested by Gwendal Grignou
+> >   - Use cros_ec instead of cros-ec in the subject line to be consistent.
+> >     Suggested by Gwendal Grignou
+> > ---
+> >  drivers/input/keyboard/cros_ec_keyb.c      |   2 +-
+> >  drivers/mfd/cros_ec.c                      |  52 ++++++++++--
+> >  drivers/mfd/cros_ec_i2c.c                  |   1 -
+> >  drivers/mfd/cros_ec_spi.c                  |   1 -
+> >  drivers/platform/chrome/cros_ec_dev.c      | 130 ++++++++++++++++++++---------
+> >  drivers/platform/chrome/cros_ec_dev.h      |   7 --
+> >  drivers/platform/chrome/cros_ec_lightbar.c |  75 +++++++++--------
+> >  drivers/platform/chrome/cros_ec_lpc.c      |   1 -
+> >  drivers/platform/chrome/cros_ec_sysfs.c    |  48 +++++------
+> >  include/linux/mfd/cros_ec.h                |  44 ++++++++--
+> >  10 files changed, 234 insertions(+), 127 deletions(-)
+> 
+> For my own reference:
+>   Acked-by: Lee Jones <lee.jones@linaro.org>
+> 
+> Let me know when you have all the appropriate Acks and I'll apply the
+> set.
 
-Isn't the unittest oops'ing a problem?
+Whole series:
 
-> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> ---
->  drivers/of/unittest.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 18016341d5a9..0a27b38c3041 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void)
->         }
->  }
->
-> +static struct resource test_bus_res = {
-> +       .start = 0xfffffff8,
-> +       .end = 0xfffffff9,
-> +       .flags = IORESOURCE_MEM,
-> +};
->  static const struct platform_device_info test_bus_info = {
->         .name = "unittest-bus",
->  };
-> @@ -795,6 +800,7 @@ static void __init of_unittest_platform_populate(void)
->         if (rc)
->                 return;
->         test_bus->dev.of_node = np;
-> +       platform_device_add_resources(test_bus, &test_bus_res, 1);
+Acked-by: Olof Johansson <olof@lixom.net>
 
-A comment here as to the purpose of this would be useful.
+I'm OK with this going through the mfd tree, since there's nothing queued up
+for chrome-platform that this would conflict with.
 
-Rob
 
->
->         of_platform_populate(np, match, NULL, &test_bus->dev);
->         for_each_child_of_node(np, child) {
-> --
-> 2.1.4
->
+-Olof
