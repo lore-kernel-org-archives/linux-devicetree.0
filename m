@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 03/22] usb: add OTG feature options to gadget structure.
-Date: Mon, 8 Jun 2015 23:01:58 +0800
-Message-ID: <1433775737-9816-4-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v2 04/22] usb: gadget: composite: add USB_DT_OTG request handling
+Date: Mon, 8 Jun 2015 23:01:59 +0800
+Message-ID: <1433775737-9816-5-git-send-email-jun.li@freescale.com>
 References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,55 +14,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add ADP, HNP and SRP feature options and otg version to gadget structure.
+Copy usb_otg_descriptor from config's descriptor if host requests
+USB_DT_OTG.
 
 Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- include/linux/usb/gadget.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/usb/gadget/composite.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-index 4f3dfb7..2f4f39c 100644
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -514,6 +514,12 @@ struct usb_gadget_ops {
-  * @sg_supported: true if we can handle scatter-gather
-  * @is_otg: True if the USB device port uses a Mini-AB jack, so that the
-  *	gadget driver must provide a USB OTG descriptor.
-+ * @adp_support: OTG device feature flag, indicating that the device
-+	supports ADP at this port.
-+ * @hnp_support: OTG device feature flag, indicating that the device
-+	supports HNP at this port.
-+ * @srp_support: OTG device feature flag, indicating that the device
-+	supports SRP at this port.
-  * @is_a_peripheral: False unless is_otg, the "A" end of a USB cable
-  *	is in the Mini-AB jack, and HNP has been used to switch roles
-  *	so that the "A" device currently acts as A-Peripheral, not A-Host.
-@@ -526,6 +532,7 @@ struct usb_gadget_ops {
-  * @quirk_ep_out_aligned_size: epout requires buffer size to be aligned to
-  *	MaxPacketSize.
-  * @is_selfpowered: if the gadget is self-powered.
-+ * @otg_rev: The OTG reversion number the device is compliant to.
-  *
-  * Gadgets have a mostly-portable "gadget driver" implementing device
-  * functions, handling all usb configurations and interfaces.  Gadget
-@@ -562,12 +569,16 @@ struct usb_gadget {
- 
- 	unsigned			sg_supported:1;
- 	unsigned			is_otg:1;
-+	unsigned			adp_support:1;
-+	unsigned			hnp_support:1;
-+	unsigned			srp_support:1;
- 	unsigned			is_a_peripheral:1;
- 	unsigned			b_hnp_enable:1;
- 	unsigned			a_hnp_support:1;
- 	unsigned			a_alt_hnp_support:1;
- 	unsigned			quirk_ep_out_aligned_size:1;
- 	unsigned			is_selfpowered:1;
-+	unsigned			otg_rev;
- };
- #define work_to_gadget(w)	(container_of((w), struct usb_gadget, work))
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 4e3447b..6b5a0c6 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -1534,6 +1534,27 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
+ 				value = min(w_length, (u16) value);
+ 			}
+ 			break;
++		case USB_DT_OTG:
++			if (gadget_is_otg(gadget)) {
++				struct usb_configuration *config;
++				int otg_desc_len =
++					sizeof(struct usb_otg_descriptor);
++
++				if (cdev->config)
++					config = cdev->config;
++				else
++					config = list_first_entry(
++							&cdev->configs,
++						struct usb_configuration, list);
++				if (!config)
++					goto done;
++
++				if (gadget->otg_rev >= 0x0200)
++					otg_desc_len += sizeof(struct bcdOTG);
++				value = min_t(int, w_length, otg_desc_len);
++				memcpy(req->buf, config->descriptors[0], value);
++			}
++			break;
+ 		}
+ 		break;
  
 -- 
 1.9.1
