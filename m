@@ -1,35 +1,92 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [PATCH 00/21] On-demand device registration
-Date: Mon, 08 Jun 2015 20:18:40 +0200
-Message-ID: <5575DC80.4040608@ahsoftware.de>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com> <CAL_Jsq+EWLEJhRudTGAwYsOg4tX2-pGhygeQGHae9RL8rBpMiA@mail.gmail.com> <556F5C24.1030101@linaro.org> <5570B783.1050808@ahsoftware.de> <557589D9.1050008@melag.de> <5575DB8D.50000@ahsoftware.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5575DB8D.50000@ahsoftware.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <weigelt@melag.de>, "Grygorii.Strashko@linaro.org" <grygorii.strashko@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <stephane.marchesin@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-clk@vger.kernel.org, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] kernel/resource: Add new flag IORESOURCE_SHARED
+Date: Mon, 08 Jun 2015 19:23:10 +0100
+Message-ID: <20150608182310.1F13FC406AA@trevor.secretlab.ca>
+References: <1433501478-15164-1-git-send-email-ricardo.ribalda@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433501478-15164-1-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cliff Wickman <cpw-sJ/iWh9BUns@public.gmane.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 08.06.2015 um 20:14 schrieb Alexander Holler:
-> Am 08.06.2015 um 14:26 schrieb Enrico Weigelt, metux IT consult:
->> Am 04.06.2015 um 22:39 schrieb Alexander Holler:
->>
->>  > As it seems to have been forgotten or overread, I've mentioned in my
->>> series of patches last year that, with a few changes, it's possible to
->>> let the algorithm I've used (dfs) to spit out all drivers which can be
->>> initialized in parallel.
->>
->> Unfortunately, I've missed that ... could you please resend you patches?
->> Boot time reduction is one of the topics on my 2do in several weeks.
->
-> https://lkml.org/lkml/2014/5/12/452
->
+On Fri,  5 Jun 2015 12:51:17 +0200
+, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ wrote:
+> Some device tree platforms have not defined correctly their memory
+> resources (i.e. Overlapping or duplication of resources).
+> To avoid this issue we have historically avoided to add their resources to
+> the resource tree. This leads to code duplication and oops when trying to
+> unload dynamically a device tree (feature introduced recently).
+> 
+> This new flag tells the resource system that a resource can be shared by
+> multiple owners, so we can support device trees with problems at the
+> same time that we do not duplicate code or crash when unloading the
+> device tree.
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
 
-And don't forget patch 10/9 which fixed a bug in my previous patch 
-series and which alos was the reason for the large difference in boot 
-times with and without deps:
+I'm really not comfortable with this change. The resource tree code is
+complicated enough as is. Adding this exception case quite probably adds
+corner cases that aren't property dealt with. If two regions overlay,
+and then request_region is called? Which region does it become a child
+of? And that's just off the top of my head. I don't want to hack in
+changes to the resource code for what is a corner case.
 
-https://lkml.org/lkml/2014/5/13/567
+g.
+
+>  include/linux/ioport.h | 1 +
+>  kernel/resource.c      | 6 ++++--
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 388e3ae94f7a..f4d992381529 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -49,6 +49,7 @@ struct resource {
+>  #define IORESOURCE_WINDOW	0x00200000	/* forwarded by bridge */
+>  #define IORESOURCE_MUXED	0x00400000	/* Resource is software muxed */
+>  
+> +#define IORESOURCE_SHARED	0x04000000	/* Resource can be shared */
+>  #define IORESOURCE_EXCLUSIVE	0x08000000	/* Userland may not map this resource */
+>  #define IORESOURCE_DISABLED	0x10000000
+>  #define IORESOURCE_UNSET	0x20000000	/* No address assigned yet */
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 90552aab5f2d..4a3626489b62 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -210,6 +210,7 @@ static struct resource * __request_resource(struct resource *root, struct resour
+>  	resource_size_t start = new->start;
+>  	resource_size_t end = new->end;
+>  	struct resource *tmp, **p;
+> +	bool root_shared = root && root->flags & IORESOURCE_SHARED;
+>  
+>  	if (end < start)
+>  		return root;
+> @@ -220,14 +221,15 @@ static struct resource * __request_resource(struct resource *root, struct resour
+>  	p = &root->child;
+>  	for (;;) {
+>  		tmp = *p;
+> -		if (!tmp || tmp->start > end) {
+> +		if (!tmp || tmp->start > end ||
+> +			(root_shared && tmp->start > start)) {
+>  			new->sibling = tmp;
+>  			*p = new;
+>  			new->parent = root;
+>  			return NULL;
+>  		}
+>  		p = &tmp->sibling;
+> -		if (tmp->end < start)
+> +		if (tmp->end < start || root_shared)
+>  			continue;
+>  		return tmp;
+>  	}
+> -- 
+> 2.1.4
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
