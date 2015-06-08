@@ -1,211 +1,147 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v4 1/8] Documentation: add DT binding for ARM System Control
- and Power Interface(SCPI) protocol
-Date: Mon,  8 Jun 2015 11:39:55 +0100
-Message-ID: <1433760002-24120-2-git-send-email-sudeep.holla@arm.com>
-References: <1433760002-24120-1-git-send-email-sudeep.holla@arm.com>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: Re: [RESEND 1/2] usb: ehci-exynos: Make provision for vdd regulators
+Date: Mon, 08 Jun 2015 16:16:25 +0530
+Message-ID: <BF5C6ACC7D2C4E51BF0CAAA7B164B6CA@sisodomain.com>
+References: <1433683242-3945-1-git-send-email-linux.amoon@gmail.com>
+ <5574F97A.5030104@samsung.com>
+ <CANAwSgTjx8uxyOTW8uuiqrcNzF+UwLMmML2OcDgG5Ku_56=vJQ@mail.gmail.com>
+ <CAJKOXPfDmt5VMqr-P+OpWy1+jz675CFRPmtS_N0HjN4tWxfwtA@mail.gmail.com>
+ <44B5E2FDCD3244AAA418BB8EC28FEA25@sisodomain.com>
+ <CANAwSgTi114wO63-sx=UmbxPerqKvstq=coVyqhRkzX44CDe_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset=UTF-8; reply-type=original
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1433760002-24120-1-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Liviu Dudau <Liviu.Dudau@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Olof Johansson <olof@lixom.net>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CANAwSgTi114wO63-sx=UmbxPerqKvstq=coVyqhRkzX44CDe_w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds devicetree binding for System Control and Power
-Interface (SCPI) Message Protocol used between the Application Cores(AP)
-and the System Control Processor(SCP). The MHU peripheral provides a
-mechanism for inter-processor communication between SCP's M3 processor
-and AP.
+Hi,
 
-SCP offers control and management of the core/cluster power states,
-various power domain DVFS including the core/cluster, certain system
-clocks configuration, thermal sensors and many others.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-CC: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/arm/arm,scpi.txt | 156 +++++++++++++++++++++
- 1 file changed, 156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
+On Monday, June 08, 2015 3:50 PM, "Anand Moon" <linux.amoon@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-new file mode 100644
-index 000000000000..f5f9684e23b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-@@ -0,0 +1,156 @@
-+System Control and Power Interface (SCPI) Message Protocol
-+----------------------------------------------------------
-+
-+Firmware implementing the SCPI described in ARM document number ARM DUI 0922B
-+("ARM Compute Subsystem SCP: Message Interface Protocols")[0] can be used
-+by Linux to initiate various system control and power operations.
-+
-+Required properties:
-+
-+- compatible : should be "arm,scpi"
-+- mboxes: List of phandle and mailbox channel specifiers
-+	  All the channels reserved by remote SCP firmware for use by
-+	  SCPI message protocol should be specified in any order
-+- shmem : List of phandle pointing to the shared memory(SHM) area between the
-+	  processors using these mailboxes for IPC, one for each mailbox
-+	  SHM can be any memory reserved for the purpose of this communication
-+	  between the processors.
-+
-+See Documentation/devicetree/bindings/mailbox/mailbox.txt
-+for more details about the generic mailbox controller and
-+client driver bindings.
-+
-+Clock bindings for the clocks based on SCPI Message Protocol
-+------------------------------------------------------------
-+
-+This binding uses the common clock binding[1].
-+
-+Container Node
-+==============
-+Required properties:
-+- compatible : should be "arm,scpi-clocks"
-+	       All the clocks provided by SCP firmware via SCPI message
-+	       protocol much be listed as sub-nodes under this node.
-+
-+Sub-nodes
-+=========
-+Required properties:
-+- compatible : shall include one of the following
-+	"arm,scpi-dvfs-clocks" - all the clocks that are variable and index based.
-+		These clocks don't provide the full range between the limits
-+		but only discrete points within the range. The firmware
-+		provides the mapping for each such operating frequency and the
-+		index associated with it. The firmware also manages the
-+		voltage scaling appropriately with the clock scaling.
-+	"arm,scpi-variable-clocks" - all the clocks that are variable and provide full
-+		range within the specified range. The firmware provides the
-+		supported range for each clock.
-+
-+Other required properties for all clocks(all from common clock binding):
-+- #clock-cells : should be set to 1 as each of the SCPI clocks have multiple
-+	outputs. The clock specifier will be the index to an entry in the list
-+	of output clocks.
-+- clock-output-names : shall be the corresponding names of the outputs.
-+- clock-indices: The identifyng number for the clocks(clock_id) in the node as
-+	expected by the firmware. It can be non linear and hence provide the
-+	mapping	of identifiers into the clock-output-names array.
-+
-+SRAM and Shared Memory for SCPI
-+-------------------------------
-+
-+A small area of SRAM is reserved for SCPI communication between application
-+processors and SCP.
-+
-+Required properties:
-+- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
-+
-+The rest of the properties should follow the generic mmio-sram discription
-+found in ../../misc/sysram.txt
-+
-+Each sub-node represents the reserved area for SCPI.
-+
-+Required sub-node properties:
-+- reg : The base offset and size of the reserved area with the SRAM
-+- compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
-+	       shared memory on Juno platforms
-+
-+[0] http://community.arm.com/servlet/JiveServlet/download/8401-45-18326/DUI0922B_scp_message_interface.pdf
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Example:
-+
-+sram: sram@50000000 {
-+	compatible = "arm,juno-sram-ns", "mmio-sram";
-+	reg = <0x0 0x50000000 0x0 0x10000>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0 0x0 0x50000000 0x10000>;
-+
-+	cpu_scp_lpri: scp-shmem@0 {
-+		compatible = "arm,juno-scp-shmem";
-+		reg = <0x0 0x200>;
-+	};
-+
-+	cpu_scp_hpri: scp-shmem@200 {
-+		compatible = "arm,juno-scp-shmem";
-+		reg = <0x200 0x200>;
-+	};
-+};
-+
-+mailbox: mailbox0@40000000 {
-+	....
-+	#mbox-cells = <1>;
-+};
-+
-+scpi_protocol: scpi@2e000000 {
-+	compatible = "arm,scpi";
-+	mboxes = <&mailbox 0 &mailbox 1>;
-+	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-+
-+	clocks {
-+		compatible = "arm,scpi-clocks";
-+
-+		scpi_dvfs: scpi_clocks@0 {
-+			compatible = "arm,scpi-dvfs-clocks";
-+			#clock-cells = <1>;
-+			clock-indices = <0>, <1>, <2>;
-+			clock-output-names = "vbig", "vlittle", "vgpu";
-+		};
-+		scpi_clk: scpi_clocks@3 {
-+			compatible = "arm,scpi-variable-clocks";
-+			#clock-cells = <1>;
-+			clock-indices = <3>, <4>;
-+			clock-output-names = "pxlclk0", "pxlclk1";
-+		};
-+	};
-+};
-+
-+cpu@0 {
-+	...
-+	reg = <0 0>;
-+	clocks = <&scpi_dvfs 0>;
-+	clock-names = "vbig";
-+};
-+
-+hdlcd@7ff60000 {
-+	...
-+	reg = <0 0x7ff60000 0 0x1000>;
-+	clocks = <&scpi_clk 1>;
-+	clock-names = "pxlclk";
-+};
-+
-+In the above example, the #clock-cells is set to 1 as required.
-+scpi_dvfs has 3 output clocks namely: vbig, vlittle and vgpu with 0, 1
-+and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0 and
-+pxlclk1 with 3 and 4 as clock-indices.
-+
-+The first consumer in the example is cpu@0 and it has vbig as input clock.
-+The index '0' in the clock specifier here points to the first entry in the
-+output clocks of scpi_dvfs for which clock_id asrequired by the firmware
-+is 0.
-+
-+Similarly the second example is hdlcd@7ff60000 and it has pxlclk0 as input
-+clock. The index '1' in the clock specifier here points to the second entry
-+in the output clocks of scpi_clocks for which clock_id as required by the
-+firmware is 4.
--- 
-1.9.1
+> On 8 June 2015 at 10:58, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+>> Hi,
+>>
+>>
+>>
+>> On Monday, June 08, 2015 10:44 AM, "Krzysztof Kozlowski"
+>> <k.kozlowski@samsung.com> wrote:
+>>
+>> my apologies for being late in replying to this thread.
+>>
+>>> 2015-06-08 13:21 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>>>>
+>>>> Hi Krzysztof ,
+>>>>
+>>>> On 8 June 2015 at 07:40, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>>> wrote:
+>>>>>
+>>>>> On 07.06.2015 22:20, Anand Moon wrote:
+>>>>>>
+>>>>>> Facilitate getting required 3.3V and 1.0V VDD supply for
+>>>>>> EHCI controller on Exynos.
+>>>>>>
+>>>>>> With the patches for regulators' nodes merged in 3.15:
+>>>>>> c8c253f ARM: dts: Add regulator entries to smdk5420
+>>>>>> 275dcd2 ARM: dts: add max77686 pmic node for smdk5250,
+>>>>>> the exynos systems turn on only minimal number of regulators.
+>>>>>>
+>>>>>> Until now, the VDD regulator supplies were either turned on
+>>>>>> by the bootloader, or the regulators were enabled by default
+>>>>>> in the kernel, so that the controller drivers did not need to
+>>>>>> care about turning on these regulators on their own.
+>>>>>> This was rather bad about these controller drivers.
+>>>>>> So ensuring now that the controller driver requests the necessary
+>>>>>> VDD regulators (if available, unless there are direct VDD rails),
+>>>>>> and enable them so as to make them working.
+>>>>>>
+>>>>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>>>> Cc: Jingoo Han <jg1.han@samsung.com>
+>>>>>> Cc: Alan Stern <stern@rowland.harvard.edu>
+>>>>>> ---
+>>>>>> Initial version of this patch was part of following series, though
+>>>>>> they are not dependent on each other, resubmitting after rebasing.
+>>>>>>
+>>>>>>
+>>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266418.html
+>>>>>
+>>>>>
+>>>>> So you just took Vivek's patch along with all the credits... That is 
+>>>>> not
+>>>>> how we usually do this.
+>>>>>
+>>>>> I would expect that rebasing a patch won't change the author unless 
+>>>>> this
+>>>>> is fine with Vivek.
+>>>>>
+>>>>
+>>>> Sorry If I have done some mistake on my part.
+>>>> I just looked at below mail chain. Before I send it.
+>>>>
+>>>> http://www.spinics.net/lists/linux-samsung-soc/msg44136.html
+>>>
+>>>
+>>> I don't get it. The patch you are referring to has a proper "From"
+>>> field. So please use it as an example.
+>>>
+>>>>
+>>>> I don't want to take any credit out of it. I just re-base on the new
+>>>> kernel.
+>>
+>> Perhaps, you would have maintained the authorship !
+>>
+>>>> I could not test this patch as it meant for exynos5440 boards.
+>>>
+>>>
+>>> Are you sure? I think the driver is used on almost all of Exynos SoCs
+>>> (Exynos4, Exynos5250, Exynos542x).
+>>
+>>
+>> That's correct, as pointed by Krzysztof Kozlowski, the driver is same for
+>> Exynos4 and Exynos5 series
+>> of SoCs.
+>>
+>>> Untested code should not go to the kernel. Additionally you should
+>>> mark it as not-tested. Marking such patch as non-tested could help you
+>>> finding some independent tests (tests performed by someone else).
+>>>
+>>> To summarize my point of view:
+>>> 1. Unless Vivek's says otherwise, please give him the credits with
+>>> proper "from" field.
+>>> 2. Issues mentioned in previous mail should be addressed (missing
+>>> IS_ERR(), how disabling the regulator during suspend affects waking
+>>> up).
+>>> 3. The patchset must be tested, even after rebasing.
+>>
+>>
+>> Unfortunately, I got busy  with a different project and lost track of the
+>> patches posted upstream.
+>> If it's not too late I can post a rebased version of the patch with 
+>> previous
+>> review comments addressed.
+>>
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>
+>>
+>
+> Hi All,
+>
+> I have learned my lesson not to interfere in others work.
+> It will never happen from my side again.
+>
+> Please accept my apology.
+
+Please don't apologise. It's just a part of learning; learning how linux 
+mainlining works.
+Hope you understand. :-)
+
+
+thanks
+Vivek 
