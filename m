@@ -1,92 +1,145 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] kernel/resource: Add new flag IORESOURCE_SHARED
-Date: Mon, 08 Jun 2015 19:23:10 +0100
-Message-ID: <20150608182310.1F13FC406AA@trevor.secretlab.ca>
-References: <1433501478-15164-1-git-send-email-ricardo.ribalda@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433501478-15164-1-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cliff Wickman <cpw-sJ/iWh9BUns@public.gmane.org>
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Mon, 08 Jun 2015 11:26:16 -0700
+Message-ID: <5575DE48.8010308@roeck-us.net>
+References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org>	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>	<556DE2D5.3090906@roeck-us.net> <CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  5 Jun 2015 12:51:17 +0200
-, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- wrote:
-> Some device tree platforms have not defined correctly their memory
-> resources (i.e. Overlapping or duplication of resources).
-> To avoid this issue we have historically avoided to add their resources to
-> the resource tree. This leads to code duplication and oops when trying to
-> unload dynamically a device tree (feature introduced recently).
-> 
-> This new flag tells the resource system that a resource can be shared by
-> multiple owners, so we can support device trees with problems at the
-> same time that we do not duplicate code or crash when unloading the
-> device tree.
-> 
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+On 06/08/2015 09:05 AM, Fu Wei wrote:
+> Hi Gurnter
+>
+> On 3 June 2015 at 01:07, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>> On 06/02/2015 09:55 AM, Fu Wei wrote:
+>>>
+>>> Hi Timur,
+>>>
+>>> Thanks , feedback inline
+>>>
+>>> On 2 June 2015 at 23:32, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>>
+>>>> On 06/01/2015 11:05 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>>>>
+>>>>> +/*
+>>>>> + * help functions for accessing 32bit registers of SBSA Generic
+>>>>> Watchdog
+>>>>> + */
+>>>>> +static void sbsa_gwdt_cf_write(unsigned int reg, u32 val,
+>>>>> +                              struct watchdog_device *wdd)
+>>>>> +{
+>>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>>>>> +
+>>>>> +       writel_relaxed(val, gwdt->control_base + reg);
+>>>>> +}
+>>>>> +
+>>>>> +static void sbsa_gwdt_rf_write(unsigned int reg, u32 val,
+>>>>> +                              struct watchdog_device *wdd)
+>>>>> +{
+>>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>>>>> +
+>>>>> +       writel_relaxed(val, gwdt->refresh_base + reg);
+>>>>> +}
+>>>>> +
+>>>>> +static u32 sbsa_gwdt_cf_read(unsigned int reg, struct watchdog_device
+>>>>> *wdd)
+>>>>> +{
+>>>>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>>>>> +
+>>>>> +       return readl_relaxed(gwdt->control_base + reg);
+>>>>> +}
+>>>>
+>>>>
+>>>>
+>>>> I still think you should get rid of these functions and just call
+>>>> readl_relaxed() and writel_relaxed() every time, but I won't complain
+>>>> again
+>>>> if you keep them.
+>>>
+>>>
+>>> yes, that make sense, and will reduce the size of code, and I think
+>>> the code's readability will be OK too.
+>>> will try in my next patch,
+>>>
+>>>>
+>>>>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
+>>>>> +{
+>>>>> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
+>>>>> +       struct watchdog_device *wdd = &gwdt->wdd;
+>>>>> +
+>>>>> +       if (wdd->pretimeout)
+>>>>> +               /* The pretimeout is valid, go panic */
+>>>>> +               panic("SBSA Watchdog pre-timeout");
+>>>>> +       else
+>>>>> +               /* We don't use pretimeout, trigger WS1 now*/
+>>>>> +               sbsa_gwdt_set_wcv(wdd, 0);
+>>>>
+>>>>
+>>>>
+>>>> I don't like this.
+>>>
+>>>
+>>> If so, what is your idea ,if pretimeout == 0?
+>>>
+>>> the reason of using WCV as (timout - pretimeout): it can provide the
+>>> longer timeout period,
+>>> (1)If we use WOR, it can only provide 10s @ 400MHz(max).
+>>> as Guenter said earlier, the default timer out for most watchdog will
+>>> be 30s, so I think 10s limit will be a little short
+>>> (2)we can always program WCV just like ping.
+>>> (3)if a timeout arrives, WOR will be use, so use it as pretimeout, but
+>>> we still can make this pretimeout longer by programming WCV(I don't
+>>> think it's necessary)
+>>>
+>>>
+>>>> The triggering of the hardware reset should never depend
+>>>> on an interrupt being handled properly.
+>>>
+>>>
+>>> if this fail, system reset in 1S, because WOR == (1s)
+>>>
+>> So ?
+>
+> Even the interrupt routine isn't triggered,  (WOR + system counter) --> WCV,
+> then, sy system reset in 1S.
+>
+> the hardware reset doesn't depend on an interrupt.
+>
+>
+>>
+>>>> You should always program WCV
+>>>> correctly in advance.  This is especially true since pre-timeout will
+>>>> probably rarely be used.
+>>>
+>>>
+>>> always programming WCV is doable.  But I absolutely can not agree "
+>>> pre-timeout will probably rarely be used"
+>>> If so, SBSA watchdog is just a normal watchdog,  This use case just
+>>> makes this HW useless.
+>>> If so, go to use SP805.
+>>> you still don't see the importance of this warning and pretimeout to a
+>>> real server.
+>>>
+>>
+>> If pretimeout isn't used, why not just set WCV = timeout, WOR = 0 ?
+>
+> Because if WOR = 0 , according to SBSA,  once you want to enable watchdog,
+> (0 + system counter) --> WCV , then , WS0 and WS1 will be triggered immediately.
+> we have not a chance(a time slot) to update WCV.
+>
 
-I'm really not comfortable with this change. The resource tree code is
-complicated enough as is. Adding this exception case quite probably adds
-corner cases that aren't property dealt with. If two regions overlay,
-and then request_region is called? Which region does it become a child
-of? And that's just off the top of my head. I don't want to hack in
-changes to the resource code for what is a corner case.
+I would have thought that this is exactly what we want if pretimeout is not used.
+What am I missing here ?
 
-g.
-
->  include/linux/ioport.h | 1 +
->  kernel/resource.c      | 6 ++++--
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index 388e3ae94f7a..f4d992381529 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -49,6 +49,7 @@ struct resource {
->  #define IORESOURCE_WINDOW	0x00200000	/* forwarded by bridge */
->  #define IORESOURCE_MUXED	0x00400000	/* Resource is software muxed */
->  
-> +#define IORESOURCE_SHARED	0x04000000	/* Resource can be shared */
->  #define IORESOURCE_EXCLUSIVE	0x08000000	/* Userland may not map this resource */
->  #define IORESOURCE_DISABLED	0x10000000
->  #define IORESOURCE_UNSET	0x20000000	/* No address assigned yet */
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index 90552aab5f2d..4a3626489b62 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -210,6 +210,7 @@ static struct resource * __request_resource(struct resource *root, struct resour
->  	resource_size_t start = new->start;
->  	resource_size_t end = new->end;
->  	struct resource *tmp, **p;
-> +	bool root_shared = root && root->flags & IORESOURCE_SHARED;
->  
->  	if (end < start)
->  		return root;
-> @@ -220,14 +221,15 @@ static struct resource * __request_resource(struct resource *root, struct resour
->  	p = &root->child;
->  	for (;;) {
->  		tmp = *p;
-> -		if (!tmp || tmp->start > end) {
-> +		if (!tmp || tmp->start > end ||
-> +			(root_shared && tmp->start > start)) {
->  			new->sibling = tmp;
->  			*p = new;
->  			new->parent = root;
->  			return NULL;
->  		}
->  		p = &tmp->sibling;
-> -		if (tmp->end < start)
-> +		if (tmp->end < start || root_shared)
->  			continue;
->  		return tmp;
->  	}
-> -- 
-> 2.1.4
-> 
+Guenter
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
