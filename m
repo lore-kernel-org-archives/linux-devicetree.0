@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 13/22] usb: gadget: audio: init usb_otg_descriptor via usb_otg_descriptor_add
-Date: Mon, 8 Jun 2015 23:02:08 +0800
-Message-ID: <1433775737-9816-14-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v2 17/22] usb: gadget: mass_storage: init usb_otg_descriptor via usb_otg_descriptor_add
+Date: Mon, 8 Jun 2015 23:02:12 +0800
+Message-ID: <1433775737-9816-18-git-send-email-jun.li@freescale.com>
 References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -17,14 +17,14 @@ free it while composite unbind.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/audio.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+ drivers/usb/gadget/legacy/mass_storage.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/audio.c b/drivers/usb/gadget/legacy/audio.c
-index f289caf..abe53f2 100644
---- a/drivers/usb/gadget/legacy/audio.c
-+++ b/drivers/usb/gadget/legacy/audio.c
-@@ -150,20 +150,7 @@ static struct usb_device_descriptor device_desc = {
+diff --git a/drivers/usb/gadget/legacy/mass_storage.c b/drivers/usb/gadget/legacy/mass_storage.c
+index e7bfb08..20fdc2f 100644
+--- a/drivers/usb/gadget/legacy/mass_storage.c
++++ b/drivers/usb/gadget/legacy/mass_storage.c
+@@ -64,21 +64,7 @@ static struct usb_device_descriptor msg_device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -32,7 +32,8 @@ index f289caf..abe53f2 100644
 -	.bLength =		sizeof otg_descriptor,
 -	.bDescriptorType =	USB_DT_OTG,
 -
--	/* REVISIT SRP-only hardware is possible, although
+-	/*
+-	 * REVISIT SRP-only hardware is possible, although
 -	 * it would not be called "OTG" ...
 -	 */
 -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
@@ -44,10 +45,10 @@ index f289caf..abe53f2 100644
 -};
 +static const struct usb_descriptor_header *otg_desc[2];
  
- /*-------------------------------------------------------------------------*/
- 
-@@ -174,6 +161,13 @@ static int audio_do_config(struct usb_configuration *c)
- 	/* FIXME alloc iConfiguration string, set it in c->strings */
+ static struct usb_string strings_dev[] = {
+ 	[USB_GADGET_MANUFACTURER_IDX].s = "",
+@@ -136,6 +122,13 @@ static int msg_do_config(struct usb_configuration *c)
+ 	int ret;
  
  	if (gadget_is_otg(c->cdev->gadget)) {
 +		if (!otg_desc[0]) {
@@ -60,10 +61,10 @@ index f289caf..abe53f2 100644
  		c->descriptors = otg_desc;
  		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
  	}
-@@ -289,6 +283,9 @@ static int audio_unbind(struct usb_composite_dev *cdev)
- 	if (!IS_ERR_OR_NULL(fi_uac2))
- 		usb_put_function_instance(fi_uac2);
- #endif
+@@ -243,6 +236,9 @@ static int msg_unbind(struct usb_composite_dev *cdev)
+ 	if (!IS_ERR(fi_msg))
+ 		usb_put_function_instance(fi_msg);
+ 
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
