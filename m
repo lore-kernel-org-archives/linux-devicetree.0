@@ -1,222 +1,76 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [v4,09/21] rtc: support DS1302 RTC on ICP DAS LP-8x4x
-Date: Mon, 8 Jun 2015 14:07:13 +0200
-Message-ID: <20150608120713.GA5222@piout.net>
-References: <1397668667-27328-3-git-send-email-ynvich@gmail.com>
+From: "Enrico Weigelt, metux IT consult" <weigelt-d/C+FbuhHiA@public.gmane.org>
+Subject: Re: Dealing with optional i2c devices in a devicetree
+Date: Mon, 8 Jun 2015 14:11:19 +0200
+Message-ID: <55758667.70501@melag.de>
+References: <55713BB1.80004@alliedtelesis.co.nz> <55714FFB.3000608@roeck-us.net> <55752FD4.6050700@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1397668667-27328-3-git-send-email-ynvich@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergey Yanovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Alessandro Zummo <a.zummo@towertech.it>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, rtc-linux@googlegroups.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55752FD4.6050700-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "jdelvare-l3A5Bk7waGM@public.gmane.org" <jdelvare-l3A5Bk7waGM@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org" <guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergey,
+Am 08.06.2015 um 08:01 schrieb Chris Packham:
 
-Are you still interested in seeing that patch going upstream?
+Hi folks,
 
-On 16/04/2014 at 21:17:14 +0400, Sergey Yanovich wrote :
-> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-> ---
->    v3..v4
->    * move DTS bindings to a different patch (8/21)
-> 
->    v2..v3
->    * use usleep_range instead of custom nsleep
->    * number change (07/16 -> 09/21)
-> 
->    v0..v2
->    * use device tree
->    * use devm helpers where possible
-> 
->  .../devicetree/bindings/rtc/rtc-ds1302.txt         |  14 +++
->  arch/arm/configs/lp8x4x_defconfig                  |   1 +
->  drivers/rtc/Kconfig                                |   2 +-
->  drivers/rtc/rtc-ds1302.c                           | 100 ++++++++++++++++++++-
->  4 files changed, 114 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
-> new file mode 100644
-> index 0000000..810613b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
-> @@ -0,0 +1,14 @@
-> +* Dallas Semiconductor DS-1302 RTC
-> +
-> +Simple device which could be used to store date/time between reboots.
-> +
-> +Required properties:
-> +- compatible : Should be "dallas,rtc-ds1302"
-> +- reg : Should be address and size of IO memory region
-> +
-> +Examples:
-> +
-> +rtc@40900000 {
-> +	compatible = "dallas,rtc-ds1302";
-> +	reg = <0x1700901c 0x1>;
-> +};
-> diff --git a/arch/arm/configs/lp8x4x_defconfig b/arch/arm/configs/lp8x4x_defconfig
-> index 9f1efb6..d60e37a 100644
-> --- a/arch/arm/configs/lp8x4x_defconfig
-> +++ b/arch/arm/configs/lp8x4x_defconfig
-> @@ -141,6 +141,7 @@ CONFIG_LEDS_GPIO=y
->  CONFIG_LEDS_TRIGGERS=y
->  CONFIG_LEDS_TRIGGER_HEARTBEAT=y
->  CONFIG_RTC_CLASS=y
-> +CONFIG_RTC_DRV_DS1302=y
->  CONFIG_RTC_DRV_PXA=m
->  # CONFIG_IOMMU_SUPPORT is not set
->  CONFIG_EXT2_FS=m
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 2e565f8..80aaaa1 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -710,7 +710,7 @@ config RTC_DRV_DS1286
->  
->  config RTC_DRV_DS1302
->  	tristate "Dallas DS1302"
-> -	depends on SH_SECUREEDGE5410
-> +	depends on SH_SECUREEDGE5410 || (ARCH_PXA && HIGH_RES_TIMERS)
->  	help
->  	  If you say yes here you get support for the Dallas DS1302 RTC chips.
->  
-> diff --git a/drivers/rtc/rtc-ds1302.c b/drivers/rtc/rtc-ds1302.c
-> index 07e8d79..3c49023 100644
-> --- a/drivers/rtc/rtc-ds1302.c
-> +++ b/drivers/rtc/rtc-ds1302.c
-> @@ -50,7 +50,7 @@
->  #define ds1302_set_tx()
->  #define ds1302_set_rx()
->  
-> -static inline int ds1302_hw_init(void)
-> +static inline int ds1302_hw_init(struct platform_device *pdev)
->  {
->  	return 0;
->  }
-> @@ -86,6 +86,101 @@ static inline int ds1302_rxbit(void)
->  	return !!(get_dp() & RTC_IODATA);
->  }
->  
-> +#elif defined(CONFIG_ARCH_PXA) && defined(CONFIG_HIGH_RES_TIMERS)
-> +
-> +#include <linux/delay.h>
-> +#include <linux/of.h>
-> +
-> +#define	RTC_CE		0x01
-> +#define	RTC_CLK		0x02
-> +#define	RTC_nWE		0x04
-> +#define	RTC_IODATA	0x08
-> +
-> +static unsigned long ds1302_state;
-> +
-> +static void *mem;
-> +
-> +static inline int ds1302_hw_init(struct platform_device *pdev)
-> +{
-> +	struct resource *r;
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!r)
-> +		return -ENODEV;
-> +
-> +	mem = devm_ioremap_resource(&pdev->dev, r);
-> +	if (!mem)
-> +		return -EFAULT;
-> +
-> +	return 0;
-> +}
-> +
-> +static inline void ds1302_reset(void)
-> +{
-> +	ds1302_state = 0;
-> +	iowrite8(ds1302_state, mem);
-> +	usleep_range(4, 5);
-> +}
-> +
-> +static inline void ds1302_clock(void)
-> +{
-> +	usleep_range(1, 2);
-> +	ds1302_state |= RTC_CLK;
-> +	iowrite8(ds1302_state, mem);
-> +	usleep_range(1, 2);
-> +	ds1302_state &= ~RTC_CLK;
-> +	iowrite8(ds1302_state, mem);
-> +}
-> +
-> +static inline void ds1302_start(void)
-> +{
-> +	ds1302_state &= ~RTC_CLK;
-> +	ds1302_state |= RTC_CE;
-> +	iowrite8(ds1302_state, mem);
-> +	usleep_range(3, 4);
-> +}
-> +
-> +static inline void ds1302_stop(void)
-> +{
-> +	ds1302_state &= ~RTC_CE;
-> +	iowrite8(ds1302_state, mem);
-> +}
-> +
-> +static inline void ds1302_set_tx(void)
-> +{
-> +	ds1302_state &= ~RTC_nWE;
-> +	iowrite8(ds1302_state, mem);
-> +}
-> +
-> +static inline void ds1302_set_rx(void)
-> +{
-> +	ds1302_state |= RTC_nWE;
-> +	iowrite8(ds1302_state, mem);
-> +}
-> +
-> +static inline void ds1302_txbit(int bit)
-> +{
-> +	if (bit)
-> +		ds1302_state |= RTC_IODATA;
-> +	else
-> +		ds1302_state &= ~RTC_IODATA;
-> +	iowrite8(ds1302_state, mem);
-> +}
-> +
-> +static inline int ds1302_rxbit(void)
-> +{
-> +	return ioread8(mem) & 0x1;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id ds1302_dt_ids[] = {
-> +	{ .compatible = "dallas,rtc-ds1302" },
-> +	{ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, ds1302_dt_ids);
-> +#endif
-> +
->  #else
->  #error "Add support for your platform"
->  #endif
-> @@ -216,7 +311,7 @@ static int __init ds1302_rtc_probe(struct platform_device *pdev)
->  {
->  	struct rtc_device *rtc;
->  
-> -	if (ds1302_hw_init()) {
-> +	if (ds1302_hw_init(pdev)) {
->  		dev_err(&pdev->dev, "Failed to init communication channel");
->  		return -EINVAL;
->  	}
-> @@ -245,6 +340,7 @@ static struct platform_driver ds1302_platform_driver = {
->  	.driver		= {
->  		.name	= DRV_NAME,
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(ds1302_dt_ids),
->  	},
->  };
->  
+ > Sounds like my best bet is to mark the nodes as disabled in the
+ > dts and have my bootloader update them on the way through.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+In case your bootloader can take that decision (eg. if the device
+is present at boot time, and the bootloader has the proper probing
+logic or simply knows the device has to be there), that would be
+an pretty easy way.
+
+
+But let me add another usecase, which might be a bit more tricky:
+
+Let's assume we can plug in some more complex device, which consists
+of several (pretty standard) subdevices, behind certain bus'es (maybe
+it's attached via USB, and somewhere behind are some I2C bus'es with
+regulators, pwm-generators, etc).
+
+Let's further assume, we already got some DTS or some piece of memory
+with an DTB subtree for that device (eg. some simple bulk endpoint that
+just gives back a bunch of bytes with the DTB).
+
+Now, when the device is plugged in, I'd like to get that piece of DTB
+loaded and the corresponding drivers initialized. And, of course, when
+it's plugged-out, everything should be shut down cleanly.
+
+How could we achieve that ?
+
+
+--mtx
+--
+Enrico Weigelt, metux IT consult
++49-151-27565287
+MELAG Medizintechnik oHG Sitz Berlin Registergericht AG Charlottenburg =
+HRA 21333 B
+
+Wichtiger Hinweis: Diese Nachricht kann vertrauliche oder nur f=C3=BCr =
+einen begrenzten Personenkreis bestimmte Informationen enthalten. Sie i=
+st ausschlie=C3=9Flich f=C3=BCr denjenigen bestimmt, an den sie gericht=
+et worden ist. Wenn Sie nicht der Adressat dieser E-Mail sind, d=C3=BCr=
+fen Sie diese nicht kopieren, weiterleiten, weitergeben oder sie ganz o=
+der teilweise in irgendeiner Weise nutzen. Sollten Sie diese E-Mail irr=
+t=C3=BCmlich erhalten haben, so benachrichtigen Sie bitte den Absender,=
+ indem Sie auf diese Nachricht antworten. Bitte l=C3=B6schen Sie in die=
+sem Fall diese Nachricht und alle Anh=C3=A4nge, ohne eine Kopie zu beha=
+lten.
+Important Notice: This message may contain confidential or privileged i=
+nformation. It is intended only for the person it was addressed to. If =
+you are not the intended recipient of this email you may not copy, forw=
+ard, disclose or otherwise use it or any part of it in any form whatsoe=
+ver. If you received this email in error please notify the sender by re=
+plying and delete this message and any attachments without retaining a =
+copy.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
