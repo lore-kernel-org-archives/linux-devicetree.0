@@ -1,79 +1,122 @@
-From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 22/22] usb: gadget: zero: init usb_otg_descriptor via usb_otg_descriptor_add
-Date: Mon, 8 Jun 2015 23:02:17 +0800
-Message-ID: <1433775737-9816-23-git-send-email-jun.li@freescale.com>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from
+ the platform device
+Date: Mon, 8 Jun 2015 10:02:56 -0500
+Message-ID: <CAL_JsqKYqZyayzN3imi55EFP=ao4NTSgfXjP5J5rSxMAg4ZSMA@mail.gmail.com>
+References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
+ <1433324255-27510-5-git-send-email-ygardi@codeaurora.org> <CAC5umyis6HU06KU-aSGoy6mCt-u+5Pz16nDk1qHrcsTnFo_2hA@mail.gmail.com>
+ <763dbc7b708b5d5b18ce0b5adcc41016.squirrel@www.codeaurora.org>
+ <CAC5umyhWTLe_K+q9U=4M4N4Yu4Hp7hUxy4QiL=ch=JmYEiMBnQ@mail.gmail.com> <68c91f08f2be6c84055a303ca8aa3fe0.squirrel@www.codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433775737-9816-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <68c91f08f2be6c84055a303ca8aa3fe0.squirrel@www.codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: ygardi@codeaurora.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, merez@qti.qualcomm.com, dovl@qti.qualcomm.com, Jej B <james.bottomley@hansenpartnership.com>, LKML <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Paul Bolle <pebolle@tiscali.nl>, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jbottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codea>
 List-Id: devicetree@vger.kernel.org
 
-Use usb_otg_descriptor_add to allocate and initialize usb_otg_descriptor,
-free it while composite unbind.
+On Sun, Jun 7, 2015 at 10:32 AM,  <ygardi@codeaurora.org> wrote:
+>> 2015-06-05 5:53 GMT+09:00  <ygardi@codeaurora.org>:
+>>>> Hi Yaniv,
+>>>>
+>>>> 2015-06-03 18:37 GMT+09:00 Yaniv Gardi <ygardi@codeaurora.org>:
+>>>>> @@ -321,7 +313,22 @@ static int ufshcd_pltfrm_probe(struct
+>>>>> platform_device *pdev)
+>>>>>                 goto out;
+>>>>>         }
+>>>>>
+>>>>> -       hba->vops = get_variant_ops(&pdev->dev);
+>>>>> +       err = of_platform_populate(node, NULL, NULL, &pdev->dev);
+>>>>> +       if (err)
+>>>>> +               dev_err(&pdev->dev,
+>>>>> +                       "%s: of_platform_populate() failed\n",
+>>>>> __func__);
+>>>>> +
+>>>>> +       ufs_variant_node = of_get_next_available_child(node, NULL);
+>>>>> +
+>>>>> +       if (!ufs_variant_node) {
+>>>>> +               dev_dbg(&pdev->dev, "failed to find ufs_variant_node
+>>>>> child\n");
+>>>>> +       } else {
+>>>>> +               ufs_variant_pdev =
+>>>>> of_find_device_by_node(ufs_variant_node);
+>>>>> +
+>>>>> +               if (ufs_variant_pdev)
+>>>>> +                       hba->vops = (struct ufs_hba_variant_ops *)
+>>>>> +
+>>>>> dev_get_drvdata(&ufs_variant_pdev->dev);
+>>>>> +       }
+>>>>
+>>>> I have no strong objection to 'ufs_variant' sub-node.  But why can't we
+>>>> simply add an of_device_id to ufs_of_match, like below:
+>>>>
+>>>> static const struct of_device_id ufs_of_match[] = {
+>>>>         { .compatible = "jedec,ufs-1.1"},
+>>>> #if IS_ENABLED(SCSI_UFS_QCOM)
+>>>>         { .compatible = "qcom,ufs", .data = &ufs_hba_qcom_vops },
+>>>> #neidf
+>>>>         {},
+>>>> };
+>>>>
+>>>> and get hba->vops by get_variant_ops()?
+>>>>
+>>>
+>>> Hi Mita,
+>>> thanks for your comments.
+>>>
+>>> The whole idea, of having a sub-node which includes all variant specific
+>>> attributes is to separate the UFS Platform device component, from the
+>>> need
+>>> to know "qcom" or any other future variant.
+>>> I believe it keeps the code more modular, and clean - meaning - no
+>>> #ifdef's and no need to include all variant attributes inside the driver
+>>> DT node.
+>>> in that case, we simply have a DT node that is compatible to the Jdec
+>>> standard, and sub-node to include variant info.
+>>>
+>>> I hope you agree with this new design, since it provides a good answer
+>>> to every future variant that will be added, without the need to change
+>>> the
+>>> platform file.
+>>
+>> Thanks for your explanation, I agree with it.
+>>
+>> I found two problems in the current code, but both can be fixed
+>> relatively easily as described below:
+>>
+>> 1) If ufshcd-pltfrm driver is loaded before ufs-qcom driver,
+>> ufshcd_pltfrm_probe() can't find a ufs_variant device.
+>>
+>> In order to trigger re-probing ufs device when ufs-qcom driver has
+>> been loaded, ufshcd_pltfrm_probe() should return -EPROBE_DEFER in
+>> case 'ufs_variant' sub-node exists and no hba->vops found.
+>>
+>> 2) Nothing prevents ufs-qcom module from being unloaded while the
+>> variant_ops is referenced by ufshcd-pltfrm.
+>>
+>> It can be fixed by incrementing module refcount of ufs_variant module
+>> by __module_get(ufs_variant_pdev->dev.driver->owener) in
+>> ufshcd_pltfrm_probe(), and module_put() in ufshcd_pltfrm_remove()
+>> to descrement the refcount.
+>>
+>
+> again, Mita, your comments are very appreciated.
+>
+> 1)
+> If ufshcd-pltfrm driver is loaded before ufs-qcom, (what actually happens
+> always), then the calling to of_platform_populate() which is added,
+> guarantees that ufs-qcom probe will be called and finish, before
+> ufshcd_pltfrm probe continues.
+> so ufs_variant device is always there, and ready.
+> I think it means we are safe - since either way, we make sure ufs-qcom
+> probe will be called and finish before dealing with ufs_variant device in
+> ufshcd_pltfrm probe.
 
-Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/gadget/legacy/zero.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+This is due to the fact that you have 2 platform drivers. You should
+only have 1 (and 1 node). If you really think you need 2, then you
+should do like many other common *HCIs do and make the base UFS driver
+a set of library functions that drivers can use or call. Look at EHCI,
+AHCI, SDHCI, etc. for inspiration.
 
-diff --git a/drivers/usb/gadget/legacy/zero.c b/drivers/usb/gadget/legacy/zero.c
-index c986e8a..fe8cddb 100644
---- a/drivers/usb/gadget/legacy/zero.c
-+++ b/drivers/usb/gadget/legacy/zero.c
-@@ -122,20 +122,7 @@ static struct usb_device_descriptor device_desc = {
- };
- 
- #ifdef CONFIG_USB_OTG
--static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =		sizeof otg_descriptor,
--	.bDescriptorType =	USB_DT_OTG,
--
--	/* REVISIT SRP-only hardware is possible, although
--	 * it would not be called "OTG" ...
--	 */
--	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
--};
--
--static const struct usb_descriptor_header *otg_desc[] = {
--	(struct usb_descriptor_header *) &otg_descriptor,
--	NULL,
--};
-+static const struct usb_descriptor_header *otg_desc[2];
- #else
- #define otg_desc	NULL
- #endif
-@@ -341,6 +328,13 @@ static int zero_bind(struct usb_composite_dev *cdev)
- 
- 	/* support OTG systems */
- 	if (gadget_is_otg(cdev->gadget)) {
-+		if (!otg_desc[0]) {
-+			otg_desc[0] = (struct usb_descriptor_header *)
-+					usb_otg_descriptor_add(cdev->gadget);
-+			if (!otg_desc[0])
-+				return -ENOMEM;
-+			otg_desc[1] = NULL;
-+		}
- 		sourcesink_driver.descriptors = otg_desc;
- 		sourcesink_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
- 		loopback_driver.descriptors = otg_desc;
-@@ -397,6 +391,9 @@ static int zero_unbind(struct usb_composite_dev *cdev)
- 	if (!IS_ERR_OR_NULL(func_lb))
- 		usb_put_function(func_lb);
- 	usb_put_function_instance(func_inst_lb);
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
-+
- 	return 0;
- }
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
