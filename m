@@ -1,65 +1,47 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: Dealing with optional i2c devices in a devicetree
-Date: Mon, 8 Jun 2015 06:01:57 +0000
-Message-ID: <55752FD4.6050700@alliedtelesis.co.nz>
-References: <55713BB1.80004@alliedtelesis.co.nz>
- <55714FFB.3000608@roeck-us.net>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v0] gpio_keys: fix gpio key driver to proper support GIC
+ interrupt
+Date: Mon, 8 Jun 2015 08:30:52 +0200
+Message-ID: <20150608063052.GW18985@pengutronix.de>
+References: <1433402712-21399-1-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55714FFB.3000608-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Content-ID: <CD20D719BB874F40862B61A4ED56CE85-aR5bhbO/t7M@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1433402712-21399-1-git-send-email-yvo-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "jdelvare-l3A5Bk7waGM@public.gmane.org" <jdelvare-l3A5Bk7waGM@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org" <guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+To: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Toan Le <toanle-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIHRvIHRob3NlIHdobyByZXBsaWVkLg0KDQpPbiAwNi8wNS8yMDE1IDA3OjMwIFBNLCBH
-dWVudGVyIFJvZWNrIHdyb3RlOg0KPiBIaSBDaHJpcywNCj4NCj4gT24gMDYvMDQvMjAxNSAxMTow
-MyBQTSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4+IEhpLA0KPj4NCj4+IEknbSB3b3JraW5nIG9u
-IGEgbmV3IGJvYXJkIGFuZCBvbmUgZmVhdHVyZSBpdCBhcyBpcyBhIHBsdWctaW4gbW9kdWxlDQo+
-PiB3aXRoIGFuIEFEUzc4MzAgdm9sdGFnZSBtb25pdG9yIG9uIGl0LiBUaGlzIHdpbGwgYmUgdXNl
-ZCBkdXJpbmcNCj4+IG1hbnVmYWN0dXJpbmcgdG8gc2FuaXR5IGNoZWNrIHRoYXQgdmFyaW91cyB2
-b2x0YWdlIHJhaWxzIGFyZSB3aXRoaW4NCj4+IGV4cGVjdGVkIHJhbmdlcy4NCj4+DQo+PiBJIGhh
-dmUgYSBkdHMgZW50cnkgZm9yIHRoZSBkZXZpY2UgYXMgYmVsb3cgKHdpdGggc29tZSBvbWlzc2lv
-bnMgZm9yIHRoZQ0KPj4gc2FrZSBvZiBjbGFyaXR5KQ0KPj4NCj4+ICAgICBzb2Mgew0KPj4gICAg
-ICAgICBpbnRlcm5hbC1yZWdzIHsNCj4+ICAgICAgICAgICAgIGkyY0AxMTAwMCB7DQo+PiAgICAg
-ICAgICAgICAgICAgYWRzNzgzMEA0OCB7DQo+PiAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGli
-bGUgPSAiYWRzNzgzMCI7DQo+PiAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDQ4PjsNCj4+
-ICAgICAgICAgICAgICAgICB9Ow0KPj4gICAgICAgICAgICAgfTsNCj4+ICAgICAgICAgfTsNCj4+
-ICAgICB9Ow0KPj4NCj4+IFRoZSBwcm9ibGVtIGlzIHRoYXQgd2hlbiB0aGUgbWFudWZhY3R1cmlu
-ZyBjYXJkIGlzIG5vdCBpbnN0YWxsZWQgdGhlDQo+PiBkZXZpY2Ugc3RpbGwgc2hvd3MgdXAgaW4g
-L3N5cy9jbGFzcy9od21vbi9od21vbjAvIGFuZA0KPj4gL3N5cy9idXMvaTJjL2RldmljZXMvMC0w
-MDQ4LyBkZXNwaXRlIGl0IG5vdCBhY3R1YWxseSBiZWluZyBwcmVzZW50LiBJZiBJDQo+PiB3YXMg
-dXNpbmcgYW4gb2xkIHN0eWxlIGluaXRpYWxpemF0aW9uIEkgY291bGQgdXNlDQo+PiBpMmNfbmV3
-X3Byb2JlZF9kZXZpY2UoKSB3aGljaCBJIHRoaW5rIHdvdWxkIHN0b3AgdGhlIGRyaXZlcnMgcHJv
-YmUoKQ0KPj4gZnVuY3Rpb24gZnJvbSBiZWluZyBjYWxsZWQNCj4+DQo+PiBMb29raW5nIGF0IHRo
-ZSBhZHM3ODI4X3Byb2JlKCkgZnVuY3Rpb24gaXQgZG9lc24ndCBhY3R1YWxseSBkbyBhbnl0aGlu
-Zw0KPj4gd2l0aCB0aGUgaTJjIGRldmljZSBiZWZvcmUgY2FsbGluZyBod21vbl9kZXZpY2VfcmVn
-aXN0ZXIoKS4gU29tZSBod21vbg0KPj4gZHJpdmVycyBsaWtlIGxtNzNfcHJvYmUoKSBkbyBhdHRl
-bXB0IHRvIHJlYWQgZnJvbSB0aGUgZGV2aWNlIGFuZCBiYWlsIGlmDQo+PiB0aGUgcmVhZCBmYWls
-cy4gSSBjYW4gcHJvYmFibHkgZml4IG15IHByb2JsZW0gYnkgZG9pbmcgc29tZXRoaW5nIHNpbWls
-YXINCj4+IGluIHRoZSBhZHM3ODI4X3Byb2JlKCksIGJ1dCB0aGVyZSBhcmUgb3RoZXIgZHJpdmVy
-cyB0aGF0IGhhdmUgYSBzaW1pbGFyDQo+PiBwcm9iZSBmdW5jdGlvbi4NCj4+DQo+IEJ1dCB0aGF0
-IHdvdWxkIGJlIGFydGlmaWNpYWwgaW4gdGhpcyBjYXNlLCBhbmQgaXQgY291bGQgbm90IGJlIHVz
-ZWQgdG8NCj4gcmVhbGx5DQo+IGRldGVjdCB0aGUgY2hpcCBidXQgd291bGQgb25seSBwcm92ZSB0
-aGF0IHRoZXJlIGlzIGEgY2hpcCBhdCB0aGUNCj4gc2VsZWN0ZWQgaTJjDQo+IGFkZHJlc3MuIFRo
-aXMgaXMgbm90IHJlYWxseSB1c2VmdWwuDQo+DQo+PiBJcyB0aGVyZSBhIGJldHRlciB3YXkgb2Yg
-Z2V0dGluZyB0aGUgZGV2aWNldHJlZSBtYWNoaW5lcnkgdG8gYXZvaWQgdGhlDQo+PiBjYWxsIHRv
-IHRoZSBkcml2ZXIgcHJvYmUgZnVuY3Rpb24gaW4gdGhlIGZpcnN0IHBsYWNlPw0KPj4NCj4NCj4g
-VGhlIGVhc2llc3Qgc29sdXRpb24gd291bGQgcHJvYmFibHkgYmUgdG8gZHJvcCB0aGUgZW50cnkg
-ZnJvbSB0aGUNCj4gZGV2aWNldHJlZSBmaWxlIGFuZCBpbnN0YW50aWF0ZSB0aGUgZHJpdmVyIG1h
-bnVhbGx5IHZpYSBzeXNmcyB3aGVuDQo+IG5lZWRlZC4gQW5vdGhlciBvcHRpb24gd291bGQgYmUg
-dG8gbG9hZCBhIGRpZmZlcmVudCBkZXZpY2V0cmVlIGZpbGUNCj4gaWYgdGhlIGNoaXAgaXMgcGx1
-Z2dlZCBpbi4NCj4NCj4gWW91IG1pZ2h0IGFsc28gYmUgYWJsZSB0byB1c2UgYSBkZXZpY2V0cmVl
-IG92ZXJsYXksIGJ1dCB0aGF0IHdvdWxkDQo+IHByb2JhYmx5IGFkZCB0b28gbXVjaCBjb21wbGV4
-aXR5IGlmIHRoZSBjaGlwIGlzIG9ubHkgdXNlZCBpbg0KPiBtYW51ZmFjdHVyaW5nLg0KDQpTb3Vu
-ZHMgbGlrZSBteSBiZXN0IGJldCBpcyB0byBtYXJrIHRoZSBub2RlcyBhcyBkaXNhYmxlZCBpbiB0
-aGUgZHRzIGFuZCANCmhhdmUgbXkgYm9vdGxvYWRlciB1cGRhdGUgdGhlbSBvbiB0aGUgd2F5IHRo
-cm91Z2gu
+Hello,
+
+On Thu, Jun 04, 2015 at 02:25:12PM +0700, Y Vo wrote:
+> GIC is designed to support two of trigger mechanisms - active level
+> high or edge rising. But in the gpio_keys driver, it tries to use bot=
+h
+> edge rising and edge falling trigger. This patch fixes the gpio_keys
+> driver to request only the edge rising event when failed to configure=
+ the
+> interrupt.
+Is it possible to fix that in the GIC driver? I.e. let it switch the
+trigger direction to falling when it fired for raising?
+
+This would require to read out the current level, not sure this is
+possible?!
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
