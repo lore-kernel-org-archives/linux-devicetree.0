@@ -1,59 +1,42 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/2]  Add code to release secondary cores from holding pen.
-Date: Mon,  8 Jun 2015 17:16:57 +0100
-Message-ID: <1433780219-1245-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 2/2] ARM: STi: DT: STiH407: Add cpu-release-addr dt property.
+Date: Mon,  8 Jun 2015 17:16:59 +0100
+Message-ID: <1433780219-1245-3-git-send-email-peter.griffin@linaro.org>
+References: <1433780219-1245-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433780219-1245-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+To enable SMP when booting via u-boot we need to specify the
+newly implemented cpu-release-addr DT property.
 
-This patchset adds in the necessary code to manage the holding pen for STi
-platforms.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ arch/arm/boot/dts/stih407-family.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Due to all the STi upstream devs using JTAG to boot the STi boards, there
-is currently a SMP bug when booting upstream kernels via u-boot where
-only the primary core is brought up.
-
-This hasn't been noticed until now because when booting via JTAG the
-stlinux_arm_boot script sets the PC of the secondary cores directly.
-
-I can't test this on a STiH418 platform, as I don't have one, but a similar
-DT change will be required there as well. I'm not sure if u-boot uses
-the same SBC DMEM offset by default or not.
-
-With these patches applied booting via u-boot now works correctly.
-
-[    0.045456] CPU: Testing write buffer coherency: ok
-[    0.045597] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-[    0.045734] Setting up static identity map for 0x40209000 - 0x40209098
-[    0.065047] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
-[    0.065081] Brought up 2 CPUs
-[    0.065089] SMP: Total of 2 processors activated (5983.43 BogoMIPS).
-[    0.065092] CPU: All CPU(s) started in SVC mode.
-
-IMHO these should be considered for the next -rc.
-
-regards,
-
-Peter.
-
-Peter Griffin (2):
-  ARM: STi: Add code to release secondary cores from holding pen.
-  ARM: STi: DT: STiH407: Add cpu-release-addr dt property.
-
- arch/arm/boot/dts/stih407-family.dtsi |  4 +++
- arch/arm/mach-sti/headsmp.S           |  1 +
- arch/arm/mach-sti/platsmp.c           | 56 +++++++++++++++++++++++++++++++++--
- arch/arm/mach-sti/smp.h               |  2 ++
- 4 files changed, 60 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index c06a546..3c90227 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -19,11 +19,15 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			/* u-boot puts hpen in SBC dmem at 0xa4 offset */
++			cpu-release-addr = <0x94100A4>;
+ 		};
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			/* u-boot puts hpen in SBC dmem at 0xa4 offset */
++			cpu-release-addr = <0x94100A4>;
+ 		};
+ 	};
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
