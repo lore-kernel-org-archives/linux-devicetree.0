@@ -1,67 +1,60 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] ARM: dts: add property for maximum ADC clock
- frequencies
-Date: Sun, 07 Jun 2015 21:23:03 +0200
-Message-ID: <b32971379e0b8dcc60620716d3d79aed@agner.ch>
-References: <1432730872-14325-1-git-send-email-stefan@agner.ch>
- <1432730872-14325-3-git-send-email-stefan@agner.ch>
- <557477BE.5050108@kernel.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
+Date: Sun, 7 Jun 2015 19:29:17 -0500
+Message-ID: <CAL_JsqKEcpWiPsORFrQs+dhqM4qcgMPyaz0ijVEMNkFeVQfkWQ@mail.gmail.com>
+References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
+ <1431613704-30801-1-git-send-email-sudeep.holla@arm.com> <555B2C9C.1000709@arm.com>
+ <20150519171732.GD9213@kroah.com> <20150607070539.A8C7EC409D1@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557477BE.5050108-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150607070539.A8C7EC409D1-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-06-07 18:56, Jonathan Cameron wrote:
-> On 27/05/15 13:47, Stefan Agner wrote:
->> The ADC clock frequency is limited depending on modes used. Add
->> device tree property which allow to set the mode used and the
->> maximum frequency ratings for the instance. These allows to
->> set the ADC clock to a frequency which is within specification
->> according to the actual mode used.
+On Sun, Jun 7, 2015 at 2:05 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 19 May 2015 10:17:32 -0700
+> , Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>  wrote:
+>> On Tue, May 19, 2015 at 01:29:16PM +0100, Sudeep Holla wrote:
+>> > Hi Rob/Greg,
+>> >
+>> > On 14/05/15 15:28, Sudeep Holla wrote:
+>> > >Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+>> > >devices with an OF node") adds the symlink `of_node` for each device
+>> > >pointing to it's device tree node while creating/initialising it.
+>> > >
+>> > >However the devicetree sysfs is created and setup in of_init which is
+>> > >executed at core_initcall level. For all the devices created before
+>> > >of_init, the following error is thrown:
+>> > >   "Error -2(-ENOENT) creating of_node link"
+>> > >
+>> > >Like many other components in driver model, initialize the sysfs support
+>> > >for OF/devicetree from driver_init so that it's ready before any devices
+>> > >are created.
+>> > >
+>> > >Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
+>> > >   devices with an OF node")
+>> > >Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > >Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > >Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > >Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> > >Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+>> > >Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>> > >Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> >
+>> > I assume one of you will pick this up if there are no further comments ?
 >>
->> Acked-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> I'm happy to take this via IIO if people want me to, otherwise give
-> it's connection to the previous patch that I just applied,
+>> I will once things settle down...
+>
+> I've picked it up. Yell if you'd prefer to take it by your tree.
 
-I guess the chances for conflicts are rather small. I don't have any
-preferences, Shawn?
+Greg already applied it. It just hit Linus' tree Sat.
 
+Rob
 --
-Stefan
-
-> 
-> Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
->> ---
->>  arch/arm/boot/dts/vfxxx.dtsi | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
->> index a29c7ce..c6609bd 100644
->> --- a/arch/arm/boot/dts/vfxxx.dtsi
->> +++ b/arch/arm/boot/dts/vfxxx.dtsi
->> @@ -189,6 +189,8 @@
->>  				clocks = <&clks VF610_CLK_ADC0>;
->>  				clock-names = "adc";
->>  				status = "disabled";
->> +				fsl,adck-max-frequency = <30000000>, <40000000>,
->> +							<20000000>;
->>  			};
->>
->>  			wdoga5: wdog@4003e000 {
->> @@ -387,6 +389,8 @@
->>  				clocks = <&clks VF610_CLK_ADC1>;
->>  				clock-names = "adc";
->>  				status = "disabled";
->> +				fsl,adck-max-frequency = <30000000>, <40000000>,
->> +							<20000000>;
->>  			};
->>
->>  			esdhc1: esdhc@400b2000 {
->>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
