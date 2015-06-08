@@ -1,92 +1,65 @@
 From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Subject: Re: Dealing with optional i2c devices in a devicetree
-Date: Mon, 8 Jun 2015 06:01:42 +0000
-Message-ID: <55752FC5.3040004@alliedtelesis.co.nz>
-References: <55713BB1.80004@alliedtelesis.co.nz> <2658431.5aULpGi9jh@wuerfel>
+Date: Mon, 8 Jun 2015 06:01:57 +0000
+Message-ID: <55752FD4.6050700@alliedtelesis.co.nz>
+References: <55713BB1.80004@alliedtelesis.co.nz>
+ <55714FFB.3000608@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2658431.5aULpGi9jh@wuerfel>
+In-Reply-To: <55714FFB.3000608-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Content-Language: en-US
-Content-ID: <2564747D5712D347919F3815D8263CDE-aR5bhbO/t7M@public.gmane.org>
+Content-ID: <CD20D719BB874F40862B61A4ED56CE85-aR5bhbO/t7M@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jdelvare-l3A5Bk7waGM@public.gmane.org" <jdelvare-l3A5Bk7waGM@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org" <guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "jdelvare-l3A5Bk7waGM@public.gmane.org" <jdelvare-l3A5Bk7waGM@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <shardy-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org" <guillaume.roguez-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/05/2015 07:26 PM, Arnd Bergmann wrote:
-> On Friday 05 June 2015 06:03:30 Chris Packham wrote:
->>
->> Is there a better way of getting the devicetree machinery to avoid the
->> call to the driver probe function in the first place?
->>
->>
->
-> The newly added DT overlay support should do what you need, but it might
-> not be the easiest solution.
->
-> To start out with the device not getting probed at first, add a
-> 'status="disabled"' property, which will prevent the i2c_device from
-> getting added. At runtime you then need a way to change that from
-> "disabled" to "ok" and retrigger the probe. I haven't done that myself,
-> so it might need some i2c core changes to work correctly.
->
-
-So I pursued this idea a little.
-
-I set the node to status = "disabled" in the dts. Then I added some code 
-to probe for the i2c device using
-i2c_probe_func_quick_read() and updated the device tree to remove the 
-status property based on the result of the probe.
-
-Then I was able to call of_platform_populate(node->parent, ...). This 
-got me as far as the platform device being created but none of the i2c 
-or hwmon code kicked in. I may have missed something, perhaps the 
-platform bus needs to be re-probed now that there is a new device.
-
-I think I'll look at updating the device tree passed by the bootloader 
-which should be easier to do at this point.
-
-For future (and current) mailing list readers this is the gist of my 
-detect function.
-
-static void board_detect(struct device *dev)
-{
-	struct i2c_adapter *adap = i2c_get_adapter(0);
-
-	/* Ugly hack. The ads7830 device is a SMBUS device at 0x48.
-	 * SMBUS is not i2c but the quick read should be OK-ish.
-	 */
-	if (i2c_probe_func_quick_read(adap, 0x48)) {
-		int ret;
-		struct device_node *node;
-
-		dev_info(dev, "board detected");
-		for_each_compatible_node(node, NULL, "ads7830") {
-			struct property *prop;
-			const struct of_device_id match_table[] = {
-				{ .compatible = "ads7830", },
-				{} /* Empty terminated list */
-			};
-
-			prop = of_find_property(node, "status", NULL);
-			if (prop)
-				of_remove_property(node, prop);
-
-			ret = of_platform_populate(node->parent,
-						   match_table,
-						   NULL, NULL);
-			if (ret)
-				dev_err(dev, "populate failed\n");
-		}
-	}
-
-	i2c_put_adapter(adap);
-	return;
-}--
+VGhhbmtzIHRvIHRob3NlIHdobyByZXBsaWVkLg0KDQpPbiAwNi8wNS8yMDE1IDA3OjMwIFBNLCBH
+dWVudGVyIFJvZWNrIHdyb3RlOg0KPiBIaSBDaHJpcywNCj4NCj4gT24gMDYvMDQvMjAxNSAxMTow
+MyBQTSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4+IEhpLA0KPj4NCj4+IEknbSB3b3JraW5nIG9u
+IGEgbmV3IGJvYXJkIGFuZCBvbmUgZmVhdHVyZSBpdCBhcyBpcyBhIHBsdWctaW4gbW9kdWxlDQo+
+PiB3aXRoIGFuIEFEUzc4MzAgdm9sdGFnZSBtb25pdG9yIG9uIGl0LiBUaGlzIHdpbGwgYmUgdXNl
+ZCBkdXJpbmcNCj4+IG1hbnVmYWN0dXJpbmcgdG8gc2FuaXR5IGNoZWNrIHRoYXQgdmFyaW91cyB2
+b2x0YWdlIHJhaWxzIGFyZSB3aXRoaW4NCj4+IGV4cGVjdGVkIHJhbmdlcy4NCj4+DQo+PiBJIGhh
+dmUgYSBkdHMgZW50cnkgZm9yIHRoZSBkZXZpY2UgYXMgYmVsb3cgKHdpdGggc29tZSBvbWlzc2lv
+bnMgZm9yIHRoZQ0KPj4gc2FrZSBvZiBjbGFyaXR5KQ0KPj4NCj4+ICAgICBzb2Mgew0KPj4gICAg
+ICAgICBpbnRlcm5hbC1yZWdzIHsNCj4+ICAgICAgICAgICAgIGkyY0AxMTAwMCB7DQo+PiAgICAg
+ICAgICAgICAgICAgYWRzNzgzMEA0OCB7DQo+PiAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGli
+bGUgPSAiYWRzNzgzMCI7DQo+PiAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDQ4PjsNCj4+
+ICAgICAgICAgICAgICAgICB9Ow0KPj4gICAgICAgICAgICAgfTsNCj4+ICAgICAgICAgfTsNCj4+
+ICAgICB9Ow0KPj4NCj4+IFRoZSBwcm9ibGVtIGlzIHRoYXQgd2hlbiB0aGUgbWFudWZhY3R1cmlu
+ZyBjYXJkIGlzIG5vdCBpbnN0YWxsZWQgdGhlDQo+PiBkZXZpY2Ugc3RpbGwgc2hvd3MgdXAgaW4g
+L3N5cy9jbGFzcy9od21vbi9od21vbjAvIGFuZA0KPj4gL3N5cy9idXMvaTJjL2RldmljZXMvMC0w
+MDQ4LyBkZXNwaXRlIGl0IG5vdCBhY3R1YWxseSBiZWluZyBwcmVzZW50LiBJZiBJDQo+PiB3YXMg
+dXNpbmcgYW4gb2xkIHN0eWxlIGluaXRpYWxpemF0aW9uIEkgY291bGQgdXNlDQo+PiBpMmNfbmV3
+X3Byb2JlZF9kZXZpY2UoKSB3aGljaCBJIHRoaW5rIHdvdWxkIHN0b3AgdGhlIGRyaXZlcnMgcHJv
+YmUoKQ0KPj4gZnVuY3Rpb24gZnJvbSBiZWluZyBjYWxsZWQNCj4+DQo+PiBMb29raW5nIGF0IHRo
+ZSBhZHM3ODI4X3Byb2JlKCkgZnVuY3Rpb24gaXQgZG9lc24ndCBhY3R1YWxseSBkbyBhbnl0aGlu
+Zw0KPj4gd2l0aCB0aGUgaTJjIGRldmljZSBiZWZvcmUgY2FsbGluZyBod21vbl9kZXZpY2VfcmVn
+aXN0ZXIoKS4gU29tZSBod21vbg0KPj4gZHJpdmVycyBsaWtlIGxtNzNfcHJvYmUoKSBkbyBhdHRl
+bXB0IHRvIHJlYWQgZnJvbSB0aGUgZGV2aWNlIGFuZCBiYWlsIGlmDQo+PiB0aGUgcmVhZCBmYWls
+cy4gSSBjYW4gcHJvYmFibHkgZml4IG15IHByb2JsZW0gYnkgZG9pbmcgc29tZXRoaW5nIHNpbWls
+YXINCj4+IGluIHRoZSBhZHM3ODI4X3Byb2JlKCksIGJ1dCB0aGVyZSBhcmUgb3RoZXIgZHJpdmVy
+cyB0aGF0IGhhdmUgYSBzaW1pbGFyDQo+PiBwcm9iZSBmdW5jdGlvbi4NCj4+DQo+IEJ1dCB0aGF0
+IHdvdWxkIGJlIGFydGlmaWNpYWwgaW4gdGhpcyBjYXNlLCBhbmQgaXQgY291bGQgbm90IGJlIHVz
+ZWQgdG8NCj4gcmVhbGx5DQo+IGRldGVjdCB0aGUgY2hpcCBidXQgd291bGQgb25seSBwcm92ZSB0
+aGF0IHRoZXJlIGlzIGEgY2hpcCBhdCB0aGUNCj4gc2VsZWN0ZWQgaTJjDQo+IGFkZHJlc3MuIFRo
+aXMgaXMgbm90IHJlYWxseSB1c2VmdWwuDQo+DQo+PiBJcyB0aGVyZSBhIGJldHRlciB3YXkgb2Yg
+Z2V0dGluZyB0aGUgZGV2aWNldHJlZSBtYWNoaW5lcnkgdG8gYXZvaWQgdGhlDQo+PiBjYWxsIHRv
+IHRoZSBkcml2ZXIgcHJvYmUgZnVuY3Rpb24gaW4gdGhlIGZpcnN0IHBsYWNlPw0KPj4NCj4NCj4g
+VGhlIGVhc2llc3Qgc29sdXRpb24gd291bGQgcHJvYmFibHkgYmUgdG8gZHJvcCB0aGUgZW50cnkg
+ZnJvbSB0aGUNCj4gZGV2aWNldHJlZSBmaWxlIGFuZCBpbnN0YW50aWF0ZSB0aGUgZHJpdmVyIG1h
+bnVhbGx5IHZpYSBzeXNmcyB3aGVuDQo+IG5lZWRlZC4gQW5vdGhlciBvcHRpb24gd291bGQgYmUg
+dG8gbG9hZCBhIGRpZmZlcmVudCBkZXZpY2V0cmVlIGZpbGUNCj4gaWYgdGhlIGNoaXAgaXMgcGx1
+Z2dlZCBpbi4NCj4NCj4gWW91IG1pZ2h0IGFsc28gYmUgYWJsZSB0byB1c2UgYSBkZXZpY2V0cmVl
+IG92ZXJsYXksIGJ1dCB0aGF0IHdvdWxkDQo+IHByb2JhYmx5IGFkZCB0b28gbXVjaCBjb21wbGV4
+aXR5IGlmIHRoZSBjaGlwIGlzIG9ubHkgdXNlZCBpbg0KPiBtYW51ZmFjdHVyaW5nLg0KDQpTb3Vu
+ZHMgbGlrZSBteSBiZXN0IGJldCBpcyB0byBtYXJrIHRoZSBub2RlcyBhcyBkaXNhYmxlZCBpbiB0
+aGUgZHRzIGFuZCANCmhhdmUgbXkgYm9vdGxvYWRlciB1cGRhdGUgdGhlbSBvbiB0aGUgd2F5IHRo
+cm91Z2gu
+--
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
