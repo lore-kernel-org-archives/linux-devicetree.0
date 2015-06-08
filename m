@@ -1,46 +1,63 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH 00/20] ARM: dts: Add USB and OTG related
- nodes and enable on various boards
-Date: Mon, 8 Jun 2015 14:56:35 +0200
-Message-ID: <CAOMqctRDEoPiJ95EVgs_ZRQVt=SzK9NPDJGmq3JTJF1kWscmqg@mail.gmail.com>
-References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com> <20150608100358.GW23777@lukather>
-Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Ranjit Abhimanyu Waghmode <ranjit.waghmode-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [LINUX RFC V2 1/2] devicetree: Add DT bindings documentation
+ for Zynq Ultrascale+ MPSoC GQSPI controller
+Date: Mon, 8 Jun 2015 12:59:23 +0000
+Message-ID: <7CFCFE83B8145347A1D424EC939F1C3CA7115F@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1433509653-15142-1-git-send-email-ranjit.waghmode@xilinx.com>
+ <20150605160017.GA8863@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQMLUOX54MBBLFC22VQKGQEX3L4KQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150608100358.GW23777@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150605160017.GA8863@xsjsorenbubuntu>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On 8 June 2015 at 12:03, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Hans,
->
-> On Fri, Jun 05, 2015 at 09:02:03PM +0200, Hans de Goede wrote:
->> Hi Maxime,
->>
->> Here is a patch-set with all the otg / sun8i-usb-host related dts patches
->> I've accumulated.
->>
->> These are intended for 4.3, and go hand in hand with the outstanding
->> musb-sunxi / phy-sun4i-usb patches, which I expect to be merged as is
->> for 4.3 .
->
-> I'm fine with these patches. Do you have a branch somewhere that I can
-> pull (without the one that you wanted me to drop, obviously)?
-
-Are these before the conversion to DT label syntax or after (meaning
-that the conversion patches got pulled somewhere already)?
-
-Thanks
-
-Michal
+SGkgU29yZW4sDQoNCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS16eW5xbXAt
+cXNwaS50eHQgICAgfCAyNg0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLXp5bnFtcC1xc3BpLnR4dA0K
+PiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+cGkvc3BpLXp5bnFtcC1xc3BpLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3NwaS9zcGktenlucW1wLXFzcGkudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQN
+Cj4gPiBpbmRleCAwMDAwMDAwLi5jZWM2MzMwDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLXp5bnFtcC1xc3BpLnR4
+dA0KPiA+IEBAIC0wLDAgKzEsMjYgQEANCj4gPiArWGlsaW54IFp5bnEgVWx0cmFTY2FsZSsgTVBT
+b0MgR1FTUEkgY29udHJvbGxlciBEZXZpY2UgVHJlZSBCaW5kaW5ncw0KPiA+ICstLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGUgICAg
+ICAgICAgICAgICA6IFNob3VsZCBiZSAieGxueCx6eW5xbXAtcXNwaS0xLjAiLg0KPiA+ICstIHJl
+ZyAgICAgICAgICAgICAgICAgICAgICA6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBv
+ZiBHUVNQSSByZWdpc3RlcnMgbWFwLg0KPiA+ICstIGludGVycnVwdHMgICAgICAgICAgICAgICA6
+IFByb3BlcnR5IHdpdGggYSB2YWx1ZSBkZXNjcmliaW5nIHRoZSBpbnRlcnJ1cHQNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgbnVtYmVyLg0KPiA+ICstIGludGVycnVwdC1wYXJlbnQgOiBNdXN0
+IGJlIGNvcmUgaW50ZXJydXB0IGNvbnRyb2xsZXIuDQo+ID4gKy0gY2xvY2stbmFtZXMgICAgICAg
+ICAgICAgIDogTGlzdCBvZiBpbnB1dCBjbG9jayBuYW1lcyAtICJyZWZfY2xrIiwgInBjbGsiDQo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgIChTZWUgY2xvY2sgYmluZGluZ3MgZm9yIGRldGFpbHMp
+Lg0KPiA+ICstIGNsb2NrcyAgICAgICAgICAgOiBDbG9jayBwaGFuZGxlcyAoc2VlIGNsb2NrIGJp
+bmRpbmdzIGZvciBkZXRhaWxzKS4NCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+
+ID4gKy0gbnVtLWNzICAgICAgICAgICA6IE51bWJlciBvZiBjaGlwIHNlbGVjdHMgdXNlZC4NCj4g
+PiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gKyAgIHFzcGk6IHNwaUBmZjBmMDAwMCB7DQo+ID4gKyAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJ4bG54LHp5bnFtcC1xc3BpLTEuMCI7DQo+ID4gKyAgICAg
+ICAgICAgY2xvY2stbmFtZXMgPSAicmVmX2NsayIsICJwY2xrIjsNCj4gPiArICAgICAgICAgICBj
+bG9ja3MgPSA8Jm1pc2NfY2xrICZtaXNjX2Nsaz47DQo+ID4gKyAgICAgICAgICAgaW50ZXJydXB0
+cyA9IDwwIDE1IDQ+Ow0KPiA+ICsgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8JmdpYz47
+DQo+ID4gKyAgICAgICAgICAgbnVtLWNzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgIHJlZyA9IDww
+eDAgMHhmZjBmMDAwMCAweDEwMDAgMHgwIDB4YzAwMDAwMDAgMHg4MDAwMDAwPjsNCj4NCj4gUGxl
+YXNlIG1ha2UgdGhpcw0KPiAgIHJlZyA9IDwweDAgMHhmZjBmMDAwMCAweDEwMDA+LCA8MHgwIDB4
+YzAwMDAwMDAgMHg4MDAwMDAwPjsNCj4NCg0KU29ycnkgZm9yIHRoaXMgbWlzcy4gV2lsbCB1cGRh
+dGUgaW4gbmV4dCB2ZXJzaW9uLg0KDQpSZWdhcmRzLA0KUmFuaml0IFdhZ2htb2RlLA0KcmFuaml0
+d0B4aWxpbnguY29tDQoNCg0KVGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBpbnRl
+bmRlZCBmb3IgdGhlIHNvbGUgdXNlIG9mIHRoZSBuYW1lZCByZWNpcGllbnQocykgYW5kIGNvbnRh
+aW4ocykgY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIHRoYXQgbWF5IGJlIHByb3ByaWV0YXJ5LCBw
+cml2aWxlZ2VkIG9yIGNvcHlyaWdodGVkIHVuZGVyIGFwcGxpY2FibGUgbGF3LiBJZiB5b3UgYXJl
+IG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBkbyBub3QgcmVhZCwgY29weSwgb3IgZm9yd2Fy
+ZCB0aGlzIGVtYWlsIG1lc3NhZ2Ugb3IgYW55IGF0dGFjaG1lbnRzLiBEZWxldGUgdGhpcyBlbWFp
+bCBtZXNzYWdlIGFuZCBhbnkgYXR0YWNobWVudHMgaW1tZWRpYXRlbHkuDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
