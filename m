@@ -1,71 +1,172 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/6] drivers: firmware: psci: add extended stateid
- power_state support
-Date: Mon, 8 Jun 2015 12:03:52 +0100
-Message-ID: <20150608110352.GB682@red-moon>
-References: <1432901799-18359-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1432901799-18359-6-git-send-email-lorenzo.pieralisi@arm.com>
- <CAJ5Y-eYLAjOcTU1Md3Rmc0E49A5Dby1aoBzwtpKpD4Rg=XAYfA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ5Y-eYLAjOcTU1Md3Rmc0E49A5Dby1aoBzwtpKpD4Rg=XAYfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v4 1/2] usb: ehci-exynos: Make provision for vdd regulators
+Date: Mon, 08 Jun 2015 16:37:12 +0530
+Message-ID: <1433761633-8542-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Alan Stern <stern@rowland.harvard.edu>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2015 at 03:16:36PM +0100, Ashwin Chaugule wrote:
-> On 29 May 2015 at 08:16, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+Facilitate getting required 3.3V and 1.0V VDD supply for
+EHCI controller on Exynos.
 
-[...]
+For example, patches for regulators' nodes:
+c8c253f ARM: dts: Add regulator entries to smdk5420
+275dcd2 ARM: dts: add max77686 pmic node for smdk5250,
+enable only minimum number of regulators on smdk5250.
 
-> > diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
-> > index 187b828d..2598d7c 100644
-> > --- a/include/uapi/linux/psci.h
-> > +++ b/include/uapi/linux/psci.h
-> > @@ -58,6 +58,13 @@
-> >  #define PSCI_0_2_POWER_STATE_AFFL_MASK         \
-> >                                 (0x3 << PSCI_0_2_POWER_STATE_AFFL_SHIFT)
-> >
-> > +/* PSCI extended power state encoding for CPU_SUSPEND function */
-> > +#define PSCI_EXT_POWER_STATE_ID_MASK           0xfffffff
-> > +#define PSCI_EXT_POWER_STATE_ID_SHIFT          0
-> > +#define PSCI_EXT_POWER_STATE_TYPE_SHIFT                30
-> > +#define PSCI_EXT_POWER_STATE_TYPE_MASK         \
-> > +                               (0x1 << PSCI_EXT_POWER_STATE_TYPE_SHIFT)
-> > +
-> 
-> For consistency, dont you need version numbers here, like we have for v0.2?
+So ensuring now that the controller driver requests the necessary
+VDD regulators (if available, unless there are direct VDD rails),
+and enable them so as to make them working on exynos systems.
 
-According to the docs (page 49, 5.12.2 Implementation responsibilities)
-the choice is between "Original Format(PSCI0.2)" and "extended stateid"
-parameter.
+Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Jingoo Han <jg1.han@samsung.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+---
 
-Do we really need to add a version number to the extended stateid defines ?
-I could add it, I am not not fussed about this.
+These patches had long been posted, and i lost track of them.
+My apologies for that.
+Thanks to Krzysztof for catching this.
 
-> >  /* PSCI v0.2 affinity level state returned by AFFINITY_INFO */
-> >  #define PSCI_0_2_AFFINITY_LEVEL_ON             0
-> >  #define PSCI_0_2_AFFINITY_LEVEL_OFF            1
-> > @@ -78,6 +85,11 @@
-> >  #define PSCI_VERSION_MINOR(ver)                        \
-> >                 ((ver) & PSCI_VERSION_MINOR_MASK)
-> >
-> > +/* PSCI features decoding (>=1.0) */
-> > +#define PSCI_FEATURES_CPU_SUSPEND_PF_SHIFT     1
-> > +#define PSCI_FEATURES_CPU_SUSPEND_PF_MASK      \
-> > +                       (0x1 << PSCI_FEATURES_CPU_SUSPEND_PF_SHIFT)
-> > +
-> 
-> Likewise.
+Kindly review.
 
-I could do, yes.
+Changes since v3:
+ - added a if (!IS_ERR()) check for regulators before disabling
+   them in error path.
 
-Thanks,
-Lorenzo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v2:
+ - replaced devm_regulator_get() with devm_regulator_get_optional().
+ - Added Documentation for the vdd supplies for the controller.
+ - Re-did the commit message.
+
+ .../devicetree/bindings/usb/exynos-usb.txt         |  2 +
+ drivers/usb/host/ehci-exynos.c                     | 57 +++++++++++++++++++++-
+ 2 files changed, 58 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+index 9b4dbe3..776fa03 100644
+--- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
++++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+@@ -23,6 +23,8 @@ Required properties:
+ Optional properties:
+  - samsung,vbus-gpio:  if present, specifies the GPIO that
+    needs to be pulled up for the bus to be powered.
++ - vdd33-supply: handle to 3.3V Vdd supply regulator for the controller.
++ - vdd10-supply: handle to 1.0V Vdd supply regulator for the controller.
+ 
+ Example:
+ 
+diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+index df538fd..160ad66 100644
+--- a/drivers/usb/host/ehci-exynos.c
++++ b/drivers/usb/host/ehci-exynos.c
+@@ -21,6 +21,7 @@
+ #include <linux/of_gpio.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/usb.h>
+ #include <linux/usb/hcd.h>
+ 
+@@ -45,6 +46,8 @@ static struct hc_driver __read_mostly exynos_ehci_hc_driver;
+ struct exynos_ehci_hcd {
+ 	struct clk *clk;
+ 	struct phy *phy[PHY_NUMBER];
++	struct regulator *vdd33;
++	struct regulator *vdd10;
+ };
+ 
+ #define to_exynos_ehci(hcd) (struct exynos_ehci_hcd *)(hcd_to_ehci(hcd)->priv)
+@@ -170,7 +173,27 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+ 
+ 	err = exynos_ehci_get_phy(&pdev->dev, exynos_ehci);
+ 	if (err)
+-		goto fail_clk;
++		goto fail_regulator1;
++
++	exynos_ehci->vdd33 = devm_regulator_get_optional(&pdev->dev, "vdd33");
++	if (!IS_ERR(exynos_ehci->vdd33)) {
++		err = regulator_enable(exynos_ehci->vdd33);
++		if (err) {
++			dev_err(&pdev->dev,
++				"Failed to enable 3.3V Vdd supply\n");
++			goto fail_regulator1;
++		}
++	}
++
++	exynos_ehci->vdd10 = devm_regulator_get_optional(&pdev->dev, "vdd10");
++	if (!IS_ERR(exynos_ehci->vdd10)) {
++		err = regulator_enable(exynos_ehci->vdd10);
++		if (err) {
++			dev_err(&pdev->dev,
++				"Failed to enable 1.0V Vdd supply\n");
++			goto fail_regulator2;
++		}
++	}
+ 
+ skip_phy:
+ 
+@@ -231,6 +254,12 @@ fail_add_hcd:
+ fail_io:
+ 	clk_disable_unprepare(exynos_ehci->clk);
+ fail_clk:
++	if (!IS_ERR(exynos_ehci->vdd10))
++		regulator_disable(exynos_ehci->vdd10);
++fail_regulator2:
++	if (!IS_ERR(exynos_ehci->vdd33))
++		regulator_disable(exynos_ehci->vdd33);
++fail_regulator1:
+ 	usb_put_hcd(hcd);
+ 	return err;
+ }
+@@ -246,6 +275,11 @@ static int exynos_ehci_remove(struct platform_device *pdev)
+ 
+ 	clk_disable_unprepare(exynos_ehci->clk);
+ 
++	if (!IS_ERR(exynos_ehci->vdd33))
++		regulator_disable(exynos_ehci->vdd33);
++	if (!IS_ERR(exynos_ehci->vdd10))
++		regulator_disable(exynos_ehci->vdd10);
++
+ 	usb_put_hcd(hcd);
+ 
+ 	return 0;
+@@ -268,6 +302,11 @@ static int exynos_ehci_suspend(struct device *dev)
+ 
+ 	clk_disable_unprepare(exynos_ehci->clk);
+ 
++	if (!IS_ERR(exynos_ehci->vdd33))
++		regulator_disable(exynos_ehci->vdd33);
++	if (!IS_ERR(exynos_ehci->vdd10))
++		regulator_disable(exynos_ehci->vdd10);
++
+ 	return rc;
+ }
+ 
+@@ -277,6 +316,22 @@ static int exynos_ehci_resume(struct device *dev)
+ 	struct exynos_ehci_hcd *exynos_ehci = to_exynos_ehci(hcd);
+ 	int ret;
+ 
++	if (!IS_ERR(exynos_ehci->vdd33)) {
++		ret = regulator_enable(exynos_ehci->vdd33);
++		if (ret) {
++			dev_err(dev, "Failed to enable 3.3V Vdd supply\n");
++			return ret;
++		}
++	}
++
++	if (!IS_ERR(exynos_ehci->vdd10)) {
++		ret = regulator_enable(exynos_ehci->vdd10);
++		if (ret) {
++			dev_err(dev, "Failed to enable 1.0V Vdd supply\n");
++			return ret;
++		}
++	}
++
+ 	clk_prepare_enable(exynos_ehci->clk);
+ 
+ 	ret = exynos_ehci_phy_enable(dev);
+-- 
+2.2.0
