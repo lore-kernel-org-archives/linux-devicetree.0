@@ -1,139 +1,171 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
-Date: Mon, 8 Jun 2015 09:48:58 +0200
-Message-ID: <20150608074858.GK6325@pengutronix.de>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
- <20150528132452.GI26575@pengutronix.de>
- <1432867649.15597.46.camel@mtksdaap41>
- <20150529062345.GY6325@pengutronix.de>
- <20150604210212.GM676@codeaurora.org>
- <1433468737.14416.7.camel@mtksdaap41>
- <20150606005912.GC29237@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+Date: Mon, 8 Jun 2015 11:14:34 +0300
+Message-ID: <CF8AAE4C-400C-47D9-9440-3CD04DF02F50@konsulko.com>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org> <1433686811-12303-3-git-send-email-grant.likely@linaro.org> <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150606005912.GC29237-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2015 at 05:59:12PM -0700, Stephen Boyd wrote:
-> On 06/05, James Liao wrote:
-> > Hi Stephen,
-> > 
-> > On Thu, 2015-06-04 at 14:02 -0700, Stephen Boyd wrote:
-> > > On 05/29, Sascha Hauer wrote:
-> > > > Yes. I previously got the impression that the subsystem clocks are not
-> > > > directly associated to the larbs, but needed to be handled by the larb
-> > > > code due to some side effect. Now that I saw that the larbs are directly
-> > > > in the subsystem register space it all makes sense.
-> > > > 
-> > > > Note that the way Mediatek SoCs are designed around sub modules is bit
-> > > > unusual and does not fit very well in the Linux directory structure.
-> > > > Normally SoCs have a single clocks controller which controls all clocks
-> > > > in the SoC. Then you often have a reset controller providing reset lines
-> > > > in the SoC. In this case it's clear that the clk driver goes to
-> > > > drivers/clk/, the reset controller driver to drivers/reset/. Mediatek
-> > > > SoCs instead have several blocks, each with its own clock and reset
-> > > > controller. Splitting each block up into parts in drivers/clk/ and
-> > > > drivers/reset/ leads to quite a code fragmentation.
-> > > > This is my opinion, it would be great to hear something from others.
-> > > > Matthias? I'd like to avoid running into a direction that is not
-> > > > acceptable in the end.
-> > > 
-> > > We already have drivers registering clocks and resets under
-> > > drivers/clk, so it's not unheard of. An alternative solution is
-> > > to make child devices for the clock part and the reset part at
-> > > runtime in the toplevel driver for the vencsys device (don't do
-> > > any sort of DT description for this) and use regmap to mediate
-> > > the register accesses and locking. That way we can put the clk
-> > > driver in drivers/clk/, the reset driver in drivers/reset, etc.
-> > > so that logically related code is grouped.
-> > 
-> > I have a question about the alternative way you mentioned. Currently
-> > clock providers and consumers describe what clocks they will provide /
-> > consume in device tree. If we don't describe vencsys clocks in device
-> > tree, how to get vencsys clocks for drivers that need to control them?
-> > 
-> 
-> Perhaps an example would be best. In DT we would have:
-> 
-> 	vencsys: vencsys@10000 {
-> 		compatible = "mtk,vencsys";
-> 		reg = <0x10000 0x1000>;
-> 		#clock-cells = <1>;
-> 		#reset-cells = <1>;
-> 	};
-> 
-> 	myconsumer@12000 {
-> 		compatible = "mtk,vencsys";
-> 		reg = <0x12000 0x100>;
-> 		clocks = <&vencsys 10>;
-> 		clock-names = "core";
-> 	};
-> 
-> 	(Or are the consumers only children of the subsystem?
-> 	It's not clear to me)
-> 
-> And then in the mtk,vencsys driver we would create a platform
-> device named something like "mtk-vencsys-clk" and assign the
-> of_node of the device to be the of_node that is assigned to the
-> mtk,vencsys device.
-> 
-> 	static int vencsys_probe(struct platform_device *pdev)
-> 	{
-> 		int ret;
-> 		struct device_node *np = pdev->dev.of_node;
-> 		struct platform_device *clk_pdev;
-> 
-> 		clk_pdev = platform_device_alloc("mtk-vencsys-clk", -1);
-> 		clk_pdev->dev.of_node = of_node;
-> 		ret = platform_device_add(clk_pdev);
-> 		if (ret)
-> 			return ret;
-> 	}
-> 
-> Then we could put a mtk-vencsys-clk driver in drivers/clk/ that
-> does the clk driver part...
-> 
-> 	static int clk_vencsys_probe(struct platform_device *pdev)
-> 	{
-> 		int ret;
-> 		struct device_node *np = pdev->dev.of_node;
-> 		struct regmap *regmap;
-> 
-> 		ret = of_clk_add_provider(np, of_clk_src_onecell_get, ..);
-> 		if (ret)
-> 			return ret;
-> 
-> 		regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> 
-> 	}
-> 
-> And similar things could be done for the reset driver.
+Hi Ricardo, Grant,
 
-The problem I see with this approach is that we scatter the code for a
-otherwise simple driver over a bunch of directories. We would have
+> On Jun 7, 2015, at 21:13 , Ricardo Ribalda Delgado <ricardo.ribalda@g=
+mail.com> wrote:
+>=20
+> Hello Grant
+>=20
+> I would ask you to go through all the discussion related to this bug.
+> Here is a summary (please anyone involved correct me if I am wrong)
+>=20
+> 1) I send a patch to fix the oops if release resource is executed wit=
+h
+> a resource without parent
+> 2) Bjorn says that we should fix the issue of the problem, which he
+> pointed out being that we use platform_device_del() after using
+> of_device_add()
+> 3) I resend a patchset to use platform_devide_add()
+> 4) 3 series of cleanouts after the help from Rob and Bjorn
+> 5) Greg adds the series (v5) to his device core tree
+> 6) You complaint that that series can break miss behaved platforms
+> 7) I send a couple of patches that fix your problem and leaves the
+> window open to blacklist the platforms that miss behave.
+>=20
+> now you send a patch that takes us to back to step 1), and adds some
+> code that is already merged into gregk's
+> https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/t=
+ree/drivers/base/platform.c?h=3Ddriver-core-testing#n314
+>=20
+>=20
+> Wouldn't you agree that it will be a better solution to give your
+> feedback regarding https://lkml.org/lkml/2015/6/5/246 and fix this
+> issue together?
+>=20
+> that solution has been reviewed by a bunch of people, removes code
+> duplication and afaik, is tested, does not break any platform, and I
+> believe that is closer to an scenario when we can remove
+> of_device_add() and all the devices behave similarly.
+>=20
+>=20
+> Best Regards
+>=20
 
-drivers/clk/mediatek/vencsys.c
-drivers/reset/mediatek/vencsys.c
-drivers/soc/mediatek/vencsys.c
+Either patch fixes (or rather papers over) the problem.
 
-The same must be added for vdecsys, imgsys and vencltsys. That will make
-12 drivers and three maintainers for 12 registers.  I think this will be
-a pain to maintain, hence my suggestion to put the vencsys code into a
-single file and not split this up into more subsystem specific files.
+The way I understand it is that we have two issues.
 
-Sascha
+1. The rather obvious crash on device removal.
+2. The of_platform_populate (and the subsequent call to=20
+of_platform_device_create_pdata()) not registering the resources
+due to bugs in platforms that do overlapping regions.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+#1 is fixed but #2 is rather touchy.
+
+I would like to eventually fix those platforms; starting with a
+nice fat warning when using overlapping regions would be nice.
+
+The problem is how to deal with range definitions that overlap.
+Does anyone remember what does the spec say regarding those?
+
+If the way they are used now in those platform is wrong we should
+mark them in some manner in the DT so that the idiom does not propagate=
+=2E
+
+If they are valid, so be it, we have to fix it in driver core somehow.
+
+Regards
+
+=E2=80=94 Pantelis
+
+>=20
+>=20
+> On Sun, Jun 7, 2015 at 4:20 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org=
+> wrote:
+>> The unregister path of platform_device is broken. On registration, i=
+t
+>> will register all resources with either a parent already set, or
+>> type=3D=3DIORESOURCE_{IO,MEM}. However, on unregister it will releas=
+e
+>> everything with type=3D=3DIORESOURCE_{IO,MEM}, but ignore the others=
+=2E There
+>> are also cases where resources don't get registered in the first pla=
+ce,
+>> like with devices created by of_platform_populate()*.
+>>=20
+>> Fix the unregister path to be symmetrical with the register path by
+>> checking the parent pointer instead of the type field to decide whic=
+h
+>> resources to unregister. This is safe because the upshot of the
+>> registration path algorithm is that registered resources have a pare=
+nt
+>> pointer, and non-registered resources do not.
+>>=20
+>> * It can be argued that of_platform_populate() should be registering
+>>  it's resources, and they argument has some merit. However, there ar=
+e
+>>  quite a few platforms that end up broken if we try to do that due t=
+o
+>>  overlapping resources in the device tree. Until that is fixed, we n=
+eed
+>>  to solve the immediate problem.
+>>=20
+>> Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>> Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> drivers/base/platform.c | 8 ++------
+>> 1 file changed, 2 insertions(+), 6 deletions(-)
+>>=20
+>> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+>> index ebf034b97278..7403de94832c 100644
+>> --- a/drivers/base/platform.c
+>> +++ b/drivers/base/platform.c
+>> @@ -375,9 +375,7 @@ int platform_device_add(struct platform_device *=
+pdev)
+>>=20
+>>        while (--i >=3D 0) {
+>>                struct resource *r =3D &pdev->resource[i];
+>> -               unsigned long type =3D resource_type(r);
+>> -
+>> -               if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESO=
+URCE_IO)
+>> +               if (r->parent)
+>>                        release_resource(r);
+>>        }
+>>=20
+>> @@ -408,9 +406,7 @@ void platform_device_del(struct platform_device =
+*pdev)
+>>=20
+>>                for (i =3D 0; i < pdev->num_resources; i++) {
+>>                        struct resource *r =3D &pdev->resource[i];
+>> -                       unsigned long type =3D resource_type(r);
+>> -
+>> -                       if (type =3D=3D IORESOURCE_MEM || type =3D=3D=
+ IORESOURCE_IO)
+>> +                       if (r->parent)
+>>                                release_resource(r);
+>>                }
+>>        }
+>> --
+>> 2.1.4
+>>=20
+>=20
+>=20
+>=20
+> --=20
+> Ricardo Ribalda
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
