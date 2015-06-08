@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 04/22] usb: gadget: composite: add USB_DT_OTG request handling
-Date: Mon, 8 Jun 2015 23:01:59 +0800
-Message-ID: <1433775737-9816-5-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
+Date: Mon, 8 Jun 2015 23:02:00 +0800
+Message-ID: <1433775737-9816-6-git-send-email-jun.li@freescale.com>
 References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,40 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+features don't have to be decided by usb gadget drivers.
 
-Copy usb_otg_descriptor from config's descriptor if host requests
-USB_DT_OTG.
-
-Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/composite.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 4e3447b..6b5a0c6 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -1534,6 +1534,27 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
- 				value = min(w_length, (u16) value);
- 			}
- 			break;
-+		case USB_DT_OTG:
-+			if (gadget_is_otg(gadget)) {
-+				struct usb_configuration *config;
-+				int otg_desc_len =
-+					sizeof(struct usb_otg_descriptor);
-+
-+				if (cdev->config)
-+					config = cdev->config;
-+				else
-+					config = list_first_entry(
-+							&cdev->configs,
-+						struct usb_configuration, list);
-+				if (!config)
-+					goto done;
-+
-+				if (gadget->otg_rev >= 0x0200)
-+					otg_desc_len += sizeof(struct bcdOTG);
-+				value = min_t(int, w_length, otg_desc_len);
-+				memcpy(req->buf, config->descriptors[0], value);
-+			}
-+			break;
- 		}
- 		break;
+diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+index 477d5bb..7386f4a 100644
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@ -11,6 +11,12 @@ Optional properties:
+ 			"peripheral" and "otg". In case this attribute isn't
+ 			passed via DT, USB DRD controllers should default to
+ 			OTG.
++ - otg-rev: tells usb driver the release number of the OTG and EH supplement
++			with which the device and its descriptors are compliant,
++			in binary-coded decimal (i.e. 2.0 is 0200H).
++ - srp-support: tells OTG controllers we want to enable SRP.
++ - hnp-support: tells OTG controllers we want to enable HNP.
++ - adp-support: tells OTG controllers we want to enable ADP.
  
+ This is an attribute to a USB controller such as:
+ 
+@@ -21,4 +27,8 @@ dwc3@4a030000 {
+ 	usb-phy = <&usb2_phy>, <&usb3,phy>;
+ 	maximum-speed = "super-speed";
+ 	dr_mode = "otg";
++	otg-rev = <0x0200>;
++	srp-support;
++	hnp-support;
++	adp-support;
+ };
 -- 
 1.9.1
 
