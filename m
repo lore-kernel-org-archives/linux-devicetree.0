@@ -1,58 +1,109 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: mt8173: Add I2C device node
-Date: Mon, 8 Jun 2015 09:27:25 +0200
-Message-ID: <20150608072725.GJ6325@pengutronix.de>
-References: <1433164107-26568-1-git-send-email-eddie.huang@mediatek.com>
- <1433164107-26568-3-git-send-email-eddie.huang@mediatek.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
+Date: Mon, 8 Jun 2015 15:27:51 +0800
+Message-ID: <1433748471.15883.14.camel@mtksdaap41>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <20150528132452.GI26575@pengutronix.de>
+	 <1432867649.15597.46.camel@mtksdaap41>
+	 <20150529062345.GY6325@pengutronix.de>
+	 <20150604210212.GM676@codeaurora.org> <1433468737.14416.7.camel@mtksdaap41>
+	 <20150606005912.GC29237@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1433164107-26568-3-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20150606005912.GC29237-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
+Hi Stephen,
 
-On Mon, Jun 01, 2015 at 09:08:27PM +0800, Eddie Huang wrote:
-> Add MT8173 I2C device nodes, include I2C controllers and pins.
-> MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
-> The 6th I2C controller register base doesn't next to 5th I2C,
-> and there is a hardware between 5th and 6th I2C controller. So
-> SoC designer name 6th controller as "i2c6", not "i2c5".
+On Fri, 2015-06-05 at 17:59 -0700, Stephen Boyd wrote:
+> Perhaps an example would be best. In DT we would have:
 > 
-> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 119 +++++++++++++++++++++++++++++++
->  1 file changed, 119 insertions(+)
+> 	vencsys: vencsys@10000 {
+> 		compatible = "mtk,vencsys";
+> 		reg = <0x10000 0x1000>;
+> 		#clock-cells = <1>;
+> 		#reset-cells = <1>;
+> 	};
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index b52ec43..7003ed2 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -158,6 +158,53 @@
->  			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
->  						<GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
->  						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> +			i2c0_pins_a: i2c0@0 {
-> +				pins1 {
-> +					pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
-> +						 <MT8173_PIN_46_SCL0__FUNC_SCL0>;
-> +					bias-disable;
-> +				};
-> +			};
+> 	myconsumer@12000 {
+> 		compatible = "mtk,vencsys";
+> 		reg = <0x12000 0x100>;
+> 		clocks = <&vencsys 10>;
+> 		clock-names = "core";
+> 	};
+> 
+> 	(Or are the consumers only children of the subsystem?
+> 	It's not clear to me)
 
-The pinmux nodes should be in the board dts, not in the SoC dtsi.
+In our case the vencsys clocks may use used by its own driver and other
+drivers (such as SMI driver).
 
-Sascha
+> And then in the mtk,vencsys driver we would create a platform
+> device named something like "mtk-vencsys-clk" and assign the
+> of_node of the device to be the of_node that is assigned to the
+> mtk,vencsys device.
+> 
+> 	static int vencsys_probe(struct platform_device *pdev)
+> 	{
+> 		int ret;
+> 		struct device_node *np = pdev->dev.of_node;
+> 		struct platform_device *clk_pdev;
+> 
+> 		clk_pdev = platform_device_alloc("mtk-vencsys-clk", -1);
+> 		clk_pdev->dev.of_node = of_node;
+> 		ret = platform_device_add(clk_pdev);
+> 		if (ret)
+> 			return ret;
+> 	}
+> 
+> Then we could put a mtk-vencsys-clk driver in drivers/clk/ that
+> does the clk driver part...
+> 
+> 	static int clk_vencsys_probe(struct platform_device *pdev)
+> 	{
+> 		int ret;
+> 		struct device_node *np = pdev->dev.of_node;
+> 		struct regmap *regmap;
+> 
+> 		ret = of_clk_add_provider(np, of_clk_src_onecell_get, ..);
+> 		if (ret)
+> 			return ret;
+> 
+> 		regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> 
+> 	}
+> 
+> And similar things could be done for the reset driver.
+> 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+It looks like there is only one DT node (vencsys@10000) but there are
+several drivers refer to this DT node, and then we use a dummy driver
+(or a "top driver") to aggregate drivers with different features (clk,
+reset etc.).
+
+It means we need to provide vencsys clk driver in drivers/clk and
+vencsys reset driver in drivers/reset, and also to provide a vencsys top
+driver in, for example, soc/mediatek, right?
+
+Now we have 3 choice:
+
+1. implement vencsys clock driver and reset driver in drivers/clk.
+2. implement vencsys clock driver and reset driver in drivers/soc.
+3. implement vencsys clock driver in drivers/clk, vencsys reset driver
+in drivers/reset, and vencsys top driver in drivers/soc.
+
+Sascha, do you have comments for these 3 solutions?
+
+
+Best regards,
+
+James
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
