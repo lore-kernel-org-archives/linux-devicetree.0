@@ -1,88 +1,37 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RESEND 1/2] usb: ehci-exynos: Make provision for vdd regulators
-Date: Mon, 8 Jun 2015 14:14:52 +0900
-Message-ID: <CAJKOXPfDmt5VMqr-P+OpWy1+jz675CFRPmtS_N0HjN4tWxfwtA@mail.gmail.com>
-References: <1433683242-3945-1-git-send-email-linux.amoon@gmail.com>
-	<5574F97A.5030104@samsung.com>
-	<CANAwSgTjx8uxyOTW8uuiqrcNzF+UwLMmML2OcDgG5Ku_56=vJQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANAwSgTjx8uxyOTW8uuiqrcNzF+UwLMmML2OcDgG5Ku_56=vJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1 0/2] Implement sample time consideration
+Date: Mon,  8 Jun 2015 11:11:59 +0530
+Message-ID: <cover.1433740528.git.maitysanchayan@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-06-08 13:21 GMT+09:00 Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Hi Krzysztof ,
->
-> On 8 June 2015 at 07:40, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> On 07.06.2015 22:20, Anand Moon wrote:
->>> Facilitate getting required 3.3V and 1.0V VDD supply for
->>> EHCI controller on Exynos.
->>>
->>> With the patches for regulators' nodes merged in 3.15:
->>> c8c253f ARM: dts: Add regulator entries to smdk5420
->>> 275dcd2 ARM: dts: add max77686 pmic node for smdk5250,
->>> the exynos systems turn on only minimal number of regulators.
->>>
->>> Until now, the VDD regulator supplies were either turned on
->>> by the bootloader, or the regulators were enabled by default
->>> in the kernel, so that the controller drivers did not need to
->>> care about turning on these regulators on their own.
->>> This was rather bad about these controller drivers.
->>> So ensuring now that the controller driver requests the necessary
->>> VDD regulators (if available, unless there are direct VDD rails),
->>> and enable them so as to make them working.
->>>
->>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
->>> ---
->>> Initial version of this patch was part of following series, though
->>> they are not dependent on each other, resubmitting after rebasing.
->>>
->>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266418.html
->>
->> So you just took Vivek's patch along with all the credits... That is not
->> how we usually do this.
->>
->> I would expect that rebasing a patch won't change the author unless this
->> is fine with Vivek.
->>
->
-> Sorry If I have done some mistake on my part.
-> I just looked at below mail chain. Before I send it.
->
-> http://www.spinics.net/lists/linux-samsung-soc/msg44136.html
+Hello,
 
-I don't get it. The patch you are referring to has a proper "From"
-field. So please use it as an example.
+This patchset adds a dt binding for specifying sample time
+for the vybrid adc driver and takes this into account for
+sampling frequency calculation and related configuration in
+the driver.
 
->
-> I don't want to take any credit out of it. I just re-base on the new kernel.
-> I could not test this patch as it meant for exynos5440 boards.
+The patchset is based on top of Stefan's patches here
+http://lkml.iu.edu/hypermail/linux/kernel/1505.3/02043.html
 
-Are you sure? I think the driver is used on almost all of Exynos SoCs
-(Exynos4, Exynos5250, Exynos542x).
+which got recently applied. Tested with shawn's for-next
+branch.
 
-Untested code should not go to the kernel. Additionally you should
-mark it as not-tested. Marking such patch as non-tested could help you
-finding some independent tests (tests performed by someone else).
+Regards,
+Sanchayan.
 
-To summarize my point of view:
-1. Unless Vivek's says otherwise, please give him the credits with
-proper "from" field.
-2. Issues mentioned in previous mail should be addressed (missing
-IS_ERR(), how disabling the regulator during suspend affects waking
-up).
-3. The patchset must be tested, even after rebasing.
+Sanchayan Maity (2):
+  iio: adc: Determine sampling frequencies by using minimum sample time
+  ARM: dts: vfxxx: Add property for minimum sample time
 
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/iio/adc/vf610-adc.txt      |  6 ++
+ arch/arm/boot/dts/vfxxx.dtsi                       |  2 +
+ drivers/iio/adc/vf610_adc.c                        | 74 ++++++++++++++++++++--
+ 3 files changed, 78 insertions(+), 4 deletions(-)
+
+-- 
+2.4.2
