@@ -1,60 +1,76 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] drivers: of/base: move of_init to driver_init
-Date: Sun, 7 Jun 2015 19:29:17 -0500
-Message-ID: <CAL_JsqKEcpWiPsORFrQs+dhqM4qcgMPyaz0ijVEMNkFeVQfkWQ@mail.gmail.com>
-References: <1431595695-17103-1-git-send-email-sudeep.holla@arm.com>
- <1431613704-30801-1-git-send-email-sudeep.holla@arm.com> <555B2C9C.1000709@arm.com>
- <20150519171732.GD9213@kroah.com> <20150607070539.A8C7EC409D1@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150607070539.A8C7EC409D1-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 1/2] power_supply: max17042: Add OF support for setting
+ thresholds
+Date: Mon, 08 Jun 2015 10:11:38 +0900
+Message-ID: <1433725899-13849-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 7, 2015 at 2:05 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 19 May 2015 10:17:32 -0700
-> , Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
->  wrote:
->> On Tue, May 19, 2015 at 01:29:16PM +0100, Sudeep Holla wrote:
->> > Hi Rob/Greg,
->> >
->> > On 14/05/15 15:28, Sudeep Holla wrote:
->> > >Commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
->> > >devices with an OF node") adds the symlink `of_node` for each device
->> > >pointing to it's device tree node while creating/initialising it.
->> > >
->> > >However the devicetree sysfs is created and setup in of_init which is
->> > >executed at core_initcall level. For all the devices created before
->> > >of_init, the following error is thrown:
->> > >   "Error -2(-ENOENT) creating of_node link"
->> > >
->> > >Like many other components in driver model, initialize the sysfs support
->> > >for OF/devicetree from driver_init so that it's ready before any devices
->> > >are created.
->> > >
->> > >Fixes: 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
->> > >   devices with an OF node")
->> > >Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > >Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > >Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > >Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> > >Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
->> > >Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
->> > >Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> >
->> > I assume one of you will pick this up if there are no further comments ?
->>
->> I will once things settle down...
->
-> I've picked it up. Yell if you'd prefer to take it by your tree.
+The commit edd4ab055931 ("power: max17042_battery: add HEALTH and TEMP_*
+properties support") added support for setting voltage and temperature
+thresholds with platform data. For DeviceTree default of 0 was always
+used.
 
-Greg already applied it. It just hit Linus' tree Sat.
+This caused reporting battery health always as over voltage or
+over heated.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Fixes: edd4ab055931 ("power: max17042_battery: add HEALTH and TEMP_* properties support")
+---
+ .../devicetree/bindings/power_supply/max17042_battery.txt   | 13 +++++++++++++
+ drivers/power/max17042_battery.c                            |  9 +++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power_supply/max17042_battery.txt b/Documentation/devicetree/bindings/power_supply/max17042_battery.txt
+index 5bc9b685cf8a..3f3894aaeebc 100644
+--- a/Documentation/devicetree/bindings/power_supply/max17042_battery.txt
++++ b/Documentation/devicetree/bindings/power_supply/max17042_battery.txt
+@@ -9,10 +9,23 @@ Optional properties :
+                          (datasheet-recommended value is 10000).
+    Defining this property enables current-sense functionality.
+ 
++Optional threshold properties :
++ If skipped the condition won't be reported.
++ - maxim,cold-temp :      Temperature threshold to report battery
++                          as cold (in tenths of degree Celsius).
++ - maxim,over-heat-temp : Temperature threshold to report battery
++                          as over heated (in tenths of degree Celsius).
++ - maxim,dead-volt :      Voltage threshold to report battery
++                          as dead (in mV).
++ - maxim,over-volt :      Voltage threshold to report battery
++                          as over voltage (in mV).
++
+ Example:
+ 
+ 	battery-charger@36 {
+ 		compatible = "maxim,max17042";
+ 		reg = <0x36>;
+ 		maxim,rsns-microohm = <10000>;
++		maxim,over-heat-temp = <600>;
++		maxim,over-volt = <4300>;
+ 	};
+diff --git a/drivers/power/max17042_battery.c b/drivers/power/max17042_battery.c
+index 62908eba2763..a8e16364c2aa 100644
+--- a/drivers/power/max17042_battery.c
++++ b/drivers/power/max17042_battery.c
+@@ -818,6 +818,15 @@ max17042_get_pdata(struct device *dev)
+ 		pdata->enable_current_sense = true;
+ 	}
+ 
++	if (of_property_read_s32(np, "maxim,cold-temp", &pdata->temp_min))
++		pdata->temp_min = INT_MIN;
++	if (of_property_read_s32(np, "maxim,over-heat-temp", &pdata->temp_max))
++		pdata->temp_max = INT_MAX;
++	if (of_property_read_s32(np, "maxim,dead-volt", &pdata->vmin))
++		pdata->vmin = INT_MIN;
++	if (of_property_read_s32(np, "maxim,over-volt", &pdata->vmax))
++		pdata->vmax = INT_MAX;
++
+ 	return pdata;
+ }
+ #else
+-- 
+1.9.1
