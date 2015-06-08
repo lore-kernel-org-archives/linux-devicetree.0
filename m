@@ -1,100 +1,37 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [PATCH 1/2] Documentation: dt: Add Xilinx zynqmp dma device tree
- binding documentation
-Date: Mon, 8 Jun 2015 22:27:07 +0530
-Message-ID: <1433782628-23748-1-git-send-email-punnaia@xilinx.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: dts; pxa: add embedded pxa camera capture interface
+Date: Mon, 08 Jun 2015 19:23:29 +0200
+Message-ID: <877fre3yi6.fsf@belgarion.home>
+References: <1433624953-28165-1-git-send-email-robert.jarzmik@free.fr>
+	<1433624953-28165-4-git-send-email-robert.jarzmik@free.fr>
+	<55736F05.8000904@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kpc528@gmail.com, kalluripunnaiahchoudary@xilinx.com, dmaengine@vger.kernel.org, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55736F05.8000904-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> (Sergei Shtylyov's message
+	of "Sun, 07 Jun 2015 01:07:01 +0300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation for Xilinx zynqmp dma engine used in
-Zynq UltraScale+ MPSoC.
+Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> writes:
 
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
----
- .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  |   61 ++++++++++++++++++++
- 1 files changed, 61 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>> +		pxa_camera: pxa_camera@50000000 {
+>
+>    The ePAPR standard has something to say about the node naming:
+> "The name of a node should be somewhat generic, reflecting the function of the
+> device and not its precise programming model." So I'd suggest "video@50000000"
+> instead...
+Okay, I understand. As "video" could stand for a video decoder/encoder, or the
+display device, I'd rather go for "imaging" or "camera-host", or something like
+that if I find an already used named in other dts files.
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-new file mode 100644
-index 0000000..e4f92b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-@@ -0,0 +1,61 @@
-+Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
-+memory to device and device to memory transfers. It also has flow
-+control and rate control support for slave/peripheral dma access.
-+
-+Required properties:
-+- compatible: Should be "xlnx,zynqmp-dma-1.0"
-+- #dma-cells: Should be <1>, a single cell holding a line request number
-+- reg: Memory map for module access
-+- interrupt-parent: Interrupt controller the interrupt is routed through
-+- interrupts: Should contain DMA channel interrupt
-+- xlnx,bus-width: AXI buswidth in bits. Should contain 128 or 64
-+
-+Optional properties:
-+- xlnx,include-sg: Indicates the controller to operate in simple or scatter
-+		   gather dma mode
-+- xlnx,ratectrl: Scheduling interval in terms of clock cycles for
-+		 source AXI transaction
-+- xlnx,overfetch: Tells whether the channel is allowed to over fetch the data
-+- xlnx,src-issue: Number of AXI outstanding transactions on source side
-+- xlnx,desc-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			descriptor read are marked Non-coherent
-+- xlnx,src-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			source descriptor payload are marked Non-coherent
-+- xlnx,dst-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			dst descriptor payload are marked Non-coherent
-+- xlnx,desc-axi-qos: AXI QOS bits to be used for descriptor fetch
-+- xlnx,src-axi-qos: AXI QOS bits to be used for data read
-+- xlnx,dst-axi-qos: AXI QOS bits to be used for data write
-+- xlnx,desc-axi-cache: AXI cache bits to be used for descriptor fetch.
-+- xlnx,desc-axi-cache: AXI cache bits to be used for data read
-+- xlnx,desc-axi-cache: AXI cache bits to be used for data write
-+- xlnx,src-burst-len: AXI length for data read. Support only power of 2 values
-+		      i.e 1,2,4,8 and 16
-+- xlnx,dst-burst-len: AXI length for data write. Support only power of 2 values
-+		      i.e 1,2,4,8 and 16
-+
-+Example:
-+++++++++
-+fpd_dma_chan1: dma@FD500000 {
-+	compatible = "xlnx,zynqmp-dma-1.0";
-+	reg = <0x0 0xFD500000 0x1000>;
-+	#dma_cells = <1>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <0 117 4>;
-+	xlnx,bus-width = <128>;
-+	xlnx,include-sg;
-+	xlnx,overfetch;
-+	xlnx,ratectrl = <0>;
-+	xlnx,src-issue = <16>;
-+	xlnx,desc-axi-cohrnt;
-+	xlnx,src-axi-cohrnt;
-+	xlnx,dst-axi-cohrnt;
-+	xlnx,desc-axi-qos = <0>;
-+	xlnx,desc-axi-cache = <0>;
-+	xlnx,src-axi-qos = <0>;
-+	xlnx,src-axi-cache = <2>;
-+	xlnx,dst-axi-qos = <0>;
-+	xlnx,dst-axi-cache = <2>;
-+	xlnx,src-burst-len = <4>;
-+	xlnx,dst-burst-len = <4>;
-+};
+Cheers.
+
 -- 
-1.7.4
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
