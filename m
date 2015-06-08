@@ -1,74 +1,59 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND v7 2/2] mmc: host: sdhci: Add support to disable
- SDR104/SDR50/DDR50 based on capability register 0.
-Date: Mon, 8 Jun 2015 10:38:22 +0200
-Message-ID: <CAPDyKFqA5BGXUV+_r63Xwtpm6Bzi2HB=UN0pDcu6FkjtHOaqew@mail.gmail.com>
-References: <1432197817-22110-1-git-send-email-stripathi@apm.com>
-	<1432197817-22110-3-git-send-email-stripathi@apm.com>
-	<CAPDyKFpxkNF9C8AOJ6+18CEcpZTKycPR0i5OuwPRr1Zc+VPJ5Q@mail.gmail.com>
-	<CAOHikRASDmy7PwFjqmX7JAjW52DYR+d3RkE3yd_45NN5sHK7Pg@mail.gmail.com>
-	<CAOHikRBB9Uyh4Z34_pFTdmA0A-vnV09zTi8iYEU+01XvmzSr_A@mail.gmail.com>
-	<20150605145323.GA15110@shlinux1.ap.freescale.net>
-	<CAOHikRCXuJryKgo7pjehi-SyosE1Rr2zFjc+9yWJwke_ib=Azw@mail.gmail.com>
-	<CAPDyKFqk1_B-wH0Z2QwfxftJy8LLH6Ey9cg56eFxAj7zmeFmOg@mail.gmail.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+Date: Mon, 8 Jun 2015 10:42:50 +0200
+Message-ID: <CAPybu_2ftjZ5pmTXqn4iHXc6mrj0qzmQ-SLhLZvcRk=1gwF=9g@mail.gmail.com>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
+ <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+ <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com> <CF8AAE4C-400C-47D9-9440-3CD04DF02F50@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFqk1_B-wH0Z2QwfxftJy8LLH6Ey9cg56eFxAj7zmeFmOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CF8AAE4C-400C-47D9-9440-3CD04DF02F50@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 June 2015 at 10:37, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> [...]
->
->>> >
->>> >    Can you test this patch  on imx SoC ?
->>> >
->>>
->>> (Your email have some format issue.)
->>
->> Yeah missed to sent in plain text mode.
->>
->>>
->>> I have tested this patch and it does not break imx SoC.
->>> You can add my tag.
->>> Tested-by: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>
->> Thanks Dong !!
->>
->>>
->>> However, it looks to me SDHCI_CAN_VDD_180 is only indicating the host VDD
->>> capabiliies, not IO voltage capability.
->
-> I think Dong is correct. I don't think SDHCI_CAN_VDD_180 is not
+Hello Pantelis
 
-/s /is not /is
+On Mon, Jun 8, 2015 at 10:14 AM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
+>>
+>
+> Either patch fixes (or rather papers over) the problem.
+>
+> The way I understand it is that we have two issues.
+>
+> 1. The rather obvious crash on device removal.
+> 2. The of_platform_populate (and the subsequent call to
+> of_platform_device_create_pdata()) not registering the resources
+> due to bugs in platforms that do overlapping regions.
+>
+>
+> #1 is fixed but #2 is rather touchy.
 
-> related to UHS modes at all.
+I believe that after my last patchset also #2 is fixed.
+
+The only missing part is applying the shared flag to ONLY the broken
+OF platforms, not to all.
+
+We even have a warning on overlapping resources, that should help the
+development
+
+https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/tree/drivers/base/platform.c?h=driver-core-testing#n379
+
+Hopefully one day we can merge of and platform :)
+
 >
-> At least the name of the field (SDHCI_CAN_VDD_180) indicates it's
-> about VDD/VCC, the core power and not the IO voltage.
+> I would like to eventually fix those platforms; starting with a
+> nice fat warning when using overlapping regions would be nice.
 >
->> Are you sure on this ?? If SDHCI host VDD is  1.8V then the cards are
->> also capable to operate at 1.8V ? Didn't understand what you mean by
->> IO voltage capability
->>
->>
->>> SD3.0 cards require 1.8v IO voltage support.
->>> So should this bit affect SD3.0 support?
->>
->> The preset value resgister says that  SDR modes requires 1.8V and we
->> disable the modes based on capability or quirk.
+> The problem is how to deal with range definitions that overlap.
+> Does anyone remember what does the spec say regarding those?
 >
-> It requires 1.8V *IO voltage*, not VDD/VCC.
->
-> [...]
->
-> Kind regards
-> Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If the way they are used now in those platform is wrong we should
+> mark them in some manner in the DT so that the idiom does not propagate.
+
+We could easily find out which DT have overlapping resources on the tree...
+
+Regars!
