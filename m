@@ -1,125 +1,129 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH 8/9] input: goodix: add support for ESD
-Date: Mon, 8 Jun 2015 14:28:49 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F19A7A4F8@irsmsx105.ger.corp.intel.com>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
- <1432817265-23891-9-git-send-email-irina.tirdea@intel.com>
- <20150528132353.GJ23176@leverpostej>
- <1F3AC3675D538145B1661F571FE1805F19A77432@irsmsx105.ger.corp.intel.com>
- <1433422675.5346.21.camel@hadess.net>
- <1F3AC3675D538145B1661F571FE1805F19A79DF9@irsmsx105.ger.corp.intel.com>
- <20150605164602.GD26708@dtor-ws>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
+ regulators
+Date: Mon, 8 Jun 2015 15:29:26 +0100
+Message-ID: <20150608142926.GY7557@n2100.arm.linux.org.uk>
+References: <4184159.j0iXe39dFB@phil> <2619686.csNBBFyt8W@phil>
+ <20150605110159.GA16254@ulmo.nvidia.com>
+ <23123577.mOoqGCAPdL@diego>
+ <20150605231058.GQ7557@n2100.arm.linux.org.uk>
+ <20150608140256.GA10354@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150605164602.GD26708@dtor-ws>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Bastien Nocera <hadess@hadess.net>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150608140256.GA10354@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
-> Sent: 05 June, 2015 19:46
-> To: Tirdea, Irina
-> Cc: Bastien Nocera; Mark Rutland; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 8/9] input: goodix: add support for ESD
-> 
-> On Fri, Jun 05, 2015 at 04:37:49PM +0000, Tirdea, Irina wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Bastien Nocera [mailto:hadess@hadess.net]
-> > > Sent: 04 June, 2015 15:58
-> > > To: Tirdea, Irina
-> > > Cc: Mark Rutland; Dmitry Torokhov; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH 8/9] input: goodix: add support for ESD
-> > >
-> > > On Thu, 2015-05-28 at 14:26 +0000, Tirdea, Irina wrote:
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: linux-input-owner@vger.kernel.org [mailto:
-> > > > > linux-input-owner@vger.kernel.org] On Behalf Of Mark Rutland
-> > > > > Sent: 28 May, 2015 16:24
-> > > > > To: Tirdea, Irina
-> > > > > Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org;
-> > > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > > > Subject: Re: [PATCH 8/9] input: goodix: add support for ESD
-> > > > >
-> > > > > On Thu, May 28, 2015 at 01:47:44PM +0100, Irina Tirdea wrote:
-> > > > > > Add ESD (Electrostatic Discharge) protection mechanism.
-> > > > > >
-> > > > > > The driver enables ESD protection in HW and checks a register
-> > > > > > to determine if ESD occurred. If ESD is signalled by the HW,
-> > > > > > the driver will reset the device.
-> > > > > >
-> > > > > > The ESD poll time (in ms) can be set through
-> > > > > > esd-recovery-timeout-ms ACPI/DT property. If it is set to 0,
-> > > > > > ESD protection is disabled.
-> > > > > >
-> > > > > > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > > > > > ---
-> > > > > >  .../bindings/input/touchscreen/goodix.txt          |   4 +
-> > > > > >  drivers/input/touchscreen/goodix.c                 | 106
-> > > > > > ++++++++++++++++++++-
-> > > > > >  2 files changed, 106 insertions(+), 4 deletions(-)
-> > > > > >
-> > > > > > diff --git
-> > > > > > a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > index 9e4ff69..9132ee0 100644
-> > > > > > ---
-> > > > > > a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > +++
-> > > > > > b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > @@ -19,6 +19,10 @@ Optional properties:
-> > > > > >
-> > > > > >   - device-config : device configuration information
-> > > > > > (specified as byte
-> > > > > >                     array). Maximum size is 240 bytes.
-> > > > > > + - esd-recovery-timeout-ms : ESD poll time (in milli seconds)
-> > > > > > for the driver to
-> > > > > > +                      check if ESD occurred and in that
-> > > > > > case reset the
-> > > > > > +                      device. ESD is disabled if this
-> > > > > > property is not set
-> > > > > > +                      or is set to 0.
-> > > > >
-> > > > > This sounds like software configuration rather than HW description.
-> > > > > Is
-> > > > > there any reason this needs to be a DT property?
-> > > > >
-> > > >
-> > > > Although this enables a software feature, it depends on the platform
-> > > > if electrostatic discharge
-> > > > protection should be enabled or not. Some platform designs handle ESD
-> > > > better and do not need
-> > > > the SW mechanism, so the property can be used to disable it.
-> 
-> Even though it depends on the platform it describes software function,
-> not hardware. Since it is not necessary for starting the device maybe we
-> should indeed export it through sysfs and userspace board code should
-> activate it as needed?
-
-Sure, I can do it through sysfs.
-The only confusing part is that the tsc2005 touchscreen driver uses the
-device tree property esd-recovery-timeout-ms.
-
-> 
-> I'll leave the decision to DT folks here.
-> 
-
-OK. I will keep this version of the esd patch in v2 and wait for an answer
-from DT folks so I know exactly how to handle it.
-
-Thanks,
-Irina
-
-> Thanks.
-> 
-> --
-> Dmitry
+T24gTW9uLCBKdW4gMDgsIDIwMTUgYXQgMDQ6MDI6NThQTSArMDIwMCwgVGhpZXJyeSBSZWRpbmcg
+d3JvdGU6Cj4gT24gU2F0LCBKdW4gMDYsIDIwMTUgYXQgMTI6MTA6NThBTSArMDEwMCwgUnVzc2Vs
+bCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOgo+ID4gT24gRnJpLCBKdW4gMDUsIDIwMTUgYXQgMDI6
+MTY6NDBQTSArMDIwMCwgSGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4gPiA+IEhpIFRoaWVycnkKPiA+
+ID4gCj4gPiA+IEFtIEZyZWl0YWcsIDUuIEp1bmkgMjAxNSwgMTM6MDI6MDEgc2NocmllYiBUaGll
+cnJ5IFJlZGluZzoKPiA+ID4gPiBJZiB0aGlzIGlzIHNwZWNpZmljIHRvIHRoZSBSb2NrY2hpcCBp
+bXBsZW1lbnRhdGlvbiwgc2hvdWxkbid0IHRoaXMgZ28KPiA+ID4gPiBpbnRvIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9kd19oZG1pLXJvY2tjaGlwLnR4dD8gSXQKPiA+
+ID4gPiBjb3VsZCB0aGVuIHNpbXBseSBnbyBpbnRvIHRoZSBSb2NrY2hpcCBEUk0gdHJlZS4KPiA+
+ID4gCj4gPiA+IGFjdHVhbGx5LCB3ZSBkZXRlcm1pbmVkIHRoYXQgdGhlIHN1cHBseSBuYW1lcyBh
+cmUgdW5pdmVyc2FsIHRvIHRoZSBJUAo+ID4gPiAoYm90aCBpbiBpbXggYW5kIHJvY2tjaGlwIGFu
+ZCBwcm9iYWJseSBtb3JlIGlmIHRoZXJlIGFyZSBtb3JlIHVzZXJzCj4gPiA+IG91dCB0aGVyZSku
+IEp1c3QgUnVzc2VsbCByZXF1ZXN0ZWQgdGhhdCB3ZSBkb24ndCBwb2xsdXRlIHRoZSBnZW5lcmlj
+Cj4gPiA+IGNvZGUgdW50aWwgbmVjZXNzYXJ5LCBhcyBpdCBsb29rcyBsaWtlIHRoZSBzdXBwbHkg
+b2YgdGhvc2UgaXMgc29tZWhvdwo+ID4gPiBoYW5kbGVkIGludGVybmFsbHkgb24gdGhlIGlteC4K
+PiA+IAo+ID4gV2h5IGRvIHlvdSB0aGluayBpdCdzIHVuaXZlcnNhbD8KPiA+IAo+ID4gTGV0J3Mg
+c3RhcnQgZnJvbSB0aGUgYmVnaW5uaW5nLCBiZWZvcmUgd2UgY3JlYXRlIHNvbWV0aGluZyB0aGF0
+J3Mgbm90Cj4gPiByZXByZXNlbnRhdGl2ZSBvZiB0aGUgaGFyZHdhcmUuCj4gPiAKPiA+IGR3X2hk
+bWkgYWN0dWFsbHkgZHJpdmVzIHR3byBwaWVjZXMgb2YgaGFyZHdhcmUgLSB0aGUgSERNSSB0cmFu
+c21pdHRlciwKPiA+IGFuZCBhIHNlcGFyYXRlIGhhcmR3YXJlIGJsb2NrLCB0aGUgSERNSSBwaHku
+Cj4gPiAKPiA+IFRoZXJlIGFyZSBhdCBsZWFzdCB0d28gcG9zc2libGUgSERNSSBwaHlzIHJlZmVy
+ZW5jZWQgaW4gdGhlIGlNWAo+ID4gZG9jdW1lbnRhdGlvbiAtIHRoZXJlIGlzIG9uZSBjYWxsZWQg
+SEVBQyB3aGljaCBkb2Vzbid0IGFwcGVhciBpbiBpTVgKPiA+IGRldmljZXMgYWZhaWssIGFuZCB0
+aGUgb25lIHdoaWNoIGRvZXMsIHdoaWNoIGlzIGEgM0QgcGh5Lgo+IAo+IEknbSBub3Qgc3VyZSBJ
+IHVuZGVyc3RhbmQgY29ycmVjdGx5LiBBcmUgdGhlc2UgUEhZcyBleGNoYW5nZWFibGU/IERvZXMK
+PiB0aGUgRGVzaWduV2FyZSBJUCBwcm92aWRlIHRoZW0gb3IgY291bGQgdGhleSBiZSBwcm92aWRl
+ZCBzZXBhcmF0ZWx5PwoKWW91J3JlIGFza2luZyBxdWVzdGlvbnMgd2UgaGF2ZSBubyByZWFsIGFu
+c3dlcnMgdG8gLSBhbGwgd2UgaGF2ZSBpcyB0aGUKYXZhaWxhYmxlIGRvY3VtZW50YXRpb24gcHJv
+dmlkZWQgYnkgRnJlZXNjYWxlIC0gd2UgZG9uJ3QgZXZlbiBoYXZlIHRoZQpSb2NoY2hpcCBkb2N1
+bWVudGF0aW9uLgoKRnJvbSB0aGUgRnJlZXNjYWxlIGRvY3VtZW50YXRpb24sIHdoaWNoIGRvY3Vt
+ZW50cyB0aGUgSERNSSB0cmFuc21pdHRlcgplbnRpcmVseSBzZXBhcmF0ZWx5IGZyb20gdGhlIEhE
+TUkgcGh5LCBJIHdvdWxkIHNheSB0aGF0IHRoZSBJUCBpcwpzdHJ1Y3R1cmVkIGFzIHR3byBlbnRp
+cmVseSBzZXBhcmF0ZSBibG9ja3MsIGFuZCB0aGUgY2hpcCBkZXNpZ25lciBpcwpmcmVlIHRvIGNo
+b29zZSBhbiBhcHByb3ByaWF0ZSBwaHkgZnJvbSBhIHJhbmdlIG9mIEhETUkgcGh5cy4KCk1vcmVv
+dmVyLCBpbiB0aGUgZmVhdHVyZSBsaXN0IGZvciB0aGUgSERNSSB0cmFuc21pdHRlciwgaXQgc2F5
+cyAodGhvdWdoCnRoaXMgaXMgbm90IGFwcGxpY2FibGUgdG8gaU1YNiAtIGFuZCBpcyBwcm9iYWJs
+eSBsaWZ0ZWQgZnJvbSB0aGUKU3lub3BzaXMgZG9jdW1lbnRhdGlvbik6CgoiKiBPcHRpb24gdG8g
+cmVtb3ZlIHBpeGVsIHJlcGV0aXRpb24gY2xvY2sgZnJvbSBIRE1JIFRYIGludGVyZmFjZSBmb3Ig
+YW4KICBlYXN5IGludGVncmF0aW9uIHdpdGggdGhpcmQgcGFydHkgSERNSSBUWCBQSFlzIgoKU28g
+LSBoZXJlJ3MgdGhlIHF1ZXN0aW9uOiB3aGF0IGRvIHdlIGRvIHdoZW4gd2UgZmluZCBzb21ldGhp
+bmcgdXNpbmcgdGhlClN5bm9wc2lzIGRlc2lnbi13YXJlIEhETUkgdHJhbnNtaXR0ZXIgd2l0aCBh
+IGRpZmZlcmVudCBIRE1JIHBoeT8KClJlbWVtYmVyLCBWUCwgVlBILCBWUF9GSUxUXyogYXJlIGFs
+bCBwYXJ0IG9mIHRoZSBIRE1JIHBoeSBhY2NvcmRpbmcgdG8KdGhlIGZyZWVzY2FsZSBkb2N1bWVu
+dGF0aW9uLCBhbmQgbm90IHBhcnQgb2YgdGhlIEhETUkgdHJhbnNtaXR0ZXIuCgo+IEkKPiBzZWUg
+cmVnaXN0ZXIgZGVmaW5pdGlvbnMgZm9yIGEgInNvdXJjZSIgUEhZIGFuZCBhICJtYXN0ZXIiIFBI
+WSwgd2hlcmUKPiB0aGUgbGF0dGVyIHNlZW1zIHRvIGJlIGFuIEkyQyBjb250cm9sbGVyIHJhdGhl
+ciB0aGFuIGEgUEhZLiBQZXJoYXBzIGl0Cj4gaXMgdXNlZCB0byBjb21tdW5pY2F0ZSB3aXRoIGFu
+IGV4dGVybmFsIFBIWT8KCkknbSBub3Qgc3VyZSB3aGVyZSB5b3UgZ2V0IHRoYXQgZnJvbS4gIE1h
+eWJlIHlvdSBjb3VsZCBnaXZlIGEgY2hhcHRlcgpyZWZlcmVuY2U/CgpMb29raW5nIGRlZXBlciBh
+dCB0aGlzIEhFQUMgaXNzdWUsIHRoYXQgaXMgYSBzZXBhcmF0ZSwgc21hbGxlciBwaHkgd2hpY2gK
+ZG9lc24ndCBoYXZlIG11Y2ggdG8gZG8gd2l0aCB2aWRlbyAtIHRob3VnaCBpdCByZW1haW5zIHJh
+dGhlciB1bmRvY3VtZW50ZWQKaW4gdGhlIGZyZWVzY2FsZSBkb2NzLiAgVGhhdCdzIG9ubHkgZ29p
+bmcgb24gYSBibG9jayBkaWFncmFtIG5lYXIgdGhlCnN0YXJ0IG9mIHRoZSBIRE1JIHRyYW5zbWl0
+dGVyIGNoYXB0ZXIgdGhvdWdoLgoKPiA+IElmIHdlIHdhbnRlZCB0byBtb2RlbCB0aGlzIGNvcnJl
+Y3RseSwgdGhlbiBmb3IgaU1YLCBJIHdvdWxkIHN1Z2dlc3QKPiA+IHRoYXQgdGhlIEhETUkgcGh5
+IHNob3VsZCBiZSBtb2RlbGxlZCBpbiBEVCwgYW5kIF9hbGxfIHRoZSBzaXggVlAqCj4gPiBzdXBw
+bGllcyBhcmUgbW9kZWxsZWQgLSBhbmQgd2Ugc2hvdWxkIGFzc3VtZSB0aGF0ICJHRCIgaXMgYSAi
+cG93ZXIKPiA+IGdvb2QiIHNpZ25hbCwgdGhvdWdoIHdlIGRvbid0IGtub3cgdGhhdCBmb3IgY2Vy
+dGFpbi4KPiAKPiBQZXJoYXBzIFZQX0ZJTFQqIGFyZSBzb3VyY2VkIGZyb20gdGhlIHNhbWUgc3Vw
+cGx5IGFzIFZQLCBzbyBtYXliZSB3ZQo+IGRvbid0IGhhdmUgdG8gY2FyZSBhdCB0aGUgRFQgbGV2
+ZWw/CgpXZSdkIGJlIGd1ZXNzaW5nIC0gYW5kIHRoYXQncyBleGFjdGx5IG15IHBvaW50LiAgRGVz
+aWduaW5nIHNvbWV0aGluZyBhdApEVCBsZXZlbCBiYXNlZCBvbiBndWVzc3dvcmsgaXMgbm8gd2F5
+IHRvIGdvLCBlc3BlY2lhbGx5IHdpdGggYSBnZW5lcmljCmJpdCBvZiBJUCB3aGljaCB3b3VsZCBi
+ZSByZS11c2VkIGFjcm9zcyBtdWx0aXBsZSBkaWZmZXJlbnQgcGxhdGZvcm1zLgoKPiA+IFdoYXQg
+d2UgYWxzbyBkb24ndCBrbm93IG9uIGlNWDYgaXMgd2hhdCB2b2x0YWdlcyBhbnkgb2YgdGhlc2Ug
+YXJlCj4gPiBzdXBwbGllZCB3aXRoLgo+IAo+IEEgcmF0aGVyIGNvbW1vbiBudWlzYW5jZSB3aXRo
+IHRoZXNlIGxpY2Vuc2VkIElQIGJsb2NrcyBpcyB0aGF0IHNvbWUgb2YKPiB0aGUgZGV0YWlscyBt
+YXkgYmUgaGlkZGVuIGluIFNvQyBnbHVlLCByZXN1bHRpbmcgaW4gdGhlIGludGVyZmFjZSBiZWlu
+Zwo+IGRpZmZlcmVudCBvbiBlYWNoIFNvQy4gR2l2ZW4gYWxsIG9mIHRoZSBhYm92ZSBpdCBzb3Vu
+ZHMgbGlrZSBpLk1YIGNvdWxkCj4gaGF2ZSBzb21lIGludGVybmFsIGdsdWUgdG8gc3VwcGx5IFZQ
+IGFuZCBWUEggYW5kIHRoZXJlJ2QgYmUgbm8gc2Vuc2libGUKPiB3YXkgdG8gcmVwcmVzZW50IHRo
+ZW0gaW4gRFQuCgouLi4gb3IgaXQncyBlbnRpcmVseSBwb3NzaWJsZSB0aGF0IGFsbCB0aGVzZSBz
+dXBwbGllcyBhcmUgYWx3YXlzIGZlZCBieQp0aGUgaU1YNiBTb0MgYWxsIHRoZSB0aW1lLgoKPiA+
+IFNvLCBhcyB3ZSBkb24ndCBoYXZlIG11Y2ggY2VydGFpbnR5IGhlcmUsIGFuZCB3ZSBrbm93IHRo
+YXQgYWRkaW5nIGl0Cj4gPiB0byB3aGF0IGlzIHRoZSBIRE1JIHRyYW5zbWl0dGVyIHdvdWxkIGJl
+IHdyb25nLCBJJ2Qgc3VnZ2VzdCBub3QKPiA+IG1vZGVsbGluZyBpdCBpbiBhIGdlbmVyaWMgd2F5
+IGF0IHByZXNlbnQuCj4gCj4gRG9lcyBEZXNpZ25XYXJlIGJ5IGFueSBjaGFuY2Ugb2ZmZXIgZG9j
+dW1lbnRhdGlvbiBhYm91dCB0aGUgSVA/IElmIG5vdCBJCj4gYWdyZWUgdGhhdCB0aGUgc2FmZXN0
+IHRoaW5nIHRvIGRvIGZvciBub3cgd291bGQgYmUgdG8gbWFrZSB0aGlzIFJvY2tjaGlwCj4gc3Bl
+Y2lmaWMuCgpUaGF0J3MgX2V4YWN0bHlfIHdoeSBJIHJhaXNlZCB0aGUgcG9pbnQgb3JpZ2luYWxs
+eSwgYW5kIHNhaWQgdGhhdCBpdCBzaG91bGQKYmUgUm9ja2NoaXAgc3BlY2lmaWMgdW50aWwgd2Ug
+a25vdyBiZXR0ZXIuICBHbGFkIHlvdSd2ZSBjYXVnaHQgdXAgd2l0aCBteQp0aGlua2luZy4gOikK
+Ckhvd2V2ZXIsIG15IHRoaW5raW5nIF9ub3dfIGlzIHRoYXQgaXQgc2hvdWxkbid0IGV2ZW4gYmUg
+bW9kZWxsZWQgYXMgcGFydApvZiBvdXIgSERNSSB0cmFuc21pdHRlciBEVCBibG9iLCBidXQgd2Ug
+c2hvdWxkIGJlIG1vZGVsbGluZyB0aGUgSERNSQp0cmFuc21pdHRlciBzZXBhcmF0ZWx5IGZyb20g
+dGhlIEhETUkgcGh5IGFzIHR3byBzZXBhcmF0ZSBEVCBibG9icywgYW5kCnRoZW4gdGhlIEhETUkg
+cGh5IGJsb2IgZ2V0cyB0aGUgKHBvc3NpYmx5IG9wdGlvbmFsKSBWUEggYW5kIFZQIHN1cHBsaWVz
+LgoKV2hhdCBpZiBzb21lb25lIGRlc2lnbnMgYSBjaGlwIHdpdGggdGhlaXIgb3duIEhETUkgcGh5
+IHdoaWNoIHVzZXMKZGlmZmVyZW50IHN1cHBsaWVzPwoKVGhpcyBpcyBvbmUgb2YgdGhlIHByb2Js
+ZW1zIEkgaGF2ZSB3aXRoIERUIC0gRFQgbmVlZHMgdXMgdG8gZGVzY3JpYmUKdGhlIGhhcmR3YXJl
+IGNvcnJlY3RseSBmaXJzdCB0aW1lIGFyb3VuZCwgd2hlbiB3ZSBtYXkgbm90IGhhdmUgYWxsIHRo
+ZQphdmFpbGFibGUgZmFjdHMgdG8gbWFrZSBwcm9wZXIgZGVjaXNpb25zLCBhbmQgd3JvbmcgZGVj
+aXNpb25zIGNhbiB2ZXJ5CndlbGwgbGVhZCB0byBzZXJpb3VzIGhlYWRhY2hlcyBsYXRlciBvbiBi
+ZWNhdXNlIHdlIGRpZG4ndCBtb2RlbApzb21ldGhpbmcgY29ycmVjdGx5IC0gYW5kIHdlJ3JlIHN0
+dWNrIHdpdGggdGhlIHdyb25nIGRlY2lzaW9ucyBmb3IgZXZlci4KCi0tIApGVFRDIGJyb2FkYmFu
+ZCBmb3IgMC44bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBrYnBzIHVw
+CmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
