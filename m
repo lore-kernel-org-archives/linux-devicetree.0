@@ -1,272 +1,139 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v9 2/8] media: Add registration helpers for V4L2 flash
- sub-devices
-Date: Mon, 08 Jun 2015 09:43:38 +0200
-Message-ID: <557547AA.6010106@samsung.com>
-References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
- <1432566843-6391-3-git-send-email-j.anaszewski@samsung.com>
- <20150601205921.GH25595@valkosipuli.retiisi.org.uk>
- <556D73D2.20600@samsung.com>
- <20150602153234.GL25595@valkosipuli.retiisi.org.uk>
- <556EB337.4010608@samsung.com>
- <20150603205946.GM25595@valkosipuli.retiisi.org.uk>
- <55754266.2020709@samsung.com>
- <20150608073709.GB5904@valkosipuli.retiisi.org.uk>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
+Date: Mon, 8 Jun 2015 09:48:58 +0200
+Message-ID: <20150608074858.GK6325@pengutronix.de>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+ <20150528132452.GI26575@pengutronix.de>
+ <1432867649.15597.46.camel@mtksdaap41>
+ <20150529062345.GY6325@pengutronix.de>
+ <20150604210212.GM676@codeaurora.org>
+ <1433468737.14416.7.camel@mtksdaap41>
+ <20150606005912.GC29237@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20150608073709.GB5904@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150606005912.GC29237-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2015 09:37 AM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Mon, Jun 08, 2015 at 09:21:10AM +0200, Jacek Anaszewski wrote:
->> Hi Sakari,
->>
->> On 06/03/2015 10:59 PM, Sakari Ailus wrote:
->>> Hi Jacek,
->>>
->>> On Wed, Jun 03, 2015 at 09:56:39AM +0200, Jacek Anaszewski wrote:
->>>> Hi Sakari,
->>>>
->>>> On 06/02/2015 05:32 PM, Sakari Ailus wrote:
->>>>> Hi, Jacek!
->>>>>
->>>>> On Tue, Jun 02, 2015 at 11:13:54AM +0200, Jacek Anaszewski wrote:
->>>>>> Hi Sakari,
->>>>>>
->>>>>> On 06/01/2015 10:59 PM, Sakari Ailus wrote:
->>>>>>> Hi Jacek,
->>>>>>>
->>>>>>> On Mon, May 25, 2015 at 05:13:57PM +0200, Jacek Anaszewski wrote:
->>>>>>>> This patch adds helper functions for registering/unregistering
->>>>>>>> LED Flash class devices as V4L2 sub-devices. The functions should
->>>>>>>> be called from the LED subsystem device driver. In case the
->>>>>>>> support for V4L2 Flash sub-devices is disabled in the kernel
->>>>>>>> config the functions' empty versions will be used.
->>>>>>>>
->>>>>>>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->>>>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>>>>>> Cc: Sakari Ailus <sakari.ailus@iki.fi>
->>>>>>>> Cc: Hans Verkuil <hans.verkuil@cisco.com>
->>>>>>>
->>>>>>> Thanks for adding indicator support!
->>>>>>>
->>>>>>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>>>>>>
->>>>>>
->>>>>> I missed one thing - sysfs interface of the indicator LED class
->>>>>> also has to be disabled/enabled of v4l2_flash_open/close.
->>>>>
->>>>> Good catch.
->>>>>
->>>>>>
->>>>>> I am planning to reimplement the functions as follows,
->>>>>> please let me know if you see any issues here:
->>>>>>
->>>>>> static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
->>>>>> *fh)
->>>>>> {
->>>>>>          struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
->>>>>>
->>>>>>          struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
->>>>>>
->>>>>>          struct led_classdev *led_cdev = &fled_cdev->led_cdev;
->>>>>>          struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
->>>>>>
->>>>>>          struct led_classdev *led_cdev_ind;
->>>>>>
->>>>>>          int ret = 0;
->>>>>
->>>>> I think you could spare some newlines above (and below as well).
->>>>
->>>> There must have been some issue on thunderbird side,
->>>> originally there were no newlines above.
->>>
->>> Ok. I've used Seamonkey, I believe it uses the same editor. Some bugs were
->>> unintroduced a few years ago, and since that I've mostly used a different
->>> editor (and MUA) when replying to patches.
->>>
->>>>>>
->>>>>>
->>>>>>          mutex_lock(&led_cdev->led_access);
->>>>>>
->>>>>>
->>>>>>          if (!v4l2_fh_is_singular(&fh->vfh))
->>>>>>
->>>>>>                  goto unlock;
->>>>>>
->>>>>>
->>>>>>          led_sysfs_disable(led_cdev);
->>>>>>          led_trigger_remove(led_cdev);
->>>>>>
->>>>>>
->>>>>>          if (iled_cdev) {
->>>>>>                  led_cdev_ind = &iled_cdev->led_cdev;
->>>>>
->>>>> You can also declare led_cdev_ind here as you don't need it outside the
->>>>> basic block.
->>>>
->>>> With new approach it will be required also in error path.
->>>
->>> True.
->>>
->>>>>>
->>>>>>
->>>>>>                  mutex_lock(&led_cdev_ind->led_access);
->>>>>>
->>>>>>
->>>>>>                  led_sysfs_disable(led_cdev_ind);
->>>>>>                  led_trigger_remove(led_cdev_ind);
->>>>>>
->>>>>>
->>>>>>                  mutex_unlock(&led_cdev_ind->led_access);
->>>>>
->>>>> Please don't acquire the indicator mutex while holding the flash mutex. I
->>>>> don't think there's a need to do so, thus creating a dependency between the
->>>>> two.Just remember to check for v4l2_fh_is_singular() in both cases.
->>>>
->>>> I thought that the code would be simpler this way. Nevertheless I
->>>> produced a new version by following your advise.
->>>>
->>>>>
->>>>>>
->>>>>>          }
->>>>>>
->>>>>>
->>>>>>          ret = __sync_device_with_v4l2_controls(v4l2_flash);
->>>>>
->>>>> If ret is < 0 here, you end up disabling the sysfs interface while open()
->>>>> fails (and v4l2_flash_close() will not be run). Shouldn't you handle that?
->>>>
->>>> Good point.
->>>>
->>>> Please find the new version of v4l2_flash{open|close} functions below:
->>>>
->>>> static int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
->>>> *fh)
->>>> {
->>>>          struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
->>>>          struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
->>>>          struct led_classdev *led_cdev = &fled_cdev->led_cdev;
->>>>          struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
->>>>          struct led_classdev *led_cdev_ind = NULL;
->>>>          int ret = 0;
->>>>
->>>>          mutex_lock(&led_cdev->led_access);
->>>>
->>>>          if (!v4l2_fh_is_singular(&fh->vfh)) {
->>>
->>> Hmm. I just realised that this might be a bit broken ---
->>> v4l2_fh_is_singular() should return the same value independently of where in
->>> subdev's open() handler it is called.
->>>
->>> But adding file handles to the list and checking how many there are of them
->>> is not properly serialised, i.e. another process could change the list in
->>> between. I'll try to submit a patch for that. No need to wait for that
->>> though.
->>>
->>> So please ignore my earlier request to check for v4l2_fh_is_singular() for
->>> multiple times, it won't help. Once is enough, albeit more than that won't
->>> hurt.
->>
->> Let's agree on the new shape of the functions then:
->
-> Looks good to me. Could you resend once more, please?
+On Fri, Jun 05, 2015 at 05:59:12PM -0700, Stephen Boyd wrote:
+> On 06/05, James Liao wrote:
+> > Hi Stephen,
+> > 
+> > On Thu, 2015-06-04 at 14:02 -0700, Stephen Boyd wrote:
+> > > On 05/29, Sascha Hauer wrote:
+> > > > Yes. I previously got the impression that the subsystem clocks are not
+> > > > directly associated to the larbs, but needed to be handled by the larb
+> > > > code due to some side effect. Now that I saw that the larbs are directly
+> > > > in the subsystem register space it all makes sense.
+> > > > 
+> > > > Note that the way Mediatek SoCs are designed around sub modules is bit
+> > > > unusual and does not fit very well in the Linux directory structure.
+> > > > Normally SoCs have a single clocks controller which controls all clocks
+> > > > in the SoC. Then you often have a reset controller providing reset lines
+> > > > in the SoC. In this case it's clear that the clk driver goes to
+> > > > drivers/clk/, the reset controller driver to drivers/reset/. Mediatek
+> > > > SoCs instead have several blocks, each with its own clock and reset
+> > > > controller. Splitting each block up into parts in drivers/clk/ and
+> > > > drivers/reset/ leads to quite a code fragmentation.
+> > > > This is my opinion, it would be great to hear something from others.
+> > > > Matthias? I'd like to avoid running into a direction that is not
+> > > > acceptable in the end.
+> > > 
+> > > We already have drivers registering clocks and resets under
+> > > drivers/clk, so it's not unheard of. An alternative solution is
+> > > to make child devices for the clock part and the reset part at
+> > > runtime in the toplevel driver for the vencsys device (don't do
+> > > any sort of DT description for this) and use regmap to mediate
+> > > the register accesses and locking. That way we can put the clk
+> > > driver in drivers/clk/, the reset driver in drivers/reset, etc.
+> > > so that logically related code is grouped.
+> > 
+> > I have a question about the alternative way you mentioned. Currently
+> > clock providers and consumers describe what clocks they will provide /
+> > consume in device tree. If we don't describe vencsys clocks in device
+> > tree, how to get vencsys clocks for drivers that need to control them?
+> > 
+> 
+> Perhaps an example would be best. In DT we would have:
+> 
+> 	vencsys: vencsys@10000 {
+> 		compatible = "mtk,vencsys";
+> 		reg = <0x10000 0x1000>;
+> 		#clock-cells = <1>;
+> 		#reset-cells = <1>;
+> 	};
+> 
+> 	myconsumer@12000 {
+> 		compatible = "mtk,vencsys";
+> 		reg = <0x12000 0x100>;
+> 		clocks = <&vencsys 10>;
+> 		clock-names = "core";
+> 	};
+> 
+> 	(Or are the consumers only children of the subsystem?
+> 	It's not clear to me)
+> 
+> And then in the mtk,vencsys driver we would create a platform
+> device named something like "mtk-vencsys-clk" and assign the
+> of_node of the device to be the of_node that is assigned to the
+> mtk,vencsys device.
+> 
+> 	static int vencsys_probe(struct platform_device *pdev)
+> 	{
+> 		int ret;
+> 		struct device_node *np = pdev->dev.of_node;
+> 		struct platform_device *clk_pdev;
+> 
+> 		clk_pdev = platform_device_alloc("mtk-vencsys-clk", -1);
+> 		clk_pdev->dev.of_node = of_node;
+> 		ret = platform_device_add(clk_pdev);
+> 		if (ret)
+> 			return ret;
+> 	}
+> 
+> Then we could put a mtk-vencsys-clk driver in drivers/clk/ that
+> does the clk driver part...
+> 
+> 	static int clk_vencsys_probe(struct platform_device *pdev)
+> 	{
+> 		int ret;
+> 		struct device_node *np = pdev->dev.of_node;
+> 		struct regmap *regmap;
+> 
+> 		ret = of_clk_add_provider(np, of_clk_src_onecell_get, ..);
+> 		if (ret)
+> 			return ret;
+> 
+> 		regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> 
+> 	}
+> 
+> And similar things could be done for the reset driver.
 
-Of course, there will be also minor modifications in the other
-patches of the patch set.
+The problem I see with this approach is that we scatter the code for a
+otherwise simple driver over a bunch of directories. We would have
 
->> tatic int v4l2_flash_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
->> {
->>          struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
->>          struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
->>          struct led_classdev *led_cdev = &fled_cdev->led_cdev;
->>          struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
->>          struct led_classdev *led_cdev_ind = NULL;
->>          int ret = 0;
->>
->>          if (!v4l2_fh_is_singular(&fh->vfh))
->>                  return 0;
->>
->>          mutex_lock(&led_cdev->led_access);
->>
->>          led_sysfs_disable(led_cdev);
->>          led_trigger_remove(led_cdev);
->>
->>          mutex_unlock(&led_cdev->led_access);
->>
->>          if (iled_cdev) {
->>                  led_cdev_ind = &iled_cdev->led_cdev;
->>
->>                  mutex_lock(&led_cdev_ind->led_access);
->>
->>                  led_sysfs_disable(led_cdev_ind);
->>                  led_trigger_remove(led_cdev_ind);
->>
->>                  mutex_unlock(&led_cdev_ind->led_access);
->>          }
->>
->>          ret = __sync_device_with_v4l2_controls(v4l2_flash);
->>          if (ret < 0)
->>                  goto out_sync_device;
->>
->>          return 0;
->> out_sync_device:
->>          mutex_lock(&led_cdev->led_access);
->>          led_sysfs_enable(led_cdev);
->>          mutex_unlock(&led_cdev->led_access);
->>
->>          if (led_cdev_ind) {
->>                  mutex_lock(&led_cdev_ind->led_access);
->>                  led_sysfs_enable(led_cdev_ind);
->>                  mutex_unlock(&led_cdev_ind->led_access);
->>          }
->>
->>          return ret;
->> }
->>
->> static int v4l2_flash_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh
->> *fh)
->> {
->>          struct v4l2_flash *v4l2_flash = v4l2_subdev_to_v4l2_flash(sd);
->>          struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
->>          struct led_classdev *led_cdev = &fled_cdev->led_cdev;
->>          struct led_classdev_flash *iled_cdev = v4l2_flash->iled_cdev;
->>          int ret = 0;
->>
->>          if (!v4l2_fh_is_singular(&fh->vfh))
->>                  return 0;
->>
->>          mutex_lock(&led_cdev->led_access);
->>
->>          if (v4l2_flash->ctrls[STROBE_SOURCE])
->>                  ret = v4l2_ctrl_s_ctrl(v4l2_flash->ctrls[STROBE_SOURCE],
->>                                  V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
->>          led_sysfs_enable(led_cdev);
->>
->>          mutex_unlock(&led_cdev->led_access);
->>
->>          if (iled_cdev) {
->>                  struct led_classdev *led_cdev_ind = &iled_cdev->led_cdev;
->>
->>                  mutex_lock(&led_cdev_ind->led_access);
->>                  led_sysfs_enable(led_cdev_ind);
->>                  mutex_unlock(&led_cdev_ind->led_access);
->>          }
->>
->>          return ret;
->> }
->>
->>
->
+drivers/clk/mediatek/vencsys.c
+drivers/reset/mediatek/vencsys.c
+drivers/soc/mediatek/vencsys.c
 
+The same must be added for vdecsys, imgsys and vencltsys. That will make
+12 drivers and three maintainers for 12 registers.  I think this will be
+a pain to maintain, hence my suggestion to put the vencsys code into a
+single file and not split this up into more subsystem specific files.
+
+Sascha
 
 -- 
-Best Regards,
-Jacek Anaszewski
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
