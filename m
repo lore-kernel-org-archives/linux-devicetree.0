@@ -1,80 +1,57 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RESEND 1/2] usb: ehci-exynos: Make provision for vdd regulators
-Date: Mon, 08 Jun 2015 22:21:46 +0900
-Message-ID: <557596EA.50103@samsung.com>
-References: <1433683242-3945-1-git-send-email-linux.amoon@gmail.com> <5574F97A.5030104@samsung.com> <CANAwSgTjx8uxyOTW8uuiqrcNzF+UwLMmML2OcDgG5Ku_56=vJQ@mail.gmail.com> <CAJKOXPfDmt5VMqr-P+OpWy1+jz675CFRPmtS_N0HjN4tWxfwtA@mail.gmail.com> <44B5E2FDCD3244AAA418BB8EC28FEA25@sisodomain.com> <CANAwSgTi114wO63-sx=UmbxPerqKvstq=coVyqhRkzX44CDe_w@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v9 4/6] Documentation: DT: PL011: hi6220: add compatible
+ string for Hisilicon designed UART
+Date: Mon, 8 Jun 2015 15:32:09 +0200
+Message-ID: <CACRpkdZ-z0sESSmB=Smng1ra+1Uv4DEt1=kqZm0vMK8+vknHDQ@mail.gmail.com>
+References: <1432950661-23060-1-git-send-email-bintian.wang@huawei.com>
+ <1432950661-23060-5-git-send-email-bintian.wang@huawei.com>
+ <CACRpkdav_5x6RC9F++ErvqGyxDCF-=kap7-jCsO4zZ6QGVLfBQ@mail.gmail.com>
+ <556D73B6.4090608@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgTi114wO63-sx=UmbxPerqKvstq=coVyqhRkzX44CDe_w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <556D73B6.4090608@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, Kevin Hilman <khilman@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "wangbintian@gmail.com" <wangbintian@gmail.com>, Kevin Hilman <khilman@kernel.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Jaehoon Chung <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, Yunlei He <heyunlei@huawei.com>, puck.c
 List-Id: devicetree@vger.kernel.org
 
-W dniu 08.06.2015 o 19:20, Anand Moon pisze:
-> On 8 June 2015 at 10:58, Vivek Gautam <gautam.vivek@samsung.com> wrote:
->> Hi,
->>
+On Tue, Jun 2, 2015 at 11:13 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On 02/06/15 09:59, Linus Walleij wrote:
 
-(...)
+>> enum amba_vendor {
+>>         AMBA_VENDOR_ARM = 0x41,
+>> +       AMBA_VENDOR_HISILICON = 0x48,
+>>
+>> Then patch drivers/tty/serial/amba_pl011.c to add vendor_hisilicon
+>> and a match table for 0x00048011 just like everyone else.
+>
+> That feels weird. This amba_vendor enum is not under control of the DT
+> author, nor the kernel. This is a set of codes that are managed by a
+> third party (probably ARM). What if some company with a name starting
+> with 'H' (Hilarious Inc?) comes up with some actual HW and ends up
+> conflicting with the above?
 
->>
->> On Monday, June 08, 2015 10:44 AM, "Krzysztof Kozlowski"
->> <k.kozlowski@samsung.com> wrote:
->>
->>> Untested code should not go to the kernel. Additionally you should
->>> mark it as not-tested. Marking such patch as non-tested could help you
->>> finding some independent tests (tests performed by someone else).
->>>
->>> To summarize my point of view:
->>> 1. Unless Vivek's says otherwise, please give him the credits with
->>> proper "from" field.
->>> 2. Issues mentioned in previous mail should be addressed (missing
->>> IS_ERR(), how disabling the regulator during suspend affects waking
->>> up).
->>> 3. The patchset must be tested, even after rebasing.
->>
->>
->> Unfortunately, I got busy  with a different project and lost track of the
->> patches posted upstream.
->> If it's not too late I can post a rebased version of the patch with previous
->> review comments addressed.
->>
->>>
->>> Best regards,
->>> Krzysztof
->>
->>
-> 
-> Hi All,
-> 
-> I have learned my lesson not to interfere in others work.
-> It will never happen from my side again.
-> 
-> Please accept my apology.
+Sorry, as indicated by
+commit db4fa45ed3182d8206af241811dfc99369ffa849
+"spi: pl022: Add support for chip select extension"
+bits [6:0] should be the JEP106 manufacturer identity code.
 
-Sure, no problem. Mistakes happen (I make a lot of them too), just learn
-from them.
+Not that I know how you get such a code. Hardware which is
+modified and does not set the JEP106 ID code is buggy I
+guess.
 
-Javier explained what was the proper way to do this - retain original
-author of the patch. Your signed-off-by was correct.
+Anyways, the pattern we have to handle this is to use that ID
+code.
 
-In fact the kernel SubmittingPatches is worth reading from time to time:
-https://www.kernel.org/doc/Documentation/SubmittingPatches
-Under chapter 11th ("Sign your work") in paragraph starting with "If you
-are a subsystem or branch maintainer" - it explains how to mention
-changes when modifying someone's else patch.
-
-You can also look at example from Bartlomiej, how hge did this when he
-took Thomas' patches:
-https://lkml.org/lkml/2015/4/3/387
-However his case is kind of special because he made such a lot of
-changes and made such huge effort that in my humble opinion he could
-take the authorship of patch. But in this case the changelog is huge.
-And he tested it. Extensively. However he did not change the author of
-patches :) and you can just look at this work as an example.
-
-Best regards,
-Krzysztof
+Yours,
+Linus Walleij
