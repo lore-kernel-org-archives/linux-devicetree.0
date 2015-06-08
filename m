@@ -1,59 +1,99 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
-Date: Mon, 8 Jun 2015 10:42:50 +0200
-Message-ID: <CAPybu_2ftjZ5pmTXqn4iHXc6mrj0qzmQ-SLhLZvcRk=1gwF=9g@mail.gmail.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
- <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
- <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com> <CF8AAE4C-400C-47D9-9440-3CD04DF02F50@konsulko.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CF8AAE4C-400C-47D9-9440-3CD04DF02F50@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH v10 4/8] DT: aat1290: Document handling external strobe sources
+Date: Mon, 08 Jun 2015 11:02:21 +0200
+Message-ID: <1433754145-12765-5-git-send-email-j.anaszewski@samsung.com>
+References: <1433754145-12765-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1433754145-12765-1-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
+Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Pantelis
+This patch adds documentation for a pinctrl-names property.
+The property, when present, is used for switching the source
+of the strobe signal for the device.
 
-On Mon, Jun 8, 2015 at 10:14 AM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
->>
->
-> Either patch fixes (or rather papers over) the problem.
->
-> The way I understand it is that we have two issues.
->
-> 1. The rather obvious crash on device removal.
-> 2. The of_platform_populate (and the subsequent call to
-> of_platform_device_create_pdata()) not registering the resources
-> due to bugs in platforms that do overlapping regions.
->
->
-> #1 is fixed but #2 is rather touchy.
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/leds/leds-aat1290.txt      |   36 ++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
-I believe that after my last patchset also #2 is fixed.
-
-The only missing part is applying the shared flag to ONLY the broken
-OF platforms, not to all.
-
-We even have a warning on overlapping resources, that should help the
-development
-
-https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/tree/drivers/base/platform.c?h=driver-core-testing#n379
-
-Hopefully one day we can merge of and platform :)
-
->
-> I would like to eventually fix those platforms; starting with a
-> nice fat warning when using overlapping regions would be nice.
->
-> The problem is how to deal with range definitions that overlap.
-> Does anyone remember what does the spec say regarding those?
->
-> If the way they are used now in those platform is wrong we should
-> mark them in some manner in the DT so that the idiom does not propagate.
-
-We could easily find out which DT have overlapping resources on the tree...
-
-Regars!
+diff --git a/Documentation/devicetree/bindings/leds/leds-aat1290.txt b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
+index ef88b9c..c05ed91 100644
+--- a/Documentation/devicetree/bindings/leds/leds-aat1290.txt
++++ b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
+@@ -2,7 +2,9 @@
+ 
+ The device is controlled through two pins: FL_EN and EN_SET. The pins when,
+ asserted high, enable flash strobe and movie mode (max 1/2 of flash current)
+-respectively.
++respectively. In order to add a capability of selecting the strobe signal source
++(e.g. CPU or camera sensor) there is an additional switch required, independent
++of the flash chip. The switch is controlled with pin control.
+ 
+ Required properties:
+ 
+@@ -10,6 +12,13 @@ Required properties:
+ - flen-gpios : Must be device tree identifier of the flash device FL_EN pin.
+ - enset-gpios : Must be device tree identifier of the flash device EN_SET pin.
+ 
++Optional properties:
++- pinctrl-names : Must contain entries: "default", "host", "isp". Entries
++		"default" and "host" must refer to the same pin configuration
++		node, which sets the host as a strobe signal provider. Entry
++		"isp" must refer to the pin configuration node, which sets the
++		ISP as a strobe signal provider.
++
+ A discrete LED element connected to the device must be represented by a child
+ node - see Documentation/devicetree/bindings/leds/common.txt.
+ 
+@@ -25,13 +34,22 @@ Required properties of the LED child node:
+ Optional properties of the LED child node:
+ - label : see Documentation/devicetree/bindings/leds/common.txt
+ 
+-Example (by Ct = 220nF, Rset = 160kohm):
++Example (by Ct = 220nF, Rset = 160kohm and exynos4412-trats2 board with
++a switch that allows for routing strobe signal either from the host or from
++the camera sensor):
++
++#include "exynos4412.dtsi"
+ 
+ aat1290 {
+ 	compatible = "skyworks,aat1290";
+ 	flen-gpios = <&gpj1 1 GPIO_ACTIVE_HIGH>;
+ 	enset-gpios = <&gpj1 2 GPIO_ACTIVE_HIGH>;
+ 
++	pinctrl-names = "default", "host", "isp";
++	pinctrl-0 = <&camera_flash_host>;
++	pinctrl-1 = <&camera_flash_host>;
++	pinctrl-2 = <&camera_flash_isp>;
++
+ 	camera_flash: flash-led {
+ 		label = "aat1290-flash";
+ 		led-max-microamp = <520833>;
+@@ -39,3 +57,17 @@ aat1290 {
+ 		flash-timeout-us = <1940000>;
+ 	};
+ };
++
++&pinctrl_0 {
++	camera_flash_host: camera-flash-host {
++		samsung,pins = "gpj1-0";
++		samsung,pin-function = <1>;
++		samsung,pin-val = <0>;
++	};
++
++	camera_flash_isp: camera-flash-isp {
++		samsung,pins = "gpj1-0";
++		samsung,pin-function = <1>;
++		samsung,pin-val = <1>;
++	};
++};
+-- 
+1.7.9.5
