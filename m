@@ -1,45 +1,37 @@
-From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 2/2] ARM: dts: vfxxx: Add property for minimum sample time
-Date: Mon,  8 Jun 2015 11:12:01 +0530
-Message-ID: <4d2ba0ad1bbc61dedc9ec144e9be6aeb6cf4747d.1433740528.git.maitysanchayan@gmail.com>
-References: <cover.1433740528.git.maitysanchayan@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1433740528.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1433740528.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1433740528.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V2 0/3] Add RS-485 support and fix RTS/CTS implementation
+Date: Mon, 8 Jun 2015 11:28:13 +0530
+Message-ID: <55752EF5.1040103@toradex.com>
+References: <1433136067-20644-1-git-send-email-bhuvanchandra.dv@toradex.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433136067-20644-1-git-send-email-bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, moorray3-5tc4TXWwyLM@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhuvanchandra.dv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a device tree property which allows to specify the minimum sample
-time which can be used to calculate the actual ADC cycles required
-depending on the hardware.
+Hello,
 
-Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/vfxxx.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Ping!
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 90a03d5..463cfe3 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -229,6 +229,7 @@
- 				status = "disabled";
- 				fsl,adck-max-frequency = <30000000>, <40000000>,
- 							<20000000>;
-+				fsl,min-sample-time = <1000>;
- 			};
- 
- 			wdoga5: wdog@4003e000 {
-@@ -447,6 +448,7 @@
- 				status = "disabled";
- 				fsl,adck-max-frequency = <30000000>, <40000000>,
- 							<20000000>;
-+				fsl,min-sample-time = <1000>;
- 			};
- 
- 			esdhc1: esdhc@400b2000 {
--- 
-2.4.2
+On 06/01/2015 10:51 AM, Bhuvanchandra DV wrote:
+> Changes since V1:
+> Use common get/set mctrl control methods for both lpuart, lpuart32
+> and fix indention.
+>
+> Bhuvanchandra DV (3):
+>    ARM: dts: colibri-vf: Add pinmux for UART_0 aka UART_A RTS/CTS pins
+>    tty: serial: fsl_lpuart: remove RTS/CTS control from set/get_mctrl
+>    tty: serial: fsl_lpuart: Add support for RS-485
+>
+>   arch/arm/boot/dts/vf-colibri.dtsi |   2 +
+>   drivers/tty/serial/fsl_lpuart.c   | 103 ++++++++++++++++++++------------------
+>   2 files changed, 57 insertions(+), 48 deletions(-)
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
