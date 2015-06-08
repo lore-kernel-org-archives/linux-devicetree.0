@@ -1,37 +1,66 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: dts; pxa: add embedded pxa camera capture interface
-Date: Mon, 08 Jun 2015 19:23:29 +0200
-Message-ID: <877fre3yi6.fsf@belgarion.home>
-References: <1433624953-28165-1-git-send-email-robert.jarzmik@free.fr>
-	<1433624953-28165-4-git-send-email-robert.jarzmik@free.fr>
-	<55736F05.8000904@cogentembedded.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 1/2] iio: adc: vf610: implement configurable conversion modes
+Date: Mon, 8 Jun 2015 12:49:46 -0500
+Message-ID: <CAL_JsqK0YxgJ-k8kSs6XQj9n3FSg4QBd-GdFEfcafH7Cm4NreQ@mail.gmail.com>
+References: <1432730872-14325-1-git-send-email-stefan@agner.ch> <1432730872-14325-2-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55736F05.8000904-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> (Sergei Shtylyov's message
-	of "Sun, 07 Jun 2015 01:07:01 +0300")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1432730872-14325-2-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, knaack.h@gmx.de, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Fugang Duan <B38611@freescale.com>, maitysanchayan@gmail.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> writes:
-
->> +		pxa_camera: pxa_camera@50000000 {
+On Wed, May 27, 2015 at 7:47 AM, Stefan Agner <stefan@agner.ch> wrote:
+> Support configurable conversion mode through sysfs. So far, the
+> mode used was low-power, which is enabled by default now. Beside
+> that, the modes normal and high-speed are selectable as well.
 >
->    The ePAPR standard has something to say about the node naming:
-> "The name of a node should be somewhat generic, reflecting the function of the
-> device and not its precise programming model." So I'd suggest "video@50000000"
-> instead...
-Okay, I understand. As "video" could stand for a video decoder/encoder, or the
-display device, I'd rather go for "imaging" or "camera-host", or something like
-that if I find an already used named in other dts files.
+> Use the new device tree property which specifies the maximum ADC
+> conversion clock frequencies. Depending on the mode used, the
+> available resulting conversion frequency are calculated
+> dynamically.
+>
+> Acked-by: Fugang Duan <B38611@freescale.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio-vf610      |   7 +
+>  .../devicetree/bindings/iio/adc/vf610-adc.txt      |   9 ++
+>  drivers/iio/adc/vf610_adc.c                        | 146 +++++++++++++++------
+>  3 files changed, 120 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-vf610
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-vf610 b/Documentation/ABI/testing/sysfs-bus-iio-vf610
+> new file mode 100644
+> index 0000000..ecbc1f4
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-vf610
+> @@ -0,0 +1,7 @@
+> +What:          /sys/bus/iio/devices/iio:deviceX/conversion_mode
+> +KernelVersion: 4.2
+> +Contact:       linux-iio@vger.kernel.org
+> +Description:
+> +               Specifies the hardware conversion mode used. The three
+> +               available modes are "normal", "high-speed" and "low-power",
+> +               where the last is the default mode.
+> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> index 1a4a43d..3eb40e2 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> @@ -11,6 +11,13 @@ Required properties:
+>  - clock-names: Must contain "adc", matching entry in the clocks property.
+>  - vref-supply: The regulator supply ADC reference voltage.
+>
+> +Recommended properties:
+> +- fsl,adck-max-frequency: Maximum frequencies according to datasheets operating
+> +  requirements. Three values are required, depending on conversion mode:
+> +  - Frequency in normal mode (ADLPC=0, ADHSC=0)
+> +  - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
+> +  - Frequency in low-power mode (ADLPC=1, ADHSC=0)
 
-Cheers.
+Why is this "adck" rather than "adc"?
 
--- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How is this related to today's patch adding min-sample-time?
+
+Rob
