@@ -1,60 +1,150 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
-Date: Mon, 8 Jun 2015 11:06:49 -0500
-Message-ID: <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com> <1433775737-9816-6-git-send-email-jun.li@freescale.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/3] spi: atmel: add support for the internal chip-select of the spi controller
+Date: Mon, 8 Jun 2015 18:07:42 +0200
+Message-ID: <c05f4d9abfdabb62b3b3cfeb57a3f9c138b4e45d.1433779081.git.cyrille.pitchen@atmel.com>
+References: <cover.1433779081.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433775737-9816-6-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1433779081.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
-> features don't have to be decided by usb gadget drivers.
->
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> index 477d5bb..7386f4a 100644
-> --- a/Documentation/devicetree/bindings/usb/generic.txt
-> +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> @@ -11,6 +11,12 @@ Optional properties:
->                         "peripheral" and "otg". In case this attribute isn't
->                         passed via DT, USB DRD controllers should default to
->                         OTG.
-> + - otg-rev: tells usb driver the release number of the OTG and EH supplement
-> +                       with which the device and its descriptors are compliant,
-> +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+This patch relies on the CSAAT (Chip Select Active After Transfer) feature
+introduced by the version 2 of the spi controller. This new mode allows to
+use properly the internal chip-select output pin of the spi controller
+instead of using external gpios. Consequently, the "cs-gpios" device-tree
+property becomes optional.
 
-I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
-dependency or a driver feature?
+When the new CSAAT bit is set into the Chip Select Register, the internal
+chip-select output pin remains asserted till both the following conditions
+become true:
+- the LASTXFER bit is set into the Control Register (or the Transmit Data
+  Register)
+- the Transmit Data Register and its shift register are empty.
 
-> + - srp-support: tells OTG controllers we want to enable SRP.
-> + - hnp-support: tells OTG controllers we want to enable HNP.
-> + - adp-support: tells OTG controllers we want to enable ADP.
+WARNING: if the LASTXFER bit is set into the Control Register then new
+data are written into the Transmit Data Register fast enough to keep its
+shifter not empty, the chip-select output pin remains asserted. Only when
+the shifter becomes empty, the chip-select output pin is unasserted.
 
-I've recently run into a problem[1] and found that I have to disable
-OTG in the kernel to get my device to work. Having to turn-off OTG
-seems like the wrong solution, and shifting the problem to DT seems
-wrong too. Why is this not a user configurable option (within whatever
-h/w constraints there are)?
+When the CSAAT bit is clear in the Chip Select Register, the LASTXFER bit
+is ignored in both the Control Register and the Transmit Data Register.
+The internal chip-select output pin remains active as long as the Transmit
+Data Register or its shift register are not empty.
 
-What are the valid combinations? When do we want these enabled or not?
-Wouldn't default enabled be better?
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/spi/spi-atmel.c | 37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
 
-We already have dr_mode property. How is it related to these?
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index a2f40b1..aa7d202 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -246,6 +246,7 @@ struct atmel_spi {
+ 
+ 	bool			use_dma;
+ 	bool			use_pdc;
++	bool			use_cs_gpios;
+ 	/* dmaengine data */
+ 	struct atmel_spi_dma	dma;
+ 
+@@ -321,7 +322,8 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+ 		}
+ 
+ 		mr = spi_readl(as, MR);
+-		gpio_set_value(asd->npcs_pin, active);
++		if (as->use_cs_gpios)
++			gpio_set_value(asd->npcs_pin, active);
+ 	} else {
+ 		u32 cpol = (spi->mode & SPI_CPOL) ? SPI_BIT(CPOL) : 0;
+ 		int i;
+@@ -337,7 +339,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+ 
+ 		mr = spi_readl(as, MR);
+ 		mr = SPI_BFINS(PCS, ~(1 << spi->chip_select), mr);
+-		if (spi->chip_select != 0)
++		if (as->use_cs_gpios && spi->chip_select != 0)
+ 			gpio_set_value(asd->npcs_pin, active);
+ 		spi_writel(as, MR, mr);
+ 	}
+@@ -366,7 +368,9 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
+ 			asd->npcs_pin, active ? " (low)" : "",
+ 			mr);
+ 
+-	if (atmel_spi_is_v2(as) || spi->chip_select != 0)
++	if (!as->use_cs_gpios)
++		spi_writel(as, CR, SPI_BIT(LASTXFER));
++	else if (atmel_spi_is_v2(as) || spi->chip_select != 0)
+ 		gpio_set_value(asd->npcs_pin, !active);
+ }
+ 
+@@ -996,6 +1000,8 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 		csr |= SPI_BIT(CPOL);
+ 	if (!(spi->mode & SPI_CPHA))
+ 		csr |= SPI_BIT(NCPHA);
++	if (!as->use_cs_gpios)
++		csr |= SPI_BIT(CSAAT);
+ 
+ 	/* DLYBS is mostly irrelevant since we manage chipselect using GPIOs.
+ 	 *
+@@ -1009,7 +1015,9 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
+ 	npcs_pin = (unsigned long)spi->controller_data;
+ 
+-	if (gpio_is_valid(spi->cs_gpio))
++	if (!as->use_cs_gpios)
++		npcs_pin = spi->chip_select;
++	else if (gpio_is_valid(spi->cs_gpio))
+ 		npcs_pin = spi->cs_gpio;
+ 
+ 	asd = spi->controller_state;
+@@ -1018,15 +1026,19 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 		if (!asd)
+ 			return -ENOMEM;
+ 
+-		ret = gpio_request(npcs_pin, dev_name(&spi->dev));
+-		if (ret) {
+-			kfree(asd);
+-			return ret;
++		if (as->use_cs_gpios) {
++			ret = gpio_request(npcs_pin, dev_name(&spi->dev));
++			if (ret) {
++				kfree(asd);
++				return ret;
++			}
++
++			gpio_direction_output(npcs_pin,
++					      !(spi->mode & SPI_CS_HIGH));
+ 		}
+ 
+ 		asd->npcs_pin = npcs_pin;
+ 		spi->controller_state = asd;
+-		gpio_direction_output(npcs_pin, !(spi->mode & SPI_CS_HIGH));
+ 	}
+ 
+ 	asd->csr = csr;
+@@ -1338,6 +1350,13 @@ static int atmel_spi_probe(struct platform_device *pdev)
+ 
+ 	atmel_get_caps(as);
+ 
++	as->use_cs_gpios = true;
++	if (atmel_spi_is_v2(as) &&
++	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL)) {
++		as->use_cs_gpios = false;
++		master->num_chipselect = 4;
++	}
++
+ 	as->use_dma = false;
+ 	as->use_pdc = false;
+ 	if (as->caps.has_dma_support) {
+-- 
+1.8.2.2
 
-Rob
-
-[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1047527
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
