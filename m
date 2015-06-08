@@ -1,171 +1,65 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
-Date: Mon, 8 Jun 2015 11:14:34 +0300
-Message-ID: <CF8AAE4C-400C-47D9-9440-3CD04DF02F50@konsulko.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org> <1433686811-12303-3-git-send-email-grant.likely@linaro.org> <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH RESEND v7 2/2] mmc: host: sdhci: Add support to disable
+ SDR104/SDR50/DDR50 based on capability register 0.
+Date: Mon, 8 Jun 2015 10:37:09 +0200
+Message-ID: <CAPDyKFqk1_B-wH0Z2QwfxftJy8LLH6Ey9cg56eFxAj7zmeFmOg@mail.gmail.com>
+References: <1432197817-22110-1-git-send-email-stripathi@apm.com>
+	<1432197817-22110-3-git-send-email-stripathi@apm.com>
+	<CAPDyKFpxkNF9C8AOJ6+18CEcpZTKycPR0i5OuwPRr1Zc+VPJ5Q@mail.gmail.com>
+	<CAOHikRASDmy7PwFjqmX7JAjW52DYR+d3RkE3yd_45NN5sHK7Pg@mail.gmail.com>
+	<CAOHikRBB9Uyh4Z34_pFTdmA0A-vnV09zTi8iYEU+01XvmzSr_A@mail.gmail.com>
+	<20150605145323.GA15110@shlinux1.ap.freescale.net>
+	<CAOHikRCXuJryKgo7pjehi-SyosE1Rr2zFjc+9yWJwke_ib=Azw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOHikRCXuJryKgo7pjehi-SyosE1Rr2zFjc+9yWJwke_ib=Azw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>, Dong Aisheng <b29396@freescale.com>
+Cc: Dong Aisheng <aisheng.dong@freescale.com>, Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ricardo, Grant,
+[...]
 
-> On Jun 7, 2015, at 21:13 , Ricardo Ribalda Delgado <ricardo.ribalda@g=
-mail.com> wrote:
->=20
-> Hello Grant
->=20
-> I would ask you to go through all the discussion related to this bug.
-> Here is a summary (please anyone involved correct me if I am wrong)
->=20
-> 1) I send a patch to fix the oops if release resource is executed wit=
-h
-> a resource without parent
-> 2) Bjorn says that we should fix the issue of the problem, which he
-> pointed out being that we use platform_device_del() after using
-> of_device_add()
-> 3) I resend a patchset to use platform_devide_add()
-> 4) 3 series of cleanouts after the help from Rob and Bjorn
-> 5) Greg adds the series (v5) to his device core tree
-> 6) You complaint that that series can break miss behaved platforms
-> 7) I send a couple of patches that fix your problem and leaves the
-> window open to blacklist the platforms that miss behave.
->=20
-> now you send a patch that takes us to back to step 1), and adds some
-> code that is already merged into gregk's
-> https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/t=
-ree/drivers/base/platform.c?h=3Ddriver-core-testing#n314
->=20
->=20
-> Wouldn't you agree that it will be a better solution to give your
-> feedback regarding https://lkml.org/lkml/2015/6/5/246 and fix this
-> issue together?
->=20
-> that solution has been reviewed by a bunch of people, removes code
-> duplication and afaik, is tested, does not break any platform, and I
-> believe that is closer to an scenario when we can remove
-> of_device_add() and all the devices behave similarly.
->=20
->=20
-> Best Regards
->=20
+>> >
+>> >    Can you test this patch  on imx SoC ?
+>> >
+>>
+>> (Your email have some format issue.)
+>
+> Yeah missed to sent in plain text mode.
+>
+>>
+>> I have tested this patch and it does not break imx SoC.
+>> You can add my tag.
+>> Tested-by: Dong Aisheng <aisheng.dong@freescale.com>
+>
+> Thanks Dong !!
+>
+>>
+>> However, it looks to me SDHCI_CAN_VDD_180 is only indicating the host VDD
+>> capabiliies, not IO voltage capability.
 
-Either patch fixes (or rather papers over) the problem.
+I think Dong is correct. I don't think SDHCI_CAN_VDD_180 is not
+related to UHS modes at all.
 
-The way I understand it is that we have two issues.
+At least the name of the field (SDHCI_CAN_VDD_180) indicates it's
+about VDD/VCC, the core power and not the IO voltage.
 
-1. The rather obvious crash on device removal.
-2. The of_platform_populate (and the subsequent call to=20
-of_platform_device_create_pdata()) not registering the resources
-due to bugs in platforms that do overlapping regions.
+> Are you sure on this ?? If SDHCI host VDD is  1.8V then the cards are
+> also capable to operate at 1.8V ? Didn't understand what you mean by
+> IO voltage capability
+>
+>
+>> SD3.0 cards require 1.8v IO voltage support.
+>> So should this bit affect SD3.0 support?
+>
+> The preset value resgister says that  SDR modes requires 1.8V and we
+> disable the modes based on capability or quirk.
 
+It requires 1.8V *IO voltage*, not VDD/VCC.
 
-#1 is fixed but #2 is rather touchy.
+[...]
 
-I would like to eventually fix those platforms; starting with a
-nice fat warning when using overlapping regions would be nice.
-
-The problem is how to deal with range definitions that overlap.
-Does anyone remember what does the spec say regarding those?
-
-If the way they are used now in those platform is wrong we should
-mark them in some manner in the DT so that the idiom does not propagate=
-=2E
-
-If they are valid, so be it, we have to fix it in driver core somehow.
-
-Regards
-
-=E2=80=94 Pantelis
-
->=20
->=20
-> On Sun, Jun 7, 2015 at 4:20 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org=
-> wrote:
->> The unregister path of platform_device is broken. On registration, i=
-t
->> will register all resources with either a parent already set, or
->> type=3D=3DIORESOURCE_{IO,MEM}. However, on unregister it will releas=
-e
->> everything with type=3D=3DIORESOURCE_{IO,MEM}, but ignore the others=
-=2E There
->> are also cases where resources don't get registered in the first pla=
-ce,
->> like with devices created by of_platform_populate()*.
->>=20
->> Fix the unregister path to be symmetrical with the register path by
->> checking the parent pointer instead of the type field to decide whic=
-h
->> resources to unregister. This is safe because the upshot of the
->> registration path algorithm is that registered resources have a pare=
-nt
->> pointer, and non-registered resources do not.
->>=20
->> * It can be argued that of_platform_populate() should be registering
->>  it's resources, and they argument has some merit. However, there ar=
-e
->>  quite a few platforms that end up broken if we try to do that due t=
-o
->>  overlapping resources in the device tree. Until that is fixed, we n=
-eed
->>  to solve the immediate problem.
->>=20
->> Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
->> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
->> Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> drivers/base/platform.c | 8 ++------
->> 1 file changed, 2 insertions(+), 6 deletions(-)
->>=20
->> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
->> index ebf034b97278..7403de94832c 100644
->> --- a/drivers/base/platform.c
->> +++ b/drivers/base/platform.c
->> @@ -375,9 +375,7 @@ int platform_device_add(struct platform_device *=
-pdev)
->>=20
->>        while (--i >=3D 0) {
->>                struct resource *r =3D &pdev->resource[i];
->> -               unsigned long type =3D resource_type(r);
->> -
->> -               if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESO=
-URCE_IO)
->> +               if (r->parent)
->>                        release_resource(r);
->>        }
->>=20
->> @@ -408,9 +406,7 @@ void platform_device_del(struct platform_device =
-*pdev)
->>=20
->>                for (i =3D 0; i < pdev->num_resources; i++) {
->>                        struct resource *r =3D &pdev->resource[i];
->> -                       unsigned long type =3D resource_type(r);
->> -
->> -                       if (type =3D=3D IORESOURCE_MEM || type =3D=3D=
- IORESOURCE_IO)
->> +                       if (r->parent)
->>                                release_resource(r);
->>                }
->>        }
->> --
->> 2.1.4
->>=20
->=20
->=20
->=20
-> --=20
-> Ricardo Ribalda
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
