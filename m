@@ -1,124 +1,32 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
-Date: Tue, 09 Jun 2015 19:50:26 +0300
-Message-ID: <2309597.bA1dyPGh92@avalon>
-References: <1427814771-30335-1-git-send-email-wsa@the-dreams.de> <83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com> <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 09 Jun 2015 11:53:36 -0500
+Message-ID: <55771A10.7080005@codeaurora.org>
+References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org>	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>	<556DE2D5.3090906@roeck-us.net>	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>	<5575DE48.8010308@roeck-us.net>	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>	<55766D74.2060401@roeck-us.net>	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>	<55769E0E.8060801@roeck-us.net> <CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com> <557712CF.8010802@roeck-us.net> <5577147B.2030900@codeaurora.org> <5577180E.4070804@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5577180E.4070804-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On 06/09/2015 11:45 AM, Guenter Roeck wrote:
 
-On Sunday 07 June 2015 12:16:32 Grant Likely wrote:
-> On Wed, 22 Apr 2015 15:30:28 +0300, Pantelis Antoniou wrote:
-> > > On Apr 14, 2015, at 16:27 , Wolfram Sang <wsa@the-dreams.de> wrot=
-e:
-> > >=20
-> > > Hi Pantelis,
-> > >=20
-> > > thanks for your prompt reply. Unfortunately, I had to wait until =
-I could
-> > > access the test system again.
-> >=20
-> > [snip]
-> >=20
-> > Sorry for the non-prompt reply; but just for kicks, can you try the
-> > attached patch?
-> >=20
-> > I have a hunch this might be the problem.
-> >=20
-> > Regards
-> >=20
-> > =E2=80=94 Pantelis
->=20
-> I played around with this some today. If I'm reading it correctly, th=
-e
-> following patch reproduces the same problem:
->=20
-> (continued below patch)
-> ---
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 18016341d5a9..0a27b38c3041 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void)
->  	}
->  }
->=20
-> +static struct resource test_bus_res =3D {
-> +	.start =3D 0xfffffff8,
-> +	.end =3D 0xfffffff9,
-> +	.flags =3D IORESOURCE_MEM,
-> +};
->  static const struct platform_device_info test_bus_info =3D {
->  	.name =3D "unittest-bus",
->  };
-> @@ -795,6 +800,7 @@ static void __init of_unittest_platform_populate(=
-void)
->  	if (rc)
->  		return;
->  	test_bus->dev.of_node =3D np;
-> +	platform_device_add_resources(test_bus, &test_bus_res, 1);
->=20
->  	of_platform_populate(np, match, NULL, &test_bus->dev);
->  	for_each_child_of_node(np, child) {
->=20
-> ---
->=20
-> I think the fixup patch boils down to the following. It's hard to tel=
-l
-> because it combines refactoring with the bug fix. Do I have it correc=
-t?
-> If so, I'd rather commit the simple fix which can be committed now fo=
-r
-> v4.1, and the refactoring can be pushed for v4.2
+> I tend to agree that we should just forget about pretimeout and
+> use your original approach, where the timeout value is used
+> to program WOR. Everything else is really just asking for trouble.
 
-The patch below looks equivalent to Pantelis' patch if we remove the=20
-refactoring, but I don't immediately see how r->parent can be NULL in=20
-platform_device_del() if type is equal to IORESOURCE_MEM or IORESOURCE_=
-IO, as=20
-platform_device_add() will have called insert_resource() in those cases=
-, which=20
-should set the resource parent pointer. I must be missing something as =
-the=20
-patch fixes Wolfram's issue, so an explanation in the commit message wo=
-uld be=20
-welcome.
+The driver that I submitted is effectively the same as Fu's, except 
+without pre-timeout support.
 
-> ---
->=20
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index ebf034b97278..b3042e6ee3ef 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -377,7 +377,7 @@ int platform_device_add(struct platform_device *p=
-dev)
->  		struct resource *r =3D &pdev->resource[i];
->  		unsigned long type =3D resource_type(r);
->=20
-> -		if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
-> +		if (r->parent)
->  			release_resource(r);
->  	}
->=20
-> @@ -410,7 +410,7 @@ void platform_device_del(struct platform_device *=
-pdev)
->  			struct resource *r =3D &pdev->resource[i];
->  			unsigned long type =3D resource_type(r);
->=20
-> -			if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
-> +			if (r->parent)
->  				release_resource(r);
->  		}
->  	}
-
---=20
-Regards,
-
-Laurent Pinchart
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
