@@ -1,68 +1,46 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v2 1/3] ARM: STi: Add code to release secondary cores
- from holding pen.
-Date: Tue, 9 Jun 2015 22:37:41 +0100
-Message-ID: <20150609213741.GA25965@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1433856824-30689-1-git-send-email-peter.griffin@linaro.org>
- <1433856824-30689-2-git-send-email-peter.griffin@linaro.org>
- <20150609135935.GE7557@n2100.arm.linux.org.uk>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 0/8] mfd/power/phy: Add support for otg vbus detection via axp pmic
+Date: Tue,  9 Jun 2015 23:37:53 +0200
+Message-ID: <1433885881-19809-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150609135935.GE7557@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, maxime.coquelin@st.com, khilman@kernel.org, arnd@arndb.de, olof@lixom.net, devicetree@vger.kernel.org, lee.jones@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: =?UTF-8?q?Bruno=20Pr=C3=A9mont?= <bonbons@linux-vserver.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+Hi All,
 
-On Tue, 09 Jun 2015, Russell King - ARM Linux wrote:
-> On Tue, Jun 09, 2015 at 02:33:42PM +0100, Peter Griffin wrote:
-> > Most upstream devs boot STi platform via JTAG which abuses the
-> > boot process by setting the PC of secondary cores directly. As
-> > a consquence, booting STi platforms via u-boot results in only
-> > the primary core being brought up as the code to manage the
-> > holding pen is not upstream.
-> 
-> Looking at the current mainline code:
-> 
-> static void sti_secondary_init(unsigned int cpu)
-> {
->         trace_hardirqs_off();
-> 
-> Why is this necessary?
+Here is a series which adds the beginning of power-supply support to
+the axp20x pmic code. My primary reason for working on this is to
+enable the use of the usb power-supply bits in the pmic to for vbus
+detection on boards which do not have a vbus-det gpio, and instead
+rely on the pmic for vbus detection.
 
-After having a dig around, the comment at the top of the file says
-this implementation was originally cloned from arch/arm/mach-vexpress/platsmp.c.
+After I had written most of the vbus power-supply driver code I
+became aware of Bruno Pr=C3=A9mont's (in the CC) previous work on this
+our drivers are mostly the same, and I've borrowed some code from
+his driver to add support for min-volt / max-curr properties.
 
-After some googling I can see that you submitted this patch
-http://lists.infradead.org/pipermail/linux-arm-kernel/2010-December/033678.html
-which consolidated this call back in December 2010 from the platform specific
-secondary startup code into the common SMP code.
+The big difference between our 2 drivers is that mine driver uses
+a devicetree child node / mfd cell per power-supply, so one for
+each of the usb-power, ac-power / battery-charger and rtc-backup-bat-ch=
+arger
+bits.
 
-At this time, the STi implementation was being maintained 'out of tree', so
-although I can't say for certain, I strongly suspect that this could be why
-the call is there, and that when this implementation was submitted in 2013
-it was missed during the review process.
+Depending on the board each of those must be enabled / disabled separat=
+ely
+in devicetree as most boards do not use all 4. So in dt each one needs =
+its
+own child-node of the axp20x node. Another reason for using separate ch=
+ild
+nodes for each is so that other devicetree nodes can have a power-suppl=
+y
+property with a phandle referencing a node representing a single
+power-supply.
 
-> If things aren't correctly setup in generic code,
-> please report a bug against the generic code rather than working around
-> the problem in platform specific code.  This is the Linux kernel, not
-> some closed source project.
+Regards,
 
-100% agree. This is a good example of why upstreaming code is a good idea.
-
-> What bug are you seeing which required the addition of that?
-
-None that I'm aware of, however I'm not the original author or submitter of
-the code. I just booted several times with this call removed and everything
-appears to work OK.
-
-As I suspect it is due to the implementation being 'out of tree' at the time
-of your patch, I will submit another patch which removes this call.
-
-regards,
-
-Peter.
+Hans
