@@ -1,59 +1,42 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Master-aware devices and sideband ID data
-Date: Tue, 9 Jun 2015 11:17:54 +0100
-Message-ID: <20150609101515.GA28474@leverpostej>
-References: <20150324155007.GC23005@leverpostej>
- <26BE36EF-2C5B-4DA6-8950-8FEBB031ED1B@caviumnetworks.com>
- <20150527173953.GC23176@leverpostej>
- <E342D737-5DD5-48C7-BB01-B83C29CB6E31@caviumnetworks.com>
- <20150601102208.GD22406@leverpostej>
- <158EFC9F-FCAF-44D3-AD40-804EDFE0CE25@caviumnetworks.com>
- <20150605090534.GC1198@arm.com>
+From: =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
+Subject: [PATCH 1/3] dt-bindings: Add Raspberry Pi compatible string for
+ watchdog
+Date: Tue,  9 Jun 2015 12:21:43 +0200
+Message-ID: <1433845305-17329-1-git-send-email-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150605090534.GC1198-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2015 at 10:05:34AM +0100, Will Deacon wrote:
-> On Thu, Jun 04, 2015 at 11:19:30PM +0100, Chalamarla, Tirumalesh wrote:
-> > > On Jun 1, 2015, at 3:22 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > It's possible to specify that the paths exist. I expect that software
-> > > would select which to use at runtime.
-> > > 
-> > My worry is how to define any priorities/preferences between masters. 
-> > in general the proposal looks reasonable.
-> 
-> I agree that the proposal looks reasonable (in terms of the ability to
-> describe the sort of topologies that we will face) but I still don't
-> understand what I need to do in e.g. my IOMMU driver to support this
-> binding whilst continuing to support the existing iommus binding, which
-> is relied upon to configure dma-mapping.
-> 
-> Mark: how do you see this co-existing/merging with the current bindings?
-
-As I mentioned in my initial mail, it's not clear to me how this can be
-reconciled with the current bindings. Everything I've been able to come
-up with so far at best ends up describing the same thing repeatedly.
-
-I'll see what I can come up with. Any sugestions are welcome!
-
-> I don't think it's practical to throw away what we have and move over to
-> something totally different all in one go, but there clearly *is* benefit
-> in your proposal over the existing scheme.
-
-I can see that's probably not practical. :(
-
-Do we know what we're going to do w.r.t. IORT? That's going to require
-the kernel to be able to handle a similar description to this proposal.
-
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIFJhc3BiZXJyeSBQaSBoYXMgY2hhbmdlZCBob3cgaXQncyBmaXJtd2FyZSBkZXRlY3RzIGEg
+cG93ZXJvZmYKYW5kIG5lZWRzIHNwZWNpYWwgaGFuZGxpbmcgZm9yIHRoaXMuCgpTaWduZWQtb2Zm
+LWJ5OiBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9ubmVzLm9yZz4KLS0tCiBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvYnJjbSxiY20yODM1LXBtLXdkb2cudHh0
+IHwgMyArKy0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
+CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cv
+YnJjbSxiY20yODM1LXBtLXdkb2cudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3dhdGNoZG9nL2JyY20sYmNtMjgzNS1wbS13ZG9nLnR4dAppbmRleCBmODAxZDcxLi4xYTgw
+OTMxIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hk
+b2cvYnJjbSxiY20yODM1LXBtLXdkb2cudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy93YXRjaGRvZy9icmNtLGJjbTI4MzUtcG0td2RvZy50eHQKQEAgLTIsNyArMiw4
+IEBAIEJDTTI4MzUgV2F0Y2hkb2cgdGltZXIKIAogUmVxdWlyZWQgcHJvcGVydGllczoKIAotLSBj
+b21wYXRpYmxlIDogc2hvdWxkIGJlICJicmNtLGJjbTI4MzUtcG0td2R0IgorLSBjb21wYXRpYmxl
+IDogc2hvdWxkIGJlICJicmNtLHJhc3BiZXJyeXBpLXBtLXdkdCIgZm9yIHRoZSBSYXNwYmVycnkg
+UGkgYW5kCisJICAgICAgICJicmNtLGJjbTI4MzUtcG0td2R0IiBmb3Igb3RoZXJzLgogLSByZWcg
+OiBTcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSByZWdpc3Rl
+cnMuCiAKIE9wdGlvbmFsIHByb3BlcnRpZXM6Ci0tIAoyLjIuMgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
