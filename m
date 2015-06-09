@@ -1,43 +1,52 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 4/8] input: goodix: reset device at init
-Date: Tue, 9 Jun 2015 10:57:56 -0700
-Message-ID: <20150609175756.GI6338@dtor-ws>
-References: <1433774273-23103-1-git-send-email-irina.tirdea@intel.com>
- <1433774273-23103-5-git-send-email-irina.tirdea@intel.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] ASoC: davinci-mcasp: Choose PCM driver based on
+ configured DMA controller
+Date: Tue, 9 Jun 2015 19:01:11 +0100
+Message-ID: <20150609180111.GU14071@sirena.org.uk>
+References: <e5dbf0a5fbb101792fd106461929c4b814dffc06.1433275670.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HFKwn2g6R1ux/FzN"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1433774273-23103-5-git-send-email-irina.tirdea@intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Bastien Nocera <hadess@hadess.net>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Octavian Purdila <octavian.purdila@intel.com>
+In-Reply-To: <e5dbf0a5fbb101792fd106461929c4b814dffc06.1433275670.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, misael.lopez-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Irina,
 
-On Mon, Jun 08, 2015 at 05:37:49PM +0300, Irina Tirdea wrote:
-> +static int goodix_get_gpio_config(struct goodix_ts_data *ts)
-> +{
-> +	struct device *dev;
-> +	struct gpio_desc *gpiod;
-> +	int ret;
-> +
-> +	if (!ts->client)
-> +		return -EINVAL;
-> +	dev = &ts->client->dev;
-> +
-> +	/* Get interrupt GPIO pin number */
-> +	gpiod = devm_gpiod_get(dev, GOODIX_GPIO_INT_NAME, GPIOD_IN);
-> +	if (IS_ERR(gpiod)) {
-> +		ret = PTR_ERR(gpiod);
-> +		dev_err(dev, "Failed to get %s GPIO: %d\n",
-> +			GOODIX_GPIO_INT_NAME, ret);
+--HFKwn2g6R1ux/FzN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-You need to handle -EPROBE_DEFER (suppress error) and especially -ENOENT error
-codes, otherwise, as Bastien mentioned, you will break existing DTS.
+On Tue, Jun 02, 2015 at 11:09:34PM +0300, Jyri Sarha wrote:
+> Find the configured DMA controller by asking for a DMA channel in the
+> probe phase and releasing it right after. The controller device can be
+> found via the dma_chan struct and the controller is recognized from
+> the compatible property of its device node. The patch assumes EDMA if
+> there is no device node.
 
-Thanks.
+Applied, thanks.
 
--- 
-Dmitry
+--HFKwn2g6R1ux/FzN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVdynnAAoJECTWi3JdVIfQxugH/2lIDBFlmjb6GmcMns7HwqCC
+J53opTwP2govMthznEGtQd/smw3VXdzdNnHv8VKH3jU9emVBQ33OSQ3wsUlscaYQ
+MVSXMuxqDXlWt7xYgX+RS0CWu0+/t4/S4ON7AuNHmrzY5AAw33V5w0pRX8MF5CEl
+2NmOq8ydR4tUBrlFC+pjl7xHAmn8QAxBBdZqB9So4V11BAbtkHwhQLMAaXhe05Ls
+A7AJ3dslHd2EsQZsNR44zDCoKQHM2AW+LnadAXWkgIXWOt34dJCv31l+x9yhnk9l
+txBs44l0eBvwt90fbC0SF5nDtCG04n/lprs6zPd/orTFjag0d2UTOhPpHuf9myw=
+=vSwc
+-----END PGP SIGNATURE-----
+
+--HFKwn2g6R1ux/FzN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
