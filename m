@@ -1,59 +1,176 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 2/2] ASoC: qcom: add apq8016 sound card support
-Date: Tue, 9 Jun 2015 19:04:35 +0100
-Message-ID: <20150609180435.GV14071@sirena.org.uk>
-References: <1433854702-23654-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1433854776-23852-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150609170738.GI14071@sirena.org.uk>
- <557727BF.8040807@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 5/8] input: goodix: write configuration data to device
+Date: Tue, 9 Jun 2015 11:14:06 -0700
+Message-ID: <20150609181406.GJ6338@dtor-ws>
+References: <1433774273-23103-1-git-send-email-irina.tirdea@intel.com>
+ <1433774273-23103-6-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OpkDJjDTRXa+mPUW"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <557727BF.8040807@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1433774273-23103-6-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Octavian Purdila <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Irina,
 
---OpkDJjDTRXa+mPUW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Jun 08, 2015 at 05:37:50PM +0300, Irina Tirdea wrote:
+> Goodix devices can be configured by writing custom data to the device at
+> init. The configuration data is read with request_firmware from
+> "goodix_<id>_cfg.bin", where <id> is the product id read from the device
+> (e.g.: goodix_911_cfg.bin for Goodix GT911, goodix_9271_cfg.bin for
+> GT9271).
+> 
+> The configuration information has a specific format described in the Goodix
+> datasheet. It includes X/Y resolution, maximum supported touch points,
+> interrupt flags, various sesitivity factors and settings for advanced
+> features (like gesture recognition).
+> 
+> This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> driver gt9xx.c for Android (publicly available in Android kernel
+> trees for various devices).
 
-On Tue, Jun 09, 2015 at 06:51:59PM +0100, Srinivas Kandagatla wrote:
-> On 09/06/15 18:07, Mark Brown wrote:
+I am afraid that just using request_firmware() in probe() is not the
+best option as it may cause either errors or delays in
+initialization of the driver is compiled into the kernel and tries to
+initialize before filesystem with configuration file is mounted (and
+firmware is not built into the kernel). We can either try switch to
+request_firmware_nowait() or at least document that we need firmware at
+boot.
 
-> >Why not just do these one time at probe, we don't undo them when we shut
-> >the DAI down?
+> 
+> Signed-off-by: Octavian Purdila <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/input/touchscreen/goodix.c | 128 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> index c345eb7..1ce9278 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/slab.h>
+>  #include <linux/acpi.h>
+> +#include <linux/firmware.h>
+>  #include <linux/gpio.h>
+>  #include <linux/of.h>
+>  #include <asm/unaligned.h>
+> @@ -95,6 +96,39 @@ static int goodix_i2c_read(struct i2c_client *client,
+>  	return ret < 0 ? ret : (ret != ARRAY_SIZE(msgs) ? -EIO : 0);
+>  }
+>  
+> +/**
+> + * goodix_i2c_write - write data to a register of the i2c slave device.
+> + *
+> + * @client: i2c device.
+> + * @reg: the register to write to.
+> + * @buf: raw data buffer to write.
+> + * @len: length of the buffer to write
+> + */
+> +static int goodix_i2c_write(struct i2c_client *client, u16 reg, const u8 *buf,
+> +			    unsigned len)
+> +{
+> +	u8 *addr_buf;
+> +	struct i2c_msg msg;
+> +	int ret;
+> +
+> +	addr_buf = kmalloc(len + 2, GFP_KERNEL);
+> +	if (!addr_buf)
+> +		return -ENOMEM;
+> +
+> +	addr_buf[0] = reg >> 8;
+> +	addr_buf[1] = reg & 0xFF;
+> +	memcpy(&addr_buf[2], buf, len);
+> +
+> +	msg.flags = 0;
+> +	msg.addr = client->addr;
+> +	msg.buf = addr_buf;
+> +	msg.len = len + 2;
+> +
+> +	ret = i2c_transfer(client->adapter, &msg, 1);
+> +	kfree(addr_buf);
+> +	return ret < 0 ? ret : (ret != 1 ? -EIO : 0);
+> +}
+> +
+>  static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
+>  {
+>  	int touch_num;
+> @@ -192,6 +226,95 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +/**
+> + * goodix_check_cfg - Checks if config buffer is valid
+> + *
+> + * @ts: goodix_ts_data pointer
+> + * @fw: firmware config data
+> + */
+> +static int goodix_check_cfg(struct goodix_ts_data *ts,
+> +			    const struct firmware *fw)
+> +{
+> +	int i, raw_cfg_len;
+> +	u8 check_sum = 0;
+> +
+> +	if (fw->size > GOODIX_CONFIG_MAX_LENGTH) {
+> +		dev_err(&ts->client->dev,
+> +			"The length of the config buffer array is not correct");
+> +		return -EINVAL;
+> +	}
+> +
+> +	raw_cfg_len = fw->size - 2;
+> +	for (i = 0; i < raw_cfg_len; i++)
+> +		check_sum += fw->data[i];
+> +	check_sum = (~check_sum) + 1;
+> +	if (check_sum != fw->data[raw_cfg_len]) {
+> +		dev_err(&ts->client->dev,
+> +			"The checksum of the config buffer array is not correct");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (fw->data[raw_cfg_len + 1] != 1) {
+> +		dev_err(&ts->client->dev,
+> +			"The Config_Fresh register needs to be set");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * goodix_send_cfg - Write device config
+> + *
+> + * @ts: goodix_ts_data pointer
+> + * @id: product id read from device
+> + */
+> +static int goodix_send_cfg(struct goodix_ts_data *ts, u16 id)
+> +{
+> +	const struct firmware *fw = NULL;
+> +	char *fw_name;
+> +	int ret;
+> +
+> +	fw_name = kasprintf(GFP_KERNEL, "goodix_%d_cfg.bin", id);
+> +	if (!fw_name)
+> +		return -ENOMEM;
+> +
+> +	ret = request_firmware(&fw, fw_name, &ts->client->dev);
+> +	if (ret) {
+> +		dev_err(&ts->client->dev, "Unable to open firmware %s\n",
+> +			fw_name);
+> +		goto err_free_fw_name;
 
-> If I do that Am afraid that the driver would loose the flexibility of
-> selecting different MI2S from DT level. Hardcoding which MI2S can got to
-> external or internal codec is something that I wanted to avoid from the
-> start.
+That I think will cause driver to abort binding if config is not there.
+Do we always need to load the config? Is configuration stored in NVRAM?
+Maybe configuration should be only loaded when userspace requests it?
 
-I don't understand why we'd loose anything - we get init() callbacks on
-the DAIs when they're instantiated?
+Thanks.
 
-> I will add the shutdown code to reset the configuration.
-
-OK.
-
---OpkDJjDTRXa+mPUW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVdyqzAAoJECTWi3JdVIfQmz0H/ig1ESYG4BU4SB0Ctdm/affi
-544StIDP7PRu5FVc7EJnWIjYLQK5vjYar7HX3P2mm/fs4BWzL6FZqjqYbMjm3iKz
-iuAZlV4dYjqJ1Qm1PEdLf/t4j+16s5jTrMynPEu5D0OPXf9PLDwlNXn95bSqB3Us
-MKmeMqlV9BS60FrtLTKWnRWrt1LYTqg6GkScYJs+fkIksw54on+P6OPwT8LIO4An
-773z8E3FdVXWy+PofEvlyPESLXwa+lngPmOG51mtRqVREd1HtJ0t1rvhE4ys3f6S
-k+T8NKMkB4u6KBnWqhSI55H1s2i1yuofI7O6MKCG3Xj8aN0ZAOVSPBEHu/WZsls=
-=qgbG
------END PGP SIGNATURE-----
-
---OpkDJjDTRXa+mPUW--
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
