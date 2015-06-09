@@ -1,222 +1,175 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 9 Jun 2015 18:46:16 +0800
-Message-ID: <CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
-	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
-	<556DCC95.806@codeaurora.org>
-	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
-	<556DE2D5.3090906@roeck-us.net>
-	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
-	<5575DE48.8010308@roeck-us.net>
-	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>
-	<55766D74.2060401@roeck-us.net>
-	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>
-	<55769E0E.8060801@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <55769E0E.8060801@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Timur Tabi <timur@codeaurora.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform
+ devices
+Date: Tue, 09 Jun 2015 12:00:44 +0100
+Message-ID: <20150609110044.61031C40580@trevor.secretlab.ca>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
+	<1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+	<CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
+	<20150608184713.446B7C406AA@trevor.secretlab.ca>
+	<CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On Mon, 8 Jun 2015 22:09:13 +0200
+, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ wrote:
+> Hello Grant
+> 
+> 
+> On Mon, Jun 8, 2015 at 8:47 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > Hi Ricardo,
+> >
+> > Comments below...
+> >
+> > On Sun, 7 Jun 2015 20:13:15 +0200
+> > , Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >  wrote:
+> >> Hello Grant
+> >>
+> >> I would ask you to go through all the discussion related to this bug.
+> >> Here is a summary (please anyone involved correct me if I am wrong)
+> >>
+> >> 1) I send a patch to fix the oops if release resource is executed with
+> >> a resource without parent
+> >> 2) Bjorn says that we should fix the issue of the problem, which he
+> >> pointed out being that we use platform_device_del() after using
+> >> of_device_add()
+> >
+> > Bjorn's comments on v3 of your patchset were correct. The proposed bug
+> > fix hacked the __release_resource function directly, when the bug is in
+> > the platform_bus_type code.
+> >
+> 
+> The bug is not in the platform subsystem but in the of subsystem. Your
+> patch fixes it in the platform subsystem, so it is as bad as fixing it
+> directly on the resource interface.
 
-Thanks for your feedback
+Not exactly. There is a bug in the platform subsystem: Register and
+unregister are not symmetrical, which when combined with the defect in
+the OF code results in an oops. It is appropriate to fix the
+non-symmetrical code path.
 
-On 9 June 2015 at 16:04, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 06/08/2015 11:37 PM, Fu Wei wrote:
->
->>
->> I would like to stress that  pretimeout == 0 should not happen in a
->> real server system,  that is why we defined  a SBSA watchdog, but not
->> a normal one
->
->
-> Clarification - In _your opinion_, a server should always use pretimeout.
->
->> But we still need to thinking about the situation that administrator
->> want to do this on a very special purpose.
->>
-> I could as well argue that setting pretimeout is the special situation.
-> Some administrators may not want to bother but just want the system to reset
-> if  a watchdog timeout occurs. _Maybe_ if it happens multiple times,
-> they might want to set up pretimeout to figure out why.
+> >> 3) I resend a patchset to use platform_devide_add()
+> >> 4) 3 series of cleanouts after the help from Rob and Bjorn
+> >> 5) Greg adds the series (v5) to his device core tree
+> >
+> > The series is still wrong.
+> >
+> > Greg, please drop Ricardo's series. It isn't correct and it will cause
+> > breakage.
+> 
+> The series can be kept, only
+> 
+> patch "of/platform: Use platform_device interface"
+> 
+> needs to be reverted.
 
-you are right,
-before this driver and device are really used in some server, we don't
-know How do administrators use this pretimeout,
-and the percentage of using pretimeout, But here you did mention a
-good usage of pretimeout: we can figure out what is wrong with system.
+No, it's better to drop the whole series. There are still issues and it
+will conflict with merging the bugfix for v4.1.
 
-except the usages,  this two stage timeouts is a main feature of SBSA
-watchdog, if we drop this feature, I don't think that is a  SBSA
-watchdog driver. it becomes normal watchdog driver using SBSA watchdog
-hardware.
+> >
+> > There are two issues that need to be delt with:
+> >
+> > First, there is the immediate bug fix which should go to Linus before
+> > v4.1. I believe my patch handles it correctly. I've included a test
+> > case, but I would like to have acks from Rob and Pantelis before merging
+> > it. Ricardo's v5 patch 2/4 comes close to solving it, but it still
+> > doesn't make the unregister path symmetric with the register path.
+> 
+> Could you please be more specific. what is not symmetric after
+> applying the patchset?
 
->
-> Declaring that one _has_ to configure pretimeout is just a personal
-> opinion, nothing else. We don't know what server administrators want,
-> and we should not dictate anything unless technically necessary.
+register path:
 
-yes, agree with you on "we should not dictate anything unless
-technically necessary."
+Insert all resources with a parent, if no parent and type == MEM or
+IO, then use iomem_resource/ioport_resource as the parent. At the end of
+registration, each resource with a parent assigned will be inserted.
 
->
->> maybe we can set min_pretimeout = 1 for this driver. that is just a
->> suggestion.
->>
-> No. It is not technically necessary.
+unregister path:
 
-it is just a thought. but I never do that , because min_pretimeout = 0
-is technically doable in this driver.
+Without patch 2/3: Remove all resources with type == MEM or IO. If it
+hasn't been inserted then the kernel will oops. Neglects to remove
+non-MEM/IO resources.
 
->
->>
->>> if it must be set to a value > 0 I don't understand why
->>> setting it to 1 (instead of 1 second) would not be sufficient.
->>
->>
->> it don't have to be 1 second , it can be 0.1, 0.5 or 0.01 second. like
->> I said before, we just need a time slot to setup WCV in
->> sbsa_gwdt_start. I have commented this in sbsa_gwdt_set_pretimeout in
->> this patchset.
->
->
-> I think what you really want to say is that you want to have time to
-> handle the interrupt. But handling the interrupt is not asked for if
-> pretimeout == 0.
+With patch 2/3: Remove all resources that have a parent and type == MEM
+or IO.  Neglects to remove non-MEM/IO resources that were inserted in
+the register path.
 
-No, that is not what I want to say. pretimeout == 0 but WOR can not be
-0 is nothing to do with interrupt.
-In another word,  pretimeout == 0 we should trigger WS1 ASAP, we don't
-need to handle the interrupt.
-I have explained this in  previous email:
+In both the with and without cases the remove behaviour doesn't not
+strictly reverse the insert behaviour, which is not what we want.
 
-"
-we need WOR > 1, only when we enable the watchdog( write "1" to WCS,
-this causes a ExplicitRefresh, see Line 7 "ExplicitRefresh == TRUE"
-and Line 8 below).
-in this cause , we just need a time slot to reload WCV, the driver
-doesn't really spend 1s on this.
-But If WOR ==0, (Line 1) TimeoutRefresh = TRUE in a very short time,
-the minimum time depends on the implementation. Then The first timeout
-stage occur(see Line 7 (TimeoutRefresh == TRUE and WS0 == FALSE), and
-Line 8 below again ) and  WS0 was triggered(Line 16~18).  Because WOR
-==0 too, (Line 1) TimeoutRefresh = TRUE occur in a very short time
-again, then see Line 16, 17, 20
-"
-in one word, according to SBSA,  If we make WOR == 0, once we enable
-watchdog, WS0 and WS1 will be triggered immediately, we have not
-chance to set up WCV for (timeout - pretimeout).
-In another word,  WOR == 0, we can not enable watchdog, enabling
-become a warn reset button.
+I do realize that patch 1/3 of the series stops inserting non-MEM/IO
+resources in the register path, but do you know if it is safe to change
+that behaviour? There are users who use set parent explicitly, and don't
+depend on the default IO and MEM resource roots. For example, I was able
+to quickly find devices setting their own root with:
 
->
->> But I think the minimum time slot depend on implementation, the spec
->> doesn't mention about this.
->
->
-> Yes, because a minimum value does not exist.
->
->> If pretimeout == 0, and we set up WOR a little bigger,  it *ONLY*
->> affect "the worst case" I mention above. in this case, a administrator
->> set up pretimeout == 0 which should not happen in a real server, then
->> the system goes very wrong. I don't think it is important that this
->> server system reset in 1 second or 0.0001 second, at this time, this
->> server can not provide any useful info anyway(because we don't use
->> pretimeout).
->> If system may go wrong,  the administrator should set up pretimeout >
->> 0 to figure out what is wrong with it just like he always should do.
->>
->
-> Yes, exactly. But otherwise, if pretimeout is set to 0, we want
-> to reset immediately as directed.
+$ git grep '\.parent = .*res'
+arch/arm/mach-sa1100/neponset.c:        sa1111_resources[0].parent = sa1111_res;
+arch/arm/mach-sa1100/neponset.c:        smc91x_resources[0].parent = smc91x_res;
+arch/arm/mach-sa1100/neponset.c:        smc91x_resources[1].parent = smc91x_res;
+arch/ia64/sn/kernel/io_init.c:          res[0].parent = &ioport_resource;
+arch/ia64/sn/kernel/io_init.c:          res[1].parent = &iomem_resource;
+arch/mips/pci/pci-ar2315.c:     apc->mem_res.parent = res;
+arch/mips/pci/pci-ar71xx.c:     apc->io_res.parent = res;
+arch/mips/pci/pci-ar71xx.c:     apc->mem_res.parent = res;
+arch/mips/pci/pci-ar724x.c:     apc->io_res.parent = res;
+arch/mips/pci/pci-ar724x.c:     apc->mem_res.parent = res;
+arch/mips/pci/pci-rc32434.c:    .parent = &rc32434_res_pci_mem1,
+drivers/mfd/mfd-core.c:                 res[r].parent = cell->resources[r].parent;
+drivers/uwb/whci.c:     umc->resource.parent = &card->pci->resource[bar];
 
-In this driver, if pretimeout is set to 0, we want to *trigger WS1*
-immediately as directed.
-Yes, If we could.
+And that was just a quick search. All of those examples are still type
+MEM/IO, so it isn't a definitive answer. Due-diligence still needs to be
+done before patch 1/3 would be acceptable.
 
->
-> As I interpret the specification, WOR=0 forces WS1 immediately after WS0.
->
-> 1) if TimeoutRefresh = True:
->         CompareValue := SystemCounter + WOR (= SystemCounter
->         WS0 := True
-> 2) TimeoutRefresh is True again, WS0 == True:
->         WS1 = True
->
-> This is exactly the behavior we want if pretimeout == 0. In this situation,
-> we don't want to handle the interrupt, we just want to reset the system as
-> fast as possible.
+In the mean time, the simple bug fix is by far the least risky option.
 
-Yes, if WOR only affect in TimeoutRefresh, we cat always make WOR == pretimeout
-But the problem is  if we enable watchdog (write 0x01 to WCS will
-cause an explicit watchdog refresh), then
-1) if ExplicitRefresh = True:
-         CompareValue := SystemCounter + WOR
-         WS0 := True
-2) TimeoutRefresh is True again, WS0 == True:
-         WS1 = True
+> > Second, there is the issue of making devicetree platform_devices request
+> > resources.  That's harder, and we are *NOT* ready to merge anything. Nor
+> > is it a time critical issue.
+> >
+> >> 6) You complaint that that series can break miss behaved platforms
+> >
+> > Yes, because it will.
+> >
+> >> 7) I send a couple of patches that fix your problem and leaves the
+> >> window open to blacklist the platforms that miss behave.
+> >
+> > I've replied to that series. It isn't a good solution either.
+> 
+> I have also replied, please provide a testcase and we will figure it
+> if it is not handled properly. So far it works fine on my tests.
+> 
+> >>
+> >> now you send a patch that takes us to back to step 1), and adds some
+> >> code that is already merged into gregk's
+> >> https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/tree/drivers/base/platform.c?h=driver-core-testing#n314
+> >
+> > My patch is different. In v3 __release_resource was hacked directly. By
+> > v5 you were fixing platform_device_{add,del}, which is the right thing,
+> > but still isn't symmetric. My patch I think handles the bug fix
+> > correctly.
+> 
+> There is no need to apply your patch, that behaviour is already
+> impletented in my patchset. If we want to pospone the non registry of
+> resources on of devices we just need to revert
+> 
+> "of/platform: Use platform_device interface"
+> 
+> I believe reverting 1 patch is patch is better than reverting 4
+> reviewed patches and applying a new one.
 
-so once we enable watchdog, system reset, that is not what we want.
-this behavior is following SBSA spec.
+That series is not in mainline. It is not applied yet. We don't merge
+things that aren't ready.
 
-FYI:
------
-An explicit watchdog refresh occurs when one of a number of different
-events occur:
- The Watchdog Refresh Register is written.
- The Watchdog Offset Register is written.
- The Watchdog Control and Status register is written.
------
-
->
-> Having said that, have you tested what happens in your system if you
-> set WOR=0 ?
-
-I have not HW, but I have tested it on Foundation model, the result is
-just what I expect:
--------------------------------------
-pretimeout=0 ,
-
-and
-
-static int sbsa_gwdt_set_pretimeout(struct watchdog_device *wdd,
-                    unsigned int pretimeout)
-{
-    struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-
-    wdd->pretimeout = pretimeout;
-
-    /* refresh the WOR, that will cause an explicit watchdog refresh */
-    sbsa_gwdt_cf_write(SBSA_GWDT_WOR,  pretimeout * gwdt->clk, wdd);
-
-    return 0;
-}
--------------------------------------
-Once I enable watchdog, system down(there is a WS1 interrupter in
-Foundation model, but not more info for that), there is not panic(if
-ws0 is triggered).
-
->
-> Thanks,
-> Guenter
->
-
-
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
