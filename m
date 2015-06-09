@@ -1,7 +1,7 @@
 From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 25/28] ARCv2: [nsim*hs*] Support simulation platforms for HS38x cores
-Date: Tue, 9 Jun 2015 17:18:25 +0530
-Message-ID: <1433850508-26317-26-git-send-email-vgupta@synopsys.com>
+Subject: [PATCH 27/28] ARCv2: [axs103] Support ARC SDP FPGA platform for HS38x cores
+Date: Tue, 9 Jun 2015 17:18:27 +0530
+Message-ID: <1433850508-26317-28-git-send-email-vgupta@synopsys.com>
 References: <1433850508-26317-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -17,31 +17,45 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 ---
- arch/arc/boot/dts/nsim_hs.dts              |  53 +++++++++++++++
- arch/arc/boot/dts/nsim_hs_idu.dts          |  72 ++++++++++++++++++++
- arch/arc/boot/dts/nsimosci_hs.dts          |  80 +++++++++++++++++++++++
- arch/arc/boot/dts/nsimosci_hs_idu.dts      | 101 +++++++++++++++++++++++++++++
- arch/arc/configs/nsim_hs_defconfig         |  64 ++++++++++++++++++
- arch/arc/configs/nsim_hs_smp_defconfig     |  63 ++++++++++++++++++
- arch/arc/configs/nsimosci_hs_defconfig     |  73 +++++++++++++++++++++
- arch/arc/configs/nsimosci_hs_smp_defconfig |  93 ++++++++++++++++++++++++++
- arch/arc/plat-sim/platform.c               |   2 +
- 9 files changed, 601 insertions(+)
- create mode 100644 arch/arc/boot/dts/nsim_hs.dts
- create mode 100644 arch/arc/boot/dts/nsim_hs_idu.dts
- create mode 100644 arch/arc/boot/dts/nsimosci_hs.dts
- create mode 100644 arch/arc/boot/dts/nsimosci_hs_idu.dts
- create mode 100644 arch/arc/configs/nsim_hs_defconfig
- create mode 100644 arch/arc/configs/nsim_hs_smp_defconfig
- create mode 100644 arch/arc/configs/nsimosci_hs_defconfig
- create mode 100644 arch/arc/configs/nsimosci_hs_smp_defconfig
+ Documentation/devicetree/bindings/arc/axs103.txt |   8 +
+ arch/arc/boot/dts/axc003.dtsi                    | 102 ++++++++++++
+ arch/arc/boot/dts/axc003_idu.dtsi                | 126 +++++++++++++++
+ arch/arc/boot/dts/axs103.dts                     |  24 +++
+ arch/arc/boot/dts/axs103_idu.dts                 |  24 +++
+ arch/arc/configs/axs103_defconfig                | 117 ++++++++++++++
+ arch/arc/configs/axs103_smp_defconfig            | 118 ++++++++++++++
+ arch/arc/kernel/devtree.c                        |   2 +-
+ arch/arc/plat-axs10x/Kconfig                     |  13 +-
+ arch/arc/plat-axs10x/axs10x.c                    | 198 +++++++++++++++++++++--
+ 10 files changed, 720 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arc/axs103.txt
+ create mode 100644 arch/arc/boot/dts/axc003.dtsi
+ create mode 100644 arch/arc/boot/dts/axc003_idu.dtsi
+ create mode 100644 arch/arc/boot/dts/axs103.dts
+ create mode 100644 arch/arc/boot/dts/axs103_idu.dts
+ create mode 100644 arch/arc/configs/axs103_defconfig
+ create mode 100644 arch/arc/configs/axs103_smp_defconfig
 
-diff --git a/arch/arc/boot/dts/nsim_hs.dts b/arch/arc/boot/dts/nsim_hs.dts
+diff --git a/Documentation/devicetree/bindings/arc/axs103.txt b/Documentation/devicetree/bindings/arc/axs103.txt
 new file mode 100644
-index 000000000000..911f069e0540
+index 000000000000..6eea862e72b9
 --- /dev/null
-+++ b/arch/arc/boot/dts/nsim_hs.dts
-@@ -0,0 +1,53 @@
++++ b/Documentation/devicetree/bindings/arc/axs103.txt
+@@ -0,0 +1,8 @@
++Synopsys DesignWare ARC Software Development Platforms Device Tree Bindings
++---------------------------------------------------------------------------
++
++SDP Main Board with an AXC003 FPGA Card which can contain various flavours of
++HS38x cores.
++
++Required root node properties:
++    - compatible = "snps,axs103", "snps,arc-sdp";
+diff --git a/arch/arc/boot/dts/axc003.dtsi b/arch/arc/boot/dts/axc003.dtsi
+new file mode 100644
+index 000000000000..15c8d6226c9d
+--- /dev/null
++++ b/arch/arc/boot/dts/axc003.dtsi
+@@ -0,0 +1,102 @@
 +/*
 + * Copyright (C) 2014-15 Synopsys, Inc. (www.synopsys.com)
 + *
@@ -49,90 +63,133 @@ index 000000000000..911f069e0540
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
-+/dts-v1/;
 +
-+/include/ "skeleton.dtsi"
++/*
++ * Device tree for AXC003 CPU card: HS38x UP configuration
++ */
 +
 +/ {
-+	compatible = "snps,nsim_hs";
-+	interrupt-parent = <&core_intc>;
++	compatible = "snps,arc";
++	clock-frequency = <75000000>;
++	#address-cells = <1>;
++	#size-cells = <1>;
 +
-+	chosen {
-+		bootargs = "earlycon=arc_uart,mmio32,0xc0fc1000,115200n8 console=ttyARC0,115200n8";
-+	};
-+
-+	aliases {
-+		serial0 = &arcuart0;
-+	};
-+
-+	fpga {
++	cpu_card {
 +		compatible = "simple-bus";
 +		#address-cells = <1>;
 +		#size-cells = <1>;
 +
-+		/* child and parent address space 1:1 mapped */
-+		ranges;
++		ranges = <0x00000000 0xf0000000 0x10000000>;
 +
-+		core_intc: core-interrupt-controller {
++		cpu_intc: archs-intc@cpu {
 +			compatible = "snps,archs-intc";
 +			interrupt-controller;
 +			#interrupt-cells = <1>;
 +		};
 +
-+		arcuart0: serial@c0fc1000 {
-+			compatible = "snps,arc-uart";
-+			reg = <0xc0fc1000 0x100>;
-+			interrupts = <24>;
-+			clock-frequency = <80000000>;
-+			current-speed = <115200>;
-+			status = "okay";
++		/*
++		 * this GPIO block ORs all interrupts on CPU card (creg,..)
++		 * to uplink only 1 IRQ to ARC core intc
++		 */
++		dw-apb-gpio@0x2000 {
++			compatible = "snps,dw-apb-gpio";
++			reg = < 0x2000 0x80 >;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ictl_intc: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <30>;
++				reg = <0>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupt-parent = <&cpu_intc>;
++				interrupts = <25>;
++			};
++		};
++
++		debug_uart: dw-apb-uart@0x5000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x5000 0x100>;
++			clock-frequency = <33333000>;
++			interrupt-parent = <&ictl_intc>;
++			interrupts = <2 4>;
++			baud = <115200>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
 +		};
 +
 +		arcpct0: pct {
 +			compatible = "snps,archs-pct";
 +			#interrupt-cells = <1>;
++			interrupt-parent = <&cpu_intc>;
 +			interrupts = <20>;
 +		};
 +	};
++
++	/*
++	 * This INTC is actually connected to DW APB GPIO
++	 * which acts as a wire between MB INTC and CPU INTC.
++	 * GPIO INTC is configured in platform init code
++	 * and here we mimic direct connection from MB INTC to
++	 * CPU INTC, thus we set "interrupts = <7>" instead of
++	 * "interrupts = <12>"
++	 *
++	 * This intc actually resides on MB, but we move it here to
++	 * avoid duplicating the MB dtsi file given that IRQ from
++	 * this intc to cpu intc are different for axs101 and axs103
++	 */
++	mb_intc: dw-apb-ictl@0xe0012000 {
++		#interrupt-cells = <1>;
++		compatible = "snps,dw-apb-ictl";
++		reg = < 0xe0012000 0x200 >;
++		interrupt-controller;
++		interrupt-parent = <&cpu_intc>;
++		interrupts = < 24 >;
++	};
++
++	memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x00000000 0x80000000 0x40000000>;
++		device_type = "memory";
++		reg = <0x00000000 0x20000000>;	/* 512MiB */
++	};
 +};
-diff --git a/arch/arc/boot/dts/nsim_hs_idu.dts b/arch/arc/boot/dts/nsim_hs_idu.dts
+diff --git a/arch/arc/boot/dts/axc003_idu.dtsi b/arch/arc/boot/dts/axc003_idu.dtsi
 new file mode 100644
-index 000000000000..46ab31975612
+index 000000000000..199d42820eca
 --- /dev/null
-+++ b/arch/arc/boot/dts/nsim_hs_idu.dts
-@@ -0,0 +1,72 @@
++++ b/arch/arc/boot/dts/axc003_idu.dtsi
+@@ -0,0 +1,126 @@
 +/*
-+ * Copyright (C) 2014-15 Synopsys, Inc. (www.synopsys.com)
++ * Copyright (C) 2014, 2015 Synopsys, Inc. (www.synopsys.com)
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
-+/dts-v1/;
 +
-+/include/ "skeleton.dtsi"
++/*
++ * Device tree for AXC003 CPU card: HS38x2 (Dual Core) with IDU intc
++ */
 +
 +/ {
-+	compatible = "snps,nsim_hs";
-+	interrupt-parent = <&core_intc>;
++	compatible = "snps,arc";
++	clock-frequency = <75000000>;
++	#address-cells = <1>;
++	#size-cells = <1>;
 +
-+	chosen {
-+		bootargs = "earlycon=arc_uart,mmio32,0xc0fc1000,115200n8 console=ttyARC0,115200n8";
-+	};
-+
-+	aliases {
-+		serial0 = &arcuart0;
-+	};
-+
-+	fpga {
++	cpu_card {
 +		compatible = "simple-bus";
 +		#address-cells = <1>;
 +		#size-cells = <1>;
 +
-+		/* child and parent address space 1:1 mapped */
-+		ranges;
++		ranges = <0x00000000 0xf0000000 0x10000000>;
 +
-+		core_intc: core-interrupt-controller {
++		cpu_intc: archs-intc@cpu {
 +			compatible = "snps,archs-intc";
 +			interrupt-controller;
 +			#interrupt-cells = <1>;
@@ -141,7 +198,7 @@ index 000000000000..46ab31975612
 +		idu_intc: idu-interrupt-controller {
 +			compatible = "snps,archs-idu-intc";
 +			interrupt-controller;
-+			interrupt-parent = <&core_intc>;
++			interrupt-parent = <&cpu_intc>;
 +
 +			/*
 +			 * <hwirq  distribution>
@@ -153,32 +210,92 @@ index 000000000000..46ab31975612
 +			 * upstream irqs to core intc - downstream these are
 +			 * "COMMON" irq 0,1..
 +			 */
-+			interrupts = <24 25 26 27 28 29 30 31>;
++			interrupts = <24 25>;
 +		};
 +
-+		arcuart0: serial@c0fc1000 {
-+			compatible = "snps,arc-uart";
-+			reg = <0xc0fc1000 0x100>;
-+			interrupt-parent = <&idu_intc>;
-+			interrupts = <0 0>;
-+			clock-frequency = <80000000>;
-+			current-speed = <115200>;
-+			status = "okay";
++		/*
++		 * this GPIO block ORs all interrupts on CPU card (creg,..)
++		 * to uplink only 1 IRQ to ARC core intc
++		 */
++		dw-apb-gpio@0x2000 {
++			compatible = "snps,dw-apb-gpio";
++			reg = < 0x2000 0x80 >;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ictl_intc: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <30>;
++				reg = <0>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupt-parent = <&idu_intc>;
++
++				/*
++				 * cmn irq 1 -> cpu irq 25
++				 * Distribute to cpu0 only
++				 */
++				interrupts = <1 1>;
++			};
++		};
++
++		debug_uart: dw-apb-uart@0x5000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x5000 0x100>;
++			clock-frequency = <33333000>;
++			interrupt-parent = <&ictl_intc>;
++			interrupts = <2 4>;
++			baud = <115200>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
 +		};
 +
 +		arcpct0: pct {
 +			compatible = "snps,archs-pct";
 +			#interrupt-cells = <1>;
++			interrupt-parent = <&cpu_intc>;
 +			interrupts = <20>;
 +		};
 +	};
++
++	/*
++	 * This INTC is actually connected to DW APB GPIO
++	 * which acts as a wire between MB INTC and CPU INTC.
++	 * GPIO INTC is configured in platform init code
++	 * and here we mimic direct connection from MB INTC to
++	 * CPU INTC, thus we set "interrupts = <0 1>" instead of
++	 * "interrupts = <12>"
++	 *
++	 * This intc actually resides on MB, but we move it here to
++	 * avoid duplicating the MB dtsi file given that IRQ from
++	 * this intc to cpu intc are different for axs101 and axs103
++	 */
++	mb_intc: dw-apb-ictl@0xe0012000 {
++		#interrupt-cells = <1>;
++		compatible = "snps,dw-apb-ictl";
++		reg = < 0xe0012000 0x200 >;
++		interrupt-controller;
++		interrupt-parent = <&idu_intc>;
++		interrupts = <0 1>;	/* cmn irq 0 -> cpu irq 24
++					   distribute to cpu0 only */
++	};
++
++	memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x00000000 0x80000000 0x40000000>;
++		device_type = "memory";
++		reg = <0x00000000 0x20000000>;	/* 512MiB */
++	};
 +};
-diff --git a/arch/arc/boot/dts/nsimosci_hs.dts b/arch/arc/boot/dts/nsimosci_hs.dts
+diff --git a/arch/arc/boot/dts/axs103.dts b/arch/arc/boot/dts/axs103.dts
 new file mode 100644
-index 000000000000..d64a96f8515a
+index 000000000000..e6d0e31ea299
 --- /dev/null
-+++ b/arch/arc/boot/dts/nsimosci_hs.dts
-@@ -0,0 +1,80 @@
++++ b/arch/arc/boot/dts/axs103.dts
+@@ -0,0 +1,24 @@
 +/*
 + * Copyright (C) 2014-15 Synopsys, Inc. (www.synopsys.com)
 + *
@@ -186,85 +303,29 @@ index 000000000000..d64a96f8515a
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
++
++/*
++ * Device Tree for AXS103 SDP with AXS10X Main Board and
++ * AXC003 FPGA Card (with UP bitfile)
++ */
 +/dts-v1/;
 +
-+/include/ "skeleton.dtsi"
++/include/ "axc003.dtsi"
++/include/ "axs10x_mb.dtsi"
 +
 +/ {
-+	compatible = "snps,nsimosci_hs";
-+	clock-frequency = <20000000>;	/* 20 MHZ */
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&core_intc>;
++	compatible = "snps,axs103", "snps,arc-sdp";
 +
 +	chosen {
-+		/* this is for console on PGU */
-+		/* bootargs = "console=tty0 consoleblank=0"; */
-+		/* this is for console on serial */
-+		bootargs = "earlycon=uart8250,mmio32,0xf0000000,115200n8 console=tty0 console=ttyS0,115200n8 consoleblank=0 debug";
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	fpga {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/* child and parent address space 1:1 mapped */
-+		ranges;
-+
-+		core_intc: core-interrupt-controller {
-+			compatible = "snps,archs-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		uart0: serial@f0000000 {
-+			compatible = "ns8250";
-+			reg = <0xf0000000 0x2000>;
-+			interrupts = <24>;
-+			clock-frequency = <3686400>;
-+			baud = <115200>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			no-loopback-test = <1>;
-+		};
-+
-+		pgu0: pgu@f9000000 {
-+			compatible = "snps,arcpgufb";
-+			reg = <0xf9000000 0x400>;
-+		};
-+
-+		ps2: ps2@f9001000 {
-+			compatible = "snps,arc_ps2";
-+			reg = <0xf9000400 0x14>;
-+			interrupts = <27>;
-+			interrupt-names = "arc_ps2_irq";
-+		};
-+
-+		eth0: ethernet@f0003000 {
-+			compatible = "snps,oscilan";
-+			reg = <0xf0003000 0x44>;
-+			interrupts = <25>, <26>;
-+			interrupt-names = "rx", "tx";
-+		};
-+
-+		arcpct0: pct {
-+			compatible = "snps,archs-pct";
-+			#interrupt-cells = <1>;
-+			interrupts = <20>;
-+		};
++		bootargs = "earlycon=uart8250,mmio32,0xe0022000,115200n8 console=ttyS3,115200n8 debug print-fatal-signals=1";
 +	};
 +};
-diff --git a/arch/arc/boot/dts/nsimosci_hs_idu.dts b/arch/arc/boot/dts/nsimosci_hs_idu.dts
+diff --git a/arch/arc/boot/dts/axs103_idu.dts b/arch/arc/boot/dts/axs103_idu.dts
 new file mode 100644
-index 000000000000..f6bf0ca95a57
+index 000000000000..f999fef5a60a
 --- /dev/null
-+++ b/arch/arc/boot/dts/nsimosci_hs_idu.dts
-@@ -0,0 +1,101 @@
++++ b/arch/arc/boot/dts/axs103_idu.dts
+@@ -0,0 +1,24 @@
 +/*
 + * Copyright (C) 2014-15 Synopsys, Inc. (www.synopsys.com)
 + *
@@ -272,113 +333,36 @@ index 000000000000..f6bf0ca95a57
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
++
++/*
++ * Device Tree for AXS103 SDP with AXS10X Main Board and
++ * AXC003 FPGA Card (with SMP bitfile)
++ */
 +/dts-v1/;
 +
-+/include/ "skeleton.dtsi"
++/include/ "axc003_idu.dtsi"
++/include/ "axs10x_mb.dtsi"
 +
 +/ {
-+	compatible = "snps,nsimosci_hs";
-+	clock-frequency = <5000000>;	/* 5 MHZ */
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&core_intc>;
++	compatible = "snps,axs103", "snps,arc-sdp";
 +
 +	chosen {
-+		/* this is for console on serial */
-+		bootargs = "earlycon=uart8250,mmio32,0xf0000000,115200n8 console=tty0 console=ttyS0,115200n8 consoleblan=0 debug";
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	fpga {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/* child and parent address space 1:1 mapped */
-+		ranges;
-+
-+		core_intc: core-interrupt-controller {
-+			compatible = "snps,archs-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+/*			interrupts = <16 17 18 19 20 21 22 23 24 25>; */
-+		};
-+
-+		idu_intc: idu-interrupt-controller {
-+			compatible = "snps,archs-idu-intc";
-+			interrupt-controller;
-+			interrupt-parent = <&core_intc>;
-+
-+			/*
-+			 * <hwirq  distribution>
-+			 * distribution: 0=RR; 1=cpu0, 2=cpu1, 4=cpu2, 8=cpu3
-+			 */
-+			#interrupt-cells = <2>;
-+
-+			/*
-+			 * upstream irqs to core intc - downstream these are
-+			 * "COMMON" irq 0,1..
-+			 */
-+			interrupts = <24 25 26 27 28 29 30 31>;
-+		};
-+
-+		uart0: serial@f0000000 {
-+			compatible = "ns8250";
-+			reg = <0xf0000000 0x2000>;
-+			interrupt-parent = <&idu_intc>;
-+			interrupts = <0 0>; /* cmn irq 0 -> cpu irq 24
-+						RR distribute to all cpus */
-+			clock-frequency = <3686400>;
-+			baud = <115200>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			no-loopback-test = <1>;
-+		};
-+
-+		pgu0: pgu@f9000000 {
-+			compatible = "snps,arcpgufb";
-+			reg = <0xf9000000 0x400>;
-+		};
-+
-+		ps2: ps2@f9001000 {
-+			compatible = "snps,arc_ps2";
-+			reg = <0xf9000400 0x14>;
-+			interrupts = <3 0>;
-+			interrupt-parent = <&idu_intc>;
-+			interrupt-names = "arc_ps2_irq";
-+		};
-+
-+		eth0: ethernet@f0003000 {
-+			compatible = "snps,oscilan";
-+			reg = <0xf0003000 0x44>;
-+			interrupt-parent = <&idu_intc>;
-+			interrupts = <1 2>, <2 2>;
-+			interrupt-names = "rx", "tx";
-+		};
-+
-+		arcpct0: pct {
-+			compatible = "snps,archs-pct";
-+			#interrupt-cells = <1>;
-+			interrupts = <20>;
-+		};
++		bootargs = "earlycon=uart8250,mmio32,0xe0022000,115200n8 console=ttyS3,115200n8 debug print-fatal-signals=1";
 +	};
 +};
-diff --git a/arch/arc/configs/nsim_hs_defconfig b/arch/arc/configs/nsim_hs_defconfig
+diff --git a/arch/arc/configs/axs103_defconfig b/arch/arc/configs/axs103_defconfig
 new file mode 100644
-index 000000000000..f761a7c70761
+index 000000000000..83a6d8d5cc58
 --- /dev/null
-+++ b/arch/arc/configs/nsim_hs_defconfig
-@@ -0,0 +1,64 @@
++++ b/arch/arc/configs/axs103_defconfig
+@@ -0,0 +1,117 @@
 +CONFIG_CROSS_COMPILE="arc-linux-uclibc-"
-+# CONFIG_LOCALVERSION_AUTO is not set
 +CONFIG_DEFAULT_HOSTNAME="ARCLinux"
 +# CONFIG_SWAP is not set
 +CONFIG_SYSVIPC=y
 +CONFIG_POSIX_MQUEUE=y
 +# CONFIG_CROSS_MEMORY_ATTACH is not set
++CONFIG_NO_HZ_IDLE=y
 +CONFIG_HIGH_RES_TIMERS=y
 +CONFIG_IKCONFIG=y
 +CONFIG_IKCONFIG_PROC=y
@@ -386,317 +370,529 @@ index 000000000000..f761a7c70761
 +# CONFIG_UTS_NS is not set
 +# CONFIG_PID_NS is not set
 +CONFIG_BLK_DEV_INITRD=y
-+CONFIG_INITRAMFS_SOURCE="../arc_initramfs_hs/"
-+CONFIG_KALLSYMS_ALL=y
++CONFIG_INITRAMFS_SOURCE="../../arc_initramfs_hs/"
 +CONFIG_EMBEDDED=y
++CONFIG_PERF_EVENTS=y
++# CONFIG_VM_EVENT_COUNTERS is not set
 +# CONFIG_SLUB_DEBUG is not set
 +# CONFIG_COMPAT_BRK is not set
-+CONFIG_KPROBES=y
 +CONFIG_MODULES=y
-+# CONFIG_LBDAF is not set
-+# CONFIG_BLK_DEV_BSG is not set
-+# CONFIG_IOSCHED_DEADLINE is not set
-+# CONFIG_IOSCHED_CFQ is not set
-+CONFIG_ARC_PLAT_SIM=y
++CONFIG_PARTITION_ADVANCED=y
++CONFIG_ARC_PLAT_AXS10X=y
++CONFIG_AXS103=y
 +CONFIG_ISA_ARCV2=y
-+CONFIG_ARC_BUILTIN_DTB_NAME="nsim_hs"
++CONFIG_ARC_BUILTIN_DTB_NAME="axs103"
 +CONFIG_PREEMPT=y
 +# CONFIG_COMPACTION is not set
 +CONFIG_NET=y
 +CONFIG_PACKET=y
 +CONFIG_UNIX=y
-+CONFIG_UNIX_DIAG=y
 +CONFIG_NET_KEY=y
 +CONFIG_INET=y
-+# CONFIG_IPV6 is not set
-+# CONFIG_STANDALONE is not set
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+# CONFIG_FIRMWARE_IN_KERNEL is not set
-+# CONFIG_BLK_DEV is not set
-+# CONFIG_INPUT_MOUSEDEV_PSAUX is not set
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_LEGACY_PTYS is not set
-+# CONFIG_DEVKMEM is not set
-+CONFIG_SERIAL_ARC=y
-+CONFIG_SERIAL_ARC_CONSOLE=y
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_HWMON is not set
-+# CONFIG_VGA_CONSOLE is not set
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_EXT2_FS=y
-+CONFIG_EXT2_FS_XATTR=y
-+CONFIG_TMPFS=y
-+# CONFIG_MISC_FILESYSTEMS is not set
-+CONFIG_NFS_FS=y
-+# CONFIG_ENABLE_WARN_DEPRECATED is not set
-+# CONFIG_ENABLE_MUST_CHECK is not set
-+# CONFIG_DEBUG_PREEMPT is not set
-+CONFIG_XZ_DEC=y
-diff --git a/arch/arc/configs/nsim_hs_smp_defconfig b/arch/arc/configs/nsim_hs_smp_defconfig
-new file mode 100644
-index 000000000000..dc6f74f41283
---- /dev/null
-+++ b/arch/arc/configs/nsim_hs_smp_defconfig
-@@ -0,0 +1,63 @@
-+CONFIG_CROSS_COMPILE="arc-linux-uclibc-"
-+# CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_DEFAULT_HOSTNAME="ARCLinux"
-+# CONFIG_SWAP is not set
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_NAMESPACES=y
-+# CONFIG_UTS_NS is not set
-+# CONFIG_PID_NS is not set
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_INITRAMFS_SOURCE="../arc_initramfs_hs/"
-+CONFIG_KALLSYMS_ALL=y
-+CONFIG_EMBEDDED=y
-+# CONFIG_SLUB_DEBUG is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_KPROBES=y
-+CONFIG_MODULES=y
-+# CONFIG_LBDAF is not set
-+# CONFIG_BLK_DEV_BSG is not set
-+# CONFIG_IOSCHED_DEADLINE is not set
-+# CONFIG_IOSCHED_CFQ is not set
-+CONFIG_ARC_PLAT_SIM=y
-+CONFIG_ARC_BOARD_ML509=y
-+CONFIG_ISA_ARCV2=y
-+CONFIG_SMP=y
-+CONFIG_ARC_BUILTIN_DTB_NAME="nsim_hs_idu"
-+CONFIG_PREEMPT=y
-+# CONFIG_COMPACTION is not set
-+# CONFIG_CROSS_MEMORY_ATTACH is not set
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_UNIX_DIAG=y
-+CONFIG_NET_KEY=y
-+CONFIG_INET=y
-+# CONFIG_IPV6 is not set
-+# CONFIG_STANDALONE is not set
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+# CONFIG_FIRMWARE_IN_KERNEL is not set
-+# CONFIG_BLK_DEV is not set
-+# CONFIG_INPUT_MOUSEDEV_PSAUX is not set
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_LEGACY_PTYS is not set
-+# CONFIG_DEVKMEM is not set
-+CONFIG_SERIAL_ARC=y
-+CONFIG_SERIAL_ARC_CONSOLE=y
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_HWMON is not set
-+# CONFIG_VGA_CONSOLE is not set
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_EXT2_FS=y
-+CONFIG_EXT2_FS_XATTR=y
-+CONFIG_TMPFS=y
-+# CONFIG_MISC_FILESYSTEMS is not set
-+CONFIG_NFS_FS=y
-+# CONFIG_ENABLE_WARN_DEPRECATED is not set
-+# CONFIG_ENABLE_MUST_CHECK is not set
-+CONFIG_XZ_DEC=y
-diff --git a/arch/arc/configs/nsimosci_hs_defconfig b/arch/arc/configs/nsimosci_hs_defconfig
-new file mode 100644
-index 000000000000..3fef0a210c56
---- /dev/null
-+++ b/arch/arc/configs/nsimosci_hs_defconfig
-@@ -0,0 +1,73 @@
-+CONFIG_CROSS_COMPILE="arc-linux-uclibc-"
-+# CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_DEFAULT_HOSTNAME="ARCLinux"
-+# CONFIG_SWAP is not set
-+CONFIG_SYSVIPC=y
-+# CONFIG_CROSS_MEMORY_ATTACH is not set
-+CONFIG_NO_HZ=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_NAMESPACES=y
-+# CONFIG_UTS_NS is not set
-+# CONFIG_PID_NS is not set
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_INITRAMFS_SOURCE="../arc_initramfs_hs/"
-+CONFIG_KALLSYMS_ALL=y
-+CONFIG_EMBEDDED=y
-+# CONFIG_SLUB_DEBUG is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_KPROBES=y
-+CONFIG_MODULES=y
-+# CONFIG_LBDAF is not set
-+# CONFIG_BLK_DEV_BSG is not set
-+# CONFIG_IOSCHED_DEADLINE is not set
-+# CONFIG_IOSCHED_CFQ is not set
-+CONFIG_ARC_PLAT_SIM=y
-+CONFIG_ISA_ARCV2=y
-+CONFIG_ARC_BUILTIN_DTB_NAME="nsimosci_hs"
-+# CONFIG_COMPACTION is not set
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_UNIX_DIAG=y
-+CONFIG_NET_KEY=y
-+CONFIG_INET=y
-+# CONFIG_IPV6 is not set
-+# CONFIG_STANDALONE is not set
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+# CONFIG_FIRMWARE_IN_KERNEL is not set
-+# CONFIG_BLK_DEV is not set
-+CONFIG_NETDEVICES=y
-+CONFIG_NET_OSCI_LAN=y
-+CONFIG_INPUT_EVDEV=y
-+# CONFIG_MOUSE_PS2_ALPS is not set
-+# CONFIG_MOUSE_PS2_LOGIPS2PP is not set
-+# CONFIG_MOUSE_PS2_SYNAPTICS is not set
-+# CONFIG_MOUSE_PS2_TRACKPOINT is not set
-+CONFIG_MOUSE_PS2_TOUCHKIT=y
-+# CONFIG_SERIO_SERPORT is not set
-+CONFIG_SERIO_ARC_PS2=y
-+# CONFIG_LEGACY_PTYS is not set
-+# CONFIG_DEVKMEM is not set
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_NR_UARTS=1
-+CONFIG_SERIAL_8250_RUNTIME_UARTS=1
-+CONFIG_SERIAL_OF_PLATFORM=y
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_HWMON is not set
-+CONFIG_FB=y
-+# CONFIG_VGA_CONSOLE is not set
-+CONFIG_FRAMEBUFFER_CONSOLE=y
-+CONFIG_LOGO=y
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_EXT2_FS=y
-+CONFIG_EXT2_FS_XATTR=y
-+CONFIG_TMPFS=y
-+# CONFIG_MISC_FILESYSTEMS is not set
-+CONFIG_NFS_FS=y
-+# CONFIG_ENABLE_WARN_DEPRECATED is not set
-+# CONFIG_ENABLE_MUST_CHECK is not set
-diff --git a/arch/arc/configs/nsimosci_hs_smp_defconfig b/arch/arc/configs/nsimosci_hs_smp_defconfig
-new file mode 100644
-index 000000000000..51784837daae
---- /dev/null
-+++ b/arch/arc/configs/nsimosci_hs_smp_defconfig
-@@ -0,0 +1,93 @@
-+CONFIG_CROSS_COMPILE="arc-linux-uclibc-"
-+CONFIG_DEFAULT_HOSTNAME="ARCLinux"
-+# CONFIG_SWAP is not set
-+CONFIG_SYSVIPC=y
-+CONFIG_NO_HZ=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+# CONFIG_UTS_NS is not set
-+# CONFIG_PID_NS is not set
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_INITRAMFS_SOURCE="../arc_initramfs_hs/"
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_KPROBES=y
-+CONFIG_MODULES=y
-+# CONFIG_LBDAF is not set
-+# CONFIG_BLK_DEV_BSG is not set
-+# CONFIG_IOSCHED_DEADLINE is not set
-+# CONFIG_IOSCHED_CFQ is not set
-+CONFIG_ARC_PLAT_SIM=y
-+CONFIG_ARC_BOARD_ML509=y
-+CONFIG_ISA_ARCV2=y
-+CONFIG_SMP=y
-+CONFIG_ARC_HAS_LL64=y
-+# CONFIG_ARC_HAS_RTSC is not set
-+CONFIG_ARC_BUILTIN_DTB_NAME="nsimosci_hs_idu"
-+CONFIG_PREEMPT=y
-+# CONFIG_COMPACTION is not set
-+# CONFIG_CROSS_MEMORY_ATTACH is not set
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_PACKET_DIAG=y
-+CONFIG_UNIX=y
-+CONFIG_UNIX_DIAG=y
-+CONFIG_NET_KEY=y
-+CONFIG_INET=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_DHCP=y
++CONFIG_IP_PNP_BOOTP=y
++CONFIG_IP_PNP_RARP=y
 +# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
 +# CONFIG_INET_XFRM_MODE_TUNNEL is not set
 +# CONFIG_INET_XFRM_MODE_BEET is not set
-+# CONFIG_INET_LRO is not set
 +# CONFIG_IPV6 is not set
-+# CONFIG_WIRELESS is not set
 +# CONFIG_STANDALONE is not set
 +# CONFIG_PREVENT_FIRMWARE_BUILD is not set
 +# CONFIG_FIRMWARE_IN_KERNEL is not set
-+# CONFIG_BLK_DEV is not set
++CONFIG_MTD=y
++CONFIG_MTD_CMDLINE_PARTS=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_NAND=y
++CONFIG_MTD_NAND_AXS=y
++CONFIG_SCSI=y
++CONFIG_BLK_DEV_SD=y
 +CONFIG_NETDEVICES=y
 +# CONFIG_NET_VENDOR_ARC is not set
-+# CONFIG_NET_CADENCE is not set
 +# CONFIG_NET_VENDOR_BROADCOM is not set
 +# CONFIG_NET_VENDOR_INTEL is not set
 +# CONFIG_NET_VENDOR_MARVELL is not set
 +# CONFIG_NET_VENDOR_MICREL is not set
 +# CONFIG_NET_VENDOR_NATSEMI is not set
 +# CONFIG_NET_VENDOR_SEEQ is not set
-+# CONFIG_NET_VENDOR_STMICRO is not set
++CONFIG_STMMAC_ETH=y
 +# CONFIG_NET_VENDOR_VIA is not set
 +# CONFIG_NET_VENDOR_WIZNET is not set
-+CONFIG_NET_OSCI_LAN=y
-+# CONFIG_WLAN is not set
++CONFIG_NATIONAL_PHY=y
++# CONFIG_USB_NET_DRIVERS is not set
 +CONFIG_INPUT_EVDEV=y
 +CONFIG_MOUSE_PS2_TOUCHKIT=y
-+# CONFIG_SERIO_SERPORT is not set
-+CONFIG_SERIO_LIBPS2=y
-+CONFIG_SERIO_ARC_PS2=y
-+CONFIG_VT_HW_CONSOLE_BINDING=y
++CONFIG_MOUSE_SERIAL=y
++CONFIG_MOUSE_SYNAPTICS_USB=y
 +# CONFIG_LEGACY_PTYS is not set
 +# CONFIG_DEVKMEM is not set
 +CONFIG_SERIAL_8250=y
 +CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_NR_UARTS=1
-+CONFIG_SERIAL_8250_RUNTIME_UARTS=1
 +CONFIG_SERIAL_8250_DW=y
 +CONFIG_SERIAL_OF_PLATFORM=y
 +# CONFIG_HW_RANDOM is not set
++CONFIG_I2C=y
++CONFIG_I2C_CHARDEV=y
++CONFIG_I2C_DESIGNWARE_PLATFORM=y
 +# CONFIG_HWMON is not set
 +CONFIG_FB=y
-+CONFIG_ARCPGU_RGB888=y
-+CONFIG_ARCPGU_DISPTYPE=0
 +# CONFIG_VGA_CONSOLE is not set
 +CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
 +CONFIG_LOGO=y
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
++# CONFIG_LOGO_LINUX_MONO is not set
++# CONFIG_LOGO_LINUX_VGA16 is not set
++# CONFIG_LOGO_LINUX_CLUT224 is not set
++CONFIG_USB=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_EHCI_HCD_PLATFORM=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_OHCI_HCD_PLATFORM=y
++CONFIG_USB_STORAGE=y
++CONFIG_MMC=y
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_PLTFM=y
++CONFIG_MMC_DW=y
++CONFIG_MMC_DW_IDMAC=y
 +# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_EXT2_FS=y
-+CONFIG_EXT2_FS_XATTR=y
++CONFIG_EXT3_FS=y
++CONFIG_EXT4_FS=y
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_NTFS_FS=y
 +CONFIG_TMPFS=y
-+# CONFIG_MISC_FILESYSTEMS is not set
++CONFIG_JFFS2_FS=y
 +CONFIG_NFS_FS=y
++CONFIG_NLS_CODEPAGE_437=y
++CONFIG_NLS_ISO8859_1=y
 +# CONFIG_ENABLE_WARN_DEPRECATED is not set
 +# CONFIG_ENABLE_MUST_CHECK is not set
-+CONFIG_FTRACE=y
-diff --git a/arch/arc/plat-sim/platform.c b/arch/arc/plat-sim/platform.c
-index 8795ae2ef48a..d9e35b4a2f08 100644
---- a/arch/arc/plat-sim/platform.c
-+++ b/arch/arc/plat-sim/platform.c
-@@ -22,7 +22,9 @@
++CONFIG_STRIP_ASM_SYMS=y
++CONFIG_LOCKUP_DETECTOR=y
++CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
++# CONFIG_SCHED_DEBUG is not set
++# CONFIG_DEBUG_PREEMPT is not set
++# CONFIG_FTRACE is not set
+diff --git a/arch/arc/configs/axs103_smp_defconfig b/arch/arc/configs/axs103_smp_defconfig
+new file mode 100644
+index 000000000000..f1e1c84e0dda
+--- /dev/null
++++ b/arch/arc/configs/axs103_smp_defconfig
+@@ -0,0 +1,118 @@
++CONFIG_CROSS_COMPILE="arc-linux-uclibc-"
++CONFIG_DEFAULT_HOSTNAME="ARCLinux"
++# CONFIG_SWAP is not set
++CONFIG_SYSVIPC=y
++CONFIG_POSIX_MQUEUE=y
++# CONFIG_CROSS_MEMORY_ATTACH is not set
++CONFIG_NO_HZ_IDLE=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_IKCONFIG=y
++CONFIG_IKCONFIG_PROC=y
++CONFIG_NAMESPACES=y
++# CONFIG_UTS_NS is not set
++# CONFIG_PID_NS is not set
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_INITRAMFS_SOURCE="../../arc_initramfs_hs/"
++CONFIG_EMBEDDED=y
++CONFIG_PERF_EVENTS=y
++# CONFIG_VM_EVENT_COUNTERS is not set
++# CONFIG_COMPAT_BRK is not set
++CONFIG_SLAB=y
++CONFIG_MODULES=y
++CONFIG_PARTITION_ADVANCED=y
++CONFIG_ARC_PLAT_AXS10X=y
++CONFIG_AXS103=y
++CONFIG_ISA_ARCV2=y
++CONFIG_SMP=y
++CONFIG_ARC_BUILTIN_DTB_NAME="axs103_idu"
++CONFIG_PREEMPT=y
++# CONFIG_COMPACTION is not set
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_NET_KEY=y
++CONFIG_INET=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_DHCP=y
++CONFIG_IP_PNP_BOOTP=y
++CONFIG_IP_PNP_RARP=y
++# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
++# CONFIG_INET_XFRM_MODE_TUNNEL is not set
++# CONFIG_INET_XFRM_MODE_BEET is not set
++# CONFIG_IPV6 is not set
++# CONFIG_STANDALONE is not set
++# CONFIG_PREVENT_FIRMWARE_BUILD is not set
++# CONFIG_FIRMWARE_IN_KERNEL is not set
++CONFIG_MTD=y
++CONFIG_MTD_CMDLINE_PARTS=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_NAND=y
++CONFIG_MTD_NAND_AXS=y
++CONFIG_SCSI=y
++CONFIG_BLK_DEV_SD=y
++CONFIG_NETDEVICES=y
++# CONFIG_NET_VENDOR_ARC is not set
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++CONFIG_STMMAC_ETH=y
++# CONFIG_NET_VENDOR_VIA is not set
++# CONFIG_NET_VENDOR_WIZNET is not set
++CONFIG_NATIONAL_PHY=y
++# CONFIG_USB_NET_DRIVERS is not set
++CONFIG_INPUT_EVDEV=y
++CONFIG_MOUSE_PS2_TOUCHKIT=y
++CONFIG_MOUSE_SERIAL=y
++CONFIG_MOUSE_SYNAPTICS_USB=y
++# CONFIG_LEGACY_PTYS is not set
++# CONFIG_DEVKMEM is not set
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_DW=y
++CONFIG_SERIAL_OF_PLATFORM=y
++# CONFIG_HW_RANDOM is not set
++CONFIG_I2C=y
++CONFIG_I2C_CHARDEV=y
++CONFIG_I2C_DESIGNWARE_PLATFORM=y
++# CONFIG_HWMON is not set
++CONFIG_FB=y
++# CONFIG_VGA_CONSOLE is not set
++CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
++CONFIG_LOGO=y
++# CONFIG_LOGO_LINUX_MONO is not set
++# CONFIG_LOGO_LINUX_VGA16 is not set
++# CONFIG_LOGO_LINUX_CLUT224 is not set
++CONFIG_USB=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_EHCI_HCD_PLATFORM=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_OHCI_HCD_PLATFORM=y
++CONFIG_USB_STORAGE=y
++CONFIG_MMC=y
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_PLTFM=y
++CONFIG_MMC_DW=y
++CONFIG_MMC_DW_IDMAC=y
++# CONFIG_IOMMU_SUPPORT is not set
++CONFIG_EXT3_FS=y
++CONFIG_EXT4_FS=y
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_NTFS_FS=y
++CONFIG_TMPFS=y
++CONFIG_JFFS2_FS=y
++CONFIG_NFS_FS=y
++CONFIG_NLS_CODEPAGE_437=y
++CONFIG_NLS_ISO8859_1=y
++# CONFIG_ENABLE_WARN_DEPRECATED is not set
++# CONFIG_ENABLE_MUST_CHECK is not set
++CONFIG_STRIP_ASM_SYMS=y
++CONFIG_LOCKUP_DETECTOR=y
++CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
++# CONFIG_SCHED_DEBUG is not set
++# CONFIG_DEBUG_PREEMPT is not set
++# CONFIG_FTRACE is not set
+diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
+index f801d46dc087..7e844fd8213f 100644
+--- a/arch/arc/kernel/devtree.c
++++ b/arch/arc/kernel/devtree.c
+@@ -33,7 +33,7 @@ static void __init arc_set_early_base_baud(unsigned long dt_root)
+ 	if (of_flat_dt_is_compatible(dt_root, "abilis,arc-tb10x"))
+ 		arc_base_baud = core_clk/3;
+ 	else if (of_flat_dt_is_compatible(dt_root, "snps,arc-sdp"))
+-		arc_base_baud = 33333333;	/* Fixed 33MHz clk */
++		arc_base_baud = 33333333;	/* Fixed 33MHz clk (AXS10x) */
+ 	else
+ 		arc_base_baud = core_clk;
+ }
+diff --git a/arch/arc/plat-axs10x/Kconfig b/arch/arc/plat-axs10x/Kconfig
+index 45641ca8aba8..d475f9d4847c 100644
+--- a/arch/arc/plat-axs10x/Kconfig
++++ b/arch/arc/plat-axs10x/Kconfig
+@@ -6,7 +6,7 @@
+ # published by the Free Software Foundation.
+ #
  
- static const char *simulation_compat[] __initconst = {
- 	"snps,nsim",
-+	"snps,nsim_hs",
- 	"snps,nsimosci",
-+	"snps,nsimosci_hs",
+-config ARC_PLAT_AXS10X
++menuconfig ARC_PLAT_AXS10X
+ 	bool "Synopsys ARC AXS10x Software Development Platforms"
+ 	select DW_APB_ICTL
+ 	select GPIO_DWAPB
+@@ -23,6 +23,7 @@ config ARC_PLAT_AXS10X
+ if ARC_PLAT_AXS10X
+ 
+ config AXS101
++	depends on ISA_ARCOMPACT
+ 	bool "AXS101 with AXC001 CPU Card (ARC 770D/EM6/AS221)"
+ 	help
+ 	  This adds support for the 770D/EM6/AS221 CPU Card. Only the ARC
+@@ -32,4 +33,14 @@ config AXS101
+ 	  this daughtercard. Please use the axs101.dts device tree
+ 	  with this configuration.
+ 
++config AXS103
++	bool "AXS103 with AXC003 CPU Card (ARC HS38x)"
++	depends on ISA_ARCV2
++	help
++	  This adds support for the HS38x CPU Card.
++
++	  The AXS103 Platform consists of an AXS10x mainboard with
++	  this daughtercard. Please use the axs103.dts device tree
++	  with this configuration.
++
+ endif
+diff --git a/arch/arc/plat-axs10x/axs10x.c b/arch/arc/plat-axs10x/axs10x.c
+index a1cecdaf9dca..ad0a7ef84660 100644
+--- a/arch/arc/plat-axs10x/axs10x.c
++++ b/arch/arc/plat-axs10x/axs10x.c
+@@ -1,5 +1,5 @@
+ /*
+- * AXS101 Software Development Platform
++ * AXS101/AXS103 Software Development Platform
+  *
+  * Copyright (C) 2013-15 Synopsys, Inc. (www.synopsys.com)
+  *
+@@ -15,8 +15,10 @@
+  */
+ 
+ #include <linux/of_platform.h>
+-#include <asm/mach_desc.h>
++#include <asm/clk.h>
+ #include <asm/io.h>
++#include <asm/mach_desc.h>
++#include <asm/mcip.h>
+ 
+ #define AXS_MB_CGU		0xE0010000
+ #define AXS_MB_CREG		0xE0011000
+@@ -29,14 +31,6 @@
+ #define AXC001_CREG		0xF0001000
+ #define AXC001_GPIO_INTC	0xF0003000
+ 
+-#define CREG_CPU_ADDR_770	(AXC001_CREG + 0x20)
+-#define CREG_CPU_ADDR_TUNN	(AXC001_CREG + 0x60)
+-#define CREG_CPU_ADDR_770_UPD	(AXC001_CREG + 0x34)
+-#define CREG_CPU_ADDR_TUNN_UPD	(AXC001_CREG + 0x74)
+-
+-#define CREG_CPU_ARC770_IRQ_MUX	(AXC001_CREG + 0x114)
+-#define CREG_CPU_GPIO_UART_MUX	(AXC001_CREG + 0x120)
+-
+ static void __init axs10x_enable_gpio_intc_wire(void)
+ {
+ 	/*
+@@ -83,6 +77,22 @@ static void __init axs10x_enable_gpio_intc_wire(void)
+ 	iowrite32(1 << MB_TO_GPIO_IRQ, (void __iomem *) GPIO_INTEN);
+ }
+ 
++static inline void __init
++write_cgu_reg(uint32_t value, void __iomem *reg, void __iomem *lock_reg)
++{
++	unsigned int loops = 128 * 1024, ctr;
++
++	iowrite32(value, reg);
++
++	ctr = loops;
++	while (((ioread32(lock_reg) & 1) == 1) && ctr--) /* wait for unlock */
++		cpu_relax();
++
++	ctr = loops;
++	while (((ioread32(lock_reg) & 1) == 0) && ctr--) /* wait for re-lock */
++		cpu_relax();
++}
++
+ static void __init axs10x_print_board_ver(unsigned int creg, const char *str)
+ {
+ 	union ver {
+@@ -118,6 +128,16 @@ static void __init axs10x_early_init(void)
+ 	axs10x_print_board_ver(CREG_MB_VER, mb);
+ }
+ 
++#ifdef CONFIG_AXS101
++
++#define CREG_CPU_ADDR_770	(AXC001_CREG + 0x20)
++#define CREG_CPU_ADDR_TUNN	(AXC001_CREG + 0x60)
++#define CREG_CPU_ADDR_770_UPD	(AXC001_CREG + 0x34)
++#define CREG_CPU_ADDR_TUNN_UPD	(AXC001_CREG + 0x74)
++
++#define CREG_CPU_ARC770_IRQ_MUX	(AXC001_CREG + 0x114)
++#define CREG_CPU_GPIO_UART_MUX	(AXC001_CREG + 0x120)
++
+ /*
+  * Set up System Memory Map for ARC cpu / peripherals controllers
+  *
+@@ -287,6 +307,145 @@ static void __init axs101_early_init(void)
+ 	axs10x_early_init();
+ }
+ 
++#endif	/* CONFIG_AXS101 */
++
++#ifdef CONFIG_AXS103
++
++#define AXC003_CGU	0xF0000000
++#define AXC003_CREG	0xF0001000
++#define AXC003_MST_AXI_TUNNEL	0
++#define AXC003_MST_HS38		1
++
++#define CREG_CPU_AXI_M0_IRQ_MUX	(AXC003_CREG + 0x440)
++#define CREG_CPU_GPIO_UART_MUX	(AXC003_CREG + 0x480)
++#define CREG_CPU_TUN_IO_CTRL	(AXC003_CREG + 0x494)
++
++
++union pll_reg {
++	struct {
++#ifdef CONFIG_CPU_BIG_ENDIAN
++		unsigned int pad:17, noupd:1, bypass:1, edge:1, high:6, low:6;
++#else
++		unsigned int low:6, high:6, edge:1, bypass:1, noupd:1, pad:17;
++#endif
++	};
++	unsigned int val;
++};
++
++static unsigned int __init axs103_get_freq(void)
++{
++	union pll_reg idiv, fbdiv, odiv;
++	unsigned int f = 33333333;
++
++	idiv.val = ioread32((void __iomem *)AXC003_CGU + 0x80 + 0);
++	fbdiv.val = ioread32((void __iomem *)AXC003_CGU + 0x80 + 4);
++	odiv.val = ioread32((void __iomem *)AXC003_CGU + 0x80 + 8);
++
++	if (idiv.bypass != 1)
++		f = f / (idiv.low + idiv.high);
++
++	if (fbdiv.bypass != 1)
++		f = f * (fbdiv.low + fbdiv.high);
++
++	if (odiv.bypass != 1)
++		f = f / (odiv.low + odiv.high);
++
++	f = (f + 500000) / 1000000; /* Rounding */
++	return f;
++}
++
++static inline unsigned int __init encode_div(unsigned int id, int upd)
++{
++	union pll_reg div;
++
++	div.val = 0;
++
++	div.noupd = !upd;
++	div.bypass = id == 1 ? 1 : 0;
++	div.edge = (id%2 == 0) ? 0 : 1;  /* 0 = rising */
++	div.low = (id%2 == 0) ? id >> 1 : (id >> 1)+1;
++	div.high = id >> 1;
++
++	return div.val;
++}
++
++noinline static void __init
++axs103_set_freq(unsigned int id, unsigned int fd, unsigned int od)
++{
++	write_cgu_reg(encode_div(id, 0),
++		      (void __iomem *)AXC003_CGU + 0x80 + 0,
++		      (void __iomem *)AXC003_CGU + 0x110);
++
++	write_cgu_reg(encode_div(fd, 0),
++		      (void __iomem *)AXC003_CGU + 0x80 + 4,
++		      (void __iomem *)AXC003_CGU + 0x110);
++
++	write_cgu_reg(encode_div(od, 1),
++		      (void __iomem *)AXC003_CGU + 0x80 + 8,
++		      (void __iomem *)AXC003_CGU + 0x110);
++}
++
++static void __init axs103_early_init(void)
++{
++	switch (arc_get_core_freq()/1000000) {
++	case 33:
++		axs103_set_freq(1, 1, 1);
++		break;
++	case 50:
++		axs103_set_freq(1, 30, 20);
++		break;
++	case 75:
++		axs103_set_freq(2, 45, 10);
++		break;
++	case 90:
++		axs103_set_freq(2, 54, 10);
++		break;
++	case 100:
++		axs103_set_freq(1, 30, 10);
++		break;
++	case 125:
++		axs103_set_freq(2, 45,  6);
++		break;
++	default:
++		/*
++		 * In this case, core_frequency derived from
++		 * DT "clock-frequency" might not match with board value.
++		 * Hence update it to match the board value.
++		 */
++		arc_set_core_freq(axs103_get_freq() * 1000000);
++		break;
++	}
++
++	pr_info("Freq is %dMHz\n", axs103_get_freq());
++
++	/* Memory maps already config in pre-bootloader */
++
++	/* set GPIO mux to UART */
++	iowrite32(0x01, (void __iomem *) CREG_CPU_GPIO_UART_MUX);
++
++	iowrite32((0x00100000U | 0x000C0000U | 0x00003322U),
++		  (void __iomem *) CREG_CPU_TUN_IO_CTRL);
++
++	/* Set up the AXS_MB interrupt system.*/
++	iowrite32(12, (void __iomem *) (CREG_CPU_AXI_M0_IRQ_MUX
++					 + (AXC003_MST_HS38 << 2)));
++
++	/* connect ICTL - Main Board with GPIO line */
++	iowrite32(0x01, (void __iomem *) CREG_MB_IRQ_MUX);
++
++	axs10x_print_board_ver(AXC003_CREG + 4088, "AXC003 CPU Card");
++
++	axs10x_early_init();
++
++#ifdef CONFIG_ARC_MCIP
++	/* No Hardware init, but filling the smp ops callbacks */
++	mcip_init_early_smp();
++#endif
++}
++#endif
++
++#ifdef CONFIG_AXS101
++
+ static const char *axs101_compat[] __initconst = {
+ 	"snps,axs101",
  	NULL,
- };
- 
+@@ -296,3 +455,22 @@ MACHINE_START(AXS101, "axs101")
+ 	.dt_compat	= axs101_compat,
+ 	.init_early	= axs101_early_init,
+ MACHINE_END
++
++#endif	/* CONFIG_AXS101 */
++
++#ifdef CONFIG_AXS103
++
++static const char *axs103_compat[] __initconst = {
++	"snps,axs103",
++	NULL,
++};
++
++MACHINE_START(AXS103, "axs103")
++	.dt_compat	= axs103_compat,
++	.init_early	= axs103_early_init,
++#ifdef CONFIG_ARC_MCIP
++	.init_smp	= mcip_init_smp,
++#endif
++MACHINE_END
++
++#endif	/* CONFIG_AXS103 */
 -- 
 1.9.1
 
