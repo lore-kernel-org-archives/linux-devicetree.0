@@ -1,42 +1,75 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v5 1/2] ASoC: qcom: document apq8016 sbc machine driver
- bindings
-Date: Tue, 09 Jun 2015 18:31:33 +0100
-Message-ID: <557722F5.7020506@linaro.org>
-References: <1433854702-23654-1-git-send-email-srinivas.kandagatla@linaro.org> <1433854769-23807-1-git-send-email-srinivas.kandagatla@linaro.org> <20150609165718.GH14071@sirena.org.uk> <55771D88.4050603@linaro.org> <20150609171313.GK14071@sirena.org.uk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] drm/panel: Add display timing for Okaya
+ RS800480T-7X0GP
+Date: Tue, 09 Jun 2015 19:39:48 +0200
+Message-ID: <1433871588.5428.42.camel@pengutronix.de>
+References: <1432827466-8104-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1433865599-8167-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1433865599-8167-3-git-send-email-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150609171313.GK14071@sirena.org.uk>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1433865599-8167-3-git-send-email-gary.bisson@boundarydevices.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Gary Bisson <gary.bisson@boundarydevices.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/06/15 18:13, Mark Brown wrote:
-> On Tue, Jun 09, 2015 at 06:08:24PM +0100, Srinivas Kandagatla wrote:
->
->>>>> +- external	: flag to indicate if the I2S is connected to external codec
->
->>> not sure I understand why we need a boolean property indicating if an
->>> external CODEC is in use - what is the consequence of setting this
->>> property?
->
->> As of today, the consequence of setting this flag is to setup correct
->> dai_link names.
->> Also there are some limitations on which MI2S can be configured to external
->> or internal codecs, this flag can be used in future to validate such
->> configurations, if required.
->
-> That validation sounds like something that the SoC drivers should be
-> doing if required rather than the machine driver - otherwise every
-> machine driver using this SoC would have to implement the same
-> validation.
-
-Thats a valid point, for now I can move to using dai link name property 
-instead of external flag, this should work for now. I will add the 
-validation logic in SOC driver if required in future.
->
+SGkgR2FyeSwKCkFtIERpZW5zdGFnLCBkZW4gMDkuMDYuMjAxNSwgMTc6NTkgKzAyMDAgc2Nocmll
+YiBHYXJ5IEJpc3NvbjoKPiBBZGQgc3VwcG9ydCBmb3IgdGhlIE9rYXlhIFJTODAwNDgwVC03WDBH
+UCB0byB0aGUgRFJNIHNpbXBsZSBwYW5lbAo+IGRyaXZlci4KPiAKPiBUaGUgUlM4MDA0ODBULTdY
+MEdQIGlzIGEgV1ZHQSAoODAweDQ4MCkgcGFuZWwgd2l0aCBhbiAxOC1iaXQgcGFyYWxsZWwKPiBM
+Q0QgaW50ZXJmYWNlLiBJdCBzdXBwb3J0cyBwaXhlbCBjbG9ja3MgaW4gdGhlIHJhbmdlIG9mIDMw
+LTQwIE1Iei4KPiAKPiBUaGlzIHBhbmVsIGRldGFpbHMgY2FuIGJlIGZvdW5kIGF0Ogo+IGh0dHA6
+Ly9ib3VuZGFyeWRldmljZXMuY29tL3Byb2R1Y3QvNy04MDB4NDgwLWRpc3BsYXkvCj4gCj4gU2ln
+bmVkLW9mZi1ieTogR2FyeSBCaXNzb24gPGdhcnkuYmlzc29uQGJvdW5kYXJ5ZGV2aWNlcy5jb20+
+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9wYW5lbC9va2F5YSxyczgwMDQ4MHRfN3gwZ3AudHh0ICAg
+ICAgIHwgIDcgKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAg
+ICAgICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5n
+ZWQsIDM0IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9va2F5YSxyczgwMDQ4MHRfN3gwZ3AudHh0Cj4gCj4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9va2F5
+YSxyczgwMDQ4MHRfN3gwZ3AudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BhbmVsL29rYXlhLHJzODAwNDgwdF83eDBncC50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
+IGluZGV4IDAwMDAwMDAuLmY3YzcyOWQKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL29rYXlhLHJzODAwNDgwdF83eDBncC50eHQK
+PiBAQCAtMCwwICsxLDcgQEAKPiArT0tBWUEgRWxlY3RyaWMgQW1lcmljYSwgSW5jLiBSUzgwMDQ4
+MFQtN1gwR1AgNyIgV1ZHQSBMQ0QgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
+Ky0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJva2F5YSxyczgwMDQ4MHRfN3gwZ3AiCj4gKwo+ICtU
+aGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywg
+d2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rv
+cnkuCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBi
+L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+IGluZGV4IDk3YjY2YjguLmU1
+MTFhMjIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
+Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gQEAgLTk0Miw2
+ICs5NDIsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGxnX2xwMTI5cWUgPSB7
+Cj4gIAl9LAo+ICB9Owo+ICAKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBv
+a2F5YV9yczgwMDQ4MHRfN3gwZ3BfdGltaW5nID0gewo+ICsJLnBpeGVsY2xvY2sgPSB7IDMwMDAw
+MDAwLCAzMDAwMDAwMCwgNDAwMDAwMDAgfSwKPiArCS5oYWN0aXZlID0geyA4MDAsIDgwMCwgODAw
+IH0sCj4gKwkuaGZyb250X3BvcmNoID0geyA0MCwgNDAsIDQwIH0sCj4gKwkuaGJhY2tfcG9yY2gg
+PSB7IDQwLCA0MCwgNDAgfSwKPiArCS5oc3luY19sZW4gPSB7IDEsIDQ4LCA0OCB9LAo+ICsJLnZh
+Y3RpdmUgPSB7IDQ4MCwgNDgwLCA0ODAgfSwKPiArCS52ZnJvbnRfcG9yY2ggPSB7IDEzLCAxMywg
+MTMgfSwKPiArCS52YmFja19wb3JjaCA9IHsgMjksIDI5LCAyOSB9LAo+ICsJLnZzeW5jX2xlbiA9
+IHsgMywgMywgMyB9LAo+ICsJLmZsYWdzID0gRElTUExBWV9GTEFHU19ERV9ISUdILAo+ICt9Owo+
+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIG9rYXlhX3JzODAwNDgwdF83eDBn
+cCA9IHsKPiArCS50aW1pbmdzID0gJm9rYXlhX3JzODAwNDgwdF83eDBncF90aW1pbmcsCj4gKwku
+bnVtX3RpbWluZ3MgPSAxLAo+ICsJLmJwYyA9IDYsCj4gKwkuc2l6ZSA9IHsKPiArCQkud2lkdGgg
+PSAxNTQsCj4gKwkJLmhlaWdodCA9IDg3LAo+ICsJfSwKCkFyZSB0aGVyZSBhbnkgcG93ZXJvbi9w
+b3dlcm9mZiBzZXF1ZW5jaW5nIGRlbGF5cyBpbiB0aGUgZGF0YXNoZWV0IHRoYXQKc2hvdWxkIGJl
+IG1ldD8gUGFyYWxsZWwgZGlzcGxheXMgb2Z0ZW4gc3BlY2lmeSBhIGZldyBtcyBkZWxheSBhZnRl
+ciB0aGUKdm9sdGFnZSBzdXBwbHkgaXMgc3RhYmxlIGFuZCBiZWZvcmUgcGl4ZWwgZGF0YSBzaG91
+bGQgYmUgZHJpdmVuIG9uIHRoZQpidXMgKC5kZWxheS5wcmVwYXJlKSwgYXMgd2VsbCBhcyBhZnRl
+cndhcmRzLCBiZWZvcmUgYWN0aXZhdGluZyB0aGUKYmFja2xpZ2h0ICguZGVsYXkuZW5hYmxlKS4K
+CnJlZ2FyZHMKUGhpbGlwcAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
