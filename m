@@ -1,68 +1,42 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] spi: atmel: add support to FIFOs
-Date: Tue, 9 Jun 2015 18:30:04 +0100
-Message-ID: <20150609173004.GO14071@sirena.org.uk>
-References: <cover.1433850255.git.cyrille.pitchen@atmel.com>
- <bb9ae6c3a3567d4fae7689a31f771da6036661bd.1433850255.git.cyrille.pitchen@atmel.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 1/2] ASoC: qcom: document apq8016 sbc machine driver
+ bindings
+Date: Tue, 09 Jun 2015 18:31:33 +0100
+Message-ID: <557722F5.7020506@linaro.org>
+References: <1433854702-23654-1-git-send-email-srinivas.kandagatla@linaro.org> <1433854769-23807-1-git-send-email-srinivas.kandagatla@linaro.org> <20150609165718.GH14071@sirena.org.uk> <55771D88.4050603@linaro.org> <20150609171313.GK14071@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+aOZGdcGYL8FotQd"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <bb9ae6c3a3567d4fae7689a31f771da6036661bd.1433850255.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150609171313.GK14071@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---+aOZGdcGYL8FotQd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 09, 2015 at 01:53:54PM +0200, Cyrille Pitchen wrote:
+On 09/06/15 18:13, Mark Brown wrote:
+> On Tue, Jun 09, 2015 at 06:08:24PM +0100, Srinivas Kandagatla wrote:
+>
+>>>>> +- external	: flag to indicate if the I2S is connected to external codec
+>
+>>> not sure I understand why we need a boolean property indicating if an
+>>> external CODEC is in use - what is the consequence of setting this
+>>> property?
+>
+>> As of today, the consequence of setting this flag is to setup correct
+>> dai_link names.
+>> Also there are some limitations on which MI2S can be configured to external
+>> or internal codecs, this flag can be used in future to validate such
+>> configurations, if required.
+>
+> That validation sounds like something that the SoC drivers should be
+> doing if required rather than the machine driver - otherwise every
+> machine driver using this SoC would have to implement the same
+> validation.
 
-> To enable the FIFO feature a "atmel,fifo-size" attribute with a strictly
-> positive value must be added into the node of the device-tree describing
-> the spi controller.
-
-I'd expect the driver to use FIFOs any time they make sense, I wouldn't
-expect this to be something that requires configuration - I'd expect
-that there's going to be at least some FIFO in all versions of the IP,
-even if the size varies.  Is that not the case?
-
-> When FIFOs are enabled, the RX one is forced to operate in SINGLE data
-> mode because this driver configures the spi controller as a master. In
-> master mode only, the Received Data Register has an additionnal Peripheral
-> Chip Select field, which prevents us from reading more than a single data
-> at each register access.
->=20
-> Besides, the TX FIFO operates in MULTIPLE data mode. However, even when a
-
-This is very hard to understand as I have no idea what single and
-multiple data modes are, sorry.  Please write your commit messages so
-they can be read by people who aren't familiar with the internals of the
-IP.
-
---+aOZGdcGYL8FotQd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVdyKcAAoJECTWi3JdVIfQK0UH/26wVok4vSoxLx+X576KU4cH
-tdNWK/GNQVxiHH9k46jXMJ2oN+rh8hpJGpIZKw9Lcjqor2jP1pSOfcFcQJIhCkBu
-uiGEUBb/AwcQNCuwyhg47flYqRZUiq4w+dkbx2GLOvOkXIIw7DmSRq522hHk7Qqo
-Lb8BoJha1T8Tjk28vd0KuzeosjRDYvVEiTafkzSbvJWUekJlHo4hZN8JpwILyIlG
-RjX9sSJYHX0I3Gdyjn7pheTGaZ0NQBLI3+93+lgzzx+2mCciYyVn4C4D5XH80O5G
-fP3h93prWSjYZRnD9ErrMHjbxifT9QJPawHByEe+cjspyAf3Qla7r5ApcrXmgaY=
-=jnsy
------END PGP SIGNATURE-----
-
---+aOZGdcGYL8FotQd--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thats a valid point, for now I can move to using dai link name property 
+instead of external flag, this should work for now. I will add the 
+validation logic in SOC driver if required in future.
+>
