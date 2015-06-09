@@ -1,41 +1,171 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 09 Jun 2015 11:29:47 -0500
-Message-ID: <5577147B.2030900@codeaurora.org>
-References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org>	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>	<556DE2D5.3090906@roeck-us.net>	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>	<5575DE48.8010308@roeck-us.net>	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>	<55766D74.2060401@roeck-us.net>	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>	<55769E0E.8060801@roeck-us.net> <CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com> <557712CF.8010802@roeck-us.net>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
+Date: Tue, 9 Jun 2015 11:33:11 -0500
+Message-ID: <CAL_JsqJ+q5hs26FaLXG1LVb0asE-UZ5hXar2FeVAJN=S8=CG3w@mail.gmail.com>
+References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
+ <1433775737-9816-6-git-send-email-jun.li@freescale.com> <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+ <20150609011806.GA7976@shlinux1.ap.freescale.net> <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+ <20150609182931.1eda4111@rockdesk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557712CF.8010802-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150609182931.1eda4111@rockdesk>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2015 11:22 AM, Guenter Roeck wrote:
+On Tue, Jun 9, 2015 at 10:29 AM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> Rob,
 >
+> On Tue, 9 Jun 2015 08:26:20 -0500
+> Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
-> but I see your point. Essentially, the specification is broken
-> for all practical purposes, since, as you point out, enabling
-> the watchdog overwrites and explicitly sets WCV. Effectively
-> this means that just using WCV to program the timeout period
-> is not really possible.
+>> On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> > On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
+>> >> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> >> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+>> >> > features don't have to be decided by usb gadget drivers.
+>> >> >
+>> >> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> >> > ---
+>> >> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+>> >> >  1 file changed, 10 insertions(+)
+>> >> >
+>> >> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+>> >> > index 477d5bb..7386f4a 100644
+>> >> > --- a/Documentation/devicetree/bindings/usb/generic.txt
+>> >> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
+>> >> > @@ -11,6 +11,12 @@ Optional properties:
+>> >> >                         "peripheral" and "otg". In case this attribute isn't
+>> >> >                         passed via DT, USB DRD controllers should default to
+>> >> >                         OTG.
+>> >> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+>> >> > +                       with which the device and its descriptors are compliant,
+>> >> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+>> >>
+>> >> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
+>> >> dependency or a driver feature?
+>> >>
+>> > Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
+>> > member bcdOTG to identify the OTG version, this descriptor needs to be sent
+>> > to OTG host with correct size and content, so we have to know which release
+>> > version the OTG device is compliant with, either by menuconfig config or pass
+>> > via DT.
+>>
+>> So you have to change the version depending on the host you are
+>> connected to? That really seems strange that plugging in a OTG 2.0
+>> device to an OTG 1.3 host would not work and doesn't make for a good
+>> user experience.
 >
-> I am not really sure how to address this. We can either only use WOR,
-> and forget about pretimeout, or we can enforce a minimum pretimeout.
-> In the latter case, we'll have to write WCV after writing WOR.
+> No. The OTG version in the OTG descriptor for any device is usually fixed for the
+> lifetime of the product.
+>
+> Let's assume it is 2.0.
+>
+> If you plug this to OTG 1.0 host, it won't be an issue as OTG 1.0 host doesn't
+> read the BCD version.
 
-In talking with our hardware engineers, using WCV to program the timeout 
-period is not a valid operation.  This is why I keep arguing against the 
-pre-timeout feature, and I don't agree that servers should always use 
-pre-timeout.
+That makes sense, but there was some discussion about the size mattering.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+So is there a reason not to always report 2.0 with any kernel that has
+2.0 support?
+
+>>
+>> >> > + - srp-support: tells OTG controllers we want to enable SRP.
+>> >> > + - hnp-support: tells OTG controllers we want to enable HNP.
+>> >> > + - adp-support: tells OTG controllers we want to enable ADP.
+>> >>
+>> >> I've recently run into a problem[1] and found that I have to disable
+>> >> OTG in the kernel to get my device to work. Having to turn-off OTG
+>> >> seems like the wrong solution, and shifting the problem to DT seems
+>> >> wrong too. Why is this not a user configurable option (within whatever
+>> >> h/w constraints there are)?
+>> > The problem of below link, seems your device is claiming it's a HNP capable
+>> > OTG device, but connecting to a non-OTG port of your Host, assume your Host
+>> > does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
+>> > OTG device to remind it can use another port with HNP, but the request failed
+>> > (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
+>> > in OTG 2.0), so your Host just stopped enumeration of your device, this is not
+>> > reasonable because current OTG code is some out of data.
+>>
+>> Do PCs have OTG ports typically? My expectation is that if I plug in
+>> an OTG device as a B device to any host port, that it will work as a
+>> device no matter what the host OTG capabilities are. If I have to
+>> change the kernel config or DT, that is a problem.
+>
+> AFAIK PCs don't have OTG ports.
+>
+> If you plug in OTG device to a non-otg host port it will work as normal B-device.
+> The host doesn't request for OTG descriptors and doesn't care what OTG features it
+> supports or not.
+
+That is what I would expect. My testing and the bug report show otherwise.
+
+>> > I am trying to make those OTG feaures to be configurable options, you mean
+>> > by sys?
+>>
+>> Yes.
+>
+> why do you need OTG features to be sysfs configurable other than for debugging?
+
+I don't know. Buggy host perhaps? Why do you need them in DT?
+
+If they are truly debugging, then they would belong in debugfs rather
+than sysfs.
+
+>> >> What are the valid combinations? When do we want these enabled or not?
+>> >> Wouldn't default enabled be better?
+>> >
+>> > We want to enable all those support in kernel driver, but some platform or
+>> > hardware may not want to enable any or some of them, so those hardware
+>> > can disable it by not pass the property in dt, the 3 sub features of OTG are
+>> > not mandatory for so called OTG device, normally we at least enable HNP, and
+>> > SRP and ADP are optional.
+>>
+>> Please answer my questions in the doc.
+>>
+>> >>
+>> >> We already have dr_mode property. How is it related to these?
+>
+> dr_mode states what mode the controller will operate in.
+>
+> for dr_mode == "host" we don't care about these otg flags.
+>
+> for dr_mode == "peripheral" or dr_mode == "otg"
+> we care about these OTG flags to create our OTG descriptor on the fly.
+
+Then how do I specify my device is peripheral only even though I have
+a DR controller?
+
+How is ID pin detect supposed to be supported? Do we need dr_mode = "idpin"?
+
+>> > dr_mode is to tell the device it will work at OTG mode(there is another simple
+>> > dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
+>> > which protocol the OTG device will support.
+>>
+>> By simple DR, you mean ID pin detect, right. So please define how you
+>> support just ID pin detect vs. other levels of capability. Does only
+>> dr_mode = otg mean ID pin detect? That may be a problem for existing
+>> DTs if you disable other OTG functions because they have not been
+>> added to the DT, then that is a problem.
+>>
+>> I'm feeling less convinced that this belongs in DT at all. Please
+>> convince me otherwise.
+>
+> Yes not specifying anything in DT should work and default to the
+> best OTG version and features supported by the OTG controller.
+
+Right, hence why I suggested disable flags, not enable flags.
+
+> But if the device manufacturer wants to restrict the OTG version
+> to something less or disable some OTG features then the DT flags come
+> into play.
+
+Why would they?
+
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
