@@ -1,156 +1,106 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related
- properties
-Date: Tue, 9 Jun 2015 18:29:31 +0300
-Message-ID: <20150609182931.1eda4111@rockdesk>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
-	<1433775737-9816-6-git-send-email-jun.li@freescale.com>
-	<CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
-	<20150609011806.GA7976@shlinux1.ap.freescale.net>
-	<CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+From: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH 2/2 RESEND] power: reset: Add syscon poweroff device node
+ for APM X-Gene platform
+Date: Tue, 9 Jun 2015 09:31:21 -0600
+Message-ID: <CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+	<1433272747-27114-3-git-send-email-ttnguyen@apm.com>
+	<CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g@mail.gmail.com>
+	<CACgAJHwtCuZgZySmcvMxZHVxy__eZP02-TDbEn3FEpMx5y_LDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACgAJHwtCuZgZySmcvMxZHVxy__eZP02-TDbEn3FEpMx5y_LDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+On Mon, Jun 8, 2015 at 10:34 PM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+> Hi Dann,
+>
+> On Mon, Jun 8, 2015 at 8:44 PM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+>> On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+>>> This patch adds syscon poweroff device node to support poweroff feature
+>>> on APM X-Gene Mustang platform
+>>
+>> hey Tai,
+>>  The reboot changes work just fine for me, but poweroff does not:
+>>
+>> [  OK  ] Reached target Final Step.
+>>          Starting Power-Off...
+>> reboot: Power down
+>> Unable to poweroff system
+>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+>>
+>> CPU: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W       4.1.0-rc7+ #1
+>> Hardware name: APM X-Gene Mustang board (DT)
+>> Call trace:
+>> [<ffffffc00008990c>] dump_backtrace+0x0/0x11c
+>> [<ffffffc000089a38>] show_stack+0x10/0x1c
+>> [<ffffffc0005b447c>] dump_stack+0x88/0xc8
+>> [<ffffffc0005b3374>] panic+0xe0/0x220
+>> [<ffffffc0000b5f24>] do_exit+0x990/0x994
+>> [<ffffffc0000d06bc>] SyS_reboot+0x14c/0x208
+>> ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+>>
+>>   -dann
+>>
+>
+> Thanks for testing my patches.
+> On APM X-Gene Mustang platform, power off circuit is controlled by firmware.
+> It requires a firmware update to support power off feature.
+> May I ask what firmware version you're running on?
 
-On Tue, 9 Jun 2015 08:26:20 -0500
-Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Sure, 1.15.12.
 
-> On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
-> >> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> >> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
-> >> > features don't have to be decided by usb gadget drivers.
-> >> >
-> >> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >> > ---
-> >> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
-> >> >  1 file changed, 10 insertions(+)
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> >> > index 477d5bb..7386f4a 100644
-> >> > --- a/Documentation/devicetree/bindings/usb/generic.txt
-> >> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> >> > @@ -11,6 +11,12 @@ Optional properties:
-> >> >                         "peripheral" and "otg". In case this attribute isn't
-> >> >                         passed via DT, USB DRD controllers should default to
-> >> >                         OTG.
-> >> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
-> >> > +                       with which the device and its descriptors are compliant,
-> >> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
-> >>
-> >> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
-> >> dependency or a driver feature?
-> >>
-> > Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
-> > member bcdOTG to identify the OTG version, this descriptor needs to be sent
-> > to OTG host with correct size and content, so we have to know which release
-> > version the OTG device is compliant with, either by menuconfig config or pass
-> > via DT.
-> 
-> So you have to change the version depending on the host you are
-> connected to? That really seems strange that plugging in a OTG 2.0
-> device to an OTG 1.3 host would not work and doesn't make for a good
-> user experience.
+  -dann
 
-No. The OTG version in the OTG descriptor for any device is usually fixed for the
-lifetime of the product.
-
-Let's assume it is 2.0.
-
-If you plug this to OTG 1.0 host, it won't be an issue as OTG 1.0 host doesn't
-read the BCD version.
-
-> 
-> >> > + - srp-support: tells OTG controllers we want to enable SRP.
-> >> > + - hnp-support: tells OTG controllers we want to enable HNP.
-> >> > + - adp-support: tells OTG controllers we want to enable ADP.
-> >>
-> >> I've recently run into a problem[1] and found that I have to disable
-> >> OTG in the kernel to get my device to work. Having to turn-off OTG
-> >> seems like the wrong solution, and shifting the problem to DT seems
-> >> wrong too. Why is this not a user configurable option (within whatever
-> >> h/w constraints there are)?
-> > The problem of below link, seems your device is claiming it's a HNP capable
-> > OTG device, but connecting to a non-OTG port of your Host, assume your Host
-> > does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
-> > OTG device to remind it can use another port with HNP, but the request failed
-> > (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
-> > in OTG 2.0), so your Host just stopped enumeration of your device, this is not
-> > reasonable because current OTG code is some out of data.
-> 
-> Do PCs have OTG ports typically? My expectation is that if I plug in
-> an OTG device as a B device to any host port, that it will work as a
-> device no matter what the host OTG capabilities are. If I have to
-> change the kernel config or DT, that is a problem.
-
-AFAIK PCs don't have OTG ports.
-
-If you plug in OTG device to a non-otg host port it will work as normal B-device.
-The host doesn't request for OTG descriptors and doesn't care what OTG features it
-supports or not.
-
-> 
-> > I am trying to make those OTG feaures to be configurable options, you mean
-> > by sys?
-> 
-> Yes.
-
-why do you need OTG features to be sysfs configurable other than for debugging?
-
-> 
-> >> What are the valid combinations? When do we want these enabled or not?
-> >> Wouldn't default enabled be better?
-> >
-> > We want to enable all those support in kernel driver, but some platform or
-> > hardware may not want to enable any or some of them, so those hardware
-> > can disable it by not pass the property in dt, the 3 sub features of OTG are
-> > not mandatory for so called OTG device, normally we at least enable HNP, and
-> > SRP and ADP are optional.
-> 
-> Please answer my questions in the doc.
-> 
-> >>
-> >> We already have dr_mode property. How is it related to these?
-
-dr_mode states what mode the controller will operate in.
-
-for dr_mode == "host" we don't care about these otg flags.
-
-for dr_mode == "peripheral" or dr_mode == "otg"
-we care about these OTG flags to create our OTG descriptor on the fly.
-
-> >
-> > dr_mode is to tell the device it will work at OTG mode(there is another simple
-> > dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
-> > which protocol the OTG device will support.
-> 
-> By simple DR, you mean ID pin detect, right. So please define how you
-> support just ID pin detect vs. other levels of capability. Does only
-> dr_mode = otg mean ID pin detect? That may be a problem for existing
-> DTs if you disable other OTG functions because they have not been
-> added to the DT, then that is a problem.
-> 
-> I'm feeling less convinced that this belongs in DT at all. Please
-> convince me otherwise.
-
-Yes not specifying anything in DT should work and default to the
-best OTG version and features supported by the OTG controller.
-
-But if the device manufacturer wants to restrict the OTG version
-to something less or disable some OTG features then the DT flags come
-into play.
-
-cheers,
--roger
+> Tai
+>
+>
+>>> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+>>> ---
+>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
+>>>  1 file changed, 12 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>> index 83578e7..910d561 100644
+>>> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>> @@ -23,6 +23,18 @@
+>>>                 device_type = "memory";
+>>>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
+>>>         };
+>>> +
+>>> +       poweroff_mbox: poweroff_mbox@10548000 {
+>>> +               compatible = "syscon";
+>>> +               reg = <0x0 0x10548000 0x0 0x30>;
+>>> +       };
+>>> +
+>>> +       poweroff: poweroff@10548010 {
+>>> +               compatible = "syscon-poweroff";
+>>> +               regmap = <&poweroff_mbox>;
+>>> +               offset = <0x10>;
+>>> +               mask = <0x1>;
+>>> +       };
+>>>  };
+>>>
+>>>  &pcie0clk {
+>>> --
+>>> 1.7.9.5
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
+>
+> --
+> Tai
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
