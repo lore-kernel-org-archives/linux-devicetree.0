@@ -1,30 +1,55 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH v2 3/8] input: goodix: export id and version read from
- device
-Date: Tue, 09 Jun 2015 17:36:03 +0200
-Message-ID: <1433864163.5707.6.camel@hadess.net>
-References: <1433774273-23103-1-git-send-email-irina.tirdea@intel.com>
-	 <1433774273-23103-4-git-send-email-irina.tirdea@intel.com>
+From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Add code to release secondary cores from holding pen.
+Date: Tue, 09 Jun 2015 08:43:28 -0700
+Message-ID: <7hd214sx9b.fsf@deeprootsystems.com>
+References: <1433856824-30689-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1433774273-23103-4-git-send-email-irina.tirdea@intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Octavian Purdila <octavian.purdila@intel.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433856824-30689-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+	(Peter Griffin's message of "Tue, 9 Jun 2015 14:33:41 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-06-08 at 17:37 +0300, Irina Tirdea wrote:
-> Goodix touchscreens export through their registers a Product ID
-> and Firmware Version. The Product ID is an ASCII encoding of the
-> product name (e.g.: "911").
-> 
-> Export to sysfs (through the input subsystem) the product id and
-> firmware version read from the device rather than using constant
-> values.
-> 
-> Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
-> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
-Acked-by: Bastien Nocera <hadess@hadess.net>
+> Hi Maxime, Patrice, Srini, Kevin, Olof & Arnd,
+>
+> This patchset adds in the necessary code to manage the holding pen for STi
+> platforms.
+>
+> Due to all the STi upstream devs using JTAG to boot the STi boards, there
+> is currently a SMP bug when booting upstream kernels via u-boot where
+> only the primary core is brought up.
+>
+> This hasn't been noticed until now because when booting via JTAG the
+> stlinux_arm_boot script sets the PC of the secondary cores directly.
+>
+> With these patches applied booting via u-boot now works correctly.
+>
+> [    0.045456] CPU: Testing write buffer coherency: ok
+> [    0.045597] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+> [    0.045734] Setting up static identity map for 0x40209000 - 0x40209098
+> [    0.065047] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+> [    0.065081] Brought up 2 CPUs
+> [    0.065089] SMP: Total of 2 processors activated (5983.43 BogoMIPS).
+> [    0.065092] CPU: All CPU(s) started in SVC mode.
+>
+> Kevin / Olof / Arnd - Can you put this fix into the next ARM SoC fixes pull
+> request (if there is one)?
+
+At this stage of the cycle (we're already at -rc7) we limit things to
+strictly regression fixes, and seems this has been broken for some time,
+so I think this will have to wait for v4.2.
+
+After addresing the comments, Maxime should queue this up for arm-soc so
+we can get it in early in the v4.2-rc cycle.
+
+Kevin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
